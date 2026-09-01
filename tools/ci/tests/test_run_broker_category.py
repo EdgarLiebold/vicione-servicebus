@@ -125,6 +125,45 @@ class Supplying_a_run_scoped_localstack_identity(unittest.TestCase):
         self.assertIn('"127.0.0.1::4566"', compose)
 
 
+class Binding_the_event_hubs_emulator_fixture(unittest.TestCase):
+    """The native rider receives one AMQP endpoint and one independently projected Blob endpoint."""
+
+    def test_event_hubs_and_blob_ports_have_distinct_typed_projection(self) -> None:
+        self.assertEqual(
+            {5672: "VICIONE_SERVICEBUS_EVENTHUB_PORT"},
+            compose_fixture.BROKER_PORTS["eventhubs"])
+        self.assertEqual(
+            {
+                10000: "VICIONE_SERVICEBUS_AZURITE_BLOB_PORT",
+                10002: "VICIONE_SERVICEBUS_AZURITE_TABLE_PORT",
+            },
+            compose_fixture.BROKER_PORTS["azurite"])
+        self.assertEqual(
+            "VICIONE_SERVICEBUS_EVENTHUB_HOST",
+            broker_logs.BROKER_HOST_VARIABLE["eventhubs"])
+
+    def test_official_event_hubs_image_and_config_are_immutably_bound(self) -> None:
+        image_lock = json.loads(
+            (compose_fixture.REPO_ROOT / "build/test-infrastructure/images.lock.json")
+            .read_text(encoding="utf-8"))
+        event_hubs = image_lock["baseImages"]["eventhubs"]
+        expected_reference = (
+            "mcr.microsoft.com/azure-messaging/eventhubs-emulator:2.2.1@"
+            "sha256:be413f0d59541621879e6d197d73f64f3b3ac5fa45861641fdc1430252b8b44b")
+        compose = compose_fixture.COMPOSE_FILE.read_text(encoding="utf-8")
+        config = json.loads(
+            (compose_fixture.REPO_ROOT / "build/test-infrastructure/eventhubs/config.json")
+            .read_text(encoding="utf-8"))
+
+        self.assertEqual(expected_reference, event_hubs["reference"])
+        self.assertEqual(1, compose.count(f"image: {expected_reference}"))
+        self.assertIn("./eventhubs/config.json:/Eventhubs_Emulator/ConfigFiles/Config.json:ro", compose)
+        entities = config["UserConfig"]["NamespaceConfig"][0]["Entities"]
+        self.assertEqual(10, len(entities))
+        self.assertEqual(10, len({entity["Name"] for entity in entities}))
+        self.assertTrue(all(entity["ConsumerGroups"] == [{"Name": "cg1"}] for entity in entities))
+
+
 class Reporting_a_teardown_that_did_not_happen(unittest.TestCase):
     """A fixture that could not be removed is not a green run.
 

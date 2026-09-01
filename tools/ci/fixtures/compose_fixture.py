@@ -47,7 +47,11 @@ BROKER_PORTS = {
     # Not brokers, but the Entity Framework specs need them and they obey the same rules.
     "mssql": {1433: "VICIONE_SERVICEBUS_MSSQL_PORT"},
     "postgres": {5432: "VICIONE_SERVICEBUS_PG_PORT"},
-    "azurite": {10002: "VICIONE_SERVICEBUS_AZURITE_TABLE_PORT"},
+    "azurite": {
+        10000: "VICIONE_SERVICEBUS_AZURITE_BLOB_PORT",
+        10002: "VICIONE_SERVICEBUS_AZURITE_TABLE_PORT",
+    },
+    "eventhubs": {5672: "VICIONE_SERVICEBUS_EVENTHUB_PORT"},
     "localstack": {4566: "VICIONE_SERVICEBUS_LOCALSTACK_PORT"},
 }
 

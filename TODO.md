@@ -342,6 +342,22 @@ partial failure, cancellation, exact object retention, bounded resource growth a
 eventual deletion. Do not silently round durations, create one lifecycle rule per object, or accept
 a TTL that the product cannot enforce.
 
+## Complete Event Hubs validation against the real cloud service
+
+The pinned local Event Hubs emulator and Azurite own deterministic transport, checkpoint, retry,
+metadata, saga and lifecycle verification. They do not issue Microsoft Entra tokens, evaluate Azure
+RBAC, reproduce service-controlled partition rebalancing under real namespace pressure or enforce the
+real service's retention lifecycle. Those differences remain visible instead of being counted green:
+
+- `OBL-R0-CLOUD-0258`: workload identity, authorization denial and token refresh against Azure;
+- `OBL-R0-CLOUD-0261`: service-owned partition rebalance with exact checkpoint continuity;
+- `OBL-R0-CLOUD-0262`: service-enforced retention at the configured boundary.
+
+Run these in a disposable Azure namespace with OIDC/workload identity and no stored client secret.
+Acceptance requires bounded provider-owned state and delivery barriers, exact partition/checkpoint
+continuity, explicit cleanup of the namespace resources, zero skip/failure and evidence that names the
+Azure endpoint and identity mode without recording tokens or connection strings.
+
 ## Finalize solution composition after native-test promotion
 
 `ViciOne.ServiceBus.slnx` is now a product/package solution and no longer compiles inherited

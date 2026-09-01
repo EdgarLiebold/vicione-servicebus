@@ -26,5 +26,4 @@ The following changed baseline files cannot carry an in-file comment and are
 covered by exact path-bound entries in MODIFICATIONS.md:
 ViciOne.ServiceBus.slnx
 ViciOne.ServiceBus.snk
-tests/Transports/ViciOne.ServiceBus.EventHubIntegration.Tests/config.json
 tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/client.p12

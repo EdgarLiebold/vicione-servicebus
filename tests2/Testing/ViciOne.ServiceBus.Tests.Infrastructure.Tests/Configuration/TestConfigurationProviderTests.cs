@@ -31,6 +31,7 @@ public sealed class TestConfigurationProviderTests
         PostgreSqlLocalOptions postgreSql = Assert.IsType<PostgreSqlLocalOptions>(localInfrastructure.PostgreSql);
         SqlServerLocalOptions sqlServer = Assert.IsType<SqlServerLocalOptions>(localInfrastructure.SqlServer);
         AzureTableLocalOptions azureTable = Assert.IsType<AzureTableLocalOptions>(localInfrastructure.AzureTable);
+        EventHubsLocalOptions eventHubs = Assert.IsType<EventHubsLocalOptions>(localInfrastructure.EventHubs);
         LocalStackLocalOptions localStack = Assert.IsType<LocalStackLocalOptions>(localInfrastructure.LocalStack);
         Assert.Equal("localhost", rabbitMq.Host);
         Assert.Equal(5672, rabbitMq.Port);
@@ -49,6 +50,10 @@ public sealed class TestConfigurationProviderTests
         Assert.Equal("master", sqlServer.Database);
         Assert.Equal("localhost", azureTable.Host);
         Assert.Equal(10002, azureTable.Port);
+        Assert.Equal("localhost", eventHubs.Host);
+        Assert.Equal(5672, eventHubs.Port);
+        Assert.Equal("localhost", eventHubs.StorageHost);
+        Assert.Equal(10000, eventHubs.StoragePort);
         Assert.Equal("localhost", localStack.Host);
         Assert.Equal(4566, localStack.Port);
         Assert.Equal("eu-central-1", localStack.Region);
@@ -243,6 +248,57 @@ public sealed class TestConfigurationProviderTests
             (key, value)).GetOptions();
 
         Assert.Contains(expectedError, options.ValidateForLocal(LocalTestResource.LocalStack));
+    }
+
+    [Theory]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__EventHubs__Host", "", "LocalInfrastructure:EventHubs:Host")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__EventHubs__Port", "0", "LocalInfrastructure:EventHubs:Port")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__EventHubs__Port", "65536", "LocalInfrastructure:EventHubs:Port")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__EventHubs__StorageHost", "", "LocalInfrastructure:EventHubs:StorageHost")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__EventHubs__StoragePort", "0", "LocalInfrastructure:EventHubs:StoragePort")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__EventHubs__StorageAccountName", "", "LocalInfrastructure:EventHubs:StorageAccountName")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__EventHubs__StorageAccountKey", "", "LocalInfrastructure:EventHubs:StorageAccountKey")]
+    public void EventHubsSelection_RejectsAnInvalidCoordinate(
+        string key,
+        string value,
+        string expectedError)
+    {
+        ViciOneTestOptions options = ProviderWith(
+            ("VICIONE_TESTS__Profile", "LocalIntegration"),
+            ("VICIONE_TESTS__LocalInfrastructure__EventHubs__StorageAccountName", "run-account"),
+            ("VICIONE_TESTS__LocalInfrastructure__EventHubs__StorageAccountKey", "run-key"),
+            (key, value)).GetOptions();
+
+        Assert.Contains(expectedError, options.ValidateForLocal(LocalTestResource.EventHubs));
+    }
+
+    [Theory]
+    [InlineData("VICIONE_SERVICEBUS_EVENTHUB_HOST", "127.0.0.1", "127.0.0.1")]
+    [InlineData("VICIONE_SERVICEBUS_EVENTHUB_PORT", "35672", "35672")]
+    [InlineData("VICIONE_SERVICEBUS_AZURITE_HOST", "127.0.0.2", "127.0.0.2")]
+    [InlineData("VICIONE_SERVICEBUS_AZURITE_BLOB_PORT", "31000", "31000")]
+    [InlineData("VICIONE_SERVICEBUS_AZURITE_ACCOUNT", "run-account", "run-account")]
+    [InlineData("VICIONE_SERVICEBUS_AZURITE_KEY", "run-secret", "run-secret")]
+    public void CanonicalEventHubsAndAzuriteVariables_MapIntoOneTypedResource(
+        string key,
+        string value,
+        string expected)
+    {
+        EventHubsLocalOptions eventHubs = Assert.IsType<EventHubsLocalOptions>(
+            ProviderWith((key, value)).GetOptions().LocalInfrastructure?.EventHubs);
+
+        string actual = key switch
+        {
+            "VICIONE_SERVICEBUS_EVENTHUB_HOST" => eventHubs.Host!,
+            "VICIONE_SERVICEBUS_EVENTHUB_PORT" => eventHubs.Port!.Value.ToString(),
+            "VICIONE_SERVICEBUS_AZURITE_HOST" => eventHubs.StorageHost!,
+            "VICIONE_SERVICEBUS_AZURITE_BLOB_PORT" => eventHubs.StoragePort!.Value.ToString(),
+            "VICIONE_SERVICEBUS_AZURITE_ACCOUNT" => eventHubs.StorageAccountName!,
+            "VICIONE_SERVICEBUS_AZURITE_KEY" => eventHubs.StorageAccountKey!,
+            _ => throw new InvalidOperationException(key),
+        };
+
+        Assert.Equal(expected, actual);
     }
 
     [Theory]
@@ -526,7 +582,7 @@ public sealed class TestConfigurationProviderTests
             ["ExternalProviders", "LocalInfrastructure", "OperationTimeout", "Profile"],
             PublicPropertyNames<ViciOneTestOptions>());
         Assert.Equal(
-            ["ActiveMq", "Artemis", "AzureTable", "LocalStack", "PostgreSql", "RabbitMq", "SqlServer"],
+            ["ActiveMq", "Artemis", "AzureTable", "EventHubs", "LocalStack", "PostgreSql", "RabbitMq", "SqlServer"],
             PublicPropertyNames<LocalInfrastructureOptions>());
         Assert.Equal(
             ["Host", "Password", "Port", "UserName"],
@@ -547,6 +603,9 @@ public sealed class TestConfigurationProviderTests
             ["AccountKey", "AccountName", "Host", "Port"],
             PublicPropertyNames<AzureTableLocalOptions>());
         Assert.Equal(
+            ["Host", "Port", "StorageAccountKey", "StorageAccountName", "StorageHost", "StoragePort"],
+            PublicPropertyNames<EventHubsLocalOptions>());
+        Assert.Equal(
             ["AccountId", "Host", "Port", "Region"],
             PublicPropertyNames<LocalStackLocalOptions>());
         Assert.Equal(
@@ -566,6 +625,7 @@ public sealed class TestConfigurationProviderTests
         Assert.Empty(PublicFields<PostgreSqlLocalOptions>());
         Assert.Empty(PublicFields<SqlServerLocalOptions>());
         Assert.Empty(PublicFields<AzureTableLocalOptions>());
+        Assert.Empty(PublicFields<EventHubsLocalOptions>());
         Assert.Empty(PublicFields<LocalStackLocalOptions>());
         Assert.Empty(PublicFields<AzureProviderOptions>());
         Assert.Empty(PublicFields<AwsProviderOptions>());

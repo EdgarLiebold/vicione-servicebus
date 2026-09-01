@@ -32,6 +32,14 @@
       "reference": "mcr.microsoft.com/azure-storage/azurite:3.36.0@sha256:37493d0f2e764467421ffe16eb3caa39277e5fa7f6adea18eb5bbfb3c5247f98",
       "rationale": "Microsoft's current stable Azurite release provides the real Azure Table wire contract for local integration tests. The multi-architecture OCI index digest fixes the exact image bytes while retaining native amd64 and arm64 execution. A run-scoped custom account replaces the public development account, and the in-memory data directory prevents state or credentials from surviving a run."
     },
+    "eventhubs": {
+      "repository": "mcr.microsoft.com/azure-messaging/eventhubs-emulator",
+      "tag": "2.2.1",
+      "digest": "sha256:be413f0d59541621879e6d197d73f64f3b3ac5fa45861641fdc1430252b8b44b",
+      "reference": "mcr.microsoft.com/azure-messaging/eventhubs-emulator:2.2.1@sha256:be413f0d59541621879e6d197d73f64f3b3ac5fa45861641fdc1430252b8b44b",
+      "platform": "linux/amd64",
+      "rationale": "Microsoft's official Event Hubs emulator provides the local AMQP and partition-processing contract without Azure credentials. The concrete 2.2.1 image and manifest digest bind the bytes; Microsoft currently publishes this image for linux/amd64, so arm64 developer machines run this bounded fixture under container emulation."
+    },
     "localstack": {
       "repository": "localstack/localstack",
       "tag": "4.14.0",

@@ -71,10 +71,10 @@
   },
   {
     "requirementId": "REQ-TEST-203",
-    "variantKey": "active-mq-local-integration-uses-causal-barriers",
+    "variantKey": "broker-local-integration-projects-use-causal-barriers",
     "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
     "testType": "ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests",
-    "testMethod": "ActiveMqLocalIntegrationSources_UseNoWallClockWaits"
+    "testMethod": "BrokerLocalIntegrationSources_UseNoWallClockWaits"
   },
   {
     "requirementId": "REQ-TEST-203",

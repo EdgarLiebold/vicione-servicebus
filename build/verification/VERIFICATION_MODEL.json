@@ -223,16 +223,14 @@
     },
     {
       "id": "rider-azure-event-hubs",
-      "class": "REAL_EPHEMERAL_CLOUD",
+      "class": "NATIVE_TEST_ESTATE",
       "sourceProjects": [
         "src/Transports/ViciOne.ServiceBus.EventHubIntegration"
       ],
-      "testProjects": [
-        "tests/Transports/ViciOne.ServiceBus.EventHubIntegration.Tests"
-      ],
+      "testProjects": [],
       "supportProjects": [],
       "toolProjects": [],
-      "rationale": "",
+      "rationale": "The inherited NUnit/VSTest project is retired after terminal closure of its 22 locally executable R0 obligations. Event Hubs behavior is verified by the native xUnit 4/MTP v2 LocalIntegration project against the pinned Event Hubs emulator and Azurite; three real-Azure-only contracts remain explicitly External pending.",
       "runs": []
     },
     {

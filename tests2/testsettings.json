@@ -32,6 +32,12 @@
       "Host": "localhost",
       "Port": 10002
     },
+    "EventHubs": {
+      "Host": "localhost",
+      "Port": 5672,
+      "StorageHost": "localhost",
+      "StoragePort": 10000
+    },
     "LocalStack": {
       "Host": "localhost",
       "Port": 4566,

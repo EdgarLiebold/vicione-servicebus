@@ -138,46 +138,61 @@ public sealed class TestConfigurationProvider
     private static IEnumerable<KeyValuePair<string, string?>> NormalizeFixtureEnvironment(
         IEnumerable<KeyValuePair<string, string?>> environment)
     {
-        var mappings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        var mappings = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase)
         {
-            ["VICIONE_SERVICEBUS_RMQ_HOST"] = "LocalInfrastructure:RabbitMq:Host",
-            ["VICIONE_SERVICEBUS_RMQ_PORT"] = "LocalInfrastructure:RabbitMq:Port",
-            ["VICIONE_SERVICEBUS_RMQ_USER"] = "LocalInfrastructure:RabbitMq:UserName",
-            ["VICIONE_SERVICEBUS_RMQ_PASS"] = "LocalInfrastructure:RabbitMq:Password",
-            ["VICIONE_SERVICEBUS_AMQ_HOST"] = "LocalInfrastructure:ActiveMq:Host",
-            ["VICIONE_SERVICEBUS_AMQ_OPENWIRE_PORT"] = "LocalInfrastructure:ActiveMq:OpenWirePort",
-            ["VICIONE_SERVICEBUS_AMQ_AMQP_PORT"] = "LocalInfrastructure:ActiveMq:AmqpPort",
-            ["VICIONE_SERVICEBUS_AMQ_JOLOKIA_PORT"] = "LocalInfrastructure:ActiveMq:JolokiaPort",
-            ["VICIONE_SERVICEBUS_AMQ_USER"] = "LocalInfrastructure:ActiveMq:UserName",
-            ["VICIONE_SERVICEBUS_AMQ_PASS"] = "LocalInfrastructure:ActiveMq:Password",
-            ["VICIONE_SERVICEBUS_ARTEMIS_HOST"] = "LocalInfrastructure:Artemis:Host",
-            ["VICIONE_SERVICEBUS_ARTEMIS_PORT"] = "LocalInfrastructure:Artemis:Port",
-            ["VICIONE_SERVICEBUS_ARTEMIS_JOLOKIA_PORT"] = "LocalInfrastructure:Artemis:JolokiaPort",
-            ["VICIONE_SERVICEBUS_ARTEMIS_USER"] = "LocalInfrastructure:Artemis:UserName",
-            ["VICIONE_SERVICEBUS_ARTEMIS_PASS"] = "LocalInfrastructure:Artemis:Password",
-            ["VICIONE_SERVICEBUS_PG_HOST"] = "LocalInfrastructure:PostgreSql:Host",
-            ["VICIONE_SERVICEBUS_PG_PORT"] = "LocalInfrastructure:PostgreSql:Port",
-            ["VICIONE_SERVICEBUS_PG_DATABASE"] = "LocalInfrastructure:PostgreSql:Database",
-            ["VICIONE_SERVICEBUS_PG_USER"] = "LocalInfrastructure:PostgreSql:UserName",
-            ["VICIONE_SERVICEBUS_PG_PASS"] = "LocalInfrastructure:PostgreSql:Password",
-            ["VICIONE_SERVICEBUS_MSSQL_HOST"] = "LocalInfrastructure:SqlServer:Host",
-            ["VICIONE_SERVICEBUS_MSSQL_PORT"] = "LocalInfrastructure:SqlServer:Port",
-            ["VICIONE_SERVICEBUS_MSSQL_DATABASE"] = "LocalInfrastructure:SqlServer:Database",
-            ["VICIONE_SERVICEBUS_MSSQL_USER"] = "LocalInfrastructure:SqlServer:UserName",
-            ["VICIONE_SERVICEBUS_MSSQL_PASS"] = "LocalInfrastructure:SqlServer:Password",
-            ["VICIONE_SERVICEBUS_AZURITE_HOST"] = "LocalInfrastructure:AzureTable:Host",
-            ["VICIONE_SERVICEBUS_AZURITE_TABLE_PORT"] = "LocalInfrastructure:AzureTable:Port",
-            ["VICIONE_SERVICEBUS_AZURITE_ACCOUNT"] = "LocalInfrastructure:AzureTable:AccountName",
-            ["VICIONE_SERVICEBUS_AZURITE_KEY"] = "LocalInfrastructure:AzureTable:AccountKey",
-            ["VICIONE_SERVICEBUS_LOCALSTACK_HOST"] = "LocalInfrastructure:LocalStack:Host",
-            ["VICIONE_SERVICEBUS_LOCALSTACK_PORT"] = "LocalInfrastructure:LocalStack:Port",
-            ["VICIONE_SERVICEBUS_LOCALSTACK_REGION"] = "LocalInfrastructure:LocalStack:Region",
-            ["VICIONE_SERVICEBUS_LOCALSTACK_ACCOUNT_ID"] = "LocalInfrastructure:LocalStack:AccountId",
+            ["VICIONE_SERVICEBUS_RMQ_HOST"] = ["LocalInfrastructure:RabbitMq:Host"],
+            ["VICIONE_SERVICEBUS_RMQ_PORT"] = ["LocalInfrastructure:RabbitMq:Port"],
+            ["VICIONE_SERVICEBUS_RMQ_USER"] = ["LocalInfrastructure:RabbitMq:UserName"],
+            ["VICIONE_SERVICEBUS_RMQ_PASS"] = ["LocalInfrastructure:RabbitMq:Password"],
+            ["VICIONE_SERVICEBUS_AMQ_HOST"] = ["LocalInfrastructure:ActiveMq:Host"],
+            ["VICIONE_SERVICEBUS_AMQ_OPENWIRE_PORT"] = ["LocalInfrastructure:ActiveMq:OpenWirePort"],
+            ["VICIONE_SERVICEBUS_AMQ_AMQP_PORT"] = ["LocalInfrastructure:ActiveMq:AmqpPort"],
+            ["VICIONE_SERVICEBUS_AMQ_JOLOKIA_PORT"] = ["LocalInfrastructure:ActiveMq:JolokiaPort"],
+            ["VICIONE_SERVICEBUS_AMQ_USER"] = ["LocalInfrastructure:ActiveMq:UserName"],
+            ["VICIONE_SERVICEBUS_AMQ_PASS"] = ["LocalInfrastructure:ActiveMq:Password"],
+            ["VICIONE_SERVICEBUS_ARTEMIS_HOST"] = ["LocalInfrastructure:Artemis:Host"],
+            ["VICIONE_SERVICEBUS_ARTEMIS_PORT"] = ["LocalInfrastructure:Artemis:Port"],
+            ["VICIONE_SERVICEBUS_ARTEMIS_JOLOKIA_PORT"] = ["LocalInfrastructure:Artemis:JolokiaPort"],
+            ["VICIONE_SERVICEBUS_ARTEMIS_USER"] = ["LocalInfrastructure:Artemis:UserName"],
+            ["VICIONE_SERVICEBUS_ARTEMIS_PASS"] = ["LocalInfrastructure:Artemis:Password"],
+            ["VICIONE_SERVICEBUS_PG_HOST"] = ["LocalInfrastructure:PostgreSql:Host"],
+            ["VICIONE_SERVICEBUS_PG_PORT"] = ["LocalInfrastructure:PostgreSql:Port"],
+            ["VICIONE_SERVICEBUS_PG_DATABASE"] = ["LocalInfrastructure:PostgreSql:Database"],
+            ["VICIONE_SERVICEBUS_PG_USER"] = ["LocalInfrastructure:PostgreSql:UserName"],
+            ["VICIONE_SERVICEBUS_PG_PASS"] = ["LocalInfrastructure:PostgreSql:Password"],
+            ["VICIONE_SERVICEBUS_MSSQL_HOST"] = ["LocalInfrastructure:SqlServer:Host"],
+            ["VICIONE_SERVICEBUS_MSSQL_PORT"] = ["LocalInfrastructure:SqlServer:Port"],
+            ["VICIONE_SERVICEBUS_MSSQL_DATABASE"] = ["LocalInfrastructure:SqlServer:Database"],
+            ["VICIONE_SERVICEBUS_MSSQL_USER"] = ["LocalInfrastructure:SqlServer:UserName"],
+            ["VICIONE_SERVICEBUS_MSSQL_PASS"] = ["LocalInfrastructure:SqlServer:Password"],
+            ["VICIONE_SERVICEBUS_EVENTHUB_HOST"] = ["LocalInfrastructure:EventHubs:Host"],
+            ["VICIONE_SERVICEBUS_EVENTHUB_PORT"] = ["LocalInfrastructure:EventHubs:Port"],
+            ["VICIONE_SERVICEBUS_AZURITE_HOST"] = [
+                "LocalInfrastructure:AzureTable:Host",
+                "LocalInfrastructure:EventHubs:StorageHost",
+            ],
+            ["VICIONE_SERVICEBUS_AZURITE_BLOB_PORT"] = ["LocalInfrastructure:EventHubs:StoragePort"],
+            ["VICIONE_SERVICEBUS_AZURITE_TABLE_PORT"] = ["LocalInfrastructure:AzureTable:Port"],
+            ["VICIONE_SERVICEBUS_AZURITE_ACCOUNT"] = [
+                "LocalInfrastructure:AzureTable:AccountName",
+                "LocalInfrastructure:EventHubs:StorageAccountName",
+            ],
+            ["VICIONE_SERVICEBUS_AZURITE_KEY"] = [
+                "LocalInfrastructure:AzureTable:AccountKey",
+                "LocalInfrastructure:EventHubs:StorageAccountKey",
+            ],
+            ["VICIONE_SERVICEBUS_LOCALSTACK_HOST"] = ["LocalInfrastructure:LocalStack:Host"],
+            ["VICIONE_SERVICEBUS_LOCALSTACK_PORT"] = ["LocalInfrastructure:LocalStack:Port"],
+            ["VICIONE_SERVICEBUS_LOCALSTACK_REGION"] = ["LocalInfrastructure:LocalStack:Region"],
+            ["VICIONE_SERVICEBUS_LOCALSTACK_ACCOUNT_ID"] = ["LocalInfrastructure:LocalStack:AccountId"],
         };
 
         foreach (KeyValuePair<string, string?> entry in environment)
         {
-            if (mappings.TryGetValue(entry.Key, out string? configurationKey))
+            if (!mappings.TryGetValue(entry.Key, out string[]? configurationKeys))
+                continue;
+
+            foreach (string configurationKey in configurationKeys)
                 yield return new KeyValuePair<string, string?>(configurationKey, entry.Value);
         }
     }

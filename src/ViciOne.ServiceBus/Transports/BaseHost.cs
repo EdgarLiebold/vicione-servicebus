@@ -24,7 +24,7 @@ namespace ViciOne.ServiceBus.Transports
         }
 
         protected IReceiveEndpointCollection ReceiveEndpoints { get; }
-        IRiderCollection Riders { get; }
+        RiderCollection Riders { get; }
 
         public Uri Address => _hostConfiguration.HostAddress;
 
@@ -149,7 +149,10 @@ namespace ViciOne.ServiceBus.Transports
 
             LogContext.Debug?.Log("Stopping bus: {HostAddress}", Address);
 
-            await Riders.Stop(cancellationToken).ConfigureAwait(false);
+            // The host can be started again after it is stopped. RiderCollection itself is an Agent,
+            // and an Agent is intentionally one-shot, so stopping the collection would make every
+            // later host stop a no-op and leave the restarted riders running.
+            await Riders.StopRiders(cancellationToken).ConfigureAwait(false);
 
             await ReceiveEndpoints.StopEndpoints(cancellationToken).ConfigureAwait(false);
 

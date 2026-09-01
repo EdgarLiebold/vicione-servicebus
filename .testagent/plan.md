@@ -9,8 +9,8 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 2410 predeclared unfiltered cases;
-- `LocalIntegration`: 375 predeclared unfiltered cases.
+- `UnitArchitecture`: 2837 predeclared unfiltered cases;
+- `LocalIntegration`: 398 predeclared unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
 durable product-requirement projection and compares it with passive metadata compiled into the same
@@ -2648,3 +2648,24 @@ LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carri
    UnitArchitecture, scoped format, CI/Identity/Verification Model and CHANGELIST. Freeze one Technical
    commit and one direct Evidence child. Remote publication remains separately authorized and never
    uses force-push.
+
+## Event Hubs native closure — 25-obligation provider package (2026-09-01)
+
+1. Close the 25 Event Hubs R0 obligations: 22 executable LocalIntegration contracts and exactly three
+   real-Azure-only contracts (`0258`, `0261`, `0262`) as visible `EXTERNAL_PENDING` work. Never promote
+   emulator authentication, rebalance or retention behavior to a real-service verdict.
+2. Use the pinned Event Hubs emulator together with run-scoped Azurite checkpoint storage. Prove exact
+   batch cardinality/order, raw-SDK interoperability, envelope and provider metadata, retry/fault paths,
+   checkpoint confirmation, multi-rider isolation, saga activities and partition lifecycle without sleep,
+   polling, quiet-window or timeout-as-success oracles.
+3. Correct the shared rider lifecycle so every rider generation is stopped exactly once after repeated
+   bus start/stop. Carry both a hermetic two-generation regression owner and the real provider callback
+   proof; bind a one-cause mutation that restores the one-shot collection stop and makes both red.
+4. Raise UnitArchitecture from 2,836 to 2,837 and LocalIntegration from 375 to 398. The Event Hubs project
+   contributes 22 behavior cases plus one passive requirement-projection case.
+5. Delete the complete inherited Event Hubs test project only after projection, Release builds, all 23
+   native cases and targeted mutations are green. Preserve the frozen expected-core identity list and
+   keep the three External obligations nonexecuting and visible.
+6. Pay the broad Engineering, UnitArchitecture, LocalIntegration, CI-tool, identity and change-list cost
+   once after mutation restoration. Freeze a Technical commit and direct Evidence child; do not push
+   without a fresh explicit authorization and never force-push.

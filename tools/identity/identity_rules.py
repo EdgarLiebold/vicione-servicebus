@@ -62,8 +62,6 @@ FORMER_TRADES_TYPE = "".join(("TradesBooked", "M", "T"))
 COMMENTLESS_OR_BINARY_BASELINE_SOURCES = {
     "ViciOne.ServiceBus.slnx": "MassTransit.sln",
     "ViciOne.ServiceBus.snk": "MassTransit.snk",
-    "tests/Transports/ViciOne.ServiceBus.EventHubIntegration.Tests/config.json":
-        "tests/MassTransit.EventHubIntegration.Tests/config.json",
     "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/client.p12":
         "tests/MassTransit.RabbitMqTransport.Tests/client.p12",
 }

@@ -171,6 +171,7 @@ public sealed class ViciOneTestOptions
                 LocalTestResource.PostgreSql => LocalInfrastructure.PostgreSql,
                 LocalTestResource.SqlServer => LocalInfrastructure.SqlServer,
                 LocalTestResource.AzureTable => LocalInfrastructure.AzureTable,
+                LocalTestResource.EventHubs => LocalInfrastructure.EventHubs,
                 LocalTestResource.LocalStack => LocalInfrastructure.LocalStack,
                 _ => throw new UnreachableException(),
             };
@@ -203,6 +204,8 @@ public enum LocalTestResource
     Artemis = 5,
 
     SqlServer = 6,
+
+    EventHubs = 7,
 }
 
 /// <summary>External providers currently supported by the test configuration contract.</summary>
@@ -226,6 +229,8 @@ public sealed class LocalInfrastructureOptions
     public SqlServerLocalOptions? SqlServer { get; set; }
 
     public AzureTableLocalOptions? AzureTable { get; set; }
+
+    public EventHubsLocalOptions? EventHubs { get; set; }
 
     public LocalStackLocalOptions? LocalStack { get; set; }
 }
@@ -365,6 +370,32 @@ public sealed class AzureTableLocalOptions : ILocalTestResourceConfiguration
         if (Port is null or < 1 or > 65535) yield return nameof(Port);
         if (string.IsNullOrWhiteSpace(AccountName)) yield return nameof(AccountName);
         if (string.IsNullOrWhiteSpace(AccountKey)) yield return nameof(AccountKey);
+    }
+}
+
+/// <summary>Run-scoped Event Hubs emulator and Blob checkpoint coordinates.</summary>
+public sealed class EventHubsLocalOptions : ILocalTestResourceConfiguration
+{
+    public string? Host { get; set; }
+
+    public int? Port { get; set; }
+
+    public string? StorageHost { get; set; }
+
+    public int? StoragePort { get; set; }
+
+    public string? StorageAccountName { get; set; }
+
+    public string? StorageAccountKey { get; set; }
+
+    public IEnumerable<string> MissingSettings()
+    {
+        if (string.IsNullOrWhiteSpace(Host)) yield return nameof(Host);
+        if (Port is null or < 1 or > 65535) yield return nameof(Port);
+        if (string.IsNullOrWhiteSpace(StorageHost)) yield return nameof(StorageHost);
+        if (StoragePort is null or < 1 or > 65535) yield return nameof(StoragePort);
+        if (string.IsNullOrWhiteSpace(StorageAccountName)) yield return nameof(StorageAccountName);
+        if (string.IsNullOrWhiteSpace(StorageAccountKey)) yield return nameof(StorageAccountKey);
     }
 }
 

@@ -131,18 +131,26 @@ namespace ViciOne.ServiceBus.Transports
 
         protected override async Task StopAgent(StopContext context)
         {
+            await StopRiders(context.CancellationToken).ConfigureAwait(false);
+
+            await base.StopAgent(context).ConfigureAwait(false);
+        }
+
+        internal async Task StopRiders(CancellationToken cancellationToken)
+        {
             KeyValuePair<string, Handle>[] handles;
             lock (_mutateLock)
                 handles = _handles.ToArray();
 
-            await Task.WhenAll(handles.Select(x => x.Value.StopAsync(false, context.CancellationToken))).ConfigureAwait(false);
-
-            await base.StopAgent(context).ConfigureAwait(false);
+            await Task.WhenAll(handles.Select(x => x.Value.StopAsync(false, cancellationToken))).ConfigureAwait(false);
 
             lock (_mutateLock)
             {
                 foreach (KeyValuePair<string, Handle> handle in handles)
-                    _handles.Remove(handle.Key);
+                {
+                    if (_handles.TryGetValue(handle.Key, out var current) && ReferenceEquals(current, handle.Value))
+                        _handles.Remove(handle.Key);
+                }
             }
         }
 

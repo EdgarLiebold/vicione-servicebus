@@ -114,18 +114,40 @@ services:
   azurite:
     image: mcr.microsoft.com/azure-storage/azurite:3.36.0@sha256:37493d0f2e764467421ffe16eb3caa39277e5fa7f6adea18eb5bbfb3c5247f98
     environment:
-      AZURITE_ACCOUNTS: ${VICIONE_SERVICEBUS_AZURITE_ACCOUNT:?run credentials are missing}:${VICIONE_SERVICEBUS_AZURITE_KEY:?run credentials are missing}
-    command: azurite --silent --location /data --tableHost 0.0.0.0 --tablePort 10002
+      # Event Hubs emulator 2.2.1 uses Azurite's documented development account for its internal
+      # metadata. Native tests continue to use the independent run-scoped account. Declaring both
+      # is required because AZURITE_ACCOUNTS otherwise disables devstoreaccount1 entirely.
+      AZURITE_ACCOUNTS: ${VICIONE_SERVICEBUS_AZURITE_ACCOUNT:?run credentials are missing}:${VICIONE_SERVICEBUS_AZURITE_KEY:?run credentials are missing};devstoreaccount1:Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==
+    # Azure.Storage 12.27 emits a service version newer than this pinned emulator knows. Azurite's
+    # documented compatibility switch keeps the wire behavior real while avoiding a false fixture
+    # failure that happens before the EventProcessor checkpoint store is exercised.
+    command: azurite --silent --skipApiVersionCheck --location /data --blobHost 0.0.0.0 --blobPort 10000 --tableHost 0.0.0.0 --tablePort 10002
     ports:
+      - "127.0.0.1::10000"
       - "127.0.0.1::10002"
     tmpfs:
       - /data
     healthcheck:
-      test: ["CMD-SHELL", "node -e \"const socket=require('net').connect(10002,'127.0.0.1'); socket.on('connect',()=>{socket.end();process.exit(0)}); socket.on('error',()=>process.exit(1))\""]
+      test: ["CMD-SHELL", "node -e \"const net=require('net'); let ready=0; for (const port of [10000,10002]) { const socket=net.connect(port,'127.0.0.1'); socket.on('connect',()=>{socket.end(); if (++ready===2) process.exit(0)}); socket.on('error',()=>process.exit(1)); }\""]
       interval: 2s
       timeout: 5s
       retries: 30
       start_period: 3s
+
+  eventhubs:
+    image: mcr.microsoft.com/azure-messaging/eventhubs-emulator:2.2.1@sha256:be413f0d59541621879e6d197d73f64f3b3ac5fa45861641fdc1430252b8b44b
+    platform: linux/amd64
+    environment:
+      BLOB_SERVER: azurite
+      METADATA_SERVER: azurite
+      ACCEPT_EULA: "Y"
+    volumes:
+      - ./eventhubs/config.json:/Eventhubs_Emulator/ConfigFiles/Config.json:ro
+    ports:
+      - "127.0.0.1::5672"
+    depends_on:
+      azurite:
+        condition: service_healthy
 
   localstack:
     image: localstack/localstack:4.14.0@sha256:3ebc37595918b8accb852f8048fef2aff047d465167edd655528065b07bc364a

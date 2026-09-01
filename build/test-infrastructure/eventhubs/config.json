@@ -1,0 +1,25 @@
+{
+  "UserConfig": {
+    "NamespaceConfig": [
+      {
+        "Type": "EventHub",
+        "Name": "emulatorNs1",
+        "Entities": [
+          { "Name": "envelope-eh", "PartitionCount": "4", "ConsumerGroups": [{ "Name": "cg1" }] },
+          { "Name": "batch-eh", "PartitionCount": "4", "ConsumerGroups": [{ "Name": "cg1" }] },
+          { "Name": "checkpoint-gate-eh", "PartitionCount": "4", "ConsumerGroups": [{ "Name": "cg1" }] },
+          { "Name": "lifecycle-eh", "PartitionCount": "4", "ConsumerGroups": [{ "Name": "cg1" }] },
+          { "Name": "retry-eh", "PartitionCount": "4", "ConsumerGroups": [{ "Name": "cg1" }] },
+          { "Name": "multibus-eh1", "PartitionCount": "4", "ConsumerGroups": [{ "Name": "cg1" }] },
+          { "Name": "multibus-eh2", "PartitionCount": "4", "ConsumerGroups": [{ "Name": "cg1" }] },
+          { "Name": "raw-eh", "PartitionCount": "4", "ConsumerGroups": [{ "Name": "cg1" }] },
+          { "Name": "saga-eh", "PartitionCount": "4", "ConsumerGroups": [{ "Name": "cg1" }] },
+          { "Name": "config-eh", "PartitionCount": "4", "ConsumerGroups": [{ "Name": "cg1" }] }
+        ]
+      }
+    ],
+    "LoggingConfig": {
+      "Type": "File"
+    }
+  }
+}

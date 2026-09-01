@@ -21,8 +21,8 @@ namespace ViciOne.ServiceBus.Architecture.Tests.TestPlatform;
 /// </remarks>
 public sealed class TestingPlatformConfigurationTests
 {
-    private const int ExpectedUnitTestFloor = 2836;
-    private const int ExpectedLocalIntegrationTestFloor = 375;
+    private const int ExpectedUnitTestFloor = 2837;
+    private const int ExpectedLocalIntegrationTestFloor = 398;
 
     [Fact]
     public void CanonicalConfiguration_TurnsSkipsAndWarningsIntoFailures()
@@ -163,38 +163,47 @@ public sealed class TestingPlatformConfigurationTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-TEST-203", "active-mq-local-integration-uses-causal-barriers")]
-    public void ActiveMqLocalIntegrationSources_UseNoWallClockWaits()
+    [RequirementCoverage("REQ-TEST-203", "broker-local-integration-projects-use-causal-barriers")]
+    public void BrokerLocalIntegrationSources_UseNoWallClockWaits()
     {
-        string projectPath = Path.Combine(
-            RepositoryLayout.Root,
-            "tests2",
-            "Transports",
-            "ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests",
-            "ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.csproj");
-        CSharpParseOptions parseOptions = ActiveMqReleaseParseOptions(projectPath);
-
-        SyntaxTree[] projectSyntaxTrees = MsBuildEvaluation
-            .ItemMetadata(projectPath, "Compile", "FullPath", "Release")
-            .Select(path => CSharpSyntaxTree.ParseText(
-                File.ReadAllText(path),
-                parseOptions,
-                path))
-            .ToArray();
-        Assert.NotEmpty(projectSyntaxTrees);
-        SyntaxTree[] syntaxTrees =
+        string[] projectNames =
         [
-            ActiveMqImplicitGlobalUsingsSyntaxTree(projectPath, parseOptions),
-            .. projectSyntaxTrees,
+            "ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests",
+            "ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests",
         ];
-        CSharpCompilation compilation = CreateWallClockCompilation(syntaxTrees);
 
-        var violations = syntaxTrees
-            .SelectMany(syntaxTree => FindWallClockWaits(syntaxTree, compilation))
-            .OrderBy(value => value, StringComparer.Ordinal)
-            .ToArray();
+        foreach (string projectName in projectNames)
+        {
+            string projectPath = Path.Combine(
+                RepositoryLayout.Root,
+                "tests2",
+                "Transports",
+                projectName,
+                $"{projectName}.csproj");
+            CSharpParseOptions parseOptions = ReleaseParseOptions(projectPath);
 
-        Assert.Empty(violations);
+            SyntaxTree[] projectSyntaxTrees = MsBuildEvaluation
+                .ItemMetadata(projectPath, "Compile", "FullPath", "Release")
+                .Select(path => CSharpSyntaxTree.ParseText(
+                    File.ReadAllText(path),
+                    parseOptions,
+                    path))
+                .ToArray();
+            Assert.NotEmpty(projectSyntaxTrees);
+            SyntaxTree[] syntaxTrees =
+            [
+                ImplicitGlobalUsingsSyntaxTree(projectPath, parseOptions),
+                .. projectSyntaxTrees,
+            ];
+            CSharpCompilation compilation = CreateWallClockCompilation(syntaxTrees);
+
+            var violations = syntaxTrees
+                .SelectMany(syntaxTree => FindWallClockWaits(syntaxTree, compilation))
+                .OrderBy(value => value, StringComparer.Ordinal)
+                .ToArray();
+
+            Assert.Empty(violations);
+        }
     }
 
     [Theory]
@@ -215,10 +224,10 @@ public sealed class TestingPlatformConfigurationTests
             "Transports",
             "ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests",
             "ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.csproj");
-        CSharpParseOptions parseOptions = ActiveMqReleaseParseOptions(projectPath);
+        CSharpParseOptions parseOptions = ReleaseParseOptions(projectPath);
         var syntaxTrees = new List<SyntaxTree>
         {
-            ActiveMqImplicitGlobalUsingsSyntaxTree(projectPath, parseOptions),
+            ImplicitGlobalUsingsSyntaxTree(projectPath, parseOptions),
         };
         if (globalUsing is not null)
         {
@@ -271,19 +280,19 @@ public sealed class TestingPlatformConfigurationTests
             MetadataReference.CreateFromFile(typeof(Task).Assembly.Location),
         ];
         return CSharpCompilation.Create(
-            "ViciOne.ServiceBus.ActiveMqWallClockAnalysis",
+            "ViciOne.ServiceBus.WallClockAnalysis",
             syntaxTrees,
             references,
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
     }
 
-    private static CSharpParseOptions ActiveMqReleaseParseOptions(string projectPath)
+    private static CSharpParseOptions ReleaseParseOptions(string projectPath)
     {
         string declaredLanguageVersion = MsBuildEvaluation.PropertyOf(projectPath, "LangVersion", "Release");
         if (!LanguageVersionFacts.TryParse(declaredLanguageVersion, out LanguageVersion languageVersion))
         {
             throw new InvalidOperationException(
-                $"The ActiveMQ LocalIntegration project declares unsupported LangVersion '{declaredLanguageVersion}'.");
+                $"The LocalIntegration project declares unsupported LangVersion '{declaredLanguageVersion}'.");
         }
 
         string[] preprocessorSymbols = MsBuildEvaluation
@@ -295,7 +304,7 @@ public sealed class TestingPlatformConfigurationTests
             .WithPreprocessorSymbols(preprocessorSymbols);
     }
 
-    private static SyntaxTree ActiveMqImplicitGlobalUsingsSyntaxTree(
+    private static SyntaxTree ImplicitGlobalUsingsSyntaxTree(
         string projectPath,
         CSharpParseOptions parseOptions)
     {
@@ -309,7 +318,7 @@ public sealed class TestingPlatformConfigurationTests
             Path.GetDirectoryName(projectPath)
                 ?? throw new InvalidOperationException($"No directory for {projectPath}."),
             "obj",
-            "ActiveMqWallClockImplicitGlobalUsings.g.cs");
+            "WallClockImplicitGlobalUsings.g.cs");
 
         return CSharpSyntaxTree.ParseText(source, parseOptions, generatedPath);
     }

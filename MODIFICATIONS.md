@@ -43,7 +43,6 @@ targets in the same order:
 
 - `MassTransit.sln` -> `ViciOne.ServiceBus.slnx`
 - `MassTransit.snk` -> `ViciOne.ServiceBus.snk`
-- `tests/MassTransit.EventHubIntegration.Tests/config.json` -> `tests/Transports/ViciOne.ServiceBus.EventHubIntegration.Tests/config.json`
 - `tests/MassTransit.RabbitMqTransport.Tests/client.p12` -> `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/client.p12`
 
 ## ViciOne modification: greenfield circuit breaker and message journal, 2026-08-25
