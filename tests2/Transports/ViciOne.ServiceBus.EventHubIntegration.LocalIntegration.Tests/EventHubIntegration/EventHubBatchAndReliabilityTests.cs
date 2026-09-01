@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using ViciOne.ServiceBus.EventHubIntegration.Configuration;
 using ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -339,6 +340,14 @@ public sealed class EventHubBatchAndReliabilityTests
         var producerOptions = NewSignal<EventHubProducerClientOptions>();
         await using EventHubLocalFixture fixture = EventHubLocalFixture.Create("provider-config");
         string containerName = fixture.ContainerName("named-checkpoints");
+        string producerIdentifier = $"vsb-{marker:N}";
+        var directContext = new EventHubConnectionContext(
+            new HostSettings { ConnectionString = fixture.EventHubConnectionString },
+            new StorageSettings { ConnectionString = fixture.StorageConnectionString },
+            options => options.Identifier = producerIdentifier,
+            CancellationToken.None);
+        await using EventHubProducerClient configuredClient = directContext.CreateEventHubClient(eventHubName);
+        Assert.Equal(producerIdentifier, configuredClient.Identifier);
         await using ServiceProvider provider = new ServiceCollection()
             .AddSingleton(new MarkerDelivery(marker, received))
             .AddViciOneServiceBus(configuration =>
