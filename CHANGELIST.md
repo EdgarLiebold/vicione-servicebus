@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 5354 |
-| Modified | 4017 |
-| Deleted | 1631 |
+| Added | 5447 |
+| Modified | 4002 |
+| Deleted | 1646 |
 | Renamed | 2 |
 
 | Path | Status | Baseline path |
@@ -31,6 +31,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/consumer-factory-middleware-native-obligation-map.tsv` | Added |  |
 | `.testagent/consumer-request-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-batch-messaging-native-obligation-map.tsv` | Added |  |
+| `.testagent/core-container-runtime-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-courier-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-fault-publication-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-message-data-native-obligation-map.tsv` | Added |  |
@@ -2126,6 +2127,89 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/raw/identity-selftests.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/raw/unit-architecture.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONSUMER-REQUEST/raw/verification-model.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/FINAL_RESULTS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/MUTATION_MANIFEST.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/SHA256SUMS` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/TECHNICAL.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/TECHNICAL_SCOPE.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/binlogs/M01-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/binlogs/M02-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/binlogs/M03-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/binlogs/M04-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/binlogs/M05-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/binlogs/M06-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/binlogs/M07-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/binlogs/M08-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/binlogs/M09-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/binlogs/M10-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/binlogs/M11-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/binlogs/M12-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/binlogs/M13-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/binlogs/M14-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/binlogs/M15-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/binlogs/M16-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/binlogs/engineering-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/binlogs/engineering-restore.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/binlogs/format-scope-verify.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/binlogs/postrestore-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/mutations/M01.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/mutations/M02.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/mutations/M03.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/mutations/M04.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/mutations/M05.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/mutations/M06.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/mutations/M07.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/mutations/M08.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/mutations/M09.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/mutations/M10.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/mutations/M11.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/mutations/M12.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/mutations/M13.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/mutations/M14.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/mutations/M15.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/mutations/M16.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/patches/M01.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/patches/M02.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/patches/M03.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/patches/M04.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/patches/M05.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/patches/M06.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/patches/M07.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/patches/M08.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/patches/M09.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/patches/M10.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/patches/M11.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/patches/M12.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/patches/M13.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/patches/M14.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/patches/M15.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/patches/M16.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/positive/unit/abstractions.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/positive/unit/activemq.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/positive/unit/amazon-s3.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/positive/unit/amazon-sqs.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/positive/unit/analyzers-codefixes.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/positive/unit/analyzers.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/positive/unit/architecture.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/positive/unit/azure-table.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/positive/unit/benchmark.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/positive/unit/core.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/positive/unit/diagnostics.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/positive/unit/dynamodb.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/positive/unit/entity-framework.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/positive/unit/messagepack.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/positive/unit/quartz.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/positive/unit/rabbitmq.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/positive/unit/roslyn-infrastructure.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/positive/unit/signalr.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/positive/unit/sql-transport.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/positive/unit/state-machine-visualizer.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/positive/unit/test-infrastructure.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/raw/change-list.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/raw/ci-selftests.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/raw/identity-selftests.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/raw/verification-model.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/FINAL_RESULTS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/MUTATION_MANIFEST.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-COURIER-NATIVE-CLOSURE/SHA256SUMS` | Added |  |
@@ -9589,13 +9673,28 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/ConsumerFactoryMiddleware_Specs.cs` | Deleted | `tests/MassTransit.Tests/ConsumerFactoryMiddleware_Specs.cs` |
 | `tests/MassTransit.Tests/Consumer_Specs.cs` | Deleted | `tests/MassTransit.Tests/Consumer_Specs.cs` |
 | `tests/MassTransit.Tests/ContainedMessage_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainedMessage_Specs.cs` |
+| `tests/MassTransit.Tests/ContainerTests/AccessScope_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/AccessScope_Specs.cs` |
 | `tests/MassTransit.Tests/ContainerTests/Batch_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/Batch_Specs.cs` |
 | `tests/MassTransit.Tests/ContainerTests/ContainerTestHarness_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/ContainerTestHarness_Specs.cs` |
 | `tests/MassTransit.Tests/ContainerTests/DateOnlyTimeOnly_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/DateOnlyTimeOnly_Specs.cs` |
 | `tests/MassTransit.Tests/ContainerTests/DependencyInjectionTestHarness2_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/DependencyInjectionTestHarness2_Specs.cs` |
 | `tests/MassTransit.Tests/ContainerTests/DependencyInjectionTestHarness_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/DependencyInjectionTestHarness_Specs.cs` |
+| `tests/MassTransit.Tests/ContainerTests/Dispatcher_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/Dispatcher_Specs.cs` |
+| `tests/MassTransit.Tests/ContainerTests/EmptyBody_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/EmptyBody_Specs.cs` |
+| `tests/MassTransit.Tests/ContainerTests/EndpointConfiguration_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/EndpointConfiguration_Specs.cs` |
+| `tests/MassTransit.Tests/ContainerTests/ExcludeFromConfigureEndpoints_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/ExcludeFromConfigureEndpoints_Specs.cs` |
+| `tests/MassTransit.Tests/ContainerTests/ExcludeTypeFromFilter_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/ExcludeTypeFromFilter_Specs.cs` |
+| `tests/MassTransit.Tests/ContainerTests/Handler_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/Handler_Specs.cs` |
+| `tests/MassTransit.Tests/ContainerTests/HealthCheck_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/HealthCheck_Specs.cs` |
 | `tests/MassTransit.Tests/ContainerTests/KillSwitch_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/KillSwitch_Specs.cs` |
+| `tests/MassTransit.Tests/ContainerTests/MediatorFilter_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/MediatorFilter_Specs.cs` |
 | `tests/MassTransit.Tests/ContainerTests/Metrics_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/Metrics_Specs.cs` |
+| `tests/MassTransit.Tests/ContainerTests/ReceiveEndpointDependency_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/ReceiveEndpointDependency_Specs.cs` |
+| `tests/MassTransit.Tests/ContainerTests/RedeliveryHeader_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/RedeliveryHeader_Specs.cs` |
+| `tests/MassTransit.Tests/ContainerTests/RoutingSlipRequestProxy_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/RoutingSlipRequestProxy_Specs.cs` |
+| `tests/MassTransit.Tests/ContainerTests/Scheduler_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/Scheduler_Specs.cs` |
+| `tests/MassTransit.Tests/ContainerTests/Stop_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/Stop_Specs.cs` |
+| `tests/MassTransit.Tests/ContainerTests/TenantScope_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/TenantScope_Specs.cs` |
 | `tests/MassTransit.Tests/ConversationId_Specs.cs` | Deleted | `tests/MassTransit.Tests/ConversationId_Specs.cs` |
 | `tests/MassTransit.Tests/CorrelationId_Specs.cs` | Deleted | `tests/MassTransit.Tests/CorrelationId_Specs.cs` |
 | `tests/MassTransit.Tests/Courier/ActivityRedelivery_Specs.cs` | Deleted | `tests/MassTransit.Tests/Courier/ActivityRedelivery_Specs.cs` |
@@ -10110,7 +10209,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.TestInfrastructure/TestRunnerContractException.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.TestInfrastructure/ViciOne.ServiceBus.TestInfrastructure.csproj` | Added |  |
 | `tests/ViciOne.ServiceBus.TestInfrastructure/packages.lock.json` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/ContainerTests/AccessScope_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/AccessScope_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/Common_Conductor.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Common_Tests/Common_Conductor.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/Common_ConsumeContext.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Common_Tests/Common_ConsumeContext.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/Common_Consumer.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Common_Tests/Common_Consumer.cs` |
@@ -10133,19 +10231,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/MyId.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Common_Tests/MyId.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/RequestClientOutbox_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Common_Tests/RequestClientOutbox_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/RequestClient_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Common_Tests/RequestClient_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ContainerTests/Dispatcher_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Dispatcher_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ContainerTests/EmptyBody_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/EmptyBody_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ContainerTests/EndpointConfiguration_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/EndpointConfiguration_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ContainerTests/ExcludeFromConfigureEndpoints_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/ExcludeFromConfigureEndpoints_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ContainerTests/ExcludeTypeFromFilter_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/ExcludeTypeFromFilter_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Future_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Future_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ContainerTests/Handler_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Handler_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ContainerTests/HealthCheck_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/HealthCheck_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ContainerTests/MediatorFilter_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/MediatorFilter_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ContainerTests/MultiBusScopeIsolation_Specs.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/ContainerTests/ReceiveEndpointDependency_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/ReceiveEndpointDependency_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ContainerTests/RedeliveryHeader_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/RedeliveryHeader_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ContainerTests/RoutingSlipRequestProxy_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/RoutingSlipRequestProxy_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Scenarios/AnotherMessageConsumer.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Scenarios/AnotherMessageConsumer.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Scenarios/AnotherMessageConsumerImpl.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Scenarios/AnotherMessageConsumerImpl.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Scenarios/AnotherMessageInterface.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Scenarios/AnotherMessageInterface.cs` |
@@ -10164,9 +10250,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Scenarios/WhenAllCompletedOrFaulted.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Scenarios/WhenAllCompletedOrFaulted.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Scenarios/When_registering_a_consumer.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Scenarios/When_registering_a_consumer.cs` |
 | `tests/ViciOne.ServiceBus.Tests/ContainerTests/Scenarios/When_registering_a_saga.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Scenarios/When_registering_a_saga.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ContainerTests/Scheduler_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Scheduler_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ContainerTests/Stop_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Stop_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ContainerTests/TenantScope_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/TenantScope_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Conventional/ConventionConsumer_Specs.cs` | Modified | `tests/MassTransit.Tests/Conventional/ConventionConsumer_Specs.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Conventional/CustomConsumeConnectorFactory.cs` | Modified | `tests/MassTransit.Tests/Conventional/CustomConsumeConnectorFactory.cs` |
 | `tests/ViciOne.ServiceBus.Tests/Conventional/CustomConsumerConvention.cs` | Modified | `tests/MassTransit.Tests/Conventional/CustomConsumerConvention.cs` |
@@ -10752,7 +10835,13 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Courier/RoutingSlipRequestIntegrationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Courier/RoutingSlipRetryIntegrationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Courier/RoutingSlipRevisionAndSubscriptionTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ConfigureEndpointExclusionTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/DependencyInjection/EndpointConfigurationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/DependencyInjection/HandlerRegistrationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/DependencyInjection/MultiBusRequestTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/DependencyInjection/MultiBusScopeIsolationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ReceiveEndpointDependencyTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ScopedPipelineTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Events/FaultExceptionInfoTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Events/PolymorphicFaultDispatchTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Futures/FutureLocationTests.cs` | Added |  |
@@ -10843,6 +10932,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/RescueFilterTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/RetryBusObserverTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/RetryFilterTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Middleware/TenantScopeIntegrationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutCancellationIntegrationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutConfigurationSurfaceTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutFilterTests.cs` | Added |  |
@@ -10885,6 +10975,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineTestExecution.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineTransportIntegrationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Sagas/Configuration/SagaConnectorTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Scheduling/ScopedSchedulingTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Serialization/ArrayMessageTypeTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Serialization/CoreMessageBodyContractTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Serialization/DictionarySendHeadersTests.cs` | Added |  |
@@ -10951,10 +11042,12 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Transactions/BufferedBusTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Transactions/DeferredBusRegistrationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Transformation/TransformPipelineTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Transports/BusHealthLifecycleTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Transports/Components/KillSwitch/KillSwitchIntegrationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Transports/Components/KillSwitch/KillSwitchTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Transports/Fabric/MessageFabricTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Transports/HostConfigurationRetryExtensionsTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Transports/ReceiveEndpointDispatcherTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Transports/RequestOutcomeTimeToLiveTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Transports/SendEndpointCacheTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Util/TaskExecutorTests.cs` | Added |  |

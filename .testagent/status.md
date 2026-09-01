@@ -2475,3 +2475,30 @@ future cohorts as complete.
 - The Evidence child created with this section is a local immutable review subject. Independent
   read-only acceptance, architecture binding and any future remote publication remain pending and are
   not self-approved; no remote push is authorized or performed by this package.
+
+## Core container/runtime native closure — large-package local Evidence freeze (2026-09-01)
+
+- Technical `3edcd0b39478aa7b504f407cafeb56bae26d926d`, tree
+  `805c51328bed172232c6be8a5a1b0421618d092e`, closes 56 selected container/runtime obligations as
+  `REPLACED_EXECUTING` in UnitArchitecture. Fifty-four native executable cases bind dependency
+  injection, endpoint configuration, receive dispatch, health lifecycle, scoped middleware,
+  scheduling, consumer-stop cancellation and routing-slip behavior.
+- Sixteen fully replaced inherited ContainerTests files and 3,516 inherited test lines are removed
+  atomically. The complete three-commit Technical range changes 37 paths, adds 2,502 lines and deletes
+  3,523 lines, reducing the repository by 1,021 lines while the executable floor rises from 2,698 to
+  2,752. The containing directory remains because `Future_Specs.cs` is not part of this closure; no
+  empty inherited test directory remains and the frozen expected list is unchanged.
+- Complete UnitArchitecture is 2,757/2,757 across 21 direct Microsoft Testing Platform CTRFs with
+  zero failed, skipped, pending or other cases. Locked restore, complete Engineering Release build,
+  post-mutation restore build and scoped format verification are green; both builds contain zero
+  warnings and errors.
+- Sixteen independently reconstructed one-cause product mutations all build and are killed. Their 96
+  executions contain 25 causal failures and 71 passing controls with no skip. Every touched product
+  file restores byte-exactly before the final post-restore build.
+- The local `dotnet test --solution` compatibility path did not propagate the repository test profile
+  and discovered zero tests; it is excluded rather than misreported. The same built solution closure
+  was executed serially through all 21 native MTP module executables with
+  `VICIONE_TESTS__Profile=UnitArchitecture`.
+- The Evidence child created with this section is a local immutable review subject. Independent
+  read-only acceptance, architecture binding and any future remote publication remain pending and are
+  not self-approved; no remote push is authorized or performed by this package.

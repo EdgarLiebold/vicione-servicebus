@@ -1,0 +1,302 @@
+{
+  "schemaVersion": 1,
+  "kind": "CORE_CONTAINER_RUNTIME_NATIVE_RESULTS",
+  "baselineCommit": "a5d9e5566371324c840d577996f81dc3682f657e",
+  "technicalCommit": "3edcd0b39478aa7b504f407cafeb56bae26d926d",
+  "technicalTree": "805c51328bed172232c6be8a5a1b0421618d092e",
+  "obligations": {
+    "count": 56,
+    "replacedExecuting": 56,
+    "profile": "UnitArchitecture",
+    "map": ".testagent/core-container-runtime-native-obligation-map.tsv"
+  },
+  "nativeCarrier": {
+    "materializedExecutableCases": 54,
+    "requirementCoveragePairsAdded": 21
+  },
+  "unitArchitecture": {
+    "ctrfFiles": 21,
+    "tests": 2757,
+    "passed": 2757,
+    "failed": 0,
+    "skipped": 0,
+    "pending": 0,
+    "other": 0,
+    "declaredFloor": 2752,
+    "ctrfRoot": "positive/unit",
+    "modules": [
+      {
+        "module": "abstractions",
+        "ctrf": "positive/unit/abstractions.json",
+        "tests": 245,
+        "passed": 245,
+        "failed": 0,
+        "skipped": 0,
+        "pending": 0,
+        "other": 0
+      },
+      {
+        "module": "activemq",
+        "ctrf": "positive/unit/activemq.json",
+        "tests": 133,
+        "passed": 133,
+        "failed": 0,
+        "skipped": 0,
+        "pending": 0,
+        "other": 0
+      },
+      {
+        "module": "amazon-s3",
+        "ctrf": "positive/unit/amazon-s3.json",
+        "tests": 6,
+        "passed": 6,
+        "failed": 0,
+        "skipped": 0,
+        "pending": 0,
+        "other": 0
+      },
+      {
+        "module": "amazon-sqs",
+        "ctrf": "positive/unit/amazon-sqs.json",
+        "tests": 66,
+        "passed": 66,
+        "failed": 0,
+        "skipped": 0,
+        "pending": 0,
+        "other": 0
+      },
+      {
+        "module": "analyzers-codefixes",
+        "ctrf": "positive/unit/analyzers-codefixes.json",
+        "tests": 29,
+        "passed": 29,
+        "failed": 0,
+        "skipped": 0,
+        "pending": 0,
+        "other": 0
+      },
+      {
+        "module": "analyzers",
+        "ctrf": "positive/unit/analyzers.json",
+        "tests": 114,
+        "passed": 114,
+        "failed": 0,
+        "skipped": 0,
+        "pending": 0,
+        "other": 0
+      },
+      {
+        "module": "architecture",
+        "ctrf": "positive/unit/architecture.json",
+        "tests": 137,
+        "passed": 137,
+        "failed": 0,
+        "skipped": 0,
+        "pending": 0,
+        "other": 0
+      },
+      {
+        "module": "azure-table",
+        "ctrf": "positive/unit/azure-table.json",
+        "tests": 50,
+        "passed": 50,
+        "failed": 0,
+        "skipped": 0,
+        "pending": 0,
+        "other": 0
+      },
+      {
+        "module": "benchmark",
+        "ctrf": "positive/unit/benchmark.json",
+        "tests": 21,
+        "passed": 21,
+        "failed": 0,
+        "skipped": 0,
+        "pending": 0,
+        "other": 0
+      },
+      {
+        "module": "core",
+        "ctrf": "positive/unit/core.json",
+        "tests": 1389,
+        "passed": 1389,
+        "failed": 0,
+        "skipped": 0,
+        "pending": 0,
+        "other": 0
+      },
+      {
+        "module": "diagnostics",
+        "ctrf": "positive/unit/diagnostics.json",
+        "tests": 45,
+        "passed": 45,
+        "failed": 0,
+        "skipped": 0,
+        "pending": 0,
+        "other": 0
+      },
+      {
+        "module": "dynamodb",
+        "ctrf": "positive/unit/dynamodb.json",
+        "tests": 14,
+        "passed": 14,
+        "failed": 0,
+        "skipped": 0,
+        "pending": 0,
+        "other": 0
+      },
+      {
+        "module": "entity-framework",
+        "ctrf": "positive/unit/entity-framework.json",
+        "tests": 60,
+        "passed": 60,
+        "failed": 0,
+        "skipped": 0,
+        "pending": 0,
+        "other": 0
+      },
+      {
+        "module": "messagepack",
+        "ctrf": "positive/unit/messagepack.json",
+        "tests": 55,
+        "passed": 55,
+        "failed": 0,
+        "skipped": 0,
+        "pending": 0,
+        "other": 0
+      },
+      {
+        "module": "quartz",
+        "ctrf": "positive/unit/quartz.json",
+        "tests": 87,
+        "passed": 87,
+        "failed": 0,
+        "skipped": 0,
+        "pending": 0,
+        "other": 0
+      },
+      {
+        "module": "rabbitmq",
+        "ctrf": "positive/unit/rabbitmq.json",
+        "tests": 108,
+        "passed": 108,
+        "failed": 0,
+        "skipped": 0,
+        "pending": 0,
+        "other": 0
+      },
+      {
+        "module": "roslyn-infrastructure",
+        "ctrf": "positive/unit/roslyn-infrastructure.json",
+        "tests": 4,
+        "passed": 4,
+        "failed": 0,
+        "skipped": 0,
+        "pending": 0,
+        "other": 0
+      },
+      {
+        "module": "signalr",
+        "ctrf": "positive/unit/signalr.json",
+        "tests": 32,
+        "passed": 32,
+        "failed": 0,
+        "skipped": 0,
+        "pending": 0,
+        "other": 0
+      },
+      {
+        "module": "sql-transport",
+        "ctrf": "positive/unit/sql-transport.json",
+        "tests": 45,
+        "passed": 45,
+        "failed": 0,
+        "skipped": 0,
+        "pending": 0,
+        "other": 0
+      },
+      {
+        "module": "state-machine-visualizer",
+        "ctrf": "positive/unit/state-machine-visualizer.json",
+        "tests": 8,
+        "passed": 8,
+        "failed": 0,
+        "skipped": 0,
+        "pending": 0,
+        "other": 0
+      },
+      {
+        "module": "test-infrastructure",
+        "ctrf": "positive/unit/test-infrastructure.json",
+        "tests": 109,
+        "passed": 109,
+        "failed": 0,
+        "skipped": 0,
+        "pending": 0,
+        "other": 0
+      }
+    ]
+  },
+  "engineeringRestore": {
+    "exitCode": 0,
+    "lockedMode": true,
+    "binlog": "binlogs/engineering-restore.binlog"
+  },
+  "engineeringBuild": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "binlog": "binlogs/engineering-build.binlog"
+  },
+  "postRestoreBuild": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "binlog": "binlogs/postrestore-build.binlog"
+  },
+  "formatVerification": {
+    "exitCode": 0,
+    "scope": "15 changed surviving C# carrier files",
+    "binlog": "binlogs/format-scope-verify.binlog"
+  },
+  "ciSelfTests": {
+    "tests": 257,
+    "passed": 257,
+    "failed": 0,
+    "rawLog": "raw/ci-selftests.log"
+  },
+  "identitySelfTests": {
+    "tests": 148,
+    "passed": 148,
+    "failed": 0,
+    "rawLog": "raw/identity-selftests.log"
+  },
+  "verificationModel": {
+    "status": "PASS",
+    "rawLog": "raw/verification-model.log"
+  },
+  "changeListAtEvidenceFreeze": {
+    "status": "PASS",
+    "entries": 11097,
+    "rawLog": "raw/change-list.log"
+  },
+  "retirement": {
+    "trackedLegacyFilesRemoved": 16,
+    "legacyLinesDeleted": 3516,
+    "technicalLinesAdded": 2502,
+    "technicalLinesDeleted": 3523,
+    "technicalNetLines": -1021,
+    "emptyLegacyTestDirectories": 0
+  },
+  "mutations": {
+    "count": 16,
+    "built": 16,
+    "killed": 16,
+    "restored": 16,
+    "executions": 96,
+    "passedControls": 71,
+    "causalFailures": 25,
+    "skipped": 0
+  },
+  "remotePushPerformed": false
+}
