@@ -2661,8 +2661,9 @@ LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carri
 3. Correct the shared rider lifecycle so every rider generation is stopped exactly once after repeated
    bus start/stop. Carry both a hermetic two-generation regression owner and the real provider callback
    proof; bind a one-cause mutation that restores the one-shot collection stop and makes both red.
-4. Raise UnitArchitecture from 2,836 to 2,837 and LocalIntegration from 375 to 398. The Event Hubs project
-   contributes 22 behavior cases plus one passive requirement-projection case.
+4. Raise UnitArchitecture from 2,836 to 2,838 and LocalIntegration from 375 to 398. The Event Hubs project
+   contributes 23 behavior cases plus one passive requirement-projection case. The additional Unit owner
+   proves that a convention enumeration acquired before registration remains an immutable snapshot.
 5. Delete the complete inherited Event Hubs test project only after projection, Release builds, all 23
    native cases and targeted mutations are green. Preserve the frozen expected-core identity list and
    keep the three External obligations nonexecuting and visible.
