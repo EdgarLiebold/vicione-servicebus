@@ -251,6 +251,8 @@ public sealed class RabbitMqLocalOptions : ILocalTestResourceConfiguration
 
     public int? Port { get; set; }
 
+    public int? ManagementPort { get; set; }
+
     public string? UserName { get; set; }
 
     public string? Password { get; set; }
@@ -259,6 +261,7 @@ public sealed class RabbitMqLocalOptions : ILocalTestResourceConfiguration
     {
         if (string.IsNullOrWhiteSpace(Host)) yield return nameof(Host);
         if (Port is null or < 1 or > 65535) yield return nameof(Port);
+        if (ManagementPort is null or < 1 or > 65535) yield return nameof(ManagementPort);
         if (string.IsNullOrWhiteSpace(UserName)) yield return nameof(UserName);
         if (string.IsNullOrWhiteSpace(Password)) yield return nameof(Password);
     }

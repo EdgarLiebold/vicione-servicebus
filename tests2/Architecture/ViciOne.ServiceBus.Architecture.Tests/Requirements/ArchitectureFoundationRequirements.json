@@ -89,5 +89,12 @@
     "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
     "testType": "ViciOne.ServiceBus.Architecture.Tests.Repository.AzureServiceBusObligationProjectionTests",
     "testMethod": "AzureServiceBusObligations_AreExactTerminalAndBoundToRealCarriers"
+  },
+  {
+    "requirementId": "REQ-TEST-205",
+    "variantKey": "rabbitmq-obligations-are-terminal-and-carrier-bound",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Repository.RabbitMqObligationProjectionTests",
+    "testMethod": "RabbitMqObligations_AreExactTerminalAndBoundToRealCarriers"
   }
 ]

@@ -142,6 +142,7 @@ public sealed class TestConfigurationProvider
         {
             ["VICIONE_SERVICEBUS_RMQ_HOST"] = ["LocalInfrastructure:RabbitMq:Host"],
             ["VICIONE_SERVICEBUS_RMQ_PORT"] = ["LocalInfrastructure:RabbitMq:Port"],
+            ["VICIONE_SERVICEBUS_RMQ_MGMT_PORT"] = ["LocalInfrastructure:RabbitMq:ManagementPort"],
             ["VICIONE_SERVICEBUS_RMQ_USER"] = ["LocalInfrastructure:RabbitMq:UserName"],
             ["VICIONE_SERVICEBUS_RMQ_PASS"] = ["LocalInfrastructure:RabbitMq:Password"],
             ["VICIONE_SERVICEBUS_AMQ_HOST"] = ["LocalInfrastructure:ActiveMq:Host"],

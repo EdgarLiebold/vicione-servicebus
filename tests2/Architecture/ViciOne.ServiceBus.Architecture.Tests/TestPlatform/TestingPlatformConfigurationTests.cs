@@ -21,10 +21,11 @@ namespace ViciOne.ServiceBus.Architecture.Tests.TestPlatform;
 /// </remarks>
 public sealed class TestingPlatformConfigurationTests
 {
-    private const int ExpectedUnitTestFloor = 2842;
+    private const int ExpectedUnitTestFloor = 2850;
     private const int ExpectedLocalIntegrationTestFloor = 326;
     private const int ExpectedSqlServerLocalIntegrationTestFloor = 60;
     private const int ExpectedAzureServiceBusLocalIntegrationTestFloor = 24;
+    private const int ExpectedRabbitMqLocalIntegrationTestFloor = 17;
 
     [Fact]
     public void CanonicalConfiguration_TurnsSkipsAndWarningsIntoFailures()
@@ -137,6 +138,9 @@ public sealed class TestingPlatformConfigurationTests
             Assert.Equal(
                 ExpectedAzureServiceBusLocalIntegrationTestFloor,
                 ReadAzureServiceBusLocalIntegrationProfileFloor(path));
+            Assert.Equal(
+                ExpectedRabbitMqLocalIntegrationTestFloor,
+                ReadRabbitMqLocalIntegrationProfileFloor(path));
 
             MatchCollection outageControls = Regex.Matches(
                 File.ReadAllText(path),
@@ -178,6 +182,7 @@ public sealed class TestingPlatformConfigurationTests
         [
             "ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests",
             "ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests",
+            "ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests",
         ];
 
         foreach (string projectName in projectNames)
@@ -429,6 +434,21 @@ public sealed class TestingPlatformConfigurationTests
         Assert.True(
             matches.Count == 1,
             $"expected exactly one documented SqlServerLocalIntegration profile command in {path}, found {matches.Count}");
+        return int.Parse(matches[0].Groups["floor"].Value, System.Globalization.CultureInfo.InvariantCulture);
+    }
+
+    private static int ReadRabbitMqLocalIntegrationProfileFloor(string path)
+    {
+        const string localCommandPattern =
+            @"dotnet test\s+--solution\s+ViciOne\.ServiceBus\.Tests\.RabbitMqLocalIntegration\.slnx.*?--minimum-expected-tests\s+(?<floor>\d+)";
+        MatchCollection matches = Regex.Matches(
+            File.ReadAllText(path),
+            localCommandPattern,
+            RegexOptions.Singleline | RegexOptions.CultureInvariant);
+
+        Assert.True(
+            matches.Count == 1,
+            $"expected exactly one documented RabbitMqLocalIntegration profile command in {path}, found {matches.Count}");
         return int.Parse(matches[0].Groups["floor"].Value, System.Globalization.CultureInfo.InvariantCulture);
     }
 }

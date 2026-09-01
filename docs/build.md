@@ -61,7 +61,7 @@ the native MTP command form and no VSTest argument separator:
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
   -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 2842 \
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 2850 \
   --max-parallel-test-modules 1
 
 VICIONE_TESTS__Profile=LocalIntegration \
@@ -87,6 +87,13 @@ python3 tools/ci/run_broker_category.py --broker servicebus --command -- \
     -c Release --no-build --no-restore \
     --results-directory artifacts/test-results/azure-servicebus-local-integration \
     --minimum-expected-tests 24 --max-parallel-test-modules 1
+
+VICIONE_TESTS__Profile=LocalIntegration \
+python3 tools/ci/run_broker_category.py --broker rabbitmq --command -- \
+  dotnet test --solution ViciOne.ServiceBus.Tests.RabbitMqLocalIntegration.slnx \
+    -c Release --no-build --no-restore \
+    --results-directory artifacts/test-results/rabbitmq-local-integration \
+    --minimum-expected-tests 17 --max-parallel-test-modules 1
 ```
 
 The unfiltered process exit code is the verdict. `tests2/testconfig.json` turns skips and warnings

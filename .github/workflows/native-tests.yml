@@ -37,7 +37,7 @@ jobs:
       - name: Build release test binaries
         run: dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore
       - name: Run the complete profile without filters
-        run: dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore --results-directory artifacts/test-results/unit --minimum-expected-tests 2842 --max-parallel-test-modules 1
+        run: dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore --results-directory artifacts/test-results/unit --minimum-expected-tests 2850 --max-parallel-test-modules 1
 
   local-integration:
     name: "Required: Native Local Integration"
@@ -122,4 +122,30 @@ jobs:
           -c Release --no-build --no-restore
           --results-directory artifacts/test-results/azure-servicebus-local-integration
           --minimum-expected-tests 24
+          --max-parallel-test-modules 1
+
+  rabbitmq-local-integration:
+    name: "Required: Native RabbitMQ Local Integration"
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      VICIONE_TESTS__Profile: LocalIntegration
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Restore locked dependency graph
+        run: dotnet restore ViciOne.ServiceBus.Tests.RabbitMqLocalIntegration.slnx --locked-mode
+      - name: Build release test binaries
+        run: dotnet build ViciOne.ServiceBus.Tests.RabbitMqLocalIntegration.slnx -c Release --no-restore
+      - name: Run the complete profile against the pinned local provider
+        run: >-
+          python3 tools/ci/run_broker_category.py
+          --broker rabbitmq
+          --command --
+          dotnet test --solution ViciOne.ServiceBus.Tests.RabbitMqLocalIntegration.slnx
+          -c Release --no-build --no-restore
+          --results-directory artifacts/test-results/rabbitmq-local-integration
+          --minimum-expected-tests 17
           --max-parallel-test-modules 1

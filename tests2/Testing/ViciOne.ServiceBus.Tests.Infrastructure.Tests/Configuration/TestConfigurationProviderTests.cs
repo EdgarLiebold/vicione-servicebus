@@ -100,13 +100,15 @@ public sealed class TestConfigurationProviderTests
     {
         var options = ProviderWith(
             ("VICIONE_TESTS__LocalInfrastructure__RabbitMq__Host", "broker.internal"),
-            ("VICIONE_TESTS__LocalInfrastructure__RabbitMq__Port", "5673")).GetOptions();
+            ("VICIONE_TESTS__LocalInfrastructure__RabbitMq__Port", "5673"),
+            ("VICIONE_TESTS__LocalInfrastructure__RabbitMq__ManagementPort", "15673")).GetOptions();
         var localInfrastructure = Assert.IsType<LocalInfrastructureOptions>(options.LocalInfrastructure);
         RabbitMqLocalOptions rabbitMq = Assert.IsType<RabbitMqLocalOptions>(localInfrastructure.RabbitMq);
         PostgreSqlLocalOptions postgreSql = Assert.IsType<PostgreSqlLocalOptions>(localInfrastructure.PostgreSql);
 
         Assert.Equal("broker.internal", rabbitMq.Host);
         Assert.Equal(5673, rabbitMq.Port);
+        Assert.Equal(15673, rabbitMq.ManagementPort);
         Assert.Equal("localhost", postgreSql.Host);
     }
 
@@ -638,7 +640,7 @@ public sealed class TestConfigurationProviderTests
             ["ActiveMq", "Artemis", "AzureServiceBus", "AzureTable", "EventHubs", "LocalStack", "PostgreSql", "RabbitMq", "SqlServer"],
             PublicPropertyNames<LocalInfrastructureOptions>());
         Assert.Equal(
-            ["Host", "Password", "Port", "UserName"],
+            ["Host", "ManagementPort", "Password", "Port", "UserName"],
             PublicPropertyNames<RabbitMqLocalOptions>());
         Assert.Equal(
             ["AmqpPort", "Host", "JolokiaPort", "OpenWirePort", "Password", "UserName"],

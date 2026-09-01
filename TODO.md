@@ -383,6 +383,19 @@ Acceptance requires bounded provider-owned state and delivery barriers, exact pa
 continuity, explicit cleanup of the namespace resources, zero skip/failure and evidence that names the
 Azure endpoint and identity mode without recording tokens or connection strings.
 
+## Complete RabbitMQ validation against Amazon MQ
+
+The pinned run-scoped RabbitMQ fixture owns every deterministic protocol, topology, retry, lifecycle,
+stream, scheduling and management assertion. `OBL-R0-BRK-0004` remains external because it requires
+Amazon MQ's managed TLS endpoint, AWS-owned certificate chain, account policy and service lifecycle;
+counting a local container as that proof would be false.
+
+Run the retained connection/start/stop case against a disposable Amazon MQ RabbitMQ broker through
+short-lived AWS identity, without storing credentials or connection strings. Acceptance requires an
+exact successful endpoint ready/stop lifecycle, bounded provider state, explicit broker/resource
+cleanup, zero skip/failure and evidence that identifies the AWS region and authentication mode without
+recording secrets.
+
 ## Finalize solution composition after native-test promotion
 
 `ViciOne.ServiceBus.slnx` is now a product/package solution and no longer compiles inherited

@@ -92,7 +92,6 @@ REQUIRED_SUPPORT_JOB_CONTRACTS = {
         "      - legacy-tooling",
         "      - build",
         "      - benchmarks",
-        "      - rabbitmq",
         "    steps:",
         f"      {CHECKOUT_ACTION_STEP}",
         f"      {SETUP_DOTNET_ACTION_STEP}",

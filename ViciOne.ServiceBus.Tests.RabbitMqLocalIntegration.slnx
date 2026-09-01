@@ -1,0 +1,12 @@
+<Solution>
+  <!-- Profile RabbitMqLocalIntegration: pinned RabbitMQ 4.2 with management and delayed-exchange plugin. -->
+  <Folder Name="/tests2/">
+    <Project Path="tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj" />
+    <Project Path="tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj" />
+    <Project Path="src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
+    <Project Path="src/Transports/ViciOne.ServiceBus.RabbitMqTransport/ViciOne.ServiceBus.RabbitMqTransport.csproj" />
+  </Folder>
+</Solution>

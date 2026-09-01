@@ -6,10 +6,9 @@
   "selections": {
     "all": {
       "members": [
-        "local",
-        "fixture"
+        "local"
       ],
-      "note": "the complete required acceptance scope available to this work package: the local categories and the ones that run against a pinned fixture. It is defined here, so a narrower selection can never produce or satisfy an 'all' receipt."
+      "note": "the complete required acceptance scope retained by this transitional model. Native provider profiles are owned only by .github/workflows/native-tests.yml and are not duplicated here."
     },
     "local": {
       "members": [
@@ -17,20 +16,9 @@
       ],
       "note": "everything that needs no container"
     },
-    "fixture": {
-      "members": [
-        "rabbitmq"
-      ],
-      "note": "everything that runs against the pinned Compose fixture"
-    },
     "benchmarks": {
       "members": [
         "benchmarks"
-      ]
-    },
-    "rabbitmq": {
-      "members": [
-        "rabbitmq"
       ]
     },
     "engineering": {
@@ -41,7 +29,6 @@
     }
   },
   "jobs": {
-    "rabbitmq": "rabbitmq",
     "benchmarks": "engineering"
   },
   "verificationClasses": {
@@ -343,43 +330,15 @@
     },
     {
       "id": "transport-rabbitmq",
-      "class": "PINNED_FIXTURE_REQUIRED_RUN",
+      "class": "NATIVE_TEST_ESTATE",
       "sourceProjects": [
         "src/Transports/ViciOne.ServiceBus.RabbitMqTransport"
       ],
-      "testProjects": [
-        "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests"
-      ],
+      "testProjects": [],
       "supportProjects": [],
       "toolProjects": [],
-      "rationale": "",
-      "runs": [
-        {
-          "job": "rabbitmq",
-          "category": "rabbitmq",
-          "project": "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj",
-          "minimumExecutedCases": 370,
-          "notExecuted": [
-            {
-              "identity": "ViciOne.ServiceBus.RabbitMqTransport.Tests.AmazonMqTests.Connecting_to_RabbitMQ_via_Amazon.Should_connect",
-              "fixture": "Connecting_to_RabbitMQ_via_Amazon",
-              "test": "Should_connect",
-              "mechanism": "EXPLICIT",
-              "dueness": "NOT_DUE_REAL_CLOUD_RESOURCE",
-              "reason": "Addresses a real Amazon MQ broker over TLS with an account nobody in this run has. The pinned RabbitMQ fixture cannot stand in for it, so it stays a visible open cloud proof and never a pass."
-            }
-          ],
-          "testProjectDirectory": "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests",
-          "explicitAttributeCount": 1,
-          "budgetSeconds": 2400,
-          "brokers": [
-            "rabbitmq"
-          ],
-          "allowBrokerOutage": null,
-          "oneRefusalPerVhost": "test-exclusive-*",
-          "expectedIdentities": "build/verification/expected/rabbitmq.txt"
-        }
-      ]
+      "rationale": "The inherited NUnit/VSTest RabbitMQ project is retired after exact terminal closure of all 354 frozen obligations. One hundred ninety-one obligations are owned by native UnitArchitecture carriers, 162 by the run-scoped pinned RabbitMQ LocalIntegration profile, and the real Amazon MQ TLS/account case remains visible External work. The three terminal projections are .testagent/rabbitmq-*-native-obligation-map.tsv; only REPLACED_EXECUTING rows contribute green evidence.",
+      "runs": []
     },
     {
       "id": "transport-sql",
