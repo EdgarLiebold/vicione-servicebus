@@ -2670,3 +2670,38 @@ LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carri
 6. Pay the broad Engineering, UnitArchitecture, LocalIntegration, CI-tool, identity and change-list cost
    once after mutation restoration. Freeze a Technical commit and direct Evidence child; do not push
    without a fresh explicit authorization and never force-push.
+
+## Azure Service Bus native closure — 153-obligation capability-first provider package (2026-09-01)
+
+1. Re-derive all 153 frozen Azure Service Bus obligations from the current provider boundary. The old
+   31 UnitArchitecture / 15 LocalIntegration / 107 External split predates emulator 2.0.0 and is not an
+   execution verdict. Pin Microsoft's official multi-architecture 2.0.0 image by manifest digest, run it
+   with the existing supported SQL Server fixture and measure the administration and AMQP capabilities
+   before assigning any final disposition.
+2. Add one run-scoped, loopback-only `servicebus` fixture with ephemeral AMQP and HTTP management ports,
+   EULA acceptance, bounded health, exact image/config binding, canonical runner projection and complete
+   teardown/log capture. No Azure credential fallback, shared namespace or persisted fixture state is
+   allowed. The emulator and other heavyweight providers remain sequential categories.
+3. Probe queue/topic/subscription/rule create-update-delete, forwarding, sessions/session-state,
+   scheduling/cancellation, duplicate detection, dead-lettering and quota boundaries through the real
+   `Azure.Messaging.ServiceBus` 7.20.1 data and administration clients. Classify an obligation as local
+   only when the emulator executes the same observable provider contract. Keep Entra/RBAC, partitioning,
+   AMQP WebSockets, tier/availability, real-service retention and other unsupported semantics visibly
+   `EXTERNAL_PENDING`; never count them green.
+4. Create source-mirrored native UnitArchitecture, LocalIntegration and External owners from the measured
+   capability matrix. Tests bind exact entity/message/session/sequence/dead-letter/forwarding identities
+   and provider state at positive completion barriers. No sleep, polling, quiet-window, timeout-as-success,
+   reflection-only product oracle or self-derived expected value is permitted.
+5. Preserve all inherited Azure Service Bus files that still own an unimplemented or External obligation.
+   Delete a file only when every one of its frozen obligations has a stronger executing or explicitly
+   External native owner; delete the complete old project only after all 153 rows are terminal. Never edit
+   the frozen expected-core identity list and remove only directories that are physically empty.
+6. Correct product defects exposed by the carriers instead of weakening assertions. Bind independent,
+   buildable one-cause mutations for each high-value address, topology, configuration, send-property,
+   settlement, session, scheduling, forwarding, retry and validation mechanism; restore every byte exactly
+   and rerun the focused positive control after mutation work.
+7. Pay locked restore/build, complete UnitArchitecture and LocalIntegration, scoped format, Engineering,
+   CI-tool, identity, verification-model and CHANGELIST costs once for the finished package. Freeze one
+   Technical commit and one direct Evidence child with raw CTRF/log/binlog/hash evidence, perform the
+   independent static counterexample review, then publish without force-push under the current explicit
+   remote-backup authorization.

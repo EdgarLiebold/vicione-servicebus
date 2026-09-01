@@ -68,6 +68,13 @@
       "digest": "sha256:a2751b3b5eed89e47ebbd5e776de0d6d85d924002773933ab881da49c073b85d",
       "reference": "rabbitmq:4.2-management@sha256:a2751b3b5eed89e47ebbd5e776de0d6d85d924002773933ab881da49c073b85d",
       "rationale": "Official Docker library image. The management plugin is required because the test set up creates and cleans the 'test' virtual host over the HTTP API on port 15672."
+    },
+    "servicebus": {
+      "repository": "mcr.microsoft.com/azure-messaging/servicebus-emulator",
+      "tag": "2.0.0",
+      "digest": "sha256:a00c9626c8960f6b9be6178aa91a7ac8f1a102c0d9deda7603a1ba0ac9d9ab51",
+      "reference": "mcr.microsoft.com/azure-messaging/servicebus-emulator:2.0.0@sha256:a00c9626c8960f6b9be6178aa91a7ac8f1a102c0d9deda7603a1ba0ac9d9ab51",
+      "rationale": "Microsoft's official Service Bus emulator 2.0.0 provides native Azure.Messaging.ServiceBus 7.20.1 data and administration APIs. The manifest-list digest binds both linux/amd64 and linux/arm64 bytes. The fixture uses ephemeral loopback AMQP and management ports and the existing supported SQL Server dependency; unsupported real-Azure semantics remain External rather than being inferred from the emulator."
     }
   },
   "plugins": {

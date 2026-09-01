@@ -59,6 +59,9 @@ def build_environment(brokers: list[str]) -> dict[str, str]:
     placeholder with a known value; the idle service is never started, so the secret is never used.
     """
     environment: dict[str, str] = {}
+    # Every canonical broker run is a local-integration execution. Project this explicitly so
+    # command-mode test assemblies cannot silently inherit the UnitArchitecture repository default.
+    environment["VICIONE_TESTS__Profile"] = "LocalIntegration"
     for user_variable, pass_variable in broker_logs.BROKER_CREDENTIAL_VARIABLES.values():
         environment[user_variable] = (
             broker_logs.AZURITE_ACCOUNT_NAME
@@ -73,6 +76,9 @@ def build_environment(brokers: list[str]) -> dict[str, str]:
     environment["VICIONE_SERVICEBUS_PG_DATABASE"] = "postgres"
     environment[broker_logs.MSSQL_USER_VARIABLE] = broker_logs.MSSQL_ACCOUNT_NAME
     environment[broker_logs.MSSQL_PASSWORD_VARIABLE] = secrets.token_hex(16) + "Aa1!"
+    if "servicebus" in brokers:
+        environment["VICIONE_SERVICEBUS_SERVICEBUS_KEY_NAME"] = "RootManageSharedAccessKey"
+        environment["VICIONE_SERVICEBUS_SERVICEBUS_KEY"] = base64.b64encode(secrets.token_bytes(32)).decode("ascii")
     if "localstack" in brokers:
         # These are run credentials, not product configuration. Standard AWS SDK variables make the
         # provider chain the one credential owner while the typed test configuration contains only
@@ -190,6 +196,9 @@ def execute(args: argparse.Namespace, brokers: list[str], environment: dict[str,
         endpoints.update(compose_fixture.resolve_ports(broker, environment, service=source))
         endpoints[broker_logs.BROKER_HOST_VARIABLE[broker]] = "127.0.0.1"
     environment.update(endpoints)
+
+    if "servicebus" in brokers:
+        compose_fixture.wait_for_servicebus_health(environment)
 
     if proxy:
         print(f"{args.allow_broker_outage} is reached through {proxy}, so its address survives a restart")

@@ -15,6 +15,8 @@ import json
 import os
 import subprocess
 import time
+import urllib.error
+import urllib.request
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -52,6 +54,10 @@ BROKER_PORTS = {
         10002: "VICIONE_SERVICEBUS_AZURITE_TABLE_PORT",
     },
     "eventhubs": {5672: "VICIONE_SERVICEBUS_EVENTHUB_PORT"},
+    "servicebus": {
+        5672: "VICIONE_SERVICEBUS_SERVICEBUS_AMQP_PORT",
+        5300: "VICIONE_SERVICEBUS_SERVICEBUS_MANAGEMENT_PORT",
+    },
     "localstack": {4566: "VICIONE_SERVICEBUS_LOCALSTACK_PORT"},
 }
 
@@ -119,6 +125,34 @@ def stop(environment: dict[str, str] | None = None) -> None:
     result = compose("down", "-v", "--remove-orphans", capture=True, environment=environment)
     if result.returncode != 0:
         raise TeardownError(f"the fixture could not be removed: {result.stderr.strip() or result.stdout.strip()}")
+
+
+def wait_for_servicebus_health(environment: dict[str, str], budget_seconds: float = 120) -> None:
+    """Wait for the provider-owned health endpoint before starting a child process.
+
+    The emulator image intentionally has no shell or HTTP utility, so Compose cannot execute a
+    meaningful in-container health check. The runner has already resolved the ephemeral loopback
+    management port at this point and reads the emulator's own bounded health signal instead.
+    """
+    host = environment.get("VICIONE_SERVICEBUS_SERVICEBUS_HOST")
+    port = environment.get("VICIONE_SERVICEBUS_SERVICEBUS_MANAGEMENT_PORT")
+    if not host or not port:
+        raise RunnerError("the Service Bus health endpoint was not projected")
+
+    endpoint = f"http://{host}:{port}/health"
+    deadline = time.monotonic() + budget_seconds
+    last_failure = "no response"
+    while time.monotonic() < deadline:
+        try:
+            with urllib.request.urlopen(endpoint, timeout=2) as response:
+                if 200 <= response.status < 300:
+                    return
+                last_failure = f"HTTP {response.status}"
+        except (OSError, urllib.error.URLError) as exception:
+            last_failure = str(exception)
+        time.sleep(0.25)
+
+    raise RunnerError(f"the Service Bus fixture did not become healthy at {endpoint}: {last_failure}")
 
 
 # The fixture boundary a test asks for an outage through. The test writes a request file and waits for

@@ -167,6 +167,11 @@ public sealed class TestConfigurationProvider
             ["VICIONE_SERVICEBUS_MSSQL_PASS"] = ["LocalInfrastructure:SqlServer:Password"],
             ["VICIONE_SERVICEBUS_EVENTHUB_HOST"] = ["LocalInfrastructure:EventHubs:Host"],
             ["VICIONE_SERVICEBUS_EVENTHUB_PORT"] = ["LocalInfrastructure:EventHubs:Port"],
+            ["VICIONE_SERVICEBUS_SERVICEBUS_HOST"] = ["LocalInfrastructure:AzureServiceBus:Host"],
+            ["VICIONE_SERVICEBUS_SERVICEBUS_AMQP_PORT"] = ["LocalInfrastructure:AzureServiceBus:AmqpPort"],
+            ["VICIONE_SERVICEBUS_SERVICEBUS_MANAGEMENT_PORT"] = ["LocalInfrastructure:AzureServiceBus:ManagementPort"],
+            ["VICIONE_SERVICEBUS_SERVICEBUS_KEY_NAME"] = ["LocalInfrastructure:AzureServiceBus:SharedAccessKeyName"],
+            ["VICIONE_SERVICEBUS_SERVICEBUS_KEY"] = ["LocalInfrastructure:AzureServiceBus:SharedAccessKey"],
             ["VICIONE_SERVICEBUS_AZURITE_HOST"] = [
                 "LocalInfrastructure:AzureTable:Host",
                 "LocalInfrastructure:EventHubs:StorageHost",

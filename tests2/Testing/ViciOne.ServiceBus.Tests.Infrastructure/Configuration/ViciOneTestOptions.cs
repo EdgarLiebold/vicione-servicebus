@@ -172,6 +172,7 @@ public sealed class ViciOneTestOptions
                 LocalTestResource.SqlServer => LocalInfrastructure.SqlServer,
                 LocalTestResource.AzureTable => LocalInfrastructure.AzureTable,
                 LocalTestResource.EventHubs => LocalInfrastructure.EventHubs,
+                LocalTestResource.AzureServiceBus => LocalInfrastructure.AzureServiceBus,
                 LocalTestResource.LocalStack => LocalInfrastructure.LocalStack,
                 _ => throw new UnreachableException(),
             };
@@ -206,6 +207,8 @@ public enum LocalTestResource
     SqlServer = 6,
 
     EventHubs = 7,
+
+    AzureServiceBus = 8,
 }
 
 /// <summary>External providers currently supported by the test configuration contract.</summary>
@@ -231,6 +234,8 @@ public sealed class LocalInfrastructureOptions
     public AzureTableLocalOptions? AzureTable { get; set; }
 
     public EventHubsLocalOptions? EventHubs { get; set; }
+
+    public AzureServiceBusLocalOptions? AzureServiceBus { get; set; }
 
     public LocalStackLocalOptions? LocalStack { get; set; }
 }
@@ -396,6 +401,29 @@ public sealed class EventHubsLocalOptions : ILocalTestResourceConfiguration
         if (StoragePort is null or < 1 or > 65535) yield return nameof(StoragePort);
         if (string.IsNullOrWhiteSpace(StorageAccountName)) yield return nameof(StorageAccountName);
         if (string.IsNullOrWhiteSpace(StorageAccountKey)) yield return nameof(StorageAccountKey);
+    }
+}
+
+/// <summary>Run-scoped Azure Service Bus emulator data and administration coordinates.</summary>
+public sealed class AzureServiceBusLocalOptions : ILocalTestResourceConfiguration
+{
+    public string? Host { get; set; }
+
+    public int? AmqpPort { get; set; }
+
+    public int? ManagementPort { get; set; }
+
+    public string? SharedAccessKeyName { get; set; }
+
+    public string? SharedAccessKey { get; set; }
+
+    public IEnumerable<string> MissingSettings()
+    {
+        if (string.IsNullOrWhiteSpace(Host)) yield return nameof(Host);
+        if (AmqpPort is null or < 1 or > 65535) yield return nameof(AmqpPort);
+        if (ManagementPort is null or < 1 or > 65535) yield return nameof(ManagementPort);
+        if (string.IsNullOrWhiteSpace(SharedAccessKeyName)) yield return nameof(SharedAccessKeyName);
+        if (string.IsNullOrWhiteSpace(SharedAccessKey)) yield return nameof(SharedAccessKey);
     }
 }
 

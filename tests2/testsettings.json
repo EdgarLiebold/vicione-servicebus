@@ -38,6 +38,11 @@
       "StorageHost": "localhost",
       "StoragePort": 10000
     },
+    "AzureServiceBus": {
+      "Host": "localhost",
+      "AmqpPort": 5672,
+      "ManagementPort": 5300
+    },
     "LocalStack": {
       "Host": "localhost",
       "Port": 4566,

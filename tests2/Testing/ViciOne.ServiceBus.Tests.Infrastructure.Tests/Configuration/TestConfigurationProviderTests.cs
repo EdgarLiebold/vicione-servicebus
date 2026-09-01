@@ -32,6 +32,7 @@ public sealed class TestConfigurationProviderTests
         SqlServerLocalOptions sqlServer = Assert.IsType<SqlServerLocalOptions>(localInfrastructure.SqlServer);
         AzureTableLocalOptions azureTable = Assert.IsType<AzureTableLocalOptions>(localInfrastructure.AzureTable);
         EventHubsLocalOptions eventHubs = Assert.IsType<EventHubsLocalOptions>(localInfrastructure.EventHubs);
+        AzureServiceBusLocalOptions serviceBus = Assert.IsType<AzureServiceBusLocalOptions>(localInfrastructure.AzureServiceBus);
         LocalStackLocalOptions localStack = Assert.IsType<LocalStackLocalOptions>(localInfrastructure.LocalStack);
         Assert.Equal("localhost", rabbitMq.Host);
         Assert.Equal(5672, rabbitMq.Port);
@@ -54,6 +55,11 @@ public sealed class TestConfigurationProviderTests
         Assert.Equal(5672, eventHubs.Port);
         Assert.Equal("localhost", eventHubs.StorageHost);
         Assert.Equal(10000, eventHubs.StoragePort);
+        Assert.Equal("localhost", serviceBus.Host);
+        Assert.Equal(5672, serviceBus.AmqpPort);
+        Assert.Equal(5300, serviceBus.ManagementPort);
+        Assert.Null(serviceBus.SharedAccessKeyName);
+        Assert.Null(serviceBus.SharedAccessKey);
         Assert.Equal("localhost", localStack.Host);
         Assert.Equal(4566, localStack.Port);
         Assert.Equal("eu-central-1", localStack.Region);
@@ -270,6 +276,53 @@ public sealed class TestConfigurationProviderTests
             (key, value)).GetOptions();
 
         Assert.Contains(expectedError, options.ValidateForLocal(LocalTestResource.EventHubs));
+    }
+
+    [Theory]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__AzureServiceBus__Host", "", "LocalInfrastructure:AzureServiceBus:Host")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__AzureServiceBus__AmqpPort", "0", "LocalInfrastructure:AzureServiceBus:AmqpPort")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__AzureServiceBus__ManagementPort", "65536", "LocalInfrastructure:AzureServiceBus:ManagementPort")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__AzureServiceBus__SharedAccessKeyName", "", "LocalInfrastructure:AzureServiceBus:SharedAccessKeyName")]
+    [InlineData("VICIONE_TESTS__LocalInfrastructure__AzureServiceBus__SharedAccessKey", "", "LocalInfrastructure:AzureServiceBus:SharedAccessKey")]
+    public void AzureServiceBusSelection_RejectsAnInvalidCoordinate(
+        string key,
+        string value,
+        string expectedError)
+    {
+        ViciOneTestOptions options = ProviderWith(
+            ("VICIONE_TESTS__Profile", "LocalIntegration"),
+            ("VICIONE_TESTS__LocalInfrastructure__AzureServiceBus__SharedAccessKeyName", "RootManageSharedAccessKey"),
+            ("VICIONE_TESTS__LocalInfrastructure__AzureServiceBus__SharedAccessKey", "run-key"),
+            (key, value)).GetOptions();
+
+        Assert.Contains(expectedError, options.ValidateForLocal(LocalTestResource.AzureServiceBus));
+    }
+
+    [Theory]
+    [InlineData("VICIONE_SERVICEBUS_SERVICEBUS_HOST", "127.0.0.1", "127.0.0.1")]
+    [InlineData("VICIONE_SERVICEBUS_SERVICEBUS_AMQP_PORT", "35672", "35672")]
+    [InlineData("VICIONE_SERVICEBUS_SERVICEBUS_MANAGEMENT_PORT", "35300", "35300")]
+    [InlineData("VICIONE_SERVICEBUS_SERVICEBUS_KEY_NAME", "RootManageSharedAccessKey", "RootManageSharedAccessKey")]
+    [InlineData("VICIONE_SERVICEBUS_SERVICEBUS_KEY", "run-key", "run-key")]
+    public void CanonicalAzureServiceBusVariables_MapIntoOneTypedResource(
+        string key,
+        string value,
+        string expected)
+    {
+        AzureServiceBusLocalOptions serviceBus = Assert.IsType<AzureServiceBusLocalOptions>(
+            ProviderWith((key, value)).GetOptions().LocalInfrastructure?.AzureServiceBus);
+
+        string actual = key switch
+        {
+            "VICIONE_SERVICEBUS_SERVICEBUS_HOST" => serviceBus.Host!,
+            "VICIONE_SERVICEBUS_SERVICEBUS_AMQP_PORT" => serviceBus.AmqpPort!.Value.ToString(),
+            "VICIONE_SERVICEBUS_SERVICEBUS_MANAGEMENT_PORT" => serviceBus.ManagementPort!.Value.ToString(),
+            "VICIONE_SERVICEBUS_SERVICEBUS_KEY_NAME" => serviceBus.SharedAccessKeyName!,
+            "VICIONE_SERVICEBUS_SERVICEBUS_KEY" => serviceBus.SharedAccessKey!,
+            _ => throw new InvalidOperationException(key),
+        };
+
+        Assert.Equal(expected, actual);
     }
 
     [Theory]
@@ -582,7 +635,7 @@ public sealed class TestConfigurationProviderTests
             ["ExternalProviders", "LocalInfrastructure", "OperationTimeout", "Profile"],
             PublicPropertyNames<ViciOneTestOptions>());
         Assert.Equal(
-            ["ActiveMq", "Artemis", "AzureTable", "EventHubs", "LocalStack", "PostgreSql", "RabbitMq", "SqlServer"],
+            ["ActiveMq", "Artemis", "AzureServiceBus", "AzureTable", "EventHubs", "LocalStack", "PostgreSql", "RabbitMq", "SqlServer"],
             PublicPropertyNames<LocalInfrastructureOptions>());
         Assert.Equal(
             ["Host", "Password", "Port", "UserName"],
@@ -606,6 +659,9 @@ public sealed class TestConfigurationProviderTests
             ["Host", "Port", "StorageAccountKey", "StorageAccountName", "StorageHost", "StoragePort"],
             PublicPropertyNames<EventHubsLocalOptions>());
         Assert.Equal(
+            ["AmqpPort", "Host", "ManagementPort", "SharedAccessKey", "SharedAccessKeyName"],
+            PublicPropertyNames<AzureServiceBusLocalOptions>());
+        Assert.Equal(
             ["AccountId", "Host", "Port", "Region"],
             PublicPropertyNames<LocalStackLocalOptions>());
         Assert.Equal(
@@ -626,6 +682,7 @@ public sealed class TestConfigurationProviderTests
         Assert.Empty(PublicFields<SqlServerLocalOptions>());
         Assert.Empty(PublicFields<AzureTableLocalOptions>());
         Assert.Empty(PublicFields<EventHubsLocalOptions>());
+        Assert.Empty(PublicFields<AzureServiceBusLocalOptions>());
         Assert.Empty(PublicFields<LocalStackLocalOptions>());
         Assert.Empty(PublicFields<AzureProviderOptions>());
         Assert.Empty(PublicFields<AwsProviderOptions>());

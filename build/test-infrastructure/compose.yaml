@@ -149,6 +149,23 @@ services:
       azurite:
         condition: service_healthy
 
+  servicebus:
+    image: mcr.microsoft.com/azure-messaging/servicebus-emulator:2.0.0@sha256:a00c9626c8960f6b9be6178aa91a7ac8f1a102c0d9deda7603a1ba0ac9d9ab51
+    environment:
+      ACCEPT_EULA: "Y"
+      SQL_SERVER: mssql
+      MSSQL_SA_PASSWORD: ${VICIONE_SERVICEBUS_MSSQL_PASS:?run credentials are missing, source new-run-credentials.sh}
+      EMULATOR_HTTP_PORT: "5300"
+      SQL_WAIT_INTERVAL: "1"
+    volumes:
+      - ./servicebus/config.json:/ServiceBus_Emulator/ConfigFiles/Config.json:ro
+    ports:
+      - "127.0.0.1::5672"
+      - "127.0.0.1::5300"
+    depends_on:
+      mssql:
+        condition: service_healthy
+
   localstack:
     image: localstack/localstack:4.14.0@sha256:3ebc37595918b8accb852f8048fef2aff047d465167edd655528065b07bc364a
     environment:

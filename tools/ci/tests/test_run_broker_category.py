@@ -84,6 +84,7 @@ class Supplying_a_run_scoped_localstack_identity(unittest.TestCase):
     def test_an_unrelated_fixture_run_receives_no_aws_identity(self) -> None:
         environment = runner.build_environment(["rabbitmq"])
 
+        self.assertEqual("LocalIntegration", environment["VICIONE_TESTS__Profile"])
         self.assertNotIn("AWS_ACCESS_KEY_ID", environment)
         self.assertNotIn("AWS_SECRET_ACCESS_KEY", environment)
         self.assertNotIn("AWS_REGION", environment)
@@ -162,6 +163,68 @@ class Binding_the_event_hubs_emulator_fixture(unittest.TestCase):
         self.assertEqual(10, len(entities))
         self.assertEqual(10, len({entity["Name"] for entity in entities}))
         self.assertTrue(all(entity["ConsumerGroups"] == [{"Name": "cg1"}] for entity in entities))
+
+
+class Binding_the_service_bus_emulator_fixture(unittest.TestCase):
+    """The native transport receives distinct data and management endpoints from one pinned fixture."""
+
+    def test_service_bus_ports_and_credentials_are_run_scoped(self) -> None:
+        self.assertEqual(
+            {
+                5672: "VICIONE_SERVICEBUS_SERVICEBUS_AMQP_PORT",
+                5300: "VICIONE_SERVICEBUS_SERVICEBUS_MANAGEMENT_PORT",
+            },
+            compose_fixture.BROKER_PORTS["servicebus"])
+        self.assertEqual(
+            "VICIONE_SERVICEBUS_SERVICEBUS_HOST",
+            broker_logs.BROKER_HOST_VARIABLE["servicebus"])
+
+        unrelated = runner.build_environment(["rabbitmq"])
+        first = runner.build_environment(["servicebus"])
+        second = runner.build_environment(["servicebus"])
+
+        self.assertNotIn("VICIONE_SERVICEBUS_SERVICEBUS_KEY", unrelated)
+        self.assertEqual("RootManageSharedAccessKey", first["VICIONE_SERVICEBUS_SERVICEBUS_KEY_NAME"])
+        self.assertNotEqual(first["VICIONE_SERVICEBUS_SERVICEBUS_KEY"], second["VICIONE_SERVICEBUS_SERVICEBUS_KEY"])
+
+    def test_official_image_empty_namespace_and_sql_dependency_are_bound(self) -> None:
+        image_lock = json.loads(
+            (compose_fixture.REPO_ROOT / "build/test-infrastructure/images.lock.json")
+            .read_text(encoding="utf-8"))
+        service_bus = image_lock["baseImages"]["servicebus"]
+        expected_reference = (
+            "mcr.microsoft.com/azure-messaging/servicebus-emulator:2.0.0@"
+            "sha256:a00c9626c8960f6b9be6178aa91a7ac8f1a102c0d9deda7603a1ba0ac9d9ab51")
+        compose = compose_fixture.COMPOSE_FILE.read_text(encoding="utf-8")
+        config = json.loads(
+            (compose_fixture.REPO_ROOT / "build/test-infrastructure/servicebus/config.json")
+            .read_text(encoding="utf-8"))
+
+        self.assertEqual(expected_reference, service_bus["reference"])
+        self.assertEqual(1, compose.count(f"image: {expected_reference}"))
+        self.assertIn("SQL_SERVER: mssql", compose)
+        self.assertIn("condition: service_healthy", compose)
+        self.assertEqual(
+            [{"Name": "sbemulatorns", "Queues": [], "Topics": []}],
+            config["UserConfig"]["Namespaces"])
+
+    def test_provider_health_is_required_after_port_projection(self) -> None:
+        response = mock.MagicMock()
+        response.status = 200
+        response.__enter__.return_value = response
+        environment = {
+            "VICIONE_SERVICEBUS_SERVICEBUS_HOST": "127.0.0.1",
+            "VICIONE_SERVICEBUS_SERVICEBUS_MANAGEMENT_PORT": "35300",
+        }
+
+        with mock.patch.object(compose_fixture.urllib.request, "urlopen", return_value=response) as request:
+            compose_fixture.wait_for_servicebus_health(environment, budget_seconds=1)
+
+        request.assert_called_once_with("http://127.0.0.1:35300/health", timeout=2)
+
+    def test_missing_health_projection_fails_closed(self) -> None:
+        with self.assertRaises(compose_fixture.RunnerError):
+            compose_fixture.wait_for_servicebus_health({}, budget_seconds=0)
 
 
 class Reporting_a_teardown_that_did_not_happen(unittest.TestCase):
