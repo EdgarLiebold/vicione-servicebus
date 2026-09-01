@@ -1,0 +1,98 @@
+08:43:40.349-I Configured endpoint Plain, Consumer: ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+PlainConsumer
+08:43:40.391-I Configured endpoint by_definition, Consumer: ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+DefinitionNameConsumer
+08:43:40.393-I Configured endpoint InlineEndpoint, Consumer: ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+InlineEndpointConsumer
+08:43:40.395-I Configured endpoint ignored-definition-endpoint, Consumer: ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+DefinitionEndpointConsumer
+08:43:40.396-I Configured endpoint by_endpoint_name, Consumer: ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+OverrideDefinitionNameConsumer
+08:43:40.397-I Configured endpoint ignored_definition_endpoint, Consumer: ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+OverrideDefinitionEndpointConsumer
+08:43:40.545-D Starting bus instances: IBus
+08:43:40.549-D Starting bus: loopback://localhost/
+08:43:40.592-D Endpoint Ready: loopback://localhost/by_definition
+08:43:40.592-D Endpoint Ready: loopback://localhost/Plain
+08:43:40.592-D Endpoint Ready: loopback://localhost/InlineEndpoint
+08:43:40.592-D Endpoint Ready: loopback://localhost/ignored_definition_endpoint
+08:43:40.592-D Endpoint Ready: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_9eaoyydppokgd4jkbdxox7n5g6
+08:43:40.592-D Endpoint Ready: loopback://localhost/by_endpoint_name
+08:43:40.592-D Endpoint Ready: loopback://localhost/ignored-definition-endpoint
+08:43:40.595-I Bus started: loopback://localhost/
+08:43:40.617-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerEndpointRoutingTests+PlainCommand
+08:43:40.727-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerEndpointRoutingTests+PlainCommand fa310000-6d6c-1461-5898-08df07f45bf7 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+PlainCommand
+08:43:40.730-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerEndpointRoutingTests+DefinitionNameCommand
+08:43:40.735-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerEndpointRoutingTests+DefinitionNameCommand fa310000-6d6c-1461-833a-08df07f45c07 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+DefinitionNameCommand
+08:43:40.736-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerEndpointRoutingTests+InlineEndpointCommand
+08:43:40.740-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerEndpointRoutingTests+InlineEndpointCommand fa310000-6d6c-1461-5184-08df07f45c08 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+InlineEndpointCommand
+08:43:40.741-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerEndpointRoutingTests+DefinitionEndpointCommand
+08:43:40.743-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerEndpointRoutingTests+DefinitionEndpointCommand fa310000-6d6c-1461-1510-08df07f45c09 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+DefinitionEndpointCommand
+08:43:40.744-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerEndpointRoutingTests+OverrideDefinitionNameCommand
+08:43:40.748-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerEndpointRoutingTests+OverrideDefinitionNameCommand fa310000-6d6c-1461-9832-08df07f45c09 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+OverrideDefinitionNameCommand
+08:43:40.748-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerEndpointRoutingTests+OverrideDefinitionEndpointCommand
+08:43:40.756-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerEndpointRoutingTests+OverrideDefinitionEndpointCommand fa310000-6d6c-1461-336e-08df07f45c0a ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+OverrideDefinitionEndpointCommand
+08:43:40.784-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerEndpointRoutingTests+OverrideDefinitionEndpointEvent
+08:43:40.784-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerEndpointRoutingTests+DefinitionNameEvent
+08:43:40.784-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerEndpointRoutingTests+DefinitionEndpointEvent
+08:43:40.784-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerEndpointRoutingTests+PlainEvent
+08:43:40.784-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerEndpointRoutingTests+OverrideDefinitionNameEvent
+08:43:40.785-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerEndpointRoutingTests+InlineEndpointEvent
+08:43:40.798-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerEndpointRoutingTests+OverrideDefinitionEndpointEvent fa310000-6d6c-1461-fa92-08df07f45c0f ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+OverrideDefinitionEndpointEvent
+08:43:40.798-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerEndpointRoutingTests+DefinitionEndpointEvent fa310000-6d6c-1461-f45c-08df07f45c0f ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+DefinitionEndpointEvent
+08:43:40.799-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerEndpointRoutingTests+PlainEvent fa310000-6d6c-1461-f20e-08df07f45c0f ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+PlainEvent
+08:43:40.799-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerEndpointRoutingTests+InlineEndpointEvent fa310000-6d6c-1461-f1c8-08df07f45c0f ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+InlineEndpointEvent
+08:43:40.799-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerEndpointRoutingTests+DefinitionNameEvent fa310000-6d6c-1461-fb14-08df07f45c0f ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+DefinitionNameEvent
+08:43:40.799-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerEndpointRoutingTests+OverrideDefinitionNameEvent fa310000-6d6c-1461-f722-08df07f45c0f ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+OverrideDefinitionNameEvent
+08:43:40.809-D RECEIVE loopback://localhost/by_endpoint_name fa310000-6d6c-1461-9832-08df07f45c09 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+OverrideDefinitionNameCommand ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+OverrideDefinitionNameConsumer(00:00:00.0462516)
+08:43:40.809-D RECEIVE loopback://localhost/InlineEndpoint fa310000-6d6c-1461-5184-08df07f45c08 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+InlineEndpointCommand ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+InlineEndpointConsumer(00:00:00.0462103)
+08:43:40.809-D RECEIVE loopback://localhost/by_definition fa310000-6d6c-1461-833a-08df07f45c07 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+DefinitionNameCommand ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+DefinitionNameConsumer(00:00:00.0461510)
+08:43:40.809-D RECEIVE loopback://localhost/Plain fa310000-6d6c-1461-5898-08df07f45bf7 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+PlainCommand ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+PlainConsumer(00:00:00.0461819)
+08:43:40.809-D RECEIVE loopback://localhost/ignored-definition-endpoint fa310000-6d6c-1461-1510-08df07f45c09 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+DefinitionEndpointCommand ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+DefinitionEndpointConsumer(00:00:00.0462035)
+08:43:40.809-D RECEIVE loopback://localhost/ignored_definition_endpoint fa310000-6d6c-1461-336e-08df07f45c0a ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+OverrideDefinitionEndpointCommand ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests+OverrideDefinitionEndpointConsumer(00:00:00.0461401)
+08:43:40.817-D Stopping bus instances: IBus
+08:43:40.822-D Stopping bus: loopback://localhost/
+08:43:40.828-D Endpoint Stopping: loopback://localhost/Plain
+08:43:40.829-D Consumer Stopping: loopback://localhost/Plain (Stop Receive Transport)
+08:43:40.839-D Endpoint Completed: loopback://localhost/Plain
+08:43:40.843-D Consumer Completed: loopback://localhost/Plain: 1 received, 1 concurrent
+08:43:40.845-D Endpoint Stopping: loopback://localhost/by_definition
+08:43:40.845-D Consumer Stopping: loopback://localhost/by_definition (Stop Receive Transport)
+08:43:40.845-D Endpoint Completed: loopback://localhost/by_definition
+08:43:40.845-D Consumer Completed: loopback://localhost/by_definition: 1 received, 1 concurrent
+08:43:40.845-D Endpoint Stopping: loopback://localhost/InlineEndpoint
+08:43:40.846-D Consumer Stopping: loopback://localhost/InlineEndpoint (Stop Receive Transport)
+08:43:40.846-D Endpoint Completed: loopback://localhost/InlineEndpoint
+08:43:40.846-D Consumer Completed: loopback://localhost/InlineEndpoint: 1 received, 1 concurrent
+08:43:40.846-D Endpoint Stopping: loopback://localhost/ignored-definition-endpoint
+08:43:40.846-D Consumer Stopping: loopback://localhost/ignored-definition-endpoint (Stop Receive Transport)
+08:43:40.846-D Endpoint Completed: loopback://localhost/ignored-definition-endpoint
+08:43:40.846-D Consumer Completed: loopback://localhost/ignored-definition-endpoint: 1 received, 1 concurrent
+08:43:40.846-D Endpoint Stopping: loopback://localhost/by_endpoint_name
+08:43:40.846-D Consumer Stopping: loopback://localhost/by_endpoint_name (Stop Receive Transport)
+08:43:40.846-D Endpoint Completed: loopback://localhost/by_endpoint_name
+08:43:40.846-D Consumer Completed: loopback://localhost/by_endpoint_name: 1 received, 1 concurrent
+08:43:40.846-D Endpoint Stopping: loopback://localhost/ignored_definition_endpoint
+08:43:40.846-D Consumer Stopping: loopback://localhost/ignored_definition_endpoint (Stop Receive Transport)
+08:43:40.846-D Endpoint Completed: loopback://localhost/ignored_definition_endpoint
+08:43:40.846-D Consumer Completed: loopback://localhost/ignored_definition_endpoint: 1 received, 1 concurrent
+08:43:40.847-D Endpoint Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_9eaoyydppokgd4jkbdxox7n5g6
+08:43:40.847-D Consumer Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_9eaoyydppokgd4jkbdxox7n5g6 (Stop Receive Transport)
+08:43:40.847-D Endpoint Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_9eaoyydppokgd4jkbdxox7n5g6
+08:43:40.847-D Consumer Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_9eaoyydppokgd4jkbdxox7n5g6: 0 received, 0 concurrent
+08:43:40.858-I Bus stopped: loopback://localhost/
+fehlerhaft ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests.ConsumerRegistrationPrecedence_ProducesEveryExactSourceAddress (941ms)
+  Assert.Equal() Failure: Strings differ
+             ↓ (pos 0)
+  Expected: "by-endpoint"
+  Actual:   "InlineEndpoint"
+             ↑ (pos 0)
+    um ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests.AssertSource[TEvent,TConsumer](ITestHarness harness, String endpointName, TimeSpan timeout, CancellationToken cancellationToken) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerEndpointRoutingTests.cs:210
+    um ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests.ConsumerRegistrationPrecedence_ProducesEveryExactSourceAddress() in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerEndpointRoutingTests.cs:47
+    um ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests.ConsumerRegistrationPrecedence_ProducesEveryExactSourceAddress() in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerEndpointRoutingTests.cs:58
+    um ViciOne.ServiceBus.Tests.DependencyInjection.ContainerEndpointRoutingTests.ConsumerRegistrationPrecedence_ProducesEveryExactSourceAddress() in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerEndpointRoutingTests.cs:58
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/container-mutation-evidence-final/M13-results/M13.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-container-mutations/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 2s 290ms

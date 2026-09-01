@@ -1,0 +1,10 @@
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/container-final-positive/unit/activemq.json
+
+Testlaufzusammenfassung: Bestanden! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport.Tests/release/ViciOne.ServiceBus.ActiveMqTransport.Tests.dll (net10.0|x64)
+  gesamt: 133
+  fehlerhaft: 0
+  erfolgreich: 133
+  übersprungen: 0
+  Dauer: 1s 227ms

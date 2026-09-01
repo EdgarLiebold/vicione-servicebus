@@ -1,0 +1,75 @@
+08:44:09.581-I Configured endpoint discovery-ping-state, Saga: ViciOne.ServiceBus.Tests.DependencyInjection.ContainerDiscovery.DiscoveryPingState, State Machine: ViciOne.ServiceBus.Tests.DependencyInjection.ContainerDiscovery.DiscoveryPingStateMachine
+08:44:09.649-I Configured endpoint DiscoveryPing, Saga: ViciOne.ServiceBus.Tests.DependencyInjection.ContainerDiscovery.DiscoveryPingSaga
+08:44:09.653-I Configured endpoint Ping_compensate, Compensate Activity: ViciOne.ServiceBus.Tests.DependencyInjection.ContainerDiscovery.PingActivity
+08:44:09.654-I Configured endpoint Ping_execute, Execute Activity: ViciOne.ServiceBus.Tests.DependencyInjection.ContainerDiscovery.PingActivity
+08:44:09.656-I Configured endpoint PingSecond_execute, Execute Activity: ViciOne.ServiceBus.Tests.DependencyInjection.ContainerDiscovery.PingSecondActivity
+08:44:09.780-D Starting bus instances: IBus
+08:44:09.783-D Starting bus: loopback://localhost/
+08:44:09.819-D Endpoint Ready: loopback://localhost/Ping_execute
+08:44:09.819-D Endpoint Ready: loopback://localhost/PingSecond_execute
+08:44:09.819-D Endpoint Ready: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_io3yyydppokgdz9wbdxox7dpnp
+08:44:09.819-D Endpoint Ready: loopback://localhost/Ping_compensate
+08:44:09.819-D Endpoint Ready: loopback://localhost/DiscoveryPing
+08:44:09.819-D Endpoint Ready: loopback://localhost/discovery-ping-state
+08:44:09.823-I Bus started: loopback://localhost/
+08:44:09.847-D Create send transport: loopback://localhost/Ping_execute?bind=true
+08:44:09.934-D SEND loopback://localhost/Ping_execute?bind=true ac320000-6d6c-1461-62d4-08df07f46d63 ViciOne.ServiceBus.Courier.Contracts.RoutingSlip
+08:44:09.994-D Execute Activity: ac320000-6d6c-1461-b55e-08df07f46d5e (ViciOne.ServiceBus.Tests.DependencyInjection.ContainerDiscovery.PingActivity, loopback://localhost/Ping_execute)
+08:44:10.029-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Courier.Contracts:RoutingSlipActivityCompleted
+08:44:10.052-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Courier.Contracts:RoutingSlipActivityCompleted ac320000-6d6c-1461-69d0-08df07f46d7e ViciOne.ServiceBus.Courier.Contracts.RoutingSlipActivityCompleted
+08:44:10.056-D Create send transport: loopback://localhost/PingSecond_execute?bind=true
+08:44:10.066-D SEND loopback://localhost/PingSecond_execute?bind=true ac320000-6d6c-1461-62d4-08df07f46d63 ViciOne.ServiceBus.Courier.Contracts.RoutingSlip
+08:44:10.068-D Execute Activity: ac320000-6d6c-1461-b55e-08df07f46d5e (ViciOne.ServiceBus.Tests.DependencyInjection.ContainerDiscovery.PingSecondActivity, loopback://localhost/PingSecond_execute)
+08:44:10.068-D RECEIVE loopback://localhost/Ping_execute ac320000-6d6c-1461-62d4-08df07f46d63 ViciOne.ServiceBus.Courier.Contracts.RoutingSlip ViciOne.ServiceBus.Tests.DependencyInjection.ContainerDiscovery.PingActivity(00:00:00.1054669)
+08:44:10.070-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Courier.Contracts:RoutingSlipActivityCompleted
+08:44:10.071-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Courier.Contracts:RoutingSlipActivityCompleted ac320000-6d6c-1461-6e98-08df07f46d84 ViciOne.ServiceBus.Courier.Contracts.RoutingSlipActivityCompleted
+08:44:10.072-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Courier.Contracts:RoutingSlipCompleted
+08:44:10.076-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Courier.Contracts:RoutingSlipCompleted ac320000-6d6c-1461-b7b8-08df07f46d84 ViciOne.ServiceBus.Courier.Contracts.RoutingSlipCompleted
+08:44:10.076-D RECEIVE loopback://localhost/PingSecond_execute ac320000-6d6c-1461-62d4-08df07f46d63 ViciOne.ServiceBus.Courier.Contracts.RoutingSlip ViciOne.ServiceBus.Tests.DependencyInjection.ContainerDiscovery.PingSecondActivity(00:00:00.0087734)
+08:44:10.096-D Create send transport: loopback://localhost/ping-queue?bind=true
+08:44:10.124-D SEND loopback://localhost/ping-queue?bind=true ac320000-6d6c-1461-72e0-08df07f46d88 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerDiscovery.DiscoveryPing
+08:44:40.126-D Stopping bus instances: IBus
+08:44:40.129-D Stopping bus: loopback://localhost/
+08:44:40.134-D Endpoint Stopping: loopback://localhost/discovery-ping-state
+08:44:40.135-D Consumer Stopping: loopback://localhost/discovery-ping-state (Stop Receive Transport)
+08:44:40.140-D Endpoint Completed: loopback://localhost/discovery-ping-state
+08:44:40.145-D Consumer Completed: loopback://localhost/discovery-ping-state: 0 received, 0 concurrent
+08:44:40.148-D Endpoint Stopping: loopback://localhost/DiscoveryPing
+08:44:40.148-D Consumer Stopping: loopback://localhost/DiscoveryPing (Stop Receive Transport)
+08:44:40.148-D Endpoint Completed: loopback://localhost/DiscoveryPing
+08:44:40.148-D Consumer Completed: loopback://localhost/DiscoveryPing: 0 received, 0 concurrent
+08:44:40.148-D Endpoint Stopping: loopback://localhost/Ping_compensate
+08:44:40.148-D Consumer Stopping: loopback://localhost/Ping_compensate (Stop Receive Transport)
+08:44:40.149-D Endpoint Completed: loopback://localhost/Ping_compensate
+08:44:40.149-D Consumer Completed: loopback://localhost/Ping_compensate: 0 received, 0 concurrent
+08:44:40.149-D Endpoint Stopping: loopback://localhost/Ping_execute
+08:44:40.149-D Consumer Stopping: loopback://localhost/Ping_execute (Stop Receive Transport)
+08:44:40.149-D Endpoint Completed: loopback://localhost/Ping_execute
+08:44:40.149-D Consumer Completed: loopback://localhost/Ping_execute: 1 received, 1 concurrent
+08:44:40.149-D Endpoint Stopping: loopback://localhost/PingSecond_execute
+08:44:40.149-D Consumer Stopping: loopback://localhost/PingSecond_execute (Stop Receive Transport)
+08:44:40.149-D Endpoint Completed: loopback://localhost/PingSecond_execute
+08:44:40.149-D Consumer Completed: loopback://localhost/PingSecond_execute: 1 received, 1 concurrent
+08:44:40.150-D Endpoint Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_io3yyydppokgdz9wbdxox7dpnp
+08:44:40.150-D Consumer Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_io3yyydppokgdz9wbdxox7dpnp (Stop Receive Transport)
+08:44:40.150-D Endpoint Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_io3yyydppokgdz9wbdxox7dpnp
+08:44:40.151-D Consumer Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_io3yyydppokgdz9wbdxox7dpnp: 0 received, 0 concurrent
+08:44:40.162-I Bus stopped: loopback://localhost/
+fehlerhaft ViciOne.ServiceBus.Tests.DependencyInjection.ContainerNamespaceDiscoveryTests.NamespaceDiscovery_ConfiguresAndExecutesEveryOwnedEndpointEndToEnd (30s 984ms)
+  Xunit.MicrosoftTestingPlatform.XunitException: ViciOne.ServiceBus.RequestTimeoutException : Timeout waiting for response, RequestId: ac320000-6d6c-1461-5a54-08df07f46d87
+    um ViciOne.ServiceBus.Clients.ResponseHandlerConnectHandle`1.GetTask() in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Clients/ResponseHandlerConnectHandle.cs:58
+    um ViciOne.ServiceBus.Clients.RequestClient`1.GetResponseInternal[T](SendRequestCallback request, CancellationToken cancellationToken, RequestTimeout timeout, RequestPipeConfiguratorCallback`1 callback) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Clients/RequestClient.cs:206
+    um ViciOne.ServiceBus.Tests.DependencyInjection.ContainerNamespaceDiscoveryTests.NamespaceDiscovery_ConfiguresAndExecutesEveryOwnedEndpointEndToEnd() in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerNamespaceDiscoveryTests.cs:64
+    um ViciOne.ServiceBus.Tests.DependencyInjection.ContainerNamespaceDiscoveryTests.NamespaceDiscovery_ConfiguresAndExecutesEveryOwnedEndpointEndToEnd() in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerNamespaceDiscoveryTests.cs:104
+    um ViciOne.ServiceBus.Tests.DependencyInjection.ContainerNamespaceDiscoveryTests.NamespaceDiscovery_ConfiguresAndExecutesEveryOwnedEndpointEndToEnd() in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerNamespaceDiscoveryTests.cs:104
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/container-mutation-evidence-final/M14-results/M14.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-container-mutations/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 32s 686ms

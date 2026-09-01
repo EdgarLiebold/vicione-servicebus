@@ -1,0 +1,52 @@
+08:34:43.022-I Configured endpoint container-initial-request, Consumer: ViciOne.ServiceBus.Tests.Clients.ContainerRequestClientRegistrationTests+InitialConsumer
+08:34:43.071-I Configured endpoint container-subsequent-request, Consumer: ViciOne.ServiceBus.Tests.Clients.ContainerRequestClientRegistrationTests+SubsequentConsumer
+08:34:43.186-D Starting bus instances: IBus
+08:34:43.190-D Starting bus: loopback://localhost/
+08:34:43.224-D Endpoint Ready: loopback://localhost/container-subsequent-request
+08:34:43.224-D Endpoint Ready: loopback://localhost/container-initial-request
+08:34:43.224-D Endpoint Ready: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_basyyydppokgnnnrbdxoxha5rz
+08:34:43.227-I Bus started: loopback://localhost/
+08:34:43.256-D Create send transport: loopback://localhost/container-initial-request?bind=true
+08:34:43.384-D SEND loopback://localhost/container-initial-request?bind=true 0e2c0000-6d6c-1461-71f2-08df07f31bac ViciOne.ServiceBus.Tests.Clients.ContainerRequestClientRegistrationTests+InitialRequest
+08:34:43.438-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Clients:ContainerRequestClientRegistrationTests+SubsequentRequest
+08:34:43.459-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Clients:ContainerRequestClientRegistrationTests+SubsequentRequest 0e2c0000-6d6c-1461-4860-08df07f31bc7 ViciOne.ServiceBus.Tests.Clients.ContainerRequestClientRegistrationTests+SubsequentRequest
+08:34:43.467-D Create send transport: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_basyyydppokgnnnrbdxoxha5rz
+08:34:43.472-D SEND loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_basyyydppokgnnnrbdxoxha5rz 0e2c0000-6d6c-1461-cce6-08df07f31bcb ViciOne.ServiceBus.Tests.Clients.ContainerRequestClientRegistrationTests+SubsequentResponse
+08:34:43.478-D RECEIVE loopback://localhost/container-subsequent-request 0e2c0000-6d6c-1461-4860-08df07f31bc7 ViciOne.ServiceBus.Tests.Clients.ContainerRequestClientRegistrationTests+SubsequentRequest ViciOne.ServiceBus.Tests.Clients.ContainerRequestClientRegistrationTests+SubsequentConsumer(00:00:00.0154812)
+08:34:43.478-D RECEIVE loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_basyyydppokgnnnrbdxoxha5rz 0e2c0000-6d6c-1461-cce6-08df07f31bcb ViciOne.ServiceBus.Tests.Clients.ContainerRequestClientRegistrationTests+SubsequentResponse ViciOne.ServiceBus.MessageHandler<ViciOne.ServiceBus.Tests.Clients.ContainerRequestClientRegistrationTests+SubsequentResponse>(00:00:00.0004180)
+08:34:43.482-D Create send transport: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_basyyydppokgnnnrbdxoxha5rz
+08:34:43.486-D SEND loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_basyyydppokgnnnrbdxoxha5rz 0e2c0000-6d6c-1461-eb70-08df07f31bcd ViciOne.ServiceBus.Tests.Clients.ContainerRequestClientRegistrationTests+InitialResponse
+08:34:43.487-D RECEIVE loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_basyyydppokgnnnrbdxoxha5rz 0e2c0000-6d6c-1461-eb70-08df07f31bcd ViciOne.ServiceBus.Tests.Clients.ContainerRequestClientRegistrationTests+InitialResponse ViciOne.ServiceBus.MessageHandler<ViciOne.ServiceBus.Tests.Clients.ContainerRequestClientRegistrationTests+InitialResponse>(00:00:00.0000517)
+08:34:43.488-D RECEIVE loopback://localhost/container-initial-request 0e2c0000-6d6c-1461-71f2-08df07f31bac ViciOne.ServiceBus.Tests.Clients.ContainerRequestClientRegistrationTests+InitialRequest ViciOne.ServiceBus.Tests.Clients.ContainerRequestClientRegistrationTests+InitialConsumer(00:00:00.0761931)
+08:34:43.497-D Stopping bus instances: IBus
+08:34:43.500-D Stopping bus: loopback://localhost/
+08:34:43.505-D Endpoint Stopping: loopback://localhost/container-initial-request
+08:34:43.506-D Consumer Stopping: loopback://localhost/container-initial-request (Stop Receive Transport)
+08:34:43.510-D Endpoint Completed: loopback://localhost/container-initial-request
+08:34:43.515-D Consumer Completed: loopback://localhost/container-initial-request: 1 received, 1 concurrent
+08:34:43.517-D Endpoint Stopping: loopback://localhost/container-subsequent-request
+08:34:43.517-D Consumer Stopping: loopback://localhost/container-subsequent-request (Stop Receive Transport)
+08:34:43.518-D Endpoint Completed: loopback://localhost/container-subsequent-request
+08:34:43.518-D Consumer Completed: loopback://localhost/container-subsequent-request: 1 received, 1 concurrent
+08:34:43.520-D Endpoint Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_basyyydppokgnnnrbdxoxha5rz
+08:34:43.520-D Consumer Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_basyyydppokgnnnrbdxoxha5rz (Stop Receive Transport)
+08:34:43.520-D Endpoint Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_basyyydppokgnnnrbdxoxha5rz
+08:34:43.520-D Consumer Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_basyyydppokgnnnrbdxoxha5rz: 2 received, 1 concurrent
+08:34:43.528-I Bus stopped: loopback://localhost/
+fehlerhaft ViciOne.ServiceBus.Tests.Clients.ContainerRequestClientRegistrationTests.AddressedGenericAndRuntimeRegistrations_CompleteTheNestedRequestWithExactCausation (895ms)
+  Assert.Single() Failure: The collection was empty
+    um ViciOne.ServiceBus.Tests.Clients.ContainerRequestClientRegistrationTests.AddressedGenericAndRuntimeRegistrations_CompleteTheNestedRequestWithExactCausation() in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/Clients/ContainerRequestClientRegistrationTests.cs:48
+    um ViciOne.ServiceBus.Tests.Clients.ContainerRequestClientRegistrationTests.AddressedGenericAndRuntimeRegistrations_CompleteTheNestedRequestWithExactCausation() in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/Clients/ContainerRequestClientRegistrationTests.cs:64
+    um ViciOne.ServiceBus.Tests.Clients.ContainerRequestClientRegistrationTests.AddressedGenericAndRuntimeRegistrations_CompleteTheNestedRequestWithExactCausation() in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/Clients/ContainerRequestClientRegistrationTests.cs:68
+    um ViciOne.ServiceBus.Tests.Clients.ContainerRequestClientRegistrationTests.AddressedGenericAndRuntimeRegistrations_CompleteTheNestedRequestWithExactCausation() in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/Clients/ContainerRequestClientRegistrationTests.cs:68
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/container-mutation-evidence-final/M02-results/M02.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-container-mutations/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 2s 055ms

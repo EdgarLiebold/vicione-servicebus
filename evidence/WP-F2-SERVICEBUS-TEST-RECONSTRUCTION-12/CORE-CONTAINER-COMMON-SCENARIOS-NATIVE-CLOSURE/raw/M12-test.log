@@ -1,0 +1,46 @@
+08:42:46.351-I Configured endpoint InlineEndpoint, Saga: ViciOne.ServiceBus.Tests.Sagas.ContainerSagaIntegrationTests+InlineEndpointSaga
+08:42:46.386-I Configured endpoint custom-definition-saga, Saga: ViciOne.ServiceBus.Tests.Sagas.ContainerSagaIntegrationTests+DefinitionEndpointSaga
+08:42:46.490-D Starting bus instances: IBus
+08:42:46.493-D Starting bus: loopback://localhost/
+08:42:46.525-D Endpoint Ready: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_qcaoyydppokgdzpabdxox7b5fj
+08:42:46.525-D Endpoint Ready: loopback://localhost/InlineEndpoint
+08:42:46.525-D Endpoint Ready: loopback://localhost/custom-definition-saga
+08:42:46.527-I Bus started: loopback://localhost/
+08:42:46.543-D Create send transport: loopback://localhost/custom-container-saga?bind=true
+08:42:46.544-D Create send transport: loopback://localhost/custom-definition-saga?bind=true
+08:42:46.625-D SEND loopback://localhost/custom-container-saga?bind=true 73310000-6d6c-1461-3602-08df07f43bbc ViciOne.ServiceBus.Tests.Sagas.ContainerSagaIntegrationTests+InlineSagaStart
+08:42:46.631-D SEND loopback://localhost/custom-definition-saga?bind=true 73310000-6d6c-1461-e5d8-08df07f43bc7 ViciOne.ServiceBus.Tests.Sagas.ContainerSagaIntegrationTests+DefinitionSagaStart
+08:42:46.679-D SAGA:ViciOne.ServiceBus.Tests.Sagas.ContainerSagaIntegrationTests+DefinitionEndpointSaga:73310000-6d6c-1461-d516-08df07f43bb8 Created ViciOne.ServiceBus.Tests.Sagas.ContainerSagaIntegrationTests+DefinitionSagaStart
+08:42:46.685-D SAGA:ViciOne.ServiceBus.Tests.Sagas.ContainerSagaIntegrationTests+DefinitionEndpointSaga:73310000-6d6c-1461-d516-08df07f43bb8 Added ViciOne.ServiceBus.Tests.Sagas.ContainerSagaIntegrationTests+DefinitionSagaStart
+08:42:46.695-D RECEIVE loopback://localhost/custom-definition-saga 73310000-6d6c-1461-e5d8-08df07f43bc7 ViciOne.ServiceBus.Tests.Sagas.ContainerSagaIntegrationTests+DefinitionSagaStart ViciOne.ServiceBus.Tests.Sagas.ContainerSagaIntegrationTests+DefinitionEndpointSaga(00:00:00.0287032)
+08:43:16.643-D Stopping bus instances: IBus
+08:43:16.647-D Stopping bus: loopback://localhost/
+08:43:16.652-D Endpoint Stopping: loopback://localhost/InlineEndpoint
+08:43:16.652-D Consumer Stopping: loopback://localhost/InlineEndpoint (Stop Receive Transport)
+08:43:16.656-D Endpoint Completed: loopback://localhost/InlineEndpoint
+08:43:16.660-D Consumer Completed: loopback://localhost/InlineEndpoint: 0 received, 0 concurrent
+08:43:16.662-D Endpoint Stopping: loopback://localhost/custom-definition-saga
+08:43:16.662-D Consumer Stopping: loopback://localhost/custom-definition-saga (Stop Receive Transport)
+08:43:16.662-D Endpoint Completed: loopback://localhost/custom-definition-saga
+08:43:16.662-D Consumer Completed: loopback://localhost/custom-definition-saga: 1 received, 1 concurrent
+08:43:16.663-D Endpoint Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_qcaoyydppokgdzpabdxox7b5fj
+08:43:16.664-D Consumer Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_qcaoyydppokgdzpabdxox7b5fj (Stop Receive Transport)
+08:43:16.664-D Endpoint Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_qcaoyydppokgdzpabdxox7b5fj
+08:43:16.664-D Consumer Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_qcaoyydppokgdzpabdxox7b5fj: 0 received, 0 concurrent
+08:43:16.671-I Bus stopped: loopback://localhost/
+fehlerhaft ViciOne.ServiceBus.Tests.Sagas.ContainerSagaIntegrationTests.SagaEndpointOverrides_RouteToTheInlineAndDefinitionOwnedAddresses (30s 599ms)
+  Xunit.MicrosoftTestingPlatform.XunitException: System.TimeoutException : The operation has timed out.
+    um ViciOne.ServiceBus.Tests.Sagas.ContainerSagaIntegrationTests.SagaEndpointOverrides_RouteToTheInlineAndDefinitionOwnedAddresses() in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/Sagas/ContainerSagaIntegrationTests.cs:100
+    um ViciOne.ServiceBus.Tests.Sagas.ContainerSagaIntegrationTests.SagaEndpointOverrides_RouteToTheInlineAndDefinitionOwnedAddresses() in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/Sagas/ContainerSagaIntegrationTests.cs:112
+    um ViciOne.ServiceBus.Tests.Sagas.ContainerSagaIntegrationTests.SagaEndpointOverrides_RouteToTheInlineAndDefinitionOwnedAddresses() in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/Sagas/ContainerSagaIntegrationTests.cs:112
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/container-mutation-evidence-final/M12-results/M12.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-container-mutations/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 31s 586ms

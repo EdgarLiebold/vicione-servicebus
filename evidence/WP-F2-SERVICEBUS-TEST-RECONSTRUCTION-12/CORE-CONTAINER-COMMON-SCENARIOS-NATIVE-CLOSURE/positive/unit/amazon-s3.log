@@ -1,0 +1,10 @@
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/container-final-positive/unit/amazon-s3.json
+
+Testlaufzusammenfassung: Bestanden! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonS3.Tests/release/ViciOne.ServiceBus.AmazonS3.Tests.dll (net10.0|x64)
+  gesamt: 6
+  fehlerhaft: 0
+  erfolgreich: 6
+  übersprungen: 0
+  Dauer: 588ms

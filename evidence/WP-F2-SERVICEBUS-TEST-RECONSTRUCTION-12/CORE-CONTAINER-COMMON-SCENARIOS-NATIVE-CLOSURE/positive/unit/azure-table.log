@@ -1,0 +1,10 @@
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/container-final-positive/unit/azure-table.json
+
+Testlaufzusammenfassung: Bestanden! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.Tests/release/ViciOne.ServiceBus.Azure.Table.Tests.dll (net10.0|x64)
+  gesamt: 50
+  fehlerhaft: 0
+  erfolgreich: 50
+  übersprungen: 0
+  Dauer: 993ms

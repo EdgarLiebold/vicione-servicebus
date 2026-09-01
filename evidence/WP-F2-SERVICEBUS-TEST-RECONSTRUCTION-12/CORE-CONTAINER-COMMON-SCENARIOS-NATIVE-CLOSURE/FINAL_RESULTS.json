@@ -1,0 +1,360 @@
+{
+  "schemaVersion": 1,
+  "kind": "CORE_CONTAINER_COMMON_SCENARIOS_NATIVE_RESULTS",
+  "baselineCommit": "71f64fb483272a155ce8ab7a9d76d59205bc1081",
+  "technicalCommit": "2628be062f3d390a1c91655109bdbd78dc516d6b",
+  "technicalTree": "e3af82a0a44caa62bdec2c3ad8c69fc272c19700",
+  "obligations": {
+    "count": 102,
+    "replacedExecuting": 97,
+    "invalidAbstract": 5,
+    "profile": "UnitArchitecture",
+    "map": ".testagent/core-container-common-scenarios-native-obligation-map.tsv"
+  },
+  "nativeCarrier": {
+    "materializedExecutableCasesAdded": 50,
+    "requirementCoveragePairsAdded": 37
+  },
+  "legacyRetirement": {
+    "filesDeleted": 40,
+    "linesDeleted": 6982,
+    "technicalNetLines": -2441
+  },
+  "unitArchitecture": {
+    "ctrfFiles": 21,
+    "tests": 2807,
+    "passed": 2807,
+    "failed": 0,
+    "skipped": 0,
+    "pending": 0,
+    "other": 0,
+    "declaredFloor": 2802,
+    "ctrfRoot": "positive/unit",
+    "modules": [
+      {
+        "module": "abstractions",
+        "exitCode": 0,
+        "tests": 245,
+        "passed": 245,
+        "failed": 0,
+        "pending": 0,
+        "skipped": 0,
+        "other": 0,
+        "suites": 1,
+        "start": 1788245466216,
+        "stop": 1788245467108
+      },
+      {
+        "module": "activemq",
+        "exitCode": 0,
+        "tests": 133,
+        "passed": 133,
+        "failed": 0,
+        "pending": 0,
+        "skipped": 0,
+        "other": 0,
+        "suites": 1,
+        "start": 1788245468444,
+        "stop": 1788245469403
+      },
+      {
+        "module": "amazon-s3",
+        "exitCode": 0,
+        "tests": 6,
+        "passed": 6,
+        "failed": 0,
+        "pending": 0,
+        "skipped": 0,
+        "other": 0,
+        "suites": 1,
+        "start": 1788245470683,
+        "stop": 1788245471063
+      },
+      {
+        "module": "amazon-sqs",
+        "exitCode": 0,
+        "tests": 66,
+        "passed": 66,
+        "failed": 0,
+        "pending": 0,
+        "skipped": 0,
+        "other": 0,
+        "suites": 1,
+        "start": 1788245472373,
+        "stop": 1788245473152
+      },
+      {
+        "module": "analyzers-codefixes",
+        "exitCode": 0,
+        "tests": 29,
+        "passed": 29,
+        "failed": 0,
+        "pending": 0,
+        "skipped": 0,
+        "other": 0,
+        "suites": 1,
+        "start": 1788245474476,
+        "stop": 1788245486161
+      },
+      {
+        "module": "analyzers",
+        "exitCode": 0,
+        "tests": 114,
+        "passed": 114,
+        "failed": 0,
+        "pending": 0,
+        "skipped": 0,
+        "other": 0,
+        "suites": 1,
+        "start": 1788245487596,
+        "stop": 1788245508631
+      },
+      {
+        "module": "architecture",
+        "exitCode": 0,
+        "tests": 137,
+        "passed": 137,
+        "failed": 0,
+        "pending": 0,
+        "skipped": 0,
+        "other": 0,
+        "suites": 1,
+        "start": 1788245540004,
+        "stop": 1788245623583
+      },
+      {
+        "module": "azure-table",
+        "exitCode": 0,
+        "tests": 50,
+        "passed": 50,
+        "failed": 0,
+        "pending": 0,
+        "skipped": 0,
+        "other": 0,
+        "suites": 1,
+        "start": 1788245625064,
+        "stop": 1788245625810
+      },
+      {
+        "module": "benchmark",
+        "exitCode": 0,
+        "tests": 21,
+        "passed": 21,
+        "failed": 0,
+        "pending": 0,
+        "skipped": 0,
+        "other": 0,
+        "suites": 1,
+        "start": 1788245627138,
+        "stop": 1788245627401
+      },
+      {
+        "module": "core",
+        "exitCode": 0,
+        "tests": 1439,
+        "passed": 1439,
+        "failed": 0,
+        "pending": 0,
+        "skipped": 0,
+        "other": 0,
+        "suites": 1,
+        "start": 1788245629576,
+        "stop": 1788245692381
+      },
+      {
+        "module": "diagnostics",
+        "exitCode": 0,
+        "tests": 45,
+        "passed": 45,
+        "failed": 0,
+        "pending": 0,
+        "skipped": 0,
+        "other": 0,
+        "suites": 1,
+        "start": 1788245693506,
+        "stop": 1788245693868
+      },
+      {
+        "module": "dynamodb",
+        "exitCode": 0,
+        "tests": 14,
+        "passed": 14,
+        "failed": 0,
+        "pending": 0,
+        "skipped": 0,
+        "other": 0,
+        "suites": 1,
+        "start": 1788245695196,
+        "stop": 1788245695676
+      },
+      {
+        "module": "entity-framework",
+        "exitCode": 0,
+        "tests": 60,
+        "passed": 60,
+        "failed": 0,
+        "pending": 0,
+        "skipped": 0,
+        "other": 0,
+        "suites": 1,
+        "start": 1788245696946,
+        "stop": 1788245701068
+      },
+      {
+        "module": "messagepack",
+        "exitCode": 0,
+        "tests": 55,
+        "passed": 55,
+        "failed": 0,
+        "pending": 0,
+        "skipped": 0,
+        "other": 0,
+        "suites": 1,
+        "start": 1788245702662,
+        "stop": 1788245704802
+      },
+      {
+        "module": "quartz",
+        "exitCode": 0,
+        "tests": 87,
+        "passed": 87,
+        "failed": 0,
+        "pending": 0,
+        "skipped": 0,
+        "other": 0,
+        "suites": 1,
+        "start": 1788245706108,
+        "stop": 1788245725414
+      },
+      {
+        "module": "rabbitmq",
+        "exitCode": 0,
+        "tests": 108,
+        "passed": 108,
+        "failed": 0,
+        "pending": 0,
+        "skipped": 0,
+        "other": 0,
+        "suites": 1,
+        "start": 1788245727049,
+        "stop": 1788245727690
+      },
+      {
+        "module": "roslyn-infrastructure",
+        "exitCode": 0,
+        "tests": 4,
+        "passed": 4,
+        "failed": 0,
+        "pending": 0,
+        "skipped": 0,
+        "other": 0,
+        "suites": 1,
+        "start": 1788245729419,
+        "stop": 1788245732486
+      },
+      {
+        "module": "signalr",
+        "exitCode": 0,
+        "tests": 32,
+        "passed": 32,
+        "failed": 0,
+        "pending": 0,
+        "skipped": 0,
+        "other": 0,
+        "suites": 1,
+        "start": 1788245734132,
+        "stop": 1788245738859
+      },
+      {
+        "module": "sql-transport",
+        "exitCode": 0,
+        "tests": 45,
+        "passed": 45,
+        "failed": 0,
+        "pending": 0,
+        "skipped": 0,
+        "other": 0,
+        "suites": 1,
+        "start": 1788245740114,
+        "stop": 1788245740618
+      },
+      {
+        "module": "state-machine-visualizer",
+        "exitCode": 0,
+        "tests": 8,
+        "passed": 8,
+        "failed": 0,
+        "pending": 0,
+        "skipped": 0,
+        "other": 0,
+        "suites": 1,
+        "start": 1788245742222,
+        "stop": 1788245742665
+      },
+      {
+        "module": "test-infrastructure",
+        "exitCode": 0,
+        "tests": 109,
+        "passed": 109,
+        "failed": 0,
+        "pending": 0,
+        "skipped": 0,
+        "other": 0,
+        "suites": 1,
+        "start": 1788245744024,
+        "stop": 1788245744489
+      }
+    ]
+  },
+  "engineeringRestore": {
+    "exitCode": 0,
+    "lockedMode": true,
+    "binlog": "binlogs/container-engineering-restore.binlog"
+  },
+  "engineeringBuild": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "binlog": "binlogs/container-engineering-build.binlog"
+  },
+  "postRestoreBuild": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "binlog": "binlogs/postrestore-build.binlog"
+  },
+  "format": {
+    "exitCode": 0,
+    "verifyNoChanges": true,
+    "binlog": "binlogs/format.binlog",
+    "rawLog": "raw/format.log"
+  },
+  "ciSelfTests": {
+    "exitCode": 0,
+    "tests": 257,
+    "passed": 257,
+    "rawLog": "raw/ci-selftests.log"
+  },
+  "verificationModel": {
+    "exitCode": 0,
+    "rawLog": "raw/verification-model.log"
+  },
+  "identitySelfTests": {
+    "exitCode": 0,
+    "tests": 148,
+    "passed": 148,
+    "rawLog": "raw/identity-selftests.log"
+  },
+  "changeList": {
+    "exitCode": 0,
+    "entries": 11261,
+    "rawLog": "raw/change-list.log"
+  },
+  "mutations": {
+    "count": 18,
+    "buildable": 18,
+    "killed": 18,
+    "survived": 0,
+    "manifest": "MUTATION_MANIFEST.json"
+  }
+}

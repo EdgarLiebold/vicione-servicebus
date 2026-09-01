@@ -1,0 +1,269 @@
+{
+  "schemaVersion": 1,
+  "baselineCommit": "71f64fb483272a155ce8ab7a9d76d59205bc1081",
+  "technicalCommit": "2628be062f3d390a1c91655109bdbd78dc516d6b",
+  "technicalTree": "e3af82a0a44caa62bdec2c3ad8c69fc272c19700",
+  "pathCount": 65,
+  "paths": [
+    {
+      "status": "M",
+      "path": ".github/workflows/native-tests.yml"
+    },
+    {
+      "status": "A",
+      "path": ".testagent/core-container-common-scenarios-native-obligation-map.tsv"
+    },
+    {
+      "status": "M",
+      "path": ".testagent/plan.md"
+    },
+    {
+      "status": "M",
+      "path": "README.md"
+    },
+    {
+      "status": "M",
+      "path": "docs/build.md"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/Common_Conductor.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/Common_ConsumeContext.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/Common_Consumer.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/Common_Courier.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/Common_Discovery.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/Common_JobConsumer.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/Common_Mediator.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/Common_MissingDependency.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/Common_Registration.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/Common_Saga.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/Common_SagaStateMachine.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/Common_Scope.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/Common_ScopePublish.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/Common_ScopeRequestClient.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/Common_ScopeSend.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/Common_ScopedMediator.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/MultiBusEndpointName_Specs.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/MultiBusPublishEndpoint_Specs.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/MultiBus_Specs.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/MyId.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/RequestClientOutbox_Specs.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Common_Tests/RequestClient_Specs.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Scenarios/AnotherMessageConsumer.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Scenarios/AnotherMessageConsumerImpl.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Scenarios/AnotherMessageInterface.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Scenarios/FirstSagaMessage.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Scenarios/ISimpleConsumerDependency.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Scenarios/PingRequestConsumer.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Scenarios/SecondSagaMessage.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Scenarios/SecondSimpleSaga.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Scenarios/SimpleConsumer.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Scenarios/SimpleConsumerDependency.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Scenarios/SimpleMessageClass.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Scenarios/SimpleMessageInterface.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Scenarios/SimplePublishedInterface.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Scenarios/SimpleSaga.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Scenarios/ThirdSagaMessage.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Scenarios/WhenAllCompletedOrFaulted.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Scenarios/When_registering_a_consumer.cs"
+    },
+    {
+      "status": "D",
+      "path": "tests/ViciOne.ServiceBus.Tests/ContainerTests/Scenarios/When_registering_a_saga.cs"
+    },
+    {
+      "status": "M",
+      "path": "tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs"
+    },
+    {
+      "status": "A",
+      "path": "tests2/ViciOne.ServiceBus.Tests/Clients/ContainerRequestClientRegistrationTests.cs"
+    },
+    {
+      "status": "A",
+      "path": "tests2/ViciOne.ServiceBus.Tests/Courier/ContainerActivityRegistrationTests.cs"
+    },
+    {
+      "status": "A",
+      "path": "tests2/ViciOne.ServiceBus.Tests/Courier/ContainerRoutingSlipOutboxRequestTests.cs"
+    },
+    {
+      "status": "A",
+      "path": "tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs"
+    },
+    {
+      "status": "A",
+      "path": "tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumerRegistrationTests.cs"
+    },
+    {
+      "status": "A",
+      "path": "tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerDiscovery/ContainerDiscoveryTypes.cs"
+    },
+    {
+      "status": "A",
+      "path": "tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerEndpointRoutingTests.cs"
+    },
+    {
+      "status": "A",
+      "path": "tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerNamespaceDiscoveryTests.cs"
+    },
+    {
+      "status": "A",
+      "path": "tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerOutboxScopeTests.cs"
+    },
+    {
+      "status": "A",
+      "path": "tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerScopedEndpointTests.cs"
+    },
+    {
+      "status": "M",
+      "path": "tests2/ViciOne.ServiceBus.Tests/DependencyInjection/MultiBusRequestTests.cs"
+    },
+    {
+      "status": "A",
+      "path": "tests2/ViciOne.ServiceBus.Tests/Futures/BatchFutureIntegrationTests.cs"
+    },
+    {
+      "status": "A",
+      "path": "tests2/ViciOne.ServiceBus.Tests/JobService/Integration/ContainerJobConsumerDiscoveryTests.cs"
+    },
+    {
+      "status": "A",
+      "path": "tests2/ViciOne.ServiceBus.Tests/JobService/Integration/ContainerJobDiscovery/ContainerJobDiscoveryTypes.cs"
+    },
+    {
+      "status": "A",
+      "path": "tests2/ViciOne.ServiceBus.Tests/Mediator/ContainerMediatorIntegrationTests.cs"
+    },
+    {
+      "status": "M",
+      "path": "tests2/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json"
+    },
+    {
+      "status": "A",
+      "path": "tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/ContainerStateMachineScopeTests.cs"
+    },
+    {
+      "status": "M",
+      "path": "tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineLifecycleIntegrationTests.cs"
+    },
+    {
+      "status": "A",
+      "path": "tests2/ViciOne.ServiceBus.Tests/Sagas/ContainerSagaIntegrationTests.cs"
+    }
+  ]
+}

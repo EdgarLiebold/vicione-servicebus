@@ -2502,3 +2502,27 @@ future cohorts as complete.
 - The Evidence child created with this section is a local immutable review subject. Independent
   read-only acceptance, architecture binding and any future remote publication remain pending and are
   not self-approved; no remote push is authorized or performed by this package.
+
+## Core container common/scenarios native closure — large-package local Evidence freeze (2026-09-01)
+
+- Technical `2628be062f3d390a1c91655109bdbd78dc516d6b`, tree
+  `e3af82a0a44caa62bdec2c3ad8c69fc272c19700`, closes 102 selected inherited ContainerTests
+  Common/Scenarios obligations. The committed map contains 97 `REPLACED_EXECUTING` records and five
+  explicitly invalid abstract fixture identities; 50 new executable cases and 37 requirement variants
+  bind disposal, request routing, discovery, future coordination, outbox/scope, MultiBus, endpoint and
+  mediator behavior in native UnitArchitecture owners.
+- Forty fully replaced inherited files and 6,982 legacy lines are removed atomically. The 65-path
+  Technical range adds 4,541 lines and deletes 6,982, reducing the repository by 2,441 lines while the
+  executable floor rises from 2,752 to 2,802. No empty inherited directory remains and the frozen
+  expected list is unchanged.
+- Complete UnitArchitecture is 2,807/2,807 across 21 direct Microsoft Testing Platform CTRFs with zero
+  failed, skipped, pending or other cases. Locked restore, complete Engineering Release build,
+  post-mutation restore build and scoped format verification are green; builds contain zero warnings
+  and errors. CI self-tests pass 257/257 outside the known restricted macOS process boundary and the
+  fail-closed verification model passes.
+- Eighteen independently reconstructed one-cause product mutations all build and are killed. Their
+  bound owner executions cover all selected disposal, routing, discovery, coordination and DI-owner
+  axes with no skipped case. Every touched product file restores byte-exactly before the final build.
+- The Evidence child created with this section is a local immutable review subject. Independent
+  read-only acceptance, architecture binding and any future remote publication remain pending and are
+  not self-approved; no remote push is authorized or performed by this package.

@@ -1,0 +1,92 @@
+08:41:51.690-I Configured endpoint container-complete-compensate, Compensate Activity: ViciOne.ServiceBus.Tests.Courier.FirstCourierActivity
+08:41:51.743-I Configured endpoint FirstCourier_execute, Execute Activity: ViciOne.ServiceBus.Tests.Courier.FirstCourierActivity
+08:41:51.921-D Starting bus instances: IBus
+08:41:51.925-D Starting bus: loopback://localhost/
+08:41:51.961-D Endpoint Ready: loopback://localhost/FirstCourier_execute
+08:41:51.961-D Endpoint Ready: loopback://localhost/container-complete-compensate
+08:41:51.961-D Endpoint Ready: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_hyayyydppokgd6prbdxox7y5bb
+08:41:51.966-I Bus started: loopback://localhost/
+08:41:52.001-D Create send transport: loopback://localhost/container-complete-execute?bind=true
+08:41:52.110-D SEND loopback://localhost/container-complete-execute?bind=true e0300000-6d6c-1461-08d2-08df07f41b3a ViciOne.ServiceBus.Courier.Contracts.RoutingSlip
+08:42:22.120-D Stopping bus instances: IBus
+08:42:22.123-D Stopping bus: loopback://localhost/
+08:42:22.127-D Endpoint Stopping: loopback://localhost/container-complete-compensate
+08:42:22.127-D Consumer Stopping: loopback://localhost/container-complete-compensate (Stop Receive Transport)
+08:42:22.133-D Endpoint Completed: loopback://localhost/container-complete-compensate
+08:42:22.137-D Consumer Completed: loopback://localhost/container-complete-compensate: 0 received, 0 concurrent
+08:42:22.139-D Endpoint Stopping: loopback://localhost/FirstCourier_execute
+08:42:22.139-D Consumer Stopping: loopback://localhost/FirstCourier_execute (Stop Receive Transport)
+08:42:22.139-D Endpoint Completed: loopback://localhost/FirstCourier_execute
+08:42:22.139-D Consumer Completed: loopback://localhost/FirstCourier_execute: 0 received, 0 concurrent
+08:42:22.140-D Endpoint Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_hyayyydppokgd6prbdxox7y5bb
+08:42:22.140-D Consumer Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_hyayyydppokgd6prbdxox7y5bb (Stop Receive Transport)
+08:42:22.140-D Endpoint Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_hyayyydppokgd6prbdxox7y5bb
+08:42:22.140-D Consumer Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_hyayyydppokgd6prbdxox7y5bb: 0 received, 0 concurrent
+08:42:22.147-I Bus stopped: loopback://localhost/
+fehlerhaft ViciOne.ServiceBus.Tests.Courier.ContainerActivityRegistrationTests.ContainerRegisteredActivity_ExecutesAtItsExactOwnedEndpoint(shape: CustomExecuteAndCompensateEndpoints) (30s 773ms)
+  Xunit.MicrosoftTestingPlatform.XunitException: System.InvalidOperationException : Message List was empty, or timed out
+    um ViciOne.ServiceBus.Testing.AsyncElementListExtensions.First[TElement](IAsyncEnumerable`1 elements) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Testing/AsyncElementListExtensions.cs:18
+    um ViciOne.ServiceBus.Tests.Courier.ContainerActivityRegistrationTests.ContainerRegisteredActivity_ExecutesAtItsExactOwnedEndpoint(ActivityRegistrationShape shape) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/Courier/ContainerActivityRegistrationTests.cs:61
+    um ViciOne.ServiceBus.Tests.Courier.ContainerActivityRegistrationTests.ContainerRegisteredActivity_ExecutesAtItsExactOwnedEndpoint(ActivityRegistrationShape shape) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/Courier/ContainerActivityRegistrationTests.cs:78
+    um ViciOne.ServiceBus.Tests.Courier.ContainerActivityRegistrationTests.ContainerRegisteredActivity_ExecutesAtItsExactOwnedEndpoint(ActivityRegistrationShape shape) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/Courier/ContainerActivityRegistrationTests.cs:78
+    --- End of stack trace from previous location ---
+08:42:22.209-I Configured endpoint container-custom-execute, Execute Activity: ViciOne.ServiceBus.Tests.Courier.ContainerActivityRegistrationTests+ContainerExecuteActivity
+08:42:22.213-D Starting bus instances: IBus
+08:42:22.213-D Starting bus: loopback://localhost/
+08:42:22.213-D Endpoint Ready: loopback://localhost/container-custom-execute
+08:42:22.213-D Endpoint Ready: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_hyayyydppokgnxtobdxox7bpb4
+08:42:22.214-I Bus started: loopback://localhost/
+08:42:22.214-D Create send transport: loopback://localhost/container-custom-execute?bind=true
+08:42:22.217-D SEND loopback://localhost/container-custom-execute?bind=true e0300000-6d6c-1461-e9de-08df07f42d3a ViciOne.ServiceBus.Courier.Contracts.RoutingSlip
+08:42:22.275-D Execute Activity: e0300000-6d6c-1461-c7d8-08df07f42d3a (ViciOne.ServiceBus.Tests.Courier.ContainerActivityRegistrationTests+ContainerExecuteActivity, loopback://localhost/container-custom-execute)
+08:42:22.300-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Courier.Contracts:RoutingSlipActivityCompleted
+08:42:22.319-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Courier.Contracts:RoutingSlipActivityCompleted e0300000-6d6c-1461-3350-08df07f42d48 ViciOne.ServiceBus.Courier.Contracts.RoutingSlipActivityCompleted
+08:42:22.323-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Courier.Contracts:RoutingSlipCompleted
+08:42:22.326-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Courier.Contracts:RoutingSlipCompleted e0300000-6d6c-1461-6c1e-08df07f42d4b ViciOne.ServiceBus.Courier.Contracts.RoutingSlipCompleted
+08:42:22.328-D RECEIVE loopback://localhost/container-custom-execute e0300000-6d6c-1461-e9de-08df07f42d3a ViciOne.ServiceBus.Courier.Contracts.RoutingSlip ViciOne.ServiceBus.Tests.Courier.ContainerActivityRegistrationTests+ContainerExecuteActivity(00:00:00.0747117)
+08:42:22.335-D Stopping bus instances: IBus
+08:42:22.335-D Stopping bus: loopback://localhost/
+08:42:22.335-D Endpoint Stopping: loopback://localhost/container-custom-execute
+08:42:22.335-D Consumer Stopping: loopback://localhost/container-custom-execute (Stop Receive Transport)
+08:42:22.335-D Endpoint Completed: loopback://localhost/container-custom-execute
+08:42:22.335-D Consumer Completed: loopback://localhost/container-custom-execute: 1 received, 1 concurrent
+08:42:22.335-D Endpoint Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_hyayyydppokgnxtobdxox7bpb4
+08:42:22.335-D Consumer Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_hyayyydppokgnxtobdxox7bpb4 (Stop Receive Transport)
+08:42:22.335-D Endpoint Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_hyayyydppokgnxtobdxox7bpb4
+08:42:22.335-D Consumer Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_hyayyydppokgnxtobdxox7bpb4: 0 received, 0 concurrent
+08:42:22.335-I Bus stopped: loopback://localhost/
+08:42:22.341-I Configured endpoint container-manual-execute, Execute Activity: ViciOne.ServiceBus.Tests.Courier.ContainerActivityRegistrationTests+ContainerExecuteActivity
+08:42:22.342-D Starting bus instances: IBus
+08:42:22.342-D Starting bus: loopback://localhost/
+08:42:22.342-D Endpoint Ready: loopback://localhost/container-manual-execute
+08:42:22.342-D Endpoint Ready: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_hyayyydppokgn1febdxox7bpnq
+08:42:22.343-I Bus started: loopback://localhost/
+08:42:22.344-D Create send transport: loopback://localhost/container-manual-execute?bind=true
+08:42:22.344-D SEND loopback://localhost/container-manual-execute?bind=true e0300000-6d6c-1461-b4be-08df07f42d4e ViciOne.ServiceBus.Courier.Contracts.RoutingSlip
+08:42:22.345-D Execute Activity: e0300000-6d6c-1461-b040-08df07f42d4e (ViciOne.ServiceBus.Tests.Courier.ContainerActivityRegistrationTests+ContainerExecuteActivity, loopback://localhost/container-manual-execute)
+08:42:22.346-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Courier.Contracts:RoutingSlipActivityCompleted
+08:42:22.346-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Courier.Contracts:RoutingSlipActivityCompleted e0300000-6d6c-1461-e92a-08df07f42d4e ViciOne.ServiceBus.Courier.Contracts.RoutingSlipActivityCompleted
+08:42:22.346-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Courier.Contracts:RoutingSlipCompleted
+08:42:22.346-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Courier.Contracts:RoutingSlipCompleted e0300000-6d6c-1461-f3f2-08df07f42d4e ViciOne.ServiceBus.Courier.Contracts.RoutingSlipCompleted
+08:42:22.346-D RECEIVE loopback://localhost/container-manual-execute e0300000-6d6c-1461-b4be-08df07f42d4e ViciOne.ServiceBus.Courier.Contracts.RoutingSlip ViciOne.ServiceBus.Tests.Courier.ContainerActivityRegistrationTests+ContainerExecuteActivity(00:00:00.0010727)
+08:42:22.346-D Stopping bus instances: IBus
+08:42:22.346-D Stopping bus: loopback://localhost/
+08:42:22.346-D Endpoint Stopping: loopback://localhost/container-manual-execute
+08:42:22.346-D Consumer Stopping: loopback://localhost/container-manual-execute (Stop Receive Transport)
+08:42:22.346-D Endpoint Completed: loopback://localhost/container-manual-execute
+08:42:22.346-D Consumer Completed: loopback://localhost/container-manual-execute: 1 received, 1 concurrent
+08:42:22.346-D Endpoint Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_hyayyydppokgn1febdxox7bpnq
+08:42:22.346-D Consumer Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_hyayyydppokgn1febdxox7bpnq (Stop Receive Transport)
+08:42:22.346-D Endpoint Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_hyayyydppokgn1febdxox7bpnq
+08:42:22.346-D Consumer Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_hyayyydppokgn1febdxox7bpnq: 0 received, 0 concurrent
+08:42:22.347-I Bus stopped: loopback://localhost/
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/container-mutation-evidence-final/M11-results/M11.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-container-mutations/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 3
+  fehlerhaft: 1
+  erfolgreich: 2
+  übersprungen: 0
+  Dauer: 32s 419ms

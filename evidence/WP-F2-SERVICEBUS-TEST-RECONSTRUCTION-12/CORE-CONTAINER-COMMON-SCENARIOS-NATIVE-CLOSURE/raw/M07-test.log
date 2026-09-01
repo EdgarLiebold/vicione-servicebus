@@ -1,0 +1,726 @@
+08:39:16.179-I Configured endpoint FaultingBatchContext, Consumer: ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+FaultingBatchContextConsumer
+08:39:16.219-I Configured endpoint SideEffect, Consumer: ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+SideEffectConsumer
+08:39:16.355-D Starting bus instances: IBus
+08:39:16.358-D Starting bus: loopback://localhost/
+08:39:16.391-D Endpoint Ready: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgnmbhbdxoxh76dj
+08:39:16.391-D Endpoint Ready: loopback://localhost/SideEffect
+08:39:16.391-D Endpoint Ready: loopback://localhost/FaultingBatchContext
+08:39:16.396-I Bus started: loopback://localhost/
+08:39:16.418-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand
+08:39:16.512-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand cc2e0000-6d6c-1461-a84c-08df07f3be7d ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand
+08:39:16.515-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand cc2e0000-6d6c-1461-6248-08df07f3be8b ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand
+08:39:16.515-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand cc2e0000-6d6c-1461-7058-08df07f3be8b ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand
+08:39:16.515-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand cc2e0000-6d6c-1461-73aa-08df07f3be8b ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand
+08:39:16.684-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+DeferredSideEffect
+08:39:16.773-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand]]
+08:39:16.803-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand]] cc2e0000-6d6c-1461-e318-08df07f3beb2 ViciOne.ServiceBus.Fault<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>
+08:39:16.803-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand]] cc2e0100-6d6c-1461-e318-08df07f3beb2 ViciOne.ServiceBus.Fault<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>
+08:39:16.803-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand]] cc2e0000-6d6c-1461-fd8a-08df07f3beb2 ViciOne.ServiceBus.Fault<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>
+08:39:16.803-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand]] cc2e0000-6d6c-1461-fdf8-08df07f3beb2 ViciOne.ServiceBus.Fault<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>
+08:39:16.806-E R-FAULT loopback://localhost/FaultingBatchContext cc2e0000-6d6c-1461-a84c-08df07f3be7d ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>(00:00:00.1557249)
+
+ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure: Exception of type 'ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure' was thrown.
+   at ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultingBatchContextConsumer.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:line 332
+   at ViciOne.ServiceBus.Testing.Implementations.TestConsumerFactoryDecorator`1.TestDecoratorPipe`1.Send(ConsumerConsumeContext`2 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Testing/Implementations/TestConsumerFactoryDecorator.cs:line 56
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 40
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 50
+   at ViciOne.ServiceBus.Middleware.RetryFilter`1.ViciOne.ServiceBus.IFilter<TContext>.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RetryFilter.cs:line 57
+   at ViciOne.ServiceBus.Middleware.RetryFilter`1.ViciOne.ServiceBus.IFilter<TContext>.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RetryFilter.cs:line 98
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Deliver(ConsumeContext context, IReadOnlyList`1 messages, BatchCompletionMode batchCompletionMode) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 183
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.RedeliveryRetryFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RedeliveryRetryFilter.cs:line 50
+08:39:16.806-E R-FAULT loopback://localhost/FaultingBatchContext cc2e0000-6d6c-1461-6248-08df07f3be8b ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>(00:00:00.1333731)
+
+ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure: Exception of type 'ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure' was thrown.
+   at ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultingBatchContextConsumer.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:line 332
+   at ViciOne.ServiceBus.Testing.Implementations.TestConsumerFactoryDecorator`1.TestDecoratorPipe`1.Send(ConsumerConsumeContext`2 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Testing/Implementations/TestConsumerFactoryDecorator.cs:line 56
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 40
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 50
+   at ViciOne.ServiceBus.Middleware.RetryFilter`1.ViciOne.ServiceBus.IFilter<TContext>.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RetryFilter.cs:line 57
+   at ViciOne.ServiceBus.Middleware.RetryFilter`1.ViciOne.ServiceBus.IFilter<TContext>.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RetryFilter.cs:line 98
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Deliver(ConsumeContext context, IReadOnlyList`1 messages, BatchCompletionMode batchCompletionMode) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 183
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.RedeliveryRetryFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RedeliveryRetryFilter.cs:line 50
+08:39:16.806-E R-FAULT loopback://localhost/FaultingBatchContext cc2e0000-6d6c-1461-7058-08df07f3be8b ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>(00:00:00.1322423)
+
+ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure: Exception of type 'ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure' was thrown.
+   at ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultingBatchContextConsumer.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:line 332
+   at ViciOne.ServiceBus.Testing.Implementations.TestConsumerFactoryDecorator`1.TestDecoratorPipe`1.Send(ConsumerConsumeContext`2 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Testing/Implementations/TestConsumerFactoryDecorator.cs:line 56
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 40
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 50
+   at ViciOne.ServiceBus.Middleware.RetryFilter`1.ViciOne.ServiceBus.IFilter<TContext>.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RetryFilter.cs:line 57
+   at ViciOne.ServiceBus.Middleware.RetryFilter`1.ViciOne.ServiceBus.IFilter<TContext>.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RetryFilter.cs:line 98
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Deliver(ConsumeContext context, IReadOnlyList`1 messages, BatchCompletionMode batchCompletionMode) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 183
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.RedeliveryRetryFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RedeliveryRetryFilter.cs:line 50
+08:39:16.806-E R-FAULT loopback://localhost/FaultingBatchContext cc2e0000-6d6c-1461-73aa-08df07f3be8b ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>(00:00:00.1313395)
+
+ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure: Exception of type 'ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure' was thrown.
+   at ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultingBatchContextConsumer.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:line 332
+   at ViciOne.ServiceBus.Testing.Implementations.TestConsumerFactoryDecorator`1.TestDecoratorPipe`1.Send(ConsumerConsumeContext`2 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Testing/Implementations/TestConsumerFactoryDecorator.cs:line 56
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 40
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 50
+   at ViciOne.ServiceBus.Middleware.RetryFilter`1.ViciOne.ServiceBus.IFilter<TContext>.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RetryFilter.cs:line 57
+   at ViciOne.ServiceBus.Middleware.RetryFilter`1.ViciOne.ServiceBus.IFilter<TContext>.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RetryFilter.cs:line 98
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Deliver(ConsumeContext context, IReadOnlyList`1 messages, BatchCompletionMode batchCompletionMode) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 183
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.RedeliveryRetryFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RedeliveryRetryFilter.cs:line 50
+08:39:16.831-D Stopping bus instances: IBus
+08:39:16.833-D Stopping bus: loopback://localhost/
+08:39:16.840-D Endpoint Stopping: loopback://localhost/FaultingBatchContext
+08:39:16.840-D Consumer Stopping: loopback://localhost/FaultingBatchContext (Stop Receive Transport)
+08:39:16.845-D Endpoint Completed: loopback://localhost/FaultingBatchContext
+08:39:16.849-D Consumer Completed: loopback://localhost/FaultingBatchContext: 4 received, 4 concurrent
+08:39:16.851-D Endpoint Stopping: loopback://localhost/SideEffect
+08:39:16.851-D Consumer Stopping: loopback://localhost/SideEffect (Stop Receive Transport)
+08:39:16.851-D Endpoint Completed: loopback://localhost/SideEffect
+08:39:16.851-D Consumer Completed: loopback://localhost/SideEffect: 0 received, 0 concurrent
+08:39:16.852-D Endpoint Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgnmbhbdxoxh76dj
+08:39:16.852-D Consumer Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgnmbhbdxoxh76dj (Stop Receive Transport)
+08:39:16.852-D Endpoint Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgnmbhbdxoxh76dj
+08:39:16.853-D Consumer Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgnmbhbdxoxh76dj: 0 received, 0 concurrent
+08:39:16.865-I Bus stopped: loopback://localhost/
+08:39:16.903-I Configured endpoint FaultingBatchContext, Consumer: ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+FaultingBatchContextConsumer
+08:39:16.904-I Configured endpoint SideEffect, Consumer: ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+SideEffectConsumer
+08:39:16.907-D Starting bus instances: IBus
+08:39:16.907-D Starting bus: loopback://localhost/
+08:39:16.907-D Endpoint Ready: loopback://localhost/FaultingBatchContext
+08:39:16.907-D Endpoint Ready: loopback://localhost/SideEffect
+08:39:16.907-D Endpoint Ready: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgdujrbdxoxh76gg
+08:39:16.908-I Bus started: loopback://localhost/
+08:39:16.908-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand
+08:39:16.908-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand cc2e0000-6d6c-1461-594c-08df07f3bec7 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand
+08:39:16.908-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand cc2e0000-6d6c-1461-6234-08df07f3bec7 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand
+08:39:16.908-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand cc2e0000-6d6c-1461-64e6-08df07f3bec7 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand
+08:39:16.908-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand cc2e0000-6d6c-1461-684c-08df07f3bec7 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand
+08:39:16.912-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+DeferredSideEffect
+08:39:16.913-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand]]
+08:39:16.913-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand]] cc2e0000-6d6c-1461-2dd6-08df07f3bec8 ViciOne.ServiceBus.Fault<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>
+08:39:16.913-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand]] cc2e0100-6d6c-1461-2dd6-08df07f3bec8 ViciOne.ServiceBus.Fault<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>
+08:39:16.913-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand]] cc2e0000-6d6c-1461-2f0c-08df07f3bec8 ViciOne.ServiceBus.Fault<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>
+08:39:16.913-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand]] cc2e0000-6d6c-1461-2ec6-08df07f3bec8 ViciOne.ServiceBus.Fault<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>
+08:39:16.914-D Stopping bus instances: IBus
+08:39:16.914-E R-FAULT loopback://localhost/FaultingBatchContext cc2e0000-6d6c-1461-684c-08df07f3bec7 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>(00:00:00.0034986)
+
+ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure: Exception of type 'ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure' was thrown.
+   at ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultingBatchContextConsumer.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:line 332
+   at ViciOne.ServiceBus.Testing.Implementations.TestConsumerFactoryDecorator`1.TestDecoratorPipe`1.Send(ConsumerConsumeContext`2 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Testing/Implementations/TestConsumerFactoryDecorator.cs:line 56
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 40
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 50
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Deliver(ConsumeContext context, IReadOnlyList`1 messages, BatchCompletionMode batchCompletionMode) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 183
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+08:39:16.914-E R-FAULT loopback://localhost/FaultingBatchContext cc2e0000-6d6c-1461-594c-08df07f3bec7 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>(00:00:00.0039601)
+
+ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure: Exception of type 'ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure' was thrown.
+   at ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultingBatchContextConsumer.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:line 332
+   at ViciOne.ServiceBus.Testing.Implementations.TestConsumerFactoryDecorator`1.TestDecoratorPipe`1.Send(ConsumerConsumeContext`2 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Testing/Implementations/TestConsumerFactoryDecorator.cs:line 56
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 40
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 50
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Deliver(ConsumeContext context, IReadOnlyList`1 messages, BatchCompletionMode batchCompletionMode) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 183
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+08:39:16.914-D Stopping bus: loopback://localhost/
+08:39:16.914-E R-FAULT loopback://localhost/FaultingBatchContext cc2e0000-6d6c-1461-6234-08df07f3bec7 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>(00:00:00.0038320)
+
+ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure: Exception of type 'ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure' was thrown.
+   at ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultingBatchContextConsumer.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:line 332
+   at ViciOne.ServiceBus.Testing.Implementations.TestConsumerFactoryDecorator`1.TestDecoratorPipe`1.Send(ConsumerConsumeContext`2 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Testing/Implementations/TestConsumerFactoryDecorator.cs:line 56
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 40
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 50
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Deliver(ConsumeContext context, IReadOnlyList`1 messages, BatchCompletionMode batchCompletionMode) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 183
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+08:39:16.914-E R-FAULT loopback://localhost/FaultingBatchContext cc2e0000-6d6c-1461-64e6-08df07f3bec7 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>(00:00:00.0037331)
+
+ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure: Exception of type 'ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure' was thrown.
+   at ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultingBatchContextConsumer.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:line 332
+   at ViciOne.ServiceBus.Testing.Implementations.TestConsumerFactoryDecorator`1.TestDecoratorPipe`1.Send(ConsumerConsumeContext`2 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Testing/Implementations/TestConsumerFactoryDecorator.cs:line 56
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 40
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 50
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Deliver(ConsumeContext context, IReadOnlyList`1 messages, BatchCompletionMode batchCompletionMode) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 183
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+08:39:16.914-D Endpoint Stopping: loopback://localhost/FaultingBatchContext
+08:39:16.914-D Consumer Stopping: loopback://localhost/FaultingBatchContext (Stop Receive Transport)
+08:39:16.916-D Endpoint Stopping: loopback://localhost/SideEffect
+08:39:16.916-D Consumer Stopping: loopback://localhost/SideEffect (Stop Receive Transport)
+08:39:16.916-D Endpoint Completed: loopback://localhost/SideEffect
+08:39:16.916-D Consumer Completed: loopback://localhost/SideEffect: 0 received, 0 concurrent
+08:39:16.916-D Endpoint Completed: loopback://localhost/FaultingBatchContext
+08:39:16.916-D Consumer Completed: loopback://localhost/FaultingBatchContext: 4 received, 4 concurrent
+08:39:16.916-D Endpoint Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgdujrbdxoxh76gg
+08:39:16.916-D Consumer Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgdujrbdxoxh76gg (Stop Receive Transport)
+08:39:16.916-D Endpoint Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgdujrbdxoxh76gg
+08:39:16.916-D Consumer Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgdujrbdxoxh76gg: 0 received, 0 concurrent
+08:39:16.916-I Bus stopped: loopback://localhost/
+08:39:16.924-I Configured endpoint FaultingDirectContext, Consumer: ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+FaultingDirectContextConsumer
+08:39:16.925-I Configured endpoint SideEffect, Consumer: ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+SideEffectConsumer
+08:39:16.930-D Starting bus instances: IBus
+08:39:16.930-D Starting bus: loopback://localhost/
+08:39:16.930-D Endpoint Ready: loopback://localhost/FaultingDirectContext
+08:39:16.930-D Endpoint Ready: loopback://localhost/SideEffect
+08:39:16.930-D Endpoint Ready: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgnynhbdxoxh76gk
+08:39:16.930-I Bus started: loopback://localhost/
+08:39:16.930-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand
+08:39:16.930-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand cc2e0000-6d6c-1461-c960-08df07f3beca ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand
+08:39:16.932-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+DeferredSideEffect
+08:39:16.935-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+DeferredSideEffect cc2e0000-6d6c-1461-1212-08df07f3becb ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+DeferredSideEffect
+08:39:16.935-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand]]
+08:39:16.936-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand]] cc2e0000-6d6c-1461-94f8-08df07f3becb ViciOne.ServiceBus.Fault<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>
+08:39:16.936-E R-FAULT loopback://localhost/FaultingDirectContext cc2e0000-6d6c-1461-c960-08df07f3beca ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+FaultingDirectContextConsumer(00:00:00.0042529)
+
+ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure: Exception of type 'ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure' was thrown.
+   at ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultingDirectContextConsumer.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:line 321
+   at ViciOne.ServiceBus.Testing.Implementations.TestConsumerFactoryDecorator`1.TestDecoratorPipe`1.Send(ConsumerConsumeContext`2 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Testing/Implementations/TestConsumerFactoryDecorator.cs:line 56
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+08:39:16.937-D RECEIVE loopback://localhost/SideEffect cc2e0000-6d6c-1461-1212-08df07f3becb ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+DeferredSideEffect ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+SideEffectConsumer(00:00:00.0015914)
+08:39:16.939-D Stopping bus instances: IBus
+08:39:16.939-D Stopping bus: loopback://localhost/
+08:39:16.939-D Endpoint Stopping: loopback://localhost/FaultingDirectContext
+08:39:16.939-D Consumer Stopping: loopback://localhost/FaultingDirectContext (Stop Receive Transport)
+08:39:16.939-D Endpoint Completed: loopback://localhost/FaultingDirectContext
+08:39:16.939-D Consumer Completed: loopback://localhost/FaultingDirectContext: 1 received, 1 concurrent
+08:39:16.939-D Endpoint Stopping: loopback://localhost/SideEffect
+08:39:16.939-D Consumer Stopping: loopback://localhost/SideEffect (Stop Receive Transport)
+08:39:16.939-D Endpoint Completed: loopback://localhost/SideEffect
+08:39:16.939-D Consumer Completed: loopback://localhost/SideEffect: 1 received, 1 concurrent
+08:39:16.939-D Endpoint Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgnynhbdxoxh76gk
+08:39:16.939-D Consumer Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgnynhbdxoxh76gk (Stop Receive Transport)
+08:39:16.939-D Endpoint Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgnynhbdxoxh76gk
+08:39:16.939-D Consumer Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgnynhbdxoxh76gk: 0 received, 0 concurrent
+08:39:16.939-I Bus stopped: loopback://localhost/
+08:39:16.951-I Configured endpoint FaultingBatchContext, Consumer: ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+FaultingBatchContextConsumer
+08:39:16.951-I Configured endpoint SideEffect, Consumer: ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+SideEffectConsumer
+08:39:16.952-D Starting bus instances: IBus
+08:39:16.952-D Starting bus: loopback://localhost/
+08:39:16.952-D Endpoint Ready: loopback://localhost/FaultingBatchContext
+08:39:16.952-D Endpoint Ready: loopback://localhost/SideEffect
+08:39:16.952-D Endpoint Ready: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgd7hrbdxoxh76gp
+08:39:16.952-I Bus started: loopback://localhost/
+fehlerhaft ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultedConsumer_UsesTheExactOutboxContextAndDiscardsEverySideEffect(shape: DirectWithoutRegistrationContext) (22ms)
+  Assert.True() Failure
+  Expected: True
+  Actual:   False
+    um ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultedConsumer_UsesTheExactOutboxContextAndDiscardsEverySideEffect(OutboxShape shape) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:101
+    um ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultedConsumer_UsesTheExactOutboxContextAndDiscardsEverySideEffect(OutboxShape shape) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:118
+    um ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultedConsumer_UsesTheExactOutboxContextAndDiscardsEverySideEffect(OutboxShape shape) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:118
+    --- End of stack trace from previous location ---
+08:39:16.952-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand
+08:39:16.959-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand cc2e0000-6d6c-1461-2096-08df07f3becf ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand
+08:39:16.959-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand cc2e0000-6d6c-1461-2be0-08df07f3becf ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand
+08:39:16.959-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand cc2e0000-6d6c-1461-2eec-08df07f3becf ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand
+08:39:16.959-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand cc2e0000-6d6c-1461-3450-08df07f3becf ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand
+08:39:16.960-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+DeferredSideEffect
+08:39:16.962-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand]]
+08:39:16.962-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand]] cc2e0000-6d6c-1461-9f4e-08df07f3becf ViciOne.ServiceBus.Fault<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>
+08:39:16.962-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand]] cc2e0000-6d6c-1461-9fd0-08df07f3becf ViciOne.ServiceBus.Fault<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>
+08:39:16.962-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand]] cc2e0000-6d6c-1461-9fbc-08df07f3becf ViciOne.ServiceBus.Fault<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>
+08:39:16.962-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand]] cc2e0000-6d6c-1461-9dd2-08df07f3becf ViciOne.ServiceBus.Fault<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>
+08:39:16.962-D Stopping bus instances: IBus
+08:39:16.962-D Stopping bus: loopback://localhost/
+08:39:16.962-D Endpoint Stopping: loopback://localhost/FaultingBatchContext
+08:39:16.963-D Consumer Stopping: loopback://localhost/FaultingBatchContext (Stop Receive Transport)
+08:39:16.963-D Endpoint Stopping: loopback://localhost/SideEffect
+08:39:16.963-D Consumer Stopping: loopback://localhost/SideEffect (Stop Receive Transport)
+08:39:16.962-E R-FAULT loopback://localhost/FaultingBatchContext cc2e0000-6d6c-1461-2be0-08df07f3becf ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>(00:00:00.0014303)
+
+ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure: Exception of type 'ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure' was thrown.
+   at ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultingBatchContextConsumer.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:line 332
+   at ViciOne.ServiceBus.Testing.Implementations.TestConsumerFactoryDecorator`1.TestDecoratorPipe`1.Send(ConsumerConsumeContext`2 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Testing/Implementations/TestConsumerFactoryDecorator.cs:line 56
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 40
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 50
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Deliver(ConsumeContext context, IReadOnlyList`1 messages, BatchCompletionMode batchCompletionMode) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 183
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+08:39:16.963-D Endpoint Completed: loopback://localhost/SideEffect
+08:39:16.962-E R-FAULT loopback://localhost/FaultingBatchContext cc2e0000-6d6c-1461-2096-08df07f3becf ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>(00:00:00.0017682)
+
+ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure: Exception of type 'ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure' was thrown.
+   at ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultingBatchContextConsumer.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:line 332
+   at ViciOne.ServiceBus.Testing.Implementations.TestConsumerFactoryDecorator`1.TestDecoratorPipe`1.Send(ConsumerConsumeContext`2 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Testing/Implementations/TestConsumerFactoryDecorator.cs:line 56
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 40
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 50
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Deliver(ConsumeContext context, IReadOnlyList`1 messages, BatchCompletionMode batchCompletionMode) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 183
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+08:39:16.962-E R-FAULT loopback://localhost/FaultingBatchContext cc2e0000-6d6c-1461-3450-08df07f3becf ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>(00:00:00.0010296)
+
+ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure: Exception of type 'ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure' was thrown.
+   at ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultingBatchContextConsumer.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:line 332
+   at ViciOne.ServiceBus.Testing.Implementations.TestConsumerFactoryDecorator`1.TestDecoratorPipe`1.Send(ConsumerConsumeContext`2 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Testing/Implementations/TestConsumerFactoryDecorator.cs:line 56
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 40
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 50
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Deliver(ConsumeContext context, IReadOnlyList`1 messages, BatchCompletionMode batchCompletionMode) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 183
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+08:39:16.962-E R-FAULT loopback://localhost/FaultingBatchContext cc2e0000-6d6c-1461-2eec-08df07f3becf ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>(00:00:00.0012109)
+
+ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure: Exception of type 'ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure' was thrown.
+   at ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultingBatchContextConsumer.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:line 332
+   at ViciOne.ServiceBus.Testing.Implementations.TestConsumerFactoryDecorator`1.TestDecoratorPipe`1.Send(ConsumerConsumeContext`2 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Testing/Implementations/TestConsumerFactoryDecorator.cs:line 56
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 40
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 50
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Deliver(ConsumeContext context, IReadOnlyList`1 messages, BatchCompletionMode batchCompletionMode) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 183
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+08:39:16.963-D Consumer Completed: loopback://localhost/SideEffect: 0 received, 0 concurrent
+08:39:16.965-D Endpoint Completed: loopback://localhost/FaultingBatchContext
+08:39:16.965-D Consumer Completed: loopback://localhost/FaultingBatchContext: 4 received, 4 concurrent
+08:39:16.965-D Endpoint Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgd7hrbdxoxh76gp
+08:39:16.965-D Consumer Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgd7hrbdxoxh76gp (Stop Receive Transport)
+08:39:16.965-D Endpoint Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgd7hrbdxoxh76gp
+08:39:16.965-D Consumer Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgd7hrbdxoxh76gp: 0 received, 0 concurrent
+08:39:16.965-I Bus stopped: loopback://localhost/
+08:39:16.967-I Configured endpoint FaultingBatchContext, Consumer: ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+FaultingBatchContextConsumer
+08:39:16.968-I Configured endpoint SideEffect, Consumer: ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+SideEffectConsumer
+08:39:16.969-D Starting bus instances: IBus
+08:39:16.969-D Starting bus: loopback://localhost/
+08:39:16.969-D Endpoint Ready: loopback://localhost/FaultingBatchContext
+08:39:16.969-D Endpoint Ready: loopback://localhost/SideEffect
+08:39:16.969-D Endpoint Ready: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgdde6bdxoxh76go
+08:39:16.969-I Bus started: loopback://localhost/
+08:39:16.969-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand
+08:39:16.970-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand cc2e0000-6d6c-1461-c25c-08df07f3bed0 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand
+08:39:16.970-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand cc2e0000-6d6c-1461-cc34-08df07f3bed0 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand
+08:39:16.970-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand cc2e0000-6d6c-1461-cf5e-08df07f3bed0 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand
+08:39:16.970-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand cc2e0000-6d6c-1461-d224-08df07f3bed0 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand
+08:39:16.971-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+DeferredSideEffect
+08:39:16.974-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand]]
+08:39:16.975-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand]] cc2e0000-6d6c-1461-8822-08df07f3bed1 ViciOne.ServiceBus.Fault<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>
+08:39:16.975-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand]] cc2e0000-6d6c-1461-8a66-08df07f3bed1 ViciOne.ServiceBus.Fault<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>
+08:39:16.975-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand]] cc2e0000-6d6c-1461-89ee-08df07f3bed1 ViciOne.ServiceBus.Fault<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>
+08:39:16.975-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand]] cc2e0000-6d6c-1461-88f4-08df07f3bed1 ViciOne.ServiceBus.Fault<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>
+08:39:16.975-D Stopping bus instances: IBus
+08:39:16.975-D Stopping bus: loopback://localhost/
+08:39:16.975-D Endpoint Stopping: loopback://localhost/FaultingBatchContext
+08:39:16.975-D Consumer Stopping: loopback://localhost/FaultingBatchContext (Stop Receive Transport)
+08:39:16.975-D Endpoint Stopping: loopback://localhost/SideEffect
+08:39:16.975-D Consumer Stopping: loopback://localhost/SideEffect (Stop Receive Transport)
+08:39:16.975-D Endpoint Completed: loopback://localhost/SideEffect
+08:39:16.975-D Consumer Completed: loopback://localhost/SideEffect: 0 received, 0 concurrent
+08:39:16.975-E R-FAULT loopback://localhost/FaultingBatchContext cc2e0000-6d6c-1461-c25c-08df07f3bed0 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>(00:00:00.0011257)
+
+ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure: Exception of type 'ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure' was thrown.
+   at ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultingBatchContextConsumer.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:line 332
+   at ViciOne.ServiceBus.Testing.Implementations.TestConsumerFactoryDecorator`1.TestDecoratorPipe`1.Send(ConsumerConsumeContext`2 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Testing/Implementations/TestConsumerFactoryDecorator.cs:line 56
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 40
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 50
+   at ViciOne.ServiceBus.Middleware.RetryFilter`1.ViciOne.ServiceBus.IFilter<TContext>.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RetryFilter.cs:line 57
+   at ViciOne.ServiceBus.Middleware.RetryFilter`1.ViciOne.ServiceBus.IFilter<TContext>.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RetryFilter.cs:line 98
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Deliver(ConsumeContext context, IReadOnlyList`1 messages, BatchCompletionMode batchCompletionMode) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 183
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.RedeliveryRetryFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RedeliveryRetryFilter.cs:line 50
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.RedeliveryRetryFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RedeliveryRetryFilter.cs:line 50
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.RedeliveryRetryFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RedeliveryRetryFilter.cs:line 50
+08:39:16.975-E R-FAULT loopback://localhost/FaultingBatchContext cc2e0000-6d6c-1461-d224-08df07f3bed0 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>(00:00:00.0006173)
+
+ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure: Exception of type 'ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure' was thrown.
+   at ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultingBatchContextConsumer.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:line 332
+   at ViciOne.ServiceBus.Testing.Implementations.TestConsumerFactoryDecorator`1.TestDecoratorPipe`1.Send(ConsumerConsumeContext`2 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Testing/Implementations/TestConsumerFactoryDecorator.cs:line 56
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 40
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 50
+   at ViciOne.ServiceBus.Middleware.RetryFilter`1.ViciOne.ServiceBus.IFilter<TContext>.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RetryFilter.cs:line 57
+   at ViciOne.ServiceBus.Middleware.RetryFilter`1.ViciOne.ServiceBus.IFilter<TContext>.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RetryFilter.cs:line 98
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Deliver(ConsumeContext context, IReadOnlyList`1 messages, BatchCompletionMode batchCompletionMode) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 183
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.RedeliveryRetryFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RedeliveryRetryFilter.cs:line 50
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.RedeliveryRetryFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RedeliveryRetryFilter.cs:line 50
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.RedeliveryRetryFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RedeliveryRetryFilter.cs:line 50
+08:39:16.975-E R-FAULT loopback://localhost/FaultingBatchContext cc2e0000-6d6c-1461-cc34-08df07f3bed0 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>(00:00:00.0009603)
+
+ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure: Exception of type 'ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure' was thrown.
+   at ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultingBatchContextConsumer.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:line 332
+   at ViciOne.ServiceBus.Testing.Implementations.TestConsumerFactoryDecorator`1.TestDecoratorPipe`1.Send(ConsumerConsumeContext`2 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Testing/Implementations/TestConsumerFactoryDecorator.cs:line 56
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 40
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 50
+   at ViciOne.ServiceBus.Middleware.RetryFilter`1.ViciOne.ServiceBus.IFilter<TContext>.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RetryFilter.cs:line 57
+   at ViciOne.ServiceBus.Middleware.RetryFilter`1.ViciOne.ServiceBus.IFilter<TContext>.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RetryFilter.cs:line 98
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Deliver(ConsumeContext context, IReadOnlyList`1 messages, BatchCompletionMode batchCompletionMode) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 183
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.RedeliveryRetryFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RedeliveryRetryFilter.cs:line 50
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.RedeliveryRetryFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RedeliveryRetryFilter.cs:line 50
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.RedeliveryRetryFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RedeliveryRetryFilter.cs:line 50
+08:39:16.975-E R-FAULT loopback://localhost/FaultingBatchContext cc2e0000-6d6c-1461-cf5e-08df07f3bed0 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand ViciOne.ServiceBus.Batching.BatchConsumer<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>(00:00:00.0008941)
+
+ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure: Exception of type 'ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure' was thrown.
+   at ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultingBatchContextConsumer.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:line 332
+   at ViciOne.ServiceBus.Testing.Implementations.TestConsumerFactoryDecorator`1.TestDecoratorPipe`1.Send(ConsumerConsumeContext`2 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Testing/Implementations/TestConsumerFactoryDecorator.cs:line 56
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 40
+   at ViciOne.ServiceBus.Middleware.InMemoryOutboxFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/InMemoryOutboxFilter.cs:line 50
+   at ViciOne.ServiceBus.Middleware.RetryFilter`1.ViciOne.ServiceBus.IFilter<TContext>.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RetryFilter.cs:line 57
+   at ViciOne.ServiceBus.Middleware.RetryFilter`1.ViciOne.ServiceBus.IFilter<TContext>.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RetryFilter.cs:line 98
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Deliver(ConsumeContext context, IReadOnlyList`1 messages, BatchCompletionMode batchCompletionMode) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 183
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.RedeliveryRetryFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RedeliveryRetryFilter.cs:line 50
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Batching.BatchConsumer`1.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumer.cs:line 49
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 44
+   at ViciOne.ServiceBus.Batching.BatchConsumerFactory`1.Send[T](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Consumers/Batching/BatchConsumerFactory.cs:line 39
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.RedeliveryRetryFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RedeliveryRetryFilter.cs:line 50
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 73
+   at ViciOne.ServiceBus.Middleware.RedeliveryRetryFilter`2.Send(TContext context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/RedeliveryRetryFilter.cs:line 50
+08:39:16.978-D Endpoint Completed: loopback://localhost/FaultingBatchContext
+08:39:16.978-D Consumer Completed: loopback://localhost/FaultingBatchContext: 4 received, 4 concurrent
+08:39:16.978-D Endpoint Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgdde6bdxoxh76go
+08:39:16.978-D Consumer Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgdde6bdxoxh76go (Stop Receive Transport)
+08:39:16.978-D Endpoint Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgdde6bdxoxh76go
+08:39:16.978-D Consumer Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgdde6bdxoxh76go: 0 received, 0 concurrent
+08:39:16.978-I Bus stopped: loopback://localhost/
+08:39:16.981-I Configured endpoint FaultingDirectContext, Consumer: ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+FaultingDirectContextConsumer
+08:39:16.981-I Configured endpoint SideEffect, Consumer: ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+SideEffectConsumer
+08:39:16.982-D Starting bus instances: IBus
+08:39:16.982-D Starting bus: loopback://localhost/
+08:39:16.982-D Endpoint Ready: loopback://localhost/FaultingDirectContext
+08:39:16.982-D Endpoint Ready: loopback://localhost/SideEffect
+08:39:16.982-D Endpoint Ready: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgdr6kbdxoxh76g1
+08:39:16.982-I Bus started: loopback://localhost/
+08:39:16.982-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand
+08:39:16.982-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand cc2e0000-6d6c-1461-b472-08df07f3bed2 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand
+08:39:16.983-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+DeferredSideEffect
+08:39:16.983-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+DeferredSideEffect cc2e0000-6d6c-1461-c444-08df07f3bed2 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+DeferredSideEffect
+08:39:16.983-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand]]
+08:39:16.983-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand]] cc2e0000-6d6c-1461-daf6-08df07f3bed2 ViciOne.ServiceBus.Fault<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>
+08:39:16.983-E R-FAULT loopback://localhost/FaultingDirectContext cc2e0000-6d6c-1461-b472-08df07f3bed2 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+FaultingDirectContextConsumer(00:00:00.0003822)
+
+ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure: Exception of type 'ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure' was thrown.
+   at ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultingDirectContextConsumer.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:line 321
+   at ViciOne.ServiceBus.Testing.Implementations.TestConsumerFactoryDecorator`1.TestDecoratorPipe`1.Send(ConsumerConsumeContext`2 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Testing/Implementations/TestConsumerFactoryDecorator.cs:line 56
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+08:39:16.983-D Stopping bus instances: IBus
+08:39:16.984-D Stopping bus: loopback://localhost/
+08:39:16.984-D Endpoint Stopping: loopback://localhost/FaultingDirectContext
+08:39:16.984-D Consumer Stopping: loopback://localhost/FaultingDirectContext (Stop Receive Transport)
+08:39:16.984-D Endpoint Stopping: loopback://localhost/SideEffect
+08:39:16.984-D Consumer Stopping: loopback://localhost/SideEffect (Stop Receive Transport)
+08:39:16.984-D RECEIVE loopback://localhost/SideEffect cc2e0000-6d6c-1461-c444-08df07f3bed2 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+DeferredSideEffect ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+SideEffectConsumer(00:00:00.0010057)
+08:39:16.984-D Endpoint Completed: loopback://localhost/FaultingDirectContext
+08:39:16.984-D Consumer Completed: loopback://localhost/FaultingDirectContext: 1 received, 1 concurrent
+08:39:16.985-D Endpoint Completed: loopback://localhost/SideEffect
+08:39:16.985-D Consumer Completed: loopback://localhost/SideEffect: 1 received, 1 concurrent
+08:39:16.985-D Endpoint Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgdr6kbdxoxh76g1
+08:39:16.985-D Consumer Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgdr6kbdxoxh76g1 (Stop Receive Transport)
+08:39:16.985-D Endpoint Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgdr6kbdxoxh76g1
+08:39:16.985-D Consumer Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgdr6kbdxoxh76g1: 0 received, 0 concurrent
+08:39:16.985-I Bus stopped: loopback://localhost/
+fehlerhaft ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultedConsumer_UsesTheExactOutboxContextAndDiscardsEverySideEffect(shape: DirectWithRegistrationContext) (6ms)
+  Assert.True() Failure
+  Expected: True
+  Actual:   False
+    um ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultedConsumer_UsesTheExactOutboxContextAndDiscardsEverySideEffect(OutboxShape shape) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:101
+    um ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultedConsumer_UsesTheExactOutboxContextAndDiscardsEverySideEffect(OutboxShape shape) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:118
+    um ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultedConsumer_UsesTheExactOutboxContextAndDiscardsEverySideEffect(OutboxShape shape) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:118
+    --- End of stack trace from previous location ---
+08:39:16.990-I Configured endpoint FaultingDependencyContext, Consumer: ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+FaultingDependencyContextConsumer
+08:39:16.990-I Configured endpoint SideEffect, Consumer: ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+SideEffectConsumer
+08:39:16.991-D Starting bus instances: IBus
+08:39:16.991-D Starting bus: loopback://localhost/
+08:39:16.991-D Endpoint Ready: loopback://localhost/FaultingDependencyContext
+08:39:16.991-D Endpoint Ready: loopback://localhost/SideEffect
+08:39:16.992-D Endpoint Ready: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgd75kbdxoxh76gu
+08:39:16.992-I Bus started: loopback://localhost/
+08:39:16.992-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand
+08:39:16.992-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand cc2e0000-6d6c-1461-299c-08df07f3bed4 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand
+08:39:16.995-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+DeferredSideEffect
+08:39:16.995-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+DeferredSideEffect cc2e0000-6d6c-1461-a188-08df07f3bed4 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+DeferredSideEffect
+08:39:16.996-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand]]
+08:39:16.996-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand]] cc2e0000-6d6c-1461-cd3e-08df07f3bed4 ViciOne.ServiceBus.Fault<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>
+08:39:16.996-D RECEIVE loopback://localhost/SideEffect cc2e0000-6d6c-1461-a188-08df07f3bed4 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+DeferredSideEffect ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+SideEffectConsumer(00:00:00.0009160)
+08:39:16.996-D Stopping bus instances: IBus
+08:39:16.996-D Stopping bus: loopback://localhost/
+08:39:16.996-E R-FAULT loopback://localhost/FaultingDependencyContext cc2e0000-6d6c-1461-299c-08df07f3bed4 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+FaultingDependencyContextConsumer(00:00:00.0030626)
+
+ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure: Exception of type 'ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure' was thrown.
+   at ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultingDependencyContextConsumer.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:line 299
+   at ViciOne.ServiceBus.Testing.Implementations.TestConsumerFactoryDecorator`1.TestDecoratorPipe`1.Send(ConsumerConsumeContext`2 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Testing/Implementations/TestConsumerFactoryDecorator.cs:line 56
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+08:39:16.996-D Endpoint Stopping: loopback://localhost/FaultingDependencyContext
+08:39:16.996-D Consumer Stopping: loopback://localhost/FaultingDependencyContext (Stop Receive Transport)
+08:39:16.997-D Endpoint Stopping: loopback://localhost/SideEffect
+08:39:16.997-D Consumer Stopping: loopback://localhost/SideEffect (Stop Receive Transport)
+08:39:16.997-D Endpoint Completed: loopback://localhost/SideEffect
+08:39:16.997-D Consumer Completed: loopback://localhost/SideEffect: 1 received, 1 concurrent
+08:39:16.997-D Endpoint Completed: loopback://localhost/FaultingDependencyContext
+08:39:16.997-D Consumer Completed: loopback://localhost/FaultingDependencyContext: 1 received, 1 concurrent
+08:39:16.997-D Endpoint Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgd75kbdxoxh76gu
+08:39:16.997-D Consumer Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgd75kbdxoxh76gu (Stop Receive Transport)
+08:39:16.997-D Endpoint Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgd75kbdxoxh76gu
+08:39:16.997-D Consumer Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgd75kbdxoxh76gu: 0 received, 0 concurrent
+08:39:16.997-I Bus stopped: loopback://localhost/
+fehlerhaft ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultedConsumer_UsesTheExactOutboxContextAndDiscardsEverySideEffect(shape: DependencyWithRegistrationContext) (11ms)
+  Assert.True() Failure
+  Expected: True
+  Actual:   False
+    um ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultedConsumer_UsesTheExactOutboxContextAndDiscardsEverySideEffect(OutboxShape shape) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:101
+    um ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultedConsumer_UsesTheExactOutboxContextAndDiscardsEverySideEffect(OutboxShape shape) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:118
+    um ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultedConsumer_UsesTheExactOutboxContextAndDiscardsEverySideEffect(OutboxShape shape) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:118
+    --- End of stack trace from previous location ---
+08:39:17.000-I Configured endpoint FaultingDependencyContext, Consumer: ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+FaultingDependencyContextConsumer
+08:39:17.000-I Configured endpoint SideEffect, Consumer: ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+SideEffectConsumer
+08:39:17.001-D Starting bus instances: IBus
+08:39:17.001-D Starting bus: loopback://localhost/
+08:39:17.001-D Endpoint Ready: loopback://localhost/FaultingDependencyContext
+08:39:17.001-D Endpoint Ready: loopback://localhost/SideEffect
+08:39:17.002-D Endpoint Ready: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgdb5ybdxoxh76gi
+08:39:17.002-I Bus started: loopback://localhost/
+08:39:17.002-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand
+08:39:17.002-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand cc2e0000-6d6c-1461-b0d2-08df07f3bed5 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand
+08:39:17.002-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+DeferredSideEffect
+08:39:17.003-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+DeferredSideEffect cc2e0000-6d6c-1461-cef0-08df07f3bed5 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+DeferredSideEffect
+08:39:17.004-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand]]
+08:39:17.004-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus:Fault[[ViciOne.ServiceBus.Tests.DependencyInjection:ContainerConsumeContextTests+ContextCommand]] cc2e0000-6d6c-1461-f8a8-08df07f3bed5 ViciOne.ServiceBus.Fault<ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand>
+08:39:17.004-D RECEIVE loopback://localhost/SideEffect cc2e0000-6d6c-1461-cef0-08df07f3bed5 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+DeferredSideEffect ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+SideEffectConsumer(00:00:00.0010506)
+08:39:17.004-D Stopping bus instances: IBus
+08:39:17.004-D Stopping bus: loopback://localhost/
+08:39:17.004-E R-FAULT loopback://localhost/FaultingDependencyContext cc2e0000-6d6c-1461-b0d2-08df07f3bed5 ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ContextCommand ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+FaultingDependencyContextConsumer(00:00:00.0008574)
+
+ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure: Exception of type 'ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests+ExpectedContextFailure' was thrown.
+   at ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultingDependencyContextConsumer.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:line 299
+   at ViciOne.ServiceBus.Testing.Implementations.TestConsumerFactoryDecorator`1.TestDecoratorPipe`1.Send(ConsumerConsumeContext`2 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Testing/Implementations/TestConsumerFactoryDecorator.cs:line 56
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+08:39:17.004-D Endpoint Stopping: loopback://localhost/FaultingDependencyContext
+08:39:17.004-D Consumer Stopping: loopback://localhost/FaultingDependencyContext (Stop Receive Transport)
+08:39:17.004-D Endpoint Stopping: loopback://localhost/SideEffect
+08:39:17.004-D Consumer Stopping: loopback://localhost/SideEffect (Stop Receive Transport)
+08:39:17.004-D Endpoint Completed: loopback://localhost/SideEffect
+08:39:17.005-D Consumer Completed: loopback://localhost/SideEffect: 1 received, 1 concurrent
+08:39:17.005-D Endpoint Completed: loopback://localhost/FaultingDependencyContext
+08:39:17.005-D Consumer Completed: loopback://localhost/FaultingDependencyContext: 1 received, 1 concurrent
+08:39:17.006-D Endpoint Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgdb5ybdxoxh76gi
+08:39:17.006-D Consumer Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgdb5ybdxoxh76gi (Stop Receive Transport)
+08:39:17.006-D Endpoint Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgdb5ybdxoxh76gi
+08:39:17.006-D Consumer Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_3ozyyydppokgdb5ybdxoxh76gi: 0 received, 0 concurrent
+08:39:17.006-I Bus stopped: loopback://localhost/
+fehlerhaft ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultedConsumer_UsesTheExactOutboxContextAndDiscardsEverySideEffect(shape: DependencyWithoutRegistrationContext) (7ms)
+  Assert.True() Failure
+  Expected: True
+  Actual:   False
+    um ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultedConsumer_UsesTheExactOutboxContextAndDiscardsEverySideEffect(OutboxShape shape) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:101
+    um ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultedConsumer_UsesTheExactOutboxContextAndDiscardsEverySideEffect(OutboxShape shape) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:118
+    um ViciOne.ServiceBus.Tests.DependencyInjection.ContainerConsumeContextTests.FaultedConsumer_UsesTheExactOutboxContextAndDiscardsEverySideEffect(OutboxShape shape) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs:118
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/container-mutation-evidence-final/M07-results/M07.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-container-mutations/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 8
+  fehlerhaft: 4
+  erfolgreich: 4
+  übersprungen: 0
+  Dauer: 2s 573ms

@@ -1,0 +1,96 @@
+08:36:37.912-I Configured endpoint ProcessBatchItem, Consumer: ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItemConsumer
+08:36:38.061-I Configured endpoint BatchFuture, Future: ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+BatchFuture
+08:36:38.226-D Starting bus instances: IBus
+08:36:38.229-D Starting bus: loopback://localhost/
+08:36:38.269-D Endpoint Ready: loopback://localhost/BatchFuture
+08:36:38.269-D Endpoint Ready: loopback://localhost/ProcessBatchItem
+08:36:38.269-D Endpoint Ready: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_gwsoyydppokgdf1sbdxoxh5ybf
+08:36:38.274-I Bus started: loopback://localhost/
+08:36:38.325-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Futures:BatchFutureIntegrationTests+BatchRequest
+08:36:38.486-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Futures:BatchFutureIntegrationTests+BatchRequest 352d0000-6d6c-1461-110e-08df07f36043 ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+BatchRequest
+08:36:38.560-D SAGA:ViciOne.ServiceBus.FutureState:352d0000-6d6c-1461-f568-08df07f3603b Created ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+BatchRequest
+08:36:38.568-D SAGA:ViciOne.ServiceBus.FutureState:352d0000-6d6c-1461-f568-08df07f3603b Added ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+BatchRequest
+08:36:38.606-D Create send transport: loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Futures:BatchFutureIntegrationTests+ProcessBatchItem
+08:36:38.659-D RECEIVE loopback://localhost/BatchFuture 352d0000-6d6c-1461-110e-08df07f36043 ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+BatchRequest ViciOne.ServiceBus.FutureState(00:00:00.1311601)
+08:36:38.672-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Futures:BatchFutureIntegrationTests+ProcessBatchItem 352d0000-6d6c-1461-5844-08df07f36075 ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItem
+08:36:38.672-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Futures:BatchFutureIntegrationTests+ProcessBatchItem 352d0000-6d6c-1461-7094-08df07f36076 ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItem
+08:36:38.672-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Futures:BatchFutureIntegrationTests+ProcessBatchItem 352d0000-6d6c-1461-7724-08df07f36076 ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItem
+08:36:38.672-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Futures:BatchFutureIntegrationTests+ProcessBatchItem 352d0000-6d6c-1461-7eae-08df07f36076 ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItem
+08:36:38.672-D SEND loopback://localhost/urn:message:ViciOne.ServiceBus.Tests.Futures:BatchFutureIntegrationTests+ProcessBatchItem 352d0000-6d6c-1461-821e-08df07f36076 ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItem
+08:36:38.686-D Create send transport: loopback://localhost/BatchFuture
+08:36:38.701-D SEND loopback://localhost/BatchFuture 352d0000-6d6c-1461-78f2-08df07f36079 ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItemCompleted
+08:36:38.702-D RECEIVE loopback://localhost/ProcessBatchItem 352d0000-6d6c-1461-5844-08df07f36075 ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItem ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItemConsumer(00:00:00.0280223)
+08:36:38.705-D SAGA:ViciOne.ServiceBus.FutureState:352d0000-6d6c-1461-f568-08df07f3603b Used ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItemCompleted
+08:36:38.710-D RECEIVE loopback://localhost/BatchFuture 352d0000-6d6c-1461-78f2-08df07f36079 ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItemCompleted ViciOne.ServiceBus.FutureState(00:00:00.0070023)
+08:36:38.772-D SEND loopback://localhost/BatchFuture 352d0000-6d6c-1461-ead2-08df07f36081 ViciOne.ServiceBus.Fault<ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItem>
+08:36:38.773-E R-FAULT loopback://localhost/ProcessBatchItem 352d0000-6d6c-1461-7094-08df07f36076 ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItem ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItemConsumer(00:00:00.0014236)
+
+ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ExpectedBatchFailure: Exception of type 'ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ExpectedBatchFailure' was thrown.
+   at ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests.ProcessBatchItemConsumer.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/Futures/BatchFutureIntegrationTests.cs:line 163
+   at ViciOne.ServiceBus.Testing.Implementations.TestConsumerFactoryDecorator`1.TestDecoratorPipe`1.Send(ConsumerConsumeContext`2 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Testing/Implementations/TestConsumerFactoryDecorator.cs:line 56
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+08:36:38.777-D SAGA:ViciOne.ServiceBus.FutureState:352d0000-6d6c-1461-f568-08df07f3603b Used ViciOne.ServiceBus.Fault<ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItem>
+08:36:38.785-D SEND loopback://localhost/BatchFuture 352d0000-6d6c-1461-c0f6-08df07f36087 ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItemCompleted
+08:36:38.785-D RECEIVE loopback://localhost/ProcessBatchItem 352d0000-6d6c-1461-7724-08df07f36076 ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItem ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItemConsumer(00:00:00.0015784)
+08:36:38.786-D SEND loopback://localhost/BatchFuture 352d0000-6d6c-1461-eb4e-08df07f36087 ViciOne.ServiceBus.Fault<ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItem>
+08:36:38.786-E R-FAULT loopback://localhost/ProcessBatchItem 352d0000-6d6c-1461-7eae-08df07f36076 ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItem ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItemConsumer(00:00:00.0001173)
+
+ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ExpectedBatchFailure: Exception of type 'ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ExpectedBatchFailure' was thrown.
+   at ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests.ProcessBatchItemConsumer.Consume(ConsumeContext`1 context) in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/Futures/BatchFutureIntegrationTests.cs:line 163
+   at ViciOne.ServiceBus.Testing.Implementations.TestConsumerFactoryDecorator`1.TestDecoratorPipe`1.Send(ConsumerConsumeContext`2 context) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Testing/Implementations/TestConsumerFactoryDecorator.cs:line 56
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.DependencyInjection.ScopeConsumerFactory`1.Send[TMessage](ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/DependencyInjection/ScopeConsumerFactory.cs:line 22
+   at ViciOne.ServiceBus.Middleware.ConsumerMessageFilter`2.ViciOne.ServiceBus.IFilter<ViciOne.ServiceBus.ConsumeContext<TMessage>>.Send(ConsumeContext`1 context, IPipe`1 next) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs:line 48
+08:36:38.787-D SEND loopback://localhost/BatchFuture 352d0000-6d6c-1461-197a-08df07f36088 ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItemCompleted
+08:36:38.788-D RECEIVE loopback://localhost/ProcessBatchItem 352d0000-6d6c-1461-821e-08df07f36076 ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItem ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItemConsumer(00:00:00.0001940)
+08:36:38.803-D Create send transport: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_gwsoyydppokgdf1sbdxoxh5ybf
+08:36:38.805-D RECEIVE loopback://localhost/BatchFuture 352d0000-6d6c-1461-ead2-08df07f36081 ViciOne.ServiceBus.Fault<ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItem> ViciOne.ServiceBus.FutureState(00:00:00.0289368)
+08:36:38.810-D SEND loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_gwsoyydppokgdf1sbdxoxh5ybf 352d0000-6d6c-1461-c2d8-08df07f3608a ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+BatchFaulted
+08:36:38.811-D SAGA:ViciOne.ServiceBus.FutureState:352d0000-6d6c-1461-f568-08df07f3603b Used ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItemCompleted
+08:36:38.813-D RECEIVE loopback://localhost/BatchFuture 352d0000-6d6c-1461-c0f6-08df07f36087 ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItemCompleted ViciOne.ServiceBus.FutureState(00:00:00.0012132)
+08:36:38.813-D SEND loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_gwsoyydppokgdf1sbdxoxh5ybf 352d0000-6d6c-1461-effa-08df07f3608b ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+BatchFaulted
+08:36:38.814-D SAGA:ViciOne.ServiceBus.FutureState:352d0000-6d6c-1461-f568-08df07f3603b Used ViciOne.ServiceBus.Fault<ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItem>
+08:36:38.814-D RECEIVE loopback://localhost/BatchFuture 352d0000-6d6c-1461-eb4e-08df07f36087 ViciOne.ServiceBus.Fault<ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItem> ViciOne.ServiceBus.FutureState(00:00:00.0006831)
+08:36:38.814-D SEND loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_gwsoyydppokgdf1sbdxoxh5ybf 352d0000-6d6c-1461-3514-08df07f3608c ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+BatchFaulted
+08:36:38.815-D SAGA:ViciOne.ServiceBus.FutureState:352d0000-6d6c-1461-f568-08df07f3603b Used ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItemCompleted
+08:36:38.816-D RECEIVE loopback://localhost/BatchFuture 352d0000-6d6c-1461-197a-08df07f36088 ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+ProcessBatchItemCompleted ViciOne.ServiceBus.FutureState(00:00:00.0007754)
+08:36:38.816-D SEND loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_gwsoyydppokgdf1sbdxoxh5ybf 352d0000-6d6c-1461-6afc-08df07f3608c ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+BatchFaulted
+08:36:38.816-D RECEIVE loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_gwsoyydppokgdf1sbdxoxh5ybf 352d0000-6d6c-1461-c2d8-08df07f3608a ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+BatchFaulted ViciOne.ServiceBus.MessageHandler<ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+BatchFaulted>(00:00:00.0006751)
+08:36:38.817-D RECEIVE loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_gwsoyydppokgdf1sbdxoxh5ybf 352d0000-6d6c-1461-effa-08df07f3608b ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+BatchFaulted ViciOne.ServiceBus.MessageHandler<ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+BatchFaulted>(00:00:00.0000066)
+08:36:38.817-D RECEIVE loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_gwsoyydppokgdf1sbdxoxh5ybf 352d0000-6d6c-1461-3514-08df07f3608c ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+BatchFaulted ViciOne.ServiceBus.MessageHandler<ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+BatchFaulted>(00:00:00.0000030)
+08:36:38.817-D RECEIVE loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_gwsoyydppokgdf1sbdxoxh5ybf 352d0000-6d6c-1461-6afc-08df07f3608c ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+BatchFaulted ViciOne.ServiceBus.MessageHandler<ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests+BatchFaulted>(00:00:00.0000020)
+08:36:38.842-D Stopping bus instances: IBus
+08:36:38.845-D Stopping bus: loopback://localhost/
+08:36:38.851-D Endpoint Stopping: loopback://localhost/ProcessBatchItem
+08:36:38.851-D Consumer Stopping: loopback://localhost/ProcessBatchItem (Stop Receive Transport)
+08:36:38.856-D Endpoint Completed: loopback://localhost/ProcessBatchItem
+08:36:38.861-D Consumer Completed: loopback://localhost/ProcessBatchItem: 5 received, 1 concurrent
+08:36:38.862-D Endpoint Stopping: loopback://localhost/BatchFuture
+08:36:38.862-D Consumer Stopping: loopback://localhost/BatchFuture (Stop Receive Transport)
+08:36:38.863-D Endpoint Completed: loopback://localhost/BatchFuture
+08:36:38.863-D Consumer Completed: loopback://localhost/BatchFuture: 6 received, 1 concurrent
+08:36:38.864-D Endpoint Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_gwsoyydppokgdf1sbdxoxh5ybf
+08:36:38.864-D Consumer Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_gwsoyydppokgdf1sbdxoxh5ybf (Stop Receive Transport)
+08:36:38.864-D Endpoint Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_gwsoyydppokgdf1sbdxoxh5ybf
+08:36:38.864-D Consumer Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_gwsoyydppokgdf1sbdxoxh5ybf: 4 received, 1 concurrent
+08:36:38.873-I Bus stopped: loopback://localhost/
+fehlerhaft ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests.PartiallyFaultedBatch_ReturnsOnlyTheSuccessfulJobNumbersExactlyOnce (1s 302ms)
+  Assert.Equal() Failure: Collections differ
+                                    ↓ (pos 1)
+  Expected: <generated>  ["C12345", "C54321", "C33454"]
+  Actual:   List<string> ["C12345"]
+    um ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests.PartiallyFaultedBatch_ReturnsOnlyTheSuccessfulJobNumbersExactlyOnce() in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/Futures/BatchFutureIntegrationTests.cs:40
+    um ViciOne.ServiceBus.Tests.Futures.BatchFutureIntegrationTests.PartiallyFaultedBatch_ReturnsOnlyTheSuccessfulJobNumbersExactlyOnce() in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/Futures/BatchFutureIntegrationTests.cs:42
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/container-mutation-evidence-final/M05-results/M05.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-container-mutations/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 2s 621ms

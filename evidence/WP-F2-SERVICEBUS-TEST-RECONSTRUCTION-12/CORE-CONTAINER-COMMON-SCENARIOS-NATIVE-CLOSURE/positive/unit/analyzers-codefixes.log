@@ -1,0 +1,10 @@
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/container-final-positive/unit/analyzers-codefixes.json
+
+Testlaufzusammenfassung: Bestanden! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/release/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.dll (net10.0|x64)
+  gesamt: 29
+  fehlerhaft: 0
+  erfolgreich: 29
+  übersprungen: 0
+  Dauer: 11s 933ms

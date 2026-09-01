@@ -1,0 +1,87 @@
+08:41:20.509-I Configured endpoint DefaultOwnedRequest, Consumer: ViciOne.ServiceBus.Tests.DependencyInjection.MultiBusRequestTests+DefaultOwnedRequestConsumer
+08:41:20.626-I Configured endpoint BusBOwnedRequest, Consumer: ViciOne.ServiceBus.Tests.DependencyInjection.MultiBusRequestTests+BusBOwnedRequestConsumer
+08:41:20.627-I Configured endpoint CrossBusOrigin, Consumer: ViciOne.ServiceBus.Tests.DependencyInjection.MultiBusRequestTests+CrossBusOriginConsumer
+08:41:20.645-I Configured endpoint BusCOwnedRequest, Consumer: ViciOne.ServiceBus.Tests.DependencyInjection.MultiBusRequestTests+BusCOwnedRequestConsumer
+08:41:20.649-I Configured endpoint CrossBusDelivered, Consumer: ViciOne.ServiceBus.Tests.DependencyInjection.MultiBusRequestTests+CrossBusDeliveredConsumer
+08:41:20.661-D Starting bus instances: IBus, IBusB, IBusC
+08:41:20.665-D Starting bus: loopback://localhost/
+08:41:20.699-D Endpoint Ready: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_erayyydppokgnztybdxox7yedh
+08:41:20.699-D Endpoint Ready: loopback://localhost/DefaultOwnedRequest
+08:41:20.702-D Starting bus: loopback://localhost/three-bus-b
+08:41:20.703-D Endpoint Ready: loopback://localhost/three-bus-b/BusBOwnedRequest
+08:41:20.703-D Endpoint Ready: loopback://localhost/three-bus-b/CrossBusOrigin
+08:41:20.703-D Endpoint Ready: loopback://localhost/three-bus-b/EdgarsiMac2_ViciOneServiceBus_bus_erayyydppokgdnpkbdxox7yerf
+08:41:20.703-I Bus started: loopback://localhost/
+08:41:20.703-I Bus started: loopback://localhost/three-bus-b
+08:41:20.703-D Starting bus: loopback://localhost/three-bus-c
+08:41:20.704-D Endpoint Ready: loopback://localhost/three-bus-c/BusCOwnedRequest
+08:41:20.704-D Endpoint Ready: loopback://localhost/three-bus-c/CrossBusDelivered
+08:41:20.704-D Endpoint Ready: loopback://localhost/three-bus-c/EdgarsiMac2_ViciOneServiceBus_bus_erayyydppokgdam1bdxox7yere
+08:41:20.704-I Bus started: loopback://localhost/three-bus-c
+08:41:20.707-D Stopping bus instances: IBus, IBusB, IBusC
+08:41:20.709-D Stopping bus: loopback://localhost/
+08:41:20.715-D Endpoint Stopping: loopback://localhost/DefaultOwnedRequest
+08:41:20.716-D Consumer Stopping: loopback://localhost/DefaultOwnedRequest (Stop Receive Transport)
+08:41:20.721-D Endpoint Completed: loopback://localhost/DefaultOwnedRequest
+08:41:20.733-D Consumer Completed: loopback://localhost/DefaultOwnedRequest: 0 received, 0 concurrent
+08:41:20.735-D Endpoint Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_erayyydppokgnztybdxox7yedh
+08:41:20.735-D Consumer Stopping: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_erayyydppokgnztybdxox7yedh (Stop Receive Transport)
+08:41:20.736-D Endpoint Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_erayyydppokgnztybdxox7yedh
+08:41:20.736-D Consumer Completed: loopback://localhost/EdgarsiMac2_ViciOneServiceBus_bus_erayyydppokgnztybdxox7yedh: 0 received, 0 concurrent
+08:41:20.736-D Stopping bus: loopback://localhost/three-bus-b
+08:41:20.736-D Endpoint Stopping: loopback://localhost/three-bus-b/BusBOwnedRequest
+08:41:20.736-D Consumer Stopping: loopback://localhost/three-bus-b/BusBOwnedRequest (Stop Receive Transport)
+08:41:20.736-D Endpoint Completed: loopback://localhost/three-bus-b/BusBOwnedRequest
+08:41:20.736-D Consumer Completed: loopback://localhost/three-bus-b/BusBOwnedRequest: 0 received, 0 concurrent
+08:41:20.736-D Endpoint Stopping: loopback://localhost/three-bus-b/CrossBusOrigin
+08:41:20.736-D Consumer Stopping: loopback://localhost/three-bus-b/CrossBusOrigin (Stop Receive Transport)
+08:41:20.736-D Endpoint Completed: loopback://localhost/three-bus-b/CrossBusOrigin
+08:41:20.736-D Consumer Completed: loopback://localhost/three-bus-b/CrossBusOrigin: 0 received, 0 concurrent
+08:41:20.736-D Stopping bus: loopback://localhost/three-bus-c
+08:41:20.736-D Endpoint Stopping: loopback://localhost/three-bus-c/BusCOwnedRequest
+08:41:20.736-D Endpoint Stopping: loopback://localhost/three-bus-b/EdgarsiMac2_ViciOneServiceBus_bus_erayyydppokgdnpkbdxox7yerf
+08:41:20.736-D Consumer Stopping: loopback://localhost/three-bus-c/BusCOwnedRequest (Stop Receive Transport)
+08:41:20.736-D Consumer Stopping: loopback://localhost/three-bus-b/EdgarsiMac2_ViciOneServiceBus_bus_erayyydppokgdnpkbdxox7yerf (Stop Receive Transport)
+08:41:20.737-D Endpoint Completed: loopback://localhost/three-bus-c/BusCOwnedRequest
+08:41:20.737-D Endpoint Completed: loopback://localhost/three-bus-b/EdgarsiMac2_ViciOneServiceBus_bus_erayyydppokgdnpkbdxox7yerf
+08:41:20.737-D Consumer Completed: loopback://localhost/three-bus-c/BusCOwnedRequest: 0 received, 0 concurrent
+08:41:20.737-D Consumer Completed: loopback://localhost/three-bus-b/EdgarsiMac2_ViciOneServiceBus_bus_erayyydppokgdnpkbdxox7yerf: 0 received, 0 concurrent
+08:41:20.737-D Endpoint Stopping: loopback://localhost/three-bus-c/CrossBusDelivered
+08:41:20.737-D Consumer Stopping: loopback://localhost/three-bus-c/CrossBusDelivered (Stop Receive Transport)
+08:41:20.737-D Endpoint Completed: loopback://localhost/three-bus-c/CrossBusDelivered
+08:41:20.737-D Consumer Completed: loopback://localhost/three-bus-c/CrossBusDelivered: 0 received, 0 concurrent
+08:41:20.737-D Endpoint Stopping: loopback://localhost/three-bus-c/EdgarsiMac2_ViciOneServiceBus_bus_erayyydppokgdam1bdxox7yere
+08:41:20.737-D Consumer Stopping: loopback://localhost/three-bus-c/EdgarsiMac2_ViciOneServiceBus_bus_erayyydppokgdam1bdxox7yere (Stop Receive Transport)
+08:41:20.737-D Endpoint Completed: loopback://localhost/three-bus-c/EdgarsiMac2_ViciOneServiceBus_bus_erayyydppokgdam1bdxox7yere
+08:41:20.737-D Consumer Completed: loopback://localhost/three-bus-c/EdgarsiMac2_ViciOneServiceBus_bus_erayyydppokgdam1bdxox7yere: 0 received, 0 concurrent
+08:41:20.745-I Bus stopped: loopback://localhost/three-bus-c
+08:41:20.745-I Bus stopped: loopback://localhost/
+08:41:20.745-I Bus stopped: loopback://localhost/three-bus-b
+fehlerhaft ViciOne.ServiceBus.Tests.DependencyInjection.MultiBusRequestTests.ThreeBusRegistration_ResolvesEveryOwnerClientAndCrossBusDeliveryExactly (590ms)
+  Xunit.MicrosoftTestingPlatform.XunitException: System.InvalidCastException : Unable to cast object of type 'ViciOne.ServiceBus.ViciOneServiceBusBus' to type 'IBusB'.
+    um ViciOne.ServiceBus.Configuration.ServiceCollectionBusConfigurator`2.<>c__1`1.<SetBusFactory>b__1_3(IServiceProvider provider) in /private/tmp/vicione-container-mutations/src/ViciOne.ServiceBus/DependencyInjection/Configuration/ServiceCollectionBusConfigurator.cs:209
+    um Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitFactory(FactoryCallSite factoryCallSite, RuntimeResolverContext context)
+    um Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+    um Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitRootCache(ServiceCallSite callSite, RuntimeResolverContext context)
+    um Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+    um Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+    um Microsoft.Extensions.DependencyInjection.ServiceProvider.CreateServiceAccessor(ServiceIdentifier serviceIdentifier)
+    um System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+    um Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)
+    um Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(Type serviceType)
+    um Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService(IServiceProvider provider, Type serviceType)
+    um Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+    um ViciOne.ServiceBus.Tests.DependencyInjection.MultiBusRequestTests.ThreeBusRegistration_ResolvesEveryOwnerClientAndCrossBusDeliveryExactly() in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/MultiBusRequestTests.cs:225
+    um ViciOne.ServiceBus.Tests.DependencyInjection.MultiBusRequestTests.ThreeBusRegistration_ResolvesEveryOwnerClientAndCrossBusDeliveryExactly() in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/MultiBusRequestTests.cs:262
+    um ViciOne.ServiceBus.Tests.DependencyInjection.MultiBusRequestTests.ThreeBusRegistration_ResolvesEveryOwnerClientAndCrossBusDeliveryExactly() in /private/tmp/vicione-container-mutations/tests2/ViciOne.ServiceBus.Tests/DependencyInjection/MultiBusRequestTests.cs:262
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /private/tmp/container-mutation-evidence-final/M10-results/M10.json
+
+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-container-mutations/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 1s 912ms
