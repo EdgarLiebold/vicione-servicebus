@@ -21,8 +21,10 @@ namespace ViciOne.ServiceBus.Architecture.Tests.TestPlatform;
 /// </remarks>
 public sealed class TestingPlatformConfigurationTests
 {
-    private const int ExpectedUnitTestFloor = 2838;
-    private const int ExpectedLocalIntegrationTestFloor = 398;
+    private const int ExpectedUnitTestFloor = 2840;
+    private const int ExpectedLocalIntegrationTestFloor = 326;
+    private const int ExpectedSqlServerLocalIntegrationTestFloor = 60;
+    private const int ExpectedAzureServiceBusLocalIntegrationTestFloor = 22;
 
     [Fact]
     public void CanonicalConfiguration_TurnsSkipsAndWarningsIntoFailures()
@@ -129,6 +131,12 @@ public sealed class TestingPlatformConfigurationTests
         Assert.All(commandOwners, path =>
         {
             Assert.Equal(ExpectedLocalIntegrationTestFloor, ReadLocalIntegrationProfileFloor(path));
+            Assert.Equal(
+                ExpectedSqlServerLocalIntegrationTestFloor,
+                ReadSqlServerLocalIntegrationProfileFloor(path));
+            Assert.Equal(
+                ExpectedAzureServiceBusLocalIntegrationTestFloor,
+                ReadAzureServiceBusLocalIntegrationProfileFloor(path));
 
             MatchCollection outageControls = Regex.Matches(
                 File.ReadAllText(path),
@@ -391,6 +399,36 @@ public sealed class TestingPlatformConfigurationTests
         Assert.True(
             matches.Count == 1,
             $"expected exactly one documented LocalIntegration profile command in {path}, found {matches.Count}");
+        return int.Parse(matches[0].Groups["floor"].Value, System.Globalization.CultureInfo.InvariantCulture);
+    }
+
+    private static int ReadAzureServiceBusLocalIntegrationProfileFloor(string path)
+    {
+        const string localCommandPattern =
+            @"dotnet test\s+--solution\s+ViciOne\.ServiceBus\.Tests\.AzureServiceBusLocalIntegration\.slnx.*?--minimum-expected-tests\s+(?<floor>\d+)";
+        MatchCollection matches = Regex.Matches(
+            File.ReadAllText(path),
+            localCommandPattern,
+            RegexOptions.Singleline | RegexOptions.CultureInvariant);
+
+        Assert.True(
+            matches.Count == 1,
+            $"expected exactly one documented AzureServiceBusLocalIntegration profile command in {path}, found {matches.Count}");
+        return int.Parse(matches[0].Groups["floor"].Value, System.Globalization.CultureInfo.InvariantCulture);
+    }
+
+    private static int ReadSqlServerLocalIntegrationProfileFloor(string path)
+    {
+        const string localCommandPattern =
+            @"dotnet test\s+--solution\s+ViciOne\.ServiceBus\.Tests\.SqlServerLocalIntegration\.slnx.*?--minimum-expected-tests\s+(?<floor>\d+)";
+        MatchCollection matches = Regex.Matches(
+            File.ReadAllText(path),
+            localCommandPattern,
+            RegexOptions.Singleline | RegexOptions.CultureInvariant);
+
+        Assert.True(
+            matches.Count == 1,
+            $"expected exactly one documented SqlServerLocalIntegration profile command in {path}, found {matches.Count}");
         return int.Parse(matches[0].Groups["floor"].Value, System.Globalization.CultureInfo.InvariantCulture);
     }
 }

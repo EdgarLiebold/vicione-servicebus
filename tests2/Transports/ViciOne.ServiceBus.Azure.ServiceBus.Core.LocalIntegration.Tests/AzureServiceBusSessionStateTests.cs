@@ -1,8 +1,9 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.LocalIntegration.Tests;
+namespace ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests;
 
 using global::Azure.Messaging.ServiceBus;
 using global::Azure.Messaging.ServiceBus.Administration;
 using Infrastructure;
+using ViciOne.ServiceBus.AzureServiceBusTransport;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 

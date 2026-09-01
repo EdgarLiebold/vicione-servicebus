@@ -2,12 +2,12 @@ using System.Reflection;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.LocalIntegration.Tests.Requirements;
+namespace ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests.Requirements;
 
 public sealed class RequirementCoverageProjectionTests
 {
     const string ProjectionResourceName =
-        "ViciOne.ServiceBus.AzureServiceBusTransport.LocalIntegration.Tests.Requirements.AzureServiceBusLocalIntegrationRequirements.json";
+        "ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests.Requirements.AzureServiceBusLocalIntegrationRequirements.json";
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-LOCAL-REQUIREMENT-PROJECTION", "compiled-metadata-matches-projection")]

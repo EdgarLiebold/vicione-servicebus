@@ -11,6 +11,8 @@ mapped by `NuGet.config`; no machine-level feed or credential participates.
 | `ViciOne.ServiceBus.Engineering.slnx` | benchmarks, diagnostics, samples, product dependencies, and every materialized native-test project |
 | `ViciOne.ServiceBus.Tests.Unit.slnx` | current hermetic unit and architecture profile |
 | `ViciOne.ServiceBus.Tests.LocalIntegration.slnx` | tests against real resources of the local host |
+| `ViciOne.ServiceBus.Tests.SqlServerLocalIntegration.slnx` | SQL Server stress and lock-renewal tests in an isolated provider profile |
+| `ViciOne.ServiceBus.Tests.AzureServiceBusLocalIntegration.slnx` | Azure Service Bus tests against the official local emulator in an isolated provider profile |
 
 A native profile solution is created only with its first executable cohort. The external profile is
 therefore not materialized yet. Empty solution files are not valid test runs and must never be used
@@ -25,11 +27,15 @@ dotnet restore ViciOne.ServiceBus.slnx --locked-mode
 dotnet restore ViciOne.ServiceBus.Engineering.slnx --locked-mode
 dotnet restore ViciOne.ServiceBus.Tests.Unit.slnx --locked-mode
 dotnet restore ViciOne.ServiceBus.Tests.LocalIntegration.slnx --locked-mode
+dotnet restore ViciOne.ServiceBus.Tests.SqlServerLocalIntegration.slnx --locked-mode
+dotnet restore ViciOne.ServiceBus.Tests.AzureServiceBusLocalIntegration.slnx --locked-mode
 
 dotnet build ViciOne.ServiceBus.slnx -c Release --no-restore
 dotnet build ViciOne.ServiceBus.Engineering.slnx -c Release --no-restore
 dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore
 dotnet build ViciOne.ServiceBus.Tests.LocalIntegration.slnx -c Release --no-restore
+dotnet build ViciOne.ServiceBus.Tests.SqlServerLocalIntegration.slnx -c Release --no-restore
+dotnet build ViciOne.ServiceBus.Tests.AzureServiceBusLocalIntegration.slnx -c Release --no-restore
 ```
 
 Use the normal MSBuild dependency graph. `--no-incremental` selects the `Rebuild` target, which is
@@ -55,18 +61,32 @@ the native MTP command form and no VSTest argument separator:
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
   -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 2838 \
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 2840 \
   --max-parallel-test-modules 1
 
 VICIONE_TESTS__Profile=LocalIntegration \
 python3 tools/ci/run_broker_category.py \
-  --broker postgres --broker mssql --broker azurite --broker localstack \
+  --broker postgres --broker azurite --broker localstack \
   --broker activemq --broker artemis --broker eventhubs \
   --allow-broker-outage activemq --command -- \
   dotnet test --solution ViciOne.ServiceBus.Tests.LocalIntegration.slnx \
     -c Release --no-build --no-restore \
     --results-directory artifacts/test-results/local-integration \
-    --minimum-expected-tests 398 --max-parallel-test-modules 1
+    --minimum-expected-tests 326 --max-parallel-test-modules 1
+
+VICIONE_TESTS__Profile=LocalIntegration \
+python3 tools/ci/run_broker_category.py --broker postgres --broker mssql --command -- \
+  dotnet test --solution ViciOne.ServiceBus.Tests.SqlServerLocalIntegration.slnx \
+    -c Release --no-build --no-restore \
+    --results-directory artifacts/test-results/sqlserver-local-integration \
+    --minimum-expected-tests 60 --max-parallel-test-modules 1
+
+VICIONE_TESTS__Profile=LocalIntegration \
+python3 tools/ci/run_broker_category.py --broker servicebus --command -- \
+  dotnet test --solution ViciOne.ServiceBus.Tests.AzureServiceBusLocalIntegration.slnx \
+    -c Release --no-build --no-restore \
+    --results-directory artifacts/test-results/azure-servicebus-local-integration \
+    --minimum-expected-tests 22 --max-parallel-test-modules 1
 ```
 
 The unfiltered process exit code is the verdict. `tests2/testconfig.json` turns skips and warnings
@@ -133,10 +153,11 @@ input-pipeline continuation, and configured concurrency maxima. The fault-diagno
 and host-metadata cohort proves detached case-insensitive diagnostic snapshots,
 application-data precedence, exact remote exception identity, complete System.Text.Json fault data,
 one unambiguous current-host capture path and all eight host fields after real envelope transport.
-The LocalIntegration floor is independent and includes only host-resource tests in that profile.
-Its 398 cases cover run-scoped PostgreSQL, SQL Server, Azurite, LocalStack, ActiveMQ Classic, Artemis
-and the pinned Event Hubs emulator
-resources, including
+The LocalIntegration floors are independent and include only host-resource tests in their profiles.
+The 326-case host profile covers run-scoped PostgreSQL, Azurite, LocalStack, ActiveMQ Classic,
+Artemis and the pinned Event Hubs emulator. The isolated 60-case SQL Server profile keeps its
+stress and lock-renewal cases away from those six provider processes. The isolated 22-case Azure Service Bus profile
+uses the official emulator without competing with those seven provider processes. Those resources cover
 `MessageJournal`, EF Core saga/outbox/job/future persistence, ambient-transaction and explicit-buffer
 commit/rollback/flush behavior, SQS/SNS transport semantics, DynamoDB optimistic saga persistence and S3
 message-data/lifecycle-policy composition. ActiveMQ recovery cases use the runner-owned outage

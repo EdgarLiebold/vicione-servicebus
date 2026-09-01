@@ -1,4 +1,4 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.LocalIntegration.Tests;
+namespace ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests;
 
 using System.Collections.Concurrent;
 using global::Azure.Messaging.ServiceBus;

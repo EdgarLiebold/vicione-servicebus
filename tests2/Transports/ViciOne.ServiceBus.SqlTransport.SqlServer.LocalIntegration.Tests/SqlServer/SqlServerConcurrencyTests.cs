@@ -28,7 +28,7 @@ public sealed class SqlServerConcurrencyTests
             {
                 endpoint.PrefetchCount = 10;
                 endpoint.ConcurrentMessageLimit = 10;
-                endpoint.SetReceiveMode(SqlReceiveMode.Partitioned);
+                endpoint.SetReceiveMode(SqlReceiveMode.PartitionedOrdered);
                 endpoint.Handler<PartitionedMessage>(context =>
                 {
                     string key = context.PartitionKey()

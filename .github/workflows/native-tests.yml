@@ -37,7 +37,7 @@ jobs:
       - name: Build release test binaries
         run: dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore
       - name: Run the complete profile without filters
-        run: dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore --results-directory artifacts/test-results/unit --minimum-expected-tests 2838 --max-parallel-test-modules 1
+        run: dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore --results-directory artifacts/test-results/unit --minimum-expected-tests 2840 --max-parallel-test-modules 1
 
   local-integration:
     name: "Required: Native Local Integration"
@@ -58,7 +58,6 @@ jobs:
         run: >-
           python3 tools/ci/run_broker_category.py
           --broker postgres
-          --broker mssql
           --broker azurite
           --broker localstack
           --broker activemq
@@ -69,5 +68,58 @@ jobs:
           dotnet test --solution ViciOne.ServiceBus.Tests.LocalIntegration.slnx
           -c Release --no-build --no-restore
           --results-directory artifacts/test-results/local-integration
-          --minimum-expected-tests 398
+          --minimum-expected-tests 326
+          --max-parallel-test-modules 1
+
+  sqlserver-local-integration:
+    name: "Required: Native SQL Server Local Integration"
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      VICIONE_TESTS__Profile: LocalIntegration
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Restore locked dependency graph
+        run: dotnet restore ViciOne.ServiceBus.Tests.SqlServerLocalIntegration.slnx --locked-mode
+      - name: Build release test binaries
+        run: dotnet build ViciOne.ServiceBus.Tests.SqlServerLocalIntegration.slnx -c Release --no-restore
+      - name: Run the complete profile against the pinned local provider
+        run: >-
+          python3 tools/ci/run_broker_category.py
+          --broker postgres
+          --broker mssql
+          --command --
+          dotnet test --solution ViciOne.ServiceBus.Tests.SqlServerLocalIntegration.slnx
+          -c Release --no-build --no-restore
+          --results-directory artifacts/test-results/sqlserver-local-integration
+          --minimum-expected-tests 60
+          --max-parallel-test-modules 1
+
+  azure-servicebus-local-integration:
+    name: "Required: Native Azure Service Bus Local Integration"
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      VICIONE_TESTS__Profile: LocalIntegration
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Restore locked dependency graph
+        run: dotnet restore ViciOne.ServiceBus.Tests.AzureServiceBusLocalIntegration.slnx --locked-mode
+      - name: Build release test binaries
+        run: dotnet build ViciOne.ServiceBus.Tests.AzureServiceBusLocalIntegration.slnx -c Release --no-restore
+      - name: Run the complete profile against the pinned local provider
+        run: >-
+          python3 tools/ci/run_broker_category.py
+          --broker servicebus
+          --command --
+          dotnet test --solution ViciOne.ServiceBus.Tests.AzureServiceBusLocalIntegration.slnx
+          -c Release --no-build --no-restore
+          --results-directory artifacts/test-results/azure-servicebus-local-integration
+          --minimum-expected-tests 22
           --max-parallel-test-modules 1

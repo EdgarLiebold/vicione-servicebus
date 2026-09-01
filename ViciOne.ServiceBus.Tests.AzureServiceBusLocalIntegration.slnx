@@ -1,0 +1,12 @@
+<Solution>
+  <!-- Profile AzureServiceBusLocalIntegration: official emulator, isolated from the seven-provider host profile. -->
+  <Folder Name="/tests2/">
+    <Project Path="tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj" />
+    <Project Path="tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj" />
+    <Project Path="src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
+    <Project Path="src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/ViciOne.ServiceBus.Azure.ServiceBus.Core.csproj" />
+  </Folder>
+</Solution>
