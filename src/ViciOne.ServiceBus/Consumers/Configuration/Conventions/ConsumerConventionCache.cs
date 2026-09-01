@@ -16,10 +16,13 @@ namespace ViciOne.ServiceBus.Configuration
         public static bool TryAdd<T>(T convention)
             where T : IConsumerConvention
         {
-            if (Cached.Registered.Any(x => x.GetType() == convention.GetType()))
-                return false;
+            lock (Cached.MutateLock)
+            {
+                if (Cached.Registered.Any(x => x.GetType() == convention.GetType()))
+                    return false;
 
-            Cached.Registered.Add(convention);
+                Cached.Registered.Add(convention);
+            }
 
             return true;
         }
@@ -27,12 +30,15 @@ namespace ViciOne.ServiceBus.Configuration
         public static bool Remove<T>()
             where T : IConsumerConvention
         {
-            for (var i = 0; i < Cached.Registered.Count; i++)
+            lock (Cached.MutateLock)
             {
-                if (Cached.Registered[i] is T)
+                for (var i = 0; i < Cached.Registered.Count; i++)
                 {
-                    Cached.Registered.RemoveAt(i);
-                    return true;
+                    if (Cached.Registered[i] is T)
+                    {
+                        Cached.Registered.RemoveAt(i);
+                        return true;
+                    }
                 }
             }
 
@@ -47,12 +53,17 @@ namespace ViciOne.ServiceBus.Configuration
         public static IEnumerable<IConsumerMessageConvention> GetConventions<T>()
             where T : class
         {
-            return Cached.Registered.Select(convention => convention.GetConsumerMessageConvention<T>());
+            IConsumerConvention[] conventions;
+            lock (Cached.MutateLock)
+                conventions = Cached.Registered.ToArray();
+
+            return conventions.Select(convention => convention.GetConsumerMessageConvention<T>()).ToArray();
         }
 
 
         static class Cached
         {
+            internal static readonly object MutateLock = new object();
             internal static readonly List<IConsumerConvention> Registered = new List<IConsumerConvention>();
         }
     }

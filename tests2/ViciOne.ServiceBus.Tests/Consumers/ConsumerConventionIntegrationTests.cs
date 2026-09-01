@@ -11,6 +11,28 @@ namespace ViciOne.ServiceBus.Tests.Consumers;
 public sealed class ConsumerConventionIntegrationTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-CONSUMER-CONVENTION", "registration-publishes-an-immutable-snapshot")]
+    public void Registration_PublishesANewImmutableConventionSnapshot()
+    {
+        IEnumerable<IConsumerMessageConvention> beforeRegistration = ConsumerConventionCache.GetConventions<SnapshotConsumer>();
+
+        try
+        {
+            Assert.True(ConsumerConvention.Register(new SnapshotMarkerConsumerConvention()));
+            Assert.DoesNotContain(
+                beforeRegistration,
+                convention => convention is SnapshotMarkerConsumerMessageConvention<SnapshotConsumer>);
+            Assert.Contains(
+                ConsumerConventionCache.GetConventions<SnapshotConsumer>(),
+                convention => convention is SnapshotMarkerConsumerMessageConvention<SnapshotConsumer>);
+        }
+        finally
+        {
+            ConsumerConvention.Remove<SnapshotMarkerConsumerConvention>();
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-CONSUMER-CONVENTION", "custom-message-only-handler-contract")]
     public async Task CustomConvention_DispatchesEveryDeclaredMessageOnlyHandlerExactlyOnce()
     {
@@ -119,6 +141,20 @@ public sealed class ConsumerConventionIntegrationTests
             received.TrySetResult(context.Message);
             return Task.CompletedTask;
         }
+    }
+
+    private sealed class SnapshotConsumer;
+
+    private sealed class SnapshotMarkerConsumerConvention : IConsumerConvention
+    {
+        IConsumerMessageConvention IConsumerConvention.GetConsumerMessageConvention<T>() =>
+            new SnapshotMarkerConsumerMessageConvention<T>();
+    }
+
+    private sealed class SnapshotMarkerConsumerMessageConvention<T> : IConsumerMessageConvention
+        where T : class
+    {
+        public IEnumerable<IMessageInterfaceType> GetMessageTypes() => [];
     }
 
     public sealed class MessageOnlyConsumerConvention : IConsumerConvention
