@@ -97,9 +97,16 @@ def start(brokers: list[str], environment: dict[str, str]) -> None:
             "the fixture of an earlier run could not be removed before this one started: "
             f"{cleaned.stderr.strip() or cleaned.stdout.strip()}")
 
-    result = compose("up", "-d", "--wait", *brokers, capture=True, environment=environment)
-    if result.returncode != 0:
-        raise RunnerError(f"the {', '.join(brokers)} fixture did not become ready: {result.stderr.strip()}")
+    # Compose starts every named service concurrently. That is needlessly hostile to the bounded
+    # developer/CI runners this repository supports: SQL Server, both ActiveMQ brokers, LocalStack
+    # and the Event Hubs emulator all perform their most expensive initialization at once, and SQL
+    # Server can fail with EAGAIN while the same pinned image is healthy in isolation. Keep one
+    # run-scoped project and one final simultaneous fixture, but bring each requested service to its
+    # declared readiness before starting the next one.
+    for broker in dict.fromkeys(brokers):
+        result = compose("up", "-d", "--wait", broker, capture=True, environment=environment)
+        if result.returncode != 0:
+            raise RunnerError(f"the {broker} fixture did not become ready: {result.stderr.strip()}")
 
 
 def stop(environment: dict[str, str] | None = None) -> None:

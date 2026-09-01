@@ -527,6 +527,41 @@ class Making_startup_and_teardown_total(unittest.TestCase):
 
         self.assertNotIn("up", calls, "the fixture was started on top of the one it could not remove")
 
+    def test_requested_services_reach_readiness_one_at_a_time_in_the_same_project(self) -> None:
+        calls = []
+
+        def compose(*args: str, capture: bool = False, environment: dict | None = None):
+            calls.append(args)
+            return subprocess.CompletedProcess(args=list(args), returncode=0, stdout="", stderr="")
+
+        with mock.patch.object(compose_fixture, "compose", side_effect=compose):
+            compose_fixture.start(["mssql", "eventhubs", "mssql"], {})
+
+        self.assertEqual(
+            [
+                ("down", "-v", "--remove-orphans"),
+                ("up", "-d", "--wait", "mssql"),
+                ("up", "-d", "--wait", "eventhubs"),
+            ],
+            calls,
+        )
+
+    def test_a_failed_service_stops_sequential_startup_before_later_services(self) -> None:
+        calls = []
+
+        def compose(*args: str, capture: bool = False, environment: dict | None = None):
+            calls.append(args)
+            failed = args == ("up", "-d", "--wait", "mssql")
+            return subprocess.CompletedProcess(
+                args=list(args), returncode=1 if failed else 0, stdout="", stderr="resource unavailable")
+
+        with mock.patch.object(compose_fixture, "compose", side_effect=compose):
+            with self.assertRaises(compose_fixture.RunnerError) as raised:
+                compose_fixture.start(["postgres", "mssql", "eventhubs"], {})
+
+        self.assertIn("mssql fixture did not become ready", str(raised.exception))
+        self.assertNotIn(("up", "-d", "--wait", "eventhubs"), calls)
+
     def test_a_controller_that_was_never_started_can_still_be_shut_down(self) -> None:
         """Thread.join() raises on a thread that never ran, and that exception used to travel out of a
         teardown which promises not to raise."""
