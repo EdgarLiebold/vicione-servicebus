@@ -281,18 +281,6 @@
       "runs": []
     },
     {
-      "id": "test-infrastructure",
-      "class": "SUPPORT_LIBRARY",
-      "sourceProjects": [],
-      "testProjects": [],
-      "supportProjects": [
-        "tests/ViciOne.ServiceBus.TestInfrastructure"
-      ],
-      "toolProjects": [],
-      "rationale": "The run-scoped fixture contract every database backed test project reads. It carries no case of its own; it is compiled and exercised by the categories that reference it, and its own assurances are asserted in RunnerContract_Specs inside the SQL transport project.",
-      "runs": []
-    },
-    {
       "id": "transport-activemq",
       "class": "NATIVE_TEST_ESTATE",
       "sourceProjects": [

@@ -2,6 +2,7 @@ using System.Text;
 using System.Text.Json.Nodes;
 using Microsoft.Extensions.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
+using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Infrastructure.Tests.Configuration;
@@ -174,6 +175,7 @@ public sealed class TestConfigurationProviderTests
     [InlineData("VICIONE_TESTS__LocalInfrastructure__PostgreSql__Database", "", "LocalInfrastructure:PostgreSql:Database")]
     [InlineData("VICIONE_TESTS__LocalInfrastructure__PostgreSql__UserName", "", "LocalInfrastructure:PostgreSql:UserName")]
     [InlineData("VICIONE_TESTS__LocalInfrastructure__PostgreSql__Password", "", "LocalInfrastructure:PostgreSql:Password")]
+    [RequirementCoverage("OBL-R0-SQL-0049", "native-typed-configuration-owner")]
     public void LocalPostgreSqlSelection_RejectsAnInvalidSetting(
         string key,
         string value,
@@ -211,6 +213,7 @@ public sealed class TestConfigurationProviderTests
     [InlineData("VICIONE_TESTS__LocalInfrastructure__SqlServer__Database", "", "LocalInfrastructure:SqlServer:Database")]
     [InlineData("VICIONE_TESTS__LocalInfrastructure__SqlServer__UserName", "", "LocalInfrastructure:SqlServer:UserName")]
     [InlineData("VICIONE_TESTS__LocalInfrastructure__SqlServer__Password", "", "LocalInfrastructure:SqlServer:Password")]
+    [RequirementCoverage("OBL-R0-SQL-0050", "native-typed-configuration-owner")]
     public void LocalSqlServerSelection_RejectsAnInvalidSetting(
         string key,
         string value,
@@ -458,6 +461,7 @@ public sealed class TestConfigurationProviderTests
     [InlineData("VICIONE_SERVICEBUS_PG_DATABASE", "journal", "journal")]
     [InlineData("VICIONE_SERVICEBUS_PG_USER", "run-user", "run-user")]
     [InlineData("VICIONE_SERVICEBUS_PG_PASS", "run-secret", "run-secret")]
+    [RequirementCoverage("OBL-R0-SQL-0048", "native-typed-configuration-owner")]
     public void CanonicalFixtureVariables_MapIntoTheSingleTypedConfiguration(
         string key,
         string value,
@@ -692,16 +696,61 @@ public sealed class TestConfigurationProviderTests
     }
 
     [Fact]
-    public void GetValidatedLocalOptions_FailsBeforeExecutionWithoutCredentials()
+    [RequirementCoverage("OBL-R0-SQL-0052", "native-typed-configuration-owner")]
+    public void GetValidatedLocalOptions_FailsBeforeExecutionAndNamesEveryMissingPostgreSqlSetting()
     {
-        var provider = ProviderWith(("VICIONE_TESTS__Profile", "LocalIntegration"));
+        var provider = ProviderWith(
+            ("VICIONE_TESTS__Profile", "LocalIntegration"),
+            ("VICIONE_TESTS__LocalInfrastructure__PostgreSql__Host", ""),
+            ("VICIONE_TESTS__LocalInfrastructure__PostgreSql__Port", "0"),
+            ("VICIONE_TESTS__LocalInfrastructure__PostgreSql__Database", ""),
+            ("VICIONE_TESTS__LocalInfrastructure__PostgreSql__UserName", ""),
+            ("VICIONE_TESTS__LocalInfrastructure__PostgreSql__Password", ""));
 
         var failure = Assert.Throws<InvalidOperationException>(
             () => provider.GetValidatedLocalOptions(LocalTestResource.PostgreSql));
 
+        Assert.Contains("LocalInfrastructure:PostgreSql:Host", failure.Message);
+        Assert.Contains("LocalInfrastructure:PostgreSql:Port", failure.Message);
+        Assert.Contains("LocalInfrastructure:PostgreSql:Database", failure.Message);
         Assert.Contains("LocalInfrastructure:PostgreSql:UserName", failure.Message);
         Assert.Contains("LocalInfrastructure:PostgreSql:Password", failure.Message);
         Assert.Contains("Never commit credentials", failure.Message);
+    }
+
+    [Fact]
+    [RequirementCoverage("OBL-R0-SQL-0051", "native-typed-configuration-owner")]
+    public void LocalValidationDiagnostics_NeverDisclosePublishedCredentials()
+    {
+        const string username = "recognizable-run-user";
+        const string password = "recognizable-run-secret";
+        var options = ProviderWith(
+            ("VICIONE_TESTS__Profile", "LocalIntegration"),
+            ("VICIONE_TESTS__LocalInfrastructure__PostgreSql__Host", ""),
+            ("VICIONE_TESTS__LocalInfrastructure__PostgreSql__UserName", username),
+            ("VICIONE_TESTS__LocalInfrastructure__PostgreSql__Password", password)).GetOptions();
+
+        string diagnostics = string.Join(Environment.NewLine,
+            options.ValidateForLocal(LocalTestResource.PostgreSql));
+
+        Assert.Contains("LocalInfrastructure:PostgreSql:Host", diagnostics, StringComparison.Ordinal);
+        Assert.DoesNotContain(username, diagnostics, StringComparison.Ordinal);
+        Assert.DoesNotContain(password, diagnostics, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage("OBL-R0-SQL-0053", "native-typed-configuration-owner")]
+    public void NonNumericCanonicalPostgreSqlPort_IsRejectedBeforeExecution()
+    {
+        InvalidOperationException failure = Assert.Throws<InvalidOperationException>(() => ProviderWith(
+            ("VICIONE_TESTS__Profile", "LocalIntegration"),
+            ("VICIONE_SERVICEBUS_PG_PORT", "not-a-port"),
+            ("VICIONE_SERVICEBUS_PG_USER", "run-user"),
+            ("VICIONE_SERVICEBUS_PG_PASS", "run-secret")).GetValidatedLocalOptions(LocalTestResource.PostgreSql));
+
+        Assert.Contains("PostgreSql", failure.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("Port", failure.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("run-secret", failure.Message, StringComparison.Ordinal);
     }
 
     [Fact]

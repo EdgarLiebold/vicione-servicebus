@@ -183,7 +183,6 @@ public sealed class RepositoryGraphTests
                 "src/ViciOne.ServiceBus.SignalR/ViciOne.ServiceBus.SignalR.csproj",
                 "src/ViciOne.ServiceBus.StateMachineVisualizer/ViciOne.ServiceBus.StateMachineVisualizer.csproj",
                 "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
-                "tests/ViciOne.ServiceBus.TestInfrastructure/ViciOne.ServiceBus.TestInfrastructure.csproj",
                 "tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/ViciOne.ServiceBus.Architecture.Tests.csproj",
                 "tests2/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ViciOne.ServiceBus.Benchmark.Tests.csproj",
                 "tests2/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj",
