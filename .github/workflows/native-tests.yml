@@ -37,7 +37,7 @@ jobs:
       - name: Build release test binaries
         run: dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore
       - name: Run the complete profile without filters
-        run: dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore --results-directory artifacts/test-results/unit --minimum-expected-tests 2840 --max-parallel-test-modules 1
+        run: dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore --results-directory artifacts/test-results/unit --minimum-expected-tests 2842 --max-parallel-test-modules 1
 
   local-integration:
     name: "Required: Native Local Integration"
@@ -121,5 +121,5 @@ jobs:
           dotnet test --solution ViciOne.ServiceBus.Tests.AzureServiceBusLocalIntegration.slnx
           -c Release --no-build --no-restore
           --results-directory artifacts/test-results/azure-servicebus-local-integration
-          --minimum-expected-tests 22
+          --minimum-expected-tests 24
           --max-parallel-test-modules 1

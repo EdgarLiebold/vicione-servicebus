@@ -331,16 +331,14 @@
     },
     {
       "id": "transport-azure-service-bus",
-      "class": "REAL_EPHEMERAL_CLOUD",
+      "class": "NATIVE_TEST_ESTATE",
       "sourceProjects": [
         "src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core"
       ],
-      "testProjects": [
-        "tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests"
-      ],
+      "testProjects": [],
       "supportProjects": [],
       "toolProjects": [],
-      "rationale": "",
+      "rationale": "The inherited NUnit/VSTest project is retired after exact terminal closure of all 153 Azure Service Bus obligations. Fifty-eight obligations are owned by native UnitArchitecture tests, forty-nine by the run-scoped local emulator profile, and forty-six remain visible real-Azure External work because their identity, partition, tier, management, availability, quota, transport or broker-clock semantics cannot be represented truthfully by the emulator. The four terminal projections are .testagent/azure-servicebus-*-native-obligation-map.tsv; only REPLACED_EXECUTING rows contribute green test evidence.",
       "runs": []
     },
     {

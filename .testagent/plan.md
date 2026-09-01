@@ -9,10 +9,10 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 2840 predeclared unfiltered cases;
+- `UnitArchitecture`: 2842 predeclared unfiltered cases;
 - `LocalIntegration`: 326 predeclared unfiltered cases;
 - `SqlServerLocalIntegration`: 60 predeclared unfiltered cases;
-- `AzureServiceBusLocalIntegration`: 22 predeclared unfiltered cases.
+- `AzureServiceBusLocalIntegration`: 24 predeclared unfiltered cases.
 
 The floors are accepted lower bounds, not completeness evidence. Each executable project embeds one
 durable product-requirement projection and compares it with passive metadata compiled into the same

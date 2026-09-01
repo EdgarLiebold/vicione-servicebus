@@ -4,6 +4,31 @@ This file contains bounded work that was deliberately kept out of the active imp
 It is not a second feature catalog, architecture, changelog, or license record. An item is removed
 only after its acceptance evidence is committed.
 
+## Complete Azure Service Bus validation against the real cloud service
+
+The local Azure Service Bus emulator executes queue, topic, subscription, rule, forwarding,
+session-state, scheduling, duplicate-detection and dead-letter contracts. It does not provide a
+truthful substitute for Azure-owned identity, tier, availability, partition, transport and clock
+semantics. Keep the corresponding rows in
+`.testagent/azure-servicebus-external-native-obligation-map.tsv` visibly `EXTERNAL_PENDING` until a
+short-lived real namespace runs them.
+
+The external profile must use run-scoped entities and credentials, bind the exact Azure resource and
+SDK versions, and prove both positive and negative outcomes for Entra/RBAC and SAS validity,
+partitioned queue and subscription delivery, Premium versus Standard message-size limits,
+AMQP-over-WebSockets, broker-clock AutoDeleteOnIdle, real retry backoff, entity deletion and outage
+recovery, lock/session-lock renewal and loss, and TTL/lock-expiry exception classification. It must
+use provider state or service acknowledgements as terminal barriers, never sleeps, polling success,
+shared resources or a local-emulator result presented as cloud evidence.
+
+The same profile owns the remaining management-plane and namespace-boundary contracts: topology-only
+deployment, dynamic and multi-bus subscription endpoints, unchanged-subscription idempotence,
+high-entity-count restart, cross-scope routing, temporary endpoint lifetime, scheduled publish and
+send-context enqueue, raw-JSON response correlation, prefetched-message shutdown, shutdown-grace
+publishing, complete broker-assigned message context values, and the combined Azure Blob Storage plus
+Service Bus message-data matrix. These rows stay pending until the real service produces the named
+positive and negative outcomes; their retired inherited tests are not reported as executing evidence.
+
 ## Normalize product source paths
 
 Run this as a dedicated mechanical slice after the native test reconstruction has been promoted from

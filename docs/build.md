@@ -61,7 +61,7 @@ the native MTP command form and no VSTest argument separator:
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
   -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 2840 \
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 2842 \
   --max-parallel-test-modules 1
 
 VICIONE_TESTS__Profile=LocalIntegration \
@@ -86,7 +86,7 @@ python3 tools/ci/run_broker_category.py --broker servicebus --command -- \
   dotnet test --solution ViciOne.ServiceBus.Tests.AzureServiceBusLocalIntegration.slnx \
     -c Release --no-build --no-restore \
     --results-directory artifacts/test-results/azure-servicebus-local-integration \
-    --minimum-expected-tests 22 --max-parallel-test-modules 1
+    --minimum-expected-tests 24 --max-parallel-test-modules 1
 ```
 
 The unfiltered process exit code is the verdict. `tests2/testconfig.json` turns skips and warnings
@@ -156,7 +156,7 @@ one unambiguous current-host capture path and all eight host fields after real e
 The LocalIntegration floors are independent and include only host-resource tests in their profiles.
 The 326-case host profile covers run-scoped PostgreSQL, Azurite, LocalStack, ActiveMQ Classic,
 Artemis and the pinned Event Hubs emulator. The isolated 60-case SQL Server profile keeps its
-stress and lock-renewal cases away from those six provider processes. The isolated 22-case Azure Service Bus profile
+stress and lock-renewal cases away from those six provider processes. The isolated 24-case Azure Service Bus profile
 uses the official emulator without competing with those seven provider processes. Those resources cover
 `MessageJournal`, EF Core saga/outbox/job/future persistence, ambient-transaction and explicit-buffer
 commit/rollback/flush behavior, SQS/SNS transport semantics, DynamoDB optimistic saga persistence and S3

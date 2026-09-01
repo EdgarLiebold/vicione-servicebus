@@ -21,10 +21,10 @@ namespace ViciOne.ServiceBus.Architecture.Tests.TestPlatform;
 /// </remarks>
 public sealed class TestingPlatformConfigurationTests
 {
-    private const int ExpectedUnitTestFloor = 2840;
+    private const int ExpectedUnitTestFloor = 2842;
     private const int ExpectedLocalIntegrationTestFloor = 326;
     private const int ExpectedSqlServerLocalIntegrationTestFloor = 60;
-    private const int ExpectedAzureServiceBusLocalIntegrationTestFloor = 22;
+    private const int ExpectedAzureServiceBusLocalIntegrationTestFloor = 24;
 
     [Fact]
     public void CanonicalConfiguration_TurnsSkipsAndWarningsIntoFailures()

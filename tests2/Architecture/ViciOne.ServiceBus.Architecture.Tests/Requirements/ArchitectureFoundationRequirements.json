@@ -82,5 +82,12 @@
     "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
     "testType": "ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests",
     "testMethod": "ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape"
+  },
+  {
+    "requirementId": "REQ-TEST-205",
+    "variantKey": "azure-service-bus-obligations-are-terminal-and-carrier-bound",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Repository.AzureServiceBusObligationProjectionTests",
+    "testMethod": "AzureServiceBusObligations_AreExactTerminalAndBoundToRealCarriers"
   }
 ]
