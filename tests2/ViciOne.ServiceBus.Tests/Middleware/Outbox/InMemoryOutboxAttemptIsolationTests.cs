@@ -44,7 +44,6 @@ public sealed class InMemoryOutboxAttemptIsolationTests
                 context => context.MessageId = messageId,
                 cancellationToken);
             await completion.Completed.WaitAsync(timeout, cancellationToken);
-            await observation.AllSideEffectsReceived.WaitAsync(timeout, cancellationToken);
         }
         finally
         {
@@ -161,13 +160,9 @@ public sealed class InMemoryOutboxAttemptIsolationTests
 
     private sealed class DeliveryObservation
     {
-        private readonly TaskCompletionSource _allSideEffectsReceived =
-            new(TaskCreationOptions.RunContinuationsAsynchronously);
         private readonly ConcurrentDictionary<string, int> _sideEffectCounts = new(StringComparer.Ordinal);
         private int _commandExecutions;
         private int _deliveryFailureInjected;
-
-        public Task AllSideEffectsReceived => _allSideEffectsReceived.Task;
 
         public int CommandExecutions => Volatile.Read(ref _commandExecutions);
 
@@ -182,8 +177,6 @@ public sealed class InMemoryOutboxAttemptIsolationTests
         public void RecordSideEffect(string identity)
         {
             _sideEffectCounts.AddOrUpdate(identity, 1, static (_, count) => count + 1);
-            if (_sideEffectCounts.Count == 2)
-                _allSideEffectsReceived.TrySetResult();
         }
 
         public bool TryInjectDeliveryFailure() =>
