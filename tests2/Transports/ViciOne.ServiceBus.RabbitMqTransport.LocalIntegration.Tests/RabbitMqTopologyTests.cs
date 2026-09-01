@@ -57,10 +57,6 @@ public sealed class RabbitMqTopologyTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            await bus.Publish(new AlternateMessage(expected), cancellationToken)
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            Assert.Equal(expected, await alternateReceived.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
-
             Assert.True(bus.Topology.TryGetPublishAddress<AlternateMessage>(out Uri? publishAddress));
             Assert.Contains(
                 $"alternateexchange={Uri.EscapeDataString(alternateExchange)}",
@@ -84,6 +80,10 @@ public sealed class RabbitMqTopologyTests
             Assert.Equal(alternateExchange, primaryState.Arguments["alternate-exchange"]);
             Assert.True(alternateState.Exists);
             Assert.True(deadLetterState.Exists);
+
+            await bus.Publish(new AlternateMessage(expected), cancellationToken)
+                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            Assert.Equal(expected, await alternateReceived.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
 
             await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
             started = false;
@@ -134,13 +134,6 @@ public sealed class RabbitMqTopologyTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            await bus.Publish(new RoutingMessage(firstKey, "first"), cancellationToken)
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await bus.Publish(new RoutingMessage(secondKey, "second"), cancellationToken)
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-
-            Assert.Equal("first", await firstReceived.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
-            Assert.Equal("second", await secondReceived.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
             RabbitMqBroker.ExchangeState state = await fixture.Exchange(exchange, cancellationToken);
             Assert.Equal(exchangeType, state.Type);
             IReadOnlyList<RabbitMqBroker.BindingState> bindings = await fixture.Bindings(cancellationToken);
@@ -148,6 +141,14 @@ public sealed class RabbitMqTopologyTests
                 binding.Source == exchange && binding.Destination == firstQueue && binding.RoutingKey == firstKey);
             Assert.Contains(bindings, binding =>
                 binding.Source == exchange && binding.Destination == secondQueue && binding.RoutingKey == secondKey);
+
+            await bus.Publish(new RoutingMessage(firstKey, "first"), cancellationToken)
+                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await bus.Publish(new RoutingMessage(secondKey, "second"), cancellationToken)
+                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+
+            Assert.Equal("first", await firstReceived.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
+            Assert.Equal("second", await secondReceived.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
 
             await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
             started = false;

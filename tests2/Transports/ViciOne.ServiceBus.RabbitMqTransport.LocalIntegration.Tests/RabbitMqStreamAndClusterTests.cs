@@ -42,12 +42,13 @@ public sealed class RabbitMqStreamAndClusterTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            await bus.Publish(new StreamMessage(expected), cancellationToken)
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            Assert.Equal(expected, await received.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
             RabbitMqBroker.QueueState state = await fixture.Queue(queue, cancellationToken);
             Assert.Equal("stream", state.Arguments["x-queue-type"]);
             Assert.Equal("14D", state.Arguments["x-max-age"]);
+
+            await bus.Publish(new StreamMessage(expected), cancellationToken)
+                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            Assert.Equal(expected, await received.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
 
             await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
             started = false;
