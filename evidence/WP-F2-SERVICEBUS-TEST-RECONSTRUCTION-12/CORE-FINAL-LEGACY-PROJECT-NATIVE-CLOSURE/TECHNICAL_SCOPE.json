@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "kind": "CORE_FINAL_LEGACY_PROJECT_NATIVE_TECHNICAL_SCOPE",
+  "baselineCommit": "f64811c3d2f318f378b6cb3ce68dbab54748fbcc",
+  "technicalCommit": "0f5ea86d52319807dd438149a8d7bb4636247a5e",
+  "technicalTree": "c0b95d43cea74ea53c36e2795d7dfd5322f7f5f2",
+  "technicalParent": "ed2154609748ae00803884396d7309376f1841ca",
+  "pathCount": 92,
+  "addedPaths": 10,
+  "modifiedPaths": 17,
+  "deletedPaths": 65,
+  "insertions": 2180,
+  "deletions": 4287,
+  "pathList": "TECHNICAL_PATHS.tsv",
+  "pathListSha256": "52e16e8a894d5138f6a4757accbadd8a99eae357850806a90f6bddbdf0cf16fc",
+  "patch": "TECHNICAL.patch.gz",
+  "patchSha256": "7797167364a9a1dac62dfdc24956cd7b36ba6219cf744bd6ed1d351c01627136"
+}

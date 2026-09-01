@@ -2526,3 +2526,28 @@ future cohorts as complete.
 - The Evidence child created with this section is a local immutable review subject. Independent
   read-only acceptance, architecture binding and any future remote publication remain pending and are
   not self-approved; no remote push is authorized or performed by this package.
+
+## Final inherited core project native closure — local Evidence freeze (2026-09-01)
+
+- Technical `0f5ea86d52319807dd438149a8d7bb4636247a5e`, tree
+  `c0b95d43cea74ea53c36e2795d7dfd5322f7f5f2`, closes the final 65 inherited core-project
+  identities: 55 executing obligations and ten support-only retired identities. The complete
+  terminal map is `.testagent/core-final-legacy-project-native-obligation-map.tsv`.
+- All 65 tracked paths of `tests/ViciOne.ServiceBus.Tests` are deleted atomically and the directory is
+  absent. The inherited verification model now classifies core as `NATIVE_TEST_ESTATE`; its obsolete
+  `core-unit` model selection and workflow job are removed. The frozen historical expected list is
+  unchanged, while `.github/workflows/native-tests.yml` remains the executable native owner.
+- Complete UnitArchitecture is 2,841/2,841 across 21 direct Microsoft Testing Platform CTRFs with
+  zero failed, skipped, pending or other cases against a floor of 2,836. Twelve focused owner classes
+  are 43/43. Locked Engineering restore and the complete serial Release build are green with zero
+  warnings and errors; formatting is green for all 16 changed C# paths.
+- Fourteen independent one-cause mutations bind the closure. M01-M12 are buildable product or
+  architecture mutations with 16 causal failures and six passing controls across 22 executions;
+  M13-M14 independently reject restoration of the inherited verification class and workflow job.
+  Every baseline is restored byte-exactly, and the temporary M11 project directory is removed again.
+- CI self-tests are 258/258 and the final verification model is PASS. Identity self-tests and the
+  generated CHANGELIST are rerun after the complete Evidence inventory is staged, so the final logs
+  bind the committed Evidence rather than a pre-freeze placeholder.
+- The Evidence child created with this section is a local immutable review subject. Independent
+  read-only review and architecture binding remain mandatory; no remote push is authorized or
+  performed by this package.

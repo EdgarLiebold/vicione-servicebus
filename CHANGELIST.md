@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 5611 |
-| Modified | 3962 |
-| Deleted | 1686 |
+| Added | 5688 |
+| Modified | 3900 |
+| Deleted | 1748 |
 | Renamed | 2 |
 
 | Path | Status | Baseline path |
@@ -35,6 +35,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.testagent/core-container-runtime-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-courier-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-fault-publication-native-obligation-map.tsv` | Added |  |
+| `.testagent/core-final-legacy-project-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-message-data-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-package-0182-0199-native-obligation-map.tsv` | Added |  |
 | `.testagent/core-package-0201-0227-native-obligation-map.tsv` | Added |  |
@@ -2508,6 +2509,76 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FAULT-PUBLICATION/raw/ci-selftests.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FAULT-PUBLICATION/raw/identity-selftests.log` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FAULT-PUBLICATION/raw/verification-model.log` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/FINAL_RESULTS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/MUTATION_MANIFEST.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/SHA256SUMS` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/TECHNICAL.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/TECHNICAL_PATHS.tsv` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/TECHNICAL_SCOPE.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/binlogs/M01-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/binlogs/M02-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/binlogs/M03-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/binlogs/M04-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/binlogs/M05-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/binlogs/M06-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/binlogs/M07-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/binlogs/M08-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/binlogs/M09-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/binlogs/M10-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/binlogs/M11-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/binlogs/M12-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/binlogs/engineering-build.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/binlogs/engineering-restore.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/binlogs/scoped-format.binlog` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/mutations/M01.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/mutations/M02.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/mutations/M03.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/mutations/M04.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/mutations/M05.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/mutations/M06.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/mutations/M07.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/mutations/M08.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/mutations/M09.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/mutations/M10.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/mutations/M11.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/mutations/M12.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/patches/M01.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/patches/M02.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/patches/M03.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/patches/M04.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/patches/M05.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/patches/M06.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/patches/M07.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/patches/M08.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/patches/M09.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/patches/M10.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/patches/M11.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/patches/M12.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/patches/M13.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/patches/M14.patch.gz` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/positive/focused/edgar.liebold_Edgars-iMac-2_2026-09-01_09_53_30.260432.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/positive/unit/edgar.liebold_Edgars-iMac-2_2026-09-01_09_49_03.374345.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/positive/unit/edgar.liebold_Edgars-iMac-2_2026-09-01_09_49_06.483652.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/positive/unit/edgar.liebold_Edgars-iMac-2_2026-09-01_09_49_28.736049.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/positive/unit/edgar.liebold_Edgars-iMac-2_2026-09-01_09_49_30.331174.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/positive/unit/edgar.liebold_Edgars-iMac-2_2026-09-01_09_49_32.892558.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/positive/unit/edgar.liebold_Edgars-iMac-2_2026-09-01_09_51_11.921379.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/positive/unit/edgar.liebold_Edgars-iMac-2_2026-09-01_09_51_15.769273.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/positive/unit/edgar.liebold_Edgars-iMac-2_2026-09-01_09_51_17.134508.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/positive/unit/edgar.liebold_Edgars-iMac-2_2026-09-01_09_51_18.595902.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/positive/unit/edgar.liebold_Edgars-iMac-2_2026-09-01_09_51_20.122866.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/positive/unit/edgar.liebold_Edgars-iMac-2_2026-09-01_09_51_58.250002.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/positive/unit/edgar.liebold_Edgars-iMac-2_2026-09-01_09_51_59.737211.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/positive/unit/edgar.liebold_Edgars-iMac-2_2026-09-01_09_52_19.877644.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/positive/unit/edgar.liebold_Edgars-iMac-2_2026-09-01_09_52_22.911139.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/positive/unit/edgar.liebold_Edgars-iMac-2_2026-09-01_09_52_24.343466.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/positive/unit/edgar.liebold_Edgars-iMac-2_2026-09-01_09_52_25.628133.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/positive/unit/edgar.liebold_Edgars-iMac-2_2026-09-01_09_52_27.145184.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/positive/unit/edgar.liebold_Edgars-iMac-2_2026-09-01_09_52_28.595721.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/positive/unit/edgar.liebold_Edgars-iMac-2_2026-09-01_09_52_29.938549.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/positive/unit/edgar.liebold_Edgars-iMac-2_2026-09-01_09_52_31.324047.ctrf` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/positive/unit/edgar.liebold_Edgars-iMac-2_2026-09-01_09_52_32.802496.ctrf` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-DUAL-HOST/FINAL_RESULTS.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-DUAL-HOST/MUTATION_MANIFEST.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-DUAL-HOST/SHA256SUMS` | Added |  |
@@ -9854,6 +9925,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/ContainerTests/EndpointConfiguration_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/EndpointConfiguration_Specs.cs` |
 | `tests/MassTransit.Tests/ContainerTests/ExcludeFromConfigureEndpoints_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/ExcludeFromConfigureEndpoints_Specs.cs` |
 | `tests/MassTransit.Tests/ContainerTests/ExcludeTypeFromFilter_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/ExcludeTypeFromFilter_Specs.cs` |
+| `tests/MassTransit.Tests/ContainerTests/Future_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/Future_Specs.cs` |
 | `tests/MassTransit.Tests/ContainerTests/Handler_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/Handler_Specs.cs` |
 | `tests/MassTransit.Tests/ContainerTests/HealthCheck_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/HealthCheck_Specs.cs` |
 | `tests/MassTransit.Tests/ContainerTests/KillSwitch_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/KillSwitch_Specs.cs` |
@@ -9883,6 +9955,13 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/ContainerTests/Scheduler_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/Scheduler_Specs.cs` |
 | `tests/MassTransit.Tests/ContainerTests/Stop_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/Stop_Specs.cs` |
 | `tests/MassTransit.Tests/ContainerTests/TenantScope_Specs.cs` | Deleted | `tests/MassTransit.Tests/ContainerTests/TenantScope_Specs.cs` |
+| `tests/MassTransit.Tests/Conventional/ConventionConsumer_Specs.cs` | Deleted | `tests/MassTransit.Tests/Conventional/ConventionConsumer_Specs.cs` |
+| `tests/MassTransit.Tests/Conventional/CustomConsumeConnectorFactory.cs` | Deleted | `tests/MassTransit.Tests/Conventional/CustomConsumeConnectorFactory.cs` |
+| `tests/MassTransit.Tests/Conventional/CustomConsumerConvention.cs` | Deleted | `tests/MassTransit.Tests/Conventional/CustomConsumerConvention.cs` |
+| `tests/MassTransit.Tests/Conventional/CustomConsumerInterfaceType.cs` | Deleted | `tests/MassTransit.Tests/Conventional/CustomConsumerInterfaceType.cs` |
+| `tests/MassTransit.Tests/Conventional/CustomConsumerMessageConvention.cs` | Deleted | `tests/MassTransit.Tests/Conventional/CustomConsumerMessageConvention.cs` |
+| `tests/MassTransit.Tests/Conventional/CustomMethodConsumerMessageFilter.cs` | Deleted | `tests/MassTransit.Tests/Conventional/CustomMethodConsumerMessageFilter.cs` |
+| `tests/MassTransit.Tests/Conventional/IHandler.cs` | Deleted | `tests/MassTransit.Tests/Conventional/IHandler.cs` |
 | `tests/MassTransit.Tests/ConversationId_Specs.cs` | Deleted | `tests/MassTransit.Tests/ConversationId_Specs.cs` |
 | `tests/MassTransit.Tests/CorrelationId_Specs.cs` | Deleted | `tests/MassTransit.Tests/CorrelationId_Specs.cs` |
 | `tests/MassTransit.Tests/Courier/ActivityRedelivery_Specs.cs` | Deleted | `tests/MassTransit.Tests/Courier/ActivityRedelivery_Specs.cs` |
@@ -9909,6 +9988,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/Courier/TwoActivityEvent_Specs.cs` | Deleted | `tests/MassTransit.Tests/Courier/TwoActivityEvent_Specs.cs` |
 | `tests/MassTransit.Tests/Courier/UriArgument_Specs.cs` | Deleted | `tests/MassTransit.Tests/Courier/UriArgument_Specs.cs` |
 | `tests/MassTransit.Tests/CronExpressionTests.cs` | Deleted | `tests/MassTransit.Tests/CronExpressionTests.cs` |
+| `tests/MassTransit.Tests/Definition_Specs.cs` | Deleted | `tests/MassTransit.Tests/Definition_Specs.cs` |
 | `tests/MassTransit.Tests/DelayProviderPublish_Specs.cs` | Deleted | `tests/MassTransit.Tests/DelayProviderPublish_Specs.cs` |
 | `tests/MassTransit.Tests/DelayProvider_Specs.cs` | Deleted | `tests/MassTransit.Tests/DelayProvider_Specs.cs` |
 | `tests/MassTransit.Tests/DelayedRedelivery_Specs.cs` | Deleted | `tests/MassTransit.Tests/DelayedRedelivery_Specs.cs` |
@@ -9929,6 +10009,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/Groups/Group_Specs.cs` | Deleted | `tests/MassTransit.Tests/Groups/Group_Specs.cs` |
 | `tests/MassTransit.Tests/HeaderObject_Specs.cs` | Deleted | `tests/MassTransit.Tests/HeaderObject_Specs.cs` |
 | `tests/MassTransit.Tests/HostInfo_Specs.cs` | Deleted | `tests/MassTransit.Tests/HostInfo_Specs.cs` |
+| `tests/MassTransit.Tests/ITestBusConfiguration.cs` | Deleted | `tests/MassTransit.Tests/ITestBusConfiguration.cs` |
 | `tests/MassTransit.Tests/ImplementedTypeCache_Specs.cs` | Deleted | `tests/MassTransit.Tests/ImplementedTypeCache_Specs.cs` |
 | `tests/MassTransit.Tests/InMemoryDuo_Specs.cs` | Deleted | `tests/MassTransit.Tests/InMemoryDuo_Specs.cs` |
 | `tests/MassTransit.Tests/InMemoryOutboxRedelivery_Specs.cs` | Deleted | `tests/MassTransit.Tests/InMemoryOutboxRedelivery_Specs.cs` |
@@ -9950,6 +10031,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/JsonToken_Specs.cs` | Deleted | `tests/MassTransit.Tests/JsonToken_Specs.cs` |
 | `tests/MassTransit.Tests/KillSwitch_Specs.cs` | Deleted | `tests/MassTransit.Tests/KillSwitch_Specs.cs` |
 | `tests/MassTransit.Tests/LocalDbConnectionStringProvider.cs` | Deleted | `tests/MassTransit.Tests/LocalDbConnectionStringProvider.cs` |
+| `tests/MassTransit.Tests/MassTransit.Tests.csproj` | Deleted | `tests/MassTransit.Tests/MassTransit.Tests.csproj` |
 | `tests/MassTransit.Tests/MediatorRequest_Specs.cs` | Deleted | `tests/MassTransit.Tests/MediatorRequest_Specs.cs` |
 | `tests/MassTransit.Tests/Mediator_Specs.cs` | Deleted | `tests/MassTransit.Tests/Mediator_Specs.cs` |
 | `tests/MassTransit.Tests/MessageContext_Specs.cs` | Deleted | `tests/MassTransit.Tests/MessageContext_Specs.cs` |
@@ -9966,6 +10048,14 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/MessageFlow_Specs.cs` | Deleted | `tests/MassTransit.Tests/MessageFlow_Specs.cs` |
 | `tests/MassTransit.Tests/MessageType_Specs.cs` | Deleted | `tests/MassTransit.Tests/MessageType_Specs.cs` |
 | `tests/MassTransit.Tests/MessageUrnSpecs.cs` | Deleted | `tests/MassTransit.Tests/MessageUrnSpecs.cs` |
+| `tests/MassTransit.Tests/Messages/ClientMessage.cs` | Deleted | `tests/MassTransit.Tests/Messages/ClientMessage.cs` |
+| `tests/MassTransit.Tests/Messages/DeleteMessage.cs` | Deleted | `tests/MassTransit.Tests/Messages/DeleteMessage.cs` |
+| `tests/MassTransit.Tests/Messages/PartialSerializationTestMessage.cs` | Deleted | `tests/MassTransit.Tests/Messages/PartialSerializationTestMessage.cs` |
+| `tests/MassTransit.Tests/Messages/RequestMessage.cs` | Deleted | `tests/MassTransit.Tests/Messages/RequestMessage.cs` |
+| `tests/MassTransit.Tests/Messages/ResponseMessage.cs` | Deleted | `tests/MassTransit.Tests/Messages/ResponseMessage.cs` |
+| `tests/MassTransit.Tests/Messages/SerializationTestMessage.cs` | Deleted | `tests/MassTransit.Tests/Messages/SerializationTestMessage.cs` |
+| `tests/MassTransit.Tests/Messages/UpdateAcceptedMessage.cs` | Deleted | `tests/MassTransit.Tests/Messages/UpdateAcceptedMessage.cs` |
+| `tests/MassTransit.Tests/Messages/UpdateMessage.cs` | Deleted | `tests/MassTransit.Tests/Messages/UpdateMessage.cs` |
 | `tests/MassTransit.Tests/Middleware/Agents/Agent_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/Agents/Agent_Specs.cs` |
 | `tests/MassTransit.Tests/Middleware/Authentication_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/Authentication_Specs.cs` |
 | `tests/MassTransit.Tests/Middleware/Bind_Specs.cs` | Deleted | `tests/MassTransit.Tests/Middleware/Bind_Specs.cs` |
@@ -10009,6 +10099,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/MinimalBody_Specs.cs` | Deleted | `tests/MassTransit.Tests/MinimalBody_Specs.cs` |
 | `tests/MassTransit.Tests/MultiBusRequest_Specs.cs` | Deleted | `tests/MassTransit.Tests/MultiBusRequest_Specs.cs` |
 | `tests/MassTransit.Tests/MultiTestConsumer_Specs.cs` | Deleted | `tests/MassTransit.Tests/MultiTestConsumer_Specs.cs` |
+| `tests/MassTransit.Tests/NewConfigurationModel.cs` | Deleted | `tests/MassTransit.Tests/NewConfigurationModel.cs` |
 | `tests/MassTransit.Tests/Observer_Specs.cs` | Deleted | `tests/MassTransit.Tests/Observer_Specs.cs` |
 | `tests/MassTransit.Tests/Outbox_Specs.cs` | Deleted | `tests/MassTransit.Tests/Outbox_Specs.cs` |
 | `tests/MassTransit.Tests/Pipeline/CircuitBreaker_Specs.cs` | Deleted | `tests/MassTransit.Tests/Pipeline/CircuitBreaker_Specs.cs` |
@@ -10034,11 +10125,48 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/RecurringJobConsumer_Specs.cs` | Deleted | `tests/MassTransit.Tests/RecurringJobConsumer_Specs.cs` |
 | `tests/MassTransit.Tests/RecurringSchedule_Specs.cs` | Deleted | `tests/MassTransit.Tests/RecurringSchedule_Specs.cs` |
 | `tests/MassTransit.Tests/RedeliveryHeader_Specs.cs` | Deleted | `tests/MassTransit.Tests/RedeliveryHeader_Specs.cs` |
+| `tests/MassTransit.Tests/ReliableMessaging/Command.cs` | Deleted | `tests/MassTransit.Tests/ReliableMessaging/Command.cs` |
+| `tests/MassTransit.Tests/ReliableMessaging/CreateState.cs` | Deleted | `tests/MassTransit.Tests/ReliableMessaging/CreateState.cs` |
+| `tests/MassTransit.Tests/ReliableMessaging/Event.cs` | Deleted | `tests/MassTransit.Tests/ReliableMessaging/Event.cs` |
+| `tests/MassTransit.Tests/ReliableMessaging/InboxLock_Specs.cs` | Deleted | `tests/MassTransit.Tests/ReliableMessaging/InboxLock_Specs.cs` |
+| `tests/MassTransit.Tests/ReliableMessaging/ReliableConsumer.cs` | Deleted | `tests/MassTransit.Tests/ReliableMessaging/ReliableConsumer.cs` |
+| `tests/MassTransit.Tests/ReliableMessaging/ReliableInMemoryConsumerDefinition.cs` | Deleted | `tests/MassTransit.Tests/ReliableMessaging/ReliableInMemoryConsumerDefinition.cs` |
+| `tests/MassTransit.Tests/ReliableMessaging/ReliableInMemoryStateDefinition.cs` | Deleted | `tests/MassTransit.Tests/ReliableMessaging/ReliableInMemoryStateDefinition.cs` |
+| `tests/MassTransit.Tests/ReliableMessaging/ReliableInMemory_Specs.cs` | Deleted | `tests/MassTransit.Tests/ReliableMessaging/ReliableInMemory_Specs.cs` |
+| `tests/MassTransit.Tests/ReliableMessaging/ReliableState.cs` | Deleted | `tests/MassTransit.Tests/ReliableMessaging/ReliableState.cs` |
+| `tests/MassTransit.Tests/ReliableMessaging/ReliableStateMachine.cs` | Deleted | `tests/MassTransit.Tests/ReliableMessaging/ReliableStateMachine.cs` |
+| `tests/MassTransit.Tests/ReliableMessaging/StateVerified.cs` | Deleted | `tests/MassTransit.Tests/ReliableMessaging/StateVerified.cs` |
 | `tests/MassTransit.Tests/RequestClientNew_Specs.cs` | Deleted | `tests/MassTransit.Tests/RequestClientNew_Specs.cs` |
 | `tests/MassTransit.Tests/RequestClient_Specs.cs` | Deleted | `tests/MassTransit.Tests/RequestClient_Specs.cs` |
 | `tests/MassTransit.Tests/RequestFilter_Specs.cs` | Deleted | `tests/MassTransit.Tests/RequestFilter_Specs.cs` |
 | `tests/MassTransit.Tests/ResponsePatternMatching_Specs.cs` | Deleted | `tests/MassTransit.Tests/ResponsePatternMatching_Specs.cs` |
 | `tests/MassTransit.Tests/Retry_Specs.cs` | Deleted | `tests/MassTransit.Tests/Retry_Specs.cs` |
+| `tests/MassTransit.Tests/Saga/InitiateSaga_Specs.cs` | Deleted | `tests/MassTransit.Tests/Saga/InitiateSaga_Specs.cs` |
+| `tests/MassTransit.Tests/Saga/InjectingSampleSaga.cs` | Deleted | `tests/MassTransit.Tests/Saga/InjectingSampleSaga.cs` |
+| `tests/MassTransit.Tests/Saga/Injecting_Specs.cs` | Deleted | `tests/MassTransit.Tests/Saga/Injecting_Specs.cs` |
+| `tests/MassTransit.Tests/Saga/Locator/SagaExpression_Specs.cs` | Deleted | `tests/MassTransit.Tests/Saga/Locator/SagaExpression_Specs.cs` |
+| `tests/MassTransit.Tests/Saga/Locator/Should_allow_extraction_of_property_name_and_value.cs` | Deleted | `tests/MassTransit.Tests/Saga/Locator/Should_allow_extraction_of_property_name_and_value.cs` |
+| `tests/MassTransit.Tests/Saga/MessageSaga_Specs.cs` | Deleted | `tests/MassTransit.Tests/Saga/MessageSaga_Specs.cs` |
+| `tests/MassTransit.Tests/Saga/Messages/CompleteSimpleSaga.cs` | Deleted | `tests/MassTransit.Tests/Saga/Messages/CompleteSimpleSaga.cs` |
+| `tests/MassTransit.Tests/Saga/Messages/CorrelatedMessage.cs` | Deleted | `tests/MassTransit.Tests/Saga/Messages/CorrelatedMessage.cs` |
+| `tests/MassTransit.Tests/Saga/Messages/InitiateSimpleSaga.cs` | Deleted | `tests/MassTransit.Tests/Saga/Messages/InitiateSimpleSaga.cs` |
+| `tests/MassTransit.Tests/Saga/Messages/ObservableSagaMessage.cs` | Deleted | `tests/MassTransit.Tests/Saga/Messages/ObservableSagaMessage.cs` |
+| `tests/MassTransit.Tests/Saga/Messages/RegisterUser.cs` | Deleted | `tests/MassTransit.Tests/Saga/Messages/RegisterUser.cs` |
+| `tests/MassTransit.Tests/Saga/Messages/SendUserVerificationEmail.cs` | Deleted | `tests/MassTransit.Tests/Saga/Messages/SendUserVerificationEmail.cs` |
+| `tests/MassTransit.Tests/Saga/Messages/SendValidationEmail.cs` | Deleted | `tests/MassTransit.Tests/Saga/Messages/SendValidationEmail.cs` |
+| `tests/MassTransit.Tests/Saga/Messages/SimpleSagaMessageBase.cs` | Deleted | `tests/MassTransit.Tests/Saga/Messages/SimpleSagaMessageBase.cs` |
+| `tests/MassTransit.Tests/Saga/Messages/UserRegistrationComplete.cs` | Deleted | `tests/MassTransit.Tests/Saga/Messages/UserRegistrationComplete.cs` |
+| `tests/MassTransit.Tests/Saga/Messages/UserRegistrationPending.cs` | Deleted | `tests/MassTransit.Tests/Saga/Messages/UserRegistrationPending.cs` |
+| `tests/MassTransit.Tests/Saga/Messages/UserValidated.cs` | Deleted | `tests/MassTransit.Tests/Saga/Messages/UserValidated.cs` |
+| `tests/MassTransit.Tests/Saga/Messages/UserVerificationEmailSent.cs` | Deleted | `tests/MassTransit.Tests/Saga/Messages/UserVerificationEmailSent.cs` |
+| `tests/MassTransit.Tests/Saga/NewOrExisting_Specs.cs` | Deleted | `tests/MassTransit.Tests/Saga/NewOrExisting_Specs.cs` |
+| `tests/MassTransit.Tests/Saga/PartitionSaga_Specs.cs` | Deleted | `tests/MassTransit.Tests/Saga/PartitionSaga_Specs.cs` |
+| `tests/MassTransit.Tests/Saga/RegisterUserSaga.cs` | Deleted | `tests/MassTransit.Tests/Saga/RegisterUserSaga.cs` |
+| `tests/MassTransit.Tests/Saga/RegisterUserSaga.hbm.xml` | Deleted | `tests/MassTransit.Tests/Saga/RegisterUserSaga.hbm.xml` |
+| `tests/MassTransit.Tests/Saga/RepositoryContext_Specs.cs` | Deleted | `tests/MassTransit.Tests/Saga/RepositoryContext_Specs.cs` |
+| `tests/MassTransit.Tests/Saga/SagaTestContext.cs` | Deleted | `tests/MassTransit.Tests/Saga/SagaTestContext.cs` |
+| `tests/MassTransit.Tests/Saga/SimpleSaga.cs` | Deleted | `tests/MassTransit.Tests/Saga/SimpleSaga.cs` |
+| `tests/MassTransit.Tests/Saga/saga.nhibernate.cfg.xml` | Deleted | `tests/MassTransit.Tests/Saga/saga.nhibernate.cfg.xml` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Activity_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Activity_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/AnyStateTransition_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/AnyStateTransition_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Anytime_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Anytime_Specs.cs` |
@@ -10054,6 +10182,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Declarative_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Declarative_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Dependency_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Dependency_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/EventObservable_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/EventObservable_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/EventRaisedObserver.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/EventRaisedObserver.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Event_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Event_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Exception_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Exception_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Faulted_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Faulted_Specs.cs` |
@@ -10065,6 +10194,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/RaiseEvent_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/RaiseEvent_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Retry_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/Retry_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/SerializeState_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/SerializeState_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/StateChangeObserver.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/StateChangeObserver.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/StateConverter.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/StateConverter.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/StateExpression_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/StateExpression_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/State_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/State_Specs.cs` |
@@ -10133,6 +10263,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/SagaStateMachineTests/RemoveWhen_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/RemoveWhen_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Request2_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Request2_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Request3_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Request3_Specs.cs` |
+| `tests/MassTransit.Tests/SagaStateMachineTests/RequestRequest_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/RequestRequest_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Request_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Request_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/Respond_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/Respond_Specs.cs` |
 | `tests/MassTransit.Tests/SagaStateMachineTests/SagaConfigurationObserver_Specs.cs` | Deleted | `tests/MassTransit.Tests/SagaStateMachineTests/SagaConfigurationObserver_Specs.cs` |
@@ -10182,6 +10313,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/Serialization/TypeNameHandlingAuto_Specs.cs` | Deleted | `tests/MassTransit.Tests/Serialization/TypeNameHandlingAuto_Specs.cs` |
 | `tests/MassTransit.Tests/SerializationFault_Specs.cs` | Deleted | `tests/MassTransit.Tests/SerializationFault_Specs.cs` |
 | `tests/MassTransit.Tests/SerializationSupport_Specs.cs` | Deleted | `tests/MassTransit.Tests/SerializationSupport_Specs.cs` |
+| `tests/MassTransit.Tests/ServiceBusExtensions.cs` | Deleted | `tests/MassTransit.Tests/ServiceBusExtensions.cs` |
+| `tests/MassTransit.Tests/ServiceProviderExtensions.cs` | Deleted | `tests/MassTransit.Tests/ServiceProviderExtensions.cs` |
 | `tests/MassTransit.Tests/SimpleConfiguration_Specs.cs` | Deleted | `tests/MassTransit.Tests/SimpleConfiguration_Specs.cs` |
 | `tests/MassTransit.Tests/StartStop_Specs.cs` | Deleted | `tests/MassTransit.Tests/StartStop_Specs.cs` |
 | `tests/MassTransit.Tests/StaticProperty_Specs.cs` | Deleted | `tests/MassTransit.Tests/StaticProperty_Specs.cs` |
@@ -10397,71 +10530,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/ViciOne.ServiceBus.TestInfrastructure/TestRunnerContractException.cs` | Added |  |
 | `tests/ViciOne.ServiceBus.TestInfrastructure/ViciOne.ServiceBus.TestInfrastructure.csproj` | Added |  |
 | `tests/ViciOne.ServiceBus.TestInfrastructure/packages.lock.json` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/ContainerTests/Future_Specs.cs` | Modified | `tests/MassTransit.Tests/ContainerTests/Future_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Conventional/ConventionConsumer_Specs.cs` | Modified | `tests/MassTransit.Tests/Conventional/ConventionConsumer_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Conventional/CustomConsumeConnectorFactory.cs` | Modified | `tests/MassTransit.Tests/Conventional/CustomConsumeConnectorFactory.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Conventional/CustomConsumerConvention.cs` | Modified | `tests/MassTransit.Tests/Conventional/CustomConsumerConvention.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Conventional/CustomConsumerInterfaceType.cs` | Modified | `tests/MassTransit.Tests/Conventional/CustomConsumerInterfaceType.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Conventional/CustomConsumerMessageConvention.cs` | Modified | `tests/MassTransit.Tests/Conventional/CustomConsumerMessageConvention.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Conventional/CustomMethodConsumerMessageFilter.cs` | Modified | `tests/MassTransit.Tests/Conventional/CustomMethodConsumerMessageFilter.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Conventional/IHandler.cs` | Modified | `tests/MassTransit.Tests/Conventional/IHandler.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Definition_Specs.cs` | Modified | `tests/MassTransit.Tests/Definition_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ITestBusConfiguration.cs` | Modified | `tests/MassTransit.Tests/ITestBusConfiguration.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Messages/ClientMessage.cs` | Modified | `tests/MassTransit.Tests/Messages/ClientMessage.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Messages/DeleteMessage.cs` | Modified | `tests/MassTransit.Tests/Messages/DeleteMessage.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Messages/PartialSerializationTestMessage.cs` | Modified | `tests/MassTransit.Tests/Messages/PartialSerializationTestMessage.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Messages/RequestMessage.cs` | Modified | `tests/MassTransit.Tests/Messages/RequestMessage.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Messages/ResponseMessage.cs` | Modified | `tests/MassTransit.Tests/Messages/ResponseMessage.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Messages/SerializationTestMessage.cs` | Modified | `tests/MassTransit.Tests/Messages/SerializationTestMessage.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Messages/UpdateAcceptedMessage.cs` | Modified | `tests/MassTransit.Tests/Messages/UpdateAcceptedMessage.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Messages/UpdateMessage.cs` | Modified | `tests/MassTransit.Tests/Messages/UpdateMessage.cs` |
-| `tests/ViciOne.ServiceBus.Tests/NewConfigurationModel.cs` | Modified | `tests/MassTransit.Tests/NewConfigurationModel.cs` |
-| `tests/ViciOne.ServiceBus.Tests/NoLicensingResidue_Specs.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/NoOutboundVendorCall_Specs.cs` | Added |  |
-| `tests/ViciOne.ServiceBus.Tests/ReliableMessaging/Command.cs` | Modified | `tests/MassTransit.Tests/ReliableMessaging/Command.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ReliableMessaging/CreateState.cs` | Modified | `tests/MassTransit.Tests/ReliableMessaging/CreateState.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ReliableMessaging/Event.cs` | Modified | `tests/MassTransit.Tests/ReliableMessaging/Event.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ReliableMessaging/InboxLock_Specs.cs` | Modified | `tests/MassTransit.Tests/ReliableMessaging/InboxLock_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ReliableMessaging/ReliableConsumer.cs` | Modified | `tests/MassTransit.Tests/ReliableMessaging/ReliableConsumer.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ReliableMessaging/ReliableInMemoryConsumerDefinition.cs` | Modified | `tests/MassTransit.Tests/ReliableMessaging/ReliableInMemoryConsumerDefinition.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ReliableMessaging/ReliableInMemoryStateDefinition.cs` | Modified | `tests/MassTransit.Tests/ReliableMessaging/ReliableInMemoryStateDefinition.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ReliableMessaging/ReliableInMemory_Specs.cs` | Modified | `tests/MassTransit.Tests/ReliableMessaging/ReliableInMemory_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ReliableMessaging/ReliableState.cs` | Modified | `tests/MassTransit.Tests/ReliableMessaging/ReliableState.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ReliableMessaging/ReliableStateMachine.cs` | Modified | `tests/MassTransit.Tests/ReliableMessaging/ReliableStateMachine.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ReliableMessaging/StateVerified.cs` | Modified | `tests/MassTransit.Tests/ReliableMessaging/StateVerified.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Saga/InitiateSaga_Specs.cs` | Modified | `tests/MassTransit.Tests/Saga/InitiateSaga_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Saga/InjectingSampleSaga.cs` | Modified | `tests/MassTransit.Tests/Saga/InjectingSampleSaga.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Saga/Injecting_Specs.cs` | Modified | `tests/MassTransit.Tests/Saga/Injecting_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Saga/Locator/SagaExpression_Specs.cs` | Modified | `tests/MassTransit.Tests/Saga/Locator/SagaExpression_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Saga/Locator/Should_allow_extraction_of_property_name_and_value.cs` | Modified | `tests/MassTransit.Tests/Saga/Locator/Should_allow_extraction_of_property_name_and_value.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Saga/MessageSaga_Specs.cs` | Modified | `tests/MassTransit.Tests/Saga/MessageSaga_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Saga/Messages/CompleteSimpleSaga.cs` | Modified | `tests/MassTransit.Tests/Saga/Messages/CompleteSimpleSaga.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Saga/Messages/CorrelatedMessage.cs` | Modified | `tests/MassTransit.Tests/Saga/Messages/CorrelatedMessage.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Saga/Messages/InitiateSimpleSaga.cs` | Modified | `tests/MassTransit.Tests/Saga/Messages/InitiateSimpleSaga.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Saga/Messages/ObservableSagaMessage.cs` | Modified | `tests/MassTransit.Tests/Saga/Messages/ObservableSagaMessage.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Saga/Messages/RegisterUser.cs` | Modified | `tests/MassTransit.Tests/Saga/Messages/RegisterUser.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Saga/Messages/SendUserVerificationEmail.cs` | Modified | `tests/MassTransit.Tests/Saga/Messages/SendUserVerificationEmail.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Saga/Messages/SendValidationEmail.cs` | Modified | `tests/MassTransit.Tests/Saga/Messages/SendValidationEmail.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Saga/Messages/SimpleSagaMessageBase.cs` | Modified | `tests/MassTransit.Tests/Saga/Messages/SimpleSagaMessageBase.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Saga/Messages/UserRegistrationComplete.cs` | Modified | `tests/MassTransit.Tests/Saga/Messages/UserRegistrationComplete.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Saga/Messages/UserRegistrationPending.cs` | Modified | `tests/MassTransit.Tests/Saga/Messages/UserRegistrationPending.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Saga/Messages/UserValidated.cs` | Modified | `tests/MassTransit.Tests/Saga/Messages/UserValidated.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Saga/Messages/UserVerificationEmailSent.cs` | Modified | `tests/MassTransit.Tests/Saga/Messages/UserVerificationEmailSent.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Saga/NewOrExisting_Specs.cs` | Modified | `tests/MassTransit.Tests/Saga/NewOrExisting_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Saga/PartitionSaga_Specs.cs` | Modified | `tests/MassTransit.Tests/Saga/PartitionSaga_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Saga/RegisterUserSaga.cs` | Modified | `tests/MassTransit.Tests/Saga/RegisterUserSaga.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Saga/RegisterUserSaga.hbm.xml` | Modified | `tests/MassTransit.Tests/Saga/RegisterUserSaga.hbm.xml` |
-| `tests/ViciOne.ServiceBus.Tests/Saga/RepositoryContext_Specs.cs` | Modified | `tests/MassTransit.Tests/Saga/RepositoryContext_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Saga/SagaTestContext.cs` | Modified | `tests/MassTransit.Tests/Saga/SagaTestContext.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Saga/SimpleSaga.cs` | Modified | `tests/MassTransit.Tests/Saga/SimpleSaga.cs` |
-| `tests/ViciOne.ServiceBus.Tests/Saga/saga.nhibernate.cfg.xml` | Modified | `tests/MassTransit.Tests/Saga/saga.nhibernate.cfg.xml` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/EventRaisedObserver.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/EventRaisedObserver.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/Automatonymous/StateChangeObserver.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/Automatonymous/StateChangeObserver.cs` |
-| `tests/ViciOne.ServiceBus.Tests/SagaStateMachineTests/RequestRequest_Specs.cs` | Modified | `tests/MassTransit.Tests/SagaStateMachineTests/RequestRequest_Specs.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ServiceBusExtensions.cs` | Modified | `tests/MassTransit.Tests/ServiceBusExtensions.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ServiceProviderExtensions.cs` | Modified | `tests/MassTransit.Tests/ServiceProviderExtensions.cs` |
-| `tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj` | Modified | `tests/MassTransit.Tests/MassTransit.Tests.csproj` |
-| `tests/ViciOne.ServiceBus.Tests/packages.lock.json` | Added |  |
 | `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/EvaluatedBuildGraphTests.cs` | Added |  |
 | `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/MsBuildEvaluation.cs` | Added |  |
 | `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Dependencies/ResolvedPackageGraph.cs` | Added |  |
@@ -10930,6 +10998,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.StateMachineVisualizer.Tests/packages.lock.json` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Agents/PipeContextSupervisorFailureTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Agents/PipeContextSupervisorTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Architecture/OutboundNetworkBoundaryTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Architecture/RemovalBoundaryTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Caching/GreenCacheCapacityTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Caching/GreenCacheObserverTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Caching/GreenCacheTests.cs` | Added |  |
@@ -10966,6 +11036,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Configuration/TransactionConfigurationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchDeliveryIntegrationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Consumers/ConsumerAndSagaConcurrencyTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Consumers/ConsumerConventionIntegrationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Consumers/DynamicConsumePipeConnectionTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Consumers/InstanceExtensionsTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Contexts/ConsumeContextEndpointExtensionsTests.cs` | Added |  |
@@ -11004,6 +11075,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Events/PolymorphicFaultDispatchTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Futures/BatchFutureIntegrationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Futures/FutureLocationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Futures/FutureRequestConsumerIntegrationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryBusLifecycleTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryDelayProviderTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryErrorTransportTests.cs` | Added |  |
@@ -11083,7 +11155,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/LatestFilterTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/Outbox/BusOutboxNotificationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/Outbox/ExpiredForwardingOutboxTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Middleware/Outbox/InMemoryOutboxAttemptIsolationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/Outbox/InMemoryOutboxFaultTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Middleware/Outbox/InMemoryOutboxMessageRepositoryTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/Outbox/InMemoryOutboxRedeliveryTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/Outbox/RequestClientOutboxTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Middleware/PartitionerTests.cs` | Added |  |
@@ -11107,6 +11181,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/Observers/PublishObserverTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Observers/ReceiveObserverTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Observers/SendObserverTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/ReliableMessaging/ReliableInMemoryIntegrationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/RetryPolicies/BaseRetryPolicyContextTests.cs` | Added |  |
@@ -11125,6 +11200,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineDefinitionTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineExceptionBehaviorTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineLifecycleIntegrationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineNestedRequestIntegrationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineObservationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineOutboxSchedulingIntegrationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachinePolicyIntegrationTests.cs` | Added |  |
@@ -11139,6 +11215,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineTransportIntegrationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Sagas/Configuration/SagaConnectorTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Sagas/ContainerSagaIntegrationTests.cs` | Added |  |
+| `tests2/ViciOne.ServiceBus.Tests/Sagas/LegacySagaIntegrationTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Scheduling/ScopedSchedulingTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Serialization/ArrayMessageTypeTests.cs` | Added |  |
 | `tests2/ViciOne.ServiceBus.Tests/Serialization/CoreMessageBodyContractTests.cs` | Added |  |
