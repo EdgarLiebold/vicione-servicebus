@@ -16,7 +16,8 @@ namespace ViciOne.ServiceBus.Events
         }
 
         public Uri InputAddress => _faulted.InputAddress;
-        public Exception? Exception => _faulted.Exception;
+        public Exception Exception => _faulted.Exception;
+        public bool IsTerminal => _faulted.IsTerminal;
 
         public IReceiveEndpoint ReceiveEndpoint { get; }
     }

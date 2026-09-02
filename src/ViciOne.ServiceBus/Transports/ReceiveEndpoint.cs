@@ -87,10 +87,22 @@ namespace ViciOne.ServiceBus.Transports
             if (_handle != null)
                 throw new InvalidOperationException($"The receive endpoint was already started: {InputAddress}");
 
-            _handle = new EndpointHandle(this, _transport, _startObserver, cancellationToken);
+            var handle = new EndpointHandle(this, _transport, _startObserver, cancellationToken);
+            _handle = handle;
             _paused = false;
 
-            _handle.Start();
+            try
+            {
+                handle.Start();
+            }
+            catch (Exception exception)
+            {
+                _handle = null;
+                Message = $"start faulted ({exception.Message})";
+                HealthResult = EndpointHealthResult.Unhealthy(this, Message, exception);
+                CurrentState = State.Faulted;
+                throw;
+            }
 
             switch (CurrentState)
             {
@@ -333,7 +345,6 @@ namespace ViciOne.ServiceBus.Transports
             readonly ConnectHandle _handle;
             readonly TaskCompletionSource<ReceiveEndpointReady> _ready;
             readonly IReceiveTransport _transport;
-            ReceiveEndpointFaulted _faulted;
             CancellationTokenRegistration _registration;
 
             public EndpointHandle(ReceiveEndpoint endpoint, IReceiveTransport transport, StartObserver startObserver, CancellationToken cancellationToken)
@@ -343,22 +354,10 @@ namespace ViciOne.ServiceBus.Transports
 
                 _cancellationToken = cancellationToken;
                 _ready = new TaskCompletionSource<ReceiveEndpointReady>(TaskCreationOptions.RunContinuationsAsynchronously);
+                _handle = startObserver.ConnectEndpointHandle(this);
 
                 if (cancellationToken.CanBeCanceled)
-                {
-                    _registration = cancellationToken.Register(() =>
-                    {
-                        if (_faulted != null)
-                        {
-                            _handle?.Disconnect();
-                            _ready.TrySetException(_faulted.Exception);
-                        }
-
-                        _registration.Dispose();
-                    });
-                }
-
-                _handle = startObserver.ConnectEndpointHandle(this);
+                    _registration = cancellationToken.UnsafeRegister(static state => ((EndpointHandle)state!).CancelReady(), this);
             }
 
             public ReceiveTransportHandle TransportHandle { get; private set; }
@@ -372,7 +371,19 @@ namespace ViciOne.ServiceBus.Transports
 
             public void Start()
             {
-                TransportHandle = _transport.Start();
+                _cancellationToken.ThrowIfCancellationRequested();
+
+                try
+                {
+                    TransportHandle = _transport.Start();
+                }
+                catch (Exception exception)
+                {
+                    _handle.Disconnect();
+                    _registration.Dispose();
+                    _ready.TrySetException(exception);
+                    throw;
+                }
             }
 
             public Task SetReady(ReceiveEndpointReady ready)
@@ -387,29 +398,21 @@ namespace ViciOne.ServiceBus.Transports
 
             public Task SetFaulted(ReceiveEndpointFaulted faulted)
             {
+                if (!faulted.IsTerminal)
+                    return Task.CompletedTask;
 
-                _faulted = faulted;
+                _handle.Disconnect();
+                _registration.Dispose();
 
-                if (_cancellationToken.IsCancellationRequested || IsUnrecoverable(faulted.Exception))
-                {
-                    _handle.Disconnect();
-                    _registration.Dispose();
-
-                    _ready.TrySetException(faulted.Exception);
-                }
+                _ready.TrySetException(faulted.Exception);
 
                 return Task.CompletedTask;
             }
 
-
-
-        static bool IsUnrecoverable(Exception exception)
+            void CancelReady()
             {
-                return exception switch
-                {
-                    ConnectionException connectionException => !connectionException.IsTransient,
-                    _ => false
-                };
+                _handle.Disconnect();
+                _ready.TrySetCanceled(_cancellationToken);
             }
         }
     }

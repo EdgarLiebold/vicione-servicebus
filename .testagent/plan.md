@@ -2774,3 +2774,17 @@ freeze, two commits and the already authorized non-force remote publication.
    the zero-warning Release build, complete UnitArchitecture profile and scoped format gate.
 5. Preserve this as a local checkpoint while the same authorized assignment continues with explicit
    receive startup, retry, terminal-fault, cancellation and stop semantics.
+
+## Reviewer integration — V4 explicit receive terminality (2026-09-02)
+
+1. Carry a non-null exact exception and explicit terminality through receive transport and endpoint
+   fault contracts; make the retry owner the only authority for terminal exhaustion.
+2. Make endpoint start, readiness cancellation and synchronous rollback deterministic, preserving the
+   exact initiating cancellation token and exact terminal cause.
+3. Own in-memory startup as a task, publish dependency failures as terminal, and make stop await the
+   startup-observation path without allowing another active agent to mask the test oracle.
+4. Bind attempt, exhaustion, stop, bus-waiter and in-memory lifecycle behavior with ordinary native
+   tests and independent one-cause product mutations.
+5. After restoration, require focused owners, a zero-warning Release build, the complete
+   Unit/Architecture profile, passive requirement projection and scoped static gates to pass before the
+   local checkpoint is committed.

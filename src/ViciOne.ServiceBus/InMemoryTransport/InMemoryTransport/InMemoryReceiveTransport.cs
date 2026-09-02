@@ -85,6 +85,7 @@ namespace ViciOne.ServiceBus.InMemoryTransport
             readonly InMemoryReceiveEndpointContext _context;
             readonly TaskExecutor _executor;
             readonly IMessageQueue<InMemoryTransportContext, InMemoryTransportMessage> _queue;
+            readonly Task _startupTask;
             TopologyHandle _topologyHandle;
 
             public ReceiveTransportAgent(InMemoryReceiveEndpointContext context, IMessageQueue<InMemoryTransportContext, InMemoryTransportMessage> queue)
@@ -95,7 +96,7 @@ namespace ViciOne.ServiceBus.InMemoryTransport
 
                 _executor = new TaskExecutor(context.ConcurrentMessageLimit ?? context.PrefetchCount);
 
-                Task.Run(() => Startup());
+                _startupTask = Startup();
             }
 
             public Task Deliver(InMemoryTransportMessage message, CancellationToken cancellationToken)
@@ -147,15 +148,37 @@ namespace ViciOne.ServiceBus.InMemoryTransport
 
                     SetReady();
                 }
+                catch (OperationCanceledException exception) when (Stopping.IsCancellationRequested)
+                {
+                    SetNotReady(exception);
+                }
                 catch (Exception exception)
                 {
                     SetNotReady(exception);
+
+                    try
+                    {
+                        await _context.TransportObservers.NotifyFaulted(_context.InputAddress, exception, true).ConfigureAwait(false);
+                    }
+                    catch (Exception observerException)
+                    {
+                        LogContext.Warning?.Log(observerException, "In-memory receive startup fault observer failed: {InputAddress}",
+                            _context.InputAddress);
+                    }
                 }
             }
 
             protected override async Task ActiveAndActualAgentsCompleted(StopContext context)
             {
                 _topologyHandle?.Disconnect();
+
+                try
+                {
+                    await _startupTask.OrCanceled(context.CancellationToken).ConfigureAwait(false);
+                }
+                catch (OperationCanceledException)
+                {
+                }
 
                 await base.ActiveAndActualAgentsCompleted(context).ConfigureAwait(false);
 

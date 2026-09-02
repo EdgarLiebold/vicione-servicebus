@@ -2650,3 +2650,15 @@ future cohorts as complete.
   directory remains unchanged and untracked.
 - This local checkpoint closes execution primitives only. Explicit receive terminality remains active
   in the same reviewer-integration assignment; no remote publication is included or implied.
+
+## Reviewer integration — V4 explicit receive terminality accepted locally (2026-09-02)
+
+- Receive attempt faults are explicitly nonterminal; retry exhaustion is terminal and preserves the
+  exact failure after invoking the retry context's terminal callback.
+- Endpoint start rollback, initiating-token cancellation, bus-endpoint waiter wake-up and in-memory
+  startup/stop ownership are deterministic and independently exercised.
+- The focused owners pass 9/9 and 3/3. Ten buildable one-cause production mutations are killed and
+  restored; the test-strengthening step that converted a surviving masked mutation into a causal
+  failure is recorded rather than hidden.
+- The final complete Unit/Architecture run passes 3,023/3,023 with zero failures or skips. Protected
+  `review/**` remains unchanged and untracked. No remote publication is included or implied.

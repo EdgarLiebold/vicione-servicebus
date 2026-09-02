@@ -130,15 +130,13 @@ namespace ViciOne.ServiceBus
         /// through it on each request, and it keeps exactly the shape it had.
         /// </para>
         /// <para>
-        /// The filter is ConnectionException.IsTransient, which is the assembly-crossing contract and is
-        /// checked by the compiler. Its earlier reading was what made it look unusable: an ordinary
-        /// shutdown announced itself as non-transient, so filtering here turned every routine bus stop
-        /// into a dead endpoint and failed unrelated specs across the suite — always the run after a
-        /// stop, never the first one, which is why it never showed in isolation. The transport now says
-        /// transient about its own stop, and the flag answers the question it was named for.
+        /// Terminality is supplied by the receive transport's retry owner. Observers therefore do not
+        /// infer lifecycle state from exception types or provider-specific transient flags: a recoverable
+        /// attempt fault leaves waiters attached, while retry exhaustion or another definitive startup
+        /// failure wakes them with the original cause.
         /// </para>
         /// </summary>
-        class TerminalFaultObserver :
+        internal class TerminalFaultObserver :
             IReceiveEndpointObserver
         {
             readonly object _lock = new();
@@ -176,7 +174,7 @@ namespace ViciOne.ServiceBus
                     }
                 }
 
-                Wake(waiter);
+                CancelAttachedWaiter(waiter);
             }
 
 
@@ -187,73 +185,61 @@ namespace ViciOne.ServiceBus
                     _waiting.Remove(waiter);
             }
 
-            /// <summary>
-            /// Wakes a waiter away from the caller's thread.
-            /// <para>
-            /// CancellationTokenSource.Cancel runs its registrations synchronously, and this observer is
-            /// notified from ReceiveTransport, which awaits the observer chain. Cancelling inline would
-            /// therefore run a waiter's continuation on the transport's own fault path and hold it there
-            /// while it runs — the reentrancy record 0041 named as a candidate. The wake-up is handed to
-            /// the thread pool instead, so the notification returns to the transport at once.
-            /// </para>
-            /// </summary>
-            static void Wake(CancellationTokenSource waiter)
+            static void CancelAttachedWaiter(CancellationTokenSource waiter)
             {
-                ThreadPool.QueueUserWorkItem(state =>
+                try
+                {
+                    waiter.Cancel();
+                }
+                catch (ObjectDisposedException)
+                {
+                    // The waiter completed between observing the terminal cause and this cancellation.
+                }
+                catch (Exception exception)
+                {
+                    // The terminal cause remains authoritative. A cancellation callback is observation
+                    // attached to the internal wait and must not replace the transport failure.
+                    LogContext.Warning?.Log(exception, "Bus endpoint readiness cancellation callback faulted");
+                }
+            }
+
+            static async Task CancelWaitersAsync(CancellationTokenSource[] waiters)
+            {
+                foreach (var waiter in waiters)
                 {
                     try
                     {
-                        ((CancellationTokenSource)state!).Cancel();
+                        await waiter.CancelAsync().ConfigureAwait(false);
                     }
                     catch (ObjectDisposedException)
                     {
-                        // That waiter gave up on its own in the meantime.
+                        // The waiter completed independently while the terminal fault was being published.
                     }
-                }, waiter);
+                    catch (Exception exception)
+                    {
+                        // Cancellation wakes an internal readiness wait. Callback failures must be owned and
+                        // observable, but must never replace the receive transport's terminal failure.
+                        LogContext.Warning?.Log(exception, "Bus endpoint readiness cancellation callback faulted");
+                    }
+                }
             }
 
-            Task IReceiveEndpointObserver.Faulted(ReceiveEndpointFaulted faulted)
+            async Task IReceiveEndpointObserver.Faulted(ReceiveEndpointFaulted faulted)
             {
-
                 CancellationTokenSource[] waiting;
 
                 lock (_lock)
                 {
-                    if (_cause != null || !IsTerminal(faulted.Exception))
-                        return Task.CompletedTask;
+                    if (_cause != null || !faulted.IsTerminal)
+                        return;
 
-                    // The cause is set before anyone is woken, or a waiter could read an empty reason
-                    // and report the safety limit instead of the broker's answer.
                     _cause = faulted.Exception;
 
                     waiting = _waiting.ToArray();
                     _waiting.Clear();
                 }
 
-                foreach (var waiter in waiting)
-                    Wake(waiter);
-
-                return Task.CompletedTask;
-            }
-
-            /// <summary>
-            /// Whether waiting longer cannot change this failure. The cause is walked, because the
-            /// endpoint reports what it caught and the transport's answer is often one level down.
-            /// <para>
-            /// The parameter is nullable because <see cref="ReceiveEndpointFaulted.Exception" /> is:
-            /// an endpoint may fault without handing over an exception. A missing exception is not
-            /// terminal, which is what the walk already returns for it.
-            /// </para>
-            /// </summary>
-            static bool IsTerminal(Exception? exception)
-            {
-                for (var cause = exception; cause != null; cause = cause.InnerException)
-                {
-                    if (cause is ConnectionException connection)
-                        return !connection.IsTransient;
-                }
-
-                return false;
+                await CancelWaitersAsync(waiting).ConfigureAwait(false);
             }
 
             Task IReceiveEndpointObserver.Ready(ReceiveEndpointReady ready)

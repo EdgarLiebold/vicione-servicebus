@@ -6,7 +6,7 @@
 - product baseline tree: `6f0aa701c05e833c30ee747cc77ecc6c3aee0f75`;
 - aggregate read-only review SHA-256: `371bf21331f0fc3316be271bce04ab37b3c54c50e13f443789d94c1f6eca1f18`;
 - V4 bundle SHA-256: `e8f28736562bf7c4fa8ffca4dfd662cd5105d3124e26d2ba424fe1ac0d192b87`;
-- V4 donor commit: `f8050928d1065145bf76fa76488644ca5c834c86`;
+- V4 donor commit: `f8050928715e536b60c42d800d1cbb81c085818f`;
 - V5 bundle SHA-256: `af76f8f4266efc7aa6d2bb34d29b30c0b73bb04dee7cb8237e4ab42717e1fdf5`;
 - V5 cumulative patch SHA-256: `88f2c61a3b2fc470f525ce68a3972463e731bea418cfa9de0d58f4e745a1a344`;
 - V5.1 delta SHA-256: `fac6328e141fd71daf01db0efe9987a79a5d561e8929ab209c4e70b9dbe7562c`.

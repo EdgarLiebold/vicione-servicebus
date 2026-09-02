@@ -17,9 +17,9 @@ namespace ViciOne.ServiceBus.Transports
             return observer.Completed(new ReceiveTransportCompletedEvent(inputAddress, metrics));
         }
 
-        public static Task NotifyFaulted(this IReceiveTransportObserver observer, Uri inputAddress, Exception exception)
+        public static Task NotifyFaulted(this IReceiveTransportObserver observer, Uri inputAddress, Exception exception, bool isTerminal)
         {
-            return observer.Faulted(new ReceiveTransportFaultedEvent(inputAddress, exception));
+            return observer.Faulted(new ReceiveTransportFaultedEvent(inputAddress, exception, isTerminal));
         }
     }
 }

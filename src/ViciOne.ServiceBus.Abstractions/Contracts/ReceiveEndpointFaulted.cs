@@ -6,6 +6,7 @@ namespace ViciOne.ServiceBus
     public interface ReceiveEndpointFaulted :
         ReceiveEndpointEvent
     {
-        Exception? Exception { get; }
+        Exception Exception { get; }
+        bool IsTerminal { get; }
     }
 }

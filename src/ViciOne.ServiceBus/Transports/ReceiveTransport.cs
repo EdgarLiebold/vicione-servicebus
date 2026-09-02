@@ -86,9 +86,6 @@ namespace ViciOne.ServiceBus.Transports
                 _preStartPipe = preStartPipe;
 
                 Task receiver = Run();
-
-                SetReady(receiver);
-
                 SetCompleted(receiver);
             }
 
@@ -147,7 +144,7 @@ namespace ViciOne.ServiceBus.Transports
                         {
                             var exception = new ConnectionException(
                                 $"Receive transport completed before shutdown: {_context.InputAddress}", isTransient: true);
-                            await NotifyFaulted(exception).ConfigureAwait(false);
+                            await NotifyFaulted(exception, false).ConfigureAwait(false);
                             throw exception;
                         }
                     }
@@ -163,7 +160,16 @@ namespace ViciOne.ServiceBus.Transports
 
                         if (!canRetry || nextRetryContext == null)
                         {
-                            LogContext.Error?.Log(exception, "ReceiveTransport cannot retry: {InputAddress}", _context.InputAddress);
+                            if (nextRetryContext != null && _retryPolicy.IsHandled(exception))
+                            {
+                                Task retryFaulted = nextRetryContext.RetryFaulted(exception)
+                                    ?? throw new InvalidOperationException("The receive transport retry context returned a null retry-faulted task.");
+                                if (retryFaulted.Status != TaskStatus.RanToCompletion)
+                                    await retryFaulted.ConfigureAwait(false);
+                            }
+
+                            LogContext.Error?.Log(exception, "ReceiveTransport retry budget exhausted: {InputAddress}", _context.InputAddress);
+                            await NotifyFaulted(exception, true).ConfigureAwait(false);
                             break;
                         }
 
@@ -190,7 +196,7 @@ namespace ViciOne.ServiceBus.Transports
                 }
                 catch (ConnectionException exception)
                 {
-                    await NotifyFaulted(exception).ConfigureAwait(false);
+                    await NotifyFaulted(exception, false).ConfigureAwait(false);
                     throw;
                 }
                 catch (OperationCanceledException)
@@ -209,7 +215,7 @@ namespace ViciOne.ServiceBus.Transports
                 var exception = _context.ConvertException(originalException, message);
 
 
-                await NotifyFaulted(exception).ConfigureAwait(false);
+                await NotifyFaulted(exception, false).ConfigureAwait(false);
 
                 return exception;
             }
@@ -217,11 +223,9 @@ namespace ViciOne.ServiceBus.Transports
 
 
 
-            Task NotifyFaulted(Exception exception)
+            Task NotifyFaulted(Exception exception, bool isTerminal)
             {
-
-
-                return _context.TransportObservers.NotifyFaulted(_context.InputAddress, exception);
+                return _context.TransportObservers.NotifyFaulted(_context.InputAddress, exception, isTerminal);
             }
 
 

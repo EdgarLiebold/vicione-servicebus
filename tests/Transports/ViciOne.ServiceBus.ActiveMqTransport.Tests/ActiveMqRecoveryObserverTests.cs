@@ -53,5 +53,6 @@ public sealed class ActiveMqRecoveryObserverTests
         public Uri InputAddress { get; } = new($"activemq://broker:61616/{Uri.EscapeDataString(endpoint)}");
         public IReceiveEndpoint ReceiveEndpoint => null!;
         public Exception Exception { get; } = new InvalidOperationException("The endpoint faulted.");
+        public bool IsTerminal => false;
     }
 }

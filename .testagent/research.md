@@ -3251,7 +3251,7 @@ produced all 19 packages successfully.
 The protected `review/` handoff was verified without modifying or tracking it. Its aggregate SHA-256
 is `371bf21331f0fc3316be271bce04ab37b3c54c50e13f443789d94c1f6eca1f18`; the V4 donor bundle is
 `e8f28736562bf7c4fa8ffca4dfd662cd5105d3124e26d2ba424fe1ac0d192b87` and resolves to final commit
-`f8050928d1065145bf76fa76488644ca5c834c86`. The current integration baseline remains commit
+`f8050928715e536b60c42d800d1cbb81c085818f`. The current integration baseline remains commit
 `894985b3c8b6db3bfe06e04926becee11c7774ba`, tree
 `6f0aa701c05e833c30ee747cc77ecc6c3aee0f75`; current native tests are authoritative because they
 postdate the reviewer copy.
@@ -3310,3 +3310,24 @@ zero skips. All 80 changed or added C# paths pass scoped whitespace verification
 still reports inherited findings in unchanged files. Detailed mutation ownership and environment
 facts are recorded under
 `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-CONCURRENCY-LIFECYCLE/`.
+
+## Reviewer integration research — V4 explicit receive terminality (2026-09-02)
+
+V4 commit `ad9d4e27a294fc9f061a3142e164da94293d77ec` moves the terminal decision to
+the receive retry owner instead of asking downstream observers to infer it from exception types. The
+current tree needed the same semantic change across transport events, endpoint readiness, bus-endpoint
+waiters, retry exhaustion, requested stop and in-memory startup ownership.
+
+The source-derived native owners contain 12 materialized cases and 69 assertions. They distinguish
+nonterminal attempt faults from terminal exhaustion, preserve exact exception and cancellation-token
+identity, require synchronous start rollback, bind the retry callback trace, and isolate in-memory stop
+from unrelated active-agent completion. Ten independent production mutations were killed. One initial
+startup-ownership oracle was correctly rejected after another agent masked the mutation; isolating the
+actual startup task turned it into a causal failure. No sleep, polling, quiet-window, timeout-as-success,
+skip or reflection-only verdict remains.
+
+The restored candidate passes the focused receive owner 9/9, the in-memory lifecycle owner 3/3, and the
+complete Unit/Architecture profile 3,023/3,023 with zero skips. The first full run exposed one unrelated
+scheduling-sensitive diagnostics assertion; it passed in isolation and on the unchanged complete rerun.
+Detailed evidence is under
+`evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-RECEIVE-TERMINALITY/`.
