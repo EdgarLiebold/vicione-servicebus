@@ -15,9 +15,9 @@ public sealed class RunnerContractTests
         string first;
         string repeated;
         using (EnvironmentSnapshot.WithValues(new Dictionary<string, string?>
-               {
-                   [runRootVariable] = "/private/tmp/vicione-run-a",
-               }))
+        {
+            [runRootVariable] = "/private/tmp/vicione-run-a",
+        }))
         {
             first = TestDatabaseName.CreateForCurrentRun("vsbpg", "sql-run-scope", "delivery");
             repeated = TestDatabaseName.CreateForCurrentRun("vsbpg", "sql-run-scope", "delivery");
@@ -25,9 +25,9 @@ public sealed class RunnerContractTests
 
         string second;
         using (EnvironmentSnapshot.WithValues(new Dictionary<string, string?>
-               {
-                   [runRootVariable] = "/private/tmp/vicione-run-b",
-               }))
+        {
+            [runRootVariable] = "/private/tmp/vicione-run-b",
+        }))
         {
             second = TestDatabaseName.CreateForCurrentRun("vsbpg", "sql-run-scope", "delivery");
         }
