@@ -1,0 +1,1817 @@
+{
+  "artifacts": [
+    {
+      "findings": [],
+      "kind": "nupkg",
+      "packageEntries": [
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "NuGet.README.md",
+          "sha256": "947189958aebe33426a745b5ba0e924d0179b0305206437344d2f6737a95a099",
+          "size": 2918,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "ViciOne.ServiceBus.nuspec",
+          "sha256": "2a952ea3ac3780b95eaf720d0c32376f068e15e34199324660b0d2a64fe1591f",
+          "size": 1818,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "[Content_Types].xml",
+          "sha256": "70b483c5066b0f062f2102cd8f0c4b2fde9e919b5a9204689dd67e64b0cc518e",
+          "size": 582,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "_rels/.rels",
+          "sha256": "d2069117459e6149d1b2ed218ab6835653a5bf0d78d1d0e1d5551c13138e8526",
+          "size": 508,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.dll",
+          "sha256": "85537f87796f57904ba080bd9e3f2540f88ba439fca4d93198c76fff7a18d52f",
+          "size": 4489728,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.xml",
+          "sha256": "3d9ff666959b3496f971ab81d1680d327ef4510a472c3671fb52cdcb689234fd",
+          "size": 908641,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "package/services/metadata/core-properties/a87fb41acb9e4849804a01681df1d76f.psmdcp",
+          "sha256": "0502309c55b546888d11d5f48ccc61267a63c0da63cee736025fdcccf6e7fec4",
+          "size": 742,
+          "status": "PASS"
+        }
+      ],
+      "path": "artifacts/packages/final-native-promotion/ViciOne.ServiceBus.1.0.0.nupkg",
+      "sha256": "8152b44a9d20b713a1c0c2f88696684b370089114b7a243ff257d5bda1ab521b",
+      "size": 1972135,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "nupkg",
+      "packageEntries": [
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "NuGet.README.md",
+          "sha256": "947189958aebe33426a745b5ba0e924d0179b0305206437344d2f6737a95a099",
+          "size": 2918,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "ViciOne.ServiceBus.Abstractions.nuspec",
+          "sha256": "b8f0e3307f85fa27613250c957fe03d0146d8a5dd5b4303852fe91afcd0dcabf",
+          "size": 1038,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "[Content_Types].xml",
+          "sha256": "70b483c5066b0f062f2102cd8f0c4b2fde9e919b5a9204689dd67e64b0cc518e",
+          "size": 582,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "_rels/.rels",
+          "sha256": "85cd19567aaecbe4dd992e558f9a147386c479e1179d420ee7d1b464fca39413",
+          "size": 521,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "sha256": "e1400f7fbf367881c0cdf20c0018055f43bec506341a5ceeb73803e06cdd4898",
+          "size": 741888,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.Abstractions.xml",
+          "sha256": "5d42c9564c3e7ff7549735656790cbb8d0bd543ef15dd6112481280752830c71",
+          "size": 728271,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "package/services/metadata/core-properties/588bb82d778d4c63927a49a520062502.psmdcp",
+          "sha256": "6594ef7300a69811d95250d785e997428db13508d31cc3de52674a622c26435e",
+          "size": 755,
+          "status": "PASS"
+        }
+      ],
+      "path": "artifacts/packages/final-native-promotion/ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "sha256": "27ba946625dd7a432de5422119d242065024f873e25eeba4ddd5326cd4affba3",
+      "size": 388732,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "nupkg",
+      "packageEntries": [
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "NuGet.README.md",
+          "sha256": "947189958aebe33426a745b5ba0e924d0179b0305206437344d2f6737a95a099",
+          "size": 2918,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "ViciOne.ServiceBus.ActiveMQ.nuspec",
+          "sha256": "b051b503b7053f75236caf6103ceeb2efd6d3a62379f756a8728226dfd2d07b5",
+          "size": 1415,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "[Content_Types].xml",
+          "sha256": "70b483c5066b0f062f2102cd8f0c4b2fde9e919b5a9204689dd67e64b0cc518e",
+          "size": 582,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "_rels/.rels",
+          "sha256": "7e3989aa1d2433c2f88a652d5f86fe4540d34116116538adad729104a391a159",
+          "size": 517,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.ActiveMqTransport.dll",
+          "sha256": "d891f19d72974c68e66b96bf405f1e3b03e897efffe1663450ca616ad6693be1",
+          "size": 219648,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.ActiveMqTransport.xml",
+          "sha256": "b41cf1a9d80627f0ec5a3b1401c292d35710d4dcf7b4fea2bd60316fcde16995",
+          "size": 41704,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "package/services/metadata/core-properties/169710d6766d4d88a20cc58cf70b3635.psmdcp",
+          "sha256": "5063566618c2fc0e4afbabf2a0eea9c096c0ca4d778c1c66c742b4f4f6111f76",
+          "size": 807,
+          "status": "PASS"
+        }
+      ],
+      "path": "artifacts/packages/final-native-promotion/ViciOne.ServiceBus.ActiveMQ.1.0.0.nupkg",
+      "sha256": "7e9a0e0e9f656c2cc1c68aaada007c731cc0cec0568d9d10742b19e44e737410",
+      "size": 123479,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "nupkg",
+      "packageEntries": [
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "NuGet.README.md",
+          "sha256": "947189958aebe33426a745b5ba0e924d0179b0305206437344d2f6737a95a099",
+          "size": 2918,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "ViciOne.ServiceBus.AmazonS3.nuspec",
+          "sha256": "b3e2b1e3dd3fcbe83b7e3876cbb8b24d42298950903bccad33f44558516b591b",
+          "size": 1339,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "[Content_Types].xml",
+          "sha256": "70b483c5066b0f062f2102cd8f0c4b2fde9e919b5a9204689dd67e64b0cc518e",
+          "size": 582,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "_rels/.rels",
+          "sha256": "0d70e91790073f15f84e28c3c6cfb898ab7994f30120666d6360b83a4001ae6f",
+          "size": 517,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.AmazonS3.dll",
+          "sha256": "f970cec12c0f08d7b6285646a5576158973c245b0f1aa1bad83125270c294ca1",
+          "size": 33792,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.AmazonS3.xml",
+          "sha256": "f063372611986b021c91e4187b32fa35e9b94061a5f8c07f132fd80149c797c2",
+          "size": 982,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "package/services/metadata/core-properties/2f6707c2e9174ef3a87c134ed215583b.psmdcp",
+          "sha256": "2aa03f331b659022d349a1d9f3d2796c4b21360ec5f1e9f9030551ab222b78a8",
+          "size": 824,
+          "status": "PASS"
+        }
+      ],
+      "path": "artifacts/packages/final-native-promotion/ViciOne.ServiceBus.AmazonS3.1.0.0.nupkg",
+      "sha256": "7faf0f968f5d211746e141380f5534a19f4e597226f4dd2f0768b915f229ecb8",
+      "size": 25668,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "nupkg",
+      "packageEntries": [
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "NuGet.README.md",
+          "sha256": "947189958aebe33426a745b5ba0e924d0179b0305206437344d2f6737a95a099",
+          "size": 2918,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "ViciOne.ServiceBus.AmazonSQS.nuspec",
+          "sha256": "b9933334b7e8b15178b94d7174381613a712bd52bebd2d9bf4fd8375bc9135bb",
+          "size": 1434,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "[Content_Types].xml",
+          "sha256": "70b483c5066b0f062f2102cd8f0c4b2fde9e919b5a9204689dd67e64b0cc518e",
+          "size": 582,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "_rels/.rels",
+          "sha256": "1b3e09de2eaa8b7cd4480f626ca467d16abbde9c570c2960c30ea4b4ac6790b7",
+          "size": 518,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.AmazonSqsTransport.dll",
+          "sha256": "c4ae8a5150884be04acd32471891129e0beb5f6a62a3ac0eaca024413f8021a1",
+          "size": 299008,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.AmazonSqsTransport.xml",
+          "sha256": "08af963791e74af7bda131513c13f1093acae6c40db5e7829d7b49f904b7ee96",
+          "size": 46456,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "package/services/metadata/core-properties/4757f2fd1b91449ea12a15918625418f.psmdcp",
+          "sha256": "f13879ded5880cc1cf5fd044d987b8eeb3ae871f88c0f00943e57ed580a286ca",
+          "size": 811,
+          "status": "PASS"
+        }
+      ],
+      "path": "artifacts/packages/final-native-promotion/ViciOne.ServiceBus.AmazonSQS.1.0.0.nupkg",
+      "sha256": "7ce703fc574f8308e2cbcf51d1e04e56031a58e722dfb91a2d30cab5164c38bf",
+      "size": 156555,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "nupkg",
+      "packageEntries": [
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "NuGet.README.md",
+          "sha256": "947189958aebe33426a745b5ba0e924d0179b0305206437344d2f6737a95a099",
+          "size": 2918,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "ViciOne.ServiceBus.Analyzers.nuspec",
+          "sha256": "7f678be2fea0cc0782859920575acc69892e5585e678e866b4ece16861347d6b",
+          "size": 1111,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "[Content_Types].xml",
+          "sha256": "e2541e78f0e1080bd6e2b57fe526fa104e159f2b9e4bc46f2fe30166f9561da1",
+          "size": 582,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "_rels/.rels",
+          "sha256": "b2e9d1a9445b3d15b3e524ae572cc0f6c4d024e5470519004bcaf2c36637ae71",
+          "size": 518,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "analyzers/dotnet/cs/ViciOne.ServiceBus.Analyzers.CodeFixes.dll",
+          "sha256": "3cbe8bd475808d03641eda9384006ce8ac541bfb60cad64ad8bd991475198b2a",
+          "size": 34816,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "analyzers/dotnet/cs/ViciOne.ServiceBus.Analyzers.dll",
+          "sha256": "687c86b579cc828db8a163a448f2ab205cd16b156a76e9b5f582241128cc3e83",
+          "size": 60416,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "package/services/metadata/core-properties/00e8f0eba2e342e2a970cf90dd30414c.psmdcp",
+          "sha256": "881db25571a0352aa156ec351f314e365fb1cbae1f75543308e63d7777796bb7",
+          "size": 764,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "tools/install.ps1",
+          "sha256": "ae576f2417efa054df0b27c0e5bd028c4efde55ed64f092e443aec5673849b9c",
+          "size": 1587,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "tools/uninstall.ps1",
+          "sha256": "65e1672af7fd23accb658fa14b30c35e85c804981045bf0605b2b9d63a2cabbb",
+          "size": 1716,
+          "status": "PASS"
+        }
+      ],
+      "path": "artifacts/packages/final-native-promotion/ViciOne.ServiceBus.Analyzers.1.0.0.nupkg",
+      "sha256": "e3dab9a532b7500a800644346f69382108d750927546313d5da4db50305d88ef",
+      "size": 57577,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "nupkg",
+      "packageEntries": [
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "NuGet.README.md",
+          "sha256": "947189958aebe33426a745b5ba0e924d0179b0305206437344d2f6737a95a099",
+          "size": 2918,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "ViciOne.ServiceBus.Azure.ServiceBus.Core.nuspec",
+          "sha256": "f7ae660e9107ab86c0743fe5d47765d22eca4bee04e0f8a9aea081c4b93d1eca",
+          "size": 1471,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "[Content_Types].xml",
+          "sha256": "70b483c5066b0f062f2102cd8f0c4b2fde9e919b5a9204689dd67e64b0cc518e",
+          "size": 582,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "_rels/.rels",
+          "sha256": "de8c9e0c09ba8524152438495f158aba2557b6c1a889ea5240a7c2722c85792b",
+          "size": 530,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.Azure.ServiceBus.Core.dll",
+          "sha256": "f778342c6c38afccfcbaeea2a2fa6601cce004e1e61d0e33627f5f9ab7ac493a",
+          "size": 318976,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.Azure.ServiceBus.Core.xml",
+          "sha256": "942dc0b151e5c848ea571aab05893539d2dcb432053bedb5adb269e8c0f8e09f",
+          "size": 84174,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "package/services/metadata/core-properties/4d46c6e5f35c49f2af416e4291cf50f8.psmdcp",
+          "sha256": "c911ef8e3f310f3ceb59bdd747580d908a8b5d640d9cb2fcbd8d6e8519cb610f",
+          "size": 842,
+          "status": "PASS"
+        }
+      ],
+      "path": "artifacts/packages/final-native-promotion/ViciOne.ServiceBus.Azure.ServiceBus.Core.1.0.0.nupkg",
+      "sha256": "b5693526ff64478c94377c41afcfbb3eea49149fb894c8c72bad3cb338d7bcdc",
+      "size": 169260,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "nupkg",
+      "packageEntries": [
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "NuGet.README.md",
+          "sha256": "947189958aebe33426a745b5ba0e924d0179b0305206437344d2f6737a95a099",
+          "size": 2918,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "ViciOne.ServiceBus.Azure.Storage.nuspec",
+          "sha256": "6a0abc5c9bb20f676244acd3462bc51ecc488404dd1f41aed68ede84c67b75c6",
+          "size": 1450,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "[Content_Types].xml",
+          "sha256": "70b483c5066b0f062f2102cd8f0c4b2fde9e919b5a9204689dd67e64b0cc518e",
+          "size": 582,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "_rels/.rels",
+          "sha256": "9b25b3a5ab39aba4011f2f0a4d78979a08036e4658a42c4457fab78b45cd7a82",
+          "size": 522,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.Azure.Storage.dll",
+          "sha256": "f9d00b8ac317967c2d014378ee1d799fbd35e60b4bdfe52531bf813890658544",
+          "size": 25088,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.Azure.Storage.xml",
+          "sha256": "97426ad043f886c10501cdd56fa0ff6975d368a88f3054b5474f3554701d7ecc",
+          "size": 886,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "package/services/metadata/core-properties/a6fec34aaff949e8b079647342b3954b.psmdcp",
+          "sha256": "62380aacb7b4b9162743f3824fc692cf0a4d107b375820709c7cc345198b0854",
+          "size": 835,
+          "status": "PASS"
+        }
+      ],
+      "path": "artifacts/packages/final-native-promotion/ViciOne.ServiceBus.Azure.Storage.1.0.0.nupkg",
+      "sha256": "e0f2213fc8b1cd37e14dceb2bca8aca2071f268716fcd079117c4ad36025e31d",
+      "size": 21663,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "nupkg",
+      "packageEntries": [
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "NuGet.README.md",
+          "sha256": "947189958aebe33426a745b5ba0e924d0179b0305206437344d2f6737a95a099",
+          "size": 2918,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "ViciOne.ServiceBus.Azure.Table.nuspec",
+          "sha256": "2e2592f928613848ef878c9672a6e7296fe1ac1844d604496be8cfd3cfb39a41",
+          "size": 1447,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "[Content_Types].xml",
+          "sha256": "70b483c5066b0f062f2102cd8f0c4b2fde9e919b5a9204689dd67e64b0cc518e",
+          "size": 582,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "_rels/.rels",
+          "sha256": "ca3455b4534f30691cbd0836985e85af04d33945b1e6ff408a31c4eda24f2cbd",
+          "size": 520,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.Azure.Table.dll",
+          "sha256": "0eaa7a302e127e45924dd335e571646452936703b1dc09788a5e2912bf7158ef",
+          "size": 72192,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.Azure.Table.xml",
+          "sha256": "689b948649d9aad11ddea33a6388b6e68b1b5a0651bf0097c9c12104c30871e1",
+          "size": 6288,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "package/services/metadata/core-properties/959aab18994b4002b47bc855c487206a.psmdcp",
+          "sha256": "6a199d46fc661d6a1e7bd5373ee50f97722ca1f83fc9bff9e4a7c63b64279ef7",
+          "size": 922,
+          "status": "PASS"
+        }
+      ],
+      "path": "artifacts/packages/final-native-promotion/ViciOne.ServiceBus.Azure.Table.1.0.0.nupkg",
+      "sha256": "2d5b18df138cb8a50319ed430fd93f2684246f60e7ead7b6dc44d5fea868130e",
+      "size": 46298,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "nupkg",
+      "packageEntries": [
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "NuGet.README.md",
+          "sha256": "947189958aebe33426a745b5ba0e924d0179b0305206437344d2f6737a95a099",
+          "size": 2918,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "ViciOne.ServiceBus.DynamoDb.nuspec",
+          "sha256": "1d941463605a4a0385cad7121564f25a0c3213045607d25ab72c5c48c726fbc7",
+          "size": 1343,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "[Content_Types].xml",
+          "sha256": "70b483c5066b0f062f2102cd8f0c4b2fde9e919b5a9204689dd67e64b0cc518e",
+          "size": 582,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "_rels/.rels",
+          "sha256": "c3a5b25ea4ee05ee5945beba6d185d5896e7c2335a07de30317aaae90edc9bf0",
+          "size": 517,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.DynamoDbIntegration.dll",
+          "sha256": "eba87d97f2ba275fae270594ed31171d9846f2d4d84bb3402d2f292e03c42b56",
+          "size": 47616,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.DynamoDbIntegration.xml",
+          "sha256": "ada6f50d4967e5d78f0bf9276103ed9188c284a1e2cd13c8d7c0641856ef931f",
+          "size": 1904,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "package/services/metadata/core-properties/6be73e9aba0d43ba97ff54ecca383e32.psmdcp",
+          "sha256": "98a3c66d325409df3b8a98ab7426f9f87584ec059fda96424c6df855193e60e7",
+          "size": 820,
+          "status": "PASS"
+        }
+      ],
+      "path": "artifacts/packages/final-native-promotion/ViciOne.ServiceBus.DynamoDb.1.0.0.nupkg",
+      "sha256": "d967c331f1eec12161ec628a2c5430f0dc751d17333a42bafde296f8371842e1",
+      "size": 32155,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "nupkg",
+      "packageEntries": [
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "NuGet.README.md",
+          "sha256": "947189958aebe33426a745b5ba0e924d0179b0305206437344d2f6737a95a099",
+          "size": 2918,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "ViciOne.ServiceBus.EntityFrameworkCore.nuspec",
+          "sha256": "a918bbbb5c4c12803286fe279ceecc63bf5ba3f6993118dd214d541982919ba8",
+          "size": 1534,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "[Content_Types].xml",
+          "sha256": "70b483c5066b0f062f2102cd8f0c4b2fde9e919b5a9204689dd67e64b0cc518e",
+          "size": 582,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "_rels/.rels",
+          "sha256": "8e82ec9ada83d87e4341212045a867d96c5ea6172066188404489d4b98ab4578",
+          "size": 528,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.dll",
+          "sha256": "125e87218968a4d102aecef0abfe86ac6f246b1f661af6991bab16ea9655aa0c",
+          "size": 197632,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.xml",
+          "sha256": "85a026e70b5afa091b03af9ff94384217524e678ccab253fb67a8ead01f801ed",
+          "size": 34194,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "package/services/metadata/core-properties/c894f35ab90f4e768dce42b4f6390069.psmdcp",
+          "sha256": "29b48cd68e26c293af925c866258ce515f3428424a50edc4848c30f6a9bf8394",
+          "size": 870,
+          "status": "PASS"
+        }
+      ],
+      "path": "artifacts/packages/final-native-promotion/ViciOne.ServiceBus.EntityFrameworkCore.1.0.0.nupkg",
+      "sha256": "7dd8e229cccc2720a1eff4babed5984c3906061f162c5606268b30d7dbc0699e",
+      "size": 104244,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "nupkg",
+      "packageEntries": [
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "NuGet.README.md",
+          "sha256": "947189958aebe33426a745b5ba0e924d0179b0305206437344d2f6737a95a099",
+          "size": 2918,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "ViciOne.ServiceBus.EventHub.nuspec",
+          "sha256": "5935f1c6cd65770421dd6d2666f0762ab8789e6d89c7d105e929f636c9f9ba63",
+          "size": 1447,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "[Content_Types].xml",
+          "sha256": "70b483c5066b0f062f2102cd8f0c4b2fde9e919b5a9204689dd67e64b0cc518e",
+          "size": 582,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "_rels/.rels",
+          "sha256": "8f8ecdbeb02c3ad5a4452d270f98c0eaba7c8875ee9e1eeba1bd1c769100db43",
+          "size": 517,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.EventHubIntegration.dll",
+          "sha256": "27f02480536df596a74b66407752e300553f2fa1d2c9fda0f699d866a8b8ef93",
+          "size": 158720,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.EventHubIntegration.xml",
+          "sha256": "9a7bc2af414135a0f364b84471acc08543ee52f71026c338b944bdf66389a4f1",
+          "size": 16451,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "package/services/metadata/core-properties/c91898834078412f913bf756be5b3b22.psmdcp",
+          "sha256": "b8c0991ca6b4a420a4a412dade44d35d5ef9be8a0f550fa97e3efc5126347a33",
+          "size": 816,
+          "status": "PASS"
+        }
+      ],
+      "path": "artifacts/packages/final-native-promotion/ViciOne.ServiceBus.EventHub.1.0.0.nupkg",
+      "sha256": "94adeee8710683961f56a00c0b792823c0f83193c6f1c261e1d00b51d02d1dc5",
+      "size": 86867,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "nupkg",
+      "packageEntries": [
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "NuGet.README.md",
+          "sha256": "947189958aebe33426a745b5ba0e924d0179b0305206437344d2f6737a95a099",
+          "size": 2918,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "ViciOne.ServiceBus.MessagePack.nuspec",
+          "sha256": "086f1a308edeb1f024860fce080ae74eb553515445d07fe35e4f939d695a407f",
+          "size": 1433,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "[Content_Types].xml",
+          "sha256": "70b483c5066b0f062f2102cd8f0c4b2fde9e919b5a9204689dd67e64b0cc518e",
+          "size": 582,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "_rels/.rels",
+          "sha256": "8a5b3ad874efd2b5d54cbbff213bfda32e90bc803ba8aeec0c00b9aced16a82a",
+          "size": 520,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.MessagePack.dll",
+          "sha256": "335a39277ed3f7b251e83031744ee684f98e76dbb1ffd882563fc288b45f222d",
+          "size": 46080,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.MessagePack.xml",
+          "sha256": "16b43ca57ba37cb0a38641e027f6625ffd91935a19ae6707c0d93aaa6b2ef6c6",
+          "size": 9953,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "package/services/metadata/core-properties/60dac08acf42482b9676c7f3fc8f3e3d.psmdcp",
+          "sha256": "fa609843eb642c709322212bb5ab273d09a6ad91e79468d3c23cbca7ebf213ce",
+          "size": 814,
+          "status": "PASS"
+        }
+      ],
+      "path": "artifacts/packages/final-native-promotion/ViciOne.ServiceBus.MessagePack.1.0.0.nupkg",
+      "sha256": "97168b6b7600392f571cfb7553a79e7d01e6b10f5c985495e0176256556c175c",
+      "size": 34671,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "nupkg",
+      "packageEntries": [
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "NuGet.README.md",
+          "sha256": "947189958aebe33426a745b5ba0e924d0179b0305206437344d2f6737a95a099",
+          "size": 2918,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "ViciOne.ServiceBus.Quartz.nuspec",
+          "sha256": "7e4441ad8ea269caee0ece770c13fa8d9b6041f01aa9b987d2b3f2dfb3beb110",
+          "size": 1431,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "[Content_Types].xml",
+          "sha256": "70b483c5066b0f062f2102cd8f0c4b2fde9e919b5a9204689dd67e64b0cc518e",
+          "size": 582,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "_rels/.rels",
+          "sha256": "aa69dfcece0ac5c90b7472ee23c013dc3388bdee2f31aeb1543608417cb63c6e",
+          "size": 515,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.QuartzIntegration.dll",
+          "sha256": "652ffd2bb643291fccd29421f1975d6e5e1627703184c511e334baf38b66fd77",
+          "size": 71168,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.QuartzIntegration.xml",
+          "sha256": "1fbc613ba1852e9f06d2e73bdda0ab52e041c0f7d2a395c594f19dd67e1e217f",
+          "size": 3332,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "package/services/metadata/core-properties/b28de96d262d4e1bbeb3f25b3e2ca1ab.psmdcp",
+          "sha256": "5db7a2c481fb2bf9bbc8d5e0f348a47aaf751b1536a2633f1ef3796504706df4",
+          "size": 826,
+          "status": "PASS"
+        }
+      ],
+      "path": "artifacts/packages/final-native-promotion/ViciOne.ServiceBus.Quartz.1.0.0.nupkg",
+      "sha256": "0ec576d62eb8221fb59fe166120058db3a825293f76c94cd6e73b610d1c08121",
+      "size": 43747,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "nupkg",
+      "packageEntries": [
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "NuGet.README.md",
+          "sha256": "947189958aebe33426a745b5ba0e924d0179b0305206437344d2f6737a95a099",
+          "size": 2918,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "ViciOne.ServiceBus.RabbitMQ.nuspec",
+          "sha256": "74d5cce2710e3f2f61c386c6a7718ff3e78a9cb9f72e728fa30b1d5aba0c704d",
+          "size": 1325,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "[Content_Types].xml",
+          "sha256": "70b483c5066b0f062f2102cd8f0c4b2fde9e919b5a9204689dd67e64b0cc518e",
+          "size": 582,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "_rels/.rels",
+          "sha256": "8dc8cfb48cc72ecd24f3ac98bce7c68ea2949516c0076b4927d894d70526aea7",
+          "size": 517,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.RabbitMqTransport.dll",
+          "sha256": "a29473eb78c5d5726cdab0022286aeb338bf0edf4d64b1e052c812c7c74a33e0",
+          "size": 332288,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.RabbitMqTransport.xml",
+          "sha256": "0adfc1fee78ab2bcaacea48c578b1cf434ee8629ff55e3b2f979b60bb0181474",
+          "size": 106676,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "package/services/metadata/core-properties/958c6f719fc94e2ab1965ea31691197d.psmdcp",
+          "sha256": "5a9d7d036e19c2b7b7cfe80d20a68de065162605e3ed3133aa9ad01f78579985",
+          "size": 807,
+          "status": "PASS"
+        }
+      ],
+      "path": "artifacts/packages/final-native-promotion/ViciOne.ServiceBus.RabbitMQ.1.0.0.nupkg",
+      "sha256": "6973befddaae70f09e79ff433131c5ad2d77d963bd2852ea86441733c8ed1277",
+      "size": 183756,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "nupkg",
+      "packageEntries": [
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "NuGet.README.md",
+          "sha256": "947189958aebe33426a745b5ba0e924d0179b0305206437344d2f6737a95a099",
+          "size": 2918,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "ViciOne.ServiceBus.SignalR.nuspec",
+          "sha256": "76aec3696cc09e7ed5288458a60d750fe807d3b31780eeb28d5ce6aad5459baa",
+          "size": 1360,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "[Content_Types].xml",
+          "sha256": "70b483c5066b0f062f2102cd8f0c4b2fde9e919b5a9204689dd67e64b0cc518e",
+          "size": 582,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "_rels/.rels",
+          "sha256": "aa3aa588718a5ddd0ef165af9b4d6ba88fea2ff91505f6a6b8b61ef0607478b7",
+          "size": 516,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.SignalR.dll",
+          "sha256": "ed5558b40f8e6fdc04524f24a9b72a39aded53d9e63a87802e889a9ccfab5ca7",
+          "size": 66560,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.SignalR.xml",
+          "sha256": "6f84dda0d4b64bd8e9a36265d1330fbd5dbe67ebf38343c0ea974b099dd5364a",
+          "size": 1014,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "package/services/metadata/core-properties/22e6d01607484877b93724f671839bc4.psmdcp",
+          "sha256": "ca0b13c741928cf5f00213f32a43d93adf1d8ebace96720c0f4775c7fe8762c3",
+          "size": 804,
+          "status": "PASS"
+        }
+      ],
+      "path": "artifacts/packages/final-native-promotion/ViciOne.ServiceBus.SignalR.1.0.0.nupkg",
+      "sha256": "0369485e22b85c4cd1c6e6224af1bcad8f61abc79af404c5188a9dc4ceaa2e66",
+      "size": 40885,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "nupkg",
+      "packageEntries": [
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "NuGet.README.md",
+          "sha256": "947189958aebe33426a745b5ba0e924d0179b0305206437344d2f6737a95a099",
+          "size": 2918,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "ViciOne.ServiceBus.SqlTransport.PostgreSQL.nuspec",
+          "sha256": "22456d600d4dfe1536abd2b388c9138719e19958d7b9eeb9c8afc05367c5a739",
+          "size": 1456,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "[Content_Types].xml",
+          "sha256": "70b483c5066b0f062f2102cd8f0c4b2fde9e919b5a9204689dd67e64b0cc518e",
+          "size": 582,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "_rels/.rels",
+          "sha256": "9fa0527d9f22134dcdaf4a30e01badf620cba8717f686a7840b9073a3af2c6c1",
+          "size": 532,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll",
+          "sha256": "389d8ce88f837fb9b4e1b3cfa07409c221096ae1e4625a6647f6c1f9405222cf",
+          "size": 338944,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.SqlTransport.PostgreSql.xml",
+          "sha256": "97d4dd51ede5f9bed315285cc2f4f9301073b84d48520f43393901c95ada371f",
+          "size": 5585,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "package/services/metadata/core-properties/c126b594b7934732b5fef598c778b80d.psmdcp",
+          "sha256": "8d4429b609e7a0eeb6df6da9cbb145debd0de627b31060755d0baeeba1499989",
+          "size": 853,
+          "status": "PASS"
+        }
+      ],
+      "path": "artifacts/packages/final-native-promotion/ViciOne.ServiceBus.SqlTransport.PostgreSQL.1.0.0.nupkg",
+      "sha256": "0c55424cb80ec95b392e0be8067f231b46d7e183f872ea3037db0521b31cb2cd",
+      "size": 75388,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "nupkg",
+      "packageEntries": [
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "NuGet.README.md",
+          "sha256": "947189958aebe33426a745b5ba0e924d0179b0305206437344d2f6737a95a099",
+          "size": 2918,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "ViciOne.ServiceBus.SqlTransport.SqlServer.nuspec",
+          "sha256": "76c2f55d4e973d30c47090656c8f3b3e6cd7032d98cd81df2845bdda01a96d3e",
+          "size": 1476,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "[Content_Types].xml",
+          "sha256": "70b483c5066b0f062f2102cd8f0c4b2fde9e919b5a9204689dd67e64b0cc518e",
+          "size": 582,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "_rels/.rels",
+          "sha256": "b8266ac787e069dcfccc1b50fda1e186a3e2960e0d8b2fe27164f7f448f84a44",
+          "size": 531,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.SqlTransport.SqlServer.dll",
+          "sha256": "9feee97342b439bc64a5fe2e699fee6aa4f99a8d1a521bb6103379f962e0fc4f",
+          "size": 355328,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.SqlTransport.SqlServer.xml",
+          "sha256": "947d60f77e51e8984e22bf851c52e71d8316d59709f4e7e6e49f1f8895efc609",
+          "size": 3267,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "package/services/metadata/core-properties/e3f1644c8d13402f8a687f8607e549fa.psmdcp",
+          "sha256": "34edae50dc4971994190aef03b123b25455cb787f2c47095655777dbb51ec1f2",
+          "size": 856,
+          "status": "PASS"
+        }
+      ],
+      "path": "artifacts/packages/final-native-promotion/ViciOne.ServiceBus.SqlTransport.SqlServer.1.0.0.nupkg",
+      "sha256": "5eb49a2f00490dc0047e97676bba38c87646f06b175a01d337e7c85e1a093b5b",
+      "size": 75572,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "nupkg",
+      "packageEntries": [
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "NuGet.README.md",
+          "sha256": "947189958aebe33426a745b5ba0e924d0179b0305206437344d2f6737a95a099",
+          "size": 2918,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "ViciOne.ServiceBus.StateMachineVisualizer.nuspec",
+          "sha256": "9a42a7c652f8315fad8fd0923d82b5d4174e0227c97cece768f55f8e98c22a1e",
+          "size": 1345,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "[Content_Types].xml",
+          "sha256": "70b483c5066b0f062f2102cd8f0c4b2fde9e919b5a9204689dd67e64b0cc518e",
+          "size": 582,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "_rels/.rels",
+          "sha256": "5631d871fac6016a5edefab07e54e142b29068907c8567a4b7e17d064aa12f27",
+          "size": 531,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.StateMachineVisualizer.dll",
+          "sha256": "582c2d1941dc201e392b6639d9825129d75d76be3dcec0bb30d7d49301143280",
+          "size": 19456,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "lib/net10.0/ViciOne.ServiceBus.StateMachineVisualizer.xml",
+          "sha256": "6b84e87a45a59c7baa03b77f02480e2c44bcfca7c8ab4a24c14d0af89e68865a",
+          "size": 158,
+          "status": "PASS"
+        },
+        {
+          "commentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "commentSize": 0,
+          "legalProvenanceException": false,
+          "path": "package/services/metadata/core-properties/ccabfe2ca5254210b894e28afc5ab447.psmdcp",
+          "sha256": "44be743d95ea53a986b9048cbb258a3cab052348b80368b2d8fe5ff5d8541632",
+          "size": 791,
+          "status": "PASS"
+        }
+      ],
+      "path": "artifacts/packages/final-native-promotion/ViciOne.ServiceBus.StateMachineVisualizer.1.0.0.nupkg",
+      "sha256": "20d2a7d2812e63211f1fce87ae504f508c2401c90655e3085f97213a01cacf38",
+      "size": 17938,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "dll",
+      "packageEntries": [],
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll",
+      "sha256": "85537f87796f57904ba080bd9e3f2540f88ba439fca4d93198c76fff7a18d52f",
+      "size": 4489728,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "dll",
+      "packageEntries": [],
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "e1400f7fbf367881c0cdf20c0018055f43bec506341a5ceeb73803e06cdd4898",
+      "size": 741888,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "dll",
+      "packageEntries": [],
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport/release/ViciOne.ServiceBus.ActiveMqTransport.dll",
+      "sha256": "d891f19d72974c68e66b96bf405f1e3b03e897efffe1663450ca616ad6693be1",
+      "size": 219648,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "dll",
+      "packageEntries": [],
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.AmazonS3/release/ViciOne.ServiceBus.AmazonS3.dll",
+      "sha256": "f970cec12c0f08d7b6285646a5576158973c245b0f1aa1bad83125270c294ca1",
+      "size": 33792,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "dll",
+      "packageEntries": [],
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqsTransport/release/ViciOne.ServiceBus.AmazonSqsTransport.dll",
+      "sha256": "c4ae8a5150884be04acd32471891129e0beb5f6a62a3ac0eaca024413f8021a1",
+      "size": 299008,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "dll",
+      "packageEntries": [],
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.Analyzers/release/ViciOne.ServiceBus.Analyzers.dll",
+      "sha256": "687c86b579cc828db8a163a448f2ab205cd16b156a76e9b5f582241128cc3e83",
+      "size": 60416,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "dll",
+      "packageEntries": [],
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.Analyzers.CodeFixes/release/ViciOne.ServiceBus.Analyzers.CodeFixes.dll",
+      "sha256": "3cbe8bd475808d03641eda9384006ce8ac541bfb60cad64ad8bd991475198b2a",
+      "size": 34816,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "dll",
+      "packageEntries": [],
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.Analyzers.Package/release/ViciOne.ServiceBus.Analyzers.Package.dll",
+      "sha256": "013249acbe7f6fb919f6a097da3364347803b66d27af10c82593c3c10c184c27",
+      "size": 8704,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "dll",
+      "packageEntries": [],
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.Azure.ServiceBus.Core/release/ViciOne.ServiceBus.Azure.ServiceBus.Core.dll",
+      "sha256": "f778342c6c38afccfcbaeea2a2fa6601cce004e1e61d0e33627f5f9ab7ac493a",
+      "size": 318976,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "dll",
+      "packageEntries": [],
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Storage/release/ViciOne.ServiceBus.Azure.Storage.dll",
+      "sha256": "f9d00b8ac317967c2d014378ee1d799fbd35e60b4bdfe52531bf813890658544",
+      "size": 25088,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "dll",
+      "packageEntries": [],
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table/release/ViciOne.ServiceBus.Azure.Table.dll",
+      "sha256": "0eaa7a302e127e45924dd335e571646452936703b1dc09788a5e2912bf7158ef",
+      "size": 72192,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "dll",
+      "packageEntries": [],
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.DynamoDbIntegration/release/ViciOne.ServiceBus.DynamoDbIntegration.dll",
+      "sha256": "eba87d97f2ba275fae270594ed31171d9846f2d4d84bb3402d2f292e03c42b56",
+      "size": 47616,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "dll",
+      "packageEntries": [],
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.dll",
+      "sha256": "125e87218968a4d102aecef0abfe86ac6f246b1f661af6991bab16ea9655aa0c",
+      "size": 197632,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "dll",
+      "packageEntries": [],
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.EventHubIntegration/release/ViciOne.ServiceBus.EventHubIntegration.dll",
+      "sha256": "27f02480536df596a74b66407752e300553f2fa1d2c9fda0f699d866a8b8ef93",
+      "size": 158720,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "dll",
+      "packageEntries": [],
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.MessagePack/release/ViciOne.ServiceBus.MessagePack.dll",
+      "sha256": "335a39277ed3f7b251e83031744ee684f98e76dbb1ffd882563fc288b45f222d",
+      "size": 46080,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "dll",
+      "packageEntries": [],
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.QuartzIntegration/release/ViciOne.ServiceBus.QuartzIntegration.dll",
+      "sha256": "652ffd2bb643291fccd29421f1975d6e5e1627703184c511e334baf38b66fd77",
+      "size": 71168,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "dll",
+      "packageEntries": [],
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport/release/ViciOne.ServiceBus.RabbitMqTransport.dll",
+      "sha256": "a29473eb78c5d5726cdab0022286aeb338bf0edf4d64b1e052c812c7c74a33e0",
+      "size": 332288,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "dll",
+      "packageEntries": [],
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.OrderWorkflow/release/ViciOne.ServiceBus.Samples.OrderWorkflow.dll",
+      "sha256": "e327387bca79302ed5d96c3bfd3c036f5463b7337a129e851e12a5055760b01e",
+      "size": 21504,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "dll",
+      "packageEntries": [],
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.SignalR/release/ViciOne.ServiceBus.SignalR.dll",
+      "sha256": "ed5558b40f8e6fdc04524f24a9b72a39aded53d9e63a87802e889a9ccfab5ca7",
+      "size": 66560,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "dll",
+      "packageEntries": [],
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll",
+      "sha256": "389d8ce88f837fb9b4e1b3cfa07409c221096ae1e4625a6647f6c1f9405222cf",
+      "size": 338944,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "dll",
+      "packageEntries": [],
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer/release/ViciOne.ServiceBus.SqlTransport.SqlServer.dll",
+      "sha256": "9feee97342b439bc64a5fe2e699fee6aa4f99a8d1a521bb6103379f962e0fc4f",
+      "size": 355328,
+      "status": "PASS"
+    },
+    {
+      "findings": [],
+      "kind": "dll",
+      "packageEntries": [],
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.StateMachineVisualizer/release/ViciOne.ServiceBus.StateMachineVisualizer.dll",
+      "sha256": "582c2d1941dc201e392b6639d9825129d75d76be3dcec0bb30d7d49301143280",
+      "size": 19456,
+      "status": "PASS"
+    }
+  ],
+  "counts": {
+    "artifacts": 41,
+    "dll": 22,
+    "embeddedPdbAssemblies": 22,
+    "findings": 0,
+    "nupkg": 19,
+    "pdb": 0
+  },
+  "findings": [],
+  "status": "PASS",
+  "strongNames": [
+    {
+      "expected": true,
+      "managedPe": true,
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll",
+      "signaturePresent": true,
+      "signatureSize": 128,
+      "status": "PASS",
+      "strongNameFlag": true
+    },
+    {
+      "expected": true,
+      "managedPe": true,
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll",
+      "signaturePresent": true,
+      "signatureSize": 128,
+      "status": "PASS",
+      "strongNameFlag": true
+    },
+    {
+      "expected": false,
+      "managedPe": true,
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMqTransport/release/ViciOne.ServiceBus.ActiveMqTransport.dll",
+      "signaturePresent": false,
+      "signatureSize": 0,
+      "status": "FAIL",
+      "strongNameFlag": false
+    },
+    {
+      "expected": true,
+      "managedPe": true,
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.AmazonS3/release/ViciOne.ServiceBus.AmazonS3.dll",
+      "signaturePresent": true,
+      "signatureSize": 128,
+      "status": "PASS",
+      "strongNameFlag": true
+    },
+    {
+      "expected": true,
+      "managedPe": true,
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqsTransport/release/ViciOne.ServiceBus.AmazonSqsTransport.dll",
+      "signaturePresent": true,
+      "signatureSize": 128,
+      "status": "PASS",
+      "strongNameFlag": true
+    },
+    {
+      "expected": true,
+      "managedPe": true,
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.Analyzers/release/ViciOne.ServiceBus.Analyzers.dll",
+      "signaturePresent": true,
+      "signatureSize": 128,
+      "status": "PASS",
+      "strongNameFlag": true
+    },
+    {
+      "expected": true,
+      "managedPe": true,
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.Analyzers.CodeFixes/release/ViciOne.ServiceBus.Analyzers.CodeFixes.dll",
+      "signaturePresent": true,
+      "signatureSize": 128,
+      "status": "PASS",
+      "strongNameFlag": true
+    },
+    {
+      "expected": false,
+      "managedPe": true,
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.Analyzers.Package/release/ViciOne.ServiceBus.Analyzers.Package.dll",
+      "signaturePresent": false,
+      "signatureSize": 0,
+      "status": "FAIL",
+      "strongNameFlag": false
+    },
+    {
+      "expected": true,
+      "managedPe": true,
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.Azure.ServiceBus.Core/release/ViciOne.ServiceBus.Azure.ServiceBus.Core.dll",
+      "signaturePresent": true,
+      "signatureSize": 128,
+      "status": "PASS",
+      "strongNameFlag": true
+    },
+    {
+      "expected": true,
+      "managedPe": true,
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Storage/release/ViciOne.ServiceBus.Azure.Storage.dll",
+      "signaturePresent": true,
+      "signatureSize": 128,
+      "status": "PASS",
+      "strongNameFlag": true
+    },
+    {
+      "expected": true,
+      "managedPe": true,
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table/release/ViciOne.ServiceBus.Azure.Table.dll",
+      "signaturePresent": true,
+      "signatureSize": 128,
+      "status": "PASS",
+      "strongNameFlag": true
+    },
+    {
+      "expected": true,
+      "managedPe": true,
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.DynamoDbIntegration/release/ViciOne.ServiceBus.DynamoDbIntegration.dll",
+      "signaturePresent": true,
+      "signatureSize": 128,
+      "status": "PASS",
+      "strongNameFlag": true
+    },
+    {
+      "expected": true,
+      "managedPe": true,
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/release/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.dll",
+      "signaturePresent": true,
+      "signatureSize": 128,
+      "status": "PASS",
+      "strongNameFlag": true
+    },
+    {
+      "expected": true,
+      "managedPe": true,
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.EventHubIntegration/release/ViciOne.ServiceBus.EventHubIntegration.dll",
+      "signaturePresent": true,
+      "signatureSize": 128,
+      "status": "PASS",
+      "strongNameFlag": true
+    },
+    {
+      "expected": true,
+      "managedPe": true,
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.MessagePack/release/ViciOne.ServiceBus.MessagePack.dll",
+      "signaturePresent": true,
+      "signatureSize": 128,
+      "status": "PASS",
+      "strongNameFlag": true
+    },
+    {
+      "expected": true,
+      "managedPe": true,
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.QuartzIntegration/release/ViciOne.ServiceBus.QuartzIntegration.dll",
+      "signaturePresent": true,
+      "signatureSize": 128,
+      "status": "PASS",
+      "strongNameFlag": true
+    },
+    {
+      "expected": true,
+      "managedPe": true,
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport/release/ViciOne.ServiceBus.RabbitMqTransport.dll",
+      "signaturePresent": true,
+      "signatureSize": 128,
+      "status": "PASS",
+      "strongNameFlag": true
+    },
+    {
+      "expected": false,
+      "managedPe": true,
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.OrderWorkflow/release/ViciOne.ServiceBus.Samples.OrderWorkflow.dll",
+      "signaturePresent": false,
+      "signatureSize": 0,
+      "status": "FAIL",
+      "strongNameFlag": false
+    },
+    {
+      "expected": true,
+      "managedPe": true,
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.SignalR/release/ViciOne.ServiceBus.SignalR.dll",
+      "signaturePresent": true,
+      "signatureSize": 128,
+      "status": "PASS",
+      "strongNameFlag": true
+    },
+    {
+      "expected": false,
+      "managedPe": true,
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll",
+      "signaturePresent": false,
+      "signatureSize": 0,
+      "status": "FAIL",
+      "strongNameFlag": false
+    },
+    {
+      "expected": false,
+      "managedPe": true,
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer/release/ViciOne.ServiceBus.SqlTransport.SqlServer.dll",
+      "signaturePresent": false,
+      "signatureSize": 0,
+      "status": "FAIL",
+      "strongNameFlag": false
+    },
+    {
+      "expected": true,
+      "managedPe": true,
+      "path": "artifacts/sdk/bin/ViciOne.ServiceBus.StateMachineVisualizer/release/ViciOne.ServiceBus.StateMachineVisualizer.dll",
+      "signaturePresent": true,
+      "signatureSize": 128,
+      "status": "PASS",
+      "strongNameFlag": true
+    }
+  ]
+}

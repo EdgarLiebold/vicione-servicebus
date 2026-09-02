@@ -12,9 +12,9 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 
 | Status | Count |
 |---|---|
-| Added | 5856 |
-| Modified | 3900 |
-| Deleted | 1748 |
+| Added | 5812 |
+| Modified | 3757 |
+| Deleted | 1891 |
 | Renamed | 2 |
 
 | Path | Status | Baseline path |
@@ -22,7 +22,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `.gitattributes` | Modified | `.gitattributes` |
 | `.github/ISSUE_TEMPLATE/bug_report.yml` | Modified | `.github/ISSUE_TEMPLATE/bug_report.yml` |
 | `.github/ISSUE_TEMPLATE/config.yml` | Modified | `.github/ISSUE_TEMPLATE/config.yml` |
-| `.github/workflows/build.yml` | Modified | `.github/workflows/build.yml` |
+| `.github/workflows/build.yml` | Deleted | `.github/workflows/build.yml` |
 | `.github/workflows/native-tests.yml` | Added |  |
 | `.github/workflows/nightly-transports.yml` | Deleted | `.github/workflows/nightly-transports.yml` |
 | `.gitignore` | Modified | `.gitignore` |
@@ -96,6 +96,7 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `benchmarks/ViciOne.ServiceBus.Benchmark/ActiveMqOptionSet.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmark/AmazonSqsOptionSet.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmark/Analytics.cs` | Added |  |
+| `benchmarks/ViciOne.ServiceBus.Benchmark/BenchmarkMetricClock.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmark/BenchmarkReporting.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmark/BusOutbox/BusOutboxBenchmark.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.Benchmark/BusOutbox/BusOutboxBenchmarkOptions.cs` | Added |  |
@@ -176,14 +177,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/Throughput/ThroughputTestContext.cs` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/ViciOne.ServiceBus.BenchmarkConsole.csproj` | Added |  |
 | `benchmarks/ViciOne.ServiceBus.BenchmarkConsole/packages.lock.json` | Added |  |
-| `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/AnalyticsTests.cs` | Added |  |
-| `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/BenchmarkRunOutcomeTests.cs` | Added |  |
-| `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/BusOutboxDatabaseSettingsTests.cs` | Added |  |
-| `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/MessageMetricCaptureTests.cs` | Added |  |
-| `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/RabbitMqOptionSetTests.cs` | Added |  |
-| `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/SqlOptionSetTests.cs` | Added |  |
-| `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/ViciOne.ServiceBus.Benchmarks.Tests.csproj` | Added |  |
-| `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/packages.lock.json` | Added |  |
 | `build/test-infrastructure/activemq/Dockerfile` | Added |  |
 | `build/test-infrastructure/activemq/activemq.xml` | Added |  |
 | `build/test-infrastructure/activemq/groups.properties` | Added |  |
@@ -195,9 +188,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `build/test-infrastructure/rabbitmq/Dockerfile` | Added |  |
 | `build/test-infrastructure/rabbitmq/enabled_plugins` | Added |  |
 | `build/test-infrastructure/servicebus/config.json` | Added |  |
-| `build/verification/VERIFICATION_MODEL.json` | Added |  |
-| `build/verification/expected/benchmarks.txt` | Added |  |
-| `build/verification/expected/core.txt` | Added |  |
 | `docs/build.md` | Added |  |
 | `docs/observability.md` | Added |  |
 | `evidence/EVIDENCE_DISPOSITION.json` | Added |  |
@@ -4063,6 +4053,12 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/F1B/F1B_MUTATION_ARTIFACTS.sha256` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/F1B/F1B_MUTATION_EVIDENCE.md` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/F1B/projections/architecture-foundation.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/FINAL-NATIVE-TEST-PROMOTION/ARTIFACT_GATE.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/FINAL-NATIVE-TEST-PROMOTION/FINAL_RESULTS.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/FINAL-NATIVE-TEST-PROMOTION/MUTATION_MANIFEST.json` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/FINAL-NATIVE-TEST-PROMOTION/SHA256SUMS` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/FINAL-NATIVE-TEST-PROMOTION/VALIDATION.md` | Added |  |
+| `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/FINAL-NATIVE-TEST-PROMOTION/VULNERABILITY_INVENTORY.json` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/LEGACY-PROJECT-RETIREMENT-CORRECTION-02/CORRECTION_DIFF.txt` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/LEGACY-PROJECT-RETIREMENT-CORRECTION-02/SHA256SUMS` | Added |  |
 | `evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/LEGACY-PROJECT-RETIREMENT-CORRECTION-02/VALIDATION.md` | Added |  |
@@ -4867,12 +4863,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `evidence/native-tests/type-relationships-and-properties/PRODUCT_PATH_ANALYSIS.md` | Added |  |
 | `global.json` | Added |  |
 | `mt-logo-small.png` | Deleted | `mt-logo-small.png` |
-| `review/A_PLUS_ARCHITECTURE.md` | Added |  |
-| `review/A_PLUS_MASTER_MATRIX.md` | Added |  |
-| `review/A_PLUS_RUNTIME_GATES.md` | Added |  |
-| `review/A_PLUS_TEST_ARCHITECTURE.md` | Added |  |
-| `review/ViciOne_ServiceBus_APlus_Review_2026-09-01.md` | Added |  |
-| `review/ViciOne_ServiceBus_SOURCE_v3.zip` | Added |  |
 | `samples/OrderWorkflow/Activities/ProcessOrderActivity.cs` | Added |  |
 | `samples/OrderWorkflow/Activities/ProcessOrderActivityDefinition.cs` | Added |  |
 | `samples/OrderWorkflow/Consumers/SubmitOrderConsumer.cs` | Added |  |
@@ -5005,6 +4995,152 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/MassTransit.Newtonsoft/Serialization/NewtonsoftXmlSerializerContext.cs` | Deleted | `src/MassTransit.Newtonsoft/Serialization/NewtonsoftXmlSerializerContext.cs` |
 | `src/MassTransit.Newtonsoft/Serialization/NewtonsoftXmlSerializerFactory.cs` | Deleted | `src/MassTransit.Newtonsoft/Serialization/NewtonsoftXmlSerializerFactory.cs` |
 | `src/MassTransit.Newtonsoft/Serialization/RawXmlMessageSerializer.cs` | Deleted | `src/MassTransit.Newtonsoft/Serialization/RawXmlMessageSerializer.cs` |
+| `src/MassTransit.TestFramework/ActivityTestContext.cs` | Deleted | `src/MassTransit.TestFramework/ActivityTestContext.cs` |
+| `src/MassTransit.TestFramework/ActivityTestContextConfigurator.cs` | Deleted | `src/MassTransit.TestFramework/ActivityTestContextConfigurator.cs` |
+| `src/MassTransit.TestFramework/AsyncTestFixture.cs` | Deleted | `src/MassTransit.TestFramework/AsyncTestFixture.cs` |
+| `src/MassTransit.TestFramework/BusTestFixture.cs` | Deleted | `src/MassTransit.TestFramework/BusTestFixture.cs` |
+| `src/MassTransit.TestFramework/Courier/AddressActivity.cs` | Deleted | `src/MassTransit.TestFramework/Courier/AddressActivity.cs` |
+| `src/MassTransit.TestFramework/Courier/AddressArguments.cs` | Deleted | `src/MassTransit.TestFramework/Courier/AddressArguments.cs` |
+| `src/MassTransit.TestFramework/Courier/AddressLog.cs` | Deleted | `src/MassTransit.TestFramework/Courier/AddressLog.cs` |
+| `src/MassTransit.TestFramework/Courier/FaultyActivity.cs` | Deleted | `src/MassTransit.TestFramework/Courier/FaultyActivity.cs` |
+| `src/MassTransit.TestFramework/Courier/FaultyArguments.cs` | Deleted | `src/MassTransit.TestFramework/Courier/FaultyArguments.cs` |
+| `src/MassTransit.TestFramework/Courier/FaultyCompensateActivity.cs` | Deleted | `src/MassTransit.TestFramework/Courier/FaultyCompensateActivity.cs` |
+| `src/MassTransit.TestFramework/Courier/FaultyLog.cs` | Deleted | `src/MassTransit.TestFramework/Courier/FaultyLog.cs` |
+| `src/MassTransit.TestFramework/Courier/FirstFaultyActivity.cs` | Deleted | `src/MassTransit.TestFramework/Courier/FirstFaultyActivity.cs` |
+| `src/MassTransit.TestFramework/Courier/FirstFaultyCompensateActivity.cs` | Deleted | `src/MassTransit.TestFramework/Courier/FirstFaultyCompensateActivity.cs` |
+| `src/MassTransit.TestFramework/Courier/NastyFaultyActivity.cs` | Deleted | `src/MassTransit.TestFramework/Courier/NastyFaultyActivity.cs` |
+| `src/MassTransit.TestFramework/Courier/ObjectGraphActivityArguments.cs` | Deleted | `src/MassTransit.TestFramework/Courier/ObjectGraphActivityArguments.cs` |
+| `src/MassTransit.TestFramework/Courier/ObjectGraphTestActivity.cs` | Deleted | `src/MassTransit.TestFramework/Courier/ObjectGraphTestActivity.cs` |
+| `src/MassTransit.TestFramework/Courier/OuterObject.cs` | Deleted | `src/MassTransit.TestFramework/Courier/OuterObject.cs` |
+| `src/MassTransit.TestFramework/Courier/OuterObjectImpl.cs` | Deleted | `src/MassTransit.TestFramework/Courier/OuterObjectImpl.cs` |
+| `src/MassTransit.TestFramework/Courier/ReviseItineraryActivity.cs` | Deleted | `src/MassTransit.TestFramework/Courier/ReviseItineraryActivity.cs` |
+| `src/MassTransit.TestFramework/Courier/ReviseToEmptyItineraryActivity.cs` | Deleted | `src/MassTransit.TestFramework/Courier/ReviseToEmptyItineraryActivity.cs` |
+| `src/MassTransit.TestFramework/Courier/ReviseWithNoChangeItineraryActivity.cs` | Deleted | `src/MassTransit.TestFramework/Courier/ReviseWithNoChangeItineraryActivity.cs` |
+| `src/MassTransit.TestFramework/Courier/SecondTestActivity.cs` | Deleted | `src/MassTransit.TestFramework/Courier/SecondTestActivity.cs` |
+| `src/MassTransit.TestFramework/Courier/SetLargeVariableActivity.cs` | Deleted | `src/MassTransit.TestFramework/Courier/SetLargeVariableActivity.cs` |
+| `src/MassTransit.TestFramework/Courier/SetLargeVariableArguments.cs` | Deleted | `src/MassTransit.TestFramework/Courier/SetLargeVariableArguments.cs` |
+| `src/MassTransit.TestFramework/Courier/SetVariableActivity.cs` | Deleted | `src/MassTransit.TestFramework/Courier/SetVariableActivity.cs` |
+| `src/MassTransit.TestFramework/Courier/SetVariableArguments.cs` | Deleted | `src/MassTransit.TestFramework/Courier/SetVariableArguments.cs` |
+| `src/MassTransit.TestFramework/Courier/SetVariablesFaultyActivity.cs` | Deleted | `src/MassTransit.TestFramework/Courier/SetVariablesFaultyActivity.cs` |
+| `src/MassTransit.TestFramework/Courier/SetVariablesFaultyArguments.cs` | Deleted | `src/MassTransit.TestFramework/Courier/SetVariablesFaultyArguments.cs` |
+| `src/MassTransit.TestFramework/Courier/TestActivity.cs` | Deleted | `src/MassTransit.TestFramework/Courier/TestActivity.cs` |
+| `src/MassTransit.TestFramework/Courier/TestArguments.cs` | Deleted | `src/MassTransit.TestFramework/Courier/TestArguments.cs` |
+| `src/MassTransit.TestFramework/Courier/TestLog.cs` | Deleted | `src/MassTransit.TestFramework/Courier/TestLog.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Activities/DressBurgerActivity.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Activities/DressBurgerActivity.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Activities/DressBurgerArguments.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Activities/DressBurgerArguments.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Activities/GrillBurgerActivity.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Activities/GrillBurgerActivity.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Activities/GrillBurgerArguments.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Activities/GrillBurgerArguments.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Activities/GrillBurgerLog.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Activities/GrillBurgerLog.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Consumers/CookFryConsumer.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Consumers/CookFryConsumer.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Consumers/CookFryConsumerDefinition.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Consumers/CookFryConsumerDefinition.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Consumers/CookOnionRingsConsumer.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Consumers/CookOnionRingsConsumer.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Consumers/PourShakeConsumer.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Consumers/PourShakeConsumer.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/Burger.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/Burger.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/BurgerCompleted.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/BurgerCompleted.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/BurgerPatty.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/BurgerPatty.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/CalculateCompleted.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/CalculateCompleted.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/ComboCompleted.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/ComboCompleted.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/CookFry.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/CookFry.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/CookOnionRings.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/CookOnionRings.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/Fry.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/Fry.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/FryCompleted.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/FryCompleted.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/FryReady.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/FryReady.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/FryShake.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/FryShake.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/FryShakeCompleted.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/FryShakeCompleted.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/FryShakeFaulted.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/FryShakeFaulted.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/FryShakeReady.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/FryShakeReady.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/FutureCompleted.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/FutureCompleted.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/FutureFaulted.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/FutureFaulted.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/OnionRingsCompleted.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/OnionRingsCompleted.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/OnionRingsReady.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/OnionRingsReady.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderBurger.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderBurger.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderCalculate.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderCalculate.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderCombo.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderCombo.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderCompleted.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderCompleted.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderFaulted.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderFaulted.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderFry.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderFry.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderFryShake.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderFryShake.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderLine.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderLine.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderLineCompleted.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderLineCompleted.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderLineFaulted.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderLineFaulted.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderOnionRings.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderOnionRings.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderShake.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderShake.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/PourShake.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/PourShake.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/Shake.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/Shake.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/ShakeCompleted.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/ShakeCompleted.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/ShakeReady.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/ShakeReady.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/Size.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/Size.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Contracts/SubmitOrder.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Contracts/SubmitOrder.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Futures/BurgerFuture.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Futures/BurgerFuture.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Futures/CalculateFuture.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Futures/CalculateFuture.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Futures/ComboFuture.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Futures/ComboFuture.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Futures/FryFuture.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Futures/FryFuture.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Futures/FryShakeFuture.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Futures/FryShakeFuture.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Futures/OnionRingsFuture.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Futures/OnionRingsFuture.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Futures/OrderFuture.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Futures/OrderFuture.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Futures/ShakeFuture.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Futures/ShakeFuture.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/ItineraryPlanners/BurgerItineraryPlanner.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/ItineraryPlanners/BurgerItineraryPlanner.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Services/Fryer.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Services/Fryer.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Services/Grill.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Services/Grill.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Services/IFryer.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Services/IFryer.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Services/IGrill.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Services/IGrill.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Services/IShakeMachine.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Services/IShakeMachine.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Services/ShakeMachine.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Services/ShakeMachine.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Tests/BurgerFuture_Specs.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Tests/BurgerFuture_Specs.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Tests/CalculateFuture_Specs.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Tests/CalculateFuture_Specs.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Tests/ComboFuture_Specs.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Tests/ComboFuture_Specs.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Tests/FryFuture_Specs.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Tests/FryFuture_Specs.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Tests/FryShakeFuture_Specs.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Tests/FryShakeFuture_Specs.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Tests/OrderFuture_Specs.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Tests/OrderFuture_Specs.cs` |
+| `src/MassTransit.TestFramework/ForkJoint/Tests/ShakeFuture_Specs.cs` | Deleted | `src/MassTransit.TestFramework/ForkJoint/Tests/ShakeFuture_Specs.cs` |
+| `src/MassTransit.TestFramework/FutureTestFixture.cs` | Deleted | `src/MassTransit.TestFramework/FutureTestFixture.cs` |
+| `src/MassTransit.TestFramework/Futures/BatchCompleted.cs` | Deleted | `src/MassTransit.TestFramework/Futures/BatchCompleted.cs` |
+| `src/MassTransit.TestFramework/Futures/BatchFaulted.cs` | Deleted | `src/MassTransit.TestFramework/Futures/BatchFaulted.cs` |
+| `src/MassTransit.TestFramework/Futures/BatchFuture.cs` | Deleted | `src/MassTransit.TestFramework/Futures/BatchFuture.cs` |
+| `src/MassTransit.TestFramework/Futures/BatchRequest.cs` | Deleted | `src/MassTransit.TestFramework/Futures/BatchRequest.cs` |
+| `src/MassTransit.TestFramework/Futures/CalculatePrice.cs` | Deleted | `src/MassTransit.TestFramework/Futures/CalculatePrice.cs` |
+| `src/MassTransit.TestFramework/Futures/CalculatePriceConsumer.cs` | Deleted | `src/MassTransit.TestFramework/Futures/CalculatePriceConsumer.cs` |
+| `src/MassTransit.TestFramework/Futures/PriceCalculation.cs` | Deleted | `src/MassTransit.TestFramework/Futures/PriceCalculation.cs` |
+| `src/MassTransit.TestFramework/Futures/PriceCalculationFuture.cs` | Deleted | `src/MassTransit.TestFramework/Futures/PriceCalculationFuture.cs` |
+| `src/MassTransit.TestFramework/Futures/ProcessBatchItem.cs` | Deleted | `src/MassTransit.TestFramework/Futures/ProcessBatchItem.cs` |
+| `src/MassTransit.TestFramework/Futures/ProcessBatchItemCompleted.cs` | Deleted | `src/MassTransit.TestFramework/Futures/ProcessBatchItemCompleted.cs` |
+| `src/MassTransit.TestFramework/Futures/ProcessBatchItemConsumer.cs` | Deleted | `src/MassTransit.TestFramework/Futures/ProcessBatchItemConsumer.cs` |
+| `src/MassTransit.TestFramework/Futures/Tests/BatchFuture_Specs.cs` | Deleted | `src/MassTransit.TestFramework/Futures/Tests/BatchFuture_Specs.cs` |
+| `src/MassTransit.TestFramework/Futures/Tests/PriceCalculationFuture_Specs.cs` | Deleted | `src/MassTransit.TestFramework/Futures/Tests/PriceCalculationFuture_Specs.cs` |
+| `src/MassTransit.TestFramework/HealthCheckServiceExtensions.cs` | Deleted | `src/MassTransit.TestFramework/HealthCheckServiceExtensions.cs` |
+| `src/MassTransit.TestFramework/IFutureTestFixtureConfigurator.cs` | Deleted | `src/MassTransit.TestFramework/IFutureTestFixtureConfigurator.cs` |
+| `src/MassTransit.TestFramework/ITestFixtureContainerFactory.cs` | Deleted | `src/MassTransit.TestFramework/ITestFixtureContainerFactory.cs` |
+| `src/MassTransit.TestFramework/InMemoryActivityTestFixture.cs` | Deleted | `src/MassTransit.TestFramework/InMemoryActivityTestFixture.cs` |
+| `src/MassTransit.TestFramework/InMemoryContainerTestFixture.cs` | Deleted | `src/MassTransit.TestFramework/InMemoryContainerTestFixture.cs` |
+| `src/MassTransit.TestFramework/InMemoryTestFixture.cs` | Deleted | `src/MassTransit.TestFramework/InMemoryTestFixture.cs` |
+| `src/MassTransit.TestFramework/IntentionalTestException.cs` | Deleted | `src/MassTransit.TestFramework/IntentionalTestException.cs` |
+| `src/MassTransit.TestFramework/IntrospectionExtensions.cs` | Deleted | `src/MassTransit.TestFramework/IntrospectionExtensions.cs` |
+| `src/MassTransit.TestFramework/Logging/DiagnosticListenerObserver.cs` | Deleted | `src/MassTransit.TestFramework/Logging/DiagnosticListenerObserver.cs` |
+| `src/MassTransit.TestFramework/Logging/TestOutputListenerObserver.cs` | Deleted | `src/MassTransit.TestFramework/Logging/TestOutputListenerObserver.cs` |
+| `src/MassTransit.TestFramework/Logging/TestOutputLogger.cs` | Deleted | `src/MassTransit.TestFramework/Logging/TestOutputLogger.cs` |
+| `src/MassTransit.TestFramework/Logging/TestOutputLoggerFactory.cs` | Deleted | `src/MassTransit.TestFramework/Logging/TestOutputLoggerFactory.cs` |
+| `src/MassTransit.TestFramework/MassTransit.TestFramework.csproj` | Deleted | `src/MassTransit.TestFramework/MassTransit.TestFramework.csproj` |
+| `src/MassTransit.TestFramework/MassTransit.TestFramework.log4net.xml` | Deleted | `src/MassTransit.TestFramework/MassTransit.TestFramework.log4net.xml` |
+| `src/MassTransit.TestFramework/MediatorTestFixture.cs` | Deleted | `src/MassTransit.TestFramework/MediatorTestFixture.cs` |
+| `src/MassTransit.TestFramework/Messages/DeleteMessage.cs` | Deleted | `src/MassTransit.TestFramework/Messages/DeleteMessage.cs` |
+| `src/MassTransit.TestFramework/Messages/IMessageA.cs` | Deleted | `src/MassTransit.TestFramework/Messages/IMessageA.cs` |
+| `src/MassTransit.TestFramework/Messages/MessageA.cs` | Deleted | `src/MassTransit.TestFramework/Messages/MessageA.cs` |
+| `src/MassTransit.TestFramework/Messages/MessageB.cs` | Deleted | `src/MassTransit.TestFramework/Messages/MessageB.cs` |
+| `src/MassTransit.TestFramework/Messages/PingMessage.cs` | Deleted | `src/MassTransit.TestFramework/Messages/PingMessage.cs` |
+| `src/MassTransit.TestFramework/Messages/PingNotSupported.cs` | Deleted | `src/MassTransit.TestFramework/Messages/PingNotSupported.cs` |
+| `src/MassTransit.TestFramework/Messages/PongMessage.cs` | Deleted | `src/MassTransit.TestFramework/Messages/PongMessage.cs` |
+| `src/MassTransit.TestFramework/Sagas/ChoirTest.cs` | Deleted | `src/MassTransit.TestFramework/Sagas/ChoirTest.cs` |
+| `src/MassTransit.TestFramework/Sagas/PublishTestStartedActivity.cs` | Deleted | `src/MassTransit.TestFramework/Sagas/PublishTestStartedActivity.cs` |
+| `src/MassTransit.TestFramework/Sagas/StartStateMachineTest.cs` | Deleted | `src/MassTransit.TestFramework/Sagas/StartStateMachineTest.cs` |
+| `src/MassTransit.TestFramework/Sagas/TestInstance.cs` | Deleted | `src/MassTransit.TestFramework/Sagas/TestInstance.cs` |
+| `src/MassTransit.TestFramework/Sagas/TestStarted.cs` | Deleted | `src/MassTransit.TestFramework/Sagas/TestStarted.cs` |
+| `src/MassTransit.TestFramework/Sagas/TestStateMachineSaga.cs` | Deleted | `src/MassTransit.TestFramework/Sagas/TestStateMachineSaga.cs` |
+| `src/MassTransit.TestFramework/Sagas/TestUpdated.cs` | Deleted | `src/MassTransit.TestFramework/Sagas/TestUpdated.cs` |
+| `src/MassTransit.TestFramework/Sagas/UpdateTest.cs` | Deleted | `src/MassTransit.TestFramework/Sagas/UpdateTest.cs` |
+| `src/MassTransit.TestFramework/TestConsumeContext.cs` | Deleted | `src/MassTransit.TestFramework/TestConsumeContext.cs` |
+| `src/MassTransit.TestFramework/TestStateMachineExtensions.cs` | Deleted | `src/MassTransit.TestFramework/TestStateMachineExtensions.cs` |
+| `src/MassTransit.TestFramework/TestSymmetricKeyProvider.cs` | Deleted | `src/MassTransit.TestFramework/TestSymmetricKeyProvider.cs` |
+| `src/MassTransit.TestFramework/ThreadSafeRandom.cs` | Deleted | `src/MassTransit.TestFramework/ThreadSafeRandom.cs` |
 | `src/MassTransit/Audit/IConsumeMetadataFactory.cs` | Deleted | `src/MassTransit/Audit/IConsumeMetadataFactory.cs` |
 | `src/MassTransit/Audit/IMessageAuditStore.cs` | Deleted | `src/MassTransit/Audit/IMessageAuditStore.cs` |
 | `src/MassTransit/Audit/ISendMetadataFactory.cs` | Deleted | `src/MassTransit/Audit/ISendMetadataFactory.cs` |
@@ -7396,153 +7532,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus.StateMachineVisualizer/StateMachineMermaidGenerator.cs` | Modified | `src/MassTransit.StateMachineVisualizer/StateMachineMermaidGenerator.cs` |
 | `src/ViciOne.ServiceBus.StateMachineVisualizer/ViciOne.ServiceBus.StateMachineVisualizer.csproj` | Modified | `src/MassTransit.StateMachineVisualizer/MassTransit.StateMachineVisualizer.csproj` |
 | `src/ViciOne.ServiceBus.StateMachineVisualizer/packages.lock.json` | Added |  |
-| `src/ViciOne.ServiceBus.TestFramework/ActivityTestContext.cs` | Modified | `src/MassTransit.TestFramework/ActivityTestContext.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ActivityTestContextConfigurator.cs` | Modified | `src/MassTransit.TestFramework/ActivityTestContextConfigurator.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/AsyncTestFixture.cs` | Modified | `src/MassTransit.TestFramework/AsyncTestFixture.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/BusTestFixture.cs` | Modified | `src/MassTransit.TestFramework/BusTestFixture.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Courier/AddressActivity.cs` | Modified | `src/MassTransit.TestFramework/Courier/AddressActivity.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Courier/AddressArguments.cs` | Modified | `src/MassTransit.TestFramework/Courier/AddressArguments.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Courier/AddressLog.cs` | Modified | `src/MassTransit.TestFramework/Courier/AddressLog.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Courier/FaultyActivity.cs` | Modified | `src/MassTransit.TestFramework/Courier/FaultyActivity.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Courier/FaultyArguments.cs` | Modified | `src/MassTransit.TestFramework/Courier/FaultyArguments.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Courier/FaultyCompensateActivity.cs` | Modified | `src/MassTransit.TestFramework/Courier/FaultyCompensateActivity.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Courier/FaultyLog.cs` | Modified | `src/MassTransit.TestFramework/Courier/FaultyLog.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Courier/FirstFaultyActivity.cs` | Modified | `src/MassTransit.TestFramework/Courier/FirstFaultyActivity.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Courier/FirstFaultyCompensateActivity.cs` | Modified | `src/MassTransit.TestFramework/Courier/FirstFaultyCompensateActivity.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Courier/NastyFaultyActivity.cs` | Modified | `src/MassTransit.TestFramework/Courier/NastyFaultyActivity.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Courier/ObjectGraphActivityArguments.cs` | Modified | `src/MassTransit.TestFramework/Courier/ObjectGraphActivityArguments.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Courier/ObjectGraphTestActivity.cs` | Modified | `src/MassTransit.TestFramework/Courier/ObjectGraphTestActivity.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Courier/OuterObject.cs` | Modified | `src/MassTransit.TestFramework/Courier/OuterObject.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Courier/OuterObjectImpl.cs` | Modified | `src/MassTransit.TestFramework/Courier/OuterObjectImpl.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Courier/ReviseItineraryActivity.cs` | Modified | `src/MassTransit.TestFramework/Courier/ReviseItineraryActivity.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Courier/ReviseToEmptyItineraryActivity.cs` | Modified | `src/MassTransit.TestFramework/Courier/ReviseToEmptyItineraryActivity.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Courier/ReviseWithNoChangeItineraryActivity.cs` | Modified | `src/MassTransit.TestFramework/Courier/ReviseWithNoChangeItineraryActivity.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Courier/SecondTestActivity.cs` | Modified | `src/MassTransit.TestFramework/Courier/SecondTestActivity.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Courier/SetLargeVariableActivity.cs` | Modified | `src/MassTransit.TestFramework/Courier/SetLargeVariableActivity.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Courier/SetLargeVariableArguments.cs` | Modified | `src/MassTransit.TestFramework/Courier/SetLargeVariableArguments.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Courier/SetVariableActivity.cs` | Modified | `src/MassTransit.TestFramework/Courier/SetVariableActivity.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Courier/SetVariableArguments.cs` | Modified | `src/MassTransit.TestFramework/Courier/SetVariableArguments.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Courier/SetVariablesFaultyActivity.cs` | Modified | `src/MassTransit.TestFramework/Courier/SetVariablesFaultyActivity.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Courier/SetVariablesFaultyArguments.cs` | Modified | `src/MassTransit.TestFramework/Courier/SetVariablesFaultyArguments.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Courier/TestActivity.cs` | Modified | `src/MassTransit.TestFramework/Courier/TestActivity.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Courier/TestArguments.cs` | Modified | `src/MassTransit.TestFramework/Courier/TestArguments.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Courier/TestLog.cs` | Modified | `src/MassTransit.TestFramework/Courier/TestLog.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Activities/DressBurgerActivity.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Activities/DressBurgerActivity.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Activities/DressBurgerArguments.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Activities/DressBurgerArguments.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Activities/GrillBurgerActivity.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Activities/GrillBurgerActivity.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Activities/GrillBurgerArguments.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Activities/GrillBurgerArguments.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Activities/GrillBurgerLog.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Activities/GrillBurgerLog.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Consumers/CookFryConsumer.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Consumers/CookFryConsumer.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Consumers/CookFryConsumerDefinition.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Consumers/CookFryConsumerDefinition.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Consumers/CookOnionRingsConsumer.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Consumers/CookOnionRingsConsumer.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Consumers/PourShakeConsumer.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Consumers/PourShakeConsumer.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/Burger.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/Burger.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/BurgerCompleted.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/BurgerCompleted.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/BurgerPatty.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/BurgerPatty.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/CalculateCompleted.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/CalculateCompleted.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/ComboCompleted.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/ComboCompleted.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/CookFry.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/CookFry.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/CookOnionRings.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/CookOnionRings.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/Fry.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/Fry.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/FryCompleted.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/FryCompleted.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/FryReady.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/FryReady.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/FryShake.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/FryShake.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/FryShakeCompleted.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/FryShakeCompleted.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/FryShakeFaulted.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/FryShakeFaulted.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/FryShakeReady.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/FryShakeReady.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/FutureCompleted.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/FutureCompleted.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/FutureFaulted.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/FutureFaulted.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/OnionRingsCompleted.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/OnionRingsCompleted.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/OnionRingsReady.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/OnionRingsReady.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/OrderBurger.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderBurger.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/OrderCalculate.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderCalculate.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/OrderCombo.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderCombo.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/OrderCompleted.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderCompleted.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/OrderFaulted.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderFaulted.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/OrderFry.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderFry.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/OrderFryShake.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderFryShake.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/OrderLine.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderLine.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/OrderLineCompleted.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderLineCompleted.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/OrderLineFaulted.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderLineFaulted.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/OrderOnionRings.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderOnionRings.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/OrderShake.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/OrderShake.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/PourShake.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/PourShake.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/Shake.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/Shake.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/ShakeCompleted.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/ShakeCompleted.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/ShakeReady.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/ShakeReady.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/Size.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/Size.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Contracts/SubmitOrder.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Contracts/SubmitOrder.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Futures/BurgerFuture.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Futures/BurgerFuture.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Futures/CalculateFuture.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Futures/CalculateFuture.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Futures/ComboFuture.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Futures/ComboFuture.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Futures/FryFuture.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Futures/FryFuture.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Futures/FryShakeFuture.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Futures/FryShakeFuture.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Futures/OnionRingsFuture.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Futures/OnionRingsFuture.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Futures/OrderFuture.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Futures/OrderFuture.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Futures/ShakeFuture.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Futures/ShakeFuture.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/ItineraryPlanners/BurgerItineraryPlanner.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/ItineraryPlanners/BurgerItineraryPlanner.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Services/Fryer.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Services/Fryer.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Services/Grill.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Services/Grill.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Services/IFryer.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Services/IFryer.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Services/IGrill.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Services/IGrill.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Services/IShakeMachine.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Services/IShakeMachine.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Services/ShakeMachine.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Services/ShakeMachine.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Tests/BurgerFuture_Specs.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Tests/BurgerFuture_Specs.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Tests/CalculateFuture_Specs.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Tests/CalculateFuture_Specs.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Tests/ComboFuture_Specs.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Tests/ComboFuture_Specs.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Tests/FryFuture_Specs.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Tests/FryFuture_Specs.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Tests/FryShakeFuture_Specs.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Tests/FryShakeFuture_Specs.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Tests/OrderFuture_Specs.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Tests/OrderFuture_Specs.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ForkJoint/Tests/ShakeFuture_Specs.cs` | Modified | `src/MassTransit.TestFramework/ForkJoint/Tests/ShakeFuture_Specs.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/FutureTestFixture.cs` | Modified | `src/MassTransit.TestFramework/FutureTestFixture.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Futures/BatchCompleted.cs` | Modified | `src/MassTransit.TestFramework/Futures/BatchCompleted.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Futures/BatchFaulted.cs` | Modified | `src/MassTransit.TestFramework/Futures/BatchFaulted.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Futures/BatchFuture.cs` | Modified | `src/MassTransit.TestFramework/Futures/BatchFuture.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Futures/BatchRequest.cs` | Modified | `src/MassTransit.TestFramework/Futures/BatchRequest.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Futures/CalculatePrice.cs` | Modified | `src/MassTransit.TestFramework/Futures/CalculatePrice.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Futures/CalculatePriceConsumer.cs` | Modified | `src/MassTransit.TestFramework/Futures/CalculatePriceConsumer.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Futures/PriceCalculation.cs` | Modified | `src/MassTransit.TestFramework/Futures/PriceCalculation.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Futures/PriceCalculationFuture.cs` | Modified | `src/MassTransit.TestFramework/Futures/PriceCalculationFuture.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Futures/ProcessBatchItem.cs` | Modified | `src/MassTransit.TestFramework/Futures/ProcessBatchItem.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Futures/ProcessBatchItemCompleted.cs` | Modified | `src/MassTransit.TestFramework/Futures/ProcessBatchItemCompleted.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Futures/ProcessBatchItemConsumer.cs` | Modified | `src/MassTransit.TestFramework/Futures/ProcessBatchItemConsumer.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Futures/Tests/BatchFuture_Specs.cs` | Modified | `src/MassTransit.TestFramework/Futures/Tests/BatchFuture_Specs.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Futures/Tests/PriceCalculationFuture_Specs.cs` | Modified | `src/MassTransit.TestFramework/Futures/Tests/PriceCalculationFuture_Specs.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/HealthCheckServiceExtensions.cs` | Modified | `src/MassTransit.TestFramework/HealthCheckServiceExtensions.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/IFutureTestFixtureConfigurator.cs` | Modified | `src/MassTransit.TestFramework/IFutureTestFixtureConfigurator.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ITestFixtureContainerFactory.cs` | Modified | `src/MassTransit.TestFramework/ITestFixtureContainerFactory.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/InMemoryActivityTestFixture.cs` | Modified | `src/MassTransit.TestFramework/InMemoryActivityTestFixture.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/InMemoryContainerTestFixture.cs` | Modified | `src/MassTransit.TestFramework/InMemoryContainerTestFixture.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/InMemoryTestFixture.cs` | Modified | `src/MassTransit.TestFramework/InMemoryTestFixture.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/IntentionalTestException.cs` | Modified | `src/MassTransit.TestFramework/IntentionalTestException.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/IntrospectionExtensions.cs` | Modified | `src/MassTransit.TestFramework/IntrospectionExtensions.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Logging/DiagnosticListenerObserver.cs` | Modified | `src/MassTransit.TestFramework/Logging/DiagnosticListenerObserver.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Logging/TestOutputListenerObserver.cs` | Modified | `src/MassTransit.TestFramework/Logging/TestOutputListenerObserver.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Logging/TestOutputLogger.cs` | Modified | `src/MassTransit.TestFramework/Logging/TestOutputLogger.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Logging/TestOutputLoggerFactory.cs` | Modified | `src/MassTransit.TestFramework/Logging/TestOutputLoggerFactory.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/MediatorTestFixture.cs` | Modified | `src/MassTransit.TestFramework/MediatorTestFixture.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Messages/DeleteMessage.cs` | Modified | `src/MassTransit.TestFramework/Messages/DeleteMessage.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Messages/IMessageA.cs` | Modified | `src/MassTransit.TestFramework/Messages/IMessageA.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Messages/MessageA.cs` | Modified | `src/MassTransit.TestFramework/Messages/MessageA.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Messages/MessageB.cs` | Modified | `src/MassTransit.TestFramework/Messages/MessageB.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Messages/PingMessage.cs` | Modified | `src/MassTransit.TestFramework/Messages/PingMessage.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Messages/PingNotSupported.cs` | Modified | `src/MassTransit.TestFramework/Messages/PingNotSupported.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Messages/PongMessage.cs` | Modified | `src/MassTransit.TestFramework/Messages/PongMessage.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Sagas/ChoirTest.cs` | Modified | `src/MassTransit.TestFramework/Sagas/ChoirTest.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Sagas/PublishTestStartedActivity.cs` | Modified | `src/MassTransit.TestFramework/Sagas/PublishTestStartedActivity.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Sagas/StartStateMachineTest.cs` | Modified | `src/MassTransit.TestFramework/Sagas/StartStateMachineTest.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Sagas/TestInstance.cs` | Modified | `src/MassTransit.TestFramework/Sagas/TestInstance.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Sagas/TestStarted.cs` | Modified | `src/MassTransit.TestFramework/Sagas/TestStarted.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Sagas/TestStateMachineSaga.cs` | Modified | `src/MassTransit.TestFramework/Sagas/TestStateMachineSaga.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Sagas/TestUpdated.cs` | Modified | `src/MassTransit.TestFramework/Sagas/TestUpdated.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/Sagas/UpdateTest.cs` | Modified | `src/MassTransit.TestFramework/Sagas/UpdateTest.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/TestConsumeContext.cs` | Modified | `src/MassTransit.TestFramework/TestConsumeContext.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/TestStateMachineExtensions.cs` | Modified | `src/MassTransit.TestFramework/TestStateMachineExtensions.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/TestSymmetricKeyProvider.cs` | Modified | `src/MassTransit.TestFramework/TestSymmetricKeyProvider.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ThreadSafeRandom.cs` | Modified | `src/MassTransit.TestFramework/ThreadSafeRandom.cs` |
-| `src/ViciOne.ServiceBus.TestFramework/ViciOne.ServiceBus.TestFramework.csproj` | Modified | `src/MassTransit.TestFramework/MassTransit.TestFramework.csproj` |
-| `src/ViciOne.ServiceBus.TestFramework/ViciOne.ServiceBus.TestFramework.log4net.xml` | Modified | `src/MassTransit.TestFramework/MassTransit.TestFramework.log4net.xml` |
-| `src/ViciOne.ServiceBus.TestFramework/packages.lock.json` | Added |  |
 | `src/ViciOne.ServiceBus/Agents/ActivePipeContext.cs` | Modified | `src/MassTransit/Agents/ActivePipeContext.cs` |
 | `src/ViciOne.ServiceBus/Agents/ActivePipeContextAgent.cs` | Modified | `src/MassTransit/Agents/ActivePipeContextAgent.cs` |
 | `src/ViciOne.ServiceBus/Agents/ActivePipeContextHandle.cs` | Modified | `src/MassTransit/Agents/ActivePipeContextHandle.cs` |
@@ -9501,9 +9490,44 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `src/ViciOne.ServiceBus/ViciOneServiceBusHostedService.cs` | Modified | `src/MassTransit/MassTransitHostedService.cs` |
 | `src/ViciOne.ServiceBus/packages.lock.json` | Added |  |
 | `src/mt-logo-small.png` | Deleted | `src/mt-logo-small.png` |
+| `tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/EvaluatedBuildGraphTests.cs` | Added |  |
+| `tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/MsBuildEvaluation.cs` | Added |  |
+| `tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Dependencies/ResolvedPackageGraph.cs` | Added |  |
+| `tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Dependencies/ResolvedPackageGraphTests.cs` | Added |  |
+| `tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/TimeSourceArchitectureTests.cs` | Added |  |
+| `tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/ProductAssemblyFacts.cs` | Added |  |
+| `tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/AzureServiceBusObligationProjectionTests.cs` | Added |  |
+| `tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/BenchmarkObligationProjectionTests.cs` | Added |  |
+| `tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/NativeTestSourceLayoutTests.cs` | Added |  |
+| `tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RabbitMqObligationProjectionTests.cs` | Added |  |
+| `tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryGraphTests.cs` | Added |  |
+| `tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryLayout.cs` | Added |  |
+| `tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/TestFrameworkCapabilityDispositionTests.cs` | Added |  |
+| `tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/TestTreeIsolationTests.cs` | Added |  |
+| `tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/VerificationCapabilityDispositionTests.cs` | Added |  |
+| `tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Requirements/ArchitectureFoundationRequirements.json` | Added |  |
+| `tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Smoke/ProductAssemblySmokeTests.cs` | Added |  |
+| `tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs` | Added |  |
+| `tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Tooling/ProviderFixtureRunnerTests.cs` | Added |  |
+| `tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/ViciOne.ServiceBus.Architecture.Tests.csproj` | Added |  |
+| `tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/packages.lock.json` | Added |  |
+| `tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ActiveMqOptionSetTests.cs` | Added |  |
+| `tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/AnalyticsTests.cs` | Added |  |
+| `tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/BenchmarkRunOutcomeTests.cs` | Added |  |
+| `tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/BenchmarkTestClock.cs` | Added |  |
+| `tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/BusOutboxDatabaseSettingsTests.cs` | Added |  |
+| `tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/MessageMetricCaptureTests.cs` | Added |  |
+| `tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ProcessStateCollection.cs` | Added |  |
+| `tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/RabbitMqOptionSetTests.cs` | Added |  |
+| `tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/Requirements/BenchmarkRequirements.json` | Added |  |
+| `tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/SqlOptionSetTests.cs` | Added |  |
+| `tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ViciOne.ServiceBus.Benchmark.Tests.csproj` | Added |  |
+| `tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/packages.lock.json` | Added |  |
 | `tests/Directory.Build.props` | Modified | `tests/Directory.Build.props` |
+| `tests/Directory.Build.targets` | Added |  |
 | `tests/MassTransit.Abstractions.Tests/ExceptionFilter_Specs.cs` | Deleted | `tests/MassTransit.Abstractions.Tests/ExceptionFilter_Specs.cs` |
-| `tests/MassTransit.Abstractions.Tests/MassTransit.Abstractions.Tests.csproj` | Deleted | `tests/MassTransit.Abstractions.Tests/MassTransit.Abstractions.Tests.csproj` |
 | `tests/MassTransit.Abstractions.Tests/MassTransit.Abstractions.Tests.csproj.DotSettings` | Deleted | `tests/MassTransit.Abstractions.Tests/MassTransit.Abstractions.Tests.csproj.DotSettings` |
 | `tests/MassTransit.Abstractions.Tests/NewId/Formatter_Specs.cs` | Deleted | `tests/MassTransit.Abstractions.Tests/NewId/Formatter_Specs.cs` |
 | `tests/MassTransit.Abstractions.Tests/NewId/Generator_Specs.cs` | Deleted | `tests/MassTransit.Abstractions.Tests/NewId/Generator_Specs.cs` |
@@ -9588,7 +9612,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Analyzers.Tests/Helpers/CodeFixVerifier.Helper.cs` | Deleted | `tests/MassTransit.Analyzers.Tests/Helpers/CodeFixVerifier.Helper.cs` |
 | `tests/MassTransit.Analyzers.Tests/Helpers/DiagnosticResult.cs` | Deleted | `tests/MassTransit.Analyzers.Tests/Helpers/DiagnosticResult.cs` |
 | `tests/MassTransit.Analyzers.Tests/Helpers/DiagnosticVerifier.Helper.cs` | Deleted | `tests/MassTransit.Analyzers.Tests/Helpers/DiagnosticVerifier.Helper.cs` |
-| `tests/MassTransit.Analyzers.Tests/MassTransit.Analyzers.Tests.csproj` | Deleted | `tests/MassTransit.Analyzers.Tests/MassTransit.Analyzers.Tests.csproj` |
 | `tests/MassTransit.Analyzers.Tests/MessageContractAnalyzerUnitTests.cs` | Deleted | `tests/MassTransit.Analyzers.Tests/MessageContractAnalyzerUnitTests.cs` |
 | `tests/MassTransit.Analyzers.Tests/MessageContractAnalyzerWithVariableUnitTest.cs` | Deleted | `tests/MassTransit.Analyzers.Tests/MessageContractAnalyzerWithVariableUnitTest.cs` |
 | `tests/MassTransit.Analyzers.Tests/MessageDataInitializer_Specs.cs` | Deleted | `tests/MassTransit.Analyzers.Tests/MessageDataInitializer_Specs.cs` |
@@ -10110,7 +10133,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.RedisIntegration.Tests/SimpleSaga.cs` | Deleted | `tests/MassTransit.RedisIntegration.Tests/SimpleSaga.cs` |
 | `tests/MassTransit.RedisIntegration.Tests/docker-compose.yml` | Deleted | `tests/MassTransit.RedisIntegration.Tests/docker-compose.yml` |
 | `tests/MassTransit.SignalR.Tests/HubLifeTimeManagerTests.cs` | Deleted | `tests/MassTransit.SignalR.Tests/HubLifeTimeManagerTests.cs` |
-| `tests/MassTransit.SignalR.Tests/MassTransit.SignalR.Tests.csproj` | Deleted | `tests/MassTransit.SignalR.Tests/MassTransit.SignalR.Tests.csproj` |
 | `tests/MassTransit.SignalR.Tests/MassTransitHubLifetimeManagerTests.cs` | Deleted | `tests/MassTransit.SignalR.Tests/MassTransitHubLifetimeManagerTests.cs` |
 | `tests/MassTransit.SignalR.Tests/OfficialFramework/DuplexPipe.cs` | Deleted | `tests/MassTransit.SignalR.Tests/OfficialFramework/DuplexPipe.cs` |
 | `tests/MassTransit.SignalR.Tests/OfficialFramework/HubConnectionContextUtils.cs` | Deleted | `tests/MassTransit.SignalR.Tests/OfficialFramework/HubConnectionContextUtils.cs` |
@@ -10324,7 +10346,6 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/JsonToken_Specs.cs` | Deleted | `tests/MassTransit.Tests/JsonToken_Specs.cs` |
 | `tests/MassTransit.Tests/KillSwitch_Specs.cs` | Deleted | `tests/MassTransit.Tests/KillSwitch_Specs.cs` |
 | `tests/MassTransit.Tests/LocalDbConnectionStringProvider.cs` | Deleted | `tests/MassTransit.Tests/LocalDbConnectionStringProvider.cs` |
-| `tests/MassTransit.Tests/MassTransit.Tests.csproj` | Deleted | `tests/MassTransit.Tests/MassTransit.Tests.csproj` |
 | `tests/MassTransit.Tests/MediatorRequest_Specs.cs` | Deleted | `tests/MassTransit.Tests/MediatorRequest_Specs.cs` |
 | `tests/MassTransit.Tests/Mediator_Specs.cs` | Deleted | `tests/MassTransit.Tests/Mediator_Specs.cs` |
 | `tests/MassTransit.Tests/MessageContext_Specs.cs` | Deleted | `tests/MassTransit.Tests/MessageContext_Specs.cs` |
@@ -10637,860 +10658,814 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tests/MassTransit.Tests/Transports/MessageFabric_Specs.cs` | Deleted | `tests/MassTransit.Tests/Transports/MessageFabric_Specs.cs` |
 | `tests/MassTransit.Tests/Transports/TopicExchange_Specs.cs` | Deleted | `tests/MassTransit.Tests/Transports/TopicExchange_Specs.cs` |
 | `tests/MassTransit.Tests/TypeCastRetry_Specs.cs` | Deleted | `tests/MassTransit.Tests/TypeCastRetry_Specs.cs` |
-| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/EvaluatedBuildGraphTests.cs` | Added |  |
-| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Build/MsBuildEvaluation.cs` | Added |  |
-| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Dependencies/ResolvedPackageGraph.cs` | Added |  |
-| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Dependencies/ResolvedPackageGraphTests.cs` | Added |  |
-| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Product/TimeSourceArchitectureTests.cs` | Added |  |
-| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/ProductAssemblyFacts.cs` | Added |  |
-| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/AzureServiceBusObligationProjectionTests.cs` | Added |  |
-| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/NativeTestSourceLayoutTests.cs` | Added |  |
-| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RabbitMqObligationProjectionTests.cs` | Added |  |
-| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryGraphTests.cs` | Added |  |
-| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/RepositoryLayout.cs` | Added |  |
-| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/TestTreeIsolationTests.cs` | Added |  |
-| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Requirements/ArchitectureFoundationRequirements.json` | Added |  |
-| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/Smoke/ProductAssemblySmokeTests.cs` | Added |  |
-| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/TestPlatform/TestingPlatformConfigurationTests.cs` | Added |  |
-| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/ViciOne.ServiceBus.Architecture.Tests.csproj` | Added |  |
-| `tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/packages.lock.json` | Added |  |
-| `tests2/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ActiveMqOptionSetTests.cs` | Added |  |
-| `tests2/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/Requirements/BenchmarkRequirements.json` | Added |  |
-| `tests2/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ViciOne.ServiceBus.Benchmark.Tests.csproj` | Added |  |
-| `tests2/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/packages.lock.json` | Added |  |
-| `tests2/Directory.Build.props` | Added |  |
-| `tests2/Directory.Build.targets` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/AmazonS3/MessageData/AmazonS3MessageDataRepositoryTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/Infrastructure/AmazonS3TestBucket.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/Requirements/AmazonS3LocalIntegrationRequirements.json` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests.csproj` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/packages.lock.json` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/AmazonS3/MessageData/AmazonS3MessageDataConfigurationTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/AmazonS3/MessageData/AmazonS3MessageDataObserverTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/Requirements/AmazonS3Requirements.json` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/packages.lock.json` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/AzureTable/AzureTableFuturePersistenceTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/AzureTable/AzureTableJobServiceIntegrationTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/AzureTable/AzureTableRoutingSlipFuturePersistenceTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/AzureTable/Saga/AzureTableSagaConcurrencyTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/AzureTable/Saga/AzureTableSagaRepositoryIntegrationTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Infrastructure/AzureTableTestTable.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/MessageJournal/AzureTableMessageJournalStoreTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Requirements/AzureTableLocalIntegrationRequirements.json` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.csproj` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/packages.lock.json` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/AzureTable/Configuration/AzureTableConfigurationContractTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/AzureTable/Saga/AzureTableSagaRepositoryBoundaryTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/AzureTable/Saga/EntityConverterTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/AzureTable/Saga/SagaKeyFormatterTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/MessageJournal/AzureTableMessageJournalOptionsTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/MessageJournal/AzureTableMessageJournalStoreTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Requirements/AzureTableRequirements.json` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/ViciOne.ServiceBus.Azure.Table.Tests.csproj` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/packages.lock.json` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/DynamoDbIntegration/Saga/DynamoDbSagaConcurrencyTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/DynamoDbIntegration/Saga/DynamoDbSagaConfigurationTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/DynamoDbIntegration/Saga/DynamoDbSagaExpirationTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/DynamoDbIntegration/Saga/DynamoDbSagaPersistenceTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/Infrastructure/DynamoDbTestTable.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/Requirements/DynamoDbLocalIntegrationRequirements.json` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests.csproj` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/packages.lock.json` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/DynamoDbIntegration/Saga/DynamoDbSagaFailureBoundaryTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/DynamoDbIntegration/Saga/DynamoDbSagaRepositoryConfigurationTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/Requirements/DynamoDbRequirements.json` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests.csproj` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/packages.lock.json` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/BusOutboxDeliveryServiceTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkDeferredBusIntegrationTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkExecutionStrategyRetryTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkFuturePersistenceTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkJobServiceIntegrationTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkRoutingSlipFuturePersistenceTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/InboxOutboxConcurrencyTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/QuartzTransactionalOutboxTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/ReliableTransactionalOutboxTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/ScopedOutboxFilterTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/TransactionalOutboxFaultTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/TransactionalOutboxRequestSagaTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/Infrastructure/PostgreSqlTestDatabase.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/MessageJournal/EntityFrameworkMessageJournalStoreTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/Requirements/EntityFrameworkLocalIntegrationRequirements.json` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/Saga/PostgreSqlPessimisticSagaLockTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/Saga/PostgreSqlPessimisticSagaQueryCustomizationTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/Saga/PostgreSqlReadOnlySagaTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/Saga/PostgreSqlSagaConcurrencyTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/Saga/PostgreSqlSagaRepositoryIntegrationTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.csproj` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/packages.lock.json` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Configuration/EntityFrameworkProviderConfigurationTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Configuration/EntityFrameworkTestDatabaseNameTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Configuration/EntityFrameworkTimeProviderTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkExecutionStrategyTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/MessageJournal/EntityFrameworkMessageJournalModelTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Outbox/BusOutboxDeliveryTelemetryTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Outbox/EntityFrameworkOutboxWriteCoordinatorTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Requirements/EntityFrameworkRequirements.json` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Saga/DbContextSagaRepositoryContextTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Saga/EntityFrameworkSagaRepositoryFactoryTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Saga/SqliteOptimisticSagaConcurrencyTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/SqlLockStatementProviderTests.cs` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj` | Added |  |
-| `tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/packages.lock.json` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Configuration/QuartzContainerIntegrationTests.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Configuration/QuartzEndpointDefinitionTests.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Configuration/QuartzRegistrationExtensionsTests.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Configuration/QuartzSchedulerOptionsTests.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/JobDataMessageContextTests.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/JobService/QuartzJobServiceFaultIntegrationTests.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/JobService/QuartzJobServiceLifecycleIntegrationTests.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/JobService/QuartzJobServiceSuspectAttemptIntegrationTests.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzChainedSchedulingIntegrationTests.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzCourierRedeliveryIntegrationTests.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzExplicitRedeliveryIntegrationTests.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzHostedServiceSettingsTests.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzIntegrationCollection.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzMissingSagaRedeliveryIntegrationTests.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzNestedRequestIntegrationTests.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzOutboxSchedulingIntegrationTests.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzRecurringDeliveryIntegrationTests.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzSagaRequestTimeoutIntegrationTests.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzSagaSchedulingIntegrationTests.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzScheduleTimingIntegrationTests.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzScheduledRedeliveryIntegrationTests.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzScheduledRedeliveryScopeTests.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzTriggerKeyTests.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/ScheduledMessageExpirationTests.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/ScheduledMessageJobTests.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/SchedulerBusObserverTests.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/SchedulerCommandIntegrationTests.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/InheritedBehaviorDispositionTests.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzIntegrationRequirements.json` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Testing/ConsumeCompletionObserver.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Testing/QuartzJobServiceTestBus.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Testing/QuartzTestBus.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Testing/ScheduledMessageCapture.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Testing/ScheduledMessageSequenceCapture.cs` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/ViciOne.ServiceBus.QuartzIntegration.Tests.csproj` | Added |  |
-| `tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/packages.lock.json` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/MessageContracts/ExpectedInitializer.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/MessageContracts/ExpectedMessageContractDiagnostic.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/MessageContracts/MessageContractScenario.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/MessageContracts/MessageContractScenarioCatalog.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/MessageContracts/MessageContractSourceFactory.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/MessageContracts/MessageSourceForm.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure.csproj` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/packages.lock.json` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests/Compilation/RoslynTestHostTests.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests/Requirements/RoslynInfrastructureRequirements.json` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests.csproj` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests/packages.lock.json` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/Diagnostics/DiagnosticObservation.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/References/MetadataReferenceClosure.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/RoslynTestHost.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.csproj` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/packages.lock.json` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/Configuration/TestConfigurationProviderTests.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/Requirements/RequirementCoverageAttributeTests.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/Requirements/RequirementCoverageProjectionVerifierTests.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/Requirements/RequirementCoverageVerifierRequirements.json` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/ViciOne.ServiceBus.Tests.Infrastructure.Tests.csproj` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/packages.lock.json` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Brokers/BrokerOutageControlClient.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/TestConfigurationProvider.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/ViciOneTestOptions.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Databases/TestDatabaseName.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageAttribute.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageProjectionVerifier.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/packages.lock.json` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Brokers/ReceiveEndpointRecoveryObserver.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Caching/GreenCacheTestFactory.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxCheckpointDriver.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxTestContextFactory.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/KillSwitch/KillSwitchTestDriver.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalEntryTestFactory.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalWriterTestDriver.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/MessagingSystemNormalizerTestDriver.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/OutboxTelemetryTestDriver.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Serialization/ForwardingExpirationTestDriver.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/DeferredBusTestDriver.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/TransactionFilterTestDriver.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/RiderCollectionTestDriver.cs` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj` | Added |  |
-| `tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/packages.lock.json` | Added |  |
-| `tests2/Tools/ViciOne.ServiceBus.Diagnostics.Tests/CommandLineTests.cs` | Added |  |
-| `tests2/Tools/ViciOne.ServiceBus.Diagnostics.Tests/MessageSequenceLedgerTests.cs` | Added |  |
-| `tests2/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ObservationBoundaryTests.cs` | Added |  |
-| `tests2/Tools/ViciOne.ServiceBus.Diagnostics.Tests/Requirements/DiagnosticsRequirements.json` | Added |  |
-| `tests2/Tools/ViciOne.ServiceBus.Diagnostics.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ResultDeliveryTests.cs` | Added |  |
-| `tests2/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ViciOne.ServiceBus.Diagnostics.Tests.csproj` | Added |  |
-| `tests2/Tools/ViciOne.ServiceBus.Diagnostics.Tests/packages.lock.json` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqCompressionTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqConnectionTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqDeployTopologyTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqErrorTransportTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqFixtureRecoveryTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqHandlerFlowTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqJobServiceTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqJolokiaTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqKillSwitchTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqLifecycleTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqMessageFlowTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqOutboxRedeliveryTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqPublishTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqQuartzSchedulingTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqRedeliveryTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqRequestResponseTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqSchedulingTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqServiceClientTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqTelemetryTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqTemporaryReplyTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqTopicEndpointTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/AssemblyInfo.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/DeployTopologyContracts/ActiveMqDeployTopologyContracts.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/Infrastructure/ActiveMqBroker.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/Infrastructure/ReceiveCompletionObserver.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/PublishContracts/ActiveMqPublishContracts.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/Requirements/ActiveMqLocalIntegrationRequirements.json` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.csproj` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/packages.lock.json` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqEndpointAddressTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqEndpointConfigurationTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqHostAddressTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqMessageBodyTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqRecoveryObserverTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqTransport/ActiveMqLifecycleTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqTransport/ActiveMqSendTimingTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqTransport/Configuration/ActiveMqHostSettingsTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Brokers/BrokerOutageControlClientTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Configuration/ActiveMqConfigurationTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Requirements/ActiveMqRequirements.json` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/TestDoubles/InterfaceProxy.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Topology/ArtemisTopologyTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Topology/ConsumerEntityTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/packages.lock.json` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsConnectionTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsDeployTopologyTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsDynamicEndpointTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsErrorTransportTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsFaultOwnershipTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsFifoTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsFilterPolicyTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsHandlerFlowTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsLifecycleTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsMessageDataTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsMultiBusTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsOutboxRedeliveryTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsPublishTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsQuartzSchedulingTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsRawJsonTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsReceiveLockTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsRedeliveryTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsRequestResponseTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsSchedulingTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsScopeTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsSentTimeTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsTelemetryTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsTopicEndpointTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsTopologyTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/DeployTopologyContracts/AmazonSqsDeployTopologyContracts.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/Infrastructure/AmazonSqsLocalStack.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/PublishContracts/AmazonSqsPublishContracts.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/Requirements/AmazonSqsLocalIntegrationRequirements.json` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests.csproj` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/packages.lock.json` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsBatchResponseTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsDelayTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsEndpointAddressTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsEndpointConfigurationTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsEntityNameTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsEnvelopeTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsHeaderProviderTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsHostConfigurationTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsLifecycleBoundaryTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsMessageBodyTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsReceiveLifecycleTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsVisibilityConfigurationTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/Requirements/AmazonSqsRequirements.json` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/TestDoubles/InterfaceProxy.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests.csproj` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/packages.lock.json` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/AssemblyInfo.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/AzureServiceBusDeadLetterTransportTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/AzureServiceBusFunctionReceiverTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/AzureServiceBusMessageFlowTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/AzureServiceBusPublishTopologyTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/AzureServiceBusSessionAndSchedulingTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/AzureServiceBusSessionStateTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/AzureServiceBusSubscriptionRuleTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/AzureServiceBusTopologyLifecycleTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/Infrastructure/AzureServiceBusEmulatorCapabilityTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/Infrastructure/AzureServiceBusLocalFixture.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/Requirements/AzureServiceBusLocalIntegrationRequirements.json` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/TopologyContracts/AzureServiceBusTopologyContracts.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests.csproj` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/packages.lock.json` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/Requirements/AzureServiceBusRequirements.json` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ServiceBusConnectionContextTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ServiceBusEndpointAddressTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ServiceBusEndpointConfigurationTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ServiceBusFunctionsAndProbeTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ServiceBusHostAndNameValidationTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ServiceBusMessageBodyTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ServiceBusTopologyTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests.csproj` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/packages.lock.json` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests/AssemblyInfo.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests/EventHubIntegration/EventHubBatchAndReliabilityTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests/EventHubIntegration/EventHubEndpointAndBusBoundaryTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests/EventHubIntegration/EventHubInteropAndContextTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests/EventHubIntegration/EventHubProducerDeliveryTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests/EventHubIntegration/EventHubSagaAndLifecycleTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests/Infrastructure/EventHubLocalFixture.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests/Requirements/EventHubLocalIntegrationRequirements.json` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests/ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests.csproj` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests/packages.lock.json` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/AssemblyInfo.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/Infrastructure/RabbitMqBroker.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/RabbitMqBrokerContractTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/RabbitMqFaultTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/RabbitMqLifecycleTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/RabbitMqMessageFlowTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/RabbitMqPayloadAndConcurrencyTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/RabbitMqRequestResponseTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/RabbitMqSchedulingTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/RabbitMqStreamAndClusterTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/RabbitMqTopologyTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/Requirements/RabbitMqLocalIntegrationRequirements.json` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests.csproj` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/packages.lock.json` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqConnectionExceptionTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqEndpointAddressTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqHostAddressTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqTransport/Configuration/ConfigurationHostSettingsTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqTransport/Configuration/RabbitMqStreamConfigurationTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqTransport/RabbitMqAddressExtensionsTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqTransport/Topology/RabbitMqBusTopologyTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqTransport/TransportLifetimeTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/Requirements/RabbitMqAddressRequirements.json` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/packages.lock.json` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/Infrastructure/PostgreSqlTestDatabase.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/Infrastructure/PostgreSqlTransportInspection.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlAutoDeleteTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlBasicTransportTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlBuiltInRedeliveryTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlBusOutboxTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlConcurrencyAndPriorityTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlDeliveryLimitTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlDeliveryStateTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlIsolationTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlJobServiceTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlLockRenewalTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlMaintenanceTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlNotificationTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlProvisioningTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlPublishAndPurgeTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlReceiveConfigurationTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlRedeliveryTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlRoutingAndFailureTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlRoutingSlipTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlScheduleCancellationTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlSchedulingTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlSerializationAndRequestTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlUnlockTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/Requirements/PostgreSqlTransportRequirements.json` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/TestAssembly.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.csproj` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/packages.lock.json` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/Infrastructure/SqlServerTestDatabase.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/Infrastructure/SqlServerTransportInspection.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/Requirements/SqlServerTransportRequirements.json` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlProvisioningCredentialTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerConcurrencyTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerConfigurationAndRetryTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerDeliveryLimitTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerJobServiceTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerLockRenewalTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerMaintenanceAndTopologyTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerProvisioningTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerPublishAndPurgeTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerRedeliveryTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerScheduleCancellationTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerSchedulingTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerSerializationAndRequestTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/TestAssembly.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.csproj` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/packages.lock.json` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Address/SqlAddressTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Configuration/SqlConfigurationTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Infrastructure/RunnerContractTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.Tests/PostgreSql/PostgresConnectionConfigurationTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Requirements/SqlTransportRequirements.json` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.Tests/SqlServer/SqlServerConnectionConfigurationTests.cs` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj` | Added |  |
-| `tests2/Transports/ViciOne.ServiceBus.SqlTransport.Tests/packages.lock.json` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/NewId/NewIdProviders/WorkerIdProviderTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/Requirements/AbstractionsLocalIntegrationRequirements.json` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.csproj` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/packages.lock.json` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Attributes/MessageUrnAttributeTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/BusControlHealthExtensionsTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Clients/RequestTimeoutTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Clients/ResponseTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Contexts/MessageBodyContractTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Contexts/PipeContextTimeProviderExtensionsTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Internals/Extensions/QueryStringExtensionsTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Internals/Extensions/TaskExtensionsTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Internals/Extensions/TypeExtensionsTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Internals/Extensions/TypeRelationshipExtensionsTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Internals/Reflection/ReadWritePropertyCacheTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Internals/Reflection/ReadWritePropertyTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/MessageUrnTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Metadata/BusHostInfoTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Metadata/FaultMessageTypeTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Metadata/ImplementedMessageTypeCacheTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Middleware/Configuration/PipeSpecificationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Middleware/Configuration/Publish/PublishPipeSpecificationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Middleware/Configuration/Send/SendPipeSpecificationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Middleware/ExceptionFilters/ExceptionSpecificationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Middleware/PipeExtensionsTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Middleware/ScopePipeContextTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Middleware/SupervisorLifecycleTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/NewId/NewIdFormatters/NewIdFormatterTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/NewId/NewIdFormatters/ReferenceCorpus.json` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/NewId/NewIdGeneratorTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/NewId/NewIdGuidInteropTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/NewId/NewIdOrderingTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/NewId/NewIdTestInputs.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/NewId/NewIdValueTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Requirements/AbstractionsRequirements.json` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Serialization/ArrayMessageBodyTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Serialization/Base64MessageBodyTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Serialization/BytesMessageBodyTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Serialization/EmptyMessageBodyTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Serialization/StringMessageBodyTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/TypeCacheTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Util/ConnectableTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/Util/RequestRateAlgorithmTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj` | Added |  |
-| `tests2/ViciOne.ServiceBus.Abstractions.Tests/packages.lock.json` | Added |  |
-| `tests2/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/CancellationTokenOverloadMethodFixerTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/Fixtures/ServiceBusCodeFixFixture.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/MessageContractCodeFixProvider/MessageContractCodeFixScenarioTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/Requirements/CodeFixRequirements.json` | Added |  |
-| `tests2/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.csproj` | Added |  |
-| `tests2/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/packages.lock.json` | Added |  |
-| `tests2/ViciOne.ServiceBus.Analyzers.Tests/AnalyzerInstanceStateTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Analyzers.Tests/AsyncMethodAnalyzerTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Analyzers.Tests/CancellationTokenOverloadMethodAnalyzerTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Analyzers.Tests/Fixtures/ServiceBusAnalyzerFixture.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Analyzers.Tests/MessageContractAnalyzer/DictionaryInitializerTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Analyzers.Tests/MessageContractAnalyzer/MessageContractScenarioCatalogTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Analyzers.Tests/MessageContractAnalyzer/MessageContractScenarioTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Analyzers.Tests/MessageContractAnalyzer/MessageDataInitializerTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Analyzers.Tests/Requirements/AnalyzerRequirements.json` | Added |  |
-| `tests2/ViciOne.ServiceBus.Analyzers.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj` | Added |  |
-| `tests2/ViciOne.ServiceBus.Analyzers.Tests/packages.lock.json` | Added |  |
-| `tests2/ViciOne.ServiceBus.MessagePack.Tests/Architecture/MessagePackSerializerBoundaryTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.MessagePack.Tests/Architecture/MessagePackSerializerReferenceScanner.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.MessagePack.Tests/Configuration/MessagePackTransportIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.MessagePack.Tests/Requirements/MessagePackRequirements.json` | Added |  |
-| `tests2/ViciOne.ServiceBus.MessagePack.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.MessagePack.Tests/Serialization/InterfaceMessagePackFormatterTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.MessagePack.Tests/Serialization/InternalMessagePackResolverTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.MessagePack.Tests/Serialization/MessagePackDomainContractTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.MessagePack.Tests/Serialization/MessagePackEnvelopeMetadataProjectionTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.MessagePack.Tests/Serialization/MessagePackEnvelopeTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.MessagePack.Tests/Serialization/MessagePackMessageBodyTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.MessagePack.Tests/Serialization/MessagePackMessageSerializerTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.MessagePack.Tests/Serialization/MessagePackRoundTrip.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.MessagePack.Tests/Serialization/MessagePackTestContracts.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.MessagePack.Tests/ViciOne.ServiceBus.MessagePack.Tests.csproj` | Added |  |
-| `tests2/ViciOne.ServiceBus.MessagePack.Tests/packages.lock.json` | Added |  |
-| `tests2/ViciOne.ServiceBus.SignalR.Tests/HubConnectionTestClient.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.SignalR.Tests/HubLifetimeManagerTestEnvironment.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.SignalR.Tests/RecordingLogger.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.SignalR.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.SignalR.Tests/Requirements/SignalRRequirements.json` | Added |  |
-| `tests2/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj` | Added |  |
-| `tests2/ViciOne.ServiceBus.SignalR.Tests/ViciOneServiceBusHubLifetimeManagerFanOutTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.SignalR.Tests/ViciOneServiceBusHubLifetimeManagerLocalTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.SignalR.Tests/ViciOneServiceBusHubLifetimeManagerScaleOutTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.SignalR.Tests/ViciOneServiceBusHubLifetimeManagerSerializationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.SignalR.Tests/packages.lock.json` | Added |  |
-| `tests2/ViciOne.ServiceBus.StateMachineVisualizer.Tests/Abstractions/StateMachineGeneratorTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.StateMachineVisualizer.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.StateMachineVisualizer.Tests/Requirements/StateMachineVisualizerRequirements.json` | Added |  |
-| `tests2/ViciOne.ServiceBus.StateMachineVisualizer.Tests/StateMachineGraphFixtures.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.StateMachineVisualizer.Tests/StateMachineGraphvizGeneratorTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.StateMachineVisualizer.Tests/StateMachineInputTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.StateMachineVisualizer.Tests/StateMachineMermaidGeneratorTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.StateMachineVisualizer.Tests/ViciOne.ServiceBus.StateMachineVisualizer.Tests.csproj` | Added |  |
-| `tests2/ViciOne.ServiceBus.StateMachineVisualizer.Tests/packages.lock.json` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Agents/PipeContextSupervisorFailureTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Agents/PipeContextSupervisorTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Architecture/OutboundNetworkBoundaryTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Architecture/RemovalBoundaryTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Caching/GreenCacheCapacityTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Caching/GreenCacheObserverTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Caching/GreenCacheTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Caching/Internals/BucketNodeTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Caching/Internals/BucketTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Caching/Internals/IndexTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Caching/Internals/NodeTrackerTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Caching/Internals/NodeValueFactoryTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Caching/MultipleIndexTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Clients/ContainerRequestClientRegistrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Clients/RequestClientBoundaryTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Clients/RequestClientLifecycleTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Clients/RequestClientMetadataTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Clients/ResponseAcceptanceTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Clients/ResponseMatchingTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Configuration/BindPipeSpecificationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Configuration/CircuitBreakerOptionsTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Configuration/Configuration/BuiltPipelineConfigurationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Configuration/Configuration/ConfigurationObserverTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Configuration/Configuration/ConfigurationValidationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Configuration/Configuration/ConsumerMessageConfigurationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Configuration/Configuration/PublishPipeConfigurationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Configuration/Configuration/Retry/ConsumeContextRetryPipeSpecificationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Configuration/Configuration/Retry/RetryPipeSpecificationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Configuration/Configuration/SendPipeConfigurationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/RegistrationConfiguratorExtensionsTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Configuration/EndpointNaming/EndpointNameFormatterTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Configuration/KillSwitchOptionsTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Configuration/MessageJournalConfigurationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Configuration/MessageRetryConfigurationExtensionsTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Configuration/PartitionMessageConfigurationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Configuration/RetryConfigurationExtensionsTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Configuration/ServiceInstanceEndpointTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Configuration/TransactionConfigurationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchDeliveryIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Consumers/ConsumerAndSagaConcurrencyTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Consumers/ConsumerConventionIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Consumers/DynamicConsumePipeConnectionTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Consumers/InstanceExtensionsTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Contexts/ConsumeContextEndpointExtensionsTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Contexts/ConversationContextTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Contexts/MessageContextFlowTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Contexts/SentMessageMetadataTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Contexts/TransactionContextExtensionsTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Contracts/InterfaceMessageDispatchTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Courier/ContainerActivityRegistrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Courier/ContainerRoutingSlipOutboxRequestTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Courier/CourierTestSupport.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Courier/RoutingSlipArgumentIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Courier/RoutingSlipBuilderContractTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Courier/RoutingSlipFaultIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Courier/RoutingSlipHostConfigurationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Courier/RoutingSlipLifecycleIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Courier/RoutingSlipPayloadIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Courier/RoutingSlipRequestIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Courier/RoutingSlipRetryIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Courier/RoutingSlipRevisionAndSubscriptionTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ConfigureEndpointExclusionTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumerRegistrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerDiscovery/ContainerDiscoveryTypes.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerEndpointRoutingTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerNamespaceDiscoveryTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerOutboxScopeTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerScopedEndpointTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/DependencyInjection/EndpointConfigurationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/DependencyInjection/HandlerRegistrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/DependencyInjection/MultiBusRequestTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/DependencyInjection/MultiBusScopeIsolationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ReceiveEndpointDependencyTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/DependencyInjection/ScopedPipelineTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Events/FaultExceptionInfoTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Events/PolymorphicFaultDispatchTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Futures/BatchFutureIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Futures/FutureLocationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Futures/FutureRequestConsumerIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryBusLifecycleTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryDelayProviderTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryErrorTransportTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryFaultPublicationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryPublishEndpointTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryReceiveEndpointConcurrencyTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryScheduledPublishTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemorySendEndpointTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryTransportIsolationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Initializers/Conventions/DefaultInitializerConventionTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Initializers/Conventions/DictionaryInitializerConventionTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Initializers/DynamicContractIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Initializers/MessageInitializerObjectGraphTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Initializers/MessageInitializerRequestResponseTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Initializers/MessageInitializerScalarConversionTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/ArrayPropertyConverterTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/DictionaryPropertyConverterTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/ListPropertyConverterTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/StatePropertyConverterTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/TaskPropertyConverterTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/VariablePropertyConverterTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/AsyncPropertyProviderTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryArrayTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryDictionaryTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryObjectGraphTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryScalarTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryVariableTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderTestContext.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/TaskPropertyProviderTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Initializers/TaskInitializerExtensionsTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Initializers/TypeConverters/DateTimeTypeConverterTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Initializers/TypeConverters/ExceptionTypeConverterTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Internals/Caching/CacheEntry.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Internals/Caching/ManualTimeProvider.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Internals/Caching/TimeToLiveCachePolicyTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Internals/Caching/ViciOneServiceBusCacheCapacityTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Internals/Caching/ViciOneServiceBusCacheRecoveryTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Internals/Reflection/DynamicImplementationBuilderTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Introspection/BusProbeTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/JobService/Configuration/JobServiceEndpointConfigurationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/JobService/Configuration/RecurringJobScheduleConfiguratorTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/JobService/Integration/ContainerJobConsumerDiscoveryTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/JobService/Integration/ContainerJobDiscovery/ContainerJobDiscoveryTypes.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/JobService/Integration/InMemoryJobServiceTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/JobService/JobService/JobProgressBufferTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/JobService/JobService/JobServiceLifecycleTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionCalendarTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionContractTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionDaylightSavingTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionParsingTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionSchedulingTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/JobService/StateMachine/JobAttemptGenerationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Mediator/ContainerMediatorIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Mediator/Contexts/MediatorSendObserverTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Mediator/ExpiredForwardingMediatorTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Mediator/MediatorDispatchTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Mediator/MediatorRequestTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/MessageData/MessageDataEndpointIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/MessageData/MessageDataInitializerIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/MessageData/MessageDataRepositoryTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/MessageData/MessageDataTestSupport.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/MessageData/MessageDataTransportIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/MessageData/PropertyProviders/PutMessageDataPropertyProviderTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalContractTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalTelemetryTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalWriterTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Middleware/CircuitBreaker/CircuitBreakerFilterTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Middleware/ConsumeContextPayloadPropagationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Middleware/ContextFilterTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Middleware/DynamicRoutingTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Middleware/FilterObserverTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Middleware/ForkFilterTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Middleware/InMemoryOutbox/InMemoryOutboxCheckpointTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Middleware/InMemoryOutbox/InMemoryOutboxFilterTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Middleware/LatestFilterTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Middleware/Outbox/BusOutboxNotificationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Middleware/Outbox/ExpiredForwardingOutboxTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Middleware/Outbox/InMemoryOutboxAttemptIsolationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Middleware/Outbox/InMemoryOutboxFaultTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Middleware/Outbox/InMemoryOutboxMessageRepositoryTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Middleware/Outbox/InMemoryOutboxRedeliveryTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Middleware/Outbox/RequestClientOutboxTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Middleware/PartitionerTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Middleware/PipeCompositionTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Middleware/RateAndConcurrencyLimitTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Middleware/Redelivery/DelayedRedeliveryIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Middleware/RequestFilterFaultTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Middleware/RescueFilterTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Middleware/RetryBusObserverTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Middleware/RetryFilterTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Middleware/TenantScopeIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutCancellationIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutConfigurationSurfaceTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutFilterTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Middleware/TransactionFilterTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Monitoring/MessagePipelineActivityTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Monitoring/MessagePipelineMetricsTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Monitoring/MetricObservationSession.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Monitoring/ServiceBusTelemetryTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Observers/MessageObserverTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Observers/PublishObserverTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Observers/ReceiveObserverTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Observers/SendObserverTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/ReliableMessaging/ReliableInMemoryIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/RetryPolicies/BaseRetryPolicyContextTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/RetryPolicies/ExponentialRetryPolicyTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/RetryPolicies/ImmediateRetryPolicyTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/RetryPolicies/IncrementalRetryPolicyTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/RetryPolicies/IntervalRetryPolicyTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/RetryPolicies/NoRetryPolicyTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/RetryPolicies/PipeRetryExtensionsTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/ContainerStateMachineScopeTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineActivityTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineCompositeEventTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineConcurrencyIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineConditionTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineConfigurationContractTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineDefinitionTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineExceptionBehaviorTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineLifecycleIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineNestedRequestIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineObservationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineOutboxSchedulingIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachinePolicyIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRecoveryTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRequestIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineResponseAndFaultIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRuntimeContractTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineSchedulingIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineStateStorageTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineTelephoneTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineTestExecution.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineTransportIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Sagas/Configuration/SagaConnectorTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Sagas/ContainerSagaIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Sagas/LegacySagaIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Scheduling/ScopedSchedulingTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/ArrayMessageTypeTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/CoreMessageBodyContractTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/DictionarySendHeadersTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/EnvelopeMetadataProjectionTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/ForwardMessageTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/HeaderRoundTripTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/HostMetadataRoundTripTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/JsonObjectConsumptionTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/MemoryMessageBodyTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/MessageBodyContractAssertions.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/MinimalEnvelopeRedeliveryTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/NotSupportedMessageBodyTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/Protobuf/ProtobufCompatibilityPayload.Populate.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/Protobuf/ProtobufCompatibilityPayload.proto` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/SerializationConfigurationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/SerializationContractIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/SerializationFaultTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonApplicationFormatCompatibilityTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonCollectionTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonConfigurationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonConstructorBindingTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonDateOnlyTimeOnlyTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonDateTimeTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonDecimalTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonExtensionDataTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonExtensionsTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonInterfaceMetadataTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonMessageBodyTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonMessageSerializerOptionsTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonObjectMessageBodyTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonPolymorphismTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonRawMessageBodyTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonRoundTrip.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonScalarTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonTypeSafetyTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Testing/ActivityTestHarnessTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Testing/AsyncElementListTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Testing/AsyncInactivityObserverTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Testing/BusActivityIndicatorTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Testing/ConditionExpressionTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Testing/ConsumeObserverTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Testing/DependencyInjectionTestHarnessTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Testing/DiagnosticOutputTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Testing/DynamicReceiveEndpointConnectorTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Testing/HostedServiceLifecycleTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Testing/InMemoryTestHarnessBehaviorTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Testing/MediatorTestHarnessBehaviorTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Testing/MessageFilterTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Testing/MessageObservationListTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Testing/MultiTestConsumerBehaviorTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Testing/ObservableTimeProvider.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Testing/OpenTelemetryGlobalCollection.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Testing/RecordedMessageTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Testing/SagaPollingTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Testing/SagaTestHarnessBehaviorTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Testing/SystemTextJsonGlobalOptionsCollection.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Testing/TelemetryMonitorTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Testing/TestHarnessTimeProviderTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Testing/TestingServiceProviderExtensionsTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Topology/Configuration/CorrelationIdConventionTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Topology/Configuration/EndpointConventionIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Topology/Configuration/TopologyConventionIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Transactions/AmbientTransactionBusTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Transactions/BufferedBusTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Transactions/DeferredBusRegistrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Transformation/TransformPipelineTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Transports/BusHealthLifecycleTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Transports/Components/KillSwitch/KillSwitchIntegrationTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Transports/Components/KillSwitch/KillSwitchTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Transports/Fabric/MessageFabricTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Transports/HostConfigurationRetryExtensionsTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Transports/ReceiveEndpointDispatcherTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Transports/RequestOutcomeTimeToLiveTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Transports/RiderCollectionTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Transports/SendEndpointCacheTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Util/TaskExecutorTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/Util/TaskUtilTests.cs` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj` | Added |  |
-| `tests2/ViciOne.ServiceBus.Tests/packages.lock.json` | Added |  |
-| `tests2/testconfig.json` | Added |  |
-| `tests2/testsettings.json` | Added |  |
-| `tools/ci/api_surface.cs` | Added |  |
-| `tools/ci/collect_api_assemblies.py` | Added |  |
-| `tools/ci/compare_api_surface.py` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/AmazonS3/MessageData/AmazonS3MessageDataRepositoryTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/Infrastructure/AmazonS3TestBucket.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/Requirements/AmazonS3LocalIntegrationRequirements.json` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests.csproj` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/packages.lock.json` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/AmazonS3/MessageData/AmazonS3MessageDataConfigurationTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/AmazonS3/MessageData/AmazonS3MessageDataObserverTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/Requirements/AmazonS3Requirements.json` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/packages.lock.json` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/AzureTable/AzureTableFuturePersistenceTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/AzureTable/AzureTableJobServiceIntegrationTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/AzureTable/AzureTableRoutingSlipFuturePersistenceTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/AzureTable/Saga/AzureTableSagaConcurrencyTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/AzureTable/Saga/AzureTableSagaRepositoryIntegrationTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Infrastructure/AzureTableTestTable.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/MessageJournal/AzureTableMessageJournalStoreTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Requirements/AzureTableLocalIntegrationRequirements.json` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.csproj` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/packages.lock.json` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/AzureTable/Configuration/AzureTableConfigurationContractTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/AzureTable/Saga/AzureTableSagaRepositoryBoundaryTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/AzureTable/Saga/EntityConverterTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/AzureTable/Saga/SagaKeyFormatterTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/MessageJournal/AzureTableMessageJournalOptionsTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/MessageJournal/AzureTableMessageJournalStoreTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Requirements/AzureTableRequirements.json` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/ViciOne.ServiceBus.Azure.Table.Tests.csproj` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/packages.lock.json` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/DynamoDbIntegration/Saga/DynamoDbSagaConcurrencyTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/DynamoDbIntegration/Saga/DynamoDbSagaConfigurationTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/DynamoDbIntegration/Saga/DynamoDbSagaExpirationTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/DynamoDbIntegration/Saga/DynamoDbSagaPersistenceTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/Infrastructure/DynamoDbTestTable.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/Requirements/DynamoDbLocalIntegrationRequirements.json` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests.csproj` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/packages.lock.json` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/DynamoDbIntegration/Saga/DynamoDbSagaFailureBoundaryTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/DynamoDbIntegration/Saga/DynamoDbSagaRepositoryConfigurationTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/Requirements/DynamoDbRequirements.json` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests.csproj` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/packages.lock.json` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/BusOutboxDeliveryServiceTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkDeferredBusIntegrationTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkExecutionStrategyRetryTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkFuturePersistenceTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkJobServiceIntegrationTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkRoutingSlipFuturePersistenceTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/InboxOutboxConcurrencyTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/QuartzTransactionalOutboxTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/ReliableTransactionalOutboxTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/ScopedOutboxFilterTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/TransactionalOutboxFaultTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/EntityFrameworkCoreIntegration/TransactionalOutboxRequestSagaTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/Infrastructure/PostgreSqlTestDatabase.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/MessageJournal/EntityFrameworkMessageJournalStoreTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/Requirements/EntityFrameworkLocalIntegrationRequirements.json` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/Saga/PostgreSqlPessimisticSagaLockTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/Saga/PostgreSqlPessimisticSagaQueryCustomizationTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/Saga/PostgreSqlReadOnlySagaTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/Saga/PostgreSqlSagaConcurrencyTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/Saga/PostgreSqlSagaRepositoryIntegrationTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.csproj` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/packages.lock.json` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Configuration/EntityFrameworkProviderConfigurationTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Configuration/EntityFrameworkTestDatabaseNameTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Configuration/EntityFrameworkTimeProviderTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/EntityFrameworkCoreIntegration/EntityFrameworkExecutionStrategyTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/MessageJournal/EntityFrameworkMessageJournalModelTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Outbox/BusOutboxDeliveryTelemetryTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Outbox/EntityFrameworkOutboxWriteCoordinatorTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Requirements/EntityFrameworkRequirements.json` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Saga/DbContextSagaRepositoryContextTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Saga/EntityFrameworkSagaRepositoryFactoryTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Saga/SqliteOptimisticSagaConcurrencyTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/SqlLockStatementProviderTests.cs` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj` | Added |  |
+| `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/packages.lock.json` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Configuration/QuartzContainerIntegrationTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Configuration/QuartzEndpointDefinitionTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Configuration/QuartzRegistrationExtensionsTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Configuration/QuartzSchedulerOptionsTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/JobDataMessageContextTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/JobService/QuartzJobServiceFaultIntegrationTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/JobService/QuartzJobServiceLifecycleIntegrationTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/JobService/QuartzJobServiceSuspectAttemptIntegrationTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzChainedSchedulingIntegrationTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzCourierRedeliveryIntegrationTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzExplicitRedeliveryIntegrationTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzHostedServiceSettingsTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzIntegrationCollection.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzMissingSagaRedeliveryIntegrationTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzNestedRequestIntegrationTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzOutboxSchedulingIntegrationTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzRecurringDeliveryIntegrationTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzSagaRequestTimeoutIntegrationTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzSagaSchedulingIntegrationTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzScheduleTimingIntegrationTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzScheduledRedeliveryIntegrationTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzScheduledRedeliveryScopeTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/QuartzTriggerKeyTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/ScheduledMessageExpirationTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/ScheduledMessageJobTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/SchedulerBusObserverTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/QuartzIntegration/SchedulerCommandIntegrationTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/InheritedBehaviorDispositionTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzIntegrationRequirements.json` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Testing/ConsumeCompletionObserver.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Testing/QuartzJobServiceTestBus.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Testing/QuartzTestBus.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Testing/ScheduledMessageCapture.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Testing/ScheduledMessageSequenceCapture.cs` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/ViciOne.ServiceBus.QuartzIntegration.Tests.csproj` | Added |  |
+| `tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/packages.lock.json` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/MessageContracts/ExpectedInitializer.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/MessageContracts/ExpectedMessageContractDiagnostic.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/MessageContracts/MessageContractScenario.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/MessageContracts/MessageContractScenarioCatalog.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/MessageContracts/MessageContractSourceFactory.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/MessageContracts/MessageSourceForm.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure.csproj` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/packages.lock.json` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests/Compilation/RoslynTestHostTests.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests/Requirements/RoslynInfrastructureRequirements.json` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests.csproj` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests/packages.lock.json` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/Diagnostics/DiagnosticObservation.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/References/MetadataReferenceClosure.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/RoslynTestHost.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.csproj` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/packages.lock.json` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/Configuration/TestConfigurationProviderTests.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/Requirements/RequirementCoverageAttributeTests.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/Requirements/RequirementCoverageProjectionVerifierTests.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/Requirements/RequirementCoverageVerifierRequirements.json` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/ViciOne.ServiceBus.Tests.Infrastructure.Tests.csproj` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/packages.lock.json` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Brokers/BrokerOutageControlClient.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/TestConfigurationProvider.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/ViciOneTestOptions.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Databases/TestDatabaseName.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageAttribute.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageProjectionVerifier.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/packages.lock.json` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Brokers/ReceiveEndpointRecoveryObserver.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Caching/GreenCacheTestFactory.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxCheckpointDriver.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxTestContextFactory.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/KillSwitch/KillSwitchTestDriver.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalEntryTestFactory.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalWriterTestDriver.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/MessagingSystemNormalizerTestDriver.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/OutboxTelemetryTestDriver.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Serialization/ForwardingExpirationTestDriver.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/DeferredBusTestDriver.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/TransactionFilterTestDriver.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/RiderCollectionTestDriver.cs` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj` | Added |  |
+| `tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/packages.lock.json` | Added |  |
+| `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/CommandLineTests.cs` | Added |  |
+| `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/MessageSequenceLedgerTests.cs` | Added |  |
+| `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ObservationBoundaryTests.cs` | Added |  |
+| `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/Requirements/DiagnosticsRequirements.json` | Added |  |
+| `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ResultDeliveryTests.cs` | Added |  |
+| `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ViciOne.ServiceBus.Diagnostics.Tests.csproj` | Added |  |
+| `tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/packages.lock.json` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqCompressionTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqConnectionTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqDeployTopologyTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqErrorTransportTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqFixtureRecoveryTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqHandlerFlowTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqJobServiceTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqJolokiaTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqKillSwitchTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqLifecycleTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqMessageFlowTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqOutboxRedeliveryTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqPublishTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqQuartzSchedulingTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqRedeliveryTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqRequestResponseTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqSchedulingTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqServiceClientTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqTelemetryTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqTemporaryReplyTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ActiveMqTopicEndpointTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/AssemblyInfo.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/DeployTopologyContracts/ActiveMqDeployTopologyContracts.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/Infrastructure/ActiveMqBroker.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/Infrastructure/ReceiveCompletionObserver.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/PublishContracts/ActiveMqPublishContracts.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/Requirements/ActiveMqLocalIntegrationRequirements.json` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.csproj` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/packages.lock.json` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqEndpointAddressTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqEndpointConfigurationTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqHostAddressTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqMessageBodyTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqRecoveryObserverTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqTransport/ActiveMqLifecycleTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqTransport/ActiveMqSendTimingTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ActiveMqTransport/Configuration/ActiveMqHostSettingsTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Brokers/BrokerOutageControlClientTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Configuration/ActiveMqConfigurationTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Requirements/ActiveMqRequirements.json` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/TestDoubles/InterfaceProxy.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Topology/ArtemisTopologyTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/Topology/ConsumerEntityTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/packages.lock.json` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsConnectionTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsDeployTopologyTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsDynamicEndpointTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsErrorTransportTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsFaultOwnershipTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsFifoTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsFilterPolicyTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsHandlerFlowTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsLifecycleTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsMessageDataTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsMultiBusTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsOutboxRedeliveryTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsPublishTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsQuartzSchedulingTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsRawJsonTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsReceiveLockTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsRedeliveryTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsRequestResponseTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsSchedulingTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsScopeTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsSentTimeTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsTelemetryTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsTopicEndpointTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/AmazonSqsTopologyTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/DeployTopologyContracts/AmazonSqsDeployTopologyContracts.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/Infrastructure/AmazonSqsLocalStack.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/PublishContracts/AmazonSqsPublishContracts.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/Requirements/AmazonSqsLocalIntegrationRequirements.json` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests.csproj` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/packages.lock.json` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsBatchResponseTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsDelayTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsEndpointAddressTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsEndpointConfigurationTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsEntityNameTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsEnvelopeTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsHeaderProviderTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsHostConfigurationTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsLifecycleBoundaryTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsMessageBodyTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsReceiveLifecycleTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/AmazonSqsVisibilityConfigurationTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/Requirements/AmazonSqsRequirements.json` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/TestDoubles/InterfaceProxy.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests.csproj` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/packages.lock.json` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/AssemblyInfo.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/AzureServiceBusDeadLetterTransportTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/AzureServiceBusFunctionReceiverTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/AzureServiceBusMessageFlowTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/AzureServiceBusPublishTopologyTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/AzureServiceBusSessionAndSchedulingTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/AzureServiceBusSessionStateTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/AzureServiceBusSubscriptionRuleTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/AzureServiceBusTopologyLifecycleTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/Infrastructure/AzureServiceBusEmulatorCapabilityTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/Infrastructure/AzureServiceBusLocalFixture.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/Requirements/AzureServiceBusLocalIntegrationRequirements.json` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/TopologyContracts/AzureServiceBusTopologyContracts.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests.csproj` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/packages.lock.json` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/Requirements/AzureServiceBusRequirements.json` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ServiceBusConnectionContextTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ServiceBusEndpointAddressTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ServiceBusEndpointConfigurationTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ServiceBusFunctionsAndProbeTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ServiceBusHostAndNameValidationTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ServiceBusMessageBodyTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ServiceBusTopologyTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests.csproj` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/packages.lock.json` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests/AssemblyInfo.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests/EventHubIntegration/EventHubBatchAndReliabilityTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests/EventHubIntegration/EventHubEndpointAndBusBoundaryTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests/EventHubIntegration/EventHubInteropAndContextTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests/EventHubIntegration/EventHubProducerDeliveryTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests/EventHubIntegration/EventHubSagaAndLifecycleTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests/Infrastructure/EventHubLocalFixture.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests/Requirements/EventHubLocalIntegrationRequirements.json` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests/ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests.csproj` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests/packages.lock.json` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/AssemblyInfo.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/Infrastructure/RabbitMqBroker.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/RabbitMqBrokerContractTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/RabbitMqFaultTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/RabbitMqLifecycleTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/RabbitMqMessageFlowTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/RabbitMqPayloadAndConcurrencyTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/RabbitMqRequestResponseTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/RabbitMqSchedulingTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/RabbitMqStreamAndClusterTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/RabbitMqTopologyTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/Requirements/RabbitMqLocalIntegrationRequirements.json` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests.csproj` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/packages.lock.json` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqConnectionExceptionTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqEndpointAddressTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqHostAddressTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqTransport/Configuration/ConfigurationHostSettingsTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqTransport/Configuration/RabbitMqStreamConfigurationTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqTransport/RabbitMqAddressExtensionsTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqTransport/Topology/RabbitMqBusTopologyTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqTransport/TransportLifetimeTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/Requirements/RabbitMqAddressRequirements.json` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/packages.lock.json` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/Infrastructure/PostgreSqlTestDatabase.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/Infrastructure/PostgreSqlTransportInspection.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlAutoDeleteTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlBasicTransportTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlBuiltInRedeliveryTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlBusOutboxTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlConcurrencyAndPriorityTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlDeliveryLimitTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlDeliveryStateTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlIsolationTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlJobServiceTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlLockRenewalTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlMaintenanceTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlNotificationTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlProvisioningTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlPublishAndPurgeTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlReceiveConfigurationTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlRedeliveryTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlRoutingAndFailureTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlRoutingSlipTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlScheduleCancellationTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlSchedulingTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlSerializationAndRequestTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/PostgreSql/PostgreSqlUnlockTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/Requirements/PostgreSqlTransportRequirements.json` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/TestAssembly.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.csproj` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/packages.lock.json` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/Infrastructure/SqlServerTestDatabase.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/Infrastructure/SqlServerTransportInspection.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/Requirements/SqlServerTransportRequirements.json` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlProvisioningCredentialTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerConcurrencyTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerConfigurationAndRetryTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerDeliveryLimitTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerJobServiceTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerLockRenewalTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerMaintenanceAndTopologyTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerProvisioningTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerPublishAndPurgeTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerRedeliveryTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerScheduleCancellationTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerSchedulingTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerSerializationAndRequestTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/TestAssembly.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.csproj` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/packages.lock.json` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Address/SqlAddressTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Configuration/SqlConfigurationTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Infrastructure/RunnerContractTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/PostgreSql/PostgresConnectionConfigurationTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Requirements/SqlTransportRequirements.json` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/SqlServer/SqlServerConnectionConfigurationTests.cs` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj` | Added |  |
+| `tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/packages.lock.json` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/NewId/NewIdProviders/WorkerIdProviderTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/Requirements/AbstractionsLocalIntegrationRequirements.json` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.csproj` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/packages.lock.json` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Attributes/MessageUrnAttributeTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/BusControlHealthExtensionsTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Clients/RequestTimeoutTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Clients/ResponseTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Contexts/MessageBodyContractTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Contexts/PipeContextTimeProviderExtensionsTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Internals/Extensions/QueryStringExtensionsTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Internals/Extensions/TaskExtensionsTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Internals/Extensions/TypeExtensionsTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Internals/Extensions/TypeRelationshipExtensionsTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Internals/Reflection/ReadWritePropertyCacheTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Internals/Reflection/ReadWritePropertyTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/MessageUrnTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Metadata/BusHostInfoTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Metadata/FaultMessageTypeTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Metadata/ImplementedMessageTypeCacheTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Middleware/Configuration/PipeSpecificationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Middleware/Configuration/Publish/PublishPipeSpecificationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Middleware/Configuration/Send/SendPipeSpecificationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Middleware/ExceptionFilters/ExceptionSpecificationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Middleware/PipeExtensionsTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Middleware/ScopePipeContextTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Middleware/SupervisorLifecycleTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/NewIdFormatters/NewIdFormatterTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/NewIdFormatters/ReferenceCorpus.json` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/NewIdGeneratorTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/NewIdGuidInteropTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/NewIdOrderingTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/NewIdTestInputs.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/NewId/NewIdValueTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Requirements/AbstractionsRequirements.json` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Serialization/ArrayMessageBodyTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Serialization/Base64MessageBodyTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Serialization/BytesMessageBodyTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Serialization/EmptyMessageBodyTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Serialization/StringMessageBodyTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/TypeCacheTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Util/ConnectableTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/Util/RequestRateAlgorithmTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj` | Modified | `tests/MassTransit.Abstractions.Tests/MassTransit.Abstractions.Tests.csproj` |
+| `tests/ViciOne.ServiceBus.Abstractions.Tests/packages.lock.json` | Added |  |
+| `tests/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/CancellationTokenOverloadMethodFixerTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/Fixtures/ServiceBusCodeFixFixture.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/MessageContractCodeFixProvider/MessageContractCodeFixScenarioTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/Requirements/CodeFixRequirements.json` | Added |  |
+| `tests/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.csproj` | Added |  |
+| `tests/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/packages.lock.json` | Added |  |
+| `tests/ViciOne.ServiceBus.Analyzers.Tests/AnalyzerInstanceStateTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Analyzers.Tests/AsyncMethodAnalyzerTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Analyzers.Tests/CancellationTokenOverloadMethodAnalyzerTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Analyzers.Tests/Fixtures/ServiceBusAnalyzerFixture.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Analyzers.Tests/MessageContractAnalyzer/DictionaryInitializerTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Analyzers.Tests/MessageContractAnalyzer/MessageContractScenarioCatalogTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Analyzers.Tests/MessageContractAnalyzer/MessageContractScenarioTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Analyzers.Tests/MessageContractAnalyzer/MessageDataInitializerTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Analyzers.Tests/Requirements/AnalyzerRequirements.json` | Added |  |
+| `tests/ViciOne.ServiceBus.Analyzers.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj` | Modified | `tests/MassTransit.Analyzers.Tests/MassTransit.Analyzers.Tests.csproj` |
+| `tests/ViciOne.ServiceBus.Analyzers.Tests/packages.lock.json` | Added |  |
+| `tests/ViciOne.ServiceBus.MessagePack.Tests/Architecture/MessagePackSerializerBoundaryTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.MessagePack.Tests/Architecture/MessagePackSerializerReferenceScanner.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.MessagePack.Tests/Configuration/MessagePackTransportIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.MessagePack.Tests/Requirements/MessagePackRequirements.json` | Added |  |
+| `tests/ViciOne.ServiceBus.MessagePack.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.MessagePack.Tests/Serialization/InterfaceMessagePackFormatterTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.MessagePack.Tests/Serialization/InternalMessagePackResolverTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.MessagePack.Tests/Serialization/MessagePackDomainContractTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.MessagePack.Tests/Serialization/MessagePackEnvelopeMetadataProjectionTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.MessagePack.Tests/Serialization/MessagePackEnvelopeTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.MessagePack.Tests/Serialization/MessagePackMessageBodyTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.MessagePack.Tests/Serialization/MessagePackMessageSerializerTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.MessagePack.Tests/Serialization/MessagePackRoundTrip.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.MessagePack.Tests/Serialization/MessagePackTestContracts.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.MessagePack.Tests/ViciOne.ServiceBus.MessagePack.Tests.csproj` | Added |  |
+| `tests/ViciOne.ServiceBus.MessagePack.Tests/packages.lock.json` | Added |  |
+| `tests/ViciOne.ServiceBus.SignalR.Tests/HubConnectionTestClient.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.SignalR.Tests/HubLifetimeManagerTestEnvironment.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.SignalR.Tests/RecordingLogger.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.SignalR.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.SignalR.Tests/Requirements/SignalRRequirements.json` | Added |  |
+| `tests/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj` | Modified | `tests/MassTransit.SignalR.Tests/MassTransit.SignalR.Tests.csproj` |
+| `tests/ViciOne.ServiceBus.SignalR.Tests/ViciOneServiceBusHubLifetimeManagerFanOutTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.SignalR.Tests/ViciOneServiceBusHubLifetimeManagerLocalTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.SignalR.Tests/ViciOneServiceBusHubLifetimeManagerScaleOutTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.SignalR.Tests/ViciOneServiceBusHubLifetimeManagerSerializationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.SignalR.Tests/packages.lock.json` | Added |  |
+| `tests/ViciOne.ServiceBus.StateMachineVisualizer.Tests/Abstractions/StateMachineGeneratorTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.StateMachineVisualizer.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.StateMachineVisualizer.Tests/Requirements/StateMachineVisualizerRequirements.json` | Added |  |
+| `tests/ViciOne.ServiceBus.StateMachineVisualizer.Tests/StateMachineGraphFixtures.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.StateMachineVisualizer.Tests/StateMachineGraphvizGeneratorTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.StateMachineVisualizer.Tests/StateMachineInputTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.StateMachineVisualizer.Tests/StateMachineMermaidGeneratorTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.StateMachineVisualizer.Tests/ViciOne.ServiceBus.StateMachineVisualizer.Tests.csproj` | Added |  |
+| `tests/ViciOne.ServiceBus.StateMachineVisualizer.Tests/packages.lock.json` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Agents/PipeContextSupervisorFailureTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Agents/PipeContextSupervisorTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Architecture/OutboundNetworkBoundaryTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Architecture/RemovalBoundaryTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Caching/GreenCacheCapacityTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Caching/GreenCacheObserverTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Caching/GreenCacheTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Caching/Internals/BucketNodeTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Caching/Internals/BucketTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Caching/Internals/IndexTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Caching/Internals/NodeTrackerTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Caching/Internals/NodeValueFactoryTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Caching/MultipleIndexTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Clients/ContainerRequestClientRegistrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Clients/RequestClientBoundaryTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Clients/RequestClientLifecycleTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Clients/RequestClientMetadataTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Clients/ResponseAcceptanceTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Clients/ResponseMatchingTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Configuration/BindPipeSpecificationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Configuration/CircuitBreakerOptionsTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/BuiltPipelineConfigurationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/ConfigurationObserverTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/ConfigurationValidationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/ConsumerMessageConfigurationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/PublishPipeConfigurationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/Retry/ConsumeContextRetryPipeSpecificationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/Retry/RetryPipeSpecificationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/SendPipeConfigurationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/RegistrationConfiguratorExtensionsTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Configuration/EndpointNaming/EndpointNameFormatterTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Configuration/KillSwitchOptionsTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Configuration/MessageJournalConfigurationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Configuration/MessageRetryConfigurationExtensionsTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Configuration/PartitionMessageConfigurationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Configuration/RetryConfigurationExtensionsTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Configuration/ServiceInstanceEndpointTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Configuration/TransactionConfigurationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchDeliveryIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Consumers/ConsumerAndSagaConcurrencyTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Consumers/ConsumerConventionIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Consumers/DynamicConsumePipeConnectionTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Consumers/InstanceExtensionsTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Contexts/ConsumeContextEndpointExtensionsTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Contexts/ConversationContextTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Contexts/MessageContextFlowTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Contexts/SentMessageMetadataTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Contexts/TransactionContextExtensionsTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Contracts/InterfaceMessageDispatchTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Courier/ContainerActivityRegistrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Courier/ContainerRoutingSlipOutboxRequestTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Courier/CourierTestSupport.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipArgumentIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipBuilderContractTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipFaultIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipHostConfigurationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipLifecycleIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipPayloadIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipRequestIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipRetryIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipRevisionAndSubscriptionTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/DependencyInjection/ConfigureEndpointExclusionTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumerRegistrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerDiscovery/ContainerDiscoveryTypes.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerEndpointRoutingTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerNamespaceDiscoveryTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerOutboxScopeTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerScopedEndpointTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/DependencyInjection/EndpointConfigurationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/DependencyInjection/HandlerRegistrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/DependencyInjection/MultiBusRequestTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/DependencyInjection/MultiBusScopeIsolationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/DependencyInjection/ReceiveEndpointDependencyTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/DependencyInjection/ScopedPipelineTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Events/FaultExceptionInfoTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Events/PolymorphicFaultDispatchTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Futures/BatchFutureIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Futures/FutureLocationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Futures/FutureRequestConsumerIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryBusLifecycleTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryDelayProviderTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryErrorTransportTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryFaultPublicationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryPublishEndpointTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryReceiveEndpointConcurrencyTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryScheduledPublishTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemorySendEndpointTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryTransportIsolationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Initializers/Conventions/DefaultInitializerConventionTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Initializers/Conventions/DictionaryInitializerConventionTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Initializers/DynamicContractIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Initializers/MessageInitializerObjectGraphTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Initializers/MessageInitializerRequestResponseTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Initializers/MessageInitializerScalarConversionTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/ArrayPropertyConverterTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/DictionaryPropertyConverterTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/ListPropertyConverterTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/StatePropertyConverterTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/TaskPropertyConverterTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/VariablePropertyConverterTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/AsyncPropertyProviderTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryArrayTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryDictionaryTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryObjectGraphTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryScalarTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryVariableTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderTestContext.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/TaskPropertyProviderTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Initializers/TaskInitializerExtensionsTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Initializers/TypeConverters/DateTimeTypeConverterTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Initializers/TypeConverters/ExceptionTypeConverterTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Internals/Caching/CacheEntry.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Internals/Caching/ManualTimeProvider.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Internals/Caching/TimeToLiveCachePolicyTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Internals/Caching/ViciOneServiceBusCacheCapacityTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Internals/Caching/ViciOneServiceBusCacheRecoveryTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Internals/Reflection/DynamicImplementationBuilderTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Introspection/BusProbeTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/JobService/Configuration/JobServiceEndpointConfigurationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/JobService/Configuration/RecurringJobScheduleConfiguratorTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/JobService/Integration/ContainerJobConsumerDiscoveryTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/JobService/Integration/ContainerJobDiscovery/ContainerJobDiscoveryTypes.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/JobService/Integration/InMemoryJobServiceTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/JobService/JobService/JobProgressBufferTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/JobService/JobService/JobServiceLifecycleTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionCalendarTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionContractTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionDaylightSavingTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionParsingTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionSchedulingTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/JobService/StateMachine/JobAttemptGenerationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Mediator/ContainerMediatorIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Mediator/Contexts/MediatorSendObserverTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Mediator/ExpiredForwardingMediatorTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Mediator/MediatorDispatchTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Mediator/MediatorRequestTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/MessageData/MessageDataEndpointIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/MessageData/MessageDataInitializerIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/MessageData/MessageDataRepositoryTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/MessageData/MessageDataTestSupport.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/MessageData/MessageDataTransportIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/MessageData/PropertyProviders/PutMessageDataPropertyProviderTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalContractTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalTelemetryTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalWriterTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/CircuitBreaker/CircuitBreakerFilterTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/ConsumeContextPayloadPropagationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/ContextFilterTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/DynamicRoutingTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/FilterObserverTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/ForkFilterTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/InMemoryOutbox/InMemoryOutboxCheckpointTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/InMemoryOutbox/InMemoryOutboxFilterTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/LatestFilterTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/BusOutboxNotificationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/ExpiredForwardingOutboxTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/InMemoryOutboxAttemptIsolationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/InMemoryOutboxFaultTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/InMemoryOutboxMessageRepositoryTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/InMemoryOutboxRedeliveryTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/RequestClientOutboxTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/PartitionerTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/PipeCompositionTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/RateAndConcurrencyLimitTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/Redelivery/DelayedRedeliveryIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/RequestFilterFaultTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/RescueFilterTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/RetryBusObserverTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/RetryFilterTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/TenantScopeIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutCancellationIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutConfigurationSurfaceTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutFilterTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Middleware/TransactionFilterTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Monitoring/MessagePipelineActivityTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Monitoring/MessagePipelineMetricsTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Monitoring/MetricObservationSession.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Monitoring/ServiceBusTelemetryTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Observers/MessageObserverTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Observers/PublishObserverTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Observers/ReceiveObserverTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Observers/SendObserverTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/ReliableMessaging/ReliableInMemoryIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Requirements/RequirementCoverageProjectionTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/RetryPolicies/BaseRetryPolicyContextTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/RetryPolicies/ExponentialRetryPolicyTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/RetryPolicies/ImmediateRetryPolicyTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/RetryPolicies/IncrementalRetryPolicyTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/RetryPolicies/IntervalRetryPolicyTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/RetryPolicies/NoRetryPolicyTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/RetryPolicies/PipeRetryExtensionsTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/ContainerStateMachineScopeTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineActivityTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineCompositeEventTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineConcurrencyIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineConditionTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineConfigurationContractTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineDefinitionTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineExceptionBehaviorTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineLifecycleIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineNestedRequestIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineObservationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineOutboxSchedulingIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachinePolicyIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRecoveryTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRequestIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineResponseAndFaultIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRuntimeContractTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineSchedulingIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineStateStorageTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineTelephoneTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineTestExecution.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineTransportIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Sagas/Configuration/SagaConnectorTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Sagas/ContainerSagaIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Sagas/LegacySagaIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Scheduling/ScopedSchedulingTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/ArrayMessageTypeTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/CoreMessageBodyContractTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/DictionarySendHeadersTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/EnvelopeMetadataProjectionTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/ForwardMessageTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/HeaderRoundTripTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/HostMetadataRoundTripTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/JsonObjectConsumptionTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/MemoryMessageBodyTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/MessageBodyContractAssertions.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/MinimalEnvelopeRedeliveryTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/NotSupportedMessageBodyTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/Protobuf/ProtobufCompatibilityPayload.Populate.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/Protobuf/ProtobufCompatibilityPayload.proto` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/SerializationConfigurationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/SerializationContractIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/SerializationFaultTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonApplicationFormatCompatibilityTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonCollectionTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonConfigurationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonConstructorBindingTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonDateOnlyTimeOnlyTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonDateTimeTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonDecimalTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonExtensionDataTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonExtensionsTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonInterfaceMetadataTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonMessageBodyTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonMessageSerializerOptionsTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonObjectMessageBodyTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonPolymorphismTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonRawMessageBodyTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonRoundTrip.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonScalarTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonTypeSafetyTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Testing/ActivityTestHarnessTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Testing/AsyncElementListTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Testing/AsyncInactivityObserverTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Testing/BusActivityIndicatorTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Testing/ConditionExpressionTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Testing/ConsumeObserverTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Testing/DependencyInjectionTestHarnessTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Testing/DiagnosticOutputTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Testing/DynamicReceiveEndpointConnectorTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Testing/HostedServiceLifecycleTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Testing/InMemoryTestHarnessBehaviorTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Testing/MediatorTestHarnessBehaviorTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Testing/MessageFilterTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Testing/MessageObservationListTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Testing/MultiTestConsumerBehaviorTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Testing/ObservableTimeProvider.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Testing/OpenTelemetryGlobalCollection.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Testing/RecordedMessageTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Testing/SagaPollingTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Testing/SagaTestHarnessBehaviorTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Testing/SystemTextJsonGlobalOptionsCollection.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Testing/TelemetryMonitorTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Testing/TestHarnessTimeProviderTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Testing/TestingServiceProviderExtensionsTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Topology/Configuration/CorrelationIdConventionTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Topology/Configuration/EndpointConventionIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Topology/Configuration/TopologyConventionIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Transactions/AmbientTransactionBusTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Transactions/BufferedBusTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Transactions/DeferredBusRegistrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Transformation/TransformPipelineTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Transports/BusHealthLifecycleTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Transports/Components/KillSwitch/KillSwitchIntegrationTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Transports/Components/KillSwitch/KillSwitchTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Transports/Fabric/MessageFabricTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Transports/HostConfigurationRetryExtensionsTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Transports/ReceiveEndpointDispatcherTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Transports/RequestOutcomeTimeToLiveTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Transports/RiderCollectionTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Transports/SendEndpointCacheTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Util/TaskExecutorTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/Util/TaskUtilTests.cs` | Added |  |
+| `tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj` | Modified | `tests/MassTransit.Tests/MassTransit.Tests.csproj` |
+| `tests/ViciOne.ServiceBus.Tests/packages.lock.json` | Added |  |
+| `tests/testconfig.json` | Added |  |
+| `tests/testsettings.json` | Added |  |
 | `tools/ci/fixtures/__init__.py` | Added |  |
 | `tools/ci/fixtures/broker_logs.py` | Added |  |
 | `tools/ci/fixtures/compose_fixture.py` | Added |  |
 | `tools/ci/fixtures/outage_protocol.py` | Added |  |
-| `tools/ci/record_expected.py` | Added |  |
+| `tools/ci/fixtures/run_scope.py` | Added |  |
 | `tools/ci/run_broker_category.py` | Added |  |
-| `tools/ci/run_test_category.py` | Added |  |
-| `tools/ci/tests/__init__.py` | Added |  |
-| `tools/ci/tests/test_locked_restore.py` | Added |  |
-| `tools/ci/tests/test_module_names.py` | Added |  |
-| `tools/ci/tests/test_record_expected.py` | Added |  |
-| `tools/ci/tests/test_run_broker_category.py` | Added |  |
-| `tools/ci/tests/test_run_test_category.py` | Added |  |
-| `tools/ci/tests/test_verification_model.py` | Added |  |
-| `tools/ci/tests/test_verify.py` | Added |  |
-| `tools/ci/validate_receipt.py` | Added |  |
-| `tools/ci/verification/__init__.py` | Added |  |
-| `tools/ci/verification/fixture.py` | Added |  |
-| `tools/ci/verification/model.py` | Added |  |
-| `tools/ci/verification/process_tree.py` | Added |  |
-| `tools/ci/verification/receipt.py` | Added |  |
-| `tools/ci/verification/run_scope.py` | Added |  |
-| `tools/ci/verification/trx.py` | Added |  |
-| `tools/ci/verify.py` | Added |  |
 | `tools/ci/vulnerability_inventory.py` | Added |  |
 | `tools/diagnostics/ViciOne.ServiceBus.Diagnostics/AssemblyInfo.cs` | Added |  |
 | `tools/diagnostics/ViciOne.ServiceBus.Diagnostics/BusLifecycleScenario.cs` | Added |  |
@@ -11501,27 +11476,8 @@ by hand; regenerate it with `python3 tools/identity/change_list.py --write`.
 | `tools/diagnostics/ViciOne.ServiceBus.Diagnostics/RunScopedBroker.cs` | Added |  |
 | `tools/diagnostics/ViciOne.ServiceBus.Diagnostics/ViciOne.ServiceBus.Diagnostics.csproj` | Added |  |
 | `tools/diagnostics/ViciOne.ServiceBus.Diagnostics/packages.lock.json` | Added |  |
-| `tools/identity/analyzer_baseline_gate.py` | Added |  |
-| `tools/identity/apply_identity_refactor.py` | Added |  |
 | `tools/identity/artifact_gate.py` | Added |  |
 | `tools/identity/change_list.py` | Added |  |
-| `tools/identity/evidence_summary_gate.py` | Added |  |
-| `tools/identity/freeze_manifest.py` | Added |  |
-| `tools/identity/generate_rabbitmq_native_obligation_maps.py` | Added |  |
 | `tools/identity/historical_identity_policy.json` | Added |  |
 | `tools/identity/identity_gate.py` | Added |  |
 | `tools/identity/identity_rules.py` | Added |  |
-| `tools/identity/not_executed_source_gate.py` | Added |  |
-| `tools/identity/proof_contract_gate.py` | Added |  |
-| `tools/identity/test_analyzer_baseline_gate.py` | Added |  |
-| `tools/identity/test_artifact_gate.py` | Added |  |
-| `tools/identity/test_change_list.py` | Added |  |
-| `tools/identity/test_failure_partition_gate.py` | Added |  |
-| `tools/identity/test_freeze_manifest.py` | Added |  |
-| `tools/identity/test_identity_gate.py` | Added |  |
-| `tools/identity/test_identity_rules.py` | Added |  |
-| `tools/identity/test_not_executed_source_gate.py` | Added |  |
-| `tools/identity/test_proof_contract_gate.py` | Added |  |
-| `tools/identity/test_result_gate.py` | Added |  |
-| `tools/identity/test_test_failure_partition_gate.py` | Added |  |
-| `tools/identity/test_test_result_gate.py` | Added |  |

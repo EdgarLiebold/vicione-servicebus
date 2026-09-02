@@ -46,7 +46,7 @@
         "text-scan"
       ],
       "authorizedLineCount": 5632,
-      "authorizedLinesSha256": "36ba7cf3b152bd6e036af156224c4f170458ed5b3fcddb9cc05f6089bee79104",
+      "authorizedLinesSha256": "b53963372af44c1082609d8b11571c240a598ad66a646469892a109ec53ae36a",
       "category": "LEGAL_PROVENANCE",
       "path": "CHANGELIST.md"
     },
@@ -55,8 +55,8 @@
         "binary-scan",
         "text-scan"
       ],
-      "authorizedLineCount": 4,
-      "authorizedLinesSha256": "9cab3ea3c05981016bb4dd1ff63f88e583e6f32d6d8fb54e0e11b15a750b4f2b",
+      "authorizedLineCount": 2,
+      "authorizedLinesSha256": "bf4d886a129673c8c3bce3dbe15164c7752cb129ab88c788577f00de4ae0c9b9",
       "category": "LEGAL_PROVENANCE",
       "path": "MODIFICATIONS.md"
     },
@@ -370,22 +370,6 @@
     },
     {
       "allowedGates": [
-        "binary-scan"
-      ],
-      "blobSha256": "f60f86e19dba174b954ce712c3ba555fa57c25387c30b5b1cf06dccc7e31c1a8",
-      "category": "HISTORICAL_EVIDENCE",
-      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-DUAL-HOST/binlogs/unit-architecture.binlog"
-    },
-    {
-      "allowedGates": [
-        "binary-scan"
-      ],
-      "blobSha256": "07a05e6ac6cc1871740a1bd856d685d0b15bd8caa10d2d7b7f6765558c184344",
-      "category": "HISTORICAL_EVIDENCE",
-      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/binlogs/format-verify.binlog"
-    },
-    {
-      "allowedGates": [
         "binary-scan",
         "text-scan"
       ],
@@ -423,6 +407,190 @@
       "authorizedLinesSha256": "e16d69a20891a099e6a889804ee01a4ca5153274afe454731a9d8ecf607034b7",
       "category": "HISTORICAL_EVIDENCE",
       "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/C7-IMPLEMENTED-MESSAGE-TOPOLOGY/MUTATION_AND_ACCEPTANCE_EVIDENCE.md"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "003c7a33b2c6c0f72b2b73cb62ff149fa9858d338b29a0d9b403ebcf720744fe",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-COMMON-SCENARIOS-NATIVE-CLOSURE/binlogs/M05-build.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "49ab7e6e78b328f7074faff73c15189b1cd8307f2b03f8ba24d48b865f5f5442",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-COMMON-SCENARIOS-NATIVE-CLOSURE/binlogs/M15-build.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "0be16ba2f3483858dfa093a92665a19fe8992154149fa8dc65e5e51a56c5c4be",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-COMMON-SCENARIOS-NATIVE-CLOSURE/binlogs/container-engineering-build.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "f9052775b1d704e2fdd0c64a4e85533fe8699095b0e627ed7788a6f3b9139a0d",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-COMMON-SCENARIOS-NATIVE-CLOSURE/binlogs/container-engineering-restore.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "5f060f910574a7b29b9b1a2bf8555032988dc47ebb12d301e5f32bd7c0f68e41",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/binlogs/M03-build.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "ecdd6ed248bb9954d8f5aed6eb8f0720a236bd0662d8fa7e34fae7e4e09f254a",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-CONTAINER-RUNTIME-NATIVE-CLOSURE/binlogs/M09-build.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "90f433f6b395060b008f06febe26054861c0d3b6cffda14105cd7cf7774624cb",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/binlogs/M08-build.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "0bdb2cc8dde461f889e2892582b283b6dd88e01be777025011d5c1cf1d0971c4",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-FINAL-LEGACY-PROJECT-NATIVE-CLOSURE/binlogs/scoped-format.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "f60f86e19dba174b954ce712c3ba555fa57c25387c30b5b1cf06dccc7e31c1a8",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-DUAL-HOST/binlogs/unit-architecture.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "07a05e6ac6cc1871740a1bd856d685d0b15bd8caa10d2d7b7f6765558c184344",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-IN-MEMORY-OUTBOX-FILTER/binlogs/format-verify.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "e50e2591696bce5d09d98c948f89aabd74fa83f1a9c235c598de0e2e2f50efe3",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/binlogs/M09-build.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "618608dc854253dc4bed54c63b5a8082905b04e5e2c412030c395466c175dc53",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-MESSAGE-DATA-NATIVE-CLOSURE/binlogs/unit-test-dotnet-test.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "f24229f070e6ed0ef7c608646af568c5c049fd3f8d7c73a683036d41f1c921b8",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0182-0199/binlogs/engineering-build.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "813a11f7c60727357d905b1e5c604b457602cc3e0d8c04548baebcd19f7fbef7",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/binlogs/M01-build.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "459decb8b1e16eaf80e6c73d0b855d984f413f43007ad0de40524fb18c678337",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-PACKAGE-0201-0227/binlogs/format-scoped.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "b89796777309f072df29d564cac8f2c9ff251dbd31e53da5258a308c0603dd35",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-RUNTIME-SCHEDULING-LIFECYCLE/binlogs/focused-test.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "22bc98e1406486985622f76bcd3512a5e464185b92942b72ec5ee856d401422d",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-SERIALIZATION-NATIVE-CLOSURE/binlogs/format-verify.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "1e16bba74086e2ec16653b99a2de016a27e107a70b7e83763e374d44735af978",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-ACTIVITY-CONDITION-NATIVE-CLOSURE/binlogs/M02-build.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "1dd48fe189171ff59056240f9e70634d8d34f7fe37d8cf227035c5f345418736",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-DEFINITION-RUNTIME-NATIVE-CLOSURE/binlogs/unit-test-dotnet-test.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "34809ee5fede1f8a9bef10d3bed4c31f08d433f814233ab1b2e10ce6c2f126b4",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/binlogs/M05-build.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "f3c0e592ac5613d5072625ec073bbc410325ba2a425c751d8a94aab931b636a5",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-EXCEPTION-OBSERVATION-NATIVE-CLOSURE/binlogs/technical-unit-solution-build.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "ad0783db00cbe08fd711dc853293e2fdad5d63fbd2aa0a0d62aef6c22e5663e0",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-INTEGRATION-POLICY-NATIVE-CLOSURE/binlogs/M13-build.binlog"
+    },
+    {
+      "allowedGates": [
+        "binary-scan"
+      ],
+      "blobSha256": "1b7b965edc2d3afcc1c26642db5a68d62975b1320f8e9d7c14fd19d6b51d0b7c",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-12/CORE-STATE-MACHINE-INTEGRATION-POLICY-NATIVE-CLOSURE/binlogs/postrestore-build.binlog"
     },
     {
       "allowedGates": [
@@ -521,30 +689,10 @@
         "binary-scan",
         "text-scan"
       ],
-      "authorizedLineCount": 5,
-      "authorizedLinesSha256": "5eaf80a3b082530d263019308a265e2ca468ac56e6973442deda0adcca390ba6",
+      "authorizedLineCount": 3,
+      "authorizedLinesSha256": "5c54066f59b0ceb7366695c882f1d2c0a58a3ab9e68d4062c5ebde7d4c022f26",
       "category": "IDENTITY_TOOL_SELF_REFERENCE",
       "path": "tools/identity/identity_rules.py"
-    },
-    {
-      "allowedGates": [
-        "binary-scan",
-        "text-scan"
-      ],
-      "authorizedLineCount": 6,
-      "authorizedLinesSha256": "0472b2f286da42ed57b0626bba1de79011621e8f6ac06c4d04776982309b74da",
-      "category": "IDENTITY_TOOL_SELF_REFERENCE",
-      "path": "tools/identity/test_identity_gate.py"
-    },
-    {
-      "allowedGates": [
-        "binary-scan",
-        "text-scan"
-      ],
-      "authorizedLineCount": 1,
-      "authorizedLinesSha256": "e28b933f03bd9ce3df559bbbb6f066ad79eac3b610b959e6ffe17f4b40b6e705",
-      "category": "IDENTITY_TOOL_SELF_REFERENCE",
-      "path": "tools/identity/test_identity_rules.py"
     }
   ],
   "schemaVersion": 1

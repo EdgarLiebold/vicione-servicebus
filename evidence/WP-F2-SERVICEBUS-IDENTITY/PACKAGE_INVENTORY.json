@@ -19,15 +19,6 @@
   },
   {
     "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.Benchmarks.Tests",
-    "isPackable": false,
-    "packageId": "ViciOne.ServiceBus.Benchmarks.Tests",
-    "project": "benchmarks/ViciOne.ServiceBus.Benchmarks.Tests/ViciOne.ServiceBus.Benchmarks.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.Benchmarks.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.Benchmarks.Tests.dll"
-  },
-  {
-    "artifacts": [],
     "assemblyName": "ViciOne.ServiceBus.Samples.OrderWorkflow",
     "isPackable": false,
     "packageId": "ViciOne.ServiceBus.Samples.OrderWorkflow",
@@ -217,21 +208,219 @@
   },
   {
     "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.TestFramework",
-    "isPackable": false,
-    "packageId": "ViciOne.ServiceBus.TestFramework",
-    "project": "src/ViciOne.ServiceBus.TestFramework/ViciOne.ServiceBus.TestFramework.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.TestFramework",
-    "targetArtifactPattern": "ViciOne.ServiceBus.TestFramework.dll"
-  },
-  {
-    "artifacts": [],
     "assemblyName": "ViciOne.ServiceBus",
     "isPackable": true,
     "packageId": "ViciOne.ServiceBus",
     "project": "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
     "rootNamespace": "ViciOne.ServiceBus",
     "targetArtifactPattern": "ViciOne.ServiceBus.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.Architecture.Tests",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.Architecture.Tests",
+    "project": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/ViciOne.ServiceBus.Architecture.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.Architecture.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.Architecture.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.Benchmark.Tests",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.Benchmark.Tests",
+    "project": "tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ViciOne.ServiceBus.Benchmark.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.Benchmark.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.Benchmark.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests",
+    "project": "tests/Persistence/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "project": "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.AmazonS3.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.AmazonS3.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests",
+    "project": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.Azure.Table.Tests",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.Azure.Table.Tests",
+    "project": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/ViciOne.ServiceBus.Azure.Table.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.Azure.Table.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.Azure.Table.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests",
+    "project": "tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.DynamoDbIntegration.Tests",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.DynamoDbIntegration.Tests",
+    "project": "tests/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.DynamoDbIntegration.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.DynamoDbIntegration.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests",
+    "project": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests",
+    "project": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.QuartzIntegration.Tests",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.QuartzIntegration.Tests",
+    "project": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/ViciOne.ServiceBus.QuartzIntegration.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.QuartzIntegration.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.QuartzIntegration.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.Analyzers.Tests.Infrastructure",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.Analyzers.Tests.Infrastructure",
+    "project": "tests/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.Tests.Infrastructure.Analyzers",
+    "targetArtifactPattern": "ViciOne.ServiceBus.Analyzers.Tests.Infrastructure.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests",
+    "project": "tests/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure",
+    "project": "tests/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.Tests.Infrastructure.Roslyn",
+    "targetArtifactPattern": "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.Tests.Infrastructure.Tests",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.Tests.Infrastructure.Tests",
+    "project": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/ViciOne.ServiceBus.Tests.Infrastructure.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.Tests.Infrastructure.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.Tests.Infrastructure.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.Tests.Infrastructure",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.Tests.Infrastructure",
+    "project": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.Tests.Infrastructure",
+    "targetArtifactPattern": "ViciOne.ServiceBus.Tests.Infrastructure.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.Tests.InternalAccess",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.Tests.InternalAccess",
+    "project": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.Tests.InternalAccess",
+    "targetArtifactPattern": "ViciOne.ServiceBus.Tests.InternalAccess.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.Diagnostics.Tests",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.Diagnostics.Tests",
+    "project": "tests/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ViciOne.ServiceBus.Diagnostics.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.Diagnostics.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.Diagnostics.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests",
+    "project": "tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.ActiveMqTransport.Tests",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.ActiveMqTransport.Tests",
+    "project": "tests/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.ActiveMqTransport.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.ActiveMqTransport.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests",
+    "project": "tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.AmazonSqsTransport.Tests",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.AmazonSqsTransport.Tests",
+    "project": "tests/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.AmazonSqsTransport.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests",
+    "project": "tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests.dll"
   },
   {
     "artifacts": [],
@@ -244,12 +433,21 @@
   },
   {
     "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.EventHubIntegration.Tests",
+    "assemblyName": "ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests",
     "isPackable": false,
-    "packageId": "ViciOne.ServiceBus.EventHubIntegration.Tests",
-    "project": "tests/Transports/ViciOne.ServiceBus.EventHubIntegration.Tests/ViciOne.ServiceBus.EventHubIntegration.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.EventHubIntegration.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.EventHubIntegration.Tests.dll"
+    "packageId": "ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests",
+    "project": "tests/Transports/ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests/ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests",
+    "project": "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests.dll"
   },
   {
     "artifacts": [],
@@ -262,12 +460,93 @@
   },
   {
     "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.TestInfrastructure",
+    "assemblyName": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
     "isPackable": false,
-    "packageId": "ViciOne.ServiceBus.TestInfrastructure",
-    "project": "tests/ViciOne.ServiceBus.TestInfrastructure/ViciOne.ServiceBus.TestInfrastructure.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.TestInfrastructure",
-    "targetArtifactPattern": "ViciOne.ServiceBus.TestInfrastructure.dll"
+    "packageId": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "project": "tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "project": "tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "project": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.SqlTransport.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.SqlTransport.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests",
+    "project": "tests/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.Abstractions.Tests",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.Abstractions.Tests",
+    "project": "tests/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.Abstractions.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.Abstractions.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
+    "project": "tests/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.Analyzers.Tests",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.Analyzers.Tests",
+    "project": "tests/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.Analyzers.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.Analyzers.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.MessagePack.Tests",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.MessagePack.Tests",
+    "project": "tests/ViciOne.ServiceBus.MessagePack.Tests/ViciOne.ServiceBus.MessagePack.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.MessagePack.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.MessagePack.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.SignalR.Tests",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.SignalR.Tests",
+    "project": "tests/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.SignalR.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.SignalR.Tests.dll"
+  },
+  {
+    "artifacts": [],
+    "assemblyName": "ViciOne.ServiceBus.StateMachineVisualizer.Tests",
+    "isPackable": false,
+    "packageId": "ViciOne.ServiceBus.StateMachineVisualizer.Tests",
+    "project": "tests/ViciOne.ServiceBus.StateMachineVisualizer.Tests/ViciOne.ServiceBus.StateMachineVisualizer.Tests.csproj",
+    "rootNamespace": "ViciOne.ServiceBus.StateMachineVisualizer.Tests",
+    "targetArtifactPattern": "ViciOne.ServiceBus.StateMachineVisualizer.Tests.dll"
   },
   {
     "artifacts": [],
@@ -275,312 +554,6 @@
     "isPackable": false,
     "packageId": "ViciOne.ServiceBus.Tests",
     "project": "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.Architecture.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.Architecture.Tests",
-    "project": "tests2/Architecture/ViciOne.ServiceBus.Architecture.Tests/ViciOne.ServiceBus.Architecture.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.Architecture.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.Architecture.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.Benchmark.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.Benchmark.Tests",
-    "project": "tests2/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ViciOne.ServiceBus.Benchmark.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.Benchmark.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.Benchmark.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests",
-    "project": "tests2/Persistence/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.AmazonS3.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.AmazonS3.Tests",
-    "project": "tests2/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/ViciOne.ServiceBus.AmazonS3.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.AmazonS3.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.AmazonS3.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests",
-    "project": "tests2/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.Azure.Table.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.Azure.Table.Tests",
-    "project": "tests2/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/ViciOne.ServiceBus.Azure.Table.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.Azure.Table.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.Azure.Table.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests",
-    "project": "tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests/ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.DynamoDbIntegration.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.DynamoDbIntegration.Tests",
-    "project": "tests2/Persistence/ViciOne.ServiceBus.DynamoDbIntegration.Tests/ViciOne.ServiceBus.DynamoDbIntegration.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.DynamoDbIntegration.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.DynamoDbIntegration.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests",
-    "project": "tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests",
-    "project": "tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.QuartzIntegration.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.QuartzIntegration.Tests",
-    "project": "tests2/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/ViciOne.ServiceBus.QuartzIntegration.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.QuartzIntegration.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.QuartzIntegration.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.Analyzers.Tests.Infrastructure",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.Analyzers.Tests.Infrastructure",
-    "project": "tests2/Testing/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure/ViciOne.ServiceBus.Analyzers.Tests.Infrastructure.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.Tests.Infrastructure.Analyzers",
-    "targetArtifactPattern": "ViciOne.ServiceBus.Analyzers.Tests.Infrastructure.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests",
-    "project": "tests2/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure",
-    "project": "tests2/Testing/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.Tests.Infrastructure.Roslyn",
-    "targetArtifactPattern": "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.Tests.Infrastructure.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.Tests.Infrastructure.Tests",
-    "project": "tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure.Tests/ViciOne.ServiceBus.Tests.Infrastructure.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.Tests.Infrastructure.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.Tests.Infrastructure.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.Tests.Infrastructure",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.Tests.Infrastructure",
-    "project": "tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.Tests.Infrastructure",
-    "targetArtifactPattern": "ViciOne.ServiceBus.Tests.Infrastructure.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.Tests.InternalAccess",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.Tests.InternalAccess",
-    "project": "tests2/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.Tests.InternalAccess",
-    "targetArtifactPattern": "ViciOne.ServiceBus.Tests.InternalAccess.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.Diagnostics.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.Diagnostics.Tests",
-    "project": "tests2/Tools/ViciOne.ServiceBus.Diagnostics.Tests/ViciOne.ServiceBus.Diagnostics.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.Diagnostics.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.Diagnostics.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests",
-    "project": "tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests/ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.ActiveMqTransport.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.ActiveMqTransport.Tests",
-    "project": "tests2/Transports/ViciOne.ServiceBus.ActiveMqTransport.Tests/ViciOne.ServiceBus.ActiveMqTransport.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.ActiveMqTransport.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.ActiveMqTransport.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests",
-    "project": "tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests/ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.AmazonSqsTransport.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.AmazonSqsTransport.Tests",
-    "project": "tests2/Transports/ViciOne.ServiceBus.AmazonSqsTransport.Tests/ViciOne.ServiceBus.AmazonSqsTransport.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.AmazonSqsTransport.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.AmazonSqsTransport.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.RabbitMqTransport.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.RabbitMqTransport.Tests",
-    "project": "tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/ViciOne.ServiceBus.RabbitMqTransport.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.RabbitMqTransport.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.RabbitMqTransport.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
-    "project": "tests2/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
-    "project": "tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.SqlTransport.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.SqlTransport.Tests",
-    "project": "tests2/Transports/ViciOne.ServiceBus.SqlTransport.Tests/ViciOne.ServiceBus.SqlTransport.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.SqlTransport.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.SqlTransport.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests",
-    "project": "tests2/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.Abstractions.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.Abstractions.Tests",
-    "project": "tests2/ViciOne.ServiceBus.Abstractions.Tests/ViciOne.ServiceBus.Abstractions.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.Abstractions.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.Abstractions.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
-    "project": "tests2/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.Analyzers.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.Analyzers.Tests",
-    "project": "tests2/ViciOne.ServiceBus.Analyzers.Tests/ViciOne.ServiceBus.Analyzers.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.Analyzers.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.Analyzers.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.MessagePack.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.MessagePack.Tests",
-    "project": "tests2/ViciOne.ServiceBus.MessagePack.Tests/ViciOne.ServiceBus.MessagePack.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.MessagePack.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.MessagePack.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.SignalR.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.SignalR.Tests",
-    "project": "tests2/ViciOne.ServiceBus.SignalR.Tests/ViciOne.ServiceBus.SignalR.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.SignalR.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.SignalR.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.StateMachineVisualizer.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.StateMachineVisualizer.Tests",
-    "project": "tests2/ViciOne.ServiceBus.StateMachineVisualizer.Tests/ViciOne.ServiceBus.StateMachineVisualizer.Tests.csproj",
-    "rootNamespace": "ViciOne.ServiceBus.StateMachineVisualizer.Tests",
-    "targetArtifactPattern": "ViciOne.ServiceBus.StateMachineVisualizer.Tests.dll"
-  },
-  {
-    "artifacts": [],
-    "assemblyName": "ViciOne.ServiceBus.Tests",
-    "isPackable": true,
-    "packageId": "ViciOne.ServiceBus.Tests",
-    "project": "tests2/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
     "rootNamespace": "ViciOne.ServiceBus.Tests",
     "targetArtifactPattern": "ViciOne.ServiceBus.Tests.dll"
   },

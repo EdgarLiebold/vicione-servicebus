@@ -162,15 +162,15 @@
   ],
   "historicalIdentityPolicy": {
     "categories": {
-      "HISTORICAL_EVIDENCE": 48,
-      "IDENTITY_TOOL_SELF_REFERENCE": 4,
+      "HISTORICAL_EVIDENCE": 69,
+      "IDENTITY_TOOL_SELF_REFERENCE": 2,
       "LEGAL_PROVENANCE": 3,
       "NEGATIVE_TEST_ORACLE": 1
     },
-    "entryCount": 56,
+    "entryCount": 75,
     "path": "tools/identity/historical_identity_policy.json",
     "schemaVersion": 1,
-    "sha256": "e0dc9df67c52edbc5cde276a332b8fb6f7c13f85280357bd532bdf444a892ea1"
+    "sha256": "6047d80738044cab866b7c150a87be6407217bb387f44164d6884b9f93bc426d"
   },
   "mappingPolicy": "single-declarative-family-registry-identity_rules.py",
   "retainedLegalProvenanceContexts": [
