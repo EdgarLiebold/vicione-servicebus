@@ -1,8 +1,9 @@
 namespace ViciOne.ServiceBus.ActiveMqTransport
 {
+    using System;
     using System.Threading.Tasks;
     using Apache.NMS;
-    using Internals.Caching;
+    using Caching;
     using ViciOne.ServiceBus.Middleware;
     using Transports;
 
@@ -13,33 +14,27 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
         public delegate Task<IMessageProducer> MessageProducerFactory(IDestination destination);
 
 
-        readonly ICache<IDestination, CachedMessageProducer, ITimeToLiveCacheValue<CachedMessageProducer>> _cache;
+        readonly KeyedResourceCache<IDestination, CachedMessageProducer> _cache;
 
         public MessageProducerCache()
         {
-            var options = new CacheOptions { Capacity = SendEndpointCacheDefaults.Capacity };
-            var policy = new TimeToLiveCachePolicy<CachedMessageProducer>(SendEndpointCacheDefaults.MaxAge);
+            var options = new ResourceCacheOptions(SendEndpointCacheDefaults.Capacity, SendEndpointCacheDefaults.MinAge,
+                SendEndpointCacheDefaults.MaxAge, ResourceCacheExpirationMode.Sliding);
 
-            _cache = new ViciOneServiceBusCache<IDestination, CachedMessageProducer, ITimeToLiveCacheValue<CachedMessageProducer>>(policy, options);
+            _cache = new KeyedResourceCache<IDestination, CachedMessageProducer>(x => x.Destination, options);
         }
 
         public async Task<IMessageProducer> GetMessageProducer(IDestination key, MessageProducerFactory factory)
         {
-            var messageProducer = await _cache.GetOrAdd(key, x => GetMessageProducerFromFactory(x, factory)).ConfigureAwait(false);
+            ArgumentNullException.ThrowIfNull(factory);
 
-            return messageProducer;
+            return await _cache.GetOrAddAsync(key,
+                async (destination, _) => new CachedMessageProducer(destination, await factory(destination).ConfigureAwait(false))).ConfigureAwait(false);
         }
 
-        static async Task<CachedMessageProducer> GetMessageProducerFromFactory(IDestination destination, MessageProducerFactory factory)
+        protected override async Task StopAgent(StopContext context)
         {
-            var messageProducer = await factory(destination).ConfigureAwait(false);
-
-            return new CachedMessageProducer(destination, messageProducer);
-        }
-
-        protected override Task StopAgent(StopContext context)
-        {
-            return _cache.Clear();
+            await _cache.ClearAsync(context.CancellationToken).ConfigureAwait(false);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
 
     public class CachedMessageProducer :
         IMessageProducer,
-        INotifyValueUsed
+        IResourceUsageSource
     {
         readonly IMessageProducer _producer;
 

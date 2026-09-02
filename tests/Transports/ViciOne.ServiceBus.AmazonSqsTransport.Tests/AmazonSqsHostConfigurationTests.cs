@@ -277,7 +277,7 @@ public sealed class AmazonSqsHostConfigurationTests
     public async Task ClientContextCacheOptions_ArePerHostAndExpireThroughTheConfiguredTimeProvider()
     {
         Assert.Throws<ArgumentOutOfRangeException>(
-            () => new AmazonSqsClientContextCacheOptions(7, TimeSpan.FromMinutes(1), TimeProvider.System));
+            () => new AmazonSqsClientContextCacheOptions(0, TimeSpan.FromMinutes(1), TimeProvider.System));
         Assert.Throws<ArgumentOutOfRangeException>(
             () => new AmazonSqsClientContextCacheOptions(8, TimeSpan.Zero, TimeProvider.System));
         Assert.Throws<ArgumentNullException>(

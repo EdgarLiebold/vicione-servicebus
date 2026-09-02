@@ -50,11 +50,11 @@ public sealed class RemovalBoundaryTests
         "VICIONE_SERVICEBUS_LICENSE_PATH",
     ];
 
-    private const string RetainedNeighbour = "UsageCachePolicy`1";
+    private const string RetainedNeighbour = "ResourceCache`1";
 
     [Fact]
     [RequirementCoverage("REQ-VSB-REMOVED-CLOSURES", "metadata-namespaces-types-and-retained-control")]
-    public void ProductMetadata_ContainsNoRemovedTypeAndStillContainsTheRetainedUsageCachePolicy()
+    public void ProductMetadata_ContainsNoRemovedTypeAndStillContainsTheRetainedResourceCache()
     {
         Type[] types = ProductAssemblies().SelectMany(assembly => assembly.GetTypes()).ToArray();
 

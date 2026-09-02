@@ -2681,3 +2681,21 @@ future cohorts as complete.
 - Detailed evidence is under
   `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-EF-OUTBOX-RELIABILITY/`. V4 progress is now 5/12
   (41.7%); no remote publication is included or implied.
+
+## Reviewer integration — V4 bounded ResourceCache accepted locally (2026-09-02)
+
+- One bounded `ResourceCache<TValue>` state machine replaces both old cache implementations and owns
+  creation, indices, capacity, expiration, usage, observers, cancellation and disposal.
+- Core send endpoints, ActiveMQ, Event Hubs and AWS queue/topic resources retain their provider identity;
+  connection-owned AWS resources use a separate durable single-flight store.
+- Native audit corrected eight material lifecycle/concurrency defects beyond a literal donor transplant,
+  including under-lock cancellation in both cache owners and concurrent usage-subscription detachment.
+- Final analyzer-active Release build is zero-warning/zero-error. Core passes 1,543/1,543, ActiveMQ Unit
+  136/136, AWS Unit 77/77, canonical Unit/Architecture 3,109/3,109 and final LocalStack SQS 48/48 with no
+  skips. The other directly affected local provider assemblies also pass.
+- Twenty-six independent buildable product mutations are killed and every target is restored byte-exactly.
+  Scoped format, requirement projection, JSON, stale-symbol, empty-directory and diff gates pass.
+- The broad LocalIntegration carrier's sole EF `ReceiveCount` failure reproduces identically on the clean
+  pre-cache baseline commit and is recorded as a separate out-of-scope defect, not hidden or misattributed.
+- Protected `review/**` remains untouched and untracked. V4 progress is now 6/12 (50%); no remote
+  publication is included or implied.

@@ -1,92 +1,86 @@
 namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Amazon.SimpleNotificationService;
 using Amazon.SimpleNotificationService.Model;
+using Caching;
 using Internals;
-using Internals.Caching;
 
 
-public class TopicCache :
+public sealed class TopicCache :
     IAsyncDisposable
 {
-    readonly ICache<string, TopicInfo, ITimeToLiveCacheValue<TopicInfo>> _cache;
-    readonly CancellationToken _cancellationToken;
+    readonly CancellationToken _lifetimeCancellationToken;
     readonly IAmazonSimpleNotificationService _client;
-    readonly IDictionary<string, TopicInfo> _durableTopics;
+    readonly object _loaderSync = new();
+    readonly DurableResourceStore<string, TopicInfo> _durableTopics;
+    readonly KeyedResourceCache<string, TopicInfo> _ephemeralTopics;
     Lazy<Task> _loadExistingTopics;
-    bool _topicsLoaded;
+    volatile bool _topicsLoaded;
 
-    public TopicCache(IAmazonSimpleNotificationService client, AmazonSqsClientContextCacheOptions options, CancellationToken cancellationToken)
+    public TopicCache(IAmazonSimpleNotificationService client, AmazonSqsClientContextCacheOptions options,
+        CancellationToken lifetimeCancellationToken)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
         ArgumentNullException.ThrowIfNull(options);
-        _cancellationToken = cancellationToken;
 
-        _cache = options.CreateCache<string, TopicInfo>();
-
-        _loadExistingTopics = ResetLoadExistingTopics();
-
-        _durableTopics = new Dictionary<string, TopicInfo>();
+        _lifetimeCancellationToken = lifetimeCancellationToken;
+        _durableTopics = new DurableResourceStore<string, TopicInfo>(lifetimeCancellationToken, StringComparer.Ordinal);
+        _ephemeralTopics = new KeyedResourceCache<string, TopicInfo>(x => x.EntityName,
+            options.CreateResourceCacheOptions(lifetimeCancellationToken), StringComparer.Ordinal);
+        _loadExistingTopics = CreateExistingTopicsLoader();
     }
 
     public async ValueTask DisposeAsync()
     {
-        TopicInfo[] topicInfos;
-        lock (_durableTopics)
-        {
-            topicInfos = _durableTopics.Values.ToArray();
-
-            _durableTopics.Clear();
-        }
-
-        foreach (var topicInfo in topicInfos)
-            await topicInfo.DisposeAsync().ConfigureAwait(false);
-
-        await _cache.Clear().ConfigureAwait(false);
+        await _ephemeralTopics.DisposeAsync().ConfigureAwait(false);
+        await _durableTopics.DisposeAsync().ConfigureAwait(false);
     }
 
     public async Task<TopicInfo> Get(Topology.Topic topic, CancellationToken cancellationToken)
     {
-        if (!_topicsLoaded)
-            await LoadExistingTopics().OrCanceled(cancellationToken).ConfigureAwait(false);
+        ArgumentNullException.ThrowIfNull(topic);
+        await EnsureTopicsLoadedAsync(cancellationToken).ConfigureAwait(false);
 
-        lock (_durableTopics)
+        if (_durableTopics.TryGet(topic.EntityName, out var durable))
+            return durable;
+
+        if (topic is { Durable: true, AutoDelete: false })
         {
-            if (_durableTopics.TryGetValue(topic.EntityName, out var topicInfo))
-                return topicInfo;
+            await _ephemeralTopics.RemoveAsync(topic.EntityName, cancellationToken).ConfigureAwait(false);
+
+            return await _durableTopics.GetOrAddAsync(topic.EntityName,
+                (_, ownerToken) => CreateMissingTopicAsync(topic, ownerToken), cancellationToken).ConfigureAwait(false);
         }
 
-        return await _cache.GetOrAdd(topic.EntityName, _ => CreateMissingTopic(topic, cancellationToken)).ConfigureAwait(false);
+        return await _ephemeralTopics.GetOrAddAsync(topic.EntityName,
+            (_, ownerToken) => CreateMissingTopicAsync(topic, ownerToken), cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<TopicInfo> GetByName(string entityName, CancellationToken cancellationToken)
     {
-        if (!_topicsLoaded)
-            await LoadExistingTopics().OrCanceled(cancellationToken).ConfigureAwait(false);
+        ArgumentException.ThrowIfNullOrWhiteSpace(entityName);
+        await EnsureTopicsLoadedAsync(cancellationToken).ConfigureAwait(false);
 
-        lock (_durableTopics)
-        {
-            if (_durableTopics.TryGetValue(entityName, out var topicInfo))
-                return topicInfo;
-        }
+        if (_durableTopics.TryGet(entityName, out var durable))
+            return durable;
 
-        return await _cache.Get(entityName).ConfigureAwait(false);
+        return await _ephemeralTopics.GetAsync(entityName, cancellationToken).ConfigureAwait(false);
     }
 
-    public Task<bool> RemoveByName(string entityName)
+    public async Task<bool> RemoveByName(string entityName)
     {
-        lock (_durableTopics)
-            _durableTopics.Remove(entityName);
+        ArgumentException.ThrowIfNullOrWhiteSpace(entityName);
 
-        return _cache.Remove(entityName);
+        bool durableRemoved = await _durableTopics.RemoveAsync(entityName).ConfigureAwait(false);
+        bool ephemeralRemoved = await _ephemeralTopics.RemoveAsync(entityName).ConfigureAwait(false);
+        return durableRemoved || ephemeralRemoved;
     }
 
-    async Task<TopicInfo> CreateMissingTopic(Topology.Topic topic, CancellationToken cancellationToken)
+    async ValueTask<TopicInfo> CreateMissingTopicAsync(Topology.Topic topic, CancellationToken cancellationToken)
     {
         var request = new CreateTopicRequest(topic.EntityName)
         {
@@ -99,85 +93,72 @@ public class TopicCache :
         };
 
         var createResponse = await _client.CreateTopicAsync(request, cancellationToken).ConfigureAwait(false);
-
         createResponse.EnsureSuccessfulResponse();
 
         var attributesResponse = await _client.GetTopicAttributesAsync(createResponse.TopicArn, cancellationToken).ConfigureAwait(false);
-
         attributesResponse.EnsureSuccessfulResponse();
 
-        var missingTopic = new TopicInfo(topic.EntityName, createResponse.TopicArn, _client, cancellationToken, false);
-
-        if (topic is { Durable: true, AutoDelete: false })
-        {
-            lock (_durableTopics)
-                _durableTopics[missingTopic.EntityName] = missingTopic;
-        }
-
-        return missingTopic;
+        return new TopicInfo(topic.EntityName, createResponse.TopicArn, _client, cancellationToken, false);
     }
 
-    Lazy<Task> ResetLoadExistingTopics()
+    Lazy<Task> CreateExistingTopicsLoader()
     {
-        return _loadExistingTopics = new Lazy<Task>(() => LoadExistingTopicsLazy(_cancellationToken));
+        return new Lazy<Task>(() => LoadExistingTopicsAsync(_lifetimeCancellationToken), LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
-    Task LoadExistingTopics()
+    async Task EnsureTopicsLoadedAsync(CancellationToken cancellationToken)
     {
-        var result = _loadExistingTopics.Value;
-        if (result.IsFaulted || result.IsCanceled)
+        if (_topicsLoaded)
+            return;
+
+        while (true)
         {
-            lock (this)
+            Lazy<Task> loader = _loadExistingTopics;
+            try
             {
-                result = _loadExistingTopics.Value;
-                if (result.IsFaulted || result.IsCanceled)
-                    result = ResetLoadExistingTopics().Value;
+                await loader.Value.OrCanceled(cancellationToken).ConfigureAwait(false);
+                return;
+            }
+            catch when (loader.Value.IsFaulted || loader.Value.IsCanceled)
+            {
+                lock (_loaderSync)
+                {
+                    if (ReferenceEquals(_loadExistingTopics, loader))
+                        _loadExistingTopics = CreateExistingTopicsLoader();
+                }
+
+                if (cancellationToken.IsCancellationRequested)
+                    cancellationToken.ThrowIfCancellationRequested();
             }
         }
-
-        return result;
     }
 
-    async Task LoadExistingTopicsLazy(CancellationToken cancellationToken)
+    async Task LoadExistingTopicsAsync(CancellationToken cancellationToken)
     {
-        var cursor = string.Empty;
+        string? cursor = null;
         do
         {
-            var request = new ListTopicsRequest { NextToken = cursor };
+            var response = await _client.ListTopicsAsync(new ListTopicsRequest { NextToken = cursor }, cancellationToken).ConfigureAwait(false);
 
-            var response = await _client.ListTopicsAsync(request, cancellationToken).ConfigureAwait(false);
-
-            if (response.Topics != null)
+            if (response.Topics is not null)
             {
                 foreach (var topic in response.Topics)
                 {
-                    var index = topic.TopicArn.LastIndexOf(":", StringComparison.OrdinalIgnoreCase);
-                    if (index < 0)
+                    int index = topic.TopicArn.LastIndexOf(':');
+                    if (index < 0 || index == topic.TopicArn.Length - 1)
                         continue;
 
-                    var topicName = topic.TopicArn.Substring(index + 1);
-
-                    await _cache.GetOrAdd(topicName, async _ =>
-                    {
-                        var topicInfo = new TopicInfo(topicName, topic.TopicArn, _client, _cancellationToken, true);
-
-                        lock (_durableTopics)
-                            _durableTopics[topicInfo.EntityName] = topicInfo;
-
-                        return topicInfo;
-                    }).ConfigureAwait(false);
+                    string topicName = topic.TopicArn[(index + 1)..];
+                    await _durableTopics.GetOrAddAsync(topicName,
+                        (_, ownerToken) => ValueTask.FromResult(new TopicInfo(topicName, topic.TopicArn, _client, ownerToken, true)),
+                        cancellationToken).ConfigureAwait(false);
                 }
             }
 
             cursor = response.NextToken;
         }
-        while (!string.IsNullOrEmpty(cursor) && !cancellationToken.IsCancellationRequested);
+        while (!string.IsNullOrEmpty(cursor));
 
         _topicsLoaded = true;
-    }
-
-    public void Clear()
-    {
-        _cache.Clear();
     }
 }

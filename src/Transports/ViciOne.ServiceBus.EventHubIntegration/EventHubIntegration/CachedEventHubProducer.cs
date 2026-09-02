@@ -9,7 +9,7 @@ namespace ViciOne.ServiceBus.EventHubIntegration
 
     public class CachedEventHubProducer<TKey> :
         IEventHubProducer,
-        INotifyValueUsed,
+        IResourceUsageSource,
         IAsyncDisposable
     {
         readonly IEventHubProducer _producer;

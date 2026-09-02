@@ -7,93 +7,94 @@ using System.Threading;
 using System.Threading.Tasks;
 using Amazon.SQS;
 using Amazon.SQS.Model;
-using Internals.Caching;
+using Caching;
 using Topology;
 
 
-public class QueueCache :
+public sealed class QueueCache :
     IAsyncDisposable
 {
     static readonly List<string> AllAttributes = [QueueAttributeName.All];
 
-    readonly ICache<string, QueueInfo, ITimeToLiveCacheValue<QueueInfo>> _cache;
     readonly IAmazonSQS _client;
-    readonly IDictionary<string, QueueInfo> _durableQueues;
+    readonly DurableResourceStore<string, QueueInfo> _durableQueues;
+    readonly KeyedResourceCache<string, QueueInfo> _ephemeralQueues;
 
-    public QueueCache(IAmazonSQS client, AmazonSqsClientContextCacheOptions options)
+    public QueueCache(IAmazonSQS client, AmazonSqsClientContextCacheOptions options, CancellationToken lifetimeCancellationToken)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
         ArgumentNullException.ThrowIfNull(options);
 
-        _cache = options.CreateCache<string, QueueInfo>();
-
-        _durableQueues = new Dictionary<string, QueueInfo>();
+        _durableQueues = new DurableResourceStore<string, QueueInfo>(lifetimeCancellationToken, StringComparer.Ordinal);
+        _ephemeralQueues = new KeyedResourceCache<string, QueueInfo>(x => x.EntityName,
+            options.CreateResourceCacheOptions(lifetimeCancellationToken), StringComparer.Ordinal);
     }
 
     public async ValueTask DisposeAsync()
     {
-        QueueInfo[] queueInfos;
-        lock (_durableQueues)
-        {
-            queueInfos = _durableQueues.Values.ToArray();
+        await _ephemeralQueues.DisposeAsync().ConfigureAwait(false);
+        await _durableQueues.DisposeAsync().ConfigureAwait(false);
+    }
 
-            _durableQueues.Clear();
+    public async Task<QueueInfo> Get(Queue queue, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(queue);
+
+        if (_durableQueues.TryGet(queue.EntityName, out var durable))
+            return durable;
+
+        if (queue is { Durable: true, AutoDelete: false })
+        {
+            // Ownership transition is explicit: a resource cannot be simultaneously evictable and durable.
+            await _ephemeralQueues.RemoveAsync(queue.EntityName, cancellationToken).ConfigureAwait(false);
+
+            return await _durableQueues.GetOrAddAsync(queue.EntityName,
+                (_, ownerToken) => ResolveQueueAsync(queue, ownerToken), cancellationToken).ConfigureAwait(false);
         }
 
-        foreach (var queueInfo in queueInfos)
-            await queueInfo.DisposeAsync().ConfigureAwait(false);
-
-        await _cache.Clear().ConfigureAwait(false);
+        return await _ephemeralQueues.GetOrAddAsync(queue.EntityName,
+            (_, ownerToken) => ResolveQueueAsync(queue, ownerToken), cancellationToken).ConfigureAwait(false);
     }
 
-    public Task<QueueInfo> Get(Queue queue, CancellationToken cancellationToken)
+    public async Task<QueueInfo> GetByName(string entityName, CancellationToken cancellationToken)
     {
-        lock (_durableQueues)
+        ArgumentException.ThrowIfNullOrWhiteSpace(entityName);
+
+        if (_durableQueues.TryGet(entityName, out var durable))
+            return durable;
+
+        return await _ephemeralQueues.GetOrAddAsync(entityName,
+            (name, ownerToken) => GetExistingQueueAsync(name, ownerToken), cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<bool> RemoveByName(string entityName)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(entityName);
+
+        bool durableRemoved = await _durableQueues.RemoveAsync(entityName).ConfigureAwait(false);
+        bool ephemeralRemoved = await _ephemeralQueues.RemoveAsync(entityName).ConfigureAwait(false);
+        return durableRemoved || ephemeralRemoved;
+    }
+
+    async ValueTask<QueueInfo> ResolveQueueAsync(Queue queue, CancellationToken cancellationToken)
+    {
+        try
         {
-            if (_durableQueues.TryGetValue(queue.EntityName, out var queueInfo))
-                return Task.FromResult(queueInfo);
+            return await GetExistingQueueAsync(queue.EntityName, cancellationToken).ConfigureAwait(false);
         }
-
-        return _cache.GetOrAdd(queue.EntityName, async _ =>
+        catch (QueueDoesNotExistException)
         {
-            try
-            {
-                return await GetExistingQueue(queue.EntityName, cancellationToken).ConfigureAwait(false);
-            }
-            catch (QueueDoesNotExistException)
-            {
-                return await CreateMissingQueue(queue, cancellationToken).ConfigureAwait(false);
-            }
-        });
-    }
-
-    public Task<QueueInfo> GetByName(string entityName, CancellationToken cancellationToken)
-    {
-        lock (_durableQueues)
-        {
-            if (_durableQueues.TryGetValue(entityName, out var queueInfo))
-                return Task.FromResult(queueInfo);
+            return await CreateMissingQueueAsync(queue, cancellationToken).ConfigureAwait(false);
         }
-
-        return _cache.GetOrAdd(entityName, queueName => GetExistingQueue(queueName, cancellationToken));
     }
 
-    public Task<bool> RemoveByName(string entityName)
-    {
-        lock (_durableQueues)
-            _durableQueues.Remove(entityName);
-
-        return _cache.Remove(entityName);
-    }
-
-    async Task<QueueInfo> CreateMissingQueue(Queue queue, CancellationToken cancellationToken)
+    async ValueTask<QueueInfo> CreateMissingQueueAsync(Queue queue, CancellationToken cancellationToken)
     {
         Dictionary<string, string> attributes = queue.QueueAttributes.ToDictionary(x => x.Key, x => x.Value.ToString()!);
 
         if (AmazonSqsEndpointAddress.IsFifo(queue.EntityName) && !attributes.ContainsKey(QueueAttributeName.FifoQueue))
         {
             LogContext.Warning?.Log("Using '.fifo' suffix without 'FifoQueue' attribute might cause unexpected behavior.");
-
             attributes[QueueAttributeName.FifoQueue] = "true";
         }
 
@@ -104,33 +105,21 @@ public class QueueCache :
         };
 
         var createResponse = await _client.CreateQueueAsync(request, cancellationToken).ConfigureAwait(false);
-
         createResponse.EnsureSuccessfulResponse();
 
         var attributesResponse = await _client.GetQueueAttributesAsync(createResponse.QueueUrl, AllAttributes, cancellationToken).ConfigureAwait(false);
-
         attributesResponse.EnsureSuccessfulResponse();
 
-        var missingQueue = new QueueInfo(queue.EntityName, createResponse.QueueUrl, attributesResponse.Attributes ?? new Dictionary<string, string>(),
+        return new QueueInfo(queue.EntityName, createResponse.QueueUrl, attributesResponse.Attributes ?? new Dictionary<string, string>(),
             _client, cancellationToken, false);
-
-        if (queue is { Durable: true, AutoDelete: false })
-        {
-            lock (_durableQueues)
-                _durableQueues[missingQueue.EntityName] = missingQueue;
-        }
-
-        return missingQueue;
     }
 
-    async Task<QueueInfo> GetExistingQueue(string queueName, CancellationToken cancellationToken)
+    async ValueTask<QueueInfo> GetExistingQueueAsync(string queueName, CancellationToken cancellationToken)
     {
         var urlResponse = await _client.GetQueueUrlAsync(queueName, cancellationToken).ConfigureAwait(false);
-
         urlResponse.EnsureSuccessfulResponse();
 
         var attributesResponse = await _client.GetQueueAttributesAsync(urlResponse.QueueUrl, AllAttributes, cancellationToken).ConfigureAwait(false);
-
         attributesResponse.EnsureSuccessfulResponse();
 
         return new QueueInfo(queueName, urlResponse.QueueUrl, attributesResponse.Attributes ?? new Dictionary<string, string>(), _client,

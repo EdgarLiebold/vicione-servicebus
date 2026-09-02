@@ -12,7 +12,8 @@ using Amazon.SQS.Model;
 
 
 public class QueueInfo :
-    IAsyncDisposable
+    IAsyncDisposable,
+    ViciOne.ServiceBus.Caching.IResourceUsageSource
 {
     readonly Lazy<IBatcher<DeleteMessageBatchRequestEntry>> _batchDeleter;
     readonly Lazy<IBatcher<SendMessageBatchRequestEntry>> _batchSender;
@@ -50,6 +51,8 @@ public class QueueInfo :
     public IList<string> SubscriptionArns { get; }
     public bool Existing { get; }
 
+    public event Action? Used;
+
     public async ValueTask DisposeAsync()
     {
         if (_disposed)
@@ -67,11 +70,13 @@ public class QueueInfo :
 
     public Task Send(SendMessageBatchRequestEntry entry, CancellationToken cancellationToken)
     {
+        Used?.Invoke();
         return _batchSender.Value.Execute(entry, cancellationToken);
     }
 
     public Task Delete(string receiptHandle, CancellationToken cancellationToken)
     {
+        Used?.Invoke();
         var entry = new DeleteMessageBatchRequestEntry("", receiptHandle);
 
         return _batchDeleter.Value.Execute(entry, cancellationToken);
@@ -79,6 +84,7 @@ public class QueueInfo :
 
     public async Task<bool> UpdatePolicy(string sqsQueueArn, string topicArn, CancellationToken cancellationToken)
     {
+        Used?.Invoke();
         await _updateSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
@@ -90,7 +96,7 @@ public class QueueInfo :
             if (QueueHasTopicPermission(policy, topicArn, sqsQueueArn))
                 return false;
 
-            #pragma warning disable 618
+#pragma warning disable 618
             var statement = policy.Statements.FirstOrDefault(x => x.Effect == Statement.StatementEffect.Allow
                 && x.Actions.Any(a => a.ActionName.Equals(SendMessageIAMActionName, StringComparison.Ordinal))
                 && x.Resources.Any(a => a.Id.Equals(sqsQueueArn, StringComparison.OrdinalIgnoreCase))
@@ -105,7 +111,7 @@ public class QueueInfo :
                 statement.Principals.Add(new Principal("Service", "sns.amazonaws.com"));
                 policy.Statements.Add(statement);
             }
-            #pragma warning restore 618
+#pragma warning restore 618
 
             var condition = statement.Conditions.FirstOrDefault(x =>
                 string.Equals(ConditionFactory.SOURCE_ARN_CONDITION_KEY, x.ConditionKey, StringComparison.Ordinal) &&

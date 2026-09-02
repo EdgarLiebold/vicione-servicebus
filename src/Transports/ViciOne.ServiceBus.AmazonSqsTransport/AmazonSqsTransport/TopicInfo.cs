@@ -8,7 +8,8 @@ using Amazon.SimpleNotificationService.Model;
 
 
 public class TopicInfo :
-    IAsyncDisposable
+    IAsyncDisposable,
+    ViciOne.ServiceBus.Caching.IResourceUsageSource
 {
     readonly Lazy<IBatcher<PublishBatchRequestEntry>> _batchPublisher;
     bool _disposed;
@@ -26,6 +27,8 @@ public class TopicInfo :
     public string Arn { get; }
     public bool Existing { get; }
 
+    public event Action? Used;
+
     public async ValueTask DisposeAsync()
     {
         if (_disposed)
@@ -39,6 +42,7 @@ public class TopicInfo :
 
     public Task Publish(PublishBatchRequestEntry entry, CancellationToken cancellationToken)
     {
+        Used?.Invoke();
         return _batchPublisher.Value.Execute(entry, cancellationToken);
     }
 }

@@ -1,11 +1,12 @@
 namespace ViciOne.ServiceBus;
 
 using System;
-using Internals.Caching;
+using System.Threading;
+using Caching;
 
 
 /// <summary>
-/// Immutable cache settings for queue and topic provider contexts owned by one Amazon SQS host.
+/// Immutable cache settings for queue and topic provider contexts owned by one Amazon SQS connection.
 /// </summary>
 public sealed class AmazonSqsClientContextCacheOptions
 {
@@ -16,8 +17,8 @@ public sealed class AmazonSqsClientContextCacheOptions
 
     public AmazonSqsClientContextCacheOptions(int capacity, TimeSpan maxAge, TimeProvider timeProvider)
     {
-        if (capacity < 8)
-            throw new ArgumentOutOfRangeException(nameof(capacity), "Capacity must be at least 8.");
+        if (capacity < 1)
+            throw new ArgumentOutOfRangeException(nameof(capacity), "Capacity must be greater than zero.");
         if (maxAge <= TimeSpan.Zero)
             throw new ArgumentOutOfRangeException(nameof(maxAge), "Maximum age must be greater than zero.");
 
@@ -30,12 +31,9 @@ public sealed class AmazonSqsClientContextCacheOptions
     public TimeSpan MaxAge { get; }
     public TimeProvider TimeProvider { get; }
 
-    internal ICache<TKey, TValue, ITimeToLiveCacheValue<TValue>> CreateCache<TKey, TValue>()
-        where TValue : class
+    internal ResourceCacheOptions CreateResourceCacheOptions(CancellationToken lifetimeCancellationToken)
     {
-        var options = new CacheOptions { Capacity = Capacity };
-        var policy = new TimeToLiveCachePolicy<TValue>(MaxAge, TimeProvider);
-
-        return new ViciOneServiceBusCache<TKey, TValue, ITimeToLiveCacheValue<TValue>>(policy, options);
+        return new ResourceCacheOptions(Capacity, TimeSpan.Zero, MaxAge, ResourceCacheExpirationMode.Sliding, TimeProvider,
+            lifetimeCancellationToken);
     }
 }

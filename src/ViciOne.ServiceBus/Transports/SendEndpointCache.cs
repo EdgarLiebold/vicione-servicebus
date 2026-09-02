@@ -1,37 +1,34 @@
 namespace ViciOne.ServiceBus.Transports
 {
+    using System;
     using System.Threading.Tasks;
-    using Internals.Caching;
+    using Caching;
 
 
     /// <summary>
-    /// Caches SendEndpoint instances by address (ignoring the query string entirely, case insensitive)
+    /// Caches transport send endpoints by their normalized address key.
     /// </summary>
     public class SendEndpointCache<TKey> :
         ISendEndpointCache<TKey>
     {
-        readonly ICache<TKey, CachedSendEndpoint<TKey>, ITimeToLiveCacheValue<CachedSendEndpoint<TKey>>> _cache;
+        readonly KeyedResourceCache<TKey, CachedSendEndpoint<TKey>> _cache;
 
         public SendEndpointCache()
         {
-            var options = new CacheOptions { Capacity = SendEndpointCacheDefaults.Capacity };
-            var policy = new TimeToLiveCachePolicy<CachedSendEndpoint<TKey>>(SendEndpointCacheDefaults.MaxAge);
+            var options = new ResourceCacheOptions(SendEndpointCacheDefaults.Capacity, SendEndpointCacheDefaults.MinAge,
+                SendEndpointCacheDefaults.MaxAge, ResourceCacheExpirationMode.Sliding);
 
-            _cache = new ViciOneServiceBusCache<TKey, CachedSendEndpoint<TKey>, ITimeToLiveCacheValue<CachedSendEndpoint<TKey>>>(policy, options);
+            _cache = new KeyedResourceCache<TKey, CachedSendEndpoint<TKey>>(x => x.Key, options);
         }
 
         public async Task<ISendEndpoint> GetSendEndpoint(TKey key, SendEndpointFactory<TKey> factory)
         {
-            CachedSendEndpoint<TKey> sendEndpoint = await _cache.GetOrAdd(key, x => GetSendEndpointFromFactory(x, factory)).ConfigureAwait(false);
+            ArgumentNullException.ThrowIfNull(factory);
+
+            CachedSendEndpoint<TKey> sendEndpoint = await _cache.GetOrAddAsync(key,
+                async (address, _) => new CachedSendEndpoint<TKey>(address, await factory(address).ConfigureAwait(false))).ConfigureAwait(false);
 
             return sendEndpoint;
-        }
-
-        static async Task<CachedSendEndpoint<TKey>> GetSendEndpointFromFactory(TKey address, SendEndpointFactory<TKey> factory)
-        {
-            var sendEndpoint = await factory(address).ConfigureAwait(false);
-
-            return new CachedSendEndpoint<TKey>(address, sendEndpoint);
         }
     }
 }

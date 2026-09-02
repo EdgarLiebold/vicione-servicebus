@@ -2803,3 +2803,20 @@ freeze, two commits and the already authorized non-force remote publication.
    strengthen any surviving oracle before accepting the package.
 6. Freeze a local product commit and architecture binding as V4 package 5/12. Keep `review/**` untouched and
    do not publish remotely without fresh explicit permission.
+
+## Reviewer integration — V4 bounded ResourceCache (2026-09-02)
+
+1. Replace both overlapping cache engines with one `ResourceCache<TValue>` owner for pending creation,
+   committed visibility, indices, bounded capacity, TTL, usage, cancellation, observers and release.
+2. Migrate core send endpoints, ActiveMQ, Event Hubs and AWS queue/topic ownership without changing their
+   provider identity. Keep durable AWS resources connection-owned through a separate single-flight store.
+3. Build deterministic native owners for positive, boundary, concurrency, fault, cancellation, expiration,
+   eviction, observer and disposal behavior. Delete old tests only where the new owners fully supersede them.
+4. Audit every external callback against the state lock. Correct timer, cancellation and usage-subscription
+   races found beyond the donor, and require callback faults to remain observational.
+5. Kill independent one-cause mutations for the cache state machine and every migrated transport boundary;
+   restore all targets byte-exactly before final positive execution.
+6. Require a zero-warning analyzer build, exact-count Unit/Architecture execution, real affected local
+   providers, requirements projection, scoped format, old-symbol and empty-directory gates.
+7. Record the inherited EF concurrency failure only after a clean baseline-commit reproduction proves it is
+   noncausal and out of scope. Freeze the sixth local V4 checkpoint without remote publication.

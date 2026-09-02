@@ -3355,3 +3355,36 @@ production 30-second slot wait with its 30-second test budget, passes three focu
 canonical serialized Unit/Architecture profile passes 3,072/3,072. Detailed results and byte-exact
 restoration hashes are under
 `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-EF-OUTBOX-RELIABILITY/`.
+
+## Reviewer integration research — V4 bounded ResourceCache (2026-09-02)
+
+V4 commit `d9d804d7ba7912e3b41aa9a790bb3233d4c8b1d5` correctly identifies the architectural cost of two
+overlapping cache engines. The semantic integration retains the useful single-owner direction but does
+not copy the donor as truth. Native review found cache cancellation and time-provider callbacks under the
+state lock, caller completion before added-observer completion, missing cache-owned creation lifetime and
+a usage-subscription/removal race. All were corrected with explicit positive barriers rather than timing
+as a success oracle.
+
+The final static pass found the same under-lock cancellation class in the new AWS durable store. Four
+materialized remove/dispose cases were red before the correction: two proved lock inversion through a
+reentrant state read and two proved that a throwing callback aborted release. Cancellation now occurs
+after atomic state invalidation and outside the lock, with observer failures contained. Three additional
+mutants independently put removal cancellation under lock, put disposal cancellation under lock and
+remove callback-fault containment; each exact owner turns red and the controls remain green where
+applicable. A fifth case then exposed that concurrent dispose callers did not share completion while a
+late resource remained owned. One completion barrier now serves every caller, and an independent mutant
+that restores the early return is causally red.
+
+The final analyzer-active, non-incremental Unit solution build has zero warnings/errors. Core is
+1,543/1,543, ActiveMQ Unit is 136/136, AWS Unit is 77/77, the canonical serialized profile is
+3,109/3,109 and the final complete SQS LocalIntegration assembly is 48/48 against fresh LocalStack run
+`vicione-b4f8bb961c44`. ActiveMQ, Event Hubs and Amazon SQS were green in the broader six-provider run.
+All 26 one-cause mutants are killed and restored; scoped format covers 37 C# paths and all active old-cache
+symbol, requirements JSON, empty-directory and diff gates pass.
+
+The broad provider run also reproduced the inherited EF inbox `ReceiveCount` race at 1 rather than 3.
+The exact current test failed identically against fresh PostgreSQL, and a clean temporary archive of
+baseline commit `0df0a5ed` produced the same failure against another fresh fixture. This establishes a
+pre-existing, non-cache EF defect and prevents an out-of-scope change from being smuggled into this
+package. The temporary archive was removed. Detailed evidence is under
+`evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-RESOURCE-CACHE/`.

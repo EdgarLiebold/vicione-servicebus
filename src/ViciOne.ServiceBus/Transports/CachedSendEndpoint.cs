@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.Transports
 
     public class CachedSendEndpoint<TKey> :
         ITransportSendEndpoint,
-        INotifyValueUsed,
+        IResourceUsageSource,
         IAsyncDisposable
     {
         readonly ITransportSendEndpoint _endpoint;

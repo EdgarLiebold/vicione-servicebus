@@ -2,33 +2,29 @@ namespace ViciOne.ServiceBus.EventHubIntegration
 {
     using System;
     using System.Threading.Tasks;
-    using Internals.Caching;
+    using Caching;
     using Transports;
 
 
     public class EventHubProducerCache<TKey> :
         IEventHubProducerCache<TKey>
     {
-        readonly ICache<TKey, CachedEventHubProducer<TKey>, ITimeToLiveCacheValue<CachedEventHubProducer<TKey>>> _cache;
+        readonly KeyedResourceCache<TKey, CachedEventHubProducer<TKey>> _cache;
 
         public EventHubProducerCache()
         {
-            var options = new CacheOptions {Capacity = SendEndpointCacheDefaults.Capacity};
-            var policy = new TimeToLiveCachePolicy<CachedEventHubProducer<TKey>>(SendEndpointCacheDefaults.MaxAge);
+            var options = new ResourceCacheOptions(SendEndpointCacheDefaults.Capacity, SendEndpointCacheDefaults.MinAge,
+                SendEndpointCacheDefaults.MaxAge, ResourceCacheExpirationMode.Sliding);
 
-            _cache = new ViciOneServiceBusCache<TKey, CachedEventHubProducer<TKey>, ITimeToLiveCacheValue<CachedEventHubProducer<TKey>>>(policy, options);
+            _cache = new KeyedResourceCache<TKey, CachedEventHubProducer<TKey>>(x => x.Key, options);
         }
 
         public async Task<IEventHubProducer> GetProducer(TKey key, Func<TKey, Task<IEventHubProducer>> factory)
         {
-            return await _cache.GetOrAdd(key, x => GetProducerFromFactory(x, factory)).ConfigureAwait(false);
-        }
+            ArgumentNullException.ThrowIfNull(factory);
 
-        static async Task<CachedEventHubProducer<TKey>> GetProducerFromFactory(TKey address, Func<TKey, Task<IEventHubProducer>> factory)
-        {
-            var sendEndpoint = await factory(address).ConfigureAwait(false);
-
-            return new CachedEventHubProducer<TKey>(address, sendEndpoint);
+            return await _cache.GetOrAddAsync(key,
+                async (address, _) => new CachedEventHubProducer<TKey>(address, await factory(address).ConfigureAwait(false))).ConfigureAwait(false);
         }
     }
 }
