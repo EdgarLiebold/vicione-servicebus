@@ -2,17 +2,45 @@
 namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
-/// <summary>Owns the synchronous mutation boundary for one scoped EF outbox context.</summary>
-internal sealed class EntityFrameworkOutboxWriteCoordinator
+
+/// <summary>Owns all mutation of one scoped EF outbox session.</summary>
+internal sealed class EntityFrameworkOutboxWriteCoordinator : IDisposable
 {
-    private readonly object _syncRoot = new();
+    readonly SemaphoreSlim _gate = new(1, 1);
 
-    public void Execute(Action action)
+    public async Task ExecuteAsync(Func<Task> action, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(action);
+        await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            await action().ConfigureAwait(false);
+        }
+        finally
+        {
+            _gate.Release();
+        }
+    }
 
-        lock (_syncRoot)
+    public void ExecuteBlocking(Action action)
+    {
+        ArgumentNullException.ThrowIfNull(action);
+        _gate.Wait();
+        try
+        {
             action();
+        }
+        finally
+        {
+            _gate.Release();
+        }
+    }
+
+    public void Dispose()
+    {
+        _gate.Dispose();
     }
 }

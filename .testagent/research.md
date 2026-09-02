@@ -3331,3 +3331,27 @@ complete Unit/Architecture profile 3,023/3,023 with zero skips. The first full r
 scheduling-sensitive diagnostics assertion; it passed in isolation and on the unchanged complete rerun.
 Detailed evidence is under
 `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-RECEIVE-TERMINALITY/`.
+
+## Reviewer integration research — V4 typed EF bus-outbox reliability (2026-09-02)
+
+V4 commit `a621bf20872f28bf28f22170adba7a14b7af15a1` identifies a real ownership gap in the
+Entity Framework bus outbox: notification and scoped-session state were not typed per bus, multiple
+`DbContext` registrations had no fail-closed default selection, and delivery failures had no durable,
+operable terminal state. The semantic integration preserves the current native tree and adds bounded bus
+identity, frozen runtime options, explicit commit/abort, retry classification and quarantine operations.
+
+The real PostgreSQL 12-by-12 concurrency carrier reproduced three additional defects that a hermetic
+review alone did not expose: `RepeatableRead` conflicts with the skip-locked worker pattern, failure reset
+overwrote delivered status, and an empty final window persisted completion while reporting zero progress.
+All three are corrected and the carrier delivers 144/144. The retry test now proves the persisted due-time
+boundary with fake time and a fresh delivery signal rather than accepting an immediate second attempt.
+
+Seventeen independent one-cause mutations are killed. Mutation review also strengthened the quarantine
+bus-isolation test after its random foreign key could fall outside a two-row page. The analyzer-active
+Unit solution build is clean, the EF assembly passes 102/102, and all four previously executed local
+provider profiles remain green. Noncanonical module-parallel diagnostics exposed timing-sensitive
+ActiveMQ, diagnostics, job-service and Quartz tests. The identity-only job carrier no longer shares the
+production 30-second slot wait with its 30-second test budget, passes three focused repetitions, and the
+canonical serialized Unit/Architecture profile passes 3,072/3,072. Detailed results and byte-exact
+restoration hashes are under
+`evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-EF-OUTBOX-RELIABILITY/`.

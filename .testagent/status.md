@@ -2662,3 +2662,22 @@ future cohorts as complete.
   failure is recorded rather than hidden.
 - The final complete Unit/Architecture run passes 3,023/3,023 with zero failures or skips. Protected
   `review/**` remains unchanged and untracked. No remote publication is included or implied.
+
+## Reviewer integration — V4 typed EF bus-outbox reliability accepted locally (2026-09-02)
+
+- Typed bus/`DbContext` registration, stable bus identity, frozen options, explicit transactional sessions,
+  durable retry/quarantine state and bus-scoped operations close the fifth semantic V4 package.
+- Real PostgreSQL concurrency reproduced and corrected isolation-level, delivered-state reset and
+  empty-final-window progress defects; the 12-by-12 carrier completes all 144 deliveries.
+- The analyzer-active Release Unit solution builds with zero warnings/errors. The complete changed EF owner
+  passes 102/102 and the canonical serialized Unit/Architecture profile passes 3,072/3,072; general local,
+  SQL Server, Azure Service Bus emulator and RabbitMQ profiles pass 338/338, 60/60, 24/24 and 17/17 with
+  no skips.
+- Seventeen buildable one-cause mutations are killed and eight product baselines restore byte-exactly. A
+  surviving random-key isolation oracle was made deterministic before the mutation was accepted.
+- Noncanonical module-parallel timing flanks are recorded honestly. The one deterministic 30-second
+  slot-wait/test-budget collision is removed from its identity-only test before the canonical green run.
+  Protected `review/**` remains untouched.
+- Detailed evidence is under
+  `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-EF-OUTBOX-RELIABILITY/`. V4 progress is now 5/12
+  (41.7%); no remote publication is included or implied.

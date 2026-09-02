@@ -26,6 +26,7 @@ public sealed class EntityFrameworkProviderConfigurationTests
         Assert.IsType<SqlServerLockStatementProvider>(outbox.Provider);
         outbox.UsePostgres();
         Assert.IsType<PostgresLockStatementProvider>(outbox.Provider);
+        Assert.Equal(IsolationLevel.ReadCommitted, outbox.Isolation);
         outbox.UseSqlite();
         Assert.IsType<SqliteLockStatementProvider>(outbox.Provider);
         Assert.Equal(IsolationLevel.Serializable, outbox.Isolation);
@@ -224,8 +225,8 @@ public sealed class EntityFrameworkProviderConfigurationTests
                     ? nameof(DependencyInjectionTransactionExtensions.AddAmbientTransactionBus)
                     : nameof(DependencyInjectionTransactionExtensions.AddBufferedBus)
                 : ambientCapability
-                    ? nameof(IAmbientTransactionBus)
-                    : nameof(IBufferedBus),
+                    ? "AmbientTransaction"
+                    : "BufferedBus",
             exception.Message,
             StringComparison.Ordinal);
 
@@ -258,6 +259,9 @@ public sealed class EntityFrameworkProviderConfigurationTests
                 {
                     busOutbox.MessageDeliveryLimit = 13;
                     busOutbox.MessageDeliveryTimeout = TimeSpan.FromSeconds(11);
+                    busOutbox.MaximumDeliveryAttempts = 7;
+                    busOutbox.InitialDeliveryRetryDelay = TimeSpan.FromSeconds(2);
+                    busOutbox.MaximumDeliveryRetryDelay = TimeSpan.FromSeconds(19);
                     capturedBusOutbox = busOutbox;
                 });
                 capturedOutbox = outbox;
@@ -274,14 +278,17 @@ public sealed class EntityFrameworkProviderConfigurationTests
         registeredOutbox.QueryTimeout = TimeSpan.FromMinutes(2);
         registeredBusOutbox.MessageDeliveryLimit = 777;
         registeredBusOutbox.MessageDeliveryTimeout = TimeSpan.FromMinutes(3);
+        registeredBusOutbox.MaximumDeliveryAttempts = 99;
+        registeredBusOutbox.InitialDeliveryRetryDelay = TimeSpan.FromMinutes(4);
+        registeredBusOutbox.MaximumDeliveryRetryDelay = TimeSpan.FromMinutes(5);
 
         using ServiceProvider provider = services.BuildServiceProvider();
         EntityFrameworkOutboxOptions<ConfigurationDbContext> outboxOptions = provider
             .GetRequiredService<IOptions<EntityFrameworkOutboxOptions<ConfigurationDbContext>>>().Value;
         InboxCleanupServiceOptions<ConfigurationDbContext> cleanupOptions = provider
             .GetRequiredService<IOptions<InboxCleanupServiceOptions<ConfigurationDbContext>>>().Value;
-        OutboxDeliveryServiceOptions deliveryOptions = provider
-            .GetRequiredService<IOptions<OutboxDeliveryServiceOptions>>().Value;
+        OutboxDeliveryServiceOptions<EntityFrameworkBusOutboxScope<IBus, ConfigurationDbContext>> deliveryOptions = provider
+            .GetRequiredService<IOptions<OutboxDeliveryServiceOptions<EntityFrameworkBusOutboxScope<IBus, ConfigurationDbContext>>>>().Value;
 
         Assert.IsType<PostgresLockStatementProvider>(outboxOptions.LockStatementProvider);
         Assert.Equal(TimeSpan.FromMinutes(17), cleanupOptions.DuplicateDetectionWindow);
@@ -290,6 +297,63 @@ public sealed class EntityFrameworkProviderConfigurationTests
         Assert.Equal(TimeSpan.FromSeconds(7), cleanupOptions.QueryTimeout);
         Assert.Equal(13, deliveryOptions.MessageDeliveryLimit);
         Assert.Equal(TimeSpan.FromSeconds(11), deliveryOptions.MessageDeliveryTimeout);
+        Assert.Equal(7, deliveryOptions.MaximumDeliveryAttempts);
+        Assert.Equal(TimeSpan.FromSeconds(2), deliveryOptions.InitialDeliveryRetryDelay);
+        Assert.Equal(TimeSpan.FromSeconds(19), deliveryOptions.MaximumDeliveryRetryDelay);
+    }
+
+    [Theory]
+    [InlineData(InvalidDeliverySetting.MessageLimit, "MessageDeliveryLimit")]
+    [InlineData(InvalidDeliverySetting.MessageTimeout, "MessageDeliveryTimeout")]
+    [InlineData(InvalidDeliverySetting.AttemptLimit, "MaximumDeliveryAttempts")]
+    [InlineData(InvalidDeliverySetting.InitialRetryDelay, "InitialDeliveryRetryDelay")]
+    [InlineData(InvalidDeliverySetting.MaximumRetryDelay, "MaximumDeliveryRetryDelay")]
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-CONFIGURATION", "invalid-delivery-settings-fail-at-registration")]
+    public void BusOutboxConfiguration_RejectsEveryInvalidReliabilityBoundary(
+        InvalidDeliverySetting setting,
+        string expectedSetting)
+    {
+        ConfigurationException failure = Assert.Throws<ConfigurationException>(() =>
+            new ServiceCollection().AddViciOneServiceBus(configuration =>
+                configuration.AddEntityFrameworkOutbox<ConfigurationDbContext>(outbox =>
+                {
+                    outbox.UseSqlite();
+                    outbox.UseBusOutbox(busOutbox =>
+                    {
+                        switch (setting)
+                        {
+                            case InvalidDeliverySetting.MessageLimit:
+                                busOutbox.MessageDeliveryLimit = 0;
+                                break;
+                            case InvalidDeliverySetting.MessageTimeout:
+                                busOutbox.MessageDeliveryTimeout = TimeSpan.Zero;
+                                break;
+                            case InvalidDeliverySetting.AttemptLimit:
+                                busOutbox.MaximumDeliveryAttempts = 0;
+                                break;
+                            case InvalidDeliverySetting.InitialRetryDelay:
+                                busOutbox.InitialDeliveryRetryDelay = TimeSpan.Zero;
+                                break;
+                            case InvalidDeliverySetting.MaximumRetryDelay:
+                                busOutbox.InitialDeliveryRetryDelay = TimeSpan.FromSeconds(2);
+                                busOutbox.MaximumDeliveryRetryDelay = TimeSpan.FromSeconds(1);
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException(nameof(setting), setting, null);
+                        }
+                    });
+                })));
+
+        Assert.Contains(expectedSetting, failure.Message, StringComparison.Ordinal);
+    }
+
+    public enum InvalidDeliverySetting
+    {
+        MessageLimit,
+        MessageTimeout,
+        AttemptLimit,
+        InitialRetryDelay,
+        MaximumRetryDelay
     }
 
     public sealed class ConfigurationSaga : ISaga

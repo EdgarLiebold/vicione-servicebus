@@ -1,44 +1,47 @@
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
+#nullable enable
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using DependencyInjection;
+
+
+/// <summary>
+/// Selects the EF bus outbox for a scoped bus. Selection is deterministic: one registration is implicit, multiple
+/// registrations require exactly one explicit default. DbContext-specific APIs bypass this selector entirely.
+/// </summary>
+internal sealed class EntityFrameworkScopedBusContextProvider<TBus> : IScopedBusContextProvider<TBus>
+    where TBus : class, IBus
 {
-    using System;
-    using DependencyInjection;
-    using Microsoft.EntityFrameworkCore;
-    using Middleware.Outbox;
-
-
-    public class EntityFrameworkScopedBusContextProvider<TBus, TDbContext> :
-        IScopedBusContextProvider<TBus>,
-        IDisposable
-        where TBus : class, IBus
-        where TDbContext : DbContext
+    public EntityFrameworkScopedBusContextProvider(IEnumerable<IEntityFrameworkScopedBusContextFactory<TBus>> factories, IServiceProvider provider)
     {
-        public EntityFrameworkScopedBusContextProvider(TBus bus, TDbContext dbContext, IBusOutboxNotification notification,
-            Bind<TBus, IClientFactory> clientFactory, Bind<TBus, IScopedConsumeContextProvider> consumeContextProvider,
-            IScopedConsumeContextProvider globalConsumeContextProvider, IServiceProvider provider, TimeProvider timeProvider)
-        {
-            ArgumentNullException.ThrowIfNull(timeProvider);
+        ArgumentNullException.ThrowIfNull(factories);
+        ArgumentNullException.ThrowIfNull(provider);
 
-            if (consumeContextProvider.Value.HasContext)
-                Context = new ConsumeContextScopedBusContext(consumeContextProvider.Value.GetContext(), clientFactory.Value);
-            else if (globalConsumeContextProvider.HasContext)
+        var registrations = factories.ToArray();
+        if (registrations.Length == 0)
+            throw new ConfigurationException($"No Entity Framework bus outbox is registered for {TypeCache<TBus>.ShortName}.");
+
+        IEntityFrameworkScopedBusContextFactory<TBus> selected;
+        if (registrations.Length == 1)
+            selected = registrations[0];
+        else
+        {
+            var defaults = registrations.Where(x => x.IsDefault).ToArray();
+            selected = defaults.Length switch
             {
-                Context = new EntityFrameworkConsumeContextScopedBusContext<TBus, TDbContext>(bus, dbContext, notification, clientFactory.Value, provider,
-                    globalConsumeContextProvider.GetContext(), timeProvider);
-            }
-            else
-                Context = new EntityFrameworkScopedBusContext<TBus, TDbContext>(bus, dbContext, notification, clientFactory.Value, provider, timeProvider);
+                1 => defaults[0],
+                0 => throw new ConfigurationException(
+                    $"Multiple Entity Framework bus outboxes are configured for {TypeCache<TBus>.ShortName}. "
+                    + "An explicit default DbContext is required for untyped scoped publish/send endpoints."),
+                _ => throw new ConfigurationException(
+                    $"Multiple default Entity Framework bus outboxes are configured for {TypeCache<TBus>.ShortName}. Exactly one default is allowed.")
+            };
         }
 
-        public void Dispose()
-        {
-            switch (Context)
-            {
-                case IDisposable disposable:
-                    disposable.Dispose();
-                    return;
-            }
-        }
-
-        public ScopedBusContext Context { get; }
+        Context = selected.Create(provider);
     }
+
+    public ScopedBusContext Context { get; }
 }

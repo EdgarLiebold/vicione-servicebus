@@ -5,39 +5,25 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
 
 
     /// <summary>
-    /// Used by the sweeper to track the state of an outbox, to ensure that it is properly locked
-    /// across sweeper instances to ensure in-order delivery of messages from the outbox.
+    /// Persistent state for one ordered bus-outbox sequence. The bus identity is persisted so multiple bus instances
+    /// can safely share the same DbContext and physical outbox tables without cross-delivery.
     /// </summary>
     public class OutboxState
     {
-        /// <summary>
-        /// Assigned when the scope is created for an outbox
-        /// </summary>
         public Guid OutboxId { get; set; }
-
-        /// <summary>
-        /// Lock token to ensure row is locked within the transaction
-        /// </summary>
+        public string BusKey { get; set; } = null!;
         public Guid LockId { get; set; }
-
-        /// <summary>
-        /// EF RowVersion
-        /// </summary>
         public byte[]? RowVersion { get; set; }
-
-        /// <summary>
-        /// The point at which the outbox was created
-        /// </summary>
         public DateTime Created { get; set; }
-
-        /// <summary>
-        /// When all messages in the outbox were delivered to the transport
-        /// </summary>
+        public OutboxDeliveryStatus Status { get; set; }
+        public DateTime? NextDeliveryTime { get; set; }
+        public int DeliveryAttempts { get; set; }
+        public OutboxFailureKind LastFailureKind { get; set; }
+        public DateTime? LastFailureTime { get; set; }
+        public string? LastFailure { get; set; }
+        public long? FailedSequenceNumber { get; set; }
+        public Guid? FailedMessageId { get; set; }
         public DateTime? Delivered { get; set; }
-
-        /// <summary>
-        /// The last sequence number that was successfully delivered to the transport
-        /// </summary>
         public long? LastSequenceNumber { get; set; }
     }
 }

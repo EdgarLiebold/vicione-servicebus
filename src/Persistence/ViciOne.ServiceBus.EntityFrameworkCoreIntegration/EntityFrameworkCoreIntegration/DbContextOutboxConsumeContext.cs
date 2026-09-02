@@ -110,9 +110,11 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
                 _timeProvider,
                 MessageId,
                 ConsumerId);
-            _writeCoordinator.Execute(() => _dbContext.Add(message));
-
-            return Task.CompletedTask;
+            return _writeCoordinator.ExecuteAsync(() =>
+            {
+                _dbContext.Add(message);
+                return Task.CompletedTask;
+            }, context.CancellationToken);
         }
     }
 }

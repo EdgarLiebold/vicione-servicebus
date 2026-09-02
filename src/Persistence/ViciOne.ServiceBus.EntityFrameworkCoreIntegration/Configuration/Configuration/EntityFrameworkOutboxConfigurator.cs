@@ -10,8 +10,9 @@ namespace ViciOne.ServiceBus.Configuration
     using Middleware;
 
 
-    public class EntityFrameworkOutboxConfigurator<TDbContext> :
+    public class EntityFrameworkOutboxConfigurator<TBus, TDbContext> :
         IEntityFrameworkOutboxConfigurator
+        where TBus : class, IBus
         where TDbContext : DbContext
     {
         readonly IBusRegistrationConfigurator _configurator;
@@ -97,7 +98,7 @@ namespace ViciOne.ServiceBus.Configuration
 
             if (_useBusOutbox)
             {
-                var busOutboxConfigurator = new EntityFrameworkBusOutboxConfigurator<TDbContext>(_configurator, this);
+                var busOutboxConfigurator = new EntityFrameworkBusOutboxConfigurator<TBus, TDbContext>(_configurator, this);
                 busOutboxConfigurator.Configure(_configureBusOutbox);
             }
         }

@@ -200,7 +200,9 @@ public sealed class InMemoryJobServiceTests
     public async Task PublishingJobs_GeneratesDistinctNonEmptyIdentitiesAcrossEachLifecycle()
     {
         var consumer = new CompletingJobConsumer();
-        await using JobServiceFixture fixture = await JobServiceFixture.Start(consumer);
+        await using JobServiceFixture fixture = await JobServiceFixture.Start(
+            consumer,
+            configureSaga: options => options.SlotWaitTime = TimeSpan.FromSeconds(1));
 
         await fixture.Harness.Bus.Publish(new InMemoryJob("first"), fixture.CancellationToken)
             .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);

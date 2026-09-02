@@ -68,14 +68,16 @@ public sealed class BusOutboxNotificationTests
         notification.Delivered();
         await firstWait.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
 
-        Assert.Equal("Only one outbox delivery waiter may own the notification signal.", rejected.Message);
+        Assert.Equal("Only one outbox delivery agent may wait on NotificationScope.", rejected.Message);
     }
 
-    private static BusOutboxNotification CreateNotification(TimeProvider timeProvider) => new(
-        Options.Create(new OutboxDeliveryServiceOptions { QueryDelay = TimeSpan.FromMinutes(10) }),
+    private static BusOutboxNotification<NotificationScope> CreateNotification(TimeProvider timeProvider) => new(
+        Options.Create(new OutboxDeliveryServiceOptions<NotificationScope> { QueryDelay = TimeSpan.FromMinutes(10) }),
         timeProvider);
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()
         .OperationTimeout!.Value;
+
+    private sealed class NotificationScope;
 }

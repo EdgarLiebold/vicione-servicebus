@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Middleware.Outbox;
 
 
-public class EntityFrameworkConsumeContextScopedBusContext<TBus, TDbContext> :
+internal class EntityFrameworkConsumeContextScopedBusContext<TBus, TDbContext> :
     EntityFrameworkScopedBusContext<TBus, TDbContext>
     where TBus : class, IBus
     where TDbContext : DbContext
@@ -18,7 +18,7 @@ public class EntityFrameworkConsumeContextScopedBusContext<TBus, TDbContext> :
     readonly ConsumeContext _consumeContext;
     readonly IServiceProvider _provider;
 
-    public EntityFrameworkConsumeContextScopedBusContext(TBus bus, TDbContext dbContext, IBusOutboxNotification notification, IClientFactory clientFactory,
+    public EntityFrameworkConsumeContextScopedBusContext(TBus bus, TDbContext dbContext, IBusOutboxNotification<EntityFrameworkBusOutboxScope<TBus, TDbContext>> notification, IClientFactory clientFactory,
         IServiceProvider provider, ConsumeContext consumeContext, TimeProvider timeProvider)
         : base(bus, dbContext, notification, clientFactory, provider, timeProvider)
     {

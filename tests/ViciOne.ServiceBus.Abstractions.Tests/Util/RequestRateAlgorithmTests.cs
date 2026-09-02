@@ -137,6 +137,40 @@ public sealed class RequestRateAlgorithmTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-RATE-SCALING", "concurrent-full-batches-do-not-deadlock")]
+    public async Task RepeatedConcurrentFullBatches_CompleteWhileRequestCountGrows()
+    {
+        using var algorithm = CreateAlgorithm(prefetchCount: 100, requestResultLimit: 10);
+        using var timeout = new CancellationTokenSource(CompletionTimeout);
+        var observedRequestCounts = new List<int> { algorithm.RequestCount };
+
+        for (var pass = 0; pass < 3; pass++)
+        {
+            int expectedRequestCount = algorithm.RequestCount;
+            var allRequestsStarted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            var arrivedRequestCount = 0;
+
+            async Task<int> Request(int resultLimit, CancellationToken cancellationToken)
+            {
+                if (Interlocked.Increment(ref arrivedRequestCount) == expectedRequestCount)
+                    allRequestsStarted.TrySetResult();
+
+                await allRequestsStarted.Task.WaitAsync(cancellationToken);
+                return resultLimit;
+            }
+
+            int resultCount = await algorithm.Run(Request, timeout.Token).WaitAsync(timeout.Token);
+
+            Assert.Equal(expectedRequestCount * algorithm.ResultLimit, resultCount);
+            Assert.Equal(expectedRequestCount, arrivedRequestCount);
+            Assert.Equal(0, algorithm.ActiveRequestCount);
+            observedRequestCounts.Add(algorithm.RequestCount);
+        }
+
+        Assert.Equal([1, 6, 10, 10], observedRequestCounts);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-RATE-LIMITS", "prefetch-clamps-result-limit")]
     public void ResultLimit_IsClampedToPrefetchCount()
     {

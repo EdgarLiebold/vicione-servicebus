@@ -1,3 +1,4 @@
+#nullable enable
 namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
 {
     using System;
@@ -18,38 +19,54 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
     using Middleware.Outbox;
     using RetryPolicies;
     using Serialization;
+    using Transports;
     using Util;
 
 
-    public class BusOutboxDeliveryService<TDbContext> :
+    internal sealed class BusOutboxDeliveryService<TBus, TDbContext> :
         BackgroundService
+        where TBus : class, IBus
         where TDbContext : DbContext
     {
+        readonly TBus _bus;
         readonly IBusControl _busControl;
+        readonly string _busKey;
+        readonly IReadOnlyList<ITransportSendFailureClassifier> _failureClassifiers;
         readonly IsolationLevel _isolationLevel;
         readonly ILockStatementProvider _lockStatementProvider;
         readonly ILogger _logger;
-        readonly IBusOutboxNotification _notification;
-        readonly OutboxDeliveryServiceOptions _options;
+        readonly IBusOutboxNotification<EntityFrameworkBusOutboxScope<TBus, TDbContext>> _notification;
+        readonly OutboxDeliveryServiceOptions<EntityFrameworkBusOutboxScope<TBus, TDbContext>> _options;
         readonly Func<TDbContext, Guid, long, int, IAsyncEnumerable<OutboxMessage>> _outboxMessagesQuery;
         readonly IServiceProvider _provider;
-        readonly IRetryPolicy _retryPolicy;
+        readonly IRetryPolicy _operationalRetryPolicy;
         readonly TimeProvider _timeProvider;
+        string? _getOutboxIdStatement;
 
-        string _getOutboxIdStatement;
-
-        public BusOutboxDeliveryService(IBusControl busControl, IOptions<OutboxDeliveryServiceOptions> options,
-            IOptions<EntityFrameworkOutboxOptions<TDbContext>> outboxOptions, IBusOutboxNotification notification,
-            ILogger<BusOutboxDeliveryService<TDbContext>> logger, IServiceProvider provider, TimeProvider timeProvider)
+        public BusOutboxDeliveryService(IOptions<OutboxDeliveryServiceOptions<EntityFrameworkBusOutboxScope<TBus, TDbContext>>> options,
+            IOptions<EntityFrameworkOutboxOptions<TDbContext>> outboxOptions,
+            IBusOutboxNotification<EntityFrameworkBusOutboxScope<TBus, TDbContext>> notification,
+            IEnumerable<ITransportSendFailureClassifier> failureClassifiers,
+            ILogger<BusOutboxDeliveryService<TBus, TDbContext>> logger,
+            IServiceProvider provider,
+            TimeProvider timeProvider)
         {
-            _busControl = busControl;
-            _notification = notification;
+            ArgumentNullException.ThrowIfNull(options);
+            ArgumentNullException.ThrowIfNull(outboxOptions);
+            ArgumentNullException.ThrowIfNull(notification);
+            ArgumentNullException.ThrowIfNull(failureClassifiers);
+            ArgumentNullException.ThrowIfNull(logger);
+            ArgumentNullException.ThrowIfNull(provider);
+
             _provider = provider;
+            _bus = provider.GetRequiredService<TBus>();
+            _busControl = ResolveBusControl(provider);
+            _busKey = EntityFrameworkBusOutboxIdentity<TBus>.BusKey;
+            _notification = notification;
             _logger = logger;
             _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
-
+            _failureClassifiers = failureClassifiers.ToArray();
             _options = options.Value;
-
             _lockStatementProvider = outboxOptions.Value.LockStatementProvider;
             _isolationLevel = outboxOptions.Value.IsolationLevel;
 
@@ -60,20 +77,17 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
                     .Take(limit)
                     .AsNoTracking());
 
-            _retryPolicy = Retry.Exponential(1000, TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(3));
+            _operationalRetryPolicy = Retry.Exponential(1000, TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(3));
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            // A background service starts on the execution context of the host, which carries no log context of this
-            // provider. It is established here, before the first await, so that the outbox delivery instruments
-            // record through the meter scope of this provider and not through whatever happened to be ambient.
             LogContext.ConfigureCurrentLogContextIfNull(_provider);
 
             using var algorithm = new RequestRateAlgorithm(new RequestRateAlgorithmOptions
             {
                 PrefetchCount = _options.QueryMessageLimit,
-                RequestResultLimit = 10,
+                RequestResultLimit = 10
             });
 
             while (!stoppingToken.IsCancellationRequested)
@@ -82,229 +96,201 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
                 {
                     await _busControl.WaitForHealthStatusAsync(BusHealthStatus.Healthy, stoppingToken).ConfigureAwait(false);
 
-                    // ReSharper disable once AccessToDisposedClosure
-                    var count = await _retryPolicy.Retry(() => algorithm.Run(DeliverOutbox, stoppingToken), stoppingToken).ConfigureAwait(false);
+                    var count = await _operationalRetryPolicy.Retry(() => algorithm.Run(DeliverOutbox, stoppingToken), stoppingToken)
+                        .ConfigureAwait(false);
                     if (count > 0)
                         continue;
 
                     await _notification.WaitForDelivery(stoppingToken).ConfigureAwait(false);
                 }
-                catch (OperationCanceledException)
+                catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
                 {
+                    break;
                 }
                 catch (DbUpdateConcurrencyException)
                 {
+                    // Another process won the row. This is normal HA contention and not a delivery failure.
                 }
                 catch (Exception exception)
                 {
-                    _logger.LogError(exception, "ProcessMessageBatch faulted");
+                    _logger.LogError(exception, "EF bus outbox delivery agent faulted for {BusKey}/{DbContext}", _busKey, typeof(TDbContext).Name);
                 }
             }
         }
 
         async Task<int> DeliverOutbox(int resultLimit, CancellationToken cancellationToken)
         {
-            var scope = _provider.CreateAsyncScope();
+            await using var scope = _provider.CreateAsyncScope();
+            await using var dbContext = scope.ServiceProvider.GetRequiredService<TDbContext>();
 
-            var dbContext = scope.ServiceProvider.GetRequiredService<TDbContext>();
+            _getOutboxIdStatement ??= _lockStatementProvider.GetOutboxStatement(dbContext);
 
-            try
+            async Task<int> Execute()
             {
-                _getOutboxIdStatement ??= _lockStatementProvider.GetOutboxStatement(dbContext);
+                using var timeoutToken = new CancellationTokenSource(_options.QueryTimeout, _timeProvider);
+                using var linkedToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutToken.Token);
+                await using var transaction = await dbContext.Database.BeginTransactionAsync(_isolationLevel, linkedToken.Token).ConfigureAwait(false);
 
-                async Task<int> Execute()
+                try
                 {
-                    var lockId = NewId.NextGuid();
-
-                    using var timeoutToken = new CancellationTokenSource(_options.QueryTimeout, _timeProvider);
-
-                    await using var transaction = await dbContext.Database.BeginTransactionAsync(_isolationLevel, timeoutToken.Token)
+                    var now = _timeProvider.GetUtcNow().UtcDateTime;
+                    List<OutboxState> states = await dbContext.Set<OutboxState>()
+                        .FromSqlRaw(_getOutboxIdStatement,
+                            _busKey,
+                            OutboxDeliveryStatus.Pending,
+                            OutboxDeliveryStatus.RetryScheduled,
+                            now,
+                            OutboxDeliveryStatus.Delivered)
+                        .AsTracking()
+                        .ToListAsync(linkedToken.Token)
                         .ConfigureAwait(false);
 
-                    try
+                    var outboxState = states.SingleOrDefault();
+                    if (outboxState == null)
+                        return -1;
+
+                    if (!StringComparer.Ordinal.Equals(outboxState.BusKey, _busKey))
+                        throw new InvalidOperationException($"Outbox lock returned a row owned by bus '{outboxState.BusKey}' instead of '{_busKey}'.");
+
+                    outboxState.LockId = NewId.NextGuid();
+                    dbContext.Update(outboxState);
+                    await dbContext.SaveChangesAsync(linkedToken.Token).ConfigureAwait(false);
+
+                    int progress;
+                    if (outboxState.Status == OutboxDeliveryStatus.Delivered)
                     {
-                        List<OutboxState> outboxStateList = await dbContext.Set<OutboxState>()
-                            .FromSqlRaw(_getOutboxIdStatement)
-                            .AsTracking()
-                            .ToListAsync(timeoutToken.Token).ConfigureAwait(false);
-                        var outboxState = outboxStateList.SingleOrDefault();
-
-                        if (outboxState == null)
-                            return -1;
-
-                        outboxState.LockId = lockId;
-
-                        dbContext.Update(outboxState);
-                        await dbContext.SaveChangesAsync(timeoutToken.Token).ConfigureAwait(false);
-
-                        int continueProcessing;
-
-                        if (outboxState.Delivered.HasValue)
-                        {
-                            await RemoveOutbox(dbContext, outboxState, cancellationToken).ConfigureAwait(false);
-
-                            // cleanup counts as progress so the outer loop keeps draining delivered outboxes
-                            // without falling through to WaitForDelivery; distinct from a zero-progress send fault.
-                            continueProcessing = 1;
-                        }
-                        else
-                            continueProcessing = await DeliverOutboxMessages(dbContext, outboxState, cancellationToken).ConfigureAwait(false);
-
-                        await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
-
-                        return continueProcessing;
+                        await RemoveOutbox(dbContext, outboxState, linkedToken.Token).ConfigureAwait(false);
+                        progress = 1;
                     }
-                    catch (OperationCanceledException)
-                    {
-                        throw;
-                    }
-                    catch (Exception)
-                    {
-                        await RollbackTransaction(transaction).ConfigureAwait(false);
-                        throw;
-                    }
+                    else
+                        progress = await DeliverOutboxMessages(dbContext, outboxState, linkedToken.Token).ConfigureAwait(false);
+
+                    await transaction.CommitAsync(linkedToken.Token).ConfigureAwait(false);
+                    return progress;
                 }
-
-                var executionStrategy = dbContext.Database.CreateExecutionStrategy();
-
-                var messageCount = 0;
-                while (messageCount < resultLimit)
+                catch
                 {
-                    // Provider-owned execution strategies are the only authoritative source for transient-failure
-                    // classification. Always execute through the public strategy contract; inspecting provider error
-                    // message text or recognizing only EF's built-in base class would make custom strategies unsafe.
-                    var executeResult = await EntityFrameworkExecutionStrategy.ExecuteAsync(
-                            dbContext,
-                            executionStrategy,
-                            Execute,
-                            cancellationToken)
-                        .ConfigureAwait(false);
-
-                    // executeResult < 0: no outbox found (nothing to do)
-                    // executeResult == 0: pending outbox locked but no messages delivered (send fault or poison
-                    //   message). Break so the outer loop falls through to WaitForDelivery(QueryDelay), rather than
-                    //   re-locking the same outbox immediately and spinning on the same poison message.
-                    // executeResult > 0: progress (messages delivered, or delivered-outbox cleanup). Continue.
-                    if (executeResult <= 0)
-                        break;
-
-                    messageCount += executeResult;
+                    await RollbackTransaction(transaction).ConfigureAwait(false);
+                    throw;
                 }
-
-                return messageCount;
             }
-            finally
+
+            var executionStrategy = dbContext.Database.CreateExecutionStrategy();
+            var messageCount = 0;
+            while (messageCount < resultLimit)
             {
-                if (dbContext != null)
-                    await dbContext.DisposeAsync().ConfigureAwait(false);
+                var executeResult = await EntityFrameworkExecutionStrategy.ExecuteAsync(dbContext, executionStrategy, Execute, cancellationToken)
+                    .ConfigureAwait(false);
+                if (executeResult <= 0)
+                    break;
 
-                await scope.DisposeAsync().ConfigureAwait(false);
+                messageCount += executeResult;
             }
+
+            return messageCount;
         }
 
         static async Task RemoveOutbox(TDbContext dbContext, OutboxState outboxState, CancellationToken cancellationToken)
         {
             List<OutboxMessage> messages = await dbContext.Set<OutboxMessage>()
                 .Where(x => x.OutboxId == outboxState.OutboxId)
-                .ToListAsync(cancellationToken);
+                .ToListAsync(cancellationToken)
+                .ConfigureAwait(false);
 
             dbContext.RemoveRange(messages);
-
             dbContext.Remove(outboxState);
+            await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-            await dbContext.SaveChangesAsync(cancellationToken);
-
-            if (messages.Count > 0)
-                LogContext.Debug?.Log("Outbox removed {Count} messages: {OutboxId}", messages.Count, outboxState);
+            LogContext.Debug?.Log("Outbox removed {Count} messages: {OutboxId}", messages.Count, outboxState.OutboxId);
         }
 
-        async Task<int> DeliverOutboxMessages(TDbContext dbContext, OutboxState outboxState, CancellationToken cancellationToken)
+        internal async Task<int> DeliverOutboxMessages(TDbContext dbContext, OutboxState outboxState, CancellationToken cancellationToken)
         {
-            var messageLimit = _options.MessageDeliveryLimit;
-
-            var hasLastSequenceNumber = outboxState.LastSequenceNumber.HasValue;
-
-            var lastSequenceNumber = outboxState.LastSequenceNumber ?? 0;
+            int messageLimit = Math.Max(1, _options.MessageDeliveryLimit);
+            bool hasLastSequenceNumber = outboxState.LastSequenceNumber.HasValue;
+            long lastSequenceNumber = outboxState.LastSequenceNumber ?? 0;
 
             IList<OutboxMessage> messages = await _outboxMessagesQuery(dbContext, outboxState.OutboxId, lastSequenceNumber, messageLimit)
                 .ToListAsync(cancellationToken)
                 .ConfigureAwait(false);
 
-            var sentSequenceNumber = 0L;
+            long sentSequenceNumber = 0;
+            int messageCount = 0;
+            int messageIndex = 0;
+            bool saveChanges = false;
+            bool completedOutbox = false;
 
-            var saveChanges = false;
-
-            var messageCount = 0;
-            var messageIndex = 0;
             for (; messageIndex < messages.Count && messageCount < messageLimit; messageIndex++)
             {
                 var message = messages[messageIndex];
-
-                message.Deserialize(ServiceBusMetadataJson.ObjectDeserializer);
+                try
+                {
+                    message.Deserialize(ServiceBusMetadataJson.ObjectDeserializer);
+                }
+                catch (Exception exception)
+                {
+                    Quarantine(outboxState, message, OutboxFailureKind.InvariantViolation,
+                        $"Persisted outbox metadata could not be deserialized: {DescribeFailure(exception)}");
+                    _logger.LogError(exception,
+                        "Outbox message quarantined after persisted metadata failure: {BusKey} {OutboxId} {SequenceNumber}",
+                        _busKey, outboxState.OutboxId, message.SequenceNumber);
+                    saveChanges = true;
+                    break;
+                }
 
                 if (message.DestinationAddress == null)
                 {
-                    LogContext.Warning?.Log("Outbox message DestinationAddress not present: {SequenceNumber} {MessageId}", message.SequenceNumber,
-                        message.MessageId);
+                    Quarantine(outboxState, message, OutboxFailureKind.InvariantViolation,
+                        "Persisted outbox message has no DestinationAddress.");
+                    saveChanges = true;
+                    break;
                 }
-                else
+
+                try
                 {
+                    using var sendTimeout = new CancellationTokenSource(_options.MessageDeliveryTimeout, _timeProvider);
+                    using var sendToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, sendTimeout.Token);
+
+                    var pipe = new OutboxMessageSendPipe(message, message.DestinationAddress);
+                    var endpoint = await _bus.GetSendEndpoint(message.DestinationAddress).ConfigureAwait(false);
+                    StartedActivity? activity = LogContext.Current?.StartOutboxDeliverActivity(message);
+                    var instrument = LogContext.Current?.StartOutboxDeliveryInstrument();
+
                     try
                     {
-                        using var sendToken = new CancellationTokenSource(_options.MessageDeliveryTimeout, _timeProvider);
-                        using var token = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, sendToken.Token);
-
-                        var pipe = new OutboxMessageSendPipe(message, message.DestinationAddress);
-
-                        var endpoint = await _busControl.GetSendEndpoint(message.DestinationAddress).ConfigureAwait(false);
-
-                        StartedActivity? activity = LogContext.Current?.StartOutboxDeliverActivity(message);
-                        var instrument = LogContext.Current?.StartOutboxDeliveryInstrument();
-
-                        try
-                        {
-                            await endpoint.Send(new SerializedMessageBody(), pipe, token.Token).ConfigureAwait(false);
-                        }
-                        catch (Exception ex)
-                        {
-                            activity?.AddExceptionEvent(ex);
-                            instrument?.RecordException(ex);
-                            throw;
-                        }
-                        finally
-                        {
-                            activity?.Stop();
-                            instrument?.Complete();
-                        }
-
-                        sentSequenceNumber = message.SequenceNumber;
-
-                        LogContext.Debug?.Log("Outbox Sent: {OutboxId} {SequenceNumber} {MessageId}", message.OutboxId, sentSequenceNumber, message.MessageId);
-                    }
-                    catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
-                    {
-                        throw;
-                    }
-                    catch (OperationCanceledException ex)
-                    {
-                        LogContext.Warning?.Log(ex,
-                            "Outbox Send Timeout after {Timeout}: {OutboxId} {SequenceNumber} {MessageId}",
-                            _options.MessageDeliveryTimeout, message.OutboxId, message.SequenceNumber, message.MessageId);
-                        break;
+                        await endpoint.Send(new SerializedMessageBody(), pipe, sendToken.Token).ConfigureAwait(false);
                     }
                     catch (Exception ex)
                     {
-                        LogContext.Warning?.Log(ex, "Outbox Send Fault: {OutboxId} {SequenceNumber} {MessageId}", message.OutboxId, message.SequenceNumber,
-                            message.MessageId);
-
-                        break;
+                        activity?.AddExceptionEvent(ex);
+                        instrument?.RecordException(ex);
+                        throw;
+                    }
+                    finally
+                    {
+                        activity?.Stop();
+                        instrument?.Complete();
                     }
 
-                    dbContext.Remove((object)message);
-
+                    sentSequenceNumber = message.SequenceNumber;
+                    dbContext.Remove(message);
+                    outboxState.Status = OutboxDeliveryStatus.Pending;
+                    ResetFailure(outboxState);
                     saveChanges = true;
-
                     messageCount++;
+
+                    LogContext.Debug?.Log("Outbox sent: {BusKey} {OutboxId} {SequenceNumber} {MessageId}", _busKey, message.OutboxId,
+                        message.SequenceNumber, message.MessageId);
+                }
+                catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+                {
+                    throw;
+                }
+                catch (Exception exception)
+                {
+                    ApplyDeliveryFailure(outboxState, message, exception);
+                    saveChanges = true;
+                    break;
                 }
             }
 
@@ -312,15 +298,19 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
             {
                 outboxState.LastSequenceNumber = sentSequenceNumber;
                 dbContext.Update(outboxState);
-
                 saveChanges = true;
             }
 
-            if (messageIndex == messages.Count && messages.Count < messageLimit)
+            if (outboxState.Status != OutboxDeliveryStatus.Quarantined
+                && outboxState.Status != OutboxDeliveryStatus.RetryScheduled
+                && messageIndex == messages.Count
+                && messages.Count < messageLimit)
             {
+                outboxState.Status = OutboxDeliveryStatus.Delivered;
                 outboxState.Delivered = _timeProvider.GetUtcNow().UtcDateTime;
+                ResetFailure(outboxState);
 
-                if (hasLastSequenceNumber == false)
+                if (!hasLastSequenceNumber)
                 {
                     dbContext.Remove(outboxState);
                     dbContext.RemoveRange(messages);
@@ -329,14 +319,151 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
                     dbContext.Update(outboxState);
 
                 saveChanges = true;
-
-                LogContext.Debug?.Log("Outbox Delivered: {OutboxId} {Delivered}", outboxState.OutboxId, outboxState.Delivered);
+                completedOutbox = true;
+                LogContext.Debug?.Log("Outbox delivered: {BusKey} {OutboxId} {Delivered}", _busKey, outboxState.OutboxId, outboxState.Delivered);
             }
 
             if (saveChanges)
                 await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-            return messageCount;
+            return messageCount > 0 || !completedOutbox ? messageCount : 1;
+        }
+
+        internal void ApplyDeliveryFailure(OutboxState state, OutboxMessage message, Exception exception)
+        {
+            var failureKind = Classify(exception);
+            if (failureKind == TransportSendFailureKind.Permanent)
+            {
+                Quarantine(state, message, OutboxFailureKind.Permanent, DescribeFailure(exception));
+                _logger.LogError(exception, "Outbox message quarantined after permanent send failure: {BusKey} {OutboxId} {SequenceNumber}",
+                    _busKey, state.OutboxId, message.SequenceNumber);
+                return;
+            }
+
+            if (state.DeliveryAttempts < 0 || state.DeliveryAttempts == int.MaxValue)
+            {
+                Quarantine(state, message, OutboxFailureKind.InvariantViolation,
+                    $"Persisted DeliveryAttempts value is invalid: {state.DeliveryAttempts}.");
+                return;
+            }
+
+            int attempt = state.DeliveryAttempts + 1;
+            if (attempt >= _options.MaximumDeliveryAttempts)
+            {
+                state.DeliveryAttempts = attempt;
+                Quarantine(state, message, OutboxFailureKind.RetryLimitExceeded, DescribeFailure(exception));
+                _logger.LogError(exception, "Outbox message quarantined after {Attempts} attempts: {BusKey} {OutboxId} {SequenceNumber}", attempt,
+                    _busKey, state.OutboxId, message.SequenceNumber);
+                return;
+            }
+
+            var delay = CalculateRetryDelay(attempt);
+            var now = _timeProvider.GetUtcNow();
+            state.Status = OutboxDeliveryStatus.RetryScheduled;
+            state.DeliveryAttempts = attempt;
+            state.NextDeliveryTime = (now + delay).UtcDateTime;
+            state.LastFailureKind = failureKind == TransportSendFailureKind.Transient
+                ? OutboxFailureKind.Transient
+                : OutboxFailureKind.Unclassified;
+            state.LastFailureTime = now.UtcDateTime;
+            state.LastFailure = Truncate(exception.ToString(), 2048);
+            state.FailedSequenceNumber = message.SequenceNumber;
+            state.FailedMessageId = message.MessageId;
+
+            _logger.LogWarning(exception,
+                "Outbox send scheduled for retry {Attempt}/{MaximumAttempts} after {Delay}: {BusKey} {OutboxId} {SequenceNumber}",
+                attempt, _options.MaximumDeliveryAttempts, delay, _busKey, state.OutboxId, message.SequenceNumber);
+        }
+
+        internal TransportSendFailureKind Classify(Exception exception)
+        {
+            foreach (var classifier in _failureClassifiers)
+            {
+                try
+                {
+                    if (classifier.TryClassify(exception, out var kind))
+                        return kind;
+                }
+                catch (Exception classifierException)
+                {
+                    _logger.LogWarning(classifierException,
+                        "Transport send failure classifier {Classifier} faulted; delivery remains bounded and unclassified.",
+                        classifier?.GetType().FullName ?? "<null>");
+                }
+            }
+
+            return exception switch
+            {
+                ConnectionException connectionException => connectionException.IsTransient
+                    ? TransportSendFailureKind.Transient
+                    : TransportSendFailureKind.Permanent,
+                OperationCanceledException => TransportSendFailureKind.Transient,
+                TimeoutException => TransportSendFailureKind.Transient,
+                ConfigurationException => TransportSendFailureKind.Permanent,
+                NotSupportedException => TransportSendFailureKind.Permanent,
+                ArgumentException => TransportSendFailureKind.Permanent,
+                UnauthorizedAccessException => TransportSendFailureKind.Permanent,
+                UriFormatException => TransportSendFailureKind.Permanent,
+                _ => TransportSendFailureKind.Unclassified
+            };
+        }
+
+        void Quarantine(OutboxState state, OutboxMessage message, OutboxFailureKind kind, string reason)
+        {
+            var now = _timeProvider.GetUtcNow().UtcDateTime;
+            state.Status = OutboxDeliveryStatus.Quarantined;
+            state.NextDeliveryTime = null;
+            state.LastFailureKind = kind;
+            state.LastFailureTime = now;
+            state.LastFailure = Truncate(reason, 2048);
+            state.FailedSequenceNumber = message.SequenceNumber;
+            state.FailedMessageId = message.MessageId;
+        }
+
+        static void ResetFailure(OutboxState state)
+        {
+            state.NextDeliveryTime = null;
+            state.DeliveryAttempts = 0;
+            state.LastFailureKind = OutboxFailureKind.None;
+            state.LastFailureTime = null;
+            state.LastFailure = null;
+            state.FailedSequenceNumber = null;
+            state.FailedMessageId = null;
+        }
+
+        internal TimeSpan CalculateRetryDelay(int attempt)
+        {
+            long ticks = _options.InitialDeliveryRetryDelay.Ticks;
+            long maximumTicks = _options.MaximumDeliveryRetryDelay.Ticks;
+            for (var i = 1; i < attempt && ticks < maximumTicks; i++)
+                ticks = ticks > maximumTicks / 2 ? maximumTicks : Math.Min(maximumTicks, ticks * 2);
+
+            return TimeSpan.FromTicks(ticks);
+        }
+
+        IBusControl ResolveBusControl(IServiceProvider provider)
+        {
+            if (typeof(TBus) == typeof(IBus))
+                return provider.GetRequiredService<IBusControl>();
+
+            return provider.GetRequiredService<IBusInstance<TBus>>().BusControl;
+        }
+
+        static string Truncate(string text, int maximumLength)
+        {
+            return text.Length <= maximumLength ? text : text[..maximumLength];
+        }
+
+        static string DescribeFailure(Exception exception)
+        {
+            try
+            {
+                return exception.ToString();
+            }
+            catch
+            {
+                return exception.GetType().FullName ?? exception.GetType().Name;
+            }
         }
 
         static async Task RollbackTransaction(IDbContextTransaction transaction)
@@ -345,9 +472,9 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
             {
                 await transaction.RollbackAsync(CancellationToken.None).ConfigureAwait(false);
             }
-            catch (Exception)
+            catch
             {
-                //
+                // Preserve the original failure. Rollback failure is secondary and the transaction is disposed immediately afterwards.
             }
         }
     }

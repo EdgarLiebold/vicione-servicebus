@@ -7,24 +7,26 @@ namespace ViciOne.ServiceBus.Middleware.Outbox
     using Microsoft.Extensions.Options;
 
 
-    public class BusOutboxNotification :
-        IBusOutboxNotification
+    public class BusOutboxNotification<TScope> :
+        IBusOutboxNotification<TScope>
+        where TScope : class
     {
-        readonly object _lock = new object();
-        readonly IOptions<OutboxDeliveryServiceOptions> _options;
+        readonly object _lock = new();
+        readonly OutboxDeliveryServiceOptions<TScope> _options;
         readonly TimeProvider _timeProvider;
-        CancellationTokenSource? _cancellationTokenSource;
+        CancellationTokenSource? _deliverySignal;
         bool _deliveryPending;
 
-        public BusOutboxNotification(IOptions<OutboxDeliveryServiceOptions> options, TimeProvider timeProvider)
+        public BusOutboxNotification(IOptions<OutboxDeliveryServiceOptions<TScope>> options, TimeProvider timeProvider)
         {
-            _options = options ?? throw new ArgumentNullException(nameof(options));
+            ArgumentNullException.ThrowIfNull(options);
+            _options = options.Value;
             _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         }
 
         public async Task WaitForDelivery(CancellationToken cancellationToken)
         {
-            CancellationTokenSource deliverySignal;
+            CancellationTokenSource signal;
             lock (_lock)
             {
                 if (_deliveryPending)
@@ -33,40 +35,38 @@ namespace ViciOne.ServiceBus.Middleware.Outbox
                     return;
                 }
 
-                if (_cancellationTokenSource is not null)
-                    throw new InvalidOperationException("Only one outbox delivery waiter may own the notification signal.");
+                if (_deliverySignal != null)
+                    throw new InvalidOperationException($"Only one outbox delivery agent may wait on {typeof(TScope).Name}.");
 
-                deliverySignal = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-                _cancellationTokenSource = deliverySignal;
+                signal = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                _deliverySignal = signal;
             }
 
             try
             {
-                await Task.Delay(_options.Value.QueryDelay, _timeProvider, deliverySignal.Token).ConfigureAwait(false);
+                await Task.Delay(_options.QueryDelay, _timeProvider, signal.Token).ConfigureAwait(false);
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
             {
-                cancellationToken.ThrowIfCancellationRequested();
                 throw;
             }
             catch (OperationCanceledException)
             {
-                // Delivered() is the wake-up signal. It is not caller cancellation.
+                // Delivered() intentionally wakes the single delivery agent.
             }
             finally
             {
                 lock (_lock)
                 {
-                    if (ReferenceEquals(_cancellationTokenSource, deliverySignal))
+                    if (ReferenceEquals(_deliverySignal, signal))
                     {
-                        _cancellationTokenSource = null;
-
-                        if (deliverySignal.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
+                        _deliverySignal = null;
+                        if (signal.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
                             _deliveryPending = false;
                     }
-
-                    deliverySignal.Dispose();
                 }
+
+                signal.Dispose();
             }
         }
 
@@ -75,7 +75,7 @@ namespace ViciOne.ServiceBus.Middleware.Outbox
             lock (_lock)
             {
                 _deliveryPending = true;
-                _cancellationTokenSource?.Cancel();
+                _deliverySignal?.Cancel();
             }
         }
     }

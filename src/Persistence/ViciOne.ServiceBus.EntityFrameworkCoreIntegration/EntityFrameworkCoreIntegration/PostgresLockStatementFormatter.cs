@@ -25,10 +25,19 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
             sb.Append(" FOR UPDATE");
         }
 
-        public void CreateOutboxStatement(StringBuilder sb, string schema, string table, string columnName)
+        public void CreateOutboxStatement(StringBuilder sb, string schema, string table, string createdColumn, string outboxIdColumn,
+            string busKeyColumn, string statusColumn, string nextDeliveryTimeColumn)
         {
-            sb.AppendFormat("SELECT *, xmin FROM {0} ORDER BY {1} LIMIT 1 FOR UPDATE SKIP LOCKED",
-                FormatTableName(schema, table), QuoteIdentifier(columnName));
+            sb.AppendFormat(
+                "SELECT *, xmin FROM {0} WHERE {1} = @p0 AND ({2} = @p1 OR ({2} = @p2 AND ({3} IS NULL OR {3} <= @p3)) OR {2} = @p4) ORDER BY {4}, {5} LIMIT 1 FOR UPDATE SKIP LOCKED",
+                FormatTableName(schema, table), QuoteIdentifier(busKeyColumn), QuoteIdentifier(statusColumn), QuoteIdentifier(nextDeliveryTimeColumn),
+                QuoteIdentifier(createdColumn), QuoteIdentifier(outboxIdColumn));
+        }
+
+        public void CreateInboxCleanupLockStatement(StringBuilder sb, string schema, string table)
+        {
+            string resource = $"ViciOne.ServiceBus:InboxCleanup:{schema}.{table}".Replace("'", "''", StringComparison.Ordinal);
+            sb.Append($"SELECT CASE WHEN pg_try_advisory_xact_lock(hashtext('{resource}'), 0) THEN 1 ELSE 0 END");
         }
 
         static string FormatTableName(string schema, string table)

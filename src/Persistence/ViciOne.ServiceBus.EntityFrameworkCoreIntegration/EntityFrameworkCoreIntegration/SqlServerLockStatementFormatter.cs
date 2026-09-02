@@ -34,10 +34,22 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
         {
         }
 
-        public void CreateOutboxStatement(StringBuilder sb, string schema, string table, string columnName)
+        public void CreateOutboxStatement(StringBuilder sb, string schema, string table, string createdColumn, string outboxIdColumn,
+            string busKeyColumn, string statusColumn, string nextDeliveryTimeColumn)
         {
-            sb.AppendFormat(@"SELECT TOP 1 * FROM {0} WITH (UPDLOCK, ROWLOCK, READPAST) ORDER BY {1}", FormatTableName(schema, table),
-                QuoteIdentifier(columnName));
+            sb.AppendFormat(
+                "SELECT TOP 1 * FROM {0} WITH (UPDLOCK, ROWLOCK, READPAST) WHERE {1} = @p0 AND ({2} = @p1 OR ({2} = @p2 AND ({3} IS NULL OR {3} <= @p3)) OR {2} = @p4) ORDER BY {4}, {5}",
+                FormatTableName(schema, table), QuoteIdentifier(busKeyColumn), QuoteIdentifier(statusColumn), QuoteIdentifier(nextDeliveryTimeColumn),
+                QuoteIdentifier(createdColumn), QuoteIdentifier(outboxIdColumn));
+        }
+
+        public void CreateInboxCleanupLockStatement(StringBuilder sb, string schema, string table)
+        {
+            string resource = $"ViciOne.ServiceBus:InboxCleanup:{schema}.{table}".Replace("'", "''", StringComparison.Ordinal);
+            sb.Append("DECLARE @result int; EXEC @result = sys.sp_getapplock ")
+                .Append("@Resource = N'").Append(resource).Append("', ")
+                .Append("@LockMode = 'Exclusive', @LockOwner = 'Transaction', @LockTimeout = 0; ")
+                .Append("SELECT CASE WHEN @result >= 0 THEN 1 ELSE 0 END");
         }
 
         static string FormatTableName(string schema, string table)

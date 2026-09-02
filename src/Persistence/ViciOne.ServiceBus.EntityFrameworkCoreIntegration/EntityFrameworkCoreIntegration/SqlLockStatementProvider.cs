@@ -52,11 +52,23 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
 
         public virtual string GetOutboxStatement(DbContext context)
         {
-            var schemaTableTrio = GetSchemaAndTableNameAndColumnName(context, typeof(OutboxState), nameof(OutboxState.Created));
+            var schemaTableTrio = GetSchemaAndTableNameAndColumnName(context, typeof(OutboxState),
+                nameof(OutboxState.Created), nameof(OutboxState.OutboxId), nameof(OutboxState.BusKey), nameof(OutboxState.Status),
+                nameof(OutboxState.NextDeliveryTime));
 
-            var sb = new StringBuilder(128);
-            _formatter.CreateOutboxStatement(sb, schemaTableTrio.Schema, schemaTableTrio.Table, schemaTableTrio.ColumnNames[0]);
+            var sb = new StringBuilder(256);
+            _formatter.CreateOutboxStatement(sb, schemaTableTrio.Schema, schemaTableTrio.Table,
+                schemaTableTrio.ColumnNames[0], schemaTableTrio.ColumnNames[1], schemaTableTrio.ColumnNames[2], schemaTableTrio.ColumnNames[3],
+                schemaTableTrio.ColumnNames[4]);
 
+            return sb.ToString();
+        }
+
+        public virtual string GetInboxCleanupLockStatement(DbContext context)
+        {
+            var mapping = GetSchemaAndTableNameAndColumnName(context, typeof(InboxState), nameof(InboxState.Delivered));
+            var sb = new StringBuilder(192);
+            _formatter.CreateInboxCleanupLockStatement(sb, mapping.Schema, mapping.Table);
             return sb.ToString();
         }
 

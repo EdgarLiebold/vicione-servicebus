@@ -2,6 +2,8 @@
 namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
 {
     using System;
+    using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using Clients;
     using DependencyInjection;
@@ -13,9 +15,10 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
     using Transports;
 
 
-    public class EntityFrameworkScopedBusContext<TBus, TDbContext> :
+    internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :
         ScopedBusContext,
         OutboxSendContext,
+        IEntityFrameworkTransactionalOutbox<TBus, TDbContext>,
         IDisposable
         where TBus : class, IBus
         where TDbContext : DbContext
@@ -23,74 +26,29 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
         readonly TBus _bus;
         readonly IClientFactory _clientFactory;
         readonly TDbContext _dbContext;
-        readonly IBusOutboxNotification _notification;
+        readonly IBusOutboxNotification<EntityFrameworkBusOutboxScope<TBus, TDbContext>> _notification;
         readonly IServiceProvider _provider;
         readonly TimeProvider _timeProvider;
-        readonly EntityFrameworkOutboxWriteCoordinator _writeCoordinator;
-        Guid _outboxId;
+        readonly EntityFrameworkOutboxWriteCoordinator _writeCoordinator = new();
+        bool _disposed;
+        Guid _outboxId = NewId.NextGuid();
         EntityEntry<OutboxState>? _outboxState;
         IPublishEndpoint? _publishEndpoint;
         IScopedClientFactory? _scopedClientFactory;
         ISendEndpointProvider? _sendEndpointProvider;
 
-        public EntityFrameworkScopedBusContext(TBus bus, TDbContext dbContext, IBusOutboxNotification notification, IClientFactory clientFactory,
-            IServiceProvider provider, TimeProvider timeProvider)
+        internal bool HasActiveSession => _outboxState != null;
+
+        public EntityFrameworkScopedBusContext(TBus bus, TDbContext dbContext,
+            IBusOutboxNotification<EntityFrameworkBusOutboxScope<TBus, TDbContext>> notification,
+            IClientFactory clientFactory, IServiceProvider provider, TimeProvider timeProvider)
         {
-            _bus = bus;
-            _dbContext = dbContext;
-            _notification = notification;
-            _clientFactory = clientFactory;
-            _provider = provider;
+            _bus = bus ?? throw new ArgumentNullException(nameof(bus));
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            _notification = notification ?? throw new ArgumentNullException(nameof(notification));
+            _clientFactory = clientFactory ?? throw new ArgumentNullException(nameof(clientFactory));
+            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
             _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
-
-            _outboxId = NewId.NextGuid();
-
-            _writeCoordinator = new EntityFrameworkOutboxWriteCoordinator();
-        }
-
-        public void Dispose()
-        {
-            if (WasCommitted())
-                _notification.Delivered();
-
-            _outboxState = null;
-        }
-
-        public Task AddSend<T>(SendContext<T> context)
-            where T : class
-        {
-            _writeCoordinator.Execute(() =>
-            {
-                if (_outboxState == null || WasCommitted())
-                {
-                    if (WasCommitted())
-                    {
-                        _notification.Delivered();
-                        _outboxId = NewId.NextGuid();
-                        _outboxState = null;
-                    }
-
-                    _outboxState ??= _dbContext.Add(new OutboxState
-                    {
-                        OutboxId = _outboxId,
-                        Created = _timeProvider.GetUtcNow().UtcDateTime
-                    });
-                }
-
-                OutboxMessage message = OutboxMessageFactory.Create(
-                    context,
-                    ServiceBusMetadataJson.ObjectDeserializer,
-                    _timeProvider,
-                    outboxId: _outboxId);
-                _dbContext.Add(message);
-            });
-
-            return Task.CompletedTask;
-        }
-
-        public object? GetService(Type serviceType)
-        {
-            return _provider.GetService(serviceType);
         }
 
         public ISendEndpointProvider SendEndpointProvider => _sendEndpointProvider ??= new OutboxSendEndpointProvider(this, GetSendEndpointProvider());
@@ -100,9 +58,91 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
 
         public IScopedClientFactory ClientFactory => _scopedClientFactory ??= GetClientFactory();
 
-        bool WasCommitted()
+        public object? GetService(Type serviceType) => _provider.GetService(serviceType);
+
+        public Task AddSend<T>(SendContext<T> context)
+            where T : class
         {
-            return _outboxState?.State == EntityState.Unchanged;
+            ArgumentNullException.ThrowIfNull(context);
+            ThrowIfDisposed();
+
+            return _writeCoordinator.ExecuteAsync(() =>
+            {
+                ThrowIfDisposed();
+                EnsureOutboxState();
+
+                var message = OutboxMessageFactory.Create(context, ServiceBusMetadataJson.ObjectDeserializer, _timeProvider, outboxId: _outboxId);
+                _dbContext.Add(message);
+                return Task.CompletedTask;
+            }, context.CancellationToken);
+        }
+
+        public Task CommitAsync(CancellationToken cancellationToken = default)
+        {
+            ThrowIfDisposed();
+            return _writeCoordinator.ExecuteAsync(async () =>
+            {
+                ThrowIfDisposed();
+                if (WasCommitted())
+                {
+                    CompleteCommittedOutbox();
+                    return;
+                }
+
+                await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                if (_outboxState == null)
+                    return;
+
+                if (!WasCommitted())
+                    throw new InvalidOperationException("The transactional outbox SaveChanges operation did not persist the staged outbox state.");
+
+                CompleteCommittedOutbox();
+            }, cancellationToken);
+        }
+
+        public Task AbortAsync(CancellationToken cancellationToken = default)
+        {
+            ThrowIfDisposed();
+            return _writeCoordinator.ExecuteAsync(() =>
+            {
+                ThrowIfDisposed();
+                cancellationToken.ThrowIfCancellationRequested();
+                if (WasCommitted())
+                {
+                    CompleteCommittedOutbox();
+                    throw new InvalidOperationException("A persisted transactional outbox session cannot be aborted.");
+                }
+
+                DetachPendingOutbox();
+                return Task.CompletedTask;
+            }, cancellationToken);
+        }
+
+        public void Dispose()
+        {
+            if (_disposed)
+                return;
+
+            Exception? uncommitted = null;
+            _writeCoordinator.ExecuteBlocking(() =>
+            {
+                if (HasPendingOutboxChanges())
+                {
+                    Guid abandonedOutboxId = _outboxId;
+                    DetachPendingOutbox();
+                    uncommitted = new InvalidOperationException(
+                        $"The transactional outbox for {TypeCache<TBus>.ShortName}/{TypeCache<TDbContext>.ShortName} was disposed without commit. "
+                        + $"Staged outbox {abandonedOutboxId} records were detached to prevent accidental later persistence.");
+                }
+                else if (WasCommitted())
+                    CompleteCommittedOutbox();
+
+                _disposed = true;
+            });
+
+            _writeCoordinator.Dispose();
+            if (uncommitted != null)
+                throw uncommitted;
         }
 
         protected virtual ScopedClientFactory GetClientFactory()
@@ -110,14 +150,69 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
             return new ScopedClientFactory(new ClientFactory(new ScopedClientFactoryContext(_clientFactory, _provider)), null);
         }
 
-        protected virtual IPublishEndpointProvider GetPublishEndpointProvider()
+        protected virtual IPublishEndpointProvider GetPublishEndpointProvider() => _bus;
+        protected virtual ISendEndpointProvider GetSendEndpointProvider() => _bus;
+
+        void EnsureOutboxState()
         {
-            return _bus;
+            if (_outboxState != null && !WasCommitted())
+                return;
+
+            if (WasCommitted())
+                CompleteCommittedOutbox();
+
+            _outboxId = NewId.NextGuid();
+            _outboxState = _dbContext.Add(new OutboxState
+            {
+                OutboxId = _outboxId,
+                BusKey = EntityFrameworkBusOutboxIdentity<TBus>.BusKey,
+                Created = _timeProvider.GetUtcNow().UtcDateTime,
+                Status = OutboxDeliveryStatus.Pending
+            });
         }
 
-        protected virtual ISendEndpointProvider GetSendEndpointProvider()
+        bool HasPendingOutboxChanges()
         {
-            return _bus;
+            if (_outboxState == null)
+                return false;
+
+            if (_outboxState is { State: not EntityState.Unchanged and not EntityState.Detached })
+                return true;
+
+            return _dbContext.ChangeTracker.Entries<OutboxMessage>()
+                .Any(x => x.Entity.OutboxId == _outboxId && x.State is not EntityState.Unchanged and not EntityState.Detached);
+        }
+
+        bool WasCommitted() => _outboxState?.State == EntityState.Unchanged;
+
+        void CompleteCommittedOutbox()
+        {
+            if (_outboxState == null || !WasCommitted())
+                return;
+
+            _notification.Delivered();
+            _outboxState = null;
+            _outboxId = NewId.NextGuid();
+        }
+
+        void DetachPendingOutbox()
+        {
+            foreach (var entry in _dbContext.ChangeTracker.Entries<OutboxMessage>().Where(x => x.Entity.OutboxId == _outboxId).ToArray())
+            {
+                if (entry.State != EntityState.Unchanged)
+                    entry.State = EntityState.Detached;
+            }
+
+            if (_outboxState is { State: not EntityState.Unchanged })
+                _outboxState.State = EntityState.Detached;
+
+            _outboxState = null;
+            _outboxId = NewId.NextGuid();
+        }
+
+        void ThrowIfDisposed()
+        {
+            ObjectDisposedException.ThrowIf(_disposed, this);
         }
     }
 }

@@ -275,6 +275,8 @@ public sealed class EntityFrameworkSagaRepositoryFactoryTests
             where T : class => throw new NotSupportedException();
 
         public string GetOutboxStatement(DbContext context) => throw new NotSupportedException();
+
+        public string GetInboxCleanupLockStatement(DbContext context) => throw new NotSupportedException();
     }
 
     private sealed class ExecutionStrategyProbe

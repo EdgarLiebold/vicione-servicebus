@@ -2788,3 +2788,18 @@ freeze, two commits and the already authorized non-force remote publication.
 5. After restoration, require focused owners, a zero-warning Release build, the complete
    Unit/Architecture profile, passive requirement projection and scoped static gates to pass before the
    local checkpoint is committed.
+
+## Reviewer integration — V4 typed EF bus-outbox reliability (2026-09-02)
+
+1. Type notification, session, scoped context and operational ownership by bus plus `DbContext`; make
+   multiple registrations select exactly one explicit default or fail before a session is created.
+2. Freeze validated delivery settings at registration completion and make commit/abort behavior explicit,
+   including ordinary business-only commits and durable-before-notification ordering.
+3. Persist bounded retry and quarantine state with isolated transport classification, corrupt-metadata and
+   missing-destination terminality, deterministic bus-scoped administration and provider-exact SQL.
+4. Exercise retry due time and concurrent PostgreSQL delivery against the real local provider. Use
+   `ReadCommitted` with skip-locked workers, preserve explicit later overrides and require all 144 messages.
+5. Bind exact hermetic state tests, real provider runs and at least sixteen independent one-cause mutations;
+   strengthen any surviving oracle before accepting the package.
+6. Freeze a local product commit and architecture binding as V4 package 5/12. Keep `review/**` untouched and
+   do not publish remotely without fresh explicit permission.

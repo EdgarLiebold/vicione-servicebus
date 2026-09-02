@@ -144,8 +144,8 @@ public sealed class BusOutboxDeliveryServiceTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-EF-BUS-OUTBOX-DELIVERY", "zero-progress-requires-next-delivery-signal")]
-    public async Task FailedSend_ReturnsToNotificationWaitBeforeAnotherAttempt()
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-RETRY", "retry-waits-for-persisted-due-time")]
+    public async Task FailedSend_RetriesOnlyAfterThePersistedDueTimeAndANewSignal()
     {
         var notification = new ControlledOutboxNotification();
         var failingSend = new FailingSendFilter();
@@ -162,12 +162,25 @@ public sealed class BusOutboxDeliveryServiceTests
         Assert.Equal(1, await failingSend.ReadAttemptAsync(fixture.OperationTimeout, fixture.CancellationToken));
         Assert.Equal(2, await notification.ReadWaitEntryAsync(fixture.OperationTimeout, fixture.CancellationToken));
         Assert.Equal(1, failingSend.AttemptCount);
+        OutboxState firstFailure = await fixture.LoadSingleOutboxStateAsync();
+        Assert.Equal(OutboxDeliveryStatus.RetryScheduled, firstFailure.Status);
+        Assert.Equal(1, firstFailure.DeliveryAttempts);
+        Assert.Equal(OutboxFailureKind.Unclassified, firstFailure.LastFailureKind);
+        Assert.Equal((FrozenTime + TimeSpan.FromSeconds(1)).UtcDateTime, firstFailure.NextDeliveryTime);
 
         notification.Delivered();
-
-        Assert.Equal(2, await failingSend.ReadAttemptAsync(fixture.OperationTimeout, fixture.CancellationToken));
         Assert.Equal(3, await notification.ReadWaitEntryAsync(fixture.OperationTimeout, fixture.CancellationToken));
+        Assert.Equal(1, failingSend.AttemptCount);
+
+        fixture.TimeProvider.Advance(TimeSpan.FromSeconds(1));
+        notification.Delivered();
+        Assert.Equal(2, await failingSend.ReadAttemptAsync(fixture.OperationTimeout, fixture.CancellationToken));
+        Assert.Equal(4, await notification.ReadWaitEntryAsync(fixture.OperationTimeout, fixture.CancellationToken));
         Assert.Equal(2, failingSend.AttemptCount);
+        OutboxState secondFailure = await fixture.LoadSingleOutboxStateAsync();
+        Assert.Equal(OutboxDeliveryStatus.RetryScheduled, secondFailure.Status);
+        Assert.Equal(2, secondFailure.DeliveryAttempts);
+        Assert.Equal((FrozenTime + TimeSpan.FromSeconds(3)).UtcDateTime, secondFailure.NextDeliveryTime);
     }
 
     [Fact]
@@ -214,10 +227,18 @@ public sealed class BusOutboxDeliveryServiceTests
                     .Select(sequence => new OutboxProbe(sequence)))));
 
         int expectedMessageCount = batchCount * messagesPerBatch;
-        DeliveryObservation[] delivered = await fixture.Deliveries.ReadManyAsync(
-            expectedMessageCount,
-            fixture.OperationTimeout,
-            fixture.CancellationToken);
+        DeliveryObservation[] delivered;
+        try
+        {
+            delivered = await fixture.Deliveries.ReadManyAsync(
+                expectedMessageCount,
+                fixture.OperationTimeout,
+                fixture.CancellationToken);
+        }
+        catch (TimeoutException exception)
+        {
+            throw new InvalidOperationException(await fixture.DescribeDeliveryTimeoutAsync(expectedMessageCount), exception);
+        }
         Guid[] drainedOutboxes = await fixture.Drains.ReadManyAsync(
             batchCount,
             fixture.OperationTimeout,
@@ -446,7 +467,8 @@ public sealed class BusOutboxDeliveryServiceTests
         }
     }
 
-    public sealed class ControlledOutboxNotification : IBusOutboxNotification
+    public sealed class ControlledOutboxNotification :
+        IBusOutboxNotification<EntityFrameworkBusOutboxScope<IBus, BusOutboxDbContext>>
     {
         private readonly Channel<int> _waitEntries = Channel.CreateUnbounded<int>(
             new UnboundedChannelOptions { SingleReader = true, SingleWriter = true });
@@ -541,7 +563,7 @@ public sealed class BusOutboxDeliveryServiceTests
 
         public static async Task<BusOutboxFixture> CreateAsync(
             bool useRawJson,
-            IBusOutboxNotification? notification = null,
+            IBusOutboxNotification<EntityFrameworkBusOutboxScope<IBus, BusOutboxDbContext>>? notification = null,
             IFilter<SendContext>? sendFilter = null,
             bool startHarness = true,
             bool disableDeliveryService = false)
@@ -673,6 +695,34 @@ public sealed class BusOutboxDeliveryServiceTests
             await using BusOutboxDbContext context = CreateContext();
             Assert.Empty(await context.Set<OutboxMessage>().AsNoTracking().ToListAsync(CancellationToken));
             Assert.Empty(await context.Set<OutboxState>().AsNoTracking().ToListAsync(CancellationToken));
+        }
+
+        public async Task<OutboxState> LoadSingleOutboxStateAsync()
+        {
+            await using BusOutboxDbContext context = CreateContext();
+            return await context.Set<OutboxState>().AsNoTracking().SingleAsync(CancellationToken);
+        }
+
+        public async Task<string> DescribeDeliveryTimeoutAsync(int expectedMessageCount)
+        {
+            await using BusOutboxDbContext context = CreateContext();
+            OutboxState[] states = await context.Set<OutboxState>()
+                .AsNoTracking()
+                .OrderBy(x => x.OutboxId)
+                .ToArrayAsync(CancellationToken.None);
+            var remainingByOutbox = await context.Set<OutboxMessage>()
+                .AsNoTracking()
+                .Where(x => x.OutboxId.HasValue)
+                .GroupBy(x => x.OutboxId)
+                .Select(group => new { OutboxId = group.Key!.Value, Count = group.Count() })
+                .ToDictionaryAsync(x => x.OutboxId, x => x.Count, CancellationToken.None);
+            int messageCount = remainingByOutbox.Values.Sum();
+            string stateSummary = string.Join(", ", states.Select(state =>
+                $"{state.OutboxId}:{state.Status}:remaining={remainingByOutbox.GetValueOrDefault(state.OutboxId)}:"
+                + $"last={state.LastSequenceNumber?.ToString() ?? "null"}:lock={state.LockId}:attempts={state.DeliveryAttempts}"));
+
+            return $"Expected {expectedMessageCount} deliveries but observed {Deliveries.RecordedCount}; "
+                + $"the store retained {messageCount} messages across {states.Length} states [{stateSummary}].";
         }
 
         public async ValueTask DisposeAsync()

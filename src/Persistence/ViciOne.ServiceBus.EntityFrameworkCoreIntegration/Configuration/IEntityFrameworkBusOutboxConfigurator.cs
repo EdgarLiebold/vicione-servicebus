@@ -7,14 +7,16 @@ namespace ViciOne.ServiceBus
     public interface IEntityFrameworkBusOutboxConfigurator :
         IBusOutboxConfigurator
     {
-        /// <summary>
-        /// The number of messages to deliver at a time from the outbox to the broker
-        /// </summary>
-        public int MessageDeliveryLimit { set; }
+        int MessageDeliveryLimit { set; }
+        TimeSpan MessageDeliveryTimeout { get; set; }
+        int MaximumDeliveryAttempts { get; set; }
+        TimeSpan InitialDeliveryRetryDelay { get; set; }
+        TimeSpan MaximumDeliveryRetryDelay { get; set; }
 
         /// <summary>
-        /// Transport Send timeout when delivering messages to the transport
+        /// Selects this DbContext as the default outbox for untyped scoped publish/send when a bus has multiple EF outboxes.
+        /// DbContext-specific transactional APIs do not require a default.
         /// </summary>
-        TimeSpan MessageDeliveryTimeout { get; set; }
+        void UseAsDefault();
     }
 }

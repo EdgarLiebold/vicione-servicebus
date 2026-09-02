@@ -19,5 +19,6 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
             where T : class;
 
         string GetOutboxStatement(DbContext context);
+        string GetInboxCleanupLockStatement(DbContext context);
     }
 }

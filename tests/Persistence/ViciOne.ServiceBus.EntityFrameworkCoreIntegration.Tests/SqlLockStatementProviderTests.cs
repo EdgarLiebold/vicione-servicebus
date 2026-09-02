@@ -58,11 +58,11 @@ public sealed class SqlLockStatementProviderTests
 
     [Theory]
     [InlineData("sql-server",
-        "SELECT TOP 1 * FROM [north]]schema].[Outbox]]Archive] WITH (UPDLOCK, ROWLOCK, READPAST) ORDER BY [Created]]At]")]
+        "SELECT TOP 1 * FROM [north]]schema].[Outbox]]Archive] WITH (UPDLOCK, ROWLOCK, READPAST) WHERE [Bus]]Key] = @p0 AND ([Status]]Code] = @p1 OR ([Status]]Code] = @p2 AND ([Next]]At] IS NULL OR [Next]]At] <= @p3)) OR [Status]]Code] = @p4) ORDER BY [Created]]At], [Outbox]]Id]")]
     [InlineData("postgresql",
-        "SELECT *, xmin FROM \"north]schema\".\"Outbox]Archive\" ORDER BY \"Created]At\" LIMIT 1 FOR UPDATE SKIP LOCKED")]
+        "SELECT *, xmin FROM \"north]schema\".\"Outbox]Archive\" WHERE \"Bus]Key\" = @p0 AND (\"Status]Code\" = @p1 OR (\"Status]Code\" = @p2 AND (\"Next]At\" IS NULL OR \"Next]At\" <= @p3)) OR \"Status]Code\" = @p4) ORDER BY \"Created]At\", \"Outbox]Id\" LIMIT 1 FOR UPDATE SKIP LOCKED")]
     [InlineData("sqlite",
-        "SELECT * FROM \"Outbox]Archive\" ORDER BY \"Created]At\" LIMIT 1")]
+        "SELECT * FROM \"Outbox]Archive\" WHERE \"Bus]Key\" = @p0 AND (\"Status]Code\" = @p1 OR (\"Status]Code\" = @p2 AND (\"Next]At\" IS NULL OR \"Next]At\" <= @p3)) OR \"Status]Code\" = @p4) ORDER BY \"Created]At\", \"Outbox]Id\" LIMIT 1")]
     [RequirementCoverage("REQ-VSB-EF-LOCK-SQL", "outbox-model-mapping-and-identifier-quoting")]
     public void OutboxStatement_UsesTheExactModelAndQuotesEveryIdentifier(string provider, string expected)
     {
@@ -70,6 +70,23 @@ public sealed class SqlLockStatementProviderTests
         using var context = new OutboxMappingContext(CreateOptions<OutboxMappingContext>());
 
         string statement = statements.GetOutboxStatement(context);
+
+        Assert.Equal(expected, statement);
+    }
+
+    [Theory]
+    [InlineData("sql-server",
+        "DECLARE @result int; EXEC @result = sys.sp_getapplock @Resource = N'ViciOne.ServiceBus:InboxCleanup:north''schema.Inbox''Archive', @LockMode = 'Exclusive', @LockOwner = 'Transaction', @LockTimeout = 0; SELECT CASE WHEN @result >= 0 THEN 1 ELSE 0 END")]
+    [InlineData("postgresql",
+        "SELECT CASE WHEN pg_try_advisory_xact_lock(hashtext('ViciOne.ServiceBus:InboxCleanup:north''schema.Inbox''Archive'), 0) THEN 1 ELSE 0 END")]
+    [InlineData("sqlite", "SELECT 1")]
+    [RequirementCoverage("REQ-VSB-EF-INBOX-CLEANUP", "provider-native-transactional-ownership-sql")]
+    public void InboxCleanupStatement_UsesProviderNativeTransactionalOwnership(string provider, string expected)
+    {
+        ILockStatementProvider statements = CreateProvider(provider);
+        using var context = new InboxMappingContext(CreateOptions<InboxMappingContext>());
+
+        string statement = statements.GetInboxCleanupLockStatement(context);
 
         Assert.Equal(expected, statement);
     }
@@ -148,7 +165,24 @@ public sealed class SqlLockStatementProviderTests
             {
                 entity.ToTable("Outbox]Archive", "north]schema");
                 entity.HasKey(state => state.OutboxId);
+                entity.Property(state => state.OutboxId).HasColumnName("Outbox]Id");
+                entity.Property(state => state.BusKey).HasColumnName("Bus]Key");
+                entity.Property(state => state.Status).HasColumnName("Status]Code");
+                entity.Property(state => state.NextDeliveryTime).HasColumnName("Next]At");
                 entity.Property(state => state.Created).HasColumnName("Created]At");
+            });
+        }
+    }
+
+    private sealed class InboxMappingContext(DbContextOptions<InboxMappingContext> options) : DbContext(options)
+    {
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<InboxState>(entity =>
+            {
+                entity.ToTable("Inbox'Archive", "north'schema");
+                entity.HasKey(state => state.Id);
+                entity.Property(state => state.Delivered);
             });
         }
     }
@@ -168,5 +202,7 @@ public sealed class SqlLockStatementProviderTests
             where T : class => GetRowLockStatement<T>(context);
 
         public string GetOutboxStatement(DbContext context) => throw new NotSupportedException();
+
+        public string GetInboxCleanupLockStatement(DbContext context) => throw new NotSupportedException();
     }
 }

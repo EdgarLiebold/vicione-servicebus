@@ -553,6 +553,13 @@
       "variantKey" : "full-batch-growth-curve"
    },
    {
+      "requirementId" : "REQ-VSB-REQUEST-RATE-SCALING",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "RepeatedConcurrentFullBatches_CompleteWhileRequestCountGrows",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Util.RequestRateAlgorithmTests",
+      "variantKey" : "concurrent-full-batches-do-not-deadlock"
+   },
+   {
       "requirementId" : "REQ-VSB-REQUEST-RATE-LIMITS",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
       "testMethod" : "ResultLimit_IsClampedToPrefetchCount",

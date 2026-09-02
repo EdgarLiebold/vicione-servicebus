@@ -50,12 +50,12 @@ public sealed class BusOutboxDeliveryTelemetryTests
         listener.Start();
 
         ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
-        var service = new BusOutboxDeliveryService<RecordingDbContext>(
-            provider.GetRequiredService<IBusControl>(),
-            Options.Create(new OutboxDeliveryServiceOptions()),
+        var service = new BusOutboxDeliveryService<IBus, RecordingDbContext>(
+            Options.Create(new OutboxDeliveryServiceOptions<EntityFrameworkBusOutboxScope<IBus, RecordingDbContext>>()),
             Options.Create(new EntityFrameworkOutboxOptions<RecordingDbContext>()),
             new NoNotification(),
-            NullLogger<BusOutboxDeliveryService<RecordingDbContext>>.Instance,
+            [],
+            NullLogger<BusOutboxDeliveryService<IBus, RecordingDbContext>>.Instance,
             provider,
             TimeProvider.System);
 
@@ -86,7 +86,7 @@ public sealed class BusOutboxDeliveryTelemetryTests
         }
     }
 
-    private sealed class NoNotification : IBusOutboxNotification
+    private sealed class NoNotification : IBusOutboxNotification<EntityFrameworkBusOutboxScope<IBus, RecordingDbContext>>
     {
         public Task WaitForDelivery(CancellationToken cancellationToken) =>
             Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);

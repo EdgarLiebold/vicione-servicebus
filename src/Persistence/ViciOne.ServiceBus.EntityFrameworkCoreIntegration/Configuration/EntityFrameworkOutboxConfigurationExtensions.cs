@@ -23,8 +23,24 @@ namespace ViciOne.ServiceBus
             Action<IEntityFrameworkOutboxConfigurator>? configure = null)
             where TDbContext : DbContext
         {
-            var outboxConfigurator = new EntityFrameworkOutboxConfigurator<TDbContext>(configurator);
+            ArgumentNullException.ThrowIfNull(configurator);
 
+            var outboxConfigurator = new EntityFrameworkOutboxConfigurator<IBus, TDbContext>(configurator);
+            outboxConfigurator.Configure(configure);
+        }
+
+        /// <summary>
+        /// Configures an Entity Framework outbox for a specific MultiBus instance. Bus and DbContext together form
+        /// the durable outbox identity, allowing the same DbContext to host isolated outboxes for multiple buses.
+        /// </summary>
+        public static void AddEntityFrameworkOutbox<TBus, TDbContext>(this IBusRegistrationConfigurator<TBus> configurator,
+            Action<IEntityFrameworkOutboxConfigurator>? configure = null)
+            where TBus : class, IBus
+            where TDbContext : DbContext
+        {
+            ArgumentNullException.ThrowIfNull(configurator);
+
+            var outboxConfigurator = new EntityFrameworkOutboxConfigurator<TBus, TDbContext>(configurator);
             outboxConfigurator.Configure(configure);
         }
 
@@ -74,6 +90,7 @@ namespace ViciOne.ServiceBus
         {
             ArgumentNullException.ThrowIfNull(configurator);
             configurator.LockStatementProvider = new PostgresLockStatementProvider();
+            configurator.IsolationLevel = System.Data.IsolationLevel.ReadCommitted;
 
             return configurator;
         }
@@ -184,11 +201,26 @@ namespace ViciOne.ServiceBus
 
             outbox.Property(p => p.RowVersion).IsRowVersion();
 
+            outbox.Property(p => p.BusKey).HasMaxLength(256);
             outbox.Property(p => p.Created);
-            outbox.HasIndex(p => p.Created);
-
+            outbox.Property(p => p.Status);
+            outbox.Property(p => p.NextDeliveryTime);
+            outbox.Property(p => p.DeliveryAttempts);
+            outbox.Property(p => p.LastFailureKind);
+            outbox.Property(p => p.LastFailureTime);
+            outbox.Property(p => p.LastFailure).HasMaxLength(2048);
+            outbox.Property(p => p.FailedSequenceNumber);
+            outbox.Property(p => p.FailedMessageId);
             outbox.Property(p => p.Delivered);
             outbox.Property(p => p.LastSequenceNumber);
+
+            outbox.HasIndex(p => new
+            {
+                p.BusKey,
+                p.Status,
+                p.NextDeliveryTime,
+                p.Created
+            });
         }
 
         /// <summary>

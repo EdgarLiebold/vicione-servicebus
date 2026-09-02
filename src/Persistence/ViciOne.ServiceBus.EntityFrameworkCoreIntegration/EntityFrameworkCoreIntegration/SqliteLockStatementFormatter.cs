@@ -23,9 +23,19 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
         {
         }
 
-        public void CreateOutboxStatement(StringBuilder sb, string schema, string table, string columnName)
+        public void CreateOutboxStatement(StringBuilder sb, string schema, string table, string createdColumn, string outboxIdColumn,
+            string busKeyColumn, string statusColumn, string nextDeliveryTimeColumn)
         {
-            sb.Append($"SELECT * FROM {QuoteIdentifier(table)} ORDER BY {QuoteIdentifier(columnName)} LIMIT 1");
+            sb.AppendFormat(
+                "SELECT * FROM {0} WHERE {1} = @p0 AND ({2} = @p1 OR ({2} = @p2 AND ({3} IS NULL OR {3} <= @p3)) OR {2} = @p4) ORDER BY {4}, {5} LIMIT 1",
+                QuoteIdentifier(table), QuoteIdentifier(busKeyColumn), QuoteIdentifier(statusColumn), QuoteIdentifier(nextDeliveryTimeColumn),
+                QuoteIdentifier(createdColumn), QuoteIdentifier(outboxIdColumn));
+        }
+
+        public void CreateInboxCleanupLockStatement(StringBuilder sb, string schema, string table)
+        {
+            // The surrounding Serializable SQLite transaction is the cleanup ownership boundary.
+            sb.Append("SELECT 1");
         }
 
         static string QuoteIdentifier(string identifier) => $"\"{identifier.Replace("\"", "\"\"", StringComparison.Ordinal)}\"";
