@@ -32,10 +32,10 @@ namespace ViciOne.ServiceBus.Transformation
             where T : class
         {
             if (!context.TryGetPayload(out TransformContext<TInput> transformContext))
-                return TaskUtil.Default<TProperty>();
+                return TaskResults.Default<TProperty>();
 
             if (!context.HasInput)
-                return TaskUtil.Default<TProperty>();
+                return TaskResults.Default<TProperty>();
 
             Task<TProperty> inputTask = _inputProvider.GetProperty(context);
             if (inputTask.IsCompleted)

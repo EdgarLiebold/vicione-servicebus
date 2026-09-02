@@ -20,7 +20,7 @@ namespace ViciOne.ServiceBus.Transformation
             where TMessage : class
         {
             if (input == null || !context.TryGetPayload(out TransformContext<TMessage> transformContext) || !transformContext.HasInput)
-                return TaskUtil.Default<TProperty>();
+                return TaskResults.Default<TProperty>();
 
             var propertyTransformContext = new PropertyTransformContext<TMessage, TProperty>(transformContext, input);
 

@@ -1,6 +1,7 @@
 namespace ViciOne.ServiceBus.Util;
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Channels;
@@ -8,444 +9,327 @@ using System.Threading.Tasks;
 
 
 /// <summary>
-/// Executes asynchronous work with a fixed concurrency limit and optional bounded queue capacity.
+/// Executes asynchronous work with bounded backpressure and a fixed concurrency limit.
 /// </summary>
 public sealed class TaskExecutor :
     IAsyncDisposable
 {
-    readonly Task _readerTask;
-    readonly Channel<IFuture> _taskChannel;
-    int _disposeState;
+    readonly Channel<IWorkItem> _channel;
+    readonly Task _workers;
+    int _lifecycleState;
 
+    /// <summary>
+    /// Creates an executor using a bounded default queue sized relative to the concurrency limit.
+    /// </summary>
     public TaskExecutor(int concurrencyLimit = 1)
+        : this(GetDefaultCapacity(concurrencyLimit), concurrencyLimit)
     {
-        if (concurrencyLimit < 1)
-            throw new ArgumentOutOfRangeException(nameof(concurrencyLimit), concurrencyLimit, "Must be >= 1");
-
-        _taskChannel = Channel.CreateUnbounded<IFuture>(new UnboundedChannelOptions
-        {
-            AllowSynchronousContinuations = true,
-            SingleReader = concurrencyLimit == 1,
-            SingleWriter = false
-        });
-
-        _readerTask = concurrencyLimit == 1
-            ? Task.Run(() => SingleReader())
-            : Task.WhenAll(Enumerable.Range(0, concurrencyLimit).Select(_ => Task.Run(() => MultipleReader())));
     }
 
-    public TaskExecutor(int prefetchCount, int concurrencyLimit = 1)
+    /// <summary>
+    /// Creates an executor with an explicit queue capacity and concurrency limit.
+    /// </summary>
+    public TaskExecutor(int capacity, int concurrencyLimit)
     {
-        if (prefetchCount < 1)
-            throw new ArgumentOutOfRangeException(nameof(prefetchCount), prefetchCount, "Must be >= 1");
-
+        if (capacity < 1)
+            throw new ArgumentOutOfRangeException(nameof(capacity), capacity, "Must be >= 1");
         if (concurrencyLimit < 1)
             throw new ArgumentOutOfRangeException(nameof(concurrencyLimit), concurrencyLimit, "Must be >= 1");
 
-        _taskChannel = Channel.CreateBounded<IFuture>(new BoundedChannelOptions(prefetchCount)
+        _channel = Channel.CreateBounded<IWorkItem>(new BoundedChannelOptions(capacity)
         {
-            AllowSynchronousContinuations = true,
+            AllowSynchronousContinuations = false,
+            FullMode = BoundedChannelFullMode.Wait,
             SingleReader = concurrencyLimit == 1,
             SingleWriter = false
         });
 
-        _readerTask = concurrencyLimit == 1
-            ? Task.Run(() => SingleReader())
-            : Task.WhenAll(Enumerable.Range(0, concurrencyLimit).Select(_ => Task.Run(() => MultipleReader())));
+        // Async worker methods start immediately and naturally yield at the first incomplete await.
+        // Task.Run would only add an unnecessary ThreadPool scheduling hop.
+        Task[] workers = Enumerable.Range(0, concurrencyLimit).Select(_ => RunWorker()).ToArray();
+        _workers = workers.Length == 1 ? workers[0] : Task.WhenAll(workers);
     }
 
     public async ValueTask DisposeAsync()
     {
-        if (Interlocked.Exchange(ref _disposeState, 1) == 0)
-            _taskChannel.Writer.TryComplete();
+        if (Interlocked.CompareExchange(ref _lifecycleState, 1, 0) == 0)
+            _channel.Writer.TryComplete();
 
-        await _readerTask.ConfigureAwait(false);
+        await _workers.ConfigureAwait(false);
+        Volatile.Write(ref _lifecycleState, 2);
     }
 
-    public async Task Run(Action method, CancellationToken cancellationToken = default)
+    public Task ExecuteAsync(Action method, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(method);
-        var future = new ActionFuture(method, cancellationToken);
 
-        await Enqueue(future, cancellationToken).ConfigureAwait(false);
-
-        await future.Completed.ConfigureAwait(false);
+        return ExecuteAsync(() =>
+        {
+            method();
+            return Task.CompletedTask;
+        }, cancellationToken);
     }
 
-    public async Task Run(Func<Task> method, CancellationToken cancellationToken = default)
+    public async Task ExecuteAsync(Func<Task> method, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(method);
-        var future = new TaskFuture(method, cancellationToken);
 
-        await Enqueue(future, cancellationToken).ConfigureAwait(false);
-
-        await future.Completed.ConfigureAwait(false);
+        var item = new CompletionWorkItem(method, cancellationToken);
+        await EnqueueCore(item, cancellationToken).ConfigureAwait(false);
+        await item.Completed.ConfigureAwait(false);
     }
 
-    public async Task RunValueTask(Func<ValueTask> method, CancellationToken cancellationToken = default)
+    public Task ExecuteValueTaskAsync(Func<ValueTask> method, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(method);
-        var future = new ValueTaskFuture(method, cancellationToken);
-
-        await Enqueue(future, cancellationToken).ConfigureAwait(false);
-
-        await future.Completed.ConfigureAwait(false);
+        return ExecuteAsync(async () => await method().ConfigureAwait(false), cancellationToken);
     }
 
-    public async Task Push(Action method, CancellationToken cancellationToken = default)
+    public Task<T> ExecuteAsync<T>(Func<T> method, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(method);
-        var future = new ActionFuture(method, cancellationToken);
 
-        await Enqueue(future, cancellationToken).ConfigureAwait(false);
+        return ExecuteAsync(() => Task.FromResult(method()), cancellationToken);
     }
 
-    public async Task Push(Func<Task> method, CancellationToken cancellationToken = default)
+    public async Task<T> ExecuteAsync<T>(Func<Task<T>> method, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(method);
-        var future = new TaskFuture(method, cancellationToken);
 
-        await Enqueue(future, cancellationToken).ConfigureAwait(false);
+        var item = new CompletionWorkItem<T>(method, cancellationToken);
+        await EnqueueCore(item, cancellationToken).ConfigureAwait(false);
+        return await item.Completed.ConfigureAwait(false);
     }
 
-    public async Task PushValueTask(Func<ValueTask> method, CancellationToken cancellationToken = default)
+    public Task<T> ExecuteValueTaskAsync<T>(Func<ValueTask<T>> method, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(method);
-        var future = new ValueTaskFuture(method, cancellationToken);
-
-        await Enqueue(future, cancellationToken).ConfigureAwait(false);
+        return ExecuteAsync(async () => await method().ConfigureAwait(false), cancellationToken);
     }
 
-    public async Task<T> Run<T>(Func<T> method, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Enqueues work and completes once the bounded queue accepted it. Work failures are owned and
+    /// logged by the executor because no caller awaits the work result.
+    /// </summary>
+    public Task EnqueueAsync(Action method, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(method);
-        var future = new FuncFuture<T>(method, cancellationToken);
 
-        await Enqueue(future, cancellationToken).ConfigureAwait(false);
-
-        return await future.Completed.ConfigureAwait(false);
+        return EnqueueAsync(() =>
+        {
+            method();
+            return Task.CompletedTask;
+        }, cancellationToken);
     }
 
-    public async Task<T> Run<T>(Func<Task<T>> method, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Enqueues work and completes once the bounded queue accepted it. Work failures are owned and
+    /// logged by the executor because no caller awaits the work result.
+    /// </summary>
+    public async Task EnqueueAsync(Func<Task> method, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(method);
-        var future = new TaskFuture<T>(method, cancellationToken);
-
-        await Enqueue(future, cancellationToken).ConfigureAwait(false);
-
-        return await future.Completed.ConfigureAwait(false);
+        await EnqueueCore(new QueuedWorkItem(method, cancellationToken), cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<T> RunValueTask<T>(Func<ValueTask<T>> method, CancellationToken cancellationToken = default)
+    public Task EnqueueValueTaskAsync(Func<ValueTask> method, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(method);
-        var future = new ValueTaskFuture<T>(method, cancellationToken);
-
-        await Enqueue(future, cancellationToken).ConfigureAwait(false);
-
-        return await future.Completed.ConfigureAwait(false);
+        return EnqueueAsync(async () => await method().ConfigureAwait(false), cancellationToken);
     }
 
-    async ValueTask Enqueue(IFuture future, CancellationToken cancellationToken)
+    /// <summary>
+    /// Synchronous backpressure boundary for callback APIs which cannot return a Task (for example
+    /// Apache.NMS message listeners). This blocks only until the bounded queue accepts the work; it
+    /// never polls and it does not wait for message processing to finish.
+    /// </summary>
+    public void EnqueueBlocking(Func<Task> method, CancellationToken cancellationToken = default)
     {
-        ThrowIfDisposed();
+        ArgumentNullException.ThrowIfNull(method);
+        ThrowIfNotAcceptingWork();
+
+        var item = new QueuedWorkItem(method, cancellationToken);
+        ValueTask write = _channel.Writer.WriteAsync(item, cancellationToken);
+        if (!write.IsCompletedSuccessfully)
+        {
+            try
+            {
+                write.AsTask().GetAwaiter().GetResult();
+            }
+            catch (ChannelClosedException) when (Volatile.Read(ref _lifecycleState) != 0)
+            {
+                throw new ObjectDisposedException(nameof(TaskExecutor));
+            }
+        }
+    }
+
+    async ValueTask EnqueueCore(IWorkItem item, CancellationToken cancellationToken)
+    {
+        ThrowIfNotAcceptingWork();
 
         try
         {
-            await _taskChannel.Writer.WriteAsync(future, cancellationToken).ConfigureAwait(false);
+            await _channel.Writer.WriteAsync(item, cancellationToken).ConfigureAwait(false);
         }
-        catch (ChannelClosedException) when (Volatile.Read(ref _disposeState) != 0)
+        catch (ChannelClosedException) when (Volatile.Read(ref _lifecycleState) != 0)
         {
             throw new ObjectDisposedException(nameof(TaskExecutor));
         }
     }
 
-    void ThrowIfDisposed()
+    async Task RunWorker()
     {
-        if (Volatile.Read(ref _disposeState) != 0)
+        await foreach (IWorkItem item in _channel.Reader.ReadAllAsync().ConfigureAwait(false))
+            await item.ExecuteAsync().ConfigureAwait(false);
+    }
+
+    void ThrowIfNotAcceptingWork()
+    {
+        if (Volatile.Read(ref _lifecycleState) != 0)
             throw new ObjectDisposedException(nameof(TaskExecutor));
     }
 
-    async Task MultipleReader()
+    static int GetDefaultCapacity(int concurrencyLimit)
     {
-        try
-        {
-            while (await _taskChannel.Reader.WaitToReadAsync().ConfigureAwait(false))
-            {
-                if (!_taskChannel.Reader.TryRead(out var future))
-                    continue;
+        if (concurrencyLimit < 1)
+            throw new ArgumentOutOfRangeException(nameof(concurrencyLimit), concurrencyLimit, "Must be >= 1");
 
-                await future.Run().ConfigureAwait(false);
-            }
-        }
-        catch (OperationCanceledException)
-        {
-        }
-        catch (Exception exception)
-        {
-            LogContext.Warning?.Log(exception, "MultipleReader faulted");
-        }
-    }
-
-    async Task SingleReader()
-    {
-        try
-        {
-            while (await _taskChannel.Reader.WaitToReadAsync().ConfigureAwait(false))
-            {
-                if (!_taskChannel.Reader.TryPeek(out var future))
-                    continue;
-
-                await future.Run().ConfigureAwait(false);
-
-                await _taskChannel.Reader.ReadAsync().ConfigureAwait(false);
-            }
-        }
-        catch (OperationCanceledException)
-        {
-        }
-        catch (Exception exception)
-        {
-            LogContext.Warning?.Log(exception, "SingleReader faulted");
-        }
+        // Keep the default deliberately bounded for edge deployments while still allowing a short
+        // burst ahead of the workers. High-throughput transports pass their own prefetch capacity.
+        return Math.Max(32, checked(concurrencyLimit * 8));
     }
 
 
-    interface IFuture
+    interface IWorkItem
     {
-        ValueTask Run();
+        ValueTask ExecuteAsync();
     }
 
 
-    abstract class BaseFuture<T>
+    sealed class QueuedWorkItem :
+        IWorkItem
     {
-        protected readonly CancellationToken CancellationToken;
-        protected readonly TaskCompletionSource<T> Source;
-
-        protected BaseFuture(CancellationToken cancellationToken)
-        {
-            CancellationToken = cancellationToken;
-
-            Source = new TaskCompletionSource<T>(TaskCreationOptions.RunContinuationsAsynchronously);
-        }
-
-        public Task<T> Completed => Source.Task;
-
-        protected bool TrySetCanceled()
-        {
-            if (!CancellationToken.IsCancellationRequested)
-                return false;
-
-            Source.TrySetCanceled(CancellationToken);
-            return true;
-        }
-
-        protected void SetException(Exception exception)
-        {
-            if (exception is OperationCanceledException canceled)
-                Source.TrySetCanceled(canceled.CancellationToken);
-            else
-                Source.TrySetException(exception);
-        }
-    }
-
-
-    abstract class BaseFuture :
-        BaseFuture<bool>
-    {
-        protected BaseFuture(CancellationToken cancellationToken)
-            : base(cancellationToken)
-        {
-        }
-    }
-
-
-    sealed class TaskFuture<T> :
-        BaseFuture<T>,
-        IFuture
-    {
-        readonly Func<Task<T>> _method;
-
-        public TaskFuture(Func<Task<T>> method, CancellationToken cancellationToken)
-            : base(cancellationToken)
-        {
-            _method = method;
-        }
-
-        public async ValueTask Run()
-        {
-            if (TrySetCanceled())
-                return;
-
-            try
-            {
-                var result = await _method().ConfigureAwait(false);
-
-                Source.TrySetResult(result);
-            }
-            catch (Exception exception)
-            {
-                SetException(exception);
-            }
-        }
-    }
-
-
-    sealed class ValueTaskFuture<T> :
-        BaseFuture<T>,
-        IFuture
-    {
-        readonly Func<ValueTask<T>> _method;
-
-        public ValueTaskFuture(Func<ValueTask<T>> method, CancellationToken cancellationToken)
-            : base(cancellationToken)
-        {
-            _method = method;
-        }
-
-        public async ValueTask Run()
-        {
-            if (TrySetCanceled())
-                return;
-
-            try
-            {
-                var result = await _method().ConfigureAwait(false);
-
-                Source.TrySetResult(result);
-            }
-            catch (Exception exception)
-            {
-                SetException(exception);
-            }
-        }
-    }
-
-
-    sealed class TaskFuture :
-        BaseFuture,
-        IFuture
-    {
+        readonly CancellationToken _cancellationToken;
         readonly Func<Task> _method;
 
-        public TaskFuture(Func<Task> method, CancellationToken cancellationToken)
-            : base(cancellationToken)
+        public QueuedWorkItem(Func<Task> method, CancellationToken cancellationToken)
         {
             _method = method;
+            _cancellationToken = cancellationToken;
         }
 
-        public async ValueTask Run()
+        public async ValueTask ExecuteAsync()
         {
-            if (TrySetCanceled())
+            if (_cancellationToken.IsCancellationRequested)
                 return;
 
             try
             {
                 await _method().ConfigureAwait(false);
-
-                Source.TrySetResult(true);
+            }
+            catch (OperationCanceledException) when (_cancellationToken.IsCancellationRequested)
+            {
             }
             catch (Exception exception)
             {
-                SetException(exception);
+                // Queued work intentionally has no result task. The executor therefore owns failures
+                // instead of manufacturing an unobserved TaskCompletionSource exception.
+                TryLog(exception);
+            }
+        }
+
+        static void TryLog(Exception exception)
+        {
+            try
+            {
+                LogContext.Warning?.Log(exception, "Queued task execution faulted");
+            }
+            catch
+            {
+                // A secondary observation failure cannot terminate a worker or strand accepted work.
             }
         }
     }
 
 
-    sealed class ValueTaskFuture :
-        BaseFuture,
-        IFuture
+    sealed class CompletionWorkItem :
+        IWorkItem
     {
-        readonly Func<ValueTask> _method;
+        readonly CancellationToken _cancellationToken;
+        readonly TaskCompletionSource _completed;
+        readonly Func<Task> _method;
 
-        public ValueTaskFuture(Func<ValueTask> method, CancellationToken cancellationToken)
-            : base(cancellationToken)
+        public CompletionWorkItem(Func<Task> method, CancellationToken cancellationToken)
         {
             _method = method;
+            _cancellationToken = cancellationToken;
+            _completed = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         }
 
-        public async ValueTask Run()
+        public Task Completed => _completed.Task;
+
+        public async ValueTask ExecuteAsync()
         {
-            if (TrySetCanceled())
+            if (_cancellationToken.IsCancellationRequested)
+            {
+                _completed.TrySetCanceled(_cancellationToken);
                 return;
+            }
 
             try
             {
                 await _method().ConfigureAwait(false);
-
-                Source.TrySetResult(true);
+                _completed.TrySetResult();
+            }
+            catch (OperationCanceledException exception)
+            {
+                _completed.TrySetCanceled(exception.CancellationToken);
             }
             catch (Exception exception)
             {
-                SetException(exception);
+                _completed.TrySetException(exception);
             }
         }
     }
 
 
-    sealed class FuncFuture<T> :
-        BaseFuture<T>,
-        IFuture
+    sealed class CompletionWorkItem<T> :
+        IWorkItem
     {
-        readonly Func<T> _method;
+        readonly CancellationToken _cancellationToken;
+        readonly TaskCompletionSource<T> _completed;
+        readonly Func<Task<T>> _method;
 
-        public FuncFuture(Func<T> method, CancellationToken cancellationToken)
-            : base(cancellationToken)
+        public CompletionWorkItem(Func<Task<T>> method, CancellationToken cancellationToken)
         {
             _method = method;
+            _cancellationToken = cancellationToken;
+            _completed = new TaskCompletionSource<T>(TaskCreationOptions.RunContinuationsAsynchronously);
         }
 
-        public ValueTask Run()
+        public Task<T> Completed => _completed.Task;
+
+        public async ValueTask ExecuteAsync()
         {
-            if (TrySetCanceled())
-                return default;
+            if (_cancellationToken.IsCancellationRequested)
+            {
+                _completed.TrySetCanceled(_cancellationToken);
+                return;
+            }
 
             try
             {
-                var result = _method();
-
-                Source.TrySetResult(result);
+                T result = await _method().ConfigureAwait(false);
+                _completed.TrySetResult(result);
+            }
+            catch (OperationCanceledException exception)
+            {
+                _completed.TrySetCanceled(exception.CancellationToken);
             }
             catch (Exception exception)
             {
-                SetException(exception);
+                _completed.TrySetException(exception);
             }
-
-            return default;
-        }
-    }
-
-
-    sealed class ActionFuture :
-        BaseFuture,
-        IFuture
-    {
-        readonly Action _method;
-
-        public ActionFuture(Action method, CancellationToken cancellationToken)
-            : base(cancellationToken)
-        {
-            _method = method;
-        }
-
-        public ValueTask Run()
-        {
-            if (TrySetCanceled())
-                return default;
-
-            try
-            {
-                _method();
-
-                Source.TrySetResult(true);
-            }
-            catch (Exception exception)
-            {
-                SetException(exception);
-            }
-
-            return default;
         }
     }
 }

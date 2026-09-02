@@ -27,7 +27,7 @@ namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox
             ReceiveContext = outboxReceiveContext;
             PublishEndpointProvider = outboxReceiveContext.PublishEndpointProvider;
 
-            _clearToSend = TaskUtil.GetTask<InMemoryOutboxConsumeContext>();
+            _clearToSend = TaskCompletionSources.Create<InMemoryOutboxConsumeContext>();
 
             _deferredMethods = new InMemoryOutboxDeferredMethodCollection(_clearToSend.Task);
 

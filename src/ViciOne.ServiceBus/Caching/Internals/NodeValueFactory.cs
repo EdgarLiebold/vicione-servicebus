@@ -30,7 +30,7 @@ namespace ViciOne.ServiceBus.Caching.Internals
 
             _pendingCollection = new BlockingCollection<IPendingValue<TValue>>();
 
-            _value = TaskUtil.GetTask<TValue>();
+            _value = TaskCompletionSources.Create<TValue>();
 
             _pendingCollection.Add(initialPendingValue);
         }

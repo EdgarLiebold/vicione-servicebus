@@ -22,7 +22,7 @@ namespace ViciOne.ServiceBus.Transports.Fabric
         {
             _balancerFactory = balancerFactory;
 
-            _balancer = TaskUtil.GetTask<IReceiverLoadBalancer<T>>();
+            _balancer = TaskCompletionSources.Create<IReceiverLoadBalancer<T>>();
             _receivers = new Dictionary<long, IMessageReceiver<T>>();
         }
 
@@ -60,7 +60,7 @@ namespace ViciOne.ServiceBus.Transports.Fabric
 
                 if (!_balancer.TrySetResult(balancer))
                 {
-                    _balancer = TaskUtil.GetTask<IReceiverLoadBalancer<T>>();
+                    _balancer = TaskCompletionSources.Create<IReceiverLoadBalancer<T>>();
                     _balancer.SetResult(balancer);
                 }
 
@@ -101,7 +101,7 @@ namespace ViciOne.ServiceBus.Transports.Fabric
             {
                 _receivers.Remove(id);
 
-                _balancer = TaskUtil.GetTask<IReceiverLoadBalancer<T>>();
+                _balancer = TaskCompletionSources.Create<IReceiverLoadBalancer<T>>();
 
                 IMessageReceiver<T>[] connected = _receivers.Values.ToArray();
                 if (connected.Length <= 0)

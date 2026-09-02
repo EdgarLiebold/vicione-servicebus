@@ -26,7 +26,7 @@ namespace ViciOne.ServiceBus.Agents
         public PipeContextAgent(Task<TContext> context)
         {
             _context = context;
-            _inactive = TaskUtil.GetTask<DateTime>();
+            _inactive = TaskCompletionSources.Create<DateTime>();
 
             SetReady(_context);
         }

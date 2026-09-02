@@ -25,7 +25,7 @@ public class InMemoryRequestResponseBenchmark
             cfg.ReceiveEndpoint("input-queue", x => x.Consumer<ExampleRequestConsumer>());
         });
 
-        TaskUtil.Await(() => _busControl.StartAsync(CancellationToken.None));
+        TaskBlocking.Wait(() => _busControl.StartAsync(CancellationToken.None));
         _requestClient = _busControl.CreateRequestClient<ExampleRequest>();
         _request = new ExampleRequest
         {

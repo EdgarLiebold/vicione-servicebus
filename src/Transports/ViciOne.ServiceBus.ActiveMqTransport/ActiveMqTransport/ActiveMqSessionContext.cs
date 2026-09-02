@@ -77,7 +77,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
 
         public Task<ITopic> GetTopic(Topic topic)
         {
-            return _executor.Run(() =>
+            return _executor.ExecuteAsync(() =>
             {
                 var topicName = topic.EntityName.Split('?')[0];
 
@@ -91,7 +91,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
 
         public Task EnsureTopicExists(Topic topic)
         {
-            return _executor.Run(() =>
+            return _executor.ExecuteAsync(() =>
             {
                 // Resolution and the short lived producer belong together and belong here: both touch
                 // the session, which is not thread safe, and this runs while the endpoint is starting.
@@ -113,7 +113,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
 
         public Task<IQueue> GetQueue(Queue queue)
         {
-            return _executor.Run(() =>
+            return _executor.ExecuteAsync(() =>
             {
                 if (!queue.Durable && queue.AutoDelete && !ConnectionContext.IsVirtualTopicConsumer(queue.EntityName))
                     return ConnectionContext.GetTemporaryQueue(_session, queue.EntityName);
@@ -128,7 +128,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
                 && DestinationTypeMatches(destination, destinationType))
                 return Task.FromResult(destination);
 
-            return _executor.Run(() => SessionUtil.GetDestination(_session, destinationName, destinationType), CancellationToken);
+            return _executor.ExecuteAsync(() => SessionUtil.GetDestination(_session, destinationName, destinationType), CancellationToken);
         }
 
         bool DestinationTypeMatches(IDestination destination, DestinationType destinationType)
@@ -150,7 +150,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
         public Task<IMessageConsumer> CreateMessageConsumer(IDestination destination, string selector, bool noLocal, string consumerName = null,
             bool shared = false, bool durable = true)
         {
-            return _executor.Run(() =>
+            return _executor.ExecuteAsync(() =>
             {
                 if (destination.IsTopic && !string.IsNullOrEmpty(consumerName))
                 {
@@ -175,9 +175,9 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
         public async Task SendAsync(IDestination destination, IMessage message, CancellationToken cancellationToken)
         {
             var producer = await _messageProducerCache.GetMessageProducer(destination,
-                x => _executor.Run(() => _session.CreateProducerAsync(x), cancellationToken)).ConfigureAwait(false);
+                x => _executor.ExecuteAsync(() => _session.CreateProducerAsync(x), cancellationToken)).ConfigureAwait(false);
 
-            await _executor.Run(() => producer.SendAsync(message, message.NMSDeliveryMode, message.NMSPriority, message.NMSTimeToLive)
+            await _executor.ExecuteAsync(() => producer.SendAsync(message, message.NMSDeliveryMode, message.NMSPriority, message.NMSTimeToLive)
                 .OrCanceled(cancellationToken), cancellationToken).ConfigureAwait(false);
         }
 
@@ -200,7 +200,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
         {
             TransportLogMessages.DeleteTopic(topicName);
 
-            return _executor.Run(() =>
+            return _executor.ExecuteAsync(() =>
             {
                 if (!ConnectionContext.TryRemoveTemporaryEntity(_session, topicName))
                     SessionUtil.DeleteTopic(_session, topicName);
@@ -211,7 +211,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
         {
             TransportLogMessages.DeleteQueue(queueName);
 
-            return _executor.Run(() =>
+            return _executor.ExecuteAsync(() =>
                 {
                     if (!ConnectionContext.TryRemoveTemporaryEntity(_session, queueName))
                         SessionUtil.DeleteQueue(_session, queueName);

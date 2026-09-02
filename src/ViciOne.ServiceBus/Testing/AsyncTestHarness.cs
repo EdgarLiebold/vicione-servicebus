@@ -104,7 +104,7 @@ namespace ViciOne.ServiceBus.Testing
                         _cancellationTokenSource = new CancellationTokenSource(TestTimeout, TimeProvider);
                         _cancellationToken = _cancellationTokenSource.Token;
 
-                        TaskCompletionSource<bool> source = TaskUtil.GetTask<bool>();
+                        TaskCompletionSource<bool> source = TaskCompletionSources.Create<bool>();
                         _cancelledTask = source.Task;
 
                         _cancellationToken.Register(() => source.TrySetCanceled());
@@ -186,7 +186,7 @@ namespace ViciOne.ServiceBus.Testing
         /// <returns></returns>
         public TaskCompletionSource<T> GetTask<T>()
         {
-            TaskCompletionSource<T> source = TaskUtil.GetTask<T>();
+            TaskCompletionSource<T> source = TaskCompletionSources.Create<T>();
 
             TestCancelledTask.ContinueWith(x => source.TrySetCanceled(), TaskContinuationOptions.OnlyOnCanceled);
 

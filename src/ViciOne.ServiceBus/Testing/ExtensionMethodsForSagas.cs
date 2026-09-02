@@ -32,7 +32,7 @@ namespace ViciOne.ServiceBus.Testing
             if (repository is IQuerySagaRepository<TSaga> querySagaRepository)
                 return querySagaRepository.ShouldContainSaga(correlationId, timeout, timeProvider);
 
-            return TaskUtil.Faulted<Guid?>(new ArgumentException("The repository must support loading or querying sagas", nameof(repository)));
+            return TaskResults.Faulted<Guid?>(new ArgumentException("The repository must support loading or querying sagas", nameof(repository)));
         }
 
         public static Task<Guid?> ShouldContainSaga<TSaga>(this ILoadSagaRepository<TSaga> repository, Guid correlationId, TimeSpan timeout)
@@ -84,7 +84,7 @@ namespace ViciOne.ServiceBus.Testing
             if (repository is ILoadSagaRepository<TSaga> loadSagaRepository)
                 return loadSagaRepository.ShouldContainSaga(correlationId, condition, timeout, timeProvider);
 
-            return TaskUtil.Faulted<Guid?>(new ArgumentException("The repository must support loading sagas", nameof(repository)));
+            return TaskResults.Faulted<Guid?>(new ArgumentException("The repository must support loading sagas", nameof(repository)));
         }
 
         public static Task<Guid?> ShouldContainSaga<TSaga>(this ILoadSagaRepository<TSaga> repository, Guid correlationId, Func<TSaga, bool> condition,
@@ -126,7 +126,7 @@ namespace ViciOne.ServiceBus.Testing
             if (repository is IQuerySagaRepository<TSaga> querySagaRepository)
                 return querySagaRepository.ShouldNotContainSaga(correlationId, timeout, timeProvider);
 
-            return TaskUtil.Faulted<Guid?>(new ArgumentException("The repository must support loading or querying sagas", nameof(repository)));
+            return TaskResults.Faulted<Guid?>(new ArgumentException("The repository must support loading or querying sagas", nameof(repository)));
         }
 
         public static Task<Guid?> ShouldNotContainSaga<TSaga>(this ILoadSagaRepository<TSaga> repository, Guid correlationId, TimeSpan timeout)
@@ -178,7 +178,7 @@ namespace ViciOne.ServiceBus.Testing
             if (repository is IQuerySagaRepository<TSaga> querySagaRepository)
                 return querySagaRepository.ShouldContainSaga(filter, timeout, timeProvider);
 
-            return TaskUtil.Faulted<Guid?>(new ArgumentException("The repository must support querying sagas", nameof(repository)));
+            return TaskResults.Faulted<Guid?>(new ArgumentException("The repository must support querying sagas", nameof(repository)));
         }
 
         public static Task<Guid?> ShouldContainSaga<TSaga>(this IQuerySagaRepository<TSaga> repository, Expression<Func<TSaga, bool>> filter,

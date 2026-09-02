@@ -26,7 +26,7 @@ namespace ViciOne.ServiceBus.MessageData.PropertyProviders
             where T : class
         {
             if (!context.HasInput)
-                return TaskUtil.Default<MessageData<TValue>>();
+                return TaskResults.Default<MessageData<TValue>>();
 
             Task<MessageData<TValue>> inputTask = _inputProvider.GetProperty(context);
             if (inputTask.IsCompleted)

@@ -7,6 +7,7 @@ using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Testing;
 
+[Collection(OpenTelemetryGlobalCollection.Name)]
 public sealed class DiagnosticOutputTests
 {
     [Fact]

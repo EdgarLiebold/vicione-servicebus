@@ -27,7 +27,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
             where T : class
         {
             return input == null
-                ? TaskUtil.Default<MessageData<byte[]>>()
+                ? TaskResults.Default<MessageData<byte[]>>()
                 : Task.FromResult<MessageData<byte[]>>(new PutMessageData<byte[]>(input));
         }
 
@@ -35,7 +35,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
             where T : class
         {
             return input == null
-                ? TaskUtil.Default<MessageData<byte[]>>()
+                ? TaskResults.Default<MessageData<byte[]>>()
                 : Task.FromResult(input);
         }
 
@@ -57,7 +57,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
         Task<MessageData<byte[]>> IPropertyConverter<MessageData<byte[]>, string>.Convert<T>(InitializeContext<T> context, string input)
         {
             if (input == null)
-                return TaskUtil.Default<MessageData<byte[]>>();
+                return TaskResults.Default<MessageData<byte[]>>();
 
             var bytes = Encoding.UTF8.GetBytes(input);
 
@@ -70,7 +70,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
             where T : class
         {
             return input == null
-                ? TaskUtil.Default<MessageData<Stream>>()
+                ? TaskResults.Default<MessageData<Stream>>()
                 : Task.FromResult(input);
         }
 
@@ -78,7 +78,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
             where T : class
         {
             return input == null
-                ? TaskUtil.Default<MessageData<Stream>>()
+                ? TaskResults.Default<MessageData<Stream>>()
                 : Task.FromResult<MessageData<Stream>>(new PutMessageData<Stream>(input));
         }
 
@@ -91,7 +91,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
         Task<MessageData<string>> IPropertyConverter<MessageData<string>, string>.Convert<T>(InitializeContext<T> context, string input)
         {
             return input == null
-                ? TaskUtil.Default<MessageData<string>>()
+                ? TaskResults.Default<MessageData<string>>()
                 : Task.FromResult<MessageData<string>>(new PutMessageData<string>(input));
         }
     }
@@ -106,7 +106,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
             where T : class
         {
             return input == null
-                ? TaskUtil.Default<MessageData<TValue>>()
+                ? TaskResults.Default<MessageData<TValue>>()
                 : Task.FromResult(input);
         }
 
@@ -114,7 +114,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
             where T1 : class
         {
             return input == null
-                ? TaskUtil.Default<MessageData<TValue>>()
+                ? TaskResults.Default<MessageData<TValue>>()
                 : Task.FromResult<MessageData<TValue>>(new PutMessageData<TValue>(input));
         }
     }

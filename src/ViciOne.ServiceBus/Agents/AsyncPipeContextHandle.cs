@@ -21,8 +21,8 @@ namespace ViciOne.ServiceBus.Agents
         /// </summary>
         public AsyncPipeContextHandle()
         {
-            _context = TaskUtil.GetTask<TContext>();
-            _inactive = TaskUtil.GetTask<DateTime>();
+            _context = TaskCompletionSources.Create<TContext>();
+            _inactive = TaskCompletionSources.Create<DateTime>();
         }
 
         bool PipeContextHandle<TContext>.IsDisposed => _inactive.Task.IsCompleted;

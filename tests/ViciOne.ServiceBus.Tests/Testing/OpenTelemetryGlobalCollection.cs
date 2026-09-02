@@ -3,7 +3,8 @@ using Xunit;
 namespace ViciOne.ServiceBus.Tests.Testing;
 
 /// <summary>
-/// Serializes tests that install process-wide OpenTelemetry listeners.
+/// Serializes every test that installs a process-wide ActivityListener, including test-monitoring
+/// helpers whose listener is created indirectly.
 /// </summary>
 [CollectionDefinition(Name, DisableParallelization = true)]
 public sealed class OpenTelemetryGlobalCollection

@@ -15,7 +15,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
             switch (input)
             {
                 case null:
-                    return TaskUtil.Default<TElement[]>();
+                    return TaskResults.Default<TElement[]>();
                 case TElement[] array:
                     return Task.FromResult(array);
                 default:
@@ -55,7 +55,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
             where TMessage : class
         {
             if (input == null)
-                return TaskUtil.Default<TElement[]>();
+                return TaskResults.Default<TElement[]>();
 
             var capacity = 0;
             if (input is ICollection<TElement> collection)

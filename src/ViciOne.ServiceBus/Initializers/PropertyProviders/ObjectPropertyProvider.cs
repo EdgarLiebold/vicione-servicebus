@@ -31,7 +31,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyProviders
             {
                 var propertyValue = propertyTask.Result;
                 if (propertyValue == default)
-                    return TaskUtil.Default<TProperty>();
+                    return TaskResults.Default<TProperty>();
 
                 var converter = _converters.GetOrAdd(propertyValue.GetType(), CreateConverter);
 
@@ -77,7 +77,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyProviders
                 where T : class
             {
                 return _converter == null
-                    ? TaskUtil.Default<TProperty>()
+                    ? TaskResults.Default<TProperty>()
                     : _converter.Convert(context, (TObject)propertyValue);
             }
         }

@@ -85,7 +85,7 @@ namespace ViciOne.ServiceBus.Transports
                 _transportPipe = transportPipe;
                 _preStartPipe = preStartPipe;
 
-                var receiver = Task.Run(Run);
+                Task receiver = Run();
 
                 SetReady(receiver);
 
@@ -109,83 +109,66 @@ namespace ViciOne.ServiceBus.Transports
 
             async Task Run()
             {
-                async Task DelayWithCancellation(TimeSpan delay)
+                var stoppingContext = new TransportStoppingContext(Stopping);
+                stoppingContext.SetTimeProvider(_context.GetTimeProvider());
+
+                using RetryPolicyContext<TransportStoppingContext> policyContext = _retryPolicy.CreatePolicyContext(stoppingContext)
+                    ?? throw new InvalidOperationException("The receive transport retry policy returned a null policy context.");
+
+                RetryContext<TransportStoppingContext> retryContext = null;
+
+                while (!Stopping.IsCancellationRequested)
                 {
                     try
                     {
-                        await Task.Delay(delay, Stopping).ConfigureAwait(false);
+                        if (retryContext != null)
+                        {
+                            retryContext.CancellationToken.ThrowIfCancellationRequested();
+
+                            LogContext.Info?.Log(retryContext.Exception, "Retrying {Delay}: {Message}", retryContext.Delay,
+                                retryContext.Exception.Message);
+
+                            if (retryContext.Delay.HasValue)
+                            {
+                                await Task.Delay(retryContext.Delay.Value, _context.GetTimeProvider(), retryContext.CancellationToken)
+                                    .ConfigureAwait(false);
+                            }
+
+                            Task preRetry = retryContext.PreRetry()
+                                ?? throw new InvalidOperationException("The receive transport retry context returned a null pre-retry task.");
+                            if (preRetry.Status != TaskStatus.RanToCompletion)
+                                await preRetry.ConfigureAwait(false);
+                        }
+
+                        Stopping.ThrowIfCancellationRequested();
+                        await RunTransport().ConfigureAwait(false);
+
+                        if (!Stopping.IsCancellationRequested)
+                        {
+                            var exception = new ConnectionException(
+                                $"Receive transport completed before shutdown: {_context.InputAddress}", isTransient: true);
+                            await NotifyFaulted(exception).ConfigureAwait(false);
+                            throw exception;
+                        }
                     }
-                    catch
+                    catch (OperationCanceledException) when (Stopping.IsCancellationRequested)
                     {
-                        // just a little breather before reconnecting the receive transport
+                        break;
                     }
-                }
-
-                var stoppingContext = new TransportStoppingContext(Stopping);
-
-                RetryPolicyContext<TransportStoppingContext> policyContext = _retryPolicy.CreatePolicyContext(stoppingContext);
-
-                try
-                {
-                    RetryContext<TransportStoppingContext> retryContext = null;
-
-                    while (!IsStopping)
+                    catch (Exception exception)
                     {
-                        try
+                        bool canRetry = retryContext == null
+                            ? policyContext.CanRetry(exception, out RetryContext<TransportStoppingContext> nextRetryContext)
+                            : retryContext.CanRetry(exception, out nextRetryContext);
+
+                        if (!canRetry || nextRetryContext == null)
                         {
-                            if (retryContext != null)
-                            {
-                                LogContext.Info?.Log(retryContext.Exception, "Retrying {Delay}: {Message}", retryContext.Delay, retryContext.Exception.Message);
-
-                                if (retryContext.Delay != null)
-                                    await DelayWithCancellation(retryContext.Delay.Value).ConfigureAwait(false);
-                            }
-
-                            if (!IsStopping)
-                                await RunTransport().ConfigureAwait(false);
-                        }
-                        catch (OperationCanceledException exception)
-                        {
-                            if (retryContext == null)
-                                await NotifyFaulted(exception).ConfigureAwait(false);
-                        }
-                        catch (Exception exception)
-                        {
-                            if (retryContext != null)
-                            {
-                                retryContext = retryContext.CanRetry(exception, out RetryContext<TransportStoppingContext> nextRetryContext)
-                                    ? nextRetryContext
-                                    : null;
-                            }
-
-                            var canRetry = retryContext != null || policyContext.CanRetry(exception, out retryContext);
-
-
-                            if (!canRetry)
-                            {
-                                LogContext.Error?.Log(exception, "ReceiveTransport Cannot Retry: {InputAddress}", _context.InputAddress);
-                                break;
-                            }
-                        }
-
-                        if (IsStopping)
+                            LogContext.Error?.Log(exception, "ReceiveTransport cannot retry: {InputAddress}", _context.InputAddress);
                             break;
+                        }
 
-                        await DelayWithCancellation(TimeSpan.FromSeconds(1)).ConfigureAwait(false);
+                        retryContext = nextRetryContext;
                     }
-                }
-                catch (OperationCanceledException exception)
-                {
-                    if (exception.CancellationToken != Stopping)
-                        LogContext.Debug?.Log(exception, "ReceiveTransport Operation Cancelled: {InputAddress}", _context.InputAddress);
-                }
-                catch (Exception exception)
-                {
-                    LogContext.Debug?.Log(exception, "ReceiveTransport Run Exception: {InputAddress}", _context.InputAddress);
-                }
-                finally
-                {
-                    policyContext.Dispose();
                 }
             }
 

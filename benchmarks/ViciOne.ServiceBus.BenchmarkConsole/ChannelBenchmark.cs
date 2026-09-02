@@ -14,12 +14,13 @@ using Util;
 public class ChannelBenchmark :
     IAsyncDisposable
 {
-    readonly ChannelExecutor _singleChannel = new(1, 1);
+    readonly TaskExecutor _tightCapacityExecutor = new(capacity: 1, concurrencyLimit: 1);
     readonly TaskExecutor _taskExecutor = new();
 
-    public ValueTask DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
-        return _singleChannel.DisposeAsync();
+        await _tightCapacityExecutor.DisposeAsync();
+        await _taskExecutor.DisposeAsync();
     }
 
     [Benchmark(Baseline = true, Description = "Regular Method")]
@@ -28,16 +29,16 @@ public class ChannelBenchmark :
         await SubjectMethod().ConfigureAwait(false);
     }
 
-    [Benchmark(Description = "Single Channel")]
-    public async Task SingleChannelExecutor()
+    [Benchmark(Description = "Tight-capacity executor")]
+    public async Task TightCapacityExecutor()
     {
-        await _singleChannel.Run(SubjectMethod).ConfigureAwait(false);
+        await _tightCapacityExecutor.ExecuteAsync(SubjectMethod).ConfigureAwait(false);
     }
 
-    [Benchmark(Description = "Super Channel")]
-    public async Task SuperChannelExecutor()
+    [Benchmark(Description = "Default-capacity executor")]
+    public async Task DefaultCapacityExecutor()
     {
-        await _taskExecutor.Run(SubjectMethod).ConfigureAwait(false);
+        await _taskExecutor.ExecuteAsync(SubjectMethod).ConfigureAwait(false);
     }
 
     static async Task SubjectMethod()
@@ -57,12 +58,12 @@ public class ChannelBenchmark :
 public class ConcurrentChannelBenchmark :
     IAsyncDisposable
 {
-    readonly ChannelExecutor _singleChannel = new(1, 10);
+    readonly TaskExecutor _tightCapacityExecutor = new(capacity: 1, concurrencyLimit: 10);
     readonly TaskExecutor _taskExecutor = new(10);
 
     public async ValueTask DisposeAsync()
     {
-        await _singleChannel.DisposeAsync();
+        await _tightCapacityExecutor.DisposeAsync();
 
         await _taskExecutor.DisposeAsync();
     }
@@ -73,23 +74,19 @@ public class ConcurrentChannelBenchmark :
         await Parallel.ForAsync(0, 10, async (n, token) => await SubjectMethod());
     }
 
-    [Benchmark(Description = "Single Channel", OperationsPerInvoke = 10)]
-    public async Task SingleChannelExecutor()
+    [Benchmark(Description = "Tight-capacity executor", OperationsPerInvoke = 10)]
+    public async Task TightCapacityExecutor()
     {
-        await Parallel.ForAsync(0, 10, async (n, token) => await _singleChannel.Run(SubjectMethod, token));
+        await Parallel.ForAsync(0, 10,
+            async (n, token) => await _tightCapacityExecutor.ExecuteAsync(SubjectMethod, token));
     }
 
-    [Benchmark(Description = "Super Channel", OperationsPerInvoke = 10)]
-    public async Task SuperChannelExecutor()
+    [Benchmark(Description = "Default-capacity executor", OperationsPerInvoke = 10)]
+    public async Task DefaultCapacityExecutor()
     {
-        await Parallel.ForAsync(0, 10, async (n, token) => await _taskExecutor.Run(SubjectMethod, token));
+        await Parallel.ForAsync(0, 10,
+            async (n, token) => await _taskExecutor.ExecuteAsync(SubjectMethod, token));
     }
-
-    // [Benchmark(Description = "Super Channel (Value)", OperationsPerInvoke = 10)]
-    // public async Task SuperChannelExecutorValue()
-    // {
-    //     await Parallel.ForAsync(0, 10, (n, token) => _taskExecutor.Run(SubjectMethodValue, token));
-    // }
 
     static async Task SubjectMethod()
     {

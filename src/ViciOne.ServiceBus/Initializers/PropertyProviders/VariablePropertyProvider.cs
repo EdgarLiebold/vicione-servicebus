@@ -26,7 +26,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyProviders
             where T : class
         {
             if (!context.HasInput)
-                return TaskUtil.Default<TValue>();
+                return TaskResults.Default<TValue>();
 
             Task<TProperty> propertyTask = _provider.GetProperty(context);
             if (propertyTask.Status == TaskStatus.RanToCompletion)

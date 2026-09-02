@@ -31,7 +31,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyProviders
             if (context.HasInput && context.Input.TryGetValue(_key, out var value))
                 return Task.FromResult(value);
 
-            return TaskUtil.Default<TProperty>();
+            return TaskResults.Default<TProperty>();
         }
     }
 }

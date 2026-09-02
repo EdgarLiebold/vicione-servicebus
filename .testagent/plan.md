@@ -2761,3 +2761,16 @@ freeze, two commits and the already authorized non-force remote publication.
    byte-exact restoration, run the complete UnitArchitecture profile, scoped format and applicable
    repository static gates once. Record raw evidence under
    `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-TELEMETRY-FAULTS/`.
+
+## Reviewer integration — V4 bounded execution and task primitives (2026-09-02)
+
+1. Replace the overlapping channel executors with a single hard-bounded `TaskExecutor` and a
+   lazily materialized, per-partition bounded `PartitionedTaskExecutor`.
+2. Split the former catch-all task utility by responsibility and migrate every production and
+   benchmark consumer atomically. Keep Task and ValueTask delegate APIs unambiguous.
+3. Bind exact concurrency, FIFO, admission, cancellation, result, fault ownership, logger isolation,
+   synchronous-wait, partitioning and concurrent-disposal behavior with ordinary native xUnit tests.
+4. Reject one independent cause for every critical mechanism, restore each target exactly, then run
+   the zero-warning Release build, complete UnitArchitecture profile and scoped format gate.
+5. Preserve this as a local checkpoint while the same authorized assignment continues with explicit
+   receive startup, retry, terminal-fault, cancellation and stop semantics.

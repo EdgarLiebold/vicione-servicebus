@@ -27,7 +27,7 @@ namespace ViciOne.ServiceBus.Clients
             _requestTask = requestTask;
 
             _pipeConfigurator = new PipeConfigurator<ConsumeContext<TResponse>>();
-            _completed = TaskUtil.GetTask<ConsumeContext<TResponse>>();
+            _completed = TaskCompletionSources.Create<ConsumeContext<TResponse>>();
         }
 
         public void AddPipeSpecification(IPipeSpecification<ConsumeContext<TResponse>> specification)

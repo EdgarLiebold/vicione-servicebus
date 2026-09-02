@@ -95,25 +95,6 @@ Acceptance requires a repository-wide formatter/analyzer gate, a path-complete r
 behavior or public-API changes, locked restore, zero-warning Release builds, and every applicable
 unfiltered native test profile.
 
-## Consolidate channel executors
-
-`src/ViciOne.ServiceBus/Util/ChannelExecutor.cs` and `TaskExecutor.cs` currently provide overlapping
-queue-execution capabilities. Consolidate them in a dedicated product slice after the native test
-reconstruction has captured both behavior sets. Preserve every meaningful capability, including
-bounded backpressure, concurrency, synchronous waiting where still required, cancellation, draining
-disposal, and the ActiveMQ call sites. Remove historical comparison language and the redundant type
-only after all consumers, benchmarks, public API, and package contents have explicit dispositions.
-
-## Normalize task-utility API names
-
-`src/ViciOne.ServiceBus/Util/TaskUtil.cs` still exposes inherited generic helper names such as
-`GetTask` and `Default`, and its `Util` location does not describe an architectural owner. Treat the
-complete utility surface and every call site as one dedicated product-normalization slice after the
-native reconstruction has captured all behavior. Select intent-revealing .NET names and a stable
-source owner, preserve every meaningful capability, and migrate all internal and public consumers
-atomically. Acceptance requires a public-API disposition, package comparison, zero stale names,
-locked restore, zero-warning Release builds, and every applicable unfiltered native test profile.
-
 ## Consolidate the two cache engines
 
 `src/ViciOne.ServiceBus/Caching` and `src/ViciOne.ServiceBus/Internals/Caching` are two independent

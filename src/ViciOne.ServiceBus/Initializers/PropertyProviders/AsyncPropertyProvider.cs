@@ -23,7 +23,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyProviders
         Task<TProperty> IPropertyProvider<TInput, TProperty>.GetProperty<T>(InitializeContext<T, TInput> context)
         {
             if (!context.HasInput)
-                return TaskUtil.Default<TProperty>();
+                return TaskResults.Default<TProperty>();
 
             Task<Task<TProperty>> propertyTask = _provider.GetProperty(context);
             if (propertyTask.Status == TaskStatus.RanToCompletion)
@@ -67,7 +67,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyProviders
         Task<TProperty> IPropertyProvider<TInput, TProperty>.GetProperty<T>(InitializeContext<T, TInput> context)
         {
             if (!context.HasInput)
-                return TaskUtil.Default<TProperty>();
+                return TaskResults.Default<TProperty>();
 
             Task<Task<TTask>> propertyTask = _provider.GetProperty(context);
             if (propertyTask.Status == TaskStatus.RanToCompletion)

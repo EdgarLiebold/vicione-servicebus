@@ -29,7 +29,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyProviders
             where T : class
         {
             if (!context.HasInput)
-                return TaskUtil.Default<TProperty>();
+                return TaskResults.Default<TProperty>();
 
             Task<TInputProperty> inputTask = _inputProvider.GetProperty(context);
             if (inputTask.Status == TaskStatus.RanToCompletion)

@@ -49,7 +49,7 @@ namespace ViciOne.ServiceBus.EventHubIntegration
             {
                 var producer = _producerTask.Status == TaskStatus.RanToCompletion
                     ? _producerTask.Result
-                    : TaskUtil.Await(() => _producerTask);
+                    : TaskBlocking.Wait(() => _producerTask);
                 return producer.ConnectSendObserver(observer);
             }
 

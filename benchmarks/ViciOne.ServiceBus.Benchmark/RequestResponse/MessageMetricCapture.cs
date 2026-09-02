@@ -47,7 +47,7 @@ namespace ViciOneServiceBusBenchmark.RequestResponse
             if (consumed == _messageCount)
                 _consumeCompleted.TrySetResult(_clock.Elapsed);
 
-            return TaskUtil.Completed;
+            return TaskResults.Completed;
         }
 
         public async Task<T> ResponseReceived<T>(Guid messageId, Func<Task<T>> request)

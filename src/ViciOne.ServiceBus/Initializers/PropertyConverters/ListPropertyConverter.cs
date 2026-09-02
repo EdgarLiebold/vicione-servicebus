@@ -19,7 +19,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
             switch (input)
             {
                 case null:
-                    return TaskUtil.Default<ICollection<TElement>>();
+                    return TaskResults.Default<ICollection<TElement>>();
                 case ICollection<TElement> list:
                     return Task.FromResult(list);
                 default:
@@ -33,7 +33,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
             switch (input)
             {
                 case null:
-                    return TaskUtil.Default<IEnumerable<TElement>>();
+                    return TaskResults.Default<IEnumerable<TElement>>();
                 default:
                     return Task.FromResult(input);
             }
@@ -44,7 +44,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
             switch (input)
             {
                 case null:
-                    return TaskUtil.Default<IList<TElement>>();
+                    return TaskResults.Default<IList<TElement>>();
                 case IList<TElement> list:
                     return Task.FromResult(list);
                 default:
@@ -58,7 +58,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
             switch (input)
             {
                 case null:
-                    return TaskUtil.Default<IReadOnlyList<TElement>>();
+                    return TaskResults.Default<IReadOnlyList<TElement>>();
                 case IReadOnlyList<TElement> list:
                     return Task.FromResult(list);
                 default:
@@ -72,7 +72,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
             switch (input)
             {
                 case null:
-                    return TaskUtil.Default<List<TElement>>();
+                    return TaskResults.Default<List<TElement>>();
                 case List<TElement> list:
                     return Task.FromResult(list);
                 default:
@@ -166,7 +166,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
             where TMessage : class
         {
             if (input == null)
-                return TaskUtil.Default<List<TElement>>();
+                return TaskResults.Default<List<TElement>>();
 
             var capacity = 0;
             if (input is ICollection<TElement> collection)

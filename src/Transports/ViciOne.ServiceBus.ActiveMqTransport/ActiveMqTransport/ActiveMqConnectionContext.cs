@@ -57,7 +57,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
         {
             using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
 
-            return await _executor.Run(() => _connection.CreateSessionAsync(AcknowledgementMode.IndividualAcknowledge), tokenSource.Token)
+            return await _executor.ExecuteAsync(() => _connection.CreateSessionAsync(AcknowledgementMode.IndividualAcknowledge), tokenSource.Token)
                 .ConfigureAwait(false);
         }
 

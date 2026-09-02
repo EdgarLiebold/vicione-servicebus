@@ -33,7 +33,7 @@ namespace ViciOne.ServiceBus.Batching
             _consumerPipe = consumerPipe;
             _dispatcher = dispatcher;
             _messages = new Dictionary<Guid, BatchEntry>();
-            _completed = TaskUtil.GetTask<DateTime>();
+            _completed = TaskCompletionSources.Create<DateTime>();
             _firstMessage = DateTime.UtcNow;
             _options = options;
 
@@ -64,7 +64,7 @@ namespace ViciOne.ServiceBus.Batching
 
         void TimeLimitExpired(object state)
         {
-            Task.Run(() => _executor.Push(() =>
+            _executor.EnqueueBlocking(() =>
             {
                 if (IsCompleted)
                     return Task.CompletedTask;
@@ -76,8 +76,8 @@ namespace ViciOne.ServiceBus.Batching
 
                 List<ConsumeContext<TMessage>> messages = GetMessageBatchInOrder();
 
-                return _dispatcher.Push(() => Deliver(messages[messages.Count - 1], messages, BatchCompletionMode.Time));
-            }));
+                return _dispatcher.EnqueueAsync(() => Deliver(messages[messages.Count - 1], messages, BatchCompletionMode.Time));
+            });
         }
 
         public Task Add(ConsumeContext<TMessage> context, Activity currentActivity)
@@ -88,7 +88,9 @@ namespace ViciOne.ServiceBus.Batching
 
             var messageId = context.MessageId ?? NewId.NextGuid();
 
-            ulong? sequenceNumber = context.ReceiveContext.TryGetPayload<ITransportSequenceNumber>(out var payload) ? payload.SequenceNumber : null;            
+            ulong? sequenceNumber = context.ReceiveContext.TryGetPayload<ITransportSequenceNumber>(out var payload)
+                ? payload.SequenceNumber
+                : null;
             ulong sentTimeAsSequenceFallback() => (ulong)(context.SentTime ?? context.ReceiveContext.GetSentTime() ?? DateTime.UtcNow).Ticks;
 
             var batchEntry = new BatchEntry(
@@ -114,7 +116,7 @@ namespace ViciOne.ServiceBus.Batching
 
                 return messageList.Count == 0
                     ? Task.CompletedTask
-                    : _dispatcher.Push(() => Deliver(context, messageList, BatchCompletionMode.Size));
+                    : _dispatcher.EnqueueAsync(() => Deliver(context, messageList, BatchCompletionMode.Size));
             }
 
             return Task.CompletedTask;
@@ -122,7 +124,7 @@ namespace ViciOne.ServiceBus.Batching
 
         void RemoveCanceledMessage(Guid messageId)
         {
-            Task.Run(() => _executor.Push(() =>
+            _executor.EnqueueBlocking(() =>
             {
                 if (IsCompleted)
                     return Task.CompletedTask;
@@ -142,7 +144,7 @@ namespace ViciOne.ServiceBus.Batching
                 }
 
                 return Task.CompletedTask;
-            }));
+            });
         }
 
         bool IsReadyToDeliver(ConsumeContext context)
@@ -160,7 +162,7 @@ namespace ViciOne.ServiceBus.Batching
             List<ConsumeContext<TMessage>> consumeContexts = GetMessageBatchInOrder();
             return consumeContexts.Count == 0
                 ? Task.CompletedTask
-                : _dispatcher.Push(() => Deliver(consumeContexts[consumeContexts.Count - 1], consumeContexts, BatchCompletionMode.Forced));
+                : _dispatcher.EnqueueAsync(() => Deliver(consumeContexts[consumeContexts.Count - 1], consumeContexts, BatchCompletionMode.Forced));
         }
 
         async Task Deliver(ConsumeContext context, IReadOnlyList<ConsumeContext<TMessage>> messages, BatchCompletionMode batchCompletionMode)

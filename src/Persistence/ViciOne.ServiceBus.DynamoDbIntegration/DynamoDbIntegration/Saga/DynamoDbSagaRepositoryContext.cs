@@ -84,12 +84,12 @@ namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga
 
         public Task Discard(SagaConsumeContext<TSaga> context)
         {
-            return TaskUtil.Completed;
+            return TaskResults.Completed;
         }
 
         public Task Undo(SagaConsumeContext<TSaga> context)
         {
-            return TaskUtil.Completed;
+            return TaskResults.Completed;
         }
 
         public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContext<T>(ConsumeContext<T> consumeContext, TSaga instance, SagaConsumeContextMode mode)

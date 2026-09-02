@@ -1837,7 +1837,7 @@ namespace ViciOne.ServiceBus
 
         static Task<bool> NotCompletedByDefault(BehaviorContext<TInstance> instance)
         {
-            return TaskUtil.False;
+            return TaskResults.False;
         }
 
         void InitializeSchedule<T>(ViciOneServiceBusStateMachine<TInstance> stateMachine, PropertyInfo property, Schedule<TInstance, T> schedule)

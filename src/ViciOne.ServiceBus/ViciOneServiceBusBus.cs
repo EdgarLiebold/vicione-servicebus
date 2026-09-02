@@ -100,7 +100,7 @@ namespace ViciOne.ServiceBus
             terminal?.Attach(timeout);
             try
             {
-                TaskUtil.Await(_receiveEndpoint.Started, timeout.Token);
+                TaskBlocking.Wait(_receiveEndpoint.Started, timeout.Token);
             }
             // Asked of the source rather than of the exception: a cancellation raised through a linked
             // token carries neither, which is how a comparable check elsewhere in this transport went

@@ -17,7 +17,7 @@ namespace ViciOne.ServiceBus.EventHubIntegration.Checkpoints
         public PendingConfirmation(ProcessEventArgs eventArgs)
         {
             _eventArgs = eventArgs;
-            _source = TaskUtil.GetTask<string>();
+            _source = TaskCompletionSources.Create<string>();
         }
 
         Uri Topic => new Uri($"topic:{Partition.EventHubName}");

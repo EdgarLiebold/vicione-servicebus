@@ -177,13 +177,13 @@ public sealed class BatchFutureIntegrationTests
         private static object MapResponse(BehaviorContext<FutureState> context)
         {
             BatchRequest command = context.GetCommand<BatchRequest>();
-            List<string> processed = context.SelectResults<ProcessBatchItemCompleted>()
+            HashSet<string> processed = context.SelectResults<ProcessBatchItemCompleted>()
                 .Select(result => result.JobNumber)
-                .ToList();
+                .ToHashSet(StringComparer.Ordinal);
             return new
             {
                 command.CorrelationId,
-                ProcessedJobsNumbers = processed,
+                ProcessedJobsNumbers = command.JobNumbers.Where(processed.Contains).ToList(),
             };
         }
     }

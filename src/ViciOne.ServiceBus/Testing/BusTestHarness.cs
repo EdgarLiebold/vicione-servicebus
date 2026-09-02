@@ -197,7 +197,7 @@ namespace ViciOne.ServiceBus.Testing
         public Task<ConsumeContext<T>> SubscribeHandler<T>()
             where T : class
         {
-            TaskCompletionSource<ConsumeContext<T>> source = TaskUtil.GetTask<ConsumeContext<T>>();
+            TaskCompletionSource<ConsumeContext<T>> source = TaskCompletionSources.Create<ConsumeContext<T>>();
 
             ConnectHandle handler = null;
             handler = Bus.ConnectHandler<T>(async context =>
@@ -227,7 +227,7 @@ namespace ViciOne.ServiceBus.Testing
         public Task<ConsumeContext<T>> SubscribeHandler<T>(Func<ConsumeContext<T>, bool> filter)
             where T : class
         {
-            TaskCompletionSource<ConsumeContext<T>> source = TaskUtil.GetTask<ConsumeContext<T>>();
+            TaskCompletionSource<ConsumeContext<T>> source = TaskCompletionSources.Create<ConsumeContext<T>>();
 
             ConnectHandle handler = null;
             handler = Bus.ConnectHandler<T>(async context =>

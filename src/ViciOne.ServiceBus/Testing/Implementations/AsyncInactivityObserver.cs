@@ -28,7 +28,7 @@ namespace ViciOne.ServiceBus.Testing.Implementations
         public AsyncInactivityObserver(TimeSpan timeout, CancellationToken cancellationToken, TimeProvider timeProvider)
         {
             _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
-            _inactivityTaskSource = TaskUtil.GetTask();
+            _inactivityTaskSource = TaskCompletionSources.Create<bool>();
             _inactivityTask = new Lazy<Task>(() => TimeoutTask(timeout, cancellationToken));
 
             _sources = new HashSet<IInactivityObservationSource>();
@@ -82,10 +82,10 @@ namespace ViciOne.ServiceBus.Testing.Implementations
                 _inactivityTaskSource.TrySetResult(true);
                 _inactivityTokenSource.Cancel();
 
-                return TaskUtil.True;
+                return TaskResults.True;
             }
 
-            return TaskUtil.False;
+            return TaskResults.False;
         }
 
         async Task TimeoutTask(TimeSpan timeout, CancellationToken cancellationToken)

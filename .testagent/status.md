@@ -2636,3 +2636,17 @@ future cohorts as complete.
 - Evidence is recorded under
   `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-TELEMETRY-FAULTS/`. This is a local technical
   acceptance only; no remote publication is included or implied.
+
+## Reviewer integration — V4 bounded execution checkpoint accepted locally (2026-09-02)
+
+- One hard-bounded task executor and one per-partition bounded executor replace the overlapping
+  channel implementations; obsolete executor and catch-all task-utility types are removed after all
+  consumers and benchmarks migrate to responsibility-specific APIs.
+- Fifty-one focused cases bind concurrency, FIFO, backpressure, cancellation, exact task results and
+  faults, logger isolation, partition identity, blocking waits and concurrent draining disposal.
+- Sixteen independent one-cause mutations are killed and every source is restored before the final
+  zero-warning Release build and 3,012/3,012 complete UnitArchitecture run with zero skips.
+- Scoped whitespace, JSON, stale-reference and diff-integrity gates pass. The protected `review/**`
+  directory remains unchanged and untracked.
+- This local checkpoint closes execution primitives only. Explicit receive terminality remains active
+  in the same reviewer-integration assignment; no remote publication is included or implied.

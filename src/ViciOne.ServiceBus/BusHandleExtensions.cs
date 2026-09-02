@@ -14,7 +14,7 @@ namespace ViciOne.ServiceBus
         /// <param name="handle">The bus handle</param>
         public static void Stop(this BusHandle handle)
         {
-            TaskUtil.Await(() => handle.StopAsync());
+            TaskBlocking.Wait(() => handle.StopAsync());
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace ViciOne.ServiceBus
 
             var cancellationToken = cancellationTokenSource.Token;
 
-            TaskUtil.Await(() => handle.StopAsync(cancellationToken), cancellationToken);
+            TaskBlocking.Wait(() => handle.StopAsync(cancellationToken), cancellationToken);
         }
 
         /// <summary>

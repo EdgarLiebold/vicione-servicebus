@@ -19,7 +19,7 @@ namespace ViciOne.ServiceBus.EventHubIntegration
         readonly CancellationTokenSource _checkpointTokenSource;
         readonly EventProcessorClient _client;
         readonly ReceiveEndpointContext _context;
-        readonly IChannelExecutorPool<ProcessEventArgs> _executorPool;
+        readonly IPartitionedTaskExecutor<ProcessEventArgs> _executorPool;
         readonly SemaphoreSlim _limit;
         readonly IProcessorLockContext _lockContext;
 
@@ -33,7 +33,7 @@ namespace ViciOne.ServiceBus.EventHubIntegration
             var lockContext = new ProcessorLockContext(processorContext, receiveSettings, _checkpointTokenSource.Token);
 
             IHashGenerator hashGenerator = new Murmur3UnsafeHashGenerator();
-            _executorPool = new PartitionChannelExecutorPool<ProcessEventArgs>(GetBytes, hashGenerator,
+            _executorPool = new PartitionedTaskExecutor<ProcessEventArgs>(GetBytes, hashGenerator,
                 receiveSettings.ConcurrentMessageLimit,
                 receiveSettings.ConcurrentDeliveryLimit);
 
@@ -73,7 +73,7 @@ namespace ViciOne.ServiceBus.EventHubIntegration
 
             await _limit.WaitAsync(Stopping).ConfigureAwait(false);
             await _lockContext.Pending(eventArgs).ConfigureAwait(false);
-            await _executorPool.Push(eventArgs, () => Handle(eventArgs), Stopping).ConfigureAwait(false);
+            await _executorPool.EnqueueAsync(eventArgs, () => Handle(eventArgs), Stopping).ConfigureAwait(false);
         }
 
         async Task Handle(ProcessEventArgs eventArgs)

@@ -39,7 +39,7 @@ namespace ViciOne.ServiceBus
 
             var cancellationToken = cancellationTokenSource.Token;
 
-            TaskUtil.Await(() => bus.StopAsync(cancellationToken), cancellationToken);
+            TaskBlocking.Wait(() => bus.StopAsync(cancellationToken), cancellationToken);
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace ViciOne.ServiceBus
             using var cancellationTokenSource = new CancellationTokenSource(startTimeout);
 
             // ReSharper disable once AccessToDisposedClosure
-            TaskUtil.Await(() => bus.StartAsync(cancellationTokenSource.Token), cancellationTokenSource.Token);
+            TaskBlocking.Wait(() => bus.StartAsync(cancellationTokenSource.Token), cancellationTokenSource.Token);
         }
 
         /// <summary>

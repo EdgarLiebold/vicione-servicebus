@@ -97,7 +97,7 @@ namespace ViciOne.ServiceBus.Transactions
             }
 
             foreach (Func<CancellationToken, Task> action in pendingActions)
-                TaskUtil.Await(() => action(CancellationToken.None));
+                TaskBlocking.Wait(() => action(CancellationToken.None));
 
             lock (_pendingActions)
                 _state = 2;

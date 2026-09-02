@@ -25,7 +25,7 @@ public sealed class AmazonSqsMessageReceiver :
 {
     readonly ClientContext _client;
     readonly SqsReceiveEndpointContext _context;
-    readonly IChannelExecutorPool<Message> _executorPool;
+    readonly IPartitionedTaskExecutor<Message> _executorPool;
     readonly ReceiveSettings _receiveSettings;
 
     /// <summary>
@@ -41,7 +41,7 @@ public sealed class AmazonSqsMessageReceiver :
 
         _receiveSettings = client.GetPayload<ReceiveSettings>();
 
-        _executorPool = new FifoChannelExecutorPool(_receiveSettings);
+        _executorPool = new FifoPartitionedTaskExecutor(_receiveSettings);
 
         TrySetConsumeTask(Task.Run(() => Consume()));
     }
@@ -71,7 +71,7 @@ public sealed class AmazonSqsMessageReceiver :
             var lockContext = new AmazonSqsReceiveLockContext(_context.InputAddress, message, _receiveSettings, _client, Stopped);
 
             return _receiveSettings.IsOrdered
-                ? _executorPool.Push(message, () => HandleMessage(message, lockContext), cancellationToken)
+                ? _executorPool.EnqueueAsync(message, () => HandleMessage(message, lockContext), cancellationToken)
                 : HandleMessage(message, lockContext);
         }
 
@@ -185,29 +185,29 @@ public sealed class AmazonSqsMessageReceiver :
     }
 
 
-    class FifoChannelExecutorPool :
-        IChannelExecutorPool<Message>
+    class FifoPartitionedTaskExecutor :
+        IPartitionedTaskExecutor<Message>
     {
-        readonly IChannelExecutorPool<Message> _keyExecutorPool;
+        readonly IPartitionedTaskExecutor<Message> _keyExecutorPool;
 
-        public FifoChannelExecutorPool(ReceiveSettings receiveSettings)
+        public FifoPartitionedTaskExecutor(ReceiveSettings receiveSettings)
         {
             IHashGenerator hashGenerator = new Murmur3UnsafeHashGenerator();
             int partitionCapacity = Math.Max(
                 1,
                 (receiveSettings.PrefetchCount + receiveSettings.ConcurrentMessageLimit - 1) / receiveSettings.ConcurrentMessageLimit);
-            _keyExecutorPool = new PartitionChannelExecutorPool<Message>(MessageGroupIdProvider, hashGenerator,
+            _keyExecutorPool = new PartitionedTaskExecutor<Message>(MessageGroupIdProvider, hashGenerator,
                 receiveSettings.ConcurrentMessageLimit, receiveSettings.ConcurrentDeliveryLimit, partitionCapacity);
         }
 
-        public Task Push(Message result, Func<Task> handle, CancellationToken cancellationToken)
+        public Task EnqueueAsync(Message result, Func<Task> handle, CancellationToken cancellationToken)
         {
-            return _keyExecutorPool.Push(result, handle, cancellationToken);
+            return _keyExecutorPool.EnqueueAsync(result, handle, cancellationToken);
         }
 
-        public Task Run(Message result, Func<Task> method, CancellationToken cancellationToken = default)
+        public Task ExecuteAsync(Message result, Func<Task> method, CancellationToken cancellationToken = default)
         {
-            return _keyExecutorPool.Run(result, method, cancellationToken);
+            return _keyExecutorPool.ExecuteAsync(result, method, cancellationToken);
         }
 
         public ValueTask DisposeAsync()

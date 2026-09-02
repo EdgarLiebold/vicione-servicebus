@@ -58,8 +58,8 @@ public class ClientRequestHandle<TRequest> :
 
         _message = new TaskCompletionSource<TRequest>();
         _pipeConfigurator = new PipeConfigurator<SendContext<TRequest>>();
-        _sendContext = TaskUtil.GetTask<SendContext<TRequest>>();
-        _readyToSend = TaskUtil.GetTask<bool>();
+        _sendContext = TaskCompletionSources.Create<SendContext<TRequest>>();
+        _readyToSend = TaskCompletionSources.Create<bool>();
         _cancellationTokenSource = new CancellationTokenSource();
         _responseHandlers = new Dictionary<Type, HandlerConnectHandle>();
         _accept = [];

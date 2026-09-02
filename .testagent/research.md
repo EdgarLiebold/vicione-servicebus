@@ -3288,3 +3288,25 @@ replacement rather than being mistaken for completed coverage.
   `IsTestingPlatformApplication` empty. The reproducible remedy is to restore UnitArchitecture plus
   all four LocalIntegration solution graphs before the complete Architecture run. This is a build
   graph precondition, distinct from the restricted-sandbox process issue.
+
+## Reviewer integration research — V4 bounded execution and task primitives (2026-09-02)
+
+V4 commit `9a15dc1c1e9cfff7b1393561a6783b579d4eff85` replaces overlapping executor and task-helper
+machinery, but direct adoption would introduce ambiguous Task/ValueTask lambda binding and would
+rename unrelated request-rate APIs. The semantic integration therefore gives ValueTask entry points
+distinct names, preserves `RequestRateAlgorithm.Run`, and strengthens disposal so partition creation
+cannot race with shutdown.
+
+The authoritative native owners now materialize 51 focused cases across `TaskExecutor`, partitioned
+execution, blocking waits, cancellation registration, completion sources and cached task results.
+They use explicit gates and xUnit cancellation tokens; none relies on sleep, polling, wall-clock
+duration, or timeout-as-success. Static gap review found no remaining old executor or task-utility
+reference in active source, tests, or benchmarks. Assertion review binds observable state, ordering,
+identity, exact exceptions/tokens and admission rather than merely checking completion.
+
+Sixteen independent one-cause mutations were killed. The clean restored Release solution builds
+with zero warnings and errors, and the complete UnitArchitecture profile passes 3,012/3,012 with
+zero skips. All 80 changed or added C# paths pass scoped whitespace verification; the full formatter
+still reports inherited findings in unchanged files. Detailed mutation ownership and environment
+facts are recorded under
+`evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-CONCURRENCY-LIFECYCLE/`.

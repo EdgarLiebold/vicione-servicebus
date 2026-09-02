@@ -63,7 +63,7 @@ namespace ViciOneServiceBusBenchmark.Latency
             if (consumed == _messageCount)
                 _consumeCompleted.TrySetResult(_clock.Elapsed);
 
-            return TaskUtil.Completed;
+            return TaskResults.Completed;
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace ViciOneServiceBusBenchmark.Latency
         {
             Complete(messageId, _clock.ElapsedTicks);
 
-            return TaskUtil.Completed;
+            return TaskResults.Completed;
         }
 
         /// <summary>

@@ -19,7 +19,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
             switch (input)
             {
                 case null:
-                    return TaskUtil.Default<Dictionary<TKey, TElement>>();
+                    return TaskResults.Default<Dictionary<TKey, TElement>>();
                 case Dictionary<TKey, TElement> dictionary:
                     return Task.FromResult(dictionary);
                 default:
@@ -33,7 +33,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
             switch (input)
             {
                 case null:
-                    return TaskUtil.Default<IDictionary<TKey, TElement>>();
+                    return TaskResults.Default<IDictionary<TKey, TElement>>();
                 case IDictionary<TKey, TElement> dictionary:
                     return Task.FromResult(dictionary);
                 default:
@@ -48,7 +48,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
             switch (input)
             {
                 case null:
-                    return TaskUtil.Default<IEnumerable<KeyValuePair<TKey, TElement>>>();
+                    return TaskResults.Default<IEnumerable<KeyValuePair<TKey, TElement>>>();
                 default:
                     return Task.FromResult(input);
             }
@@ -60,7 +60,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
             switch (input)
             {
                 case null:
-                    return TaskUtil.Default<IReadOnlyDictionary<TKey, TElement>>();
+                    return TaskResults.Default<IReadOnlyDictionary<TKey, TElement>>();
                 case IReadOnlyDictionary<TKey, TElement> dictionary:
                     return Task.FromResult(dictionary);
                 default:
@@ -141,7 +141,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
             where TMessage : class
         {
             if (input == null)
-                return TaskUtil.Default<Dictionary<TKey, TElement>>();
+                return TaskResults.Default<Dictionary<TKey, TElement>>();
 
             var capacity = 0;
             if (input is ICollection<TElement> collection)
@@ -283,7 +283,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
             where TMessage : class
         {
             if (input == null)
-                return TaskUtil.Default<Dictionary<TKey, TElement>>();
+                return TaskResults.Default<Dictionary<TKey, TElement>>();
 
             var capacity = 0;
             if (input is ICollection<TElement> collection)
@@ -429,7 +429,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
             where TMessage : class
         {
             if (input == null)
-                return TaskUtil.Default<Dictionary<TKey, TElement>>();
+                return TaskResults.Default<Dictionary<TKey, TElement>>();
 
             var capacity = 0;
             if (input is ICollection<TElement> collection)

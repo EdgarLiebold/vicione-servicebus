@@ -103,7 +103,7 @@ namespace ViciOne.ServiceBus.InMemoryTransport
                 if (IsStopping)
                     return Task.CompletedTask;
 
-                return _executor.Push(async () =>
+                return _executor.EnqueueAsync(async () =>
                 {
                     LogContext.Current = _context.LogContext;
 

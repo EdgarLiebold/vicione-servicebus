@@ -31,7 +31,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Middleware
         {
             var receiveSettings = context.GetPayload<ReceiveSettings>();
 
-            var executor = new ChannelExecutor(receiveSettings.PrefetchCount, receiveSettings.ConcurrentMessageLimit);
+            var executor = new TaskExecutor(receiveSettings.PrefetchCount, receiveSettings.ConcurrentMessageLimit);
 
             var consumers = new List<Task<ActiveMqConsumer>>
             {
@@ -105,7 +105,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Middleware
         }
 
         async Task<ActiveMqConsumer> CreateConsumer(SessionContext context, Queue entity, string selector,
-            ChannelExecutor executor)
+            TaskExecutor executor)
         {
             var queue = await context.GetQueue(entity).ConfigureAwait(false);
 
@@ -119,7 +119,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Middleware
         }
 
         async Task<ActiveMqConsumer> CreateConsumer(SessionContext context, Topic entity, string selector,
-            string consumerName, bool shared, bool durable, ChannelExecutor executor)
+            string consumerName, bool shared, bool durable, TaskExecutor executor)
         {
             var topic = await context.GetTopic(entity).ConfigureAwait(false);
 

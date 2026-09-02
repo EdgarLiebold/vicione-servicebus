@@ -50,7 +50,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
         Task<TResult> IPropertyConverter<TResult, Task<TInput>>.Convert<T>(InitializeContext<T> context, Task<TInput> input)
         {
             if (input == default)
-                return TaskUtil.Default<TResult>();
+                return TaskResults.Default<TResult>();
 
             if (input.Status == TaskStatus.RanToCompletion)
                 return _converter.Convert(context, input.Result);

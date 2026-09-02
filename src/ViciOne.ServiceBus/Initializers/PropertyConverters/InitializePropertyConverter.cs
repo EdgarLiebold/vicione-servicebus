@@ -19,7 +19,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
         Task<TProperty> IPropertyConverter<TProperty, TInput>.Convert<TMessage>(InitializeContext<TMessage> context, TInput input)
         {
             if (input == null)
-                return TaskUtil.Default<TProperty>();
+                return TaskResults.Default<TProperty>();
 
             InitializeContext<TProperty> messageContext = MessageFactoryCache<TProperty>.Factory.Create(context);
 
@@ -46,7 +46,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
         Task<TProperty> IPropertyConverter<TProperty, object>.Convert<TMessage>(InitializeContext<TMessage> context, object input)
         {
             if (input == null)
-                return TaskUtil.Default<TProperty>();
+                return TaskResults.Default<TProperty>();
 
             InitializeContext<TProperty> messageContext = MessageFactoryCache<TProperty>.Factory.Create(context);
 

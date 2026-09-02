@@ -68,7 +68,7 @@ public class SqlServerDbConnectionContext :
 
     public Task<T> Query<T>(Func<IDbConnection, IDbTransaction, Task<T>> callback, CancellationToken cancellationToken)
     {
-        return _executor.Run(() =>
+        return _executor.ExecuteAsync(() =>
         {
             return _retryPolicy.Retry(async () =>
             {

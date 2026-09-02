@@ -100,7 +100,7 @@ public abstract class Batcher<TEntry> :
             {
             }
 
-            await _executor.Push(() => ExecuteBatch(batch), CancellationToken.None).ConfigureAwait(false);
+            await _executor.EnqueueAsync(() => ExecuteBatch(batch), CancellationToken.None).ConfigureAwait(false);
         }
         catch (OperationCanceledException exception) when (exception.CancellationToken == batchToken.Token)
         {

@@ -11,7 +11,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
         public Task<TResult> Convert<T>(InitializeContext<T> context, TVariable input)
             where T : class
         {
-            return input?.GetValue(context) ?? TaskUtil.Default<TResult>();
+            return input?.GetValue(context) ?? TaskResults.Default<TResult>();
         }
     }
 

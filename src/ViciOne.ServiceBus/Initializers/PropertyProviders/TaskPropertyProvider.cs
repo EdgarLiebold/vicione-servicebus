@@ -20,7 +20,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyProviders
         {
             return Task.FromResult(context.HasInput
                 ? _provider.GetProperty(context)
-                : TaskUtil.Default<TProperty>());
+                : TaskResults.Default<TProperty>());
         }
     }
 }

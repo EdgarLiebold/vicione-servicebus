@@ -37,7 +37,7 @@ namespace ViciOneServiceBusBenchmark.RequestResponse
             {
                 Console.WriteLine("Running Request Response Benchmark");
 
-                TaskUtil.Await(RunBenchmark, cancellationToken);
+                TaskBlocking.Wait(RunBenchmark, cancellationToken);
 
                 Console.WriteLine("Message Count: {0}", _settings.MessageCount);
                 Console.WriteLine("Clients: {0}", _settings.Clients);

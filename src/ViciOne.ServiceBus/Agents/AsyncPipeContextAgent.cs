@@ -19,7 +19,7 @@ namespace ViciOne.ServiceBus.Agents
 
         public AsyncPipeContextAgent()
         {
-            _context = TaskUtil.GetTask<TContext>();
+            _context = TaskCompletionSources.Create<TContext>();
 
             _agent = new PipeContextAgent<TContext>(_context.Task);
         }

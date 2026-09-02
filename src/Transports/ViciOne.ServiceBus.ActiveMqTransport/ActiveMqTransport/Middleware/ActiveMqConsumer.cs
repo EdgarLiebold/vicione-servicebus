@@ -14,7 +14,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Middleware
         ConsumerAgent<string>
     {
         readonly ActiveMqReceiveEndpointContext _context;
-        readonly ChannelExecutor _executor;
+        readonly TaskExecutor _executor;
         readonly IMessageConsumer _messageConsumer;
         readonly ReceiveSettings _receiveSettings;
         readonly SessionContext _session;
@@ -26,7 +26,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Middleware
         /// <param name="messageConsumer"></param>
         /// <param name="context">The topology</param>
         /// <param name="executor"></param>
-        public ActiveMqConsumer(SessionContext session, IMessageConsumer messageConsumer, ActiveMqReceiveEndpointContext context, ChannelExecutor executor)
+        public ActiveMqConsumer(SessionContext session, IMessageConsumer messageConsumer, ActiveMqReceiveEndpointContext context, TaskExecutor executor)
             : base(context, StringComparer.Ordinal)
         {
             _session = session;
@@ -45,7 +45,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Middleware
 
         void HandleMessage(IMessage message)
         {
-            _executor.PushWithWait(async () =>
+            _executor.EnqueueBlocking(async () =>
             {
                 if (IsStopping)
                     return;

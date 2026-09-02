@@ -99,7 +99,7 @@ namespace ViciOne.ServiceBus.Caching.Internals
 
             static Cached()
             {
-                TaskCompletionSource<TValue> source = TaskUtil.GetTask<TValue>();
+                TaskCompletionSource<TValue> source = TaskCompletionSources.Create<TValue>();
                 source.TrySetException(new InvalidOperationException("The cached value has been removed"));
 
                 Removed = source.Task;

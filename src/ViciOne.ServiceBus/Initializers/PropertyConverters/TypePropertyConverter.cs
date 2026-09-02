@@ -23,7 +23,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
         {
             return _converter.TryConvert(input, out var result)
                 ? Task.FromResult(result)
-                : TaskUtil.Default<TResult>();
+                : TaskResults.Default<TResult>();
         }
     }
 }

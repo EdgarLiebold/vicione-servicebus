@@ -19,7 +19,7 @@ namespace ViciOne.ServiceBus.SqlTransport.Middleware
     {
         readonly ClientContext _client;
         readonly SqlReceiveEndpointContext _context;
-        readonly OrderedChannelExecutorPool _executorPool;
+        readonly OrderedPartitionedTaskExecutor _executorPool;
         readonly object _lock = new();
         readonly ReceiveSettings _receiveSettings;
         readonly TimeSpan? _touchQueueInterval;
@@ -43,7 +43,7 @@ namespace ViciOne.ServiceBus.SqlTransport.Middleware
             if (_receiveSettings.AutoDeleteOnIdle.HasValue)
                 _touchQueueInterval = new TimeSpan(_receiveSettings.AutoDeleteOnIdle.Value.Ticks / 2);
 
-            _executorPool = new OrderedChannelExecutorPool(_receiveSettings);
+            _executorPool = new OrderedPartitionedTaskExecutor(_receiveSettings);
 
             TrySetConsumeTask(Task.Run(() => Consume()));
         }
@@ -72,7 +72,7 @@ namespace ViciOne.ServiceBus.SqlTransport.Middleware
 
                 return _receiveSettings.ReceiveMode == SqlReceiveMode.Normal
                     ? HandleMessage(message, lockContext)
-                    : _executorPool.Run(message, () => HandleMessage(message, lockContext), cancellationToken);
+                    : _executorPool.ExecuteAsync(message, () => HandleMessage(message, lockContext), cancellationToken);
             }
 
             try
@@ -208,26 +208,26 @@ namespace ViciOne.ServiceBus.SqlTransport.Middleware
         }
 
 
-        class OrderedChannelExecutorPool :
-            IChannelExecutorPool<SqlTransportMessage>
+        class OrderedPartitionedTaskExecutor :
+            IPartitionedTaskExecutor<SqlTransportMessage>
         {
-            readonly IChannelExecutorPool<SqlTransportMessage> _keyExecutorPool;
+            readonly IPartitionedTaskExecutor<SqlTransportMessage> _keyExecutorPool;
 
-            public OrderedChannelExecutorPool(ReceiveSettings receiveSettings)
+            public OrderedPartitionedTaskExecutor(ReceiveSettings receiveSettings)
             {
                 IHashGenerator hashGenerator = new Murmur3UnsafeHashGenerator();
-                _keyExecutorPool = new PartitionChannelExecutorPool<SqlTransportMessage>(PartitionKeyProvider, hashGenerator,
+                _keyExecutorPool = new PartitionedTaskExecutor<SqlTransportMessage>(PartitionKeyProvider, hashGenerator,
                     receiveSettings.ConcurrentMessageLimit, receiveSettings.ConcurrentDeliveryLimit);
             }
 
-            public Task Push(SqlTransportMessage result, Func<Task> handle, CancellationToken cancellationToken)
+            public Task EnqueueAsync(SqlTransportMessage result, Func<Task> handle, CancellationToken cancellationToken)
             {
-                return _keyExecutorPool.Push(result, handle, cancellationToken);
+                return _keyExecutorPool.EnqueueAsync(result, handle, cancellationToken);
             }
 
-            public Task Run(SqlTransportMessage result, Func<Task> method, CancellationToken cancellationToken = default)
+            public Task ExecuteAsync(SqlTransportMessage result, Func<Task> method, CancellationToken cancellationToken = default)
             {
-                return _keyExecutorPool.Run(result, method, cancellationToken);
+                return _keyExecutorPool.ExecuteAsync(result, method, cancellationToken);
             }
 
             public ValueTask DisposeAsync()

@@ -25,7 +25,7 @@ namespace ViciOne.ServiceBus.Transports
         protected ConsumerAgent(ReceiveEndpointContext context, IEqualityComparer<TKey> equalityComparer = default)
         {
             _context = context;
-            _deliveryComplete = TaskUtil.GetTask<bool>();
+            _deliveryComplete = TaskCompletionSources.Create<bool>();
 
             _pending = new ConcurrentDictionary<TKey, PendingReceiveLockContext>(equalityComparer ?? EqualityComparer<TKey>.Default);
 
@@ -61,7 +61,7 @@ namespace ViciOne.ServiceBus.Transports
                 if (_consumeTask != null || _consumeTaskSource != null)
                     return;
 
-                _consumeTaskSource = TaskUtil.GetTask<bool>();
+                _consumeTaskSource = TaskCompletionSources.Create<bool>();
                 SetConsumeTask(_consumeTaskSource.Task);
             }
         }

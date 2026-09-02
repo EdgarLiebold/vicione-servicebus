@@ -34,12 +34,12 @@ namespace ViciOne.ServiceBus.Batching
         {
             var currentActivity = Activity.Current;
 
-            return _collector.Run(() => Add(context, currentActivity), context.CancellationToken);
+            return _collector.ExecuteAsync(() => Add(context, currentActivity), context.CancellationToken);
         }
 
         public Task Complete(ConsumeContext<TMessage> context, BatchConsumer<TMessage> consumer)
         {
-            return _collector.Run(() => Remove(consumer));
+            return _collector.ExecuteAsync(() => Remove(consumer));
         }
 
         public void Probe(ProbeContext context)
@@ -107,12 +107,12 @@ namespace ViciOne.ServiceBus.Batching
         {
             var currentActivity = Activity.Current;
 
-            return _collector.Run(() => Add(context, currentActivity), context.CancellationToken);
+            return _collector.ExecuteAsync(() => Add(context, currentActivity), context.CancellationToken);
         }
 
         public Task Complete(ConsumeContext<TMessage> context, BatchConsumer<TMessage> consumer)
         {
-            return _collector.Run(() => Remove(context, consumer));
+            return _collector.ExecuteAsync(() => Remove(context, consumer));
         }
 
         public void Probe(ProbeContext context)
