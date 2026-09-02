@@ -67,7 +67,7 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
         new OutboxProbe(sequence))
     {
         MessageId = messageId,
-        Serializer = SystemTextJsonMessageSerializer.Instance,
+        Serializer = ServiceBusMetadataJson.MessageSerializer,
     };
 
     public sealed record OutboxProbe(int Sequence);

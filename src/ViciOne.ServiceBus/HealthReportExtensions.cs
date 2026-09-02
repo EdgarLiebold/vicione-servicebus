@@ -20,11 +20,11 @@ namespace ViciOne.ServiceBus
                     {
                         ["status"] = entry.Value.Status.ToString(),
                         ["description"] = entry.Value.Description,
-                        ["data"] = JsonSerializer.SerializeToNode(entry.Value.Data, SystemTextJsonMessageSerializer.Options)
+                        ["data"] = JsonSerializer.SerializeToNode(entry.Value.Data, ServiceBusMetadataJson.Options)
                     })))
             };
 
-            var options = new JsonSerializerOptions(SystemTextJsonMessageSerializer.Options)
+            var options = new JsonSerializerOptions(ServiceBusMetadataJson.Options)
             {
                 WriteIndented = true,
             };

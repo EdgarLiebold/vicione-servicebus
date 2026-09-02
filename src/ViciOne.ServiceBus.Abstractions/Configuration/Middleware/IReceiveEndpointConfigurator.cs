@@ -3,6 +3,7 @@ namespace ViciOne.ServiceBus
     using System;
     using System.ComponentModel;
     using System.Net.Mime;
+    using System.Text.Json;
 
 
     /// <summary>
@@ -82,6 +83,11 @@ namespace ViciOne.ServiceBus
         /// <param name="factory"></param>
         /// <param name="isDefault">If true, set the default content type to the content type of the deserializer</param>
         void AddDeserializer(ISerializerFactory factory, bool isDefault = false);
+
+        /// <summary>
+        /// Configures the System.Text.Json payload policy for this receive endpoint. Endpoint configuration is isolated from the parent bus.
+        /// </summary>
+        void ConfigureSystemTextJsonSerializerOptions(Func<JsonSerializerOptions, JsonSerializerOptions> configure);
 
         /// <summary>
         /// Clears all message serialization configuration

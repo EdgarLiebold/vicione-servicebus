@@ -12,7 +12,7 @@ public sealed class SystemTextJsonInterfaceMetadataTests
     [RequirementCoverage("REQ-VSB-SYSTEM-TEXT-JSON-INTERFACE-METADATA", "property-converter")]
     public void InterfacePropertyConverter_IsHonoredByTheGeneratedImplementation()
     {
-        var serializer = new SystemTextJsonMessageSerializer();
+        var serializer = new SystemTextJsonMessageSerializer(ServiceBusMetadataJson.Options);
 
         ConverterAttributedMessage? result = serializer.DeserializeObject<ConverterAttributedMessage>("{\"value\":10}");
 
@@ -24,7 +24,7 @@ public sealed class SystemTextJsonInterfaceMetadataTests
     [RequirementCoverage("REQ-VSB-SYSTEM-TEXT-JSON-INTERFACE-METADATA", "nullable-empty-sequence")]
     public void NullableInterfaceCollection_DeserializesEmptyArrayAsANonNullEmptySequence()
     {
-        var serializer = new SystemTextJsonMessageSerializer();
+        var serializer = new SystemTextJsonMessageSerializer(ServiceBusMetadataJson.Options);
 
         NullableCollectionMessage? result = serializer.DeserializeObject<NullableCollectionMessage>("{\"bars\":[]}");
 

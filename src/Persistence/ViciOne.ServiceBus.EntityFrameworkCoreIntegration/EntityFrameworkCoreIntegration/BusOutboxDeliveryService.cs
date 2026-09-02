@@ -240,7 +240,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
             {
                 var message = messages[messageIndex];
 
-                message.Deserialize(SystemTextJsonMessageSerializer.Instance);
+                message.Deserialize(ServiceBusMetadataJson.ObjectDeserializer);
 
                 if (message.DestinationAddress == null)
                 {

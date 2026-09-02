@@ -38,13 +38,13 @@ namespace ViciOne.ServiceBus.Transports
         public T Get<T>(string key, T defaultValue)
             where T : class
         {
-            return SystemTextJsonMessageSerializer.Instance.GetValue(_provider, key, defaultValue);
+            return ServiceBusMetadataJson.ObjectDeserializer.GetValue(_provider, key, defaultValue);
         }
 
         public T? Get<T>(string key, T? defaultValue)
             where T : struct
         {
-            return SystemTextJsonMessageSerializer.Instance.GetValue(_provider, key, defaultValue);
+            return ServiceBusMetadataJson.ObjectDeserializer.GetValue(_provider, key, defaultValue);
         }
 
         public IEnumerator<HeaderValue> GetEnumerator()

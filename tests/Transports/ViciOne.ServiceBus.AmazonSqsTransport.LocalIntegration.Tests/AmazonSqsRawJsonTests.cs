@@ -65,7 +65,7 @@ public sealed class AmazonSqsRawJsonTests
                         context.CorrelationId = correlationId;
                         context.ConversationId = conversationId;
                         context.Headers.Set(HeaderName, HeaderValue);
-                        context.Serializer = new SystemTextJsonRawMessageSerializer(RawSerializerOptions.All);
+                        context.Serializer = new SystemTextJsonRawMessageSerializer(ServiceBusMetadataJson.Options, RawSerializerOptions.All);
                     },
                     cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
@@ -163,7 +163,7 @@ public sealed class AmazonSqsRawJsonTests
                     context =>
                     {
                         context.Headers.Set(HeaderName, HeaderValue);
-                        context.Serializer = new SystemTextJsonRawMessageSerializer(options);
+                        context.Serializer = new SystemTextJsonRawMessageSerializer(ServiceBusMetadataJson.Options, options);
                     },
                     cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);

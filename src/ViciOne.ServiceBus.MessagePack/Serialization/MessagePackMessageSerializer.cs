@@ -75,7 +75,7 @@ public class MessagePackMessageSerializer :
             // If the object is a Dictionary<string, object>, we deserialize internally using JSON.
             // MessagePack is case-sensitive, and would not be able to deserialize without correct casing.
 
-            return objectByStringPairs.Transform<T>(SystemTextJsonMessageSerializer.Options);
+            return objectByStringPairs.Transform<T>(ServiceBusMetadataJson.Options);
         }
 
         return InternalDeserializeObject(value, defaultValue);

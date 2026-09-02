@@ -84,7 +84,7 @@ namespace ViciOne.ServiceBus
             if (value == null)
                 return EmptyMessageData<byte[]>.Instance;
 
-            var bytes = JsonSerializer.SerializeToUtf8Bytes(value, objectType, SystemTextJsonMessageSerializer.Options);
+            var bytes = JsonSerializer.SerializeToUtf8Bytes(value, objectType, ServiceBusMetadataJson.Options);
 
             if (bytes.Length < MessageDataDefaults.Threshold && !MessageDataDefaults.AlwaysWriteToRepository)
                 return new BytesInlineMessageData(bytes);

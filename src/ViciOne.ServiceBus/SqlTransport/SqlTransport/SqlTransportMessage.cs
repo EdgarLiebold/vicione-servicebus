@@ -65,7 +65,7 @@ namespace ViciOne.ServiceBus.SqlTransport
 
             if (jsonHeaders != null)
             {
-                var elements = JsonSerializer.Deserialize<IEnumerable<KeyValuePair<string, object>>>(jsonHeaders, SystemTextJsonMessageSerializer.Options);
+                var elements = JsonSerializer.Deserialize<IEnumerable<KeyValuePair<string, object>>>(jsonHeaders, ServiceBusMetadataJson.Options);
                 if (elements != null)
                 {
                     foreach (KeyValuePair<string, object> element in elements)
@@ -81,7 +81,7 @@ namespace ViciOne.ServiceBus.SqlTransport
             if (Host == null)
                 return null;
 
-            return JsonSerializer.Deserialize<HostInfo>(Host, SystemTextJsonMessageSerializer.Options);
+            return JsonSerializer.Deserialize<HostInfo>(Host, ServiceBusMetadataJson.Options);
         }
 
         static Uri? ToUri(string? value)

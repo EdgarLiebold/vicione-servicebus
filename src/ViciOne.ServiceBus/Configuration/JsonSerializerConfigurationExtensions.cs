@@ -60,23 +60,26 @@ namespace ViciOne.ServiceBus
         }
 
         /// <summary>
-        /// Configure the global shared options for the default System.Text.Json serializer
+        /// Configures the System.Text.Json payload policy for this bus. The resulting runtime options are isolated
+        /// from every other bus and receive endpoint and are immutable after the serializer collection is materialized.
         /// </summary>
-        /// <param name="configurator"></param>
-        /// <param name="configure"></param>
         public static void ConfigureJsonSerializerOptions(this IBusFactoryConfigurator configurator,
             Func<JsonSerializerOptions, JsonSerializerOptions>? configure = null)
         {
-            if (configure == null)
-                return;
+            ArgumentNullException.ThrowIfNull(configurator);
+            if (configure != null)
+                configurator.ConfigureSystemTextJsonSerializerOptions(configure);
+        }
 
-            // A callback that returns nothing used to null the options every serializer reads from, and
-            // the failure then surfaced on the first message rather than at configuration time.
-            SystemTextJsonMessageSerializer.Options =
-                configure(new JsonSerializerOptions(SystemTextJsonMessageSerializer.Options))
-                ?? throw new ConfigurationException(
-                    "The ConfigureJsonSerializerOptions callback returned null. It has to return the options "
-                    + "to use, either the instance it was given or another one.");
+        /// <summary>
+        /// Configures the System.Text.Json payload policy for this receive endpoint only.
+        /// </summary>
+        public static void ConfigureJsonSerializerOptions(this IReceiveEndpointConfigurator configurator,
+            Func<JsonSerializerOptions, JsonSerializerOptions>? configure = null)
+        {
+            ArgumentNullException.ThrowIfNull(configurator);
+            if (configure != null)
+                configurator.ConfigureSystemTextJsonSerializerOptions(configure);
         }
 
         /// <summary>
@@ -90,7 +93,7 @@ namespace ViciOne.ServiceBus
             where T : class
         {
             var existingConverter = options.Converters.FirstOrDefault(x => x is CustomMessageTypeJsonConverter<T>);
-            if(existingConverter != null)
+            if (existingConverter != null)
                 options.Converters.Remove(existingConverter);
 
             var messageSerializerOptions = new JsonSerializerOptions();

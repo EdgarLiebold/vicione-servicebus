@@ -20,7 +20,7 @@ internal static class SystemTextJsonRoundTrip
     {
         ArgumentNullException.ThrowIfNull(message);
 
-        var serializer = new SystemTextJsonMessageSerializer();
+        var serializer = new SystemTextJsonMessageSerializer(ServiceBusMetadataJson.Options);
         var sendContext = new MessageSendContext<T>(message)
         {
             Serializer = serializer,
@@ -52,7 +52,7 @@ internal static class SystemTextJsonRoundTrip
     {
         ArgumentNullException.ThrowIfNull(message);
 
-        var serializer = new SystemTextJsonRawMessageSerializer(RawSerializerOptions.AnyMessageType);
+        var serializer = new SystemTextJsonRawMessageSerializer(ServiceBusMetadataJson.Options, RawSerializerOptions.AnyMessageType);
         var sendContext = new MessageSendContext<T>(message)
         {
             Serializer = serializer,

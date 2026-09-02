@@ -22,7 +22,7 @@ namespace ViciOne.ServiceBus.Serialization
                 return false;
             }
 
-            return SystemTextJsonMessageSerializer.Instance.TryGetValue(dictionary, key, out value);
+            return ServiceBusMetadataJson.ObjectDeserializer.TryGetValue(dictionary, key, out value);
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace ViciOne.ServiceBus.Serialization
                 return false;
             }
 
-            return SystemTextJsonMessageSerializer.Instance.TryGetValue(dictionary, key, out value);
+            return ServiceBusMetadataJson.ObjectDeserializer.TryGetValue(dictionary, key, out value);
         }
     }
 }

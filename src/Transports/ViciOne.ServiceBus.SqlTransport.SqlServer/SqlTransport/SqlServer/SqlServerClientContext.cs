@@ -167,7 +167,7 @@ namespace ViciOne.ServiceBus.SqlTransport.SqlServer
         public override Task Send<T>(string queueName, SqlMessageSendContext<T> context)
         {
             IEnumerable<KeyValuePair<string, object>> headers = context.Headers.GetAll().ToList();
-            var headersAsJson = headers.Any() ? JsonSerializer.Serialize(headers, SystemTextJsonMessageSerializer.Options) : null;
+            var headersAsJson = headers.Any() ? JsonSerializer.Serialize(headers, ServiceBusMetadataJson.Options) : null;
 
             Guid? schedulingTokenId = context.Headers.Get<Guid>(MessageHeaders.SchedulingTokenId);
             DateTime? expirationTime = context.TimeToLive.HasValue ? DateTime.UtcNow + context.TimeToLive.Value : null;
@@ -204,7 +204,7 @@ namespace ViciOne.ServiceBus.SqlTransport.SqlServer
         public override Task Publish<T>(string topicName, SqlMessageSendContext<T> context)
         {
             IEnumerable<KeyValuePair<string, object>> headers = context.Headers.GetAll().ToList();
-            var headersAsJson = headers.Any() ? JsonSerializer.Serialize(headers, SystemTextJsonMessageSerializer.Options) : null;
+            var headersAsJson = headers.Any() ? JsonSerializer.Serialize(headers, ServiceBusMetadataJson.Options) : null;
 
             Guid? schedulingTokenId = context.Headers.Get<Guid>(MessageHeaders.SchedulingTokenId);
             DateTime? expirationTime = context.TimeToLive.HasValue ? DateTime.UtcNow + context.TimeToLive.Value : null;
@@ -263,7 +263,7 @@ namespace ViciOne.ServiceBus.SqlTransport.SqlServer
             DateTime? expirationTime, SendHeaders sendHeaders)
         {
             IEnumerable<KeyValuePair<string, object>> headers = sendHeaders.GetAll().ToList();
-            var headersAsJson = headers.Any() ? JsonSerializer.Serialize(headers, SystemTextJsonMessageSerializer.Options) : null;
+            var headersAsJson = headers.Any() ? JsonSerializer.Serialize(headers, ServiceBusMetadataJson.Options) : null;
 
             var result = await Execute<long>(_moveMessageTypeSql, new
             {
@@ -293,7 +293,7 @@ namespace ViciOne.ServiceBus.SqlTransport.SqlServer
         public override async Task<bool> Unlock(Guid lockId, long messageDeliveryId, TimeSpan delay, SendHeaders sendHeaders)
         {
             IEnumerable<KeyValuePair<string, object>> headers = sendHeaders.GetAll().ToList();
-            var headersAsJson = headers.Any() ? JsonSerializer.Serialize(headers, SystemTextJsonMessageSerializer.Options) : null;
+            var headersAsJson = headers.Any() ? JsonSerializer.Serialize(headers, ServiceBusMetadataJson.Options) : null;
 
             var result = await Execute<long>(_unlockSql, new
             {

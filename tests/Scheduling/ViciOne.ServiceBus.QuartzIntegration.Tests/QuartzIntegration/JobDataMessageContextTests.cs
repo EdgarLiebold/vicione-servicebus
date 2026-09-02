@@ -35,12 +35,12 @@ public sealed class JobDataMessageContextTests
             new JobDataMap
             {
                 ["MessageId"] = messageId.ToString("D"),
-                ["HeadersAsJson"] = JsonSerializer.Serialize(headers, SystemTextJsonMessageSerializer.Options),
-                ["TransportProperties"] = JsonSerializer.Serialize(properties, SystemTextJsonMessageSerializer.Options),
+                ["HeadersAsJson"] = JsonSerializer.Serialize(headers, ServiceBusMetadataJson.Options),
+                ["TransportProperties"] = JsonSerializer.Serialize(properties, ServiceBusMetadataJson.Options),
                 ["TokenId"] = "token-42",
             });
 
-        var context = new JobDataMessageContext(execution, SystemTextJsonMessageSerializer.Instance);
+        var context = new JobDataMessageContext(execution, ServiceBusMetadataJson.ObjectDeserializer);
 
         Assert.Equal(messageId, context.MessageId);
         Assert.Equal("alpha.Recurring.Trigger.beta", context.Headers.Get<string>(MessageHeaders.Quartz.ScheduleId));
@@ -55,8 +55,8 @@ public sealed class JobDataMessageContextTests
 
         IReadOnlyDictionary<string, object> restored = Assert.IsAssignableFrom<IReadOnlyDictionary<string, object>>(
             context.TransportProperties);
-        Assert.Equal("north", SystemTextJsonMessageSerializer.Instance.DeserializeObject<string>(restored["partition"]));
-        Assert.Equal(7, SystemTextJsonMessageSerializer.Instance.DeserializeObject<int>(restored["priority"]));
+        Assert.Equal("north", ServiceBusMetadataJson.ObjectDeserializer.DeserializeObject<string>(restored["partition"]));
+        Assert.Equal(7, ServiceBusMetadataJson.ObjectDeserializer.DeserializeObject<int>(restored["priority"]));
     }
 
     [Fact]
@@ -68,7 +68,7 @@ public sealed class JobDataMessageContextTests
             new JobDataMap { ["MessageId"] = "not-a-guid" });
 
         FormatException exception = Assert.Throws<FormatException>(() =>
-            new JobDataMessageContext(execution, SystemTextJsonMessageSerializer.Instance));
+            new JobDataMessageContext(execution, ServiceBusMetadataJson.ObjectDeserializer));
 
         Assert.Equal("The Id was not a Guid: not-a-guid", exception.Message);
     }
@@ -79,7 +79,7 @@ public sealed class JobDataMessageContextTests
     {
         JobExecutionContextImpl execution = CreateExecutionContext("single", new JobDataMap());
 
-        var context = new JobDataMessageContext(execution, SystemTextJsonMessageSerializer.Instance);
+        var context = new JobDataMessageContext(execution, ServiceBusMetadataJson.ObjectDeserializer);
         Guid? first = context.MessageId;
         Guid? second = context.MessageId;
         DateTime? firstSentTime = context.SentTime;

@@ -14,7 +14,7 @@ public sealed class SystemTextJsonExtensionsTests
         using JsonDocument document = JsonDocument.Parse("{\"name\":\"bob\",\"count\":3}");
 
         CountedMessage? result = document.RootElement.GetObject<CountedMessage>(
-            SystemTextJsonMessageSerializer.Options);
+            ServiceBusMetadataJson.Options);
 
         Assert.NotNull(result);
         Assert.Equal("bob", result.Name);
@@ -31,7 +31,7 @@ public sealed class SystemTextJsonExtensionsTests
             ["count"] = 3,
         };
 
-        CountedMessage? result = source.Transform<CountedMessage>(SystemTextJsonMessageSerializer.Options);
+        CountedMessage? result = source.Transform<CountedMessage>(ServiceBusMetadataJson.Options);
 
         Assert.NotNull(result);
         Assert.Equal("bob", result.Name);

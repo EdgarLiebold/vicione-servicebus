@@ -47,7 +47,7 @@ class MessagePackMessageBodySerializer :
 
         currentMessage = new Dictionary<string, object>(currentMessage, StringComparer.OrdinalIgnoreCase);
         var messageToMerge = message
-            .Transform<Dictionary<string, object>>(SystemTextJsonMessageSerializer.Options);
+            .Transform<Dictionary<string, object>>(ServiceBusMetadataJson.Options);
 
         if (messageToMerge is null)
         {

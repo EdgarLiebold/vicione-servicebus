@@ -4,12 +4,10 @@ using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
-using ViciOne.ServiceBus.Tests.Testing;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Serialization;
 
-[Collection(SystemTextJsonGlobalOptionsCollection.Name)]
 public sealed class SystemTextJsonExtensionDataTests
 {
     [Fact]
@@ -28,7 +26,6 @@ public sealed class SystemTextJsonExtensionDataTests
             .GetValidatedOptions()
             .OperationTimeout!.Value;
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        JsonSerializerOptions originalOptions = SystemTextJsonMessageSerializer.Options;
         var received = new TaskCompletionSource<ConsumeContext<ExtensibleMessage>>(
             TaskCreationOptions.RunContinuationsAsynchronously);
         var faulted = new TaskCompletionSource<ConsumeContext<ReceiveFault>>(
@@ -109,14 +106,7 @@ public sealed class SystemTextJsonExtensionDataTests
         }
         finally
         {
-            try
-            {
-                await harness.Stop().WaitAsync(operationTimeout, CancellationToken.None);
-            }
-            finally
-            {
-                SystemTextJsonMessageSerializer.Options = originalOptions;
-            }
+            await harness.Stop().WaitAsync(operationTimeout, CancellationToken.None);
         }
     }
 

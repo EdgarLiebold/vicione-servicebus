@@ -84,14 +84,14 @@ namespace ViciOne.ServiceBus.AzureServiceBusTransport
 
         static Task WriteSagaState(MessageSessionContext context, TSaga saga)
         {
-            return context.SetStateAsync(BinaryData.FromObjectAsJson(saga, SystemTextJsonMessageSerializer.Options));
+            return context.SetStateAsync(BinaryData.FromObjectAsJson(saga, ServiceBusMetadataJson.Options));
         }
 
         static async Task<TSaga> ReadSagaState(MessageSessionContext context)
         {
             var state = await context.GetStateAsync().ConfigureAwait(false);
 
-            return state?.ToObjectFromJson<TSaga>(SystemTextJsonMessageSerializer.Options);
+            return state?.ToObjectFromJson<TSaga>(ServiceBusMetadataJson.Options);
         }
     }
 }

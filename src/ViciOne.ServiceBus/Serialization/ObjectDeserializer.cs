@@ -1,63 +1,39 @@
 #nullable enable
 namespace ViciOne.ServiceBus.Serialization
 {
-    using System.Threading;
-
-
+    /// <summary>
+    /// Converts ServiceBus-owned infrastructure values using the stable metadata codec. This helper intentionally
+    /// has no mutable or ambient serializer state; message payload conversion belongs to the concrete SerializerContext.
+    /// </summary>
     public static class ObjectDeserializer
     {
-        static IObjectDeserializer? _serializer = SystemTextJsonMessageSerializer.Instance;
-
-        static readonly AsyncLocal<IObjectDeserializer?> _currentSerializer = new AsyncLocal<IObjectDeserializer?>();
-
-        public static IObjectDeserializer? Default
-        {
-            set => _serializer = value ?? SystemTextJsonMessageSerializer.Instance;
-        }
-
-        public static IObjectDeserializer Current
-        {
-            set => _currentSerializer.Value = value;
-        }
-
         public static string? Serialize(object? value)
         {
-            if (value == null)
-                return null;
-
-            var serializer = _currentSerializer.Value ?? _serializer ?? throw new ConfigurationException("No JSON serializer configured");
-
-            return serializer.SerializeObject(value).GetString();
+            return value == null
+                ? null
+                : ServiceBusMetadataJson.ObjectDeserializer.SerializeObject(value).GetString();
         }
 
         public static T? Deserialize<T>(object? value, T? defaultValue = null)
             where T : class
         {
-            switch (value)
+            return value switch
             {
-                case null:
-                case string text when string.IsNullOrWhiteSpace(text):
-                    return defaultValue;
-            }
-
-            var serializer = _currentSerializer.Value ?? _serializer ?? throw new ConfigurationException("No JSON serializer configured");
-
-            return serializer.DeserializeObject<T>(value);
+                null => defaultValue,
+                string text when string.IsNullOrWhiteSpace(text) => defaultValue,
+                _ => ServiceBusMetadataJson.ObjectDeserializer.DeserializeObject<T>(value, defaultValue)
+            };
         }
 
         public static T? Deserialize<T>(object? value, T? defaultValue = default)
             where T : struct
         {
-            switch (value)
+            return value switch
             {
-                case null:
-                case string text when string.IsNullOrWhiteSpace(text):
-                    return defaultValue;
-            }
-
-            var serializer = _currentSerializer.Value ?? _serializer ?? throw new ConfigurationException("No JSON serializer configured");
-
-            return serializer.DeserializeObject<T>(value);
+                null => defaultValue,
+                string text when string.IsNullOrWhiteSpace(text) => defaultValue,
+                _ => ServiceBusMetadataJson.ObjectDeserializer.DeserializeObject<T>(value, defaultValue)
+            };
         }
     }
 }

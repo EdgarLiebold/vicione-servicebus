@@ -4,6 +4,7 @@ namespace ViciOne.ServiceBus.Configuration
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Mime;
+    using System.Text.Json;
 
 
     public class EndpointConfiguration :
@@ -251,6 +252,11 @@ namespace ViciOne.ServiceBus.Configuration
         public void AddDeserializer(ISerializerFactory factory, bool isDefault = false)
         {
             Serialization.AddDeserializer(factory, isDefault);
+        }
+
+        public void ConfigureSystemTextJsonSerializerOptions(Func<JsonSerializerOptions, JsonSerializerOptions> configure)
+        {
+            Serialization.ConfigureSystemTextJsonSerializerOptions(configure);
         }
 
         public void ClearSerialization()

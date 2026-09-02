@@ -18,7 +18,7 @@ public sealed class SystemTextJsonRawMessageBodyTests
         MessageBodyFirstAccessor firstAccessor)
     {
         var message = new BodyMessage(27, "Grüße");
-        var options = new JsonSerializerOptions(SystemTextJsonMessageSerializer.Options);
+        var options = new JsonSerializerOptions(ServiceBusMetadataJson.Options);
         byte[] expectedBytes = JsonSerializer.SerializeToUtf8Bytes(message, options);
         string expectedText = JsonSerializer.Serialize(message, options);
         var context = new MessageSendContext<BodyMessage>(message);

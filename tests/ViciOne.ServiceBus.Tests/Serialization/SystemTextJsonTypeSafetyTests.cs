@@ -14,7 +14,7 @@ public sealed class SystemTextJsonTypeSafetyTests
     [RequirementCoverage("REQ-VSB-SYSTEM-TEXT-JSON-TYPE-SAFETY", "payload-type-marker-is-data")]
     public void PayloadTypeMarker_CannotChooseTheInstantiatedType()
     {
-        var serializer = new SystemTextJsonMessageSerializer();
+        var serializer = new SystemTextJsonMessageSerializer(ServiceBusMetadataJson.Options);
         using JsonDocument document = JsonDocument.Parse(HostileBody);
 
         Assert.True(

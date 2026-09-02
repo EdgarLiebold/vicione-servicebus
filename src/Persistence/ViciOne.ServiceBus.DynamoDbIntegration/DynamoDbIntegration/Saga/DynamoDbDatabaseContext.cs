@@ -44,7 +44,7 @@ namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga
             if (value == null)
                 return null;
 
-            TSaga instance = JsonSerializer.Deserialize<TSaga>(value.Properties, SystemTextJsonMessageSerializer.Options);
+            TSaga instance = JsonSerializer.Deserialize<TSaga>(value.Properties, ServiceBusMetadataJson.Options);
             if (instance == null)
                 throw new SerializationException($"The DynamoDB saga payload for {typeof(TSaga).Name} was null.");
 
@@ -125,7 +125,7 @@ namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga
             {
                 CorrelationId = _options.FormatSagaKey(instance.CorrelationId),
                 VersionNumber = instance.Version,
-                Properties = JsonSerializer.Serialize(instance, SystemTextJsonMessageSerializer.Options),
+                Properties = JsonSerializer.Serialize(instance, ServiceBusMetadataJson.Options),
                 ExpirationEpochSeconds = GetExpirationEpochSeconds()
             };
         }

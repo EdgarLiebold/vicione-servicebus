@@ -26,7 +26,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration
         {
             ArgumentNullException.ThrowIfNull(context);
             var jobData = context.MergedJobDataMap;
-            var messageContext = new JobDataMessageContext(context, SystemTextJsonMessageSerializer.Instance);
+            var messageContext = new JobDataMessageContext(context, ServiceBusMetadataJson.ObjectDeserializer);
 
             var contentType = new ContentType(jobData.GetString("ContentType")!);
             var destinationAddress = new Uri(jobData.GetString("Destination")!);

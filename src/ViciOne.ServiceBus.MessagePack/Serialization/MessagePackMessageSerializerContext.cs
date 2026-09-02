@@ -56,7 +56,7 @@ public class MessagePackMessageSerializerContext :
                 var messageAsDictionary = InternalMessagePackResolver
                     .Deserialize<Dictionary<string, object>>(messagePackSerializedObjectBuffer);
 
-                message = messageAsDictionary.Transform(messageType, SystemTextJsonMessageSerializer.Options);
+                message = messageAsDictionary.Transform(messageType, ServiceBusMetadataJson.Options);
             }
 
             return message != default;
@@ -99,7 +99,7 @@ public class MessagePackMessageSerializerContext :
             return new Dictionary<string, object>(0, StringComparer.OrdinalIgnoreCase);
 
         // We serialize internally using JSON.
-        return message.Transform<Dictionary<string, object>>(SystemTextJsonMessageSerializer.Options)
+        return message.Transform<Dictionary<string, object>>(ServiceBusMetadataJson.Options)
             ?? new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
     }
 }

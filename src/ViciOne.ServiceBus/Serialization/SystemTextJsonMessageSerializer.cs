@@ -4,12 +4,9 @@ namespace ViciOne.ServiceBus.Serialization
     using System;
     using System.Net.Mime;
     using System.Runtime.Serialization;
-    using System.Text.Encodings.Web;
     using System.Text.Json;
-    using System.Text.Json.Serialization.Metadata;
     using Initializers;
     using Initializers.TypeConverters;
-    using JsonConverters;
 
 
     public class SystemTextJsonMessageSerializer :
@@ -19,41 +16,19 @@ namespace ViciOne.ServiceBus.Serialization
     {
         public static readonly ContentType JsonContentType = new ContentType("application/vnd.vicione.servicebus+json");
 
-        public static JsonSerializerOptions Options;
-
-        public static readonly SystemTextJsonMessageSerializer Instance = new SystemTextJsonMessageSerializer();
+        readonly JsonSerializerOptions _options;
 
         static SystemTextJsonMessageSerializer()
         {
             GlobalTopology.MarkMessageTypeNotConsumable(typeof(JsonElement));
-
-            Options = new JsonSerializerOptions
-            {
-                AllowTrailingCommas = true,
-                PropertyNameCaseInsensitive = true,
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                ReadCommentHandling = JsonCommentHandling.Skip,
-                // Broker wire data, not something a person reads. Indenting padded every message with
-                // whitespace that costs transfer and storage on every hop and is never looked at.
-                WriteIndented = false,
-                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-
-                // Set the TypeInfoResolver property based on whether reflection-based is enabled.
-                // If reflection is enabled, combine the default resolver (reflection-based) context with the custom serializer context
-                // Otherwise, use only the custom serializer context.
-                // User can overwrite it directly or by modifying the TypeInfoResolverChain.
-                TypeInfoResolver = JsonSerializer.IsReflectionEnabledByDefault
-                    ? JsonTypeInfoResolver.Combine(SystemTextJsonSerializationContext.Default, new DefaultJsonTypeInfoResolver())
-                    : SystemTextJsonSerializationContext.Default
-            };
-
-            Options.Converters.Add(new StringDecimalJsonConverter());
-            Options.Converters.Add(new SystemTextJsonMessageDataConverter());
-            Options.Converters.Add(new SystemTextJsonConverterFactory());
         }
 
-        public SystemTextJsonMessageSerializer(ContentType? contentType = null)
+        public SystemTextJsonMessageSerializer(JsonSerializerOptions options, ContentType? contentType = null)
         {
+            _options = options ?? throw new ArgumentNullException(nameof(options));
+            if (!_options.IsReadOnly)
+                throw new ArgumentException("The serializer requires an immutable JsonSerializerOptions snapshot.", nameof(options));
+
             ContentType = contentType ?? JsonContentType;
         }
 
@@ -76,10 +51,10 @@ namespace ViciOne.ServiceBus.Serialization
             try
             {
                 JsonElement? bodyElement = body is JsonMessageBody jsonMessageBody
-                    ? jsonMessageBody.GetJsonElement(Options)
-                    : JsonSerializer.Deserialize<JsonElement>(body.GetBytes(), Options);
+                    ? jsonMessageBody.GetJsonElement(_options)
+                    : JsonSerializer.Deserialize<JsonElement>(body.GetBytes(), _options);
 
-                var envelope = bodyElement?.Deserialize<MessageEnvelope>(Options);
+                var envelope = bodyElement?.Deserialize<MessageEnvelope>(_options);
                 if (envelope == null)
                     throw new SerializationException("Message envelope not found");
 
@@ -87,7 +62,7 @@ namespace ViciOne.ServiceBus.Serialization
 
                 var messageTypes = envelope.MessageType ?? [];
 
-                return new SystemTextJsonSerializerContext(this, Options, ContentType, messageContext, messageTypes, envelope);
+                return new SystemTextJsonSerializerContext(this, _options, ContentType, messageContext, messageTypes, envelope);
             }
             catch (SerializationException)
             {
@@ -107,7 +82,7 @@ namespace ViciOne.ServiceBus.Serialization
         public MessageBody GetMessageBody<T>(SendContext<T> context)
             where T : class
         {
-            return new SystemTextJsonMessageBody<T>(context, Options);
+            return new SystemTextJsonMessageBody<T>(context, _options);
         }
 
         public T? DeserializeObject<T>(object? value, T? defaultValue = default)
@@ -125,16 +100,16 @@ namespace ViciOne.ServiceBus.Serialization
                     && typeConverter.TryConvert(text, out var result):
                     return result;
                 case string text:
-                    return JsonSerializer.Deserialize<JsonElement>(text, Options).GetObject<T>(Options);
+                    return JsonSerializer.Deserialize<JsonElement>(text, _options).GetObject<T>(_options);
                 case JsonElement jsonElement:
-                    return jsonElement.GetObject<T>(Options);
+                    return jsonElement.GetObject<T>(_options);
             }
 
-            var element = JsonSerializer.SerializeToElement(value, Options);
+            var element = JsonSerializer.SerializeToElement(value, _options);
 
             return element.ValueKind == JsonValueKind.Null
                 ? defaultValue
-                : element.GetObject<T>(Options);
+                : element.GetObject<T>(_options);
         }
 
         public T? DeserializeObject<T>(object? value, T? defaultValue = null)
@@ -152,16 +127,16 @@ namespace ViciOne.ServiceBus.Serialization
                     && typeConverter.TryConvert(text, out var result):
                     return result;
                 case string text:
-                    return JsonSerializer.Deserialize<T>(text, Options);
+                    return JsonSerializer.Deserialize<T>(text, _options);
                 case JsonElement jsonElement:
-                    return jsonElement.Deserialize<T>(Options);
+                    return jsonElement.Deserialize<T>(_options);
             }
 
-            var element = JsonSerializer.SerializeToElement(value, Options);
+            var element = JsonSerializer.SerializeToElement(value, _options);
 
             return element.ValueKind == JsonValueKind.Null
                 ? defaultValue
-                : element.Deserialize<T>(Options);
+                : element.Deserialize<T>(_options);
         }
 
         public MessageBody SerializeObject(object? value)
@@ -169,7 +144,7 @@ namespace ViciOne.ServiceBus.Serialization
             if (value == null)
                 return new EmptyMessageBody();
 
-            return new SystemTextJsonObjectMessageBody(value, Options);
+            return new SystemTextJsonObjectMessageBody(value, _options);
         }
     }
 }

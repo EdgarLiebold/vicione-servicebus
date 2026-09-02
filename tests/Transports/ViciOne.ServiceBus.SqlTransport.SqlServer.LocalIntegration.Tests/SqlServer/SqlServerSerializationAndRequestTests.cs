@@ -20,7 +20,6 @@ public sealed class SqlServerSerializationAndRequestTests
         string queueName = fixture.Name("json-input");
         var elementReceived = NewObservation<ConsumeContext<WithElement>>();
         var objectReceived = NewObservation<ConsumeContext<WithObject>>();
-        JsonSerializerOptions originalOptions = SystemTextJsonMessageSerializer.Options;
         IBusControl bus = SqlBusFactory.Create(configurator =>
         {
             fixture.ConfigureHost(configurator);
@@ -88,15 +87,8 @@ public sealed class SqlServerSerializationAndRequestTests
         }
         finally
         {
-            try
-            {
-                if (started)
-                    await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
-            }
-            finally
-            {
-                SystemTextJsonMessageSerializer.Options = originalOptions;
-            }
+            if (started)
+                await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
         }
     }
 

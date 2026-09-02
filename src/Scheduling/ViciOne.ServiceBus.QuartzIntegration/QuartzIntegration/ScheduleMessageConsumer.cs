@@ -152,13 +152,13 @@ namespace ViciOne.ServiceBus.QuartzIntegration
             PreserveTraceHeader(context.Headers, headers, DiagnosticHeaders.ActivityCorrelationContext);
             PreserveTraceHeader(context.Headers, headers, DiagnosticHeaders.ActivityPropagation);
             if (headers.Any())
-                builder = builder.UsingJobData("HeadersAsJson", JsonSerializer.Serialize(headers, SystemTextJsonMessageSerializer.Options));
+                builder = builder.UsingJobData("HeadersAsJson", JsonSerializer.Serialize(headers, ServiceBusMetadataJson.Options));
 
             if (context.ReceiveContext.TryGetPayload<TransportReceiveContext>(out var transportReceiveContext))
             {
                 IDictionary<string, object>? properties = transportReceiveContext.GetTransportProperties();
                 if (properties != null)
-                    builder = builder.UsingJobData("TransportProperties", JsonSerializer.Serialize(properties, SystemTextJsonMessageSerializer.Options));
+                    builder = builder.UsingJobData("TransportProperties", JsonSerializer.Serialize(properties, ServiceBusMetadataJson.Options));
             }
 
             var trigger = builder

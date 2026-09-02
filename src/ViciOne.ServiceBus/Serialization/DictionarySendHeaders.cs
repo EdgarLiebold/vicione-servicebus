@@ -82,13 +82,13 @@ namespace ViciOne.ServiceBus.Serialization
         public T? Get<T>(string key, T? defaultValue)
             where T : class
         {
-            return SystemTextJsonMessageSerializer.Instance.GetValue((IReadOnlyDictionary<string, object>)_headers, key, defaultValue);
+            return ServiceBusMetadataJson.ObjectDeserializer.GetValue((IReadOnlyDictionary<string, object>)_headers, key, defaultValue);
         }
 
         public T? Get<T>(string key, T? defaultValue)
             where T : struct
         {
-            return SystemTextJsonMessageSerializer.Instance.GetValue((IReadOnlyDictionary<string, object>)_headers, key, defaultValue);
+            return ServiceBusMetadataJson.ObjectDeserializer.GetValue((IReadOnlyDictionary<string, object>)_headers, key, defaultValue);
         }
 
         public IEnumerator<HeaderValue> GetEnumerator()

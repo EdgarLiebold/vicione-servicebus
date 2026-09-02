@@ -17,13 +17,13 @@ public sealed class SystemTextJsonDecimalTests
     {
         string json = JsonSerializer.Serialize(
             new DecimalMessage { Decimal = decimal.MaxValue },
-            SystemTextJsonMessageSerializer.Options);
+            ServiceBusMetadataJson.Options);
 
         using JsonDocument document = JsonDocument.Parse(json);
         JsonProperty property = Assert.Single(document.RootElement.EnumerateObject());
         DecimalMessage? restored = JsonSerializer.Deserialize<DecimalMessage>(
             $$"""{"decimal":"{{MaximumDecimalText}}"}""",
-            SystemTextJsonMessageSerializer.Options);
+            ServiceBusMetadataJson.Options);
 
         Assert.Equal("decimal", property.Name);
         Assert.Equal(JsonValueKind.String, property.Value.ValueKind);

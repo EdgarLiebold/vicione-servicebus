@@ -21,7 +21,7 @@ public sealed class SystemTextJsonMessageBodyTests
         MessageBodyFirstAccessor firstAccessor)
     {
         var message = new BodyMessage(27, "Grüße");
-        var options = new JsonSerializerOptions(SystemTextJsonMessageSerializer.Options);
+        var options = new JsonSerializerOptions(ServiceBusMetadataJson.Options);
         var envelope = new JsonMessageEnvelope
         {
             MessageId = MessageId.ToString("D"),

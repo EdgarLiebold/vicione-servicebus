@@ -164,7 +164,7 @@ namespace ViciOne.ServiceBus.Courier
             {
                 DestinationAddress = destinationAddress;
 
-                Serializer = SystemTextJsonMessageSerializer.Instance;
+                Serializer = ServiceBusMetadataJson.MessageSerializer;
             }
 
             public MessageEnvelope GetMessageEnvelope()

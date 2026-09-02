@@ -15,7 +15,7 @@ namespace ViciOne.ServiceBus.MessageData.PropertyProviders
 
         public ObjectMessageDataReader()
         {
-            _converter = new SystemTextJsonObjectMessageDataConverter<T>(SystemTextJsonMessageSerializer.Options);
+            _converter = new SystemTextJsonObjectMessageDataConverter<T>(ServiceBusMetadataJson.Options);
         }
 
         public MessageData<T> GetMessageData(IMessageDataRepository repository, Uri address, CancellationToken cancellationToken)

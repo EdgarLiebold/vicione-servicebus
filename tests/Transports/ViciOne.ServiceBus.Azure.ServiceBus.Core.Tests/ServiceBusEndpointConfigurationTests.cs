@@ -66,7 +66,7 @@ public sealed class ServiceBusEndpointConfigurationTests
     {
         JsonNode probe = JsonSerializer.SerializeToNode(
             bus.GetProbeResult(TestContext.Current.CancellationToken),
-            SystemTextJsonMessageSerializer.Options)!;
+            ServiceBusMetadataJson.Options)!;
         return ReceiveEndpoints(probe)
             .Select(endpoint => endpoint["receiveTransport"]!["prefetchCount"]!.GetValue<int>())
             .ToArray();
@@ -76,7 +76,7 @@ public sealed class ServiceBusEndpointConfigurationTests
     {
         JsonObject[] endpoints = ReceiveEndpoints(JsonSerializer.SerializeToNode(
             bus.GetProbeResult(TestContext.Current.CancellationToken),
-            SystemTextJsonMessageSerializer.Options)!).ToArray();
+            ServiceBusMetadataJson.Options)!).ToArray();
         JsonObject configured = endpoints[0];
         JsonObject busEndpoint = endpoints[1];
         return (

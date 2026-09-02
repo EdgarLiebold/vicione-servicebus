@@ -16,7 +16,7 @@ public sealed class SystemTextJsonDateTimeTests
     {
         StringTimestampMessage? result = JsonSerializer.Deserialize<StringTimestampMessage>(
             Json,
-            SystemTextJsonMessageSerializer.Options);
+            ServiceBusMetadataJson.Options);
 
         Assert.NotNull(result);
         Assert.Equal(IsoTimestamp, result.IsoDate);
@@ -28,7 +28,7 @@ public sealed class SystemTextJsonDateTimeTests
     {
         DateTimeTimestampMessage? result = JsonSerializer.Deserialize<DateTimeTimestampMessage>(
             Json,
-            SystemTextJsonMessageSerializer.Options);
+            ServiceBusMetadataJson.Options);
 
         Assert.NotNull(result);
         Assert.Equal(DateTimeKind.Utc, result.IsoDate.Kind);

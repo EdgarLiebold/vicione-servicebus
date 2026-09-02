@@ -20,7 +20,7 @@ public sealed class ServiceBusSessionSagaProbeTests
 
         JsonNode probe = JsonSerializer.SerializeToNode(
             bus.GetProbeResult(TestContext.Current.CancellationToken),
-            Serialization.SystemTextJsonMessageSerializer.Options)!;
+            Serialization.ServiceBusMetadataJson.Options)!;
         JsonNode receiveEndpoints = probe["results"]!["bus"]!["host"]!["receiveEndpoint"]!;
         JsonObject[] endpoints = receiveEndpoints is JsonArray array
             ? array.Select(value => value!.AsObject()).ToArray()

@@ -30,7 +30,7 @@ public static class AzureFunctionsTestExtensions
     public static Task HandleConsumer<TConsumer>(this ITestHarness harness, object message)
         where TConsumer : class, IConsumer
     {
-        var body = SystemTextJsonMessageSerializer.Instance.SerializeObject(message);
+        var body = ServiceBusMetadataJson.ObjectDeserializer.SerializeObject(message);
 
         var messageBody = new AmqpMessageBody([new BinaryData(body.GetBytes()).ToMemory()]);
         var annotatedMessage = new AmqpAnnotatedMessage(messageBody)

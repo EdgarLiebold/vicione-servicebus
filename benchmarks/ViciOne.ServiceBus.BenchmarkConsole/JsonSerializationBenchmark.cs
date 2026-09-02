@@ -10,9 +10,14 @@ namespace ViciOne.ServiceBus.BenchmarkConsole
     public class JsonSerializationBenchmark
     {
         readonly MessageSendContext<AverageMessage> _averageMessageSendContext;
+        readonly SystemTextJsonMessageSerializer _serializer;
 
         public JsonSerializationBenchmark()
         {
+            var options = SystemTextJsonSerializerOptions.CreateDefault();
+            options.MakeReadOnly();
+            _serializer = new SystemTextJsonMessageSerializer(options);
+
             _averageMessageSendContext = new MessageSendContext<AverageMessage>(new AverageMessage
             {
                 CorrelationId = NewId.NextGuid(),
@@ -35,13 +40,13 @@ namespace ViciOne.ServiceBus.BenchmarkConsole
         [Benchmark(Description = "System.Text.Json byte[]")]
         public byte[] SystemTextJson()
         {
-            return SystemTextJsonMessageSerializer.Instance.GetMessageBody(_averageMessageSendContext).GetBytes();
+            return _serializer.GetMessageBody(_averageMessageSendContext).GetBytes();
         }
 
         [Benchmark(Description = "System.Text.Json string")]
         public string SystemTextJsonString()
         {
-            return SystemTextJsonMessageSerializer.Instance.GetMessageBody(_averageMessageSendContext).GetString();
+            return _serializer.GetMessageBody(_averageMessageSendContext).GetString();
         }
     }
 

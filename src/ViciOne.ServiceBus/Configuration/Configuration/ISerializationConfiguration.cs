@@ -1,6 +1,8 @@
 namespace ViciOne.ServiceBus.Configuration
 {
+    using System;
     using System.Net.Mime;
+    using System.Text.Json;
 
 
     public interface ISerializationConfiguration :
@@ -19,6 +21,12 @@ namespace ViciOne.ServiceBus.Configuration
         void AddSerializer(ISerializerFactory factory, bool isSerializer = true);
 
         void AddDeserializer(ISerializerFactory factory, bool isDefault = false);
+
+        /// <summary>
+        /// Adds a local System.Text.Json configuration transform. The effective options are materialized as an immutable
+        /// snapshot for this bus or receive endpoint when the serializer collection is built.
+        /// </summary>
+        void ConfigureSystemTextJsonSerializerOptions(Func<JsonSerializerOptions, JsonSerializerOptions> configure);
 
         /// <summary>
         /// Clear the configuration, removing all deserializers, serializers, and breaking the

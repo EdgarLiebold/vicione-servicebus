@@ -253,7 +253,7 @@ public sealed class MessageJournalIntegrationTests
     {
         using JsonDocument document = JsonDocument.Parse(entry.Body);
         using JsonDocument expectedDocument = JsonDocument.Parse(
-            JsonSerializer.Serialize(expected, SystemTextJsonMessageSerializer.Options));
+            JsonSerializer.Serialize(expected, ServiceBusMetadataJson.Options));
         JsonElement message = document.RootElement.GetProperty("message");
 
         Assert.True(JsonElement.DeepEquals(expectedDocument.RootElement, message),

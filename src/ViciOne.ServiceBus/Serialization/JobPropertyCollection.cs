@@ -36,7 +36,7 @@ public class JobPropertyCollection :
     {
         return _properties == null
             ? defaultValue
-            : SystemTextJsonMessageSerializer.Instance.GetValue((IReadOnlyDictionary<string, object>)_properties, key, defaultValue);
+            : ServiceBusMetadataJson.ObjectDeserializer.GetValue((IReadOnlyDictionary<string, object>)_properties, key, defaultValue);
     }
 
     public T? Get<T>(string key, T? defaultValue = default)
@@ -44,7 +44,7 @@ public class JobPropertyCollection :
     {
         return _properties == null
             ? defaultValue
-            : SystemTextJsonMessageSerializer.Instance.GetValue((IReadOnlyDictionary<string, object>)_properties, key, defaultValue);
+            : ServiceBusMetadataJson.ObjectDeserializer.GetValue((IReadOnlyDictionary<string, object>)_properties, key, defaultValue);
     }
 
     public ISetPropertyCollection Set(string key, string? value)

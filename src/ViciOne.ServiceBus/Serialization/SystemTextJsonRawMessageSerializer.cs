@@ -14,11 +14,18 @@ namespace ViciOne.ServiceBus.Serialization
     {
         public static readonly ContentType JsonContentType = new ContentType("application/json");
 
-        readonly RawSerializerOptions _options;
+        readonly IObjectDeserializer _objectDeserializer;
+        readonly JsonSerializerOptions _serializerOptions;
+        readonly RawSerializerOptions _rawOptions;
 
-        public SystemTextJsonRawMessageSerializer(RawSerializerOptions options = RawSerializerOptions.Default)
+        public SystemTextJsonRawMessageSerializer(JsonSerializerOptions serializerOptions, RawSerializerOptions rawOptions = RawSerializerOptions.Default)
         {
-            _options = options;
+            _serializerOptions = serializerOptions ?? throw new ArgumentNullException(nameof(serializerOptions));
+            if (!_serializerOptions.IsReadOnly)
+                throw new ArgumentException("The serializer requires an immutable JsonSerializerOptions snapshot.", nameof(serializerOptions));
+
+            _rawOptions = rawOptions;
+            _objectDeserializer = new SystemTextJsonMessageSerializer(_serializerOptions);
         }
 
         public ContentType ContentType => JsonContentType;
@@ -41,25 +48,22 @@ namespace ViciOne.ServiceBus.Serialization
             {
                 JsonElement? bodyElement;
                 if (body is JsonMessageBody jsonMessageBody)
-                    bodyElement = jsonMessageBody.GetJsonElement(SystemTextJsonMessageSerializer.Options);
+                    bodyElement = jsonMessageBody.GetJsonElement(_serializerOptions);
                 else
                 {
                     var bytes = body.GetBytes();
                     bodyElement = bytes.Length > 0
-                        ? JsonSerializer.Deserialize<JsonElement>(bytes, SystemTextJsonMessageSerializer.Options)
+                        ? JsonSerializer.Deserialize<JsonElement>(bytes, _serializerOptions)
                         : null;
                 }
 
                 bodyElement ??= JsonDocument.Parse("{}").RootElement;
 
                 var messageTypes = headers.GetMessageTypes();
+                var messageContext = new RawMessageContext(headers, destinationAddress, _rawOptions);
 
-                var messageContext = new RawMessageContext(headers, destinationAddress, _options);
-
-                var serializerContext = new SystemTextJsonRawSerializerContext(SystemTextJsonMessageSerializer.Instance,
-                    SystemTextJsonMessageSerializer.Options, ContentType, messageContext, messageTypes, _options, bodyElement.Value);
-
-                return serializerContext;
+                return new SystemTextJsonRawSerializerContext(_objectDeserializer, _serializerOptions, ContentType, messageContext, messageTypes, _rawOptions,
+                    bodyElement.Value);
             }
             catch (SerializationException)
             {
@@ -67,7 +71,7 @@ namespace ViciOne.ServiceBus.Serialization
             }
             catch (Exception ex)
             {
-                throw new SerializationException("An error occured while deserializing the message enveloper", ex);
+                throw new SerializationException("An error occurred while deserializing the raw message envelope", ex);
             }
         }
 
@@ -79,10 +83,10 @@ namespace ViciOne.ServiceBus.Serialization
         public MessageBody GetMessageBody<T>(SendContext<T> context)
             where T : class
         {
-            if (_options.HasFlag(RawSerializerOptions.AddTransportHeaders))
+            if (_rawOptions.HasFlag(RawSerializerOptions.AddTransportHeaders))
                 SetRawMessageHeaders(context);
 
-            return new SystemTextJsonRawMessageBody<T>(context, SystemTextJsonMessageSerializer.Options);
+            return new SystemTextJsonRawMessageBody<T>(context, _serializerOptions);
         }
     }
 }

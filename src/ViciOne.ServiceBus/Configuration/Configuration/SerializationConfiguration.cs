@@ -5,6 +5,7 @@ namespace ViciOne.ServiceBus.Configuration
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Mime;
+    using System.Text.Json;
     using Serialization;
     using Util;
 
@@ -14,6 +15,7 @@ namespace ViciOne.ServiceBus.Configuration
     {
         readonly Lazy<ISerialization> _collection;
         readonly IDictionary<string, ISerializerFactory> _deserializers;
+        readonly List<Func<JsonSerializerOptions, JsonSerializerOptions>> _jsonOptionsConfigurators;
         readonly IDictionary<string, ISerializerFactory> _serializers;
         ContentType? _defaultContentType;
         ContentType? _serializerContentType;
@@ -23,7 +25,8 @@ namespace ViciOne.ServiceBus.Configuration
         {
             _serializers = new Dictionary<string, ISerializerFactory>(StringComparer.OrdinalIgnoreCase);
             _deserializers = new Dictionary<string, ISerializerFactory>(StringComparer.OrdinalIgnoreCase);
-            _collection = new Lazy<ISerialization>(() => CreateCollection());
+            _jsonOptionsConfigurators = [];
+            _collection = new Lazy<ISerialization>(CreateCollection);
 
             AddSystemTextJson();
         }
@@ -32,7 +35,8 @@ namespace ViciOne.ServiceBus.Configuration
         {
             _serializers = new Dictionary<string, ISerializerFactory>(StringComparer.OrdinalIgnoreCase);
             _deserializers = new Dictionary<string, ISerializerFactory>(StringComparer.OrdinalIgnoreCase);
-            _collection = new Lazy<ISerialization>(() => CreateCollection());
+            _jsonOptionsConfigurators = [];
+            _collection = new Lazy<ISerialization>(CreateCollection);
 
             _source = source;
         }
@@ -41,9 +45,7 @@ namespace ViciOne.ServiceBus.Configuration
         {
             set
             {
-                if (_collection.IsValueCreated)
-                    throw new ConfigurationException("The serializer collection was already created.");
-
+                EnsureMutable();
                 _defaultContentType = value;
             }
         }
@@ -52,44 +54,52 @@ namespace ViciOne.ServiceBus.Configuration
         {
             set
             {
-                if (_collection.IsValueCreated)
-                    throw new ConfigurationException("The serializer collection was already created.");
-
+                EnsureMutable();
                 _serializerContentType = value;
             }
         }
 
         public void Clear()
         {
+            EnsureMutable();
+
             _serializers.Clear();
             _deserializers.Clear();
+            _jsonOptionsConfigurators.Clear();
 
-            _defaultContentType = default;
-            _serializerContentType = default;
+            _defaultContentType = null;
+            _serializerContentType = null;
 
             _source = null;
         }
 
         public void AddSerializer(ISerializerFactory factory, bool isSerializer = true)
         {
-            if (_collection.IsValueCreated)
-                throw new ConfigurationException("The serializer collection was already created.");
+            ArgumentNullException.ThrowIfNull(factory);
+            EnsureMutable();
 
             _serializers[factory.ContentType.MediaType] = factory;
 
             if (isSerializer)
-                SerializerContentType = factory.ContentType;
+                _serializerContentType = factory.ContentType;
         }
 
         public void AddDeserializer(ISerializerFactory factory, bool isDefault = false)
         {
-            if (_collection.IsValueCreated)
-                throw new ConfigurationException("The serializer collection was already created.");
+            ArgumentNullException.ThrowIfNull(factory);
+            EnsureMutable();
 
             _deserializers[factory.ContentType.MediaType] = factory;
 
             if (isDefault)
-                DefaultContentType = factory.ContentType;
+                _defaultContentType = factory.ContentType;
+        }
+
+        public void ConfigureSystemTextJsonSerializerOptions(Func<JsonSerializerOptions, JsonSerializerOptions> configure)
+        {
+            ArgumentNullException.ThrowIfNull(configure);
+            EnsureMutable();
+            _jsonOptionsConfigurators.Add(configure);
         }
 
         public ISerializationConfiguration CreateSerializationConfiguration()
@@ -104,85 +114,109 @@ namespace ViciOne.ServiceBus.Configuration
 
         public IEnumerable<ValidationResult> Validate()
         {
-            IEnumerable<ISerializerFactory> serializers = _serializers.Values;
-            if (_source != null)
-            {
-                serializers = serializers.Concat(_source._serializers.Values)
-                    .Distinct((x, y) => x.ContentType.MediaType.Equals(y.ContentType.MediaType, StringComparison.OrdinalIgnoreCase));
-            }
-
-            var mediaTypes = serializers.Select(x => x.ContentType.MediaType).Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
-            if (mediaTypes.Length == 0)
+            var serializers = ResolveFactories(static x => x._serializers);
+            var serializerMediaTypes = serializers.Keys.ToArray();
+            if (serializerMediaTypes.Length == 0)
                 yield return this.Failure("Serializers", "must specify at least one serializer");
 
-            var serializerMediaType = _serializerContentType?.MediaType ?? _source?._serializerContentType?.MediaType
-                ?? (mediaTypes.Length == 1 ? mediaTypes[0] : default)
-                ?? throw new ConfigurationException("No serializer content type specified and more than one serializer was configured");
+            var serializerMediaType = ResolveSerializerContentType()?.MediaType
+                ?? (serializerMediaTypes.Length == 1 ? serializerMediaTypes[0] : null);
 
-            // The matching check used to sit inside the empty branch, so it only ever compared against an
-            // empty media type. A content type that was named but never registered therefore validated
-            // clean and failed much later, when the collection was created.
-            if (string.IsNullOrWhiteSpace(serializerMediaType))
-            {
-                if (mediaTypes.Length > 1)
-                    yield return this.Failure("SerializerContentType", "must be specified when more than one serializer is supported");
-            }
-            else if (!mediaTypes.Any(x => x.Equals(serializerMediaType, StringComparison.OrdinalIgnoreCase)))
+            if (serializerMediaType == null && serializerMediaTypes.Length > 1)
+                yield return this.Failure("SerializerContentType", "must be specified when more than one serializer is supported");
+            else if (serializerMediaType != null && !serializers.ContainsKey(serializerMediaType))
                 yield return this.Failure("SerializerContentType", "matching serializer was not added");
 
-            IEnumerable<ISerializerFactory> deserializers = _deserializers.Values;
-            if (_source != null)
-            {
-                deserializers = deserializers.Concat(_source._deserializers.Values)
-                    .Distinct((x, y) => x.ContentType.MediaType.Equals(y.ContentType.MediaType, StringComparison.OrdinalIgnoreCase));
-            }
-
-            mediaTypes = deserializers.Select(x => x.ContentType.MediaType).Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
-            if (mediaTypes.Length == 0)
+            var deserializers = ResolveFactories(static x => x._deserializers);
+            var deserializerMediaTypes = deserializers.Keys.ToArray();
+            if (deserializerMediaTypes.Length == 0)
                 yield return this.Failure("Deserializers", "must specify at least one deserializer");
 
-            var defaultMediaType = _defaultContentType?.MediaType ?? _source?._defaultContentType?.MediaType
-                ?? (mediaTypes.Length == 1 ? mediaTypes[0] : default)
-                ?? throw new ConfigurationException("No default content type specified and more than one deserializer was configured");
+            var defaultMediaType = ResolveDefaultContentType()?.MediaType
+                ?? (deserializerMediaTypes.Length == 1 ? deserializerMediaTypes[0] : null);
 
-            if (string.IsNullOrWhiteSpace(defaultMediaType))
-            {
-                if (mediaTypes.Length > 1)
-                    yield return this.Failure("DefaultContentType", "must be specified when more than one deserializer is supported");
-            }
-            else if (!mediaTypes.Any(x => x.Equals(defaultMediaType, StringComparison.OrdinalIgnoreCase)))
+            if (defaultMediaType == null && deserializerMediaTypes.Length > 1)
+                yield return this.Failure("DefaultContentType", "must be specified when more than one deserializer is supported");
+            else if (defaultMediaType != null && !deserializers.ContainsKey(defaultMediaType))
                 yield return this.Failure("DefaultContentType", "matching deserializer was not added");
         }
 
         ISerialization CreateCollection()
         {
-            IEnumerable<ISerializerFactory> serializers = _serializers.Values;
-            if (_source != null)
+            var serializers = ResolveFactories(static x => x._serializers);
+            var deserializers = ResolveFactories(static x => x._deserializers);
+            var jsonOptions = CreateJsonSerializerOptions();
+            var boundFactories = new Dictionary<ISerializerFactory, ISerializerFactory>(ReferenceEqualityComparer.Instance);
+
+            ISerializerFactory Bind(ISerializerFactory factory)
             {
-                serializers = serializers.Concat(_source._serializers.Values)
-                    .Distinct((x, y) => x.ContentType.MediaType.Equals(y.ContentType.MediaType, StringComparison.OrdinalIgnoreCase));
+                if (factory is not IJsonSerializerFactory jsonFactory)
+                    return factory;
+
+                if (boundFactories.TryGetValue(factory, out var boundFactory))
+                    return boundFactory;
+
+                boundFactory = jsonFactory.Bind(jsonOptions);
+                boundFactories.Add(factory, boundFactory);
+                return boundFactory;
             }
 
-            IMessageSerializer[] messageSerializers = serializers.Select(x => x.CreateSerializer()).ToArray();
-
-            var serializerContentType = _serializerContentType ?? _source?._serializerContentType
-                ?? (messageSerializers.Length == 1 ? messageSerializers[0].ContentType : default)
+            var messageSerializers = serializers.Values.Select(x => Bind(x).CreateSerializer()).ToArray();
+            var serializerContentType = ResolveSerializerContentType()
+                ?? (messageSerializers.Length == 1 ? messageSerializers[0].ContentType : null)
                 ?? throw new ConfigurationException("No serializer content type specified and more than one serializer was configured");
 
-            IEnumerable<ISerializerFactory> deserializers = _deserializers.Values;
-            if (_source != null)
-            {
-                deserializers = deserializers.Concat(_source._deserializers.Values)
-                    .Distinct((x, y) => x.ContentType.MediaType.Equals(y.ContentType.MediaType, StringComparison.OrdinalIgnoreCase));
-            }
-
-            IMessageDeserializer[] messageDeserializers = deserializers.Select(x => x.CreateDeserializer()).ToArray();
-
-            var defaultContentType = _defaultContentType ?? _source?._defaultContentType
-                ?? (messageDeserializers.Length == 1 ? messageDeserializers[0].ContentType : default)
+            var messageDeserializers = deserializers.Values.Select(x => Bind(x).CreateDeserializer()).ToArray();
+            var defaultContentType = ResolveDefaultContentType()
+                ?? (messageDeserializers.Length == 1 ? messageDeserializers[0].ContentType : null)
                 ?? throw new ConfigurationException("No default content type specified and more than one deserializer was configured");
 
             return new Serialization(messageSerializers, serializerContentType, messageDeserializers, defaultContentType);
+        }
+
+        JsonSerializerOptions CreateJsonSerializerOptions()
+        {
+            JsonSerializerOptions options = _source?.CreateJsonSerializerOptions()
+                ?? SystemTextJsonSerializerOptions.Freeze(SystemTextJsonSerializerOptions.CreateDefault());
+
+            foreach (var configure in _jsonOptionsConfigurators)
+            {
+                var candidate = configure(new JsonSerializerOptions(options))
+                    ?? throw new ConfigurationException(
+                        "The ConfigureJsonSerializerOptions callback returned null. It must return the options to use.");
+
+                options = SystemTextJsonSerializerOptions.Freeze(candidate);
+            }
+
+            return options;
+        }
+
+        Dictionary<string, ISerializerFactory> ResolveFactories(
+            Func<SerializationConfiguration, IDictionary<string, ISerializerFactory>> selector)
+        {
+            var result = _source?.ResolveFactories(selector)
+                ?? new Dictionary<string, ISerializerFactory>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var pair in selector(this))
+                result[pair.Key] = pair.Value;
+
+            return result;
+        }
+
+        ContentType? ResolveSerializerContentType()
+        {
+            return _serializerContentType ?? _source?.ResolveSerializerContentType();
+        }
+
+        ContentType? ResolveDefaultContentType()
+        {
+            return _defaultContentType ?? _source?.ResolveDefaultContentType();
+        }
+
+        void EnsureMutable()
+        {
+            if (_collection.IsValueCreated)
+                throw new ConfigurationException("The serializer collection was already created.");
         }
 
         void AddSystemTextJson()

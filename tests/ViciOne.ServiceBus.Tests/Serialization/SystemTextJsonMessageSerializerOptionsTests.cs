@@ -13,7 +13,7 @@ public sealed class SystemTextJsonMessageSerializerOptionsTests
     public void DefaultOptions_ProduceCompactEquivalentJson()
     {
         var value = new WireJsonSample(27, "Frank", new WireJsonDetail("a longer nested value"));
-        JsonSerializerOptions options = SystemTextJsonMessageSerializer.Options;
+        JsonSerializerOptions options = SystemTextJsonSerializerOptions.CreateDefault();
         var indentedOptions = new JsonSerializerOptions(options)
         {
             WriteIndented = true,

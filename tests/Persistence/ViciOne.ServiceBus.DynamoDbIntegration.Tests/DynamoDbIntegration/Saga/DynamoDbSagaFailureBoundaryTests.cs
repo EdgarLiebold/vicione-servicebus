@@ -29,7 +29,7 @@ public sealed class DynamoDbSagaFailureBoundaryTests
         {
             CorrelationId = requestedId.ToString("D"),
             VersionNumber = persisted.Version,
-            Properties = JsonSerializer.Serialize(persisted, SystemTextJsonMessageSerializer.Options),
+            Properties = JsonSerializer.Serialize(persisted, ServiceBusMetadataJson.Options),
         };
 
         switch (corruption)
@@ -39,7 +39,7 @@ public sealed class DynamoDbSagaFailureBoundaryTests
                 break;
             case "foreign-payload-id":
                 persisted.CorrelationId = foreignId;
-                row.Properties = JsonSerializer.Serialize(persisted, SystemTextJsonMessageSerializer.Options);
+                row.Properties = JsonSerializer.Serialize(persisted, ServiceBusMetadataJson.Options);
                 break;
             case "foreign-row-key":
                 row.CorrelationId = foreignId.ToString("D");

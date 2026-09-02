@@ -31,7 +31,6 @@ namespace ViciOne.ServiceBus.Serialization
 
             SupportedMessageTypes = supportedMessageTypes;
 
-            ObjectDeserializer.Current = deserializer;
         }
 
         public Guid? MessageId => _messageId ??= _context.MessageId;

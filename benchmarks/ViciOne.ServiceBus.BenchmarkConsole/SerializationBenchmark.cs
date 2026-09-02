@@ -20,7 +20,14 @@ public class SerializationBenchmark
     public SerializationBenchmark()
     {
         _messagepackSerializer = new MessagePackMessageSerializer();
-        _systemTextJsonSerializer = SystemTextJsonMessageSerializer.Instance;
+        _systemTextJsonSerializer = CreateSystemTextJsonSerializer();
+    }
+
+    static SystemTextJsonMessageSerializer CreateSystemTextJsonSerializer()
+    {
+        var options = SystemTextJsonSerializerOptions.CreateDefault();
+        options.MakeReadOnly();
+        return new SystemTextJsonMessageSerializer(options);
     }
 
     [GlobalSetup]

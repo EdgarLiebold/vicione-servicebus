@@ -247,7 +247,7 @@ namespace ViciOne.ServiceBus.Testing
 
             var bytes = await client.GetByteArrayAsync(builder.Uri);
 
-            var rootElement = JsonSerializer.Deserialize<JsonElement>(bytes, SystemTextJsonMessageSerializer.Options);
+            var rootElement = JsonSerializer.Deserialize<JsonElement>(bytes, ServiceBusMetadataJson.Options);
 
             var entities = rootElement.EnumerateArray().Select(x => x.GetProperty("name").GetString()).ToArray();
 

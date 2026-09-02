@@ -59,7 +59,7 @@ public sealed class AmazonSqsSentTimeTests
                         sentMessageId = context.MessageId;
                         sentTime = context.SentTime;
                         if (useRawJson)
-                            context.Serializer = new SystemTextJsonRawMessageSerializer(RawSerializerOptions.All);
+                            context.Serializer = new SystemTextJsonRawMessageSerializer(ServiceBusMetadataJson.Options, RawSerializerOptions.All);
                     },
                     cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);

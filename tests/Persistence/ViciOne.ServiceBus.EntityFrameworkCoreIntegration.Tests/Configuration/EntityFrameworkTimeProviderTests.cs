@@ -48,14 +48,14 @@ public sealed class EntityFrameworkTimeProviderTests
                 .Options);
         var sendContext = new MessageSendContext<TimeMessage>(new TimeMessage("payload"))
         {
-            Serializer = SystemTextJsonMessageSerializer.Instance,
+            Serializer = ServiceBusMetadataJson.MessageSerializer,
             TimeToLive = TimeSpan.FromMinutes(5),
             Delay = TimeSpan.FromMinutes(2),
         };
 
         OutboxMessage message = OutboxMessageFactory.Create(
             sendContext,
-            SystemTextJsonMessageSerializer.Instance,
+            ServiceBusMetadataJson.ObjectDeserializer,
             timeProvider,
             outboxId: Guid.Parse("7d9cb098-bc59-4f7e-87ea-f98670543c3e"));
         dbContext.Add(message);

@@ -79,7 +79,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
 
                 OutboxMessage message = OutboxMessageFactory.Create(
                     context,
-                    SystemTextJsonMessageSerializer.Instance,
+                    ServiceBusMetadataJson.ObjectDeserializer,
                     _timeProvider,
                     outboxId: _outboxId);
                 _dbContext.Add(message);

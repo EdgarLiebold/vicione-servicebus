@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.SqlTransport
     public static class HostInfoCache
     {
         static readonly Lazy<string> _hostInfoJson =
-            new Lazy<string>(() => SystemTextJsonMessageSerializer.Instance.SerializeObject(HostMetadataCache.Host).GetString());
+            new Lazy<string>(() => ServiceBusMetadataJson.ObjectDeserializer.SerializeObject(HostMetadataCache.Host).GetString());
 
         public static string HostInfoJson => _hostInfoJson.Value;
     }

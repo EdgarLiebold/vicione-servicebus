@@ -40,7 +40,7 @@ namespace ViciOne.ServiceBus.Mediator.Contexts
             _publishTopology = configuration.Topology.Publish;
             _receiveObservers = configuration.ReceiveObservers;
 
-            _objectDeserializer = SystemTextJsonMessageSerializer.Instance;
+            _objectDeserializer = ServiceBusMetadataJson.ObjectDeserializer;
 
             _sendPipe = configuration.Send.CreatePipe();
             _publishSendEndpoint = new MediatorPublishSendEndpoint(this, configuration.Publish.CreatePipe());
