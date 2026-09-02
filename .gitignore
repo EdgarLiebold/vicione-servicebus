@@ -46,7 +46,6 @@ appsettings.Development.json
 node_modules
 *.iml
 *.log*
-!src/ViciOne.ServiceBus.TestFramework/ViciOne.ServiceBus.TestFramework.log4net.xml
 **/.testagent/
 !/.testagent/
 /.testagent/*

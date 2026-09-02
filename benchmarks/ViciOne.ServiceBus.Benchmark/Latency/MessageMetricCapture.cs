@@ -2,7 +2,6 @@ namespace ViciOneServiceBusBenchmark.Latency
 {
     using System;
     using System.Collections.Concurrent;
-    using System.Diagnostics;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -33,20 +32,24 @@ namespace ViciOneServiceBusBenchmark.Latency
         readonly long _messageCount;
         readonly TaskCompletionSource<TimeSpan> _sendCompleted;
         readonly ConcurrentDictionary<Guid, SentMessage> _sentMessages;
-        readonly Stopwatch _stopwatch;
+        readonly IBenchmarkMetricClock _clock;
         long _consumed;
         long _sent;
 
         public MessageMetricCapture(long messageCount)
+            : this(messageCount, new StopwatchBenchmarkMetricClock())
         {
+        }
+
+        internal MessageMetricCapture(long messageCount, IBenchmarkMetricClock clock)
+        {
+            _clock = clock ?? throw new ArgumentNullException(nameof(clock));
             _messageCount = messageCount;
 
             _consumedMessages = new ConcurrentBag<ConsumedMessage>();
             _sentMessages = new ConcurrentDictionary<Guid, SentMessage>();
             _sendCompleted = new TaskCompletionSource<TimeSpan>(TaskCreationOptions.RunContinuationsAsynchronously);
             _consumeCompleted = new TaskCompletionSource<TimeSpan>(TaskCreationOptions.RunContinuationsAsynchronously);
-
-            _stopwatch = Stopwatch.StartNew();
         }
 
         public Task<TimeSpan> SendCompleted => _sendCompleted.Task;
@@ -54,11 +57,11 @@ namespace ViciOneServiceBusBenchmark.Latency
 
         Task IReportConsumerMetric.Consumed<T>(Guid messageId)
         {
-            _consumedMessages.Add(new ConsumedMessage(messageId, _stopwatch.ElapsedTicks));
+            _consumedMessages.Add(new ConsumedMessage(messageId, _clock.ElapsedTicks));
 
             var consumed = Interlocked.Increment(ref _consumed);
             if (consumed == _messageCount)
-                _consumeCompleted.TrySetResult(_stopwatch.Elapsed);
+                _consumeCompleted.TrySetResult(_clock.Elapsed);
 
             return TaskUtil.Completed;
         }
@@ -73,7 +76,7 @@ namespace ViciOneServiceBusBenchmark.Latency
             if (send == null)
                 throw new ArgumentNullException(nameof(send));
 
-            var message = new SentMessage(_stopwatch.ElapsedTicks);
+            var message = new SentMessage(_clock.ElapsedTicks);
             if (!_sentMessages.TryAdd(messageId, message))
                 throw new InvalidOperationException($"The message {messageId} was already registered as sent.");
 
@@ -92,7 +95,7 @@ namespace ViciOneServiceBusBenchmark.Latency
             }
 
             if (!postSend)
-                message.TryObserveCompletion(_stopwatch.ElapsedTicks);
+                message.TryObserveCompletion(_clock.ElapsedTicks);
 
             if (message.TrySendReturned())
                 PublishSend();
@@ -104,7 +107,7 @@ namespace ViciOneServiceBusBenchmark.Latency
         /// </summary>
         public Task PostSend(Guid messageId)
         {
-            Complete(messageId, _stopwatch.ElapsedTicks);
+            Complete(messageId, _clock.ElapsedTicks);
 
             return TaskUtil.Completed;
         }
@@ -137,7 +140,7 @@ namespace ViciOneServiceBusBenchmark.Latency
         {
             var sent = Interlocked.Increment(ref _sent);
             if (sent == _messageCount)
-                _sendCompleted.TrySetResult(_stopwatch.Elapsed);
+                _sendCompleted.TrySetResult(_clock.Elapsed);
         }
 
         public MessageMetric[] GetMessageMetrics()

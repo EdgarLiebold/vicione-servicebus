@@ -3113,3 +3113,135 @@ restore/build/test and compact mutation/evidence cost is paid once for the whole
 - After every run the changed file was restored and checked against its frozen SHA-256. The final
   post-restore build is clean at zero warnings/errors and all 80 native SagaStateMachine cases pass
   with zero failures and zero skips.
+
+## Final native-test promotion research freeze (2026-09-02)
+
+### Remaining legacy inventory
+
+- The only executable NUnit test project left is
+  `benchmarks/ViciOne.ServiceBus.Benchmarks.Tests`: six source files, 75 materialized cases and an
+  exact frozen identity list in `build/verification/expected/benchmarks.txt`. Its production owners
+  are the benchmark executable and BenchmarkConsole; every behavior can move to the existing
+  `tests2/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests` xUnit-v4/MTP project.
+- `src/ViciOne.ServiceBus.TestFramework` has 147 tracked paths and no remaining ProjectReference
+  consumer. It is retained only by the root solution and contains legacy NUnit fixtures, helper
+  abstractions and restaurant/Future sample types. The accepted architecture decision permits its
+  removal once those capabilities are dispositioned; a later modern restaurant sample is a separate
+  work package and does not block this promotion.
+- `tests/` contains only its inherited `Directory.Build.props`; `tests2/` contains the complete native
+  suite (827 tracked paths, 38 projects). The final rename can therefore be atomic: remove the one
+  placeholder file, move the native tree, then update active project/solution/workflow/tooling paths.
+- The transitional verification stack consists of `build/verification/**`, the legacy
+  `tools/ci/verify.py` model and Python unittest suites, plus the split `build.yml`/`native-tests.yml`
+  workflow truth. Provider fixture runners remain engineering utilities, but their verdict must be
+  owned by native MTP tests rather than a second Python/VSTest/NUnit test system.
+
+### Benchmark replacement checklist
+
+- [x] Preserve all 75 materialized behaviors: analytics/histograms, exit codes, SQL configuration,
+  send/request metrics, reporter propagation and RabbitMQ option projection.
+- [x] Replace all wall-clock sleeps and elapsed-threshold assertions with a deterministic metric-clock
+  seam while leaving the production Stopwatch behavior unchanged.
+- [x] Serialize process-global environment and Console.Out tests through one xUnit collection and
+  restore every global value in `finally`.
+- [x] Give every native test method exactly one requirement projection row and bind every frozen NUnit
+  identity to one stronger native carrier before deleting the old project.
+- [x] Build and run the benchmark project narrowly, then prove solution-level discovery before paying
+  the full UnitArchitecture gate once.
+
+### Promotion acceptance checklist
+
+- [x] A path-complete capability disposition exists for every deleted TestFramework and transitional
+  verification file; no useful behavior is silently discarded.
+- [x] No NUnit, VSTest bridge, Microsoft.NET.Test.Sdk or Python-unittest verdict remains in the active
+  repository graph; package and solution membership reflect that fact.
+- [x] Exactly one native CI workflow owns restore, Release build, UnitArchitecture, provider categories,
+  pack and identity/change-list checks with explicit floors and no legacy-test compilation.
+- [x] `tests2/` is absent, `tests/` contains the complete native suite, all active references point to
+  `tests/`, no empty legacy directory remains, and historical frozen evidence is not rewritten.
+- [x] Final Release restore/build/test, provider-capable local gates, identity/change-list checks and
+  independent one-cause mutations are clean before the final non-force remote push.
+
+## Final native test promotion — validation and quality audit (2026-09-02)
+
+The physical promotion is complete: `tests2/` is absent, the complete native tree lives under
+`tests/`, and active source, solution, MSBuild, workflow, tooling and documentation owners no longer
+refer to the transitional path. Frozen historical Evidence was not rewritten. Empty-directory and
+active stale-reference scans are empty, `git diff --check` is clean, and the active package graph has
+no NUnit, Microsoft.NET.Test.Sdk or GitHubActionsTestLogger reference.
+
+The final post-mutation UnitArchitecture run executes 2,984/2,984 cases across 21 native MTP test
+modules with zero failures and zero skips. Its contained architecture module is 156/156 and its
+benchmark module is 96/96. Locked restore and the post-restore Unit Release build pass; the build has
+zero warnings and zero errors. Earlier in the same final work package the complete Product and
+Engineering Release graphs and every provider-profile graph built with zero warnings/errors.
+
+Real local-provider execution is not inferred from written tests. The general LocalIntegration
+profile ran 338/338 against PostgreSQL, Azurite, LocalStack, ActiveMQ Artemis and the Event Hubs
+emulator. In particular, the Azure Table cases used the Azurite table endpoint. Dedicated profiles
+ran SQL Server 60/60, Azure Service Bus emulator 24/24 and RabbitMQ 17/17, all with zero skips. One
+cold SQL Server run after the machine restart timed out during first-use DDL at 59/60; the exact
+method then passed alone and the unchanged warm complete profile passed 60/60. This is recorded as a
+cold-infrastructure observation, not hidden as a green first attempt.
+
+### Restart and sandbox diagnosis
+
+- After a host restart Colima must be started before local-provider execution. On this Intel host,
+  the pinned SQL Server 2025 image failed during SQLPAL initialization with the default 4 GiB / two
+  CPU Colima VM; restarting Colima with 8 GiB and four CPUs made the same image healthy.
+- Docker's Colima socket and .NET/MSBuild/MTP IPC endpoints are denied inside the macOS workspace
+  sandbox. Restore/build/test commands therefore run outside that sandbox with an isolated
+  `DOTNET_CLI_HOME`, `DOTNET_ROOT=/usr/local/share/dotnet`, disabled multilevel lookup and disabled
+  build servers. `--disable-build-servers` belongs on restore/build only; passing it to the native MTP
+  test application is invalid.
+- The benchmark test lock file was the only stale lock after adding the intentional BenchmarkConsole
+  project reference. It was regenerated once without locked mode, its exact dependency delta was
+  reviewed, and all final solution restores then passed with `--locked-mode`.
+
+### Assertion-quality, anti-pattern and 19-smell audit
+
+The final-promotion delta contains 84 test methods materializing 107 cases: 74 benchmark methods
+materialize 96 cases, and ten closure/provider/KillSwitch/build methods materialize eleven cases. They
+contain 247 direct assertions. Every method has an observable assertion path; exception tests assert stable
+exception types and relevant messages/properties, collection tests bind exact cardinality/content,
+and lifecycle tests bind explicit health, endpoint-ready, timer and delivery observations.
+
+The final delta has no skip/explicit markers, real `Thread.Sleep`, synchronization by `Task.Delay`,
+wall-clock `DateTime.Now/UtcNow`, unseeded random input, shared fixed provider ports, order dependency,
+console-only oracle or assertion-free test. The one infinite `Task.Delay` found by the wider static
+scan is a diagnostics test driven by a fake `TimeProvider`, not a wall-clock wait. Provider black-box
+tests mint unique GUID-based roots and fake-Docker executables, create all prerequisites, enforce a
+30-second hang ceiling, and delete their own resources.
+
+Against the complete 19-smell catalog there are no Critical or Warning findings in this delta.
+Multiple assertions in disposition and provider tests form one cohesive contract and retain named,
+type-rich xUnit failure locations; they are not unrelated Assertion Roulette. Exact hashes and path
+sets are deliberate immutable-ledger oracles, not Sensitive Equality. The operating-system guard in
+the Linux-only runner fixture throws explicitly rather than silently skipping. No General Fixture,
+Eager Test, Mystery Guest, Resource Optimism, Test Run War, Conditional Test Logic, Constructor
+Initialization, Default Test, Empty Test, Exception Catching/Throwing, Redundant Print, Sleepy Test,
+Unknown Test, Ignored Test, Lazy Test, Duplicate Assert, Magic Number Test or Dependent Test was found.
+
+The repository-wide format command is not a valid delta gate because it reports hundreds of
+pre-existing whitespace findings in unchanged product sources. The exact changed C# set, derived
+from the staged rename-aware diff and excluding byte-identical moves, passes
+`dotnet format --verify-no-changes`; no baseline formatting was rewritten.
+
+### Independent one-cause mutations
+
+Eight final independent mutations were compiled or executed and killed with zero skips: deleting one
+of 57 terminal verification rows; suppressing the workflow's native Unit command; removing the
+benchmark test project from the exact Unit solution closure; accepting a run root outside the owned
+area; allowing a non-loopback provider publication; ignoring a terminal fixture-cleanup finding; and
+using the wrong sample-count rank in the benchmark quantile calculation. The quantile mutant produced
+three causal failures with eleven passing controls. The eighth mutant advertises a nonexistent
+external Release PDB and is killed by the evaluated product-build contract. Every target was restored
+byte-for-byte; the final clean build and 2,984-case run occurred only after restoration.
+
+The first `pack --no-build` correctly exposed a build-contract defect: Release assemblies embed their
+symbols, but an early MSBuild projection still advertised external PDB outputs because
+`DebugSymbols=True`. The central late build contract now explicitly sets `_DebugSymbolsProduced=false`
+when it selects embedded Release symbols. A new architecture test evaluates every product project in
+Release and binds both `DebugType=embedded` and the absence of an external-symbol projection. The
+exact workflow sequence of locked product restore, full Release build and `pack --no-build` then
+produced all 19 packages successfully.

@@ -1,8 +1,8 @@
 <Solution>
   <!-- Profile SqlServerLocalIntegration: SQL Server stress and lock-renewal tests in an isolated provider profile. -->
-  <Folder Name="/tests2/">
-    <Project Path="tests2/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj" />
-    <Project Path="tests2/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.csproj" />
+  <Folder Name="/tests/">
+    <Project Path="tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj" />
+    <Project Path="tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.csproj" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj" />

@@ -6,7 +6,7 @@ using JobService.Scheduling;
 
 
 /// <summary>
-/// The cost of walking a cron expression forward, moved here from a NUnit case that measured a million iterations
+/// The cost of walking a cron expression forward, moved here from a retired test case that measured a million iterations
 /// with a stopwatch and wrote the result to the console. A throughput measurement has no pass or fail statement, so
 /// it belongs in the benchmark tool and not in the required test run.
 /// </summary>

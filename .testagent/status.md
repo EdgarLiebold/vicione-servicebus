@@ -2600,3 +2600,26 @@ future cohorts as complete.
 - The Evidence child created with this section is a local immutable review subject. Independent
   read-only acceptance, architecture binding and any future remote publication remain pending and
   are not self-approved; no remote push is authorized or performed by this package.
+
+## Final native test-tree promotion — local acceptance candidate (2026-09-02)
+
+- The benchmark and final legacy-capability closures are complete: all 75 benchmark obligations,
+  all 147 TestFramework paths and all 57 transitional verification paths have exact terminal maps.
+  The inherited benchmark project, TestFramework project, Python/unittest verdict stack and second
+  workflow are absent.
+- `tests2/` is absent and the complete native suite is promoted to `tests/`. One native xUnit 4/MTP
+  workflow owns product/engineering build, UnitArchitecture, all available provider profiles, pack,
+  vulnerability inventory and identity/change-list gates. No active NUnit/VSTest bridge remains.
+- Final post-restoration UnitArchitecture is 2,984/2,984 with zero failures/skips; architecture is
+  156/156 and benchmarks are 96/96. Available provider execution is 338/338 general local, 60/60 SQL
+  Server, 24/24 Azure Service Bus emulator and 17/17 RabbitMQ. Azure Table was executed against local
+  Azurite, not merely compiled.
+- Locked restore and Release builds are green with zero warnings/errors. The rename-aware changed-C#
+  format gate, active stale-reference scan, empty-directory scan and `git diff --check` are green.
+  Eight independent one-cause mutations are killed and all baselines restore byte-exactly before the
+  final complete run.
+- The assertion-quality, anti-pattern and full 19-smell audit covers 84 final-delta methods / 107
+  materialized cases / 247 assertions and has no Critical or Warning finding. The package gate now
+  binds embedded Release symbols without advertising nonexistent external PDBs and creates all 19
+  packages. Remote publication is
+  still pending at this local-candidate point and will use only the standing non-force permission.

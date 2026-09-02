@@ -1,0 +1,149 @@
+<Project InitialTargets="AssertNativeTestTreeInheritsRootBuildContract">
+
+  <!-- The late half of the native test tree's build contract.
+
+       Like the props file, this is the FIRST Directory.Build.targets found walking up from a
+       project under tests/, so the repository root one is not imported automatically. The import
+       carries no Exists() guard for the same reason: a required import must fail loudly. -->
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.targets', '$(MSBuildThisFileDirectory)../'))" />
+
+  <!-- One exact package-policy source for both the effective MSBuild gate and the resolved-closure
+       architecture tests. It lives in targets, after every project body, so a project cannot erase
+       or replace the policy after importing Directory.Build.props. Package identities are compared
+       case-insensitively because NuGet identities are case-insensitive. -->
+  <PropertyGroup>
+    <_ViciOneCanonicalForbiddenNativeTestPackageIds>GitHubActionsTestLogger;Microsoft.NET.Test.Sdk;Microsoft.Testing.Extensions.VSTestBridge;Microsoft.TestPlatform.ObjectModel;Microsoft.TestPlatform.TestHost;MSTest;MSTest.TestAdapter;MSTest.TestFramework;NUnit;NUnit3TestAdapter;NUnit.Analyzers;NUnitLite;TngTech.ArchUnitNET.xUnit;TngTech.ArchUnitNET.xUnitV3;TngTech.ArchUnitNET.NUnit;TngTech.ArchUnitNET.MSTestV2;TngTech.ArchUnitNET.TUnit;xunit.runner.visualstudio</_ViciOneCanonicalForbiddenNativeTestPackageIds>
+    <_ViciOneCanonicalForbiddenNativeTestPackageIdsDelimitedLower>$([System.String]::Copy(';$(_ViciOneCanonicalForbiddenNativeTestPackageIds);').ToLowerInvariant())</_ViciOneCanonicalForbiddenNativeTestPackageIdsDelimitedLower>
+  </PropertyGroup>
+
+  <!-- Remove any same-named project items before materializing the canonical set. C# reads these
+       evaluated items, while VOSBT006 consumes the same private canonical property directly. -->
+  <ItemGroup>
+    <ViciOneForbiddenNativeTestPackage Remove="@(ViciOneForbiddenNativeTestPackage)" />
+    <ViciOneForbiddenNativeTestPackage Include="$(_ViciOneCanonicalForbiddenNativeTestPackageIds)" />
+  </ItemGroup>
+
+  <!-- What makes a project an executable test project is not a marker anyone can delete, it is the
+       direct reference to the single test entry package: that reference is what produces the
+       Microsoft Testing Platform entry point. Classifying on the reference means a project cannot
+       opt out of the rules below by dropping a property, and the xUnit-free support library is
+       classified correctly without anyone declaring anything about it.
+
+       This file is imported after the project body and after the SDK targets, so both the project's
+       own items and the SDK defaults are final here. That is why the classification lives at this
+       point and not in Directory.Build.props, where OutputType is not yet a project's own value. -->
+  <PropertyGroup>
+    <_ViciOneCanonicalTestingPlatformConfiguration>$(MSBuildThisFileDirectory)testconfig.json</_ViciOneCanonicalTestingPlatformConfiguration>
+  </PropertyGroup>
+
+  <!-- One MTP configuration for the whole tree, taken from the canonical central path and linked
+       into every executable test artifact under the assembly-specific name that MTP discovers.
+       A per-project source file is what lets one project silently lose failSkips or failWarns while
+       the others keep it. -->
+  <ItemGroup Condition=" '$(IsTestProject)' == 'true' ">
+    <Content Include="$(_ViciOneCanonicalTestingPlatformConfiguration)"
+             Link="$(AssemblyName).testconfig.json"
+             TargetPath="$(AssemblyName).testconfig.json"
+             CopyToOutputDirectory="PreserveNewest" />
+    <!-- Same reasoning for the checked-in, secret-free defaults the typed configuration owner reads
+         at run time. -->
+    <Content Include="$(MSBuildThisFileDirectory)testsettings.json"
+             Link="testsettings.json"
+             CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <!-- Two separate anchors, so that removing either parent import fails for its OWN reason rather
+       than both collapsing into one indistinguishable error.
+
+       ArtifactsPath is set only by the repository root Directory.Build.props; ViciOneProjectIdentity
+       is set only by the repository root Directory.Build.targets. Neither has an SDK default here,
+       so an empty value means precisely one thing: that import did not happen. Without these two
+       checks a deleted import would be silent - the tree would simply build outside the locked
+       restore, the shared artifacts root and the target framework fence. -->
+  <!-- Declared as an InitialTarget, so it runs before every other target of this project.
+       BeforeTargets was not enough: the root contract's own VOSB0001 lock-file assertion also hooks
+       CollectPackageReferences and, being imported first, ran first. A missing props import switches
+       the lock file off as a side effect, so the build failed with "RestorePackagesWithLockFile off"
+       and sent the reader after a lock-file problem instead of the deleted import that caused it. -->
+  <Target Name="AssertNativeTestTreeInheritsRootBuildContract">
+    <Error Code="VOSBT001"
+           Text="$(MSBuildProjectName) did not inherit the repository root Directory.Build.props. tests/Directory.Build.props must import it with GetPathOfFileAbove; without it the locked restore, the artifacts output root and the packaging rules do not apply to this tree."
+           Condition=" '$(ArtifactsPath)' == '' " />
+    <Error Code="VOSBT002"
+           Text="$(MSBuildProjectName) did not inherit the repository root Directory.Build.targets. tests/Directory.Build.targets must import it with GetPathOfFileAbove; without it the VOSB0001-VOSB0008 assertions, including the target framework fence, do not run for this tree."
+           Condition=" '$(ViciOneProjectIdentity)' == '' " />
+  </Target>
+
+  <!-- Declared classification and actual evidence must agree in both directions. A project that
+       references the test entry package but forgot to declare itself, or declares itself without
+       the reference, is misclassified either way - and a gate that trusted the declaration alone
+       would be switched off by deleting one line. -->
+  <Target Name="AssertNativeTestProjectClassificationIsHonest" BeforeTargets="BeforeBuild">
+    <!-- Item lists may only be read inside a target, so the evidence is gathered here rather than
+         during evaluation. -->
+    <ItemGroup>
+      <_ViciOneTestEntryReference Include="@(PackageReference)"
+                                  Condition=" $([System.String]::Copy('%(Identity)').ToLowerInvariant()) == 'xunit.v3.mtp-v2' " />
+    </ItemGroup>
+    <Error Code="VOSBT003"
+           Text="$(MSBuildProjectName) references the test entry package xunit.v3.mtp-v2 but does not declare IsTestProject=true. An executable test project must own that classification explicitly, and the MTP configuration is linked in on that declaration."
+           Condition=" '@(_ViciOneTestEntryReference)' != '' AND '$(IsTestProject)' != 'true' " />
+    <Error Code="VOSBT004"
+           Text="$(MSBuildProjectName) declares IsTestProject=true but does not directly reference the test entry package xunit.v3.mtp-v2. Only a project that carries the Microsoft Testing Platform entry point is an executable test project."
+           Condition=" '@(_ViciOneTestEntryReference)' == '' AND '$(IsTestProject)' == 'true' " />
+    <Error Code="VOSBT005"
+           Text="$(MSBuildProjectName) references the test entry package xunit.v3.mtp-v2 @(_ViciOneTestEntryReference->Count()) times. Exactly one direct test entry is allowed."
+           Condition=" '@(_ViciOneTestEntryReference)' != '' AND '@(_ViciOneTestEntryReference->Count())' != '1' " />
+    <Error Code="VOSBT010"
+           Text="$(MSBuildProjectName) must set UseMicrosoftTestingPlatformRunner=true. The repository supports only the native Microsoft Testing Platform v2 entry point; xUnit's hybrid in-process entry point is not an allowed second runner path."
+           Condition=" '$(IsTestProject)' == 'true' AND '$(UseMicrosoftTestingPlatformRunner)' != 'true' " />
+  </Target>
+
+  <!-- Direct and global references only. This target cannot and does not speak about the transitive
+       closure: @(PackageReference) holds what this project declares plus what a
+       GlobalPackageReference injected, not what restore ultimately resolved. The full closure is
+       proven separately against the resolved lock file, by the architecture tests. -->
+  <Target Name="AssertNativeTestTreeDeclaresNoForbiddenPackage" BeforeTargets="BeforeBuild">
+    <ItemGroup>
+      <_ViciOneForbiddenDirectPackage Include="@(PackageReference)"
+                                      Condition="$([System.String]::Copy('$(_ViciOneCanonicalForbiddenNativeTestPackageIdsDelimitedLower)').Contains($([System.String]::Copy(';%(PackageReference.Identity);').ToLowerInvariant())))" />
+    </ItemGroup>
+    <Error Code="VOSBT006"
+           Text="$(MSBuildProjectName) directly or globally references forbidden test packages: @(_ViciOneForbiddenDirectPackage, ', '). The native test tree has one verdict path - Microsoft Testing Platform executes and owns the exit code, xUnit owns discovery and individual results."
+           Condition=" '@(_ViciOneForbiddenDirectPackage)' != '' " />
+  </Target>
+
+  <!-- The single MTP configuration has to reach the artifact exactly once, and it has to be the
+       canonical central file. A missing link would silently restore xUnit's defaults, so skips and
+       warnings would stop being failures; a second item, or one pointing somewhere else, would let
+       a same-named file elsewhere in the project decide the run instead. -->
+  <Target Name="AssertNativeTestTreeCarriesCanonicalTestingPlatformConfiguration"
+          BeforeTargets="BeforeBuild"
+          Condition=" '$(IsTestProject)' == 'true' ">
+    <ItemGroup>
+      <!-- MTP automatically recognizes <AssemblyName>.testconfig.json. Inspect both common content
+           item types and every testconfig.json name, otherwise a project-local configuration can
+           silently turn failSkips and failWarns off while the canonical file still exists. -->
+      <_ViciOneTestingPlatformConfigurationItem Include="@(Content)"
+                                       Condition="$([System.String]::Copy('%(Content.Filename)%(Content.Extension)').EndsWith('testconfig.json'))
+                                               OR $([System.String]::Copy('%(Content.Link)').EndsWith('testconfig.json'))
+                                               OR $([System.String]::Copy('%(Content.TargetPath)').EndsWith('testconfig.json'))" />
+      <_ViciOneTestingPlatformConfigurationItem Include="@(None)"
+                                       Condition="$([System.String]::Copy('%(None.Filename)%(None.Extension)').EndsWith('testconfig.json'))
+                                               OR $([System.String]::Copy('%(None.Link)').EndsWith('testconfig.json'))
+                                               OR $([System.String]::Copy('%(None.TargetPath)').EndsWith('testconfig.json'))" />
+      <_ViciOneForeignTestingPlatformConfigurationItem Include="@(_ViciOneTestingPlatformConfigurationItem)"
+                                                       Condition=" '%(FullPath)' != '$(_ViciOneCanonicalTestingPlatformConfiguration)' " />
+    </ItemGroup>
+    <Error Code="VOSBT007"
+           Text="The canonical MTP configuration $(_ViciOneCanonicalTestingPlatformConfiguration) does not exist. It is the only place where skipped tests and warnings are turned into failures."
+           Condition=" !Exists('$(_ViciOneCanonicalTestingPlatformConfiguration)') " />
+    <Error Code="VOSBT008"
+           Text="$(MSBuildProjectName) carries @(_ViciOneTestingPlatformConfigurationItem->Count()) MTP configuration items into its output; exactly one is allowed. A second one lets an arbitrary same-named file decide whether skips and warnings fail."
+           Condition=" '@(_ViciOneTestingPlatformConfigurationItem->Count())' != '1' " />
+    <Error Code="VOSBT009"
+           Text="$(MSBuildProjectName) carries an MTP configuration that is not the canonical central file: @(_ViciOneForeignTestingPlatformConfigurationItem->'%(FullPath)', ', '). Expected $(_ViciOneCanonicalTestingPlatformConfiguration)."
+           Condition=" '@(_ViciOneForeignTestingPlatformConfigurationItem)' != '' " />
+  </Target>
+
+</Project>

@@ -52,24 +52,25 @@ The repository has separate product, engineering, and materialized native-test p
 every command names the one it means. Every project resolves against a tracked `packages.lock.json`;
 updating a package is the single documented exception.
 
-The native replacement test estate uses xUnit 4 on Microsoft Testing Platform 2. Its currently
-materialized hermetic profile runs directly through the .NET 10 CLI:
+The native test estate uses xUnit 4 on Microsoft Testing Platform 2. Its hermetic profile runs
+directly through the .NET 10 CLI:
 
 ```bash
 dotnet restore ViciOne.ServiceBus.Tests.Unit.slnx --locked-mode
 dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 2850 \
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 2933 \
   --max-parallel-test-modules 1
 ```
 
-Local-integration and external profiles appear only with their first executable cohort. The legacy
-NUnit/VSTest tests and the remaining temporary takeover runners are behavior evidence during migration;
-they are not the final test architecture. The Python policy validator was a discarded Team 1 detour,
-not imported product or test behavior. It and its self-test suite are deleted and must not be recreated.
-Any independently valid invariant belongs in MSBuild or native xUnit/MTP architecture tests.
+Local-integration profiles run through the same native test architecture against pinned, run-scoped
+providers. Real-cloud-only obligations remain explicitly External Pending and are not counted as
+local green. Provider lifecycle orchestration is a non-verdict engineering utility; discovery,
+assertions and the test exit code remain owned by xUnit and MTP. The retired takeover runners and
+their test frameworks must not be recreated. Independently valid invariants belong in MSBuild or
+native xUnit/MTP architecture tests.
 The native test executable uses only the Microsoft Testing Platform entry point. Its single central
-`tests2/testconfig.json` makes skips and warnings fail and is copied into each artifact under MTP's
+`tests/testconfig.json` makes skips and warnings fail and is copied into each artifact under MTP's
 assembly-specific configuration name.
 
 [docs/build.md](docs/build.md) carries the complete current build, native-test, profile, configuration,
@@ -99,8 +100,8 @@ diagnostic snapshots of terminal send, publish and consume outcomes. EF Core and
 apply finite size, count and age limits on every append. This capability is not a queue, retry path,
 queryable audit history, or owner of ViciOne Suite operational and security audit data.
 
-The inherited TestFramework source remains only as migration input until every behavior obligation
-has moved into the native test estate. It is not part of the future public package surface.
+The inherited TestFramework source has been retired after path-complete disposition of its behavior
+and support capabilities into the native test estate. It is not part of the package surface.
 
 Capabilities removed by an explicit product decision are recorded in
 [MODIFICATIONS.md](MODIFICATIONS.md) and are not part of this source scope.

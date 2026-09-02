@@ -42,8 +42,8 @@ static class RunScopedBroker
 
     /// <summary>
     /// The virtual host these scenarios run in, created the same way the test suite creates it. It is
-    /// created here rather than assumed, because a scenario that is started outside NUnit has no set up
-    /// fixture to do it, and the broker of a fresh run carries no virtual host but the default one.
+    /// created here rather than assumed, because a standalone diagnostic scenario has no test-fixture
+    /// setup to do it, and the broker of a fresh run carries no virtual host but the default one.
     /// </summary>
     public static async Task CreateVirtualHost(string name, CancellationToken cancellationToken)
     {

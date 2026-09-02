@@ -14,7 +14,7 @@
     <_ViciOneEarlyProjectIdentity>$([MSBuild]::MakeRelative($(MSBuildThisFileDirectory), $(MSBuildProjectFullPath)))</_ViciOneEarlyProjectIdentity>
     <_ViciOneEarlyProjectIdentity>$(_ViciOneEarlyProjectIdentity.Replace('\','/'))</_ViciOneEarlyProjectIdentity>
     <ViciOneNativeTestTree>false</ViciOneNativeTestTree>
-    <ViciOneNativeTestTree Condition="$([System.String]::Copy('$(_ViciOneEarlyProjectIdentity)').StartsWith('tests2/'))">true</ViciOneNativeTestTree>
+    <ViciOneNativeTestTree Condition="$([System.String]::Copy('$(_ViciOneEarlyProjectIdentity)').StartsWith('tests/'))">true</ViciOneNativeTestTree>
   </PropertyGroup>
 
   <PropertyGroup>

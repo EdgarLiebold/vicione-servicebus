@@ -45,8 +45,8 @@ namespace ViciOne.ServiceBus.Testing
         /// <summary>
         /// Begins the scope of one test and grants it the whole configured <see cref="TestTimeout" />.
         /// <para>
-        /// NUnit creates one fixture instance and reuses it for every test method in that fixture, so
-        /// without this the budget created on first use is shared by all of them: whatever the first
+        /// A test framework may reuse one fixture instance for multiple test methods, so without this
+        /// the budget created on first use is shared by all of them: whatever the first
         /// tests spend is taken from the last ones, and once it is gone every remaining test that honours
         /// the token fails at once, no matter how fast it is.
         /// </para>
@@ -57,8 +57,8 @@ namespace ViciOne.ServiceBus.Testing
         /// explicitly cancelled source is never revived; the next test starts from a fresh one.
         /// </para>
         /// <para>
-        /// This type carries no test framework dependency. The framework lifecycle calls this once, in
-        /// ViciOne.ServiceBus.TestFramework.
+        /// This type carries no test framework dependency. The native test lifecycle calls this once
+        /// for every test scope.
         /// </para>
         /// </summary>
         public void BeginTestScope()

@@ -504,7 +504,7 @@
       "authorizedLineCount": 1,
       "authorizedLinesSha256": "53ec91c31a66faa4e738e40f1fbd09e2b567de09faff8cc568f0f4f81082344d",
       "category": "NEGATIVE_TEST_ORACLE",
-      "path": "tests2/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Configuration/EntityFrameworkTestDatabaseNameTests.cs"
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/Configuration/EntityFrameworkTestDatabaseNameTests.cs"
     },
     {
       "allowedGates": [

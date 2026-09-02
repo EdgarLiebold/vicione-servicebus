@@ -22,6 +22,11 @@
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' AND '$(IsTestingPlatformApplication)' != 'true' ">
     <DebugType>embedded</DebugType>
+    <!-- Microsoft.Common calculated this internal projection earlier from DebugSymbols=True. Once
+         Release switches to embedded symbols there is deliberately no external PDB. Correct the
+         projection so Pack's DebugSymbolsProjectOutputGroup does not advertise a file the compiler
+         neither creates nor should create. -->
+    <_DebugSymbolsProduced>false</_DebugSymbolsProduced>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(IsTestingPlatformApplication)' == 'true' ">
@@ -87,7 +92,7 @@
     <ViciOneProjectIdentity>$(ViciOneProjectIdentity.Replace('\','/'))</ViciOneProjectIdentity>
 
     <_ViciOneExpectedNativeTestTree>false</_ViciOneExpectedNativeTestTree>
-    <_ViciOneExpectedNativeTestTree Condition="$([System.String]::Copy('$(ViciOneProjectIdentity)').StartsWith('tests2/'))">true</_ViciOneExpectedNativeTestTree>
+    <_ViciOneExpectedNativeTestTree Condition="$([System.String]::Copy('$(ViciOneProjectIdentity)').StartsWith('tests/'))">true</_ViciOneExpectedNativeTestTree>
 
     <!-- Loaded by the compiler rather than by the application, so it cannot be a net10.0 assembly. -->
     <ViciOneRoslynComponentProject Condition=" '$(ViciOneProjectIdentity)' == 'src/ViciOne.ServiceBus.Analyzers/ViciOne.ServiceBus.Analyzers.csproj' ">true</ViciOneRoslynComponentProject>
@@ -109,10 +114,10 @@
                                         Condition=" $([System.String]::Copy('%(Identity)').ToLowerInvariant()) == 'xunit.v3.mtp-v2' " />
     </ItemGroup>
     <Error Code="VOSB0009"
-           Text="$(ViciOneProjectIdentity) evaluates ViciOneNativeTestTree=$(ViciOneNativeTestTree), but its repository path requires $(_ViciOneExpectedNativeTestTree). The native test boundary is granted only to projects below tests2/."
+           Text="$(ViciOneProjectIdentity) evaluates ViciOneNativeTestTree=$(ViciOneNativeTestTree), but its repository path requires $(_ViciOneExpectedNativeTestTree). The native test boundary is granted only to projects below tests/."
            Condition=" '$(ViciOneNativeTestTree)' != '$(_ViciOneExpectedNativeTestTree)' " />
     <Error Code="VOSB0010"
-           Text="$(ViciOneProjectIdentity) references xunit.v3.mtp-v2 outside tests2/. Test entry packages must never enter the product or inherited-test project graph."
+           Text="$(ViciOneProjectIdentity) references xunit.v3.mtp-v2 outside tests/. Test entry packages must never enter the product or inherited-test project graph."
            Condition=" '$(_ViciOneExpectedNativeTestTree)' != 'true' AND '@(_ViciOneNativeTestEntryReference)' != '' " />
   </Target>
 

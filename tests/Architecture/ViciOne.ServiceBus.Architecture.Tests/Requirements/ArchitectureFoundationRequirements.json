@@ -1,0 +1,149 @@
+[
+  {
+    "requirementId": "REQ-TEST-203",
+    "variantKey": "architecture-test-project-single-native-test-entry",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Build.EvaluatedBuildGraphTests",
+    "testMethod": "ExecutableTestProject_ReferencesTheSingleTestEntryExactlyOnce"
+  },
+  {
+    "requirementId": "REQ-TEST-203",
+    "variantKey": "architecture-test-project-single-canonical-platform-config-item",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Build.EvaluatedBuildGraphTests",
+    "testMethod": "ExecutableTestProject_CarriesExactlyOneCanonicalTestingPlatformConfigurationItem"
+  },
+  {
+    "requirementId": "REQ-TEST-205",
+    "variantKey": "core-and-abstractions-do-not-depend-on-test-types",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Repository.TestTreeIsolationTests",
+    "testMethod": "ProductTypes_DoNotDependOnTestTypes"
+  },
+  {
+    "requirementId": "REQ-TEST-205",
+    "variantKey": "abstractions-do-not-depend-on-core-types",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Repository.TestTreeIsolationTests",
+    "testMethod": "AbstractionsTypes_DoNotDependOnCoreTypes"
+  },
+  {
+    "requirementId": "REQ-TEST-205",
+    "variantKey": "evaluated-product-projects-cannot-enter-native-test-tree",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Build.EvaluatedBuildGraphTests",
+    "testMethod": "ProductProjects_CannotEnterTheNativeTestTreeOrDeclareAnyTestDependency"
+  },
+  {
+    "requirementId": "REQ-TEST-205",
+    "variantKey": "resolved-native-test-graphs-contain-no-forbidden-package",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Dependencies.ResolvedPackageGraphTests",
+    "testMethod": "EveryNativeTestProject_ResolvesNoForbiddenPackage"
+  },
+  {
+    "requirementId": "REQ-TEST-205",
+    "variantKey": "native-source-folders-and-namespaces-mirror",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Repository.NativeTestSourceLayoutTests",
+    "testMethod": "EveryNativeTestSourceNamespace_MirrorsItsProjectFolder"
+  },
+  {
+    "requirementId": "REQ-VSB-TIME-SOURCE-ARCHITECTURE",
+    "variantKey": "future-and-job-metadata-use-context-bound-time",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Product.TimeSourceArchitectureTests",
+    "testMethod": "FutureAndJobMetadataPaths_UseOnlyContextBoundTimeSources"
+  },
+  {
+    "requirementId": "REQ-TEST-203",
+    "variantKey": "unit-profile-contains-complete-project-reference-closure",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Repository.RepositoryGraphTests",
+    "testMethod": "UnitArchitectureProfile_ContainsEveryProjectReferenceTargetInItsClosure"
+  },
+  {
+    "requirementId": "REQ-TEST-203",
+    "variantKey": "public-local-integration-commands-use-predeclared-floor",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests",
+    "testMethod": "PublicLocalIntegrationProfileCommands_UseThePredeclaredFloor"
+  },
+  {
+    "requirementId": "REQ-TEST-203",
+    "variantKey": "broker-local-integration-projects-use-causal-barriers",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests",
+    "testMethod": "BrokerLocalIntegrationSources_UseNoWallClockWaits"
+  },
+  {
+    "requirementId": "REQ-TEST-203",
+    "variantKey": "wall-clock-guard-rejects-release-compiled-reference-forms",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.TestPlatform.TestingPlatformConfigurationTests",
+    "testMethod": "ActiveMqWallClockGuard_RejectsEveryForbiddenReferenceShape"
+  },
+  {
+    "requirementId": "REQ-TEST-205",
+    "variantKey": "azure-service-bus-obligations-are-terminal-and-carrier-bound",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Repository.AzureServiceBusObligationProjectionTests",
+    "testMethod": "AzureServiceBusObligations_AreExactTerminalAndBoundToRealCarriers"
+  },
+  {
+    "requirementId": "REQ-TEST-205",
+    "variantKey": "rabbitmq-obligations-are-terminal-and-carrier-bound",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Repository.RabbitMqObligationProjectionTests",
+    "testMethod": "RabbitMqObligations_AreExactTerminalAndBoundToRealCarriers"
+  },
+  {
+    "requirementId": "REQ-TEST-205",
+    "variantKey": "benchmark-obligations-are-terminal-and-carrier-bound",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Repository.BenchmarkObligationProjectionTests",
+    "testMethod": "BenchmarkObligations_AreExactTerminalAndBoundToNativeCarriers"
+  },
+  {
+    "requirementId": "REQ-TEST-205",
+    "variantKey": "test-framework-capabilities-are-terminal-before-retirement",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Repository.TestFrameworkCapabilityDispositionTests",
+    "testMethod": "TestFrameworkCapabilities_ArePathCompleteTerminalAndRetiredFromTheBuildGraph"
+  },
+  {
+    "requirementId": "REQ-TEST-205",
+    "variantKey": "legacy-verification-capabilities-are-terminal-and-one-native-verdict-remains",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Repository.VerificationCapabilityDispositionTests",
+    "testMethod": "LegacyVerificationCapabilities_ArePathCompleteTerminalAndLeaveOneNativeVerdict"
+  },
+  {
+    "requirementId": "REQ-TEST-203",
+    "variantKey": "provider-runner-preserves-native-mtp-exit-code-and-cleans-fixture",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.ProviderFixtureRunnerTests",
+    "testMethod": "CommandMode_PreservesChildExitCodeAndCleansTheFixture"
+  },
+  {
+    "requirementId": "REQ-TEST-203",
+    "variantKey": "provider-runner-refuses-non-loopback-publication-before-child",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.ProviderFixtureRunnerTests",
+    "testMethod": "CommandMode_RefusesANonLoopbackProviderEndpointBeforeRunningTheChild"
+  },
+  {
+    "requirementId": "REQ-TEST-203",
+    "variantKey": "provider-runner-makes-cleanup-failure-terminal",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.ProviderFixtureRunnerTests",
+    "testMethod": "CommandMode_MakesCleanupFailureRedWhenTheChildPassed"
+  },
+  {
+    "requirementId": "REQ-TEST-203",
+    "variantKey": "provider-runner-refuses-output-root-outside-owned-area",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.ProviderFixtureRunnerTests",
+    "testMethod": "CommandMode_RefusesAHandedRunRootOutsideTheRepositoryOwnedArea"
+  }
+]

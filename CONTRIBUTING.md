@@ -28,8 +28,8 @@ dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build 
   --results-directory artifacts/test-results/unit
 ```
 
-Do not extend the inherited NUnit/VSTest/Python verification stack. It remains read-only behavior
-evidence until its cohorts have accepted native replacements; see [docs/build.md](docs/build.md).
+There is one test architecture. Add executable checks to the source-owner xUnit project and run them
+through Microsoft Testing Platform; do not introduce another discovery, execution or verdict path.
 
 ## Packages are locked
 
@@ -51,14 +51,10 @@ git diff -- '**/packages.lock.json'
 packages whose version range did not change, so a lock file can stay stale while the command reports
 success.
 
-Compilation output goes to `artifacts/sdk` and packages to `artifacts/packages`. A run's raw files -
-TRX, endpoint projection, control files, broker logs - go to `artifacts/run-output/<run>/`, and its
-durable category record goes to the evidence parent the caller named, in that run's own `<run>` child.
-Two roots, one child of each per run: the record is the one file meant to outlive the run, so it is
-written where the caller asked for it rather than under the raw output. That is where the repository's
-own build and test entry points put them. It is not a property of the machine:
-a tool invoked with its own output path, or an SDK feature that writes elsewhere, still writes
-elsewhere. The claim is about where this repository's paths lead, not about what is possible.
+Compilation output goes to `artifacts/sdk`, packages to `artifacts/packages`, and MTP results to
+`artifacts/test-results`. Provider endpoint projections, outage-control files and broker logs go to
+the owning `artifacts/run-output/<run>/` directory. Each provider run has one unguessable identity,
+one isolated Compose project and one output root; teardown findings make an otherwise green run red.
 
 ## Tests that need infrastructure
 
@@ -69,8 +65,8 @@ credential chain must fail before the affected test executes; none becomes a ski
 
 ## What a change has to bring
 
-- Every relevant inherited test stays inside the acceptance boundary. Assertions are not weakened,
-  skipped or narrowed to make a change pass.
+- Every relevant behavior stays inside the acceptance boundary. Assertions are not weakened, skipped
+  or narrowed to make a change pass.
 - A correction comes with a probe that fails without it, and that probe fails naming the assurance it
   checks rather than timing out.
 - Warnings are fixed, not silenced. Every project builds at the SDK warning level; a suppression is a

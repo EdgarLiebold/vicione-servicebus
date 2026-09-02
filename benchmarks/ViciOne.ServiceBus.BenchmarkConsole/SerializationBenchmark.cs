@@ -51,7 +51,7 @@ public class SerializationBenchmark
     }
 
     /// <summary>
-    /// The envelope path a send context takes, which is what the removed NUnit serializer performance case
+    /// The envelope path a send context takes, which is what the retired serializer performance case
     /// measured. SerializeObject above measures the object path and is not the same statement.
     /// </summary>
     [Benchmark]

@@ -14,8 +14,7 @@ import re
 import sys
 from pathlib import Path
 
-from fixtures import compose_fixture
-from verification import run_scope
+from fixtures import compose_fixture, run_scope
 
 
 def broker_log_path(broker: str, environment: dict[str, str]) -> Path:

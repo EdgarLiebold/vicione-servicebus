@@ -31,8 +31,7 @@ positive and negative outcomes; their retired inherited tests are not reported a
 
 ## Normalize product source paths
 
-Run this as a dedicated mechanical slice after the native test reconstruction has been promoted from
-`tests2` to `tests`.
+Run this as a dedicated mechanical slice after the completed native test reconstruction.
 
 The following product directories repeat a segment without introducing a corresponding namespace or
 architectural boundary:
@@ -395,60 +394,3 @@ short-lived AWS identity, without storing credentials or connection strings. Acc
 exact successful endpoint ready/stop lifecycle, bounded provider state, explicit broker/resource
 cleanup, zero skip/failure and evidence that identifies the AWS region and authentication mode without
 recording secrets.
-
-## Finalize solution composition after native-test promotion
-
-`ViciOne.ServiceBus.slnx` is now a product/package solution and no longer compiles inherited
-`tests/**` projects. Do not reintroduce those projects merely to make the old NUnit/VSTest graph
-available. Replace their meaningful behavior in the source-owner native projects and retire each
-inherited project only when its obligation set is terminal.
-
-The remaining finalization is to promote `tests2` to `tests` and then revalidate that the product,
-unit, local-integration and engineering solutions each contain every retained project belonging to
-their declared role. Acceptance requires locked restore, zero-warning Release builds, all applicable
-unfiltered profiles, and architecture tests that fail when a retained project is omitted from the
-relevant solution.
-
-## Retire the inherited Python/VSTest/NUnit verification stack at promotion
-
-`tools/ci/**`, `build/verification/**`, the Python `unittest` suites, the inherited NUnit/VSTest
-projects and their `build.yml` jobs are transition evidence only. They are not part of the accepted
-xUnit 4 / Microsoft Testing Platform 2 architecture and must not survive the atomic `tests2` to
-`tests` promotion. Removing them earlier would destroy the executable lower bound for cohorts that
-have not yet been replaced.
-
-Before promotion, disposition every script and job by capability. Delete test-discovery, receipt,
-verdict, execution-sentinel and duplicate completeness machinery. Retain genuinely useful
-engineering capabilities such as API/package comparison, infrastructure orchestration, legal
-change-list verification or vulnerability inventory only at their correct non-verdict owner; if
-they require executable tests, those tests use the same native xUnit/MTP architecture. Do not carry
-Python `unittest`, VSTest, NUnit, `VERIFICATION_MODEL`, or a second test verdict into the final tree.
-
-Acceptance requires zero stale workflow/documentation reference, one native CI truth, full closure
-of every inherited obligation before deletion, all applicable unfiltered profiles, locked restore,
-zero-warning Release builds and mutations proving that omitted projects or test cohorts fail the
-native gates.
-
-## Retire the inherited TestFramework product project
-
-`src/ViciOne.ServiceBus.TestFramework` is inherited test material and is not a retained shipping
-package. Move each still-useful fixture behavior into its source-owner native test project, move
-reusable test-only infrastructure into the bounded `tests` support projects, and rebuild the useful
-restaurant scenario as the already-decided standalone sample. Do not preserve helper APIs merely
-for backward compatibility.
-
-The current project graph has exactly twelve references to this project, all from inherited
-`tests/**` projects, plus its membership in the inherited root `ViciOne.ServiceBus.slnx`. No retained
-product project, `tests2/**` project, tool, benchmark or sample references it. Preserve that clean
-boundary while the twelve inherited consumers are retired; do not introduce a temporary reference
-from the native test tree.
-
-In particular, do not migrate `GetReceiveEndpointAddresses` as a JSON-reparsing abstraction: native
-tests now consume the structured product `ProbeResult` directly. Before deleting the project,
-inventory the remaining `ToJsonString` callers and retain only genuinely useful structured
-diagnostic or sample behavior at its correct owner.
-
-Acceptance requires a path-complete capability disposition, no production reference to the old
-project or namespace, no shipped TestFramework package, all migrated native requirements green,
-the sample in its own non-shipping project, locked restore, zero-warning Release builds, and every
-applicable unfiltered native profile.

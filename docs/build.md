@@ -7,7 +7,7 @@ mapped by `NuGet.config`; no machine-level feed or credential participates.
 
 | Target | Purpose |
 |---|---|
-| `ViciOne.ServiceBus.slnx` | inherited product and inherited tests during the replacement period, plus compile-verified samples |
+| `ViciOne.ServiceBus.slnx` | retained product and package graph |
 | `ViciOne.ServiceBus.Engineering.slnx` | benchmarks, diagnostics, samples, product dependencies, and every materialized native-test project |
 | `ViciOne.ServiceBus.Tests.Unit.slnx` | current hermetic unit and architecture profile |
 | `ViciOne.ServiceBus.Tests.LocalIntegration.slnx` | tests against real resources of the local host |
@@ -29,6 +29,7 @@ dotnet restore ViciOne.ServiceBus.Tests.Unit.slnx --locked-mode
 dotnet restore ViciOne.ServiceBus.Tests.LocalIntegration.slnx --locked-mode
 dotnet restore ViciOne.ServiceBus.Tests.SqlServerLocalIntegration.slnx --locked-mode
 dotnet restore ViciOne.ServiceBus.Tests.AzureServiceBusLocalIntegration.slnx --locked-mode
+dotnet restore ViciOne.ServiceBus.Tests.RabbitMqLocalIntegration.slnx --locked-mode
 
 dotnet build ViciOne.ServiceBus.slnx -c Release --no-restore
 dotnet build ViciOne.ServiceBus.Engineering.slnx -c Release --no-restore
@@ -36,6 +37,7 @@ dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore
 dotnet build ViciOne.ServiceBus.Tests.LocalIntegration.slnx -c Release --no-restore
 dotnet build ViciOne.ServiceBus.Tests.SqlServerLocalIntegration.slnx -c Release --no-restore
 dotnet build ViciOne.ServiceBus.Tests.AzureServiceBusLocalIntegration.slnx -c Release --no-restore
+dotnet build ViciOne.ServiceBus.Tests.RabbitMqLocalIntegration.slnx -c Release --no-restore
 ```
 
 Use the normal MSBuild dependency graph. `--no-incremental` selects the `Rebuild` target, which is
@@ -56,12 +58,12 @@ Review every resulting lock-file change. Test-only central package versions are 
 ## Native xUnit/MTP tests
 
 `global.json` selects Microsoft Testing Platform. With the pinned .NET 10 SDK, run a solution using
-the native MTP command form and no VSTest argument separator:
+the native MTP command form without a legacy runner argument separator:
 
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
   -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 2850 \
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 2933 \
   --max-parallel-test-modules 1
 
 VICIONE_TESTS__Profile=LocalIntegration \
@@ -96,11 +98,12 @@ python3 tools/ci/run_broker_category.py --broker rabbitmq --command -- \
     --minimum-expected-tests 17 --max-parallel-test-modules 1
 ```
 
-The unfiltered process exit code is the verdict. `tests2/testconfig.json` turns skips and warnings
+The unfiltered process exit code is the verdict. `tests/testconfig.json` turns skips and warnings
 into failures, and MTP copies it into the artifact as `<AssemblyName>.testconfig.json`. Every
 executable test project sets `UseMicrosoftTestingPlatformRunner=true` and references exactly one entry package,
-`xunit.v3.mtp-v2`; NUnit, VSTest, test loggers, and ArchUnitNET framework adapters are forbidden in
-the native tree. Architecture rules use `TngTech.ArchUnitNET` core with ordinary xUnit assertions.
+`xunit.v3.mtp-v2`; additional test runners, bridges, loggers, and ArchUnitNET framework adapters are
+forbidden in the native tree. Architecture rules use `TngTech.ArchUnitNET` core with ordinary xUnit
+assertions.
 The minimum count is the predeclared floor for the currently materialized profile. It is updated as
 part of an accepted cohort, never inferred from the result of the run it is meant to protect. The
 current Unit floor includes the architecture foundation, all currently reconstructed Abstractions
@@ -131,8 +134,8 @@ cache cohorts cover bucket retention, direct insertion, factory arbitration, mul
 clear/reuse, and truthful atomic removal without sleeps or wall-clock assertions. The production
 endpoint-resource cache additionally proves deterministic single-flight recovery, capacity and
 usage-aware retention, exact hit accounting, tracker churn, and TTL behavior through an injected
-`TimeProvider`. The native core test project has a distinct SDK artifact identity so restoring the
-remaining same-named NUnit project cannot overwrite its resolved package graph. The
+`TimeProvider`. The native core test project has a distinct SDK artifact identity so its resolved
+package graph cannot collide with any other project. The
 serialization-fault cohort proves request-fault propagation, unsupported-body receive faults, and
 deep contract-type mismatch without dispatch through three real in-memory pipelines. The
 message-metadata cohort additionally proves correlation priority and overrides, conversation
@@ -186,7 +189,7 @@ Compile-time examples live under `samples`, never under a test project. Every sa
 has a tracked lock file, and belongs to the Engineering solution. Native architecture tests enforce
 both the delivery boundary and Engineering membership.
 
-The nested `tests2/Directory.Build.props` and `.targets` import the root contract explicitly because
+The nested `tests/Directory.Build.props` and `.targets` import the root contract explicitly because
 MSBuild otherwise imports only the nearest directory file. Their build errors are intentional:
 
 | Code | Refuses |
@@ -206,7 +209,7 @@ All build output is under `artifacts/sdk`; no test output is written beside sour
 configuration and the requirement-coverage projection verifier. It references no test
 framework and no test platform, directly or transitively. Configuration precedence is:
 
-1. secret-free `tests2/testsettings.json`;
+1. secret-free `tests/testsettings.json`;
 2. the one shared User Secrets store for non-secret local resource coordinates;
 3. `VICIONE_TESTS__...` environment values, with `__` as the hierarchy separator.
 
@@ -229,24 +232,19 @@ Product projects emit full symbols in Debug and embedded symbols in Release. Nat
 applications emit portable PDBs in every configuration because xUnit/MTP discovery depends on that
 format; the evaluated build-graph tests enforce the exception.
 
-## Inherited verification stack
+## One native verification architecture
 
-`tools/ci/**`, `build/verification/**`, and the test projects under `tests/**` are inherited
-transition material. They remain available solely as behavior evidence until each cohort is replaced
-and accepted. They are not the architecture, runner, inventory, completeness model, or final verdict
-of the native test estate. New tests and gates must not extend that Python/VSTest/NUnit stack.
+The complete executable test estate lives under `tests/`. xUnit 4 owns discovery and assertions;
+Microsoft Testing Platform 2 owns execution and the process exit code. The former discovery,
+receipt, result-reclassification and duplicate-verdict stack has been terminally dispositioned and
+removed. Its original bytes remain recoverable through Git and its capability mapping remains in the
+committed migration evidence.
 
-The Python policy validator (`tools/ci/policy_validator.py`, `tools/ci/policies/**`, and its self-test
-suite) was a discarded Team 1 detour, not imported behavior. It is permanently deleted. Do not
-reconstruct it. Any independently valid invariant is implemented once at its effective boundary: in
-MSBuild for build-graph rules, or in native xUnit/MTP architecture tests for repository and test-estate
-rules.
-
-No inherited test is removed until every behavior obligation it owns has an accepted native
-replacement in the correct profile. The original bytes remain recoverable through Git. A file whose
-obligations are only partly replaced stays in full. The mixed MessageBody fixture is the completed
-example: its Abstractions, Core, MessagePack, and cross-assembly obligations were composed into one
-exact 87/87 disposition before the inherited file was removed.
+The retained Python files are not a test framework. `tools/ci/run_broker_category.py` and its
+fixtures own only provider startup, loopback endpoint projection, run isolation, outage control,
+logs and teardown around a native MTP command. `vulnerability_inventory.py` and the tools under
+`tools/identity/` are non-test engineering gates. Their boundaries are protected by the native
+Architecture project. New executable checks belong to the source-owner xUnit/MTP project.
 
 ## Diagnostics and benchmarks
 

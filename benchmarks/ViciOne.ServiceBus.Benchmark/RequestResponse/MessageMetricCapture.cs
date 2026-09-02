@@ -2,7 +2,6 @@ namespace ViciOneServiceBusBenchmark.RequestResponse
 {
     using System;
     using System.Collections.Concurrent;
-    using System.Diagnostics;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -17,20 +16,24 @@ namespace ViciOneServiceBusBenchmark.RequestResponse
         readonly long _messageCount;
         readonly TaskCompletionSource<TimeSpan> _requestCompleted;
         readonly ConcurrentBag<RequestResponseMessage> _sentMessages;
-        readonly Stopwatch _stopwatch;
+        readonly IBenchmarkMetricClock _clock;
         long _consumed;
         long _sent;
 
         public MessageMetricCapture(long messageCount)
+            : this(messageCount, new StopwatchBenchmarkMetricClock())
         {
+        }
+
+        internal MessageMetricCapture(long messageCount, IBenchmarkMetricClock clock)
+        {
+            _clock = clock ?? throw new ArgumentNullException(nameof(clock));
             _messageCount = messageCount;
 
             _consumedMessages = new ConcurrentBag<ConsumedMessage>();
             _sentMessages = new ConcurrentBag<RequestResponseMessage>();
             _requestCompleted = new TaskCompletionSource<TimeSpan>(TaskCreationOptions.RunContinuationsAsynchronously);
             _consumeCompleted = new TaskCompletionSource<TimeSpan>(TaskCreationOptions.RunContinuationsAsynchronously);
-
-            _stopwatch = Stopwatch.StartNew();
         }
 
         public Task<TimeSpan> RequestCompleted => _requestCompleted.Task;
@@ -38,11 +41,11 @@ namespace ViciOneServiceBusBenchmark.RequestResponse
 
         Task IReportConsumerMetric.Consumed<T>(Guid messageId)
         {
-            _consumedMessages.Add(new ConsumedMessage(messageId, _stopwatch.ElapsedTicks));
+            _consumedMessages.Add(new ConsumedMessage(messageId, _clock.ElapsedTicks));
 
             var consumed = Interlocked.Increment(ref _consumed);
             if (consumed == _messageCount)
-                _consumeCompleted.TrySetResult(_stopwatch.Elapsed);
+                _consumeCompleted.TrySetResult(_clock.Elapsed);
 
             return TaskUtil.Completed;
         }
@@ -53,17 +56,17 @@ namespace ViciOneServiceBusBenchmark.RequestResponse
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
 
-            var sendTimestamp = _stopwatch.ElapsedTicks;
+            var sendTimestamp = _clock.ElapsedTicks;
 
             var response = await request().ConfigureAwait(false);
 
-            var responseTimestamp = _stopwatch.ElapsedTicks;
+            var responseTimestamp = _clock.ElapsedTicks;
 
             _sentMessages.Add(new RequestResponseMessage(messageId, sendTimestamp, responseTimestamp));
 
             var sent = Interlocked.Increment(ref _sent);
             if (sent == _messageCount)
-                _requestCompleted.TrySetResult(_stopwatch.Elapsed);
+                _requestCompleted.TrySetResult(_clock.Elapsed);
 
             return response;
         }

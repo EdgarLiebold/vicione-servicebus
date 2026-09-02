@@ -478,18 +478,13 @@ def map_text(
     registry: tuple[FormerIdentityFamily, ...] | None = None,
 ) -> str:
     """Apply the closed, order-sensitive technical identity mapping."""
-    # A tracked baseline file whose new name still contains ".log" would become
-    # ignored after the path rename. Keep the exact target file stageable by a
-    # normal `git add -A` while retaining the general log ignore rule.
-    log4net_exception = "!src/ViciOne.ServiceBus.TestFramework/ViciOne.ServiceBus.TestFramework.log4net.xml"
     scratch_boundary = ".testagent/"
-    if "*.log*" in text and (log4net_exception not in text or scratch_boundary not in text):
+    if "*.log*" in text and scratch_boundary not in text:
         text = text.replace("\r\n", "\n")
         newline = "\n"
-        additions = [item for item in (log4net_exception, scratch_boundary) if item not in text]
         text = text.replace(
             f"*.log*{newline}",
-            f"*.log*{newline}{newline.join(additions)}{newline}",
+            f"*.log*{newline}{scratch_boundary}{newline}",
             1,
         )
 

@@ -34,8 +34,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from fixtures import broker_logs, compose_fixture, outage_protocol  # noqa: E402
-from verification import run_scope  # noqa: E402
+from fixtures import broker_logs, compose_fixture, outage_protocol, run_scope  # noqa: E402
 
 # A collected broker log is raw run output, not repository structure: it is large, it repeats between
 # runs and it is gone the moment the compose project is torn down anyway. It goes where the TRX goes,

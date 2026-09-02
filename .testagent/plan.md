@@ -9,7 +9,7 @@ VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 2850 predeclared unfiltered cases;
+- `UnitArchitecture`: 2927 predeclared unfiltered cases;
 - `LocalIntegration`: 326 predeclared unfiltered cases;
 - `SqlServerLocalIntegration`: 60 predeclared unfiltered cases;
 - `AzureServiceBusLocalIntegration`: 24 predeclared unfiltered cases.
@@ -2708,3 +2708,41 @@ LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carri
    Technical commit and one direct Evidence child with raw CTRF/log/binlog/hash evidence, perform the
    independent static counterexample review, then publish without force-push under the current explicit
    remote-backup authorization.
+
+## Final A+ native-test promotion — two large completion packages (2026-09-02)
+
+### Package A — benchmark and legacy capability closure
+
+1. Port the exact 75 frozen NUnit benchmark cases into the existing benchmark xUnit-v4/MTP project.
+   Preserve data-row cardinality and strengthen the three wall-clock carriers with a deterministic
+   metric-clock seam that leaves the production Stopwatch clock unchanged.
+2. Add method-level requirement projection and an exact inherited-identity disposition. Serialize
+   process-global environment/Console tests and require exact exceptions, state, effective provider
+   settings, metric cardinality and completion identities.
+3. Run the narrow Release build/test and targeted one-cause mutations, then delete the old benchmark
+   test project and remove it from Engineering, package management and the verification model.
+4. Create a path-complete TestFramework capability disposition, map reusable infrastructure and domain
+   behaviors to their accepted native owners, verify no consumer remains, then remove the project and
+   its root-solution membership atomically.
+
+### Package B — one test tree and one CI truth
+
+5. Retire the legacy verification model, VSTest/NUnit/Python-unittest verdict stack and obsolete workflow
+   jobs. Preserve provider runner utilities only where the native workflow consumes them, and protect
+   their contracts from the native Architecture project.
+6. Fold restore/build/test/provider/pack/identity gates into one native workflow. Keep real-cloud-only
+   Azure/AWS obligations explicitly External Pending; they are visible follow-up work, never counted as
+   local green or as a blocker for the structural promotion.
+7. Atomically replace the placeholder `tests/` tree with the complete `tests2/` native tree. Mechanically
+   update active source, MSBuild, solution, workflow, tool and documentation references; keep frozen
+   historical evidence immutable and append explicit supersession where needed.
+8. Run locked restore, non-incremental Release Engineering build, complete UnitArchitecture and available
+   LocalIntegration/provider categories, format/static analysis, identity/change-list and mutation
+   controls. Freeze technical and evidence commits, verify a clean worktree except the user-owned
+   untracked `review/` directory, and publish without force-push under the standing explicit permission.
+
+### Completion state — 2026-09-02
+
+Packages A and B are implemented and locally accepted. All technical, test, provider, quality and
+mutation gates are complete. The remaining mechanical closeout is the package/identity evidence
+freeze, two commits and the already authorized non-force remote publication.

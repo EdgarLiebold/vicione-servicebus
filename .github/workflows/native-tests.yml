@@ -1,10 +1,7 @@
-#
-# The native xUnit 4 / Microsoft Testing Platform 2 estate is deliberately independent from the
-# inherited NUnit/VSTest verification model in build.yml. Both workflows are required repository
-# checks. Keeping their execution contracts separate prevents the legacy model from becoming a
-# second source of truth for the replacement test architecture.
-#
-name: Native Tests
+# One repository workflow and one test verdict: xUnit 4 discovers and asserts, while Microsoft
+# Testing Platform v2 owns execution and process exit. Python is used only for provider lifecycle
+# orchestration and non-test engineering gates.
+name: Native Build and Tests
 
 on:
   push:
@@ -23,6 +20,24 @@ env:
   TESTINGPLATFORM_TELEMETRY_OPTOUT: 1
 
 jobs:
+  build:
+    name: "Required: Product and Engineering Build"
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Restore product graph in locked mode
+        run: dotnet restore ViciOne.ServiceBus.slnx --locked-mode
+      - name: Build product graph in Release
+        run: dotnet build ViciOne.ServiceBus.slnx -c Release --no-restore
+      - name: Restore complete engineering graph in locked mode
+        run: dotnet restore ViciOne.ServiceBus.Engineering.slnx --locked-mode
+      - name: Build complete engineering graph in Release
+        run: dotnet build ViciOne.ServiceBus.Engineering.slnx -c Release --no-restore
+
   unit-architecture:
     name: "Required: Native Unit/Architecture"
     runs-on: ubuntu-24.04
@@ -37,7 +52,7 @@ jobs:
       - name: Build release test binaries
         run: dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore
       - name: Run the complete profile without filters
-        run: dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore --results-directory artifacts/test-results/unit --minimum-expected-tests 2850 --max-parallel-test-modules 1
+        run: dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore --results-directory artifacts/test-results/unit --minimum-expected-tests 2933 --max-parallel-test-modules 1
 
   local-integration:
     name: "Required: Native Local Integration"
@@ -149,3 +164,44 @@ jobs:
           --results-directory artifacts/test-results/rabbitmq-local-integration
           --minimum-expected-tests 17
           --max-parallel-test-modules 1
+
+  package-and-policy:
+    name: "Required: Package, Security, Identity and Licence"
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    needs:
+      - build
+      - unit-architecture
+      - local-integration
+      - sqlserver-local-integration
+      - azure-servicebus-local-integration
+      - rabbitmq-local-integration
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Restore product graph in locked mode
+        run: dotnet restore ViciOne.ServiceBus.slnx --locked-mode
+      - name: Build product graph in Release
+        run: dotnet build ViciOne.ServiceBus.slnx -c Release --no-restore
+      - name: Pack without another restore or build
+        run: dotnet pack ViciOne.ServiceBus.slnx -c Release --no-build --no-restore -o artifacts/packages
+      - name: Bind package bytes
+        run: sha256sum artifacts/packages/*.nupkg > artifacts/packages/SHA256SUMS
+      - name: Inventory vulnerable dependency paths
+        run: python3 tools/ci/vulnerability_inventory.py --solution ViciOne.ServiceBus.slnx --out artifacts/policy/VULNERABILITY_INVENTORY.json
+      - name: Verify source and historical identity closure
+        run: python3 tools/identity/identity_gate.py scan --root . --output artifacts/policy/SOURCE_IDENTITY_GATE.json --evidence-root evidence/WP-F2-SERVICEBUS-IDENTITY
+      - name: Verify package and binary identity closure
+        run: python3 tools/identity/artifact_gate.py --root . --output artifacts/policy/ARTIFACT_GATE.json
+      - name: Verify Apache change evidence
+        run: python3 tools/identity/change_list.py --repository .
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: required-native-package-and-policy
+          path: |
+            artifacts/packages
+            artifacts/policy
+          if-no-files-found: error

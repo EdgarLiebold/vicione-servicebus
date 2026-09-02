@@ -211,9 +211,16 @@ def scan_entry(path: str, data: bytes) -> list[Finding]:
         findings.extend(legal_findings)
         scan_data = decoded.encode("utf-8")
 
-    if decoded and contains_former_identity(decoded):
+    text_contains_identity = bool(decoded and contains_former_identity(decoded))
+    if text_contains_identity:
         findings.append(Finding("text-scan", path, "former technical identity in UTF-8 content"))
-    if contains_former_identity_bytes(scan_data):
+    # Successfully decoded UTF-8 without NUL bytes has no second UTF-16 ASCII view to discover: an
+    # ASCII former identity is already visible in decoded. Keep all binary views for undecodable or
+    # NUL-bearing data, where UTF-16 strings can genuinely be hidden from the UTF-8 text scan. This
+    # avoids decoding large JSON/JSONL evidence four additional times without weakening the gate.
+    if text_contains_identity or (
+        (not decoded or b"\0" in scan_data) and contains_former_identity_bytes(scan_data)
+    ):
         findings.append(Finding("binary-scan", path, "former product identity in binary text surface"))
     lowered = scan_data.lower()
     if any(token in lowered for token in FORBIDDEN_COMPATIBILITY_FORMS):

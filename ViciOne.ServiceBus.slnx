@@ -44,6 +44,5 @@
   </Folder>
   <Project Path="src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj" />
   <Project Path="src/ViciOne.ServiceBus.StateMachineVisualizer/ViciOne.ServiceBus.StateMachineVisualizer.csproj" />
-  <Project Path="src/ViciOne.ServiceBus.TestFramework/ViciOne.ServiceBus.TestFramework.csproj" />
   <Project Path="src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
 </Solution>
