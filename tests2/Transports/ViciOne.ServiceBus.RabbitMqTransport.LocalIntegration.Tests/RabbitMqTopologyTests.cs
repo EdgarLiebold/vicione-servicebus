@@ -64,26 +64,24 @@ public sealed class RabbitMqTopologyTests
                 StringComparison.OrdinalIgnoreCase);
 
             RabbitMqBroker.QueueState input = await fixture.Queue(inputQueue, cancellationToken);
-            RabbitMqBroker.QueueState alternate = await fixture.Queue(alternateQueue, cancellationToken);
-            RabbitMqBroker.QueueState deadLetter = await fixture.Queue(deadLetterQueue, cancellationToken);
-            RabbitMqBroker.ExchangeState primaryState = await fixture.Exchange(primary, cancellationToken);
-            RabbitMqBroker.ExchangeState alternateState = await fixture.Exchange(alternateExchange, cancellationToken);
-            RabbitMqBroker.ExchangeState deadLetterState = await fixture.Exchange(deadLetterQueue, cancellationToken);
             Assert.True(input.Exists);
             Assert.True(input.Durable);
             Assert.Equal("10", input.Arguments["x-max-priority"]);
             Assert.Equal("5400000", input.Arguments["x-expires"]);
             Assert.Equal(deadLetterQueue, input.Arguments["x-dead-letter-exchange"]);
-            Assert.True(alternate.Exists);
-            Assert.True(deadLetter.Exists);
-            Assert.True(primaryState.Exists);
-            Assert.Equal(alternateExchange, primaryState.Arguments["alternate-exchange"]);
-            Assert.True(alternateState.Exists);
-            Assert.True(deadLetterState.Exists);
+            Assert.Equal(0U, await fixture.QueueMessageCount(alternateQueue, cancellationToken));
+            Assert.Equal(0U, await fixture.QueueMessageCount(deadLetterQueue, cancellationToken));
+            await fixture.AssertExchangeExists(deadLetterQueue, cancellationToken);
 
             await bus.Publish(new AlternateMessage(expected), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.Equal(expected, await alternateReceived.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
+
+            RabbitMqBroker.ExchangeState primaryState = await fixture.Exchange(primary, cancellationToken);
+            RabbitMqBroker.ExchangeState alternateState = await fixture.Exchange(alternateExchange, cancellationToken);
+            Assert.True(primaryState.Exists);
+            Assert.Equal(alternateExchange, primaryState.Arguments["alternate-exchange"]);
+            Assert.True(alternateState.Exists);
 
             await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
             started = false;

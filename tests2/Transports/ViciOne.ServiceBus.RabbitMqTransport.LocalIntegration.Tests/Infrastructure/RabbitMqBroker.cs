@@ -118,6 +118,18 @@ internal sealed class RabbitMqBroker : IDisposable
         return queue.MessageCount;
     }
 
+    public async Task AssertExchangeExists(string exchangeName, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(exchangeName);
+        ConnectionFactory factory = CreateConnectionFactory();
+        await using IConnection connection = await factory.CreateConnectionAsync(cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+        await using IChannel channel = await connection.CreateChannelAsync(cancellationToken: cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+        await channel.ExchangeDeclarePassiveAsync(exchangeName, cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+    }
+
     public async Task WaitUntilQueueIsReleased(string queueName, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(queueName);
