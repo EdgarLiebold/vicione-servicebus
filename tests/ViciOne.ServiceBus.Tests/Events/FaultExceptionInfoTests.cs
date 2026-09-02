@@ -101,6 +101,155 @@ public sealed class FaultExceptionInfoTests
         Assert.Equal("inner", snapshot.InnerException.Message);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-FAULT-DIAGNOSTICS", "aggregate-exception-count-boundary")]
+    public void AggregateFaults_AreLimitedToTheFirstSixteenExceptions()
+    {
+        var exceptions = Enumerable.Range(0, 17)
+            .Select(index => new InvalidOperationException($"failure-{index}"))
+            .ToArray();
+
+        var fault = new FaultEvent<DiagnosticFailure>(
+            new DiagnosticFailure(FailureSource.ExceptionData),
+            null,
+            null!,
+            new AggregateException(exceptions),
+            []);
+
+        Assert.Equal(16, fault.Exceptions.Length);
+        Assert.Collection(
+            fault.Exceptions,
+            Enumerable.Range(0, 16)
+                .Select<int, Action<ExceptionInfo>>(index => exception => Assert.Equal($"failure-{index}", exception.Message))
+                .ToArray());
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-FAULT-DIAGNOSTICS", "explicit-exception-count-boundary")]
+    public void ExplicitFaultExceptionCollections_AreLimitedToTheFirstSixteenExceptions()
+    {
+        ExceptionInfo[] exceptions = Enumerable.Range(0, 17)
+            .Select(index => (ExceptionInfo)new StubExceptionInfo($"Remote.Type{index}", $"failure-{index}", null))
+            .ToArray();
+
+        var fault = new FaultEvent<DiagnosticFailure>(
+            new DiagnosticFailure(FailureSource.ExceptionData),
+            null,
+            null!,
+            exceptions,
+            []);
+
+        Assert.Equal(16, fault.Exceptions.Length);
+        Assert.Same(exceptions[0], fault.Exceptions[0]);
+        Assert.Same(exceptions[15], fault.Exceptions[15]);
+        Assert.DoesNotContain(exceptions[16], fault.Exceptions);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-FAULT-DIAGNOSTICS", "explicit-exception-collection-null-guard")]
+    public void ExplicitFaultExceptionCollections_RejectNull()
+    {
+        Assert.Throws<ArgumentNullException>(() => new FaultEvent<DiagnosticFailure>(
+            new DiagnosticFailure(FailureSource.ExceptionData),
+            null,
+            null!,
+            (IEnumerable<ExceptionInfo>)null!,
+            []));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-FAULT-DIAGNOSTICS", "receive-exception-count-boundary")]
+    public void ReceiveFaults_AreLimitedToTheFirstSixteenExceptions()
+    {
+        var exceptions = Enumerable.Range(0, 17)
+            .Select(index => new InvalidOperationException($"failure-{index}"))
+            .ToArray();
+
+        var fault = new ReceiveFaultEvent(null!, new AggregateException(exceptions), "application/json", null, []);
+
+        Assert.Equal(16, fault.Exceptions.Length);
+        Assert.Equal("failure-0", fault.Exceptions[0].Message);
+        Assert.Equal("failure-15", fault.Exceptions[15].Message);
+        Assert.DoesNotContain(fault.Exceptions, exception => exception.Message == "failure-16");
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-FAULT-DIAGNOSTICS", "inner-exception-depth-boundary")]
+    public void Construction_LimitsInnerExceptionChainToSixteenNodes()
+    {
+        Exception source = new InvalidOperationException("failure-16");
+        for (var index = 15; index >= 0; index--)
+            source = new InvalidOperationException($"failure-{index}", source);
+
+        var snapshot = new FaultExceptionInfo(source);
+        var captured = new List<ExceptionInfo>();
+        for (ExceptionInfo? current = snapshot; current is not null; current = current.InnerException)
+            captured.Add(current);
+
+        Assert.Equal(16, captured.Count);
+        Assert.Equal("failure-0", captured[0].Message);
+        Assert.Equal("failure-15", captured[15].Message);
+        Assert.Null(captured[15].InnerException);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-FAULT-DIAGNOSTICS", "cardinality-key-and-text-boundaries")]
+    public void Construction_BoundsDataCardinalityKeysValuesAndDiagnosticText()
+    {
+        var source = new InvalidOperationException("source");
+        for (var index = 0; index < 31; index++)
+            source.Data[$"Key-{index:D2}"] = index;
+
+        string oversizedKey = new('k', 257);
+        source.Data[oversizedKey] = new string('v', 2049);
+        source.Data["Rejected-33"] = true;
+
+        string oversizedText = new('x', 2049);
+        var remote = new StubExceptionInfo(oversizedText, oversizedText, null, oversizedText, oversizedText);
+
+        var dataSnapshot = new FaultExceptionInfo(source);
+        var textSnapshot = new FaultExceptionInfo(new ExceptionInfoException(remote));
+
+        Assert.Equal(32, dataSnapshot.Data!.Count);
+        for (var index = 0; index < 31; index++)
+            Assert.Equal(index, Assert.IsType<int>(dataSnapshot.Data[$"KEY-{index:D2}"]));
+        Assert.False(dataSnapshot.Data.ContainsKey("Rejected-33"));
+        string boundedKey = Assert.Single(dataSnapshot.Data.Keys, key => key.StartsWith('k'));
+        Assert.Equal(256, boundedKey.Length);
+        Assert.Equal(new string('v', 2048), Assert.IsType<string>(dataSnapshot.Data[boundedKey]));
+        Assert.Equal(2048, textSnapshot.ExceptionType.Length);
+        Assert.Equal(2048, textSnapshot.Message.Length);
+        Assert.Equal(2048, textSnapshot.StackTrace.Length);
+        Assert.Equal(2048, textSnapshot.Source.Length);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-FAULT-DIAGNOSTICS", "complex-value-safe-rendering")]
+    public void Construction_DoesNotInvokeArbitraryDataValueToString()
+    {
+        var source = new InvalidOperationException("source");
+        var value = new HostileDiagnosticValue();
+        source.Data["Value"] = value;
+
+        var snapshot = new FaultExceptionInfo(source);
+
+        Assert.Equal(0, value.ToStringCallCount);
+        Assert.Equal(typeof(HostileDiagnosticValue).FullName, Assert.IsType<string>(snapshot.Data!["Value"]));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-FAULT-DIAGNOSTICS", "hostile-getter-isolation")]
+    public void HostileDiagnosticGetters_DoNotReplaceTheOriginalFailure()
+    {
+        var snapshot = new FaultExceptionInfo(new HostileDiagnosticException());
+
+        Assert.Equal(TypeCache<HostileDiagnosticException>.ShortName, snapshot.ExceptionType);
+        Assert.Contains("Message property threw", snapshot.Message, StringComparison.Ordinal);
+        Assert.Equal(string.Empty, snapshot.StackTrace);
+        Assert.Equal(string.Empty, snapshot.Source);
+        Assert.Null(snapshot.Data);
+    }
+
     private static async Task<Fault<DiagnosticFailure>> PublishFault(FailureSource source)
     {
         TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
@@ -176,13 +325,41 @@ public sealed class FaultExceptionInfoTests
     private sealed class StubExceptionInfo(
         string exceptionType,
         string message,
-        ExceptionInfo? innerException) : ExceptionInfo
+        ExceptionInfo? innerException,
+        string stackTrace = "remote stack",
+        string source = "remote source") : ExceptionInfo
     {
         public string ExceptionType { get; } = exceptionType;
         public ExceptionInfo? InnerException { get; } = innerException;
-        public string StackTrace { get; } = "remote stack";
+        public string StackTrace { get; } = stackTrace;
         public string Message { get; } = message;
-        public string Source { get; } = "remote source";
+        public string Source { get; } = source;
         public IDictionary<string, object>? Data { get; } = null;
+    }
+
+    private sealed class HostileDiagnosticValue
+    {
+        public int ToStringCallCount { get; private set; }
+
+        public override string ToString()
+        {
+            ToStringCallCount++;
+            throw new InvalidOperationException("Application ToString must not be called for fault diagnostics.");
+        }
+    }
+
+    private sealed class HostileDiagnosticException : Exception
+    {
+        public override IDictionary Data => throw new InvalidOperationException("Data getter fault");
+
+        public override string Message => throw new InvalidOperationException("Message getter fault");
+
+        public override string? Source
+        {
+            get => throw new InvalidOperationException("Source getter fault");
+            set => throw new InvalidOperationException("Source setter fault");
+        }
+
+        public override string? StackTrace => throw new InvalidOperationException("StackTrace getter fault");
     }
 }

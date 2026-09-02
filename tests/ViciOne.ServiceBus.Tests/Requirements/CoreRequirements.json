@@ -1978,6 +1978,62 @@
       "variantKey" : "remote-type-and-inner-chain"
    },
    {
+      "requirementId" : "REQ-VSB-FAULT-DIAGNOSTICS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "AggregateFaults_AreLimitedToTheFirstSixteenExceptions",
+      "testType" : "ViciOne.ServiceBus.Tests.Events.FaultExceptionInfoTests",
+      "variantKey" : "aggregate-exception-count-boundary"
+   },
+   {
+      "requirementId" : "REQ-VSB-FAULT-DIAGNOSTICS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ExplicitFaultExceptionCollections_AreLimitedToTheFirstSixteenExceptions",
+      "testType" : "ViciOne.ServiceBus.Tests.Events.FaultExceptionInfoTests",
+      "variantKey" : "explicit-exception-count-boundary"
+   },
+   {
+      "requirementId" : "REQ-VSB-FAULT-DIAGNOSTICS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ExplicitFaultExceptionCollections_RejectNull",
+      "testType" : "ViciOne.ServiceBus.Tests.Events.FaultExceptionInfoTests",
+      "variantKey" : "explicit-exception-collection-null-guard"
+   },
+   {
+      "requirementId" : "REQ-VSB-FAULT-DIAGNOSTICS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ReceiveFaults_AreLimitedToTheFirstSixteenExceptions",
+      "testType" : "ViciOne.ServiceBus.Tests.Events.FaultExceptionInfoTests",
+      "variantKey" : "receive-exception-count-boundary"
+   },
+   {
+      "requirementId" : "REQ-VSB-FAULT-DIAGNOSTICS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Construction_LimitsInnerExceptionChainToSixteenNodes",
+      "testType" : "ViciOne.ServiceBus.Tests.Events.FaultExceptionInfoTests",
+      "variantKey" : "inner-exception-depth-boundary"
+   },
+   {
+      "requirementId" : "REQ-VSB-FAULT-DIAGNOSTICS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Construction_BoundsDataCardinalityKeysValuesAndDiagnosticText",
+      "testType" : "ViciOne.ServiceBus.Tests.Events.FaultExceptionInfoTests",
+      "variantKey" : "cardinality-key-and-text-boundaries"
+   },
+   {
+      "requirementId" : "REQ-VSB-FAULT-DIAGNOSTICS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "Construction_DoesNotInvokeArbitraryDataValueToString",
+      "testType" : "ViciOne.ServiceBus.Tests.Events.FaultExceptionInfoTests",
+      "variantKey" : "complex-value-safe-rendering"
+   },
+   {
+      "requirementId" : "REQ-VSB-FAULT-DIAGNOSTICS",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "HostileDiagnosticGetters_DoNotReplaceTheOriginalFailure",
+      "testType" : "ViciOne.ServiceBus.Tests.Events.FaultExceptionInfoTests",
+      "variantKey" : "hostile-getter-isolation"
+   },
+   {
       "requirementId" : "REQ-VSB-HOST-METADATA-TRANSPORT",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
       "testMethod" : "PublishedMessage_CarriesEveryHostFieldAcrossTheSerializationBoundary",
@@ -3327,6 +3383,27 @@
       "testMethod" : "MessageFlow_EmitsOneCompleteTraceWithExactKindsParentsBaggageAndTags",
       "testType" : "ViciOne.ServiceBus.Tests.Monitoring.MessagePipelineActivityTests",
       "variantKey" : "complete-send-receive-process-trace"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-ACTIVITY",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "UnsampledServiceBusActivity_StillPropagatesParentIdTraceStateAndBaggage",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.MessagePipelineActivityTests",
+      "variantKey" : "unsampled-parent-context-propagation"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-ACTIVITY",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ThrowingSampleAndSecondaryLogger_DoNotChangeExactlyOnceDeliveryOrParentPropagation",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.MessagePipelineActivityTests",
+      "variantKey" : "sample-and-logging-fault-isolation"
+   },
+   {
+      "requirementId" : "REQ-VSB-MESSAGE-ACTIVITY",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "ThrowingStartOrStopCallback_DoesNotChangeExactlyOnceDelivery",
+      "testType" : "ViciOne.ServiceBus.Tests.Monitoring.MessagePipelineActivityTests",
+      "variantKey" : "start-and-stop-callback-fault-isolation"
    },
    {
       "requirementId" : "REQ-VSB-TEST-HARNESS-LIFECYCLE",

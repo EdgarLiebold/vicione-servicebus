@@ -9,6 +9,9 @@ namespace ViciOne.ServiceBus.Events
     public class FaultEvent<T> :
         Fault<T>
     {
+        const int MaximumExceptionCount = 16;
+
+
         public FaultEvent()
         {
         }
@@ -20,6 +23,8 @@ namespace ViciOne.ServiceBus.Events
 
         public FaultEvent(T message, Guid? faultedMessageId, HostInfo host, IEnumerable<ExceptionInfo> exceptions, string[] faultMessageTypes)
         {
+            ArgumentNullException.ThrowIfNull(exceptions);
+
             Timestamp = DateTime.UtcNow;
             FaultId = NewId.NextGuid();
 
@@ -28,7 +33,7 @@ namespace ViciOne.ServiceBus.Events
             FaultMessageTypes = faultMessageTypes;
             FaultedMessageId = faultedMessageId;
 
-            Exceptions = exceptions.ToArray();
+            Exceptions = exceptions.Take(MaximumExceptionCount).ToArray();
         }
 
         public Guid FaultId { get; set; }
@@ -43,7 +48,8 @@ namespace ViciOne.ServiceBus.Events
         {
             var aggregateException = exception as AggregateException;
 
-            return aggregateException?.InnerExceptions.Where(x => x != null).Select(ExceptionInfo (x) => new FaultExceptionInfo(x)).ToArray()
+            return aggregateException?.InnerExceptions.Where(x => x != null).Take(MaximumExceptionCount)
+                .Select(ExceptionInfo (x) => new FaultExceptionInfo(x)).ToArray()
                 ?? [new FaultExceptionInfo(exception)];
         }
     }

@@ -8,6 +8,9 @@ namespace ViciOne.ServiceBus.Events
     public class ReceiveFaultEvent :
         ReceiveFault
     {
+        const int MaximumExceptionCount = 16;
+
+
         public ReceiveFaultEvent()
         {
         }
@@ -24,7 +27,8 @@ namespace ViciOne.ServiceBus.Events
 
             var aggregateException = exception as AggregateException;
 
-            Exceptions = aggregateException?.InnerExceptions.Select(ExceptionInfo (x) => new FaultExceptionInfo(x)).ToArray()
+            Exceptions = aggregateException?.InnerExceptions.Take(MaximumExceptionCount)
+                .Select(ExceptionInfo (x) => new FaultExceptionInfo(x)).ToArray()
                 ?? [new FaultExceptionInfo(exception)];
         }
 

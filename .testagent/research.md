@@ -3245,3 +3245,46 @@ when it selects embedded Release symbols. A new architecture test evaluates ever
 Release and binds both `DebugType=embedded` and the absence of an external-symbol projection. The
 exact workflow sequence of locked product restore, full Release build and `pack --no-build` then
 produced all 19 packages successfully.
+
+## Reviewer integration research — V4 telemetry and fault envelopes (2026-09-02)
+
+The protected `review/` handoff was verified without modifying or tracking it. Its aggregate SHA-256
+is `371bf21331f0fc3316be271bce04ab37b3c54c50e13f443789d94c1f6eca1f18`; the V4 donor bundle is
+`e8f28736562bf7c4fa8ffca4dfd662cd5105d3124e26d2ba424fe1ac0d192b87` and resolves to final commit
+`f8050928d1065145bf76fa76488644ca5c834c86`. The current integration baseline remains commit
+`894985b3c8b6db3bfe06e04926becee11c7774ba`, tree
+`6f0aa701c05e833c30ee747cc77ecc6c3aee0f75`; current native tests are authoritative because they
+postdate the reviewer copy.
+
+V4 commit `07df43b` identifies two independent defects. First, Activity listener callbacks can make
+observation throw into messaging paths, and a disabled or failed child Activity currently loses the
+ambient trace propagation. Second, fault envelopes allow unbounded aggregate fan-out, inner chains
+and exception data. The current `ExceptionUtil` already bounds message and stack strings to 2,048
+characters, so the donor is incomplete if copied literally: source/type text, aggregate breadth,
+inner depth, data cardinality/key/value size and serialization-safe normalization still require an
+explicit combined boundary.
+
+The current native owners are
+`tests/ViciOne.ServiceBus.Tests/Events/FaultExceptionInfoTests.cs` and
+`tests/ViciOne.ServiceBus.Tests/Monitoring/MessagePipelineActivityTests.cs`. Existing tests strongly
+cover detached diagnostic data, wrapper precedence, remote exception identity, and the normal
+send/receive/process trace. Missing cases are exact limits and over-limit truncation, throwing custom
+values, aggregate fan-out, deep inner chains, trace-state fallback propagation, and exception
+isolation for listener sample/start/stop callbacks. Static Roslyn pairing found 3,895 source and 713
+test files, with 1,059 source files paired and 2,836 unpaired. This is a syntax-only pairing heuristic,
+not execution coverage. In the next V4 concurrency package it specifically marks
+`src/ViciOne.ServiceBus/Util/ChannelExecutor.cs` unpaired; that gap is retained for the executor
+replacement rather than being mistaken for completed coverage.
+
+### Verification result and corrected restore-order diagnosis
+
+- The final Release Unit solution build passes with zero warnings and zero errors. Focused fault and
+  Activity owners pass 14/14 and 5/5; all 15 one-cause production mutations compile and are killed.
+- The complete restored candidate passes 2,996/2,996 with zero skips. Scoped whitespace verification
+  and `git diff --check` pass.
+- Architecture evaluates every executable project below `tests`, including the three isolated Azure
+  Service Bus, RabbitMQ and SQL Server LocalIntegration profiles. Restoring only UnitArchitecture and
+  the general LocalIntegration profile therefore leaves three generated MTP props absent and
+  `IsTestingPlatformApplication` empty. The reproducible remedy is to restore UnitArchitecture plus
+  all four LocalIntegration solution graphs before the complete Architecture run. This is a build
+  graph precondition, distinct from the restricted-sandbox process issue.

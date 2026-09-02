@@ -2623,3 +2623,16 @@ future cohorts as complete.
   binds embedded Release symbols without advertising nonexistent external PDBs and creates all 19
   packages. Remote publication is
   still pending at this local-candidate point and will use only the standing non-force permission.
+
+## Reviewer integration — V4 telemetry and fault envelopes accepted locally (2026-09-02)
+
+- The first semantic reviewer block hardens Activity observation and fault-envelope projection in
+  the promoted native tree; `review/**` remains untouched and untracked.
+- Release build passes with zero warnings/errors. Focused fault and Activity owners pass 14/14 and
+  5/5; complete UnitArchitecture passes 2,996/2,996 with zero failures or skips after all evaluated
+  solution graphs are restored.
+- Fifteen independent, buildable one-cause production mutations are killed and removed before the
+  final green run. Scoped whitespace verification and `git diff --check` pass.
+- Evidence is recorded under
+  `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-TELEMETRY-FAULTS/`. This is a local technical
+  acceptance only; no remote publication is included or implied.

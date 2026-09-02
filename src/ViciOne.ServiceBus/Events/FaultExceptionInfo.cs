@@ -10,15 +10,26 @@ namespace ViciOne.ServiceBus.Events;
 [Serializable]
 public sealed class FaultExceptionInfo : ExceptionInfo
 {
+    const int MaximumDataCount = 32;
+    const int MaximumInnerExceptionCount = 16;
+    const int MaximumKeyLength = 256;
+    const int MaximumTextLength = 2048;
+
+
     public FaultExceptionInfo()
     {
     }
 
     public FaultExceptionInfo(Exception exception)
+        : this(exception, 0)
+    {
+    }
+
+    FaultExceptionInfo(Exception exception, int depth)
     {
         ArgumentNullException.ThrowIfNull(exception);
 
-        IDictionary primaryData = exception.Data;
+        IDictionary? primaryData = GetData(exception);
         Exception reportedException = exception;
         IDictionary? fallbackData = null;
 
@@ -28,19 +39,17 @@ public sealed class FaultExceptionInfo : ExceptionInfo
         if (exception is ViciOneServiceBusApplicationException { InnerException: { } innerException })
         {
             reportedException = innerException;
-            fallbackData = innerException.Data;
+            fallbackData = GetData(innerException);
         }
 
         Data = SnapshotData(primaryData, fallbackData);
-        ExceptionType = reportedException is ExceptionInfoException infoException
-            ? infoException.ExceptionInfo.ExceptionType
-            : TypeCache.GetShortName(reportedException.GetType());
-        InnerException = reportedException.InnerException is { } nestedException
-            ? new FaultExceptionInfo(nestedException)
+        ExceptionType = Limit(GetExceptionType(reportedException), MaximumTextLength);
+        InnerException = depth < MaximumInnerExceptionCount - 1 && GetInnerException(reportedException) is { } nestedException
+            ? new FaultExceptionInfo(nestedException, depth + 1)
             : null;
-        StackTrace = ExceptionUtil.GetStackTrace(reportedException);
-        Message = ExceptionUtil.GetMessage(reportedException);
-        Source = reportedException.Source ?? string.Empty;
+        StackTrace = Limit(GetStackTrace(reportedException), MaximumTextLength);
+        Message = Limit(GetMessage(reportedException), MaximumTextLength);
+        Source = Limit(GetSource(reportedException), MaximumTextLength);
     }
 
     public string ExceptionType { get; set; } = null!;
@@ -55,26 +64,130 @@ public sealed class FaultExceptionInfo : ExceptionInfo
 
     public IDictionary<string, object>? Data { get; set; }
 
-    private static IDictionary<string, object>? SnapshotData(IDictionary primary, IDictionary? fallback)
+    static IDictionary? GetData(Exception exception)
+    {
+        try
+        {
+            return exception.Data;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    static Exception? GetInnerException(Exception exception)
+    {
+        try
+        {
+            return exception.InnerException;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    static string GetExceptionType(Exception exception)
+    {
+        try
+        {
+            if (exception is ExceptionInfoException infoException)
+                return infoException.ExceptionInfo.ExceptionType ?? TypeCache.GetShortName(exception.GetType());
+        }
+        catch
+        {
+        }
+
+        return TypeCache.GetShortName(exception.GetType());
+    }
+
+    static string GetMessage(Exception exception)
+    {
+        try
+        {
+            return ExceptionUtil.GetMessage(exception);
+        }
+        catch
+        {
+            return $"An exception of type {exception.GetType()} was thrown but its message could not be read.";
+        }
+    }
+
+    static string GetStackTrace(Exception exception)
+    {
+        try
+        {
+            return ExceptionUtil.GetStackTrace(exception);
+        }
+        catch
+        {
+            return string.Empty;
+        }
+    }
+
+    static string GetSource(Exception exception)
+    {
+        try
+        {
+            return exception.Source ?? string.Empty;
+        }
+        catch
+        {
+            return string.Empty;
+        }
+    }
+
+    static IDictionary<string, object>? SnapshotData(IDictionary? primary, IDictionary? fallback)
     {
         Dictionary<string, object>? snapshot = null;
+        var remaining = MaximumDataCount;
 
-        AddEntries(primary, ref snapshot);
-        if (fallback is not null && !ReferenceEquals(primary, fallback))
-            AddEntries(fallback, ref snapshot);
+        if (primary is not null)
+            AddEntries(primary, ref snapshot, ref remaining);
+        if (remaining > 0 && fallback is not null && !ReferenceEquals(primary, fallback))
+            AddEntries(fallback, ref snapshot, ref remaining);
 
         return snapshot;
     }
 
-    private static void AddEntries(IDictionary source, ref Dictionary<string, object>? destination)
+    static void AddEntries(IDictionary source, ref Dictionary<string, object>? destination, ref int remaining)
     {
-        foreach (DictionaryEntry entry in source)
+        try
         {
-            if (entry.Key is not string key || entry.Value is null)
-                continue;
+            foreach (DictionaryEntry entry in source)
+            {
+                if (remaining == 0)
+                    return;
+                if (entry.Key is not string key || entry.Value is null)
+                    continue;
 
-            destination ??= new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-            destination.TryAdd(key, entry.Value);
+                key = Limit(key, MaximumKeyLength);
+                destination ??= new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+                if (destination.TryAdd(key, NormalizeDiagnosticValue(entry.Value)))
+                    remaining--;
+            }
         }
+        catch
+        {
+            // Exception diagnostics are observational and must not replace the original failure.
+        }
+    }
+
+    static object NormalizeDiagnosticValue(object value)
+    {
+        return value switch
+        {
+            string text => Limit(text, MaximumTextLength),
+            bool or byte or sbyte or short or ushort or int or uint or long or ulong or float or double or decimal or char
+                or Guid or DateTime or DateTimeOffset or TimeSpan => value,
+            Enum => Limit(value.ToString() ?? value.GetType().Name, MaximumTextLength),
+            _ => Limit(value.GetType().FullName ?? value.GetType().Name, MaximumTextLength)
+        };
+    }
+
+    static string Limit(string value, int maximumLength)
+    {
+        return value.Length <= maximumLength ? value : value[..maximumLength];
     }
 }

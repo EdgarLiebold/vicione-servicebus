@@ -18,46 +18,55 @@ namespace ViciOne.ServiceBus.Logging
             params (string Key, object? Value)[] tags)
             where T : class
         {
-            var parentActivityContext = System.Diagnostics.Activity.Current == null
+            var currentActivity = System.Diagnostics.Activity.Current;
+            var parentActivityContext = currentActivity == null
                 ? GetParentActivityContext(context.Headers)
                 : default;
 
-            var activity = Cached.Source.Value.CreateActivity(transportContext.ActivityName, ActivityKind.Producer, parentActivityContext);
+            var activity = ActivityObservation.TryCreate(Cached.Source, transportContext.ActivityName, ActivityKind.Producer, parentActivityContext);
             if (activity == null)
+            {
+                PropagateActivity(context, currentActivity);
                 return null;
+            }
 
-            activity.SetTag(DiagnosticHeaders.Messaging.Operation, "send");
-            activity.SetTag(DiagnosticHeaders.Messaging.System, transportContext.ActivitySystem);
-            activity.SetTag(DiagnosticHeaders.Messaging.DestinationName, transportContext.ActivityDestination);
+            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.Messaging.Operation, "send");
+            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.Messaging.System, transportContext.ActivitySystem);
+            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.Messaging.DestinationName, transportContext.ActivityDestination);
 
-            return PopulateSendActivity<T>(context, activity, tags);
+            return PopulateSendActivity<T>(context, activity, currentActivity, tags);
         }
 
         public static StartedActivity? StartOutboxSendActivity<T>(this ILogContext logContext, SendContext<T> context)
             where T : class
         {
-            var parentActivityContext = System.Diagnostics.Activity.Current == null
+            var currentActivity = System.Diagnostics.Activity.Current;
+            var parentActivityContext = currentActivity == null
                 ? GetParentActivityContext(context.Headers)
                 : default;
 
-            var activity = Cached.Source.Value.CreateActivity("outbox send", ActivityKind.Producer, parentActivityContext);
+            var activity = ActivityObservation.TryCreate(Cached.Source, "outbox send", ActivityKind.Producer, parentActivityContext);
             if (activity == null)
+            {
+                PropagateActivity(context, currentActivity);
                 return null;
+            }
 
-            activity.SetTag(DiagnosticHeaders.Messaging.Operation, "send");
+            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.Messaging.Operation, "send");
 
-            return PopulateSendActivity<T>(context, activity);
+            return PopulateSendActivity<T>(context, activity, currentActivity);
         }
 
         public static StartedActivity? StartOutboxDeliverActivity(this ILogContext logContext, OutboxMessageContext context)
         {
             var parentActivityContext = GetParentActivityContext(context.Headers);
 
-            var activity = Cached.Source.Value.CreateActivity("outbox process", ActivityKind.Client, parentActivityContext);
+            var activity = ActivityObservation.TryCreate(Cached.Source, "outbox process", ActivityKind.Client, parentActivityContext);
             if (activity == null)
                 return null;
 
-            activity.Start();
+            if (!ActivityObservation.TryStart(activity))
+                return null;
 
             return new StartedActivity(activity);
         }
@@ -71,34 +80,36 @@ namespace ViciOne.ServiceBus.Logging
             {
                 true => linkTypeValue switch
                 {
-                    "Link" => Cached.Source.Value.CreateActivity(name, ActivityKind.Consumer, (ActivityContext)default,
-                        links: [new ActivityLink(parentActivityContext)]),
-                    "New" => Cached.Source.Value.CreateActivity(name, ActivityKind.Consumer, (ActivityContext)default),
-                    _ => Cached.Source.Value.CreateActivity(name, ActivityKind.Consumer, parentActivityContext)
+                    "Link" => ActivityObservation.TryCreate(Cached.Source, name, ActivityKind.Consumer, default,
+                        [new ActivityLink(parentActivityContext)]),
+                    "New" => ActivityObservation.TryCreate(Cached.Source, name, ActivityKind.Consumer),
+                    _ => ActivityObservation.TryCreate(Cached.Source, name, ActivityKind.Consumer, parentActivityContext)
                 },
-                false => Cached.Source.Value.CreateActivity(name, ActivityKind.Consumer, parentActivityContext)
+                false => ActivityObservation.TryCreate(Cached.Source, name, ActivityKind.Consumer, parentActivityContext)
             };
 
             if (activity == null)
                 return null;
 
-            activity.SetTag(DiagnosticHeaders.Messaging.Operation, "receive");
-            activity.SetTag(
+            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.Messaging.Operation, "receive");
+            ActivityObservation.TrySetTag(
+                activity,
                 DiagnosticHeaders.Messaging.System,
                 LogContextInstrumentationExtensions.SystemName(context));
-            activity.SetTag(DiagnosticHeaders.Messaging.DestinationName, endpointName);
+            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.Messaging.DestinationName, endpointName);
 
             if (activity.IsAllDataRequested)
             {
-                activity.SetTag(DiagnosticHeaders.InputAddress, inputAddress);
+                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.InputAddress, inputAddress);
 
                 if ((context.TransportHeaders.TryGetHeader(MessageHeaders.TransportMessageId, out var messageIdHeader)
                         || context.TransportHeaders.TryGetHeader(MessageHeaders.MessageId, out messageIdHeader))
                     && messageIdHeader is string text)
-                    activity.SetTag(DiagnosticHeaders.Messaging.TransportMessageId, text);
+                    ActivityObservation.TrySetTag(activity, DiagnosticHeaders.Messaging.TransportMessageId, text);
             }
 
-            activity.Start();
+            if (!ActivityObservation.TryStart(activity))
+                return null;
 
             return new StartedActivity(activity);
         }
@@ -108,8 +119,8 @@ namespace ViciOne.ServiceBus.Logging
         {
             return StartActivity(context, activity =>
             {
-                activity.SetTag(DiagnosticHeaders.ConsumerType, TypeCache<TConsumer>.ShortName);
-                activity.SetTag(DiagnosticHeaders.PeerAddress, MessageTypeCache<T>.DiagnosticAddress);
+                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.ConsumerType, TypeCache<TConsumer>.ShortName);
+                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.PeerAddress, MessageTypeCache<T>.DiagnosticAddress);
             });
         }
 
@@ -118,8 +129,8 @@ namespace ViciOne.ServiceBus.Logging
         {
             return StartActivity(context, activity =>
             {
-                activity.SetTag(DiagnosticHeaders.ConsumerType, "Handler");
-                activity.SetTag(DiagnosticHeaders.PeerAddress, MessageTypeCache<T>.DiagnosticAddress);
+                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.ConsumerType, "Handler");
+                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.PeerAddress, MessageTypeCache<T>.DiagnosticAddress);
             });
         }
 
@@ -129,9 +140,9 @@ namespace ViciOne.ServiceBus.Logging
         {
             return StartActivity(context, activity =>
             {
-                activity.SetTag(DiagnosticHeaders.SagaId, context.Saga.CorrelationId.ToString("D"));
-                activity.SetTag(DiagnosticHeaders.ConsumerType, TypeCache<TSaga>.ShortName);
-                activity.SetTag(DiagnosticHeaders.PeerAddress, MessageTypeCache<T>.DiagnosticAddress);
+                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.SagaId, context.Saga.CorrelationId.ToString("D"));
+                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.ConsumerType, TypeCache<TSaga>.ShortName);
+                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.PeerAddress, MessageTypeCache<T>.DiagnosticAddress);
             });
         }
 
@@ -141,9 +152,9 @@ namespace ViciOne.ServiceBus.Logging
         {
             return StartActivity(context, activity =>
             {
-                activity.SetTag(DiagnosticHeaders.SagaId, context.Saga.CorrelationId.ToString("D"));
-                activity.SetTag(DiagnosticHeaders.ConsumerType, context.StateMachine.Name);
-                activity.SetTag(DiagnosticHeaders.PeerAddress, MessageTypeCache<T>.DiagnosticAddress);
+                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.SagaId, context.Saga.CorrelationId.ToString("D"));
+                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.ConsumerType, context.StateMachine.Name);
+                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.PeerAddress, MessageTypeCache<T>.DiagnosticAddress);
             });
         }
 
@@ -153,9 +164,9 @@ namespace ViciOne.ServiceBus.Logging
         {
             return StartActivity(context, activity =>
             {
-                activity.SetTag(DiagnosticHeaders.TrackingNumber, context.Message.TrackingNumber.ToString("D"));
-                activity.SetTag(DiagnosticHeaders.ConsumerType, TypeCache<TActivity>.ShortName);
-                activity.SetTag(DiagnosticHeaders.PeerAddress, MessageTypeCache<TArguments>.DiagnosticAddress);
+                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.TrackingNumber, context.Message.TrackingNumber.ToString("D"));
+                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.ConsumerType, TypeCache<TActivity>.ShortName);
+                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.PeerAddress, MessageTypeCache<TArguments>.DiagnosticAddress);
             });
         }
 
@@ -165,65 +176,72 @@ namespace ViciOne.ServiceBus.Logging
         {
             return StartActivity(context, activity =>
             {
-                activity.SetTag(DiagnosticHeaders.TrackingNumber, context.Message.TrackingNumber.ToString("D"));
-                activity.SetTag(DiagnosticHeaders.ConsumerType, TypeCache<TActivity>.ShortName);
-                activity.SetTag(DiagnosticHeaders.PeerAddress, MessageTypeCache<TLog>.DiagnosticAddress);
+                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.TrackingNumber, context.Message.TrackingNumber.ToString("D"));
+                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.ConsumerType, TypeCache<TActivity>.ShortName);
+                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.PeerAddress, MessageTypeCache<TLog>.DiagnosticAddress);
             });
         }
 
         public static StartedActivity? StartGenericActivity(this ILogContext logContext, string operationName)
         {
-            var activity = Cached.Source.Value.CreateActivity(operationName, ActivityKind.Client);
+            var activity = ActivityObservation.TryCreate(Cached.Source, operationName, ActivityKind.Client);
             if (activity == null)
                 return null;
 
-            activity.Start();
+            if (!ActivityObservation.TryStart(activity))
+                return null;
 
             return new StartedActivity(activity);
         }
 
-        static StartedActivity? PopulateSendActivity<T>(SendContext context, System.Diagnostics.Activity activity, params (string Key, object? Value)[] tags)
+        static StartedActivity? PopulateSendActivity<T>(SendContext context, System.Diagnostics.Activity activity,
+            System.Diagnostics.Activity? parentActivity, params (string Key, object? Value)[] tags)
             where T : class
         {
             var conversationId = context.ConversationId?.ToString("D");
 
             if (context.CorrelationId.HasValue)
-                activity.SetBaggage(DiagnosticHeaders.CorrelationId, context.CorrelationId.Value.ToString("D"));
+                ActivityObservation.TrySetBaggage(activity, DiagnosticHeaders.CorrelationId, context.CorrelationId.Value.ToString("D"));
             if (conversationId != null)
-                activity.SetBaggage(DiagnosticHeaders.Messaging.ConversationId, conversationId);
+                ActivityObservation.TrySetBaggage(activity, DiagnosticHeaders.Messaging.ConversationId, conversationId);
 
             if (activity.IsAllDataRequested)
             {
                 if (context.MessageId.HasValue)
-                    activity.SetTag(DiagnosticHeaders.MessageId, context.MessageId.Value.ToString("D"));
+                    ActivityObservation.TrySetTag(activity, DiagnosticHeaders.MessageId, context.MessageId.Value.ToString("D"));
                 if (conversationId != null)
-                    activity.SetTag(DiagnosticHeaders.Messaging.ConversationId, conversationId);
+                    ActivityObservation.TrySetTag(activity, DiagnosticHeaders.Messaging.ConversationId, conversationId);
                 if (context.CorrelationId.HasValue)
-                    activity.SetTag(DiagnosticHeaders.CorrelationId, context.CorrelationId.Value.ToString("D"));
+                    ActivityObservation.TrySetTag(activity, DiagnosticHeaders.CorrelationId, context.CorrelationId.Value.ToString("D"));
                 if (context.RequestId.HasValue)
-                    activity.SetTag(DiagnosticHeaders.RequestId, context.RequestId.Value.ToString("D"));
+                    ActivityObservation.TrySetTag(activity, DiagnosticHeaders.RequestId, context.RequestId.Value.ToString("D"));
                 if (context.InitiatorId.HasValue)
-                    activity.SetTag(DiagnosticHeaders.InitiatorId, context.InitiatorId.Value.ToString("D"));
+                    ActivityObservation.TrySetTag(activity, DiagnosticHeaders.InitiatorId, context.InitiatorId.Value.ToString("D"));
                 if (context.SourceAddress != null)
-                    activity.SetTag(DiagnosticHeaders.SourceAddress, context.SourceAddress.ToString());
+                    ActivityObservation.TrySetTag(activity, DiagnosticHeaders.SourceAddress, context.SourceAddress.ToString());
                 if (context.DestinationAddress != null)
-                    activity.SetTag(DiagnosticHeaders.DestinationAddress, context.DestinationAddress.ToString());
+                    ActivityObservation.TrySetTag(activity, DiagnosticHeaders.DestinationAddress, context.DestinationAddress.ToString());
 
-                activity.SetTag(DiagnosticHeaders.MessageTypes, string.Join(",", context.SupportedMessageTypes));
+                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.MessageTypes, string.Join(",", context.SupportedMessageTypes));
 
                 for (var i = 0; i < tags.Length; i++)
                 {
                     if (tags[i].Value != null)
-                        activity.SetTag(tags[i].Key, tags[i].Value?.ToString());
+                        ActivityObservation.TrySetTag(activity, tags[i].Key, tags[i].Value?.ToString());
                 }
             }
 
-            activity.Start();
+            if (!ActivityObservation.TryStart(activity))
+            {
+                PropagateActivity(context, parentActivity);
+                return null;
+            }
 
             List<KeyValuePair<string, string?>>? baggage = null;
             foreach (KeyValuePair<string, string?> pair in activity.Baggage)
             {
-                if (pair.Key.Equals(DiagnosticHeaders.Messaging.ConversationId) || pair.Key.Equals(DiagnosticHeaders.CorrelationId))
+                if (pair.Key.Equals(DiagnosticHeaders.Messaging.ConversationId, StringComparison.Ordinal)
+                    || pair.Key.Equals(DiagnosticHeaders.CorrelationId, StringComparison.Ordinal))
                     continue;
 
                 if (string.IsNullOrWhiteSpace(pair.Value))
@@ -236,17 +254,52 @@ namespace ViciOne.ServiceBus.Logging
             if (activity.Id != null)
                 context.Headers.Set(DiagnosticHeaders.ActivityId, activity.Id);
 
+            if (!string.IsNullOrWhiteSpace(activity.TraceStateString))
+                context.Headers.Set(DiagnosticHeaders.ActivityTraceState, activity.TraceStateString);
+
             if (baggage != null)
                 context.Headers.Set(DiagnosticHeaders.ActivityCorrelationContext, baggage);
 
             return new StartedActivity(activity);
         }
 
+        static void PropagateActivity(SendContext context, System.Diagnostics.Activity? activity)
+        {
+            if (activity is null)
+                return;
+
+            if (activity.Id is { } activityId)
+                context.Headers.Set(DiagnosticHeaders.ActivityId, activityId);
+
+            if (!string.IsNullOrWhiteSpace(activity.TraceStateString))
+                context.Headers.Set(DiagnosticHeaders.ActivityTraceState, activity.TraceStateString);
+
+            List<KeyValuePair<string, string?>>? baggage = null;
+            foreach (KeyValuePair<string, string?> pair in activity.Baggage)
+            {
+                if (pair.Key.Equals(DiagnosticHeaders.Messaging.ConversationId, StringComparison.Ordinal)
+                    || pair.Key.Equals(DiagnosticHeaders.CorrelationId, StringComparison.Ordinal)
+                    || string.IsNullOrWhiteSpace(pair.Value))
+                    continue;
+
+                baggage ??= new List<KeyValuePair<string, string?>>(1);
+                baggage.Add(pair);
+            }
+
+            if (baggage is not null)
+                context.Headers.Set(DiagnosticHeaders.ActivityCorrelationContext, baggage);
+        }
+
+        static string? GetTraceState(Headers headers)
+        {
+            return headers.TryGetHeader(DiagnosticHeaders.ActivityTraceState, out var value) ? value as string : null;
+        }
+
         static ActivityContext GetParentActivityContext(Headers headers, bool isRemote = false)
         {
             if (headers.TryGetHeader(DiagnosticHeaders.ActivityId, out var headerValue)
                 && headerValue is string activityId
-                && ActivityContext.TryParse(activityId, null, out var activityContext))
+                && ActivityContext.TryParse(activityId, GetTraceState(headers), out var activityContext))
             {
                 if (isRemote && System.Diagnostics.Activity.Current == null)
                     return new ActivityContext(activityContext.TraceId, activityContext.SpanId, activityContext.TraceFlags, activityContext.TraceState, true);
@@ -273,38 +326,40 @@ namespace ViciOne.ServiceBus.Logging
                 return currentActivity.OperationName;
             });
 
-            var activity = Cached.Source.Value.CreateActivity(operationName, ActivityKind.Consumer);
+            var activity = ActivityObservation.TryCreate(Cached.Source, operationName, ActivityKind.Consumer);
             if (activity == null)
                 return null;
 
-            activity.SetTag(DiagnosticHeaders.Messaging.Operation, "process");
-            activity.SetTag(
+            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.Messaging.Operation, "process");
+            ActivityObservation.TrySetTag(
+                activity,
                 DiagnosticHeaders.Messaging.System,
                 LogContextInstrumentationExtensions.SystemName(context.ReceiveContext));
 
             if (activity.IsAllDataRequested)
             {
                 if (context.MessageId.HasValue)
-                    activity.SetTag(DiagnosticHeaders.MessageId, context.MessageId.Value.ToString("D"));
+                    ActivityObservation.TrySetTag(activity, DiagnosticHeaders.MessageId, context.MessageId.Value.ToString("D"));
                 if (context.ConversationId.HasValue)
-                    activity.SetTag(DiagnosticHeaders.Messaging.ConversationId, context.ConversationId.Value.ToString("D"));
+                    ActivityObservation.TrySetTag(activity, DiagnosticHeaders.Messaging.ConversationId, context.ConversationId.Value.ToString("D"));
                 if (context.CorrelationId.HasValue)
-                    activity.SetTag(DiagnosticHeaders.CorrelationId, context.CorrelationId.Value.ToString("D"));
+                    ActivityObservation.TrySetTag(activity, DiagnosticHeaders.CorrelationId, context.CorrelationId.Value.ToString("D"));
                 if (context.RequestId.HasValue)
-                    activity.SetTag(DiagnosticHeaders.RequestId, context.RequestId.Value.ToString("D"));
+                    ActivityObservation.TrySetTag(activity, DiagnosticHeaders.RequestId, context.RequestId.Value.ToString("D"));
                 if (context.InitiatorId.HasValue)
-                    activity.SetTag(DiagnosticHeaders.InitiatorId, context.InitiatorId.Value.ToString("D"));
+                    ActivityObservation.TrySetTag(activity, DiagnosticHeaders.InitiatorId, context.InitiatorId.Value.ToString("D"));
                 if (context.SourceAddress != null)
-                    activity.SetTag(DiagnosticHeaders.SourceAddress, context.SourceAddress.ToString());
+                    ActivityObservation.TrySetTag(activity, DiagnosticHeaders.SourceAddress, context.SourceAddress.ToString());
                 if (context.DestinationAddress != null)
-                    activity.SetTag(DiagnosticHeaders.DestinationAddress, context.DestinationAddress.ToString());
+                    ActivityObservation.TrySetTag(activity, DiagnosticHeaders.DestinationAddress, context.DestinationAddress.ToString());
 
-                activity.SetTag(DiagnosticHeaders.MessageTypes, string.Join(",", context.SupportedMessageTypes));
+                ActivityObservation.TrySetTag(activity, DiagnosticHeaders.MessageTypes, string.Join(",", context.SupportedMessageTypes));
 
                 started(activity);
             }
 
-            activity.Start();
+            if (!ActivityObservation.TryStart(activity))
+                return null;
 
             return new StartedActivity(activity);
         }

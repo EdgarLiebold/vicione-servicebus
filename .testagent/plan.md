@@ -2,14 +2,14 @@
 
 ## Target
 
-Rebuild every meaningful inherited test purpose as a source-owner test under `tests2`, using xUnit 4
-on Microsoft Testing Platform 2. The permanent tree mirrors `src`; only `Architecture`, `Testing`,
-and `Tools` are non-product owners. No phase name, generic `Core` bucket, Python test platform,
-VSTest path, receipt, interceptor, or execution sentinel is part of the design.
+Maintain every meaningful product purpose as a source-owner test under the promoted `tests` tree,
+using xUnit 4 on Microsoft Testing Platform 2. The permanent tree mirrors `src`; only
+`Architecture`, `Testing`, and `Tools` are non-product owners. No phase name, generic `Core` bucket,
+Python test platform, VSTest path, receipt, interceptor, or execution sentinel is part of the design.
 
 ## Current profile floors
 
-- `UnitArchitecture`: 2927 predeclared unfiltered cases;
+- `UnitArchitecture`: 2996 currently executed unfiltered cases;
 - `LocalIntegration`: 326 predeclared unfiltered cases;
 - `SqlServerLocalIntegration`: 60 predeclared unfiltered cases;
 - `AzureServiceBusLocalIntegration`: 24 predeclared unfiltered cases.
@@ -22,18 +22,15 @@ closed; it is never the runtime test architecture.
 
 ## Implementation order
 
-1. Complete one coherent source-owner cohort from product source, inherited behavior evidence, and
-   the semantic ledger.
+1. Complete one coherent source-owner cohort from product source, accepted native behavior evidence,
+   and independently frozen review findings.
 2. Keep unit, local-integration, broker/database, and external-resource profiles separate.
 3. Run locked restore, Release build, unfiltered MTP tests, bounded formatting, static test-quality
    review, and targeted false-green mutations. Only the Lead starts .NET/MSBuild processes.
-4. Commit and push a stationary accepted cohort before beginning the next one.
-5. Remove an inherited file only when all meaningful behavior it owns has an accepted replacement
-   or an explicit non-product/non-executing disposition.
-6. Remove every inherited directory under `tests/` as soon as its last file has been removed; empty
-   directories are never retained as placeholders.
-7. Remove the inherited runner and TestFramework only after complete closure, then atomically rename
-   `tests2` to `tests` and update every solution, CI, documentation, and build path.
+4. Commit a stationary accepted cohort before beginning the next one. Remote publication remains a
+   separate explicitly authorized operation.
+5. Keep the completed native tree free of resurrected inherited projects and remove any directory
+   only when it is physically empty.
 
 Cohorts are sized by semantic cohesion rather than by individual file or obligation. Adjacent
 behaviors under one source owner should normally share one package-level restore, complete build,
@@ -2746,3 +2743,21 @@ LocalIntegration profile adds 131 SQL cases to its prior 244 and therefore carri
 Packages A and B are implemented and locally accepted. All technical, test, provider, quality and
 mutation gates are complete. The remaining mechanical closeout is the package/identity evidence
 freeze, two commits and the already authorized non-force remote publication.
+
+## Reviewer integration — V4 telemetry and fault envelopes (2026-09-02)
+
+1. Freeze the current product commit/tree and reviewer hashes; preserve `review/**` byte-for-byte and
+   use the donor only as semantic evidence.
+2. Add one internal no-throw Activity observation boundary and route activity creation, start, tag,
+   event, status and stop through it. Preserve ambient Activity ID, trace state and nonreserved baggage
+   when no child Activity can be created or started.
+3. Make fault projection finite and serialization-safe: at most 16 aggregate exceptions, 16 inner
+   levels, 32 distinct case-insensitive data keys, 256 characters per key and 2,048 characters per
+   diagnostic text. Preserve wrapper precedence and remote exception identity.
+4. Extend the two existing native owners with exact positive, over-limit, malformed/custom-value and
+   listener-failure contracts. Update the passive requirement projection; do not create a second test
+   project or resurrect an inherited test.
+5. Run the focused Release build/tests first, then one-cause mutants for both behavior families. After
+   byte-exact restoration, run the complete UnitArchitecture profile, scoped format and applicable
+   repository static gates once. Record raw evidence under
+   `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-TELEMETRY-FAULTS/`.

@@ -8,6 +8,7 @@ namespace ViciOne.ServiceBus.Logging
         public const string DiagnosticId = "Diagnostic-Id";
         public const string ActivityId = MessageHeaders.Prefix + "Activity-Id";
         public const string ActivityCorrelationContext = MessageHeaders.Prefix + "Activity-Correlation-Context";
+        public const string ActivityTraceState = MessageHeaders.Prefix + "Activity-Trace-State";
         public const string ActivityPropagation = MessageHeaders.Prefix + "Activity-Propagation";
 
         public const string MessageId = "messaging.vicione-servicebus.message_id";

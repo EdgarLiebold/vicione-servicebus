@@ -20,7 +20,7 @@ namespace ViciOne.ServiceBus.Logging
             if (string.IsNullOrWhiteSpace(value))
                 return;
 
-            Activity.SetTag(key, value);
+            ActivityObservation.TrySetTag(Activity, key, value);
         }
 
         public void Update<T>(SendContext<T> context)
@@ -46,16 +46,16 @@ namespace ViciOne.ServiceBus.Logging
 
             var activityEvent = new ActivityEvent(DiagnosticHeaders.Exceptions.EventName, DateTimeOffset.UtcNow, tags);
 
-            Activity.AddEvent(activityEvent);
-            Activity.SetStatus(ActivityStatusCode.Error, exceptionMessage);
+            ActivityObservation.TryAddEvent(Activity, activityEvent);
+            ActivityObservation.TrySetStatus(Activity, ActivityStatusCode.Error, exceptionMessage);
         }
 
         public void Stop()
         {
             if (Activity.Status == ActivityStatusCode.Unset)
-                Activity.SetStatus(ActivityStatusCode.Ok);
+                ActivityObservation.TrySetStatus(Activity, ActivityStatusCode.Ok);
 
-            Activity.Dispose();
+            ActivityObservation.TryDispose(Activity);
         }
     }
 }
