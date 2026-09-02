@@ -1,0 +1,17 @@
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.dll (net10.0|x64)
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.dll (net10.0|x64) erfolgreich (5m 18s 402ms)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-13/FINAL/positive/sqlserver-results/edgar.liebold_Edgars-iMac-2_2026-09-02_02_14_34.383534.ctrf
+
+Testlaufzusammenfassung: Bestanden!
+  gesamt: 60
+  fehlgeschlagen: 0
+  erfolgreich: 60
+  übersprungen: 0
+  Dauer: 5m 19s 921ms
+run identity vicione-a3299372255b, output under artifacts/run-output/vicione-a3299372255b
+fixture postgres and mssql ready on loopback: VICIONE_SERVICEBUS_MSSQL_HOST=127.0.0.1, VICIONE_SERVICEBUS_MSSQL_PORT=35278, VICIONE_SERVICEBUS_PG_HOST=127.0.0.1, VICIONE_SERVICEBUS_PG_PORT=35277
+endpoints projected to artifacts/run-output/vicione-a3299372255b/endpoints.json
+broker log postgres: /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/run-output/vicione-a3299372255b/postgres-broker.log (58 lines)
+broker log mssql: /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/run-output/vicione-a3299372255b/mssql-broker.log (1240 lines)

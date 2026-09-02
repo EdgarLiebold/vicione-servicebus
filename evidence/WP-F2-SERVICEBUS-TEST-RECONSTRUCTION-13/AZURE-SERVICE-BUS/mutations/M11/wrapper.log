@@ -1,0 +1,25 @@
+fehlerhaft ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests.AzureServiceBusSubscriptionRuleTests.ExistingRule_UpdatesFilterAndActionInPlaceWithoutAddingAnotherRule (5s 850ms)
+  Assert.Equal() Failure: Strings differ
+                     ↓ (pos 8)
+  Expected: "SET A = 2"
+  Actual:   "SET A = 1"
+                     ↑ (pos 8)
+    um ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests.AzureServiceBusSubscriptionRuleTests.<>c__DisplayClass1_0.<<ExistingRule_UpdatesFilterAndActionInPlaceWithoutAddingAnotherRule>g__AssertRule|1>d.MoveNext() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/AzureServiceBusSubscriptionRuleTests.cs:156
+    --- End of stack trace from previous location ---
+    um ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests.AzureServiceBusSubscriptionRuleTests.ExistingRule_UpdatesFilterAndActionInPlaceWithoutAddingAnotherRule() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/AzureServiceBusSubscriptionRuleTests.cs:102
+    um ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests.AzureServiceBusSubscriptionRuleTests.ExistingRule_UpdatesFilterAndActionInPlaceWithoutAddingAnotherRule() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/AzureServiceBusSubscriptionRuleTests.cs:106
+    --- End of stack trace from previous location ---
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-13/AZURE-SERVICE-BUS/mutations/M11/M11.ctrf.json
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 6s 254ms
+run identity vicione-3aa0b0ab6a4e, output under artifacts/run-output/vicione-3aa0b0ab6a4e
+fixture servicebus ready on loopback: VICIONE_SERVICEBUS_SERVICEBUS_AMQP_PORT=35230, VICIONE_SERVICEBUS_SERVICEBUS_HOST=127.0.0.1, VICIONE_SERVICEBUS_SERVICEBUS_MANAGEMENT_PORT=35229
+endpoints projected to artifacts/run-output/vicione-3aa0b0ab6a4e/endpoints.json
+broker log servicebus: /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/run-output/vicione-3aa0b0ab6a4e/servicebus-broker.log (83 lines)

@@ -1,0 +1,26 @@
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests.dll (net10.0|x64)
+fehlerhaft ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests.RabbitMqTopologyTests.BrokerTopology_DeclaresAlternateDeadLetterPriorityAndExpirationContracts (1s 224ms)
+  von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests.dll (net10.0|x64)
+  Assert.Contains() Failure: Sub-string not found
+  String:    "?temporary=true"
+  Not found: "alternateexchange=vsb-policies-6366cd80f48f4ffbace"···
+    um ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests.RabbitMqTopologyTests.BrokerTopology_DeclaresAlternateDeadLetterPriorityAndExpirationContracts() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/RabbitMqTopologyTests.cs:61
+    um ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests.RabbitMqTopologyTests.BrokerTopology_DeclaresAlternateDeadLetterPriorityAndExpirationContracts() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/RabbitMqTopologyTests.cs:95
+    --- End of stack trace from previous location ---
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests.dll (net10.0|x64) fehlerhaft mit 1 Fehler(n) (2s 021ms)
+Exitcode: 2
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-13/RABBITMQ/mutations/M13/edgar.liebold_Edgars-iMac-2_2026-09-02_00_06_19.341427.ctrf
+
+Testlaufzusammenfassung: Fehler!
+  gesamt: 1
+  fehlgeschlagen: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 2s 851ms
+Der Testlauf wurde mit einem nicht erfolgreichen Exitcode abgeschlossen: 2 (siehe: https://aka.ms/testingplatform/exitcodes)
+run identity vicione-cc44ff1b1e2c, output under artifacts/run-output/vicione-cc44ff1b1e2c
+fixture rabbitmq ready on loopback: VICIONE_SERVICEBUS_RMQ_HOST=127.0.0.1, VICIONE_SERVICEBUS_RMQ_MGMT_PORT=35193, VICIONE_SERVICEBUS_RMQ_PORT=35192
+endpoints projected to artifacts/run-output/vicione-cc44ff1b1e2c/endpoints.json
+broker log rabbitmq: /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/run-output/vicione-cc44ff1b1e2c/rabbitmq-broker.log (224 lines)

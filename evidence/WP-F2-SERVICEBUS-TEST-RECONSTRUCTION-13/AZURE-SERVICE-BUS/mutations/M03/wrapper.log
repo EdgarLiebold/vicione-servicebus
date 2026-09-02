@@ -1,0 +1,16 @@
+fehlerhaft ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests.ServiceBusEndpointAddressTests.UnsupportedScheme_IsRejectedAtTheDomainBoundary (36ms)
+  Assert.Throws() Failure: No exception was thrown
+  Expected: typeof(System.ArgumentException)
+    um ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests.ServiceBusEndpointAddressTests.UnsupportedScheme_IsRejectedAtTheDomainBoundary() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ServiceBusEndpointAddressTests.cs:52
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-13/AZURE-SERVICE-BUS/mutations/M03/M03.ctrf.json
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/release/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 414ms

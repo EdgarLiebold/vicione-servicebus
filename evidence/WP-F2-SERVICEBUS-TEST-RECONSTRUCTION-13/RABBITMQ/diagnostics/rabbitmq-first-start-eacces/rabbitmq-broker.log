@@ -1,0 +1,151 @@
+rabbitmq-1  | 2026-09-02T01:26:15.250133403Z 2026-09-02 01:26:15.129078+00:00 [error] <0.153.0> Error when reading /var/lib/rabbitmq/.erlang.cookie: eacces
+rabbitmq-1  | 2026-09-02T01:26:15.301221579Z 2026-09-02 01:26:15.248333+00:00 [error] <0.153.0>   crasher:
+rabbitmq-1  | 2026-09-02T01:26:15.301262269Z 2026-09-02 01:26:15.248333+00:00 [error] <0.153.0>     initial call: auth:init/1
+rabbitmq-1  | 2026-09-02T01:26:15.301281149Z 2026-09-02 01:26:15.248333+00:00 [error] <0.153.0>     pid: <0.153.0>
+rabbitmq-1  | 2026-09-02T01:26:15.301294450Z 2026-09-02 01:26:15.248333+00:00 [error] <0.153.0>     registered_name: []
+rabbitmq-1  | 2026-09-02T01:26:15.301309110Z 2026-09-02 01:26:15.248333+00:00 [error] <0.153.0>     exception error: "Error when reading /var/lib/rabbitmq/.erlang.cookie: eacces"
+rabbitmq-1  | 2026-09-02T01:26:15.301324128Z 2026-09-02 01:26:15.248333+00:00 [error] <0.153.0>       in function  auth:init_no_setcookie/0 (auth.erl, line 360)
+rabbitmq-1  | 2026-09-02T01:26:15.301339932Z 2026-09-02 01:26:15.248333+00:00 [error] <0.153.0>       in call from auth:init/1 (auth.erl, line 207)
+rabbitmq-1  | 2026-09-02T01:26:15.301356523Z 2026-09-02 01:26:15.248333+00:00 [error] <0.153.0>       in call from gen_server:init_it/2 (gen_server.erl, line 2229)
+rabbitmq-1  | 2026-09-02T01:26:15.301370468Z 2026-09-02 01:26:15.248333+00:00 [error] <0.153.0>       in call from gen_server:init_it/6 (gen_server.erl, line 2184)
+rabbitmq-1  | 2026-09-02T01:26:15.301387416Z 2026-09-02 01:26:15.248333+00:00 [error] <0.153.0>     ancestors: [net_sup,kernel_sup,<0.47.0>]
+rabbitmq-1  | 2026-09-02T01:26:15.301402791Z 2026-09-02 01:26:15.248333+00:00 [error] <0.153.0>     message_queue_len: 0
+rabbitmq-1  | 2026-09-02T01:26:15.301418596Z 2026-09-02 01:26:15.248333+00:00 [error] <0.153.0>     messages: []
+rabbitmq-1  | 2026-09-02T01:26:15.301435043Z 2026-09-02 01:26:15.248333+00:00 [error] <0.153.0>     links: [<0.151.0>]
+rabbitmq-1  | 2026-09-02T01:26:15.301451992Z 2026-09-02 01:26:15.248333+00:00 [error] <0.153.0>     dictionary: []
+rabbitmq-1  | 2026-09-02T01:26:15.301466866Z 2026-09-02 01:26:15.248333+00:00 [error] <0.153.0>     trap_exit: true
+rabbitmq-1  | 2026-09-02T01:26:15.301484530Z 2026-09-02 01:26:15.248333+00:00 [error] <0.153.0>     status: running
+rabbitmq-1  | 2026-09-02T01:26:15.301501049Z 2026-09-02 01:26:15.248333+00:00 [error] <0.153.0>     heap_size: 1598
+rabbitmq-1  | 2026-09-02T01:26:15.301516782Z 2026-09-02 01:26:15.248333+00:00 [error] <0.153.0>     stack_size: 29
+rabbitmq-1  | 2026-09-02T01:26:15.301541454Z 2026-09-02 01:26:15.248333+00:00 [error] <0.153.0>     reductions: 2577
+rabbitmq-1  | 2026-09-02T01:26:15.301558831Z 2026-09-02 01:26:15.248333+00:00 [error] <0.153.0>   neighbours:
+rabbitmq-1  | 2026-09-02T01:26:15.301575780Z 2026-09-02 01:26:15.248333+00:00 [error] <0.153.0> 
+rabbitmq-1  | 2026-09-02T01:26:15.302153743Z 2026-09-02 01:26:15.300544+00:00 [error] <0.151.0>     supervisor: {local,net_sup}
+rabbitmq-1  | 2026-09-02T01:26:15.302181490Z 2026-09-02 01:26:15.300544+00:00 [error] <0.151.0>     errorContext: start_error
+rabbitmq-1  | 2026-09-02T01:26:15.302195649Z 2026-09-02 01:26:15.300544+00:00 [error] <0.151.0>     reason: {"Error when reading /var/lib/rabbitmq/.erlang.cookie: eacces",
+rabbitmq-1  | 2026-09-02T01:26:15.302377577Z 2026-09-02 01:26:15.300544+00:00 [error] <0.151.0>              [{auth,init_no_setcookie,0,[{file,"auth.erl"},{line,360}]},
+rabbitmq-1  | 2026-09-02T01:26:15.302393596Z 2026-09-02 01:26:15.300544+00:00 [error] <0.151.0>               {auth,init,1,[{file,"auth.erl"},{line,207}]},
+rabbitmq-1  | 2026-09-02T01:26:15.302412475Z 2026-09-02 01:26:15.300544+00:00 [error] <0.151.0>               {gen_server,init_it,2,[{file,"gen_server.erl"},{line,2229}]},
+rabbitmq-1  | 2026-09-02T01:26:15.302425419Z 2026-09-02 01:26:15.300544+00:00 [error] <0.151.0>               {gen_server,init_it,6,[{file,"gen_server.erl"},{line,2184}]},
+rabbitmq-1  | 2026-09-02T01:26:15.302531615Z 2026-09-02 01:26:15.300544+00:00 [error] <0.151.0>               {proc_lib,init_p_do_apply,3,
+rabbitmq-1  | 2026-09-02T01:26:15.302551495Z 2026-09-02 01:26:15.300544+00:00 [error] <0.151.0>                         [{file,"proc_lib.erl"},{line,329}]}]}
+rabbitmq-1  | 2026-09-02T01:26:15.302571089Z 2026-09-02 01:26:15.300544+00:00 [error] <0.151.0>     offender: [{pid,undefined},
+rabbitmq-1  | 2026-09-02T01:26:15.302587680Z 2026-09-02 01:26:15.300544+00:00 [error] <0.151.0>                {id,auth},
+rabbitmq-1  | 2026-09-02T01:26:15.302605201Z 2026-09-02 01:26:15.300544+00:00 [error] <0.151.0>                {mfargs,{auth,start_link,[]}},
+rabbitmq-1  | 2026-09-02T01:26:15.302899903Z 2026-09-02 01:26:15.300544+00:00 [error] <0.151.0>                {restart_type,permanent},
+rabbitmq-1  | 2026-09-02T01:26:15.303144690Z 2026-09-02 01:26:15.300544+00:00 [error] <0.151.0>                {significant,false},
+rabbitmq-1  | 2026-09-02T01:26:15.303183951Z 2026-09-02 01:26:15.300544+00:00 [error] <0.151.0>                {shutdown,2000},
+rabbitmq-1  | 2026-09-02T01:26:15.303201185Z 2026-09-02 01:26:15.300544+00:00 [error] <0.151.0>                {child_type,worker}]
+rabbitmq-1  | 2026-09-02T01:26:15.303401492Z 2026-09-02 01:26:15.300544+00:00 [error] <0.151.0> 
+rabbitmq-1  | 2026-09-02T01:26:15.313586074Z 
+rabbitmq-1  | 2026-09-02T01:26:15.313627551Z BOOT FAILED
+rabbitmq-1  | 2026-09-02T01:26:15.314223893Z ===========
+rabbitmq-1  | 2026-09-02T01:26:15.314380433Z Exception during startup:
+rabbitmq-1  | 2026-09-02T01:26:15.314398025Z 
+rabbitmq-1  | 2026-09-02T01:26:15.314415475Z error:{badmatch,{error,{{shutdown,{failed_to_start_child,auth,{"Error when reading /var/lib/rabbitmq/.erlang.cookie: eacces",[{auth,init_no_setcookie,0,[{file,"auth.erl"},{line,360}]},{auth,init,1,[{file,"auth.erl"},{line,207}]},{gen_server,init_it,2,[{file,"gen_server.erl"},{line,2229}]},{gen_server,init_it,6,[{file,"gen_server.erl"},{line,2184}]},{proc_lib,init_p_do_apply,3,[{file,"proc_lib.erl"},{line,329}]}]}}},{child,undefined,net_sup_dynamic,{erl_distribution,start_link,[#{name => rabbit_prelaunch_1@localhost,supervisor => net_sup_dynamic,net_tickintensity => 4,net_ticktime => 60,name_domain => shortnames,clean_halt => false}]},permanent,false,1000,supervisor,[erl_distribution]}}}}
+rabbitmq-1  | 2026-09-02T01:26:15.314619070Z 
+rabbitmq-1  | 2026-09-02T01:26:15.314636519Z     rabbit_prelaunch_dist:duplicate_node_check/1, line 80
+rabbitmq-1  | 2026-09-02T01:26:15.314652610Z     rabbit_prelaunch_dist:setup/1, line 23
+rabbitmq-1  | 2026-09-02T01:26:15.314666698Z     rabbit_prelaunch:do_run/0, line 116
+rabbitmq-1  | 2026-09-02T01:26:15.315235650Z     rabbit_prelaunch:run_prelaunch_first_phase/0, line 32
+rabbitmq-1  | 2026-09-02T01:26:15.315260680Z     supervisor:do_start_child_i/3, line 959
+rabbitmq-1  | 2026-09-02T01:26:15.314526390Z 2026-09-02 01:26:15.313109+00:00 [error] <0.144.0> 
+rabbitmq-1  | 2026-09-02T01:26:15.315347424Z 2026-09-02 01:26:15.313109+00:00 [error] <0.144.0> BOOT FAILED
+rabbitmq-1  | 2026-09-02T01:26:15.315360296Z 2026-09-02 01:26:15.313109+00:00 [error] <0.144.0> ===========
+rabbitmq-1  | 2026-09-02T01:26:15.315412930Z 2026-09-02 01:26:15.313109+00:00 [error] <0.144.0> Exception during startup:
+rabbitmq-1  | 2026-09-02T01:26:15.315460986Z 2026-09-02 01:26:15.313109+00:00 [error] <0.144.0> 
+rabbitmq-1  | 2026-09-02T01:26:15.315489519Z 2026-09-02 01:26:15.313109+00:00 [error] <0.144.0> error:{badmatch,{error,{{shutdown,{failed_to_start_child,auth,{"Error when reading /var/lib/rabbitmq/.erlang.cookie: eacces",[{auth,init_no_setcookie,0,[{file,"auth.erl"},{line,360}]},{auth,init,1,[{file,"auth.erl"},{line,207}]},{gen_server,init_it,2,[{file,"gen_server.erl"},{line,2229}]},{gen_server,init_it,6,[{file,"gen_server.erl"},{line,2184}]},{proc_lib,init_p_do_apply,3,[{file,"proc_lib.erl"},{line,329}]}]}}},{child,undefined,net_sup_dynamic,{erl_distribution,start_link,[#{name => rabbit_prelaunch_1@localhost,supervisor => net_sup_dynamic,net_tickintensity => 4,net_ticktime => 60,name_domain => shortnames,clean_halt => false}]},permanent,false,1000,supervisor,[erl_distribution]}}}}
+rabbitmq-1  | 2026-09-02T01:26:15.315513118Z 2026-09-02 01:26:15.313109+00:00 [error] <0.144.0> 
+rabbitmq-1  | 2026-09-02T01:26:15.315530353Z 2026-09-02 01:26:15.313109+00:00 [error] <0.144.0>     rabbit_prelaunch_dist:duplicate_node_check/1, line 80
+rabbitmq-1  | 2026-09-02T01:26:15.315548946Z 2026-09-02 01:26:15.313109+00:00 [error] <0.144.0>     rabbit_prelaunch_dist:setup/1, line 23
+rabbitmq-1  | 2026-09-02T01:26:15.315600292Z 2026-09-02 01:26:15.313109+00:00 [error] <0.144.0>     rabbit_prelaunch:do_run/0, line 116
+rabbitmq-1  | 2026-09-02T01:26:15.315620172Z 2026-09-02 01:26:15.313109+00:00 [error] <0.144.0>     rabbit_prelaunch:run_prelaunch_first_phase/0, line 32
+rabbitmq-1  | 2026-09-02T01:26:15.315637693Z 2026-09-02 01:26:15.313109+00:00 [error] <0.144.0>     supervisor:do_start_child_i/3, line 959
+rabbitmq-1  | 2026-09-02T01:26:15.315660434Z 2026-09-02 01:26:15.313109+00:00 [error] <0.144.0>     supervisor:do_start_child/3, line 945
+rabbitmq-1  | 2026-09-02T01:26:15.315681244Z 2026-09-02 01:26:15.313109+00:00 [error] <0.144.0>     supervisor:-start_children/2-fun-0-/3, line 929
+rabbitmq-1  | 2026-09-02T01:26:15.315710707Z 2026-09-02 01:26:15.313109+00:00 [error] <0.144.0>     supervisor:children_map/4, line 1820
+rabbitmq-1  | 2026-09-02T01:26:15.315730588Z 2026-09-02 01:26:15.313109+00:00 [error] <0.144.0> 
+rabbitmq-1  | 2026-09-02T01:26:15.315280989Z     supervisor:do_start_child/3, line 945
+rabbitmq-1  | 2026-09-02T01:26:15.315847796Z     supervisor:-start_children/2-fun-0-/3, line 929
+rabbitmq-1  | 2026-09-02T01:26:15.315879763Z     supervisor:children_map/4, line 1820
+rabbitmq-1  | 2026-09-02T01:26:15.315922455Z 
+rabbitmq-1  | 2026-09-02T01:26:16.318151590Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>     supervisor: {local,rabbit_prelaunch_sup}
+rabbitmq-1  | 2026-09-02T01:26:16.318203859Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>     errorContext: start_error
+rabbitmq-1  | 2026-09-02T01:26:16.318223682Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>     reason: {badmatch,
+rabbitmq-1  | 2026-09-02T01:26:16.318243221Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>                 {error,
+rabbitmq-1  | 2026-09-02T01:26:16.318286077Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>                     {{shutdown,
+rabbitmq-1  | 2026-09-02T01:26:16.318307683Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>                          {failed_to_start_child,auth,
+rabbitmq-1  | 2026-09-02T01:26:16.318353677Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>                              {"Error when reading /var/lib/rabbitmq/.erlang.cookie: eacces",
+rabbitmq-1  | 2026-09-02T01:26:16.318380346Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>                               [{auth,init_no_setcookie,0,
+rabbitmq-1  | 2026-09-02T01:26:16.318396961Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>                                    [{file,"auth.erl"},{line,360}]},
+rabbitmq-1  | 2026-09-02T01:26:16.318412720Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>                                {auth,init,1,[{file,"auth.erl"},{line,207}]},
+rabbitmq-1  | 2026-09-02T01:26:16.318426839Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>                                {gen_server,init_it,2,
+rabbitmq-1  | 2026-09-02T01:26:16.318443168Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>                                    [{file,"gen_server.erl"},{line,2229}]},
+rabbitmq-1  | 2026-09-02T01:26:16.318458428Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>                                {gen_server,init_it,6,
+rabbitmq-1  | 2026-09-02T01:26:16.318473688Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>                                    [{file,"gen_server.erl"},{line,2184}]},
+rabbitmq-1  | 2026-09-02T01:26:16.318489019Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>                                {proc_lib,init_p_do_apply,3,
+rabbitmq-1  | 2026-09-02T01:26:16.318504208Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>                                    [{file,"proc_lib.erl"},{line,329}]}]}}},
+rabbitmq-1  | 2026-09-02T01:26:16.318519610Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>                      {child,undefined,net_sup_dynamic,
+rabbitmq-1  | 2026-09-02T01:26:16.318562680Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>                          {erl_distribution,start_link,
+rabbitmq-1  | 2026-09-02T01:26:16.318619584Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>                              [#{name => rabbit_prelaunch_1@localhost,
+rabbitmq-1  | 2026-09-02T01:26:16.318672494Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>                                 supervisor => net_sup_dynamic,
+rabbitmq-1  | 2026-09-02T01:26:16.318689038Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>                                 net_tickintensity => 4,net_ticktime => 60,
+rabbitmq-1  | 2026-09-02T01:26:16.318704440Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>                                 name_domain => shortnames,
+rabbitmq-1  | 2026-09-02T01:26:16.318725405Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>                                 clean_halt => false}]},
+rabbitmq-1  | 2026-09-02T01:26:16.318849694Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>                          permanent,false,1000,supervisor,
+rabbitmq-1  | 2026-09-02T01:26:16.320025846Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>                          [erl_distribution]}}}}
+rabbitmq-1  | 2026-09-02T01:26:16.320252748Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>     offender: [{pid,undefined},
+rabbitmq-1  | 2026-09-02T01:26:16.320271573Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>                {id,prelaunch},
+rabbitmq-1  | 2026-09-02T01:26:16.320287261Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>                {mfargs,{rabbit_prelaunch,run_prelaunch_first_phase,[]}},
+rabbitmq-1  | 2026-09-02T01:26:16.320303091Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>                {restart_type,transient},
+rabbitmq-1  | 2026-09-02T01:26:16.320550387Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>                {significant,false},
+rabbitmq-1  | 2026-09-02T01:26:16.320569355Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>                {shutdown,5000},
+rabbitmq-1  | 2026-09-02T01:26:16.320585328Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0>                {child_type,worker}]
+rabbitmq-1  | 2026-09-02T01:26:16.320600802Z 2026-09-02 01:26:16.316416+00:00 [error] <0.144.0> 
+rabbitmq-1  | 2026-09-02T01:26:16.320754185Z {exit,terminating,[{application_controller,call,2,[{file,"application_controller.erl"},{line,511}]},{application,'-ensure_all_started/3-lc$^0/1-0-',1,[{file,"application.erl"},{line,367}]},{application,ensure_all_started,3,[{file,"application.erl"},{line,367}]},{rabbit,'-start_it/1-fun-0-',1,[{file,"rabbit.erl"},{line,442}]},{timer,tc,2,[{file,"timer.erl"},{line,595}]},{rabbit,start_it,1,[{file,"rabbit.erl"},{line,440}]},{init,start_it,1,[]},{init,start_em,1,[]}]}
+rabbitmq-1  | 2026-09-02T01:26:16.320901507Z 2026-09-02 01:26:16.318066+00:00 [notice] <0.45.0> Application rabbitmq_prelaunch exited with reason: {{shutdown,{failed_to_start_child,prelaunch,{badmatch,{error,{{shutdown,{failed_to_start_child,auth,{"Error when reading /var/lib/rabbitmq/.erlang.cookie: eacces",[{auth,init_no_setcookie,0,[{file,"auth.erl"},{line,360}]},{auth,init,1,[{file,"auth.erl"},{line,207}]},{gen_server,init_it,2,[{file,"gen_server.erl"},{line,2229}]},{gen_server,init_it,6,[{file,"gen_server.erl"},{line,2184}]},{proc_lib,init_p_do_apply,3,[{file,"proc_lib.erl"},{line,329}]}]}}},{child,undefined,net_sup_dynamic,{erl_distribution,start_link,[#{name => rabbit_prelaunch_1@localhost,supervisor => net_sup_dynamic,net_tickintensity => 4,net_ticktime => 60,name_domain => shortnames,clean_halt => false}]},permanent,false,1000,supervisor,[erl_distribution]}}}}}},{rabbit_prelaunch_app,start,[normal,[]]}}
+rabbitmq-1  | 2026-09-02T01:26:16.320918692Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>   crasher:
+rabbitmq-1  | 2026-09-02T01:26:16.320940727Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>     initial call: application_master:init/3
+rabbitmq-1  | 2026-09-02T01:26:16.321134042Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>     pid: <0.142.0>
+rabbitmq-1  | 2026-09-02T01:26:16.321252199Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>     registered_name: []
+rabbitmq-1  | 2026-09-02T01:26:16.321269741Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>     exception exit: {{shutdown,
+rabbitmq-1  | 2026-09-02T01:26:16.321296624Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>                       {failed_to_start_child,prelaunch,
+rabbitmq-1  | 2026-09-02T01:26:16.321313524Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>                        {badmatch,
+rabbitmq-1  | 2026-09-02T01:26:16.321555186Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>                         {error,
+rabbitmq-1  | 2026-09-02T01:26:16.321577292Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>                          {{shutdown,
+rabbitmq-1  | 2026-09-02T01:26:16.321600253Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>                            {failed_to_start_child,auth,
+rabbitmq-1  | 2026-09-02T01:26:16.321917573Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>                             {"Error when reading /var/lib/rabbitmq/.erlang.cookie: eacces",
+rabbitmq-1  | 2026-09-02T01:26:16.321934188Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>                              [{auth,init_no_setcookie,0,
+rabbitmq-1  | 2026-09-02T01:26:16.321949519Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>                                [{file,"auth.erl"},{line,360}]},
+rabbitmq-1  | 2026-09-02T01:26:16.321964922Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>                               {auth,init,1,[{file,"auth.erl"},{line,207}]},
+rabbitmq-1  | 2026-09-02T01:26:16.321981251Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>                               {gen_server,init_it,2,
+rabbitmq-1  | 2026-09-02T01:26:16.322121015Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>                                [{file,"gen_server.erl"},{line,2229}]},
+rabbitmq-1  | 2026-09-02T01:26:16.322138414Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>                               {gen_server,init_it,6,
+rabbitmq-1  | 2026-09-02T01:26:16.322161731Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>                                [{file,"gen_server.erl"},{line,2184}]},
+rabbitmq-1  | 2026-09-02T01:26:16.322215426Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>                               {proc_lib,init_p_do_apply,3,
+rabbitmq-1  | 2026-09-02T01:26:16.322230900Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>                                [{file,"proc_lib.erl"},{line,329}]}]}}},
+rabbitmq-1  | 2026-09-02T01:26:16.322246374Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>                           {child,undefined,net_sup_dynamic,
+rabbitmq-1  | 2026-09-02T01:26:16.322261634Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>                            {erl_distribution,start_link,
+rabbitmq-1  | 2026-09-02T01:26:16.322276751Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>                             [#{name => rabbit_prelaunch_1@localhost,
+rabbitmq-1  | 2026-09-02T01:26:16.322292296Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>                                supervisor => net_sup_dynamic,
+rabbitmq-1  | 2026-09-02T01:26:16.322307627Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>                                net_tickintensity => 4,net_ticktime => 60,
+rabbitmq-1  | 2026-09-02T01:26:16.322322887Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>                                name_domain => shortnames,
+rabbitmq-1  | 2026-09-02T01:26:16.322376725Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>                                clean_halt => false}]},
+rabbitmq-1  | 2026-09-02T01:26:16.322431774Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>                            permanent,false,1000,supervisor,
+rabbitmq-1  | 2026-09-02T01:26:16.322469567Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>                            [erl_distribution]}}}}}},
+rabbitmq-1  | 2026-09-02T01:26:16.322486539Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>                      {rabbit_prelaunch_app,start,[normal,[]]}}
+rabbitmq-1  | 2026-09-02T01:26:16.322502084Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>       in function  application_master:init/3 (application_master.erl, line 143)
+rabbitmq-1  | 2026-09-02T01:26:16.322517344Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>     ancestors: [application_controller,<0.10.0>]
+rabbitmq-1  | 2026-09-02T01:26:16.322532604Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>     message_queue_len: 1
+rabbitmq-1  | 2026-09-02T01:26:16.322547792Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>     messages: [{'EXIT',<0.143.0>,normal}]
+rabbitmq-1  | 2026-09-02T01:26:16.322563623Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>     links: [<0.45.0>]
+rabbitmq-1  | 2026-09-02T01:26:16.322582804Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>     dictionary: []
+rabbitmq-1  | 2026-09-02T01:26:16.322650832Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>     trap_exit: true
+rabbitmq-1  | 2026-09-02T01:26:16.322675505Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>     status: running
+rabbitmq-1  | 2026-09-02T01:26:16.322694972Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>     heap_size: 610
+rabbitmq-1  | 2026-09-02T01:26:16.322713226Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>     stack_size: 29
+rabbitmq-1  | 2026-09-02T01:26:16.322733977Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>     reductions: 107
+rabbitmq-1  | 2026-09-02T01:26:16.322750164Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0>   neighbours:
+rabbitmq-1  | 2026-09-02T01:26:16.322765281Z 2026-09-02 01:26:16.318190+00:00 [error] <0.142.0> 
+rabbitmq-1  | 2026-09-02T01:26:17.851461330Z Kernel pid terminated (application_controller) ("{application_start_failure,rabbitmq_prelaunch,{{shutdown,{failed_to_start_child,prelaunch,{badmatch,{error,{{shutdown,{failed_to_start_child,auth,{\"Error when reading /var/lib/rabbitmq/.erlang.cookie: eacces\",[{auth,init_no_setcookie,0,[{file,\"auth.erl\"},{line,360}]},{auth,init,1,[{file,\"auth.erl\"},{line,207}]},{gen_server,init_it,2,[{file,\"gen_server.erl\"},{line,2229}]},{gen_server,init_it,6,[{file,\"gen_server.erl\"},{line,2184}]},{proc_lib,init_p_do_apply,3,[{file,\"proc_lib.erl\"},{line,329}]}]}}},{child,undefined,net_sup_dynamic,{erl_distribution,start_link,[#{name => rabbit_prelaunch_1@localhost,supervisor => net_sup_dynamic,net_tickintensity => 4,net_ticktime => 60,name_domain => shortnames,clean_halt => false}]},permanent,false,1000,supervisor,[erl_distribution]}}}}}},{rabbit_prelaunch_app,start,[normal,[]]}}}")
+rabbitmq-1  | 2026-09-02T01:26:17.851577128Z 

@@ -1,0 +1,16 @@
+fehlerhaft ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests.ServiceBusTopologyTests.CustomReflectiveFormatter_IsEvaluatedOnceAndKeepsTheCompleteTypeGraph (112ms)
+  Assert.Contains() Failure: Filter not matched in collection
+  Collection: []
+    um ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests.ServiceBusTopologyTests.CustomReflectiveFormatter_IsEvaluatedOnceAndKeepsTheCompleteTypeGraph() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ServiceBusTopologyTests.cs:32
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-13/AZURE-SERVICE-BUS/mutations/M07/M07.ctrf.json
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/release/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 634ms

@@ -1,0 +1,17 @@
+fehlerhaft ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests.ServiceBusMessageBodyTests.EveryAccessorOrder_PreservesExactBytesAndByteLength (37ms)
+  Assert.Equal() Failure: Values differ
+  Expected: 7
+  Actual:   4
+    um ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests.ServiceBusMessageBodyTests.EveryAccessorOrder_PreservesExactBytesAndByteLength() in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/ServiceBusMessageBodyTests.cs:27
+    um System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    um System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-13/AZURE-SERVICE-BUS/mutations/M01/M01.ctrf.json
+
+Testlaufzusammenfassung: Fehler! - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests/release/ViciOne.ServiceBus.Azure.ServiceBus.Core.Tests.dll (net10.0|x64)
+  gesamt: 1
+  fehlerhaft: 1
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 495ms

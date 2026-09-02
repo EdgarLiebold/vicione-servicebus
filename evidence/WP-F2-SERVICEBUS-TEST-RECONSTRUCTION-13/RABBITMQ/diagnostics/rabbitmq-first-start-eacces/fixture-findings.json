@@ -1,0 +1,1 @@
+{"allowedBrokerOutage": null, "brokers": ["rabbitmq"], "findings": [], "kind": "SERVICEBUS_FIXTURE_FINDINGS", "logs": {"rabbitmq": "54720d69cbe95e37cb53795b3d25b43125129e6ea79733aaa8edb1a92f84c42f"}, "schemaVersion": 1}

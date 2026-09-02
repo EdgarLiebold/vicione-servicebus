@@ -1,0 +1,10 @@
+eventhubs-1  | 2026-09-02T02:22:21.137611989Z info: a.d.adt[0]
+eventhubs-1  | 2026-09-02T02:22:21.137674343Z       Emulator Service is Launching On Platform:CBL-Mariner/Linux,X64
+eventhubs-1  | 2026-09-02T02:22:21.284106147Z info: a.d.adt[0]
+eventhubs-1  | 2026-09-02T02:22:21.284164587Z       Instantiating service components
+eventhubs-1  | 2026-09-02T02:22:24.716781793Z info: a.d.adt[0]
+eventhubs-1  | 2026-09-02T02:22:24.716820655Z       Creating namespace, entities and consumer groups
+eventhubs-1  | 2026-09-02T02:22:24.767249255Z info: a.E.aEC[0]
+eventhubs-1  | 2026-09-02T02:22:24.769714168Z       Emulator is launching with config : {"LoggingConfig":{"Type":"File"},"NamespaceConfig":[{"Type":"EventHub","Name":"emulatorns1","Entities":[{"Name":"envelope-eh","PartitionCount":4,"ConsumerGroups":[{"Name":"cg1"},{"Name":"$default"}]},{"Name":"batch-eh","PartitionCount":4,"ConsumerGroups":[{"Name":"cg1"},{"Name":"$default"}]},{"Name":"checkpoint-gate-eh","PartitionCount":4,"ConsumerGroups":[{"Name":"cg1"},{"Name":"$default"}]},{"Name":"lifecycle-eh","PartitionCount":4,"ConsumerGroups":[{"Name":"cg1"},{"Name":"$default"}]},{"Name":"retry-eh","PartitionCount":4,"ConsumerGroups":[{"Name":"cg1"},{"Name":"$default"}]},{"Name":"multibus-eh1","PartitionCount":4,"ConsumerGroups":[{"Name":"cg1"},{"Name":"$default"}]},{"Name":"multibus-eh2","PartitionCount":4,"ConsumerGroups":[{"Name":"cg1"},{"Name":"$default"}]},{"Name":"raw-eh","PartitionCount":4,"ConsumerGroups":[{"Name":"cg1"},{"Name":"$default"}]},{"Name":"saga-eh","PartitionCount":4,"ConsumerGroups":[{"Name":"cg1"},{"Name":"$default"}]},{"Name":"config-eh","PartitionCount":4,"ConsumerGroups":[{"Name":"cg1"},{"Name":"$default"}]}]}]}
+eventhubs-1  | 2026-09-02T02:22:35.092777470Z info: a.d.adt[0]
+eventhubs-1  | 2026-09-02T02:22:35.092831922Z       Emulator Service is Successfully Up! ; Use connection string: "Endpoint=sb://localhost;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;". For more networking-options refer: "https://github.com/Azure/azure-event-hubs-emulator-installer?tab=readme-ov-file#networking-options"

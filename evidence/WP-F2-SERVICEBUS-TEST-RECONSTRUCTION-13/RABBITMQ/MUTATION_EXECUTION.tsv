@@ -1,0 +1,16 @@
+mutation_id	build_exit	test_exit	tests	passed	failed	skipped	raw_result
+M01	0	2	1	0	1	0	mutations/M01/M01.ctrf.json
+M02	0	2	1	0	1	0	mutations/M02/M02.ctrf.json
+M03	0	2	1	0	1	0	mutations/M03/M03.ctrf.json
+M04	0	2	2	0	2	0	mutations/M04/M04.ctrf.json
+M05	0	2	2	0	2	0	mutations/M05/M05.ctrf.json
+M06	0	2	2	0	2	0	mutations/M06/M06.ctrf.json
+M07	0	2	2	0	2	0	mutations/M07/M07.ctrf.json
+M08	0	2	2	0	2	0	mutations/M08/M08.ctrf.json
+M09	0	2	1	0	1	0	mutations/M09/M09-rerun.ctrf.json
+M10	0	2	1	0	1	0	mutations/M10/M10-rerun.ctrf.json
+M11	0	2	1	0	1	0	mutations/M11/M11.ctrf.json
+M12	0	2	1	0	1	0	mutations/M12/M12-rerun.ctrf.json
+M13	0	2	1	0	1	0	mutations/M13/M13.ctrf.json
+M14	0	2	1	0	1	0	mutations/M14/M14.ctrf.json
+M15	0	2	2	0	2	0	mutations/M15/M15.ctrf.json

@@ -1,0 +1,32 @@
+Ausführen von Tests von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests.dll (net10.0|x64)
+fehlerhaft ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests.RabbitMqTopologyTests.RoutingKeys_DeclareExactProviderBindingsAndNeverCrossDeliver(exchangeType: "direct", firstKey: "route.alpha", secondKey: "route.beta") (1s 115ms)
+  von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests.dll (net10.0|x64)
+  Assert.Contains() Failure: Filter not matched in collection
+  Collection: [BindingState { Source = , Destination = vsb-routing-9c7ee13b7efe43008bd1b1d091f80f07-first, DestinationType = queue, RoutingKey = vsb-routing-9c7ee13b7efe43008bd1b1d091f80f07-first }, BindingState { Source = , Destination = vsb-routing-9c7ee13b7efe43008bd1b1d091f80f07-second, DestinationType = queue, RoutingKey = vsb-routing-9c7ee13b7efe43008bd1b1d091f80f07-second }, BindingState { Source = vsb-routing-9c7ee13b7efe43008bd1b1d091f80f07-direct, Destination = vsb-routing-9c7ee13b7efe43008bd1b1d091f80f07-first, DestinationType = exchange, RoutingKey =  }, BindingState { Source = vsb-routing-9c7ee13b7efe43008bd1b1d091f80f07-direct, Destination = vsb-routing-9c7ee13b7efe43008bd1b1d091f80f07-second, DestinationType = exchange, RoutingKey =  }, BindingState { Source = vsb-routing-9c7ee13b7efe43008bd1b1d091f80f07-first, Destination = vsb-routing-9c7ee13b7efe43008bd1b1d091f80f07-first, DestinationType = queue, RoutingKey =  }, ···]
+    um ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests.RabbitMqTopologyTests.RoutingKeys_DeclareExactProviderBindingsAndNeverCrossDeliver(String exchangeType, String firstKey, String secondKey) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/RabbitMqTopologyTests.cs:138
+    um ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests.RabbitMqTopologyTests.RoutingKeys_DeclareExactProviderBindingsAndNeverCrossDeliver(String exchangeType, String firstKey, String secondKey) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/RabbitMqTopologyTests.cs:161
+    --- End of stack trace from previous location ---
+fehlerhaft ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests.RabbitMqTopologyTests.RoutingKeys_DeclareExactProviderBindingsAndNeverCrossDeliver(exchangeType: "topic", firstKey: "region.eu.alpha", secondKey: "region.us.beta") (165ms)
+  von /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests.dll (net10.0|x64)
+  Assert.Contains() Failure: Filter not matched in collection
+  Collection: [BindingState { Source = , Destination = vsb-routing-48b08b92880444cb841677749f73ad5e-first, DestinationType = queue, RoutingKey = vsb-routing-48b08b92880444cb841677749f73ad5e-first }, BindingState { Source = , Destination = vsb-routing-48b08b92880444cb841677749f73ad5e-second, DestinationType = queue, RoutingKey = vsb-routing-48b08b92880444cb841677749f73ad5e-second }, BindingState { Source = vsb-routing-48b08b92880444cb841677749f73ad5e-first, Destination = vsb-routing-48b08b92880444cb841677749f73ad5e-first, DestinationType = queue, RoutingKey =  }, BindingState { Source = vsb-routing-48b08b92880444cb841677749f73ad5e-second, Destination = vsb-routing-48b08b92880444cb841677749f73ad5e-second, DestinationType = queue, RoutingKey =  }, BindingState { Source = vsb-routing-48b08b92880444cb841677749f73ad5e-topic, Destination = vsb-routing-48b08b92880444cb841677749f73ad5e-first, DestinationType = exchange, RoutingKey =  }, ···]
+    um ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests.RabbitMqTopologyTests.RoutingKeys_DeclareExactProviderBindingsAndNeverCrossDeliver(String exchangeType, String firstKey, String secondKey) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/RabbitMqTopologyTests.cs:138
+    um ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests.RabbitMqTopologyTests.RoutingKeys_DeclareExactProviderBindingsAndNeverCrossDeliver(String exchangeType, String firstKey, String secondKey) in /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests2/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/RabbitMqTopologyTests.cs:161
+    --- End of stack trace from previous location ---
+/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/release/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests.dll (net10.0|x64) fehlerhaft mit 2 Fehler(n) (2s 075ms)
+Exitcode: 2
+
+  In Bearbeitung Dateiartefakte erstellt:
+    - /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-TEST-RECONSTRUCTION-13/RABBITMQ/mutations/M15/edgar.liebold_Edgars-iMac-2_2026-09-02_00_10_01.791391.ctrf
+
+Testlaufzusammenfassung: Fehler!
+  gesamt: 2
+  fehlgeschlagen: 2
+  erfolgreich: 0
+  übersprungen: 0
+  Dauer: 2s 600ms
+Der Testlauf wurde mit einem nicht erfolgreichen Exitcode abgeschlossen: 2 (siehe: https://aka.ms/testingplatform/exitcodes)
+run identity vicione-173d919cbead, output under artifacts/run-output/vicione-173d919cbead
+fixture rabbitmq ready on loopback: VICIONE_SERVICEBUS_RMQ_HOST=127.0.0.1, VICIONE_SERVICEBUS_RMQ_MGMT_PORT=35197, VICIONE_SERVICEBUS_RMQ_PORT=35196
+endpoints projected to artifacts/run-output/vicione-173d919cbead/endpoints.json
+broker log rabbitmq: /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/artifacts/run-output/vicione-173d919cbead/rabbitmq-broker.log (228 lines)

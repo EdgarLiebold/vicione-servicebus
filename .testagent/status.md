@@ -2572,3 +2572,31 @@ future cohorts as complete.
   provider fixture output, mutation logs, dispositions, independent verifier and complete SHA-256
   inventory. Independent read-only acceptance and architecture binding remain separate actions and
   are not self-approved by this status carrier.
+
+## Azure Service Bus and RabbitMQ native closure — final local Evidence freeze (2026-09-02)
+
+- Mutation Technical `b2529849c6042429845245ee60678651aa3e92f5`, tree
+  `de59387f7e5a8e0a358c47195bbb95639eecd24f`, closes the complete inherited Azure Service Bus and
+  RabbitMQ projects and removes the now-unowned legacy TestInfrastructure project. Final Technical
+  child `cfec5cf5887efa2ac0aa4d0ac4db220743e8232d`, tree
+  `c7bfa85926ca0f151543c19626e942cf809382de`, changes only six whitespace positions in one surviving
+  SQL runner unit test; no product, provider-profile or mutation-target bytes change.
+- Azure Service Bus closes 153 obligations as 58 UnitArchitecture, 49 provider LocalIntegration and
+  46 honest `EXTERNAL_PENDING` rows. RabbitMQ closes 354 obligations as 191 UnitArchitecture, 162
+  provider LocalIntegration and one honest `EXTERNAL_PENDING` row. External work is not counted as
+  green. Both inherited project roots and the legacy TestInfrastructure root are absent; no empty
+  inherited test directory remains and the frozen expected list is unchanged.
+- Final native execution is 2,900/2,900 UnitArchitecture, 338/338 LocalIntegration, 60/60 SQL Server,
+  24/24 Azure Service Bus and 17/17 RabbitMQ, all with zero failures and zero skips. The complete
+  locked Engineering restore/build was repeated at the final Technical child and reports zero build
+  warnings/errors. Scoped formatting passes for all 27 added or modified C# paths.
+- Twenty-seven independent one-cause mutations are killed: Azure Service Bus M01–M12 produce 12
+  causal owner failures; RabbitMQ M01–M15 produce 21 causal owner failures. Every mutation builds,
+  every execution has zero skips, and every target restores byte-exactly. The final whitespace child
+  changes none of these targets or provider test inputs.
+- Verification model and 266 CI tool self-tests pass. Identity self-tests and CHANGELIST are rerun
+  only after the complete Evidence path inventory is staged; raw logs and a complete recursive
+  SHA-256 manifest bind their final outcomes.
+- The Evidence child created with this section is a local immutable review subject. Independent
+  read-only acceptance, architecture binding and any future remote publication remain pending and
+  are not self-approved; no remote push is authorized or performed by this package.

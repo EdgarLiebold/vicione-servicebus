@@ -1,0 +1,5 @@
+PASS mutations=27/27
+PASS azure-service-bus=12/12 causal-failures=12
+PASS rabbitmq=15/15 causal-failures=21
+PASS every baseline, occurrence, mutant and restored SHA-256 is exact
+PASS every recorded build succeeded and every owner execution failed without skips
