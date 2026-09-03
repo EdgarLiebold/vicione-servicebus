@@ -3441,3 +3441,39 @@ consumer-cancel invalidation is equivalent because topology-filter/channel recyc
 complete no-op invalidation mutation is red under external queue deletion. Final evidence is 148/148
 RabbitMQ unit, 24/24 real RabbitMQ, 3,141/3,141 Unit/Architecture, and zero-warning analyzer builds. The
 protected review aggregate remains `371bf21331f0fc3316be271bce04ab37b3c54c50e13f443789d94c1f6eca1f18`.
+
+## Reviewer integration research — V4 deterministic property metadata (2026-09-03)
+
+V4 commit `be8979abb6fc5340d5a09c0c3983f3974cd1238c` correctly identifies duplicate reflection
+accessor ownership and hidden first-call compilation as architectural debt. The integration baseline is
+product commit `2b31f21afaf51f6999e900b1987343b2909d09dd`, tree
+`ab7db47fc3b4d985184d552898776972bc4f494e`. The protected review aggregate and V4 bundle still
+verify as `371bf21331f0fc3316be271bce04ab37b3c54c50e13f443789d94c1f6eca1f18` and
+`e8f28736562bf7c4fa8ffca4dfd662cd5105d3124e26d2ba424fe1ac0d192b87`; `review/**` remains
+unmodified and untracked.
+
+The semantic result is one public `ViciOne.ServiceBus.Metadata` owner with an explicit
+`PropertyAccessPolicy`, case-insensitive caches and deterministic most-derived property selection.
+Accessor delegates are created once during construction. Public reference-type accessors use compiled
+expressions; nonpublic, no-dynamic-code and value-type declaring accessors use reflection. Construction
+rejects indexers, static properties, incompatible target and property types, and unknown policy values.
+Reflection unwraps `TargetInvocationException` while preserving the original exception stack. Untyped
+setter values are normalized before either execution path so null and incompatible boxed values expose
+one stable API boundary.
+
+Direct donor adoption would have been unsafe. Mutation-led review proved that compiling an untyped setter
+for a value-type declaring type mutates only an unboxed copy, leaving the caller's boxed struct unchanged.
+The donor also allowed reflection to leak `TargetInvocationException`, used an overly broad compilation
+catch, retained hidden `Task.Run` first-use work, and did not normalize reflection and expression setter
+failures. The native implementation corrects these defects instead of weakening its tests.
+
+Thirty-four direct behavior facts across four new source owners, plus strengthened TypeCache and assembly
+ownership checks, replace the three inherited internal-reflection cases. They bind exact values, target
+state, declaring type, exception type/message/parameter, exception identity, cache identity and namespace
+ownership. No sleep, polling, timeout-as-success, random input or reflection-only behavior verdict is used.
+All 25 independent buildable mutations are killed and restored. Final evidence is 272/272 Abstractions,
+1,550/1,550 Core and 3,174/3,174 canonical Unit/Architecture, all with zero skips; analyzer-active builds
+have zero warnings/errors. Scoped formatting covers all 20 changed C# paths. An initial shared-server build
+ended after five minutes with exit 1 but explicitly zero compiler warnings/errors; the same build completed
+in ten seconds with `--disable-build-servers`, confirming the known local build-server interference rather
+than a source failure. Tests continue to run without that build-only switch.

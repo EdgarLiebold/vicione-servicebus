@@ -581,13 +581,6 @@
       "variantKey" : "zero-required-option-rejected"
    },
    {
-      "requirementId" : "REQ-VSB-READ-WRITE-PROPERTY",
-      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
-      "testMethod" : "PrivateSetter_CanBeWrittenAndRead",
-      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Reflection.ReadWritePropertyTests",
-      "variantKey" : "private-setter"
-   },
-   {
       "requirementId" : "REQ-VSB-FAULT-MESSAGE-TYPE-METADATA",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
       "testMethod" : "ClassHierarchy_ExposesTheCompleteFaultTypeSet",
@@ -600,20 +593,6 @@
       "testMethod" : "InterfaceHierarchy_ExposesTheCompleteFaultTypeSet",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.FaultMessageTypeTests",
       "variantKey" : "interface-hierarchy"
-   },
-   {
-      "requirementId" : "REQ-VSB-READ-WRITE-PROPERTY-CACHE",
-      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
-      "testMethod" : "PrivateSetter_IsWritableThroughItsPropertyName",
-      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Reflection.ReadWritePropertyCacheTests",
-      "variantKey" : "private-setter-by-name"
-   },
-   {
-      "requirementId" : "REQ-VSB-READ-WRITE-PROPERTY-CACHE",
-      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
-      "testMethod" : "TryGetValue_MissingPropertyReturnsFalseAndNull",
-      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Reflection.ReadWritePropertyCacheTests",
-      "variantKey" : "missing-key-try-contract"
    },
    {
       "requirementId" : "REQ-VSB-STATIC-PROPERTY-REFLECTION",
@@ -1356,5 +1335,208 @@
       "testMethod" : "TryGetValueFromQueryString_PreservesTheCompleteRawValue",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions.QueryStringExtensionsTests",
       "variantKey" : "lookup-preserves-complete-value"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-READ",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "UntypedAccessor_ReadsPublicValueProperty",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.ReadOnlyPropertyTests",
+      "variantKey" : "public-untyped-value-boxing"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-READ",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "UntypedAccessor_ReadsAPropertyFromABoxedValueType",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.ReadOnlyPropertyTests",
+      "variantKey" : "boxed-value-type-reflection-path"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-READ",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "TypedAccessor_ReadsAnInheritedProperty",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.ReadOnlyPropertyTests",
+      "variantKey" : "inherited-typed-accessor"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-POLICY",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "PublicOnly_PrivateGetterFailsWithAnExactAccessorError",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.ReadOnlyPropertyTests",
+      "variantKey" : "public-only-rejects-private-getter"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-POLICY",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "IncludeNonPublic_PrivateGetterReturnsItsValue",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.ReadOnlyPropertyTests",
+      "variantKey" : "include-non-public-private-getter"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-FALLBACK",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ReflectionFallback_PrivateGetterPreservesTheOriginalException",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.ReadOnlyPropertyTests",
+      "variantKey" : "private-getter-preserves-exception"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-VALIDATION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "TypedAccessor_RejectsAPropertyTypeMismatchAtConstruction",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.ReadOnlyPropertyTests",
+      "variantKey" : "property-type-mismatch"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-VALIDATION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "TypedAccessor_RejectsAnUnrelatedTargetTypeAtConstruction",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.ReadOnlyPropertyTests",
+      "variantKey" : "unrelated-target-type"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-VALIDATION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Accessor_RejectsAnIndexedPropertyAtConstruction",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.ReadOnlyPropertyTests",
+      "variantKey" : "indexed-property"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-VALIDATION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Accessor_RejectsAStaticPropertyAtConstruction",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.ReadOnlyPropertyTests",
+      "variantKey" : "static-property"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-VALIDATION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Accessor_RejectsAnUnknownAccessPolicyAtConstruction",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.ReadOnlyPropertyTests",
+      "variantKey" : "unknown-access-policy"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-WRITE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "TypedAccessor_WritesAndReadsAPublicProperty",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.ReadWritePropertyTests",
+      "variantKey" : "public-typed-read-write"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-POLICY",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "PublicOnly_PrivateSetterFailsWithoutChangingTheTarget",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.ReadWritePropertyTests",
+      "variantKey" : "public-only-rejects-private-setter"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-POLICY",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "IncludeNonPublic_PrivateSetterWritesAndReadsItsValue",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.ReadWritePropertyTests",
+      "variantKey" : "include-non-public-private-setter"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-FALLBACK",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ReflectionFallback_PrivateSetterPreservesTheOriginalException",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.ReadWritePropertyTests",
+      "variantKey" : "private-setter-preserves-exception"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-WRITE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "UntypedAccessor_MutatesABoxedValueType",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.ReadWritePropertyTests",
+      "variantKey" : "boxed-value-type-reflection-path"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-WRITE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "UntypedAccessor_AcceptsNullForANullableReferenceProperty",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.ReadWritePropertyTests",
+      "variantKey" : "nullable-reference-value"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-WRITE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "UntypedAccessor_RejectsNullForANonNullableValueProperty",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.ReadWritePropertyTests",
+      "variantKey" : "null-value-type-rejected"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-WRITE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "UntypedAccessor_RejectsAConvertibleButIncompatibleValueType",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.ReadWritePropertyTests",
+      "variantKey" : "incompatible-value-type-rejected"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-FALLBACK",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ReflectionFallback_RejectsNullBeforeInvokingAPrivateValueSetter",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.ReadWritePropertyTests",
+      "variantKey" : "private-value-setter-validates-null"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-WRITE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ReadOnlyProperty_SetFailsWithAnExactAccessorError",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.ReadWritePropertyTests",
+      "variantKey" : "missing-setter"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-CACHE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ReadWriteCache_LookupIsOrdinalCaseInsensitive",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.PropertyCacheTests",
+      "variantKey" : "case-insensitive-read-write-lookup"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-CACHE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Cache_MissingPropertyReturnsFalseAndNull",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.PropertyCacheTests",
+      "variantKey" : "missing-key-try-contract"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-CACHE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "PublicOnly_ExcludesPropertiesWithAnyNonPublicAccessor",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.PropertyCacheTests",
+      "variantKey" : "public-only-excludes-private-accessors"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-CACHE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "IncludeNonPublic_IncludesAndExecutesPrivateAccessors",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.PropertyCacheTests",
+      "variantKey" : "include-non-public-accessors"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-CACHE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "HiddenProperty_DerivedDeclarationIsSelectedDeterministically",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.PropertyCacheTests",
+      "variantKey" : "derived-property-wins"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-CACHE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ExpressionOperations_UseTheSameCachedProperty",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.PropertyCacheTests",
+      "variantKey" : "expression-get-set"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-CACHE",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "Cache_RejectsAnUnknownAccessPolicy",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection.PropertyCacheTests",
+      "variantKey" : "invalid-policy"
+   },
+   {
+      "requirementId" : "REQ-VSB-PROPERTY-METADATA-OWNER",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "PropertyCaches_DefaultToPublicAccessorOwnership",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.TypeCacheTests",
+      "variantKey" : "type-cache-public-only-default"
    }
 ]

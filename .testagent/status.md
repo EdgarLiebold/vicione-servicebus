@@ -2717,14 +2717,31 @@ future cohorts as complete.
 - Protected `review/**` remains untouched and untracked. V4 progress is now 6/12 (50%); no remote
   publication is included or implied.
 
-## Reviewer integration — V4 RabbitMQ reliability and recovery active (2026-09-03)
+## Reviewer integration — V4 RabbitMQ reliability and recovery accepted locally (2026-09-03)
 
-- Architecture assignment `PO-2026-09-03-SERVICEBUS-REVIEW-INTEGRATION-06` is bound to product
-  baseline `cf2e9ebfbc193573fd376df549469a956bc7de80`, tree
-  `0babdea5cf9e910e849d57ce55fd9725d0ea0f13`, and the exact V4 review hashes.
-- All existing RabbitMQ product and native-test owners have been inventoried. The review requires four
-  missing capabilities: finite TTL/DLX queue redelivery, stable-topology single-flight/recovery,
-  structured send-failure classification and bounded confirm-before-ack fault redrive.
-- The donor's canceled-waiter cache eviction is a confirmed defect and has a predeclared regression
-  requirement. Product/test implementation and real-broker proof are in progress. `review/**` remains
-  untouched; no remote publication is authorized or implied.
+- Finite classic/quorum TTL/DLX redelivery, connection-scoped topology single-flight and recovery, typed
+  send-failure classification, and bounded confirm-before-ack fault redrive are complete.
+- Final RabbitMQ Unit is 148/148, real RabbitMQ is 24/24 and canonical Unit/Architecture is 3,141/3,141,
+  all without failures or skips; analyzer-active builds are clean.
+- Twenty-four buildable one-cause mutations are killed and restored. Detailed evidence is under
+  `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-RABBITMQ-RELIABILITY/`.
+- Product commit `2b31f21afaf51f6999e900b1987343b2909d09dd` and architecture commit `71c36823`
+  close package 7/12 locally. Protected `review/**` remains untouched; no remote publication occurred.
+
+## Reviewer integration — V4 deterministic property metadata accepted locally (2026-09-03)
+
+- Architecture assignment `PO-2026-09-03-SERVICEBUS-REVIEW-INTEGRATION-07` binds baseline product
+  `2b31f21afaf51f6999e900b1987343b2909d09dd`, tree
+  `ab7db47fc3b4d985184d552898776972bc4f494e`, and the exact V4 review hashes.
+- One explicit `ViciOne.ServiceBus.Metadata` owner now provides policy-bound, case-insensitive caches and
+  deterministic accessors without hidden first-call `Task.Run` work. Unsafe value-type compilation,
+  reflection exception wrapping and divergent untyped setter failures are corrected.
+- Thirty-four direct source-owner facts plus TypeCache and Architecture boundary checks replace three
+  inherited internal-reflection cases. Abstractions passes 272/272, Core 1,550/1,550 and canonical
+  Unit/Architecture 3,174/3,174 with zero failures/skips; analyzer builds are zero-warning/zero-error.
+- All 25 independent buildable mutations are killed and every target restored. Requirements JSON, scoped
+  format, old-symbol, forbidden-async, empty-directory, diff and protected-review hash gates pass.
+- Detailed evidence is under
+  `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-PROPERTY-METADATA/`. V4 progress is 8/12
+  (66.7%); product and architecture commits are the remaining local checkpoint actions. No remote
+  publication is authorized or implied.

@@ -2853,3 +2853,27 @@ freeze, two commits and the already authorized non-force remote publication.
 
 Completion: all eight steps passed locally. Product completion and architecture binding remain the
 checkpoint actions; remote publication remains outside this package.
+
+## Reviewer integration — V4 deterministic property metadata (2026-09-03)
+
+1. Bind the current product commit/tree, protected review hashes and semantic donor commit before the
+   first product edit. Preserve the current native suite as authoritative where it postdates the donor.
+2. Move the duplicate property-cache/accessor family from the internal namespace to one explicit public
+   `Metadata` owner and update every consumer. Bind the retired and replacement full names in Architecture.
+3. Replace implicit boolean visibility with `PropertyAccessPolicy`; fail closed for unknown values and
+   preserve public-only versus nonpublic behavior in all cache and accessor variants.
+4. Construct the final delegate once. Compile only safe public reference-type accessors and use a
+   deterministic reflection fallback for nonpublic, no-dynamic-code and value-type declaring accessors.
+5. Validate property, declaring type, target, indexer/static shape and property type before execution;
+   preserve the original user exception and normalize untyped setter values across both execution paths.
+6. Replace the three inherited internal-reflection cases with source-owner native tests for access,
+   visibility, caching, inheritance, boxed structs, exceptions, validation and runtime wrappers. Delete
+   only the empty obsolete test directory after replacement.
+7. Execute independent one-cause mutations for every high-risk policy, validation, cache, delegate,
+   exception and ownership branch. Restore every target byte-exactly before final positive verification.
+8. Require analyzer-active Abstractions/Core/full-solution builds, focused and canonical serialized tests,
+   scoped format, requirements JSON, stale-symbol, forbidden-async, empty-directory, review-hash and diff
+   gates. Freeze product and architecture commits as V4 package 8/12 without remote publication.
+
+Completion: all eight steps passed locally. Package 9/12 will reconcile deterministic runtime-time
+ownership from V4 checkpoint 008; remote publication remains outside this package.

@@ -3,6 +3,7 @@ namespace ViciOne.ServiceBus
     using System;
     using System.Runtime.CompilerServices;
     using Internals;
+    using Metadata;
 
 
     public static class TypeCache

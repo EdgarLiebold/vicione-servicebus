@@ -6,6 +6,7 @@ namespace ViciOne.ServiceBus.Util
     using System.Linq;
     using System.Text;
     using Internals;
+    using Metadata;
 
 
     /// <summary>

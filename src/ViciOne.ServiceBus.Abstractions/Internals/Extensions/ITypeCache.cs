@@ -1,5 +1,8 @@
 namespace ViciOne.ServiceBus.Internals
 {
+    using Metadata;
+
+
     public interface ITypeCache<T>
     {
         string ShortName { get; }

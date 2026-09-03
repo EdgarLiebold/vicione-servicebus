@@ -3,6 +3,7 @@ namespace ViciOne.ServiceBus.Configuration
     using System;
     using System.Linq.Expressions;
     using Internals;
+    using Metadata;
     using Saga;
 
 

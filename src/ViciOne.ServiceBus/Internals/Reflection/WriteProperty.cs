@@ -3,80 +3,72 @@ namespace ViciOne.ServiceBus.Internals
     using System;
     using System.Linq.Expressions;
     using System.Reflection;
-    using System.Threading;
-    using System.Threading.Tasks;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.ExceptionServices;
 
 
-    public class WriteProperty<T, TProperty> :
-        IWriteProperty<T, TProperty>
+    public class WriteProperty<T, TProperty> : IWriteProperty<T, TProperty>
         where T : class
     {
-        Action<T, TProperty> _setMethod;
+        readonly Action<T, TProperty> _setMethod;
 
         public WriteProperty(Type implementationType, PropertyInfo propertyInfo)
         {
+            ArgumentNullException.ThrowIfNull(implementationType);
+            ArgumentNullException.ThrowIfNull(propertyInfo);
+
+            if (!typeof(T).IsAssignableFrom(implementationType))
+                throw new ArgumentException($"Implementation type {implementationType} is not assignable to {typeof(T)}.", nameof(implementationType));
+
+            if (propertyInfo.DeclaringType == null || !propertyInfo.DeclaringType.IsAssignableFrom(implementationType))
+                throw new ArgumentException($"Property {propertyInfo.Name} cannot be used with implementation type {implementationType}.", nameof(propertyInfo));
+
+            if (propertyInfo.PropertyType != typeof(TProperty))
+                throw new ArgumentException($"Property type {propertyInfo.PropertyType} does not match {typeof(TProperty)}.", nameof(propertyInfo));
+
             TargetType = implementationType;
 
-            var setMethod = propertyInfo.GetSetMethod(true);
-            if (setMethod == null)
-                throw new ArgumentException($"The property does not have an accessible set method: {propertyInfo.Name}");
+            var setMethod = propertyInfo.GetSetMethod(true)
+                ?? throw new ArgumentException($"The property does not have a setter: {propertyInfo.Name}", nameof(propertyInfo));
 
-            // look for <Address>k__BackingField and use a field setter if available
-
-            void SetUsingReflection(T entity, TProperty property)
-            {
-                setMethod.Invoke(entity, new object[] { property });
-            }
-
-            void Initialize(T entity, TProperty property)
-            {
-                Interlocked.Exchange(ref _setMethod, SetUsingReflection);
-
-                SetUsingReflection(entity, property);
-
-                Task.Run(() => GenerateExpressionSetMethod(implementationType, setMethod));
-            }
-
-            _setMethod = Initialize;
+            _setMethod = CreateSetter(implementationType, setMethod);
         }
 
         public Type TargetType { get; }
 
-        public void Set(T content, TProperty value)
-        {
-            _setMethod(content, value);
-        }
+        public void Set(T content, TProperty value) => _setMethod(content, value);
 
-        async Task GenerateExpressionSetMethod(Type implementationType, MethodInfo setMethod)
+        static Action<T, TProperty> CreateSetter(Type implementationType, MethodInfo setMethod)
         {
-            try
-            {
-                Action<T, TProperty> fastSetMethod = CompileSetMethod(implementationType, setMethod);
+            if (!RuntimeFeature.IsDynamicCodeSupported || !setMethod.IsPublic)
+                return (entity, value) => InvokeSetter(setMethod, entity, value);
 
-                Interlocked.Exchange(ref _setMethod, fastSetMethod);
-            }
-            catch (Exception)
-            {
-            }
-        }
-
-        static Action<T, TProperty> CompileSetMethod(Type implementationType, MethodInfo setMethod)
-        {
             try
             {
                 var instance = Expression.Parameter(typeof(T), "instance");
                 var value = Expression.Parameter(typeof(TProperty), "value");
-                var cast = Expression.TypeAs(instance, implementationType);
-
-                var call = Expression.Call(cast, setMethod, value);
-
-                Expression<Action<T, TProperty>> lambdaExpression = Expression.Lambda<Action<T, TProperty>>(call, instance, value);
-
-                return lambdaExpression.CompileFast<Action<T, TProperty>>();
+                var target = Expression.Convert(instance, implementationType);
+                var call = Expression.Call(target, setMethod, value);
+                return Expression.Lambda<Action<T, TProperty>>(call, instance, value).CompileFast<Action<T, TProperty>>();
             }
-            catch (Exception ex)
+            catch (Exception exception) when (IsCompilationFailure(exception))
             {
-                throw new ViciOneServiceBusException($"Failed to compile SetMethod for property {setMethod.Name} on entity {typeof(T).Name}", ex);
+                return (entity, value) => InvokeSetter(setMethod, entity, value);
+            }
+        }
+
+        static bool IsCompilationFailure(Exception exception) =>
+            exception is ArgumentException or InvalidOperationException or MemberAccessException or NotSupportedException;
+
+        static void InvokeSetter(MethodInfo setMethod, T entity, TProperty value)
+        {
+            try
+            {
+                setMethod.Invoke(entity, [value]);
+            }
+            catch (TargetInvocationException exception) when (exception.InnerException != null)
+            {
+                ExceptionDispatchInfo.Capture(exception.InnerException).Throw();
             }
         }
     }

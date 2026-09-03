@@ -52,6 +52,35 @@ public sealed class RemovalBoundaryTests
 
     private const string RetainedNeighbour = "ResourceCache`1";
 
+    private static readonly string[] RetiredPropertyMetadataTypes =
+    [
+        "ViciOne.ServiceBus.Internals.IReadOnlyPropertyCache`1",
+        "ViciOne.ServiceBus.Internals.IReadWritePropertyCache`1",
+        "ViciOne.ServiceBus.Internals.ReadOnlyProperty",
+        "ViciOne.ServiceBus.Internals.ReadOnlyProperty`1",
+        "ViciOne.ServiceBus.Internals.ReadOnlyProperty`2",
+        "ViciOne.ServiceBus.Internals.ReadOnlyPropertyCache`1",
+        "ViciOne.ServiceBus.Internals.ReadWriteProperty",
+        "ViciOne.ServiceBus.Internals.ReadWriteProperty`1",
+        "ViciOne.ServiceBus.Internals.ReadWriteProperty`2",
+        "ViciOne.ServiceBus.Internals.ReadWritePropertyCache`1",
+    ];
+
+    private static readonly string[] OwnedPropertyMetadataTypes =
+    [
+        "ViciOne.ServiceBus.Metadata.IReadOnlyPropertyCache`1",
+        "ViciOne.ServiceBus.Metadata.IReadWritePropertyCache`1",
+        "ViciOne.ServiceBus.Metadata.PropertyAccessPolicy",
+        "ViciOne.ServiceBus.Metadata.ReadOnlyProperty",
+        "ViciOne.ServiceBus.Metadata.ReadOnlyProperty`1",
+        "ViciOne.ServiceBus.Metadata.ReadOnlyProperty`2",
+        "ViciOne.ServiceBus.Metadata.ReadOnlyPropertyCache`1",
+        "ViciOne.ServiceBus.Metadata.ReadWriteProperty",
+        "ViciOne.ServiceBus.Metadata.ReadWriteProperty`1",
+        "ViciOne.ServiceBus.Metadata.ReadWriteProperty`2",
+        "ViciOne.ServiceBus.Metadata.ReadWritePropertyCache`1",
+    ];
+
     [Fact]
     [RequirementCoverage("REQ-VSB-REMOVED-CLOSURES", "metadata-namespaces-types-and-retained-control")]
     public void ProductMetadata_ContainsNoRemovedTypeAndStillContainsTheRetainedResourceCache()
@@ -121,6 +150,20 @@ public sealed class RemovalBoundaryTests
         Assert.Equal(2, assemblies.Length);
         Assert.Equal(2, names.Distinct(StringComparer.Ordinal).Count());
         Assert.All(assemblies, assembly => Assert.NotEmpty(assembly.GetTypes()));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-PROPERTY-METADATA-OWNER", "single-metadata-namespace")]
+    public void PropertyMetadataTypes_HaveOneExplicitNamespaceOwner()
+    {
+        Type[] types = ProductAssemblies().SelectMany(assembly => assembly.GetTypes()).ToArray();
+        string[] names = types.Select(type => Assert.IsType<string>(type.FullName)).ToArray();
+
+        string[] retired = names.Intersect(RetiredPropertyMetadataTypes, StringComparer.Ordinal).Order(StringComparer.Ordinal).ToArray();
+        string[] owned = names.Intersect(OwnedPropertyMetadataTypes, StringComparer.Ordinal).Order(StringComparer.Ordinal).ToArray();
+
+        Assert.Empty(retired);
+        Assert.Equal(OwnedPropertyMetadataTypes.Order(StringComparer.Ordinal), owned);
     }
 
     internal static IEnumerable<Assembly> ProductAssemblies()

@@ -3,74 +3,63 @@ namespace ViciOne.ServiceBus.Internals
     using System;
     using System.Linq.Expressions;
     using System.Reflection;
-    using System.Threading;
-    using System.Threading.Tasks;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.ExceptionServices;
 
 
-    public class ReadProperty<T, TProperty> :
-        IReadProperty<T, TProperty>
+    public class ReadProperty<T, TProperty> : IReadProperty<T, TProperty>
         where T : class
     {
-        Func<T, TProperty> _getMethod;
+        readonly Func<T, TProperty> _getMethod;
 
         public ReadProperty(PropertyInfo propertyInfo)
         {
-            if (propertyInfo == null)
-                throw new ArgumentNullException(nameof(propertyInfo));
+            ArgumentNullException.ThrowIfNull(propertyInfo);
 
-            var getMethod = propertyInfo.GetGetMethod(true);
-            if (getMethod == null)
-                throw new ArgumentException("The property does not have an accessible get method");
+            var getMethod = propertyInfo.GetGetMethod(true)
+                ?? throw new ArgumentException($"The property does not have a getter: {propertyInfo.Name}", nameof(propertyInfo));
 
-            TProperty GetUsingReflection(T entity)
-            {
-                return (TProperty)getMethod.Invoke(entity, null);
-            }
+            if (propertyInfo.PropertyType != typeof(TProperty))
+                throw new ArgumentException($"Property type {propertyInfo.PropertyType} does not match {typeof(TProperty)}.", nameof(propertyInfo));
 
-            TProperty Initialize(T entity)
-            {
-                Interlocked.Exchange(ref _getMethod, GetUsingReflection);
-
-                Task.Run(() => GenerateExpressionGetMethod(getMethod));
-
-                return GetUsingReflection(entity);
-            }
-
-            _getMethod = Initialize;
+            _getMethod = CreateGetter(getMethod);
         }
 
-        public TProperty Get(T content)
-        {
-            return _getMethod(content);
-        }
+        public TProperty Get(T content) => _getMethod(content);
 
-        async Task GenerateExpressionGetMethod(MethodInfo getMethod)
+        static Func<T, TProperty> CreateGetter(MethodInfo getMethod)
         {
-            try
-            {
-                Func<T, TProperty> method = CompileGetMethod(getMethod);
+            if (!RuntimeFeature.IsDynamicCodeSupported || !getMethod.IsPublic)
+                return entity => InvokeGetter(getMethod, entity);
 
-                Interlocked.Exchange(ref _getMethod, method);
-            }
-            catch (Exception)
-            {
-            }
-        }
-
-        static Func<T, TProperty> CompileGetMethod(MethodInfo getMethod)
-        {
             try
             {
                 var instance = Expression.Parameter(typeof(T), "instance");
-                var call = Expression.Call(instance, getMethod);
-
-                Expression<Func<T, TProperty>> lambdaExpression = Expression.Lambda<Func<T, TProperty>>(call, instance);
-
-                return lambdaExpression.CompileFast<Func<T, TProperty>>();
+                Expression target = getMethod.DeclaringType == typeof(T)
+                    ? instance
+                    : Expression.Convert(instance, getMethod.DeclaringType!);
+                var call = Expression.Call(target, getMethod);
+                return Expression.Lambda<Func<T, TProperty>>(call, instance).CompileFast<Func<T, TProperty>>();
             }
-            catch (Exception ex)
+            catch (Exception exception) when (IsCompilationFailure(exception))
             {
-                throw new ViciOneServiceBusException($"Failed to compile get method for property {getMethod.Name} on entity {typeof(T).Name}", ex);
+                return entity => InvokeGetter(getMethod, entity);
+            }
+        }
+
+        static bool IsCompilationFailure(Exception exception) =>
+            exception is ArgumentException or InvalidOperationException or MemberAccessException or NotSupportedException;
+
+        static TProperty InvokeGetter(MethodInfo getMethod, T entity)
+        {
+            try
+            {
+                return (TProperty)getMethod.Invoke(entity, null)!;
+            }
+            catch (TargetInvocationException exception) when (exception.InnerException != null)
+            {
+                ExceptionDispatchInfo.Capture(exception.InnerException).Throw();
+                throw;
             }
         }
     }
