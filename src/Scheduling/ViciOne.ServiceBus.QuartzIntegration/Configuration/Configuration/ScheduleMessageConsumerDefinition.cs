@@ -19,7 +19,7 @@ namespace ViciOne.ServiceBus.Configuration
         protected override void ConfigureConsumer(IReceiveEndpointConfigurator endpointConfigurator,
             IConsumerConfigurator<ScheduleMessageConsumer> consumerConfigurator, IRegistrationContext context)
         {
-            endpointConfigurator.UseMessageRetry(r => r.Interval(5, 250));
+            endpointConfigurator.UseTechnicalMessageRetry();
 
             consumerConfigurator.Message<ScheduleMessage>(m => m.UsePartitioner(_endpointDefinition.Partition, p => p.Message.CorrelationId));
 

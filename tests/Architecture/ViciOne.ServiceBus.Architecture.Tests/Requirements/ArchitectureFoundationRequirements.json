@@ -152,5 +152,26 @@
     "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
     "testType": "ViciOne.ServiceBus.Architecture.Tests.Product.TimeSourceArchitectureTests",
     "testMethod": "ProductionRuntimePaths_KeepDirectWallClockUsesWithinReviewedAllowlist"
+  },
+  {
+    "requirementId": "REQ-VSB-TECHNICAL-RETRY-ARCHITECTURE",
+    "variantKey": "internal-runtime-defaults-use-one-canonical-policy",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Product.TechnicalRetryArchitectureTests",
+    "testMethod": "InternalRuntimeDefaults_UseOnlyTheCanonicalTechnicalRetryPolicy"
+  },
+  {
+    "requirementId": "REQ-VSB-TECHNICAL-RETRY-ARCHITECTURE",
+    "variantKey": "public-extensions-forward-the-custom-classifier",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Product.TechnicalRetryArchitectureTests",
+    "testMethod": "PublicTechnicalRetryExtensions_ForwardTheCustomClassifierToTheCanonicalPolicies"
+  },
+  {
+    "requirementId": "REQ-VSB-TECHNICAL-RETRY-ARCHITECTURE",
+    "variantKey": "rabbitmq-native-redelivery-binds-schedule-and-taxonomy",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Product.TechnicalRetryArchitectureTests",
+    "testMethod": "RabbitMqNativeRedelivery_BindsTheCanonicalScheduleAndTransientTaxonomy"
   }
 ]

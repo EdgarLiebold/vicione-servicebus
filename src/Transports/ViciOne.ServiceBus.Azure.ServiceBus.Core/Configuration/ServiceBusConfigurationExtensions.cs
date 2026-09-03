@@ -29,6 +29,7 @@ namespace ViciOne.ServiceBus
         public static void UsingAzureServiceBus(this IBusRegistrationConfigurator configurator,
             Action<IBusRegistrationContext, IServiceBusBusFactoryConfigurator> configure = null)
         {
+            configurator.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, ServiceBusSendFailureClassifier>());
             configurator.SetBusFactory(new ServiceBusRegistrationBusFactory(configure));
 
             configurator.TryAddSingleton(provider =>
@@ -48,6 +49,7 @@ namespace ViciOne.ServiceBus
             Action<IBusRegistrationContext, IServiceBusBusFactoryConfigurator> configure = null)
             where TBus : class, IBus
         {
+            configurator.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, ServiceBusSendFailureClassifier>());
             configurator.SetBusFactory(new ServiceBusRegistrationBusFactory(configure));
 
             AddSubscriptionEndpointConnector<TBus>(configurator);

@@ -86,6 +86,64 @@ public sealed class DbContextSagaRepositoryContextTests
         Assert.Same(dbContext.ExpectedException, actual);
     }
 
+    [Theory]
+    [InlineData(WriteOperation.Save)]
+    [InlineData(WriteOperation.Update)]
+    [InlineData(WriteOperation.Delete)]
+    [RequirementCoverage("REQ-VSB-EF-SAGA-CONCURRENCY", "write-conflicts-map-to-provider-neutral-concurrency")]
+    public async Task Write_MapsEfConcurrencyToTheProviderNeutralSagaFailure(WriteOperation operation)
+    {
+        var expected = new DbUpdateConcurrencyException("test-owned stale saga version");
+        await using var dbContext = new FailingSagaDbContext(
+            new DbContextOptionsBuilder<FailingSagaDbContext>().UseSqlite("Data Source=:memory:").Options,
+            expected);
+        using var repository = CreateRepositoryContext(dbContext, new EmptyLockStrategy());
+        var saga = new TestSaga { CorrelationId = Guid.NewGuid(), Value = "stale" };
+        SagaConsumeContext<TestSaga, TestMessage> sagaContext = await repository.Add(saga);
+
+        ConcurrencyException actual = await Assert.ThrowsAsync<ConcurrencyException>(() =>
+            ExecuteWrite(repository, sagaContext, operation));
+
+        Assert.Same(expected, actual.InnerException);
+        Assert.Equal(typeof(TestSaga), actual.SagaType);
+        Assert.Equal(saga.CorrelationId, actual.CorrelationId);
+    }
+
+    [Theory]
+    [InlineData(WriteOperation.Save)]
+    [InlineData(WriteOperation.Update)]
+    [InlineData(WriteOperation.Delete)]
+    [RequirementCoverage("REQ-VSB-EF-SAGA-CONCURRENCY", "other-write-failures-preserve-exact-identity")]
+    public async Task Write_PreservesOtherEfFailuresUnchanged(WriteOperation operation)
+    {
+        var expected = new DbUpdateException("test-owned non-concurrency persistence failure");
+        await using var dbContext = new FailingSagaDbContext(
+            new DbContextOptionsBuilder<FailingSagaDbContext>().UseSqlite("Data Source=:memory:").Options,
+            expected);
+        using var repository = CreateRepositoryContext(dbContext, new EmptyLockStrategy());
+        SagaConsumeContext<TestSaga, TestMessage> sagaContext = await repository.Add(
+            new TestSaga { CorrelationId = Guid.NewGuid(), Value = "invalid" });
+
+        DbUpdateException actual = await Assert.ThrowsAsync<DbUpdateException>(() =>
+            ExecuteWrite(repository, sagaContext, operation));
+
+        Assert.Same(expected, actual);
+    }
+
+    private static Task ExecuteWrite(
+        DbContextSagaRepositoryContext<TestSaga, TestMessage> repository,
+        SagaConsumeContext<TestSaga, TestMessage> sagaContext,
+        WriteOperation operation)
+    {
+        return operation switch
+        {
+            WriteOperation.Save => repository.Save(sagaContext),
+            WriteOperation.Update => repository.Update(sagaContext),
+            WriteOperation.Delete => repository.Delete(sagaContext),
+            _ => throw new ArgumentOutOfRangeException(nameof(operation)),
+        };
+    }
+
     private static DbContextSagaRepositoryContext<TestSaga, TestMessage> CreateRepositoryContext(
         DbContext dbContext,
         ISagaRepositoryLockStrategy<TestSaga> lockStrategy)
@@ -111,6 +169,13 @@ public sealed class DbContextSagaRepositoryContextTests
     }
 
     public sealed record TestMessage;
+
+    public enum WriteOperation
+    {
+        Save,
+        Update,
+        Delete,
+    }
 
     private sealed class SagaDbContext(DbContextOptions<SagaDbContext> options) : DbContext(options)
     {

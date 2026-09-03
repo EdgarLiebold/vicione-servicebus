@@ -2920,3 +2920,35 @@ Canonical Unit/Architecture passes 3,209/3,209; SQL Server real local passes 60/
 Bus emulator passes 24/24, all without skips. The only remaining full-EF failure is the already isolated,
 pre-package-6 nondeterministic inbox/outbox concurrency case. Package 10/12 is next; remote publication
 remains outside this package.
+
+## Reviewer integration — V4 technical retry and send-failure classification (2026-09-03)
+
+1. Add the public technical retry taxonomy and conservative default classifier. Normalize invalid custom
+   values, make terminal aggregate evidence order-independent and keep unknown failures out of standard
+   retries.
+2. Add the canonical immutable immediate and delayed sequences plus null-safe configuration extensions.
+   Prove exact delays and filtering through a built retry policy, not by duplicating constants in a test.
+3. Reconcile provider send classification against the existing EF outbox owner. Add typed ActiveMQ, SQS,
+   Azure Service Bus, PostgreSQL and SQL Server adapters with full-chain permanent precedence and no text
+   matching.
+4. Register every provider adapter idempotently at its bus configuration boundary. Keep the already proven
+   RabbitMQ adapter and add only its canonical technical queue-redelivery composition.
+5. Replace only built-in Future, Job and Quartz infrastructure retry defaults with the shared bounded
+   taxonomy. Preserve all user-configured business retry policies and current native behavior owners.
+6. Execute analyzer builds and focused source-owner tests incrementally. Run independent buildable
+   one-cause mutations for classification, precedence, interval, policy, provider, registration and
+   composition branches, restoring every target before positive closure.
+7. Finish with scoped format, requirements JSON, forbidden text-classification, duplicate registration,
+   review-hash, empty-directory and diff gates; run the canonical serialized Unit/Architecture profile and
+   available directly affected provider profiles.
+8. Freeze separate local product and architecture completion commits as V4 package 10/12. Do not publish
+   remotely without a fresh explicit authorization.
+
+Current state: architecture assignment `PO-2026-09-03-SERVICEBUS-REVIEW-INTEGRATION-09` is bound at
+architecture commit `389162b4`. Research and the eight-step implementation/test plan are complete; native
+source-owner tests and the central taxonomy are next.
+
+Completion: all eight steps passed locally. Fifty-nine independent production mutations are killed; the
+complete Unit/Architecture profile passes 3,237/3,237, and every directly affected fresh provider owner is
+green. Native reconciliation additionally closes provider-neutral Azure Table/EF concurrency evidence that
+the V4 donor omitted. Package 11/12 is next; remote publication remains outside this package.

@@ -3547,3 +3547,62 @@ Mutation work also improved three initially incomplete oracles. The task-timeout
 have independent harness guards, so process-time mutants fail promptly instead of hanging. The FromLast
 batch mutant initially survived a final-completion-only assertion; the observable provider now records
 timer change count and last due time, directly proving that the second arrival restarts the deadline.
+
+## Reviewer integration research — V4 technical retry and send-failure classification (2026-09-03)
+
+Package 10/12 is bound by architecture assignment `PO-2026-09-03-SERVICEBUS-REVIEW-INTEGRATION-09`
+at architecture commit `389162b4`. Its product baseline is
+`0af45942509b6391a8265cc2eb366b422714e375`, tree
+`87adffec5b3dcb59d2d134cdfee5da0dfbc47263`. The protected V4 donor is commit
+`8e98f4273420a5c72d674c50af7b24eb257ddc48`, reconciled through final V4 head
+`f8050928715e536b60c42d800d1cbb81c085818f`; `review/**` remains read-only and untracked.
+
+The current native tree already has the stronger package-4 `ITransportSendFailureClassifier` contract for
+persisted EF outbox delivery, bounded retry/quarantine state and classifier-fault isolation. Package 7 has
+also supplied the final typed RabbitMQ classifier and idempotent registration. Those are authoritative.
+The remaining V4 gap has two related but deliberately separate owners:
+
+- application/consumer infrastructure needs a conservative `ITechnicalFailureClassifier` and canonical
+  bounded immediate/redelivery sequences;
+- durable transport send needs typed provider adapters for ActiveMQ, Amazon SQS, Azure Service Bus,
+  PostgreSQL and SQL Server registered against the existing outbox classifier contract.
+
+These taxonomies must not be conflated. Consumer cancellation is terminal for in-process retry; outbox send
+cancellation can be transient during service shutdown. Unknown consumer exceptions must not enter the
+standard retry loop, while unknown outbox failures remain bounded by the already persisted retry budget.
+
+The donor classifier has two gaps that require native correction rather than literal copying. Its aggregate
+loop returns `Unclassified` as soon as it encounters an unknown item, so a later terminal item fails to
+dominate and the result depends on aggregate order. It also returns arbitrary out-of-range values from the
+public exception-side classification interface. The integrated owner will scan the complete aggregate,
+make `NonRetryable` dominant independent of order, retain `Unclassified` over an all-transient mixture, and
+normalize invalid external enum values to `Unclassified`.
+
+The donor provider classifiers similarly return on the first recognized exception in an outer-to-inner
+walk. A transient outer connection wrapper could therefore hide typed permanent inner evidence such as
+authorization or configuration failure. The integrated adapters will evaluate the complete chain with
+permanent precedence, use only structured exception properties/status codes/error numbers, and return
+`false` with `Unclassified` for genuinely unknown failures. Message text, type-name strings and `ToString`
+output are not policy inputs.
+
+Native closure requires source-owner tests for default and custom classification, nested and aggregate
+precedence in both orders, invalid enum values, exact immutable retry schedules, policy filtering, all null
+boundaries, provider-specific transient/permanent/unknown paths and one-registration semantics. Internal
+Future, Job and Quartz defaults must use the same bounded policy; RabbitMQ gets a canonical queue-redelivery
+companion without removing its existing explicit finite-plan API. Independent mutations must cover every
+classifier branch, precedence rule, interval sequence, registration and internal composition call site.
+
+Implementation confirmed the donor's central direction but exposed a real integration gap. The conservative
+policy made Azure Table and EF Future concurrency fail because their persistence boundaries did not publish
+provider-neutral concurrency evidence. A causal rollback proved the policy change was the trigger. The final
+correction maps only Azure Table HTTP 412 and EF `DbUpdateConcurrencyException` to the existing
+`ConcurrencyException`, preserves exact provider causes, and recognizes typed BCL `DbException.IsTransient`
+evidence including EF's exact wrapper shape. Broad saga/database failures remain unclassified or terminal.
+
+All five send adapters inspect complete exception chains and use permanent precedence. The canonical policy
+is immutable to callers and is now the sole built-in Future, Job and Quartz default. Twenty-five new methods
+and one strengthened boundary method kill 59/59 independent production mutations. Analyzer build and
+3,237-case Unit/Architecture execution are fully green. Fresh provider owners pass SQL 62/62, ASB 24/24,
+RabbitMQ 24/24, SQS 48/48, Azure Table Future 6/6 and EF Future 6/6. The final 343-case general carrier's
+only failure is the inherited EF inbox `ReceiveCount` race already reproduced at clean pre-package-6 commit
+`0df0a5ed`; no package-10 path participates in it.

@@ -157,7 +157,7 @@ namespace ViciOne.ServiceBus.Configuration
 
             _busConfigurator.ReceiveEndpoint(_options.JobStateSagaEndpointName, e =>
             {
-                e.UseMessageRetry(r => r.Exponential(20, TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(1)));
+                e.UseTechnicalMessageRetry();
 
                 UseInMemoryOutbox(e);
 
@@ -205,7 +205,7 @@ namespace ViciOne.ServiceBus.Configuration
 
             _busConfigurator.ReceiveEndpoint(_options.JobAttemptSagaEndpointName, e =>
             {
-                e.UseMessageRetry(r => r.Exponential(20, TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(1)));
+                e.UseTechnicalMessageRetry();
 
                 UseInMemoryOutbox(e);
 
@@ -240,7 +240,7 @@ namespace ViciOne.ServiceBus.Configuration
 
             _busConfigurator.ReceiveEndpoint(_options.JobTypeSagaEndpointName, e =>
             {
-                e.UseMessageRetry(r => r.Exponential(20, TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(1)));
+                e.UseTechnicalMessageRetry();
 
                 UseInMemoryOutbox(e);
 

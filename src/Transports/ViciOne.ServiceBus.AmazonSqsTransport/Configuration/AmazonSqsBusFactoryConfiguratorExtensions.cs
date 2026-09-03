@@ -4,7 +4,10 @@ using System;
 using Amazon;
 using Amazon.Runtime;
 using Amazon.Runtime.Credentials;
+using AmazonSqsTransport;
 using AmazonSqsTransport.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 
 public static class AmazonSqsBusFactoryConfiguratorExtensions
@@ -25,6 +28,7 @@ public static class AmazonSqsBusFactoryConfiguratorExtensions
     public static void UsingAmazonSqs(this IBusRegistrationConfigurator configurator,
         Action<IBusRegistrationContext, IAmazonSqsBusFactoryConfigurator>? configure = null)
     {
+        configurator.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, AmazonSqsSendFailureClassifier>());
         configurator.SetBusFactory(new AmazonSqsRegistrationBusFactory(configure));
     }
 

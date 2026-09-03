@@ -2801,3 +2801,35 @@ future cohorts as complete.
   `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-RUNTIME-TIME-OWNERSHIP/`.
 - Package 9/12 is ready for its local product and architecture commits, bringing V4 progress to 75%.
   `review/**` remains untouched and untracked; no remote publication is authorized or implied.
+
+## Reviewer integration — V4 technical retry and send-failure classification active (2026-09-03)
+
+- Package 9/12 is locally frozen at product commit `0af45942` and architecture commit `4bcf2289`.
+- Package 10/12 is bound by `PO-2026-09-03-SERVICEBUS-REVIEW-INTEGRATION-09` at architecture commit
+  `389162b4`, from product baseline `0af45942509b6391a8265cc2eb366b422714e375`, tree
+  `87adffec5b3dcb59d2d134cdfee5da0dfbc47263`.
+- The semantic donor is V4 commit `8e98f4273420a5c72d674c50af7b24eb257ddc48`, reconciled through
+  final V4 head `f8050928715e536b60c42d800d1cbb81c085818f` and the later already integrated EF outbox,
+  RabbitMQ and TimeProvider owners.
+- Research separates consumer technical retry from persisted transport-send classification and identifies
+  order-dependent aggregate and nested provider-precedence weaknesses in the donor. The native plan adds
+  complete source-owner tests and corrects those gaps before adopting internal defaults.
+- `review/**` remains untouched and untracked; no remote publication is authorized or implied.
+
+## Reviewer integration — V4 technical retry and send-failure classification accepted locally (2026-09-03)
+
+- One conservative consumer retry taxonomy now owns the canonical bounded immediate and delayed cadence;
+  five transport adapters classify persisted sends from typed provider data with permanent full-chain
+  precedence and idempotent singleton registration.
+- Native validation found that a literal donor adoption broke real Azure Table and EF Future concurrency.
+  Exact provider-neutral normalization of Azure 412 and EF `DbUpdateConcurrencyException`, plus typed BCL
+  database-transience handling, restores both real owners without broadening unrelated failures.
+- Twenty-five new source-owner tests plus one strengthened boundary test kill 59/59 independent production
+  mutations. The final analyzer-active build is zero-warning/zero-error and Unit/Architecture passes
+  3,237/3,237 with zero skips.
+- Fresh real-provider results are SQL Server/PostgreSQL 62/62, Azure Service Bus 24/24, RabbitMQ 24/24,
+  SQS 48/48, Azure Table Future 6/6 and EF Future 6/6. The 343-case broad carrier has only the previously
+  baseline-reproduced EF inbox `ReceiveCount` race; all package owners are green.
+- Detailed evidence is under
+  `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-TECHNICAL-RETRY/`. V4 progress is now 10/12
+  (83.3%). Protected `review/**` remains untouched; no remote publication occurred.

@@ -99,6 +99,10 @@ namespace ViciOne.ServiceBus.AzureTable.Saga
             {
                 throw;
             }
+            catch (RequestFailedException exception) when (exception.Status == 412)
+            {
+                throw new ConcurrencyException("Saga update failed", typeof(TSaga), instance.CorrelationId, exception);
+            }
             catch (Exception exception)
             {
                 throw new SagaException("Saga update failed", typeof(TSaga), instance.CorrelationId, exception);
@@ -120,6 +124,10 @@ namespace ViciOne.ServiceBus.AzureTable.Saga
                 when (context.CancellationToken.IsCancellationRequested)
             {
                 throw;
+            }
+            catch (RequestFailedException exception) when (exception.Status == 412)
+            {
+                throw new ConcurrencyException("Saga delete failed", typeof(TSaga), instance.CorrelationId, exception);
             }
             catch (Exception exception)
             {

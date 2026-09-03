@@ -108,6 +108,10 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga
 
                 await _dbContext.SaveChangesAsync(CancellationToken).ConfigureAwait(false);
             }
+            catch (DbUpdateConcurrencyException exception)
+            {
+                throw new ConcurrencyException("Saga save failed", typeof(TSaga), context.Saga.CorrelationId, exception);
+            }
             finally
             {
                 _inUse.Release();
@@ -120,6 +124,10 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga
             try
             {
                 await _dbContext.SaveChangesAsync(CancellationToken).ConfigureAwait(false);
+            }
+            catch (DbUpdateConcurrencyException exception)
+            {
+                throw new ConcurrencyException("Saga update failed", typeof(TSaga), context.Saga.CorrelationId, exception);
             }
             finally
             {
@@ -135,6 +143,10 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga
                 _dbContext.Set<TSaga>().Remove(context.Saga);
 
                 await _dbContext.SaveChangesAsync(CancellationToken).ConfigureAwait(false);
+            }
+            catch (DbUpdateConcurrencyException exception)
+            {
+                throw new ConcurrencyException("Saga delete failed", typeof(TSaga), context.Saga.CorrelationId, exception);
             }
             finally
             {

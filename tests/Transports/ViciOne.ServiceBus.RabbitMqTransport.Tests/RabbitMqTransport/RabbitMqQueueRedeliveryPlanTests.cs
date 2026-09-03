@@ -102,6 +102,24 @@ public sealed class RabbitMqQueueRedeliveryPlanTests
         Assert.Contains("only be configured once", exception.Message, StringComparison.Ordinal);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-QUEUE-REDELIVERY", "canonical-technical-policy-owner")]
+    public void TechnicalExtension_RejectsNullAndClaimsTheCanonicalQueueRedeliveryPlan()
+    {
+        ArgumentNullException nullOwner = Assert.Throws<ArgumentNullException>(
+            () => RabbitMqQueueRedeliveryExtensions.UseTechnicalQueueRedelivery(null!));
+        Assert.Equal("configurator", nullOwner.ParamName);
+
+        ConfigurationException duplicateOwner = Assert.Throws<ConfigurationException>(() =>
+            Bus.Factory.CreateUsingRabbitMq(configurator => configurator.ReceiveEndpoint("orders", endpoint =>
+            {
+                endpoint.UseTechnicalQueueRedelivery();
+                endpoint.UseQueueRedelivery(TimeSpan.FromMinutes(10));
+            })));
+
+        Assert.Contains("only be configured once", duplicateOwner.Message, StringComparison.Ordinal);
+    }
+
     private static RabbitMqReceiveSettings CreateSettings(string queueName)
     {
         var topology = new RabbitMqTopologyConfiguration(RabbitMqBusFactory.CreateMessageTopology());

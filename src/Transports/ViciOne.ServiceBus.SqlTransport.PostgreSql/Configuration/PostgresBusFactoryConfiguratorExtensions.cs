@@ -1,8 +1,11 @@
 namespace ViciOne.ServiceBus
 {
     using System;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.DependencyInjection.Extensions;
     using Npgsql;
     using SqlTransport.Configuration;
+    using SqlTransport.PostgreSql;
 
 
     public static class PostgresBusFactoryConfiguratorExtensions
@@ -15,6 +18,7 @@ namespace ViciOne.ServiceBus
         public static void UsingPostgres(this IBusRegistrationConfigurator configurator,
             Action<IBusRegistrationContext, ISqlBusFactoryConfigurator>? configure = null)
         {
+            configurator.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, PostgresSendFailureClassifier>());
             configurator.SetBusFactory(new SqlRegistrationBusFactory((context, cfg) =>
             {
                 cfg.UsePostgres(context);
@@ -35,6 +39,7 @@ namespace ViciOne.ServiceBus
         public static void UsingPostgres(this IBusRegistrationConfigurator configurator, string connectionString,
             Action<IBusRegistrationContext, ISqlBusFactoryConfigurator>? configure = null)
         {
+            configurator.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, PostgresSendFailureClassifier>());
             configurator.SetBusFactory(new SqlRegistrationBusFactory((context, cfg) =>
             {
                 cfg.UsePostgres(connectionString);
@@ -52,6 +57,7 @@ namespace ViciOne.ServiceBus
         public static void UsingPostgres(this IBusRegistrationConfigurator configurator, NpgsqlDataSource dataSource,
             Action<IBusRegistrationContext, ISqlBusFactoryConfigurator>? configure = null)
         {
+            configurator.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, PostgresSendFailureClassifier>());
             configurator.SetBusFactory(new SqlRegistrationBusFactory((context, cfg) =>
             {
                 cfg.UsePostgres(dataSource);
@@ -69,6 +75,7 @@ namespace ViciOne.ServiceBus
         public static void UsingPostgres(this IBusRegistrationConfigurator configurator, Func<IBusRegistrationContext, NpgsqlDataSource> dataSourceProvider,
             Action<IBusRegistrationContext, ISqlBusFactoryConfigurator>? configure = null)
         {
+            configurator.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, PostgresSendFailureClassifier>());
             configurator.SetBusFactory(new SqlRegistrationBusFactory((context, cfg) =>
             {
                 cfg.UsePostgres(dataSourceProvider(context));

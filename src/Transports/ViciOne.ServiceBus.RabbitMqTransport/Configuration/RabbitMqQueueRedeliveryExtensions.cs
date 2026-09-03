@@ -1,3 +1,4 @@
+#nullable enable
 namespace ViciOne.ServiceBus;
 
 using System;
@@ -7,6 +8,22 @@ using RabbitMqTransport.Configuration;
 
 public static class RabbitMqQueueRedeliveryExtensions
 {
+    /// <summary>
+    /// Applies the canonical ViciOne technical redelivery schedule and failure taxonomy using
+    /// RabbitMQ-native predeclared TTL/DLX queues. This is the preferred RabbitMQ companion to
+    /// <see cref="TechnicalRetryConfigurationExtensions.UseTechnicalMessageRetry" />.
+    /// </summary>
+    public static void UseTechnicalQueueRedelivery(this IRabbitMqReceiveEndpointConfigurator configurator,
+        ITechnicalFailureClassifier? classifier = null)
+    {
+        ArgumentNullException.ThrowIfNull(configurator);
+
+        classifier ??= TechnicalRetryPolicy.DefaultFailureClassifier;
+        TimeSpan[] intervals = TechnicalRetryPolicy.RedeliveryIntervals.ToArray();
+        configurator.UseQueueRedelivery(intervals, retry =>
+            retry.Handle<Exception>(exception => classifier.Classify(exception) == RetryFailureKind.Transient));
+    }
+
     /// <summary>
     /// Configures RabbitMQ-native technical redelivery through a finite set of predeclared TTL/DLX
     /// queues. This path does not require the delayed-message exchange plugin.

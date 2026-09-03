@@ -1,7 +1,10 @@
 namespace ViciOne.ServiceBus
 {
     using System;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.DependencyInjection.Extensions;
     using SqlTransport.Configuration;
+    using SqlTransport.SqlServer;
 
 
     public static class SqlServerBusFactoryConfiguratorExtensions
@@ -14,6 +17,7 @@ namespace ViciOne.ServiceBus
         public static void UsingSqlServer(this IBusRegistrationConfigurator configurator,
             Action<IBusRegistrationContext, ISqlBusFactoryConfigurator>? configure = null)
         {
+            configurator.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, SqlServerSendFailureClassifier>());
             configurator.SetBusFactory(new SqlRegistrationBusFactory((context, cfg) =>
             {
                 cfg.UseSqlServer(context);
@@ -34,6 +38,7 @@ namespace ViciOne.ServiceBus
         public static void UsingSqlServer(this IBusRegistrationConfigurator configurator, string connectionString,
             Action<IBusRegistrationContext, ISqlBusFactoryConfigurator>? configure = null)
         {
+            configurator.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, SqlServerSendFailureClassifier>());
             configurator.SetBusFactory(new SqlRegistrationBusFactory((context, cfg) =>
             {
                 cfg.UseSqlServer(connectionString);

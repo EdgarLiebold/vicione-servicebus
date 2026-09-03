@@ -156,8 +156,8 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
     [Theory]
     [InlineData(WriteOperation.Update)]
     [InlineData(WriteOperation.Delete)]
-    [RequirementCoverage("REQ-VSB-AZURE-TABLE-SAGA-CONCURRENCY", "stale-etag-is-a-causal-saga-write-failure")]
-    public async Task Write_ClassifiesAStaleEtagAsASagaFailureWithTheOriginalStorageError(WriteOperation operation)
+    [RequirementCoverage("REQ-VSB-AZURE-TABLE-SAGA-CONCURRENCY", "stale-etag-maps-to-typed-retryable-concurrency")]
+    public async Task Write_MapsAStaleEtagToTypedConcurrencyWithTheOriginalStorageError(WriteOperation operation)
     {
         var expected = new RequestFailedException(412, "test-owned stale ETag");
         var table = new FailingWriteTableClient(updateFailure: expected, deleteFailure: expected);
@@ -170,7 +170,7 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
         var eTag = new SagaETag("W/\"stale-etag\"");
         sagaContext.AddOrUpdatePayload(() => eTag, _ => eTag);
 
-        SagaException actual = await Assert.ThrowsAsync<SagaException>(() =>
+        ConcurrencyException actual = await Assert.ThrowsAsync<ConcurrencyException>(() =>
             ExecuteWrite(context, sagaContext, operation));
 
         Assert.Same(expected, actual.InnerException);
@@ -178,6 +178,32 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
         Assert.Equal(correlationId, actual.CorrelationId);
         Assert.Equal(412, ((RequestFailedException)actual.InnerException!).Status);
         Assert.Equal(new ETag(eTag.ETag), table.ObservedETag);
+    }
+
+    [Theory]
+    [InlineData(WriteOperation.Update, 400)]
+    [InlineData(WriteOperation.Update, 500)]
+    [InlineData(WriteOperation.Delete, 400)]
+    [InlineData(WriteOperation.Delete, 500)]
+    [RequirementCoverage("REQ-VSB-AZURE-TABLE-SAGA-CONCURRENCY", "non-concurrency-storage-errors-remain-unclassified-saga-failures")]
+    public async Task Write_DoesNotPromoteOtherStorageFailuresToConcurrency(WriteOperation operation, int status)
+    {
+        var expected = new RequestFailedException(status, "test-owned non-concurrency failure");
+        var table = new FailingWriteTableClient(updateFailure: expected, deleteFailure: expected);
+        AzureTableSagaRepositoryContext<BoundarySaga, BoundaryMessage> context = CreateRepositoryContext(
+            table,
+            TestContext.Current.CancellationToken);
+        SagaConsumeContext<BoundarySaga, BoundaryMessage> sagaContext = await context.Add(
+            new BoundarySaga { CorrelationId = Guid.Parse("018cc251-f400-7000-8000-000000000307") });
+        var eTag = new SagaETag("W/\"non-concurrency-etag\"");
+        sagaContext.AddOrUpdatePayload(() => eTag, _ => eTag);
+
+        SagaException actual = await Assert.ThrowsAsync<SagaException>(() =>
+            ExecuteWrite(context, sagaContext, operation));
+
+        Assert.IsNotType<ConcurrencyException>(actual);
+        Assert.Same(expected, actual.InnerException);
+        Assert.Equal(status, ((RequestFailedException)actual.InnerException!).Status);
     }
 
     [Theory]

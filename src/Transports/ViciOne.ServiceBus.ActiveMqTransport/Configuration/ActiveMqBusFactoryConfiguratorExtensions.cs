@@ -1,7 +1,10 @@
 namespace ViciOne.ServiceBus
 {
     using System;
+    using ActiveMqTransport;
     using ActiveMqTransport.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.DependencyInjection.Extensions;
 
 
     public static class ActiveMqBusFactoryConfiguratorExtensions
@@ -22,6 +25,7 @@ namespace ViciOne.ServiceBus
         public static void UsingActiveMq(this IBusRegistrationConfigurator configurator,
             Action<IBusRegistrationContext, IActiveMqBusFactoryConfigurator> configure = null)
         {
+            configurator.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, ActiveMqSendFailureClassifier>());
             configurator.SetBusFactory(new ActiveMqRegistrationBusFactory(configure));
         }
     }

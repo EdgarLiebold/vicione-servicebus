@@ -29,7 +29,7 @@ namespace ViciOne.ServiceBus.DependencyInjection.Registration
         protected override void ConfigureSaga(IReceiveEndpointConfigurator endpointConfigurator, ISagaConfigurator<FutureState> sagaConfigurator,
             IRegistrationContext context)
         {
-            endpointConfigurator.UseMessageRetry(r => r.Intervals(100, 200, 500, 1000, 5000, 10000));
+            endpointConfigurator.UseTechnicalMessageRetry();
             endpointConfigurator.UseInMemoryOutbox(context);
         }
     }

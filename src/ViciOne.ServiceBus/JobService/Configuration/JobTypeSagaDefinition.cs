@@ -23,7 +23,7 @@ namespace ViciOne.ServiceBus.Configuration
         protected override void ConfigureSaga(IReceiveEndpointConfigurator configurator, ISagaConfigurator<JobTypeSaga> sagaConfigurator,
             IRegistrationContext context)
         {
-            configurator.UseMessageRetry(r => r.Exponential(20, TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(1)));
+            configurator.UseTechnicalMessageRetry();
 
             configurator.UseMessageScope(context);
 

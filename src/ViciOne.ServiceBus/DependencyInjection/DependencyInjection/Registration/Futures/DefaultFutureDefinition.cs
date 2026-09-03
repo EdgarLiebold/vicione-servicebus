@@ -7,8 +7,8 @@ namespace ViciOne.ServiceBus.DependencyInjection.Registration
         protected override void ConfigureSaga(IReceiveEndpointConfigurator endpointConfigurator, ISagaConfigurator<FutureState> sagaConfigurator,
             IRegistrationContext context)
         {
-            endpointConfigurator.UseDelayedRedelivery(r => r.Intervals(5000, 30000, 120000));
-            endpointConfigurator.UseMessageRetry(r => r.Intervals(100, 200, 500));
+            endpointConfigurator.UseTechnicalDelayedRedelivery();
+            endpointConfigurator.UseTechnicalMessageRetry();
             endpointConfigurator.UseInMemoryOutbox(context);
         }
     }
