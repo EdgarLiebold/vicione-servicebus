@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../../../src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ViciOne.ServiceBus.ActiveMqTransport.csproj" />
+    <ProjectReference Include="../../../src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj" />
     <ProjectReference Include="../../../src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/ViciOne.ServiceBus.QuartzIntegration.csproj" />
     <ProjectReference Include="../../Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj" />
     <ProjectReference Include="../../Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj" />

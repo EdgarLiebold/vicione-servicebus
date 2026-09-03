@@ -155,6 +155,12 @@
           "ViciOne.ServiceBus": "[1.0.0, )"
         }
       },
+      "vicione.servicebus.testing": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )"
+        }
+      },
       "vicione.servicebus.tests.infrastructure": {
         "type": "Project"
       },

@@ -499,7 +499,10 @@ namespace ViciOne.ServiceBus
 
             var timeZone = TimeZoneInfo.Utc;
             if (!string.IsNullOrWhiteSpace(context.Saga.TimeZoneId))
-                timeZone = TimeZoneUtil.FindTimeZoneById(context.Saga.TimeZoneId);
+            {
+                var settings = context.GetPayload<JobSagaSettings>();
+                timeZone = TimeZoneUtil.FindTimeZoneById(context.Saga.TimeZoneId, settings.TimeZoneResolver);
+            }
 
             var cronExpression = new CronExpression(context.Saga.CronExpression) { TimeZone = timeZone };
 
@@ -659,11 +662,11 @@ namespace ViciOne.ServiceBus
 
                     foreach (var attemptId in context.Saga.IncompleteAttempts)
                     {
-                        _ = endpoint.Send<FinalizeJobAttempt>(new FinalizeJobAttemptCommand
+                        await endpoint.Send<FinalizeJobAttempt>(new FinalizeJobAttemptCommand
                         {
                             JobId = context.Saga.CorrelationId,
                             AttemptId = attemptId
-                        });
+                        }, context.CancellationToken).ConfigureAwait(false);
                     }
 
                     context.Saga.IncompleteAttempts = null;

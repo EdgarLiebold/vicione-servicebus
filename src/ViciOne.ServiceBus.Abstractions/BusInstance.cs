@@ -12,7 +12,8 @@ namespace ViciOne.ServiceBus
     /// <typeparam name="TBus">The specific bus interface type for this bus instance</typeparam>
     // ReSharper disable once UnusedTypeParameter
     public abstract class BusInstance<TBus> :
-        IBusControl
+        IBusControl,
+        IMessageRouteProvider
         where TBus : class, IBus
     {
         readonly IBusControl _busControl;
@@ -162,6 +163,11 @@ namespace ViciOne.ServiceBus
         public Uri Address => _busControl.Address;
 
         public IBusTopology Topology => _busControl.Topology;
+
+        IMessageRouteTable IMessageRouteProvider.MessageRoutes => _busControl is IMessageRouteProvider routeProvider
+            ? routeProvider.MessageRoutes
+            : throw new ConfigurationException(
+                $"The wrapped bus control {_busControl.GetType().Name} does not expose its message routes.");
 
         public Task<BusHandle> StartAsync(CancellationToken cancellationToken = default)
         {

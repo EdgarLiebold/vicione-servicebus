@@ -3,11 +3,11 @@ namespace ViciOne.ServiceBus.Courier
 {
     public static class RoutingSlipRequestVariableNames
     {
-        public static string RequestId = "RequestId";
-        public static string Request = "Request";
-        public static string FaultAddress = "FaultAddress";
-        public static string ResponseAddress = "ResponseAddress";
-        public static string RequestAddress = "RequestAddress";
-        public static string RetryAttempt = "RetryAttempt";
+        public const string RequestId = "RequestId";
+        public const string Request = "Request";
+        public const string FaultAddress = "FaultAddress";
+        public const string ResponseAddress = "ResponseAddress";
+        public const string RequestAddress = "RequestAddress";
+        public const string RetryAttempt = "RetryAttempt";
     }
 }

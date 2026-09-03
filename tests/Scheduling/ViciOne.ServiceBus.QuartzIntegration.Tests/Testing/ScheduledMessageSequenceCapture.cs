@@ -33,7 +33,7 @@ internal sealed class ScheduledMessageSequenceCapture : IConsumeObserver
             if ((uint)index < (uint)_scheduled.Length)
             {
                 _scheduled[index].TrySetResult(new ScheduledMessageSnapshot(
-                    schedule.CorrelationId,
+                    schedule.TokenId,
                     schedule.ScheduledTime,
                     schedule.Destination,
                     [.. schedule.PayloadType]));

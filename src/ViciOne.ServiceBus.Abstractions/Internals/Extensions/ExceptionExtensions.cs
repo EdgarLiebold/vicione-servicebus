@@ -4,7 +4,7 @@ namespace ViciOne.ServiceBus.Internals
     using System.Runtime.ExceptionServices;
 
 
-    public static class ExceptionExtensions
+    internal static class ExceptionExtensions
     {
         /// <summary>
         /// Rethrow the exception with the call stack of the original exception

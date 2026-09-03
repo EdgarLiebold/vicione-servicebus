@@ -26,7 +26,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Topology
         string ConsumerName { get; }
 
         /// <summary>
-        /// True if the consumer is shared. 
+        /// True if the consumer is shared.
         /// </summary>
         /// <remarks>
         /// When you have multiple consumers on the same topic with same <see cref="ConsumerName"/>, you can use a shared consumer to load balance messages between the consumers.

@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus.MessageData.Conventions
 {
+    using System;
     using ViciOne.ServiceBus.Configuration;
 
 
@@ -8,10 +9,10 @@ namespace ViciOne.ServiceBus.MessageData.Conventions
     {
         readonly ITopologyConventionCache<IMessageSendTopologyConvention> _cache;
 
-        public MessageDataSendTopologyConvention(IMessageDataRepository repository)
+        public MessageDataSendTopologyConvention(IMessageDataRepository repository, MessageDataPolicy policy)
         {
             _cache = new TopologyConventionCache<IMessageSendTopologyConvention>(typeof(MessageDataMessageSendTopologyConvention<>),
-                new Factory(repository));
+                new Factory(repository, policy));
         }
 
         public bool TryGetMessageSendTopologyConvention<T>(out IMessageSendTopologyConvention<T> convention)
@@ -25,15 +26,17 @@ namespace ViciOne.ServiceBus.MessageData.Conventions
             IConventionTypeFactory<IMessageSendTopologyConvention>
         {
             readonly IMessageDataRepository _repository;
+            readonly MessageDataPolicy _policy;
 
-            public Factory(IMessageDataRepository repository)
+            public Factory(IMessageDataRepository repository, MessageDataPolicy policy)
             {
-                _repository = repository;
+                _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+                _policy = policy ?? throw new ArgumentNullException(nameof(policy));
             }
 
             IMessageSendTopologyConvention IConventionTypeFactory<IMessageSendTopologyConvention>.Create<T>()
             {
-                return new MessageDataMessageSendTopologyConvention<T>(_repository);
+                return new MessageDataMessageSendTopologyConvention<T>(_repository, _policy);
             }
         }
     }

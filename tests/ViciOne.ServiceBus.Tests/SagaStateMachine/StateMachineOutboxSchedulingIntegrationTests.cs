@@ -18,6 +18,8 @@ public sealed class StateMachineOutboxSchedulingIntegrationTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var failures = new SerializerFailureRecorder();
         var coordinator = new LoopCoordinator();
+        var endpointNameFormatter = new KebabCaseEndpointNameFormatter(
+            $"scheduled-outbox-{NewId.NextGuid():N}");
         await using ServiceProvider provider = new ServiceCollection()
             .AddSingleton(failures)
             .AddSingleton(coordinator)
@@ -25,8 +27,7 @@ public sealed class StateMachineOutboxSchedulingIntegrationTests
             .AddViciOneServiceBusTestHarness(configuration =>
             {
                 configuration.SetTestTimeouts(timeout, timeout);
-                configuration.SetEndpointNameFormatter(
-                    new KebabCaseEndpointNameFormatter($"scheduled-outbox-{NewId.NextGuid():N}"));
+                configuration.SetEndpointNameFormatter(endpointNameFormatter);
                 configuration.AddHandler(async (ConsumeContext<LoopRequest> context) =>
                 {
                     await coordinator.WaitForTerminalTransition(timeout, context.CancellationToken);
@@ -39,6 +40,8 @@ public sealed class StateMachineOutboxSchedulingIntegrationTests
                     endpoint.UseSendFilter(typeof(FailingScheduledSendFilter<>), context));
                 configuration.UsingInMemory((context, bus) =>
                 {
+                    bus.Route<LoopRequest>(new Uri(
+                        $"loopback://localhost/{endpointNameFormatter.Message<LoopRequest>()}"));
                     bus.UseDelayedMessageScheduler();
                     bus.ConfigureEndpoints(context);
                 });

@@ -15,14 +15,6 @@ namespace ViciOne.ServiceBus
     public interface IActivityRegistrationConfigurator
     {
         /// <summary>
-        /// Configure both the execute and compensate endpoints in a single call. Separate calls have been added, which
-        /// may ultimately cause this method to be deprecated.
-        /// </summary>
-        /// <param name="configureExecute"></param>
-        /// <param name="configureCompensate"></param>
-        void Endpoints(Action<IEndpointRegistrationConfigurator> configureExecute, Action<IEndpointRegistrationConfigurator> configureCompensate);
-
-        /// <summary>
         /// Configure the activity's execute endpoint
         /// </summary>
         /// <param name="configureExecute"></param>

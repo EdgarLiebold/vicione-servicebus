@@ -11,9 +11,9 @@ public sealed class BackgroundWorkOwnershipTests
         "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Batcher.cs",
         "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Middleware/AmazonSqsMessageReceiver.cs",
         "src/Transports/ViciOne.ServiceBus.EventHubIntegration/EventHubIntegration/Checkpoints/BatchCheckpointer.cs",
-        "src/ViciOne.ServiceBus/JobService/JobService/JobProgressBuffer.cs",
-        "src/ViciOne.ServiceBus/SqlTransport/SqlTransport/Middleware/SqlMessageReceiver.cs",
-        "src/ViciOne.ServiceBus/SqlTransport/SqlTransport/SqlReceiveLockContext.cs",
+        "src/ViciOne.ServiceBus/JobService/JobProgressBuffer.cs",
+        "src/ViciOne.ServiceBus/SqlTransport/Middleware/SqlMessageReceiver.cs",
+        "src/ViciOne.ServiceBus/SqlTransport/SqlReceiveLockContext.cs",
         "src/ViciOne.ServiceBus/Transports/Fabric/MessageQueue.cs",
     ];
 
@@ -61,7 +61,7 @@ public sealed class BackgroundWorkOwnershipTests
         Assert.DoesNotContain(".ContinueWith(", consumerAgent, StringComparison.Ordinal);
         Assert.Contains("_consumeTaskObserver = ObserveConsumeTask(consumeTask);", consumerAgent, StringComparison.Ordinal);
 
-        string jobService = Source("src/ViciOne.ServiceBus/JobService/JobService/JobService.cs");
+        string jobService = Source("src/ViciOne.ServiceBus/JobService/JobService.cs");
         Assert.DoesNotContain(".ContinueWith(", jobService, StringComparison.Ordinal);
         Assert.Contains("_jobCompletions.Add(CompleteJob(jobHandle));", jobService, StringComparison.Ordinal);
 

@@ -27,7 +27,7 @@ public sealed class QuartzSagaRequestTimeoutIntegrationTests
         Assert.Null(saga.ValidationRequestId);
         Assert.Equal(fixture.StateMachine.Completed.Name, saga.CurrentState.Name);
         Assert.False(await fixture.Scheduler.CheckExists(
-            new TriggerKey(scheduled.CorrelationId.ToString("N")),
+            new TriggerKey(scheduled.TokenId.ToString("N")),
             TestContext.Current.CancellationToken));
     }
 
@@ -40,7 +40,7 @@ public sealed class QuartzSagaRequestTimeoutIntegrationTests
         await fixture.SendStart();
         ScheduleMessage scheduled = await fixture.Scheduled.Message.WaitAsync(fixture.Timeout, TestContext.Current.CancellationToken);
         ITrigger trigger = Assert.IsAssignableFrom<ITrigger>(await fixture.Scheduler.GetTrigger(
-            new TriggerKey(scheduled.CorrelationId.ToString("N")),
+            new TriggerKey(scheduled.TokenId.ToString("N")),
             TestContext.Current.CancellationToken));
 
         await fixture.Scheduler.TriggerJob(trigger.JobKey, trigger.JobDataMap, TestContext.Current.CancellationToken);

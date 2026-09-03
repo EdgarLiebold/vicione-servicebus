@@ -3,7 +3,7 @@ namespace ViciOne.ServiceBus.Internals
     using System.Reflection;
 
 
-    public interface IWritePropertyCache<in T>
+    internal interface IWritePropertyCache<in T>
         where T : class
     {
         bool CanWrite(string name);

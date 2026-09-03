@@ -15,11 +15,12 @@ namespace ViciOne.ServiceBus.MessageData.Configuration
         readonly PropertyInfo _property;
         readonly PutMessageDataTransformSpecification<TProperty> _transformConfigurator;
 
-        public PutMessageDataObjectTransformConfiguration(IMessageDataRepository repository, IEnumerable<Type> knownTypes, PropertyInfo property)
+        public PutMessageDataObjectTransformConfiguration(IMessageDataRepository repository, MessageDataPolicy policy, IEnumerable<Type> knownTypes,
+            PropertyInfo property)
         {
             _property = property;
 
-            _transformConfigurator = new PutMessageDataTransformSpecification<TProperty>(repository, knownTypes);
+            _transformConfigurator = new PutMessageDataTransformSpecification<TProperty>(repository, policy, knownTypes);
         }
 
         public void Apply(ITransformConfigurator<TInput> configurator)

@@ -10,14 +10,20 @@ namespace ViciOne.ServiceBus.Configuration
 
     public class BusRegistrationContext :
         RegistrationContext,
-        IBusRegistrationContext
+        IBusRegistrationContext,
+        IBusRegistrationIdentity
     {
         IConfigureReceiveEndpoint? _configureReceiveEndpoints;
 
-        public BusRegistrationContext(IServiceProvider provider, IContainerSelector selector, ISetScopedConsumeContext setScopedConsumeContext)
+        public BusRegistrationContext(IServiceProvider provider, IContainerSelector selector, ISetScopedConsumeContext setScopedConsumeContext, Type busType)
             : base(provider, selector, setScopedConsumeContext)
         {
+            BusKey = BusRegistrationIdentity.GetKey(busType);
         }
+
+        string IBusRegistrationIdentity.BusKey => BusKey;
+
+        internal string BusKey { get; }
 
         public IEndpointNameFormatter EndpointNameFormatter => Selector.GetEndpointNameFormatter(this);
 

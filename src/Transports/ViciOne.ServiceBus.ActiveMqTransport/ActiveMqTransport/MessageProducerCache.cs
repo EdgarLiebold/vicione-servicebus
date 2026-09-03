@@ -18,8 +18,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
 
         public MessageProducerCache()
         {
-            var options = new ResourceCacheOptions(SendEndpointCacheDefaults.Capacity, SendEndpointCacheDefaults.MinAge,
-                SendEndpointCacheDefaults.MaxAge, ResourceCacheExpirationMode.Sliding);
+            var options = new ResourceCacheOptions(minAge: TimeSpan.FromSeconds(10));
 
             _cache = new KeyedResourceCache<IDestination, CachedMessageProducer>(x => x.Destination, options);
         }
@@ -34,7 +33,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
 
         protected override async Task StopAgent(StopContext context)
         {
-            await _cache.ClearAsync(context.CancellationToken).ConfigureAwait(false);
+            await _cache.DisposeAsync().ConfigureAwait(false);
         }
     }
 }

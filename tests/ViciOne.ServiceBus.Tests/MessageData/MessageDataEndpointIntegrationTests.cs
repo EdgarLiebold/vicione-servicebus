@@ -6,7 +6,6 @@ using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.MessageData;
 
-[Collection(MessageDataDefaultsCollection.Name)]
 public sealed class MessageDataEndpointIntegrationTests
 {
     [Fact]
@@ -15,11 +14,10 @@ public sealed class MessageDataEndpointIntegrationTests
     {
         TimeSpan timeout = MessageDataTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        using var defaults = StoredDefaults();
         var repository = new InMemoryMessageDataRepository();
         var observations = new ConcurrentDictionary<Guid, TaskCompletionSource<LargePayloadSnapshot>>();
         var deliveryCounts = new ConcurrentDictionary<Guid, int>();
-        using var harness = CreateHarness("message-data-large-json", timeout, repository);
+        using var harness = CreateHarness("message-data-large-json", timeout, repository, StoredPolicy());
         harness.OnConfigureInMemoryBus += configurator => configurator.UseJsonSerializer();
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<LargePayloadEvent>(async context =>
         {
@@ -88,11 +86,10 @@ public sealed class MessageDataEndpointIntegrationTests
     {
         TimeSpan timeout = MessageDataTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        using var defaults = StoredDefaults();
         var repository = new InMemoryMessageDataRepository();
         var observed = new TaskCompletionSource<PublishedSnapshot>(TaskCreationOptions.RunContinuationsAsynchronously);
         var deliveryCount = 0;
-        using var harness = CreateHarness("message-data-publish", timeout, repository);
+        using var harness = CreateHarness("message-data-publish", timeout, repository, StoredPolicy());
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<DocumentPublished>(async context =>
         {
             try
@@ -147,10 +144,9 @@ public sealed class MessageDataEndpointIntegrationTests
     {
         TimeSpan timeout = MessageDataTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        using var defaults = StoredDefaults();
         var repository = new InMemoryMessageDataRepository();
         var handlerCalls = 0;
-        using var harness = CreateHarness("message-data-request", timeout, repository);
+        using var harness = CreateHarness("message-data-request", timeout, repository, StoredPolicy());
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<DataRequest>(context =>
         {
             Interlocked.Increment(ref handlerCalls);
@@ -196,25 +192,20 @@ public sealed class MessageDataEndpointIntegrationTests
         }
     }
 
-    private static MessageDataDefaultsScope StoredDefaults()
-    {
-        var scope = new MessageDataDefaultsScope();
-        MessageDataDefaults.AlwaysWriteToRepository = true;
-        MessageDataDefaults.Threshold = 1;
-        return scope;
-    }
+    private static MessageDataPolicy StoredPolicy() => new(alwaysWriteToRepository: true, threshold: 1);
 
     private static InMemoryTestHarness CreateHarness(
         string prefix,
         TimeSpan timeout,
-        IMessageDataRepository repository)
+        IMessageDataRepository repository,
+        MessageDataPolicy policy)
     {
         var harness = new InMemoryTestHarness($"{prefix}-{NewId.NextGuid():N}")
         {
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
         };
-        harness.OnConfigureInMemoryBus += configurator => configurator.UseMessageData(repository);
+        harness.OnConfigureInMemoryBus += configurator => configurator.UseMessageData(repository, policy);
         return harness;
     }
 

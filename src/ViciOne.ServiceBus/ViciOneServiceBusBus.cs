@@ -14,7 +14,8 @@ namespace ViciOne.ServiceBus
 
 
     public class ViciOneServiceBusBus :
-        IBusControl
+        IBusControl,
+        IMessageRouteProvider
     {
         /// <summary>
         /// How long a consumer connection waits for the on-demand bus endpoint. Same value StartAsync
@@ -378,6 +379,8 @@ namespace ViciOne.ServiceBus
         }
 
         public Uri Address { get; }
+
+        IMessageRouteTable IMessageRouteProvider.MessageRoutes => EndpointConvention.GetMessageRoutes(_receiveEndpoint);
 
         public IBusTopology Topology { get; }
 

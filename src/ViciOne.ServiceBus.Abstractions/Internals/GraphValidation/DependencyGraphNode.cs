@@ -3,7 +3,7 @@ namespace ViciOne.ServiceBus.Internals.GraphValidation
     using System;
 
 
-    public class DependencyGraphNode<T> :
+    internal class DependencyGraphNode<T> :
         Node<T>,
         ITopologicalSortNodeProperties,
         ITarjanNodeProperties,

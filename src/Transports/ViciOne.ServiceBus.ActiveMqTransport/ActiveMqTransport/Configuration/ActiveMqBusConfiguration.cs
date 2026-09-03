@@ -13,6 +13,7 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
         public ActiveMqBusConfiguration(IActiveMqTopologyConfiguration topologyConfiguration)
             : base(topologyConfiguration)
         {
+            MessageRoutes = new MessageRouteTable();
             HostConfiguration = new ActiveMqHostConfiguration(this, topologyConfiguration);
             BusEndpointConfiguration = CreateEndpointConfiguration(true);
 
@@ -20,11 +21,13 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
         }
 
         IHostConfiguration IBusConfiguration.HostConfiguration => HostConfiguration;
+        IMessageRouteTable IBusConfiguration.MessageRoutes => MessageRoutes;
         IEndpointConfiguration IBusConfiguration.BusEndpointConfiguration => BusEndpointConfiguration;
         IBusObserver IBusConfiguration.BusObservers => _busObservers;
 
         public IActiveMqEndpointConfiguration BusEndpointConfiguration { get; }
         public IActiveMqHostConfiguration HostConfiguration { get; }
+        public MessageRouteTable MessageRoutes { get; }
 
         public ConnectHandle ConnectBusObserver(IBusObserver observer)
         {

@@ -20,21 +20,33 @@ namespace ViciOne.ServiceBus.Configuration
             Collection = collection;
         }
 
-        public void RegisterRequestClient<T>(RequestTimeout timeout)
+        public virtual void RegisterRequestClient<T>(RequestTimeout timeout)
             where T : class
         {
-            Collection.TryAddScoped(provider => GetScopedBusContext(provider).CreateRequestClient<T>(timeout));
+            EnsureRequestClientRegistrationIsUnique<T>(typeof(IRequestClient<T>));
+            Collection.AddScoped(provider => GetScopedBusContext(provider).CreateRequestClient<T>(timeout));
         }
 
-        public void RegisterRequestClient<T>(Uri destinationAddress, RequestTimeout timeout)
+        public virtual void RegisterRequestClient<T>(Uri destinationAddress, RequestTimeout timeout)
             where T : class
         {
-            Collection.TryAddScoped(provider => GetScopedBusContext(provider).CreateRequestClient<T>(destinationAddress, timeout));
+            EnsureRequestClientRegistrationIsUnique<T>(typeof(IRequestClient<T>));
+            Collection.AddScoped(provider => GetScopedBusContext(provider).CreateRequestClient<T>(destinationAddress, timeout));
         }
 
         public virtual void RegisterScopedClientFactory()
         {
             Collection.TryAddScoped(provider => GetScopedBusContext(provider));
+        }
+
+        protected void EnsureRequestClientRegistrationIsUnique<T>(Type serviceType)
+            where T : class
+        {
+            if (Collection.Any(descriptor => descriptor.ServiceType == serviceType))
+            {
+                throw new ConfigurationException(
+                    $"A request client for {TypeCache<T>.ShortName} is already configured for this bus owner.");
+            }
         }
 
         public virtual void RegisterEndpointNameFormatter(IEndpointNameFormatter endpointNameFormatter)
@@ -181,6 +193,21 @@ namespace ViciOne.ServiceBus.Configuration
         public DependencyInjectionContainerRegistrar(IServiceCollection collection)
             : base(collection)
         {
+        }
+
+        public override void RegisterRequestClient<T>(RequestTimeout timeout)
+        {
+            Type serviceType = typeof(Bind<TBus, IRequestClient<T>>);
+            EnsureRequestClientRegistrationIsUnique<T>(serviceType);
+            Collection.AddScoped(provider => Bind<TBus>.Create(GetScopedBusContext(provider).CreateRequestClient<T>(timeout)));
+        }
+
+        public override void RegisterRequestClient<T>(Uri destinationAddress, RequestTimeout timeout)
+        {
+            Type serviceType = typeof(Bind<TBus, IRequestClient<T>>);
+            EnsureRequestClientRegistrationIsUnique<T>(serviceType);
+            Collection.AddScoped(provider =>
+                Bind<TBus>.Create(GetScopedBusContext(provider).CreateRequestClient<T>(destinationAddress, timeout)));
         }
 
         public override IEnumerable<T> GetRegistrations<T>()

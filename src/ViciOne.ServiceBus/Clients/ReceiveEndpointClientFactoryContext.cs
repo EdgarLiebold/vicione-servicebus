@@ -58,6 +58,8 @@ namespace ViciOne.ServiceBus.Clients
 
         public RequestTimeout DefaultTimeout { get; }
 
+        public IMessageRouteTable MessageRoutes => EndpointConvention.GetMessageRoutes(_receiveEndpoint);
+
         public TimeProvider TimeProvider { get; }
     }
 }

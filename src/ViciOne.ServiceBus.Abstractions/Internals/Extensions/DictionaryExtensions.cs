@@ -4,7 +4,7 @@ namespace ViciOne.ServiceBus.Internals
     using System.Collections.Generic;
 
 
-    public static class DictionaryExtensions
+    internal static class DictionaryExtensions
     {
         public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TKey, TValue> valueFactory)
         {

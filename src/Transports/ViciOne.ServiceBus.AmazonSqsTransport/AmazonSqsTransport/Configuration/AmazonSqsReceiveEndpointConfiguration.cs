@@ -117,7 +117,7 @@ public class AmazonSqsReceiveEndpointConfiguration :
         var visibilityTimeout = TimeSpan.FromSeconds(_settings.VisibilityTimeout);
         if (_settings.MaxVisibilityTimeout < visibilityTimeout)
             yield return this.Failure("MaxVisibilityTimeout", "Must be greater than or equal to VisibilityTimeout");
-        
+
         if (_settings.MaxVisibilityTimeoutRenewal < 0)
             yield return this.Failure("MaxVisibilityTimeoutRenewal", "must be >= 0 (values less than 60 will be set to 60)");
 

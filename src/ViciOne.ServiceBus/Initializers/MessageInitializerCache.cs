@@ -2,6 +2,7 @@ namespace ViciOne.ServiceBus.Initializers
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Factories;
@@ -38,7 +39,8 @@ namespace ViciOne.ServiceBus.Initializers
         {
             var factoryType = typeof(MessageInitializerFactory<,>).MakeGenericType(typeof(TMessage), inputType);
 
-            var factory = (IMessageInitializerFactory<TMessage>)Activator.CreateInstance(factoryType, new object[] { MessageInitializer.Conventions });
+            var factory = (IMessageInitializerFactory<TMessage>)Activator.CreateInstance(factoryType,
+                new object[] { MessageInitializer.Conventions.ToArray() });
 
             return factory.CreateMessageInitializer();
         }

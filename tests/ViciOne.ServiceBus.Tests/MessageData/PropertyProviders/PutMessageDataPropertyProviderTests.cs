@@ -13,20 +13,23 @@ using Xunit;
 public sealed class PutMessageDataPropertyProviderTests
 {
     [Fact]
-    [RequirementCoverage("REQ-VSB-MESSAGE-DATA-REPOSITORY-RESOLUTION", "pipe-context-payload")]
-    public async Task ContextRepository_IsUsedWhenTheProviderHasNoConstructorRepository()
+    [RequirementCoverage("REQ-VSB-MESSAGE-DATA-REPOSITORY-RESOLUTION", "owner-bound-repository-and-policy")]
+    public async Task ConstructorRepositoryAndPolicy_AreUsedByTheProvider()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var repository = new RecordingRepository();
         var root = new BaseInitializeContext(cancellationToken);
-        root.GetOrAddPayload<IMessageDataRepository>(() => repository);
         InitializeContext<TestMessage> messageContext = root.CreateMessageContext(new TestMessage());
         var input = new TestInput(new PutMessageData<string>("context-owned repository"));
         InitializeContext<TestMessage, TestInput> context = messageContext.CreateInputContext(input);
         PropertyInfo property = typeof(TestInput).GetProperty(nameof(TestInput.Value))
             ?? throw new InvalidOperationException("The test input property is missing.");
         var inputProvider = new InputPropertyProvider<TestInput, MessageData<string>>(property);
-        var provider = new PutMessageDataPropertyProvider<TestInput, string>(inputProvider);
+        var policy = new MessageDataPolicy(
+            alwaysWriteToRepository: true,
+            threshold: 1,
+            timeToLive: TimeSpan.FromMinutes(12));
+        var provider = new PutMessageDataPropertyProvider<TestInput, string>(inputProvider, repository, policy);
 
         MessageData<string> result = await provider.GetProperty(context);
 
@@ -34,6 +37,7 @@ public sealed class PutMessageDataPropertyProviderTests
         Assert.Equal("context-owned repository", await result.Value);
         Assert.Equal("context-owned repository", Encoding.UTF8.GetString(repository.Bytes));
         Assert.Equal(cancellationToken, repository.CancellationToken);
+        Assert.Equal(TimeSpan.FromMinutes(12), repository.TimeToLive);
         Assert.Equal(1, repository.PutCalls);
     }
 
@@ -51,6 +55,8 @@ public sealed class PutMessageDataPropertyProviderTests
 
         public int PutCalls { get; private set; }
 
+        public TimeSpan? TimeToLive { get; private set; }
+
         public Task<Stream> Get(Uri address, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
@@ -63,6 +69,7 @@ public sealed class PutMessageDataPropertyProviderTests
             await stream.CopyToAsync(copy, cancellationToken);
             Bytes = copy.ToArray();
             CancellationToken = cancellationToken;
+            TimeToLive = timeToLive;
             PutCalls++;
             return Address;
         }

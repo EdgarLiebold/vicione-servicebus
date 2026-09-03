@@ -85,5 +85,11 @@ namespace ViciOne.ServiceBus
         /// If true, completed jobs will be finalized, removing the saga from the repository
         /// </summary>
         public bool FinalizeCompleted { get; set; }
+
+        /// <summary>
+        /// Optional resolver for platform-specific or application-defined time zone identifiers.
+        /// The resolver is owned by this job-service configuration instance.
+        /// </summary>
+        public Func<string, TimeZoneInfo> TimeZoneResolver { get; set; }
     }
 }

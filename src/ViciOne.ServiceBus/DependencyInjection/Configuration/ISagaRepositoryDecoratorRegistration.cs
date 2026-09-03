@@ -1,25 +1,11 @@
 namespace ViciOne.ServiceBus.Configuration
 {
-    using System;
-    using Testing;
-    using Testing.Implementations;
-
-
+    /// <summary>
+    /// Registration seam used to decorate a saga repository without coupling the runtime core to testing or diagnostics packages.
+    /// </summary>
     public interface ISagaRepositoryDecoratorRegistration<TSaga>
         where TSaga : class, ISaga
     {
-        TimeSpan TestTimeout { get; }
-        TimeProvider TimeProvider { get; }
-        ReceivedMessageList Consumed { get; }
-        SagaList<TSaga> Created { get; }
-        SagaList<TSaga> Sagas { get; }
-
-        /// <summary>
-        /// Decorate the container-based saga repository, returning the saga repository that should be
-        /// used for receive endpoint registration
-        /// </summary>
-        /// <param name="repository"></param>
-        /// <returns></returns>
         ISagaRepository<TSaga> DecorateSagaRepository(ISagaRepository<TSaga> repository);
     }
 }

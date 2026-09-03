@@ -4,7 +4,7 @@ namespace ViciOne.ServiceBus.Internals.GraphValidation
 
 
     [Serializable]
-    public class CyclicGraphException :
+    internal class CyclicGraphException :
         ViciOneServiceBusException
     {
         public CyclicGraphException()

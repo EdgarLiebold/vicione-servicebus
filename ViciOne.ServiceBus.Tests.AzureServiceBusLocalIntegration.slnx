@@ -8,5 +8,7 @@
     <Project Path="src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj" />
     <Project Path="src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
     <Project Path="src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/ViciOne.ServiceBus.Azure.ServiceBus.Core.csproj" />
+    <Project Path="src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Testing/ViciOne.ServiceBus.Azure.ServiceBus.Testing.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj" />
   </Folder>
 </Solution>

@@ -14,7 +14,7 @@ namespace ViciOne.ServiceBus.Scheduling
 
         public ScheduleMessageCommand(DateTime scheduledTime, Uri destination, T payload, Guid tokenId)
         {
-            CorrelationId = tokenId;
+            TokenId = tokenId;
 
             ScheduledTime = scheduledTime.Kind == DateTimeKind.Local
                 ? scheduledTime.ToUniversalTime()
@@ -26,7 +26,7 @@ namespace ViciOne.ServiceBus.Scheduling
             PayloadType = MessageTypeCache<T>.MessageTypeNames;
         }
 
-        public Guid CorrelationId { get; set; }
+        public Guid TokenId { get; set; }
         public DateTime ScheduledTime { get; set; }
         public string[] PayloadType { get; set; }
         public Uri Destination { get; set; }
@@ -38,7 +38,7 @@ namespace ViciOne.ServiceBus.Scheduling
     public class ScheduleMessageCommand :
         ScheduleMessage
     {
-        public Guid CorrelationId { get; set; }
+        public Guid TokenId { get; set; }
         public DateTime ScheduledTime { get; set; }
         public string[] PayloadType { get; set; }
         public Uri Destination { get; set; }

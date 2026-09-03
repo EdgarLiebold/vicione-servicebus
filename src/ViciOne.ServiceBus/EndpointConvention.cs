@@ -3,39 +3,42 @@ namespace ViciOne.ServiceBus
     using System;
 
 
-    public static class EndpointConvention
+    /// <summary>
+    /// Resolves routes from the bus that owns the active send provider.
+    /// </summary>
+    internal static class EndpointConvention
     {
-        /// <summary>
-        /// Map the message type to the specified address
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="destinationAddress"></param>
-        public static void Map<T>(Uri destinationAddress)
-            where T : class
+        internal static IMessageRouteTable GetMessageRoutes(ISendEndpointProvider provider)
         {
-            EndpointConventionCache<T>.Map(destinationAddress);
+            ArgumentNullException.ThrowIfNull(provider);
+
+            if (provider is IMessageRouteProvider routeProvider)
+                return routeProvider.MessageRoutes;
+
+            if (provider is ConsumeContext consumeContext)
+                return GetMessageRoutes(consumeContext.ReceiveContext.SendEndpointProvider);
+
+            throw new ConfigurationException(
+                $"The send endpoint provider {provider.GetType().Name} does not expose its owning bus message routes.");
         }
 
-        /// <summary>
-        /// Map the message type to the endpoint returned by the specified method
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="endpointAddressProvider"></param>
-        public static void Map<T>(EndpointAddressProvider<T> endpointAddressProvider)
+        internal static bool TryGetDestinationAddress<T>(ISendEndpointProvider provider, out Uri destinationAddress)
             where T : class
         {
-            EndpointConventionCache<T>.Map(endpointAddressProvider);
+            return GetMessageRoutes(provider).TryGetDestinationAddress<T>(out destinationAddress);
         }
 
-        public static bool TryGetDestinationAddress<T>(out Uri destinationAddress)
+        internal static bool TryGetDestinationAddress(ISendEndpointProvider provider, Type messageType, out Uri destinationAddress)
+        {
+            return GetMessageRoutes(provider).TryGetDestinationAddress(messageType, out destinationAddress);
+        }
+
+        internal static Uri GetDestinationAddress<T>(ISendEndpointProvider provider)
             where T : class
         {
-            return EndpointConventionCache<T>.TryGetEndpointAddress(out destinationAddress);
-        }
-
-        public static bool TryGetDestinationAddress(Type messageType, out Uri destinationAddress)
-        {
-            return EndpointConventionCache.TryGetEndpointAddress(messageType, out destinationAddress);
+            return TryGetDestinationAddress<T>(provider, out Uri destinationAddress)
+                ? destinationAddress
+                : throw new ConfigurationException($"A message route for {TypeCache<T>.ShortName} is not configured on this bus.");
         }
     }
 }

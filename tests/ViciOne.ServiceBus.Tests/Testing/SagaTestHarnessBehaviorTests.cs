@@ -179,6 +179,131 @@ public sealed class SagaTestHarnessBehaviorTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-STATE-MACHINE-OBSERVATION", "exact-event-lifecycle-and-transition")]
+    public async Task StateMachineObservations_RecordExactEventLifecycleAndTransition()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        Guid sagaId = NewId.NextGuid();
+        using var harness = CreateHarness(timeout);
+        var machine = new ResponsiveStateMachine();
+        ISagaStateMachineTestHarness<ResponsiveStateMachine, ResponsiveState> sagaHarness =
+            harness.StateMachineSaga<ResponsiveState, ResponsiveStateMachine>(machine);
+
+        await harness.Start(cancellationToken);
+        try
+        {
+            IRequestClient<ResponsiveRequest> client = harness.CreateRequestClient<ResponsiveRequest>();
+            Response<ResponsiveResponse> response = await client.GetResponse<ResponsiveResponse>(
+                new ResponsiveRequest(sagaId, "observed"),
+                cancellationToken);
+            Assert.Equal(sagaId, response.Message.CorrelationId);
+            Assert.Equal(sagaId, await sagaHarness.Exists(sagaId, machine.Responded, timeout));
+
+            Assert.Collection(
+                sagaHarness.Events.Where(observation => observation.SagaId == sagaId),
+                started =>
+                {
+                    Assert.Equal(machine.Request.Name, started.EventName);
+                    Assert.Equal(typeof(ResponsiveRequest), started.DataType);
+                    Assert.Equal(StateMachineEventExecutionStatus.Started, started.Status);
+                    Assert.Null(started.Exception);
+                },
+                completed =>
+                {
+                    Assert.Equal(machine.Request.Name, completed.EventName);
+                    Assert.Equal(typeof(ResponsiveRequest), completed.DataType);
+                    Assert.Equal(StateMachineEventExecutionStatus.Completed, completed.Status);
+                    Assert.Null(completed.Exception);
+                });
+            Assert.Collection(
+                sagaHarness.StateChanges.Where(change => change.SagaId == sagaId),
+                initialized =>
+                {
+                    Assert.Null(initialized.PreviousState);
+                    Assert.Equal(machine.Initial.Name, initialized.CurrentState);
+                },
+                transitioned =>
+                {
+                    Assert.Equal(machine.Initial.Name, transitioned.PreviousState);
+                    Assert.Equal(machine.Responded.Name, transitioned.CurrentState);
+                });
+        }
+        finally
+        {
+            await harness.Stop();
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-RETENTION", "bounded-saga-event-and-state-histories")]
+    public async Task BoundedRetention_AppliesToSagaAndStateMachineHistories()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        Guid[] sagaIds = [NewId.NextGuid(), NewId.NextGuid(), NewId.NextGuid()];
+        using var harness = CreateHarness(timeout);
+        harness.ContextSaveMode = TestContextSaveMode.Bounded;
+        harness.MaximumSavedContexts = 2;
+        var machine = new ResponsiveStateMachine();
+        ISagaStateMachineTestHarness<ResponsiveStateMachine, ResponsiveState> sagaHarness =
+            harness.StateMachineSaga<ResponsiveState, ResponsiveStateMachine>(machine);
+
+        await harness.Start(cancellationToken);
+        try
+        {
+            IRequestClient<ResponsiveRequest> client = harness.CreateRequestClient<ResponsiveRequest>();
+            foreach ((Guid sagaId, int index) in sagaIds.Select((id, index) => (id, index)))
+            {
+                Response<ResponsiveResponse> response = await client.GetResponse<ResponsiveResponse>(
+                    new ResponsiveRequest(sagaId, $"bounded-{index}"),
+                    cancellationToken);
+                Assert.Equal(sagaId, response.Message.CorrelationId);
+                Assert.Equal(sagaId, await sagaHarness.Exists(sagaId, machine.Responded, timeout));
+            }
+
+            Assert.Equal(sagaIds[1..], sagaHarness.Consumed.Snapshot()
+                .OfType<IReceivedMessage<ResponsiveRequest>>()
+                .Select(message => message.Context.Message.CorrelationId));
+            Assert.Equal(sagaIds[1..], sagaHarness.Created.Snapshot()
+                .Select(instance => instance.Saga.CorrelationId));
+            Assert.Equal(sagaIds[1..], sagaHarness.Sagas.Snapshot()
+                .Select(instance => instance.Saga.CorrelationId));
+
+            Assert.Collection(
+                sagaHarness.Events,
+                started =>
+                {
+                    Assert.Equal(sagaIds[2], started.SagaId);
+                    Assert.Equal(StateMachineEventExecutionStatus.Started, started.Status);
+                },
+                completed =>
+                {
+                    Assert.Equal(sagaIds[2], completed.SagaId);
+                    Assert.Equal(StateMachineEventExecutionStatus.Completed, completed.Status);
+                });
+            Assert.Collection(
+                sagaHarness.StateChanges,
+                initialized =>
+                {
+                    Assert.Equal(sagaIds[2], initialized.SagaId);
+                    Assert.Null(initialized.PreviousState);
+                    Assert.Equal(machine.Initial.Name, initialized.CurrentState);
+                },
+                transitioned =>
+                {
+                    Assert.Equal(sagaIds[2], transitioned.SagaId);
+                    Assert.Equal(machine.Initial.Name, transitioned.PreviousState);
+                    Assert.Equal(machine.Responded.Name, transitioned.CurrentState);
+                });
+        }
+        finally
+        {
+            await harness.Stop();
+        }
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-STATE-MACHINE", "query-correlation-existing-and-missing")]
     public async Task QueryCorrelatedStateMachineHarness_RecordsOnlyTheMatchedSagaAndItsResultingState()
     {

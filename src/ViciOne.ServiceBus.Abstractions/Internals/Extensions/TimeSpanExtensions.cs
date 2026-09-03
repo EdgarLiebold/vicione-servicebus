@@ -4,7 +4,7 @@ namespace ViciOne.ServiceBus.Internals
     using System.Text;
 
 
-    public static class TimeSpanExtensions
+    internal static class TimeSpanExtensions
     {
         static readonly TimeSpan _day = TimeSpan.FromDays(1);
         static readonly TimeSpan _hour = TimeSpan.FromHours(1);

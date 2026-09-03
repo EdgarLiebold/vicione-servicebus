@@ -68,5 +68,10 @@ namespace ViciOne.ServiceBus
         /// If true, completed jobs are finalized, removing them from the saga repository
         /// </summary>
         bool FinalizeCompleted { set; }
+
+        /// <summary>
+        /// Optional resolver for time zone identifiers not provided by the operating system.
+        /// </summary>
+        Func<string, TimeZoneInfo> TimeZoneResolver { set; }
     }
 }

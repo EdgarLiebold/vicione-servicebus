@@ -95,7 +95,7 @@ public sealed class SchedulerTimeProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RECURRING-SCHEDULER-CLOCK", "endpoint-control-command-timestamps")]
-    public async Task EndpointRecurringControlCommands_UseTheInjectedClockAndPreserveIdentity()
+    public async Task EndpointRecurringControlCommands_UseTheInjectedClockAndPreserveScheduleIdentity()
     {
         var clock = new FakeTimeProvider(CommandTime);
         ISendEndpoint endpoint = DispatchProxy.Create<ISendEndpoint, CaptureEndpointProxy>();
@@ -112,7 +112,7 @@ public sealed class SchedulerTimeProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RECURRING-SCHEDULER-CLOCK", "publish-control-command-timestamps")]
-    public async Task PublishRecurringControlCommands_UseTheInjectedClockAndPreserveIdentity()
+    public async Task PublishRecurringControlCommands_UseTheInjectedClockAndPreserveScheduleIdentity()
     {
         var clock = new FakeTimeProvider(CommandTime);
         IPublishEndpoint endpoint = DispatchProxy.Create<IPublishEndpoint, CaptureEndpointProxy>();
@@ -135,14 +135,6 @@ public sealed class SchedulerTimeProviderTests
             message => AssertCommand(Assert.IsAssignableFrom<PauseScheduledRecurringMessage>(message)),
             message => AssertCommand(Assert.IsAssignableFrom<ResumeScheduledRecurringMessage>(message)));
 
-        Guid[] correlationIds =
-        [
-            ((CancelScheduledRecurringMessage)messages[0]).CorrelationId,
-            ((PauseScheduledRecurringMessage)messages[1]).CorrelationId,
-            ((ResumeScheduledRecurringMessage)messages[2]).CorrelationId,
-        ];
-        Assert.DoesNotContain(Guid.Empty, correlationIds);
-        Assert.Equal(3, correlationIds.Distinct().Count());
     }
 
     private static void AssertCommand(CancelScheduledRecurringMessage command)

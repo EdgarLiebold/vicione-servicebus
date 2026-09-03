@@ -49,7 +49,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
 
             var bytes = Encoding.UTF8.GetBytes(text);
 
-            return bytes.Length < MessageDataDefaults.Threshold
+            return bytes.Length < MessageDataPolicy.Default.Threshold
                 ? (MessageData<byte[]>)new BytesInlineMessageData(bytes, input.Address)
                 : new StoredMessageData<byte[]>(input.Address, bytes);
         }
@@ -61,7 +61,7 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters
 
             var bytes = Encoding.UTF8.GetBytes(input);
 
-            return Task.FromResult(bytes.Length < MessageDataDefaults.Threshold
+            return Task.FromResult(bytes.Length < MessageDataPolicy.Default.Threshold
                 ? (MessageData<byte[]>)new BytesInlineMessageData(bytes)
                 : new PutMessageData<byte[]>(bytes));
         }

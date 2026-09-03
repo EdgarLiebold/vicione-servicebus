@@ -70,8 +70,8 @@ namespace ViciOne.ServiceBus
             {
                 var partitioner = configurator.CreatePartitioner(Environment.ProcessorCount);
 
-                e.Consumer(() => new ScheduleMessageConsumer(settings.SchedulerFactory), x =>
-                    x.Message<ScheduleMessage>(m => m.UsePartitioner(partitioner, p => p.Message.CorrelationId)));
+                e.Consumer(() => new ScheduleMessageConsumer(settings.SchedulerFactory, settings.TimeZoneResolver), x =>
+                    x.Message<ScheduleMessage>(m => m.UsePartitioner(partitioner, p => p.Message.TokenId)));
 
                 e.Consumer(() => new CancelScheduledMessageConsumer(settings.SchedulerFactory), x =>
                     x.Message<CancelScheduledMessage>(m => m.UsePartitioner(partitioner, p => p.Message.TokenId)));

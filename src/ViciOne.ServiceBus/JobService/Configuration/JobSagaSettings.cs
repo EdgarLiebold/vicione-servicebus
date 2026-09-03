@@ -22,5 +22,7 @@ namespace ViciOne.ServiceBus.Configuration
         TimeSpan HeartbeatTimeout { get; }
 
         bool FinalizeCompleted { get; }
+
+        Func<string, TimeZoneInfo> TimeZoneResolver { get; }
     }
 }

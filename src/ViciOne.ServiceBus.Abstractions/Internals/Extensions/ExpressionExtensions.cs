@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.Internals
     using System.Reflection;
 
 
-    public static class ExpressionExtensions
+    internal static class ExpressionExtensions
     {
         /// <summary>
         /// Gets the name of the member specified

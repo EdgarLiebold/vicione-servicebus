@@ -15,7 +15,8 @@ namespace ViciOne.ServiceBus.Transports
     /// </summary>
     public class ReceiveEndpoint :
         IReceiveEndpoint,
-        IRestartableReceiveEndpoint
+        IRestartableReceiveEndpoint,
+        IMessageRouteProvider
     {
         public enum State
         {
@@ -62,6 +63,8 @@ namespace ViciOne.ServiceBus.Transports
         public bool IsBusEndpoint => _context.IsBusEndpoint;
 
         public Uri InputAddress { get; set; }
+
+        IMessageRouteTable IMessageRouteProvider.MessageRoutes => _context.MessageRoutes;
 
         public Task<ReceiveEndpointReady> Started => _started.Task;
         public ConnectHandle ObserverHandle { get; set; }
@@ -213,7 +216,7 @@ namespace ViciOne.ServiceBus.Transports
                 }
 
                 _paused = false;
-                _context.Reset();
+                await _context.ResetAsync().ConfigureAwait(false);
             }
             finally
             {
@@ -234,7 +237,7 @@ namespace ViciOne.ServiceBus.Transports
                 // Mark the endpoint before stopping the transport so a concurrent host stop cannot omit it.
                 _paused = true;
                 await StopTransport(false, cancellationToken).ConfigureAwait(false);
-                _context.Reset();
+                await _context.ResetAsync().ConfigureAwait(false);
             }
             finally
             {

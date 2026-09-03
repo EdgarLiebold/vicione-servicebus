@@ -21,6 +21,11 @@ namespace ViciOne.ServiceBus
         TimeProvider TimeProvider { get; }
 
         /// <summary>
+        /// Message routes owned by the bus that created this client factory.
+        /// </summary>
+        IMessageRouteTable MessageRoutes { get; }
+
+        /// <summary>
         /// The address used for responses to messages sent by this client
         /// </summary>
         Uri ResponseAddress { get; }

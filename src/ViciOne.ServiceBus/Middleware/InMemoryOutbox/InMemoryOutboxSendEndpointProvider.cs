@@ -5,7 +5,8 @@ namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox
 
 
     public class InMemoryOutboxSendEndpointProvider :
-        ISendEndpointProvider
+        ISendEndpointProvider,
+        IMessageRouteProvider
     {
         readonly OutboxContext _outboxContext;
         readonly ISendEndpointProvider _sendEndpointProvider;
@@ -20,6 +21,8 @@ namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox
         {
             return _sendEndpointProvider.ConnectSendObserver(observer);
         }
+
+        IMessageRouteTable IMessageRouteProvider.MessageRoutes => EndpointConvention.GetMessageRoutes(_sendEndpointProvider);
 
         public async Task<ISendEndpoint> GetSendEndpoint(Uri address)
         {

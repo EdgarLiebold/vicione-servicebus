@@ -1,3 +1,5 @@
+#nullable enable
+
 namespace ViciOne.ServiceBus
 {
     using System;
@@ -13,14 +15,23 @@ namespace ViciOne.ServiceBus
         /// </summary>
         /// <param name="configurator"></param>
         /// <param name="repository"></param>
-        public static void UseMessageData(this IBusFactoryConfigurator configurator, IMessageDataRepository repository)
+        /// <param name="policy">The immutable policy owned by this bus, or the default policy when omitted.</param>
+        public static void UseMessageData(this IBusFactoryConfigurator configurator, IMessageDataRepository repository, MessageDataPolicy? policy = null)
         {
-            if (configurator.ConsumeTopology.TryAddConvention(new MessageDataConsumeTopologyConvention(repository))
-                && configurator.SendTopology.TryAddConvention(new MessageDataSendTopologyConvention(repository)))
-            {
-                // Courier does not use ConsumeContext, so it needs to be special
-                var observer = new CourierMessageDataConfigurationObserver(configurator, repository, false);
-            }
+            if (configurator == null)
+                throw new ArgumentNullException(nameof(configurator));
+            if (repository == null)
+                throw new ArgumentNullException(nameof(repository));
+
+            MessageDataPolicy runtimePolicy = policy ?? MessageDataPolicy.Default;
+
+            bool consumeAdded = configurator.ConsumeTopology.TryAddConvention(new MessageDataConsumeTopologyConvention(repository));
+            bool sendAdded = configurator.SendTopology.TryAddConvention(new MessageDataSendTopologyConvention(repository, runtimePolicy));
+            if (!consumeAdded || !sendAdded)
+                throw new ConfigurationException("Message data is already configured for this bus owner.");
+
+            // Courier does not use ConsumeContext, so it needs to be special
+            _ = new CourierMessageDataConfigurationObserver(configurator, repository, false);
         }
 
         /// <summary>
@@ -31,8 +42,9 @@ namespace ViciOne.ServiceBus
         /// The repository selector.
         /// See extension methods, e.g. <see cref="MessageDataRepositorySelectorExtensions.FileSystem" />.
         /// </param>
+        /// <param name="policy">The immutable policy owned by this bus, or the default policy when omitted.</param>
         public static IMessageDataRepository UseMessageData(this IBusFactoryConfigurator configurator,
-            Func<IMessageDataRepositorySelector, IMessageDataRepository> selector)
+            Func<IMessageDataRepositorySelector, IMessageDataRepository> selector, MessageDataPolicy? policy = null)
         {
             if (configurator is null)
                 throw new ArgumentNullException(nameof(configurator));
@@ -42,7 +54,7 @@ namespace ViciOne.ServiceBus
 
             var repository = selector(new MessageDataRepositorySelector(configurator));
 
-            UseMessageData(configurator, repository);
+            UseMessageData(configurator, repository, policy);
 
             if (repository is IBusObserver observer)
                 configurator.ConnectBusObserver(observer);

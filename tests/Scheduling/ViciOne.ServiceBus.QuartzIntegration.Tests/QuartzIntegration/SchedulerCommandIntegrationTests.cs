@@ -22,14 +22,15 @@ public sealed class SchedulerCommandIntegrationTests
         await using QuartzTestBus fixture = await QuartzTestBus.Start(timeout);
         Guid tokenId = Guid.Parse("018f6738-7d4a-7b21-86e2-bdfbb3ed5f27");
         Guid messageId = Guid.Parse("018f6738-7d4a-7b21-86e2-bdfbb3ed5f28");
-        var consumed = new ConsumeCompletionObserver<ScheduleMessage>(message => message.CorrelationId == tokenId);
+        Guid businessCorrelationId = Guid.Parse("018f6738-7d4a-7b21-86e2-bdfbb3ed5f26");
+        var consumed = new ConsumeCompletionObserver<ScheduleMessage>(message => message.TokenId == tokenId);
         using ConnectHandle observer = fixture.Bus.ConnectConsumeObserver(consumed);
         var command = new ScheduleMessageCommand<ScheduledPayload>(ScheduledTime, Destination, new ScheduledPayload("alpha"), tokenId);
 
         await fixture.SchedulerEndpoint.Send<ScheduleMessage>(command, context =>
         {
             context.MessageId = messageId;
-            context.CorrelationId = tokenId;
+            context.CorrelationId = businessCorrelationId;
             context.TimeToLive = TimeSpan.FromMinutes(30);
             context.Headers.Set("tenant", "factory-a");
         }, TestContext.Current.CancellationToken);
@@ -44,13 +45,26 @@ public sealed class SchedulerCommandIntegrationTests
         Assert.Equal(ScheduledTime, trigger.StartTimeUtc.UtcDateTime);
         Assert.IsType<SimpleTriggerImpl>(trigger);
         Assert.Equal(messageId.ToString(), trigger.JobDataMap.GetString("MessageId"));
-        Assert.Equal(tokenId.ToString(), trigger.JobDataMap.GetString("CorrelationId"));
+        Assert.Equal(businessCorrelationId.ToString(), trigger.JobDataMap.GetString("CorrelationId"));
         Assert.Equal(tokenId.ToString("N"), trigger.JobDataMap.GetString("TokenId"));
         Assert.Equal(Destination.ToString(), trigger.JobDataMap.GetString("Destination"));
         Assert.Contains("tenant", trigger.JobDataMap.GetString("HeadersAsJson"), StringComparison.Ordinal);
         Assert.True(job.Durable);
         Assert.True(job.RequestsRecovery);
         Assert.Equal(typeof(ScheduledMessageJob), job.JobType);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SCHEDULING-TECHNICAL-IDENTITY", "token-and-recurring-keys-do-not-overload-correlation")]
+    public void TechnicalSchedulingContracts_DoNotExposeSyntheticBusinessCorrelation()
+    {
+        Assert.NotNull(typeof(ScheduleMessage).GetProperty(nameof(ScheduleMessage.TokenId)));
+        Assert.Null(typeof(ScheduleMessage).GetProperty("CorrelationId"));
+        Assert.Null(typeof(ScheduleRecurringMessage).GetProperty("CorrelationId"));
+        Assert.Null(typeof(CancelScheduledMessage).GetProperty("CorrelationId"));
+        Assert.Null(typeof(CancelScheduledRecurringMessage).GetProperty("CorrelationId"));
+        Assert.Null(typeof(PauseScheduledRecurringMessage).GetProperty("CorrelationId"));
+        Assert.Null(typeof(ResumeScheduledRecurringMessage).GetProperty("CorrelationId"));
     }
 
     [Fact]
@@ -143,6 +157,49 @@ public sealed class SchedulerCommandIntegrationTests
         Assert.Null(await fixture.Scheduler.GetTrigger(triggerKey, TestContext.Current.CancellationToken));
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-QUARTZ-SCHEDULER-SETTINGS", "owner-scoped-time-zone-resolver-reaches-trigger")]
+    public async Task RecurringCommand_UsesTheOwnerScopedTimeZoneResolver()
+    {
+        TimeSpan timeout = OperationTimeout();
+        string timeZoneId = $"owner-zone-{NewId.NextGuid():N}";
+        TimeZoneInfo ownerZone = TimeZoneInfo.CreateCustomTimeZone(
+            timeZoneId,
+            TimeSpan.FromHours(3),
+            "Owner Zone",
+            "Owner Zone");
+        var resolverCalls = 0;
+        await using QuartzTestBus fixture = await QuartzTestBus.Start(
+            timeout,
+            timeZoneResolver: id =>
+            {
+                Assert.Equal(timeZoneId, id);
+                Interlocked.Increment(ref resolverCalls);
+                return ownerZone;
+            });
+        const string scheduleId = "owner-time-zone";
+        const string scheduleGroup = "operations";
+        var recurring = new OwnerTimeZoneRecurringSchedule(scheduleId, scheduleGroup, timeZoneId);
+        var scheduled = new ConsumeCompletionObserver<ScheduleRecurringMessage>(message =>
+            message.Schedule.ScheduleId == scheduleId);
+
+        using (fixture.Bus.ConnectConsumeObserver(scheduled))
+        {
+            await fixture.SchedulerEndpoint.Send<ScheduleRecurringMessage>(
+                new ScheduleRecurringMessageCommand<ScheduledPayload>(recurring, Destination, new ScheduledPayload("owner-zone")),
+                TestContext.Current.CancellationToken);
+            await scheduled.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
+        }
+
+        ITrigger trigger = Assert.IsAssignableFrom<ITrigger>(await fixture.Scheduler.GetTrigger(
+            QuartzTriggerKey.ForRecurring(scheduleId, scheduleGroup),
+            TestContext.Current.CancellationToken));
+        ICronTrigger cronTrigger = Assert.IsAssignableFrom<ICronTrigger>(trigger);
+
+        Assert.Equal(ownerZone.Id, cronTrigger.TimeZone.Id);
+        Assert.Equal(1, Volatile.Read(ref resolverCalls));
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
@@ -210,7 +267,7 @@ public sealed class SchedulerCommandIntegrationTests
 
     private static async Task SendOneTimeCommand(QuartzTestBus fixture, Guid tokenId, DateTime scheduledTime, TimeSpan timeout)
     {
-        var consumed = new ConsumeCompletionObserver<ScheduleMessage>(message => message.CorrelationId == tokenId);
+        var consumed = new ConsumeCompletionObserver<ScheduleMessage>(message => message.TokenId == tokenId);
         using ConnectHandle observer = fixture.Bus.ConnectConsumeObserver(consumed);
         var command = new ScheduleMessageCommand<ScheduledPayload>(scheduledTime, Destination, new ScheduledPayload("replacement"), tokenId);
 
@@ -226,7 +283,6 @@ public sealed class SchedulerCommandIntegrationTests
 
         await fixture.SchedulerEndpoint.Send<T>(new
         {
-            CorrelationId = NewId.NextGuid(),
             Timestamp = ScheduledTime,
             ScheduleId = scheduleId,
             ScheduleGroup = scheduleGroup,
@@ -256,6 +312,21 @@ public sealed class SchedulerCommandIntegrationTests
         public string ScheduleGroup => scheduleGroup;
         public string CronExpression => "0 0 0 ? * *";
         public string Description => "Nightly order processing";
+        public MissedEventPolicy MisfirePolicy => MissedEventPolicy.Skip;
+    }
+
+    private sealed class OwnerTimeZoneRecurringSchedule(
+        string scheduleId,
+        string scheduleGroup,
+        string timeZoneId) : RecurringSchedule
+    {
+        public string TimeZoneId => timeZoneId;
+        public DateTimeOffset StartTime => ScheduledTime;
+        public DateTimeOffset? EndTime => ScheduledTime.AddDays(2);
+        public string ScheduleId => scheduleId;
+        public string ScheduleGroup => scheduleGroup;
+        public string CronExpression => "0 0 0 ? * *";
+        public string Description => "Owner-scoped time-zone resolution";
         public MissedEventPolicy MisfirePolicy => MissedEventPolicy.Skip;
     }
 

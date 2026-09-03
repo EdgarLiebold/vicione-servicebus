@@ -237,11 +237,13 @@ public sealed class MultiBusRequestTests
                 .GetResponse<OwnedResponse>(defaultRequest, cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
             Response<OwnedResponse> responseB = await scope.ServiceProvider
-                .GetRequiredService<IRequestClient<BusBOwnedRequest>>()
+                .GetRequiredService<Bind<IBusB, IRequestClient<BusBOwnedRequest>>>()
+                .Value
                 .GetResponse<OwnedResponse>(requestB, cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
             Response<OwnedResponse> responseC = await scope.ServiceProvider
-                .GetRequiredService<IRequestClient<BusCOwnedRequest>>()
+                .GetRequiredService<Bind<IBusC, IRequestClient<BusCOwnedRequest>>>()
+                .Value
                 .GetResponse<OwnedResponse>(requestC, cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
             await busB.Publish(crossBus, cancellationToken);
@@ -261,6 +263,43 @@ public sealed class MultiBusRequestTests
         {
             await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MULTIBUS", "same-request-contract-registrations-are-owner-bound")]
+    public void SameRequestContractOnTwoBuses_RegistersOneClientPerOwner()
+    {
+        var services = new ServiceCollection();
+
+        services
+            .AddViciOneServiceBusTestHarness(configuration =>
+                configuration.AddRequestClient<SharedOwnedRequest>())
+            .AddViciOneServiceBus<IBusB>(configuration =>
+            {
+                configuration.AddRequestClient<SharedOwnedRequest>();
+                configuration.UsingInMemory((_, _) => { });
+            });
+
+        Assert.Single(services, descriptor => descriptor.ServiceType == typeof(IRequestClient<SharedOwnedRequest>));
+        Assert.Single(services, descriptor =>
+            descriptor.ServiceType == typeof(Bind<IBusB, IRequestClient<SharedOwnedRequest>>));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MULTIBUS", "duplicate-request-client-rejected-within-owner")]
+    public void DuplicateRequestClientOnOneBus_IsRejectedDuringConfiguration()
+    {
+        var services = new ServiceCollection();
+
+        ConfigurationException exception = Assert.Throws<ConfigurationException>(() =>
+            services.AddViciOneServiceBusTestHarness(configuration =>
+            {
+                configuration.AddRequestClient<SharedOwnedRequest>();
+                configuration.AddRequestClient<SharedOwnedRequest>();
+            }));
+
+        Assert.Contains(nameof(SharedOwnedRequest), exception.Message, StringComparison.Ordinal);
+        Assert.Contains("already configured for this bus owner", exception.Message, StringComparison.Ordinal);
     }
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
@@ -300,6 +339,8 @@ public sealed class MultiBusRequestTests
     public sealed record CrossBusDelivered(Guid CorrelationId, Uri SourceBus, Uri DestinationBus) : CorrelatedBy<Guid>;
 
     public sealed record SharedMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
+
+    public sealed record SharedOwnedRequest(Guid CorrelationId) : CorrelatedBy<Guid>;
 
     public sealed class SharedConsumer : IConsumer<SharedMessage>
     {
@@ -386,12 +427,12 @@ public sealed class MultiBusRequestTests
         private readonly CrossBusObservation _observation;
 
         public DefaultRequestConsumer(
-            IRequestClient<SecondaryRequest> client,
+            Bind<IBusB, IRequestClient<SecondaryRequest>> client,
             Bind<IBus, ISendEndpointProvider> defaultProvider,
             Bind<IBusB, ISendEndpointProvider> secondaryProvider,
             CrossBusObservation observation)
         {
-            _client = client;
+            _client = client.Value;
             _defaultProvider = defaultProvider.Value;
             _secondaryProvider = secondaryProvider.Value;
             _observation = observation;

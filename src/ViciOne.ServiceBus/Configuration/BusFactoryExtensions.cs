@@ -26,6 +26,11 @@ namespace ViciOne.ServiceBus
 
             busConfiguration.HostConfiguration.LogContext = LogContext.Current;
 
+            if (busConfiguration.MessageRoutes is not MessageRouteTable messageRoutes)
+                throw new ConfigurationException("The bus must own a MessageRouteTable instance.");
+
+            messageRoutes.Freeze();
+
             IReadOnlyList<ValidationResult> result = validationResult.ThrowIfContainsFailure("The bus configuration is invalid:");
 
             try

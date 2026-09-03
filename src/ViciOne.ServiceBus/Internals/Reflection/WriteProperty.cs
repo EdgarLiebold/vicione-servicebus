@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.Internals
     using System.Runtime.ExceptionServices;
 
 
-    public class WriteProperty<T, TProperty> : IWriteProperty<T, TProperty>
+    internal class WriteProperty<T, TProperty> : IWriteProperty<T, TProperty>
         where T : class
     {
         readonly Action<T, TProperty> _setMethod;

@@ -31,6 +31,10 @@
     <Project Path="src/ViciOne.ServiceBus.SignalR/ViciOne.ServiceBus.SignalR.csproj" />
     <Project Path="src/ViciOne.ServiceBus.StateMachineVisualizer/ViciOne.ServiceBus.StateMachineVisualizer.csproj" />
     <Project Path="src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj" />
+    <Project Path="src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Testing/ViciOne.ServiceBus.Azure.ServiceBus.Testing.csproj" />
+    <Project Path="src/Transports/ViciOne.ServiceBus.EventHubIntegration.Testing/ViciOne.ServiceBus.EventHubIntegration.Testing.csproj" />
+    <Project Path="src/Transports/ViciOne.ServiceBus.RabbitMqTransport.Testing/ViciOne.ServiceBus.RabbitMqTransport.Testing.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ViciOne.ServiceBus.Benchmark.Tests.csproj" />

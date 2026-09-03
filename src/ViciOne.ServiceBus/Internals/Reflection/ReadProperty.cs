@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.Internals
     using System.Runtime.ExceptionServices;
 
 
-    public class ReadProperty<T, TProperty> : IReadProperty<T, TProperty>
+    internal class ReadProperty<T, TProperty> : IReadProperty<T, TProperty>
         where T : class
     {
         readonly Func<T, TProperty> _getMethod;

@@ -2,7 +2,6 @@ namespace ViciOne.ServiceBus.Util.Scanning
 {
     using System;
     using System.Reflection;
-    using System.Threading.Tasks;
 
 
     public interface IAssemblyScanner
@@ -94,6 +93,6 @@ namespace ViciOne.ServiceBus.Util.Scanning
         void ExcludeFileNameStartsWith(params string[] startsWith);
         void IncludeFileNameStartsWith(params string[] startsWith);
         void AssembliesAndExecutablesFromApplicationBaseDirectory();
-        Task<TypeSet> ScanForTypes();
+        TypeSet ScanForTypes();
     }
 }

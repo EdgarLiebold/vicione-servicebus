@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.Internals
     using Metadata;
 
 
-    public class WritePropertyCache<T> :
+    internal class WritePropertyCache<T> :
         IWritePropertyCache<T>
         where T : class
     {

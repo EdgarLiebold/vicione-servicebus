@@ -41,6 +41,8 @@ namespace ViciOne.ServiceBus.Transports
 
         ISendEndpointProvider SendEndpointProvider { get; }
 
+        IMessageRouteTable MessageRoutes { get; }
+
         /// <summary>
         /// Task completed when dependencies are ready
         /// </summary>
@@ -76,7 +78,7 @@ namespace ViciOne.ServiceBus.Transports
         /// <summary>
         /// Reset the receive endpoint, which should clear any caches, etc.
         /// </summary>
-        void Reset();
+        ValueTask ResetAsync();
 
         /// <summary>
         /// Add an consume-side agent, which should be stopped during shutdown

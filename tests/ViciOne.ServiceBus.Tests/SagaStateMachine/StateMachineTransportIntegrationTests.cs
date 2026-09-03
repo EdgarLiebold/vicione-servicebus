@@ -70,8 +70,6 @@ public sealed class StateMachineTransportIntegrationTests
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        MessageCorrelation.UseCorrelationId<DynamicStart>(message => message.ServiceId);
-        MessageCorrelation.UseCorrelationId<DynamicStop>(message => message.ServiceId);
         using var harness = CreateHarness("dynamic-events", timeout);
         var machine = new DynamicEventMachine();
         ISagaStateMachineTestHarness<DynamicEventMachine, DynamicEventState> sagaHarness =

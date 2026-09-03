@@ -10,7 +10,7 @@ namespace ViciOne.ServiceBus
     {
         /// <summary>
         /// Adds partitioning to the consume pipeline, with a number of partitions handling all message types on the receive endpoint. Endpoints must have
-        /// a CorrelationId provider available, which can be specified using GlobalTopology.Send.UseCorrelationId&lt;T&gt;(x => x.SomeId);
+        /// a CorrelationId provider available, which can be specified using MessageCorrelation.UseCorrelationId&lt;T&gt;(x => x.SomeId);
         /// </summary>
         /// <param name="configurator">The pipe configurator</param>
         /// <param name="partitionCount">The number of partitions</param>

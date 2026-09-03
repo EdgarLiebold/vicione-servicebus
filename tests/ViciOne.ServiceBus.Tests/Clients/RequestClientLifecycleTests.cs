@@ -153,6 +153,8 @@ public sealed class RequestClientLifecycleTests
 
         public TimeProvider TimeProvider { get; } = timeProvider;
 
+        public IMessageRouteTable MessageRoutes { get; } = new MessageRouteTable();
+
         public Uri ResponseAddress { get; } = new("loopback://localhost/response");
 
         public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)

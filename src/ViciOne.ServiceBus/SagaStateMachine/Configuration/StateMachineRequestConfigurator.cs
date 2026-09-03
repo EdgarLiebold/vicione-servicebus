@@ -16,16 +16,7 @@ namespace ViciOne.ServiceBus.Configuration
             Timeout = TimeSpan.FromSeconds(30);
         }
 
-        public RequestSettings<TInstance, TRequest, TResponse> Settings
-        {
-            get
-            {
-                if (ServiceAddress == null && EndpointConvention.TryGetDestinationAddress<TRequest>(out var serviceAddress))
-                    ServiceAddress = serviceAddress;
-
-                return this;
-            }
-        }
+        public RequestSettings<TInstance, TRequest, TResponse> Settings => this;
 
         public Uri ServiceAddress { get; set; }
         public TimeSpan Timeout { get; set; }
@@ -52,16 +43,7 @@ namespace ViciOne.ServiceBus.Configuration
             Timeout = TimeSpan.FromSeconds(30);
         }
 
-        public new RequestSettings<TInstance, TRequest, TResponse, TResponse2> Settings
-        {
-            get
-            {
-                if (ServiceAddress == null && EndpointConvention.TryGetDestinationAddress<TRequest>(out var serviceAddress))
-                    ServiceAddress = serviceAddress;
-
-                return this;
-            }
-        }
+        public new RequestSettings<TInstance, TRequest, TResponse, TResponse2> Settings => this;
 
         public Action<IEventCorrelationConfigurator<TInstance, TResponse2>> Completed2 { get; set; }
     }
@@ -82,16 +64,7 @@ namespace ViciOne.ServiceBus.Configuration
             Timeout = TimeSpan.FromSeconds(30);
         }
 
-        public new RequestSettings<TInstance, TRequest, TResponse, TResponse2, TResponse3> Settings
-        {
-            get
-            {
-                if (ServiceAddress == null && EndpointConvention.TryGetDestinationAddress<TRequest>(out var serviceAddress))
-                    ServiceAddress = serviceAddress;
-
-                return this;
-            }
-        }
+        public new RequestSettings<TInstance, TRequest, TResponse, TResponse2, TResponse3> Settings => this;
 
         public Action<IEventCorrelationConfigurator<TInstance, TResponse3>> Completed3 { get; set; }
     }

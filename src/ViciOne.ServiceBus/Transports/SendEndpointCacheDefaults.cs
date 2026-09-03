@@ -3,7 +3,7 @@ namespace ViciOne.ServiceBus.Transports
     using System;
 
 
-    public static class SendEndpointCacheDefaults
+    internal static class SendEndpointCacheDefaults
     {
         static SendEndpointCacheDefaults()
         {
@@ -12,8 +12,8 @@ namespace ViciOne.ServiceBus.Transports
             MaxAge = TimeSpan.FromHours(24);
         }
 
-        public static int Capacity { get; set; }
-        public static TimeSpan MinAge { get; set; }
-        public static TimeSpan MaxAge { get; set; }
+        public static int Capacity { get; }
+        public static TimeSpan MinAge { get; }
+        public static TimeSpan MaxAge { get; }
     }
 }

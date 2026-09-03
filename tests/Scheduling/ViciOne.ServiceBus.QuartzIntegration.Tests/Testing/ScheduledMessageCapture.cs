@@ -16,7 +16,7 @@ internal sealed class ScheduledMessageCapture(string payloadTypeName) : IConsume
         if (context.Message is ScheduleMessage schedule && IsRequestedPayload(schedule.PayloadType))
         {
             _scheduled.TrySetResult(new ScheduledMessageSnapshot(
-                schedule.CorrelationId,
+                schedule.TokenId,
                 schedule.ScheduledTime,
                 schedule.Destination,
                 [.. schedule.PayloadType]));

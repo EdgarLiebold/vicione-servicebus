@@ -3,7 +3,7 @@ namespace ViciOne.ServiceBus.Internals
     using System;
 
 
-    public interface IWriteProperty<in T, in TProperty> :
+    internal interface IWriteProperty<in T, in TProperty> :
         IWriteProperty<T>
         where T : class
     {
@@ -11,7 +11,7 @@ namespace ViciOne.ServiceBus.Internals
     }
 
 
-    public interface IWriteProperty<in T>
+    internal interface IWriteProperty<in T>
         where T : class
     {
         Type TargetType { get; }

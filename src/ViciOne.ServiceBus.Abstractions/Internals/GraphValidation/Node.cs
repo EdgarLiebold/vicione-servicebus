@@ -1,6 +1,6 @@
 namespace ViciOne.ServiceBus.Internals.GraphValidation
 {
-    public class Node<T>
+    internal class Node<T>
     {
         readonly int _index;
         public readonly T Value;

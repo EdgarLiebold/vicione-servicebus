@@ -127,6 +127,11 @@ namespace ViciOne.ServiceBus.Configuration
             set => _options.FinalizeCompleted = value;
         }
 
+        public Func<string, TimeZoneInfo> TimeZoneResolver
+        {
+            set => _options.TimeZoneResolver = value;
+        }
+
         public IEnumerable<ValidationResult> Validate()
         {
             ISpecification options = _options;

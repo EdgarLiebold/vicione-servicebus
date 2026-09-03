@@ -1,12 +1,12 @@
 namespace ViciOneServiceBusBenchmark
 {
     using System;
+    using System.Globalization;
     using System.Net.Security;
     using System.Security.Authentication;
     using System.Security.Cryptography.X509Certificates;
     using System.Threading.Tasks;
     using ViciOne.ServiceBus;
-    using ViciOne.ServiceBus.Internals;
     using ViciOne.ServiceBus.RabbitMqTransport;
     using ViciOne.ServiceBus.RabbitMqTransport.Configuration;
     using ViciOne.ServiceBus.Transports;
@@ -209,7 +209,7 @@ namespace ViciOneServiceBusBenchmark
             Console.WriteLine("Split: {0}", Split);
             var batch = BatchSettings;
             Console.WriteLine("Batch: enabled={0}, limit={1}, timeout={2}", batch.Enabled, batch.MessageLimit,
-                batch.Timeout.ToFriendlyString());
+                batch.Timeout.ToString("c", CultureInfo.InvariantCulture));
         }
     }
 

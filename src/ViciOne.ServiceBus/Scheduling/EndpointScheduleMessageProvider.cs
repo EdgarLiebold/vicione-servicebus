@@ -27,11 +27,10 @@ namespace ViciOne.ServiceBus.Scheduling
             var endpoint = await _schedulerEndpoint().ConfigureAwait(false);
 
             await endpoint.Send<CancelScheduledMessage>(new
-                {
-                    InVar.CorrelationId,
-                    InVar.Timestamp,
-                    TokenId = tokenId
-                }, cancellationToken)
+            {
+                InVar.Timestamp,
+                TokenId = tokenId
+            }, cancellationToken)
                 .ConfigureAwait(false);
         }
     }

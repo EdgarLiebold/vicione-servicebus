@@ -13,8 +13,6 @@ public sealed class StateMachineLifecycleIntegrationTests
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        MessageCorrelation.UseCorrelationId<MappedStart>(message => message.ServiceId);
-        MessageCorrelation.UseCorrelationId<MappedStop>(message => message.ServiceId);
         using var harness = CreateHarness("correlation-matrix", timeout);
         var machine = new ConventionMachine();
         ISagaStateMachineTestHarness<ConventionMachine, ConventionState> sagaHarness =

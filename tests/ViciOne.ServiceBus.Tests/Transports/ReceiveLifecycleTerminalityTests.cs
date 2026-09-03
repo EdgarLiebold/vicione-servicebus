@@ -16,6 +16,26 @@ namespace ViciOne.ServiceBus.Tests.Transports;
 
 public sealed class ReceiveLifecycleTerminalityTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RECEIVE-ENDPOINT-LIFETIME", "stop-awaits-context-reset")]
+    public async Task Stop_AwaitsOwnedProviderReleaseBeforeCompleting()
+    {
+        var context = new TestReceiveEndpointContext(pauseReset: true);
+        var endpoint = new ReceiveEndpoint(new ScriptedReceiveTransport(), context);
+        endpoint.Start(CancellationToken.None);
+
+        Task stop = endpoint.Stop(TestContext.Current.CancellationToken);
+        await context.ResetStarted.Task.WaitAsync(TestContext.Current.CancellationToken);
+
+        Assert.False(stop.IsCompleted);
+        Assert.Equal(1, context.ResetCount);
+
+        context.ReleaseReset();
+        await stop.WaitAsync(TestContext.Current.CancellationToken);
+
+        Assert.Equal(1, context.ResetCount);
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
@@ -280,10 +300,15 @@ public sealed class ReceiveLifecycleTerminalityTests
         public Task Stop(CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 
-    private sealed class TestReceiveEndpointContext : BasePipeContext, ReceiveEndpointContext
+    private sealed class TestReceiveEndpointContext(bool pauseReset = false) : BasePipeContext, ReceiveEndpointContext
     {
         private readonly ReceiveEndpointObservable _endpointObservers = new();
         private readonly ReceiveTransportObservable _transportObservers = new();
+        private readonly TaskCompletionSource _releaseReset = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private int _resetCount;
+
+        public TaskCompletionSource ResetStarted { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        public int ResetCount => Volatile.Read(ref _resetCount);
 
         public TimeSpan? ConsumerStopTimeout => null;
         public TimeSpan? StopTimeout => null;
@@ -297,6 +322,7 @@ public sealed class ReceiveLifecycleTerminalityTests
         public IReceivePipe ReceivePipe { get; } = new ConnectedReceivePipe();
         public IPublishEndpointProvider PublishEndpointProvider => throw new NotSupportedException();
         public ISendEndpointProvider SendEndpointProvider => throw new NotSupportedException();
+        public IMessageRouteTable MessageRoutes { get; } = new MessageRouteTable();
         public Task DependenciesReady => Task.CompletedTask;
         public Task DependentsCompleted => Task.CompletedTask;
         public bool PublishFaults => true;
@@ -308,9 +334,14 @@ public sealed class ReceiveLifecycleTerminalityTests
 
         public IReceivePipeDispatcher CreateReceivePipeDispatcher() => throw new NotSupportedException();
 
-        public void Reset()
+        public ValueTask ResetAsync()
         {
+            Interlocked.Increment(ref _resetCount);
+            ResetStarted.TrySetResult();
+            return pauseReset ? new ValueTask(_releaseReset.Task) : default;
         }
+
+        public void ReleaseReset() => _releaseReset.TrySetResult();
 
         public void AddConsumeAgent(IAgent agent)
         {

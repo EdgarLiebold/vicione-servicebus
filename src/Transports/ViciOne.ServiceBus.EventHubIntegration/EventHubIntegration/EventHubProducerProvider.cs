@@ -8,7 +8,8 @@ namespace ViciOne.ServiceBus.EventHubIntegration
 
 
     public class EventHubProducerProvider :
-        IEventHubProducerProvider
+        IEventHubProducerProvider,
+        IAsyncDisposable
     {
         readonly IBusInstance _busInstance;
         readonly IEventHubProducerCache<Uri> _cache;
@@ -21,6 +22,11 @@ namespace ViciOne.ServiceBus.EventHubIntegration
             _busInstance = busInstance;
             _cache = new EventHubProducerCache<Uri>();
             _sendObservable = new SendObservable();
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            return _cache.DisposeAsync();
         }
 
         public Task<IEventHubProducer> GetProducer(Uri address)

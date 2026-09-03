@@ -48,7 +48,7 @@ namespace ViciOne.ServiceBus
             if (assemblies.Length == 0)
                 assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-            var types = AssemblyTypeCache.FindTypes(assemblies, RegistrationMetadata.IsConsumerOrDefinition).GetAwaiter().GetResult();
+            var types = AssemblyTypeCache.FindTypes(assemblies, RegistrationMetadata.IsConsumerOrDefinition);
 
             AddConsumers(configurator, filter, types.FindTypes(TypeClassification.Concrete | TypeClassification.Closed).ToArray());
         }
@@ -106,14 +106,14 @@ namespace ViciOne.ServiceBus
             IEnumerable<Type> consumerDefinitionTypes = types.Where(x => x.ImplementsInterface(typeof(IConsumerDefinition<>)));
 
             var consumers = from c in consumerTypes
-                join d in consumerDefinitionTypes on c equals d.GetSingleClosedGenericArgument(typeof(IConsumerDefinition<>)) into dc
-                from d in dc.DefaultIfEmpty()
-                where filter(c)
-                select new
-                {
-                    ConsumerType = c,
-                    DefinitionType = d
-                };
+                            join d in consumerDefinitionTypes on c equals d.GetSingleClosedGenericArgument(typeof(IConsumerDefinition<>)) into dc
+                            from d in dc.DefaultIfEmpty()
+                            where filter(c)
+                            select new
+                            {
+                                ConsumerType = c,
+                                DefinitionType = d
+                            };
 
             foreach (var consumer in consumers)
                 configurator.AddConsumer(consumer.ConsumerType, consumer.DefinitionType);
@@ -146,7 +146,7 @@ namespace ViciOne.ServiceBus
             if (assemblies.Length == 0)
                 assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-            var types = AssemblyTypeCache.FindTypes(assemblies, RegistrationMetadata.IsSagaOrDefinition).GetAwaiter().GetResult();
+            var types = AssemblyTypeCache.FindTypes(assemblies, RegistrationMetadata.IsSagaOrDefinition);
 
             AddSagas(configurator, filter, types.FindTypes(TypeClassification.Concrete | TypeClassification.Closed).ToArray());
         }
@@ -161,7 +161,7 @@ namespace ViciOne.ServiceBus
             if (assemblies.Length == 0)
                 assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-            var types = AssemblyTypeCache.FindTypes(assemblies, RegistrationMetadata.IsSagaOrDefinition).GetAwaiter().GetResult();
+            var types = AssemblyTypeCache.FindTypes(assemblies, RegistrationMetadata.IsSagaOrDefinition);
 
             AddSagas(configurator, types.FindTypes(TypeClassification.Concrete | TypeClassification.Closed).ToArray());
         }
@@ -219,14 +219,14 @@ namespace ViciOne.ServiceBus
             IEnumerable<Type> sagaDefinitionTypes = types.Where(x => x.ImplementsInterface(typeof(ISagaDefinition<>)));
 
             var sagas = from c in sagaTypes
-                join d in sagaDefinitionTypes on c equals d.GetSingleClosedGenericArgument(typeof(ISagaDefinition<>)) into dc
-                from d in dc.DefaultIfEmpty()
-                where filter(c)
-                select new
-                {
-                    SagaType = c,
-                    DefinitionType = d
-                };
+                        join d in sagaDefinitionTypes on c equals d.GetSingleClosedGenericArgument(typeof(ISagaDefinition<>)) into dc
+                        from d in dc.DefaultIfEmpty()
+                        where filter(c)
+                        select new
+                        {
+                            SagaType = c,
+                            DefinitionType = d
+                        };
 
             foreach (var saga in sagas)
                 configurator.AddSaga(saga.SagaType, saga.DefinitionType);
@@ -262,8 +262,7 @@ namespace ViciOne.ServiceBus
                 assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
             var types = AssemblyTypeCache.FindTypes(assemblies,
-                    type => RegistrationMetadata.IsSagaStateMachineOrDefinition(type) && !RegistrationMetadata.IsFutureOrDefinition(type))
-                .GetAwaiter().GetResult();
+                type => RegistrationMetadata.IsSagaStateMachineOrDefinition(type) && !RegistrationMetadata.IsFutureOrDefinition(type));
 
             configurator.AddSagaStateMachines(types.FindTypes(TypeClassification.Concrete | TypeClassification.Closed).ToArray());
         }
@@ -324,15 +323,15 @@ namespace ViciOne.ServiceBus
             IEnumerable<Type> sagaDefinitionTypes = types.Where(x => x.ImplementsInterface(typeof(ISagaDefinition<>)));
 
             var sagas = from c in sagaTypes
-                let it = c.GetSingleClosedGenericArgument(typeof(SagaStateMachine<>))
-                join d in sagaDefinitionTypes on it equals d.GetSingleClosedGenericArgument(typeof(ISagaDefinition<>)) into dc
-                from d in dc.DefaultIfEmpty()
-                where filter(c) || filter(it)
-                select new
-                {
-                    SagaType = c,
-                    DefinitionType = d
-                };
+                        let it = c.GetSingleClosedGenericArgument(typeof(SagaStateMachine<>))
+                        join d in sagaDefinitionTypes on it equals d.GetSingleClosedGenericArgument(typeof(ISagaDefinition<>)) into dc
+                        from d in dc.DefaultIfEmpty()
+                        where filter(c) || filter(it)
+                        select new
+                        {
+                            SagaType = c,
+                            DefinitionType = d
+                        };
 
             foreach (var saga in sagas)
                 configurator.AddSagaStateMachine(saga.SagaType, saga.DefinitionType);
@@ -389,7 +388,7 @@ namespace ViciOne.ServiceBus
             if (assemblies.Length == 0)
                 assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-            var types = AssemblyTypeCache.FindTypes(assemblies, RegistrationMetadata.IsActivityOrDefinition).GetAwaiter().GetResult();
+            var types = AssemblyTypeCache.FindTypes(assemblies, RegistrationMetadata.IsActivityOrDefinition);
 
             AddActivities(configurator, types.FindTypes(TypeClassification.Concrete | TypeClassification.Closed).ToArray());
         }
@@ -441,14 +440,14 @@ namespace ViciOne.ServiceBus
             IEnumerable<Type> activityDefinitionTypes = types.Where(x => x.ImplementsInterface(typeof(IActivityDefinition<,,>))).ToList();
 
             var activities = from c in activityTypes
-                join d in activityDefinitionTypes on c equals d.GetSingleClosedGenericArguments(typeof(IActivityDefinition<,,>)).First() into dc
-                from d in dc.DefaultIfEmpty()
-                where filter(c)
-                select new
-                {
-                    ActivityType = c,
-                    DefinitionType = d
-                };
+                             join d in activityDefinitionTypes on c equals d.GetSingleClosedGenericArguments(typeof(IActivityDefinition<,,>)).First() into dc
+                             from d in dc.DefaultIfEmpty()
+                             where filter(c)
+                             select new
+                             {
+                                 ActivityType = c,
+                                 DefinitionType = d
+                             };
 
             foreach (var activity in activities)
                 configurator.AddActivity(activity.ActivityType, activity.DefinitionType);
@@ -457,14 +456,14 @@ namespace ViciOne.ServiceBus
             IEnumerable<Type> executeActivityDefinitionTypes = types.Where(x => x.ImplementsInterface(typeof(IExecuteActivityDefinition<,>))).ToList();
 
             var executeActivities = from c in executeActivityTypes
-                join d in executeActivityDefinitionTypes on c equals d.GetSingleClosedGenericArguments(typeof(IExecuteActivityDefinition<,>)).First() into dc
-                from d in dc.DefaultIfEmpty()
-                where filter(c)
-                select new
-                {
-                    ActivityType = c,
-                    DefinitionType = d
-                };
+                                    join d in executeActivityDefinitionTypes on c equals d.GetSingleClosedGenericArguments(typeof(IExecuteActivityDefinition<,>)).First() into dc
+                                    from d in dc.DefaultIfEmpty()
+                                    where filter(c)
+                                    select new
+                                    {
+                                        ActivityType = c,
+                                        DefinitionType = d
+                                    };
 
             foreach (var executeActivity in executeActivities)
                 configurator.AddExecuteActivity(executeActivity.ActivityType, executeActivity.DefinitionType);
@@ -549,7 +548,7 @@ namespace ViciOne.ServiceBus
             if (assemblies.Length == 0)
                 assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-            var types = AssemblyTypeCache.FindTypes(assemblies, RegistrationMetadata.IsFutureOrDefinition).GetAwaiter().GetResult();
+            var types = AssemblyTypeCache.FindTypes(assemblies, RegistrationMetadata.IsFutureOrDefinition);
 
             AddFutures(configurator, filter, types.FindTypes(TypeClassification.Concrete | TypeClassification.Closed).ToArray());
         }
@@ -607,14 +606,14 @@ namespace ViciOne.ServiceBus
             IEnumerable<Type> consumerDefinitionTypes = types.Where(x => x.ImplementsInterface(typeof(IFutureDefinition<>)));
 
             var futures = from c in consumerTypes
-                join d in consumerDefinitionTypes on c equals d.GetSingleClosedGenericArgument(typeof(IFutureDefinition<>)) into dc
-                from d in dc.DefaultIfEmpty()
-                where filter(c)
-                select new
-                {
-                    FutureType = c,
-                    DefinitionType = d
-                };
+                          join d in consumerDefinitionTypes on c equals d.GetSingleClosedGenericArgument(typeof(IFutureDefinition<>)) into dc
+                          from d in dc.DefaultIfEmpty()
+                          where filter(c)
+                          select new
+                          {
+                              FutureType = c,
+                              DefinitionType = d
+                          };
 
             foreach (var future in futures)
                 configurator.AddFuture(future.FutureType, future.DefinitionType);
@@ -635,8 +634,7 @@ namespace ViciOne.ServiceBus
                         || candidate.Namespace.Equals(type.Namespace, StringComparison.OrdinalIgnoreCase));
             }
 
-            return AssemblyTypeCache.FindTypes(type.Assembly, TypeClassification.Concrete | TypeClassification.Closed, Filter)
-                .GetAwaiter().GetResult().ToArray();
+            return AssemblyTypeCache.FindTypes(type.Assembly, TypeClassification.Concrete | TypeClassification.Closed, Filter).ToArray();
         }
     }
 }

@@ -35,9 +35,14 @@ namespace ViciOne.ServiceBus
         /// </summary>
         public TimeProvider TimeProvider { get; set; } = TimeProvider.System;
 
+        /// <summary>
+        /// Optional resolver for time zone identifiers not available from the operating system.
+        /// </summary>
+        public Func<string, TimeZoneInfo?>? TimeZoneResolver { get; set; }
+
         internal QuartzSchedulerSettings CreateSettings()
         {
-            return new QuartzSchedulerSettings(SchedulerFactory, QueueName, CreateJobFactory, StartScheduler, TimeProvider);
+            return new QuartzSchedulerSettings(SchedulerFactory, QueueName, CreateJobFactory, StartScheduler, TimeProvider, TimeZoneResolver);
         }
     }
 }

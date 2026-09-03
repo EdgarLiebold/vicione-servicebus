@@ -24,7 +24,6 @@ namespace ViciOne.ServiceBus.Scheduling
         {
             return _publishEndpoint.Publish<CancelScheduledMessage>(new
             {
-                InVar.CorrelationId,
                 InVar.Timestamp,
                 TokenId = tokenId
             }, cancellationToken);

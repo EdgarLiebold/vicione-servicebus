@@ -51,7 +51,7 @@ namespace ViciOne.ServiceBus.Clients
         public IRequestClient<T> CreateRequestClient<T>(RequestTimeout timeout)
             where T : class
         {
-            if (EndpointConvention.TryGetDestinationAddress<T>(out var destinationAddress))
+            if (_clientFactory.Context.MessageRoutes.TryGetDestinationAddress<T>(out var destinationAddress))
                 return CreateRequestClient<T>(destinationAddress, timeout);
 
             return _clientFactory.CreateRequestClient<T>(_consumeContext, timeout);

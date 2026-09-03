@@ -3,7 +3,7 @@ namespace ViciOne.ServiceBus.Internals
     using System;
 
 
-    public interface IImplementationBuilder
+    internal interface IImplementationBuilder
     {
         Type GetImplementationType(Type interfaceType);
     }

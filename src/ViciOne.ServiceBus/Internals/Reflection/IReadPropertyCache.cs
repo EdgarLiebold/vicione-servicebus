@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.Internals
     using System.Reflection;
 
 
-    public interface IReadPropertyCache<T>
+    internal interface IReadPropertyCache<T>
         where T : class
     {
         IReadProperty<T, TProperty> GetProperty<TProperty>(string? name);

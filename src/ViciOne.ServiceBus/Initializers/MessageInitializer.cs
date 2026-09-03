@@ -12,26 +12,23 @@ namespace ViciOne.ServiceBus.Initializers
 
     public static class MessageInitializer
     {
-        static readonly List<IInitializerConvention> _conventions;
-        static IInitializerConvention[]? _conventionsArray;
+        static readonly InitializerConventionRegistry _conventions;
 
         static MessageInitializer()
         {
-            _conventions = new List<IInitializerConvention>
+            _conventions = new InitializerConventionRegistry(new IInitializerConvention[]
             {
                 new DefaultInitializerConvention(),
                 new DictionaryInitializerConvention()
-            };
+            });
         }
 
-        public static IInitializerConvention[] Conventions => _conventionsArray ??= _conventions.ToArray();
+        public static IReadOnlyList<IInitializerConvention> Conventions => _conventions.Conventions;
 
         public static void AddConvention<T>()
             where T : IInitializerConvention, new()
         {
-            var convention = new T();
-            _conventions.Add(convention);
-            _conventionsArray = null;
+            _conventions.Add<T>();
         }
     }
 

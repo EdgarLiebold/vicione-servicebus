@@ -21,6 +21,11 @@ namespace ViciOne.ServiceBus.Transports
             _cache = new KeyedResourceCache<TKey, CachedSendEndpoint<TKey>>(x => x.Key, options);
         }
 
+        public ValueTask DisposeAsync()
+        {
+            return _cache.DisposeAsync();
+        }
+
         public async Task<ISendEndpoint> GetSendEndpoint(TKey key, SendEndpointFactory<TKey> factory)
         {
             ArgumentNullException.ThrowIfNull(factory);

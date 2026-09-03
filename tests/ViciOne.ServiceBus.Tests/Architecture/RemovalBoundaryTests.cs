@@ -52,6 +52,56 @@ public sealed class RemovalBoundaryTests
 
     private const string RetainedNeighbour = "ResourceCache`1";
 
+    private static readonly string[] InternalImplementationTypes =
+    [
+        "ViciOne.ServiceBus.Internals.GraphValidation.AdjacencyList`2",
+        "ViciOne.ServiceBus.Internals.CodePrinter",
+        "ViciOne.ServiceBus.Internals.CompilerFlags",
+        "ViciOne.ServiceBus.Internals.GraphValidation.CyclicGraphException",
+        "ViciOne.ServiceBus.Internals.GraphValidation.DependencyGraph`1",
+        "ViciOne.ServiceBus.Internals.GraphValidation.DependencyGraphNode`1",
+        "ViciOne.ServiceBus.Internals.DictionaryExtensions",
+        "ViciOne.ServiceBus.Internals.DynamicImplementationBuilder",
+        "ViciOne.ServiceBus.Internals.GraphValidation.Edge`2",
+        "ViciOne.ServiceBus.Internals.ExceptionExtensions",
+        "ViciOne.ServiceBus.Internals.ExpressionCompiler",
+        "ViciOne.ServiceBus.Internals.ExpressionExtensions",
+        "ViciOne.ServiceBus.Internals.IDelegateDebugInfo",
+        "ViciOne.ServiceBus.Internals.IImplementationBuilder",
+        "ViciOne.ServiceBus.Internals.IReadProperty`1",
+        "ViciOne.ServiceBus.Internals.IReadProperty`2",
+        "ViciOne.ServiceBus.Internals.IReadPropertyCache`1",
+        "ViciOne.ServiceBus.Internals.GraphValidation.ITarjanNodeProperties",
+        "ViciOne.ServiceBus.Internals.GraphValidation.ITopologicalSortNodeProperties",
+        "ViciOne.ServiceBus.Internals.ITypeCache`1",
+        "ViciOne.ServiceBus.Internals.IWriteProperty`1",
+        "ViciOne.ServiceBus.Internals.IWriteProperty`2",
+        "ViciOne.ServiceBus.Internals.IWritePropertyCache`1",
+        "ViciOne.ServiceBus.Internals.ILGeneratorHacks",
+        "ViciOne.ServiceBus.Internals.GraphValidation.Node`1",
+        "ViciOne.ServiceBus.Internals.GraphValidation.NodeList`2",
+        "ViciOne.ServiceBus.Internals.GraphValidation.NodeTable`1",
+        "ViciOne.ServiceBus.Internals.NotSupported",
+        "ViciOne.ServiceBus.Internals.NotSupportedExpressionException",
+        "ViciOne.ServiceBus.Internals.QueryStringExtensions",
+        "ViciOne.ServiceBus.Internals.ReadProperty`2",
+        "ViciOne.ServiceBus.Internals.ReadPropertyCache`1",
+        "ViciOne.ServiceBus.Internals.GraphValidation.Tarjan`2",
+        "ViciOne.ServiceBus.Internals.TaskExtensions",
+        "ViciOne.ServiceBus.Internals.TimeSpanExtensions",
+        "ViciOne.ServiceBus.Internals.ToCSharpPrinter",
+        "ViciOne.ServiceBus.Internals.ToExpressionPrinter",
+        "ViciOne.ServiceBus.Internals.GraphValidation.TopologicalSort`2",
+        "ViciOne.ServiceBus.Internals.TryPrintConstant",
+        "ViciOne.ServiceBus.Internals.TypeExtensions",
+        "ViciOne.ServiceBus.Internals.TypeNameFormatter",
+        "ViciOne.ServiceBus.Internals.TypeRelationshipExtensions",
+        "ViciOne.ServiceBus.Internals.WriteProperty`2",
+        "ViciOne.ServiceBus.Internals.WritePropertyCache`1",
+        "ViciOne.ServiceBus.Topology.NullablePropertyMessageCorrelationId`1",
+        "ViciOne.ServiceBus.Topology.PropertyMessageCorrelationId`1",
+    ];
+
     private static readonly string[] RetiredPropertyMetadataTypes =
     [
         "ViciOne.ServiceBus.Internals.IReadOnlyPropertyCache`1",
@@ -164,6 +214,22 @@ public sealed class RemovalBoundaryTests
 
         Assert.Empty(retired);
         Assert.Equal(OwnedPropertyMetadataTypes.Order(StringComparer.Ordinal), owned);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-PUBLIC-SURFACE-OWNERSHIP", "implementation-helpers-are-not-exported")]
+    public void ImplementationHelpers_AreNotPartOfThePublicProductSurface()
+    {
+        string[] exported = ProductAssemblies()
+            .SelectMany(assembly => assembly.GetExportedTypes())
+            .Select(type => Assert.IsType<string>(type.FullName))
+            .ToArray();
+
+        Assert.Empty(exported.Intersect(InternalImplementationTypes, StringComparer.Ordinal));
+        Assert.Contains("ViciOne.ServiceBus.Internals.DateTimeConstants", exported);
+        Assert.Null(typeof(ViciOne.ServiceBus.Metadata.TypeMetadataCache).GetProperty(
+            "ImplementationBuilder",
+            BindingFlags.Public | BindingFlags.Static));
     }
 
     internal static IEnumerable<Assembly> ProductAssemblies()

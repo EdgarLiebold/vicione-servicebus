@@ -13,6 +13,7 @@ namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration
         public ServiceBusBusConfiguration(IServiceBusTopologyConfiguration topologyConfiguration)
             : base(topologyConfiguration)
         {
+            MessageRoutes = new MessageRouteTable();
             HostConfiguration = new ServiceBusHostConfiguration(this, topologyConfiguration);
             BusEndpointConfiguration = CreateEndpointConfiguration(true);
 
@@ -20,11 +21,13 @@ namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration
         }
 
         IHostConfiguration IBusConfiguration.HostConfiguration => HostConfiguration;
+        IMessageRouteTable IBusConfiguration.MessageRoutes => MessageRoutes;
         IEndpointConfiguration IBusConfiguration.BusEndpointConfiguration => BusEndpointConfiguration;
         IBusObserver IBusConfiguration.BusObservers => _busObservers;
 
         public IServiceBusEndpointConfiguration BusEndpointConfiguration { get; }
         public IServiceBusHostConfiguration HostConfiguration { get; }
+        public MessageRouteTable MessageRoutes { get; }
 
         public ConnectHandle ConnectBusObserver(IBusObserver observer)
         {

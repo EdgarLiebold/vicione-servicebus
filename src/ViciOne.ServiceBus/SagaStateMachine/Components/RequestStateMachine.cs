@@ -13,8 +13,12 @@ namespace ViciOne.ServiceBus.Components
     public class RequestStateMachine :
         ViciOneServiceBusStateMachine<RequestState>
     {
-        public RequestStateMachine()
+        public RequestStateMachine(Action<IMissingInstanceRedeliveryConfigurator> configureMissingInstanceRedelivery = null)
         {
+            IRequestStateMachineMissingInstanceConfigurator missingInstanceConfigurator = configureMissingInstanceRedelivery == null
+                ? null
+                : new RedeliverRequestStateMachineSpecification(configureMissingInstanceRedelivery);
+
             InstanceState(x => x.CurrentState, Pending);
 
             Event(() => Started, x =>
@@ -26,16 +30,16 @@ namespace ViciOne.ServiceBus.Components
             {
                 x.CorrelateById(m => m.SagaCorrelationId, i => i.Message.CorrelationId);
 
-                if (_missingInstanceConfigurator != null)
-                    x.OnMissingInstance(m => _missingInstanceConfigurator.Apply(m));
+                if (missingInstanceConfigurator != null)
+                    x.OnMissingInstance(m => missingInstanceConfigurator.Apply(m));
             });
 
             Event(() => Faulted, x =>
             {
                 x.CorrelateById(m => m.SagaCorrelationId, i => i.Message.CorrelationId);
 
-                if (_missingInstanceConfigurator != null)
-                    x.OnMissingInstance(m => _missingInstanceConfigurator.Apply(m));
+                if (missingInstanceConfigurator != null)
+                    x.OnMissingInstance(m => missingInstanceConfigurator.Apply(m));
             });
 
             Initially(
@@ -74,18 +78,5 @@ namespace ViciOne.ServiceBus.Components
             context.Saga.SagaAddress = context.SourceAddress;
         }
 
-        static IRequestStateMachineMissingInstanceConfigurator _missingInstanceConfigurator;
-
-        /// <summary>
-        /// Configure the state machine to redeliver <see cref="RequestCompleted" /> and <see cref="RequestFaulted" /> events
-        /// in the scenario where they arrive prior to the <see cref="RequestStarted" /> event.
-        /// </summary>
-        /// <param name="configure">A redelivery configuration callback</param>
-        public static void RedeliverOnMissingInstance(Action<IMissingInstanceRedeliveryConfigurator> configure)
-        {
-            var configurator = new RedeliverRequestStateMachineSpecification(configure);
-
-            _missingInstanceConfigurator = configurator;
-        }
     }
 }

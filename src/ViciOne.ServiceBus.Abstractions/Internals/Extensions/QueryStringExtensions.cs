@@ -4,7 +4,7 @@ namespace ViciOne.ServiceBus.Internals
     using System.Collections.Generic;
 
 
-    public static class QueryStringExtensions
+    internal static class QueryStringExtensions
     {
         public static bool TryGetValueFromQueryString(this Uri uri, string key, out string? value)
         {

@@ -25,7 +25,7 @@ namespace ViciOne.ServiceBus.Scheduling
 
             await ScheduleSend(command, scheduleMessagePipe, cancellationToken).ConfigureAwait(false);
 
-            return new ScheduledMessageHandle<T>(scheduleMessagePipe.ScheduledMessageId ?? command.CorrelationId, command.ScheduledTime,
+            return new ScheduledMessageHandle<T>(scheduleMessagePipe.ScheduledMessageId ?? command.TokenId, command.ScheduledTime,
                 command.Destination, message);
         }
 

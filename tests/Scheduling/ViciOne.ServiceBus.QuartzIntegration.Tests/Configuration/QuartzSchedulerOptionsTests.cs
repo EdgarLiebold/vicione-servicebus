@@ -16,6 +16,7 @@ public sealed class QuartzSchedulerOptionsTests
         var replacementFactory = new StdSchedulerFactory();
         var timeProvider = new FakeTimeProvider(new DateTimeOffset(2042, 2, 3, 4, 5, 6, TimeSpan.Zero));
         Func<IBus, TimeProvider, IJobFactory> createJobFactory = static (_, _) => throw new NotSupportedException();
+        Func<string, TimeZoneInfo?> timeZoneResolver = static _ => TimeZoneInfo.Utc;
         var options = new QuartzSchedulerOptions
         {
             SchedulerFactory = schedulerFactory,
@@ -23,6 +24,7 @@ public sealed class QuartzSchedulerOptionsTests
             CreateJobFactory = createJobFactory,
             StartScheduler = false,
             TimeProvider = timeProvider,
+            TimeZoneResolver = timeZoneResolver,
         };
 
         QuartzSchedulerSettings settings = options.CreateSettings();
@@ -31,12 +33,14 @@ public sealed class QuartzSchedulerOptionsTests
         options.CreateJobFactory = null;
         options.StartScheduler = true;
         options.TimeProvider = TimeProvider.System;
+        options.TimeZoneResolver = null;
 
         Assert.Same(schedulerFactory, settings.SchedulerFactory);
         Assert.Equal("scheduled-messages", settings.QueueName);
         Assert.Same(createJobFactory, settings.CreateJobFactory);
         Assert.False(settings.StartScheduler);
         Assert.Same(timeProvider, settings.TimeProvider);
+        Assert.Same(timeZoneResolver, settings.TimeZoneResolver);
     }
 
     [Fact]

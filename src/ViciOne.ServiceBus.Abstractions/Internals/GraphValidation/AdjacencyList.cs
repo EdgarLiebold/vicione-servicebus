@@ -4,7 +4,7 @@ namespace ViciOne.ServiceBus.Internals.GraphValidation
     using System.Collections.Generic;
 
 
-    public class AdjacencyList<T, TNode>
+    internal class AdjacencyList<T, TNode>
         where TNode : Node<T>
         where T : notnull
     {

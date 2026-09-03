@@ -8,6 +8,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration
     using System.Threading.Tasks;
     using Context;
     using Logging;
+    using Microsoft.Extensions.Options;
     using Quartz;
     using Quartz.Util;
     using Scheduling;
@@ -21,10 +22,22 @@ namespace ViciOne.ServiceBus.QuartzIntegration
         const string ScheduleMessageJobId = "ViciOneServiceBusScheduleMessageJob";
 
         readonly ISchedulerFactory _schedulerFactory;
+        readonly Func<string, TimeZoneInfo?>? _timeZoneResolver;
 
         public ScheduleMessageConsumer(ISchedulerFactory schedulerFactory)
+            : this(schedulerFactory, (Func<string, TimeZoneInfo?>?)null)
+        {
+        }
+
+        public ScheduleMessageConsumer(ISchedulerFactory schedulerFactory, IOptions<QuartzEndpointOptions> options)
+            : this(schedulerFactory, options?.Value.TimeZoneResolver)
+        {
+        }
+
+        internal ScheduleMessageConsumer(ISchedulerFactory schedulerFactory, Func<string, TimeZoneInfo?>? timeZoneResolver)
         {
             _schedulerFactory = schedulerFactory ?? throw new ArgumentNullException(nameof(schedulerFactory));
+            _timeZoneResolver = timeZoneResolver;
         }
 
         public async Task Consume(ConsumeContext<ScheduleMessage> context)
@@ -35,8 +48,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration
             var messageBody = context.SerializerContext.GetMessageSerializer(context.Message.Payload, context.Message.PayloadType)
                 .GetMessageBody(new MessageSendContext<ScheduleMessage>(context.Message));
 
-            var correlationId = context.Message.CorrelationId.ToString("N");
-            var triggerKey = new TriggerKey(correlationId);
+            var triggerKey = new TriggerKey(context.Message.TokenId.ToString("N"));
 
             var builder = TriggerBuilder.Create()
                 .ForJob(jobKey)
@@ -45,7 +57,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration
                 .WithIdentity(triggerKey);
 
             var trigger = PopulateTrigger(context, builder, messageBody, context.Message.Destination, context.Message.PayloadType, messageId: context.MessageId,
-                tokenId: context.Message.CorrelationId);
+                tokenId: context.Message.TokenId);
 
             var scheduler = await _schedulerFactory.GetScheduler(context.CancellationToken).ConfigureAwait(false);
 
@@ -70,7 +82,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration
 
             var tz = TimeZoneInfo.Local;
             if (!string.IsNullOrWhiteSpace(schedule.TimeZoneId) && schedule.TimeZoneId != tz.Id)
-                tz = TimeZoneUtil.FindTimeZoneById(schedule.TimeZoneId);
+                tz = JobService.Scheduling.TimeZoneUtil.FindTimeZoneById(schedule.TimeZoneId, _timeZoneResolver);
 
             var triggerBuilder = TriggerBuilder.Create()
                 .ForJob(jobKey)
@@ -96,7 +108,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration
                 triggerBuilder.EndAt(schedule.EndTime);
 
             var trigger = PopulateTrigger(context, triggerBuilder, messageBody, context.Message.Destination, context.Message.PayloadType,
-                messageId: default, tokenId: context.Message.CorrelationId);
+                messageId: default);
 
             var scheduler = await _schedulerFactory.GetScheduler(context.CancellationToken).ConfigureAwait(false);
 

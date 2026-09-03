@@ -2978,3 +2978,32 @@ the final preclaimed, immediate stop transition passes the ordered reproducer 2/
 95/95. Unit/Architecture passes 3,255/3,255; SQL passes 62/62, Azure Service Bus 24/24 and RabbitMQ 24/24.
 The broad carrier is 342/343 with only the already baseline-reproduced EF inbox counter defect. Package
 11/12 is ready for local freeze; remote publication remains outside this package.
+
+## Reviewer integration — V4 multibus routing and final-tail reconciliation (2026-09-03)
+
+1. Bind product baseline `a2c39b21`, architecture assignment `23aa7d96`, the protected aggregate, V4
+   bundle hash, source `9aa3921` and every remaining donor commit through `f805092`.
+2. Replace process-global runtime routing with one immutable route table per materialized bus. Prove exact,
+   inherited, ambiguous, duplicate, conflicting, frozen, sequential and parallel cases.
+3. Bind scoped request/client/send-endpoint/outbox/inbox/scheduler/provider state to the actual `TBus`
+   owner. Exercise three buses with conflicting policies and fail unbound or ambiguous ownership early.
+4. Freeze application-wide message conventions at deterministic application bootstrap; keep bus-owned
+   runtime routing separate from application contract conventions.
+5. Split reusable and provider test harnesses into engineering-only Testing projects. Reconcile every
+   legacy TestFramework path through the terminal native capability ledger before removing its old owner.
+6. Normalize duplicated source layout by exact moves, tighten public/technical identities, verify the
+   locked dependency and solution graph, and preserve the current stronger native regression composition.
+7. Add or strengthen source-owner and architecture tests, requirement projection, and independent
+   one-cause mutations for each behavioral mechanism. Restore every mutation before positive closure.
+8. Run all 23 Unit/Architecture executables serially, both Release solution builds, shipping pack, scoped
+   full format, JSON, review-hash, empty-directory, layout, solution-composition and diff gates.
+9. Record a commit-by-commit final V4 disposition and freeze separate local product and architecture
+   checkpoints. Continue with V5, V5.1 and API review; do not publish without new explicit authorization.
+
+Completion: all nine steps passed. V4 is 12/12 complete. The final native aggregate is 3,290/3,290 with
+zero failures/skips; Shipping and Engineering builds have zero warnings/errors; packaging yields 19
+shipping packages and no Testing package. Twenty-two independent production mutations are killed. Native
+regression found and corrected the missing route-provider forwarding in `BusInstance<TBus>`, a deterministic
+application-bootstrap correlation boundary, and one missing Quartz requirement projection. Detailed
+evidence is under `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-MULTIBUS-ROUTING/`. V5 is next;
+remote publication remains outside this package.

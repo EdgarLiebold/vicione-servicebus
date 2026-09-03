@@ -136,6 +136,8 @@ public sealed class RequestClientBoundaryTests
 
         public TimeProvider TimeProvider => TimeProvider.System;
 
+        public IMessageRouteTable MessageRoutes { get; } = new MessageRouteTable();
+
         public Uri ResponseAddress { get; } = new("loopback://localhost/response");
 
         public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)

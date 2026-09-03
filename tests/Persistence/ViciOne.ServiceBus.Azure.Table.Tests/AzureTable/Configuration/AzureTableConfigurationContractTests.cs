@@ -211,5 +211,6 @@ public sealed class AzureTableConfigurationContractTests
         public TimeSpan SuspectJobRetryDelay { set { } }
         public int? SagaPartitionCount { set { } }
         public bool FinalizeCompleted { set { } }
+        public Func<string, TimeZoneInfo> TimeZoneResolver { set { } }
     }
 }

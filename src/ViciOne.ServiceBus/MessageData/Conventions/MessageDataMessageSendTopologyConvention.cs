@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus.MessageData.Conventions
 {
+    using System;
     using Configuration;
     using ViciOne.ServiceBus.Configuration;
 
@@ -9,10 +10,12 @@ namespace ViciOne.ServiceBus.MessageData.Conventions
         where TMessage : class
     {
         readonly IMessageDataRepository _repository;
+        readonly MessageDataPolicy _policy;
 
-        public MessageDataMessageSendTopologyConvention(IMessageDataRepository repository)
+        public MessageDataMessageSendTopologyConvention(IMessageDataRepository repository, MessageDataPolicy policy)
         {
-            _repository = repository;
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _policy = policy ?? throw new ArgumentNullException(nameof(policy));
         }
 
         bool IMessageSendTopologyConvention.TryGetMessageSendTopologyConvention<T>(out IMessageSendTopologyConvention<T> convention)
@@ -24,7 +27,7 @@ namespace ViciOne.ServiceBus.MessageData.Conventions
 
         bool IMessageSendTopologyConvention<TMessage>.TryGetMessageSendTopology(out IMessageSendTopology<TMessage> messageSendTopology)
         {
-            var specification = new PutMessageDataTransformSpecification<TMessage>(_repository);
+            var specification = new PutMessageDataTransformSpecification<TMessage>(_repository, _policy);
             if (specification.TryGetSendTopology(out messageSendTopology))
                 return true;
 

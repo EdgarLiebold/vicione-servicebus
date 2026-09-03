@@ -22,12 +22,15 @@ public sealed class ConsumeContextPayloadPropagationTests
         var inbound = NewSignal<ConsumeContext<InboundSend>>();
         var outbound = NewSignal<ConsumeContext<OutboundSend>>();
 
-        EndpointConvention.Map<OutboundSend>(harness.InputQueueAddress);
-        harness.OnConfigureInMemoryBus += bus => bus.ConfigureSend(send =>
+        harness.OnConfigureInMemoryBus += bus =>
         {
-            send.UseExecute(context => context.Headers.Set("root-payload", Describe(context)));
-            send.ConnectSendPipeSpecificationObserver(new SendPayloadSpecificationObserver());
-        });
+            bus.Route<OutboundSend>(harness.InputQueueAddress);
+            bus.ConfigureSend(send =>
+            {
+                send.UseExecute(context => context.Headers.Set("root-payload", Describe(context)));
+                send.ConnectSendPipeSpecificationObserver(new SendPayloadSpecificationObserver());
+            });
+        };
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
         {
             endpoint.UseExecute(context => context.GetOrAddPayload(() => new PayloadMarker("hello")));

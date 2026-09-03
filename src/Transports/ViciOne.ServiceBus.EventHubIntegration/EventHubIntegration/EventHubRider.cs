@@ -27,7 +27,7 @@ namespace ViciOne.ServiceBus.EventHubIntegration
             _endpoints = endpoints;
             _context = context;
 
-            Reset();
+            InitializeProducerProvider();
         }
 
         public IEventHubProducerProvider GetProducerProvider(ConsumeContext consumeContext = default)
@@ -56,7 +56,7 @@ namespace ViciOne.ServiceBus.EventHubIntegration
 
             var ready = endpointsHandle.Length == 0 ? Task.CompletedTask : _hostConfiguration.ConnectionContextSupervisor.Ready;
 
-            var agent = new RiderAgent(_hostConfiguration.ConnectionContextSupervisor, _endpoints, ready, Reset);
+            var agent = new RiderAgent(_hostConfiguration.ConnectionContextSupervisor, _endpoints, ready, ResetProducerProviderAsync);
 
             return new Handle(endpointsHandle, agent);
         }
@@ -66,9 +66,17 @@ namespace ViciOne.ServiceBus.EventHubIntegration
             return _endpoints.CheckEndpointHealth();
         }
 
-        void Reset()
+        void InitializeProducerProvider()
         {
             _producerProvider = new Lazy<IEventHubProducerProvider>(() => new EventHubProducerProvider(_hostConfiguration, _busInstance));
+        }
+
+        async ValueTask ResetProducerProviderAsync()
+        {
+            if (_producerProvider.IsValueCreated && _producerProvider.Value is IAsyncDisposable disposable)
+                await disposable.DisposeAsync().ConfigureAwait(false);
+
+            InitializeProducerProvider();
         }
 
 
@@ -76,10 +84,10 @@ namespace ViciOne.ServiceBus.EventHubIntegration
             Agent
         {
             readonly IReceiveEndpointCollection _endpoints;
-            readonly Action _onStop;
+            readonly Func<ValueTask> _onStop;
             readonly IConnectionContextSupervisor _supervisor;
 
-            public RiderAgent(IConnectionContextSupervisor supervisor, IReceiveEndpointCollection endpoints, Task ready, Action onStop)
+            public RiderAgent(IConnectionContextSupervisor supervisor, IReceiveEndpointCollection endpoints, Task ready, Func<ValueTask> onStop)
             {
                 _supervisor = supervisor;
                 _endpoints = endpoints;
@@ -95,7 +103,7 @@ namespace ViciOne.ServiceBus.EventHubIntegration
                 await _supervisor.Stop(context).ConfigureAwait(false);
                 await base.StopAgent(context).ConfigureAwait(false);
 
-                _onStop();
+                await _onStop().ConfigureAwait(false);
             }
         }
 

@@ -9,7 +9,7 @@ namespace ViciOne.ServiceBus.Metadata
     public static class TypeMetadataCache
     {
         static readonly object _builderLock = new object();
-        public static IImplementationBuilder ImplementationBuilder => Cached.Builder;
+        internal static IImplementationBuilder ImplementationBuilder => Cached.Builder;
 
         public static Type GetImplementationType(Type type)
         {

@@ -4,7 +4,7 @@ namespace ViciOne.ServiceBus.Internals.GraphValidation
     using System.Collections.Generic;
 
 
-    public class Tarjan<T, TNode>
+    internal class Tarjan<T, TNode>
         where TNode : Node<T>, ITarjanNodeProperties
         where T : notnull
     {

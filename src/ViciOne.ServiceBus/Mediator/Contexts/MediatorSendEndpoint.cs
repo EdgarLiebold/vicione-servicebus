@@ -15,7 +15,8 @@ namespace ViciOne.ServiceBus.Mediator.Contexts
     public class MediatorSendEndpoint :
         ITransportSendEndpoint,
         IPublishEndpointProvider,
-        ISendEndpointProvider
+        ISendEndpointProvider,
+        IMessageRouteProvider
     {
         readonly Uri _destinationAddress;
         readonly IReceivePipeDispatcher _dispatcher;
@@ -58,6 +59,8 @@ namespace ViciOne.ServiceBus.Mediator.Contexts
         {
             return _publishSendEndpoint.ConnectPublishObserver(observer);
         }
+
+        IMessageRouteTable IMessageRouteProvider.MessageRoutes => MessageRouteTable.Empty;
 
         public Task<ISendEndpoint> GetPublishSendEndpoint<T>()
             where T : class

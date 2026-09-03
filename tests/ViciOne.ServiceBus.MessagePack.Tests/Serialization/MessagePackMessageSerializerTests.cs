@@ -254,7 +254,7 @@ public sealed class MessagePackMessageSerializerTests
         var source = new MessageDataContainer
         {
             Value = await repository.PutString(
-                new string('*', MessageDataDefaults.Threshold + 100),
+                new string('*', MessageDataPolicy.Default.Threshold + 100),
                 TestContext.Current.CancellationToken),
         };
 

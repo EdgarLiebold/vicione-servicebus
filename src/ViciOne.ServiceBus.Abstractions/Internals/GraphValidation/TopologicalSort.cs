@@ -4,7 +4,7 @@ namespace ViciOne.ServiceBus.Internals.GraphValidation
     using System.Linq;
 
 
-    public class TopologicalSort<T, TNode>
+    internal class TopologicalSort<T, TNode>
         where TNode : Node<T>, ITopologicalSortNodeProperties
         where T : notnull
     {

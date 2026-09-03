@@ -19,7 +19,7 @@ namespace ViciOne.ServiceBus
         public static async Task Send<T>(this ISendEndpointProvider provider, T message, CancellationToken cancellationToken = default)
             where T : class
         {
-            if (!EndpointConvention.TryGetDestinationAddress<T>(out var destinationAddress))
+            if (!EndpointConvention.TryGetDestinationAddress<T>(provider, out var destinationAddress))
                 throw new ArgumentException($"A convention for the message type {TypeCache<T>.ShortName} was not found");
 
             var endpoint = await provider.GetSendEndpoint(destinationAddress).ConfigureAwait(false);
@@ -40,7 +40,7 @@ namespace ViciOne.ServiceBus
             CancellationToken cancellationToken = default)
             where T : class
         {
-            if (!EndpointConvention.TryGetDestinationAddress<T>(out var destinationAddress))
+            if (!EndpointConvention.TryGetDestinationAddress<T>(provider, out var destinationAddress))
                 throw new ArgumentException($"A convention for the message type {TypeCache<T>.ShortName} was not found");
 
             var endpoint = await provider.GetSendEndpoint(destinationAddress).ConfigureAwait(false);
@@ -77,7 +77,7 @@ namespace ViciOne.ServiceBus
 
             var messageType = message.GetType();
 
-            if (!EndpointConvention.TryGetDestinationAddress(messageType, out var destinationAddress))
+            if (!EndpointConvention.TryGetDestinationAddress(provider, messageType, out var destinationAddress))
                 throw new ArgumentException($"A convention for the message type {TypeCache.GetShortName(messageType)} was not found");
 
             var endpoint = await provider.GetSendEndpoint(destinationAddress).ConfigureAwait(false);
@@ -95,7 +95,7 @@ namespace ViciOne.ServiceBus
         /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
         public static async Task Send(this ISendEndpointProvider provider, object message, Type messageType, CancellationToken cancellationToken = default)
         {
-            if (!EndpointConvention.TryGetDestinationAddress(messageType, out var destinationAddress))
+            if (!EndpointConvention.TryGetDestinationAddress(provider, messageType, out var destinationAddress))
                 throw new ArgumentException($"A convention for the message type {TypeCache.GetShortName(messageType)} was not found");
 
             var endpoint = await provider.GetSendEndpoint(destinationAddress).ConfigureAwait(false);
@@ -119,7 +119,7 @@ namespace ViciOne.ServiceBus
 
             var messageType = message.GetType();
 
-            if (!EndpointConvention.TryGetDestinationAddress(messageType, out var destinationAddress))
+            if (!EndpointConvention.TryGetDestinationAddress(provider, messageType, out var destinationAddress))
                 throw new ArgumentException($"A convention for the message type {TypeCache.GetShortName(messageType)} was not found");
 
             var endpoint = await provider.GetSendEndpoint(destinationAddress).ConfigureAwait(false);
@@ -145,7 +145,7 @@ namespace ViciOne.ServiceBus
             if (messageType == null)
                 throw new ArgumentNullException(nameof(messageType));
 
-            if (!EndpointConvention.TryGetDestinationAddress(messageType, out var destinationAddress))
+            if (!EndpointConvention.TryGetDestinationAddress(provider, messageType, out var destinationAddress))
                 throw new ArgumentException($"A convention for the message type {TypeCache.GetShortName(messageType)} was not found");
 
             var endpoint = await provider.GetSendEndpoint(destinationAddress).ConfigureAwait(false);
@@ -183,7 +183,7 @@ namespace ViciOne.ServiceBus
             if (values == null)
                 throw new ArgumentNullException(nameof(values));
 
-            if (!EndpointConvention.TryGetDestinationAddress<T>(out var destinationAddress))
+            if (!EndpointConvention.TryGetDestinationAddress<T>(provider, out var destinationAddress))
                 throw new ArgumentException($"A convention for the message type {TypeCache<T>.ShortName} was not found");
 
             var endpoint = await provider.GetSendEndpoint(destinationAddress).ConfigureAwait(false);

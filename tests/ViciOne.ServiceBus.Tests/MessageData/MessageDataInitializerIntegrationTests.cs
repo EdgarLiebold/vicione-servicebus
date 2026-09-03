@@ -7,7 +7,6 @@ using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.MessageData;
 
-[Collection(MessageDataDefaultsCollection.Name)]
 public sealed class MessageDataInitializerIntegrationTests
 {
     [Theory]
@@ -40,10 +39,9 @@ public sealed class MessageDataInitializerIntegrationTests
     {
         TimeSpan timeout = MessageDataTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        using var defaults = StoredDefaults();
         var repository = new InMemoryMessageDataRepository();
         var observedAddress = new TaskCompletionSource<Uri>(TaskCreationOptions.RunContinuationsAsynchronously);
-        using var harness = CreateHarness("message-data-object", timeout, repository);
+        using var harness = CreateHarness("message-data-object", timeout, repository, StoredPolicy());
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<ObjectRequest>(async context =>
         {
             SpecialPayload value = await context.Message.Payload.Value;
@@ -89,10 +87,9 @@ public sealed class MessageDataInitializerIntegrationTests
     {
         TimeSpan timeout = MessageDataTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        using var defaults = StoredDefaults();
         var repository = new InMemoryMessageDataRepository();
         var observed = new TaskCompletionSource<NestedSnapshot>(TaskCreationOptions.RunContinuationsAsynchronously);
-        using var harness = CreateHarness("message-data-nested-array", timeout, repository);
+        using var harness = CreateHarness("message-data-nested-array", timeout, repository, StoredPolicy());
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<Documents>(async context =>
         {
             observed.TrySetResult(new NestedSnapshot(
@@ -134,10 +131,9 @@ public sealed class MessageDataInitializerIntegrationTests
     {
         TimeSpan timeout = MessageDataTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        using var defaults = StoredDefaults();
         var repository = new InMemoryMessageDataRepository();
         var observed = new TaskCompletionSource<InputAddresses>(TaskCreationOptions.RunContinuationsAsynchronously);
-        using var harness = CreateHarness("message-data-initializer", timeout, repository);
+        using var harness = CreateHarness("message-data-initializer", timeout, repository, StoredPolicy());
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<TRequest>(async context =>
         {
             if (context.Message.StringData is not { HasValue: true })
@@ -209,9 +205,8 @@ public sealed class MessageDataInitializerIntegrationTests
     {
         TimeSpan timeout = MessageDataTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        using var defaults = StoredDefaults();
         var repository = new InMemoryMessageDataRepository();
-        using var harness = CreateHarness("message-data-missing", timeout, repository);
+        using var harness = CreateHarness("message-data-missing", timeout, repository, StoredPolicy());
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<TRequest>(context =>
         {
             if (context.Message.StringData is not { HasValue: true })
@@ -245,25 +240,20 @@ public sealed class MessageDataInitializerIntegrationTests
         }
     }
 
-    private static MessageDataDefaultsScope StoredDefaults()
-    {
-        var scope = new MessageDataDefaultsScope();
-        MessageDataDefaults.AlwaysWriteToRepository = true;
-        MessageDataDefaults.Threshold = 1;
-        return scope;
-    }
+    private static MessageDataPolicy StoredPolicy() => new(alwaysWriteToRepository: true, threshold: 1);
 
     private static InMemoryTestHarness CreateHarness(
         string prefix,
         TimeSpan timeout,
-        IMessageDataRepository repository)
+        IMessageDataRepository repository,
+        MessageDataPolicy policy)
     {
         var harness = new InMemoryTestHarness($"{prefix}-{NewId.NextGuid():N}")
         {
             TestTimeout = timeout,
             TestInactivityTimeout = timeout,
         };
-        harness.OnConfigureInMemoryBus += configurator => configurator.UseMessageData(repository);
+        harness.OnConfigureInMemoryBus += configurator => configurator.UseMessageData(repository, policy);
         return harness;
     }
 

@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.Internals
     using System.Runtime.CompilerServices;
 
 
-    public static class TypeExtensions
+    internal static class TypeExtensions
     {
         static readonly TypeNameFormatter _typeNameFormatter = new TypeNameFormatter();
 

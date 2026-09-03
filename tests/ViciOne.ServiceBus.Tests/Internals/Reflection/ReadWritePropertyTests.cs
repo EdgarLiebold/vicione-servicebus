@@ -1,8 +1,8 @@
 namespace ViciOne.ServiceBus.Tests.Internals.Reflection;
 
 using System.Reflection;
-using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Tests.InternalAccess.Internals;
 using Xunit;
 
 
@@ -12,7 +12,7 @@ public sealed class ReadWritePropertyTests
     [RequirementCoverage("REQ-VSB-RUNTIME-PROPERTY-ACCESSOR", "public-getter-first-call")]
     public void ReadProperty_PublicGetterReturnsTheValueOnItsFirstCall()
     {
-        var accessor = new ReadProperty<IRuntimeTarget, string>(Property<IRuntimeTarget>(nameof(IRuntimeTarget.Value)));
+        var accessor = new ReadPropertyTestDriver<IRuntimeTarget, string>(Property<IRuntimeTarget>(nameof(IRuntimeTarget.Value)));
         IRuntimeTarget target = new RuntimeTarget { Value = "first-call" };
 
         string value = accessor.Get(target);
@@ -24,7 +24,7 @@ public sealed class ReadWritePropertyTests
     [RequirementCoverage("REQ-VSB-RUNTIME-PROPERTY-ACCESSOR", "implementation-setter-first-call")]
     public void WriteProperty_ImplementationSetterWritesTheValueOnItsFirstCall()
     {
-        var accessor = new WriteProperty<IRuntimeTarget, string>(
+        var accessor = new WritePropertyTestDriver<IRuntimeTarget, string>(
             typeof(RuntimeTarget),
             Property<RuntimeTarget>(nameof(RuntimeTarget.Value)));
         IRuntimeTarget target = new RuntimeTarget();
@@ -40,7 +40,7 @@ public sealed class ReadWritePropertyTests
     public void ReadProperty_PrivateGetterPreservesTheOriginalException()
     {
         var failure = new IntentionalAccessorException("read");
-        var accessor = new ReadProperty<RuntimeTarget, string>(Property<RuntimeTarget>(nameof(RuntimeTarget.ThrowingPrivateGetter)));
+        var accessor = new ReadPropertyTestDriver<RuntimeTarget, string>(Property<RuntimeTarget>(nameof(RuntimeTarget.ThrowingPrivateGetter)));
         var target = new RuntimeTarget(failure, new IntentionalAccessorException("unused"));
 
         IntentionalAccessorException exception = Assert.Throws<IntentionalAccessorException>(() => accessor.Get(target));
@@ -53,7 +53,7 @@ public sealed class ReadWritePropertyTests
     public void WriteProperty_PrivateSetterPreservesTheOriginalException()
     {
         var failure = new IntentionalAccessorException("write");
-        var accessor = new WriteProperty<RuntimeTarget, string>(
+        var accessor = new WritePropertyTestDriver<RuntimeTarget, string>(
             typeof(RuntimeTarget),
             Property<RuntimeTarget>(nameof(RuntimeTarget.ThrowingPrivateSetter)));
         var target = new RuntimeTarget(new IntentionalAccessorException("unused"), failure);
@@ -68,7 +68,7 @@ public sealed class ReadWritePropertyTests
     public void ReadProperty_RejectsAPropertyTypeMismatchAtConstruction()
     {
         ArgumentException exception = Assert.Throws<ArgumentException>(() =>
-            new ReadProperty<IRuntimeTarget, int>(Property<IRuntimeTarget>(nameof(IRuntimeTarget.Value))));
+            new ReadPropertyTestDriver<IRuntimeTarget, int>(Property<IRuntimeTarget>(nameof(IRuntimeTarget.Value))));
 
         Assert.Equal("propertyInfo", exception.ParamName);
         Assert.Contains(typeof(string).ToString(), exception.Message, StringComparison.Ordinal);
@@ -80,7 +80,7 @@ public sealed class ReadWritePropertyTests
     public void WriteProperty_RejectsAnUnrelatedImplementationTypeAtConstruction()
     {
         ArgumentException exception = Assert.Throws<ArgumentException>(() =>
-            new WriteProperty<IRuntimeTarget, string>(
+            new WritePropertyTestDriver<IRuntimeTarget, string>(
                 typeof(UnrelatedTarget),
                 Property<RuntimeTarget>(nameof(RuntimeTarget.Value))));
 

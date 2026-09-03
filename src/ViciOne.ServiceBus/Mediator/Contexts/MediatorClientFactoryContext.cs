@@ -60,6 +60,8 @@ namespace ViciOne.ServiceBus.Mediator.Contexts
 
         public RequestTimeout DefaultTimeout { get; }
 
+        public IMessageRouteTable MessageRoutes => MessageRouteTable.Empty;
+
         public TimeProvider TimeProvider { get; }
     }
 }

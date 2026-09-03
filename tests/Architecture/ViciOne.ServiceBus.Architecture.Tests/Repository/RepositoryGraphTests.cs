@@ -175,6 +175,7 @@ public sealed class RepositoryGraphTests
                 "src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ViciOne.ServiceBus.ActiveMqTransport.csproj",
                 "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/ViciOne.ServiceBus.AmazonSqsTransport.csproj",
                 "src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/ViciOne.ServiceBus.Azure.ServiceBus.Core.csproj",
+                "src/Transports/ViciOne.ServiceBus.RabbitMqTransport.Testing/ViciOne.ServiceBus.RabbitMqTransport.Testing.csproj",
                 "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/ViciOne.ServiceBus.RabbitMqTransport.csproj",
                 "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/ViciOne.ServiceBus.SqlTransport.PostgreSql.csproj",
                 "src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/ViciOne.ServiceBus.SqlTransport.SqlServer.csproj",
@@ -184,6 +185,7 @@ public sealed class RepositoryGraphTests
                 "src/ViciOne.ServiceBus.MessagePack/ViciOne.ServiceBus.MessagePack.csproj",
                 "src/ViciOne.ServiceBus.SignalR/ViciOne.ServiceBus.SignalR.csproj",
                 "src/ViciOne.ServiceBus.StateMachineVisualizer/ViciOne.ServiceBus.StateMachineVisualizer.csproj",
+                "src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj",
                 "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
                 "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/ViciOne.ServiceBus.Architecture.Tests.csproj",
                 "tests/Benchmarks/ViciOne.ServiceBus.Benchmark.Tests/ViciOne.ServiceBus.Benchmark.Tests.csproj",
@@ -253,6 +255,93 @@ public sealed class RepositoryGraphTests
             .ToArray();
 
         Assert.Empty(missing);
+    }
+
+    [Fact]
+    [RequirementCoverage(
+        "REQ-VSB-TESTING-PACKAGE-BOUNDARY",
+        "dedicated-testing-projects-and-runtime-independent-shipping-graph")]
+    public void TestingHarnesses_AreDedicatedProjectsOutsideTheRuntimeShippingGraph()
+    {
+        string[] expectedTestingProjects =
+        [
+            "src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Testing/ViciOne.ServiceBus.Azure.ServiceBus.Testing.csproj",
+            "src/Transports/ViciOne.ServiceBus.EventHubIntegration.Testing/ViciOne.ServiceBus.EventHubIntegration.Testing.csproj",
+            "src/Transports/ViciOne.ServiceBus.RabbitMqTransport.Testing/ViciOne.ServiceBus.RabbitMqTransport.Testing.csproj",
+            "src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj",
+        ];
+        string[] testingProjects = RepositoryLayout.ProductProjects
+            .Where(project => Path.GetFileNameWithoutExtension(project)
+                .EndsWith(".Testing", StringComparison.Ordinal))
+            .Select(RepositoryLayout.RelativeToRoot)
+            .OrderBy(path => path, StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Equal(expectedTestingProjects, testingProjects);
+
+        var testingProjectPaths = testingProjects
+            .Select(path => Path.GetFullPath(path, RepositoryLayout.Root))
+            .ToHashSet(RepositoryLayout.PathComparer);
+        var shippingMembers = SolutionProjects(Path.Combine(RepositoryLayout.Root, "ViciOne.ServiceBus.slnx"))
+            .ToHashSet(RepositoryLayout.PathComparer);
+        var engineeringMembers = SolutionProjects(Path.Combine(RepositoryLayout.Root, "ViciOne.ServiceBus.Engineering.slnx"))
+            .ToHashSet(RepositoryLayout.PathComparer);
+
+        Assert.DoesNotContain(testingProjectPaths, shippingMembers.Contains);
+        Assert.All(testingProjectPaths, project => Assert.Contains(project, engineeringMembers));
+
+        string[] runtimeReferencesToTesting = RepositoryLayout.ProductProjects
+            .Where(project => !testingProjectPaths.Contains(Path.GetFullPath(project)))
+            .SelectMany(project => ProjectReferences(project)
+                .Where(reference => testingProjectPaths.Contains(Path.GetFullPath(reference)))
+                .Select(reference =>
+                    $"{RepositoryLayout.RelativeToRoot(project)} -> {RepositoryLayout.RelativeToRoot(reference)}"))
+            .OrderBy(edge => edge, StringComparer.Ordinal)
+            .ToArray();
+        Assert.Empty(runtimeReferencesToTesting);
+
+        string[] embeddedTestingSources = RepositoryLayout.ProductProjects
+            .Where(project => !testingProjectPaths.Contains(Path.GetFullPath(project)))
+            .SelectMany(project =>
+            {
+                var projectDirectory = Path.GetDirectoryName(project)
+                    ?? throw new InvalidOperationException($"No directory for {project}.");
+                return Directory.EnumerateFiles(projectDirectory, "*.cs", SearchOption.AllDirectories)
+                    .Select(source => (ProjectDirectory: projectDirectory, Source: source));
+            })
+            .Where(entry => !entry.Source.Contains(
+                $"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}",
+                RepositoryLayout.PathComparison))
+            .Where(entry => Path.GetRelativePath(entry.ProjectDirectory, entry.Source)
+                .Split(Path.DirectorySeparatorChar)
+                .Contains("Testing", StringComparer.Ordinal))
+            .Select(entry => RepositoryLayout.RelativeToRoot(entry.Source))
+            .OrderBy(path => path, StringComparer.Ordinal)
+            .ToArray();
+        Assert.Empty(embeddedTestingSources);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SOURCE-LAYOUT", "product-paths-have-no-adjacent-repeated-directory")]
+    public void ProductSourcePaths_HaveNoAdjacentRepeatedDirectorySegment()
+    {
+        string[] repeatedSegments = Directory.EnumerateFiles(
+                Path.Combine(RepositoryLayout.Root, "src"),
+                "*.cs",
+                SearchOption.AllDirectories)
+            .Where(source => !source.Contains(
+                $"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}",
+                RepositoryLayout.PathComparison))
+            .Select(RepositoryLayout.RelativeToRoot)
+            .Where(path =>
+            {
+                string[] segments = path.Split('/');
+                return segments.Zip(segments.Skip(1), StringComparer.Ordinal.Equals).Any(equal => equal);
+            })
+            .OrderBy(path => path, StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Empty(repeatedSegments);
     }
 
     [Fact]

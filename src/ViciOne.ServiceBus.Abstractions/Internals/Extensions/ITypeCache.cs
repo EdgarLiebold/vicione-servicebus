@@ -3,7 +3,7 @@ namespace ViciOne.ServiceBus.Internals
     using Metadata;
 
 
-    public interface ITypeCache<T>
+    internal interface ITypeCache<T>
     {
         string ShortName { get; }
         IReadOnlyPropertyCache<T> ReadOnlyPropertyCache { get; }

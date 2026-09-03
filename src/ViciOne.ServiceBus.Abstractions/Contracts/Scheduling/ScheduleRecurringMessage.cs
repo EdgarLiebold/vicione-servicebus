@@ -5,8 +5,6 @@ namespace ViciOne.ServiceBus.Scheduling
 
     public interface ScheduleRecurringMessage
     {
-        Guid CorrelationId { get; }
-
         RecurringSchedule Schedule { get; }
 
         /// <summary>

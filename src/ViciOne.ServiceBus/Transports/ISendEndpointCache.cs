@@ -1,9 +1,11 @@
 namespace ViciOne.ServiceBus.Transports
 {
+    using System;
     using System.Threading.Tasks;
 
 
-    public interface ISendEndpointCache<TKey>
+    public interface ISendEndpointCache<TKey> :
+        IAsyncDisposable
     {
         /// <summary>
         /// Return a SendEndpoint from the cache, using the factory to create it if it doesn't exist in the cache.

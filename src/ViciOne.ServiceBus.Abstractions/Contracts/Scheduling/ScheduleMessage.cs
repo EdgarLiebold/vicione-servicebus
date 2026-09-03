@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.Scheduling
 
     public interface ScheduleMessage
     {
-        Guid CorrelationId { get; }
+        Guid TokenId { get; }
 
         /// <summary>
         /// The time at which the message should be published, should be in UTC

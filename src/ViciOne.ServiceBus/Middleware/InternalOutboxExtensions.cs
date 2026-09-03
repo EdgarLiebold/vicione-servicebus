@@ -4,7 +4,7 @@ namespace ViciOne.ServiceBus.Middleware
     using Transports;
 
 
-    public static class InternalOutboxExtensions
+    internal static class InternalOutboxExtensions
     {
         internal static ISendEndpoint SkipOutbox(this ISendEndpoint endpoint)
         {
@@ -20,7 +20,7 @@ namespace ViciOne.ServiceBus.Middleware
             return endpoint;
         }
 
-        public static ConsumeContext SkipOutbox(ConsumeContext context)
+        internal static ConsumeContext SkipOutbox(ConsumeContext context)
         {
             while (context.TryGetPayload<InMemoryOutboxConsumeContext>(out var outboxConsumeContext))
                 context = outboxConsumeContext.CapturedContext;

@@ -3,7 +3,7 @@ namespace ViciOne.ServiceBus.Internals.GraphValidation
     using System;
 
 
-    public struct Edge<T, TNode> :
+    internal struct Edge<T, TNode> :
         IComparable<Edge<T, TNode>>
         where TNode : Node<T>
     {

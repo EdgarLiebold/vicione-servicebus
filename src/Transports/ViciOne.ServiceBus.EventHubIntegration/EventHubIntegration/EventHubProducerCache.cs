@@ -13,10 +13,14 @@ namespace ViciOne.ServiceBus.EventHubIntegration
 
         public EventHubProducerCache()
         {
-            var options = new ResourceCacheOptions(SendEndpointCacheDefaults.Capacity, SendEndpointCacheDefaults.MinAge,
-                SendEndpointCacheDefaults.MaxAge, ResourceCacheExpirationMode.Sliding);
+            var options = new ResourceCacheOptions(minAge: TimeSpan.FromSeconds(10));
 
             _cache = new KeyedResourceCache<TKey, CachedEventHubProducer<TKey>>(x => x.Key, options);
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            return _cache.DisposeAsync();
         }
 
         public async Task<IEventHubProducer> GetProducer(TKey key, Func<TKey, Task<IEventHubProducer>> factory)

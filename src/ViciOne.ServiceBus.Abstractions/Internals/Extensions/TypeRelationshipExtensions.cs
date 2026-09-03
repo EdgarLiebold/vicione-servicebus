@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.Internals
     using System.Threading.Tasks;
 
 
-    public static class TypeRelationshipExtensions
+    internal static class TypeRelationshipExtensions
     {
         static readonly GenericTypeMatchCache _genericTypeMatches = new GenericTypeMatchCache();
 

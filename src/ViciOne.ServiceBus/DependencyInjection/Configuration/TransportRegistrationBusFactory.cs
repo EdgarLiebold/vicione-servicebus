@@ -43,6 +43,11 @@ namespace ViciOne.ServiceBus.Configuration
             IEnumerable<ValidationResult> validationResult = configurator.Validate()
                 .Concat(busInstanceSpecifications.SelectMany(x => x.Validate()));
 
+            if (_hostConfiguration.BusConfiguration.MessageRoutes is not MessageRouteTable messageRoutes)
+                throw new ConfigurationException("The bus must own a MessageRouteTable instance.");
+
+            messageRoutes.Freeze();
+
             IReadOnlyList<ValidationResult> result = validationResult.ThrowIfContainsFailure("The bus configuration is invalid:");
 
             try

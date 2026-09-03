@@ -1,7 +1,7 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Tests.InternalAccess.Internals;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Internals.Reflection;
@@ -14,7 +14,7 @@ public sealed class DynamicImplementationBuilderTests
     [RequirementCoverage("REQ-VSB-DYNAMIC-CONTRACT", "stable-concrete-collectible-type")]
     public void ValidInterface_ProducesOnePublicSealedCollectibleImplementation()
     {
-        var builder = new DynamicImplementationBuilder();
+        var builder = new DynamicImplementationBuilderTestDriver();
 
         Type first = builder.GetImplementationType(typeof(AttributedContract));
         Type second = builder.GetImplementationType(typeof(AttributedContract));
@@ -36,7 +36,7 @@ public sealed class DynamicImplementationBuilderTests
     [RequirementCoverage("REQ-VSB-DYNAMIC-CONTRACT", "inherited-properties-init-and-attributes")]
     public void InheritedProperties_PreserveValuesInitMetadataAndCompleteAttributes()
     {
-        var builder = new DynamicImplementationBuilder();
+        var builder = new DynamicImplementationBuilderTestDriver();
         Type implementation = builder.GetImplementationType(typeof(AttributedContract));
         object instance = Activator.CreateInstance(implementation)!;
         PropertyInfo name = implementation.GetProperty(nameof(AttributedContract.Name))!;
@@ -67,7 +67,7 @@ public sealed class DynamicImplementationBuilderTests
     [RequirementCoverage("REQ-VSB-DYNAMIC-CONTRACT", "parallel-cache-single-type")]
     public void ParallelRequestsForOneContract_ReturnTheSameImplementationType()
     {
-        var builder = new DynamicImplementationBuilder();
+        var builder = new DynamicImplementationBuilderTestDriver();
         var implementations = new Type[64];
 
         Parallel.For(0, implementations.Length,
@@ -80,7 +80,7 @@ public sealed class DynamicImplementationBuilderTests
     [RequirementCoverage("REQ-VSB-DYNAMIC-CONTRACT", "compatible-inherited-property-merge")]
     public void CompatibleInheritedPropertyDeclarations_AreImplementedOnceForBothContracts()
     {
-        var builder = new DynamicImplementationBuilder();
+        var builder = new DynamicImplementationBuilderTestDriver();
         Type implementation = builder.GetImplementationType(typeof(CompatibleContract));
         object instance = Activator.CreateInstance(implementation)!;
         PropertyInfo property = Assert.Single(implementation.GetProperties(), candidate => candidate.Name == "Value");
@@ -96,7 +96,7 @@ public sealed class DynamicImplementationBuilderTests
     [RequirementCoverage("REQ-VSB-DYNAMIC-CONTRACT", "unsupported-shape-validation")]
     public void UnsupportedContractShape_IsRejectedBeforeTypeEmission(Type contractType, string expectedReason)
     {
-        var builder = new DynamicImplementationBuilder();
+        var builder = new DynamicImplementationBuilderTestDriver();
 
         ArgumentException exception = Assert.Throws<ArgumentException>(() => builder.GetImplementationType(contractType));
 
@@ -108,7 +108,7 @@ public sealed class DynamicImplementationBuilderTests
     [RequirementCoverage("REQ-VSB-DYNAMIC-CONTRACT", "required-interface-type")]
     public void MissingInterfaceType_IsRejectedPrecisely()
     {
-        var builder = new DynamicImplementationBuilder();
+        var builder = new DynamicImplementationBuilderTestDriver();
 
         ArgumentNullException exception = Assert.Throws<ArgumentNullException>(() => builder.GetImplementationType(null!));
 

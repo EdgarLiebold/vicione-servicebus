@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.Internals
     using System.Threading.Tasks;
 
 
-    public static class TaskExtensions
+    internal static class TaskExtensions
     {
         static readonly TimeSpan _defaultTimeout = new TimeSpan(0, 0, 0, 5, 0);
 

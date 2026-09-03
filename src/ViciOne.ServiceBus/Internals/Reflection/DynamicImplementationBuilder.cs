@@ -10,7 +10,7 @@ namespace ViciOne.ServiceBus.Internals
     using System.Runtime.CompilerServices;
 
 
-    public class DynamicImplementationBuilder :
+    internal class DynamicImplementationBuilder :
         IImplementationBuilder
     {
         const MethodAttributes PropertyAccessMethodAttributes = MethodAttributes.Public

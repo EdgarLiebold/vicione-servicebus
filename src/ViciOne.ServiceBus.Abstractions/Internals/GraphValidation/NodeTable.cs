@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.Internals.GraphValidation
     /// against objects with int-compare speed vs. .Equals() speed
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class NodeTable<T>
+    internal class NodeTable<T>
         where T : notnull
     {
         readonly IDictionary<T, int> _nodes;

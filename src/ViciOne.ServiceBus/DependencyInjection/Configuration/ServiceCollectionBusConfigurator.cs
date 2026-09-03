@@ -23,7 +23,7 @@ namespace ViciOne.ServiceBus.Configuration
             IBusRegistrationContext CreateRegistrationContext(IServiceProvider provider)
             {
                 var setter = provider.GetRequiredService<Bind<IBus, ISetScopedConsumeContext>>();
-                return new BusRegistrationContext(provider, Registrar, setter.Value);
+                return new BusRegistrationContext(provider, Registrar, setter.Value, typeof(IBus));
             }
 
             static Bind<IBus, IScopedConsumeContextProvider> CreateScopeProvider(IServiceProvider provider)
@@ -169,7 +169,7 @@ namespace ViciOne.ServiceBus.Configuration
             IBusRegistrationContext CreateRegistrationContext(IServiceProvider provider)
             {
                 var setter = provider.GetRequiredService<Bind<TBus, ISetScopedConsumeContext>>();
-                return new BusRegistrationContext(provider, Registrar, setter.Value);
+                return new BusRegistrationContext(provider, Registrar, setter.Value, typeof(TBus));
             }
 
             static Bind<TBus, IScopedConsumeContextProvider> CreateScopeProvider(IServiceProvider provider)

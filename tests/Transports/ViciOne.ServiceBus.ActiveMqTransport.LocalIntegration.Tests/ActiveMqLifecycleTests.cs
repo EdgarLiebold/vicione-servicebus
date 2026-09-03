@@ -154,7 +154,6 @@ public sealed class ActiveMqLifecycleTests
     public sealed record CycleResponse(Guid FlowId);
 }
 
-[Collection(ActiveMqGlobalCacheCollection.Name)]
 public sealed class ActiveMqRecoveryTests
 {
     [Theory]
@@ -163,65 +162,56 @@ public sealed class ActiveMqRecoveryTests
     [RequirementCoverage("OBL-R0-BRK-0446", "send-endpoint-cache-turnover-preserves-delivery-across-protocols")]
     public async Task SendEndpointCacheTurnover_PreservesDeliveryAcrossProtocols(string flavor)
     {
-        const int cacheCapacity = 8;
+        const int cacheCapacity = 1000;
         const int churnCount = cacheCapacity + 4;
-        int originalCapacity = Transports.SendEndpointCacheDefaults.Capacity;
-        Transports.SendEndpointCacheDefaults.Capacity = cacheCapacity;
+        using ActiveMqBroker fixture = ActiveMqBroker.Create(flavor, "cache-turnover");
+        string targetQueue = fixture.Name("target");
+        Guid before = Guid.NewGuid();
+        Guid after = Guid.NewGuid();
+        var delivered = NewObservation<Guid[]>();
+        var identities = new ConcurrentQueue<Guid>();
+        IBusControl bus = Bus.Factory.CreateUsingActiveMq(configurator =>
+        {
+            fixture.ConfigureHost(configurator);
+            configurator.ReceiveEndpoint(targetQueue, endpoint => endpoint.Handler<TurnoverMessage>(context =>
+            {
+                identities.Enqueue(context.Message.FlowId);
+                if (identities.Count == 2)
+                    delivered.TrySetResult(identities.ToArray());
+                return Task.CompletedTask;
+            }));
+        });
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        bool started = false;
+
         try
         {
-            using ActiveMqBroker fixture = ActiveMqBroker.Create(flavor, "cache-turnover");
-            string targetQueue = fixture.Name("target");
-            Guid before = Guid.NewGuid();
-            Guid after = Guid.NewGuid();
-            var delivered = NewObservation<Guid[]>();
-            var identities = new ConcurrentQueue<Guid>();
-            IBusControl bus = Bus.Factory.CreateUsingActiveMq(configurator =>
+            await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            started = true;
+            ISendEndpoint target = await bus.GetSendEndpoint(new Uri($"queue:{targetQueue}"))
+                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await target.Send(new TurnoverMessage(before), cancellationToken)
+                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+
+            for (int index = 0; index < churnCount; index++)
             {
-                fixture.ConfigureHost(configurator);
-                configurator.ReceiveEndpoint(targetQueue, endpoint => endpoint.Handler<TurnoverMessage>(context =>
-                {
-                    identities.Enqueue(context.Message.FlowId);
-                    if (identities.Count == 2)
-                        delivered.TrySetResult(identities.ToArray());
-                    return Task.CompletedTask;
-                }));
-            });
-            CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-            bool started = false;
-
-            try
-            {
-                await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
-                started = true;
-                ISendEndpoint target = await bus.GetSendEndpoint(new Uri($"queue:{targetQueue}"))
+                ISendEndpoint churn = await bus.GetSendEndpoint(new Uri($"queue:{fixture.Name($"churn-{index}")}"))
                     .WaitAsync(fixture.OperationTimeout, cancellationToken);
-                await target.Send(new TurnoverMessage(before), cancellationToken)
+                await churn.Send(new ChurnMessage(index), cancellationToken)
                     .WaitAsync(fixture.OperationTimeout, cancellationToken);
-
-                for (int index = 0; index < churnCount; index++)
-                {
-                    ISendEndpoint churn = await bus.GetSendEndpoint(new Uri($"queue:{fixture.Name($"churn-{index}")}"))
-                        .WaitAsync(fixture.OperationTimeout, cancellationToken);
-                    await churn.Send(new ChurnMessage(index), cancellationToken)
-                        .WaitAsync(fixture.OperationTimeout, cancellationToken);
-                }
-
-                ISendEndpoint reacquired = await bus.GetSendEndpoint(new Uri($"queue:{targetQueue}"))
-                    .WaitAsync(fixture.OperationTimeout, cancellationToken);
-                await reacquired.Send(new TurnoverMessage(after), cancellationToken)
-                    .WaitAsync(fixture.OperationTimeout, cancellationToken);
-
-                Assert.Equal([before, after], await delivered.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
             }
-            finally
-            {
-                if (started)
-                    await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
-            }
+
+            ISendEndpoint reacquired = await bus.GetSendEndpoint(new Uri($"queue:{targetQueue}"))
+                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await reacquired.Send(new TurnoverMessage(after), cancellationToken)
+                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+
+            Assert.Equal([before, after], await delivered.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
         }
         finally
         {
-            Transports.SendEndpointCacheDefaults.Capacity = originalCapacity;
+            if (started)
+                await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
         }
     }
 
@@ -230,10 +220,4 @@ public sealed class ActiveMqRecoveryTests
 
     public sealed record TurnoverMessage(Guid FlowId);
     public sealed record ChurnMessage(int Sequence);
-}
-
-[CollectionDefinition(Name, DisableParallelization = true)]
-public sealed class ActiveMqGlobalCacheCollection
-{
-    public const string Name = "ActiveMQ global send endpoint cache defaults";
 }

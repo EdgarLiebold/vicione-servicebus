@@ -11,7 +11,7 @@ namespace ViciOne.ServiceBus
         IDisposable
     {
         /// <summary>
-        /// Explicitly disconnect the handle without waiting for it to be disposed. If the 
+        /// Explicitly disconnect the handle without waiting for it to be disposed. If the
         /// connection is disconnected, the disconnect will be ignored when the handle is disposed.
         /// </summary>
         void Disconnect();

@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.Internals
     using System.Text;
 
 
-    public class TypeNameFormatter
+    internal class TypeNameFormatter
     {
         readonly ConditionalWeakTable<Type, CachedName> _cache;
         readonly string _genericArgumentSeparator;

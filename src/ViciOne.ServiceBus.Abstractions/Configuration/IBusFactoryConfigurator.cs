@@ -62,7 +62,7 @@ namespace ViciOne.ServiceBus
         ContentType SerializerContentType { set; }
 
         /// <summary>
-        /// Configure the message topology for the message type (global across all bus instances of the same transport type)
+        /// Configure the message topology for the message type on this bus configuration
         /// </summary>
         /// <param name="configureTopology"></param>
         /// <typeparam name="T"></typeparam>
@@ -83,6 +83,18 @@ namespace ViciOne.ServiceBus
         /// <typeparam name="T"></typeparam>
         /// <param name="configureTopology"></param>
         void Publish<T>(Action<IMessagePublishTopologyConfigurator<T>> configureTopology)
+            where T : class;
+
+        /// <summary>
+        /// Maps a message type to a destination for this bus only. Routes are frozen when the bus is built.
+        /// </summary>
+        void Route<T>(Uri destinationAddress)
+            where T : class;
+
+        /// <summary>
+        /// Maps a message type to a lazily resolved destination for this bus only.
+        /// </summary>
+        void Route<T>(EndpointAddressProvider<T> endpointAddressProvider)
             where T : class;
 
         /// <summary>

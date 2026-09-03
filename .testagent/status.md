@@ -2851,3 +2851,24 @@ future cohorts as complete.
   `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-BACKGROUND-WORK-OWNERSHIP/`. Package 11/12 is
   validation-complete and ready for local product/architecture freeze. Protected `review/**` remains
   untouched; no remote publication occurred.
+
+## Reviewer integration — V4 multibus routing and final tail accepted locally (2026-09-03)
+
+- Each materialized bus now owns immutable routes, message-data policy, request/client resolution,
+  outbox identity, scheduler/time-zone state and scoped provider context. Exact routes win, ambiguous
+  inherited routes and conflicts fail deterministically, and bootstrap/application topology stays separate.
+- Complete regression exposed and closed a typed-wrapper defect: `BusInstance<TBus>` now forwards the
+  internal route provider, so three simultaneous buses use their own routes instead of failing or leaking
+  the default bus.
+- Shared and provider harnesses are isolated in four engineering-only Testing projects. The shipping
+  solution/package set excludes them; all 147 old TestFramework paths have terminal native dispositions.
+- The remaining V4 commits through `f805092` are individually dispositioned. The source index contains
+  710 exact moves, no immediately duplicated `src` directory component and no non-build empty directory.
+- Twenty-two independent production mutations are killed. Final Core is 1,613/1,613, Architecture
+  167/167 and the other 21 Unit executables 1,510/1,510: 3,290/3,290 total, zero failures/skips.
+- Shipping and Engineering Release builds are zero-warning/zero-error; locked restore covers 67 projects;
+  pack produces 19 shipping packages and no Testing package; all 228 changed C# files pass full format.
+- Detailed evidence is under
+  `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-MULTIBUS-ROUTING/`. V4 is now 12/12 (100%) and
+  ready for local product/architecture freeze. V5, V5.1 and API review remain active goal phases.
+  Protected `review/**` remains untouched and no remote publication occurred.

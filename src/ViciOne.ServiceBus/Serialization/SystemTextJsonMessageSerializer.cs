@@ -18,11 +18,6 @@ namespace ViciOne.ServiceBus.Serialization
 
         readonly JsonSerializerOptions _options;
 
-        static SystemTextJsonMessageSerializer()
-        {
-            GlobalTopology.MarkMessageTypeNotConsumable(typeof(JsonElement));
-        }
-
         public SystemTextJsonMessageSerializer(JsonSerializerOptions options, ContentType? contentType = null)
         {
             _options = options ?? throw new ArgumentNullException(nameof(options));

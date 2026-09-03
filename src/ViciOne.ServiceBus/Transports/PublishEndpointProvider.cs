@@ -6,7 +6,8 @@ namespace ViciOne.ServiceBus.Transports
 
 
     public class PublishEndpointProvider :
-        IPublishEndpointProvider
+        IPublishEndpointProvider,
+        IAsyncDisposable
     {
         readonly ISendEndpointCache<Type> _cache;
         readonly ReceiveEndpointContext _context;
@@ -34,6 +35,11 @@ namespace ViciOne.ServiceBus.Transports
             where T : class
         {
             return _cache.GetSendEndpoint(typeof(T), type => CreateSendEndpoint<T>());
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            return _cache.DisposeAsync();
         }
 
         public ConnectHandle ConnectPublishObserver(IPublishObserver observer)

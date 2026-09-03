@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus.Util.Scanning
     using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
-    using System.Threading.Tasks;
     using Configuration;
     using Internals;
 
@@ -148,7 +147,7 @@ namespace ViciOne.ServiceBus.Util.Scanning
                 Assembly(assembly);
         }
 
-        public Task<TypeSet> ScanForTypes()
+        public TypeSet ScanForTypes()
         {
             return AssemblyTypeCache.FindTypes(_assemblies, _filter.Matches);
         }

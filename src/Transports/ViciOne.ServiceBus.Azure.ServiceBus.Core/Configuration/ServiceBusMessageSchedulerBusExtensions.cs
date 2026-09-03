@@ -64,7 +64,7 @@ namespace ViciOne.ServiceBus
             configurator.TryAddScoped(provider =>
             {
                 var bus = provider.GetRequiredService<TBus>();
-                var sendEndpointProvider = provider.GetRequiredService<ISendEndpointProvider>();
+                var sendEndpointProvider = provider.GetRequiredService<Bind<TBus, ISendEndpointProvider>>().Value;
                 var timeProvider = provider.GetService<TimeProvider>() ?? TimeProvider.System;
                 return Bind<TBus>.Create(sendEndpointProvider.CreateServiceBusMessageScheduler(bus.Topology, timeProvider));
             });

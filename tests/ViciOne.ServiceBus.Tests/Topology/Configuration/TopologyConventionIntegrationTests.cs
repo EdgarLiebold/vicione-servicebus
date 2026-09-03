@@ -10,7 +10,7 @@ public sealed class TopologyConventionIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-SEND-TOPOLOGY", "correlation-selector-syntax")]
-    public async Task CorrelationSelectors_ApplyToInterfacePropertyAndGlobalMessageContracts()
+    public async Task CorrelationSelectors_ApplyToInterfacePropertyAndBusOwnedMessageContracts()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -19,9 +19,12 @@ public sealed class TopologyConventionIntegrationTests
         HandlerTestHarness<OtherMessage> propertyHandler = harness.Handler<OtherMessage>();
         HandlerTestHarness<ExplicitCorrelationMessage> globalHandler = harness.Handler<ExplicitCorrelationMessage>();
         harness.OnConfigureInMemoryBus += configurator =>
+        {
             configurator.Send<NewUserEvent>(topology =>
                 topology.UseCorrelationId(message => message.TransactionId));
-        MessageCorrelation.UseCorrelationId<ExplicitCorrelationMessage>(message => message.TransactionId);
+            configurator.Send<ExplicitCorrelationMessage>(topology =>
+                topology.UseCorrelationId(message => message.TransactionId));
+        };
         Guid interfaceId = NewId.NextGuid();
         Guid propertyId = NewId.NextGuid();
         Guid globalId = NewId.NextGuid();

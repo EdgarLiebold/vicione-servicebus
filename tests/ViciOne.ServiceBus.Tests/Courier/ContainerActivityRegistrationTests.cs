@@ -42,9 +42,8 @@ public sealed class ContainerActivityRegistrationTests
                         break;
                     default:
                         configuration.AddActivity<FirstCourierActivity, CourierArguments, CourierLog>()
-                            .Endpoints(
-                                endpoint => endpoint.Name = executeName,
-                                endpoint => endpoint.Name = "container-complete-compensate");
+                            .ExecuteEndpoint(endpoint => endpoint.Name = executeName)
+                            .CompensateEndpoint(endpoint => endpoint.Name = "container-complete-compensate");
                         break;
                 }
             })

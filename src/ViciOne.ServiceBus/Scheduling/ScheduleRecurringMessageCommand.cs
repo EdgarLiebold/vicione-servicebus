@@ -9,8 +9,6 @@ namespace ViciOne.ServiceBus.Scheduling
     {
         public ScheduleRecurringMessageCommand(RecurringSchedule schedule, Uri destination, T payload)
         {
-            CorrelationId = NewId.NextGuid();
-
             Schedule = schedule;
 
             Destination = destination;
@@ -19,7 +17,6 @@ namespace ViciOne.ServiceBus.Scheduling
             PayloadType = MessageTypeCache<T>.MessageTypeNames;
         }
 
-        public Guid CorrelationId { get; private set; }
         public RecurringSchedule Schedule { get; private set; }
         public string[] PayloadType { get; private set; }
         public Uri Destination { get; private set; }
@@ -36,7 +33,6 @@ namespace ViciOne.ServiceBus.Scheduling
     public class ScheduleRecurringMessageCommand :
         ScheduleRecurringMessage
     {
-        public Guid CorrelationId { get; set; }
         public RecurringSchedule Schedule { get; set; }
         public string[] PayloadType { get; set; }
         public Uri Destination { get; set; }

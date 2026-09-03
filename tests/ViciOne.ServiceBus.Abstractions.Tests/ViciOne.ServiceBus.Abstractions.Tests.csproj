@@ -1,4 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../signing.props" />
 
   <PropertyGroup>
     <!-- Microsoft Testing Platform test projects are executables: the artifact starts, runs the

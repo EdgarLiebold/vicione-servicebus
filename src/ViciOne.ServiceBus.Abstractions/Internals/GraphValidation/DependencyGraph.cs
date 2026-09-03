@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.Internals.GraphValidation
     using System.Text;
 
 
-    public class DependencyGraph<T>
+    internal class DependencyGraph<T>
         where T : notnull
     {
         readonly AdjacencyList<T, DependencyGraphNode<T>> _adjacencyList;

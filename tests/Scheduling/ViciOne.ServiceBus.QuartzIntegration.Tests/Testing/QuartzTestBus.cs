@@ -23,7 +23,8 @@ internal sealed class QuartzTestBus : IAsyncDisposable
     public static async Task<QuartzTestBus> Start(
         TimeSpan timeout,
         TimeProvider? timeProvider = null,
-        Action<IInMemoryBusFactoryConfigurator>? configure = null)
+        Action<IInMemoryBusFactoryConfigurator>? configure = null,
+        Func<string, TimeZoneInfo?>? timeZoneResolver = null)
     {
         ISchedulerFactory schedulerFactory = new StdSchedulerFactory(new System.Collections.Specialized.NameValueCollection
         {
@@ -35,13 +36,14 @@ internal sealed class QuartzTestBus : IAsyncDisposable
         {
             configure?.Invoke(configurator);
             string queueName = $"quartz-{NewId.NextGuid():N}";
-            schedulerAddress = timeProvider is null
+            schedulerAddress = timeProvider is null && timeZoneResolver is null
                 ? configurator.UseInMemoryScheduler(schedulerFactory, queueName)
                 : configurator.UseInMemoryScheduler(options =>
                 {
                     options.SchedulerFactory = schedulerFactory;
                     options.QueueName = queueName;
-                    options.TimeProvider = timeProvider;
+                    options.TimeProvider = timeProvider ?? TimeProvider.System;
+                    options.TimeZoneResolver = timeZoneResolver;
                     options.CreateJobFactory = static (configuredBus, clock) =>
                         new ViciOneServiceBusJobFactory(configuredBus, clock);
                 });

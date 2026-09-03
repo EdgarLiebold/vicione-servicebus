@@ -13,6 +13,7 @@ public class AmazonSqsBusConfiguration :
     public AmazonSqsBusConfiguration(IAmazonSqsTopologyConfiguration topologyConfiguration)
         : base(topologyConfiguration)
     {
+        MessageRoutes = new MessageRouteTable();
         HostConfiguration = new AmazonSqsHostConfiguration(this, topologyConfiguration);
         BusEndpointConfiguration = CreateEndpointConfiguration(true);
 
@@ -20,11 +21,13 @@ public class AmazonSqsBusConfiguration :
     }
 
     IHostConfiguration IBusConfiguration.HostConfiguration => HostConfiguration;
+    IMessageRouteTable IBusConfiguration.MessageRoutes => MessageRoutes;
     IEndpointConfiguration IBusConfiguration.BusEndpointConfiguration => BusEndpointConfiguration;
     IBusObserver IBusConfiguration.BusObservers => _busObservers;
 
     public IAmazonSqsEndpointConfiguration BusEndpointConfiguration { get; }
     public IAmazonSqsHostConfiguration HostConfiguration { get; }
+    public MessageRouteTable MessageRoutes { get; }
 
     public ConnectHandle ConnectBusObserver(IBusObserver observer)
     {

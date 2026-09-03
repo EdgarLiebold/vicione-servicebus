@@ -68,7 +68,7 @@ namespace ViciOne.ServiceBus.Internals
 
     /// <summary>The options for the compiler</summary>
     [Flags]
-    public enum CompilerFlags
+    internal enum CompilerFlags
     {
         /// <summary>The default options: Invocation lambda is inlined, no debug info</summary>
         Default = 0,
@@ -81,7 +81,7 @@ namespace ViciOne.ServiceBus.Internals
     }
 
     /// <summary>Indicates the not supported expression combination</summary>
-    public enum NotSupported
+    internal enum NotSupported
     {
         /// <summary>Multi-dimensional array initializer is not supported</summary>
         NewArrayInit_MultidimensionalArray,
@@ -104,7 +104,7 @@ namespace ViciOne.ServiceBus.Internals
     }
 
     /// <summary>FEC Not Supported exception</summary>
-    public sealed class NotSupportedExpressionException : InvalidOperationException
+    internal sealed class NotSupportedExpressionException : InvalidOperationException
     {
         /// <summary>The reason</summary>
         public readonly NotSupported Reason;
@@ -115,7 +115,7 @@ namespace ViciOne.ServiceBus.Internals
     }
 
     /// <summary>The interface is implemented by the compiled delegate Target if `CompilerFlags.EnableDelegateDebugInfo` is set.</summary>
-    public interface IDelegateDebugInfo
+    internal interface IDelegateDebugInfo
     {
         /// <summary>The lambda expression object that was compiled to the delegate</summary>
         LambdaExpression Expression { get; }
@@ -128,7 +128,7 @@ namespace ViciOne.ServiceBus.Internals
     /// <summary>Compiles expression to delegate ~20 times faster than Expression.Compile.
     /// Partial to extend with your things when used as source file.</summary>
     // ReSharper disable once PartialTypeWithSinglePart
-    public static partial class ExpressionCompiler
+    internal static partial class ExpressionCompiler
     {
 #region Expression.CompileFast overloads for Delegate, Func, and Action
 
@@ -886,17 +886,17 @@ namespace ViciOne.ServiceBus.Internals
 
         public static readonly ArrayClosure EmptyArrayClosure = new ArrayClosure(null);
 
-        public static FieldInfo ArrayClosureArrayField =
+        public static readonly FieldInfo ArrayClosureArrayField =
             typeof(ArrayClosure).GetField(nameof(ArrayClosure.ConstantsAndNestedLambdas));
 
-        public static FieldInfo ArrayClosureWithNonPassedParamsField =
+        public static readonly FieldInfo ArrayClosureWithNonPassedParamsField =
             typeof(ArrayClosureWithNonPassedParams).GetField(nameof(ArrayClosureWithNonPassedParams.NonPassedParams));
 
         private static ConstructorInfo[] _nonPassedParamsArrayClosureCtors = typeof(ArrayClosureWithNonPassedParams).GetConstructors();
 
-        public static ConstructorInfo ArrayClosureWithNonPassedParamsConstructor = _nonPassedParamsArrayClosureCtors[0];
+        public static readonly ConstructorInfo ArrayClosureWithNonPassedParamsConstructor = _nonPassedParamsArrayClosureCtors[0];
 
-        public static ConstructorInfo ArrayClosureWithNonPassedParamsConstructorWithoutConstants = _nonPassedParamsArrayClosureCtors[1];
+        public static readonly ConstructorInfo ArrayClosureWithNonPassedParamsConstructorWithoutConstants = _nonPassedParamsArrayClosureCtors[1];
 
         public class ArrayClosure
         {
@@ -938,10 +938,10 @@ namespace ViciOne.ServiceBus.Internals
         // todo: @perf this class is required until we move to a single constants list per lambda hierarchy
         public sealed class NestedLambdaWithConstantsAndNestedLambdas
         {
-            public static FieldInfo NestedLambdaField =
+            public static readonly FieldInfo NestedLambdaField =
                 typeof(NestedLambdaWithConstantsAndNestedLambdas).GetTypeInfo().GetDeclaredField(nameof(NestedLambda));
 
-            public static FieldInfo ConstantsAndNestedLambdasField =
+            public static readonly FieldInfo ConstantsAndNestedLambdasField =
                 typeof(NestedLambdaWithConstantsAndNestedLambdas).GetTypeInfo().GetDeclaredField(nameof(ConstantsAndNestedLambdas));
 
             public readonly object NestedLambda;
@@ -5412,7 +5412,7 @@ namespace ViciOne.ServiceBus.Internals
     }
 
     /// <summary>Reflecting the internal methods to access the more performant for defining the local variable</summary>
-    public static class ILGeneratorHacks
+    internal static class ILGeneratorHacks
     {
         // The original ILGenerator methods we are trying to hack without allocating the `LocalBuilder`
         /*
@@ -5580,7 +5580,7 @@ namespace ViciOne.ServiceBus.Internals
         }
     }
 
-    public static class ToExpressionPrinter
+    internal static class ToExpressionPrinter
     {
         /// <summary>
         /// Prints the expression in its constructing syntax -
@@ -6108,10 +6108,10 @@ namespace ViciOne.ServiceBus.Internals
     }
 
     /// <summary>Output the constant to C# string or should return `null`</summary>
-    public delegate string TryPrintConstant(ConstantExpression e);
+    internal delegate string TryPrintConstant(ConstantExpression e);
 
     /// <summary>Converts the expression into the valid C# code representation</summary>
-    public static class ToCSharpPrinter
+    internal static class ToCSharpPrinter
     {
         /// <summary>Tries hard to convert the expression into the correct C# code</summary>
         public static string ToCSharpString(this Expression expr) =>
@@ -6958,7 +6958,7 @@ namespace ViciOne.ServiceBus.Internals
 
     }
 
-    public static class CodePrinter
+    internal static class CodePrinter
     {
         public static StringBuilder AppendTypeof(this StringBuilder sb, Type type,
             bool stripNamespace = false, Func<Type, string, string> printType = null, bool printGenericTypeArgs = false)

@@ -8,9 +8,24 @@ using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.MessageData;
 
-[Collection(MessageDataDefaultsCollection.Name)]
 public sealed class MessageDataRepositoryTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-DATA-POLICY", "explicit-policy-null-boundary")]
+    public async Task ExplicitPolicyOverloads_RejectANullPolicyBeforeUsingTheValue()
+    {
+        var repository = new RecordingRepository();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+
+        Assert.Equal("policy", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            repository.PutString("value", null, null!, cancellationToken))).ParamName);
+        Assert.Equal("policy", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            repository.PutBytes([1], null, null!, cancellationToken))).ParamName);
+        Assert.Equal("policy", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            repository.PutObject(new object(), typeof(object), null, null!, cancellationToken))).ParamName);
+        Assert.Equal(0, repository.PutCalls);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-DATA-REPOSITORY", "in-memory-exact-round-trip-and-missing-address")]
     public async Task InMemoryRepository_RoundTripsExactBytesAndRejectsAnUnknownAddress()
@@ -101,16 +116,14 @@ public sealed class MessageDataRepositoryTests
     public async Task InlineThreshold_EmbedsStringAndBytesButAlwaysStoresStreams()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        using var defaults = new MessageDataDefaultsScope();
-        MessageDataDefaults.AlwaysWriteToRepository = false;
-        MessageDataDefaults.Threshold = 4096;
+        var policy = new MessageDataPolicy(alwaysWriteToRepository: false, threshold: 4096);
         var repository = new RecordingRepository();
         const string text = "inline-text";
         byte[] bytes = [1, 3, 5, 7];
         byte[] streamBytes = [2, 4, 6, 8];
 
-        MessageData<string> stringData = await repository.PutString(text, cancellationToken);
-        MessageData<byte[]> byteData = await repository.PutBytes(bytes, cancellationToken);
+        MessageData<string> stringData = await repository.PutString(text, null, policy, cancellationToken);
+        MessageData<byte[]> byteData = await repository.PutBytes(bytes, null, policy, cancellationToken);
         await using var source = new MemoryStream(streamBytes, writable: false);
         MessageData<Stream> streamData = await repository.PutStream(source, cancellationToken);
 
@@ -128,9 +141,7 @@ public sealed class MessageDataRepositoryTests
     public async Task EncryptedRepository_StoresCiphertextAndRoundTripsStringBytesAndStream()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        using var defaults = new MessageDataDefaultsScope();
-        MessageDataDefaults.AlwaysWriteToRepository = true;
-        MessageDataDefaults.Threshold = 1;
+        var policy = new MessageDataPolicy(alwaysWriteToRepository: true, threshold: 1);
         var inner = new RecordingRepository();
         var repository = new EncryptedMessageDataRepository(
             inner,
@@ -139,8 +150,8 @@ public sealed class MessageDataRepositoryTests
         byte[] bytes = Enumerable.Range(0, 129).Select(index => (byte)(index % 127)).ToArray();
         byte[] streamBytes = Enumerable.Range(0, 65).Select(index => (byte)(255 - index)).ToArray();
 
-        MessageData<string> stringData = await repository.PutString(text, cancellationToken);
-        MessageData<byte[]> byteData = await repository.PutBytes(bytes, cancellationToken);
+        MessageData<string> stringData = await repository.PutString(text, null, policy, cancellationToken);
+        MessageData<byte[]> byteData = await repository.PutBytes(bytes, null, policy, cancellationToken);
         await using var source = new MemoryStream(streamBytes, writable: false);
         MessageData<Stream> streamData = await repository.PutStream(source, cancellationToken);
 

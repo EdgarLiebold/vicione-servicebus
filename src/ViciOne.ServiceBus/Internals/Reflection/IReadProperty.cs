@@ -1,6 +1,6 @@
 namespace ViciOne.ServiceBus.Internals
 {
-    public interface IReadProperty<in T, out TProperty> :
+    internal interface IReadProperty<in T, out TProperty> :
         IReadProperty<T>
         where T : class
     {
@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.Internals
     }
 
 
-    public interface IReadProperty<in T>
+    internal interface IReadProperty<in T>
     {
     }
 }

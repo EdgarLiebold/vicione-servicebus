@@ -1623,4 +1623,7 @@
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.CommandAndEventTimeProviderTests",
       "variantKey" : "concurrency-limit-command-owner"
    }
+  ,{ "requirementId": "REQ-VSB-MESSAGE-DATA-POLICY", "variantKey": "immutable-defaults", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.MessageData.MessageDataPolicyTests", "testMethod": "DefaultPolicy_UsesTheDocumentedImmutableValues" }
+  ,{ "requirementId": "REQ-VSB-MESSAGE-DATA-POLICY", "variantKey": "constructor-validation", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.MessageData.MessageDataPolicyTests", "testMethod": "Constructor_RejectsEveryInvalidBoundary" }
+  ,{ "requirementId": "REQ-VSB-MESSAGE-DATA-POLICY", "variantKey": "zero-threshold-is-valid", "testAssembly": "ViciOne.ServiceBus.Abstractions.Tests", "testType": "ViciOne.ServiceBus.Abstractions.Tests.MessageData.MessageDataPolicyTests", "testMethod": "ZeroThreshold_IsAnExplicitAlwaysStoredBoundary" }
 ]

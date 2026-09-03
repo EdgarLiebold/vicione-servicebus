@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.Internals
     using System.Reflection;
 
 
-    public class ReadPropertyCache<T> :
+    internal class ReadPropertyCache<T> :
         IReadPropertyCache<T>
         where T : class
     {

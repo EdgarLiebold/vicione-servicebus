@@ -2,6 +2,7 @@ namespace ViciOne.ServiceBus
 {
     using System;
     using System.Collections.Generic;
+    using System.Text.Json;
     using Configuration;
     using Contracts.JobService;
     using Courier.Contracts;
@@ -9,20 +10,17 @@ namespace ViciOne.ServiceBus
 
 
     /// <summary>
-    /// This represents the global topology configuration, which is delegated to by
-    /// all topology instances, unless for some radical reason a bus is configured
-    /// without any topology delegation.
-    /// YES, I hate globals, but they are serving a purpose in that these are really
-    /// just defining the default behavior of message types, rather than actually
-    /// behaving like the nasty evil global variables.
+    /// Application-wide message-contract conventions. Configuration is frozen when the first
+    /// runtime topology consumes it; bus-specific policy must never be stored here.
     /// </summary>
-    public class GlobalTopology :
-        IGlobalTopology
+    internal sealed class GlobalTopology
     {
+        readonly object _lock = new();
         readonly HashSet<Type> _notConsumableMessageTypes;
         readonly IPublishTopologyConfigurator _publish;
         readonly ConnectHandle _publishToSendHandle;
         readonly ISendTopologyConfigurator _send;
+        bool _frozen;
 
         GlobalTopology()
         {
@@ -30,8 +28,7 @@ namespace ViciOne.ServiceBus
             _send.TryAddConvention(new CorrelationIdSendTopologyConvention());
 
             _publish = new PublishTopology();
-
-            _notConsumableMessageTypes = new HashSet<Type>();
+            _notConsumableMessageTypes = [typeof(JsonElement)];
 
             var observer = new PublishToSendTopologyConfigurationObserver(_send);
             _publishToSendHandle = _publish.ConnectPublishTopologyConfigurationObserver(observer);
@@ -40,57 +37,69 @@ namespace ViciOne.ServiceBus
             ConfigureJobSagaCorrelation();
         }
 
-        public static ISendTopologyConfigurator Send => Cached.Metadata.Value.Send;
-        public static IPublishTopologyConfigurator Publish => Cached.Metadata.Value.Publish;
+        internal static ISendTopology Send => Cached.Instance.GetSendTopology();
+        internal static IPublishTopologyConfigurator Publish => Cached.Instance.GetPublishTopology();
 
-        void IGlobalTopology.SeparatePublishFromSend()
+        internal static void UseCorrelationId<T>(Func<T, Guid> correlationIdSelector)
+            where T : class
         {
-            _publishToSendHandle.Disconnect();
+            Cached.Instance.Configure(() => Cached.Instance._send.UseCorrelationId(correlationIdSelector));
         }
 
-        ISendTopologyConfigurator IGlobalTopology.Send => _send;
-        IPublishTopologyConfigurator IGlobalTopology.Publish => _publish;
-
-        bool IGlobalTopology.IsConsumableMessageType(Type type)
+        internal static void UseCorrelationId<T>(Func<T, Guid?> correlationIdSelector)
+            where T : class
         {
-            lock (_notConsumableMessageTypes)
+            Cached.Instance.Configure(() => Cached.Instance._send.UseCorrelationId(correlationIdSelector));
+        }
+
+        internal static void MarkMessageTypeNotConsumable(Type type)
+        {
+            ArgumentNullException.ThrowIfNull(type);
+            Cached.Instance.Configure(() => Cached.Instance._notConsumableMessageTypes.Add(type));
+        }
+
+        internal static bool IsConsumableMessageType(Type type)
+        {
+            ArgumentNullException.ThrowIfNull(type);
+
+            GlobalTopology instance = Cached.Instance;
+            instance.Freeze();
+            lock (instance._lock)
+                return !instance._notConsumableMessageTypes.Contains(type);
+        }
+
+        internal static void SeparatePublishFromSend()
+        {
+            Cached.Instance.Configure(() => Cached.Instance._publishToSendHandle.Disconnect());
+        }
+
+        ISendTopology GetSendTopology()
+        {
+            Freeze();
+            return _send;
+        }
+
+        IPublishTopologyConfigurator GetPublishTopology()
+        {
+            Freeze();
+            return _publish;
+        }
+
+        void Configure(Action configure)
+        {
+            lock (_lock)
             {
-                if (_notConsumableMessageTypes.Contains(type))
-                    return false;
+                if (_frozen)
+                    throw new InvalidOperationException("Application message conventions are immutable after the first bus topology is created.");
+
+                configure();
             }
-
-            return true;
         }
 
-        void IGlobalTopology.MarkMessageTypeNotConsumable(Type type)
+        void Freeze()
         {
-            lock (_notConsumableMessageTypes)
-                _notConsumableMessageTypes.Add(type);
-        }
-
-        /// <summary>
-        /// Mark the specified message type such that it will not be configured by the consume topology,
-        /// and therefore not bound/subscribed on the message broker.
-        /// </summary>
-        /// <param name="type"></param>
-        public static void MarkMessageTypeNotConsumable(Type type)
-        {
-            Cached.Metadata.Value.MarkMessageTypeNotConsumable(type);
-        }
-
-        public static bool IsConsumableMessageType(Type type)
-        {
-            return Cached.Metadata.Value.IsConsumableMessageType(type);
-        }
-
-        /// <summary>
-        /// Call before configuring any topology, so that publish is handled separately
-        /// from send. Note, this can cause some really bad things to happen with internal
-        /// types so use with caution...
-        /// </summary>
-        public static void SeparatePublishFromSend()
-        {
-            Cached.Metadata.Value.SeparatePublishFromSend();
+            lock (_lock)
+                _frozen = true;
         }
 
         void ConfigureRoutingSlipCorrelation()
@@ -146,7 +155,7 @@ namespace ViciOne.ServiceBus
 
         static class Cached
         {
-            internal static readonly Lazy<IGlobalTopology> Metadata = new(() => new GlobalTopology());
+            internal static readonly GlobalTopology Instance = new();
         }
     }
 }

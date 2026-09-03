@@ -78,6 +78,8 @@ namespace ViciOne.ServiceBus.Transports
 
         public IReceiveEndpointObserver EndpointObservers => _endpointObservers;
 
+        public IMessageRouteTable MessageRoutes => _hostConfiguration.BusConfiguration.MessageRoutes;
+
         public ConnectHandle ConnectSendObserver(ISendObserver observer)
         {
             return _sendObservers.Connect(observer);
@@ -131,13 +133,32 @@ namespace ViciOne.ServiceBus.Transports
             return new ReceivePipeDispatcher(_receivePipe.Value, _receiveObservers, _hostConfiguration, InputAddress);
         }
 
-        public void Reset()
+        public async ValueTask ResetAsync()
         {
+            ISendEndpointProvider? sendEndpointProvider = _sendEndpointProvider.IsValueCreated ? _sendEndpointProvider.Value : null;
+            IPublishEndpointProvider? publishEndpointProvider = _publishEndpointProvider.IsValueCreated ? _publishEndpointProvider.Value : null;
+
+            if (sendEndpointProvider is not null)
+                await ReleaseSendEndpointProviderAsync(sendEndpointProvider).ConfigureAwait(false);
+
+            if (publishEndpointProvider is not null && !ReferenceEquals(publishEndpointProvider, sendEndpointProvider))
+                await ReleasePublishEndpointProviderAsync(publishEndpointProvider).ConfigureAwait(false);
+
             _sendTransportProvider = new Lazy<ISendTransportProvider>(CreateSendTransportProvider);
             _publishTransportProvider = new Lazy<IPublishTransportProvider>(CreatePublishTransportProvider);
 
             _sendEndpointProvider = new Lazy<ISendEndpointProvider>(CreateSendEndpointProvider);
             _publishEndpointProvider = new Lazy<IPublishEndpointProvider>(CreatePublishEndpointProvider);
+        }
+
+        protected virtual ValueTask ReleaseSendEndpointProviderAsync(ISendEndpointProvider provider)
+        {
+            return provider is IAsyncDisposable disposable ? disposable.DisposeAsync() : default;
+        }
+
+        protected virtual ValueTask ReleasePublishEndpointProviderAsync(IPublishEndpointProvider provider)
+        {
+            return provider is IAsyncDisposable disposable ? disposable.DisposeAsync() : default;
         }
 
         public abstract void AddSendAgent(IAgent agent);

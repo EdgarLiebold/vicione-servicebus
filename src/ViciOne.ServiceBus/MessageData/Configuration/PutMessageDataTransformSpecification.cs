@@ -16,16 +16,18 @@ namespace ViciOne.ServiceBus.MessageData.Configuration
         ISendTransformSpecification<TMessage>
         where TMessage : class
     {
-        public PutMessageDataTransformSpecification(IMessageDataRepository repository, IEnumerable<Type> knownTypes = null)
+        public PutMessageDataTransformSpecification(IMessageDataRepository repository, MessageDataPolicy policy, IEnumerable<Type> knownTypes = null)
         {
             if (repository == null)
                 throw new ArgumentNullException(nameof(repository));
+            if (policy == null)
+                throw new ArgumentNullException(nameof(policy));
 
             Replace = true;
 
             var types = new HashSet<Type>(knownTypes ?? Enumerable.Empty<Type>()) { typeof(TMessage) };
 
-            AddMessageDataProperties(repository, types);
+            AddMessageDataProperties(repository, policy, types);
         }
 
         void IPipeSpecification<SendContext<TMessage>>.Apply(IPipeBuilder<SendContext<TMessage>> builder)
@@ -64,7 +66,7 @@ namespace ViciOne.ServiceBus.MessageData.Configuration
             return false;
         }
 
-        void AddMessageDataProperties(IMessageDataRepository repository, ICollection<Type> knownTypes)
+        void AddMessageDataProperties(IMessageDataRepository repository, MessageDataPolicy policy, ICollection<Type> knownTypes)
         {
             foreach (var propertyInfo in MessageTypeCache<TMessage>.Properties)
             {
@@ -77,7 +79,7 @@ namespace ViciOne.ServiceBus.MessageData.Configuration
 
                     var providerType = typeof(PutMessageDataObjectDictionaryTransformConfiguration<,,,>)
                         .MakeGenericType(typeof(TMessage), propertyType, keyType, valueType);
-                    var configuration = (IMessageDataTransformConfiguration<TMessage>)Activator.CreateInstance(providerType, repository, knownTypes,
+                    var configuration = (IMessageDataTransformConfiguration<TMessage>)Activator.CreateInstance(providerType, repository, policy, knownTypes,
                         propertyInfo);
 
                     configuration.Apply(this);
@@ -90,7 +92,7 @@ namespace ViciOne.ServiceBus.MessageData.Configuration
 
                     var providerType = typeof(PutMessageDataObjectArrayTransformConfiguration<,,>)
                         .MakeGenericType(typeof(TMessage), propertyType, elementType);
-                    var configuration = (IMessageDataTransformConfiguration<TMessage>)Activator.CreateInstance(providerType, repository, knownTypes,
+                    var configuration = (IMessageDataTransformConfiguration<TMessage>)Activator.CreateInstance(providerType, repository, policy, knownTypes,
                         propertyInfo);
 
                     configuration.Apply(this);
@@ -99,7 +101,7 @@ namespace ViciOne.ServiceBus.MessageData.Configuration
                 if (propertyType.TryGetSingleClosedGenericArguments(typeof(MessageData<>), out Type[] types))
                 {
                     var providerType = typeof(PutMessageDataTransformConfiguration<,>).MakeGenericType(typeof(TMessage), types[0]);
-                    var configuration = (IMessageDataTransformConfiguration<TMessage>)Activator.CreateInstance(providerType, repository, propertyInfo);
+                    var configuration = (IMessageDataTransformConfiguration<TMessage>)Activator.CreateInstance(providerType, repository, policy, propertyInfo);
 
                     configuration.Apply(this);
                 }
@@ -123,7 +125,7 @@ namespace ViciOne.ServiceBus.MessageData.Configuration
                 else if (IsUnknownObjectType(knownTypes, propertyType))
                 {
                     var providerType = typeof(PutMessageDataObjectTransformConfiguration<,>).MakeGenericType(typeof(TMessage), propertyType);
-                    var configuration = (IMessageDataTransformConfiguration<TMessage>)Activator.CreateInstance(providerType, repository, knownTypes,
+                    var configuration = (IMessageDataTransformConfiguration<TMessage>)Activator.CreateInstance(providerType, repository, policy, knownTypes,
                         propertyInfo);
 
                     configuration.Apply(this);

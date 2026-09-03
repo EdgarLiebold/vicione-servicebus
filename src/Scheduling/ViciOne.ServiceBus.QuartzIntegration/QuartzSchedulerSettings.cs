@@ -8,7 +8,8 @@ namespace ViciOne.ServiceBus
     internal sealed class QuartzSchedulerSettings
     {
         public QuartzSchedulerSettings(ISchedulerFactory schedulerFactory, string queueName,
-            Func<IBus, TimeProvider, IJobFactory>? createJobFactory, bool startScheduler, TimeProvider timeProvider)
+            Func<IBus, TimeProvider, IJobFactory>? createJobFactory, bool startScheduler, TimeProvider timeProvider,
+            Func<string, TimeZoneInfo?>? timeZoneResolver)
         {
             SchedulerFactory = schedulerFactory ?? throw new ArgumentNullException(nameof(schedulerFactory));
             ArgumentException.ThrowIfNullOrWhiteSpace(queueName);
@@ -17,6 +18,7 @@ namespace ViciOne.ServiceBus
             QueueName = queueName;
             CreateJobFactory = createJobFactory;
             StartScheduler = startScheduler;
+            TimeZoneResolver = timeZoneResolver;
         }
 
         public ISchedulerFactory SchedulerFactory { get; }
@@ -24,5 +26,6 @@ namespace ViciOne.ServiceBus
         public Func<IBus, TimeProvider, IJobFactory>? CreateJobFactory { get; }
         public bool StartScheduler { get; }
         public TimeProvider TimeProvider { get; }
+        public Func<string, TimeZoneInfo?>? TimeZoneResolver { get; }
     }
 }

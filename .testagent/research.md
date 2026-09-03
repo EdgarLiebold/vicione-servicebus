@@ -3642,3 +3642,45 @@ workaround: it restores the causal retirement order while the preclaim preserves
 safety. The ordered reproducer passes 2/2 and the complete provider passes 95/95. Fourteen independent
 mutations are killed; final Unit/Architecture is 3,255/3,255 and all directly affected provider profiles
 are green. The only broad-profile failure remains the independently baseline-proven EF inbox count defect.
+
+## Reviewer integration research — V4 multibus routing and final-tail reconciliation (2026-09-03)
+
+Package 12/12 is bound by architecture assignment `PO-2026-09-03-SERVICEBUS-REVIEW-INTEGRATION-11` at
+commit `23aa7d969b1bba47987c4430de3fedc52049fbb0`. Its product baseline is
+`a2c39b21c653ea09b61120e31e2bb3961d1eae34`, tree
+`ee100e64fb655dcfd7a78c57eb3afdf2144f8713`. The protected aggregate remains
+`371bf21331f0fc3316be271bce04ab37b3c54c50e13f443789d94c1f6eca1f18`; the V4 bundle remains
+`e8f28736562bf7c4fa8ffca4dfd662cd5105d3124e26d2ba424fe1ac0d192b87`.
+
+The donor's final routing direction is necessary: route selection, message-data defaults and request
+resolution cannot use mutable process-global state in a multibus process. Native integration separates
+bus-owned runtime routes from application-wide message conventions. A route table supports exact and one
+unambiguous inherited match, rejects ambiguous inherited matches and conflicting duplicates, and freezes
+with the bus. Application correlation remains a bootstrap convention and must be registered before any
+topology freezes the catalog.
+
+Full regression exposed an integration boundary absent from a file-by-file review. The typed
+`BusInstance<TBus>` wrapper implemented `IBusControl` but did not forward the new internal route-provider
+contract. Default-bus cases stayed green while buses B and C failed at request-client resolution. Moving
+the internal contract to Abstractions and explicitly forwarding it through the wrapper preserves the
+public API while making the actual bus owner observable. Removing that forwarding as mutation M22 makes
+the three-bus owner fail causally.
+
+The remaining V4 tail contains substantial nonbehavioral change, but none can be silently ignored. Test
+harness code belongs in four engineering-only Testing projects; the shipping solution and 19-package
+output remain clean. All 147 legacy TestFramework paths have terminal executing or retired dispositions.
+The current native Futures/Courier owners are stronger than the donor regression project, so adding that
+project would create a forbidden second verdict path. Source-layout normalization is integrated primarily
+as 710 exact renames and is guarded against repeated `src` components.
+
+The donor text-format commit cannot be judged by line count alone. The current `.editorconfig` is stronger.
+A global format scan found historical unrelated deviations; a package-scoped scan reduced these to one
+untouched benchmark file and two touched sources. The irrelevant four-space-only benchmark delta was
+removed, the two touched sources were normalized, and the final 228-file full format gate passes. This
+records the baseline honestly without mass-formatting unrelated history.
+
+Final evidence is 1,613/1,613 Core, 167/167 Architecture and 1,510/1,510 across the other 21 Unit
+executables: 3,290/3,290, zero failures/skips. Both Release solutions build with zero warnings/errors,
+locked restore covers 67 projects, shipping pack yields 19 non-Testing packages, and all 22 independent
+mutations are killed and restored. Every commit from `9aa3921` through `f805092` has an explicit semantic
+disposition; V4 is complete and V5 remains a separate next phase.

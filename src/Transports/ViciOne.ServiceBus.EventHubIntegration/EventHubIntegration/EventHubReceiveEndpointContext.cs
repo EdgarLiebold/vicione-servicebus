@@ -66,5 +66,15 @@ namespace ViciOne.ServiceBus.EventHubIntegration
         {
             return _busInstance.Bus;
         }
+
+        protected override ValueTask ReleaseSendEndpointProviderAsync(ISendEndpointProvider provider)
+        {
+            return default;
+        }
+
+        protected override ValueTask ReleasePublishEndpointProviderAsync(IPublishEndpointProvider provider)
+        {
+            return default;
+        }
     }
 }

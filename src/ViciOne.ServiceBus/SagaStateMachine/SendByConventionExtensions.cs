@@ -12,7 +12,7 @@ namespace ViciOne.ServiceBus
             where TInstance : class, SagaStateMachineInstance
             where TMessage : class
         {
-            return source.Add(new SendActivity<TInstance, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new SendActivity<TInstance, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(message, callback)));
         }
 
@@ -21,7 +21,7 @@ namespace ViciOne.ServiceBus
             where TInstance : class, SagaStateMachineInstance
             where TMessage : class
         {
-            return source.Add(new SendActivity<TInstance, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new SendActivity<TInstance, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(message, callback)));
         }
 
@@ -30,7 +30,7 @@ namespace ViciOne.ServiceBus
             where TInstance : class, SagaStateMachineInstance
             where TMessage : class
         {
-            return source.Add(new SendActivity<TInstance, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new SendActivity<TInstance, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(messageFactory, callback)));
         }
 
@@ -39,7 +39,7 @@ namespace ViciOne.ServiceBus
             where TInstance : class, SagaStateMachineInstance
             where TMessage : class
         {
-            return source.Add(new SendActivity<TInstance, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new SendActivity<TInstance, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(messageFactory, callback)));
         }
 
@@ -48,7 +48,7 @@ namespace ViciOne.ServiceBus
             where TInstance : class, SagaStateMachineInstance
             where TMessage : class
         {
-            return source.Add(new SendActivity<TInstance, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new SendActivity<TInstance, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(messageFactory, callback)));
         }
 
@@ -58,7 +58,7 @@ namespace ViciOne.ServiceBus
             where TData : class
             where TMessage : class
         {
-            return source.Add(new SendActivity<TInstance, TData, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new SendActivity<TInstance, TData, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(message, callback)));
         }
 
@@ -68,7 +68,7 @@ namespace ViciOne.ServiceBus
             where TData : class
             where TMessage : class
         {
-            return source.Add(new SendActivity<TInstance, TData, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new SendActivity<TInstance, TData, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(message, callback)));
         }
 
@@ -78,7 +78,7 @@ namespace ViciOne.ServiceBus
             where TData : class
             where TMessage : class
         {
-            return source.Add(new SendActivity<TInstance, TData, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new SendActivity<TInstance, TData, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(messageFactory, callback)));
         }
 
@@ -88,7 +88,7 @@ namespace ViciOne.ServiceBus
             where TData : class
             where TMessage : class
         {
-            return source.Add(new SendActivity<TInstance, TData, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new SendActivity<TInstance, TData, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(messageFactory, callback)));
         }
 
@@ -98,7 +98,7 @@ namespace ViciOne.ServiceBus
             where TData : class
             where TMessage : class
         {
-            return source.Add(new SendActivity<TInstance, TData, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new SendActivity<TInstance, TData, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(messageFactory, callback)));
         }
 
@@ -109,7 +109,7 @@ namespace ViciOne.ServiceBus
             where TMessage : class
             where TException : Exception
         {
-            return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(message, callback)));
         }
 
@@ -120,7 +120,7 @@ namespace ViciOne.ServiceBus
             where TMessage : class
             where TException : Exception
         {
-            return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(message, callback)));
         }
 
@@ -131,7 +131,7 @@ namespace ViciOne.ServiceBus
             where TMessage : class
             where TException : Exception
         {
-            return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(messageFactory, callback)));
         }
 
@@ -142,7 +142,7 @@ namespace ViciOne.ServiceBus
             where TMessage : class
             where TException : Exception
         {
-            return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(messageFactory, callback)));
         }
 
@@ -154,7 +154,7 @@ namespace ViciOne.ServiceBus
             where TMessage : class
             where TException : Exception
         {
-            return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(messageFactory, callback)));
         }
 
@@ -166,7 +166,7 @@ namespace ViciOne.ServiceBus
             where TMessage : class
             where TException : Exception
         {
-            return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(message, callback)));
         }
 
@@ -178,7 +178,7 @@ namespace ViciOne.ServiceBus
             where TMessage : class
             where TException : Exception
         {
-            return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(message, callback)));
         }
 
@@ -190,7 +190,7 @@ namespace ViciOne.ServiceBus
             where TMessage : class
             where TException : Exception
         {
-            return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(messageFactory, callback)));
         }
 
@@ -202,7 +202,7 @@ namespace ViciOne.ServiceBus
             where TMessage : class
             where TException : Exception
         {
-            return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(messageFactory, callback)));
         }
 
@@ -215,7 +215,7 @@ namespace ViciOne.ServiceBus
             where TMessage : class
             where TException : Exception
         {
-            return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(messageFactory, callback)));
         }
 
@@ -224,7 +224,7 @@ namespace ViciOne.ServiceBus
             where TInstance : class, SagaStateMachineInstance
             where TMessage : class
         {
-            return source.Add(new SendActivity<TInstance, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new SendActivity<TInstance, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(message, callback)));
         }
 
@@ -233,7 +233,7 @@ namespace ViciOne.ServiceBus
             where TInstance : class, SagaStateMachineInstance
             where TMessage : class
         {
-            return source.Add(new SendActivity<TInstance, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new SendActivity<TInstance, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(message, callback)));
         }
 
@@ -242,7 +242,7 @@ namespace ViciOne.ServiceBus
             where TInstance : class, SagaStateMachineInstance
             where TMessage : class
         {
-            return source.Add(new SendActivity<TInstance, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new SendActivity<TInstance, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(messageFactory, callback)));
         }
 
@@ -251,7 +251,7 @@ namespace ViciOne.ServiceBus
             where TInstance : class, SagaStateMachineInstance
             where TMessage : class
         {
-            return source.Add(new SendActivity<TInstance, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new SendActivity<TInstance, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(messageFactory, callback)));
         }
 
@@ -260,7 +260,7 @@ namespace ViciOne.ServiceBus
             where TInstance : class, SagaStateMachineInstance
             where TMessage : class
         {
-            return source.Add(new SendActivity<TInstance, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new SendActivity<TInstance, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(messageFactory, callback)));
         }
 
@@ -270,7 +270,7 @@ namespace ViciOne.ServiceBus
             where TData : class
             where TMessage : class
         {
-            return source.Add(new SendActivity<TInstance, TData, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new SendActivity<TInstance, TData, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(message, callback)));
         }
 
@@ -280,7 +280,7 @@ namespace ViciOne.ServiceBus
             where TData : class
             where TMessage : class
         {
-            return source.Add(new SendActivity<TInstance, TData, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new SendActivity<TInstance, TData, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(message, callback)));
         }
 
@@ -290,7 +290,7 @@ namespace ViciOne.ServiceBus
             where TData : class
             where TMessage : class
         {
-            return source.Add(new SendActivity<TInstance, TData, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new SendActivity<TInstance, TData, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(messageFactory, callback)));
         }
 
@@ -300,7 +300,7 @@ namespace ViciOne.ServiceBus
             where TData : class
             where TMessage : class
         {
-            return source.Add(new SendActivity<TInstance, TData, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new SendActivity<TInstance, TData, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(messageFactory, callback)));
         }
 
@@ -310,7 +310,7 @@ namespace ViciOne.ServiceBus
             where TData : class
             where TMessage : class
         {
-            return source.Add(new SendActivity<TInstance, TData, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new SendActivity<TInstance, TData, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(messageFactory, callback)));
         }
 
@@ -321,7 +321,7 @@ namespace ViciOne.ServiceBus
             where TMessage : class
             where TException : Exception
         {
-            return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(message, callback)));
         }
 
@@ -332,7 +332,7 @@ namespace ViciOne.ServiceBus
             where TMessage : class
             where TException : Exception
         {
-            return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(message, callback)));
         }
 
@@ -344,7 +344,7 @@ namespace ViciOne.ServiceBus
             where TMessage : class
             where TException : Exception
         {
-            return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(messageFactory, callback)));
         }
 
@@ -356,7 +356,7 @@ namespace ViciOne.ServiceBus
             where TMessage : class
             where TException : Exception
         {
-            return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(messageFactory, callback)));
         }
 
@@ -368,7 +368,7 @@ namespace ViciOne.ServiceBus
             where TMessage : class
             where TException : Exception
         {
-            return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new FaultedSendActivity<TInstance, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(messageFactory, callback)));
         }
 
@@ -380,7 +380,7 @@ namespace ViciOne.ServiceBus
             where TMessage : class
             where TException : Exception
         {
-            return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(message, callback)));
         }
 
@@ -392,7 +392,7 @@ namespace ViciOne.ServiceBus
             where TMessage : class
             where TException : Exception
         {
-            return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(message, callback)));
         }
 
@@ -405,7 +405,7 @@ namespace ViciOne.ServiceBus
             where TMessage : class
             where TException : Exception
         {
-            return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(messageFactory, callback)));
         }
 
@@ -418,7 +418,7 @@ namespace ViciOne.ServiceBus
             where TMessage : class
             where TException : Exception
         {
-            return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(messageFactory, callback)));
         }
 
@@ -431,16 +431,9 @@ namespace ViciOne.ServiceBus
             where TMessage : class
             where TException : Exception
         {
-            return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(_ => GetDestinationAddress<TMessage>(),
+            return source.Add(new FaultedSendActivity<TInstance, TData, TException, TMessage>(context => EndpointConvention.GetDestinationAddress<TMessage>(context),
                 MessageFactory<TMessage>.Create(messageFactory, callback)));
         }
 
-        static Uri GetDestinationAddress<T>()
-            where T : class
-        {
-            return EndpointConvention.TryGetDestinationAddress<T>(out var destinationAddress)
-                ? destinationAddress
-                : throw new ArgumentException($"A convention for the message type {TypeCache<T>.ShortName} was not found");
-        }
     }
 }

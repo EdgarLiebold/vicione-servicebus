@@ -6,7 +6,9 @@ namespace ViciOne.ServiceBus.Transports
 
 
     public class SendEndpointProvider :
-        ISendEndpointProvider
+        ISendEndpointProvider,
+        IMessageRouteProvider,
+        IAsyncDisposable
     {
         readonly ISendEndpointCache<Uri> _cache;
         readonly ReceiveEndpointContext _context;
@@ -30,6 +32,13 @@ namespace ViciOne.ServiceBus.Transports
             address = _provider.NormalizeAddress(address);
 
             return _cache.GetSendEndpoint(address, CreateSendEndpoint);
+        }
+
+        IMessageRouteTable IMessageRouteProvider.MessageRoutes => _context.MessageRoutes;
+
+        public ValueTask DisposeAsync()
+        {
+            return _cache.DisposeAsync();
         }
 
         public ConnectHandle ConnectSendObserver(ISendObserver observer)
