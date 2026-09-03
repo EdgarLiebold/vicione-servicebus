@@ -6,7 +6,10 @@ namespace ViciOne.ServiceBus.Configuration
 
     public static class EndpointDefinitionExtensions
     {
-        public static IEndpointDefinition Combine(this IEnumerable<IEndpointDefinition> definitions, IRegistrationContext context)
+        public static IEndpointDefinition Combine(
+            this IEnumerable<IEndpointDefinition> definitions,
+            IRegistrationContext context,
+            string endpointName)
         {
             List<IEndpointDefinition> list = definitions.ToList();
             if (list.Count == 0)
@@ -15,7 +18,7 @@ namespace ViciOne.ServiceBus.Configuration
             if (list.Count == 1)
                 return list[0];
 
-            return new CombinedEndpointDefinition(list, context);
+            return new CombinedEndpointDefinition(list, context, endpointName);
         }
     }
 }

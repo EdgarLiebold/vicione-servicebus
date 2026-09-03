@@ -3007,3 +3007,35 @@ regression found and corrected the missing route-provider forwarding in `BusInst
 application-bootstrap correlation boundary, and one missing Quartz requirement projection. Detailed
 evidence is under `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-MULTIBUS-ROUTING/`. V5 is next;
 remote publication remains outside this package.
+
+## Reviewer integration — V5 contract identity, endpoint QoS, and consumer concurrency (2026-09-03)
+
+1. Bind V4 product commit `603b8771`, architecture assignment `7eeffe9a`, the protected aggregate, both V5
+   artifacts, frozen head `d4465f57`, and the three package donor commits before editing.
+2. Add bounded stable name/major-version identity plus direct attributes and one immutable bidirectional
+   catalog owner. Reject noncanonical text, collisions, unknowns, value types, and open generics.
+3. Separate endpoint-owned transport prefetch/concurrency from consumer execution. Validate convergent,
+   conflicting, empty, dedicated legacy, and shared consumer-originated QoS before materialization.
+4. Add one first-class consumer policy and real consume-pipeline hook for serial, bounded parallel, and
+   fixed typed partition modes. Map ordinary legacy consumer limits into the same owner.
+5. Prove exact bounds, same-key exclusion, different-key progress, cancellation, exception release,
+   disposal/drain, policy idempotence/conflict, runtime materialization, and probe identity.
+6. Execute independent buildable one-cause mutations for identity, catalog, QoS validation, endpoint
+   projection, gate admission/partitioning, policy composition, legacy routing, and runtime discovery.
+7. Run both Release solutions, every Unit/Architecture executable, scoped full format, Requirements JSON,
+   protected-manifest, hash, empty-directory, layout, and diff gates.
+8. Freeze product and architecture locally as V5 package 1/4. Continue immediately with durable sender;
+   do not publish remotely without a fresh explicit authorization.
+
+Completion: all eight steps passed. Sixteen independent product mutations are killed and restored. The
+complete Unit/Architecture profile passes 3,345/3,345 with zero failures/skips, both Release solutions are
+zero-warning/zero-error, and all 40 changed/new C# files pass format verification. Full regression found
+and corrected one Azure provider test that still expected consumer concurrency to leak into endpoint QoS.
+Final source audit then found and closed a runtime origin-classification gap; its dedicated mutation proves
+that even identical consumer-originated QoS is rejected when two consumers share the endpoint.
+Complete regression then exposed the complementary built-in case: Quartz has one endpoint-owned definition
+referenced by four consumers. Identity-based shared-owner discovery preserves it, and the inverse predicate
+is killed by both raw and envelope Quartz runtime cases.
+Detailed evidence is under
+`evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V5-CONTRACT-QOS-CONCURRENCY/`. Durable sender is next;
+remote publication remains outside this package.

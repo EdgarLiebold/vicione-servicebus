@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus.Configuration
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -9,11 +10,31 @@ namespace ViciOne.ServiceBus.Configuration
     {
         readonly IRegistrationContext _context;
         readonly IReadOnlyList<IEndpointDefinition> _definitions;
+        readonly EndpointTransportQos _transportQos;
 
-        internal CombinedEndpointDefinition(IReadOnlyList<IEndpointDefinition> definitions, IRegistrationContext context)
+        internal CombinedEndpointDefinition(IReadOnlyList<IEndpointDefinition> definitions, IRegistrationContext context, string endpointName)
         {
-            _definitions = definitions;
-            _context = context;
+            _definitions = definitions ?? throw new ArgumentNullException(nameof(definitions));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            if (string.IsNullOrWhiteSpace(endpointName))
+                throw new ArgumentException("Endpoint name must not be empty.", nameof(endpointName));
+
+            EndpointQosDeclaration[] qosDeclarations = _definitions
+                .Select(definition => new EndpointQosDeclaration(
+                    endpointName,
+                    definition is DelegateEndpointDefinition delegated
+                        ? delegated.OwnerType
+                        : definition.GetType(),
+                    new EndpointTransportQos
+                    {
+                        PrefetchCount = definition.PrefetchCount,
+                        ConcurrentDeliveryLimit = definition.ConcurrentMessageLimit
+                    },
+                    GetQosOwnership(definition)))
+                .ToArray();
+            _transportQos = new EndpointQosTopologyValidator()
+                .Validate(qosDeclarations)
+                .GetValueOrDefault(endpointName, new EndpointTransportQos());
 
             if (_definitions.All(x => x.ConfigureConsumeTopology))
                 ConfigureConsumeTopology = true;
@@ -28,45 +49,9 @@ namespace ViciOne.ServiceBus.Configuration
 
         public bool IsTemporary => _definitions.All(x => x.IsTemporary);
 
-        public int? PrefetchCount
-        {
-            get
-            {
-                int? prefetch = default;
-                foreach (var definition in _definitions)
-                {
-                    if (definition.PrefetchCount.HasValue)
-                    {
-                        if (prefetch == null)
-                            prefetch = definition.PrefetchCount;
-                        else if (definition.PrefetchCount.Value > prefetch)
-                            prefetch = definition.PrefetchCount.Value;
-                    }
-                }
+        public int? PrefetchCount => _transportQos.PrefetchCount;
 
-                return prefetch;
-            }
-        }
-
-        public int? ConcurrentMessageLimit
-        {
-            get
-            {
-                int? concurrentMessageLimit = default;
-                foreach (var definition in _definitions)
-                {
-                    if (definition.ConcurrentMessageLimit.HasValue)
-                    {
-                        if (concurrentMessageLimit == null)
-                            concurrentMessageLimit = definition.ConcurrentMessageLimit;
-                        else if (definition.ConcurrentMessageLimit.Value > concurrentMessageLimit)
-                            concurrentMessageLimit = definition.ConcurrentMessageLimit.Value;
-                    }
-                }
-
-                return concurrentMessageLimit;
-            }
-        }
+        public int? ConcurrentMessageLimit => _transportQos.ConcurrentDeliveryLimit;
 
         public bool ConfigureConsumeTopology { get; }
 
@@ -80,6 +65,20 @@ namespace ViciOne.ServiceBus.Configuration
         {
             foreach (var definition in _definitions)
                 definition.Configure(configurator, context ?? _context);
+        }
+
+        EndpointQosOwnership GetQosOwnership(IEndpointDefinition definition)
+        {
+            if (definition is not DelegateEndpointDefinition delegated)
+                return EndpointQosOwnership.Endpoint;
+
+            int owners = _definitions
+                .OfType<DelegateEndpointDefinition>()
+                .Count(candidate => ReferenceEquals(candidate.EndpointDefinition, delegated.EndpointDefinition));
+
+            return owners > 1
+                ? EndpointQosOwnership.Endpoint
+                : EndpointQosOwnership.ConsumerDefinition;
         }
     }
 }

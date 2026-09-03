@@ -60,6 +60,9 @@ public sealed class BuiltPipelineConfigurationTests
         AssertSuperset(
             LimitsOf(probe, "concurrencyLimit"),
             [BusConcurrencyLimit, EndpointConcurrencyLimit, ComponentConcurrencyLimit]);
+        int[] consumerConcurrency = LimitsOf(probe, "consumerConcurrency").ToArray();
+        Assert.Equal(2, consumerConcurrency.Length);
+        Assert.All(consumerConcurrency, limit => Assert.Equal(ComponentConcurrencyLimit, limit));
         AssertSuperset(LimitsOf(probe, "rateLimit"), [BusRateLimit, EndpointRateLimit]);
         Assert.Contains("memory", TextOf(probe, "sagaRepository", "persistence"));
         Assert.Contains(typeof(PipelineConsumer).FullName!, TextOf(probe, "consumer", "type"));

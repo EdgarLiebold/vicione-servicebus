@@ -16,7 +16,9 @@ namespace ViciOne.ServiceBus.Configuration
         readonly IReadOnlyDictionary<Type, IConsumerMessageSpecification<TConsumer>> _messageTypes;
         readonly ConsumerConfigurationObservable _observers;
         readonly ConfigurationObserverNotification _configurationNotification = new ConfigurationObserverNotification();
-        IConcurrencyLimiter? _concurrencyLimiter;
+        readonly HashSet<Type> _partitionedMessageTypes = [];
+        ConsumerConcurrencyGate<object>? _concurrencyGate;
+        ConsumerConcurrencyPolicy? _concurrencyPolicy;
 
         public ConsumerSpecification(IEnumerable<IConsumerMessageSpecification<TConsumer>> messageSpecifications)
         {
@@ -26,7 +28,22 @@ namespace ViciOne.ServiceBus.Configuration
             _handles = _messageTypes.Values.Select(x => x.ConnectConsumerConfigurationObserver(_observers)).ToArray();
         }
 
-        public int? ConcurrentMessageLimit { get; set; }
+        public int? ConcurrentMessageLimit
+        {
+            get => _concurrencyPolicy?.Mode == ConsumerConcurrencyMode.Parallel
+                ? _concurrencyPolicy.Concurrency
+                : null;
+            set
+            {
+                if (value.HasValue)
+                    SetConcurrencyPolicy(ConsumerConcurrencyPolicy.Parallel(value.Value));
+            }
+        }
+
+        public ConsumerConcurrencyPolicy ConcurrencyPolicy
+        {
+            set => SetConcurrencyPolicy(value);
+        }
 
         public void Message<T>(Action<IConsumerMessageConfigurator<T>>? configure)
             where T : class
@@ -59,12 +76,38 @@ namespace ViciOne.ServiceBus.Configuration
         public void ConfigureMessagePipe<T>(IPipeConfigurator<ConsumeContext<T>> pipeConfigurator)
             where T : class
         {
-            if (ConcurrentMessageLimit.HasValue)
-            {
-                _concurrencyLimiter ??= new ConcurrencyLimiter(ConcurrentMessageLimit.Value, TypeCache<TConsumer>.ShortName);
+            if (_concurrencyPolicy is null)
+                return;
 
-                pipeConfigurator.AddPipeSpecification(new ConcurrencyLimitConsumePipeSpecification<T>(_concurrencyLimiter));
+            _concurrencyGate ??= new ConsumerConcurrencyGate<object>(_concurrencyPolicy);
+            pipeConfigurator.AddPipeSpecification(new ConsumerConcurrencyPipeSpecification<T>(_concurrencyGate, _concurrencyPolicy));
+        }
+
+        public void UsePartitionedConcurrency<TMessage, TKey>(
+            int partitionCount,
+            ConsumerPartitionKeySelector<TMessage, TKey> selector,
+            IEqualityComparer<TKey>? comparer = null)
+            where TMessage : class
+            where TKey : notnull
+        {
+            ArgumentNullException.ThrowIfNull(selector);
+            ConsumerConcurrencyPolicy policy = ConsumerConcurrencyPolicy.Partitioned(partitionCount);
+            IConsumerMessageSpecification<TConsumer, TMessage> specification = GetMessageSpecification<TMessage>();
+
+            if (_concurrencyPolicy is not null)
+            {
+                throw new ConfigurationException(
+                    $"Consumer '{TypeCache<TConsumer>.ShortName}' cannot combine a consumer-wide concurrency policy with partitioned message concurrency.");
             }
+
+            if (!_partitionedMessageTypes.Add(typeof(TMessage)))
+            {
+                throw new ConfigurationException(
+                    $"Consumer '{TypeCache<TConsumer>.ShortName}' already has a concurrency policy for message '{TypeCache<TMessage>.ShortName}'.");
+            }
+
+            var gate = new PartitionedConsumerConcurrencyGate<TMessage, TKey>(partitionCount, selector, comparer);
+            specification.AddPipeSpecification(new ConsumerConcurrencyPipeSpecification<TMessage>(gate, policy));
         }
 
         public IEnumerable<ValidationResult> Validate()
@@ -86,6 +129,31 @@ namespace ViciOne.ServiceBus.Configuration
         public ConnectHandle ConnectConsumerConfigurationObserver(IConsumerConfigurationObserver observer)
         {
             return _observers.Connect(observer);
+        }
+
+        private void SetConcurrencyPolicy(ConsumerConcurrencyPolicy policy)
+        {
+            ArgumentNullException.ThrowIfNull(policy);
+            if (policy.Mode == ConsumerConcurrencyMode.Partitioned)
+            {
+                throw new ArgumentException(
+                    "Partitioned concurrency requires a strongly typed message and partition-key selector.",
+                    nameof(policy));
+            }
+
+            if (_partitionedMessageTypes.Count > 0)
+            {
+                throw new ConfigurationException(
+                    $"Consumer '{TypeCache<TConsumer>.ShortName}' cannot combine partitioned message concurrency with a consumer-wide concurrency policy.");
+            }
+
+            if (_concurrencyPolicy is not null && _concurrencyPolicy != policy)
+            {
+                throw new ConfigurationException(
+                    $"Consumer '{TypeCache<TConsumer>.ShortName}' has conflicting consumer concurrency policies '{_concurrencyPolicy}' and '{policy}'.");
+            }
+
+            _concurrencyPolicy = policy;
         }
     }
 }

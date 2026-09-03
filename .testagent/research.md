@@ -3684,3 +3684,47 @@ executables: 3,290/3,290, zero failures/skips. Both Release solutions build with
 locked restore covers 67 projects, shipping pack yields 19 non-Testing packages, and all 22 independent
 mutations are killed and restored. Every commit from `9aa3921` through `f805092` has an explicit semantic
 disposition; V4 is complete and V5 remains a separate next phase.
+
+## Reviewer integration research — V5 contract identity, endpoint QoS, and consumer concurrency (2026-09-03)
+
+V5 package 1/4 is bound by architecture assignment `PO-2026-09-03-SERVICEBUS-REVIEW-INTEGRATION-12` at
+commit `7eeffe9a`. Its product baseline is `603b8771bf2bc70c6bb2e369c4747dcf98809742`, tree
+`10c9fe910a3061cf323daff80bf8c23f089edc07`. The frozen inputs are patch
+`88f2c61a3b2fc470f525ce68a3972463e731bea418cfa9de0d58f4e745a1a344`, bundle
+`af76f8f4266efc7aa6d2bb34d29b30c0b73bb04dee7cb8237e4ab42717e1fdf5`, and head
+`d4465f57f4753985f75684a8c690e878a931fd7f`; `review/**` remains immutable and untracked.
+
+The donor's stable identity is intentionally narrower than CLR type identity: a bounded stable name and
+positive major version are the only persisted/wire fields. Native integration strengthens canonical text
+by rejecting leading-zero versions, returns no partial parse value, rejects open generics and value types,
+and freezes both lookup directions. The V5.1 service-registration convenience will compose this same owner
+later; it must not create a competing catalog.
+
+Endpoint QoS and consumer concurrency are separate mechanisms. The frozen V5 compatibility rule permits a
+consumer-originated transport declaration only while discovery proves one dedicated consumer; it becomes
+an eager deterministic error as soon as the endpoint is shared. New ordinary consumer limits, however,
+belong exclusively to a consumer-local pipeline gate and never project prefetch or endpoint concurrency.
+The management endpoint keeps its separate endpoint-owned dynamic control.
+
+Runtime integration required more than the donor's isolated primitives. `ConsumerSpecification` owns
+exact policy idempotence and inserts one filter into the actual message pipe; a shared object gate enforces
+consumer-wide exclusion across message types, while typed partition specifications select keys from real
+messages. `CombinedEndpointDefinition` gathers every declaration for its named endpoint and validates the
+complete group before any endpoint callback runs. Probe assertions ensure the legacy typed extension and
+new policy cannot create two owners.
+
+Mutation testing killed all 16 independent one-cause changes. One attempted catalog mutation initially ran
+against a stale product DLL copied beside the direct MTP test application and was correctly rejected;
+rebuilding the whole test project made it causal. The lesson is permanent: direct MTP execution is valid
+only after the owning test project refreshes copied dependencies. Final evidence is 320/320 Abstractions,
+1,635/1,635 Core, 167/167 Architecture, and 3,345/3,345 complete Unit/Architecture, with zero skips and
+zero-warning Release builds. The only first-matrix failure was an obsolete Azure provider assertion that
+expected the now-forbidden consumer-to-endpoint concurrency leak; its corrected owner passes 25/25.
+Final audit also caught a runtime provenance gap: combined consumer definitions were marked endpoint-owned.
+The strengthened test uses identical QoS values so only ownership can decide the result; changing that one
+classification back makes the endpoint start and the exact owner fail.
+The next full matrix exposed the complementary legitimate shape: Quartz injects one endpoint definition
+into four internal consumer definitions. Treating each wrapper as a separate consumer-owned declaration
+wrongly rejected scheduler startup. Runtime discovery now recognizes one reference-identical shared
+endpoint owner while still rejecting separate per-consumer definitions with identical values. Inverting
+that predicate kills both Quartz raw/envelope integration cases.

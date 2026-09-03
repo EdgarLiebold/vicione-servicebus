@@ -27,7 +27,7 @@ public sealed class ConsumerAndSagaConcurrencyTests
                     endpointAdmittedAll.TrySetResult();
             });
             endpoint.Consumer(() => consumer, consumerConfiguration =>
-                consumerConfiguration.ConcurrentMessageLimit = 2);
+                consumerConfiguration.ConcurrencyPolicy = ConsumerConcurrencyPolicy.Parallel(2));
         };
 
         await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
@@ -61,6 +61,46 @@ public sealed class ConsumerAndSagaConcurrencyTests
         finally
         {
             probe.Release.Release(3);
+            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-V5-CONSUMER-CONCURRENCY-RUNTIME", "typed-partition-hook-in-real-consume-pipeline")]
+    public async Task PartitionedConsumerConcurrency_SeparatesDifferentKeysAndExcludesTheSameKey()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        using var harness = CreateHarness("partitioned-consumer-concurrency", timeout);
+        var consumer = new PartitionedConsumer();
+        harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
+        {
+            endpoint.ConcurrentMessageLimit = 3;
+            endpoint.Consumer(() => consumer, configuration =>
+                configuration.UsePartitionedConcurrency<PartitionedMessage, int>(4, static message => message.Key));
+        };
+
+        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        try
+        {
+            await harness.InputQueueSendEndpoint.Send(new PartitionedMessage(1, 1), cancellationToken);
+            await consumer.FirstEntered.Task.WaitAsync(timeout, cancellationToken);
+
+            await Task.WhenAll(
+                harness.InputQueueSendEndpoint.Send(new PartitionedMessage(1, 2), cancellationToken),
+                harness.InputQueueSendEndpoint.Send(new PartitionedMessage(2, 3), cancellationToken))
+                .WaitAsync(timeout, cancellationToken);
+
+            await consumer.DifferentKeyEntered.Task.WaitAsync(timeout, cancellationToken);
+            Assert.False(consumer.SameKeyEntered.Task.IsCompleted);
+
+            consumer.ReleaseFirst.TrySetResult();
+            await consumer.SameKeyEntered.Task.WaitAsync(timeout, cancellationToken);
+            await consumer.AllCompleted.Task.WaitAsync(timeout, cancellationToken);
+        }
+        finally
+        {
+            consumer.ReleaseFirst.TrySetResult();
             await harness.Stop().WaitAsync(timeout, CancellationToken.None);
         }
     }
@@ -206,6 +246,43 @@ public sealed class ConsumerAndSagaConcurrencyTests
     private sealed record ConsumerMessageA(int Index);
 
     private sealed record ConsumerMessageB(int Index);
+
+    private sealed record PartitionedMessage(int Key, int Sequence);
+
+    private sealed class PartitionedConsumer : IConsumer<PartitionedMessage>
+    {
+        private int _completed;
+
+        public TaskCompletionSource FirstEntered { get; } = NewSignal();
+
+        public TaskCompletionSource SameKeyEntered { get; } = NewSignal();
+
+        public TaskCompletionSource DifferentKeyEntered { get; } = NewSignal();
+
+        public TaskCompletionSource ReleaseFirst { get; } = NewSignal();
+
+        public TaskCompletionSource AllCompleted { get; } = NewSignal();
+
+        public async Task Consume(ConsumeContext<PartitionedMessage> context)
+        {
+            switch (context.Message.Sequence)
+            {
+                case 1:
+                    FirstEntered.TrySetResult();
+                    await ReleaseFirst.Task.WaitAsync(context.CancellationToken);
+                    break;
+                case 2:
+                    SameKeyEntered.TrySetResult();
+                    break;
+                case 3:
+                    DifferentKeyEntered.TrySetResult();
+                    break;
+            }
+
+            if (Interlocked.Increment(ref _completed) == 3)
+                AllCompleted.TrySetResult();
+        }
+    }
 
     private sealed class LimitedSaga :
         InitiatedByOrOrchestrates<SagaMessageA>,

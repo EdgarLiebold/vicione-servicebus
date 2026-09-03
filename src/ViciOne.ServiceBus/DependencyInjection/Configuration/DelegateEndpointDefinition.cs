@@ -31,6 +31,10 @@ namespace ViciOne.ServiceBus.Configuration
 
         public int? PrefetchCount => _endpointDefinition?.PrefetchCount;
 
-        public int? ConcurrentMessageLimit => _definition.ConcurrentMessageLimit ?? _endpointDefinition?.ConcurrentMessageLimit;
+        public int? ConcurrentMessageLimit => _endpointDefinition?.ConcurrentMessageLimit;
+
+        internal IEndpointDefinition EndpointDefinition => _endpointDefinition;
+
+        internal System.Type OwnerType => _definition.GetType();
     }
 }

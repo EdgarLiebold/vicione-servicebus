@@ -14,6 +14,7 @@ namespace ViciOne.ServiceBus
         where TConsumer : class, IConsumer
     {
         int? _concurrentMessageLimit;
+        ConsumerConcurrencyPolicy? _concurrencyPolicy;
         string? _endpointName;
 
         protected ConsumerDefinition()
@@ -39,14 +40,43 @@ namespace ViciOne.ServiceBus
         public int? ConcurrentMessageLimit
         {
             get => _concurrentMessageLimit;
-            protected set => _concurrentMessageLimit = value;
+            protected set
+            {
+                _concurrentMessageLimit = value;
+                _concurrencyPolicy = value.HasValue
+                    ? ConsumerConcurrencyPolicy.Parallel(value.Value)
+                    : null;
+            }
+        }
+
+        /// <summary>
+        /// Sets the consumer-local serial or fixed-parallel execution policy. Partitioned policies
+        /// require a typed selector and are configured in <see cref="ConfigureConsumer"/>.
+        /// </summary>
+        protected ConsumerConcurrencyPolicy? ConcurrencyPolicy
+        {
+            get => _concurrencyPolicy;
+            set
+            {
+                if (value?.Mode == ConsumerConcurrencyMode.Partitioned)
+                {
+                    throw new ArgumentException(
+                        "Partitioned concurrency requires a strongly typed message and partition-key selector.",
+                        nameof(value));
+                }
+
+                _concurrencyPolicy = value;
+                _concurrentMessageLimit = value?.Mode == ConsumerConcurrencyMode.Parallel
+                    ? value.Concurrency
+                    : null;
+            }
         }
 
         void IConsumerDefinition<TConsumer>.Configure(IReceiveEndpointConfigurator endpointConfigurator, IConsumerConfigurator<TConsumer> consumerConfigurator,
             IRegistrationContext context)
         {
-            if (_concurrentMessageLimit.HasValue)
-                consumerConfigurator.ConcurrentMessageLimit = _concurrentMessageLimit;
+            if (_concurrencyPolicy is not null)
+                consumerConfigurator.ConcurrencyPolicy = _concurrencyPolicy;
             ConfigureConsumer(endpointConfigurator, consumerConfigurator, context);
         }
 

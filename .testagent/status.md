@@ -2872,3 +2872,25 @@ future cohorts as complete.
   `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-MULTIBUS-ROUTING/`. V4 is now 12/12 (100%) and
   ready for local product/architecture freeze. V5, V5.1 and API review remain active goal phases.
   Protected `review/**` remains untouched and no remote publication occurred.
+
+## Reviewer integration — V5 contract identity, endpoint QoS, and consumer concurrency accepted locally (2026-09-03)
+
+- Stable name/major-version identities and one immutable bidirectional catalog reject noncanonical text,
+  unsafe types, collisions, unknown lookups, and assembly-qualified fallback.
+- Endpoint transport QoS now has an eager combined-topology owner. Retained consumer-originated QoS is
+  valid only on a truly dedicated endpoint; shared ownership and conflicting values fail deterministically.
+- Serial, bounded parallel, and fixed typed-partition consumer policies execute in the real consume pipe.
+  Ordinary legacy consumer limits map into this same owner and no longer alter endpoint prefetch or
+  transport concurrency.
+- Sixteen independent production mutations are killed and restored. Abstractions is 320/320, Core
+  1,635/1,635, Architecture 167/167, and the complete Unit/Architecture matrix 3,345/3,345, all without
+  failures or skips. Shipping and Engineering Release builds are warning/error-free.
+- Full regression corrected an obsolete Azure provider expectation; its final owner passes 25/25. A final
+  origin-classification audit additionally proved that identical consumer-owned QoS is rejected on shared
+  endpoints, while one reference-identical shared endpoint definition remains endpoint-owned and keeps all
+  89 Quartz cases green. Scoped
+  format, Requirements JSON, protected manifest/hash, empty-directory, layout, and diff gates pass.
+- Detailed evidence is under
+  `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V5-CONTRACT-QOS-CONCURRENCY/`. V5 package 1/4 is ready
+  for local product and architecture freeze. Durable sender is next; `review/**` remains untouched and no
+  remote publication occurred.

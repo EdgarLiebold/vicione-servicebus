@@ -92,7 +92,7 @@ namespace ViciOne.ServiceBus.Configuration
                 .GroupBy(x => x.Name, (name, values) => new
                 {
                     Name = name,
-                    Definition = values.Select(x => x.Definition).Combine(this)
+                    Definition = values.Select(x => x.Definition).Combine(this, name)
                 })
                 .ToList();
 
@@ -123,11 +123,11 @@ namespace ViciOne.ServiceBus.Configuration
                 from f in fs.DefaultIfEmpty()
                 join ep in endpointsWithName on e equals ep.Name into eps
                 from ep in eps.Select(x => x.Definition)
-                    .DefaultIfEmpty(c?.Select(x => (IEndpointDefinition)new DelegateEndpointDefinition(e, x, x.EndpointDefinition)).Combine(this)
-                        ?? s?.Select(x => (IEndpointDefinition)new DelegateEndpointDefinition(e, x, x.EndpointDefinition)).Combine(this)
-                        ?? a?.Select(x => (IEndpointDefinition)new DelegateEndpointDefinition(e, x, x.ExecuteEndpointDefinition)).Combine(this)
-                        ?? ea?.Select(x => (IEndpointDefinition)new DelegateEndpointDefinition(e, x, x.ExecuteEndpointDefinition)).Combine(this)
-                        ?? f?.Select(x => (IEndpointDefinition)new DelegateEndpointDefinition(e, x, x.EndpointDefinition)).Combine(this)
+                    .DefaultIfEmpty(c?.Select(x => (IEndpointDefinition)new DelegateEndpointDefinition(e, x, x.EndpointDefinition)).Combine(this, e)
+                        ?? s?.Select(x => (IEndpointDefinition)new DelegateEndpointDefinition(e, x, x.EndpointDefinition)).Combine(this, e)
+                        ?? a?.Select(x => (IEndpointDefinition)new DelegateEndpointDefinition(e, x, x.ExecuteEndpointDefinition)).Combine(this, e)
+                        ?? ea?.Select(x => (IEndpointDefinition)new DelegateEndpointDefinition(e, x, x.ExecuteEndpointDefinition)).Combine(this, e)
+                        ?? f?.Select(x => (IEndpointDefinition)new DelegateEndpointDefinition(e, x, x.EndpointDefinition)).Combine(this, e)
                         ?? new NamedEndpointDefinition(e))
                 select new Endpoint(ep, c, s, a, ea, f)).ToList();
 

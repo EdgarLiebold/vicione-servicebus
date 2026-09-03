@@ -77,6 +77,21 @@ namespace ViciOne.ServiceBus.Configuration
             set => _specification.ConcurrentMessageLimit = value;
         }
 
+        public ConsumerConcurrencyPolicy ConcurrencyPolicy
+        {
+            set => _specification.ConcurrencyPolicy = value;
+        }
+
+        public void UsePartitionedConcurrency<TMessage, TKey>(
+            int partitionCount,
+            ConsumerPartitionKeySelector<TMessage, TKey> selector,
+            IEqualityComparer<TKey>? comparer = null)
+            where TMessage : class
+            where TKey : notnull
+        {
+            _specification.UsePartitionedConcurrency(partitionCount, selector, comparer);
+        }
+
         public IEnumerable<ValidationResult> Validate()
         {
             return _consumerFactory.Validate().Concat(_specification.Validate());

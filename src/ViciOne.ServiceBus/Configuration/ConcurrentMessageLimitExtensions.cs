@@ -19,8 +19,7 @@ namespace ViciOne.ServiceBus
             if (configurator == null)
                 throw new ArgumentNullException(nameof(configurator));
 
-            var observer = new ConcurrencyLimitConsumerConfigurationObserver<TConsumer>(configurator, concurrentMessageLimit);
-            configurator.ConnectConsumerConfigurationObserver(observer);
+            configurator.ConcurrencyPolicy = ConsumerConcurrencyPolicy.Parallel(concurrentMessageLimit);
         }
 
         /// <summary>

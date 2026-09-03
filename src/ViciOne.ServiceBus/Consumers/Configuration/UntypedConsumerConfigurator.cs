@@ -36,6 +36,11 @@ namespace ViciOne.ServiceBus.Configuration
             set => _specification.ConcurrentMessageLimit = value;
         }
 
+        public ConsumerConcurrencyPolicy ConcurrencyPolicy
+        {
+            set => _specification.ConcurrencyPolicy = value;
+        }
+
         public IEnumerable<ValidationResult> Validate()
         {
             if (!typeof(TConsumer).ImplementsInterface<IConsumer>())

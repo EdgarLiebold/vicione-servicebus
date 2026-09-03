@@ -39,7 +39,7 @@ public sealed class ServiceBusEndpointConfigurationTests
         await using ServiceProvider endpointProvider = CreateProvider<EndpointPingConsumerDefinition>();
         await using ServiceProvider emptyProvider = CreateProvider<EmptyPingConsumerDefinition>();
 
-        Assert.Equal((120, 100, 427), Probe(consumerProvider.GetRequiredService<IBusControl>()));
+        Assert.Equal((427, 0, 427), Probe(consumerProvider.GetRequiredService<IBusControl>()));
         Assert.Equal((351, 100, 427), Probe(endpointProvider.GetRequiredService<IBusControl>()));
         Assert.Equal((427, 0, 427), Probe(emptyProvider.GetRequiredService<IBusControl>()));
     }

@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -17,7 +18,7 @@ public sealed class EndpointConfigurationTests
     [InlineData(ConfigurationShape.BusOnly, BusPrefetchCount, null)]
     [InlineData(ConfigurationShape.EndpointInheritsBus, BusPrefetchCount, null)]
     [InlineData(ConfigurationShape.EndpointOverridesBus, 351, null)]
-    [InlineData(ConfigurationShape.DefinitionSetsConcurrency, 120, 100)]
+    [InlineData(ConfigurationShape.DefinitionSetsConcurrency, BusPrefetchCount, null)]
     [InlineData(ConfigurationShape.DefinitionSetsBoth, 351, 100)]
     [InlineData(ConfigurationShape.RegistrationSetsConcurrency, 120, 100)]
     [InlineData(ConfigurationShape.EmptyDefinitionInheritsBus, BusPrefetchCount, null)]
@@ -77,6 +78,33 @@ public sealed class EndpointConfigurationTests
 
         BusHealthResult health = provider.GetRequiredService<IBusControl>().CheckHealth();
         Assert.Equal(BusHealthStatus.Unhealthy, health.Status);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-V5-ENDPOINT-QOS-RUNTIME", "shared-consumer-owned-qos-fails-before-materialization")]
+    public async Task SharedEndpointWithConsumerOwnedQos_FailsBeforeEndpointConfigurationRuns()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var endpointConfigurationRan = false;
+        await using ServiceProvider provider = new ServiceCollection()
+            .AddViciOneServiceBusTestHarness(configuration =>
+            {
+                configuration.SetTestTimeouts(timeout, timeout);
+                configuration.AddConsumer<FirstSharedConsumer, FirstSharedDefinition>();
+                configuration.AddConsumer<SecondSharedConsumer, SecondSharedDefinition>();
+                configuration.AddConfigureEndpointsCallback((_, _) => endpointConfigurationRan = true);
+                configuration.UsingInMemory((context, bus) => bus.ConfigureEndpoints(context));
+            })
+            .BuildServiceProvider();
+
+        EndpointQosConfigurationException exception = await Assert.ThrowsAsync<EndpointQosConfigurationException>(async () =>
+            await provider.StartTestHarness().WaitAsync(timeout, cancellationToken));
+
+        Assert.Contains(SharedEndpointName, exception.Message, StringComparison.Ordinal);
+        Assert.Contains("shared by 2 consumers", exception.Message, StringComparison.Ordinal);
+        Assert.Contains("consumer definition", exception.Message, StringComparison.Ordinal);
+        Assert.False(endpointConfigurationRan);
     }
 
     private static ServiceProvider CreateProvider(ConfigurationShape shape)
@@ -236,6 +264,46 @@ public sealed class EndpointConfigurationTests
     }
 
     private sealed class EmptyDefinition : ConsumerDefinition<EndpointConsumer>;
+
+    private const string SharedEndpointName = "shared-qos-owner";
+
+    private sealed record SharedMessage;
+
+    private sealed class FirstSharedConsumer : IConsumer<SharedMessage>
+    {
+        public Task Consume(ConsumeContext<SharedMessage> context) => Task.CompletedTask;
+    }
+
+    private sealed class SecondSharedConsumer : IConsumer<SharedMessage>
+    {
+        public Task Consume(ConsumeContext<SharedMessage> context) => Task.CompletedTask;
+    }
+
+    private sealed class FirstSharedDefinition : ConsumerDefinition<FirstSharedConsumer>
+    {
+        public FirstSharedDefinition()
+        {
+            Endpoint(endpoint =>
+            {
+                endpoint.Name = SharedEndpointName;
+                endpoint.PrefetchCount = 4;
+                endpoint.ConcurrentMessageLimit = 2;
+            });
+        }
+    }
+
+    private sealed class SecondSharedDefinition : ConsumerDefinition<SecondSharedConsumer>
+    {
+        public SecondSharedDefinition()
+        {
+            Endpoint(endpoint =>
+            {
+                endpoint.Name = SharedEndpointName;
+                endpoint.PrefetchCount = 4;
+                endpoint.ConcurrentMessageLimit = 2;
+            });
+        }
+    }
 
     private sealed record EndpointProbe(
         string Name,
