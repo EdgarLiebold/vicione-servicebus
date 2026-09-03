@@ -63,6 +63,9 @@ namespace ViciOne.ServiceBus.InMemoryTransport
                 RoutingKey = context.RoutingKey
             };
 
+            if (context.TryGetPayload(out InMemoryDurableSendContext durableSendContext))
+                transportMessage.DurableSendContext = durableSendContext;
+
             SetHeaders(transportMessage.Headers, context.Headers);
 
             var deliveryContext = new InMemoryDeliveryContext(transportMessage, _delayProvider.UtcNow, context.CancellationToken);

@@ -34,5 +34,7 @@ namespace ViciOne.ServiceBus.InMemoryTransport
 
         public TimeSpan? Delay { get; set; }
         public string? RoutingKey { get; set; }
+
+        internal InMemoryDurableSendContext? DurableSendContext { get; set; }
     }
 }

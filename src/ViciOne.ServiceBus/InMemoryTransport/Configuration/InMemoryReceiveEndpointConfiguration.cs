@@ -28,6 +28,8 @@ namespace ViciOne.ServiceBus.InMemoryTransport.Configuration
             HostAddress = hostConfiguration?.HostAddress ?? throw new ArgumentNullException(nameof(hostConfiguration.HostAddress));
 
             InputAddress = new InMemoryEndpointAddress(hostConfiguration.HostAddress, queueName);
+
+            Receive.Configurator.AddPipeSpecification(new InMemoryDurableSendCompletionPipeSpecification());
         }
 
         IInMemoryReceiveEndpointConfigurator IInMemoryReceiveEndpointConfiguration.Configurator => this;

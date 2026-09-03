@@ -3728,3 +3728,65 @@ into four internal consumer definitions. Treating each wrapper as a separate con
 wrongly rejected scheduler startup. Runtime discovery now recognizes one reference-identical shared
 endpoint owner while still rejecting separate per-consumer definitions with identical values. Inverting
 that predicate kills both Quartz raw/envelope integration cases.
+
+## Reviewer integration research — V5 durable sender and coherent V5.1 durability corrections (2026-09-03)
+
+V5 package 2/4 is bound by architecture assignment `PO-2026-09-03-SERVICEBUS-REVIEW-INTEGRATION-13`
+at architecture commit `f51a5e96`. Its product baseline is
+`ee4edfe8f4d780e30bfbe31d25a8d1fe3a78db24`, tree
+`e56479c08bccddab408b72c94b84f8c1f6b31b4a`. The frozen V5 inputs remain patch
+`88f2c61a3b2fc470f525ce68a3972463e731bea418cfa9de0d58f4e745a1a344`, bundle
+`af76f8f4266efc7aa6d2bb34d29b30c0b73bb04dee7cb8237e4ab42717e1fdf5`, and head
+`d4465f57f4753985f75684a8c690e878a931fd7f`. The coherent V5.1 corrections are delta
+`fac6328e141fd71daf01db0efe9987a79a5d561e8929ab209c4e70b9dbe7562c` and RT-002 through
+RT-004; `review/**` remains immutable and untracked.
+
+The bounded target inventory is 22 public DurableSend contracts, one application-wide catalog composition
+extension, nine generic runtime/store/health owners, one typed-bus instrumentation owner, five EF store/model
+owners plus two commit-durability validation owners, and the real InMemory serialized-send/receive pipeline.
+Native tests belong to Abstractions, Core/InMemory, EF unit/local integration and Architecture projects with
+their existing xUnit 4 + MTP v2 conventions and embedded Requirements projections.
+
+The static Roslyn pairing pass examined 3,934 source and 765 test files in 2.9 seconds. Its current repository
+result is only a pre-implementation heuristic (2,738 unpaired, 1,196 paired), not line/branch coverage; every
+new DurableSend owner therefore requires an explicit native source-owner test regardless of filename pairing.
+The donor regression files are case evidence only and are not introduced as a second test project.
+
+Correctness centers on two different acknowledgement boundaries. A provider may return
+`TransportAcceptance` only after its documented durable hand-off. InMemory is volatile and must carry a
+generation-fenced `IDurableSendConsumerCompletion` as process-local payload, never a header, and call it only
+after the complete receive pipeline succeeds. Early completion, ambiguous dispatch failure, timeout, late
+completion and stale-generation races must preserve positive completion evidence without double capacity
+release or loss.
+
+The persisted store owns atomic count plus logical-content-byte admission, intent-idempotence, fencing leases,
+retry/quarantine state, hard operation page limits and server-side ledger recovery. Quarantine and
+AwaitingConsumerCompletion remain capacity-owned. V5.1 closes the public admission gap by resolving the
+immutable contract catalog before any store call and closes the EF claim gap by validating actual
+provider/session commit durability before store initialization. Physical row/page/index allocation remains a
+separate host/provider quota and must not be mislabeled as the enforced logical byte ledger.
+
+Implementation confirmed that the V5 store contract needs three independent fences rather than one broad
+"durable" assertion: immutable-intent equality at admission, lease ownership for a worker attempt, and a
+generation token for a process-local completion capability. Both in-memory and EF owners now prove these
+separately. Consumer completion is stronger than an overlapping send-side failure only for the same retained
+incarnation; stale completion after discard/re-admission remains harmless.
+
+The initial EF concurrency test correlated a five-record limit with a five-byte limit and one-byte messages.
+A mutation could therefore remove either provider predicate while the other still masked the defect. The
+final owner executes independent count-limited (5 records, 20 bytes) and byte-limited (20 records, 5 bytes)
+cohorts. It also varies metadata under the same durable id and presents an expired lease after takeover.
+These were genuine pseudo-mutation findings, not stylistic additions; the corresponding server-predicate,
+intent-equality and lease-fencing mutants now fail causally.
+
+The real InMemory pipeline showed that `next.Send` already waits through receive-owned work, making a simple
+swap with the explicit `ReceiveCompleted` await behaviorally equivalent. The source-order architecture owner
+still rejects that swap as defense in depth, while separate dynamic mutations prove that canceled completion
+and falsely reported transport acceptance leave or prematurely retire the intent exactly as expected.
+
+Final local evidence is 328/328 Abstractions, 1,669/1,669 Core, 119/119 EF, 171/171 Architecture and
+1,115/1,115 across the other Unit executables: 3,402/3,402, zero failures/skips. Shipping and Engineering
+Release builds are warning/error-free; 57 changed/new C# files pass scoped formatting. Thirty-three
+behavioral mutants plus one structural sabotage are rejected. The package validates a real file-backed
+SQLite WAL session and complete SQLite store lifecycle. It deliberately does not claim the V5.1 release
+gates for real SQL Server/Azure SQL or PostgreSQL crash/HA evidence; those require the release environment.

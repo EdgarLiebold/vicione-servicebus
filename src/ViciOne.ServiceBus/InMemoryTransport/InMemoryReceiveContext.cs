@@ -11,7 +11,7 @@ namespace ViciOne.ServiceBus.InMemoryTransport
         readonly InMemoryTransportMessage _message;
 
         public InMemoryReceiveContext(InMemoryTransportMessage message, InMemoryReceiveEndpointContext receiveEndpointContext)
-            : base(message.DeliveryCount > 0, receiveEndpointContext)
+            : base(message.DeliveryCount > 0, receiveEndpointContext, GetPayloads(message))
         {
             _message = message;
 
@@ -22,5 +22,8 @@ namespace ViciOne.ServiceBus.InMemoryTransport
 
         public override MessageBody Body { get; }
         public string? RoutingKey => _message.RoutingKey;
+
+        static object[] GetPayloads(InMemoryTransportMessage message)
+            => message.DurableSendContext is { } durableSendContext ? [durableSendContext] : [];
     }
 }

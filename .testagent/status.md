@@ -2894,3 +2894,24 @@ future cohorts as complete.
   `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V5-CONTRACT-QOS-CONCURRENCY/`. V5 package 1/4 is ready
   for local product and architecture freeze. Durable sender is next; `review/**` remains untouched and no
   remote publication occurred.
+
+## Reviewer integration — V5 durable sender accepted locally (2026-09-03)
+
+- Package 2/4 is architecture-bound at `f51a5e96`; immutable V5/V5.1 inputs and RT-002 through RT-004 stayed
+  hash-verified and read-only.
+- The bounded restart-safe sender owns exact catalog-first admission, count-plus-logical-byte capacity,
+  idempotence, leases, generations, retries, quarantine, consumer-completion races, operations, health and
+  telemetry. InMemory carries completion only in process-local pipeline context and retires only after
+  logical consume success.
+- EF owns serializable conditional capacity, fenced transitions, server-side recovery/observation and a
+  fail-closed SQL Server/PostgreSQL/SQLite/provider-extensible commit-durability preflight. Real file SQLite
+  executes locally; real SQL Server/PostgreSQL crash/HA proof remains an explicit release-environment gate.
+- Fifty-seven package tests contain 335 assertions. Pseudo-mutation review closed independent EF count/byte,
+  metadata-idempotence and stale-lease gaps. All 33 behavioral mutants plus one structural architecture
+  sabotage are rejected and exact source hashes are restored.
+- Final Release evidence is Abstractions 328/328, Core 1,669/1,669, EF 119/119, Architecture 171/171 and
+  complete Unit/Architecture 3,402/3,402, with zero failures/skips. Shipping and Engineering builds are
+  zero-warning/zero-error; format, Requirements, protected-review, layout and diff gates pass.
+- Detailed evidence is under
+  `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V5-DURABLE-SENDER/`. Package 2/4 is ready for local
+  product/architecture freeze. No remote publication occurred.

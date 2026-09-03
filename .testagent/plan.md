@@ -9,7 +9,7 @@ Python test platform, VSTest path, receipt, interceptor, or execution sentinel i
 
 ## Current profile floors
 
-- `UnitArchitecture`: 2996 currently executed unfiltered cases;
+- `UnitArchitecture`: 3402 currently executed unfiltered cases;
 - `LocalIntegration`: 326 predeclared unfiltered cases;
 - `SqlServerLocalIntegration`: 60 predeclared unfiltered cases;
 - `AzureServiceBusLocalIntegration`: 24 predeclared unfiltered cases.
@@ -3007,6 +3007,49 @@ regression found and corrected the missing route-provider forwarding in `BusInst
 application-bootstrap correlation boundary, and one missing Quartz requirement projection. Detailed
 evidence is under `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-MULTIBUS-ROUTING/`. V5 is next;
 remote publication remains outside this package.
+
+## Reviewer integration — V5 durable sender and coherent V5.1 durability corrections (2026-09-03)
+
+1. Bind product baseline `ee4edfe8`, architecture assignment `f51a5e96`, protected V5/V5.1 hashes,
+   durable source `f1dba410`, crash-safe source `c0a60009` and final hardening `6ab00c32` before edits.
+2. Add the public DurableSend state, identity, capacity, dispatcher/store and operations contracts. Validate
+   exact count/byte/content-type/address/operation boundaries and preserve zero-byte payload legality.
+3. Add one explicit immutable application catalog composition point and reject unknown stable identities in
+   `IDurableSender.AdmitAsync` before any store mutation; prove duplicate catalog ownership fails early.
+4. Implement the in-memory store's atomic capacity, idempotence, immutable byte snapshot, lease/generation
+   fencing, retry, quarantine, requeue/discard and bounded-query state machine with controlled time.
+5. Implement the delivery owner for durable acceptance and volatile completion, including bounded parallel
+   claim, retry classification, exception identity, completion timeout and all documented completion races.
+6. Adapt the real InMemory transport with a serialized-body dispatcher and process-local completion payload;
+   complete only after the entire receive pipeline succeeds and prove no capability enters headers/body.
+7. Add EF model/store ownership with serializable admission, CAS lease transitions, atomic capacity release,
+   server-side aggregate recovery and fail-closed SQL Server/PostgreSQL/SQLite/provider-extensible commit
+   durability validation before initialization.
+8. Generate native Abstractions/Core/InMemory/EF/Architecture tests and Requirements projections for every
+   checklist item. Re-read assertions, execute pseudo-mutation and assertion-quality audits, then kill
+   independent buildable one-cause product mutations and restore exact SHA-256 baselines.
+9. Run focused owners, directly affected providers, all Unit/Architecture executables, analyzer-active
+   Shipping/Engineering Release builds, format, JSON, protected-review, empty-directory and diff gates.
+10. Record full disposition/evidence and freeze separate local product and architecture completion commits as
+    V5 package 2/4. Continue with payload/redaction/observability; do not publish without fresh authorization.
+
+Acceptance checklist: unknown-contract-before-store; one immutable catalog owner; count and logical-byte hard
+capacity; exact idempotence and conflict; caller-buffer snapshot; zero-byte and content/address bounds; hard
+claim/page limits; lease takeover/fencing; classified bounded retry; quarantine/requeue/discard and one capacity
+release; transport versus consumer completion; early/late/failure/timeout/stale-generation races; real InMemory
+success-only process-local completion; EF atomic admission/CAS/server aggregation; SQL Server, PostgreSQL,
+SQLite and unknown-provider durability preflight; typed-bus isolation; no skip and causal mutation evidence.
+
+Completion: all ten steps and every checklist item pass locally. Fifty-seven package tests add 335 meaningful
+assertions and raise the complete Unit/Architecture floor from 3,345 to 3,402. The final matrix is
+3,402/3,402 with zero failures/skips; both Release solutions build with zero warnings/errors. Thirty-three
+independent behavioral production mutants are killed, plus one explicit InMemory source-order architecture
+sabotage. Pseudo-mutation review first separated the EF count and byte concurrency limits and added direct
+provider-level metadata-conflict and stale-lease assertions. Detailed evidence is under
+`evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V5-DURABLE-SENDER/`. Real SQL Server/PostgreSQL crash and
+HA trials remain honestly classified as release-environment evidence, not local execution. Payload,
+redaction, observability, analyzer and API-review closure remain in the final V5 packages; no remote
+publication is authorized.
 
 ## Reviewer integration — V5 contract identity, endpoint QoS, and consumer concurrency (2026-09-03)
 
