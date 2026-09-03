@@ -18,10 +18,15 @@ namespace ViciOne.ServiceBus.Transports.Fabric
         readonly InMemoryDelayProvider _delayProvider;
         readonly ConcurrentDictionary<string, IMessageExchange<T>> _exchanges;
         readonly MessageFabricObservable<TContext> _observers;
+        readonly int _queueCapacity;
         readonly ConcurrentDictionary<string, IMessageQueue<TContext, T>> _queues;
 
-        public MessageFabric()
+        public MessageFabric(int queueCapacity = 1024)
         {
+            if (queueCapacity <= 0)
+                throw new ArgumentOutOfRangeException(nameof(queueCapacity), queueCapacity, "Queue capacity must be greater than zero.");
+
+            _queueCapacity = queueCapacity;
             _observers = new MessageFabricObservable<TContext>();
             _delayProvider = new InMemoryDelayProvider();
 
@@ -107,7 +112,7 @@ namespace ViciOne.ServiceBus.Transports.Fabric
             MessageQueue<TContext, T> created = null;
             IMessageQueue<TContext, T> queue = _queues.GetOrAdd(name, x =>
             {
-                created = new MessageQueue<TContext, T>(_observers, name, _delayProvider);
+                created = new MessageQueue<TContext, T>(_observers, name, _delayProvider, _queueCapacity);
 
                 return created;
             });

@@ -45,7 +45,7 @@ namespace ViciOne.ServiceBus.AzureServiceBusTransport
                 return Task.FromResult(CreateClientContext(connectionContext, inputAddress, asyncContext));
             }
 
-            _supervisor.CreateAgent(asyncContext, Create, cancellationToken);
+            _supervisor.StartAgent(asyncContext, Create, cancellationToken);
         }
 
         static async Task<ClientContext> CreateSharedContext(Task<ClientContext> context, CancellationToken cancellationToken)

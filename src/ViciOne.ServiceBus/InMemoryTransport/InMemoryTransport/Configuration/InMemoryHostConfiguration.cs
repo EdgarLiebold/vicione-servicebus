@@ -15,6 +15,7 @@ namespace ViciOne.ServiceBus.InMemoryTransport.Configuration
         readonly InMemoryBusTopology _topology;
         readonly Recycle<IInMemoryTransportProvider> _transportProvider;
         Uri _hostAddress;
+        int _queueCapacity = 1024;
 
         public InMemoryHostConfiguration(IInMemoryBusConfiguration busConfiguration, Uri baseAddress, IInMemoryTopologyConfiguration topologyConfiguration)
             : base(busConfiguration)
@@ -44,8 +45,16 @@ namespace ViciOne.ServiceBus.InMemoryTransport.Configuration
             set => _hostAddress = value ?? new Uri("loopback://localhost/");
         }
 
+        public int QueueCapacity
+        {
+            set => _queueCapacity = value > 0
+                ? value
+                : throw new ArgumentOutOfRangeException(nameof(value), value, "In-memory queue capacity must be greater than zero.");
+        }
+
         IInMemoryHostConfigurator IInMemoryHostConfiguration.Configurator => this;
         IInMemoryTransportProvider IInMemoryHostConfiguration.TransportProvider => _transportProvider.Supervisor;
+        int IInMemoryHostConfiguration.QueueCapacity => _queueCapacity;
         IInMemoryBusTopology IInMemoryHostConfiguration.Topology => _topology;
 
         public void ApplyEndpointDefinition(IInMemoryReceiveEndpointConfigurator configurator, IEndpointDefinition definition)

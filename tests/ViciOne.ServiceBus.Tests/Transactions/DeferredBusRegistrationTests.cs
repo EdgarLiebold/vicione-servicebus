@@ -297,6 +297,46 @@ public sealed class DeferredBusRegistrationTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-DEFERRED-BUS-DI", "buffer-capacity-validation")]
+    public void BufferedRegistrations_RejectNonPositiveCapacityForDefaultAndTypedBuses()
+    {
+        ArgumentOutOfRangeException defaultFailure = Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new ServiceCollection().AddViciOneServiceBusTestHarness(configuration => configuration.AddBufferedBus(0)));
+        ArgumentOutOfRangeException typedFailure = Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new ServiceCollection().AddViciOneServiceBus<ISecondaryBus>(configuration => configuration.AddBufferedBus(-1)));
+
+        Assert.Equal("capacity", defaultFailure.ParamName);
+        Assert.Equal(0, defaultFailure.ActualValue);
+        Assert.Equal("capacity", typedFailure.ParamName);
+        Assert.Equal(-1, typedFailure.ActualValue);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DEFERRED-BUS-DI", "conflicting-buffer-capacity-rejected")]
+    public void RepeatedBufferedRegistration_RejectsAConflictingCapacityInsteadOfSilentlyKeepingTheFirst()
+    {
+        ConfigurationException defaultFailure = Assert.Throws<ConfigurationException>(() =>
+            new ServiceCollection().AddViciOneServiceBusTestHarness(configuration =>
+            {
+                configuration.AddBufferedBus(2);
+                configuration.AddBufferedBus(3);
+            }));
+        ConfigurationException typedFailure = Assert.Throws<ConfigurationException>(() =>
+            new ServiceCollection().AddViciOneServiceBus<ISecondaryBus>(configuration =>
+            {
+                configuration.AddBufferedBus(5);
+                configuration.AddBufferedBus(7);
+            }));
+
+        Assert.Contains("2", defaultFailure.Message, StringComparison.Ordinal);
+        Assert.Contains("3", defaultFailure.Message, StringComparison.Ordinal);
+        Assert.Contains(nameof(IBus), defaultFailure.Message, StringComparison.Ordinal);
+        Assert.Contains("5", typedFailure.Message, StringComparison.Ordinal);
+        Assert.Contains("7", typedFailure.Message, StringComparison.Ordinal);
+        Assert.Contains(nameof(ISecondaryBus), typedFailure.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-DEFERRED-BUS-DI", "typed-bus-reflection-preserves-failure-identity")]
     public void TypedBusReflectionBoundary_PreservesTheOriginalConfigurationFailure()
     {

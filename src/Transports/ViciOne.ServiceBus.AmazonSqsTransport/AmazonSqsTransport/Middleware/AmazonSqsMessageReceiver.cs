@@ -43,7 +43,7 @@ public sealed class AmazonSqsMessageReceiver :
 
         _executorPool = new FifoPartitionedTaskExecutor(_receiveSettings);
 
-        TrySetConsumeTask(Task.Run(() => Consume()));
+        TrySetConsumeTask(Consume());
     }
 
     protected override async Task ActiveAndActualAgentsCompleted(StopContext context)

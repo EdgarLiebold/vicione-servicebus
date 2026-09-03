@@ -33,7 +33,7 @@ public class JobProgressBuffer
         };
 
         _channel = Channel.CreateBounded<ProgressUpdate>(channelOptions);
-        _updateTask = Task.Run(WaitForUpdate);
+        _updateTask = WaitForUpdate();
     }
 
     public Task Flush()

@@ -87,8 +87,8 @@ public sealed class PipeExtensionsTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-ONE-TIME-SETUP", "queued-fallback")]
-    public async Task OneTimeSetup_AQueuedHealthyCallerCompletesAfterTheLeaderFails()
+    [RequirementCoverage("REQ-VSB-ONE-TIME-SETUP", "concurrent-failure-shared-and-later-retry")]
+    public async Task OneTimeSetup_ConcurrentCallersShareTheFailedAttemptAndOnlyALaterCallerRetries()
     {
         var context = new TestPipeContext();
         var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -105,18 +105,24 @@ public sealed class PipeExtensionsTests
         });
         await entered.Task;
 
-        Task<OneTimeContext<SetupMarker>> fallback = context.OneTimeSetup<SetupMarker>(() =>
+        Task<OneTimeContext<SetupMarker>> concurrent = context.OneTimeSetup<SetupMarker>(() =>
+        {
+            Interlocked.Increment(ref callbackCount);
+            return Task.FromException(new SetupException("a concurrent callback must not run"));
+        });
+        release.SetResult();
+
+        SetupException leaderFailure = await Assert.ThrowsAsync<SetupException>(() => leader);
+        SetupException concurrentFailure = await Assert.ThrowsAsync<SetupException>(() => concurrent);
+        OneTimeContext<SetupMarker> retry = await context.OneTimeSetup<SetupMarker>(() =>
         {
             Interlocked.Increment(ref callbackCount);
             return Task.CompletedTask;
         });
-        release.SetResult();
 
-        SetupException actual = await Assert.ThrowsAsync<SetupException>(() => leader);
-        OneTimeContext<SetupMarker> result = await fallback;
-
-        Assert.Same(expected, actual);
-        Assert.NotNull(result);
+        Assert.Same(expected, leaderFailure);
+        Assert.Same(expected, concurrentFailure);
+        Assert.NotNull(retry);
         Assert.Equal(2, callbackCount);
     }
 

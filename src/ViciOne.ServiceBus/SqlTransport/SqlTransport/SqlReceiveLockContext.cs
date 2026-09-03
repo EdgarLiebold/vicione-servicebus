@@ -37,7 +37,7 @@ namespace ViciOne.ServiceBus.SqlTransport
             _locked = true;
 
             if (_message.LockId.HasValue)
-                _renewLockTask = Task.Run(() => RenewLock());
+                _renewLockTask = RenewLock();
         }
 
         public async Task ScheduleRedelivery(TimeSpan delay, Action<ConsumeContext, SendContext>? callback)

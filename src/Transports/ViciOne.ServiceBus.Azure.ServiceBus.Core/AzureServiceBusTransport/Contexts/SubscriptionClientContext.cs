@@ -14,6 +14,8 @@ namespace ViciOne.ServiceBus.AzureServiceBusTransport
         IAsyncDisposable
     {
         readonly IAgent _agent;
+        readonly object _faultStopLock = new object();
+        Task _faultStopTask;
         readonly SubscriptionSettings _settings;
         ServiceBusProcessor _queueClient;
         ServiceBusSessionProcessor _sessionClient;
@@ -107,10 +109,29 @@ namespace ViciOne.ServiceBus.AzureServiceBusTransport
 
         public Task NotifyFaulted(Exception exception, string entityPath)
         {
-            Task.Run(() => _agent.Stop($"Unrecoverable exception on {entityPath}"))
-                .IgnoreUnobservedExceptions();
+            // Azure invokes this from the processor callback. Defer closing the same processor, but
+            // retain the task and consume every stop outcome in this context owner.
+            lock (_faultStopLock)
+            {
+                if (_faultStopTask == null || _faultStopTask.IsCompleted)
+                    _faultStopTask = StopAfterCallback(entityPath);
+            }
 
             return Task.CompletedTask;
+        }
+
+        async Task StopAfterCallback(string entityPath)
+        {
+            await Task.Yield();
+
+            try
+            {
+                await _agent.Stop($"Unrecoverable exception on {entityPath}").ConfigureAwait(false);
+            }
+            catch (Exception stopException)
+            {
+                LogContext.Error?.Log(stopException, "Stopping faulted Azure client context failed: {EntityPath}", entityPath);
+            }
         }
 
         public async ValueTask DisposeAsync()

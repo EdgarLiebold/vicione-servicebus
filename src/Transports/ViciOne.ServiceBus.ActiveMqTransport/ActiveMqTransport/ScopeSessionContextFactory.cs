@@ -23,23 +23,47 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
 
             Task<SessionContext> context = CreateSession(asyncContext, supervisor.Stopped);
 
+            var faultStopLock = new object();
+            Task faultStopTask = null;
+
             void HandleConnectionException(Exception exception)
             {
                 // A send transport caches this shared session independently from the receive
                 // endpoint. Retire that cache at the same causal boundary as the underlying
                 // connection, otherwise a retained ISendEndpoint can reuse a disposed session
                 // executor after the receive endpoint has already recovered.
-                asyncContext.Stop($"Connection Exception: {exception}");
+                lock (faultStopLock)
+                {
+                    if (faultStopTask == null || faultStopTask.IsCompleted)
+                        faultStopTask = StopAfterConnectionException(exception);
+                }
             }
 
-            context.ContinueWith(task =>
+            async Task StopAfterConnectionException(Exception exception)
             {
-                task.Result.ConnectionContext.Connection.ExceptionListener += HandleConnectionException;
+                await Task.Yield();
 
-                asyncContext.Completed.ContinueWith(
-                    _ => task.Result.ConnectionContext.Connection.ExceptionListener -= HandleConnectionException,
-                    TaskContinuationOptions.ExecuteSynchronously);
-            }, TaskContinuationOptions.OnlyOnRanToCompletion);
+                try
+                {
+                    await asyncContext.Stop($"Connection Exception: {exception}").ConfigureAwait(false);
+                }
+                catch (Exception stopException)
+                {
+                    LogContext.Error?.Log(stopException, "Stopping faulted ActiveMQ session context failed");
+                }
+            }
+
+            context.GetAwaiter().OnCompleted(() =>
+            {
+                if (!context.IsCompletedSuccessfully)
+                    return;
+
+                var sessionContext = context.Result;
+                sessionContext.ConnectionContext.Connection.ExceptionListener += HandleConnectionException;
+
+                asyncContext.Completed.GetAwaiter().OnCompleted(() =>
+                    sessionContext.ConnectionContext.Connection.ExceptionListener -= HandleConnectionException);
+            });
 
             return asyncContext;
         }

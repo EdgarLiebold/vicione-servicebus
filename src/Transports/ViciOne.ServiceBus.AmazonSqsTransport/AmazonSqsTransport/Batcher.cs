@@ -30,7 +30,7 @@ public abstract class Batcher<TEntry> :
 
         _channel = Channel.CreateBounded<BatchEntry<TEntry>>(channelOptions);
         _executor = new TaskExecutor(2, _settings.BatchLimit);
-        _batchTask = Task.Run(WaitForBatch);
+        _batchTask = WaitForBatch();
     }
 
     public async Task Execute(TEntry entry, CancellationToken cancellationToken)

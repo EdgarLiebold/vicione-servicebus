@@ -2833,3 +2833,21 @@ future cohorts as complete.
 - Detailed evidence is under
   `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-TECHNICAL-RETRY/`. V4 progress is now 10/12
   (83.3%). Protected `review/**` remains untouched; no remote publication occurred.
+
+## Reviewer integration — V4 bounded background work accepted locally (2026-09-03)
+
+- One-time setup is single-flight by attempt; buffered dispatch and in-memory ready/scheduled work have
+  explicit positive capacities, cancellation-preserving backpressure and deterministic drain ownership.
+- Gauge observers, supervisor-created agents, receive/checkpoint/job/batch loops and provider callback
+  transitions now have explicit lifecycle and failure owners. Obsolete CS4014 suppressions are removed.
+- Native A/B diagnosis rejected a literal donor `Task.Yield` in ActiveMQ connection retirement: unchanged
+  package 10 and a one-file rollback passed the ordered recovery pair, while the donor-shaped callback hung
+  AMQP shutdown. The final preclaimed immediate transition passes 2/2 and full ActiveMQ 95/95.
+- Fourteen independent production mutations are killed. The final Release build has 0 warnings/0 errors;
+  Unit/Architecture is 3,255/3,255, SQL 62/62, Azure Service Bus 24/24 and RabbitMQ 24/24, all without skips.
+- The six-provider carrier is 342/343; its sole failure is the previously clean-baseline-reproduced EF inbox
+  `ReceiveCount` defect and is not represented as green.
+- Detailed evidence is under
+  `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-BACKGROUND-WORK-OWNERSHIP/`. Package 11/12 is
+  validation-complete and ready for local product/architecture freeze. Protected `review/**` remains
+  untouched; no remote publication occurred.

@@ -1,6 +1,7 @@
 namespace ViciOne.ServiceBus.Configuration
 {
     using System;
+    using System.Threading;
     using System.Threading.Tasks;
     using Batching;
     using Internals;
@@ -79,6 +80,8 @@ namespace ViciOne.ServiceBus.Configuration
         {
             readonly BatchConsumerFactory<TMessage> _factory;
             readonly ConnectHandle _handle;
+            Task _disposeTask;
+            int _disconnected;
 
             public BatchConnectHandle(ConnectHandle handle, BatchConsumerFactory<TMessage> factory)
             {
@@ -93,14 +96,23 @@ namespace ViciOne.ServiceBus.Configuration
 
             public void Disconnect()
             {
-                _handle.Disconnect();
+                if (Interlocked.Exchange(ref _disconnected, 1) != 0)
+                    return;
 
-                async Task DisposeConsumerFactory()
+                _handle.Disconnect();
+                _disposeTask = DisposeConsumerFactory();
+            }
+
+            async Task DisposeConsumerFactory()
+            {
+                try
                 {
                     await _factory.DisposeAsync().ConfigureAwait(false);
                 }
-
-                Task.Run(DisposeConsumerFactory);
+                catch (Exception exception)
+                {
+                    LogContext.Error?.Log(exception, "Batch consumer factory disposal faulted");
+                }
             }
         }
     }

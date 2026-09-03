@@ -45,26 +45,41 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
             {
                 var session = await connectionContext.CreateSession(createCancellationToken).ConfigureAwait(false);
 
+                var faultStopLock = new object();
+                Task faultStopTask = null;
+
                 void HandleConnectionException(Exception exception)
                 {
-                    // ReSharper disable once MethodSupportsCancellation
-                    asyncContext.Stop($"Connection Exception: {exception}");
+                    lock (faultStopLock)
+                    {
+                        if (faultStopTask == null || faultStopTask.IsCompleted)
+                            faultStopTask = StopAfterConnectionException(exception);
+                    }
+                }
+
+                async Task StopAfterConnectionException(Exception exception)
+                {
+                    await Task.Yield();
+
+                    try
+                    {
+                        await asyncContext.Stop($"Connection Exception: {exception}").ConfigureAwait(false);
+                    }
+                    catch (Exception stopException)
+                    {
+                        LogContext.Error?.Log(stopException, "Stopping faulted ActiveMQ session context failed");
+                    }
                 }
 
                 connectionContext.Connection.ExceptionListener += HandleConnectionException;
 
-                #pragma warning disable 4014
-                // ReSharper disable once MethodSupportsCancellation
-                asyncContext.Completed.ContinueWith(_ => connectionContext.Connection.ExceptionListener -= HandleConnectionException,
-                    TaskContinuationOptions.ExecuteSynchronously);
-                #pragma warning restore 4014
+                asyncContext.Completed.GetAwaiter().OnCompleted(() =>
+                    connectionContext.Connection.ExceptionListener -= HandleConnectionException);
 
                 return new ActiveMqSessionContext(connectionContext, session, createCancellationToken);
             }
 
-            #pragma warning disable CS4014
-            _connectionContextSupervisor.CreateAgent(asyncContext, CreateSessionContext, cancellationToken);
-            #pragma warning restore CS4014
+            _connectionContextSupervisor.StartAgent(asyncContext, CreateSessionContext, cancellationToken);
         }
     }
 }

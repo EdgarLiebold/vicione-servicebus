@@ -2,10 +2,12 @@
 namespace ViciOne.ServiceBus.Transports.Fabric
 {
     using System;
+    using System.Threading;
     using System.Threading.Channels;
     using System.Threading.Tasks;
     using InMemoryTransport;
     using Middleware;
+    using Util;
 
 
     public class MessageQueue<TContext, T> :
@@ -16,28 +18,36 @@ namespace ViciOne.ServiceBus.Transports.Fabric
     {
         readonly Channel<DeliveryContext<T>> _channel;
         readonly IInMemoryDelayProvider _delayProvider;
+        readonly SemaphoreSlim _delayedCapacity;
+        readonly PendingTaskCollection _delayedDeliveries;
         readonly Task _dispatcher;
         readonly QueueMetric _metrics;
         readonly IMessageFabricObserver<TContext> _observer;
         readonly MessageReceiverCollection<T> _receivers;
 
-        public MessageQueue(IMessageFabricObserver<TContext> observer, string name, IInMemoryDelayProvider delayProvider)
+        public MessageQueue(IMessageFabricObserver<TContext> observer, string name, IInMemoryDelayProvider delayProvider, int capacity = 1024)
         {
+            if (capacity <= 0)
+                throw new ArgumentOutOfRangeException(nameof(capacity), capacity, "Queue capacity must be greater than zero.");
+
             _observer = observer;
             _delayProvider = delayProvider;
             Name = name;
 
             _receivers = new MessageReceiverCollection<T>(receivers => new RoundRobinReceiverLoadBalancer<T>(receivers));
             _metrics = new QueueMetric(name);
+            _delayedCapacity = new SemaphoreSlim(capacity, capacity);
+            _delayedDeliveries = new PendingTaskCollection(capacity);
 
-            _channel = Channel.CreateUnbounded<DeliveryContext<T>>(new UnboundedChannelOptions
+            _channel = Channel.CreateBounded<DeliveryContext<T>>(new BoundedChannelOptions(capacity)
             {
                 SingleWriter = false,
                 SingleReader = true,
-                AllowSynchronousContinuations = false
+                AllowSynchronousContinuations = false,
+                FullMode = BoundedChannelFullMode.Wait
             });
 
-            _dispatcher = Task.Run(() => StartDispatcher());
+            _dispatcher = StartDispatcher();
         }
 
         public string Name { get; }
@@ -64,7 +74,12 @@ namespace ViciOne.ServiceBus.Transports.Fabric
                 return;
 
             if (context.EnqueueTime.HasValue)
-                _ = DeliverWithDelay(context);
+            {
+                await _delayedCapacity.WaitAsync(context.CancellationToken).ConfigureAwait(false);
+
+                Task delivery = DeliverWithDelay(context);
+                _delayedDeliveries.Add(delivery);
+            }
             else
             {
                 await _channel.Writer.WriteAsync(context, context.CancellationToken).ConfigureAwait(false);
@@ -83,11 +98,15 @@ namespace ViciOne.ServiceBus.Transports.Fabric
 
         protected override async Task StopAgent(StopContext context)
         {
+            await _delayedDeliveries.Completed().ConfigureAwait(false);
+
             _channel.Writer.TryComplete();
 
             await _channel.Reader.Completion.ConfigureAwait(false);
 
             await _dispatcher.ConfigureAwait(false);
+
+            _delayedCapacity.Dispose();
 
             await base.StopAgent(context).ConfigureAwait(false);
         }
@@ -123,7 +142,9 @@ namespace ViciOne.ServiceBus.Transports.Fabric
             finally
             {
                 if (delayed)
-                    _metrics.DelayedMessageCount.Remove();
+                    await _metrics.DelayedMessageCount.Remove().ConfigureAwait(false);
+
+                _delayedCapacity.Release();
             }
         }
 
@@ -136,7 +157,7 @@ namespace ViciOne.ServiceBus.Transports.Fabric
                     if (!_channel.Reader.TryRead(out DeliveryContext<T>? context))
                         continue;
 
-                    _metrics.MessageCount.Remove();
+                    await _metrics.MessageCount.Remove().ConfigureAwait(false);
 
                     try
                     {

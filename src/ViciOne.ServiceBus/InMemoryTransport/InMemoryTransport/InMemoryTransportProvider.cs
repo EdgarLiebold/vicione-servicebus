@@ -21,7 +21,7 @@ namespace ViciOne.ServiceBus.InMemoryTransport
             _hostConfiguration = hostConfiguration;
             _topologyConfiguration = topologyConfiguration;
 
-            _messageFabric = new MessageFabric<InMemoryTransportContext, InMemoryTransportMessage>();
+            _messageFabric = new MessageFabric<InMemoryTransportContext, InMemoryTransportMessage>(hostConfiguration.QueueCapacity);
 
             SetReady();
         }

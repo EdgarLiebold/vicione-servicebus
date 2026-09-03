@@ -29,7 +29,7 @@ namespace ViciOne.ServiceBus.EventHubIntegration.Checkpoints
             };
 
             _channel = Channel.CreateBounded<IPendingConfirmation>(channelOptions);
-            _checkpointTask = Task.Run(WaitForBatch);
+            _checkpointTask = WaitForBatch();
         }
 
         public async Task Pending(IPendingConfirmation confirmation)

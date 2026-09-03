@@ -20,6 +20,7 @@ namespace ViciOne.ServiceBus.Transports
         readonly object _lock = new object();
         readonly ConcurrentDictionary<TKey, PendingReceiveLockContext> _pending;
         Task _consumeTask;
+        Task _consumeTaskObserver;
         TaskCompletionSource<bool> _consumeTaskSource;
 
         protected ConsumerAgent(ReceiveEndpointContext context, IEqualityComparer<TKey> equalityComparer = default)
@@ -83,33 +84,40 @@ namespace ViciOne.ServiceBus.Transports
 
         void SetConsumeTask(Task consumeTask)
         {
-            async Task TryStop()
+            _consumeTaskObserver = ObserveConsumeTask(consumeTask);
+        }
+
+        async Task ObserveConsumeTask(Task consumeTask)
+        {
+            try
             {
-                if (IsStopping)
-                    return;
-
-                IsGracefulShutdown = false;
-
-                try
-                {
-                    LogContext.SetCurrentIfNull(_context.LogContext);
-
-                    using var tokenSource = _context.StopTimeout.HasValue
-                        ? new CancellationTokenSource(_context.StopTimeout.Value)
-                        : new CancellationTokenSource();
-
-                    await this.Stop("Consume Loop Exited", tokenSource.Token).ConfigureAwait(false);
-                }
-                catch (Exception exception)
-                {
-                    LogContext.Warning?.Log(exception, "Stop Faulted");
-                }
+                await consumeTask.ConfigureAwait(false);
+            }
+            catch
+            {
+                // Shutdown consumes and logs the transport-specific failure. This observer owns the
+                // automatic lifecycle transition when the loop terminates unexpectedly.
             }
 
-            if (consumeTask.IsCompleted)
-                Task.Run(() => TryStop());
-            else
-                consumeTask.ContinueWith(_ => TryStop(), TaskContinuationOptions.RunContinuationsAsynchronously);
+            if (IsStopping)
+                return;
+
+            IsGracefulShutdown = false;
+
+            try
+            {
+                LogContext.SetCurrentIfNull(_context.LogContext);
+
+                using var tokenSource = _context.StopTimeout.HasValue
+                    ? new CancellationTokenSource(_context.StopTimeout.Value)
+                    : new CancellationTokenSource();
+
+                await this.Stop("Consume Loop Exited", tokenSource.Token).ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                LogContext.Warning?.Log(exception, "Stop Faulted");
+            }
         }
 
         protected override Task StopAgent(StopContext context)
@@ -236,19 +244,20 @@ namespace ViciOne.ServiceBus.Transports
 
             var dispatchTask = _dispatcher.Dispatch(context, lockContext);
 
-            if (added)
-            {
-                dispatchTask.ContinueWith(_ =>
-                {
-                    if (_pending.TryGetValue(key, out var value))
-                    {
-                        if (value.IsEmpty)
-                            _pending.TryRemove(key, out var _);
-                    }
-                }, TaskContinuationOptions.ExecuteSynchronously);
-            }
+            return added ? TrackDispatch(dispatchTask, key) : dispatchTask;
+        }
 
-            return dispatchTask;
+        async Task TrackDispatch(Task dispatchTask, TKey key)
+        {
+            try
+            {
+                await dispatchTask.ConfigureAwait(false);
+            }
+            finally
+            {
+                if (_pending.TryGetValue(key, out var value) && value.IsEmpty)
+                    _pending.TryRemove(key, out _);
+            }
         }
     }
 }

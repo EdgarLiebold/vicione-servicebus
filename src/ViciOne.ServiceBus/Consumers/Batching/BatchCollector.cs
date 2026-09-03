@@ -25,9 +25,10 @@ namespace ViciOne.ServiceBus.Batching
             _dispatcher = new TaskExecutor(options.ConcurrencyLimit);
         }
 
-        public ValueTask DisposeAsync()
+        public async ValueTask DisposeAsync()
         {
-            return _collector.DisposeAsync();
+            await _collector.DisposeAsync().ConfigureAwait(false);
+            await _dispatcher.DisposeAsync().ConfigureAwait(false);
         }
 
         public Task<BatchConsumer<TMessage>> Collect(ConsumeContext<TMessage> context)
@@ -98,9 +99,10 @@ namespace ViciOne.ServiceBus.Batching
             _collectors = new Dictionary<TKey, BatchConsumer<TMessage>>();
         }
 
-        public ValueTask DisposeAsync()
+        public async ValueTask DisposeAsync()
         {
-            return _collector.DisposeAsync();
+            await _collector.DisposeAsync().ConfigureAwait(false);
+            await _dispatcher.DisposeAsync().ConfigureAwait(false);
         }
 
         public Task<BatchConsumer<TMessage>> Collect(ConsumeContext<TMessage> context)

@@ -20,6 +20,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport
         readonly IAgent _agent;
         readonly CancellationToken _cancellationToken;
         readonly IChannel _channel;
+        readonly object _faultStopLock = new object();
 
         /// <summary>
         /// Owns the channel. Every operation below runs under a lease from it, so the channel is not
@@ -28,6 +29,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport
         /// </summary>
         readonly TransportLifetime _lifetime;
 
+        Task _faultStopTask;
         CancellationTokenSource _tokenSource;
 
         public RabbitMqChannelContext(ConnectionContext connectionContext, IChannel channel, IAgent agent, CancellationToken cancellationToken)
@@ -211,8 +213,25 @@ namespace ViciOne.ServiceBus.RabbitMqTransport
 
         public void NotifyFaulted(Exception exception, Uri inputAddress)
         {
-            Task.Run(() => _agent.Stop($"Unrecoverable exception on {inputAddress.GetEndpointName()}", CancellationToken.None), CancellationToken.None)
-                .IgnoreUnobservedExceptions();
+            lock (_faultStopLock)
+            {
+                if (_faultStopTask == null || _faultStopTask.IsCompleted)
+                    _faultStopTask = StopAfterCallback(inputAddress);
+            }
+        }
+
+        async Task StopAfterCallback(Uri inputAddress)
+        {
+            await Task.Yield();
+
+            try
+            {
+                await _agent.Stop($"Unrecoverable exception on {inputAddress.GetEndpointName()}", CancellationToken.None).ConfigureAwait(false);
+            }
+            catch (Exception stopException)
+            {
+                LogContext.Error?.Log(stopException, "Stopping faulted RabbitMQ channel context failed: {InputAddress}", inputAddress);
+            }
         }
 
         /// <summary>

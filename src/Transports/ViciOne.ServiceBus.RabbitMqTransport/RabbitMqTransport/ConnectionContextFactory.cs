@@ -28,7 +28,7 @@ public class ConnectionContextFactory :
 
     public IPipeContextAgent<ConnectionContext> CreateContext(ISupervisor supervisor)
     {
-        Task<ConnectionContext> context = Task.Run(() => CreateConnection(supervisor), supervisor.Stopped);
+        Task<ConnectionContext> context = CreateConnection(supervisor);
 
         IPipeContextAgent<ConnectionContext> contextHandle = supervisor.AddContext(context);
 
@@ -36,26 +36,27 @@ public class ConnectionContextFactory :
         {
             // Invalidate before stopping, and never dispose from inside this notification: an operation
             // that is still unwinding — a channel creation, say — has to finish touching the connection
-            // before the connection goes away. Stopping stays off this thread for the same reason.
+            // before the connection goes away. RabbitMQ's callback is already asynchronous, so its
+            // returned task is the lifecycle owner and no detached ThreadPool hop is necessary.
             if (context.Status == TaskStatus.RanToCompletion && context.Result is RabbitMqConnectionContext connectionContext)
             {
                 connectionContext.TopologyEntityCache.Invalidate();
                 connectionContext.Lifetime.Invalidate(args);
             }
 
-            Task.Run(() => contextHandle.Stop(args.ReplyText))
-                .IgnoreUnobservedExceptions();
-
-            return Task.CompletedTask;
+            return contextHandle.Stop(args.ReplyText);
         }
 
-        context.ContinueWith(task =>
+        context.GetAwaiter().OnCompleted(() =>
         {
-            var connectionContext = task.Result;
+            if (!context.IsCompletedSuccessfully)
+                return;
+
+            var connectionContext = context.Result;
 
             connectionContext.Connection.ConnectionShutdownAsync += HandleShutdown;
 
-            void RemoveHandler(Task _)
+            void RemoveHandler()
             {
                 try
                 {
@@ -66,8 +67,8 @@ public class ConnectionContextFactory :
                 }
             }
 
-            contextHandle.Completed.ContinueWith(RemoveHandler);
-        }, TaskContinuationOptions.OnlyOnRanToCompletion);
+            contextHandle.Completed.GetAwaiter().OnCompleted(RemoveHandler);
+        });
 
         return contextHandle;
     }

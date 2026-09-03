@@ -26,17 +26,55 @@ namespace ViciOne.ServiceBus.ActiveMqTransport
 
             IPipeContextAgent<ConnectionContext> contextHandle = supervisor.AddContext(context);
 
+            var faultStopLock = new object();
+            Task faultStopTask = null;
+
             void HandleConnectionException(Exception exception)
             {
-                contextHandle.Stop($"Connection Exception: {exception}");
+                TaskCompletionSource stopCompletion;
+                lock (faultStopLock)
+                {
+                    if (faultStopTask == null || faultStopTask.IsCompleted)
+                    {
+                        stopCompletion = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+                        faultStopTask = stopCompletion.Task;
+                    }
+                    else
+                        return;
+                }
+
+                // Claim the transition before Stop is invoked, because NMS can report another
+                // exception synchronously while that stop tears the connection down.
+                _ = StopAfterConnectionException(exception, stopCompletion);
             }
 
-            context.ContinueWith(task =>
+            async Task StopAfterConnectionException(Exception exception, TaskCompletionSource stopCompletion)
             {
-                task.Result.Connection.ExceptionListener += HandleConnectionException;
+                try
+                {
+                    await contextHandle.Stop($"Connection Exception: {exception}").ConfigureAwait(false);
+                }
+                catch (Exception stopException)
+                {
+                    LogContext.Error?.Log(stopException, "Stopping faulted ActiveMQ connection context failed");
+                }
+                finally
+                {
+                    stopCompletion.TrySetResult();
+                }
+            }
 
-                contextHandle.Completed.ContinueWith(_ => task.Result.Connection.ExceptionListener -= HandleConnectionException);
-            }, TaskContinuationOptions.OnlyOnRanToCompletion);
+            context.GetAwaiter().OnCompleted(() =>
+            {
+                if (!context.IsCompletedSuccessfully)
+                    return;
+
+                var connectionContext = context.Result;
+                connectionContext.Connection.ExceptionListener += HandleConnectionException;
+
+                contextHandle.Completed.GetAwaiter().OnCompleted(() =>
+                    connectionContext.Connection.ExceptionListener -= HandleConnectionException);
+            });
 
             return contextHandle;
         }

@@ -2952,3 +2952,29 @@ Completion: all eight steps passed locally. Fifty-nine independent production mu
 complete Unit/Architecture profile passes 3,237/3,237, and every directly affected fresh provider owner is
 green. Native reconciliation additionally closes provider-neutral Azure Table/EF concurrency evidence that
 the V4 donor omitted. Package 11/12 is next; remote publication remains outside this package.
+
+## Reviewer integration — V4 bounded background work and failure ownership (2026-09-03)
+
+1. Bind the package-10 product commit/tree, protected review hashes and V4 checkpoint 010 before edits;
+   preserve the newer native owners and keep `review/**` immutable.
+2. Make one-time initialization single-flight by attempt generation, including shared failure/cancellation,
+   later retry and explicit eviction boundaries.
+3. Add positive bounded capacity and cancellation-preserving admission to `BufferedBus`; propagate one
+   validated capacity through default/typed DI and reject conflicting repeated registration.
+4. Bound immediate and scheduled in-memory delivery independently, preserve FIFO/backpressure, and make
+   queue stop cancel and await every accepted scheduled delivery.
+5. Make Gauge zero-activity observation ordered and awaitable, preserving the first observer failure.
+6. Centralize supervisor agent-start ownership; replace detached long-running loops, job/batch completions
+   and provider callbacks with lifecycle-retained tasks or outcome-transferring bridges.
+7. Add native source-owner and architecture tests, bind requirement projection, and execute independent
+   one-cause mutations. Strengthen any surviving oracle before accepting its mutation.
+8. Run focused and full analyzer builds/tests plus every available provider profile, then format, JSON,
+   risky-pattern, review-manifest, empty-directory and diff gates. Freeze product and architecture locally;
+   do not publish remotely without fresh authorization.
+
+Completion: all eight steps passed. Fourteen independent mutations are killed. A literal donor
+`Task.Yield` in the ActiveMQ connection-fault bridge was proven to reorder recovery and hang AMQP shutdown;
+the final preclaimed, immediate stop transition passes the ordered reproducer 2/2 and the complete provider
+95/95. Unit/Architecture passes 3,255/3,255; SQL passes 62/62, Azure Service Bus 24/24 and RabbitMQ 24/24.
+The broad carrier is 342/343 with only the already baseline-reproduced EF inbox counter defect. Package
+11/12 is ready for local freeze; remote publication remains outside this package.

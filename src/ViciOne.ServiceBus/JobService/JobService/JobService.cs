@@ -11,6 +11,7 @@ using Consumer;
 using Contracts.JobService;
 using Messages;
 using Middleware;
+using Util;
 
 
 public class JobService :
@@ -18,6 +19,7 @@ public class JobService :
 {
     readonly ConcurrentDictionary<Guid, JobHandle> _jobs;
     readonly Dictionary<Type, IJobTypeRegistration> _jobTypes;
+    readonly PendingTaskCollection _jobCompletions;
     /// <summary>
     /// The single owner of a lifecycle transition. Stop and BusStarted both move the stopping state and
     /// the heartbeat, and volatile only makes a write visible — it orders nothing. A later transition
@@ -54,6 +56,7 @@ public class JobService :
 
         _jobTypes = new Dictionary<Type, IJobTypeRegistration>();
         _jobs = new ConcurrentDictionary<Guid, JobHandle>();
+        _jobCompletions = new PendingTaskCollection(16);
     }
 
     public JobServiceSettings Settings { get; }
@@ -180,11 +183,13 @@ public class JobService :
                     await jobHandle.DisposeAsync().ConfigureAwait(false);
             }
 
-            await Task.WhenAll(_jobs.Values.Select(jobHandle => Task.Run(() => CancelJob(jobHandle)))).ConfigureAwait(false);
+            await Task.WhenAll(_jobs.Values.Select(CancelJob)).ConfigureAwait(false);
 
             if (_jobs.IsEmpty && Volatile.Read(ref _admitted) > 0)
                 await Task.Yield();
         }
+
+        await _jobCompletions.Completed().ConfigureAwait(false);
     }
 
     /// <summary>
@@ -286,11 +291,23 @@ public class JobService :
         if (!_jobs.TryAdd(jobHandle.JobId, jobHandle))
             throw new JobAlreadyExistsException(jobHandle.JobId);
 
-        jobHandle.JobTask.ContinueWith(async innerTask =>
+        _jobCompletions.Add(CompleteJob(jobHandle));
+    }
+
+    async Task CompleteJob(JobHandle jobHandle)
+    {
+        try
         {
-            if (TryRemoveJob(jobHandle.JobId, out _))
-                await jobHandle.DisposeAsync().ConfigureAwait(false);
-        });
+            await jobHandle.JobTask.ConfigureAwait(false);
+        }
+        catch
+        {
+            // The consumer pipeline reports the job failure. This owner observes terminal state so
+            // cleanup is deterministic and no faulted task remains detached.
+        }
+
+        if (TryRemoveJob(jobHandle.JobId, out _))
+            await jobHandle.DisposeAsync().ConfigureAwait(false);
     }
 
 

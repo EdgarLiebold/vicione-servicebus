@@ -89,17 +89,38 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Middleware
         {
             var supervisor = new ConsumerSupervisor(actualConsumers);
 
+            var connectionStopLock = new object();
+            Task connectionStopTask = null;
+
             void HandleException(Exception exception)
             {
-                supervisor.Stop(exception.Message);
+                lock (connectionStopLock)
+                {
+                    if (connectionStopTask == null || connectionStopTask.IsCompleted)
+                        connectionStopTask = StopAfterConnectionException(exception);
+                }
+            }
+
+            async Task StopAfterConnectionException(Exception exception)
+            {
+                await Task.Yield();
+
+                try
+                {
+                    await supervisor.Stop(exception.Message).ConfigureAwait(false);
+                }
+                catch (Exception stopException)
+                {
+                    LogContext.Warning?.Log(stopException, "Stop Faulted");
+                }
             }
 
             context.ConnectionContext.Connection.ExceptionListener += HandleException;
 
             supervisor.SetReady();
 
-            supervisor.Completed.ContinueWith(_ => context.ConnectionContext.Connection.ExceptionListener -= HandleException,
-                TaskContinuationOptions.ExecuteSynchronously);
+            supervisor.Completed.GetAwaiter().OnCompleted(() =>
+                context.ConnectionContext.Connection.ExceptionListener -= HandleException);
 
             return supervisor;
         }
@@ -143,20 +164,23 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Middleware
                     if (IsStopping)
                         return;
 
-                    consumer.Completed.ContinueWith(async _ =>
-                    {
-                        try
-                        {
-                            if (!IsStopping)
-                                await this.Stop("Consumer stopped, stopping supervisor").ConfigureAwait(false);
-                        }
-                        catch (Exception exception)
-                        {
-                            LogContext.Warning?.Log(exception, "Stop Faulted");
-                        }
-                    }, TaskContinuationOptions.RunContinuationsAsynchronously);
-
+                    _ = ObserveConsumerCompletion(consumer);
                     Add(consumer);
+                }
+            }
+
+            async Task ObserveConsumerCompletion(ActiveMqConsumer consumer)
+            {
+                try
+                {
+                    await consumer.Completed.ConfigureAwait(false);
+
+                    if (!IsStopping)
+                        await this.Stop("Consumer stopped, stopping supervisor").ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    LogContext.Warning?.Log(exception, "Stop Faulted");
                 }
             }
         }

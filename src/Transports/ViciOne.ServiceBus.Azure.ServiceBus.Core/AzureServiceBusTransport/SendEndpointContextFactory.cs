@@ -50,9 +50,7 @@ namespace ViciOne.ServiceBus.AzureServiceBusTransport
                 return sendEndpointContext;
             }
 
-            #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            _supervisor.CreateAgent(asyncContext, Create, cancellationToken);
-            #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            _supervisor.StartAgent(asyncContext, Create, cancellationToken);
         }
 
         static async Task<SendEndpointContext> CreateSharedContext(Task<SendEndpointContext> context, CancellationToken cancellationToken)

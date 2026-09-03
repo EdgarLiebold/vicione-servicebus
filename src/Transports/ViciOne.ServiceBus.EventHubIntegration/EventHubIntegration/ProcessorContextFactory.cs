@@ -65,9 +65,7 @@ namespace ViciOne.ServiceBus.EventHubIntegration
                 return Task.FromResult(context);
             }
 
-            #pragma warning disable CS4014
-            _contextSupervisor.CreateAgent(asyncContext, Create, cancellationToken);
-            #pragma warning restore CS4014
+            _contextSupervisor.StartAgent(asyncContext, Create, cancellationToken);
         }
     }
 }

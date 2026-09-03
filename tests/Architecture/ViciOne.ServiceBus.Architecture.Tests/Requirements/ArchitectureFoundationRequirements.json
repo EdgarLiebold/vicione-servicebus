@@ -174,4 +174,7 @@
     "testType": "ViciOne.ServiceBus.Architecture.Tests.Product.TechnicalRetryArchitectureTests",
     "testMethod": "RabbitMqNativeRedelivery_BindsTheCanonicalScheduleAndTransientTaxonomy"
   }
+  ,{ "requirementId": "REQ-VSB-BACKGROUND-AGENT-OWNERSHIP", "variantKey": "agent-creation-call-sites-use-owned-bridge", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Product.BackgroundWorkOwnershipTests", "testMethod": "AgentCreationCallSites_UseTheOwnedStartBridge" }
+  ,{ "requirementId": "REQ-VSB-BACKGROUND-TASK-OWNERSHIP", "variantKey": "long-running-loops-have-direct-lifecycle-owner", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Product.BackgroundWorkOwnershipTests", "testMethod": "LongRunningLoops_StartDirectlyAndKeepTheirTaskInALifecycleField" }
+  ,{ "requirementId": "REQ-VSB-BACKGROUND-CALLBACK-OWNERSHIP", "variantKey": "off-thread-callback-transitions-transfer-outcome", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Product.BackgroundWorkOwnershipTests", "testMethod": "CallbackDrivenOffThreadTransitions_StoreOrTransferEveryOutcome" }
 ]

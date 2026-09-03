@@ -48,7 +48,8 @@ namespace ViciOne.ServiceBus.RabbitMqTransport
             LogContext.Debug?.Log("Consumer Ok: {InputAddress} - {ConsumerTag}", _context.InputAddress, consumerTag);
 
             _channel.Channel.ChannelShutdownAsync += HandleChannelShutdown;
-            _ = Completed.ContinueWith(_ => _channel.Channel.ChannelShutdownAsync -= HandleChannelShutdown, CancellationToken.None);
+            Completed.GetAwaiter().OnCompleted(() =>
+                _channel.Channel.ChannelShutdownAsync -= HandleChannelShutdown);
 
             _consumerTag = consumerTag;
 

@@ -10,14 +10,21 @@ namespace ViciOne.ServiceBus.Transactions
         DeferredBus,
         IBufferedBus
     {
+        internal const int DefaultCapacity = 1024;
+
+        readonly SemaphoreSlim _capacity;
         readonly SemaphoreSlim _flushLock;
         readonly AsyncLocal<FlushFrame> _flushFrame;
         readonly object _lock;
         readonly Queue<Func<CancellationToken, Task>> _pendingActions;
 
-        public BufferedBus(IBus bus)
+        public BufferedBus(IBus bus, int capacity)
             : base(bus)
         {
+            if (capacity <= 0)
+                throw new ArgumentOutOfRangeException(nameof(capacity), capacity, "Buffered bus capacity must be greater than zero.");
+
+            _capacity = new SemaphoreSlim(capacity, capacity);
             _flushLock = new SemaphoreSlim(1, 1);
             _flushFrame = new AsyncLocal<FlushFrame>();
             _lock = new object();
@@ -50,6 +57,10 @@ namespace ViciOne.ServiceBus.Transactions
                         cancellationToken.ThrowIfCancellationRequested();
                     }
 
+                    // This action is no longer buffered. Releasing before execution also allows an
+                    // action to enqueue a successor when the bounded buffer was previously full.
+                    _capacity.Release();
+
                     try
                     {
                         FlushFrame inheritedFrame = _flushFrame.Value;
@@ -78,17 +89,22 @@ namespace ViciOne.ServiceBus.Transactions
             }
         }
 
-        internal override Task Add(Func<CancellationToken, Task> action, CancellationToken cancellationToken)
+        internal override async Task Add(Func<CancellationToken, Task> action, CancellationToken cancellationToken)
         {
-            if (action == null)
-                throw new ArgumentNullException(nameof(action));
+            ArgumentNullException.ThrowIfNull(action);
 
-            cancellationToken.ThrowIfCancellationRequested();
+            await _capacity.WaitAsync(cancellationToken).ConfigureAwait(false);
+            try
+            {
+                lock (_lock)
+                    _pendingActions.Enqueue(action);
+            }
+            catch
+            {
+                _capacity.Release();
+                throw;
+            }
 
-            lock (_lock)
-                _pendingActions.Enqueue(action);
-
-            return Task.CompletedTask;
         }
 
         void RestoreUnattempted(Func<CancellationToken, Task>[] actions, int firstUnattempted)

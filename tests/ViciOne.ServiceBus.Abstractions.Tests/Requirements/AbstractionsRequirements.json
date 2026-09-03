@@ -1003,9 +1003,9 @@
    {
       "requirementId" : "REQ-VSB-ONE-TIME-SETUP",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
-      "testMethod" : "OneTimeSetup_AQueuedHealthyCallerCompletesAfterTheLeaderFails",
+      "testMethod" : "OneTimeSetup_ConcurrentCallersShareTheFailedAttemptAndOnlyALaterCallerRetries",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.PipeExtensionsTests",
-      "variantKey" : "queued-fallback"
+      "variantKey" : "concurrent-failure-shared-and-later-retry"
    },
    {
       "requirementId" : "REQ-VSB-ONE-TIME-SETUP",

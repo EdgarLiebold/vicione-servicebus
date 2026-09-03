@@ -60,6 +60,7 @@ public sealed class ActiveMqFixtureRecoveryTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         bool started = false;
         bool interrupted = false;
+        Exception? primaryFailure = null;
 
         try
         {
@@ -106,13 +107,27 @@ public sealed class ActiveMqFixtureRecoveryTests
             Assert.Equal(1, received[after]);
             Assert.Equal(1, received[barrier]);
         }
+        catch (Exception exception)
+        {
+            primaryFailure = exception;
+            throw;
+        }
         finally
         {
             releaseBarrier.TrySetResult(true);
             if (interrupted)
                 await BrokerOutageControlClient.FromEnvironment().RestoreAsync();
             if (started)
-                await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
+            {
+                try
+                {
+                    await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
+                }
+                catch (Exception cleanupFailure) when (primaryFailure is not null)
+                {
+                    primaryFailure.Data["CleanupFailure"] = cleanupFailure.ToString();
+                }
+            }
         }
     }
 

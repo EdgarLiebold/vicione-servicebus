@@ -9,14 +9,14 @@ public sealed class BufferedBusTestDriver
 {
     private readonly BufferedBus _bus;
 
-    public BufferedBusTestDriver()
-        : this(UnusedBus.Create())
+    public BufferedBusTestDriver(int capacity = 1024)
+        : this(UnusedBus.Create(), capacity)
     {
     }
 
-    public BufferedBusTestDriver(IBus bus)
+    public BufferedBusTestDriver(IBus bus, int capacity = 1024)
     {
-        _bus = new BufferedBus(bus);
+        _bus = new BufferedBus(bus, capacity);
     }
 
     public IBufferedBus Bus => _bus;

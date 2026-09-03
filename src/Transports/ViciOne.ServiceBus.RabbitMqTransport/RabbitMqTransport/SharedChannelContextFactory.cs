@@ -30,12 +30,17 @@ namespace ViciOne.ServiceBus.RabbitMqTransport
                     await asyncContext.Stop(args.ReplyText).ConfigureAwait(false);
             }
 
-            context.ContinueWith(task =>
+            context.GetAwaiter().OnCompleted(() =>
             {
-                task.Result.Channel.ChannelShutdownAsync += HandleShutdown;
+                if (!context.IsCompletedSuccessfully)
+                    return;
 
-                asyncContext.Completed.ContinueWith(_ => task.Result.Channel.ChannelShutdownAsync -= HandleShutdown);
-            }, TaskContinuationOptions.OnlyOnRanToCompletion);
+                ChannelContext channelContext = context.Result;
+                channelContext.Channel.ChannelShutdownAsync += HandleShutdown;
+
+                asyncContext.Completed.GetAwaiter().OnCompleted(() =>
+                    channelContext.Channel.ChannelShutdownAsync -= HandleShutdown);
+            });
 
             return asyncContext;
         }

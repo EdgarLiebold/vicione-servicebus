@@ -3606,3 +3606,39 @@ and one strengthened boundary method kill 59/59 independent production mutations
 RabbitMQ 24/24, SQS 48/48, Azure Table Future 6/6 and EF Future 6/6. The final 343-case general carrier's
 only failure is the inherited EF inbox `ReceiveCount` race already reproduced at clean pre-package-6 commit
 `0df0a5ed`; no package-10 path participates in it.
+
+## Reviewer integration research — V4 bounded background work and failure ownership (2026-09-03)
+
+Package 11/12 is bound by architecture assignment `PO-2026-09-03-SERVICEBUS-REVIEW-INTEGRATION-10`
+at architecture commit `7d03116aacbdbdf4bcfacaca31221ac9ef8041ba`. Its product baseline is
+`f693b737de33a00d2acafe8a8b0a0397c53fd498`, tree
+`de56a8bca7ae66ced847e45d74df4beb0ceafc12`. V4 checkpoint 010 is
+`633cf9726d852826240ee4fd3a9faa679ffe2a39`; the protected V4 bundle remains
+`e8f28736562bf7c4fa8ffca4dfd662cd5105d3124e26d2ba424fe1ac0d192b87`.
+
+The donor correctly identifies four coupled risks: a monitor-based one-time initializer that does not make
+an attempt a shared task; unbounded buffered/in-memory admission; zero-activity observers whose tasks are
+discarded; and a broad family of agent, loop and callback tasks without explicit lifecycle/failure owners.
+Native integration preserves the later cache, retry, provider and clock designs while closing those exact
+risks. Capacity is a configuration invariant, not merely an implementation constant, and shutdown owns
+accepted delayed work rather than abandoning it.
+
+Mutation work exposed three initially shallow oracles. Immediate queue capacity and delayed-work shutdown
+could pass because the scheduler had not yet run the competing operation; both tests now establish a
+blocking first receiver and then observe a 250 ms stable pending window. The RabbitMQ callback scan accepted
+an unrelated occurrence of the stop expression; it now binds the exact returned callback transition.
+
+Real-provider validation found a material flaw in the literal donor. `ConnectionContextFactory` yielded
+before starting its fault stop so the task field could be assigned ahead of NMS callback re-entry. Under an
+OpenWire outage followed by an AMQP outage in one process, delivery recovered but AMQP bus stop hung. The
+failure remained with all attempted `StartAgent` observer shapes and even with the original direct
+`CreateAgent` call, disproving the initial mirror-task hypothesis. Reverting only the connection callback
+made the package green; the unchanged package-10 baseline also passed 2/2 against the same current runner.
+
+The final connection bridge preclaims the transition with an incomplete completion owner under the lock,
+then invokes stop immediately at the original callback boundary. Re-entry sees an active owner, every stop
+failure is caught/logged, and completion is published in `finally`. Removing the yield is not a timing
+workaround: it restores the causal retirement order while the preclaim preserves the donor's recursion
+safety. The ordered reproducer passes 2/2 and the complete provider passes 95/95. Fourteen independent
+mutations are killed; final Unit/Architecture is 3,255/3,255 and all directly affected provider profiles
+are green. The only broad-profile failure remains the independently baseline-proven EF inbox count defect.

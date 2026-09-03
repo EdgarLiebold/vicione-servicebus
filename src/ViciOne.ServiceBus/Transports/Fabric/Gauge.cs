@@ -20,17 +20,17 @@ namespace ViciOne.ServiceBus.Transports.Fabric
                 Interlocked.CompareExchange(ref _concurrentActiveCount, currentActiveCount, _concurrentActiveCount);
         }
 
-        public void Remove()
+        public Task Remove()
         {
             var pendingCount = Interlocked.Decrement(ref _activeCount);
             if (pendingCount != 0)
-                return;
+                return Task.CompletedTask;
 
             var zeroActivity = ZeroActive;
             if (zeroActivity == null)
-                return;
+                return Task.CompletedTask;
 
-            Task.Run(() => NotifyZeroActivity(zeroActivity));
+            return NotifyZeroActivity(zeroActivity);
         }
 
         static Task NotifyZeroActivity(ZeroActiveHandler zeroActivity)
@@ -48,7 +48,7 @@ namespace ViciOne.ServiceBus.Transports.Fabric
 
             return invocationList.Length switch
             {
-                0 => default,
+                0 => Task.CompletedTask,
                 1 when invocationList[0] is ZeroActiveHandler handler => handler(),
                 _ => InvokeAsync()
             };

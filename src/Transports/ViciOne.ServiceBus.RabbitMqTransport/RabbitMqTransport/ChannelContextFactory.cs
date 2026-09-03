@@ -40,15 +40,15 @@ public class ChannelContextFactory :
                 channelContext.Lifetime.Invalidate(args);
             }
 
-            Task.Run(() => asyncContext.Stop(args.ReplyText))
-                .IgnoreUnobservedExceptions();
-
-            return Task.CompletedTask;
+            return asyncContext.Stop(args.ReplyText);
         }
 
-        context.ContinueWith(task =>
+        context.GetAwaiter().OnCompleted(() =>
         {
-            var channelContext = task.Result;
+            if (!context.IsCompletedSuccessfully)
+                return;
+
+            var channelContext = context.Result;
 
             channelContext.Channel.ChannelShutdownAsync += HandleShutdown;
             channelContext.ConnectionContext.Connection.ConnectionShutdownAsync += HandleShutdown;
@@ -72,8 +72,8 @@ public class ChannelContextFactory :
                 }
             }
 
-            asyncContext.Completed.ContinueWith(_ => RemoveHandlers());
-        }, TaskContinuationOptions.OnlyOnRanToCompletion);
+            asyncContext.Completed.GetAwaiter().OnCompleted(RemoveHandlers);
+        });
 
         return asyncContext;
     }

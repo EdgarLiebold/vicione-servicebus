@@ -121,6 +121,32 @@ namespace ViciOne.ServiceBus
             return contextAgent;
         }
 
+        /// <summary>
+        /// Starts asynchronous agent creation for a caller that owns the supplied async context rather
+        /// than the mirror task returned by <see cref="CreateAgent{T,TAgent}"/>. The mirror outcome is
+        /// observed here; creation cancellation and failure are transferred to <paramref name="asyncContext"/>.
+        /// </summary>
+        public static void StartAgent<T, TAgent>(this ISupervisor<T> supervisor, IAsyncPipeContextAgent<TAgent> asyncContext,
+            Func<T, CancellationToken, Task<TAgent>> agentFactory, CancellationToken cancellationToken)
+            where T : class, PipeContext
+            where TAgent : class, PipeContext
+        {
+            Task<TAgent> creationTask = supervisor.CreateAgent(asyncContext, agentFactory, cancellationToken);
+
+            creationTask.GetAwaiter().OnCompleted(() =>
+            {
+                try
+                {
+                    creationTask.GetAwaiter().GetResult();
+                }
+                catch
+                {
+                    // CreateAgent transfers cancellation/failure to asyncContext. This observer exists
+                    // solely so the mirror task cannot become an unobserved exception.
+                }
+            });
+        }
+
         public static async Task<TAgent> CreateAgent<T, TAgent>(this ISupervisor<T> supervisor, IAsyncPipeContextAgent<TAgent> asyncContext,
             Func<T, CancellationToken, Task<TAgent>> agentFactory, CancellationToken cancellationToken)
             where T : class, PipeContext
@@ -148,12 +174,9 @@ namespace ViciOne.ServiceBus
                 }
             }
 
-            #pragma warning disable 4014
-            // ReSharper disable once MethodSupportsCancellation
-            HandleSupervisorTask().ContinueWith(_ =>
-            {
-            });
-            #pragma warning restore 4014
+            // The bridge catches every supervisor outcome and transfers it to asyncContext. It may
+            // outlive context creation because supervisor.Send remains active until the agent stops.
+            _ = HandleSupervisorTask();
 
             return await asyncContext.Context.ConfigureAwait(false);
         }

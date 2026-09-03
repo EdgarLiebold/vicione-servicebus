@@ -47,7 +47,7 @@ namespace ViciOne.ServiceBus.SqlTransport.Middleware
 
             _executorPool = new OrderedPartitionedTaskExecutor(_receiveSettings);
 
-            TrySetConsumeTask(Task.Run(() => Consume()));
+            TrySetConsumeTask(Consume());
         }
 
         protected override async Task ActiveAndActualAgentsCompleted(StopContext context)

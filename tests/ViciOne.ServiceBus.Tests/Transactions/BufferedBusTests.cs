@@ -583,6 +583,97 @@ public sealed class BufferedBusTests
         Assert.Equal(1, firstAttempts);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BUFFERED-BUS-BACKPRESSURE", "capacity-release-and-next-snapshot")]
+    public async Task Capacity_BlocksTheNextWriterUntilFlushReleasesAReservationIntoTheNextSnapshot()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var driver = new BufferedBusTestDriver(capacity: 2);
+        var firstEntered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var releaseFirst = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var order = new List<string>();
+
+        await driver.Enqueue(async token =>
+        {
+            order.Add("first");
+            firstEntered.TrySetResult();
+            await releaseFirst.Task.WaitAsync(timeout, token);
+        }, cancellationToken);
+        await driver.Enqueue(_ =>
+        {
+            order.Add("second");
+            return Task.CompletedTask;
+        }, cancellationToken);
+
+        Task thirdAdmission = driver.Enqueue(_ =>
+        {
+            order.Add("third");
+            return Task.CompletedTask;
+        }, cancellationToken);
+        Assert.False(thirdAdmission.IsCompleted);
+
+        Task firstFlush = driver.Bus.FlushAsync(cancellationToken);
+        await firstEntered.Task.WaitAsync(timeout, cancellationToken);
+        try
+        {
+            await thirdAdmission.WaitAsync(timeout, cancellationToken);
+            Assert.Equal(["first"], order);
+        }
+        finally
+        {
+            releaseFirst.TrySetResult();
+            await firstFlush.WaitAsync(timeout, cancellationToken);
+        }
+
+        Assert.Equal(["first", "second"], order);
+
+        await driver.Bus.FlushAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
+
+        Assert.Equal(["first", "second", "third"], order);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-BUFFERED-BUS-BACKPRESSURE", "blocked-admission-preserves-cancellation")]
+    public async Task CapacityWait_PreservesTheRequestTokenAndDoesNotEnqueueCanceledWork()
+    {
+        var driver = new BufferedBusTestDriver(capacity: 1);
+        var order = new List<string>();
+        await driver.Enqueue(_ =>
+        {
+            order.Add("accepted");
+            return Task.CompletedTask;
+        }, TestContext.Current.CancellationToken);
+        using var source = new CancellationTokenSource();
+
+        Task blocked = driver.Enqueue(_ =>
+        {
+            order.Add("canceled");
+            return Task.CompletedTask;
+        }, source.Token);
+        Assert.False(blocked.IsCompleted);
+        source.Cancel();
+
+        OperationCanceledException actual = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => blocked);
+        await driver.Bus.FlushAsync(TestContext.Current.CancellationToken);
+
+        Assert.Equal(source.Token, actual.CancellationToken);
+        Assert.Equal(["accepted"], order);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    [RequirementCoverage("REQ-VSB-BUFFERED-BUS-BACKPRESSURE", "positive-capacity")]
+    public void NonPositiveCapacity_IsRejected(int capacity)
+    {
+        ArgumentOutOfRangeException actual = Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new BufferedBusTestDriver(capacity));
+
+        Assert.Equal("capacity", actual.ParamName);
+        Assert.Equal(capacity, actual.ActualValue);
+    }
+
     private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
     private static object Values(TransactionalMessage message) => new

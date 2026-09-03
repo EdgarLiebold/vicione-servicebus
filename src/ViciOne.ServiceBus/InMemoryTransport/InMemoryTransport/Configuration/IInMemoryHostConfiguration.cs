@@ -17,6 +17,8 @@ namespace ViciOne.ServiceBus.InMemoryTransport.Configuration
 
         IInMemoryTransportProvider TransportProvider { get; }
 
+        int QueueCapacity { get; }
+
         new IInMemoryBusTopology Topology { get; }
 
         void ApplyEndpointDefinition(IInMemoryReceiveEndpointConfigurator configurator, IEndpointDefinition definition);
