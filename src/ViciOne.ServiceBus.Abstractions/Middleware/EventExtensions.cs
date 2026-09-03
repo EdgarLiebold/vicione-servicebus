@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus
 
     public static class EventExtensions
     {
-        public static Task PublishEvent<T>(this IPipe<EventContext> pipe, T message)
+        public static Task PublishEvent<T>(this IPipe<EventContext> pipe, T message, TimeProvider? timeProvider = null)
             where T : class
         {
             if (pipe == null)
@@ -16,7 +16,7 @@ namespace ViciOne.ServiceBus
             if (message == null)
                 throw new ArgumentNullException(nameof(message));
 
-            var context = new PublishEventContext<T>(message);
+            var context = new PublishEventContext<T>(message, timeProvider ?? TimeProvider.System);
 
             return pipe.Send(context);
         }
@@ -27,10 +27,11 @@ namespace ViciOne.ServiceBus
             EventContext<T>
             where T : class
         {
-            public PublishEventContext(T @event)
+            public PublishEventContext(T @event, TimeProvider timeProvider)
             {
                 Event = @event;
-                Timestamp = DateTime.UtcNow;
+                Timestamp = timeProvider.GetUtcNow().UtcDateTime;
+                this.SetTimeProvider(timeProvider);
             }
 
             public DateTime Timestamp { get; }

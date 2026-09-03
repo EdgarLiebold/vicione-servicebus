@@ -14,7 +14,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorContext<TSaga> context)
             {
-                return DateTime.UtcNow + schedule.GetDelay(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
             }
 
             return source.Add(new ScheduleActivity<TSaga, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(message, callback)));
@@ -27,7 +27,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorContext<TSaga> context)
             {
-                return DateTime.UtcNow + schedule.GetDelay(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
             }
 
             return source.Add(new ScheduleActivity<TSaga, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(message, callback)));
@@ -41,7 +41,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorContext<TSaga> context)
             {
-                return DateTime.UtcNow + delayProvider(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
             }
 
             return source.Add(new ScheduleActivity<TSaga, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(message, callback)));
@@ -55,7 +55,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorContext<TSaga> context)
             {
-                return DateTime.UtcNow + delayProvider(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
             }
 
             return source.Add(new ScheduleActivity<TSaga, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(message, callback)));
@@ -69,7 +69,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorContext<TSaga> context)
             {
-                return DateTime.UtcNow + schedule.GetDelay(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
             }
 
             return source.Add(new ScheduleActivity<TSaga, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
@@ -83,7 +83,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorContext<TSaga> context)
             {
-                return DateTime.UtcNow + schedule.GetDelay(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
             }
 
             return source.Add(new ScheduleActivity<TSaga, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
@@ -97,7 +97,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorContext<TSaga> context)
             {
-                return DateTime.UtcNow + schedule.GetDelay(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
             }
 
             return source.Add(new ScheduleActivity<TSaga, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
@@ -111,7 +111,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorContext<TSaga> context)
             {
-                return DateTime.UtcNow + delayProvider(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
             }
 
             return source.Add(new ScheduleActivity<TSaga, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
@@ -125,7 +125,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorContext<TSaga> context)
             {
-                return DateTime.UtcNow + delayProvider(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
             }
 
             return source.Add(new ScheduleActivity<TSaga, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
@@ -139,7 +139,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorContext<TSaga> context)
             {
-                return DateTime.UtcNow + delayProvider(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
             }
 
             return source.Add(new ScheduleActivity<TSaga, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
@@ -153,7 +153,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorContext<TSaga, TData> context)
             {
-                return DateTime.UtcNow + schedule.GetDelay(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
             }
 
             return source.Add(new ScheduleActivity<TSaga, TData, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(message, callback)));
@@ -167,7 +167,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorContext<TSaga, TData> context)
             {
-                return DateTime.UtcNow + schedule.GetDelay(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
             }
 
             return source.Add(new ScheduleActivity<TSaga, TData, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(message, callback)));
@@ -182,7 +182,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorContext<TSaga, TData> context)
             {
-                return DateTime.UtcNow + delayProvider(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
             }
 
             return source.Add(new ScheduleActivity<TSaga, TData, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(message, callback)));
@@ -197,7 +197,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorContext<TSaga, TData> context)
             {
-                return DateTime.UtcNow + delayProvider(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
             }
 
             return source.Add(new ScheduleActivity<TSaga, TData, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(message, callback)));
@@ -212,7 +212,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorContext<TSaga, TData> context)
             {
-                return DateTime.UtcNow + schedule.GetDelay(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
             }
 
             return source.Add(new ScheduleActivity<TSaga, TData, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
@@ -228,7 +228,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorContext<TSaga, TData> context)
             {
-                return DateTime.UtcNow + schedule.GetDelay(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
             }
 
             return source.Add(new ScheduleActivity<TSaga, TData, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
@@ -244,7 +244,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorContext<TSaga, TData> context)
             {
-                return DateTime.UtcNow + schedule.GetDelay(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
             }
 
             return source.Add(new ScheduleActivity<TSaga, TData, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
@@ -260,7 +260,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorContext<TSaga, TData> context)
             {
-                return DateTime.UtcNow + delayProvider(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
             }
 
             return source.Add(new ScheduleActivity<TSaga, TData, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
@@ -276,7 +276,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorContext<TSaga, TData> context)
             {
-                return DateTime.UtcNow + delayProvider(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
             }
 
             return source.Add(new ScheduleActivity<TSaga, TData, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
@@ -292,7 +292,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorContext<TSaga, TData> context)
             {
-                return DateTime.UtcNow + delayProvider(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
             }
 
             return source.Add(new ScheduleActivity<TSaga, TData, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
@@ -307,7 +307,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
             {
-                return DateTime.UtcNow + schedule.GetDelay(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
             }
 
             return source.Add(new FaultedScheduleActivity<TSaga, TException, TMessage>(schedule, TimeProvider,
@@ -323,7 +323,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
             {
-                return DateTime.UtcNow + schedule.GetDelay(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
             }
 
             return source.Add(new FaultedScheduleActivity<TSaga, TException, TMessage>(schedule, TimeProvider,
@@ -339,7 +339,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
             {
-                return DateTime.UtcNow + delayProvider(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
             }
 
             return source.Add(new FaultedScheduleActivity<TSaga, TException, TMessage>(schedule, TimeProvider,
@@ -355,7 +355,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
             {
-                return DateTime.UtcNow + delayProvider(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
             }
 
             return source.Add(new FaultedScheduleActivity<TSaga, TException, TMessage>(schedule, TimeProvider,
@@ -371,7 +371,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
             {
-                return DateTime.UtcNow + schedule.GetDelay(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
             }
 
             return source.Add(new FaultedScheduleActivity<TSaga, TException, TMessage>(schedule, TimeProvider,
@@ -387,7 +387,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
             {
-                return DateTime.UtcNow + schedule.GetDelay(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
             }
 
             return source.Add(new FaultedScheduleActivity<TSaga, TException, TMessage>(schedule, TimeProvider,
@@ -403,7 +403,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
             {
-                return DateTime.UtcNow + schedule.GetDelay(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
             }
 
             return source.Add(new FaultedScheduleActivity<TSaga, TException, TMessage>(schedule, TimeProvider,
@@ -420,7 +420,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
             {
-                return DateTime.UtcNow + delayProvider(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
             }
 
             return source.Add(new FaultedScheduleActivity<TSaga, TException, TMessage>(schedule, TimeProvider,
@@ -437,7 +437,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
             {
-                return DateTime.UtcNow + delayProvider(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
             }
 
             return source.Add(new FaultedScheduleActivity<TSaga, TException, TMessage>(schedule, TimeProvider,
@@ -454,7 +454,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
             {
-                return DateTime.UtcNow + delayProvider(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
             }
 
             return source.Add(new FaultedScheduleActivity<TSaga, TException, TMessage>(schedule, TimeProvider,
@@ -471,7 +471,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
             {
-                return DateTime.UtcNow + schedule.GetDelay(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
             }
 
             return source.Add(new FaultedScheduleActivity<TSaga, TData, TException, TMessage>(schedule, TimeProvider,
@@ -488,7 +488,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
             {
-                return DateTime.UtcNow + schedule.GetDelay(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
             }
 
             return source.Add(new FaultedScheduleActivity<TSaga, TData, TException, TMessage>(schedule, TimeProvider,
@@ -505,7 +505,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
             {
-                return DateTime.UtcNow + delayProvider(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
             }
 
             return source.Add(new FaultedScheduleActivity<TSaga, TData, TException, TMessage>(schedule, TimeProvider,
@@ -522,7 +522,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
             {
-                return DateTime.UtcNow + delayProvider(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
             }
 
             return source.Add(new FaultedScheduleActivity<TSaga, TData, TException, TMessage>(schedule, TimeProvider,
@@ -539,7 +539,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
             {
-                return DateTime.UtcNow + schedule.GetDelay(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
             }
 
             return source.Add(new FaultedScheduleActivity<TSaga, TData, TException, TMessage>(schedule, TimeProvider,
@@ -556,7 +556,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
             {
-                return DateTime.UtcNow + schedule.GetDelay(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
             }
 
             return source.Add(new FaultedScheduleActivity<TSaga, TData, TException, TMessage>(schedule, TimeProvider,
@@ -573,7 +573,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
             {
-                return DateTime.UtcNow + schedule.GetDelay(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
             }
 
             return source.Add(new FaultedScheduleActivity<TSaga, TData, TException, TMessage>(schedule, TimeProvider,
@@ -591,7 +591,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
             {
-                return DateTime.UtcNow + delayProvider(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
             }
 
             return source.Add(new FaultedScheduleActivity<TSaga, TData, TException, TMessage>(schedule, TimeProvider,
@@ -609,7 +609,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
             {
-                return DateTime.UtcNow + delayProvider(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
             }
 
             return source.Add(new FaultedScheduleActivity<TSaga, TData, TException, TMessage>(schedule, TimeProvider,
@@ -627,7 +627,7 @@ namespace ViciOne.ServiceBus
         {
             DateTime TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
             {
-                return DateTime.UtcNow + delayProvider(context);
+                return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
             }
 
             return source.Add(new FaultedScheduleActivity<TSaga, TData, TException, TMessage>(schedule, TimeProvider,

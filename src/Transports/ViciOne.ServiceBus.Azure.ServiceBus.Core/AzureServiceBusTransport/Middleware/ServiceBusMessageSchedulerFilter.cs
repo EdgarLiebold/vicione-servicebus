@@ -27,7 +27,7 @@ namespace ViciOne.ServiceBus.AzureServiceBusTransport.Middleware
 
         static IMessageScheduler SchedulerFactory(ConsumeContext context)
         {
-            return new MessageScheduler(new ServiceBusScheduleMessageProvider(context), context.GetPayload<IBusTopology>());
+            return new MessageScheduler(new ServiceBusScheduleMessageProvider(context), context.GetPayload<IBusTopology>(), context.GetTimeProvider());
         }
     }
 }

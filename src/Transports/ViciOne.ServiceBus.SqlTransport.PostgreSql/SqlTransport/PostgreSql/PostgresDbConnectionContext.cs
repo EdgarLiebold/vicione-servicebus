@@ -96,14 +96,15 @@ namespace ViciOne.ServiceBus.SqlTransport.PostgreSql
             }, cancellationToken);
         }
 
-        public Task DelayUntilMessageReady(long queueId, TimeSpan timeout, CancellationToken cancellationToken)
+        public Task DelayUntilMessageReady(long queueId, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken)
         {
+            ArgumentNullException.ThrowIfNull(timeProvider);
             var queueToken = _agent.GetCancellationTokenForQueue(queueId);
 
             async Task WaitAsync()
             {
                 using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, queueToken);
-                var delayTask = Task.Delay(timeout, cts.Token);
+                var delayTask = Task.Delay(timeout, timeProvider, cts.Token);
                 await Task.WhenAny(delayTask).ConfigureAwait(false);
 
                 cts.Cancel();
@@ -309,11 +310,11 @@ namespace ViciOne.ServiceBus.SqlTransport.PostgreSql
 
                         try
                         {
-                            await Task.Delay(maintenanceInterval, Stopping);
+                            await Task.Delay(maintenanceInterval, _context.GetTimeProvider(), Stopping);
                         }
                         catch (OperationCanceledException)
                         {
-                            using var timeoutToken = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+                            using var timeoutToken = new CancellationTokenSource(TimeSpan.FromSeconds(10), _context.GetTimeProvider());
 
                             try
                             {
@@ -342,11 +343,13 @@ namespace ViciOne.ServiceBus.SqlTransport.PostgreSql
                                 row_limit = _hostConfiguration.Settings.MaintenanceBatchSize,
                             }, t), Stopping);
 
-                            if (lastCleanup == null || lastCleanup < DateTime.UtcNow - cleanupInterval)
+                            var utcNow = _context.GetTimeProvider().GetUtcNow().UtcDateTime;
+
+                            if (lastCleanup == null || lastCleanup < utcNow - cleanupInterval)
                             {
                                 await _context.Query((x, t) => x.ExecuteScalarAsync<long?>(purgeTopologySql, t), Stopping);
 
-                                lastCleanup = DateTime.UtcNow;
+                                lastCleanup = utcNow;
                                 cleanupInterval = _hostConfiguration.Settings.QueueCleanupInterval
                                     + TimeSpan.FromSeconds(random.Next(0, (int)(_hostConfiguration.Settings.QueueCleanupInterval.TotalSeconds / 10)));
 

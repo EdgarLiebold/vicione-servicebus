@@ -12,12 +12,16 @@ namespace ViciOne.ServiceBus.AzureServiceBusTransport
         readonly Uri _inputAddress;
         readonly MessageLockContext _lockContext;
         readonly ServiceBusReceivedMessage _message;
+        readonly TimeProvider _timeProvider;
 
-        public ServiceBusReceiveLockContext(Uri inputAddress, MessageLockContext lockContext, ServiceBusReceivedMessage message)
+        public ServiceBusReceiveLockContext(Uri inputAddress, MessageLockContext lockContext, ServiceBusReceivedMessage message, TimeProvider timeProvider)
         {
+            ArgumentNullException.ThrowIfNull(timeProvider);
+
             _inputAddress = inputAddress;
             _lockContext = lockContext;
             _message = message;
+            _timeProvider = timeProvider;
         }
 
         public Task Complete()
@@ -52,10 +56,12 @@ namespace ViciOne.ServiceBus.AzureServiceBusTransport
 
         public Task ValidateLockStatus()
         {
-            if (_message.LockedUntil <= DateTime.UtcNow)
+            var utcNow = _timeProvider.GetUtcNow().UtcDateTime;
+
+            if (_message.LockedUntil <= utcNow)
                 throw new MessageLockExpiredException(_inputAddress, $"The message lock expired: {_message.MessageId}");
 
-            if (_message.ExpiresAt < DateTime.UtcNow)
+            if (_message.ExpiresAt < utcNow)
                 throw new MessageTimeToLiveExpiredException(_inputAddress, $"The message expired: {_message.MessageId}");
 
             return Task.CompletedTask;

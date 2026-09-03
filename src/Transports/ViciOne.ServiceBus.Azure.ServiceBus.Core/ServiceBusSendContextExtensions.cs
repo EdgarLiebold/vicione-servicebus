@@ -29,7 +29,7 @@ namespace ViciOne.ServiceBus
         public static void SetScheduledEnqueueTime(this SendContext context, TimeSpan delay)
         {
             if (context.TryGetPayload(out ServiceBusSendContext sendContext))
-                sendContext.ScheduledEnqueueTimeUtc = DateTime.UtcNow + delay;
+                sendContext.ScheduledEnqueueTimeUtc = context.GetTimeProvider().GetUtcNow().UtcDateTime + delay;
         }
 
         public static void SetSessionId(this SendContext context, string sessionId)

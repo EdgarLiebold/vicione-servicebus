@@ -1,5 +1,7 @@
+#nullable enable annotations
 namespace ViciOne.ServiceBus
 {
+    using System;
     using DependencyInjection;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -15,10 +17,11 @@ namespace ViciOne.ServiceBus
         /// use the ScheduleSend extensions on ConsumeContext.
         /// </summary>
         /// <param name="bus"></param>
+        /// <param name="timeProvider"></param>
         /// <returns></returns>
-        public static IMessageScheduler CreateServiceBusMessageScheduler(this IBus bus)
+        public static IMessageScheduler CreateServiceBusMessageScheduler(this IBus bus, TimeProvider? timeProvider = null)
         {
-            return new MessageScheduler(new ServiceBusScheduleMessageProvider(bus), bus.Topology);
+            return new MessageScheduler(new ServiceBusScheduleMessageProvider(bus), bus.Topology, timeProvider);
         }
 
         /// <summary>
@@ -29,10 +32,11 @@ namespace ViciOne.ServiceBus
         /// </summary>
         /// <param name="sendEndpointProvider"></param>
         /// <param name="busTopology"></param>
+        /// <param name="timeProvider"></param>
         /// <returns></returns>
-        public static IMessageScheduler CreateServiceBusMessageScheduler(this ISendEndpointProvider sendEndpointProvider, IBusTopology busTopology)
+        public static IMessageScheduler CreateServiceBusMessageScheduler(this ISendEndpointProvider sendEndpointProvider, IBusTopology busTopology, TimeProvider? timeProvider = null)
         {
-            return new MessageScheduler(new ServiceBusScheduleMessageProvider(sendEndpointProvider), busTopology);
+            return new MessageScheduler(new ServiceBusScheduleMessageProvider(sendEndpointProvider), busTopology, timeProvider);
         }
 
         /// <summary>
@@ -45,7 +49,8 @@ namespace ViciOne.ServiceBus
             {
                 var bus = provider.GetRequiredService<IBus>();
                 var sendEndpointProvider = provider.GetRequiredService<ISendEndpointProvider>();
-                return sendEndpointProvider.CreateServiceBusMessageScheduler(bus.Topology);
+                var timeProvider = provider.GetService<TimeProvider>() ?? TimeProvider.System;
+                return sendEndpointProvider.CreateServiceBusMessageScheduler(bus.Topology, timeProvider);
             });
         }
 
@@ -60,7 +65,8 @@ namespace ViciOne.ServiceBus
             {
                 var bus = provider.GetRequiredService<TBus>();
                 var sendEndpointProvider = provider.GetRequiredService<ISendEndpointProvider>();
-                return Bind<TBus>.Create(sendEndpointProvider.CreateServiceBusMessageScheduler(bus.Topology));
+                var timeProvider = provider.GetService<TimeProvider>() ?? TimeProvider.System;
+                return Bind<TBus>.Create(sendEndpointProvider.CreateServiceBusMessageScheduler(bus.Topology, timeProvider));
             });
         }
     }

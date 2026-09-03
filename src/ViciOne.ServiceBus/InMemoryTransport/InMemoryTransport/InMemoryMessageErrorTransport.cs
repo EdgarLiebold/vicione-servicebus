@@ -9,8 +9,8 @@ namespace ViciOne.ServiceBus.InMemoryTransport
         InMemoryMessageMoveTransport,
         IErrorTransport
     {
-        public InMemoryMessageErrorTransport(IMessageExchange<InMemoryTransportMessage> exchange)
-            : base(exchange)
+        public InMemoryMessageErrorTransport(IMessageExchange<InMemoryTransportMessage> exchange, IInMemoryDelayProvider delayProvider)
+            : base(exchange, delayProvider)
         {
         }
 

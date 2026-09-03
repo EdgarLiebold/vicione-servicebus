@@ -15,7 +15,7 @@ namespace ViciOne.ServiceBus.Initializers.Variables
 
         public TimestampVariable()
         {
-            _timestamp = DateTime.UtcNow;
+            _timestamp = TimeProvider.System.GetUtcNow().UtcDateTime;
         }
 
         public TimestampVariable(DateTime timestamp)

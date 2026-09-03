@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Globalization;
+using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Util;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -197,6 +198,64 @@ public sealed class RequestRateAlgorithmTests
         Assert.Equal(1, algorithm.RequestCount);
         Assert.Equal(100, algorithm.ResultLimit);
         Assert.Equal(0, algorithm.ActiveRequestCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-RATE-CLOCK", "rate-window-exact-boundary")]
+    public async Task RateLimitWindow_ReopensOnlyWhenTheConfiguredClockReachesTheExactInterval()
+    {
+        TimeSpan interval = TimeSpan.FromMinutes(1);
+        var clock = new FakeTimeProvider(new DateTimeOffset(2035, 6, 7, 8, 9, 10, TimeSpan.Zero));
+        using var algorithm = new RequestRateAlgorithm(new RequestRateAlgorithmOptions
+        {
+            PrefetchCount = 1,
+            RequestResultLimit = 1,
+            RequestRateLimit = 1,
+            RequestRateInterval = interval,
+        }, clock);
+
+        using (ActiveRequest first = await algorithm.BeginRequest(TestContext.Current.CancellationToken))
+            await first.Complete(0, TestContext.Current.CancellationToken);
+
+        Task<ActiveRequest> nextRequest = algorithm.BeginRequest(TestContext.Current.CancellationToken);
+        await Task.Yield();
+        Assert.False(nextRequest.IsCompleted);
+
+        clock.Advance(interval - TimeSpan.FromTicks(1));
+        await Task.Yield();
+        Assert.False(nextRequest.IsCompleted);
+
+        clock.Advance(TimeSpan.FromTicks(1));
+        using ActiveRequest second = await nextRequest.WaitAsync(
+            TimeSpan.FromSeconds(2),
+            TestContext.Current.CancellationToken);
+
+        Assert.Equal(1, second.ResultLimit);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-REQUEST-RATE-CLOCK", "active-request-cancellation-grace")]
+    public async Task ParentCancellation_CancelsAnActiveRequestAtTheConfiguredClockBoundary()
+    {
+        TimeSpan grace = TimeSpan.FromSeconds(30);
+        var clock = new FakeTimeProvider(new DateTimeOffset(2036, 7, 8, 9, 10, 11, TimeSpan.Zero));
+        using var algorithm = new RequestRateAlgorithm(new RequestRateAlgorithmOptions
+        {
+            PrefetchCount = 1,
+            RequestResultLimit = 1,
+            RequestCancellationTimeout = grace,
+        }, clock);
+        using var parent = new CancellationTokenSource();
+        using ActiveRequest request = await algorithm.BeginRequest(parent.Token);
+
+        parent.Cancel();
+        Assert.False(request.CancellationToken.IsCancellationRequested);
+
+        clock.Advance(grace - TimeSpan.FromTicks(1));
+        Assert.False(request.CancellationToken.IsCancellationRequested);
+
+        clock.Advance(TimeSpan.FromTicks(1));
+        Assert.True(request.CancellationToken.IsCancellationRequested);
     }
 
     [Theory]

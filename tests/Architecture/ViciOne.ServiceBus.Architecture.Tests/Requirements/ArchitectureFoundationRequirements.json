@@ -145,5 +145,12 @@
     "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
     "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.ProviderFixtureRunnerTests",
     "testMethod": "CommandMode_RefusesAHandedRunRootOutsideTheRepositoryOwnedArea"
+  },
+  {
+    "requirementId": "REQ-VSB-TIME-SOURCE-ARCHITECTURE",
+    "variantKey": "production-runtime-direct-clock-allowlist",
+    "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
+    "testType": "ViciOne.ServiceBus.Architecture.Tests.Product.TimeSourceArchitectureTests",
+    "testMethod": "ProductionRuntimePaths_KeepDirectWallClockUsesWithinReviewedAllowlist"
   }
 ]

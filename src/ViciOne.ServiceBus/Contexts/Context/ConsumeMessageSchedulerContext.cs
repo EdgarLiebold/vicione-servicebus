@@ -22,6 +22,8 @@ namespace ViciOne.ServiceBus.Context
 
         public MessageSchedulerFactory SchedulerFactory { get; }
 
+        public TimeProvider TimeProvider => _scheduler.Value.TimeProvider;
+
         public Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, T message,
             CancellationToken cancellationToken)
             where T : class

@@ -68,7 +68,8 @@ public sealed class SqlServerConfigurationAndRetryTests
         Assert.False(secondQueue.IsCompleted);
 
         timeProvider.Advance(TimeSpan.FromTicks(1));
-        await Task.WhenAll(firstQueue, secondQueue);
+        await Task.WhenAll(firstQueue, secondQueue)
+            .WaitAsync(TimeSpan.FromSeconds(2), TestContext.Current.CancellationToken);
         Assert.True(firstQueue.IsCompletedSuccessfully);
         Assert.True(secondQueue.IsCompletedSuccessfully);
     }

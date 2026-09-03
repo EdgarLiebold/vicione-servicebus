@@ -12,21 +12,23 @@ namespace ViciOne.ServiceBus
         /// </summary>
         /// <param name="pipe"></param>
         /// <param name="concurrencyLimit"></param>
+        /// <param name="timeProvider">The clock used to timestamp the concurrency-limit command and enforce its timeout.</param>
         /// <returns></returns>
-        public static Task SetConcurrencyLimit(this IPipe<CommandContext> pipe, int concurrencyLimit)
+        public static Task SetConcurrencyLimit(this IPipe<CommandContext> pipe, int concurrencyLimit, TimeProvider? timeProvider = null)
         {
-            return pipe.SendCommand<SetConcurrencyLimit>(new Limit(concurrencyLimit));
+            timeProvider ??= TimeProvider.System;
+
+            return pipe.SendCommand<SetConcurrencyLimit>(new Limit(concurrencyLimit, timeProvider.GetUtcNow().UtcDateTime), timeProvider);
         }
 
 
         class Limit :
             SetConcurrencyLimit
         {
-            public Limit(int concurrencyLimit)
+            public Limit(int concurrencyLimit, DateTime timestamp)
             {
                 ConcurrencyLimit = concurrencyLimit;
-
-                Timestamp = DateTime.UtcNow;
+                Timestamp = timestamp;
             }
 
             public DateTime? Timestamp { get; }

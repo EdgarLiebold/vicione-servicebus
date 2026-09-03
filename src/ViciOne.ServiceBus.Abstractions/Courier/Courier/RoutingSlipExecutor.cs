@@ -11,18 +11,20 @@ namespace ViciOne.ServiceBus.Courier
     {
         readonly IPublishEndpoint _publishEndpoint;
         readonly ISendEndpointProvider _sendEndpointProvider;
+        readonly TimeProvider _timeProvider;
 
-        public RoutingSlipExecutor(ISendEndpointProvider sendEndpointProvider, IPublishEndpoint publishEndpoint)
+        public RoutingSlipExecutor(ISendEndpointProvider sendEndpointProvider, IPublishEndpoint publishEndpoint, TimeProvider? timeProvider = null)
         {
             _sendEndpointProvider = sendEndpointProvider;
             _publishEndpoint = publishEndpoint;
+            _timeProvider = timeProvider ?? TimeProvider.System;
         }
 
         public async Task Execute(RoutingSlip routingSlip, CancellationToken cancellationToken = default)
         {
             if (routingSlip.RanToCompletion())
             {
-                var timestamp = DateTime.UtcNow;
+                var timestamp = _timeProvider.GetUtcNow().UtcDateTime;
                 var duration = timestamp - routingSlip.CreateTimestamp;
 
                 IRoutingSlipEventPublisher publisher = new RoutingSlipEventPublisher(_sendEndpointProvider, _publishEndpoint, routingSlip, cancellationToken);

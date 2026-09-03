@@ -1538,5 +1538,89 @@
       "testMethod" : "PropertyCaches_DefaultToPublicAccessorOwnership",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.TypeCacheTests",
       "variantKey" : "type-cache-public-only-default"
+   },
+   {
+      "requirementId" : "REQ-VSB-SCHEDULER-TIME-OWNER",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "RelativeSend_UsesTheSchedulerClockAndAddsTheDelayExactly",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Scheduling.RelativeSchedulingTimeProviderTests",
+      "variantKey" : "relative-send-uses-scheduler-clock"
+   },
+   {
+      "requirementId" : "REQ-VSB-SCHEDULER-TIME-OWNER",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "RelativePublish_UsesTheSchedulerClockAndAddsTheDelayExactly",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Scheduling.RelativeSchedulingTimeProviderTests",
+      "variantKey" : "relative-publish-uses-scheduler-clock"
+   },
+   {
+      "requirementId" : "REQ-VSB-SCHEDULER-TIME-OWNER",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "SchedulerContextRelativeSend_UsesItsExposedClock",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Scheduling.RelativeSchedulingTimeProviderTests",
+      "variantKey" : "scheduler-context-relative-send"
+   },
+   {
+      "requirementId" : "REQ-VSB-SCHEDULER-TIME-OWNER",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ConsumeContextRelativeSend_UsesTheConsumeContextClock",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Scheduling.RelativeSchedulingTimeProviderTests",
+      "variantKey" : "consume-context-relative-send"
+   },
+   {
+      "requirementId" : "REQ-VSB-REQUEST-RATE-CLOCK",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "RateLimitWindow_ReopensOnlyWhenTheConfiguredClockReachesTheExactInterval",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Util.RequestRateAlgorithmTests",
+      "variantKey" : "rate-window-exact-boundary"
+   },
+   {
+      "requirementId" : "REQ-VSB-REQUEST-RATE-CLOCK",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ParentCancellation_CancelsAnActiveRequestAtTheConfiguredClockBoundary",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Util.RequestRateAlgorithmTests",
+      "variantKey" : "active-request-cancellation-grace"
+   },
+   {
+      "requirementId" : "REQ-VSB-TASK-TIMEOUT-CLOCK",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "PendingTask_TimesOutOnlyAtTheConfiguredClockBoundary",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.TaskTimeoutTimeProviderTests",
+      "variantKey" : "non-generic-exact-boundary"
+   },
+   {
+      "requirementId" : "REQ-VSB-TASK-TIMEOUT-CLOCK",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "GenericTaskCompletion_BeatsTheConfiguredTimeoutAndPreservesTheResult",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.TaskTimeoutTimeProviderTests",
+      "variantKey" : "generic-completion-wins"
+   },
+   {
+      "requirementId" : "REQ-VSB-TASK-TIMEOUT-CLOCK",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ExplicitNullClock_IsRejectedAtThePublicBoundary",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.TaskTimeoutTimeProviderTests",
+      "variantKey" : "null-clock-rejected"
+   },
+   {
+      "requirementId" : "REQ-VSB-COMMAND-EVENT-CLOCK",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "SentCommand_CarriesTheConfiguredClockAndItsExactUtcTimestamp",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.CommandAndEventTimeProviderTests",
+      "variantKey" : "command-context-owner"
+   },
+   {
+      "requirementId" : "REQ-VSB-COMMAND-EVENT-CLOCK",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "PublishedEvent_CarriesTheConfiguredClockAndItsExactUtcTimestamp",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.CommandAndEventTimeProviderTests",
+      "variantKey" : "event-context-owner"
+   },
+   {
+      "requirementId" : "REQ-VSB-COMMAND-EVENT-CLOCK",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "ConcurrencyLimitCommand_UsesOneClockForEnvelopeAndPayloadTimestamps",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Middleware.CommandAndEventTimeProviderTests",
+      "variantKey" : "concurrency-limit-command-owner"
    }
 ]

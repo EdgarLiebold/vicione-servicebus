@@ -33,7 +33,7 @@ namespace ViciOne.ServiceBus.SagaStateMachine
 
             if (_request.Settings.Timeout > TimeSpan.Zero)
             {
-                var now = DateTime.UtcNow;
+                var now = context.GetTimeProvider().GetUtcNow().UtcDateTime;
                 var expirationTime = now + _request.Settings.Timeout;
 
                 RequestTimeoutExpired<TRequest> message =

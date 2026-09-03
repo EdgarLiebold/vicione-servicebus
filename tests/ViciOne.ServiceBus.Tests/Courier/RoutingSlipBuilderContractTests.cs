@@ -1,5 +1,6 @@
 using System.Runtime.Serialization;
 using System.Text.Json;
+using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Courier.Contracts;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -9,6 +10,20 @@ namespace ViciOne.ServiceBus.Tests.Courier;
 
 public sealed class RoutingSlipBuilderContractTests
 {
+    [Fact]
+    [RequirementCoverage("REQ-VSB-COURIER-BUILDER-CLOCK", "create-timestamp-from-injected-clock")]
+    public void Builder_UsesTheInjectedClockForTheExactCreateTimestamp()
+    {
+        DateTimeOffset now = new(2042, 1, 2, 3, 4, 5, TimeSpan.Zero);
+        var builder = new RoutingSlipBuilder(NewId.NextGuid(), new FakeTimeProvider(now));
+        builder.AddActivity("Clock", new Uri("loopback://localhost/clock"));
+
+        RoutingSlip routingSlip = builder.Build();
+
+        Assert.Equal(now.UtcDateTime, routingSlip.CreateTimestamp);
+        Assert.Equal(DateTimeKind.Utc, routingSlip.CreateTimestamp.Kind);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-BUILDER", "interface-valued-argument")]
     public void InterfaceValuedArgument_IsMappedWithoutLosingTheConcreteValue()

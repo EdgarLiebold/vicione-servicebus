@@ -220,6 +220,7 @@ public sealed class JobServiceLifecycleTests
         public IJobService JobService => throw new NotSupportedException("The lifecycle tests drive the service directly.");
         public TimeSpan HeartbeatInterval { get; } = heartbeatInterval;
         public TimeSpan RejectedJobDelay { get; } = TimeSpan.Zero;
+        public TimeProvider TimeProvider => System.TimeProvider.System;
         public Uri InstanceAddress { get; } = new("loopback://localhost/job-instance");
         public IReceiveEndpointConfigurator InstanceEndpointConfigurator => null!;
 

@@ -20,6 +20,8 @@ namespace ViciOne.ServiceBus.JobService
         /// </summary>
         TimeSpan RejectedJobDelay { get; }
 
+        TimeProvider TimeProvider { get; }
+
         Uri? InstanceAddress { get; }
 
         IReceiveEndpointConfigurator? InstanceEndpointConfigurator { get; }

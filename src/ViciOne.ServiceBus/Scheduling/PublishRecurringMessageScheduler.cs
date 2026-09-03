@@ -14,11 +14,14 @@ namespace ViciOne.ServiceBus.Scheduling
         readonly IBusTopology? _busTopology;
         readonly IPublishEndpoint _publishEndpoint;
 
-        public PublishRecurringMessageScheduler(IPublishEndpoint publishEndpoint, IBusTopology? busTopology = null)
+        public PublishRecurringMessageScheduler(IPublishEndpoint publishEndpoint, IBusTopology? busTopology = null, TimeProvider? timeProvider = null)
         {
             _publishEndpoint = publishEndpoint;
             _busTopology = busTopology;
+            TimeProvider = timeProvider ?? TimeProvider.System;
         }
+
+        public TimeProvider TimeProvider { get; }
 
         public Task<ScheduledRecurringMessage<T>> ScheduleRecurringSend<T>(Uri destinationAddress, RecurringSchedule schedule, T message,
             CancellationToken cancellationToken)
@@ -323,21 +326,21 @@ namespace ViciOne.ServiceBus.Scheduling
 
         public Task CancelScheduledRecurringSend(string scheduleId, string scheduleGroup)
         {
-            var command = new CancelScheduledRecurringMessageCommand(scheduleId, scheduleGroup);
+            var command = new CancelScheduledRecurringMessageCommand(scheduleId, scheduleGroup, TimeProvider.GetUtcNow().UtcDateTime);
 
             return _publishEndpoint.Publish<CancelScheduledRecurringMessage>(command);
         }
 
         public Task PauseScheduledRecurringSend(string scheduleId, string scheduleGroup)
         {
-            var command = new PauseScheduledRecurringMessageCommand(scheduleId, scheduleGroup);
+            var command = new PauseScheduledRecurringMessageCommand(scheduleId, scheduleGroup, TimeProvider.GetUtcNow().UtcDateTime);
 
             return _publishEndpoint.Publish<PauseScheduledRecurringMessage>(command);
         }
 
         public Task ResumeScheduledRecurringSend(string scheduleId, string scheduleGroup)
         {
-            var command = new ResumeScheduledRecurringMessageCommand(scheduleId, scheduleGroup);
+            var command = new ResumeScheduledRecurringMessageCommand(scheduleId, scheduleGroup, TimeProvider.GetUtcNow().UtcDateTime);
 
             return _publishEndpoint.Publish<ResumeScheduledRecurringMessage>(command);
         }

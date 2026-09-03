@@ -70,18 +70,18 @@ namespace ViciOne.ServiceBus.AzureServiceBusTransport
                     // don't log those
                     break;
                 default:
-                {
-                    if (!(args.Exception is OperationCanceledException) && !(args.Exception.InnerException is TimeoutException))
                     {
-                        EnabledLogger? logger = requiresRecycle ? LogContext.Error : LogContext.Warning;
+                        if (!(args.Exception is OperationCanceledException) && !(args.Exception.InnerException is TimeoutException))
+                        {
+                            EnabledLogger? logger = requiresRecycle ? LogContext.Error : LogContext.Warning;
 
-                        logger?.Log(args.Exception,
-                            "Exception on Receiver {InputAddress} during {Action} ActiveDispatchCount({activeDispatch}) ErrorRequiresRecycle({requiresRecycle})",
-                            _clientContext.InputAddress, args.ErrorSource, ActiveDispatchCount, requiresRecycle);
+                            logger?.Log(args.Exception,
+                                "Exception on Receiver {InputAddress} during {Action} ActiveDispatchCount({activeDispatch}) ErrorRequiresRecycle({requiresRecycle})",
+                                _clientContext.InputAddress, args.ErrorSource, ActiveDispatchCount, requiresRecycle);
+                        }
+
+                        break;
                     }
-
-                    break;
-                }
             }
 
             if (requiresRecycle)
@@ -159,7 +159,8 @@ namespace ViciOne.ServiceBus.AzureServiceBusTransport
         {
             try
             {
-                await Dispatch(context.SequenceNumber, context, new ServiceBusReceiveLockContext(_context.InputAddress, lockContext, message))
+                await Dispatch(context.SequenceNumber, context,
+                        new ServiceBusReceiveLockContext(_context.InputAddress, lockContext, message, _context.GetTimeProvider()))
                     .ConfigureAwait(false);
             }
             catch (ServiceBusException ex) when (ex.Reason == ServiceBusFailureReason.SessionLockLost)

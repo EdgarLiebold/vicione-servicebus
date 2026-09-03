@@ -36,7 +36,7 @@ namespace ViciOne.ServiceBus.Middleware
         IMessageScheduler SchedulerFactory(ConsumeContext context)
         {
             return new MessageScheduler(new EndpointScheduleMessageProvider(() => context.GetSendEndpoint(_schedulerAddress)),
-                context.GetPayload<IBusTopology>());
+                context.GetPayload<IBusTopology>(), context.GetTimeProvider());
         }
     }
 }

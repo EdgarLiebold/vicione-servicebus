@@ -31,14 +31,14 @@ namespace ViciOne.ServiceBus.Middleware.Outbox
 
         public override async Task SetConsumed()
         {
-            _inboxMessage.Consumed = DateTime.UtcNow;
+            _inboxMessage.Consumed = this.GetTimeProvider().GetUtcNow().UtcDateTime;
 
             LogContext.Debug?.Log("Outbox Consumed: {MessageId} {Consumed}", InboxMessageId, _inboxMessage.Consumed);
         }
 
         public override async Task SetDelivered()
         {
-            _inboxMessage.Delivered = DateTime.UtcNow;
+            _inboxMessage.Delivered = this.GetTimeProvider().GetUtcNow().UtcDateTime;
 
             LogContext.Debug?.Log("Outbox Delivered: {MessageId} {Delivered}", InboxMessageId, _inboxMessage.Delivered);
         }
@@ -86,7 +86,7 @@ namespace ViciOne.ServiceBus.Middleware.Outbox
 
             var body = context.Serializer.GetMessageBody(context);
 
-            var now = DateTime.UtcNow;
+            var now = context.GetTimeProvider().GetUtcNow().UtcDateTime;
 
             var outboxMessage = new InMemoryOutboxMessage
             {

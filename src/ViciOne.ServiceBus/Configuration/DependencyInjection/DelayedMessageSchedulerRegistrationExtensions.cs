@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus
 {
+    using System;
     using DependencyInjection;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -17,7 +18,8 @@ namespace ViciOne.ServiceBus
             {
                 var bus = provider.GetRequiredService<IBus>();
                 var sendEndpointProvider = provider.GetRequiredService<ISendEndpointProvider>();
-                return sendEndpointProvider.CreateDelayedMessageScheduler(bus.Topology);
+                var timeProvider = provider.GetService<TimeProvider>() ?? TimeProvider.System;
+                return sendEndpointProvider.CreateDelayedMessageScheduler(bus.Topology, timeProvider);
             });
         }
 
@@ -32,7 +34,8 @@ namespace ViciOne.ServiceBus
             {
                 var bus = provider.GetRequiredService<TBus>();
                 var sendEndpointProvider = provider.GetRequiredService<Bind<TBus, ISendEndpointProvider>>().Value;
-                return Bind<TBus>.Create(sendEndpointProvider.CreateDelayedMessageScheduler(bus.Topology));
+                var timeProvider = provider.GetService<TimeProvider>() ?? TimeProvider.System;
+                return Bind<TBus>.Create(sendEndpointProvider.CreateDelayedMessageScheduler(bus.Topology, timeProvider));
             });
         }
     }

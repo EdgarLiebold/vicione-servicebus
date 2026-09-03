@@ -62,7 +62,7 @@ public sealed class AmazonSqsMessageReceiver :
             PrefetchCount = _receiveSettings.PrefetchCount,
             ConcurrentResultLimit = _receiveSettings.ConcurrentMessageLimit,
             RequestResultLimit = 10
-        });
+        }, _context.GetTimeProvider());
 
         SetReady();
 

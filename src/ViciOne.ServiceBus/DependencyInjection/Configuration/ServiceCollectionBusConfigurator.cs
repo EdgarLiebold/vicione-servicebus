@@ -58,7 +58,8 @@ namespace ViciOne.ServiceBus.Configuration
 
             collection.TryAddScoped<IRoutingSlipExecutor>(provider => new RoutingSlipExecutor(
                 provider.GetRequiredService<IScopedBusContextProvider<IBus>>().Context.SendEndpointProvider,
-                provider.GetRequiredService<IScopedBusContextProvider<IBus>>().Context.PublishEndpoint));
+                provider.GetRequiredService<IScopedBusContextProvider<IBus>>().Context.PublishEndpoint,
+                provider.GetService<TimeProvider>() ?? TimeProvider.System));
         }
 
         protected ServiceCollectionBusConfigurator(IServiceCollection collection, IContainerRegistrar registrar)
@@ -190,7 +191,8 @@ namespace ViciOne.ServiceBus.Configuration
 
             collection.TryAddScoped(provider => Bind<TBus>.Create<IRoutingSlipExecutor>(new RoutingSlipExecutor(
                 provider.GetRequiredService<IScopedBusContextProvider<TBus>>().Context.SendEndpointProvider,
-                provider.GetRequiredService<IScopedBusContextProvider<TBus>>().Context.PublishEndpoint)));
+                provider.GetRequiredService<IScopedBusContextProvider<TBus>>().Context.PublishEndpoint,
+                provider.GetService<TimeProvider>() ?? TimeProvider.System)));
 
             collection.AddSingleton(provider => Bind<TBus>.Create(CreateRegistrationContext(provider)));
         }

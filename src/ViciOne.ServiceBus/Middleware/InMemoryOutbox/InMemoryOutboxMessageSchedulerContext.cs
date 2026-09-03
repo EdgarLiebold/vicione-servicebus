@@ -32,6 +32,8 @@ namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox
 
         public MessageSchedulerFactory SchedulerFactory { get; }
 
+        public TimeProvider TimeProvider => _scheduler.Value.TimeProvider;
+
         internal readonly record struct Checkpoint(int ScheduledMessageCount, int CancelMessageCount);
 
         internal Checkpoint CreateCheckpoint()

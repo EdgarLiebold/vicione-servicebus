@@ -11,11 +11,13 @@ namespace ViciOne.ServiceBus.InMemoryTransport
         DeliveryContext<InMemoryTransportMessage>
     {
         readonly HashSet<IMessageSink<InMemoryTransportMessage>> _delivered;
+        readonly DateTime? _enqueueTime;
 
-        public InMemoryDeliveryContext(InMemoryTransportMessage message, CancellationToken cancellationToken)
+        public InMemoryDeliveryContext(InMemoryTransportMessage message, DateTimeOffset utcNow, CancellationToken cancellationToken)
         {
             Message = message;
             CancellationToken = cancellationToken;
+            _enqueueTime = message.Delay.HasValue ? utcNow.UtcDateTime + message.Delay.Value : null;
 
             _delivered = new HashSet<IMessageSink<InMemoryTransportMessage>>();
         }
@@ -24,7 +26,7 @@ namespace ViciOne.ServiceBus.InMemoryTransport
 
         public InMemoryTransportMessage Message { get; }
         public string? RoutingKey => Message.RoutingKey;
-        public DateTime? EnqueueTime => Message.Delay.HasValue ? DateTime.UtcNow + Message.Delay : default;
+        public DateTime? EnqueueTime => _enqueueTime;
         public long? ReceiverId => default;
 
         public bool WasAlreadyDelivered(IMessageSink<InMemoryTransportMessage> sink)

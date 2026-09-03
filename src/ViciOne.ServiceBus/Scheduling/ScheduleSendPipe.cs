@@ -14,6 +14,7 @@ namespace ViciOne.ServiceBus.Scheduling
         where TMessage : class
     {
         readonly DateTime _scheduledTime;
+        readonly TimeProvider _timeProvider;
         SendContext _context;
 
         Guid? _scheduledMessageId;
@@ -22,6 +23,13 @@ namespace ViciOne.ServiceBus.Scheduling
             : base(pipe)
         {
             _scheduledTime = scheduledTime;
+        }
+
+        public ScheduleSendPipe(IPipe<SendContext<TMessage>> pipe, DateTime scheduledTime, TimeProvider timeProvider)
+            : base(pipe)
+        {
+            _scheduledTime = scheduledTime;
+            _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         }
 
         public Guid? ScheduledMessageId
@@ -37,9 +45,10 @@ namespace ViciOne.ServiceBus.Scheduling
             _context = context;
             _context.ScheduledMessageId = _scheduledMessageId;
 
+            TimeProvider timeProvider = _timeProvider ?? context.GetTimeProvider();
             var delay = _scheduledTime.Kind == DateTimeKind.Local
-                ? _scheduledTime - DateTime.Now
-                : _scheduledTime - DateTime.UtcNow;
+                ? _scheduledTime - timeProvider.GetLocalNow().DateTime
+                : _scheduledTime - timeProvider.GetUtcNow().UtcDateTime;
 
             if (delay > TimeSpan.Zero)
                 context.Delay = delay;

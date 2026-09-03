@@ -9,10 +9,17 @@ namespace ViciOne.ServiceBus.Scheduling
         IScheduleMessageProvider
     {
         readonly ISendEndpointProvider _sendEndpointProvider;
+        readonly TimeProvider _timeProvider;
 
         public DelayedScheduleMessageProvider(ISendEndpointProvider sendEndpointProvider)
         {
             _sendEndpointProvider = sendEndpointProvider;
+        }
+
+        internal DelayedScheduleMessageProvider(ISendEndpointProvider sendEndpointProvider, TimeProvider timeProvider)
+        {
+            _sendEndpointProvider = sendEndpointProvider;
+            _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         }
 
         public async Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, T message, IPipe<SendContext<T>> pipe,
@@ -22,7 +29,9 @@ namespace ViciOne.ServiceBus.Scheduling
             if (!MessageTypeCache<T>.IsValidMessageType)
                 throw new ArgumentException(MessageTypeCache<T>.InvalidMessageTypeReason, nameof(T));
 
-            var scheduleMessagePipe = new ScheduleSendPipe<T>(pipe, scheduledTime);
+            var scheduleMessagePipe = _timeProvider == null
+                ? new ScheduleSendPipe<T>(pipe, scheduledTime)
+                : new ScheduleSendPipe<T>(pipe, scheduledTime, _timeProvider);
 
             var tokenId = ScheduleTokenIdCache<T>.GetTokenId(message);
 

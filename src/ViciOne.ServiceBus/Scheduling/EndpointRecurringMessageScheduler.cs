@@ -13,17 +13,22 @@ namespace ViciOne.ServiceBus.Scheduling
         readonly IBusTopology? _busTopology;
         readonly Func<Task<ISendEndpoint>> _schedulerEndpoint;
 
-        public EndpointRecurringMessageScheduler(ISendEndpointProvider sendEndpointProvider, Uri schedulerAddress, IBusTopology? busTopology = null)
+        public EndpointRecurringMessageScheduler(ISendEndpointProvider sendEndpointProvider, Uri schedulerAddress, IBusTopology? busTopology = null,
+            TimeProvider? timeProvider = null)
         {
             _busTopology = busTopology;
             _schedulerEndpoint = () => sendEndpointProvider.GetSendEndpoint(schedulerAddress);
+            TimeProvider = timeProvider ?? TimeProvider.System;
         }
 
-        public EndpointRecurringMessageScheduler(ISendEndpoint sendEndpoint, IBusTopology? busTopology = null)
+        public EndpointRecurringMessageScheduler(ISendEndpoint sendEndpoint, IBusTopology? busTopology = null, TimeProvider? timeProvider = null)
         {
             _busTopology = busTopology;
             _schedulerEndpoint = () => Task.FromResult(sendEndpoint);
+            TimeProvider = timeProvider ?? TimeProvider.System;
         }
+
+        public TimeProvider TimeProvider { get; }
 
         public Task<ScheduledRecurringMessage<T>> ScheduleRecurringSend<T>(Uri destinationAddress, RecurringSchedule schedule, T message,
             CancellationToken cancellationToken)
@@ -331,7 +336,7 @@ namespace ViciOne.ServiceBus.Scheduling
 
         public async Task CancelScheduledRecurringSend(string scheduleId, string scheduleGroup)
         {
-            var command = new CancelScheduledRecurringMessageCommand(scheduleId, scheduleGroup);
+            var command = new CancelScheduledRecurringMessageCommand(scheduleId, scheduleGroup, TimeProvider.GetUtcNow().UtcDateTime);
 
             var endpoint = await _schedulerEndpoint().ConfigureAwait(false);
 
@@ -340,7 +345,7 @@ namespace ViciOne.ServiceBus.Scheduling
 
         public async Task PauseScheduledRecurringSend(string scheduleId, string scheduleGroup)
         {
-            var command = new PauseScheduledRecurringMessageCommand(scheduleId, scheduleGroup);
+            var command = new PauseScheduledRecurringMessageCommand(scheduleId, scheduleGroup, TimeProvider.GetUtcNow().UtcDateTime);
 
             var endpoint = await _schedulerEndpoint().ConfigureAwait(false);
 
@@ -349,7 +354,7 @@ namespace ViciOne.ServiceBus.Scheduling
 
         public async Task ResumeScheduledRecurringSend(string scheduleId, string scheduleGroup)
         {
-            var command = new ResumeScheduledRecurringMessageCommand(scheduleId, scheduleGroup);
+            var command = new ResumeScheduledRecurringMessageCommand(scheduleId, scheduleGroup, TimeProvider.GetUtcNow().UtcDateTime);
 
             var endpoint = await _schedulerEndpoint().ConfigureAwait(false);
 

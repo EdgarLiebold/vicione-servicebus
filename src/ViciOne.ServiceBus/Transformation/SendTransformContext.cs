@@ -28,7 +28,9 @@ namespace ViciOne.ServiceBus.Transformation
         public Guid? CorrelationId => _context.CorrelationId;
         public Guid? ConversationId => _context.ConversationId;
         public Guid? InitiatorId => _context.InitiatorId;
-        public DateTime? ExpirationTime => DateTime.UtcNow + _context.TimeToLive;
+        public DateTime? ExpirationTime => _context.TimeToLive.HasValue
+            ? _context.GetTimeProvider().GetUtcNow().UtcDateTime + _context.TimeToLive.Value
+            : null;
         public Uri SourceAddress => _context.SourceAddress;
         public Uri DestinationAddress => _context.DestinationAddress;
         public Uri ResponseAddress => _context.ResponseAddress;

@@ -100,13 +100,13 @@ namespace ViciOne.ServiceBus.Transports.Fabric
                 if (context.CancellationToken.IsCancellationRequested)
                     return;
 
-                var delay = context.EnqueueTime!.Value - DateTime.UtcNow;
-                if (delay > TimeSpan.Zero)
+                var enqueueTime = new DateTimeOffset(DateTime.SpecifyKind(context.EnqueueTime!.Value, DateTimeKind.Utc));
+                if (enqueueTime > _delayProvider.UtcNow)
                 {
                     _metrics.DelayedMessageCount.Add();
                     delayed = true;
 
-                    await _delayProvider.Delay(delay, Stopping).ConfigureAwait(false);
+                    await _delayProvider.Delay(enqueueTime, Stopping).ConfigureAwait(false);
                 }
 
                 await _channel.Writer.WriteAsync(context, Stopping).ConfigureAwait(false);

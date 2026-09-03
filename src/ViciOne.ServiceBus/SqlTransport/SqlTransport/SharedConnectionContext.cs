@@ -37,9 +37,9 @@ namespace ViciOne.ServiceBus.SqlTransport
             return _context.CreateConnection(cancellationToken);
         }
 
-        public Task DelayUntilMessageReady(long queueId, TimeSpan timeout, CancellationToken cancellationToken)
+        public Task DelayUntilMessageReady(long queueId, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken)
         {
-            return _context.DelayUntilMessageReady(queueId, timeout, cancellationToken);
+            return _context.DelayUntilMessageReady(queueId, timeout, timeProvider, cancellationToken);
         }
 
         public Task<T> Query<T>(Func<IDbConnection, IDbTransaction, Task<T>> callback, CancellationToken cancellationToken)

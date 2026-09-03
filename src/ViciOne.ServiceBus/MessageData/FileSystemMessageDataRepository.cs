@@ -1,3 +1,4 @@
+#nullable enable annotations
 namespace ViciOne.ServiceBus.MessageData
 {
     using System;
@@ -13,10 +14,12 @@ namespace ViciOne.ServiceBus.MessageData
         const int DefaultBufferSize = 4096;
         static readonly char[] _separator = { ':' };
         readonly DirectoryInfo _dataDirectory;
+        readonly TimeProvider _timeProvider;
 
-        public FileSystemMessageDataRepository(DirectoryInfo dataDirectory)
+        public FileSystemMessageDataRepository(DirectoryInfo dataDirectory, TimeProvider? timeProvider = null)
         {
             _dataDirectory = dataDirectory;
+            _timeProvider = timeProvider ?? TimeProvider.System;
         }
 
         Task<Stream> IMessageDataRepository.Get(Uri address, CancellationToken cancellationToken)
@@ -34,7 +37,7 @@ namespace ViciOne.ServiceBus.MessageData
 
         async Task<Uri> IMessageDataRepository.Put(Stream stream, TimeSpan? timeToLive, CancellationToken cancellationToken)
         {
-            var filePath = GenerateFilePath(timeToLive);
+            var filePath = GenerateFilePath(timeToLive, _timeProvider);
 
             var fullPath = Path.Combine(_dataDirectory.FullName, filePath);
 
@@ -56,12 +59,12 @@ namespace ViciOne.ServiceBus.MessageData
             Directory.CreateDirectory(directoryName);
         }
 
-        static string GenerateFilePath(TimeSpan? timeToLive)
+        static string GenerateFilePath(TimeSpan? timeToLive, TimeProvider timeProvider)
         {
             var fileId = FormatUtil.Formatter.Format(NewId.Next().ToSequentialGuid().ToByteArray());
 
             var expiration = timeToLive.HasValue && timeToLive.Value < TimeSpan.MaxValue && timeToLive >= TimeSpan.Zero
-                ? (DateTime.UtcNow + timeToLive.Value).ToString("yyyy-MM-dd-HH").Replace('-', Path.DirectorySeparatorChar)
+                ? (timeProvider.GetUtcNow().UtcDateTime + timeToLive.Value).ToString("yyyy-MM-dd-HH").Replace('-', Path.DirectorySeparatorChar)
                 : "none";
 
             return Path.Combine(expiration, fileId);

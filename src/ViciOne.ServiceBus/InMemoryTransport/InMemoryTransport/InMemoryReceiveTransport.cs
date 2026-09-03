@@ -46,11 +46,11 @@ namespace ViciOne.ServiceBus.InMemoryTransport
                 _context.MessageFabric.GetQueue(_context.TransportContext, _queueName);
 
             IDeadLetterTransport deadLetterTransport = new InMemoryMessageDeadLetterTransport(_context.MessageFabric.GetExchange(_context.TransportContext,
-                _context.Send.DeadLetterQueueNameFormatter.FormatDeadLetterQueueName(_queueName)));
+                _context.Send.DeadLetterQueueNameFormatter.FormatDeadLetterQueueName(_queueName)), _context.MessageFabric.DelayProvider);
             _context.AddOrUpdatePayload(() => deadLetterTransport, _ => deadLetterTransport);
 
             IErrorTransport errorTransport = new InMemoryMessageErrorTransport(_context.MessageFabric.GetExchange(_context.TransportContext,
-                _context.Send.ErrorQueueNameFormatter.FormatErrorQueueName(_queueName)));
+                _context.Send.ErrorQueueNameFormatter.FormatErrorQueueName(_queueName)), _context.MessageFabric.DelayProvider);
             _context.AddOrUpdatePayload(() => errorTransport, _ => errorTransport);
 
             return new ReceiveTransportAgent(_context, queue);

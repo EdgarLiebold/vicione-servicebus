@@ -229,7 +229,7 @@ public class JobService :
 
             // Exactly one generation per successful start: the previous one is ended and awaited above,
             // so two loops never publish side by side.
-            _heartbeat = new Heartbeat(this, publishEndpoint, Settings.HeartbeatInterval);
+            _heartbeat = new Heartbeat(this, publishEndpoint, Settings.HeartbeatInterval, Settings.TimeProvider);
 
             // Last, and only on the success path. Stop sets this and nothing cleared it again, which is
             // what left a restarted service rejecting every job for good; clearing it before the start
@@ -312,10 +312,10 @@ public class JobService :
         readonly CancellationTokenSource _stopping;
         readonly Task _publishing;
 
-        public Heartbeat(JobService service, IPublishEndpoint publishEndpoint, TimeSpan interval)
+        public Heartbeat(JobService service, IPublishEndpoint publishEndpoint, TimeSpan interval, TimeProvider timeProvider)
         {
             _stopping = new CancellationTokenSource();
-            _publishing = Run(service, publishEndpoint, interval, _stopping.Token);
+            _publishing = Run(service, publishEndpoint, interval, timeProvider, _stopping.Token);
         }
 
         public async Task Stop()
@@ -336,13 +336,14 @@ public class JobService :
             }
         }
 
-        static async Task Run(JobService service, IPublishEndpoint publishEndpoint, TimeSpan interval, CancellationToken cancellationToken)
+        static async Task Run(JobService service, IPublishEndpoint publishEndpoint, TimeSpan interval, TimeProvider timeProvider,
+            CancellationToken cancellationToken)
         {
             while (!cancellationToken.IsCancellationRequested)
             {
                 try
                 {
-                    await Task.Delay(interval, cancellationToken).ConfigureAwait(false);
+                    await Task.Delay(interval, timeProvider, cancellationToken).ConfigureAwait(false);
                 }
                 catch (OperationCanceledException)
                 {

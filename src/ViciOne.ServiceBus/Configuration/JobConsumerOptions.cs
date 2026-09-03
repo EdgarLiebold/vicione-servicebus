@@ -13,10 +13,12 @@ namespace ViciOne.ServiceBus
         {
             HeartbeatInterval = TimeSpan.FromMinutes(1);
             RejectedJobDelay = TimeSpan.FromSeconds(3);
+            TimeProvider = TimeProvider.System;
         }
 
         public TimeSpan HeartbeatInterval { get; set; }
         public TimeSpan RejectedJobDelay { get; set; }
+        public TimeProvider TimeProvider { get; set; }
 
         IEnumerable<ValidationResult> ISpecification.Validate()
         {
@@ -24,6 +26,8 @@ namespace ViciOne.ServiceBus
                 yield return this.Failure("JobConsumerOptions", "HeartbeatInterval", "Must be > 0");
             if (RejectedJobDelay <= TimeSpan.Zero)
                 yield return this.Failure("JobConsumerOptions", "RejectedJobDelay", "Must be > 0");
+            if (TimeProvider == null)
+                yield return this.Failure("JobConsumerOptions", "TimeProvider", "Must not be null");
         }
 
         public JobConsumerOptions SetHeartbeatInterval(int? d = null, int? h = null, int? m = null, int? s = null, int? ms = null)
@@ -54,6 +58,13 @@ namespace ViciOne.ServiceBus
         public JobConsumerOptions SetRejectedJobDelay(TimeSpan interval)
         {
             RejectedJobDelay = interval;
+
+            return this;
+        }
+
+        public JobConsumerOptions SetTimeProvider(TimeProvider timeProvider)
+        {
+            TimeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
 
             return this;
         }

@@ -105,7 +105,7 @@ namespace ViciOne.ServiceBus.AzureServiceBusTransport
         static async Task<bool> ScheduleSend<T>(SendEndpointContext clientContext, AzureServiceBusSendContext<T> context)
             where T : class
         {
-            var now = DateTime.UtcNow;
+            var now = context.GetTimeProvider().GetUtcNow().UtcDateTime;
 
             var enqueueTimeUtc = context.ScheduledEnqueueTimeUtc.Value;
             if (enqueueTimeUtc < now)

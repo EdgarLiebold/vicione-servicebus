@@ -1,5 +1,6 @@
 namespace ViciOne.ServiceBus.Middleware
 {
+    using System;
     using System.Diagnostics;
     using System.Threading.Tasks;
     using Context;
@@ -24,7 +25,8 @@ namespace ViciOne.ServiceBus.Middleware
 
         static IMessageScheduler SchedulerFactory(ConsumeContext context)
         {
-            return new MessageScheduler(new DelayedScheduleMessageProvider(context), context.GetPayload<IBusTopology>());
+            TimeProvider timeProvider = context.GetTimeProvider();
+            return new MessageScheduler(new DelayedScheduleMessageProvider(context, timeProvider), context.GetPayload<IBusTopology>(), timeProvider);
         }
     }
 }

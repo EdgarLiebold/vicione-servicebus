@@ -49,7 +49,7 @@ namespace ViciOne.ServiceBus.Middleware
                 : _message.MessageType.Split(';').ToArray();
 
             if (_message.ExpirationTime.HasValue)
-                context.TimeToLive = _message.ExpirationTime.Value.ToUniversalTime() - DateTime.UtcNow;
+                context.TimeToLive = _message.ExpirationTime.Value.ToUniversalTime() - context.GetTimeProvider().GetUtcNow().UtcDateTime;
 
             foreach (var headerValue in headers)
             {

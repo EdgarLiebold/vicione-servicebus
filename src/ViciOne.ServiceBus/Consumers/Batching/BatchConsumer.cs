@@ -22,22 +22,25 @@ namespace ViciOne.ServiceBus.Batching
         readonly DateTime _firstMessage;
         readonly Dictionary<Guid, BatchEntry> _messages;
         readonly BatchOptions _options;
-        readonly Timer _timer;
+        readonly ITimer _timer;
+        readonly TimeProvider _timeProvider;
         Activity _currentActivity;
         DateTime _lastMessage;
         ILogContext _logContext;
 
-        public BatchConsumer(BatchOptions options, TaskExecutor executor, TaskExecutor dispatcher, IPipe<ConsumeContext<Batch<TMessage>>> consumerPipe)
+        public BatchConsumer(BatchOptions options, TaskExecutor executor, TaskExecutor dispatcher, IPipe<ConsumeContext<Batch<TMessage>>> consumerPipe,
+            TimeProvider timeProvider)
         {
+            _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
             _executor = executor;
             _consumerPipe = consumerPipe;
             _dispatcher = dispatcher;
             _messages = new Dictionary<Guid, BatchEntry>();
             _completed = TaskCompletionSources.Create<DateTime>();
-            _firstMessage = DateTime.UtcNow;
+            _firstMessage = _timeProvider.GetUtcNow().UtcDateTime;
             _options = options;
 
-            _timer = new Timer(TimeLimitExpired, null, _options.TimeLimit, TimeSpan.FromMilliseconds(-1));
+            _timer = _timeProvider.CreateTimer(TimeLimitExpired, null, _options.TimeLimit, Timeout.InfiniteTimeSpan);
         }
 
         public bool IsCompleted { get; private set; }
@@ -91,7 +94,8 @@ namespace ViciOne.ServiceBus.Batching
             ulong? sequenceNumber = context.ReceiveContext.TryGetPayload<ITransportSequenceNumber>(out var payload)
                 ? payload.SequenceNumber
                 : null;
-            ulong sentTimeAsSequenceFallback() => (ulong)(context.SentTime ?? context.ReceiveContext.GetSentTime() ?? DateTime.UtcNow).Ticks;
+            ulong sentTimeAsSequenceFallback() => (ulong)(context.SentTime ?? context.ReceiveContext.GetSentTime()
+                ?? _timeProvider.GetUtcNow().UtcDateTime).Ticks;
 
             var batchEntry = new BatchEntry(
                 context,
@@ -106,7 +110,7 @@ namespace ViciOne.ServiceBus.Batching
             if (_options.TimeLimitStart == BatchTimeLimitStart.FromLast)
                 _timer.Change(_options.TimeLimit, TimeSpan.FromMilliseconds(-1));
 
-            _lastMessage = DateTime.UtcNow;
+            _lastMessage = _timeProvider.GetUtcNow().UtcDateTime;
 
             if (IsReadyToDeliver(context))
             {
@@ -184,7 +188,7 @@ namespace ViciOne.ServiceBus.Batching
             {
                 await _consumerPipe.Send(batchConsumeContext).ConfigureAwait(false);
 
-                _completed.TrySetResult(DateTime.UtcNow);
+                _completed.TrySetResult(_timeProvider.GetUtcNow().UtcDateTime);
             }
             catch (OperationCanceledException exception) when (exception.CancellationToken == context.CancellationToken)
             {

@@ -32,7 +32,7 @@ namespace ViciOne.ServiceBus.JobService
 
             try
             {
-                await JobTask.OrTimeout(_jobCancellationTimeout).ConfigureAwait(false);
+                await JobTask.OrTimeout(_jobCancellationTimeout, _context.GetTimeProvider()).ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {

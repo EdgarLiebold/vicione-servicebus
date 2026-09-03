@@ -19,11 +19,16 @@ namespace ViciOne.ServiceBus.SqlTransport
         readonly Task? _renewLockTask;
         readonly ReceiveSettings _settings;
         readonly DateTime _startedAt;
+        readonly TimeProvider _timeProvider;
         bool _locked;
 
-        public SqlReceiveLockContext(Uri inputAddress, SqlTransportMessage message, ReceiveSettings settings, ClientContext clientContext)
+        public SqlReceiveLockContext(Uri inputAddress, SqlTransportMessage message, ReceiveSettings settings, ClientContext clientContext,
+            TimeProvider timeProvider)
         {
-            _startedAt = DateTime.UtcNow;
+            ArgumentNullException.ThrowIfNull(timeProvider);
+
+            _timeProvider = timeProvider;
+            _startedAt = timeProvider.GetUtcNow().UtcDateTime;
             _inputAddress = inputAddress;
             _message = message;
             _settings = settings;
@@ -214,9 +219,7 @@ namespace ViciOne.ServiceBus.SqlTransport
                 {
                     if (delay > TimeSpan.Zero)
                     {
-                        await Task.Delay(delay, _activeTokenSource.Token)
-                            .ContinueWith(t => t, CancellationToken.None, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default)
-                            .ConfigureAwait(false);
+                        await Task.Delay(delay, _timeProvider, _activeTokenSource.Token).ConfigureAwait(false);
                     }
 
                     if (_activeTokenSource.IsCancellationRequested)
@@ -235,7 +238,7 @@ namespace ViciOne.ServiceBus.SqlTransport
                         }
                     }
 
-                    if (DateTime.UtcNow - _startedAt + duration >= _settings.MaxLockDuration)
+                    if (_timeProvider.GetUtcNow().UtcDateTime - _startedAt + duration >= _settings.MaxLockDuration)
                         break;
 
                     delay = CalculateDelay(duration);

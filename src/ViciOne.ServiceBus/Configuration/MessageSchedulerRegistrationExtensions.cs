@@ -24,14 +24,16 @@ namespace ViciOne.ServiceBus
             {
                 var bus = provider.GetRequiredService<IBus>();
                 var sendEndpointProvider = provider.GetRequiredService<ISendEndpointProvider>();
-                return sendEndpointProvider.CreateMessageScheduler(bus.Topology, schedulerEndpointAddress);
+                var timeProvider = provider.GetService<TimeProvider>() ?? TimeProvider.System;
+                return sendEndpointProvider.CreateMessageScheduler(bus.Topology, schedulerEndpointAddress, timeProvider);
             });
 
             configurator.TryAddScoped<IRecurringMessageScheduler>(provider =>
             {
                 var bus = provider.GetRequiredService<IBus>();
                 var sendEndpointProvider = provider.GetRequiredService<ISendEndpointProvider>();
-                return new EndpointRecurringMessageScheduler(sendEndpointProvider, schedulerEndpointAddress, bus.Topology);
+                var timeProvider = provider.GetService<TimeProvider>() ?? TimeProvider.System;
+                return new EndpointRecurringMessageScheduler(sendEndpointProvider, schedulerEndpointAddress, bus.Topology, timeProvider);
             });
         }
 
@@ -51,15 +53,17 @@ namespace ViciOne.ServiceBus
             {
                 var bus = provider.GetRequiredService<TBus>();
                 var sendEndpointProvider = provider.GetRequiredService<Bind<TBus, ISendEndpointProvider>>().Value;
-                return Bind<TBus>.Create(sendEndpointProvider.CreateMessageScheduler(bus.Topology, schedulerEndpointAddress));
+                var timeProvider = provider.GetService<TimeProvider>() ?? TimeProvider.System;
+                return Bind<TBus>.Create(sendEndpointProvider.CreateMessageScheduler(bus.Topology, schedulerEndpointAddress, timeProvider));
             });
 
             configurator.TryAddScoped(provider =>
             {
                 var bus = provider.GetRequiredService<TBus>();
                 var sendEndpointProvider = provider.GetRequiredService<Bind<TBus, ISendEndpointProvider>>().Value;
+                var timeProvider = provider.GetService<TimeProvider>() ?? TimeProvider.System;
                 return Bind<TBus>.Create<IRecurringMessageScheduler>(
-                    new EndpointRecurringMessageScheduler(sendEndpointProvider, schedulerEndpointAddress, bus.Topology));
+                    new EndpointRecurringMessageScheduler(sendEndpointProvider, schedulerEndpointAddress, bus.Topology, timeProvider));
             });
         }
 
@@ -74,14 +78,16 @@ namespace ViciOne.ServiceBus
             {
                 var bus = provider.GetRequiredService<IBus>();
                 var publishEndpoint = provider.GetRequiredService<IPublishEndpoint>();
-                return publishEndpoint.CreateMessageScheduler(bus.Topology);
+                var timeProvider = provider.GetService<TimeProvider>() ?? TimeProvider.System;
+                return publishEndpoint.CreateMessageScheduler(bus.Topology, timeProvider);
             });
 
             configurator.TryAddScoped<IRecurringMessageScheduler>(provider =>
             {
                 var bus = provider.GetRequiredService<IBus>();
                 var publishEndpoint = provider.GetRequiredService<IPublishEndpoint>();
-                return new PublishRecurringMessageScheduler(publishEndpoint, bus.Topology);
+                var timeProvider = provider.GetService<TimeProvider>() ?? TimeProvider.System;
+                return new PublishRecurringMessageScheduler(publishEndpoint, bus.Topology, timeProvider);
             });
         }
 
@@ -97,14 +103,16 @@ namespace ViciOne.ServiceBus
             {
                 var bus = provider.GetRequiredService<TBus>();
                 var publishEndpoint = provider.GetRequiredService<Bind<TBus, IPublishEndpoint>>().Value;
-                return Bind<TBus>.Create(publishEndpoint.CreateMessageScheduler(bus.Topology));
+                var timeProvider = provider.GetService<TimeProvider>() ?? TimeProvider.System;
+                return Bind<TBus>.Create(publishEndpoint.CreateMessageScheduler(bus.Topology, timeProvider));
             });
 
             configurator.TryAddScoped(provider =>
             {
                 var bus = provider.GetRequiredService<TBus>();
                 var publishEndpoint = provider.GetRequiredService<Bind<TBus, IPublishEndpoint>>().Value;
-                return Bind<TBus>.Create<IRecurringMessageScheduler>(new PublishRecurringMessageScheduler(publishEndpoint, bus.Topology));
+                var timeProvider = provider.GetService<TimeProvider>() ?? TimeProvider.System;
+                return Bind<TBus>.Create<IRecurringMessageScheduler>(new PublishRecurringMessageScheduler(publishEndpoint, bus.Topology, timeProvider));
             });
         }
     }

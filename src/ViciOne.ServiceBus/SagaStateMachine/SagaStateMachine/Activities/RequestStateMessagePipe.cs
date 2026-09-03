@@ -36,7 +36,7 @@ namespace ViciOne.ServiceBus.SagaStateMachine
 
             if (_context.Saga.ExpirationTime.HasValue)
             {
-                var timeToLive = DateTime.UtcNow - _context.Saga.ExpirationTime.Value;
+                var timeToLive = _context.Saga.ExpirationTime.Value - _context.GetTimeProvider().GetUtcNow().UtcDateTime;
                 context.TimeToLive = timeToLive > TimeSpan.Zero ? timeToLive : TimeSpan.FromSeconds(1);
             }
 

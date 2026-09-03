@@ -5,30 +5,34 @@ namespace ViciOne.ServiceBus.Util
     using System.Threading.Tasks;
 
 
-    public struct ActiveRequest :
+    public sealed class ActiveRequest :
         IDisposable
     {
         readonly RequestRateAlgorithm _algorithm;
         readonly CancellationTokenRegistration _registration;
         readonly CancellationTokenSource _source;
+        readonly TimeProvider _timeProvider;
         readonly TimeSpan _timeout;
+        ITimer? _cancelTimer;
         bool _completed;
+        int _disposed;
 
-        public readonly CancellationToken CancellationToken;
-        public readonly int ResultLimit;
-
-        public ActiveRequest(RequestRateAlgorithm algorithm, int resultLimit, CancellationToken cancellationToken, TimeSpan timeout)
+        public ActiveRequest(RequestRateAlgorithm algorithm, int resultLimit, CancellationToken cancellationToken, TimeSpan timeout,
+            TimeProvider timeProvider)
         {
             _algorithm = algorithm;
             _timeout = timeout;
+            _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
             _source = new CancellationTokenSource();
-            _registration = cancellationToken.Register(Callback, this);
 
             CancellationToken = _source.Token;
             ResultLimit = resultLimit;
 
-            _completed = false;
+            _registration = cancellationToken.Register(static state => ((ActiveRequest)state!).ScheduleCancellation(), this);
         }
+
+        public CancellationToken CancellationToken { get; }
+        public int ResultLimit { get; }
 
         public Task Complete(int count, CancellationToken cancellationToken = default)
         {
@@ -39,7 +43,11 @@ namespace ViciOne.ServiceBus.Util
 
         public void Dispose()
         {
+            if (Interlocked.Exchange(ref _disposed, 1) != 0)
+                return;
+
             _registration.Dispose();
+            _cancelTimer?.Dispose();
             _source.Dispose();
 
             if (_completed)
@@ -48,9 +56,35 @@ namespace ViciOne.ServiceBus.Util
             _algorithm.CancelRequest(ResultLimit);
         }
 
-        void Callback(object? obj)
+        void ScheduleCancellation()
         {
-            _source.CancelAfter(_timeout);
+            if (Volatile.Read(ref _disposed) != 0)
+                return;
+
+            if (_timeout <= TimeSpan.Zero)
+            {
+                Cancel();
+                return;
+            }
+
+            var timer = _timeProvider.CreateTimer(static state => ((ActiveRequest)state!).Cancel(), this, _timeout, Timeout.InfiniteTimeSpan);
+            var previous = Interlocked.CompareExchange(ref _cancelTimer, timer, null);
+            if (previous != null)
+                timer.Dispose();
+        }
+
+        void Cancel()
+        {
+            if (Volatile.Read(ref _disposed) != 0)
+                return;
+
+            try
+            {
+                _source.Cancel();
+            }
+            catch (ObjectDisposedException) when (Volatile.Read(ref _disposed) != 0)
+            {
+            }
         }
     }
 }

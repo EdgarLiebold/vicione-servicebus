@@ -1,3 +1,4 @@
+#nullable enable annotations
 namespace ViciOne.ServiceBus.Middleware.Outbox
 {
     using System;
@@ -12,10 +13,12 @@ namespace ViciOne.ServiceBus.Middleware.Outbox
         readonly Dictionary<InMemoryInboxMessageKey, InMemoryInboxMessage> _dictionary;
 
         readonly SemaphoreSlim _inUse = new SemaphoreSlim(1);
+        readonly TimeProvider _timeProvider;
 
-        public InMemoryOutboxMessageRepository()
+        public InMemoryOutboxMessageRepository(TimeProvider? timeProvider = null)
         {
             _dictionary = new Dictionary<InMemoryInboxMessageKey, InMemoryInboxMessage>(InMemoryInboxMessageKey.Comparer);
+            _timeProvider = timeProvider ?? TimeProvider.System;
         }
 
         public Task MarkInUse(CancellationToken cancellationToken)
@@ -29,7 +32,7 @@ namespace ViciOne.ServiceBus.Middleware.Outbox
 
             var existing = _dictionary.GetOrAdd(key, _ => new InMemoryInboxMessage(messageId, consumerId)
             {
-                Received = DateTime.UtcNow,
+                Received = _timeProvider.GetUtcNow().UtcDateTime,
                 ReceiveCount = 0
             });
 

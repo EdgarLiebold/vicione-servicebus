@@ -10,10 +10,10 @@ namespace ViciOne.ServiceBus.Scheduling
         {
         }
 
-        public CancelScheduledMessageCommand(Guid tokenId)
+        public CancelScheduledMessageCommand(Guid tokenId, DateTime timestamp)
         {
             CorrelationId = NewId.NextGuid();
-            Timestamp = DateTime.UtcNow;
+            Timestamp = timestamp;
             TokenId = tokenId;
         }
 

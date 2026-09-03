@@ -10,10 +10,10 @@ namespace ViciOne.ServiceBus.Scheduling
         {
         }
 
-        public PauseScheduledRecurringMessageCommand(string scheduleId, string scheduleGroup)
+        public PauseScheduledRecurringMessageCommand(string scheduleId, string scheduleGroup, DateTime timestamp)
         {
             CorrelationId = NewId.NextGuid();
-            Timestamp = DateTime.UtcNow;
+            Timestamp = timestamp;
 
             ScheduleId = scheduleId;
             ScheduleGroup = scheduleGroup;

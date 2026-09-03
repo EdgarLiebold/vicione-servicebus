@@ -8,11 +8,13 @@ namespace ViciOne.ServiceBus.InMemoryTransport
 
     public class InMemoryMessageMoveTransport
     {
+        readonly IInMemoryDelayProvider _delayProvider;
         readonly IMessageExchange<InMemoryTransportMessage> _exchange;
 
-        protected InMemoryMessageMoveTransport(IMessageExchange<InMemoryTransportMessage> exchange)
+        protected InMemoryMessageMoveTransport(IMessageExchange<InMemoryTransportMessage> exchange, IInMemoryDelayProvider delayProvider)
         {
             _exchange = exchange;
+            _delayProvider = delayProvider ?? throw new ArgumentNullException(nameof(delayProvider));
         }
 
         protected async Task Move(ReceiveContext context, Action<InMemoryTransportMessage, SendHeaders> preSend)
@@ -27,7 +29,7 @@ namespace ViciOne.ServiceBus.InMemoryTransport
 
             preSend(transportMessage, transportMessage.Headers);
 
-            var deliveryContext = new InMemoryDeliveryContext(transportMessage, CancellationToken.None);
+            var deliveryContext = new InMemoryDeliveryContext(transportMessage, _delayProvider.UtcNow, CancellationToken.None);
 
             await _exchange.Deliver(deliveryContext).ConfigureAwait(false);
         }

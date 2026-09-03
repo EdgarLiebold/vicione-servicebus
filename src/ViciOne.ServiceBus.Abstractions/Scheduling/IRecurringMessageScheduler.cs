@@ -11,6 +11,8 @@ namespace ViciOne.ServiceBus
     /// </summary>
     public interface IRecurringMessageScheduler
     {
+        TimeProvider TimeProvider { get; }
+
         /// <summary>
         /// Send a message
         /// </summary>

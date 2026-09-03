@@ -163,7 +163,9 @@ namespace ViciOne.ServiceBus.SqlTransport.PostgreSql
             var headersAsJson = headers.Any() ? JsonSerializer.Serialize(headers, ServiceBusMetadataJson.Options) : null;
 
             Guid? schedulingTokenId = context.Headers.Get<Guid>(MessageHeaders.SchedulingTokenId);
-            DateTime? expirationTime = context.TimeToLive.HasValue ? DateTime.UtcNow + context.TimeToLive.Value : null;
+            DateTime? expirationTime = context.TimeToLive.HasValue
+                ? context.GetTimeProvider().GetUtcNow().UtcDateTime + context.TimeToLive.Value
+                : null;
 
             return _context.Query((x, t) => x.ExecuteScalarAsync<long?>(_sendSql, new
             {
@@ -200,7 +202,9 @@ namespace ViciOne.ServiceBus.SqlTransport.PostgreSql
             var headersAsJson = headers.Any() ? JsonSerializer.Serialize(headers, ServiceBusMetadataJson.Options) : null;
 
             Guid? schedulingTokenId = context.Headers.Get<Guid>(MessageHeaders.SchedulingTokenId);
-            DateTime? expirationTime = context.TimeToLive.HasValue ? DateTime.UtcNow + context.TimeToLive.Value : null;
+            DateTime? expirationTime = context.TimeToLive.HasValue
+                ? context.GetTimeProvider().GetUtcNow().UtcDateTime + context.TimeToLive.Value
+                : null;
 
             return _context.Query((x, t) => x.ExecuteScalarAsync<long?>(_publishSql, new
             {

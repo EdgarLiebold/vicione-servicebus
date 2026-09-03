@@ -57,7 +57,8 @@ namespace ViciOne.ServiceBus.Configuration
 
                 var host = _hostConfiguration.Build() as IHost<TEndpointConfigurator>;
 
-                var bus = new ViciOneServiceBusBus(host, _hostConfiguration.BusConfiguration.BusObservers, busReceiveEndpointConfiguration);
+                var bus = new ViciOneServiceBusBus(host, _hostConfiguration.BusConfiguration.BusObservers, busReceiveEndpointConfiguration,
+                    context.GetService<TimeProvider>() ?? TimeProvider.System);
 
                 ConnectReceiveEndpointObservers(context, bus);
                 ConnectReceiveObservers(context, bus);

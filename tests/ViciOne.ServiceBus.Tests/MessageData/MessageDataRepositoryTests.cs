@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Text;
+using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.MessageData;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -61,6 +62,32 @@ public sealed class MessageDataRepositoryTests
             Assert.Equal(expiring, !address.OriginalString.Contains(":none:", StringComparison.Ordinal));
             FileInfo file = Assert.Single(directory.EnumerateFiles("*", SearchOption.AllDirectories));
             Assert.Equal(expected.Length, file.Length);
+        }
+        finally
+        {
+            if (directory.Exists)
+                directory.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-DATA-TTL-CLOCK", "filesystem-expiration-path")]
+    public async Task FileSystemExpirationPath_UsesTheInjectedClockAndExactTimeToLive()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        string root = Path.Combine(Path.GetTempPath(), "vsb-message-data-clock", NewId.NextGuid().ToString("N"));
+        var directory = new DirectoryInfo(root);
+        var clock = new FakeTimeProvider(new DateTimeOffset(2041, 12, 31, 23, 30, 0, TimeSpan.Zero));
+        IMessageDataRepository repository = new FileSystemMessageDataRepository(directory, clock);
+
+        try
+        {
+            await using var source = new MemoryStream([1, 2, 3], writable: false);
+
+            Uri address = await repository.Put(source, TimeSpan.FromMinutes(90), cancellationToken);
+
+            Assert.StartsWith("urn:file:2042:01:01:01:", address.OriginalString, StringComparison.Ordinal);
+            Assert.Single(directory.EnumerateFiles("*", SearchOption.AllDirectories));
         }
         finally
         {

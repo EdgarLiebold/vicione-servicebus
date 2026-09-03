@@ -38,7 +38,7 @@ namespace ViciOne.ServiceBus.InMemoryTransport
 
             IMessageExchange<InMemoryTransportMessage> exchange = _messageFabric.GetExchange(this, endpointAddress.Name, endpointAddress.ExchangeType);
 
-            var context = new InMemorySendTransportContext(_hostConfiguration, receiveEndpointContext, exchange);
+            var context = new InMemorySendTransportContext(_hostConfiguration, receiveEndpointContext, exchange, _messageFabric.DelayProvider);
 
             return new SendTransport<PipeContext>(context);
         }

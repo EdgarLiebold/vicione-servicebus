@@ -1,3 +1,4 @@
+#nullable enable annotations
 namespace ViciOne.ServiceBus.Scheduling;
 
 using System;
@@ -6,13 +7,15 @@ using System;
 public abstract class DefaultRecurringSchedule :
     RecurringSchedule
 {
-    protected DefaultRecurringSchedule()
+    protected DefaultRecurringSchedule(TimeProvider? timeProvider = null)
     {
+        timeProvider ??= TimeProvider.System;
+
         ScheduleId = TypeCache.GetShortName(GetType());
         ScheduleGroup = GetType().Assembly.FullName.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)[0];
 
-        TimeZoneId = TimeZoneInfo.Local.Id;
-        StartTime = DateTime.Now;
+        TimeZoneId = timeProvider.LocalTimeZone.Id;
+        StartTime = timeProvider.GetLocalNow();
     }
 
     public MissedEventPolicy MisfirePolicy { get; protected set; }

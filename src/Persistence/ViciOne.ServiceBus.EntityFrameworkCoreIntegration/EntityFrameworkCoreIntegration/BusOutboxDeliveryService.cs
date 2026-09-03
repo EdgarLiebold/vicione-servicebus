@@ -88,7 +88,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
             {
                 PrefetchCount = _options.QueryMessageLimit,
                 RequestResultLimit = 10
-            });
+            }, _timeProvider);
 
             while (!stoppingToken.IsCancellationRequested)
             {

@@ -37,8 +37,10 @@ namespace ViciOne.ServiceBus.AzureServiceBusTransport
 
         public override TimeSpan? Delay
         {
-            get => ScheduledEnqueueTimeUtc.HasValue ? ScheduledEnqueueTimeUtc.Value - DateTime.UtcNow : default;
-            set => ScheduledEnqueueTimeUtc = value > TimeSpan.Zero ? DateTime.UtcNow + value.Value : default(DateTime?);
+            get => ScheduledEnqueueTimeUtc.HasValue ? ScheduledEnqueueTimeUtc.Value - this.GetTimeProvider().GetUtcNow().UtcDateTime : default;
+            set => ScheduledEnqueueTimeUtc = value > TimeSpan.Zero
+                ? this.GetTimeProvider().GetUtcNow().UtcDateTime + value.Value
+                : default(DateTime?);
         }
 
         public string ReplyToSessionId { get; set; }

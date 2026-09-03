@@ -30,7 +30,7 @@ namespace ViciOne.ServiceBus.Util
         readonly CancellationTokenSource _disposeToken;
         readonly RequestRateAlgorithmOptions _options;
         readonly SemaphoreSlim? _rateLimitSemaphore;
-        readonly Timer? _rateLimitTimer;
+        readonly ITimer? _rateLimitTimer;
         readonly int _refreshThreshold;
         readonly TimeSpan _requestCancellationTimeout;
         readonly int _requestLimit;
@@ -39,6 +39,7 @@ namespace ViciOne.ServiceBus.Util
         readonly int _resultLimit;
         readonly SemaphoreSlim _resultSemaphore;
         readonly ConcurrentDictionary<long, Task> _tasks;
+        readonly TimeProvider _timeProvider;
 
         int _activeRequestCount;
         int _count;
@@ -49,7 +50,7 @@ namespace ViciOne.ServiceBus.Util
         int _rateLimit;
         int _requestCount;
 
-        public RequestRateAlgorithm(RequestRateAlgorithmOptions options)
+        public RequestRateAlgorithm(RequestRateAlgorithmOptions options, TimeProvider? timeProvider = null)
         {
             if (options.PrefetchCount == 0)
                 throw new ArgumentException("PrefetchCount must be > 0", nameof(options));
@@ -57,6 +58,7 @@ namespace ViciOne.ServiceBus.Util
                 throw new ArgumentException("RequestResultLimit must be > 0", nameof(options));
 
             _options = options;
+            _timeProvider = timeProvider ?? TimeProvider.System;
 
             _requestCancellationTimeout = _options.RequestCancellationTimeout ?? TimeSpan.FromSeconds(1);
 
@@ -81,7 +83,7 @@ namespace ViciOne.ServiceBus.Util
                 _rateLimitSemaphore = new SemaphoreSlim(_rateLimit);
 
                 var interval = options.RequestRateInterval.Value;
-                _rateLimitTimer = new Timer(Reset, null, interval, interval);
+                _rateLimitTimer = _timeProvider.CreateTimer(Reset, null, interval, interval);
             }
         }
 
@@ -356,7 +358,7 @@ namespace ViciOne.ServiceBus.Util
                     _pendingResultCount += resultLimit;
                 }
 
-                return new ActiveRequest(this, resultLimit, cancellationToken, _requestCancellationTimeout);
+                return new ActiveRequest(this, resultLimit, cancellationToken, _requestCancellationTimeout, _timeProvider);
             }
             catch (OperationCanceledException)
             {

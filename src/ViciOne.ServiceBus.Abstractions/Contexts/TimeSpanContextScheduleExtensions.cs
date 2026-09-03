@@ -20,7 +20,7 @@ namespace ViciOne.ServiceBus
             CancellationToken cancellationToken = default)
             where T : class
         {
-            var scheduledTime = DateTime.UtcNow + delay;
+            var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
 
             return scheduler.ScheduleSend(scheduledTime, message, cancellationToken);
         }
@@ -39,7 +39,7 @@ namespace ViciOne.ServiceBus
             CancellationToken cancellationToken = default)
             where T : class
         {
-            var scheduledTime = DateTime.UtcNow + delay;
+            var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
 
             return scheduler.ScheduleSend(scheduledTime, message, pipe, cancellationToken);
         }
@@ -58,7 +58,7 @@ namespace ViciOne.ServiceBus
             Action<SendContext<T>> callback, CancellationToken cancellationToken = default)
             where T : class
         {
-            var scheduledTime = DateTime.UtcNow + delay;
+            var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
 
             return scheduler.ScheduleSend(scheduledTime, message, callback.ToPipe(), cancellationToken);
         }
@@ -77,7 +77,7 @@ namespace ViciOne.ServiceBus
             Func<SendContext<T>, Task> callback, CancellationToken cancellationToken = default)
             where T : class
         {
-            var scheduledTime = DateTime.UtcNow + delay;
+            var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
 
             return scheduler.ScheduleSend(scheduledTime, message, callback.ToPipe(), cancellationToken);
         }
@@ -96,7 +96,7 @@ namespace ViciOne.ServiceBus
             IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
             where T : class
         {
-            var scheduledTime = DateTime.UtcNow + delay;
+            var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
 
             return scheduler.ScheduleSend(scheduledTime, message, pipe, cancellationToken);
         }
@@ -115,7 +115,7 @@ namespace ViciOne.ServiceBus
             Action<SendContext> callback, CancellationToken cancellationToken = default)
             where T : class
         {
-            var scheduledTime = DateTime.UtcNow + delay;
+            var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
 
             return scheduler.ScheduleSend(scheduledTime, message, callback.ToPipe(), cancellationToken);
         }
@@ -134,7 +134,7 @@ namespace ViciOne.ServiceBus
             Func<SendContext, Task> callback, CancellationToken cancellationToken = default)
             where T : class
         {
-            var scheduledTime = DateTime.UtcNow + delay;
+            var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
 
             return scheduler.ScheduleSend(scheduledTime, message, callback.ToPipe(), cancellationToken);
         }
@@ -150,7 +150,7 @@ namespace ViciOne.ServiceBus
         public static Task<ScheduledMessage> ScheduleSend(this MessageSchedulerContext scheduler, TimeSpan delay, object message,
             CancellationToken cancellationToken = default)
         {
-            var scheduledTime = DateTime.UtcNow + delay;
+            var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
 
             return scheduler.ScheduleSend(scheduledTime, message, cancellationToken);
         }
@@ -168,7 +168,7 @@ namespace ViciOne.ServiceBus
         public static Task<ScheduledMessage> ScheduleSend(this MessageSchedulerContext scheduler, TimeSpan delay, object message, Type messageType,
             CancellationToken cancellationToken = default)
         {
-            var scheduledTime = DateTime.UtcNow + delay;
+            var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
 
             return scheduler.ScheduleSend(scheduledTime, message, messageType, cancellationToken);
         }
@@ -185,7 +185,7 @@ namespace ViciOne.ServiceBus
         public static Task<ScheduledMessage> ScheduleSend(this MessageSchedulerContext scheduler, TimeSpan delay, object message,
             IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         {
-            var scheduledTime = DateTime.UtcNow + delay;
+            var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
 
             return scheduler.ScheduleSend(scheduledTime, message, pipe, cancellationToken);
         }
@@ -202,7 +202,7 @@ namespace ViciOne.ServiceBus
         public static Task<ScheduledMessage> ScheduleSend(this MessageSchedulerContext scheduler, TimeSpan delay, object message,
             Func<SendContext, Task> callback, CancellationToken cancellationToken = default)
         {
-            var scheduledTime = DateTime.UtcNow + delay;
+            var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
 
             return scheduler.ScheduleSend(scheduledTime, message, callback.ToPipe(), cancellationToken);
         }
@@ -219,7 +219,7 @@ namespace ViciOne.ServiceBus
         public static Task<ScheduledMessage> ScheduleSend(this MessageSchedulerContext scheduler, TimeSpan delay, object message,
             Action<SendContext> callback, CancellationToken cancellationToken = default)
         {
-            var scheduledTime = DateTime.UtcNow + delay;
+            var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
 
             return scheduler.ScheduleSend(scheduledTime, message, callback.ToPipe(), cancellationToken);
         }
@@ -238,7 +238,7 @@ namespace ViciOne.ServiceBus
         public static Task<ScheduledMessage> ScheduleSend(this MessageSchedulerContext scheduler, TimeSpan delay, object message, Type messageType,
             IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         {
-            var scheduledTime = DateTime.UtcNow + delay;
+            var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
 
             return scheduler.ScheduleSend(scheduledTime, message, messageType, pipe, cancellationToken);
         }
@@ -291,7 +291,7 @@ namespace ViciOne.ServiceBus
             CancellationToken cancellationToken = default)
             where T : class
         {
-            var scheduledTime = DateTime.UtcNow + delay;
+            var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
 
             return scheduler.ScheduleSend<T>(scheduledTime, values, cancellationToken);
         }
@@ -311,7 +311,7 @@ namespace ViciOne.ServiceBus
             IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
             where T : class
         {
-            var scheduledTime = DateTime.UtcNow + delay;
+            var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
 
             return scheduler.ScheduleSend(scheduledTime, values, pipe, cancellationToken);
         }
@@ -331,7 +331,7 @@ namespace ViciOne.ServiceBus
             Action<SendContext<T>> callback, CancellationToken cancellationToken = default)
             where T : class
         {
-            var scheduledTime = DateTime.UtcNow + delay;
+            var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
 
             return scheduler.ScheduleSend(scheduledTime, values, callback.ToPipe(), cancellationToken);
         }
@@ -351,7 +351,7 @@ namespace ViciOne.ServiceBus
             Func<SendContext<T>, Task> callback, CancellationToken cancellationToken = default)
             where T : class
         {
-            var scheduledTime = DateTime.UtcNow + delay;
+            var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
 
             return scheduler.ScheduleSend(scheduledTime, values, callback.ToPipe(), cancellationToken);
         }
@@ -371,7 +371,7 @@ namespace ViciOne.ServiceBus
             IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
             where T : class
         {
-            var scheduledTime = DateTime.UtcNow + delay;
+            var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
 
             return scheduler.ScheduleSend<T>(scheduledTime, values, pipe, cancellationToken);
         }
@@ -391,7 +391,7 @@ namespace ViciOne.ServiceBus
             Action<SendContext> callback, CancellationToken cancellationToken = default)
             where T : class
         {
-            var scheduledTime = DateTime.UtcNow + delay;
+            var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
 
             return scheduler.ScheduleSend<T>(scheduledTime, values, callback.ToPipe(), cancellationToken);
         }
@@ -411,7 +411,7 @@ namespace ViciOne.ServiceBus
             Func<SendContext, Task> callback, CancellationToken cancellationToken = default)
             where T : class
         {
-            var scheduledTime = DateTime.UtcNow + delay;
+            var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
 
             return scheduler.ScheduleSend<T>(scheduledTime, values, callback.ToPipe(), cancellationToken);
         }

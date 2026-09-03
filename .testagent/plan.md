@@ -2877,3 +2877,46 @@ checkpoint actions; remote publication remains outside this package.
 
 Completion: all eight steps passed locally. Package 9/12 will reconcile deterministic runtime-time
 ownership from V4 checkpoint 008; remote publication remains outside this package.
+
+## Reviewer integration — V4 deterministic runtime-time ownership (2026-09-03)
+
+1. Scheduler surface and source boundary:
+   - add `TimeProvider` to message/recurring scheduler contracts and propagate it through concrete
+     schedulers and DI composition;
+   - convert every relative IMessageScheduler, MessageSchedulerContext, PublishEndpoint and
+     ConsumeContext overload, recurring command timestamp, saga delay and local/UTC schedule-send
+     calculation;
+   - add representative exact-time behavior owners for every overload family and expand
+     `TimeSourceArchitectureTests` to the complete production tree with an explicit allowlist.
+2. Runtime timers and batching:
+   - inject the owner into `TaskExtensions`, `ActiveRequest`/`RequestRateAlgorithm`, batching collectors,
+     concurrency limiter, job-service timing and bus readiness;
+   - add `RequestRateAlgorithm_TimeoutUsesTheInjectedProvider`,
+     `BatchConsumer_UsesContextTimeForStartEndAndCompletion`, and
+     `BusReadiness_TimeoutUsesTheInjectedProvider` style owners with fixed epochs/barriers.
+3. Message and pipeline expiry:
+   - normalize timestamp variables, routing slips, file/Azure MessageData expiry, in-memory enqueue/move,
+     outbox scheduling, transforms and request-state expiry through the context/runtime provider;
+   - add exact TTL/expired/not-expired boundary cases, including a null-TTL transformation case.
+4. Provider-specific deadlines:
+   - normalize Azure Service Bus scheduling/locks, SQL Server/PostgreSQL message TTL, polling,
+     maintenance and lock renewal, and the remaining Amazon SQS receive scheduling path;
+   - use unit carriers where the source seam is deterministic and canonical local-provider execution for
+     behavior that only the actual provider can prove.
+5. Test-quality and mutation pass:
+   - re-open every new/changed test, run assertion-quality and pseudo-mutation review, strengthen surviving
+     or masked oracles, and execute independent one-cause mutations per high-risk mechanism;
+   - restore each mutation byte-exactly before final positive evidence.
+6. Closure:
+   - require analyzer-active focused builds, focused owner tests, complete serialized
+     Unit/Architecture regression, affected available provider profiles, scoped formatting, requirements
+     JSON/projection, direct-time/unowned-delay, empty-directory, review-hash and diff gates;
+   - commit product and architecture checkpoints as package 9/12 with no remote publication.
+
+Completion: all six phases passed locally. The package includes 30 killed one-cause mutations and a
+real-provider correction beyond the donor: delayed scheduler factories now preserve their injected clock
+through the transport-delay calculation even when an EF outbox-created send context has no clock payload.
+Canonical Unit/Architecture passes 3,209/3,209; SQL Server real local passes 60/60 and the Azure Service
+Bus emulator passes 24/24, all without skips. The only remaining full-EF failure is the already isolated,
+pre-package-6 nondeterministic inbox/outbox concurrency case. Package 10/12 is next; remote publication
+remains outside this package.

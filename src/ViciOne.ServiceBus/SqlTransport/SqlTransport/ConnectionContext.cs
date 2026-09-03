@@ -25,7 +25,7 @@ namespace ViciOne.ServiceBus.SqlTransport
         /// <returns></returns>
         Task<ISqlTransportConnection> CreateConnection(CancellationToken cancellationToken);
 
-        Task DelayUntilMessageReady(long queueId, TimeSpan timeout, CancellationToken cancellationToken);
+        Task DelayUntilMessageReady(long queueId, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken);
 
         /// <summary>
         /// Executes a query within a transaction using an available connection

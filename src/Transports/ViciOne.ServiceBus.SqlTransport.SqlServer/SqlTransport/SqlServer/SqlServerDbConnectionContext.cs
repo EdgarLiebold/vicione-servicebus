@@ -86,16 +86,12 @@ public class SqlServerDbConnectionContext :
         }, cancellationToken);
     }
 
-    public Task DelayUntilMessageReady(long queueId, TimeSpan timeout, CancellationToken cancellationToken)
+    Task ConnectionContext.DelayUntilMessageReady(long queueId, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken)
     {
-        return DelayUntilMessageReady(queueId, timeout, TimeProvider.System, cancellationToken);
+        return DelayUntilMessageReady(queueId, timeout, timeProvider, cancellationToken);
     }
 
-    internal static Task DelayUntilMessageReady(
-        long queueId,
-        TimeSpan timeout,
-        TimeProvider timeProvider,
-        CancellationToken cancellationToken)
+    internal static Task DelayUntilMessageReady(long queueId, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(timeProvider);
         _ = queueId;
@@ -186,7 +182,7 @@ public class SqlServerDbConnectionContext :
 
                     try
                     {
-                        await Task.Delay(maintenanceInterval, Stopping);
+                        await Task.Delay(maintenanceInterval, _context.GetTimeProvider(), Stopping);
                     }
                     catch (OperationCanceledException)
                     {
@@ -206,11 +202,13 @@ public class SqlServerDbConnectionContext :
                             rowLimit = _hostConfiguration.Settings.MaintenanceBatchSize,
                         }, Stopping);
 
-                        if (lastCleanup == null || lastCleanup < DateTime.UtcNow - cleanupInterval)
+                        var utcNow = _context.GetTimeProvider().GetUtcNow().UtcDateTime;
+
+                        if (lastCleanup == null || lastCleanup < utcNow - cleanupInterval)
                         {
                             await Execute<long>(purgeTopologySql, new { }, CancellationToken.None);
 
-                            lastCleanup = DateTime.UtcNow;
+                            lastCleanup = utcNow;
                             cleanupInterval = AddJitter(_hostConfiguration.Settings.QueueCleanupInterval, random);
 
                             await _context.Query((x, t) => x.ExecuteScalarAsync<long?>(removeOrphanedMessagesSql,

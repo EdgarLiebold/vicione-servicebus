@@ -21,7 +21,7 @@ namespace ViciOne.ServiceBus.SagaStateMachine
 
         public async Task Execute(BehaviorContext<RequestState, RequestCompleted> context, IBehavior<RequestState, RequestCompleted> next)
         {
-            if (!context.Saga.ExpirationTime.HasValue || context.Saga.ExpirationTime.Value > DateTime.UtcNow)
+            if (!context.Saga.ExpirationTime.HasValue || context.Saga.ExpirationTime.Value > context.GetTimeProvider().GetUtcNow().UtcDateTime)
             {
                 IPipe<SendContext> pipe = new RequestStateMessagePipe(context, context.Message.Payload, context.Message.PayloadType);
 

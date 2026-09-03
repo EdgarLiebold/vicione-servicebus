@@ -1,3 +1,4 @@
+#nullable enable annotations
 namespace ViciOne.ServiceBus
 {
     using System;
@@ -15,15 +16,16 @@ namespace ViciOne.ServiceBus
         /// </summary>
         /// <param name="bus"></param>
         /// <param name="schedulerEndpointAddress">The endpoint address of the scheduler service</param>
+        /// <param name="timeProvider">The clock used for relative scheduling operations.</param>
         /// <returns></returns>
-        public static IMessageScheduler CreateMessageScheduler(this IBus bus, Uri schedulerEndpointAddress)
+        public static IMessageScheduler CreateMessageScheduler(this IBus bus, Uri schedulerEndpointAddress, TimeProvider? timeProvider = null)
         {
             Task<ISendEndpoint> GetSchedulerEndpoint()
             {
                 return bus.GetSendEndpoint(schedulerEndpointAddress);
             }
 
-            return new MessageScheduler(new EndpointScheduleMessageProvider(GetSchedulerEndpoint), bus.Topology);
+            return new MessageScheduler(new EndpointScheduleMessageProvider(GetSchedulerEndpoint), bus.Topology, timeProvider);
         }
 
         /// <summary>
@@ -35,16 +37,17 @@ namespace ViciOne.ServiceBus
         /// <param name="busTopology"></param>
         /// <param name="schedulerEndpointAddress">The endpoint address of the scheduler service</param>
         /// <param name="sendEndpointProvider"></param>
+        /// <param name="timeProvider">The clock used for relative scheduling operations.</param>
         /// <returns></returns>
         public static IMessageScheduler CreateMessageScheduler(this ISendEndpointProvider sendEndpointProvider, IBusTopology busTopology,
-            Uri schedulerEndpointAddress)
+            Uri schedulerEndpointAddress, TimeProvider? timeProvider = null)
         {
             Task<ISendEndpoint> GetSchedulerEndpoint()
             {
                 return sendEndpointProvider.GetSendEndpoint(schedulerEndpointAddress);
             }
 
-            return new MessageScheduler(new EndpointScheduleMessageProvider(GetSchedulerEndpoint), busTopology);
+            return new MessageScheduler(new EndpointScheduleMessageProvider(GetSchedulerEndpoint), busTopology, timeProvider);
         }
 
         /// <summary>
@@ -55,10 +58,11 @@ namespace ViciOne.ServiceBus
         /// use the ScheduleSend extensions on ConsumeContext.
         /// </summary>
         /// <param name="bus"></param>
+        /// <param name="timeProvider">The clock used for relative scheduling operations.</param>
         /// <returns></returns>
-        public static IMessageScheduler CreateMessageScheduler(this IBus bus)
+        public static IMessageScheduler CreateMessageScheduler(this IBus bus, TimeProvider? timeProvider = null)
         {
-            return new MessageScheduler(new PublishScheduleMessageProvider(bus), bus.Topology);
+            return new MessageScheduler(new PublishScheduleMessageProvider(bus), bus.Topology, timeProvider);
         }
 
         /// <summary>
@@ -70,10 +74,11 @@ namespace ViciOne.ServiceBus
         /// </summary>
         /// <param name="publishEndpoint"></param>
         /// <param name="busTopology"></param>
+        /// <param name="timeProvider">The clock used for relative scheduling operations.</param>
         /// <returns></returns>
-        public static IMessageScheduler CreateMessageScheduler(this IPublishEndpoint publishEndpoint, IBusTopology busTopology)
+        public static IMessageScheduler CreateMessageScheduler(this IPublishEndpoint publishEndpoint, IBusTopology busTopology, TimeProvider? timeProvider = null)
         {
-            return new MessageScheduler(new PublishScheduleMessageProvider(publishEndpoint), busTopology);
+            return new MessageScheduler(new PublishScheduleMessageProvider(publishEndpoint), busTopology, timeProvider);
         }
 
         /// <summary>
@@ -82,10 +87,12 @@ namespace ViciOne.ServiceBus
         /// use the ScheduleSend extensions on ConsumeContext.
         /// </summary>
         /// <param name="bus"></param>
+        /// <param name="timeProvider">The clock used for relative scheduling operations.</param>
         /// <returns></returns>
-        public static IMessageScheduler CreateDelayedMessageScheduler(this IBus bus)
+        public static IMessageScheduler CreateDelayedMessageScheduler(this IBus bus, TimeProvider? timeProvider = null)
         {
-            return new MessageScheduler(new DelayedScheduleMessageProvider(bus), bus.Topology);
+            TimeProvider schedulerTimeProvider = timeProvider ?? TimeProvider.System;
+            return new MessageScheduler(new DelayedScheduleMessageProvider(bus, schedulerTimeProvider), bus.Topology, schedulerTimeProvider);
         }
 
         /// <summary>
@@ -95,10 +102,13 @@ namespace ViciOne.ServiceBus
         /// </summary>
         /// <param name="sendEndpointProvider"></param>
         /// <param name="busTopology"></param>
+        /// <param name="timeProvider">The clock used for relative scheduling operations.</param>
         /// <returns></returns>
-        public static IMessageScheduler CreateDelayedMessageScheduler(this ISendEndpointProvider sendEndpointProvider, IBusTopology busTopology)
+        public static IMessageScheduler CreateDelayedMessageScheduler(this ISendEndpointProvider sendEndpointProvider, IBusTopology busTopology, TimeProvider? timeProvider = null)
         {
-            return new MessageScheduler(new DelayedScheduleMessageProvider(sendEndpointProvider), busTopology);
+            TimeProvider schedulerTimeProvider = timeProvider ?? TimeProvider.System;
+            return new MessageScheduler(new DelayedScheduleMessageProvider(sendEndpointProvider, schedulerTimeProvider), busTopology,
+                schedulerTimeProvider);
         }
     }
 }

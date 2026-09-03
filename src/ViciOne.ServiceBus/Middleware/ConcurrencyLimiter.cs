@@ -24,7 +24,7 @@ namespace ViciOne.ServiceBus.Middleware
             _id = id;
 
             _limit = new SemaphoreSlim(concurrencyLimit);
-            _lastUpdated = DateTime.UtcNow;
+            _lastUpdated = DateTime.MinValue;
         }
 
         int IConcurrencyLimiter.Available => _limit.CurrentCount;
@@ -61,7 +61,7 @@ namespace ViciOne.ServiceBus.Middleware
 
                             Interlocked.Add(ref _concurrencyLimit, releaseCount);
 
-                            _lastUpdated = context.Message.Timestamp ?? context.SentTime ?? DateTime.UtcNow;
+                            _lastUpdated = context.Message.Timestamp ?? context.SentTime ?? context.GetTimeProvider().GetUtcNow().UtcDateTime;
                         }
                         else if (concurrencyLimit < previousLimit)
                         {
@@ -71,13 +71,13 @@ namespace ViciOne.ServiceBus.Middleware
 
                                 Interlocked.Decrement(ref _concurrencyLimit);
 
-                                _lastUpdated = context.Message.Timestamp ?? context.SentTime ?? DateTime.UtcNow;
+                                _lastUpdated = context.Message.Timestamp ?? context.SentTime ?? context.GetTimeProvider().GetUtcNow().UtcDateTime;
                             }
                         }
 
                         await context.RespondAsync<ConcurrencyLimitUpdated>(new
                         {
-                            Timestamp = DateTime.UtcNow,
+                            Timestamp = context.GetTimeProvider().GetUtcNow().UtcDateTime,
                             context.Message.Id,
                             context.Message.ConcurrencyLimit
                         }).ConfigureAwait(false);

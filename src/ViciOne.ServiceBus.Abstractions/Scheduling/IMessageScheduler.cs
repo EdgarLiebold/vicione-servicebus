@@ -11,6 +11,11 @@ namespace ViciOne.ServiceBus
     public interface IMessageScheduler
     {
         /// <summary>
+        /// Clock used for relative scheduling operations.
+        /// </summary>
+        TimeProvider TimeProvider { get; }
+
+        /// <summary>
         /// Send a message
         /// </summary>
         /// <typeparam name="T">The message type</typeparam>

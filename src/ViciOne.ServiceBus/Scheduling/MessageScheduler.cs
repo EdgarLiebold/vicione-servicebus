@@ -1,3 +1,4 @@
+#nullable enable annotations
 namespace ViciOne.ServiceBus.Scheduling
 {
     using System;
@@ -12,11 +13,14 @@ namespace ViciOne.ServiceBus.Scheduling
         readonly IBusTopology _busTopology;
         readonly IScheduleMessageProvider _provider;
 
-        public MessageScheduler(IScheduleMessageProvider provider, IBusTopology busTopology)
+        public MessageScheduler(IScheduleMessageProvider provider, IBusTopology busTopology, TimeProvider? timeProvider = null)
         {
-            _provider = provider;
-            _busTopology = busTopology;
+            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
+            _busTopology = busTopology ?? throw new ArgumentNullException(nameof(busTopology));
+            TimeProvider = timeProvider ?? TimeProvider.System;
         }
+
+        public TimeProvider TimeProvider { get; }
 
         public Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, T message,
             CancellationToken cancellationToken)

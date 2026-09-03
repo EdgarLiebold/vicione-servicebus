@@ -36,11 +36,12 @@ namespace ViciOne.ServiceBus
             {
                 var busInstance = provider.GetRequiredService<Bind<IBus, IBusInstance>>().Value;
                 var sendEndpointProvider = provider.GetRequiredService<ISendEndpointProvider>();
+                var timeProvider = provider.GetService<TimeProvider>() ?? TimeProvider.System;
 
                 var hostConfiguration = busInstance.HostConfiguration as ISqlHostConfiguration
                     ?? throw new ArgumentException("The SQL transport configuration was not found");
 
-                return new MessageScheduler(new SqlScheduleMessageProvider(hostConfiguration, sendEndpointProvider), busInstance.Bus.Topology);
+                return new MessageScheduler(new SqlScheduleMessageProvider(hostConfiguration, sendEndpointProvider), busInstance.Bus.Topology, timeProvider);
             });
         }
 
@@ -55,12 +56,13 @@ namespace ViciOne.ServiceBus
             {
                 var busInstance = provider.GetRequiredService<Bind<TBus, IBusInstance>>().Value;
                 var sendEndpointProvider = provider.GetRequiredService<ISendEndpointProvider>();
+                var timeProvider = provider.GetService<TimeProvider>() ?? TimeProvider.System;
 
                 var hostConfiguration = busInstance.HostConfiguration as ISqlHostConfiguration
                     ?? throw new ArgumentException("The SQL transport configuration was not found");
 
                 return Bind<TBus>.Create<IMessageScheduler>(
-                    new MessageScheduler(new SqlScheduleMessageProvider(hostConfiguration, sendEndpointProvider), busInstance.Bus.Topology));
+                    new MessageScheduler(new SqlScheduleMessageProvider(hostConfiguration, sendEndpointProvider), busInstance.Bus.Topology, timeProvider));
             });
         }
     }

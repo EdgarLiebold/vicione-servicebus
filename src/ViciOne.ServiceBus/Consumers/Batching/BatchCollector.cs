@@ -66,7 +66,7 @@ namespace ViciOne.ServiceBus.Batching
             }
 
             if (_currentConsumer == null || _currentConsumer.IsCompleted)
-                _currentConsumer = new BatchConsumer<TMessage>(_options, _collector, _dispatcher, _consumerPipe);
+                _currentConsumer = new BatchConsumer<TMessage>(_options, _collector, _dispatcher, _consumerPipe, context.GetTimeProvider());
 
             await _currentConsumer.Add(context, currentActivity).ConfigureAwait(false);
 
@@ -147,7 +147,7 @@ namespace ViciOne.ServiceBus.Batching
 
                 if (consumer == null || consumer.IsCompleted)
                 {
-                    consumer = new BatchConsumer<TMessage>(_options, _collector, _dispatcher, _consumerPipe);
+                    consumer = new BatchConsumer<TMessage>(_options, _collector, _dispatcher, _consumerPipe, context.GetTimeProvider());
                     _collectors[key] = consumer;
                 }
 
@@ -163,7 +163,7 @@ namespace ViciOne.ServiceBus.Batching
             }
 
             if (_currentConsumer == null || _currentConsumer.IsCompleted)
-                _currentConsumer = new BatchConsumer<TMessage>(_options, _collector, _dispatcher, _consumerPipe);
+                _currentConsumer = new BatchConsumer<TMessage>(_options, _collector, _dispatcher, _consumerPipe, context.GetTimeProvider());
 
             await _currentConsumer.Add(context, currentActivity).ConfigureAwait(false);
 

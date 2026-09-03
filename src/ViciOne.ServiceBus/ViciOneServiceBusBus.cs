@@ -28,6 +28,7 @@ namespace ViciOne.ServiceBus
         readonly ILogContext _logContext;
         readonly IPublishEndpoint _publishEndpoint;
         readonly IReceiveEndpoint _receiveEndpoint;
+        readonly TimeProvider _timeProvider;
         Handle? _busHandle;
 
         /// <summary>The bus endpoint's failure that waiting cannot resolve, once there is one.</summary>
@@ -37,13 +38,15 @@ namespace ViciOne.ServiceBus
         BusState _busState;
         string _healthMessage = "not started";
 
-        public ViciOneServiceBusBus(IHost host, IBusObserver busObservable, IReceiveEndpointConfiguration endpointConfiguration)
+        public ViciOneServiceBusBus(IHost host, IBusObserver busObservable, IReceiveEndpointConfiguration endpointConfiguration,
+            TimeProvider? timeProvider = null)
         {
             Address = endpointConfiguration.InputAddress;
             _consumePipe = endpointConfiguration.ConsumePipe;
             _host = host;
             _busObservable = busObservable;
             _receiveEndpoint = endpointConfiguration.ReceiveEndpoint;
+            _timeProvider = timeProvider ?? TimeProvider.System;
 
             _busState = BusState.Created;
 
@@ -95,7 +98,7 @@ namespace ViciOne.ServiceBus
 
             var terminal = _terminalFault;
 
-            using var timeout = new CancellationTokenSource(ReadyTimeout);
+            using var timeout = new CancellationTokenSource(ReadyTimeout, _timeProvider);
 
             terminal?.Attach(timeout);
             try
@@ -404,7 +407,7 @@ namespace ViciOne.ServiceBus
             {
                 if (cancellationToken == default)
                 {
-                    tokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(60));
+                    tokenSource = new CancellationTokenSource(ReadyTimeout, _timeProvider);
                     cancellationToken = tokenSource.Token;
                 }
 

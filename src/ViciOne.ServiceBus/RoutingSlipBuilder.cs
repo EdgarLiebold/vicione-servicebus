@@ -1,3 +1,4 @@
+#nullable enable annotations
 namespace ViciOne.ServiceBus
 {
     using System;
@@ -30,10 +31,10 @@ namespace ViciOne.ServiceBus
         readonly List<Subscription> _subscriptions;
         readonly IDictionary<string, object> _variables;
 
-        public RoutingSlipBuilder(Guid trackingNumber)
+        public RoutingSlipBuilder(Guid trackingNumber, TimeProvider? timeProvider = null)
         {
             TrackingNumber = trackingNumber;
-            _createTimestamp = DateTime.UtcNow;
+            _createTimestamp = (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime;
 
             _itinerary = new List<Activity>();
             _sourceItinerary = new List<Activity>();

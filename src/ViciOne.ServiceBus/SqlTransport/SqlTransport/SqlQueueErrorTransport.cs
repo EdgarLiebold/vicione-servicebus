@@ -21,7 +21,7 @@ namespace ViciOne.ServiceBus.SqlTransport
                 headers.CopyFrom(context.ExceptionHeaders);
 
                 if (message.ExpirationTime.HasValue)
-                    message.ExpirationTime = DateTime.UtcNow + Defaults.ErrorQueueTimeToLive;
+                    message.ExpirationTime = context.GetTimeProvider().GetUtcNow().UtcDateTime + Defaults.ErrorQueueTimeToLive;
             }
 
             return Move(context, PreSend);

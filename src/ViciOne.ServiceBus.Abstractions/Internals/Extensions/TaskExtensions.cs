@@ -78,16 +78,23 @@ namespace ViciOne.ServiceBus.Internals
             if (timeout == TimeSpan.Zero)
                 timeout = _defaultTimeout;
 
-            return OrTimeoutInternal(task, timeout, cancellationToken, memberName, filePath, lineNumber);
+            return OrTimeoutInternal(task, timeout, TimeProvider.System, cancellationToken, memberName, filePath, lineNumber);
         }
 
         public static Task OrTimeout(this Task task, TimeSpan timeout, CancellationToken cancellationToken = default,
             [CallerMemberName] string? memberName = null, [CallerFilePath] string? filePath = null, [CallerLineNumber] int? lineNumber = null)
         {
-            return OrTimeoutInternal(task, timeout, cancellationToken, memberName, filePath, lineNumber);
+            return OrTimeoutInternal(task, timeout, TimeProvider.System, cancellationToken, memberName, filePath, lineNumber);
         }
 
-        static Task OrTimeoutInternal(this Task task, TimeSpan timeout, CancellationToken cancellationToken, string? memberName, string? filePath,
+        public static Task OrTimeout(this Task task, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken = default,
+            [CallerMemberName] string? memberName = null, [CallerFilePath] string? filePath = null, [CallerLineNumber] int? lineNumber = null)
+        {
+            ArgumentNullException.ThrowIfNull(timeProvider);
+            return OrTimeoutInternal(task, timeout, timeProvider, cancellationToken, memberName, filePath, lineNumber);
+        }
+
+        static Task OrTimeoutInternal(this Task task, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken, string? memberName, string? filePath,
             int? lineNumber)
         {
             if (task.IsCompleted)
@@ -102,7 +109,7 @@ namespace ViciOne.ServiceBus.Internals
             async Task WaitAsync()
             {
                 using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-                var delayTask = Task.Delay(Debugger.IsAttached ? Timeout.InfiniteTimeSpan : timeout, cts.Token);
+                var delayTask = Task.Delay(Debugger.IsAttached ? Timeout.InfiniteTimeSpan : timeout, timeProvider, cts.Token);
                 var completed = await Task.WhenAny(task, delayTask).ConfigureAwait(false);
 
                 if (completed == delayTask)
@@ -129,16 +136,24 @@ namespace ViciOne.ServiceBus.Internals
             if (timeout == TimeSpan.Zero)
                 timeout = _defaultTimeout;
 
-            return OrTimeoutInternal(task, timeout, cancellationToken, memberName, filePath, lineNumber);
+            return OrTimeoutInternal(task, timeout, TimeProvider.System, cancellationToken, memberName, filePath, lineNumber);
         }
 
         public static Task<T> OrTimeout<T>(this Task<T> task, TimeSpan timeout, CancellationToken cancellationToken = default,
             [CallerMemberName] string? memberName = null, [CallerFilePath] string? filePath = null, [CallerLineNumber] int? lineNumber = null)
         {
-            return OrTimeoutInternal(task, timeout, cancellationToken, memberName, filePath, lineNumber);
+            return OrTimeoutInternal(task, timeout, TimeProvider.System, cancellationToken, memberName, filePath, lineNumber);
         }
 
-        static Task<T> OrTimeoutInternal<T>(this Task<T> task, TimeSpan timeout, CancellationToken cancellationToken, string? memberName, string? filePath,
+        public static Task<T> OrTimeout<T>(this Task<T> task, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken = default,
+            [CallerMemberName] string? memberName = null, [CallerFilePath] string? filePath = null, [CallerLineNumber] int? lineNumber = null)
+        {
+            ArgumentNullException.ThrowIfNull(timeProvider);
+            return OrTimeoutInternal(task, timeout, timeProvider, cancellationToken, memberName, filePath, lineNumber);
+        }
+
+        static Task<T> OrTimeoutInternal<T>(this Task<T> task, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken, string? memberName,
+            string? filePath,
             int? lineNumber)
         {
             if (task.IsCompleted)
@@ -153,7 +168,7 @@ namespace ViciOne.ServiceBus.Internals
             async Task<T> WaitAsync()
             {
                 using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-                var delayTask = Task.Delay(Debugger.IsAttached ? Timeout.InfiniteTimeSpan : timeout, cts.Token);
+                var delayTask = Task.Delay(Debugger.IsAttached ? Timeout.InfiniteTimeSpan : timeout, timeProvider, cts.Token);
                 var completed = await Task.WhenAny(task, delayTask).ConfigureAwait(false);
 
                 if (completed == delayTask)

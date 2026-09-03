@@ -25,6 +25,7 @@ namespace ViciOne.ServiceBus.Configuration
 
         public TimeSpan HeartbeatInterval => _options.HeartbeatInterval;
         public TimeSpan RejectedJobDelay => _options.RejectedJobDelay;
+        public TimeProvider TimeProvider => _options.TimeProvider;
 
         public Uri? InstanceAddress { get; set; }
         public IReceiveEndpointConfigurator? InstanceEndpointConfigurator { get; set; }

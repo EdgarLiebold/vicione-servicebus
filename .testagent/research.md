@@ -3477,3 +3477,73 @@ have zero warnings/errors. Scoped formatting covers all 20 changed C# paths. An 
 ended after five minutes with exit 1 but explicitly zero compiler warnings/errors; the same build completed
 in ten seconds with `--disable-build-servers`, confirming the known local build-server interference rather
 than a source failure. Tests continue to run without that build-only switch.
+
+## Reviewer integration research — V4 deterministic runtime-time ownership (2026-09-03)
+
+The protected V4 bundle verifies at
+`e8f28736562bf7c4fa8ffca4dfd662cd5105d3124e26d2ba424fe1ac0d192b87` and was opened only in
+the temporary checkout `/private/tmp/vsb-v4-donor-p9.8o1lyD`. Checkpoint 008 deliberately had no early
+freeze; the complete time-normalization change is commit
+`ce9db9e205865788d50933673a3e64d837a50f48`, with 82 touched files and 506 additions/351 removals.
+Fourteen later V4 commits overlap those paths. The final donor, not the early diff alone, is the semantic
+input. The integration baseline is product commit `0a41b94737886b3cdfa01876ef021e15336564ee`, tree
+`c1d96fb9ed155a9932fa1a332f0f0a988da464bc`; later native Receive, executor, EF, cache and RabbitMQ
+contracts remain authoritative.
+
+The focused production scan covers 3,795 C# files under `src`, excluding build output. It finds 203 direct
+`DateTime`/`DateTimeOffset` process-clock reads in 55 files, 25 `Task.Delay` call sites and 58 cancellation
+source/`CancelAfter` constructions. The current source already has 445 `TimeProvider` references and one
+public context-payload owner in `PipeContextTimeProviderExtensions`; this is a propagation/ownership closure,
+not a new clock abstraction. The final V4 donor retains only 12 direct process-clock reads in 11 files:
+NewId identity, log/activity/probe diagnostics, event/agent timestamps, rescue metadata and RabbitMQ client
+diagnostics. Those categories are explicit allowlist candidates, never an excuse to retain scheduler, TTL,
+expiry, retry, polling or timeout wall-clock decisions.
+
+The required source-to-test pairing artifact from the repository-wide scan remains
+`/private/tmp/vsb-review-audit.3RMtAp/source-test-pairing.json`. It flags `BatchCollector` and
+`BatchConsumer` as statically unpaired. Current tests already supply reusable `FakeTimeProvider` and
+`ObservableTimeProvider` carriers and strong adjacent owners for context time, requests, in-memory delay,
+retry, circuit breaker, cache, EF outbox and test-harness time. Missing direct owners are relative scheduler
+overload families, batch start/end/deadline, request-rate timeout, bus readiness, MessageData expiry and the
+transport-specific TTL/lock/maintenance calculations.
+
+Acceptance checklist before implementation:
+
+- every relative scheduler overload derives its absolute UTC value from the scheduler or context owner;
+- recurring command timestamps, schedule-send local/UTC delay, saga scheduling and scheduler DI preserve
+  the exact selected provider;
+- task timeout, request-rate cancellation, batch times, bus readiness and job/runtime delays use one owner
+  for both timestamp calculation and timers;
+- MessageData, forwarding, in-memory, SQL and Azure TTL/expiry/lock decisions use context- or
+  composition-bound time and preserve exact UTC/`DateTimeKind` semantics;
+- direct process-clock and unowned-delay architecture checks cover all production source with a narrow,
+  named allowlist for external identity, diagnostics and event metadata;
+- all new tests use fixed epochs and positive completion barriers, with no sleep, polling quiet window,
+  timeout-as-success or self-derived expected value;
+- independent buildable one-cause mutations bind provider propagation, exact deadline, UTC/local choice,
+  cancellation, TTL, batching, request rate and requirement projection;
+- no inherited/current native test is removed unless every owned behavior has a stronger terminal
+  replacement; `review/**` remains byte-identical and untracked.
+
+Implementation and validation exposed one important omission in the V4 donor. Relative delayed scheduling
+correctly used the scheduler's provider to compute an absolute timestamp, but `ScheduleSendPipe` then
+subtracted `context.GetTimeProvider()`. EF outbox-created send contexts do not necessarily carry that
+payload and therefore fell back to process time. The real PostgreSQL scheduled-publish test timed out,
+while narrower unit paths had not represented this context boundary.
+
+The compatible correction retains the existing two-argument `ScheduleSendPipe` behavior and adds an
+explicit provider path. `DelayedScheduleMessageProvider`, both `IBus` and `ISendEndpointProvider` delayed
+factory overloads, and `DelayedMessageSchedulerFilter` now select one effective provider and propagate it
+through both halves of the calculation. A direct pipe test plus a two-row factory-route theory use a
+transport context without a clock payload, so reverting any one propagation path fails causally. The real
+PostgreSQL test subsequently passes.
+
+The Azure Storage carrier is intentionally hermetic rather than a cloud claim. A recording HTTP handler
+exercises the actual Azure SDK request construction and verifies exact metadata derived from the injected
+provider, the one-minute minimum clamp, and the no-TTL no-write case. This isolates the package's clock
+contract without introducing credentials, availability or emulator semantics into the unit verdict.
+
+Mutation work also improved three initially incomplete oracles. The task-timeout and SQL polling tests now
+have independent harness guards, so process-time mutants fail promptly instead of hanging. The FromLast
+batch mutant initially survived a final-completion-only assertion; the observable provider now records
+timer change count and last due time, directly proving that the second arrival restarts the deadline.

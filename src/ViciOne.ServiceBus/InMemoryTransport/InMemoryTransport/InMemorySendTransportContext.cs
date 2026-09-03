@@ -17,13 +17,15 @@ namespace ViciOne.ServiceBus.InMemoryTransport
     {
         static readonly DateTimeOffsetTypeConverter _dateTimeOffsetConverter = new DateTimeOffsetTypeConverter();
         static readonly DateTimeTypeConverter _dateTimeConverter = new DateTimeTypeConverter();
+        readonly IInMemoryDelayProvider _delayProvider;
         readonly IMessageExchange<InMemoryTransportMessage> _exchange;
 
         public InMemorySendTransportContext(IHostConfiguration hostConfiguration, ReceiveEndpointContext context,
-            IMessageExchange<InMemoryTransportMessage> exchange)
+            IMessageExchange<InMemoryTransportMessage> exchange, IInMemoryDelayProvider delayProvider)
             : base(hostConfiguration, context.Serialization)
         {
             _exchange = exchange;
+            _delayProvider = delayProvider ?? throw new ArgumentNullException(nameof(delayProvider));
         }
 
         public override string EntityName => _exchange.Name;
@@ -63,7 +65,7 @@ namespace ViciOne.ServiceBus.InMemoryTransport
 
             SetHeaders(transportMessage.Headers, context.Headers);
 
-            var deliveryContext = new InMemoryDeliveryContext(transportMessage, context.CancellationToken);
+            var deliveryContext = new InMemoryDeliveryContext(transportMessage, _delayProvider.UtcNow, context.CancellationToken);
 
             return _exchange.Deliver(deliveryContext);
         }

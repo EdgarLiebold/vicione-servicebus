@@ -1,3 +1,4 @@
+#nullable enable annotations
 namespace ViciOne.ServiceBus.AzureStorage.MessageData
 {
     using System;
@@ -21,37 +22,42 @@ namespace ViciOne.ServiceBus.AzureStorage.MessageData
         readonly BlobContainerClient _container;
         readonly IBlobNameGenerator _nameGenerator;
         readonly bool _compress;
+        readonly TimeProvider _timeProvider;
 
-        public AzureStorageMessageDataRepository(string connectionString, string containerName, bool compress = false)
-            : this(new BlobServiceClient(connectionString), containerName, compress)
+        public AzureStorageMessageDataRepository(string connectionString, string containerName, bool compress = false, TimeProvider? timeProvider = null)
+            : this(new BlobServiceClient(connectionString), containerName, compress, timeProvider)
         {
         }
 
-        public AzureStorageMessageDataRepository(Uri serviceUri, string containerName, string accountName, string accountKey, bool compress = false)
-            : this(new BlobServiceClient(serviceUri, new StorageSharedKeyCredential(accountName, accountKey)), containerName, compress)
+        public AzureStorageMessageDataRepository(Uri serviceUri, string containerName, string accountName, string accountKey, bool compress = false,
+            TimeProvider? timeProvider = null)
+            : this(new BlobServiceClient(serviceUri, new StorageSharedKeyCredential(accountName, accountKey)), containerName, compress, timeProvider)
         {
         }
 
-        public AzureStorageMessageDataRepository(Uri serviceUri, string containerName, string signature, bool compress = false)
-            : this(new BlobServiceClient(serviceUri, new AzureSasCredential(signature)), containerName, compress)
+        public AzureStorageMessageDataRepository(Uri serviceUri, string containerName, string signature, bool compress = false, TimeProvider? timeProvider = null)
+            : this(new BlobServiceClient(serviceUri, new AzureSasCredential(signature)), containerName, compress, timeProvider)
         {
         }
 
-        public AzureStorageMessageDataRepository(Uri serviceUri, string containerName, string tenantId, string clientId, string clientSecret, bool compress = false)
-            : this(new BlobServiceClient(serviceUri, new ClientSecretCredential(tenantId, clientId, clientSecret)), containerName, compress)
+        public AzureStorageMessageDataRepository(Uri serviceUri, string containerName, string tenantId, string clientId, string clientSecret,
+            bool compress = false, TimeProvider? timeProvider = null)
+            : this(new BlobServiceClient(serviceUri, new ClientSecretCredential(tenantId, clientId, clientSecret)), containerName, compress, timeProvider)
         {
         }
 
-        public AzureStorageMessageDataRepository(BlobServiceClient client, string containerName, bool compress = false)
-            : this(client, containerName, new NewIdBlobNameGenerator(), compress)
+        public AzureStorageMessageDataRepository(BlobServiceClient client, string containerName, bool compress = false, TimeProvider? timeProvider = null)
+            : this(client, containerName, new NewIdBlobNameGenerator(), compress, timeProvider)
         {
         }
 
-        public AzureStorageMessageDataRepository(BlobServiceClient client, string containerName, IBlobNameGenerator nameGenerator, bool compress = false)
+        public AzureStorageMessageDataRepository(BlobServiceClient client, string containerName, IBlobNameGenerator nameGenerator, bool compress = false,
+            TimeProvider? timeProvider = null)
         {
             _container = client.GetBlobContainerClient(containerName);
             _nameGenerator = nameGenerator;
             _compress = compress;
+            _timeProvider = timeProvider ?? TimeProvider.System;
         }
 
         public void PostCreate(IBus bus)
@@ -153,18 +159,18 @@ namespace ViciOne.ServiceBus.AzureStorage.MessageData
                 await blob.UploadAsync(stream, cancellationToken).ConfigureAwait(false);
             }
 
-            await SetBlobExpiration(blob, timeToLive).ConfigureAwait(false);
+            await SetBlobExpiration(blob, timeToLive, _timeProvider).ConfigureAwait(false);
 
             LogContext.Debug?.Log("PUT Message Data: {Address} ({Blob})", blob.Uri, blob.Name);
 
             return blob.Uri;
         }
 
-        static async Task SetBlobExpiration(BlobBaseClient blob, TimeSpan? timeToLive)
+        static async Task SetBlobExpiration(BlobBaseClient blob, TimeSpan? timeToLive, TimeProvider timeProvider)
         {
             if (timeToLive.HasValue)
             {
-                var utcNow = DateTime.UtcNow;
+                var utcNow = timeProvider.GetUtcNow().UtcDateTime;
 
                 var expirationDate = utcNow + timeToLive.Value;
                 if (expirationDate <= utcNow)

@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus
 
     public static class CommandExtensions
     {
-        public static Task SendCommand<T>(this IPipe<CommandContext> pipe, T command)
+        public static Task SendCommand<T>(this IPipe<CommandContext> pipe, T command, TimeProvider? timeProvider = null)
             where T : class
         {
             if (pipe == null)
@@ -16,7 +16,7 @@ namespace ViciOne.ServiceBus
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
 
-            var context = new SendCommandContext<T>(command);
+            var context = new SendCommandContext<T>(command, timeProvider ?? TimeProvider.System);
 
             return pipe.Send(context);
         }
@@ -27,10 +27,11 @@ namespace ViciOne.ServiceBus
             CommandContext<T>
             where T : class
         {
-            public SendCommandContext(T command)
+            public SendCommandContext(T command, TimeProvider timeProvider)
             {
                 Command = command;
-                Timestamp = DateTime.UtcNow;
+                Timestamp = timeProvider.GetUtcNow().UtcDateTime;
+                this.SetTimeProvider(timeProvider);
             }
 
             public DateTime Timestamp { get; }

@@ -22,6 +22,7 @@ namespace ViciOne.ServiceBus.SqlTransport.Middleware
         readonly OrderedPartitionedTaskExecutor _executorPool;
         readonly object _lock = new();
         readonly ReceiveSettings _receiveSettings;
+        readonly TimeProvider _timeProvider;
         readonly TimeSpan? _touchQueueInterval;
         CancellationTokenSource _cancellationTokenSource;
         DateTime? _lastMaintenance;
@@ -37,6 +38,7 @@ namespace ViciOne.ServiceBus.SqlTransport.Middleware
         {
             _client = client;
             _context = context;
+            _timeProvider = context.GetTimeProvider();
 
             _receiveSettings = client.GetPayload<ReceiveSettings>();
 
@@ -62,13 +64,13 @@ namespace ViciOne.ServiceBus.SqlTransport.Middleware
                 PrefetchCount = _receiveSettings.PrefetchCount,
                 ConcurrentResultLimit = _context.ConcurrentMessageLimit ?? _context.PrefetchCount,
                 RequestResultLimit = _receiveSettings.PrefetchCount
-            });
+            }, _timeProvider);
 
             SetReady();
 
             Task Handle(SqlTransportMessage message, CancellationToken cancellationToken)
             {
-                var lockContext = new SqlReceiveLockContext(_context.InputAddress, message, _receiveSettings, _client);
+                var lockContext = new SqlReceiveLockContext(_context.InputAddress, message, _receiveSettings, _client, _timeProvider);
 
                 return _receiveSettings.ReceiveMode == SqlReceiveMode.Normal
                     ? HandleMessage(message, lockContext)
@@ -94,7 +96,7 @@ namespace ViciOne.ServiceBus.SqlTransport.Middleware
             if (IsStopping)
                 return;
 
-            if (message.ExpirationTime.HasValue && message.ExpirationTime.Value < DateTime.UtcNow)
+            if (message.ExpirationTime.HasValue && message.ExpirationTime.Value < _timeProvider.GetUtcNow().UtcDateTime)
             {
                 if (_receiveSettings.DeadLetterExpiredMessages)
                     await lockContext.Expired().ConfigureAwait(false);
@@ -135,21 +137,23 @@ namespace ViciOne.ServiceBus.SqlTransport.Middleware
                 {
                     int? count = 0;
 
-                    if (_lastMaintenance.HasValue == false || _lastMaintenance.Value + TimeSpan.FromSeconds(30) < DateTime.UtcNow)
+                    var utcNow = _timeProvider.GetUtcNow().UtcDateTime;
+
+                    if (_lastMaintenance.HasValue == false || _lastMaintenance.Value + TimeSpan.FromSeconds(30) < utcNow)
                     {
                         count = await _client.DeadLetterQueue(_receiveSettings.QueueName, _receiveSettings.MaintenanceBatchSize).ConfigureAwait(false);
 
                         if (count < _receiveSettings.MaintenanceBatchSize)
-                            _lastMaintenance = DateTime.UtcNow;
+                            _lastMaintenance = utcNow;
                     }
 
                     if (_touchQueueInterval.HasValue && count is null or 0)
                     {
-                        if (_lastTouched.HasValue == false || _lastTouched.Value + _touchQueueInterval.Value < DateTime.UtcNow)
+                        if (_lastTouched.HasValue == false || _lastTouched.Value + _touchQueueInterval.Value < utcNow)
                         {
                             await _client.TouchQueue(_receiveSettings.EntityName).ConfigureAwait(false);
 
-                            _lastTouched = DateTime.UtcNow;
+                            _lastTouched = utcNow;
                         }
                     }
                 }
@@ -183,8 +187,8 @@ namespace ViciOne.ServiceBus.SqlTransport.Middleware
             {
                 var delayTask = _receiveSettings.QueueId.HasValue
                     ? _client.ConnectionContext.DelayUntilMessageReady(_receiveSettings.QueueId.Value, _receiveSettings.PollingInterval,
-                        _cancellationTokenSource.Token)
-                    : Task.Delay(_receiveSettings.PollingInterval, _cancellationTokenSource.Token);
+                        _timeProvider, _cancellationTokenSource.Token)
+                    : Task.Delay(_receiveSettings.PollingInterval, _timeProvider, _cancellationTokenSource.Token);
 
                 await delayTask.ConfigureAwait(false);
             }

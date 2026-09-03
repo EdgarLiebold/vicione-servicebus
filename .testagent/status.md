@@ -2743,5 +2743,61 @@ future cohorts as complete.
   format, old-symbol, forbidden-async, empty-directory, diff and protected-review hash gates pass.
 - Detailed evidence is under
   `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-PROPERTY-METADATA/`. V4 progress is 8/12
-  (66.7%); product and architecture commits are the remaining local checkpoint actions. No remote
+  (66.7%); product commit `0a41b947` and architecture commit `892d5e32` close the package locally.
+  No remote publication is authorized or implied.
+
+## Reviewer integration — V4 deterministic runtime-time ownership active (2026-09-03)
+
+- Architecture assignment `PO-2026-09-03-SERVICEBUS-REVIEW-INTEGRATION-08` is bound to product baseline
+  `0a41b94737886b3cdfa01876ef021e15336564ee`, tree
+  `c1d96fb9ed155a9932fa1a332f0f0a988da464bc`, at architecture commit `8246d041`.
+- The protected review bundle is verified and opened only in a temporary checkout. The semantic donor is
+  `ce9db9e205865788d50933673a3e64d837a50f48`, reconciled through final V4 head
+  `f8050928715e536b60c42d800d1cbb81c085818f`.
+- Current focused scan: 3,795 production C# files, 203 direct process-clock calls in 55 files, 25 delay
+  calls, 58 cancellation-source/`CancelAfter` constructions and 445 existing `TimeProvider` references.
+  Final V4 retains only 12 explicitly non-scheduler process-clock reads in 11 files.
+- Research and six-phase test/implementation plan are complete. Phase 1 will close scheduler propagation
+  and the repository-wide time-source architecture boundary. `review/**` remains untouched; no remote
   publication is authorized or implied.
+- Three-way application of the 82-file donor change found one source conflict (`BatchConsumer`) and one
+  obsolete deleted document; all 80 other source files merged cleanly. The batch conflict is resolved by
+  retaining the later sequence-number formatting while binding timestamps and its one-shot timer to the
+  consume-context provider. The resulting production scan is exactly the final V4 boundary: 12 reviewed
+  direct wall-clock reads in 11 diagnostic/identity/event-metadata files and 735 `TimeProvider` references.
+- Local build diagnosis: aborting a silent solution build can leave orphaned `MSBuild.dll ... /nodemode:1`
+  children plus a `VBCSCompiler` process. Subsequent isolated builds then wait silently. The repeatable
+  recovery is to identify the exact processes with `ps -ax -o pid,command`, stop only the orphaned node-mode
+  children and compiler server, run `dotnet build-server shutdown`, and restart the narrow build with
+  `MSBUILDDISABLENODEREUSE=1 --disable-build-servers`. Tests continue to run without that build-only flag.
+- Analyzer-active Abstractions and Core source builds now pass with zero warnings and zero errors after
+  closing donor integration gaps in public XML documentation, nullable annotation context and in-memory
+  dead-letter/error delay-provider propagation. Six deterministic native clock-owner facts and the full
+  production direct-clock allowlist boundary are being compiled next.
+- The direct batching clock tests initially timed out because their minimal consume/receive context
+  proxies omitted `SerializerContext` and `PublishEndpointProvider`; delivery faults were consequently
+  owned by the asynchronous executor and were not surfaced to the awaiting assertion. The proxies now
+  supply the constructor boundary and a capturing logger turns any future queued delivery fault into an
+  immediate causal test failure. Both exact fake-clock cases pass together (2/2).
+- Abstractions passes 284/284, Architecture passes 157/157 and the complete Core owner passes 1,559/1,559,
+  all with zero failures and zero skips. Their analyzer-active Release builds remain zero-warning and
+  zero-error. Provider-specific compilation and runtime validation are next.
+- Provider and canonical closure is complete. Architecture now passes 159/159, Core 1,562/1,562 and the
+  complete Unit/Architecture solution 3,209/3,209, all with zero failures/skips and zero analyzer warnings
+  or errors. Azure Storage unit passes 5/5, Azure Service Bus unit 23/23, EF unit 102/102, SQS unit 77/77
+  and SQL Server unit 39/39.
+- A broad real LocalIntegration run executed 341 tests. The directly affected PostgreSQL transport and SQS
+  LocalStack assemblies were green. One of two EF failures exposed a real donor gap: a relative scheduler
+  used its fake clock for the absolute instant but the outbox transport context fell back to process time
+  when calculating delay. An explicit compatible provider path through `ScheduleSendPipe`, both delayed
+  scheduler factories and their provider fixes it; the real PostgreSQL owner then passed 1/1.
+- The second broad-run failure is the known pre-package-6 nondeterministic inbox/outbox concurrency test.
+  A fresh full EF run passed 58/59 with only that case failing again and with a different race result.
+  SQL Server's fresh real profile passes 60/60 and the Azure Service Bus emulator passes 24/24, no skips.
+- Thirty independent buildable one-cause mutations are killed and restored. M24's initial survival caused
+  a stronger direct timer-restart oracle; M09/M23 use independent harness guards so system-time mutants
+  fail promptly. Scoped format, requirements JSON, direct-clock allowlist, diff, empty-directory and V4
+  bundle gates pass. Detailed evidence is under
+  `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-RUNTIME-TIME-OWNERSHIP/`.
+- Package 9/12 is ready for its local product and architecture commits, bringing V4 progress to 75%.
+  `review/**` remains untouched and untracked; no remote publication is authorized or implied.
