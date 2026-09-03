@@ -43,6 +43,7 @@ namespace ViciOne.ServiceBus.MessageData.PropertyProviders
                 if (messageData is IInlineMessageData && messageData.HasValue && messageData.Address == null)
                     return Put(context, messageData.Value);
 
+                ObserveStoredReference(context, messageData);
                 return Task.FromResult(messageData);
             }
 
@@ -56,6 +57,7 @@ namespace ViciOne.ServiceBus.MessageData.PropertyProviders
                 if (messageData is IInlineMessageData && messageData.HasValue && messageData.Address == null)
                     return await Put(context, messageData.Value).ConfigureAwait(false);
 
+                ObserveStoredReference(context, messageData);
                 return messageData;
             }
 
@@ -79,18 +81,21 @@ namespace ViciOne.ServiceBus.MessageData.PropertyProviders
             if (value is string stringValue)
             {
                 MessageData<string> messageData = await repository.PutString(stringValue, timeToLive, _policy, context.CancellationToken).ConfigureAwait(false);
+                ObserveStoredReference(context, messageData);
                 return (MessageData<TValue>)messageData;
             }
 
             if (value is byte[] bytesValue)
             {
                 MessageData<byte[]> messageData = await repository.PutBytes(bytesValue, timeToLive, _policy, context.CancellationToken).ConfigureAwait(false);
+                ObserveStoredReference(context, messageData);
                 return (MessageData<TValue>)messageData;
             }
 
             if (value is Stream streamValue)
             {
                 MessageData<Stream> messageData = await repository.PutStream(streamValue, timeToLive, context.CancellationToken).ConfigureAwait(false);
+                ObserveStoredReference(context, messageData);
                 return (MessageData<TValue>)messageData;
             }
 
@@ -99,12 +104,31 @@ namespace ViciOne.ServiceBus.MessageData.PropertyProviders
                 var messageData = await repository.PutObject(value, value.GetType(), timeToLive, _policy, context.CancellationToken).ConfigureAwait(false);
 
                 if (messageData is IInlineMessageData inlineMessageData)
-                    return new InlineMessageData<TValue>(messageData.Address, value, inlineMessageData);
+                {
+                    var result = new InlineMessageData<TValue>(messageData.Address, value, inlineMessageData);
+                    ObserveStoredReference(context, result);
+                    return result;
+                }
 
-                return new StoredMessageData<TValue>(messageData.Address, value);
+                var stored = new StoredMessageData<TValue>(messageData.Address, value);
+                ObserveStoredReference(context, stored);
+                return stored;
             }
 
             throw new MessageDataException("Unsupported message data type: " + TypeCache<TValue>.ShortName);
+        }
+
+        void ObserveStoredReference(PipeContext context, IMessageData messageData)
+        {
+            if (messageData is not { HasValue: true } || messageData.Address == null)
+                return;
+
+            PipeContext evidenceOwner = context.TryGetPayload(out SendContext sendContext)
+                ? sendContext
+                : context;
+            MessageDataAdmissionEvidence evidence = evidenceOwner.GetOrAddPayload(
+                () => new MessageDataAdmissionEvidence(_repository, _policy));
+            evidence.Observe(_repository, _policy);
         }
     }
 }

@@ -1,6 +1,7 @@
 namespace ViciOne.ServiceBus.Serialization;
 
 using System;
+using System.Buffers;
 using MessagePack;
 using MessagePack.Resolvers;
 
@@ -38,6 +39,16 @@ static class InternalMessagePackResolver
     public static byte[] Serialize<T>(T value)
     {
         return MessagePackSerializer.Serialize(value, Options);
+    }
+
+    public static void Serialize(Type type, IBufferWriter<byte> writer, object? value)
+    {
+        MessagePackSerializer.Serialize(type, writer, value, Options);
+    }
+
+    public static void Serialize<T>(IBufferWriter<byte> writer, T value)
+    {
+        MessagePackSerializer.Serialize(writer, value, Options);
     }
 
     public static T Deserialize<T>(byte[] buffer)

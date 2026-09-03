@@ -3008,6 +3008,38 @@ application-bootstrap correlation boundary, and one missing Quartz requirement p
 evidence is under `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-MULTIBUS-ROUTING/`. V5 is next;
 remote publication remains outside this package.
 
+## Reviewer integration — V5 payload admission, sensitive diagnostics, and semantic analyzers (2026-09-03)
+
+1. Bind product baseline `3744d8b3`, architecture assignment `3ad6d74f`, protected V5/V5.1 hashes,
+   payload/analyzer/redaction/observability source commits, RT-001, RT-005, and no-throw hardening.
+2. Add an immutable typed-bus admission policy and bounded writer. Enforce independent serialized-body and
+   final-envelope limits at the real JSON, raw JSON, MessagePack, common transport, and Event Hub boundaries.
+3. Serialize the application once and reuse the admitted representation. Prove hostile reservations cannot
+   grow memory past the configured owner capacity or reach observers/provider I/O after rejection.
+4. Reuse only the existing V4 MessageData repository/policy owner. Emit payload-free evidence only for a
+   stored address, preserve inline/missing behavior, and isolate simultaneous typed buses.
+5. Add weakly cached inherited sensitivity inspection and bounded diagnostic rendering without arbitrary
+   application `ToString`, control injection, malformed Unicode, absolute-URI assumptions, or DI conflicts.
+6. Add once-per-buffer payload-free rejection metrics whose hostile listener/exporter callbacks cannot
+   alter accepted values or original failures. Reuse the established no-throw pipeline telemetry owners.
+7. Implement VOSB5001 through VOSB5005 from canonical Roslyn symbols, including inherited, shadowed,
+   lookalike, generated-code, outbound-contract, MessageData, deduplication, and parallel-instance cases.
+8. Execute assertion/gap review and independent buildable one-cause mutations. Correct every surviving
+   oracle or product defect and restore exact product hashes before positive validation.
+9. Run both analyzer-active Release solutions, complete serial Unit/Architecture, scoped format,
+   Requirements JSON, protected-review hash, empty-directory, layout, and diff gates; freeze product and
+   architecture locally and continue to V5 package 4/4 without remote publication.
+
+Completion: all nine steps passed. Forty-two methods expand to 58 package cases with 228 direct assertions;
+35 independent product mutations are killed. Full regression found and corrected an empty-MessageData
+fault-forwarding defect rather than weakening its existing expectation. Gap review also replaced a variable
+timestamp-dependent JSON envelope calibration with fixed metadata through the real serializer; three
+independent 16-case runs pass. Complete Unit/Architecture is 3,460/3,460 with zero failures/skips, both
+Release solutions have zero warnings/errors, and all 51 changed/new C# files pass scoped formatting.
+Detailed evidence is under
+`evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V5-PAYLOAD-DIAGNOSTICS-ANALYZERS/`. Final API review and
+V5 reconciliation are next; no remote publication is authorized.
+
 ## Reviewer integration — V5 durable sender and coherent V5.1 durability corrections (2026-09-03)
 
 1. Bind product baseline `ee4edfe8`, architecture assignment `f51a5e96`, protected V5/V5.1 hashes,

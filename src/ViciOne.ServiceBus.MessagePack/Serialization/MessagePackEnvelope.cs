@@ -33,6 +33,13 @@ public class MessagePackEnvelope :
         Message = InternalMessagePackResolver.Serialize(message);
     }
 
+    internal MessagePackEnvelope(SendContext context, byte[] serializedMessage)
+    {
+        ApplyMetadata(EnvelopeMetadataProjection.From(context));
+        IsMessageNativeMessagePackSerialized = true;
+        Message = serializedMessage ?? throw new ArgumentNullException(nameof(serializedMessage));
+    }
+
     public MessagePackEnvelope(MessageEnvelope envelope)
     {
         ApplyMetadata(EnvelopeMetadataProjection.From(envelope));
@@ -57,6 +64,13 @@ public class MessagePackEnvelope :
             Message = InternalMessagePackResolver.Serialize(envelope.Message);
         }
 
+    }
+
+    internal MessagePackEnvelope(MessageEnvelope envelope, byte[] serializedMessage)
+    {
+        ApplyMetadata(EnvelopeMetadataProjection.From(envelope));
+        IsMessageNativeMessagePackSerialized = true;
+        Message = serializedMessage ?? throw new ArgumentNullException(nameof(serializedMessage));
     }
 
     public MessagePackEnvelope(MessageContext context, object message, string[] messageTypesNames)

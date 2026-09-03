@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Reflection;
 using System.Threading;
+using ViciOne.ServiceBus.Serialization;
 
 /// <summary>
 /// DI-owned V5 instrumentation for one typed bus. The host owns listeners, exporters, sampling,
@@ -26,6 +27,9 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
     readonly Histogram<double> _durableDeliveryDuration;
     readonly Counter<long> _durableConsumerCompletion;
     readonly Histogram<double> _durableConsumerCompletionDuration;
+    readonly Counter<long> _payloadAdmission;
+    readonly Histogram<long> _payloadBodySize;
+    readonly Histogram<long> _payloadEnvelopeSize;
     long _durableStoredCount;
     long _durableStoredBytes;
     long _durablePendingCount;
@@ -71,6 +75,18 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
             "vicione.servicebus.durable_sender.consumer_completion.duration",
             unit: "s",
             description: "Elapsed time from volatile durable dispatch attempt start to logical consumer completion.");
+
+        _payloadAdmission = meter.CreateCounter<long>(
+            "vicione.servicebus.payload.admission",
+            description: "Serialized payload admission decisions.");
+        _payloadBodySize = meter.CreateHistogram<long>(
+            "vicione.servicebus.payload.body.size",
+            unit: "By",
+            description: "Exact serialized application-body size evaluated by admission policy.");
+        _payloadEnvelopeSize = meter.CreateHistogram<long>(
+            "vicione.servicebus.payload.envelope.size",
+            unit: "By",
+            description: "Exact final transport-envelope size evaluated by admission policy.");
 
         meter.CreateObservableGauge(
             "vicione.servicebus.durable_sender.stored",
@@ -226,6 +242,61 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
         }
     }
 
+    public void RecordPayloadBody(PayloadAdmissionDisposition disposition, int bytes, bool warningThresholdExceeded)
+    {
+        try
+        {
+            TagList tags = new()
+            {
+                { "outcome", disposition == PayloadAdmissionDisposition.Inline ? "inline" : "message-data" },
+                { "warning", warningThresholdExceeded ? "true" : "false" },
+            };
+            _payloadBodySize.Record(bytes, in tags);
+            _payloadAdmission.Add(1, in tags);
+        }
+        catch
+        {
+            // Payload admission correctness cannot depend on metrics listeners.
+        }
+    }
+
+    public void RecordPayloadRejected(PayloadAdmissionStage stage, long bytes)
+    {
+        try
+        {
+            TagList tags = new()
+            {
+                { "outcome", "rejected" },
+                { "error.type", PayloadErrorType(stage) },
+            };
+            if (stage == PayloadAdmissionStage.TransportEnvelope)
+                _payloadEnvelopeSize.Record(bytes, in tags);
+            else
+                _payloadBodySize.Record(bytes, in tags);
+            _payloadAdmission.Add(1, in tags);
+        }
+        catch
+        {
+            // Observation only.
+        }
+    }
+
+    public void RecordPayloadEnvelope(int bytes, bool rejected)
+    {
+        try
+        {
+            TagList tags = new()
+            {
+                { "outcome", rejected ? "rejected" : "accepted" },
+            };
+            _payloadEnvelopeSize.Record(bytes, in tags);
+        }
+        catch
+        {
+            // Observation only.
+        }
+    }
+
     public void PublishDurableSnapshot(DurableSendStoreSnapshot snapshot, DateTimeOffset observedAt)
     {
         // Observable callbacks read these atomics only; they never call storage or block.
@@ -298,6 +369,15 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
             DurableSendAdmissionFailure.ContractNotRegistered => "contract-not-registered",
             DurableSendAdmissionFailure.StoreFailure => "durable-store-failure",
             _ => "admission-failed",
+        };
+
+    static string PayloadErrorType(PayloadAdmissionStage stage)
+        => stage switch
+        {
+            PayloadAdmissionStage.SerializedBody => "payload-body-too-large",
+            PayloadAdmissionStage.MessageData => "message-data-required",
+            PayloadAdmissionStage.TransportEnvelope => "transport-envelope-too-large",
+            _ => "payload-admission",
         };
 
 }

@@ -12,6 +12,7 @@ namespace ViciOne.ServiceBus.Serialization
         MessageBody
         where TMessage : class
     {
+        readonly SendContext<TMessage> _context;
         readonly object? _message;
         readonly JsonSerializerOptions _options;
         byte[]? _bytes;
@@ -19,6 +20,7 @@ namespace ViciOne.ServiceBus.Serialization
 
         public SystemTextJsonRawMessageBody(SendContext<TMessage> context, JsonSerializerOptions options, object? message = null)
         {
+            _context = context;
             _options = options;
             _message = message ?? context.Message;
         }
@@ -49,9 +51,32 @@ namespace ViciOne.ServiceBus.Serialization
 
             try
             {
-                _bytes = JsonSerializer.SerializeToUtf8Bytes(_message, _options);
+                if (!_context.TryGetPayload(out PayloadAdmissionSerializationContext? admission))
+                {
+                    _bytes = JsonSerializer.SerializeToUtf8Bytes(_message, _options);
+                    return _bytes;
+                }
+
+                IPayloadSerializationBuffer bodyBuffer = admission.Runtime.CreateSerializedBodyBuffer();
+                using (var writer = new Utf8JsonWriter(bodyBuffer))
+                    JsonSerializer.Serialize(writer, _message, _message?.GetType() ?? typeof(object), _options);
+
+                _ = admission.Runtime.EvaluateSerializedBody(bodyBuffer.WrittenMemory, admission.MessageDataOffloadObserved);
+
+                // Raw JSON has no wrapper object: the application body is also the final transport
+                // envelope. Copying the already bounded bytes into the independently bounded envelope
+                // owner preserves single-pass application serialization while enforcing both limits.
+                IPayloadSerializationBuffer envelopeBuffer = admission.Runtime.CreateTransportEnvelopeBuffer();
+                bodyBuffer.WrittenMemory.Span.CopyTo(envelopeBuffer.GetSpan(bodyBuffer.WrittenCount));
+                envelopeBuffer.Advance(bodyBuffer.WrittenCount);
+                admission.Runtime.ValidateTransportEnvelope(envelopeBuffer.WrittenMemory);
+                _bytes = envelopeBuffer.WrittenMemory.ToArray();
 
                 return _bytes;
+            }
+            catch (PayloadAdmissionException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -64,22 +89,8 @@ namespace ViciOne.ServiceBus.Serialization
             if (_string != null)
                 return _string;
 
-            if (_bytes != null)
-            {
-                _string = Encoding.UTF8.GetString(_bytes);
-                return _string;
-            }
-
-            try
-            {
-                _string = JsonSerializer.Serialize(_message, _options);
-
-                return _string;
-            }
-            catch (Exception ex)
-            {
-                throw new SerializationException("Failed to serialize message", ex);
-            }
+            _string = Encoding.UTF8.GetString(GetBytes());
+            return _string;
         }
     }
 }

@@ -3790,3 +3790,47 @@ Release builds are warning/error-free; 57 changed/new C# files pass scoped forma
 behavioral mutants plus one structural sabotage are rejected. The package validates a real file-backed
 SQLite WAL session and complete SQLite store lifecycle. It deliberately does not claim the V5.1 release
 gates for real SQL Server/Azure SQL or PostgreSQL crash/HA evidence; those require the release environment.
+
+## Reviewer integration research — V5 payload, diagnostics, observability, and analyzers (2026-09-03)
+
+V5 package 3/4 is bound by architecture assignment `PO-2026-09-03-SERVICEBUS-REVIEW-INTEGRATION-14`
+at architecture commit `3ad6d74f`. Its product baseline is `3744d8b31b08b5b79321b6fb243a263c2c9e050c`,
+tree `38e5d2d43040472c0a9cede18ea2646b885a3a2d`. Protected review inputs remained byte-verified and
+unmodified.
+
+The existing serializer objects are the only trustworthy byte owners. Admission therefore belongs after
+message transformation but before send observers and provider I/O, with a special explicit call for Event
+Hub because it bypasses the common transport path. JSON and MessagePack cannot safely be measured by a
+second serialization: converters/resolvers can have state, side effects, or nondeterministic output. The
+accepted design writes once into a bounded owner, evaluates that representation, and embeds/reuses it in the
+final envelope.
+
+`IBufferWriter` exposes a subtle but material security boundary. Utf8JsonWriter and MessagePack may reserve a
+contiguous segment larger than the bytes they later advance. The writer contract requires returning at least
+the requested segment. It is therefore impossible to promise both arbitrary exact final-byte acceptance and
+never owning more than the hard limit when a conservative size hint exceeds the remaining capacity. The
+implementation chooses the hard memory invariant, rejects before overrun, and separately proves inclusive
+exact-byte evaluator decisions. Real-owner tests report the minimum bounded capacity honestly and use fixed
+metadata so NewId timestamp formatting cannot create a flaky calibration.
+
+MessageData integration cannot infer ownership from registration alone: an inline value may never have
+offloaded. The existing put transform now emits per-send evidence only after a stored address exists. Full
+regression revealed that `EmptyMessageData.Address` deliberately throws; inspecting it while forwarding a
+fault suppressed the intended request fault and caused a timeout. Checking `HasValue` first preserves the
+old contract, and both request shapes kill removal of that guard.
+
+Diagnostics classification follows canonical type/member metadata through base and interface graphs. A
+`ConditionalWeakTable` avoids rooting collectible application types. Rendering is deliberately narrow:
+bounded invariant primitives and safe URI text are allowed; arbitrary objects receive a type-only marker,
+never `ToString`. Control characters and invalid/split surrogate sequences are normalized at the bound.
+
+The analyzer donor's apparent name checks were insufficient for RT-001 and hostile lookalikes. All five
+analyzers now resolve canonical framework and ViciOne.ServiceBus symbols, walk inherited contracts where the
+rule requires it, exclude generated code, and deduplicate compilation-end large-payload diagnostics. Gap
+review added a foreign `Task`, two consumers of one large payload, direct missing-boundary assertions, and a
+real address-less MessageData fixture before accepting the 35/35 mutation result.
+
+Final local evidence is 46 new Core cases, two existing MessageData regression cases, two MessagePack, six
+analyzer, four architecture, and four requirements-projection owners. Complete Unit/Architecture passes
+3,460/3,460 with zero failures/skips. Both Release solutions are warning/error-free and the 51-path format,
+requirements, protected manifest, restored hashes, and diff gates pass.

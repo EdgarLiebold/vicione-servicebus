@@ -4,14 +4,17 @@ namespace ViciOne.ServiceBus.Configuration
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
     using Logging;
     using Observables;
+    using Serialization;
     using Transports;
     using Util;
 
 
     public abstract class BaseHostConfiguration<TConfiguration, TConfigurator> :
         IHostConfiguration,
+        IPayloadAdmissionHostConfiguration,
         IReceiveConfigurator<TConfigurator>
         where TConfiguration : IReceiveEndpointConfiguration
         where TConfigurator : IReceiveEndpointConfigurator
@@ -23,6 +26,7 @@ namespace ViciOne.ServiceBus.Configuration
         readonly SendObservable _sendObservers;
         List<TConfiguration> _endpoints;
         ILogContext? _logContext;
+        IPayloadAdmissionRuntime? _payloadAdmissionRuntime;
 
         protected BaseHostConfiguration(IBusConfiguration busConfiguration)
         {
@@ -92,6 +96,20 @@ namespace ViciOne.ServiceBus.Configuration
         public virtual IRetryPolicy SendTransportRetryPolicy => ReceiveTransportRetryPolicy;
         public TimeSpan? ConsumerStopTimeout { get; set; }
         public TimeSpan? StopTimeout { get; set; }
+
+        IPayloadAdmissionRuntime? IPayloadAdmissionHostConfiguration.PayloadAdmissionRuntime
+            => Volatile.Read(ref _payloadAdmissionRuntime);
+
+        void IPayloadAdmissionHostConfiguration.SetPayloadAdmissionRuntime(IPayloadAdmissionRuntime runtime)
+        {
+            if (runtime == null)
+                throw new ArgumentNullException(nameof(runtime));
+
+            IPayloadAdmissionRuntime? existing = Interlocked.CompareExchange(ref _payloadAdmissionRuntime, runtime, null);
+            if (existing != null && !ReferenceEquals(existing, runtime))
+                throw new ConfigurationException("Payload admission is already configured for this bus owner.");
+
+        }
 
         public abstract IReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName, Action<IReceiveEndpointConfigurator>? configure);
 

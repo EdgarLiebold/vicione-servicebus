@@ -5,6 +5,7 @@ namespace ViciOne.ServiceBus.Configuration
     using System.Linq;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Options;
+    using Serialization;
     using Transports;
 
 
@@ -34,6 +35,7 @@ namespace ViciOne.ServiceBus.Configuration
             _hostConfiguration.ConsumerStopTimeout = hostOptions?.ConsumerStopTimeout;
             _hostConfiguration.StopTimeout = hostOptions?.StopTimeout;
 
+            ConfigurePayloadAdmission(context, _hostConfiguration);
             ConnectBusObservers(context, configurator);
 
             configure?.Invoke(context, configurator);
@@ -92,6 +94,28 @@ namespace ViciOne.ServiceBus.Configuration
         {
             foreach (var observer in context.GetServices<IBusObserver>())
                 connector.ConnectBusObserver(observer);
+        }
+
+        static void ConfigurePayloadAdmission(IBusRegistrationContext context, IHostConfiguration hostConfiguration)
+        {
+            if (context is not IBusRegistrationIdentity identity)
+                return;
+
+            IPayloadAdmissionRuntimeRegistration[] registrations = context
+                .GetServices<IPayloadAdmissionRuntimeRegistration>()
+                .Where(x => string.Equals(x.BusKey, identity.BusKey, StringComparison.Ordinal))
+                .ToArray();
+
+            if (registrations.Length > 1)
+                throw new ConfigurationException($"Multiple payload-admission owners are registered for bus '{identity.BusKey}'.");
+
+            if (registrations.Length == 1)
+            {
+                if (hostConfiguration is not IPayloadAdmissionHostConfiguration target)
+                    throw new ConfigurationException($"Bus '{identity.BusKey}' does not support payload admission.");
+
+                target.SetPayloadAdmissionRuntime(registrations[0].Runtime);
+            }
         }
 
         static void ConnectReceiveEndpointObservers(IServiceProvider context, IReceiveEndpointObserverConnector connector)

@@ -9,6 +9,7 @@ namespace ViciOne.ServiceBus.Transports
     using Logging;
     using Middleware;
     using Observables;
+    using Serialization;
 
 
     public abstract class BaseSendTransportContext :
@@ -24,7 +25,6 @@ namespace ViciOne.ServiceBus.Transports
             _hostConfiguration = hostConfiguration;
 
             SendObservers = new SendObservable();
-
             Serialization = serialization;
 
             _destination = new Lazy<string>(() =>
@@ -57,6 +57,12 @@ namespace ViciOne.ServiceBus.Transports
         public SendObservable SendObservers { get; }
 
         public ISerialization Serialization { get; }
+
+        internal void ApplyPayloadAdmission<T>(SendContext<T> context)
+            where T : class
+        {
+            PayloadAdmissionTransportBoundary.Apply(_hostConfiguration, context);
+        }
 
         public abstract Task<SendContext<T>> CreateSendContext<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
             where T : class;

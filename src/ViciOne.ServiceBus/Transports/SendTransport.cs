@@ -88,6 +88,9 @@ namespace ViciOne.ServiceBus.Transports
                 if (ForwardingExpiration.TryDiscard(sendContext))
                     return;
 
+                if (_sendTransportContext is BaseSendTransportContext transportContext)
+                    transportContext.ApplyPayloadAdmission(sendContext);
+
                 StartedActivity? activity = LogContext.Current?.StartSendActivity(_sendTransportContext, sendContext);
                 var instrument = LogContext.Current?.StartSendInstrument(_sendTransportContext, sendContext);
                 try

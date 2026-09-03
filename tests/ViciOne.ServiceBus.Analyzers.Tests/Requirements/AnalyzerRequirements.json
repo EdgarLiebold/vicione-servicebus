@@ -159,5 +159,47 @@
     "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
     "testType": "ViciOne.ServiceBus.Analyzers.Tests.MessageContractAnalyzer.MessageContractScenarioCatalogTests",
     "testMethod": "Catalog_ContainsEveryCanonicalScenarioAndSourceFormExactlyOnce"
+  },
+  {
+    "requirementId": "REQ-VSB-V5-ANALYZERS",
+    "variantKey": "blocking-only-inside-canonical-consume",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.V5.V5AnalyzerTests",
+    "testMethod": "BlockingConsumerAnalyzer_ReportsCanonicalBlockingCallsOnlyInsideConsume"
+  },
+  {
+    "requirementId": "REQ-VSB-V5-ANALYZERS",
+    "variantKey": "consumer-definition-canonical-properties",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.V5.V5AnalyzerTests",
+    "testMethod": "DefinitionAnalyzers_ReportOnlyCanonicalInheritedPropertiesInConsumerDefinitions"
+  },
+  {
+    "requirementId": "REQ-VSB-V5-ANALYZERS",
+    "variantKey": "excluded-topology-canonical-contract",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.V5.V5AnalyzerTests",
+    "testMethod": "ExcludedTopologyAnalyzer_ReportsOnlyCanonicalExcludedConsumedContracts"
+  },
+  {
+    "requirementId": "REQ-VSB-V5-ANALYZERS",
+    "variantKey": "large-inline-inherited-consumed-and-outbound-contracts",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.V5.V5AnalyzerTests",
+    "testMethod": "LargeInlinePayloadAnalyzer_CoversInheritedConsumedAndOutboundContractsWithoutMessageDataFalsePositive"
+  },
+  {
+    "requirementId": "REQ-VSB-V5-ANALYZERS",
+    "variantKey": "generated-code-is-excluded",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.V5.V5AnalyzerTests",
+    "testMethod": "EveryV5Analyzer_IgnoresGeneratedCode"
+  },
+  {
+    "requirementId": "REQ-VSB-V5-ANALYZERS",
+    "variantKey": "parallel-deterministic-shared-instance",
+    "testAssembly": "ViciOne.ServiceBus.Analyzers.Tests",
+    "testType": "ViciOne.ServiceBus.Analyzers.Tests.V5.V5AnalyzerTests",
+    "testMethod": "EveryV5Analyzer_IsDeterministicWhenOneInstanceAnalyzesInParallel"
   }
 ]

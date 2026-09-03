@@ -53,9 +53,39 @@ namespace ViciOne.ServiceBus.Serialization
             {
                 var envelope = _envelope ??= new JsonMessageEnvelope(_context, _context.Message);
 
-                _bytes = JsonSerializer.SerializeToUtf8Bytes(envelope, _options);
+                if (!_context.TryGetPayload(out PayloadAdmissionSerializationContext? admission))
+                {
+                    _bytes = JsonSerializer.SerializeToUtf8Bytes(envelope, _options);
+                    return _bytes;
+                }
+
+                IPayloadSerializationBuffer bodyBuffer = admission.Runtime.CreateSerializedBodyBuffer();
+                using (var bodyWriter = new Utf8JsonWriter(bodyBuffer))
+                {
+                    object? message = envelope.Message;
+                    JsonSerializer.Serialize(bodyWriter, message, message?.GetType() ?? typeof(object), _options);
+                }
+
+                _ = admission.Runtime.EvaluateSerializedBody(bodyBuffer.WrittenMemory, admission.MessageDataOffloadObserved);
+
+                using JsonDocument bodyDocument = JsonDocument.Parse(bodyBuffer.WrittenMemory);
+                var boundedEnvelope = new JsonMessageEnvelope(envelope)
+                {
+                    Message = bodyDocument.RootElement,
+                };
+
+                IPayloadSerializationBuffer envelopeBuffer = admission.Runtime.CreateTransportEnvelopeBuffer();
+                using (var envelopeWriter = new Utf8JsonWriter(envelopeBuffer))
+                    JsonSerializer.Serialize(envelopeWriter, boundedEnvelope, _options);
+
+                admission.Runtime.ValidateTransportEnvelope(envelopeBuffer.WrittenMemory);
+                _bytes = envelopeBuffer.WrittenMemory.ToArray();
 
                 return _bytes;
+            }
+            catch (PayloadAdmissionException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -68,24 +98,8 @@ namespace ViciOne.ServiceBus.Serialization
             if (_string != null)
                 return _string;
 
-            if (_bytes != null)
-            {
-                _string = Encoding.UTF8.GetString(_bytes);
-                return _string;
-            }
-
-            try
-            {
-                var envelope = _envelope ??= new JsonMessageEnvelope(_context, _context.Message);
-
-                _string = JsonSerializer.Serialize(envelope, _options);
-
-                return _string;
-            }
-            catch (Exception ex)
-            {
-                throw new SerializationException("Failed to serialize message", ex);
-            }
+            _string = Encoding.UTF8.GetString(GetBytes());
+            return _string;
         }
     }
 }

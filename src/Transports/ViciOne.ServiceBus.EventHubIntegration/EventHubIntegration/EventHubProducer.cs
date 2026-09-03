@@ -121,6 +121,8 @@ namespace ViciOne.ServiceBus.EventHubIntegration
                 EventHubSendContext<T> sendContext = await _context.CreateContext(_message, _pipe, _cancellationToken, _sendPipe).ConfigureAwait(false);
 
                 sendContext.CancellationToken.ThrowIfCancellationRequested();
+                if (_context is BaseSendTransportContext transportContext)
+                    transportContext.ApplyPayloadAdmission(sendContext);
 
                 StartedActivity? activity = LogContext.Current?.StartSendActivity(_context, sendContext);
                 var instrument = LogContext.Current?.StartSendInstrument(_context, sendContext);
@@ -198,6 +200,12 @@ namespace ViciOne.ServiceBus.EventHubIntegration
                 {
                     contexts[i] = await _context.CreateContext(_messages[i], _pipe, _cancellationToken,
                         _initializerPipes.Length > i ? _initializerPipes[i] : null).ConfigureAwait(false);
+                }
+
+                if (_context is BaseSendTransportContext transportContext)
+                {
+                    foreach (EventHubSendContext<T> candidate in contexts)
+                        transportContext.ApplyPayloadAdmission(candidate);
                 }
 
                 EventHubSendContext<T> sendContext = contexts[0];

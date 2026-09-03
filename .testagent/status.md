@@ -2915,3 +2915,26 @@ future cohorts as complete.
 - Detailed evidence is under
   `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V5-DURABLE-SENDER/`. Package 2/4 is ready for local
   product/architecture freeze. No remote publication occurred.
+
+## Reviewer integration — V5 payload, diagnostics, and analyzers accepted locally (2026-09-03)
+
+- Package 3/4 is architecture-bound at `3ad6d74f`; all protected V5/V5.1 inputs remained hash-verified,
+  unmodified, and untracked.
+- Typed-bus payload admission now bounds actual serialized body and independent final-envelope owners for
+  JSON, raw JSON, MessagePack, the common physical transport path, and Event Hub single/batch sends. The
+  application is serialized once and rejected work cannot reach user observers or provider I/O.
+- Only the existing V4 MessageData owner can provide stored-reference evidence. Full regression found and
+  corrected an empty-value address inspection that suppressed the original fault; both established request
+  fault cases now pass and causally kill removal of the guard.
+- Sensitivity metadata, weak inherited inspection, bounded safe rendering, and no-throw payload-free metrics
+  close redaction and observability. VOSB5001 through VOSB5005 use canonical Roslyn symbol identity and
+  deterministic generated/lookalike/inheritance/outbound/parallel behavior.
+- Forty-two methods expand to 58 package cases with 228 direct assertions. Assertion/gap review closed five
+  weak or nondeterministic oracles, and all 35 independent production mutations are killed and restored.
+- Final Unit/Architecture is 3,460/3,460 with zero failures/skips. Shipping and Engineering Release builds
+  have zero warnings/errors; 51-file format, Requirements, protected-review, hash, layout, and diff gates
+  pass.
+- Detailed evidence is under
+  `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V5-PAYLOAD-DIAGNOSTICS-ANALYZERS/`. Package 3/4 is
+  ready for local product/architecture freeze. Final API review/reconciliation is next; no remote
+  publication occurred.
