@@ -3388,3 +3388,56 @@ baseline commit `0df0a5ed` produced the same failure against another fresh fixtu
 pre-existing, non-cache EF defect and prevents an out-of-scope change from being smuggled into this
 package. The temporary archive was removed. Detailed evidence is under
 `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-RESOURCE-CACHE/`.
+
+## Reviewer integration research — V4 RabbitMQ reliability and recovery (2026-09-03)
+
+The protected `review/` tree was hash-verified and remains unmodified and untracked. The V4 donor
+bundle has SHA-256 `e8f28736562bf7c4fa8ffca4dfd662cd5105d3124e26d2ba424fe1ac0d192b87`,
+resolves to final commit `f8050928715e536b60c42d800d1cbb81c085818f`, and identifies primary
+RabbitMQ commits `8bf6d3493032add0cb4495ff65d75590e3310673` and
+`6ab374c3cfcf45c0bdb9bd6800ea6099a0f035eb`. The current integration baseline is product commit
+`cf2e9ebfbc193573fd376df549469a956bc7de80`, tree
+`0babdea5cf9e910e849d57ce55fd9725d0ea0f13`. Its native RabbitMQ tests and .NET 10/RabbitMQ.Client
+7.2.1 transport ownership postdate the donor and remain authoritative.
+
+The reviewer contract has four source capabilities: finite predeclared TTL/DLX technical
+redelivery, connection-scoped topology single-flight with canonical conflict detection and
+fault-driven redeclaration, typed AMQP send-failure classification, and bounded operational fault
+redrive with a dedicated confirm channel and confirm-before-source-ack ordering. Generic business
+scheduling remains separate. The later canonical `TechnicalRetryPolicy` convenience method is not
+part of this bounded package because its generic taxonomy owner has not yet been integrated.
+
+The donor is evidence, not a patch. Its topology cache contains a concrete concurrency defect: a
+caller that cancels only its own `WaitAsync` removes the shared entry even though the connection-owned
+declaration continues. A second caller can then start a duplicate declaration. The integrated owner
+must distinguish caller cancellation from a fault of the shared declaration. It must also snapshot
+mutable topology definitions before publication, encode nested canonical values without ambiguous
+delimiters, reject same-key conflicting definitions before invoking provider work, keep transient
+entities channel-scoped, and make generation invalidation unable to resurrect stale knowledge.
+
+The real-broker gates must inspect topology before consumption, exercise classic and quorum TTL/DLX
+redelivery, reject stream and invalid interval configurations, delete durable topology externally and
+prove redeclaration, and execute unfiltered and structured-filter redrive. They must prove scan and
+redrive limits, unmatched-message requeue on channel close, mandatory target rejection without source
+loss, and broker confirmation before source acknowledgement. The connection-loss-after-confirm crash
+window is explicitly at-least-once: a duplicate is permitted, silent loss is not. Host RBAC, approval,
+audit and UI remain outside this transport primitive.
+
+The required Roslyn source-to-test pairing scan ran once against the complete current repository and
+is retained at `/private/tmp/vsb-review-audit.3RMtAp/source-test-pairing.json`: 3,881 source files,
+716 test files, 1,088 paired and 2,793 unpaired. This is a static naming heuristic, not execution
+coverage. Existing RabbitMQ unit and local-integration owners strongly cover address, configuration,
+lifetime, flow, provider topology, retry faults, payload, concurrency, scheduling and lifecycle, but
+none owns the four new reviewer capabilities. No old RabbitMQ test is eligible for deletion in this
+package.
+
+Native integration completed all four capabilities and found an additional task-boundary product defect:
+the donor-shaped redrive executor passed an async lambda through `Pipe.Execute(Action<T>)`, so a real
+mandatory return escaped as `async void` and terminated the process. `Pipe.ExecuteAsync` now preserves the
+exact provider exception as the caller's task result. Derived source names are validated after formatting,
+and real redrive preserves body plus MessageId, CorrelationId, fault header, content type, message type and
+persistence. Twenty-four buildable one-cause mutations are killed. A removal of only the eager
+consumer-cancel invalidation is equivalent because topology-filter/channel recycle also invalidate; a
+complete no-op invalidation mutation is red under external queue deletion. Final evidence is 148/148
+RabbitMQ unit, 24/24 real RabbitMQ, 3,141/3,141 Unit/Architecture, and zero-warning analyzer builds. The
+protected review aggregate remains `371bf21331f0fc3316be271bce04ab37b3c54c50e13f443789d94c1f6eca1f18`.

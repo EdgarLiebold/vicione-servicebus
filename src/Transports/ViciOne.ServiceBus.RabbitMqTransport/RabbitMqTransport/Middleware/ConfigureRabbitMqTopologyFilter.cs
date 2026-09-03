@@ -39,6 +39,7 @@ public class ConfigureRabbitMqTopologyFilter<TSettings> :
         catch (Exception)
         {
             oneTimeContext.Evict();
+            context.ConnectionContext.TopologyEntityCache.Invalidate();
 
             throw;
         }
@@ -92,10 +93,17 @@ public class ConfigureRabbitMqTopologyFilter<TSettings> :
 
     static Task Declare(ChannelContext context, Exchange exchange, CancellationToken cancellationToken)
     {
-        RabbitMqLogMessages.DeclareExchange(exchange);
-
-        return context.ExchangeDeclare(exchange.ExchangeName, exchange.ExchangeType, exchange.Durable, exchange.AutoDelete, exchange.ExchangeArguments,
-            cancellationToken);
+        return context.ConnectionContext.TopologyEntityCache.DeclareExchange(exchange, async declarationToken =>
+        {
+            RabbitMqLogMessages.DeclareExchange(exchange);
+            await context.ExchangeDeclare(
+                exchange.ExchangeName,
+                exchange.ExchangeType,
+                exchange.Durable,
+                exchange.AutoDelete,
+                exchange.ExchangeArguments,
+                declarationToken).ConfigureAwait(false);
+        }, cancellationToken);
     }
 
     static async Task Declare(ChannelContext context, Queue queue, CancellationToken cancellationToken)
@@ -103,10 +111,18 @@ public class ConfigureRabbitMqTopologyFilter<TSettings> :
 
         try
         {
-            var ok = await context.QueueDeclare(queue.QueueName, queue.Durable, queue.Exclusive, queue.AutoDelete, queue.QueueArguments, cancellationToken)
-                .ConfigureAwait(false);
+            await context.ConnectionContext.TopologyEntityCache.DeclareQueue(queue, async declarationToken =>
+            {
+                var ok = await context.QueueDeclare(
+                    queue.QueueName,
+                    queue.Durable,
+                    queue.Exclusive,
+                    queue.AutoDelete,
+                    queue.QueueArguments,
+                    declarationToken).ConfigureAwait(false);
 
-            RabbitMqLogMessages.DeclareQueue(queue, ok.ConsumerCount, ok.MessageCount);
+                RabbitMqLogMessages.DeclareQueue(queue, ok.ConsumerCount, ok.MessageCount);
+            }, cancellationToken).ConfigureAwait(false);
 
         }
         catch (Exception exception)
@@ -123,15 +139,25 @@ public class ConfigureRabbitMqTopologyFilter<TSettings> :
     {
         RabbitMqLogMessages.BindToExchange(binding);
 
-        await context.ExchangeBind(binding.Destination.ExchangeName, binding.Source.ExchangeName, binding.RoutingKey, binding.Arguments, cancellationToken)
-            .ConfigureAwait(false);
+        await context.ConnectionContext.TopologyEntityCache.Bind(binding,
+            declarationToken => context.ExchangeBind(
+                binding.Destination.ExchangeName,
+                binding.Source.ExchangeName,
+                binding.RoutingKey,
+                binding.Arguments,
+                declarationToken), cancellationToken).ConfigureAwait(false);
     }
 
     static async Task Bind(ChannelContext context, ExchangeToQueueBinding binding, CancellationToken cancellationToken)
     {
         RabbitMqLogMessages.BindToQueue(binding);
 
-        await context.QueueBind(binding.Destination.QueueName, binding.Source.ExchangeName, binding.RoutingKey, binding.Arguments, cancellationToken)
-            .ConfigureAwait(false);
+        await context.ConnectionContext.TopologyEntityCache.Bind(binding,
+            declarationToken => context.QueueBind(
+                binding.Destination.QueueName,
+                binding.Source.ExchangeName,
+                binding.RoutingKey,
+                binding.Arguments,
+                declarationToken), cancellationToken).ConfigureAwait(false);
     }
 }

@@ -2820,3 +2820,36 @@ freeze, two commits and the already authorized non-force remote publication.
    providers, requirements projection, scoped format, old-symbol and empty-directory gates.
 7. Record the inherited EF concurrency failure only after a clean baseline-commit reproduction proves it is
    noncausal and out of scope. Freeze the sixth local V4 checkpoint without remote publication.
+
+## Reviewer integration — V4 RabbitMQ reliability and recovery (2026-09-03)
+
+1. Freeze the current product commit/tree and every relevant review artifact hash. Keep `review/**`
+   byte-for-byte unmodified, reconcile the donor against the current .NET 10/RabbitMQ.Client 7.2.1
+   owner, and preserve every existing native RabbitMQ test.
+2. Implement finite immutable queue-redelivery plans, startup-time TTL/DLX topology and message-pipe
+   redelivery without the delayed-message plugin. Reject unnamed, exchange-only, stream, empty,
+   nonpositive, sub-millisecond and over-broker-limit configurations before provider work.
+3. Add one connection-scoped stable-topology single-flight owner. Bind exact stable/transient behavior,
+   mutable-input snapshots, canonical nested definitions, conflicts, faults, cancellation isolation,
+   invalidation generations and redeclaration. Correct the donor's canceled-waiter eviction race.
+4. Register a typed RabbitMQ send-failure classifier through the transport registration boundary.
+   Classify only structured exception types and AMQP reply codes; prove reply text cannot affect the
+   verdict and unowned exception types remain unclassified.
+5. Expose default-bus and typed-bus bounded fault-redrive primitives. Validate all operator inputs,
+   derive and passively verify source/target topology, use one dedicated confirm-enabled channel,
+   preserve exact filters and routing, acknowledge only after confirmed mandatory publish, and requeue
+   unmatched or failed deliveries when the channel closes.
+6. Extend native unit and real RabbitMQ local-integration owners with exact requirement projection.
+   Cover classic/quorum queue redelivery, topology inspection/deletion/recovery, classifier and DI
+   ownership, all redrive filters and limits, mandatory rejection/source retention and confirmation
+   ordering. Use deterministic coordination and finite safety timeouts, never sleeps as assertions.
+7. Perform assertion-quality and source-derived pseudo-mutation review. Execute independent one-cause
+   mutations for every high-risk branch, ordering boundary and requirement carrier; restore each
+   target byte-exactly before the final positive execution.
+8. Require analyzer-active nonincremental Release build, focused RabbitMQ unit and local-provider
+   profiles, complete serialized Unit/Architecture regression, requirement projection, scoped format,
+   stale-symbol, JSON, empty-directory and diff-integrity gates. Freeze product and architecture
+   completion commits as V4 package 7/12 without remote publication.
+
+Completion: all eight steps passed locally. Product completion and architecture binding remain the
+checkpoint actions; remote publication remains outside this package.

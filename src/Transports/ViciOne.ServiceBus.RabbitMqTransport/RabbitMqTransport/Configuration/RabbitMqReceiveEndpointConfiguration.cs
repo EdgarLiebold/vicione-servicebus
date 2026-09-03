@@ -21,6 +21,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration
         readonly IRabbitMqHostConfiguration _hostConfiguration;
         readonly Lazy<Uri> _inputAddress;
         readonly IBuildPipeConfigurator<ChannelContext> _channelConfigurator;
+        readonly List<RabbitMqQueueRedeliveryPlan> _queueRedeliveryPlans = new();
         readonly RabbitMqReceiveSettings _settings;
 
         public RabbitMqReceiveEndpointConfiguration(IRabbitMqHostConfiguration hostConfiguration, RabbitMqReceiveSettings settings,
@@ -63,6 +64,9 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration
 
             _channelConfigurator.UseFilter(new ConfigureRabbitMqTopologyFilter<ReceiveSettings>(_settings, context.BrokerTopology));
 
+            foreach (var plan in _queueRedeliveryPlans)
+                _channelConfigurator.UseFilter(new ConfigureRabbitMqQueueRedeliveryFilter(plan));
+
             if (_hostConfiguration.DeployTopologyOnly)
                 _channelConfigurator.UseFilter(new TransportReadyFilter<ChannelContext>(context));
             else
@@ -95,6 +99,17 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration
             host.AddReceiveEndpoint(queueName, receiveEndpoint);
 
             ReceiveEndpoint = receiveEndpoint;
+        }
+
+        internal RabbitMqQueueRedeliveryPlan CreateQueueRedeliveryPlan(IEnumerable<TimeSpan> intervals)
+        {
+            if (_queueRedeliveryPlans.Count > 0)
+                throw new ConfigurationException("RabbitMQ queue redelivery may only be configured once per receive endpoint.");
+
+            var plan = new RabbitMqQueueRedeliveryPlan(_settings, intervals);
+            _queueRedeliveryPlans.Add(plan);
+            Changed("QueueRedelivery");
+            return plan;
         }
 
         public override IEnumerable<ValidationResult> Validate()

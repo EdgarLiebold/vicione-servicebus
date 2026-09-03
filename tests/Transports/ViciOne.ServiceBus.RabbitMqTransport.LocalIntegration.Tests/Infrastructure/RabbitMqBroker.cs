@@ -118,6 +118,144 @@ internal sealed class RabbitMqBroker : IDisposable
         return queue.MessageCount;
     }
 
+    public async Task DeclareEndpointTopology(string endpointName, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(endpointName);
+        ConnectionFactory factory = CreateConnectionFactory();
+        await using IConnection connection = await factory.CreateConnectionAsync(cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+        await using IChannel channel = await connection.CreateChannelAsync(cancellationToken: cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+        await channel.ExchangeDeclareAsync(
+                endpointName,
+                ExchangeType.Fanout,
+                durable: true,
+                autoDelete: false,
+                arguments: null,
+                noWait: false,
+                cancellationToken: cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+        await channel.QueueDeclareAsync(
+                endpointName,
+                durable: true,
+                exclusive: false,
+                autoDelete: false,
+                arguments: null,
+                noWait: false,
+                cancellationToken: cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+        await channel.QueueBindAsync(
+                endpointName,
+                endpointName,
+                routingKey: string.Empty,
+                arguments: null,
+                noWait: false,
+                cancellationToken: cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+    }
+
+    public async Task DeclareQueue(string queueName, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(queueName);
+        ConnectionFactory factory = CreateConnectionFactory();
+        await using IConnection connection = await factory.CreateConnectionAsync(cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+        await using IChannel channel = await connection.CreateChannelAsync(cancellationToken: cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+        await channel.QueueDeclareAsync(
+                queueName,
+                durable: true,
+                exclusive: false,
+                autoDelete: false,
+                arguments: null,
+                noWait: false,
+                cancellationToken: cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+    }
+
+    public async Task DeclareExchange(string exchangeName, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(exchangeName);
+        ConnectionFactory factory = CreateConnectionFactory();
+        await using IConnection connection = await factory.CreateConnectionAsync(cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+        await using IChannel channel = await connection.CreateChannelAsync(cancellationToken: cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+        await channel.ExchangeDeclareAsync(
+                exchangeName,
+                ExchangeType.Fanout,
+                durable: true,
+                autoDelete: false,
+                arguments: null,
+                noWait: false,
+                cancellationToken: cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+    }
+
+    public async Task PublishRaw(
+        string exchangeName,
+        string routingKey,
+        BasicProperties properties,
+        ReadOnlyMemory<byte> body,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(exchangeName);
+        ArgumentNullException.ThrowIfNull(routingKey);
+        ArgumentNullException.ThrowIfNull(properties);
+        ConnectionFactory factory = CreateConnectionFactory();
+        await using IConnection connection = await factory.CreateConnectionAsync(cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+        var options = new CreateChannelOptions(
+            publisherConfirmationsEnabled: true,
+            publisherConfirmationTrackingEnabled: true);
+        await using IChannel channel = await connection.CreateChannelAsync(options, cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+        await channel.BasicPublishAsync(
+                exchangeName,
+                routingKey,
+                mandatory: true,
+                properties,
+                body,
+                cancellationToken)
+            .AsTask()
+            .WaitAsync(OperationTimeout, cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<RawMessage>> GetRaw(
+        string queueName,
+        int maximumCount,
+        CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(queueName);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(maximumCount);
+        ConnectionFactory factory = CreateConnectionFactory();
+        await using IConnection connection = await factory.CreateConnectionAsync(cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+        await using IChannel channel = await connection.CreateChannelAsync(cancellationToken: cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+        var messages = new List<RawMessage>(maximumCount);
+        while (messages.Count < maximumCount)
+        {
+            BasicGetResult? message = await channel.BasicGetAsync(queueName, autoAck: true, cancellationToken)
+                .WaitAsync(OperationTimeout, cancellationToken);
+            if (message == null)
+                break;
+
+            messages.Add(new RawMessage(
+                message.RoutingKey,
+                new BasicProperties(message.BasicProperties),
+                message.Body.ToArray()));
+        }
+
+        return messages;
+    }
+
+    public Task DeleteQueue(string queueName, CancellationToken cancellationToken) =>
+        DeleteEntity($"api/queues/%2F/{Uri.EscapeDataString(queueName)}", cancellationToken);
+
+    public Task DeleteExchange(string exchangeName, CancellationToken cancellationToken) =>
+        DeleteEntity($"api/exchanges/%2F/{Uri.EscapeDataString(exchangeName)}", cancellationToken);
+
     public async Task AssertExchangeExists(string exchangeName, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(exchangeName);
@@ -137,6 +275,40 @@ internal sealed class RabbitMqBroker : IDisposable
         timeout.CancelAfter(OperationTimeout);
         while ((await Queue(queueName, timeout.Token)).Exists)
             timeout.Token.ThrowIfCancellationRequested();
+    }
+
+    public async Task WaitUntilQueueExists(string queueName, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(queueName);
+        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        timeout.CancelAfter(OperationTimeout);
+        while (!(await Queue(queueName, timeout.Token)).Exists)
+            timeout.Token.ThrowIfCancellationRequested();
+    }
+
+    public async Task WaitUntilQueueBindingExists(
+        string queueName,
+        string sourceExchange,
+        CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(queueName);
+        ArgumentException.ThrowIfNullOrWhiteSpace(sourceExchange);
+        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        timeout.CancelAfter(OperationTimeout);
+        while (true)
+        {
+            if ((await Queue(queueName, timeout.Token)).Exists)
+            {
+                IReadOnlyList<BindingState> bindings = await QueueBindings(queueName, timeout.Token);
+                if (bindings.Any(binding =>
+                        binding.Source == sourceExchange
+                        && binding.Destination == queueName
+                        && binding.DestinationType == "queue"))
+                    return;
+            }
+
+            timeout.Token.ThrowIfCancellationRequested();
+        }
     }
 
     public async Task<QueueState> Queue(string queueName, CancellationToken cancellationToken)
@@ -232,6 +404,14 @@ internal sealed class RabbitMqBroker : IDisposable
         await DeleteOwned("api/exchanges/%2F", "name", timeout.Token);
     }
 
+    private async Task DeleteEntity(string path, CancellationToken cancellationToken)
+    {
+        using HttpResponseMessage response = await _management.DeleteAsync(path, cancellationToken)
+            .WaitAsync(OperationTimeout, cancellationToken);
+        if (response.StatusCode is not (HttpStatusCode.NoContent or HttpStatusCode.NotFound))
+            response.EnsureSuccessStatusCode();
+    }
+
     private async Task DeleteOwned(string collectionPath, string nameProperty, CancellationToken cancellationToken)
     {
         string listPath = collectionPath[..collectionPath.LastIndexOf('/', collectionPath.Length - 2)];
@@ -314,4 +494,6 @@ internal sealed class RabbitMqBroker : IDisposable
     }
 
     internal sealed record BindingState(string Source, string Destination, string DestinationType, string RoutingKey);
+
+    internal sealed record RawMessage(string RoutingKey, BasicProperties Properties, byte[] Body);
 }

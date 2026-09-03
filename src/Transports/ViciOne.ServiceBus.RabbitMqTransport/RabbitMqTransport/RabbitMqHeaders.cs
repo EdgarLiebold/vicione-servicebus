@@ -6,5 +6,6 @@ namespace ViciOne.ServiceBus.RabbitMqTransport
         public const string RoutingKey = "RabbitMQ-RoutingKey";
         public const string DeliveryTag = "RabbitMQ-DeliveryTag";
         public const string ConsumerTag = "RabbitMQ-ConsumerTag";
+        public const string RedeliveryRoutingKey = "RabbitMQ-Redelivery-RoutingKey";
     }
 }

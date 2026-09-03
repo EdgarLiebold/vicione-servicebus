@@ -35,7 +35,10 @@ public class ChannelContextFactory :
             // taking the channel away underneath it is what replaced the broker's answer with an
             // ObjectDisposedException. The lifetime disposes once the last operation has finished.
             if (context.Status == TaskStatus.RanToCompletion && context.Result is RabbitMqChannelContext channelContext)
+            {
+                channelContext.ConnectionContext.TopologyEntityCache.Invalidate();
                 channelContext.Lifetime.Invalidate(args);
+            }
 
             Task.Run(() => asyncContext.Stop(args.ReplyText))
                 .IgnoreUnobservedExceptions();

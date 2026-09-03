@@ -32,6 +32,7 @@ public class SharedConnectionContext :
 
     public TimeSpan StopTimeout => _context.StopTimeout;
     public IRabbitMqBusTopology Topology => _context.Topology;
+    public RabbitMqTopologyEntityCache TopologyEntityCache => _context.TopologyEntityCache;
 
     public async Task<IChannel> CreateChannel(ushort? concurrentMessageLimit, CancellationToken cancellationToken)
     {

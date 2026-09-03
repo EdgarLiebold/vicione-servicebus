@@ -174,6 +174,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport
             catch (Exception)
             {
                 oneTimeContext.Evict();
+                transportContext.ConnectionContext.TopologyEntityCache.Invalidate();
                 throw;
             }
         }

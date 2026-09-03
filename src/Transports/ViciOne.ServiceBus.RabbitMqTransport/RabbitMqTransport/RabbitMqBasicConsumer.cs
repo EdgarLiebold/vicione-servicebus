@@ -74,6 +74,9 @@ namespace ViciOne.ServiceBus.RabbitMqTransport
 
             LogContext.Debug?.Log("Consumer Canceled: {InputAddress} - {ConsumerTag}", _context.InputAddress, consumerTag);
 
+            // An unsolicited broker cancel commonly means that a queue was deleted externally. Any
+            // successful declaration/binding knowledge for this connection is now stale.
+            _channel.ConnectionContext.TopologyEntityCache.Invalidate();
             TrySetConsumeCanceled(cancellationToken);
         }
 

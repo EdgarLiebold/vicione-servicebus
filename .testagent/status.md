@@ -1,5 +1,22 @@
 # Status — native test reconstruction
 
+## Active reviewer integration checkpoint — V4 RabbitMQ reliability (2026-09-03)
+
+- V4 semantic package 7/12 is complete locally: finite classic/quorum TTL/DLX redelivery,
+  connection-scoped stable-topology single-flight and recovery, typed structured send-failure
+  classification, and bounded confirm-before-ack fault redrive.
+- Native reconciliation corrected canceled-waiter eviction, canonical-key/fingerprint collisions,
+  stale-generation publication, nested-authentication classification, derived-name validation, and a
+  real `async void` redrive failure boundary exposed by mandatory broker return.
+- Twenty-four independent buildable product mutations are killed and restored. One eager
+  consumer-cancel invalidation removal is equivalent under overlapping recovery paths; invalidation as
+  a system behavior is independently mutation-proven.
+- Final gates: analyzer builds 0 warnings/0 errors; RabbitMQ unit 148/148; real RabbitMQ 24/24 run
+  `vicione-1fe54599dc04`; serialized Unit/Architecture 3,141/3,141; requirements, format, wall-clock,
+  async-void, empty-directory, diff, review-hash, and Docker-teardown gates green.
+- Detailed evidence:
+  `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-RABBITMQ-RELIABILITY/VALIDATION.md`.
+
 ## Preserved baseline
 
 The accepted native foundation and MessageBody behavior are committed and remotely preserved at
@@ -2699,3 +2716,15 @@ future cohorts as complete.
   pre-cache baseline commit and is recorded as a separate out-of-scope defect, not hidden or misattributed.
 - Protected `review/**` remains untouched and untracked. V4 progress is now 6/12 (50%); no remote
   publication is included or implied.
+
+## Reviewer integration — V4 RabbitMQ reliability and recovery active (2026-09-03)
+
+- Architecture assignment `PO-2026-09-03-SERVICEBUS-REVIEW-INTEGRATION-06` is bound to product
+  baseline `cf2e9ebfbc193573fd376df549469a956bc7de80`, tree
+  `0babdea5cf9e910e849d57ce55fd9725d0ea0f13`, and the exact V4 review hashes.
+- All existing RabbitMQ product and native-test owners have been inventoried. The review requires four
+  missing capabilities: finite TTL/DLX queue redelivery, stable-topology single-flight/recovery,
+  structured send-failure classification and bounded confirm-before-ack fault redrive.
+- The donor's canceled-waiter cache eviction is a confirmed defect and has a predeclared regression
+  requirement. Product/test implementation and real-broker proof are in progress. `review/**` remains
+  untouched; no remote publication is authorized or implied.

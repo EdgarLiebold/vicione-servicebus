@@ -1,7 +1,11 @@
 namespace ViciOne.ServiceBus
 {
     using System;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.DependencyInjection.Extensions;
+    using RabbitMqTransport;
     using RabbitMqTransport.Configuration;
+    using RabbitMqTransport.Operations;
 
 
     public static class RabbitMqBusFactoryConfiguratorExtensions
@@ -22,6 +26,9 @@ namespace ViciOne.ServiceBus
         public static void UsingRabbitMq(this IBusRegistrationConfigurator configurator,
             Action<IBusRegistrationContext, IRabbitMqBusFactoryConfigurator> configure = null)
         {
+            configurator.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, RabbitMqSendFailureClassifier>());
+            configurator.TryAddSingleton<IRabbitMqQueueOperations, RabbitMqQueueOperations>();
+            configurator.TryAddSingleton(typeof(IRabbitMqQueueOperations<>), typeof(RabbitMqQueueOperations<>));
             configurator.SetBusFactory(new RabbitMqRegistrationBusFactory(configure));
         }
     }

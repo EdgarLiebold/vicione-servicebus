@@ -38,7 +38,10 @@ public class ConnectionContextFactory :
             // that is still unwinding — a channel creation, say — has to finish touching the connection
             // before the connection goes away. Stopping stays off this thread for the same reason.
             if (context.Status == TaskStatus.RanToCompletion && context.Result is RabbitMqConnectionContext connectionContext)
+            {
+                connectionContext.TopologyEntityCache.Invalidate();
                 connectionContext.Lifetime.Invalidate(args);
+            }
 
             Task.Run(() => contextHandle.Stop(args.ReplyText))
                 .IgnoreUnobservedExceptions();

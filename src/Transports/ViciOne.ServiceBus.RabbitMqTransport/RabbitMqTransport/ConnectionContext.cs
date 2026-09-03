@@ -38,6 +38,8 @@ namespace ViciOne.ServiceBus.RabbitMqTransport
 
         IRabbitMqBusTopology Topology { get; }
 
+        RabbitMqTopologyEntityCache TopologyEntityCache { get; }
+
         /// <summary>
         /// Create a channel on the connection
         /// </summary>

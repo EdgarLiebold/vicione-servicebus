@@ -28,6 +28,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport
             ContinuationTimeout = hostConfiguration.Settings.ContinuationTimeout;
 
             Topology = hostConfiguration.Topology;
+            TopologyEntityCache = new RabbitMqTopologyEntityCache();
 
             StopTimeout = TimeSpan.FromSeconds(30);
 
@@ -56,6 +57,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport
         public TimeSpan StopTimeout { get; }
 
         public IRabbitMqBusTopology Topology { get; }
+        public RabbitMqTopologyEntityCache TopologyEntityCache { get; }
 
         public async Task<IChannel> CreateChannel(ushort? concurrentMessageLimit, CancellationToken cancellationToken)
         {
