@@ -39,8 +39,8 @@ namespace ViciOne.ServiceBus.QuartzIntegration
 
             _scheduler = await _settings.SchedulerFactory.GetScheduler().ConfigureAwait(false);
 
-            if (_settings.CreateJobFactory != null)
-                _scheduler.JobFactory = _settings.CreateJobFactory(bus, _settings.TimeProvider);
+            _scheduler.Context[ScheduledMessageJob.BusContextKey] = bus;
+            _scheduler.Context[ScheduledMessageJob.TimeProviderContextKey] = _settings.TimeProvider;
         }
 
         public async Task PostStart(IBus bus, Task<BusReady> busReady)
@@ -84,10 +84,18 @@ namespace ViciOne.ServiceBus.QuartzIntegration
 
         public async Task PostStop(IBus bus)
         {
-            await _scheduler!.Shutdown().ConfigureAwait(false);
+            try
+            {
+                await _scheduler!.Shutdown().ConfigureAwait(false);
 
-            LogContext.Debug?.Log("Quartz Scheduler Stopped: {InputAddress} ({Name}/{InstanceId})", _schedulerEndpointAddress, _scheduler.SchedulerName,
-                _scheduler.SchedulerInstanceId);
+                LogContext.Debug?.Log("Quartz Scheduler Stopped: {InputAddress} ({Name}/{InstanceId})", _schedulerEndpointAddress, _scheduler.SchedulerName,
+                    _scheduler.SchedulerInstanceId);
+            }
+            finally
+            {
+                _scheduler!.Context.Remove(ScheduledMessageJob.BusContextKey);
+                _scheduler.Context.Remove(ScheduledMessageJob.TimeProviderContextKey);
+            }
         }
 
         public Task StopFaulted(IBus bus, Exception exception)

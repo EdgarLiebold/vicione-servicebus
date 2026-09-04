@@ -3834,3 +3834,86 @@ Final local evidence is 46 new Core cases, two existing MessageData regression c
 analyzer, four architecture, and four requirements-projection owners. Complete Unit/Architecture passes
 3,460/3,460 with zero failures/skips. Both Release solutions are warning/error-free and the 51-path format,
 requirements, protected manifest, restored hashes, and diff gates pass.
+
+## A+ final closure research (2026-09-04)
+
+The bounded baseline is commit `4362f6423553e2ade6df41dbb4804c44a28ad53d`, tree
+`b677aa015f3c68d8e6878a8f55c8895a6b588033`. The immutable API review identifies final gates 3 and 17 as
+FAIL and gates 13, 22, 24, and 25 as PARTIAL. The active contract is
+`WP-F2-SERVICEBUS-A-PLUS-FINAL-CLOSURE-01`; `review/**` remains untracked, unstaged, and unchanged.
+
+The one required static Roslyn pairing pass examined 4,035 source and 785 test files in 2.5 seconds: 1,255
+source files were heuristically paired and 2,780 were unpaired. This parse-only result is not line or branch
+coverage and undercounts extension-method, reflection, and DI-driven tests. Changed owners will therefore be
+bound explicitly to Core DurableSend, RabbitMQ unit/local-integration, Architecture Build/Product, and
+package-only Developer Journey tests instead of treating filename pairing as proof.
+
+Exact .NET patch selection exists in only four active owners: `global.json` (`10.0.302`, roll-forward
+disabled), `native-tests.yml`, `README.md`, and `CONTRIBUTING.md`. Two `netstandard2.0` Roslyn projects
+declare C# 14 locally. Counter-builds with the project property cleared pass warning-free, so these two local
+pins are unnecessary and belong in the removal. `net10.0`, MTP v2, and exact central NuGet versions are
+platform/dependency contracts rather than SDK/runtime patch pins.
+
+The complete Engineering solution NuGet query found stable-compatible updates for Roslyn 5.9.0, AWS SDK S3
+4.0.102.4, DynamoDB 4.0.103.5, SNS/SQS 4.0.100.11, Azure Tables 12.12.0, Azure Blobs 12.29.2, Azure Service
+Bus 7.20.2, RabbitMQ.Client 7.2.2, OpenTelemetry 1.18.0, Quartz.Extensions.Hosting 3.20.1, and
+Google.Protobuf 3.36.1. Quartz 4.0.0 is a major migration and is not selected without a separate
+compatibility proof; the coherent 3.x line is 3.20.1. Every other direct package was current in the official
+stable feed query. All selected versions remain exact in central package management and every tracked
+lockfile must be regenerated.
+
+Durable Sender currently has one supported dispatcher: InMemory, whose valid retirement boundary is
+consumer completion. All external bus transports are explicitly unsupported in the provider matrix. RabbitMQ
+is the required Suite carrier and already maps `SendContext.Durable` to a persistent AMQP message, defaults
+`AwaitAck` to true, and awaits `RabbitMQ.Client` publisher-confirm completion. Its Durable adapter must also
+force mandatory routing, validate the `rabbitmq` bus scheme at startup, replay the immutable retained bytes,
+and return `TransportAcceptance` only after that task succeeds. A real broker test must prove accepted
+persistence, unroutable rejection, cancellation/replay, restart delivery, and no pre-confirm Delivered state.
+ActiveMQ NMS does not expose an equivalently strong broker-persistence confirmation in the current contract;
+Amazon SQS, Azure Service Bus, PostgreSQL, and SQL Server need their own real-resource certification before
+advertising Durable Sender. They remain actionable startup-unsupported rather than inheriting a generic
+claim. Event Hub and SignalR are riders and not Durable Sender bus transports.
+
+Startup validation already freezes Durable policy and enforces exactly one bus, catalog, store, and
+dispatcher. The final matrix must add provider/scheme ownership and retain causal tests for every public
+static option invariant touched by the closure. The public surface already hides low-level Durable contracts
+with `EditorBrowsable(Never)`, but package/namespace ownership is not mechanically complete. Architecture
+tests and package-only journeys will enforce the five layers: Application, Advanced SPI, Provider,
+Operations, and Testing. A terminal heritage disposition must distinguish capability-bearing transport and
+pipeline mechanisms from compatibility-only aliases; only the latter may be removed.
+
+Acceptance checklist: no exact SDK/runtime/repository language pin; current supported .NET 10
+restore/build/test/pack; every direct dependency disposition and exact refreshed locks; RabbitMQ real
+acceptance success/rejection/cancellation/restart/no-early-delivery; unsupported provider fail-closed startup;
+all changed static invalid configurations actionable at startup; five API layers enforced; preferred
+IntelliSense journeys compile from packed NuGets; complete heritage disposition; 3,477 existing
+Unit/Architecture tests remain the minimum; new assertions discriminate behavior; one-cause mutants fail and
+all source bytes are restored.
+
+## A+ final closure findings (2026-09-04)
+
+The initial package inventory was deliberately conservative about Quartz 4. Direct compatibility work proved
+that the current major is supportable: hosting moved into the Quartz package, job creation/return and execution
+use `ValueTask`, standalone factories are builder-owned, and scheduling/query/status APIs use their Quartz 4
+forms. The complete 89-case Quartz owner, both Release solutions, and all package-only journeys pass, so the
+final selection is Quartz 4.0.0 rather than the initially proposed 3.20.1.
+
+The official stable-feed disposition contains 52 direct package decisions: 15 updates, 36 retained-current,
+and one folded hosting package removal. The final outdated, vulnerable-including-transitive, and
+deprecated-including-transitive queries each return zero findings. Locked restore succeeds for both complete
+solutions and rejects an unreflected central-version mutation with NU1004.
+
+RabbitMQ is the only advertised external Durable Sender transport. Its provider-owned dispatcher preserves
+stored bytes and IDs, requires persistent and mandatory publishing, and awaits the publisher confirmation.
+Real broker execution passes 27/27; independent persistence, mandatory-routing, and acknowledgement mutations
+each fail the intended acceptance case. InMemory retains its stronger process-local consumer-completion
+boundary. Every other external transport stays explicitly unsupported and therefore makes no unproved
+acceptance claim.
+
+Assertion and pseudo-mutation review found one semantic architecture-test gap: a heritage identifier could be
+changed to a different but generally allowed disposition. The final owner binds all 12 identifiers to exact
+terminal decisions; its counter-mutation is killed. Across SDK selection, lock coherence, provider acceptance,
+startup validation, API layering, preferred journey, and heritage, nine one-cause mutations fail and are
+restored. Final local evidence is 3,490/3,490 Unit/Architecture, 27/27 real RabbitMQ, 14/14 fresh-package
+journeys, zero-warning Shipping/Engineering builds, and a 20,661-line packed API baseline with SHA-256
+`32022968b9d6779d0afa4c784a669f6c8d587f698caee332f4cf3b2fc06397bc`.

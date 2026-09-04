@@ -2,8 +2,9 @@
 
 ## What you need
 
-- .NET SDK **10.0.302** exactly. `global.json` pins it with `rollForward: disable`, so a different
-  SDK fails the build rather than rolling forward silently.
+- The current stable, supported .NET 10 SDK (`10.0.x`). `global.json` selects only Microsoft Testing
+  Platform; it deliberately does not pin an SDK or runtime patch. Record `dotnet --info` with release
+  evidence so the resolved patch remains auditable.
 - Docker, for the categories that need a real broker or database. `build/test-infrastructure/`
   carries the pinned images and the compose file.
 

@@ -1,5 +1,4 @@
 using Quartz;
-using Quartz.Impl;
 using Xunit;
 
 namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Testing;
@@ -26,11 +25,14 @@ internal sealed class QuartzTestBus : IAsyncDisposable
         Action<IInMemoryBusFactoryConfigurator>? configure = null,
         Func<string, TimeZoneInfo?>? timeZoneResolver = null)
     {
-        ISchedulerFactory schedulerFactory = new StdSchedulerFactory(new System.Collections.Specialized.NameValueCollection
-        {
-            ["quartz.scheduler.instanceName"] = $"ViciOne.ServiceBus.Tests-{NewId.NextGuid():N}",
-            ["quartz.threadPool.maxConcurrency"] = "1",
-        });
+        ISchedulerFactory schedulerFactory = QuartzSchedulerBuilder.Create(builder =>
+                builder.UseJobFactory(new ViciOneServiceBusJobFactory()))
+            .UseProperties(new System.Collections.Specialized.NameValueCollection
+            {
+                ["quartz.scheduler.instanceName"] = $"ViciOne.ServiceBus.Tests-{NewId.NextGuid():N}",
+                ["quartz.threadPool.maxConcurrency"] = "1",
+            })
+            .Build();
         Uri? schedulerAddress = null;
         IBusControl bus = global::ViciOne.ServiceBus.Bus.Factory.CreateUsingInMemory(configurator =>
         {
@@ -44,8 +46,6 @@ internal sealed class QuartzTestBus : IAsyncDisposable
                     options.QueueName = queueName;
                     options.TimeProvider = timeProvider ?? TimeProvider.System;
                     options.TimeZoneResolver = timeZoneResolver;
-                    options.CreateJobFactory = static (configuredBus, clock) =>
-                        new ViciOneServiceBusJobFactory(configuredBus, clock);
                 });
         });
 
@@ -53,7 +53,7 @@ internal sealed class QuartzTestBus : IAsyncDisposable
         {
             await bus.StartAsync(TestContext.Current.CancellationToken)
                 .WaitAsync(timeout, TestContext.Current.CancellationToken);
-            IScheduler scheduler = await schedulerFactory.GetScheduler(TestContext.Current.CancellationToken)
+            IScheduler scheduler = await schedulerFactory.GetScheduler(TestContext.Current.CancellationToken).AsTask()
                 .WaitAsync(timeout, TestContext.Current.CancellationToken);
             ISendEndpoint schedulerEndpoint = await bus.GetSendEndpoint(Assert.IsType<Uri>(schedulerAddress))
                 .WaitAsync(timeout, TestContext.Current.CancellationToken);

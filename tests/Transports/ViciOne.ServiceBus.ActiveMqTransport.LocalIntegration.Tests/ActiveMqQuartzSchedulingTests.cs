@@ -77,13 +77,13 @@ public sealed class ActiveMqQuartzSchedulingTests
             Assert.Equal(1, Volatile.Read(ref deliveryCount));
 
             IScheduler scheduler = await Assert.IsAssignableFrom<ISchedulerFactory>(schedulerFactory)
-                .GetScheduler(cancellationToken)
+                .GetScheduler(cancellationToken).AsTask()
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             ITrigger? completedTrigger = await scheduler.GetTrigger(
                     new TriggerKey(schedule.TokenId.ToString("N")),
-                    cancellationToken)
+                    cancellationToken).AsTask()
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            Assert.Null(completedTrigger?.GetNextFireTimeUtc());
+            Assert.Null(completedTrigger?.NextFireTimeUtc);
 
             await receives.Completed.WaitAsync(fixture.OperationTimeout, cancellationToken);
             await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);

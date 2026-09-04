@@ -45,6 +45,20 @@ public sealed class ProviderCapabilityMatrixTests
             bool ownsDispatcher = Sources(provider.Project)
                 .Any(static source => source.Contains("IDurableSendDispatcher<", StringComparison.Ordinal));
             Assert.Equal(ownsDispatcher, provider.DurableSendDispatch != "unsupported");
+            if (ownsDispatcher)
+            {
+                Assert.NotEqual("not-applicable", provider.DurableSendAcceptanceBoundary);
+                Assert.NotEqual("not-applicable", provider.DurableSendAcceptanceEnvironment);
+                if (provider.Id == "in-memory")
+                    Assert.Equal("in-process-deterministic-test", provider.DurableSendAcceptanceEnvironment);
+                else
+                    Assert.StartsWith("real-", provider.DurableSendAcceptanceEnvironment, StringComparison.Ordinal);
+            }
+            else
+            {
+                Assert.Equal("not-applicable", provider.DurableSendAcceptanceBoundary);
+                Assert.Equal("not-applicable", provider.DurableSendAcceptanceEnvironment);
+            }
         });
 
         Assert.All(matrix.PersistenceProviders, provider =>
@@ -102,6 +116,8 @@ public sealed class ProviderCapabilityMatrixTests
         string Publish,
         string Request,
         string DurableSendDispatch,
+        string DurableSendAcceptanceBoundary,
+        string DurableSendAcceptanceEnvironment,
         string DurableSendEvidence);
 
     private sealed record PersistenceProvider(

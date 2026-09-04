@@ -82,12 +82,12 @@ public sealed class SchedulerCommandIntegrationTests
 
         ITrigger trigger = Assert.IsAssignableFrom<ITrigger>(
             await fixture.Scheduler.GetTrigger(triggerKey, TestContext.Current.CancellationToken));
-        IReadOnlyCollection<TriggerKey> keys = await fixture.Scheduler.GetTriggerKeys(
-            Quartz.Impl.Matchers.GroupMatcher<TriggerKey>.GroupEquals(triggerKey.Group),
+        PagedResult<TriggerHeader> triggers = await fixture.Scheduler.QueryTriggers(
+            new TriggerQuery { Group = GroupMatcher<TriggerKey>.GroupEquals(triggerKey.Group) },
             TestContext.Current.CancellationToken);
 
         Assert.Equal(replacementTime, trigger.StartTimeUtc.UtcDateTime);
-        Assert.Equal(1, keys.Count(key => key.Equals(triggerKey)));
+        Assert.Equal(1, triggers.Items.Count(header => header.Key.Equals(triggerKey)));
     }
 
     [Fact]
@@ -105,7 +105,7 @@ public sealed class SchedulerCommandIntegrationTests
             TestContext.Current.CancellationToken));
         JobKey durableJobKey = firstTrigger.JobKey;
         Assert.True(await fixture.Scheduler.DeleteJob(durableJobKey, TestContext.Current.CancellationToken));
-        Assert.False(await fixture.Scheduler.CheckExists(durableJobKey, TestContext.Current.CancellationToken));
+        Assert.False(await fixture.Scheduler.Exists(durableJobKey, TestContext.Current.CancellationToken));
 
         await SendOneTimeCommand(fixture, secondTokenId, ScheduledTime.AddHours(1), timeout);
 

@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-09-04",
+  "source": "/private/tmp/vicione-dotnet-10-current/dotnet --info",
+  "sdk": {
+    "version": "10.0.400",
+    "commit": "14fbf8d527",
+    "msbuild": "18.9.6+14fbf8d52"
+  },
+  "host": {
+    "version": "10.0.11",
+    "architecture": "x64",
+    "commit": "e2f47b0110"
+  },
+  "runtimes": [
+    { "name": "Microsoft.AspNetCore.App", "version": "10.0.11" },
+    { "name": "Microsoft.NETCore.App", "version": "10.0.11" }
+  ],
+  "environment": {
+    "os": "macOS 15.7",
+    "rid": "osx-x64",
+    "preview": false,
+    "isolatedSdkRoot": "/private/tmp/vicione-dotnet-10-current"
+  },
+  "repositorySelection": {
+    "targetFramework": "net10.0",
+    "sdkPatchPinned": false,
+    "runtimePatchPinned": false,
+    "workflowChannel": "10.0.x",
+    "testRunner": "Microsoft.Testing.Platform"
+  }
+}

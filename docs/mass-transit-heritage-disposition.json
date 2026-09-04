@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "rule": "Retain a historical shape only when it carries a current domain capability or a required extension boundary; remove compatibility-only identity and keep advanced retained shapes out of the preferred path.",
+  "entries": [
+    {
+      "id": "standard-messaging-vocabulary",
+      "disposition": "RETAIN_DOMAIN_STANDARD",
+      "evidence": "src/ViciOne.ServiceBus.Abstractions",
+      "rationale": "Send, publish, request/response, consumer, retry, redelivery, fault, outbox, saga, state machine, routing slip, and MessageData are industry messaging concepts rather than framework identity. Renaming them would add proprietary vocabulary without removing complexity."
+    },
+    {
+      "id": "consumer-contract",
+      "disposition": "RETAIN_APPLICATION_CAPABILITY",
+      "evidence": "src/ViciOne.ServiceBus.Abstractions/IConsumer.cs",
+      "rationale": "IConsumer<T> is the minimal strongly typed application delivery contract and is the preferred consumer model."
+    },
+    {
+      "id": "consumer-definition",
+      "disposition": "RETAIN_ADVANCED_HIDDEN",
+      "evidence": "src/ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/ConsumerDefinition.cs",
+      "rationale": "The definition model still carries custom endpoint-definition and provider-extension capability, but ordinary retry and concurrency configuration is now performed in AddConsumer<T> and the type is hidden from default IntelliSense."
+    },
+    {
+      "id": "typed-bind-wrapper",
+      "disposition": "RETAIN_ADVANCED_HIDDEN",
+      "evidence": "src/ViciOne.ServiceBus/DependencyInjection/Bind.cs",
+      "rationale": "The wrapper preserves compile-time MultiBus DI ownership for internal resolution; it is not an application abstraction and is hidden from default IntelliSense."
+    },
+    {
+      "id": "manual-scheduler-factories",
+      "disposition": "RETAIN_ADVANCED_HIDDEN",
+      "evidence": "src/ViciOne.ServiceBus/Configuration/MessageSchedulerBusExtensions.cs",
+      "rationale": "Manual construction remains a capability for non-container hosts and provider authors; applications register and inject IMessageScheduler, and the factory family is hidden from default IntelliSense."
+    },
+    {
+      "id": "endpoint-providers",
+      "disposition": "RETAIN_APPLICATION_CAPABILITY",
+      "evidence": "src/ViciOne.ServiceBus.Abstractions/ISendEndpointProvider.cs",
+      "rationale": "Destination-addressed sending and publishing are first-class application capabilities, not compatibility aliases."
+    },
+    {
+      "id": "pipeline-configurators",
+      "disposition": "RETAIN_PROVIDER_SPI",
+      "evidence": "src/ViciOne.ServiceBus.Abstractions/Configuration",
+      "rationale": "Composable middleware and provider integration require a public extension protocol. Preferred application journeys expose only focused callbacks and never ask developers to construct pipeline internals."
+    },
+    {
+      "id": "serialized-durable-envelope",
+      "disposition": "RETAIN_ADVANCED_HIDDEN",
+      "evidence": "src/ViciOne.ServiceBus.Abstractions/DurableSend/SerializedDurableSend.cs",
+      "rationale": "A stable byte envelope is required between persistence stores and transport dispatchers, while applications use typed IDurableSender<TBus>.SendAsync."
+    },
+    {
+      "id": "client-factory-internals",
+      "disposition": "RETAIN_PROVIDER_SPI",
+      "evidence": "src/ViciOne.ServiceBus/Clients/ClientFactory.cs",
+      "rationale": "Request-client construction retains transport and scope lifecycle capability; applications consume IRequestClient<T> through dependency injection."
+    },
+    {
+      "id": "masstransit-product-identity",
+      "disposition": "REMOVE_COMPATIBILITY_ONLY",
+      "evidence": "src",
+      "rationale": "No MassTransit package, namespace, assembly identity, or source identifier remains in production or preferred sample artifacts."
+    },
+    {
+      "id": "legacy-test-framework",
+      "disposition": "REMOVE_COMPATIBILITY_ONLY",
+      "evidence": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/TestFrameworkCapabilityDispositionTests.cs",
+      "rationale": "Historical test-framework carriers were retired only after their obligations were mapped to native executing tests."
+    },
+    {
+      "id": "legacy-verification-paths",
+      "disposition": "REMOVE_COMPATIBILITY_ONLY",
+      "evidence": "tests/Architecture/ViciOne.ServiceBus.Architecture.Tests/Repository/VerificationCapabilityDispositionTests.cs",
+      "rationale": "Compatibility-only verification paths were retired after capability-by-capability replacement, leaving one native release verdict."
+    }
+  ]
+}

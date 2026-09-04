@@ -32,7 +32,7 @@ public sealed class QuartzTransactionalOutboxTests
 
         try
         {
-            Assert.False(await fixture.Scheduler.CheckExists(triggerKey, fixture.CancellationToken)
+            Assert.False(await fixture.Scheduler.Exists(triggerKey, fixture.CancellationToken).AsTask()
                 .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken));
             Assert.Equal(0, scheduleObserver.ObservedCount);
         }
@@ -50,15 +50,15 @@ public sealed class QuartzTransactionalOutboxTests
         Guid? observedScheduleCorrelationId = await scheduleObserver.Completed
             .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
         ITrigger trigger = Assert.IsAssignableFrom<ITrigger>(
-            await fixture.Scheduler.GetTrigger(triggerKey, fixture.CancellationToken)
+            await fixture.Scheduler.GetTrigger(triggerKey, fixture.CancellationToken).AsTask()
                 .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken));
 
         Assert.Null(consumed.Exception);
         Assert.Equal(1, scheduleObserver.ObservedCount);
         Assert.Equal(scheduled.TokenId, observedScheduleCorrelationId);
-        Assert.Equal(ScheduledTime, trigger.GetNextFireTimeUtc()?.UtcDateTime);
+        Assert.Equal(ScheduledTime, trigger.NextFireTimeUtc?.UtcDateTime);
 
-        await fixture.Scheduler.TriggerJob(trigger.JobKey, trigger.JobDataMap, fixture.CancellationToken)
+        await fixture.Scheduler.TriggerJob(trigger.JobKey, trigger.JobDataMap, fixture.CancellationToken).AsTask()
             .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
         ScheduledOutboxPayload delivered = await fixture.Deliveries.Delivered
             .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
@@ -297,7 +297,7 @@ public sealed class QuartzTransactionalOutboxTests
                 });
                 ITestHarness harness = await provider.StartTestHarness().WaitAsync(operationTimeout, cancellationToken);
                 IScheduler scheduler = await provider.GetRequiredService<ISchedulerFactory>()
-                    .GetScheduler(cancellationToken)
+                    .GetScheduler(cancellationToken).AsTask()
                     .WaitAsync(operationTimeout, cancellationToken);
                 return new QuartzOutboxFixture(
                     database,

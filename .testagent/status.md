@@ -2938,3 +2938,21 @@ future cohorts as complete.
   `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V5-PAYLOAD-DIAGNOSTICS-ANALYZERS/`. Package 3/4 is
   ready for local product/architecture freeze. Final API review/reconciliation is next; no remote
   publication occurred.
+
+## A+ final closure status (2026-09-04)
+
+- COMPLETE LOCALLY: PO decision, task contract, and hash-bound Development Slice are complete against baseline
+  `4362f642`; protected `review/**` is unchanged.
+- COMPLETE: exact SDK/runtime/repository-language patch selection is removed and protected by architecture
+  tests; execution used stable SDK 10.0.400 and runtime 10.0.11.
+- COMPLETE: both analyzer projects pass clean counter-builds without their local language-version property;
+  there is no technical exception to preserve.
+- COMPLETE: all 52 direct dependency dispositions are recorded; 15 packages were updated, one folded Quartz
+  hosting package removed, every lock refreshed, and outdated/vulnerable/deprecated audits are zero.
+- COMPLETE: RabbitMQ owns publisher-confirmed persistent mandatory Durable acceptance; real RabbitMQ is
+  27/27, the restored focused owner is 3/3, and all other unproved external providers remain unsupported.
+- COMPLETE: the 11-family static startup matrix, five API layers, 14 preferred package-only journeys, and
+  exact 12-entry heritage disposition are executing gates.
+- FINAL FLOOR: Unit/Architecture 3,490/3,490, zero failures/skips; Shipping and Engineering Release builds
+  zero warnings/errors; nine mutations killed/restored; review gates 3, 13, 17, 22, 24, and 25 PASS locally.
+- EVIDENCE: `evidence/WP-F2-SERVICEBUS-A-PLUS-FINAL-CLOSURE-01/`. No remote publication occurred.

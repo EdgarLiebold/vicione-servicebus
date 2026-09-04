@@ -2,27 +2,20 @@ namespace ViciOne.ServiceBus
 {
     using System;
     using Quartz;
-    using Quartz.Impl;
-    using Quartz.Spi;
 
 
     public class QuartzSchedulerOptions
     {
         /// <summary>
-        /// Used to create the scheduler at bus start, defaults to <see cref="StdSchedulerFactory" />.
+        /// Used to create the scheduler at bus start. The default is an isolated Quartz 4 standalone in-memory scheduler.
         /// </summary>
-        public ISchedulerFactory SchedulerFactory { get; set; } = new StdSchedulerFactory();
+        public ISchedulerFactory SchedulerFactory { get; set; } = QuartzSchedulerBuilder.Create(builder =>
+            builder.UseJobFactory(new QuartzIntegration.ViciOneServiceBusJobFactory())).Build();
 
         /// <summary>
         /// The queue name for the quartz service, defaults to "quartz".
         /// </summary>
         public string QueueName { get; set; } = "quartz";
-
-        /// <summary>
-        /// Only supported when configuring the in-memory scheduler to inject the ViciOneServiceBusJobFactory
-        /// when not using a container.
-        /// </summary>
-        public Func<IBus, TimeProvider, IJobFactory>? CreateJobFactory { get; set; }
 
         /// <summary>
         /// Whether to start the scheduler when bus starts, defaults to true.
@@ -42,7 +35,7 @@ namespace ViciOne.ServiceBus
 
         internal QuartzSchedulerSettings CreateSettings()
         {
-            return new QuartzSchedulerSettings(SchedulerFactory, QueueName, CreateJobFactory, StartScheduler, TimeProvider, TimeZoneResolver);
+            return new QuartzSchedulerSettings(SchedulerFactory, QueueName, StartScheduler, TimeProvider, TimeZoneResolver);
         }
     }
 }

@@ -3008,6 +3008,46 @@ application-bootstrap correlation boundary, and one missing Quartz requirement p
 evidence is under `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-MULTIBUS-ROUTING/`. V5 is next;
 remote publication remains outside this package.
 
+## A+ final closure implementation plan (2026-09-04)
+
+1. Remove the four exact SDK/runtime patch selections and the two proven-unnecessary analyzer language
+   pins. Replace them with the stable .NET 10 channel contract and architecture tests that reject exact patch
+   selection while preserving `net10.0` and MTP v2.
+2. Update every stable-compatible direct package centrally, migrate Quartz to its current compatible 4.x
+   contract, regenerate every tracked lockfile, and produce a complete dependency disposition plus
+   outdated, deprecated, vulnerable, duplicate, floating, and project-local-version gates.
+3. Add a RabbitMQ-owned Durable Sender provider extension and dispatcher. Force persistent + mandatory +
+   publisher-confirm behavior, validate bus/provider ownership at startup, preserve exact retained bytes and
+   metadata, and leave all unproved external providers explicitly unsupported.
+4. Extend RabbitMQ unit and real-infrastructure local-integration tests for provider ownership, exact body,
+   confirm success, unroutable failure, cancellation, restart replay, and absence of an early Delivered
+   transition. Extend Core tests for fail-closed unsupported and duplicate provider compositions.
+5. Complete the public static configuration invariant matrix and causal startup tests for every changed
+   registration/options boundary. Ensure every failure names bus, feature/property/owner, and correction.
+6. Enforce the Application, Advanced SPI, Provider, Operations, and Testing package/namespace layers. Update
+   XML docs, README, provider capability matrix, and package-only journeys so the preferred builder path is
+   first in IntelliSense and requires no raw dispatcher/store knowledge.
+7. Produce a complete MassTransit-heritage source/public-API/package/call-site disposition. Remove or
+   internalize only capability-free historical compatibility and bind every retained mechanism to a current
+   ViciOne owner and test.
+8. Run focused tests during implementation, then locked restore, both Release solutions, all 3,477+
+   Unit/Architecture tests, due real-provider profiles, pack, public API, and all package-only journeys on the
+   current stable .NET 10 SDK. Perform test-gap and assertion-quality audits, execute independent one-cause
+   mutations, restore byte-identical sources, format all changed C# files, and write final gate evidence.
+
+Checklist mapping: step 1 covers REQ-AFC-001; step 2 covers REQ-AFC-002; steps 3-4 cover REQ-AFC-003;
+step 5 covers REQ-AFC-004; step 6 covers REQ-AFC-005; step 7 covers REQ-AFC-006; step 8 covers
+REQ-AFC-007. No item is complete until its named dynamic or static evidence passes; an unavailable real
+provider profile stays an explicit blocker rather than a documentation-only PASS.
+
+Completion: all eight steps pass locally. The final environment is SDK 10.0.400 with runtime 10.0.11.
+Both solutions restore locked and build Release without warnings/errors; complete Unit/Architecture is
+3,490/3,490, real RabbitMQ is 27/27, and all 14 package-only journeys compile from eight fresh packages.
+Nine independent one-cause mutations are killed and restored. Assertion/gap review found and closed an
+initial wrong-but-valid heritage-disposition survivor. Detailed evidence is under
+`evidence/WP-F2-SERVICEBUS-A-PLUS-FINAL-CLOSURE-01/`. Review gates 3, 13, 17, 22, 24, and 25 are closed
+locally; protected `review/**` remains untouched and no remote publication occurred.
+
 ## Reviewer integration — V5 payload admission, sensitive diagnostics, and semantic analyzers (2026-09-03)
 
 1. Bind product baseline `3744d8b3`, architecture assignment `3ad6d74f`, protected V5/V5.1 hashes,

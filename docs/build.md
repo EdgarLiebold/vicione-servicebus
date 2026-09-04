@@ -1,7 +1,8 @@
 # Build and test
 
-This repository requires exactly the .NET SDK pinned by `global.json`. NuGet sources are closed and
-mapped by `NuGet.config`; no machine-level feed or credential participates.
+This repository requires the current stable, supported .NET 10 SDK (`10.0.x`). `global.json`
+selects Microsoft Testing Platform but deliberately does not pin an SDK or runtime patch. NuGet
+sources are closed and mapped by `NuGet.config`; no machine-level feed or credential participates.
 
 ## Build surfaces
 
@@ -57,13 +58,13 @@ Review every resulting lock-file change. Test-only central package versions are 
 
 ## Native xUnit/MTP tests
 
-`global.json` selects Microsoft Testing Platform. With the pinned .NET 10 SDK, run a solution using
+`global.json` selects Microsoft Testing Platform. With a supported .NET 10 SDK, run a solution using
 the native MTP command form without a legacy runner argument separator:
 
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
   -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 2933 \
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 3490 \
   --max-parallel-test-modules 1
 
 VICIONE_TESTS__Profile=LocalIntegration \
@@ -95,7 +96,7 @@ python3 tools/ci/run_broker_category.py --broker rabbitmq --command -- \
   dotnet test --solution ViciOne.ServiceBus.Tests.RabbitMqLocalIntegration.slnx \
     -c Release --no-build --no-restore \
     --results-directory artifacts/test-results/rabbitmq-local-integration \
-    --minimum-expected-tests 17 --max-parallel-test-modules 1
+    --minimum-expected-tests 27 --max-parallel-test-modules 1
 ```
 
 The unfiltered process exit code is the verdict. `tests/testconfig.json` turns skips and warnings

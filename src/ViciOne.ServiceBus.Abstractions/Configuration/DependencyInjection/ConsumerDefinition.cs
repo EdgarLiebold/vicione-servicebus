@@ -1,6 +1,7 @@
 namespace ViciOne.ServiceBus
 {
     using System;
+    using System.ComponentModel;
     using Configuration;
 
 
@@ -9,6 +10,7 @@ namespace ViciOne.ServiceBus
     /// configure the consumer on a receive endpoint.
     /// </summary>
     /// <typeparam name="TConsumer"></typeparam>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class ConsumerDefinition<TConsumer> :
         IConsumerDefinition<TConsumer>
         where TConsumer : class, IConsumer

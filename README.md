@@ -38,7 +38,8 @@ their source, and protects the resulting A+ API with native behavior tests.
 
 ## Build
 
-- .NET SDK 10.0.302 exactly, pinned by `global.json` with `rollForward: disable`
+- the current stable, supported .NET 10 SDK (`10.0.x`); `global.json` selects only Microsoft Testing
+  Platform and deliberately does not pin an SDK or runtime patch
 - exactly one package source, nuget.org, named in `NuGet.config`; the machine's own configuration
   does not participate
 
@@ -59,7 +60,7 @@ directly through the .NET 10 CLI:
 dotnet restore ViciOne.ServiceBus.Tests.Unit.slnx --locked-mode
 dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 2933 \
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 3490 \
   --max-parallel-test-modules 1
 ```
 
@@ -76,6 +77,14 @@ assembly-specific configuration name.
 [docs/build.md](docs/build.md) carries the complete current build, native-test, profile, configuration,
 and migration contract. Bounded work deliberately deferred from the active slice is visible in
 [TODO.md](TODO.md); it is not a second architecture or feature catalog.
+
+## API surface
+
+The preferred application, provider, operations and testing paths — and the intentionally hidden
+advanced extension surface — are defined in [docs/api-surface.md](docs/api-surface.md). The 14
+package-only Developer Journeys are the normative compile-tested examples. Provider capabilities,
+including the exact Durable Sender acceptance boundary, are published in
+[docs/provider-capabilities.json](docs/provider-capabilities.json).
 
 ## Observability
 

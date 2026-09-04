@@ -17,7 +17,8 @@ public sealed class ScheduledMessageJobTests
         IJobExecutionContext context = CreateContext(contextCancellation.Token, refireCount: 0);
         var job = new ScheduledMessageJob(CreateBus(contextCancellation.Token, cancellation), TimeProvider.System);
 
-        OperationCanceledException exception = await Assert.ThrowsAsync<OperationCanceledException>(() => job.Execute(context));
+        OperationCanceledException exception = await Assert.ThrowsAsync<OperationCanceledException>(() =>
+            job.Execute(context, contextCancellation.Token).AsTask());
 
         Assert.Same(cancellation, exception);
         Assert.Equal(contextCancellation.Token, exception.CancellationToken);
@@ -33,7 +34,8 @@ public sealed class ScheduledMessageJobTests
         IJobExecutionContext context = CreateContext(contextCancellation.Token, refireCount: 0);
         var job = new ScheduledMessageJob(CreateBus(contextCancellation.Token, cancellation), TimeProvider.System);
 
-        JobExecutionException exception = await Assert.ThrowsAsync<JobExecutionException>(() => job.Execute(context));
+        JobExecutionException exception = await Assert.ThrowsAsync<JobExecutionException>(() =>
+            job.Execute(context, contextCancellation.Token).AsTask());
 
         Assert.Same(cancellation, exception.InnerException);
         Assert.True(exception.RefireImmediately);

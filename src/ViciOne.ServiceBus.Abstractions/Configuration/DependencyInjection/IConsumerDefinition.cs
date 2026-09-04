@@ -1,8 +1,10 @@
 namespace ViciOne.ServiceBus
 {
     using System;
+    using System.ComponentModel;
 
 
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public interface IConsumerDefinition :
         IDefinition
     {
@@ -22,6 +24,7 @@ namespace ViciOne.ServiceBus
     }
 
 
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public interface IConsumerDefinition<TConsumer> :
         IConsumerDefinition
         where TConsumer : class, IConsumer

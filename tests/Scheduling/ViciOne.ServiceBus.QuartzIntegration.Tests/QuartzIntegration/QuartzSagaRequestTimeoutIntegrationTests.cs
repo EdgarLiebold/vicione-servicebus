@@ -26,7 +26,7 @@ public sealed class QuartzSagaRequestTimeoutIntegrationTests
         Assert.Equal(fixture.CorrelationId, outcome.CorrelationId);
         Assert.Null(saga.ValidationRequestId);
         Assert.Equal(fixture.StateMachine.Completed.Name, saga.CurrentState.Name);
-        Assert.False(await fixture.Scheduler.CheckExists(
+        Assert.False(await fixture.Scheduler.Exists(
             new TriggerKey(scheduled.TokenId.ToString("N")),
             TestContext.Current.CancellationToken));
     }

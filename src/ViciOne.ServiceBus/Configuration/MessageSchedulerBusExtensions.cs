@@ -2,10 +2,16 @@
 namespace ViciOne.ServiceBus
 {
     using System;
+    using System.ComponentModel;
     using System.Threading.Tasks;
     using Scheduling;
 
 
+    /// <summary>
+    /// Advanced scheduler construction hooks. Application code should register a scheduler with the
+    /// service-bus configurator and inject <see cref="IMessageScheduler"/>.
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static class MessageSchedulerBusExtensions
     {
         /// <summary>

@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Xml.Linq;
 using ViciOne.ServiceBus.Architecture.Tests.Build;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -8,12 +9,6 @@ namespace ViciOne.ServiceBus.Architecture.Tests.Repository;
 /// <summary>Repository-wide architecture rules derived from the actual project and solution graph.</summary>
 public sealed class RepositoryGraphTests
 {
-    private static readonly HashSet<string> AllowedLanguageVersionPins =
-    [
-        "src/ViciOne.ServiceBus.Analyzers/ViciOne.ServiceBus.Analyzers.csproj",
-        "src/ViciOne.ServiceBus.Analyzers.CodeFixes/ViciOne.ServiceBus.Analyzers.CodeFixes.csproj",
-    ];
-
     [Fact]
     public void EveryProductProject_StaysIndependentOfTheNativeTestTree()
     {
@@ -87,7 +82,7 @@ public sealed class RepositoryGraphTests
     }
 
     [Fact]
-    public void LanguageVersion_IsPinnedOnlyForTheTwoRoslynComponents()
+    public void RepositoryDeclaresNoExactLanguageVersionPin()
     {
         var buildFiles = Directory.EnumerateFiles(RepositoryLayout.Root, "*", SearchOption.AllDirectories)
             .Where(path =>
@@ -98,13 +93,33 @@ public sealed class RepositoryGraphTests
                 .StartsWith("artifacts/", StringComparison.Ordinal));
 
         var actualPins = buildFiles
-            .Where(path => XDocument.Load(path).Descendants("LangVersion").Any())
-            .Select(RepositoryLayout.RelativeToRoot)
-            .ToHashSet(StringComparer.Ordinal);
+            .SelectMany(path => XDocument.Load(path).Descendants("LangVersion")
+                .Where(element => !string.Equals(element.Value.Trim(), "latest", StringComparison.OrdinalIgnoreCase))
+                .Select(element => $"{RepositoryLayout.RelativeToRoot(path)}={element.Value.Trim()}"))
+            .ToArray();
 
+        Assert.Empty(actualPins);
+    }
+
+    [Fact]
+    public void RepositorySelectsTheStableDotNetTenChannelWithoutAnSdkPatchPin()
+    {
+        using var globalJson = JsonDocument.Parse(
+            File.ReadAllText(Path.Combine(RepositoryLayout.Root, "global.json")));
+
+        Assert.False(globalJson.RootElement.TryGetProperty("sdk", out _));
         Assert.Equal(
-            AllowedLanguageVersionPins.OrderBy(path => path, StringComparer.Ordinal),
-            actualPins.OrderBy(path => path, StringComparer.Ordinal));
+            "Microsoft.Testing.Platform",
+            globalJson.RootElement.GetProperty("test").GetProperty("runner").GetString());
+
+        string workflow = File.ReadAllText(Path.Combine(
+            RepositoryLayout.Root,
+            ".github",
+            "workflows",
+            "native-tests.yml"));
+
+        Assert.Contains("DOTNET_VERSION: '10.0.x'", workflow, StringComparison.Ordinal);
+        Assert.DoesNotMatch("""DOTNET_VERSION:\s*['"]?10\.0\.\d+""", workflow);
     }
 
     [Fact]

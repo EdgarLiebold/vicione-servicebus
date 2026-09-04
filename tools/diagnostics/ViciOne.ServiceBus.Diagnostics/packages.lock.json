@@ -90,7 +90,7 @@
       "ViciOne.ServiceBus.RabbitMQ": {
         "type": "Project",
         "dependencies": {
-          "RabbitMQ.Client": "[7.2.1, )",
+          "RabbitMQ.Client": "[7.2.2, )",
           "ViciOne.ServiceBus": "[1.0.0, )"
         }
       },
@@ -99,7 +99,7 @@
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection": "[10.0.11, )",
           "Microsoft.Extensions.Hosting.Abstractions": "[10.0.11, )",
-          "RabbitMQ.Client": "[7.2.1, )",
+          "RabbitMQ.Client": "[7.2.2, )",
           "ViciOne.ServiceBus.RabbitMQ": "[1.0.0, )",
           "ViciOne.ServiceBus.Testing": "[1.0.0, )"
         }
@@ -185,9 +185,9 @@
       },
       "RabbitMQ.Client": {
         "type": "CentralTransitive",
-        "requested": "[7.2.1, )",
-        "resolved": "7.2.1",
-        "contentHash": "YKXEfg9fVQiTKgZlvIhAfPSFaamEgi8DsQmisCH0IAsU4FYLrtoguDrDj6JtJVGUt40QPnBLRH6fTQcAC4qsOg==",
+        "requested": "[7.2.2, )",
+        "resolved": "7.2.2",
+        "contentHash": "k4b6RnTXpLbsF96V93ooNYxgPMnoA2tEm24B6AXNJr1mG8wwNYdA1XJtgU66L5xqeGyveS7SJriRzlX3cbqQNA==",
         "dependencies": {
           "System.Threading.RateLimiting": "8.0.0"
         }

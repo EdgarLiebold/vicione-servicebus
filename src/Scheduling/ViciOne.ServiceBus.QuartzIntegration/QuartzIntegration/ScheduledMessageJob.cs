@@ -4,6 +4,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Mime;
+    using System.Threading;
     using System.Threading.Tasks;
     using Context;
     using Quartz;
@@ -13,8 +14,18 @@ namespace ViciOne.ServiceBus.QuartzIntegration
     public class ScheduledMessageJob :
         IJob
     {
-        readonly IBus _bus;
-        readonly TimeProvider _timeProvider;
+        internal const string BusContextKey = "ViciOne.ServiceBus.QuartzIntegration.Bus";
+        internal const string TimeProviderContextKey = "ViciOne.ServiceBus.QuartzIntegration.TimeProvider";
+
+        readonly IBus? _bus;
+        readonly TimeProvider? _timeProvider;
+
+        /// <summary>
+        /// Creates a job for Quartz standalone schedulers. The bus and time provider are resolved from the scheduler context.
+        /// </summary>
+        public ScheduledMessageJob()
+        {
+        }
 
         public ScheduledMessageJob(IBus bus, TimeProvider timeProvider)
         {
@@ -22,9 +33,11 @@ namespace ViciOne.ServiceBus.QuartzIntegration
             _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         }
 
-        public async Task Execute(IJobExecutionContext context)
+        public async ValueTask Execute(IJobExecutionContext context, CancellationToken cancellationToken = default)
         {
             ArgumentNullException.ThrowIfNull(context);
+            IBus bus = _bus ?? GetSchedulerContextValue<IBus>(context, BusContextKey);
+            TimeProvider timeProvider = _timeProvider ?? GetSchedulerContextValue<TimeProvider>(context, TimeProviderContextKey);
             var jobData = context.MergedJobDataMap;
             var messageContext = new JobDataMessageContext(context, ServiceBusMetadataJson.ObjectDeserializer);
 
@@ -44,15 +57,15 @@ namespace ViciOne.ServiceBus.QuartzIntegration
                     body,
                     destinationAddress,
                     supportedMessageTypes,
-                    _timeProvider);
+                    timeProvider);
 
-                var endpoint = await _bus.GetSendEndpoint(destinationAddress).ConfigureAwait(false);
+                var endpoint = await bus.GetSendEndpoint(destinationAddress).ConfigureAwait(false);
 
-                await endpoint.Send(new SerializedMessageBody(), pipe, context.CancellationToken).ConfigureAwait(false);
+                await endpoint.Send(new SerializedMessageBody(), pipe, cancellationToken).ConfigureAwait(false);
 
-                LogContext.Debug?.Log("Schedule Executed: {Key} {Schedule}", context.Trigger.Key, context.Trigger.GetNextFireTimeUtc());
+                LogContext.Debug?.Log("Schedule Executed: {Key} {Schedule}", context.Trigger.Key, context.Trigger.NextFireTimeUtc);
             }
-            catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
             {
                 throw;
             }
@@ -60,8 +73,17 @@ namespace ViciOne.ServiceBus.QuartzIntegration
             {
                 LogContext.Error?.Log(ex, "Failed to send scheduled message: {MessageType} {DestinationAddress}", supportedMessageTypes, destinationAddress);
 
-                throw new JobExecutionException(ex, context.RefireCount < 5);
+                throw new JobExecutionException(ex) { RefireImmediately = context.RefireCount < 5 };
             }
+        }
+
+        static T GetSchedulerContextValue<T>(IJobExecutionContext context, string key)
+        {
+            if (context.Scheduler.Context.TryGetValue(key, out var value) && value is T typed)
+                return typed;
+
+            throw new InvalidOperationException(
+                $"Quartz scheduler context value '{key}' is missing. Configure the scheduler through UseInMemoryScheduler or register {nameof(ScheduledMessageJob)} with dependency injection.");
         }
 
 

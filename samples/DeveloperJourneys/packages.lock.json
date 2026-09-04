@@ -30,7 +30,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "6oRd7pc+5EaTbRzr6RvCRTi9DdisivFqMLcN8j9xy3AgajM76v+KIIbh/EGe3PKK9Zdq2e01tdEkcQ9iZkLdGA==",
+        "contentHash": "JIMWYCZ1QRbwDqveWUhcQkM4Ms/ay4XxGBuHEehvMCu8T2G1KKoEFD8kzARvAFTLq2pj/VBwW6lKg2Z/7Et2Yg==",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
           "Microsoft.Extensions.Diagnostics": "10.0.11",
@@ -45,10 +45,10 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "+OglPjhSM7/kMBLE3xh8joFrau0lv7eKjtyM0UA17pLnAprFhrWbu4R/FIlojSma36SCSb4dPJ1eNSUeFNanqw==",
+        "contentHash": "CinuI1v7R1WO/zfBIBeF4qYPW9ZRl0Owp9EXG2Z+Qpymsh4ggcwcyyOZuyhesuxwHD5Y3B89jgxHsC0bjykaLA==",
         "dependencies": {
           "Azure.Identity": "1.21.0",
-          "Azure.Messaging.ServiceBus": "7.20.1",
+          "Azure.Messaging.ServiceBus": "7.20.2",
           "ViciOne.ServiceBus": "1.0.0"
         }
       },
@@ -56,7 +56,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "EY6awAVCb6vBAO83cludYoTrRVcTQOqvLqm/wENVbAndHRg3FW7rO1Y14z/1A4vvMvhmQd5Ku9nO4xm4FKPfWQ==",
+        "contentHash": "Oqk+ODaHXVEvU+T8Ymre+dhqq+eqzRZM7HxLaMzo7FsNwm9gs70qoW/Z26kF1fMhZ8Mb5xeSaHxuNK0/RGooAQ==",
         "dependencies": {
           "Microsoft.EntityFrameworkCore.Relational": "10.0.11",
           "Microsoft.Extensions.Caching.Memory": "10.0.11",
@@ -67,7 +67,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "G7ag/4dgxMs9Q6j+/9Lr9+thI06rkYydAC5k2ZWJC8KQCA6F0IbyeHM60DR57IlephsVkNsz65urhYVnU4J1sg==",
+        "contentHash": "ZJDhSj3yNNnzAU5LSN/ulMV6YYZXhQZRon3HzZuI4QkNsktfI/pcrjegLjBCa8Ik5g0EdFIhL/GUBBZ+oscnEw==",
         "dependencies": {
           "MessagePack": "3.1.8",
           "ViciOne.ServiceBus": "1.0.0",
@@ -78,10 +78,9 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "OetDWYGEfFcCIX76rKzdjF8nDJc99I1uq+GpKsH1FgRnjQMfL9YR2Zwwqc6gTkrjOd9hIVMr339fhMRJrRgZpw==",
+        "contentHash": "MECRht/pSvcuaeJiB5Me4/goG17vwfp1Mhq90zyzJx8CjvxvzSiuhrUBYueEx7Ntgc/u1Y1FeES6HlzFeDJXRw==",
         "dependencies": {
-          "Quartz": "3.19.1",
-          "Quartz.Extensions.Hosting": "3.19.1",
+          "Quartz": "4.0.0",
           "ViciOne.ServiceBus": "1.0.0"
         }
       },
@@ -89,9 +88,9 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "yr9JernWIRMhvPW0UPiOWLkm21XlBNecTvtw2j66Q3blQb96BcqRBHxxE8FABk7fDnzq/zxQJQrHgoomaW27Fg==",
+        "contentHash": "E/977jBCB3eNevI4qjdlSLoYLasLU2axa/nlr3vMhTHTM6bZGGfdJr2YcyspNV7vV2tqGo9ZUO9LweKr6gALgg==",
         "dependencies": {
-          "RabbitMQ.Client": "7.2.1",
+          "RabbitMQ.Client": "7.2.2",
           "ViciOne.ServiceBus": "1.0.0"
         }
       },
@@ -99,7 +98,7 @@
         "type": "Direct",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "f1cM1dBoDOwl7Qwty9wL1QGsiB9aB/as8N1f91KNxhb/f7psVh8OEUky9LYscQOT9n3+qj/cO5Nfco3r3Ik5BA==",
+        "contentHash": "IUj/Z8h61z0OgpSD8GO+XRcLbG7eZ8cWGi3HKBjitkOJF8s3NxtY0TU5dMIKzxDSOGau275lNbs0wkFzDzqsmQ==",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection": "10.0.11",
           "Microsoft.Extensions.Hosting.Abstractions": "10.0.11",
@@ -109,16 +108,16 @@
       },
       "Azure.Core": {
         "type": "Transitive",
-        "resolved": "1.53.0",
-        "contentHash": "x9c/toFMOtRrlTdFuE7rlGCVAduQzWVfKmLz5juj41zJAXEhYD5hluiUyyAEzJ6OxpBnKtiaBztzwpZITAVjtg==",
+        "resolved": "1.60.0",
+        "contentHash": "qCa5DLAq0w14aTl9/bvMZNA/QxPzYj1a4zakrpeudxWd4D4YliRHRfccD3yFECeHkMkvQjMmyWLggb8bzhDVKA==",
         "dependencies": {
-          "Microsoft.Bcl.AsyncInterfaces": "10.0.3",
-          "Microsoft.Extensions.Configuration.Abstractions": "10.0.3",
-          "Microsoft.Extensions.Hosting.Abstractions": "10.0.3",
-          "Microsoft.Identity.Client": "4.83.1",
-          "Microsoft.Identity.Client.Extensions.Msal": "4.83.1",
-          "System.ClientModel": "1.10.0",
-          "System.Memory.Data": "10.0.3"
+          "Microsoft.Bcl.AsyncInterfaces": "10.0.9",
+          "Microsoft.Extensions.Configuration.Abstractions": "10.0.9",
+          "Microsoft.Extensions.Hosting.Abstractions": "10.0.9",
+          "Microsoft.Identity.Client": "4.84.2",
+          "Microsoft.Identity.Client.Extensions.Msal": "4.84.2",
+          "System.ClientModel": "1.14.0",
+          "System.Memory.Data": "10.0.9"
         }
       },
       "Azure.Core.Amqp": {
@@ -140,10 +139,10 @@
       },
       "Azure.Messaging.ServiceBus": {
         "type": "Transitive",
-        "resolved": "7.20.1",
-        "contentHash": "DxCkedWPQuiXrIyFcriOhsQcZmDZW+j9d55Ev4nnK3yjMUFjlVe4Hj37fuZTJlNhC3P+7EumqBTt33R6DfOxGA==",
+        "resolved": "7.20.2",
+        "contentHash": "mwr5c3Qs7FWUtwzlLOtVixYDpUuA+Ln7sNirljTHZR8kDhzdr2grlqx0RRBvGV+IDCRHt1jIRb+hi0MUzjeVmw==",
         "dependencies": {
-          "Azure.Core": "1.46.2",
+          "Azure.Core": "1.60.0",
           "Azure.Core.Amqp": "1.3.1",
           "Microsoft.Azure.Amqp": "2.7.0"
         }
@@ -175,8 +174,8 @@
       },
       "Microsoft.Bcl.AsyncInterfaces": {
         "type": "Transitive",
-        "resolved": "10.0.3",
-        "contentHash": "TV62UsrJZPX6gbt3c4WrtXh7bmaDIcMqf9uft1cc4L6gJXOU07hDGEh+bFQh/L2Az0R1WVOkiT66lFqS6G2NmA=="
+        "resolved": "10.0.9",
+        "contentHash": "Aq7M8lG6BrHeatqKqncVm9m55ec34k6nnfPRLe/PvGg+b/pAsRM2ejofeKmCLjTXMa+5NGXm382f8CG/D5WDow=="
       },
       "Microsoft.Data.Sqlite.Core": {
         "type": "Transitive",
@@ -389,18 +388,18 @@
       },
       "Microsoft.Identity.Client": {
         "type": "Transitive",
-        "resolved": "4.83.1",
-        "contentHash": "jOLIrZ3cynoqHLLO1cXplFFabrhrMEYs/EuKHvmCyrOm1axqiVFT6nCSnHxk7w5+d2BeQfCdM12Yf/0X7OeS1g==",
+        "resolved": "4.84.2",
+        "contentHash": "Va9FjmABSgj/lcUfHH0pBNQkmS7SNyepz2ERV7Yynp6QgEYpFdSqR6Vzy1WWipN8GS5pBHuXoZbqaDWuARCrHQ==",
         "dependencies": {
           "Microsoft.IdentityModel.Abstractions": "8.14.0"
         }
       },
       "Microsoft.Identity.Client.Extensions.Msal": {
         "type": "Transitive",
-        "resolved": "4.83.1",
-        "contentHash": "I3k4J4Hj4KbLEFanjeUzzDOVecukETaTgEkJ7h2pP/Yazs6SLp6TVUTo/Eo+ptPXMwvc+iX7rBFtMSUrA7R+Mg==",
+        "resolved": "4.84.2",
+        "contentHash": "+D98LaU3dOu/Nzs6kgbBJapMvH7iwYcAeC99XwSkpmEadsPv6rozecOl9P6m4A3RfpOuPt9e6J6TwwUUp3+M4w==",
         "dependencies": {
-          "Microsoft.Identity.Client": "4.83.1",
+          "Microsoft.Identity.Client": "4.84.2",
           "System.Security.Cryptography.ProtectedData": "4.5.0"
         }
       },
@@ -416,35 +415,21 @@
       },
       "Quartz": {
         "type": "Transitive",
-        "resolved": "3.19.1",
-        "contentHash": "u+kAlmReZLLpKRG9TcPt8gP0H5e8Nff11fh9tz52e4B+GtXm9cLBOe/bfGcDs4IQftmEcxakpfTzOlsZdv9ekg==",
+        "resolved": "4.0.0",
+        "contentHash": "YzIzZMSWp7KJ/yRkQAtKF44FefSiLXAdOCvVKks7tsjIBJYGxbZzRDBx0przMOzKFFPDkI4mhB7AJQRR3o6Qhg==",
         "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "2.1.1"
-        }
-      },
-      "Quartz.Extensions.DependencyInjection": {
-        "type": "Transitive",
-        "resolved": "3.19.1",
-        "contentHash": "6UKrPvWQBgOslVnhD6OgFBjBA3kO7kUc4bM2EXG8b+vSgB/EHqVP8cLOb9RePZQJb5OJeNunN9dNEmGLpg5wuw==",
-        "dependencies": {
-          "Microsoft.Extensions.Configuration.Abstractions": "10.0.0",
-          "Microsoft.Extensions.Options": "10.0.0",
-          "Quartz": "3.19.1"
-        }
-      },
-      "Quartz.Extensions.Hosting": {
-        "type": "Transitive",
-        "resolved": "3.19.1",
-        "contentHash": "gp6EUrreKcU/Az6b2bZNeebxJWMrmlLItXRmR9nX9zUSmMzQTIDWR7NTm3SsdmsoDBbrIU9vhkLD3uv1y5mMzA==",
-        "dependencies": {
-          "Microsoft.Extensions.Hosting.Abstractions": "10.0.0",
-          "Quartz.Extensions.DependencyInjection": "3.19.1"
+          "Microsoft.Extensions.Configuration.Binder": "10.0.11",
+          "Microsoft.Extensions.DependencyInjection": "10.0.11",
+          "Microsoft.Extensions.Diagnostics.HealthChecks": "10.0.11",
+          "Microsoft.Extensions.Hosting.Abstractions": "10.0.11",
+          "Microsoft.Extensions.Logging": "10.0.11",
+          "Microsoft.Extensions.Options.ConfigurationExtensions": "10.0.11"
         }
       },
       "RabbitMQ.Client": {
         "type": "Transitive",
-        "resolved": "7.2.1",
-        "contentHash": "YKXEfg9fVQiTKgZlvIhAfPSFaamEgi8DsQmisCH0IAsU4FYLrtoguDrDj6JtJVGUt40QPnBLRH6fTQcAC4qsOg==",
+        "resolved": "7.2.2",
+        "contentHash": "k4b6RnTXpLbsF96V93ooNYxgPMnoA2tEm24B6AXNJr1mG8wwNYdA1XJtgU66L5xqeGyveS7SJriRzlX3cbqQNA==",
         "dependencies": {
           "System.Threading.RateLimiting": "8.0.0"
         }
@@ -478,8 +463,8 @@
       },
       "System.ClientModel": {
         "type": "Transitive",
-        "resolved": "1.10.0",
-        "contentHash": "lBEWs54F5Y5pZ9hC+8z4S/X76957ex+DPk7WecRHlbIHtrPfbRMMlOgI3iDn4Jpb3bSxvBnKaaHoD59auFjlBA==",
+        "resolved": "1.14.0",
+        "contentHash": "yhIJHDW3Hh5kcvhHv3ww1T8qvya06Nlwo/SR/rke4/fHXtyKiqQV/9b/VDhnVI7QUcMnpfvh4pIEFhNsTDLeKQ==",
         "dependencies": {
           "Microsoft.Extensions.Configuration.Abstractions": "10.0.3",
           "Microsoft.Extensions.Hosting.Abstractions": "10.0.3",
@@ -489,8 +474,8 @@
       },
       "System.Memory.Data": {
         "type": "Transitive",
-        "resolved": "10.0.3",
-        "contentHash": "MaGhRfGunmrj/nHjtsi9XkhlYJ/ERGWrbA+BiSKNtGnAjc9XlG5EhAvak6VRcX5LYzPF6pBO8nJ613dTgzabig=="
+        "resolved": "10.0.9",
+        "contentHash": "YweovHiLUoEdbr2Xv8eRqCSkTu1vMms4a6xBHaQiMSFVy32PL+hXv6Vhol2NWOmLHjaVgTyhJ3R52U6JxS6w3Q=="
       },
       "System.Security.Cryptography.ProtectedData": {
         "type": "Transitive",
@@ -505,7 +490,7 @@
       "ViciOne.ServiceBus.Abstractions": {
         "type": "Transitive",
         "resolved": "1.0.0",
-        "contentHash": "mUIBWf4hRFCVjWf1gVS69Ybsp8ZFcCnDoH3EHX6NzTQ4YQq5M9Fr7owrLPaa/9JjbadoIht7Byhcv1vxQijopQ=="
+        "contentHash": "aX8Y3yOsArNG42PXEgUO2xCKuiz7JzceDLG2ltlRNZ0gETTVSyTuVjnKGhyKnkL2C2lOA9SNO+UCyZfDUT1DSA=="
       }
     }
   }

@@ -16,6 +16,8 @@
       "publish": "supported",
       "request": "supported",
       "durableSendDispatch": "process-local-consumer-completion",
+      "durableSendAcceptanceBoundary": "consumer-completion-before-retained-envelope-deletion",
+      "durableSendAcceptanceEnvironment": "in-process-deterministic-test",
       "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryDurableSendIntegrationTests.cs"
     },
     {
@@ -28,6 +30,8 @@
       "publish": "supported",
       "request": "supported",
       "durableSendDispatch": "unsupported",
+      "durableSendAcceptanceBoundary": "not-applicable",
+      "durableSendAcceptanceEnvironment": "not-applicable",
       "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs"
     },
     {
@@ -40,6 +44,8 @@
       "publish": "supported",
       "request": "supported",
       "durableSendDispatch": "unsupported",
+      "durableSendAcceptanceBoundary": "not-applicable",
+      "durableSendAcceptanceEnvironment": "not-applicable",
       "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs"
     },
     {
@@ -52,6 +58,8 @@
       "publish": "supported",
       "request": "supported",
       "durableSendDispatch": "unsupported",
+      "durableSendAcceptanceBoundary": "not-applicable",
+      "durableSendAcceptanceEnvironment": "not-applicable",
       "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs"
     },
     {
@@ -64,6 +72,8 @@
       "publish": "not-applicable",
       "request": "not-applicable",
       "durableSendDispatch": "unsupported",
+      "durableSendAcceptanceBoundary": "not-applicable",
+      "durableSendAcceptanceEnvironment": "not-applicable",
       "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs"
     },
     {
@@ -75,8 +85,10 @@
       "send": "supported",
       "publish": "supported",
       "request": "supported",
-      "durableSendDispatch": "unsupported",
-      "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs"
+      "durableSendDispatch": "publisher-confirmed-persistent-mandatory",
+      "durableSendAcceptanceBoundary": "publisher-confirm-after-route-admission",
+      "durableSendAcceptanceEnvironment": "real-rabbitmq-container",
+      "durableSendEvidence": "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/RabbitMqDurableSendAcceptanceTests.cs"
     },
     {
       "id": "postgresql-sql-transport",
@@ -88,6 +100,8 @@
       "publish": "supported",
       "request": "supported",
       "durableSendDispatch": "unsupported",
+      "durableSendAcceptanceBoundary": "not-applicable",
+      "durableSendAcceptanceEnvironment": "not-applicable",
       "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs"
     },
     {
@@ -100,6 +114,8 @@
       "publish": "supported",
       "request": "supported",
       "durableSendDispatch": "unsupported",
+      "durableSendAcceptanceBoundary": "not-applicable",
+      "durableSendAcceptanceEnvironment": "not-applicable",
       "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs"
     },
     {
@@ -112,6 +128,8 @@
       "publish": "not-applicable",
       "request": "not-applicable",
       "durableSendDispatch": "unsupported",
+      "durableSendAcceptanceBoundary": "not-applicable",
+      "durableSendAcceptanceEnvironment": "not-applicable",
       "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs"
     }
   ],

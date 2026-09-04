@@ -69,12 +69,12 @@ public sealed class QuartzContainerIntegrationTests
             await scheduledCommand.Completed.WaitAsync(timeout, cancellationToken);
 
             IScheduler quartz = await provider.GetRequiredService<ISchedulerFactory>()
-                .GetScheduler(cancellationToken)
+                .GetScheduler(cancellationToken).AsTask()
                 .WaitAsync(timeout, cancellationToken);
             TriggerKey triggerKey = new(scheduled.TokenId.ToString("N"));
             ITrigger trigger = Assert.IsAssignableFrom<ITrigger>(
-                await quartz.GetTrigger(triggerKey, cancellationToken).WaitAsync(timeout, cancellationToken));
-            await quartz.TriggerJob(trigger.JobKey, trigger.JobDataMap, cancellationToken)
+                await quartz.GetTrigger(triggerKey, cancellationToken).AsTask().WaitAsync(timeout, cancellationToken));
+            await quartz.TriggerJob(trigger.JobKey, trigger.JobDataMap, cancellationToken).AsTask()
                 .WaitAsync(timeout, cancellationToken);
 
             ContainerDelivery received = await delivered.Delivered

@@ -226,7 +226,8 @@ namespace ViciOne.ServiceBus
             collection.AddHealthChecks();
             collection.TryAddEnumerable(ServiceDescriptor.Singleton<IConfigureOptions<HealthCheckServiceOptions>, ConfigureBusHealthCheckServiceOptions>());
 
-            collection.AddOptions<ViciOneServiceBusHostOptions>();
+            collection.AddOptions<ViciOneServiceBusHostOptions>()
+                .ValidateOnStart();
             collection.TryAddSingleton<IValidateOptions<ViciOneServiceBusHostOptions>, ValidateViciOneServiceBusHostOptions>();
             collection.TryAddEnumerable(ServiceDescriptor.Singleton<IHostedService, ViciOneServiceBusHostedService>());
         }

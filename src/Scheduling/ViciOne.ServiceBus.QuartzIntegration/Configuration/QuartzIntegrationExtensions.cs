@@ -4,8 +4,6 @@ namespace ViciOne.ServiceBus
     using System.Collections.Specialized;
     using Microsoft.Extensions.DependencyInjection;
     using Quartz;
-    using Quartz.Impl;
-    using Quartz.Spi;
     using QuartzIntegration;
     using Scheduling;
     using Util;
@@ -19,14 +17,14 @@ namespace ViciOne.ServiceBus
             if (configurator == null)
                 throw new ArgumentNullException(nameof(configurator));
 
-            var schedulerFactory = new StdSchedulerFactory(GetDefaultConfiguration());
+            var schedulerFactory = CreateSchedulerFactory();
 
             return configurator.UseInMemoryScheduler(schedulerFactory, queueName);
         }
 
         public static Uri UseInMemoryScheduler(this IBusFactoryConfigurator configurator, out ISchedulerFactory schedulerFactory, string queueName = "quartz")
         {
-            schedulerFactory = new StdSchedulerFactory(GetDefaultConfiguration());
+            schedulerFactory = CreateSchedulerFactory();
 
             return UseInMemoryScheduler(configurator, schedulerFactory, queueName);
         }
@@ -37,7 +35,6 @@ namespace ViciOne.ServiceBus
             {
                 options.SchedulerFactory = schedulerFactory;
 
-                options.CreateJobFactory = static (bus, timeProvider) => new ViciOneServiceBusJobFactory(bus, timeProvider);
                 options.QueueName = queueName;
             });
         }
@@ -51,6 +48,14 @@ namespace ViciOne.ServiceBus
             };
 
             return configuration;
+        }
+
+        static ISchedulerFactory CreateSchedulerFactory()
+        {
+            return QuartzSchedulerBuilder.Create(builder =>
+                    builder.UseJobFactory(new ViciOneServiceBusJobFactory()))
+                .UseProperties(GetDefaultConfiguration())
+                .Build();
         }
 
         public static Uri UseInMemoryScheduler(this IBusFactoryConfigurator configurator, Action<QuartzSchedulerOptions>? configure)

@@ -57,7 +57,7 @@ public sealed class QuartzSagaSchedulingIntegrationTests
         await firstSchedule.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
         Guid firstToken = Assert.IsType<Guid>(repository[correlationId].Instance.ScheduleTokenId);
         TriggerKey firstTrigger = new(firstToken.ToString("N"));
-        Assert.True(await fixture.Scheduler.CheckExists(firstTrigger, TestContext.Current.CancellationToken));
+        Assert.True(await fixture.Scheduler.Exists(firstTrigger, TestContext.Current.CancellationToken));
 
         await input.Send(new RefreshSchedule(correlationId), TestContext.Current.CancellationToken);
         await refreshes.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
@@ -67,15 +67,15 @@ public sealed class QuartzSagaSchedulingIntegrationTests
         TriggerKey replacementTrigger = new(replacementToken.ToString("N"));
 
         Assert.NotEqual(firstToken, replacementToken);
-        Assert.False(await fixture.Scheduler.CheckExists(firstTrigger, TestContext.Current.CancellationToken));
-        Assert.True(await fixture.Scheduler.CheckExists(replacementTrigger, TestContext.Current.CancellationToken));
+        Assert.False(await fixture.Scheduler.Exists(firstTrigger, TestContext.Current.CancellationToken));
+        Assert.True(await fixture.Scheduler.Exists(replacementTrigger, TestContext.Current.CancellationToken));
 
         await input.Send(new StopReschedule(correlationId), TestContext.Current.CancellationToken);
         RescheduleStopped final = await stopped.Task.WaitAsync(timeout, TestContext.Current.CancellationToken);
         await canceled.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
 
         Assert.Equal(correlationId, final.CorrelationId);
-        Assert.False(await fixture.Scheduler.CheckExists(replacementTrigger, TestContext.Current.CancellationToken));
+        Assert.False(await fixture.Scheduler.Exists(replacementTrigger, TestContext.Current.CancellationToken));
         Assert.Equal(0, repository.Count);
     }
 
@@ -185,7 +185,7 @@ public sealed class QuartzSagaSchedulingIntegrationTests
 
         Assert.Equal(correlationId, first.CorrelationId);
         Assert.Equal(1, repository.Count);
-        Assert.True(await fixture.Scheduler.CheckExists(secondTrigger.Key, TestContext.Current.CancellationToken));
+        Assert.True(await fixture.Scheduler.Exists(secondTrigger.Key, TestContext.Current.CancellationToken));
 
         await fixture.Scheduler.TriggerJob(secondTrigger.JobKey, secondTrigger.JobDataMap, TestContext.Current.CancellationToken);
         SecondScheduleFired second = await secondFired.Task.WaitAsync(timeout, TestContext.Current.CancellationToken);

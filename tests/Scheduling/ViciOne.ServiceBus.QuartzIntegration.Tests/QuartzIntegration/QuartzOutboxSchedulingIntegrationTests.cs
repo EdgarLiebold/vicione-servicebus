@@ -65,7 +65,7 @@ public sealed class QuartzOutboxSchedulingIntegrationTests
             await cancellationCommands.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
 
         var triggerKey = new TriggerKey(handle.TokenId.ToString("N"));
-        bool triggerExists = await fixture.Scheduler.CheckExists(triggerKey, TestContext.Current.CancellationToken)
+        bool triggerExists = await fixture.Scheduler.Exists(triggerKey, TestContext.Current.CancellationToken).AsTask()
             .WaitAsync(timeout, TestContext.Current.CancellationToken);
 
         Assert.Equal(1, scheduledCommands.ObservedCount);

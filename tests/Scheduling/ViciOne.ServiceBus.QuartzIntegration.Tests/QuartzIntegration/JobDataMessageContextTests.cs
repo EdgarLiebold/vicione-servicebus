@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Quartz;
 using Quartz.Impl;
-using Quartz.Spi;
+using Quartz.Extensibility;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -102,21 +102,23 @@ public sealed class JobDataMessageContextTests
             .UsingJobData(data)
             .StartAt(ScheduledTime)
             .Build();
-        var bundle = new TriggerFiredBundle(
-            job,
-            trigger,
-            null,
-            false,
-            FireTime,
-            ScheduledTime,
-            PreviousTime,
-            NextTime);
+        var bundle = new TriggerFiredBundle
+        {
+            JobDetail = job,
+            Trigger = trigger,
+            Calendar = null,
+            Recovering = false,
+            FireTimeUtc = FireTime,
+            ScheduledFireTimeUtc = ScheduledTime,
+            PreviousFireTimeUtc = PreviousTime,
+            NextFireTimeUtc = NextTime,
+        };
 
         return new JobExecutionContextImpl(null!, bundle, new NoOpJob());
     }
 
     private sealed class NoOpJob : IJob
     {
-        public Task Execute(IJobExecutionContext context) => Task.CompletedTask;
+        public ValueTask Execute(IJobExecutionContext context, CancellationToken cancellationToken = default) => ValueTask.CompletedTask;
     }
 }

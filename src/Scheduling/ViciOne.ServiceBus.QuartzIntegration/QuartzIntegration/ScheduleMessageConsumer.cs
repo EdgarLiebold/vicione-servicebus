@@ -53,7 +53,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration
             var builder = TriggerBuilder.Create()
                 .ForJob(jobKey)
                 .StartAt(context.Message.ScheduledTime)
-                .WithSchedule(SimpleScheduleBuilder.Create().WithMisfireHandlingInstructionFireNow())
+                .WithSchedule(SimpleScheduleBuilder.Create().WithMisfireInstruction(SimpleTriggerMisfireInstruction.FireNow))
                 .WithIdentity(triggerKey);
 
             var trigger = PopulateTrigger(context, builder, messageBody, context.Message.Destination, context.Message.PayloadType, messageId: context.MessageId,
@@ -61,12 +61,12 @@ namespace ViciOne.ServiceBus.QuartzIntegration
 
             var scheduler = await _schedulerFactory.GetScheduler(context.CancellationToken).ConfigureAwait(false);
 
-            if (await scheduler.CheckExists(trigger.Key, context.CancellationToken).ConfigureAwait(false))
+            if (await scheduler.Exists(trigger.Key, context.CancellationToken).ConfigureAwait(false))
                 await scheduler.UnscheduleJob(trigger.Key, context.CancellationToken).ConfigureAwait(false);
 
-            await scheduler.ScheduleJob(trigger, context.CancellationToken).ConfigureAwait(false);
+            await scheduler.ScheduleJob(trigger, new ScheduleJobOptions(), context.CancellationToken).ConfigureAwait(false);
 
-            LogContext.Debug?.Log("Scheduled: {Key} {Schedule}", trigger.Key, trigger.GetNextFireTimeUtc());
+            LogContext.Debug?.Log("Scheduled: {Key} {Schedule}", trigger.Key, trigger.NextFireTimeUtc);
         }
 
         public async Task Consume(ConsumeContext<ScheduleRecurringMessage> context)
@@ -95,11 +95,11 @@ namespace ViciOne.ServiceBus.QuartzIntegration
                     switch (schedule.MisfirePolicy)
                     {
                         case MissedEventPolicy.Skip:
-                            x.WithMisfireHandlingInstructionDoNothing();
+                            x.WithMisfireInstruction(CronTriggerMisfireInstruction.DoNothing);
                             break;
 
                         case MissedEventPolicy.Send:
-                            x.WithMisfireHandlingInstructionFireAndProceed();
+                            x.WithMisfireInstruction(CronTriggerMisfireInstruction.FireAndProceed);
                             break;
                     }
                 });
@@ -112,15 +112,15 @@ namespace ViciOne.ServiceBus.QuartzIntegration
 
             var scheduler = await _schedulerFactory.GetScheduler(context.CancellationToken).ConfigureAwait(false);
 
-            if (await scheduler.CheckExists(triggerKey, context.CancellationToken).ConfigureAwait(false))
+            if (await scheduler.Exists(triggerKey, context.CancellationToken).ConfigureAwait(false))
                 await scheduler.UnscheduleJob(triggerKey, context.CancellationToken).ConfigureAwait(false);
 
-            await scheduler.ScheduleJob(trigger, context.CancellationToken).ConfigureAwait(false);
+            await scheduler.ScheduleJob(trigger, new ScheduleJobOptions(), context.CancellationToken).ConfigureAwait(false);
 
-            LogContext.Debug?.Log("Scheduled: {Key} {Schedule}", triggerKey, trigger.GetNextFireTimeUtc());
+            LogContext.Debug?.Log("Scheduled: {Key} {Schedule}", triggerKey, trigger.NextFireTimeUtc);
         }
 
-        static ITrigger PopulateTrigger(ConsumeContext context, TriggerBuilder builder, MessageBody messageBody, Uri destination,
+        static ITrigger PopulateTrigger(ConsumeContext context, TriggerBuilder<IJob> builder, MessageBody messageBody, Uri destination,
             string[] messageTypes, Guid? messageId = default, Guid? tokenId = default)
         {
             builder = builder
@@ -196,7 +196,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration
 
             var scheduler = await _schedulerFactory.GetScheduler(cancellationToken).ConfigureAwait(false);
 
-            if (await scheduler.CheckExists(jobKey, cancellationToken).ConfigureAwait(false))
+            if (await scheduler.Exists(jobKey, cancellationToken).ConfigureAwait(false))
                 return jobKey;
 
             var jobDetail = JobBuilder.Create<ScheduledMessageJob>()
@@ -206,7 +206,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration
                 .WithDescription("ViciOne.ServiceBus Scheduled Message Job")
                 .Build();
 
-            await scheduler.AddJob(jobDetail, true, cancellationToken).ConfigureAwait(false);
+            await scheduler.AddJob(jobDetail, AddJobOptions.Replacing, cancellationToken).ConfigureAwait(false);
 
             return jobKey;
         }

@@ -25,6 +25,20 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Changed
 
+- Repository builds now follow the current stable .NET 10 patch channel instead of pinning one SDK or
+  runtime patch. All direct dependencies and lock files were reassessed and refreshed; Quartz 4 is
+  adopted through its `ValueTask` job lifecycle and builder-owned job factory. The former
+  `QuartzSchedulerOptions.CreateJobFactory` hook is removed: standalone schedulers now use the
+  default ViciOne job factory, while container hosts register scheduling through
+  `AddQuartzConsumers`.
+- RabbitMQ now owns a Durable Sender dispatcher whose acceptance boundary requires persistent,
+  mandatory publishing and a publisher confirmation from a real broker. Unroutable and canceled
+  attempts never report acceptance. All other external transports remain explicitly unsupported
+  until they can prove an equally strong provider-owned boundary.
+- Host lifecycle options validate at startup, and the public surface is documented and enforced as
+  Application, Advanced SPI, Provider, Operations, and Testing APIs. Advanced definition, binder,
+  manual scheduler, and persistence/dispatcher shapes remain available only where they carry an
+  active extension capability and are hidden from default IntelliSense.
 - The ambiguous inherited `ITransactionalBus` surface is replaced by two explicit Greenfield
   capabilities. `IAmbientTransactionBus` follows `Transaction.Current` and has no manual flush,
   while `IBufferedBus` exposes an explicit FIFO `FlushAsync` boundary. Both implementations are
@@ -117,5 +131,5 @@ entry below records what the current work changed for anyone reading the source.
 
 ### Not yet done
 
-Modern encryption, the Entity Framework outbox poison handling and the final public API, naming and
-obsolete clean up are open and block a release.
+Modern encryption, Entity Framework outbox poison handling, and the remaining pre-release API-program
+work tracked by architecture are still open and block a release.

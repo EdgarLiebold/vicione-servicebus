@@ -21,6 +21,7 @@ namespace ViciOne.ServiceBus
             ArgumentNullException.ThrowIfNull(configurator);
 
             configurator.TryAddSingleton(TimeProvider.System);
+            configurator.TryAddTransient<ScheduledMessageJob>();
 
             OptionsBuilder<QuartzEndpointOptions> options = configurator.AddOptions<QuartzEndpointOptions>();
             if (configure != null)

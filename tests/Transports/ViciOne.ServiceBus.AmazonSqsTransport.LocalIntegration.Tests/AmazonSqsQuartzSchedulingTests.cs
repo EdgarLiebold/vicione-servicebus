@@ -70,11 +70,11 @@ public sealed class AmazonSqsQuartzSchedulingTests
             Assert.Equal(1, Volatile.Read(ref deliveryCount));
 
             IScheduler scheduler = await Assert.IsAssignableFrom<ISchedulerFactory>(schedulerFactory)
-                .GetScheduler(cancellationToken)
+                .GetScheduler(cancellationToken).AsTask()
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             ITrigger? completedTrigger = await scheduler.GetTrigger(
                     new TriggerKey(schedule.TokenId.ToString("N")),
-                    cancellationToken)
+                    cancellationToken).AsTask()
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.Null(completedTrigger);
             Assert.Equal(1, Volatile.Read(ref deliveryCount));

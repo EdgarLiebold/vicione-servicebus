@@ -2,6 +2,7 @@ namespace ViciOne.ServiceBus.DependencyInjection
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
 
 
     /// <summary>
@@ -9,6 +10,7 @@ namespace ViciOne.ServiceBus.DependencyInjection
     /// </summary>
     /// <typeparam name="TKey">The key type</typeparam>
     /// <typeparam name="TValue">The bound type</typeparam>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class Bind<TKey, TValue> :
         IEquatable<Bind<TKey, TValue>>
         where TValue : class
@@ -53,6 +55,7 @@ namespace ViciOne.ServiceBus.DependencyInjection
     }
 
 
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class Bind<TKey1, TKey2, TValue>
         where TValue : class
     {
@@ -65,6 +68,7 @@ namespace ViciOne.ServiceBus.DependencyInjection
     }
 
 
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static class Bind<TKey>
     {
         public static Bind<TKey, TValue> Create<TValue>(TValue value)

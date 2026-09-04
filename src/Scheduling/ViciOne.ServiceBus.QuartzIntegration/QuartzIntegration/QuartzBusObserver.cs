@@ -53,14 +53,16 @@ namespace ViciOne.ServiceBus.QuartzIntegration
             return Task.CompletedTask;
         }
 
-        public Task PreStop(IBus bus)
+        public async Task PreStop(IBus bus)
         {
-            return _scheduler != null ? _scheduler.Standby() : Task.CompletedTask;
+            if (_scheduler != null)
+                await _scheduler.Standby().ConfigureAwait(false);
         }
 
-        public Task PostStop(IBus bus)
+        public async Task PostStop(IBus bus)
         {
-            return _scheduler != null ? _scheduler.Shutdown(_settings.WaitForJobsToComplete) : Task.CompletedTask;
+            if (_scheduler != null)
+                await _scheduler.Shutdown(_settings.WaitForJobsToComplete).ConfigureAwait(false);
         }
 
         public Task StopFaulted(IBus bus, Exception exception)

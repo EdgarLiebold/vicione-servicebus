@@ -6,9 +6,9 @@
     <!-- The standard Roslyn property. It states what this assembly is; it does not grant the
          framework exception - Directory.Build.targets grants that by path. -->
     <IsRoslynComponent>true</IsRoslynComponent>
-    <!-- Same reasoning as the analyzer assembly: the host is not a net10.0 process, and
-         netstandard2.0 inherits neither setting from the SDK. -->
-    <LangVersion>14.0</LangVersion>
+    <!-- Same host boundary as the analyzer assembly. netstandard2.0 otherwise selects C# 7.3;
+         "latest" follows the installed stable SDK and therefore does not pin a language release. -->
+    <LangVersion>latest</LangVersion>
     <WarningLevel>10</WarningLevel>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
     <IsPackable>false</IsPackable>

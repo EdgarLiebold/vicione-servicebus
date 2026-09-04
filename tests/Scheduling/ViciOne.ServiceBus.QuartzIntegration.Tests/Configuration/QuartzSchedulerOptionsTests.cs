@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Time.Testing;
-using Quartz.Impl;
-using Quartz.Spi;
+using Quartz;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -12,16 +11,14 @@ public sealed class QuartzSchedulerOptionsTests
     [RequirementCoverage("REQ-VSB-QUARTZ-SCHEDULER-SETTINGS", "immutable-snapshot")]
     public void CreateSettings_SnapshotsEveryRuntimeValue()
     {
-        var schedulerFactory = new StdSchedulerFactory();
-        var replacementFactory = new StdSchedulerFactory();
+        ISchedulerFactory schedulerFactory = QuartzSchedulerBuilder.Create().Build();
+        ISchedulerFactory replacementFactory = QuartzSchedulerBuilder.Create().Build();
         var timeProvider = new FakeTimeProvider(new DateTimeOffset(2042, 2, 3, 4, 5, 6, TimeSpan.Zero));
-        Func<IBus, TimeProvider, IJobFactory> createJobFactory = static (_, _) => throw new NotSupportedException();
         Func<string, TimeZoneInfo?> timeZoneResolver = static _ => TimeZoneInfo.Utc;
         var options = new QuartzSchedulerOptions
         {
             SchedulerFactory = schedulerFactory,
             QueueName = "scheduled-messages",
-            CreateJobFactory = createJobFactory,
             StartScheduler = false,
             TimeProvider = timeProvider,
             TimeZoneResolver = timeZoneResolver,
@@ -30,14 +27,12 @@ public sealed class QuartzSchedulerOptionsTests
         QuartzSchedulerSettings settings = options.CreateSettings();
         options.SchedulerFactory = replacementFactory;
         options.QueueName = "changed";
-        options.CreateJobFactory = null;
         options.StartScheduler = true;
         options.TimeProvider = TimeProvider.System;
         options.TimeZoneResolver = null;
 
         Assert.Same(schedulerFactory, settings.SchedulerFactory);
         Assert.Equal("scheduled-messages", settings.QueueName);
-        Assert.Same(createJobFactory, settings.CreateJobFactory);
         Assert.False(settings.StartScheduler);
         Assert.Same(timeProvider, settings.TimeProvider);
         Assert.Same(timeZoneResolver, settings.TimeZoneResolver);

@@ -7,9 +7,10 @@
          framework exception - Directory.Build.targets grants that by path. -->
     <IsRoslynComponent>true</IsRoslynComponent>
     <!-- The compiler that loads an analyzer is not a net10.0 process, so this project targets
-         netstandard2.0. That framework gets neither a language version nor a warning level from the
-         SDK, so both are pinned here to the level the rest of the repository builds at. -->
-    <LangVersion>14.0</LangVersion>
+         netstandard2.0. That target otherwise defaults to C# 7.3, which cannot compile this nullable-
+         annotated source. "latest" deliberately follows the installed stable SDK and is not a
+         language-version pin. -->
+    <LangVersion>latest</LangVersion>
     <WarningLevel>10</WarningLevel>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
     <!-- The package is produced by ViciOne.ServiceBus.Analyzers.Package, which carries this assembly

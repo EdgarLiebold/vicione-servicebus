@@ -204,11 +204,9 @@ internal static class MsBuildEvaluation
 /// Resolves the .NET host that is actually running this test.
 /// </summary>
 /// <remarks>
-/// Spawning a bare <c>dotnet</c> from PATH would introduce a second SDK truth: the answers would
-/// come from whichever SDK the machine happens to prefer rather than from the one
-/// <c>global.json</c> pinned for this repository. <c>DOTNET_HOST_PATH</c> is the host the current
-/// build and test run were started with; the runtime directory is the same host's installation and
-/// is used only when the variable is absent.
+/// Spawning a bare <c>dotnet</c> from PATH could evaluate with a different SDK than the current test
+/// process. <c>DOTNET_HOST_PATH</c> is the host the current build and test run were started with; the
+/// runtime directory is the same host's installation and is used only when the variable is absent.
 /// </remarks>
 internal static class DotNetHost
 {
@@ -242,6 +240,6 @@ internal static class DotNetHost
         }
 
         throw new InvalidOperationException(
-            "Could not resolve the .NET host that is running this test. Set DOTNET_HOST_PATH or run the suite through the pinned SDK.");
+            "Could not resolve the .NET host that is running this test. Set DOTNET_HOST_PATH to the current stable .NET 10 host.");
     }
 }

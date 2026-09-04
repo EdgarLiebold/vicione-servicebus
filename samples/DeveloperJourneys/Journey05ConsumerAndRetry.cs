@@ -7,17 +7,12 @@ public static class Journey05ConsumerAndRetry
     public static IServiceCollection Configure(IServiceCollection services) =>
         services.AddViciOneServiceBus(configuration =>
         {
-            configuration.AddConsumer<SubmitOrderConsumer, RetryingSubmitOrderDefinition>();
+            configuration.AddConsumer<SubmitOrderConsumer>(consumer =>
+                consumer.UseMessageRetry(retry => retry.Exponential(
+                    5,
+                    TimeSpan.FromMilliseconds(50),
+                    TimeSpan.FromSeconds(5),
+                    TimeSpan.FromMilliseconds(100))));
             configuration.UsingInMemory((context, bus) => bus.ConfigureEndpoints(context));
         });
-
-    public sealed class RetryingSubmitOrderDefinition : ConsumerDefinition<SubmitOrderConsumer>
-    {
-        protected override void ConfigureConsumer(
-            IReceiveEndpointConfigurator endpoint,
-            IConsumerConfigurator<SubmitOrderConsumer> consumer,
-            IRegistrationContext context) =>
-            endpoint.UseMessageRetry(retry => retry.Exponential(5, TimeSpan.FromMilliseconds(50), TimeSpan.FromSeconds(5),
-                TimeSpan.FromMilliseconds(100)));
-    }
 }

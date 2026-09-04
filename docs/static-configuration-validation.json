@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "scope": "All public application and provider configuration families whose invalidity is knowable before runtime messaging begins.",
+  "rule": "Reject at registration when possible; otherwise reject during host startup before provider I/O or background delivery.",
+  "families": [
+    {
+      "id": "host-lifecycle",
+      "boundary": "host-start",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "test": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ViciOneServiceBusHostOptionsValidationTests.cs",
+      "testMethod": "StartupValidator_RejectsEveryInvalidStaticLifecyclePolicy",
+      "exception": "OptionsValidationException",
+      "actionableFragment": "must"
+    },
+    {
+      "id": "transport-selection",
+      "boundary": "host-start",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+      "test": "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/ConfigurationValidationTests.cs",
+      "testMethod": "HostedServiceStart_RejectsARegistrationWithoutATransport",
+      "exception": "ConfigurationException",
+      "actionableFragment": "transport"
+    },
+    {
+      "id": "message-contract-catalog",
+      "boundary": "registration",
+      "source": "src/ViciOne.ServiceBus/Contracts/MessageContractCatalogBuilder.cs",
+      "test": "tests/ViciOne.ServiceBus.Tests/Contracts/MessageContractCatalogTests.cs",
+      "testMethod": "Registration_RejectsValueOpenGenericAndUnattributedTypesBeforeMutation",
+      "exception": "MessageContractException",
+      "actionableFragment": "contract"
+    },
+    {
+      "id": "durable-sender-policy",
+      "boundary": "host-start",
+      "source": "src/ViciOne.ServiceBus/DurableSend/DurableSenderServiceCollectionExtensions.cs",
+      "test": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs",
+      "testMethod": "Registration_InvalidRuntimePoliciesFailClosedWhenTheTypedSenderMaterializes",
+      "exception": "OptionsValidationException",
+      "actionableFragment": "bounded-delivery policy"
+    },
+    {
+      "id": "durable-sender-composition",
+      "boundary": "host-start",
+      "source": "src/ViciOne.ServiceBus/DurableSend/DurableSenderComposition.cs",
+      "test": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs",
+      "testMethod": "StartupValidation_RejectsEveryIncompleteOrAmbiguousComposition",
+      "exception": "ConfigurationException",
+      "actionableFragment": "Configure exactly one"
+    },
+    {
+      "id": "payload-admission",
+      "boundary": "host-start",
+      "source": "src/ViciOne.ServiceBus/Serialization/Admission/PayloadAdmissionServiceCollectionExtensions.cs",
+      "test": "tests/ViciOne.ServiceBus.Tests/Serialization/PayloadAdmissionEvaluatorTests.cs",
+      "testMethod": "Registration_ValidatesRequiredHardLimitsWhenOptionsAreMaterialized",
+      "exception": "OptionsValidationException",
+      "actionableFragment": "MaximumTransportEnvelopeBytes"
+    },
+    {
+      "id": "consumer-concurrency",
+      "boundary": "registration",
+      "source": "src/ViciOne.ServiceBus/Consumers/Configuration/ConsumerSpecification.cs",
+      "test": "tests/ViciOne.ServiceBus.Tests/Consumers/Concurrency/ConsumerConcurrencyConfigurationTests.cs",
+      "testMethod": "TypedPartitionPolicy_CannotBeLayeredOrRegisteredTwice",
+      "exception": "ConfigurationException",
+      "actionableFragment": "cannot combine"
+    },
+    {
+      "id": "endpoint-qos-ownership",
+      "boundary": "registration",
+      "source": "src/ViciOne.ServiceBus/Configuration/Qos/EndpointQosTopologyValidator.cs",
+      "test": "tests/ViciOne.ServiceBus.Tests/Configuration/Qos/EndpointQosTopologyValidatorTests.cs",
+      "testMethod": "ConflictingEndpointValues_AggregateWithConsumerOwnershipFailures",
+      "exception": "EndpointQosConfigurationException",
+      "actionableFragment": "conflicting"
+    },
+    {
+      "id": "message-data-owner",
+      "boundary": "registration",
+      "source": "src/ViciOne.ServiceBus/Configuration/MessageDataConfiguratorExtensions.cs",
+      "test": "tests/ViciOne.ServiceBus.Tests/MessageData/MessageDataTransportIntegrationTests.cs",
+      "testMethod": "SameBus_RejectsASecondMessageDataOwnerConfiguration",
+      "exception": "ConfigurationException",
+      "actionableFragment": "already configured"
+    },
+    {
+      "id": "bus-persistence-identity",
+      "boundary": "registration",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/BusPersistenceIdentity.cs",
+      "test": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/DurableSend/EntityFrameworkDurableSendStoreTests.cs",
+      "testMethod": "Registration_PreservesProviderValidatorAndUsesOneValidatedPersistenceIdentity",
+      "exception": "ArgumentException",
+      "actionableFragment": "persistence identity"
+    },
+    {
+      "id": "provider-address-and-topology",
+      "boundary": "registration",
+      "source": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/RabbitMqHostAddress.cs",
+      "test": "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqHostAddressTests.cs",
+      "testMethod": "InvalidOrDuplicateNumericOptions_AreRejected",
+      "exception": "RabbitMqAddressException",
+      "actionableFragment": "RabbitMQ"
+    }
+  ]
+}
