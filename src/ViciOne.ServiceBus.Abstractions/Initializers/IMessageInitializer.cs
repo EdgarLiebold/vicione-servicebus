@@ -49,7 +49,7 @@ public interface IMessageInitializer<TMessage>
     /// <param name="pipe"></param>
     /// <returns></returns>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    Task<SendTuple<TMessage>> InitializeMessageAsync(PipeContext context, object input, IPipe<SendContext<TMessage>>? pipe = null, CancellationToken cancellationToken = default);
+    Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(PipeContext context, object input, IPipe<SendContext<TMessage>>? pipe = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Initialize the message using the input and send it to the endpoint.
@@ -60,7 +60,7 @@ public interface IMessageInitializer<TMessage>
     /// <param name="pipe"></param>
     /// <returns></returns>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    Task<SendTuple<TMessage>> InitializeMessageAsync(PipeContext context, object input, object?[] moreInputs, IPipe<SendContext<TMessage>>? pipe = null, CancellationToken cancellationToken = default);
+    Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(PipeContext context, object input, object?[] moreInputs, IPipe<SendContext<TMessage>>? pipe = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Initialize the message using the input and send it to the endpoint.
@@ -69,5 +69,5 @@ public interface IMessageInitializer<TMessage>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<SendTuple<TMessage>> InitializeMessageAsync(object input, IPipe<SendContext<TMessage>> pipe, CancellationToken cancellationToken);
+    Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(object input, IPipe<SendContext<TMessage>> pipe, CancellationToken cancellationToken);
 }

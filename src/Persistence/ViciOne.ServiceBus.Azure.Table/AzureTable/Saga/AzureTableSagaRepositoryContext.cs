@@ -11,6 +11,11 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.AzureTable.Saga;
 
+/// <summary>
+/// Provides an azure table saga repository context implementation.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public class AzureTableSagaRepositoryContext<TSaga, TMessage> :
     ConsumeContextScope<TMessage>,
     SagaRepositoryContext<TSaga, TMessage>
@@ -21,6 +26,12 @@ public class AzureTableSagaRepositoryContext<TSaga, TMessage> :
     readonly DatabaseContext<TSaga> _context;
     readonly ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> _factory;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="consumeContext">The consume context value.</param>
+    /// <param name="factory">The factory value.</param>
     public AzureTableSagaRepositoryContext(DatabaseContext<TSaga> context, ConsumeContext<TMessage> consumeContext,
         ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> factory)
         : base(RequireConsumeContext(consumeContext))
@@ -33,18 +44,30 @@ public class AzureTableSagaRepositoryContext<TSaga, TMessage> :
         _factory = factory;
     }
 
+    /// <summary>
+    /// Performs the add operation.
+    /// </summary>
+    /// <param name="instance">The instance value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<SagaConsumeContext<TSaga, TMessage>> AddAsync(TSaga instance, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.SagaConsumeContext<TSaga, TMessage>>(cancellationToken); return _factory.CreateSagaConsumeContextAsync(_context, _consumeContext, instance, SagaConsumeContextMode.Add);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Advanced.SagaConsumeContext<TSaga, TMessage>>(cancellationToken); return _factory.CreateSagaConsumeContextAsync(_context, _consumeContext, instance, SagaConsumeContextMode.Add);
     }
 
+    /// <summary>
+    /// Performs the insert operation.
+    /// </summary>
+    /// <param name="instance">The instance value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task<SagaConsumeContext<TSaga, TMessage>?> InsertAsync(TSaga instance, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); ArgumentNullException.ThrowIfNull(instance);
 
         try
         {
-            (Task<Azure.Response> insert, var entity) = TableInsert(instance);
+            (Task<global::Azure.Response> insert, var entity) = TableInsert(instance);
             await insert.ConfigureAwait(false);
             _consumeContext.LogInsert<TSaga, TMessage>(instance.CorrelationId);
 
@@ -57,6 +80,12 @@ public class AzureTableSagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
+    /// <summary>
+    /// Performs the load operation.
+    /// </summary>
+    /// <param name="correlationId">The correlation id value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task<SagaConsumeContext<TSaga, TMessage>?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
         var (partitionKey, rowKey) = _context.Format(correlationId);
@@ -74,12 +103,24 @@ public class AzureTableSagaRepositoryContext<TSaga, TMessage> :
         return default;
     }
 
+    /// <summary>
+    /// Performs the save operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task SaveAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); (Task<Azure.Response> insert, _) = TableInsert(context.Saga);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); (Task<global::Azure.Response> insert, _) = TableInsert(context.Saga);
         return insert;
     }
 
+    /// <summary>
+    /// Performs the update operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task UpdateAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); var instance = context.Saga;
@@ -108,6 +149,12 @@ public class AzureTableSagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
+    /// <summary>
+    /// Performs the delete operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task DeleteAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); var instance = context.Saga;
@@ -134,23 +181,43 @@ public class AzureTableSagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
+    /// <summary>
+    /// Performs the discard operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task DiscardAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Performs the undo operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task UndoAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Creates saga consume context.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="consumeContext">The consume context value.</param>
+    /// <param name="instance">The instance value.</param>
+    /// <param name="mode">The mode value.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContextAsync<T>(ConsumeContext<T> consumeContext, TSaga instance, SagaConsumeContextMode mode)
         where T : class
     {
         return _factory.CreateSagaConsumeContextAsync(_context, consumeContext, instance, mode);
     }
 
-    (Task<Azure.Response>, TableEntity) TableInsert(TSaga instance)
+    (Task<global::Azure.Response>, TableEntity) TableInsert(TSaga instance)
     {
         IDictionary<string, object> dict = _context.Converter.GetDictionary(instance);
         var entity = new TableEntity(dict);

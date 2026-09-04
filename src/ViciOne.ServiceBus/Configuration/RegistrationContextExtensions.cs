@@ -1,8 +1,11 @@
 using System;
 using ViciOne.ServiceBus.DependencyInjection.Registration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for registration context.
+/// </summary>
 public static class RegistrationContextExtensions
 {
     /// <summary>

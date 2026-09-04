@@ -1,5 +1,8 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for endpoint configuration observer connector.
+/// </summary>
 public interface IEndpointConfigurationObserverConnector
 {
     /// <summary>

@@ -1,0 +1,25 @@
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.AzureServiceBus.Middleware;
+
+/// <summary>
+/// Moves a message to the dead-letter queue, rather than the _skipped queue
+/// </summary>
+public class DeadLetterQueueFilter :
+    IFilter<ReceiveContext>
+{
+    void IProbeSite.Probe(ProbeContext context)
+    {
+        context.CreateFilterScope("dead-letter-queue");
+    }
+
+    async Task IFilter<ReceiveContext>.SendAsync(ReceiveContext context, IPipe<ReceiveContext> next)
+    {
+        if (!context.TryGetPayload(out MessageLockContext? lockContext))
+            throw new TransportException(context.InputAddress, $"The {nameof(MessageLockContext)} was not available on the {nameof(ReceiveContext)}.");
+
+        await lockContext.DeadLetterAsync().ConfigureAwait(false);
+
+        await next.SendAsync(context).ConfigureAwait(false);
+    }
+}

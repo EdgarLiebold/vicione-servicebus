@@ -6,6 +6,11 @@ using ViciOne.ServiceBus.SagaStateMachine;
 
 namespace ViciOne.ServiceBus.Futures;
 
+/// <summary>
+/// Provides a future request implementation.
+/// </summary>
+/// <typeparam name="TInput">The t input type.</typeparam>
+/// <typeparam name="TRequest">The t request type.</typeparam>
 public class FutureRequest<TInput, TRequest> :
     ISpecification
     where TRequest : class
@@ -13,6 +18,9 @@ public class FutureRequest<TInput, TRequest> :
 {
     ContextMessageFactory<BehaviorContext<FutureState, TInput>, TRequest> _factory;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public FutureRequest()
     {
         _factory = new ContextMessageFactory<BehaviorContext<FutureState, TInput>, TRequest>(DefaultFactoryAsync);
@@ -20,14 +28,27 @@ public class FutureRequest<TInput, TRequest> :
         AddressProvider = PublishAddressProvider;
     }
 
+    /// <summary>
+    /// Gets or sets the address provider value.
+    /// </summary>
     public RequestAddressProvider<TInput> AddressProvider { get; set; }
 
+    /// <summary>
+    /// Gets or sets the pending request id provider value.
+    /// </summary>
     public PendingFutureIdProvider<TRequest> PendingRequestIdProvider { get; set; } = null!;
+    /// <summary>
+    /// Gets or sets the factory value.
+    /// </summary>
     public ContextMessageFactory<BehaviorContext<FutureState, TInput>, TRequest> Factory
     {
         set => _factory = value;
     }
 
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (_factory == null)
@@ -42,6 +63,12 @@ public class FutureRequest<TInput, TRequest> :
         return default;
     }
 
+    /// <summary>
+    /// Sends request.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SendRequestAsync(BehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default)
     {
         var destinationAddress = AddressProvider(context);
@@ -64,7 +91,7 @@ public class FutureRequest<TInput, TRequest> :
         }, cancellationToken: cancellationToken);
     }
 
-    static Task<SendTuple<TRequest>> DefaultFactoryAsync(BehaviorContext<FutureState, TInput> context)
+    static Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>> DefaultFactoryAsync(BehaviorContext<FutureState, TInput> context)
     {
         return context.InitAsync<TRequest>(context.Message);
     }

@@ -1,6 +1,6 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
 /// Registration contains the consumers and sagas that have been registered, allowing them to be configured on one or more

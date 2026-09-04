@@ -5,8 +5,11 @@ using System.Threading.Tasks;
 using ViciOne.ServiceBus.Courier;
 using ViciOne.ServiceBus.Courier.Contracts;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Courier;
 
+/// <summary>
+/// Provides extension methods for routing slip.
+/// </summary>
 public static class RoutingSlipExtensions
 {
     /// <summary>
@@ -19,16 +22,34 @@ public static class RoutingSlipExtensions
         return routingSlip.Itinerary.Count == 0;
     }
 
+    /// <summary>
+    /// Gets next execute address.
+    /// </summary>
+    /// <param name="routingSlip">The routing slip value.</param>
+    /// <returns>The result of the operation.</returns>
     public static Uri? GetNextExecuteAddress(this RoutingSlip routingSlip)
     {
         return routingSlip.Itinerary.Select(x => x.Address).First();
     }
 
+    /// <summary>
+    /// Gets next compensate address.
+    /// </summary>
+    /// <param name="routingSlip">The routing slip value.</param>
+    /// <returns>The result of the operation.</returns>
     public static Uri? GetNextCompensateAddress(this RoutingSlip routingSlip)
     {
         return routingSlip.CompensateLogs.Select(x => x.Address).Last();
     }
 
+    /// <summary>
+    /// Performs the execute operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="source">The source value.</param>
+    /// <param name="routingSlip">The routing slip value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static Task ExecuteAsync<T>(this T source, RoutingSlip routingSlip, CancellationToken cancellationToken = default)
         where T : IPublishEndpoint, ISendEndpointProvider
     {

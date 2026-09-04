@@ -1,8 +1,15 @@
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
+/// <summary>
+/// Defines the contract for activity binder.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
 public interface IActivityBinder<TSaga>
     where TSaga : class, SagaStateMachineInstance
 {
+    /// <summary>
+    /// Gets the event value.
+    /// </summary>
     Event Event { get; }
 
     /// <summary>

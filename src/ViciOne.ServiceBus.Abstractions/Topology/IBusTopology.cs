@@ -1,12 +1,21 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Topology;
 
+/// <summary>
+/// Defines the contract for bus topology.
+/// </summary>
 public interface IBusTopology
 {
+    /// <summary>
+    /// Gets the publish topology value.
+    /// </summary>
     IPublishTopology PublishTopology { get; }
 
+    /// <summary>
+    /// Gets the send topology value.
+    /// </summary>
     ISendTopology SendTopology { get; }
 
     /// <summary>

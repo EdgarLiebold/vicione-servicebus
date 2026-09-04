@@ -4,6 +4,9 @@ using System.Collections.Generic;
 #nullable enable
 namespace ViciOne.ServiceBus.JobService.Scheduling;
 
+/// <summary>
+/// Provides a cron field implementation.
+/// </summary>
 public sealed class CronField :
     IEnumerable<int>
 {
@@ -12,11 +15,17 @@ public sealed class CronField :
     int? _singleValue;
     SortedSet<int>? _values;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public CronField()
     {
         Clear();
     }
 
+    /// <summary>
+    /// Gets the count value.
+    /// </summary>
     public int Count
     {
         get
@@ -42,6 +51,10 @@ public sealed class CronField :
         }
     }
 
+    /// <summary>
+    /// Gets enumerator.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerator<int> GetEnumerator()
     {
         if (_singleValue is not null)
@@ -120,6 +133,10 @@ public sealed class CronField :
         return false;
     }
 
+    /// <summary>
+    /// Performs the add operation.
+    /// </summary>
+    /// <param name="value">The value.</param>
     public void Add(int value)
     {
         _hasAllOrNoSpec = value is CronExpressionConstants.AllSpec or CronExpressionConstants.NoSpec;
@@ -142,6 +159,11 @@ public sealed class CronField :
         }
     }
 
+    /// <summary>
+    /// Performs the contains operation.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Contains(int value)
     {
         if (_singleValue == value

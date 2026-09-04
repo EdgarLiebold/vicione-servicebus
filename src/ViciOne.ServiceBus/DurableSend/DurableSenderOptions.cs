@@ -1,22 +1,58 @@
 using System;
 
-namespace ViciOne.ServiceBus.DurableSend;
+namespace ViciOne.ServiceBus.Configuration;
 /// <summary>Mutable bootstrap options for one typed bus; validated and frozen before its durable sender starts.</summary>
 public sealed class DurableSenderOptions<TBus>
     where TBus : class, IBus
 {
 
+    /// <summary>
+    /// Gets or sets the maximum stored count value.
+    /// </summary>
     public int MaximumStoredCount { get; set; } = 10_000;
+    /// <summary>
+    /// Gets or sets the maximum stored bytes value.
+    /// </summary>
     public long MaximumStoredBytes { get; set; } = 128L * 1024 * 1024;
+    /// <summary>
+    /// Gets or sets the maximum concurrent deliveries value.
+    /// </summary>
     public int MaximumConcurrentDeliveries { get; set; } = 16;
+    /// <summary>
+    /// Gets or sets the maximum delivery attempts value.
+    /// </summary>
     public int MaximumDeliveryAttempts { get; set; } = 10;
+    /// <summary>
+    /// Gets or sets the initial retry delay value.
+    /// </summary>
     public TimeSpan InitialRetryDelay { get; set; } = TimeSpan.FromSeconds(15);
+    /// <summary>
+    /// Gets or sets the maximum retry delay value.
+    /// </summary>
     public TimeSpan MaximumRetryDelay { get; set; } = TimeSpan.FromMinutes(5);
+    /// <summary>
+    /// Gets or sets the retry jitter fraction value.
+    /// </summary>
     public double RetryJitterFraction { get; set; } = 0.20;
+    /// <summary>
+    /// Gets or sets the lease duration value.
+    /// </summary>
     public TimeSpan LeaseDuration { get; set; } = TimeSpan.FromMinutes(2);
+    /// <summary>
+    /// Gets or sets the consumer completion timeout value.
+    /// </summary>
     public TimeSpan ConsumerCompletionTimeout { get; set; } = TimeSpan.FromMinutes(5);
+    /// <summary>
+    /// Gets or sets the poll interval value.
+    /// </summary>
     public TimeSpan PollInterval { get; set; } = TimeSpan.FromSeconds(1);
+    /// <summary>
+    /// Gets or sets the telemetry snapshot interval value.
+    /// </summary>
     public TimeSpan TelemetrySnapshotInterval { get; set; } = TimeSpan.FromSeconds(5);
+    /// <summary>
+    /// Gets or sets the health degraded after value.
+    /// </summary>
     public TimeSpan HealthDegradedAfter { get; set; } = TimeSpan.FromMinutes(15);
 
     internal DurableSenderPolicy<TBus> ValidateAndFreeze()

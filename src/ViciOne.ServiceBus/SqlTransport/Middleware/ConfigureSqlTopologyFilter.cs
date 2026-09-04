@@ -18,6 +18,12 @@ public class ConfigureSqlTopologyFilter<TSettings> :
     readonly SqlReceiveEndpointContext? _context;
     readonly TSettings _settings;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="settings">The settings value.</param>
+    /// <param name="brokerTopology">The broker topology value.</param>
+    /// <param name="context">The operation context.</param>
     public ConfigureSqlTopologyFilter(TSettings settings, BrokerTopology brokerTopology, SqlReceiveEndpointContext? context = null)
     {
         _settings = settings;
@@ -25,6 +31,12 @@ public class ConfigureSqlTopologyFilter<TSettings> :
         _context = context;
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SendAsync(ClientContext context, IPipe<ClientContext> next)
     {
         OneTimeContext<ConfigureTopologyContext<TSettings>> oneTimeContext = await context.OneTimeSetupAsync<ConfigureTopologyContext<TSettings>>(() =>
@@ -46,6 +58,10 @@ public class ConfigureSqlTopologyFilter<TSettings> :
         }
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("configureTopology");

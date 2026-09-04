@@ -1,5 +1,8 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for bus outbox configurator.
+/// </summary>
 public interface IBusOutboxConfigurator
 {
     /// <summary>

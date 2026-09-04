@@ -7,6 +7,10 @@ using ViciOne.ServiceBus.Middleware;
 #nullable enable
 namespace ViciOne.ServiceBus.Util;
 
+/// <summary>
+/// Provides a partitioned task executor implementation.
+/// </summary>
+/// <typeparam name="T">The t type.</typeparam>
 public sealed class PartitionedTaskExecutor<T> :
     IPartitionedTaskExecutor<T>
 {
@@ -16,6 +20,14 @@ public sealed class PartitionedTaskExecutor<T> :
     readonly Lazy<TaskExecutor>[] _partitions;
     Task? _disposeTask;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="partitionKeyProvider">The partition key provider value.</param>
+    /// <param name="hashGenerator">The hash generator value.</param>
+    /// <param name="partitionCount">The partition count value.</param>
+    /// <param name="concurrentDeliveryLimit">The concurrent delivery limit value.</param>
+    /// <param name="partitionCapacity">The partition capacity value.</param>
     public PartitionedTaskExecutor(PartitionKeyProvider<T> partitionKeyProvider, IHashGenerator hashGenerator, int partitionCount,
         int concurrentDeliveryLimit = 1, int? partitionCapacity = null)
     {
@@ -38,6 +50,10 @@ public sealed class PartitionedTaskExecutor<T> :
             .ToArray();
     }
 
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public ValueTask DisposeAsync()
     {
         lock (_lifecycleLock)
@@ -51,11 +67,25 @@ public sealed class PartitionedTaskExecutor<T> :
         }
     }
 
+    /// <summary>
+    /// Performs the enqueue operation.
+    /// </summary>
+    /// <param name="partition">The partition value.</param>
+    /// <param name="method">The method value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task EnqueueAsync(T partition, Func<Task> method, CancellationToken cancellationToken = default)
     {
         return GetExecutor(partition).EnqueueAsync(method, cancellationToken);
     }
 
+    /// <summary>
+    /// Performs the execute operation.
+    /// </summary>
+    /// <param name="partition">The partition value.</param>
+    /// <param name="method">The method value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task ExecuteAsync(T partition, Func<Task> method, CancellationToken cancellationToken = default)
     {
         return GetExecutor(partition).ExecuteAsync(method, cancellationToken);

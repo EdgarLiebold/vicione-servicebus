@@ -2,8 +2,11 @@ using System;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Middleware;
 
+/// <summary>
+/// Provides a pipe implementation.
+/// </summary>
 public static class Pipe
 {
     /// <summary>

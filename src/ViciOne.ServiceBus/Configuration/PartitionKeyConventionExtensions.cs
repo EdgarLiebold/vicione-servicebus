@@ -2,10 +2,19 @@ using System;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Transports;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for partition key convention.
+/// </summary>
 public static class PartitionKeyConventionExtensions
 {
+    /// <summary>
+    /// Configures partition key formatter for the current pipeline.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="formatter">The formatter value.</param>
     public static void UsePartitionKeyFormatter<T>(this IMessageSendTopologyConfigurator<T> configurator, IMessagePartitionKeyFormatter<T> formatter)
         where T : class
     {

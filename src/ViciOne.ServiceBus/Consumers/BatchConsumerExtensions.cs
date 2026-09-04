@@ -2,8 +2,11 @@ using System;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Consumer;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Registration;
 
+/// <summary>
+/// Provides extension methods for batch consumer.
+/// </summary>
 public static class BatchConsumerExtensions
 {
     /// <summary>

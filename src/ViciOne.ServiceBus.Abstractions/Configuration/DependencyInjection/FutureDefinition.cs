@@ -1,7 +1,7 @@
 using System;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
 /// A future definition defines the configuration for a future, which can be used by the automatic registration code to
@@ -15,6 +15,9 @@ public class FutureDefinition<TFuture> :
     int? _concurrentMessageLimit;
     string? _endpointName;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     protected FutureDefinition()
     {
     }
@@ -28,6 +31,9 @@ public class FutureDefinition<TFuture> :
         set => _endpointName = value;
     }
 
+    /// <summary>
+    /// Gets or sets the endpoint definition value.
+    /// </summary>
     public IEndpointDefinition<TFuture>? EndpointDefinition { get; set; }
 
     IEndpointDefinition? IFutureDefinition.EndpointDefinition => EndpointDefinition;

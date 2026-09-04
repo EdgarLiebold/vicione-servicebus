@@ -1,7 +1,11 @@
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
+/// <summary>
+/// Defines the contract for state observer.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
 public interface IStateObserver<TSaga>
     where TSaga : class, SagaStateMachineInstance
 {

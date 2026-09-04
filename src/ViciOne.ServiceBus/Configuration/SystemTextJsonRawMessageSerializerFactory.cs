@@ -6,6 +6,9 @@ using ViciOne.ServiceBus.Serialization;
 #nullable enable
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a system text json raw message serializer factory implementation.
+/// </summary>
 public class SystemTextJsonRawMessageSerializerFactory :
     ISerializerFactory,
     IJsonSerializerFactory
@@ -13,6 +16,10 @@ public class SystemTextJsonRawMessageSerializerFactory :
     readonly RawSerializerOptions _rawOptions;
     readonly Lazy<SystemTextJsonRawMessageSerializer>? _serializer;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="options">The options value.</param>
     public SystemTextJsonRawMessageSerializerFactory(RawSerializerOptions options = RawSerializerOptions.Default)
     {
         _rawOptions = options;
@@ -24,13 +31,24 @@ public class SystemTextJsonRawMessageSerializerFactory :
         _serializer = new Lazy<SystemTextJsonRawMessageSerializer>(() => new SystemTextJsonRawMessageSerializer(options, rawOptions));
     }
 
+    /// <summary>
+    /// Gets the content type value.
+    /// </summary>
     public ContentType ContentType => SystemTextJsonRawMessageSerializer.JsonContentType;
 
+    /// <summary>
+    /// Creates serializer.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IMessageSerializer CreateSerializer()
     {
         return GetSerializer();
     }
 
+    /// <summary>
+    /// Creates deserializer.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IMessageDeserializer CreateDeserializer()
     {
         return GetSerializer();

@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
 /// <summary>
 /// Callback for an unhandled event in the state machine

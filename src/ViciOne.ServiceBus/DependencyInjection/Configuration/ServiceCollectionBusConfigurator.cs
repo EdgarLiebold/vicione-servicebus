@@ -12,10 +12,18 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a service collection bus configurator implementation.
+/// </summary>
 public class ServiceCollectionBusConfigurator :
     RegistrationConfigurator,
-    IBusRegistrationConfigurator
+    IBusRegistrationConfigurator,
+    IAdvancedBusRegistrationConfigurator
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="collection">The collection value.</param>
     public ServiceCollectionBusConfigurator(IServiceCollection collection)
         : this(collection, new DependencyInjectionContainerRegistrar(collection))
     {
@@ -61,14 +69,27 @@ public class ServiceCollectionBusConfigurator :
             provider.GetService<TimeProvider>() ?? TimeProvider.System));
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
     protected ServiceCollectionBusConfigurator(IServiceCollection collection, IContainerRegistrar registrar)
         : base(collection, registrar)
     {
         AddViciOneServiceBusComponents(collection);
     }
 
+    /// <summary>
+    /// Gets or sets the create client factory value.
+    /// </summary>
     protected Func<IBus, RequestTimeout, IClientFactory> CreateClientFactory { get; private set; } = DefaultClientFactory;
 
+    /// <summary>
+    /// Sets bus factory.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="busFactory">The bus factory value.</param>
     public virtual void SetBusFactory<T>(T busFactory)
         where T : class, IRegistrationBusFactory
     {
@@ -77,39 +98,55 @@ public class ServiceCollectionBusConfigurator :
 
         ThrowIfAlreadyConfigured(nameof(SetBusFactory));
 
-        this.AddSingleton(provider => Bind<IBus>.Create(CreateBus(busFactory, provider)));
+        Services.AddSingleton(provider => Bind<IBus>.Create(CreateBus(busFactory, provider)));
 
-        this.AddSingleton(provider => provider.GetRequiredService<Bind<IBus, IBusInstance>>().Value);
-        this.AddSingleton<IReceiveEndpointConnector>(provider => provider.GetRequiredService<Bind<IBus, IBusInstance>>().Value);
-        this.AddSingleton(provider => provider.GetRequiredService<Bind<IBus, IBusInstance>>().Value.BusControl);
-        this.AddSingleton(provider => provider.GetRequiredService<Bind<IBus, IBusInstance>>().Value.Bus);
+        Services.AddSingleton(provider => provider.GetRequiredService<Bind<IBus, IBusInstance>>().Value);
+        Services.AddSingleton<IReceiveEndpointConnector>(provider => provider.GetRequiredService<Bind<IBus, IBusInstance>>().Value);
+        Services.AddSingleton(provider => provider.GetRequiredService<Bind<IBus, IBusInstance>>().Value.BusControl);
+        Services.AddSingleton(provider => provider.GetRequiredService<Bind<IBus, IBusInstance>>().Value.Bus);
 
         Registrar.RegisterScopedClientFactory();
     }
 
+    /// <summary>
+    /// Adds rider to the configuration.
+    /// </summary>
+    /// <param name="configure">The configuration callback.</param>
     public virtual void AddRider(Action<IRiderRegistrationConfigurator> configure)
     {
-        var configurator = new ServiceCollectionRiderConfigurator(this, new DependencyInjectionRiderContainerRegistrar<IBus>(this));
+        var configurator = new ServiceCollectionRiderConfigurator(Services, new DependencyInjectionRiderContainerRegistrar<IBus>(Services));
         configure?.Invoke(configurator);
     }
 
+    /// <summary>
+    /// Adds configure endpoints callback to the configuration.
+    /// </summary>
+    /// <param name="callback">The callback value.</param>
     public virtual void AddConfigureEndpointsCallback(ConfigureEndpointsCallback callback)
     {
         if (callback == null)
             throw new ArgumentNullException(nameof(callback));
 
-        this.AddSingleton(_ => Bind<IBus>.Create<IConfigureReceiveEndpoint>(new ConfigureReceiveEndpointDelegate(callback)));
+        Services.AddSingleton(_ => Bind<IBus>.Create<IConfigureReceiveEndpoint>(new ConfigureReceiveEndpointDelegate(callback)));
     }
 
+    /// <summary>
+    /// Adds configure endpoints callback to the configuration.
+    /// </summary>
+    /// <param name="callback">The callback value.</param>
     public virtual void AddConfigureEndpointsCallback(ConfigureEndpointsProviderCallback callback)
     {
         if (callback == null)
             throw new ArgumentNullException(nameof(callback));
 
-        this.AddSingleton(provider => Bind<IBus>.Create<IConfigureReceiveEndpoint>(new ConfigureReceiveEndpointDelegateProvider(
+        Services.AddSingleton(provider => Bind<IBus>.Create<IConfigureReceiveEndpoint>(new ConfigureReceiveEndpointDelegateProvider(
             provider.GetRequiredService<Bind<IBus, IBusRegistrationContext>>().Value, callback)));
     }
 
+    /// <summary>
+    /// Sets request client factory.
+    /// </summary>
+    /// <param name="clientFactory">The client factory value.</param>
     public virtual void SetRequestClientFactory(Func<IBus, RequestTimeout, IClientFactory> clientFactory)
     {
         if (clientFactory == null)
@@ -156,12 +193,22 @@ public class ServiceCollectionBusConfigurator :
 }
 
 
+/// <summary>
+/// Provides a service collection bus configurator implementation.
+/// </summary>
+/// <typeparam name="TBus">The t bus type.</typeparam>
+/// <typeparam name="TBusInstance">The t bus instance type.</typeparam>
 public class ServiceCollectionBusConfigurator<TBus, TBusInstance> :
     ServiceCollectionBusConfigurator,
-    IBusRegistrationConfigurator<TBus>
+    IBusRegistrationConfigurator<TBus>,
+    IAdvancedBusRegistrationConfigurator<TBus>
     where TBus : class, IBus
     where TBusInstance : BusInstance<TBus>, TBus
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="collection">The collection value.</param>
     public ServiceCollectionBusConfigurator(IServiceCollection collection)
         : base(collection, new DependencyInjectionContainerRegistrar<TBus>(collection))
     {
@@ -196,6 +243,11 @@ public class ServiceCollectionBusConfigurator<TBus, TBusInstance> :
         collection.AddSingleton(provider => Bind<TBus>.Create(CreateRegistrationContext(provider)));
     }
 
+    /// <summary>
+    /// Sets bus factory.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="busFactory">The bus factory value.</param>
     public override void SetBusFactory<T>(T busFactory)
     {
         if (busFactory == null)
@@ -203,37 +255,53 @@ public class ServiceCollectionBusConfigurator<TBus, TBusInstance> :
 
         ThrowIfAlreadyConfigured(nameof(SetBusFactory));
 
-        this.AddSingleton(provider => CreateBus(busFactory, provider));
+        Services.AddSingleton(provider => CreateBus(busFactory, provider));
 
-        this.AddSingleton<IBusInstance>(provider => provider.GetRequiredService<IBusInstance<TBus>>());
-        this.AddSingleton(provider => Bind<TBus>.Create<IReceiveEndpointConnector>(provider.GetRequiredService<IBusInstance<TBus>>()));
-        this.AddSingleton(provider => provider.GetRequiredService<IBusInstance<TBus>>().Bus);
+        Services.AddSingleton<IBusInstance>(provider => provider.GetRequiredService<IBusInstance<TBus>>());
+        Services.AddSingleton(provider => Bind<TBus>.Create<IReceiveEndpointConnector>(provider.GetRequiredService<IBusInstance<TBus>>()));
+        Services.AddSingleton(provider => provider.GetRequiredService<IBusInstance<TBus>>().Bus);
 
         Registrar.RegisterScopedClientFactory();
     }
 
+    /// <summary>
+    /// Adds rider to the configuration.
+    /// </summary>
+    /// <param name="configure">The configuration callback.</param>
     public override void AddRider(Action<IRiderRegistrationConfigurator> configure)
     {
         AddRider(configurator => configure.Invoke(configurator));
     }
 
+    /// <summary>
+    /// Adds rider to the configuration.
+    /// </summary>
+    /// <param name="configure">The configuration callback.</param>
     public void AddRider(Action<IRiderRegistrationConfigurator<TBus>> configure)
     {
-        var configurator = new ServiceCollectionRiderConfigurator<TBus>(this, new DependencyInjectionRiderContainerRegistrar<TBus>(this));
+        var configurator = new ServiceCollectionRiderConfigurator<TBus>(Services, new DependencyInjectionRiderContainerRegistrar<TBus>(Services));
         configure?.Invoke(configurator);
     }
 
+    /// <summary>
+    /// Adds configure endpoints callback to the configuration.
+    /// </summary>
+    /// <param name="callback">The callback value.</param>
     public override void AddConfigureEndpointsCallback(ConfigureEndpointsCallback callback)
     {
-        this.AddSingleton(_ => Bind<TBus>.Create<IConfigureReceiveEndpoint>(new ConfigureReceiveEndpointDelegate(callback)));
+        Services.AddSingleton(_ => Bind<TBus>.Create<IConfigureReceiveEndpoint>(new ConfigureReceiveEndpointDelegate(callback)));
     }
 
+    /// <summary>
+    /// Adds configure endpoints callback to the configuration.
+    /// </summary>
+    /// <param name="callback">The callback value.</param>
     public override void AddConfigureEndpointsCallback(ConfigureEndpointsProviderCallback callback)
     {
         if (callback == null)
             throw new ArgumentNullException(nameof(callback));
 
-        this.AddSingleton(provider => Bind<TBus>.Create<IConfigureReceiveEndpoint>(new ConfigureReceiveEndpointDelegateProvider(
+        Services.AddSingleton(provider => Bind<TBus>.Create<IConfigureReceiveEndpoint>(new ConfigureReceiveEndpointDelegateProvider(
             provider.GetRequiredService<Bind<TBus, IBusRegistrationContext>>().Value,
             callback)));
     }

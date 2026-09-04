@@ -5,14 +5,30 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for dependency injection saga registration.
+/// </summary>
 public static class DependencyInjectionSagaRegistrationExtensions
 {
+    /// <summary>
+    /// Performs the register saga operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <returns>The result of the operation.</returns>
     public static ISagaRegistration RegisterSaga<T>(this IServiceCollection collection)
         where T : class, ISaga
     {
         return RegisterSaga<T>(collection, new DependencyInjectionContainerRegistrar(collection));
     }
 
+    /// <summary>
+    /// Performs the register saga operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
+    /// <returns>The result of the operation.</returns>
     public static ISagaRegistration RegisterSaga<T>(this IServiceCollection collection, IContainerRegistrar registrar)
         where T : class, ISaga
     {
@@ -22,6 +38,13 @@ public static class DependencyInjectionSagaRegistrationExtensions
         return new SagaRegistrar<T>().Register(collection, registrar);
     }
 
+    /// <summary>
+    /// Performs the register saga operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="TDefinition">The t definition type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <returns>The result of the operation.</returns>
     public static ISagaRegistration RegisterSaga<T, TDefinition>(this IServiceCollection collection)
         where T : class, ISaga
         where TDefinition : class, ISagaDefinition<T>
@@ -29,6 +52,14 @@ public static class DependencyInjectionSagaRegistrationExtensions
         return RegisterSaga<T, TDefinition>(collection, new DependencyInjectionContainerRegistrar(collection));
     }
 
+    /// <summary>
+    /// Performs the register saga operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="TDefinition">The t definition type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
+    /// <returns>The result of the operation.</returns>
     public static ISagaRegistration RegisterSaga<T, TDefinition>(this IServiceCollection collection, IContainerRegistrar registrar)
         where T : class, ISaga
         where TDefinition : class, ISagaDefinition<T>
@@ -39,12 +70,27 @@ public static class DependencyInjectionSagaRegistrationExtensions
         return new SagaDefinitionRegistrar<T, TDefinition>().Register(collection, registrar);
     }
 
+    /// <summary>
+    /// Performs the register saga operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="sagaDefinitionType">The saga definition type value.</param>
+    /// <returns>The result of the operation.</returns>
     public static ISagaRegistration RegisterSaga<T>(this IServiceCollection collection, Type sagaDefinitionType)
         where T : class, ISaga
     {
         return RegisterSaga<T>(collection, new DependencyInjectionContainerRegistrar(collection), sagaDefinitionType);
     }
 
+    /// <summary>
+    /// Performs the register saga operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
+    /// <param name="sagaDefinitionType">The saga definition type value.</param>
+    /// <returns>The result of the operation.</returns>
     public static ISagaRegistration RegisterSaga<T>(this IServiceCollection collection, IContainerRegistrar registrar, Type? sagaDefinitionType)
         where T : class, ISaga
     {
@@ -65,6 +111,14 @@ public static class DependencyInjectionSagaRegistrationExtensions
         return register.Register(collection, registrar);
     }
 
+    /// <summary>
+    /// Performs the register saga operation.
+    /// </summary>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
+    /// <param name="sagaType">The saga type value.</param>
+    /// <param name="sagaDefinitionType">The saga definition type value.</param>
+    /// <returns>The result of the operation.</returns>
     public static ISagaRegistration RegisterSaga(this IServiceCollection collection, IContainerRegistrar registrar, Type sagaType,
         Type? sagaDefinitionType = null)
     {

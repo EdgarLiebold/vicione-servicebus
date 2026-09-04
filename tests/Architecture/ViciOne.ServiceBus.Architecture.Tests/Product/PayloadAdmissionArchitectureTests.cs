@@ -28,7 +28,7 @@ public sealed class PayloadAdmissionArchitectureTests
     public void EventHubSpecialProducer_AdmitsEverySingleAndBatchMessageBeforeObservationOrIo()
     {
         string source = Source(
-            "src/Transports/ViciOne.ServiceBus.EventHubIntegration/EventHubIntegration/EventHubProducer.cs");
+            "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducer.cs");
         int singleStart = source.IndexOf("class SendPipe<T>", StringComparison.Ordinal);
         int batchStart = source.IndexOf("class BatchSendPipe<T>", StringComparison.Ordinal);
         Assert.True(singleStart >= 0);
@@ -72,7 +72,7 @@ public sealed class PayloadAdmissionArchitectureTests
 
         Assert.Equal(
             [
-                "src/Transports/ViciOne.ServiceBus.EventHubIntegration/EventHubIntegration/EventHubProducer.cs",
+                "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducer.cs",
                 "src/ViciOne.ServiceBus/Transports/SendTransport.cs",
             ],
             owners);

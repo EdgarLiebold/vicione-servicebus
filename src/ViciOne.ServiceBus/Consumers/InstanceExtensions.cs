@@ -1,7 +1,7 @@
 using System;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Registration;
 
 /// <summary>
 /// Extensions for subscribing object instances.

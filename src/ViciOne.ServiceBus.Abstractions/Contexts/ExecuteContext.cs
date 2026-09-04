@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Defines the contract for execute context.
+/// </summary>
 public interface ExecuteContext :
     CourierContext
 {
@@ -109,14 +112,42 @@ public interface ExecuteContext :
     ExecutionResult CompletedWithVariables<TLog>(TLog log, IEnumerable<KeyValuePair<string, object>> variables)
         where TLog : class;
 
+    /// <summary>
+    /// Performs the revise itinerary operation.
+    /// </summary>
+    /// <param name="buildItinerary">The build itinerary value.</param>
+    /// <returns>The result of the operation.</returns>
     ExecutionResult ReviseItinerary(Action<IItineraryBuilder> buildItinerary);
 
+    /// <summary>
+    /// Performs the revise itinerary operation.
+    /// </summary>
+    /// <typeparam name="TLog">The t log type.</typeparam>
+    /// <param name="log">The log value.</param>
+    /// <param name="buildItinerary">The build itinerary value.</param>
+    /// <returns>The result of the operation.</returns>
     ExecutionResult ReviseItinerary<TLog>(TLog log, Action<IItineraryBuilder> buildItinerary)
         where TLog : class;
 
+    /// <summary>
+    /// Performs the revise itinerary operation.
+    /// </summary>
+    /// <typeparam name="TLog">The t log type.</typeparam>
+    /// <param name="log">The log value.</param>
+    /// <param name="variables">The variables value.</param>
+    /// <param name="buildItinerary">The build itinerary value.</param>
+    /// <returns>The result of the operation.</returns>
     ExecutionResult ReviseItinerary<TLog>(TLog log, object variables, Action<IItineraryBuilder> buildItinerary)
         where TLog : class;
 
+    /// <summary>
+    /// Performs the revise itinerary operation.
+    /// </summary>
+    /// <typeparam name="TLog">The t log type.</typeparam>
+    /// <param name="log">The log value.</param>
+    /// <param name="variables">The variables value.</param>
+    /// <param name="buildItinerary">The build itinerary value.</param>
+    /// <returns>The result of the operation.</returns>
     ExecutionResult ReviseItinerary<TLog>(TLog log, IEnumerable<KeyValuePair<string, object>> variables, Action<IItineraryBuilder> buildItinerary)
         where TLog : class;
 
@@ -181,6 +212,10 @@ public interface ExecuteContext :
 }
 
 
+/// <summary>
+/// Defines the contract for execute context.
+/// </summary>
+/// <typeparam name="TArguments">The t arguments type.</typeparam>
 public interface ExecuteContext<out TArguments> :
     ExecuteContext
     where TArguments : class
@@ -190,6 +225,12 @@ public interface ExecuteContext<out TArguments> :
     /// </summary>
     TArguments Arguments { get; }
 
+    /// <summary>
+    /// Creates activity context.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <param name="activity">The activity value.</param>
+    /// <returns>The result of the operation.</returns>
     ExecuteActivityContext<TActivity, TArguments> CreateActivityContext<TActivity>(TActivity activity)
         where TActivity : class, IExecuteActivity<TArguments>;
 }

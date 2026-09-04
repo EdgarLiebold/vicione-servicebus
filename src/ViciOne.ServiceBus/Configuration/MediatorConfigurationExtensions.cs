@@ -3,8 +3,11 @@ using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.InMemoryTransport.Configuration;
 using ViciOne.ServiceBus.Mediator;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for mediator configuration.
+/// </summary>
 public static class MediatorConfigurationExtensions
 {
     /// <summary>

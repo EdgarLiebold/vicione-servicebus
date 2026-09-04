@@ -2,8 +2,11 @@ using System;
 using ViciOne.ServiceBus.Configuration;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for circuit breaker configuration.
+/// </summary>
 public static class CircuitBreakerConfigurationExtensions
 {
     /// <summary>

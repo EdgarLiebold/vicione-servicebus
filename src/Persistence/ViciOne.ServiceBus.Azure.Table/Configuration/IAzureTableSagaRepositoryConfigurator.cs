@@ -2,8 +2,12 @@ using System;
 using Azure.Data.Tables;
 using ViciOne.ServiceBus.AzureTable;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Azure.Table;
 
+/// <summary>
+/// Defines the contract for azure table saga repository configurator.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
 public interface IAzureTableSagaRepositoryConfigurator<TSaga> :
     IAzureTableSagaRepositoryConfigurator
     where TSaga : class, ISaga
@@ -16,6 +20,9 @@ public interface IAzureTableSagaRepositoryConfigurator<TSaga> :
 }
 
 
+/// <summary>
+/// Defines the contract for azure table saga repository configurator.
+/// </summary>
 public interface IAzureTableSagaRepositoryConfigurator
 {
     /// <summary>

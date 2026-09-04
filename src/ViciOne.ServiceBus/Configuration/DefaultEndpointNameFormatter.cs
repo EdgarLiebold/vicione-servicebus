@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.NewIdFormatters;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
 /// The default endpoint name formatter, which simply trims the words Consumer, Activity, and Saga
@@ -64,6 +64,9 @@ public class DefaultEndpointNameFormatter :
         JoinSeparator = joinSeparator;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     protected DefaultEndpointNameFormatter()
     {
         IncludeNamespace = false;
@@ -82,33 +85,65 @@ public class DefaultEndpointNameFormatter :
     /// Gets the join separator between the words
     /// </summary>
     protected string JoinSeparator { get; } = null!;
+    /// <summary>
+    /// Gets the instance value.
+    /// </summary>
     public static IEndpointNameFormatter Instance { get; } = new DefaultEndpointNameFormatter();
 
+    /// <summary>
+    /// Gets or sets the separator value.
+    /// </summary>
     public string Separator { get; protected set; } = "";
 
+    /// <summary>
+    /// Performs the temporary endpoint operation.
+    /// </summary>
+    /// <param name="tag">The tag value.</param>
+    /// <returns>The result of the operation.</returns>
     public virtual string TemporaryEndpoint(string tag)
     {
         return GetTemporaryQueueName(tag);
     }
 
+    /// <summary>
+    /// Consumes r.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     public virtual string Consumer<T>()
         where T : class, IConsumer
     {
         return GetConsumerName(typeof(T));
     }
 
+    /// <summary>
+    /// Performs the message operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     public virtual string Message<T>()
         where T : class
     {
         return GetMessageName(typeof(T));
     }
 
+    /// <summary>
+    /// Performs the saga operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     public virtual string Saga<T>()
         where T : class, ISaga
     {
         return GetSagaName(typeof(T));
     }
 
+    /// <summary>
+    /// Performs the execute activity operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="TArguments">The t arguments type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     public virtual string ExecuteActivity<T, TArguments>()
         where T : class, IExecuteActivity<TArguments>
         where TArguments : class
@@ -118,6 +153,12 @@ public class DefaultEndpointNameFormatter :
         return $"{activityName}_execute";
     }
 
+    /// <summary>
+    /// Performs the compensate activity operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="TLog">The t log type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     public virtual string CompensateActivity<T, TLog>()
         where T : class, ICompensateActivity<TLog>
         where TLog : class
@@ -127,11 +168,21 @@ public class DefaultEndpointNameFormatter :
         return $"{activityName}_compensate";
     }
 
+    /// <summary>
+    /// Performs the sanitize name operation.
+    /// </summary>
+    /// <param name="name">The name value.</param>
+    /// <returns>The result of the operation.</returns>
     public virtual string SanitizeName(string name)
     {
         return name;
     }
 
+    /// <summary>
+    /// Gets temporary queue name.
+    /// </summary>
+    /// <param name="tag">The tag value.</param>
+    /// <returns>The result of the operation.</returns>
     public static string GetTemporaryQueueName(string tag)
     {
         if (string.IsNullOrWhiteSpace(tag))

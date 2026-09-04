@@ -14,6 +14,10 @@ public class HandlerPipeSpecification<T> :
 {
     readonly MessageHandler<T> _handler;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="handler">The handler value.</param>
     public HandlerPipeSpecification(MessageHandler<T> handler)
     {
         _handler = handler ?? throw new ArgumentNullException(nameof(handler));

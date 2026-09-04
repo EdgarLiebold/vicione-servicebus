@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.JobService;
 
+/// <summary>
+/// Defines the contract for job type info.
+/// </summary>
 public interface JobTypeInfo
 {
     /// <summary>

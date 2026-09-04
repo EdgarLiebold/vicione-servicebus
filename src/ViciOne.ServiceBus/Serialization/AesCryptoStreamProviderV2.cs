@@ -4,18 +4,32 @@ using System.Security.Cryptography;
 
 namespace ViciOne.ServiceBus.Serialization;
 
+/// <summary>
+/// Provides an aes crypto stream provider v2 implementation.
+/// </summary>
 public class AesCryptoStreamProviderV2 :
     ICryptoStreamProviderV2
 {
     readonly PaddingMode _paddingMode;
     readonly ISecureKeyProvider _secureKeyProvider;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="secureKeyProvider">The secure key provider value.</param>
+    /// <param name="paddingMode">The padding mode value.</param>
     public AesCryptoStreamProviderV2(ISecureKeyProvider secureKeyProvider, PaddingMode paddingMode = PaddingMode.PKCS7)
     {
         _secureKeyProvider = secureKeyProvider;
         _paddingMode = paddingMode;
     }
 
+    /// <summary>
+    /// Gets decrypt stream.
+    /// </summary>
+    /// <param name="stream">The stream value.</param>
+    /// <param name="headers">The headers value.</param>
+    /// <returns>The result of the operation.</returns>
     public Stream GetDecryptStream(Stream stream, Headers headers)
     {
         var key = _secureKeyProvider.GetKey(headers);
@@ -30,6 +44,12 @@ public class AesCryptoStreamProviderV2 :
         return new DisposingCryptoStream(stream, encryptor, CryptoStreamMode.Read);
     }
 
+    /// <summary>
+    /// Gets encrypt stream.
+    /// </summary>
+    /// <param name="stream">The stream value.</param>
+    /// <param name="headers">The headers value.</param>
+    /// <returns>The result of the operation.</returns>
     public Stream GetEncryptStream(Stream stream, Headers headers)
     {
         var key = _secureKeyProvider.GetKey(headers);
@@ -42,6 +62,10 @@ public class AesCryptoStreamProviderV2 :
         return new DisposingCryptoStream(stream, encryptor, CryptoStreamMode.Write);
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("aes");

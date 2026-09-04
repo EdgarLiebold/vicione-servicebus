@@ -87,6 +87,11 @@ public class Supervisor :
         return StopSupervisorAsync(new Context(context, agents));
     }
 
+    /// <summary>
+    /// Stops supervisor.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     protected virtual async Task StopSupervisorAsync(StopSupervisorContext context)
     {
         switch (context.Agents.Length)

@@ -7,7 +7,7 @@ using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Middleware.CircuitBreaker;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 /// <summary>
 /// Configures a circuit breaker. The values are captured as an immutable snapshot when the pipe is built.
 /// </summary>
@@ -28,6 +28,9 @@ public sealed class CircuitBreakerOptions : IOptions
 
     private ReadOnlyCollection<TimeSpan> _breakDurations;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public CircuitBreakerOptions()
     {
         MinimumThroughput = 5;
@@ -68,6 +71,11 @@ public sealed class CircuitBreakerOptions : IOptions
     /// </summary>
     public IExceptionFilter ExceptionFilter { get; private set; }
 
+    /// <summary>
+    /// Sets minimum throughput.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns>The result of the operation.</returns>
     public CircuitBreakerOptions SetMinimumThroughput(int value)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(value, 1);
@@ -76,6 +84,11 @@ public sealed class CircuitBreakerOptions : IOptions
         return this;
     }
 
+    /// <summary>
+    /// Sets failure ratio.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns>The result of the operation.</returns>
     public CircuitBreakerOptions SetFailureRatio(double value)
     {
         if (!double.IsFinite(value) || value is < 0 or > 1)
@@ -85,6 +98,11 @@ public sealed class CircuitBreakerOptions : IOptions
         return this;
     }
 
+    /// <summary>
+    /// Sets sampling duration.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns>The result of the operation.</returns>
     public CircuitBreakerOptions SetSamplingDuration(TimeSpan value)
     {
         if (value <= TimeSpan.Zero)
@@ -94,8 +112,18 @@ public sealed class CircuitBreakerOptions : IOptions
         return this;
     }
 
+    /// <summary>
+    /// Sets break duration.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns>The result of the operation.</returns>
     public CircuitBreakerOptions SetBreakDuration(TimeSpan value) => SetBreakDurations(value);
 
+    /// <summary>
+    /// Sets break durations.
+    /// </summary>
+    /// <param name="values">The values value.</param>
+    /// <returns>The result of the operation.</returns>
     public CircuitBreakerOptions SetBreakDurations(params TimeSpan[] values)
     {
         ArgumentNullException.ThrowIfNull(values);
@@ -110,12 +138,22 @@ public sealed class CircuitBreakerOptions : IOptions
         return this;
     }
 
+    /// <summary>
+    /// Sets time provider.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns>The result of the operation.</returns>
     public CircuitBreakerOptions SetTimeProvider(TimeProvider value)
     {
         TimeProvider = value ?? throw new ArgumentNullException(nameof(value));
         return this;
     }
 
+    /// <summary>
+    /// Sets exception filter.
+    /// </summary>
+    /// <param name="configure">The configuration callback.</param>
+    /// <returns>The result of the operation.</returns>
     public CircuitBreakerOptions SetExceptionFilter(Action<IExceptionConfigurator> configure)
     {
         ArgumentNullException.ThrowIfNull(configure);

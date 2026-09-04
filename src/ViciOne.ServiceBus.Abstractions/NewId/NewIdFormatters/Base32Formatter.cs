@@ -6,6 +6,9 @@ using System.Runtime.Intrinsics.X86;
 
 namespace ViciOne.ServiceBus.NewIdFormatters;
 
+/// <summary>
+/// Provides a base32 formatter implementation.
+/// </summary>
 public class Base32Formatter :
     INewIdFormatter
 {
@@ -17,12 +20,20 @@ public class Base32Formatter :
     readonly bool _isCustom;
     readonly Vector256<byte> _lower;
     readonly Vector256<byte> _upper;
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="upperCase">The upper case value.</param>
     public Base32Formatter(bool upperCase = false)
     {
         _chars = upperCase ? UpperCaseChars : LowerCaseChars;
         _isUpperCase = upperCase;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="chars">The chars value.</param>
     public Base32Formatter(in string chars)
     {
         if (chars.Length != 32)
@@ -42,6 +53,11 @@ public class Base32Formatter :
         }
     }
 
+    /// <summary>
+    /// Performs the format operation.
+    /// </summary>
+    /// <param name="bytes">The bytes value.</param>
+    /// <returns>The result of the operation.</returns>
     public unsafe string Format(in byte[] bytes)
     {
         if (Avx2.IsSupported)

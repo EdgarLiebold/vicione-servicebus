@@ -143,7 +143,7 @@ public sealed class KillSwitchTestDriver
             {
                 _events.Add("pause");
                 _pauseCount++;
-                LogContextSeenByLastPause = ViciOne.ServiceBus.LogContext.Current;
+                LogContextSeenByLastPause = ViciOne.ServiceBus.Advanced.LogContext.Current;
                 failure = _pauseFailures.TryDequeue(out Exception? queued) ? queued : null;
                 changed = _pauseChanged;
                 _pauseChanged = NewSignal();
@@ -162,7 +162,7 @@ public sealed class KillSwitchTestDriver
             {
                 _events.Add("start");
                 _startCount++;
-                LogContextSeenByLastRestart = ViciOne.ServiceBus.LogContext.Current;
+                LogContextSeenByLastRestart = ViciOne.ServiceBus.Advanced.LogContext.Current;
                 failure = _startFailures.TryDequeue(out Exception? queued) ? queued : null;
                 changed = _startChanged;
                 _startChanged = NewSignal();

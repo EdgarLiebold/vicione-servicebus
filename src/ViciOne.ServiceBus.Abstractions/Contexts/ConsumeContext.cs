@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus;
 
+/// <summary>
+/// Defines the contract for consume context.
+/// </summary>
 public interface ConsumeContext :
     PipeContext,
     MessageContext,
@@ -186,6 +189,10 @@ public interface ConsumeContext :
 }
 
 
+/// <summary>
+/// Defines the contract for consume context.
+/// </summary>
+/// <typeparam name="T">The t type.</typeparam>
 public interface ConsumeContext<out T> :
     PipeContext,
     MessageContext

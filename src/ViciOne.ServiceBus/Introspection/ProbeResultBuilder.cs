@@ -5,6 +5,9 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.Introspection;
 
+/// <summary>
+/// Provides a probe result builder implementation.
+/// </summary>
 public class ProbeResultBuilder :
     ScopeProbeContext,
     IProbeResultBuilder
@@ -15,6 +18,12 @@ public class ProbeResultBuilder :
     readonly long _startedAt;
     readonly TimeProvider _timeProvider;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="probeId">The probe id value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="timeProvider">The time provider value.</param>
     public ProbeResultBuilder(Guid probeId, CancellationToken cancellationToken, TimeProvider? timeProvider = null)
         : base(cancellationToken)
     {
@@ -26,6 +35,10 @@ public class ProbeResultBuilder :
         _startedAt = _timeProvider.GetTimestamp();
     }
 
+    /// <summary>
+    /// Performs the build operation.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public new ProbeResult Build()
     {
         TimeSpan duration = _timeProvider.GetElapsedTime(_startedAt);

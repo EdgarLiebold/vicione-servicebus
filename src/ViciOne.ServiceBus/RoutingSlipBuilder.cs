@@ -9,7 +9,7 @@ using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Util;
 
 #nullable enable annotations
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Courier;
 
 /// <summary>
 /// A RoutingSlipBuilder is used to create a routing slip with proper validation that the resulting RoutingSlip
@@ -19,6 +19,9 @@ public class RoutingSlipBuilder :
     IRoutingSlipBuilder,
     IRoutingSlipSendEndpointTarget
 {
+    /// <summary>
+    /// Defines the no arguments value.
+    /// </summary>
     public static readonly IDictionary<string, object> NoArguments = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
     readonly List<ActivityException> _activityExceptions;
@@ -30,6 +33,11 @@ public class RoutingSlipBuilder :
     readonly List<Subscription> _subscriptions;
     readonly IDictionary<string, object> _variables;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="trackingNumber">The tracking number value.</param>
+    /// <param name="timeProvider">The time provider value.</param>
     public RoutingSlipBuilder(Guid trackingNumber, TimeProvider? timeProvider = null)
     {
         TrackingNumber = trackingNumber;
@@ -44,6 +52,11 @@ public class RoutingSlipBuilder :
         _subscriptions = new List<Subscription>();
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="routingSlip">The routing slip value.</param>
+    /// <param name="activitySelector">The activity selector value.</param>
     public RoutingSlipBuilder(RoutingSlip routingSlip, Func<IEnumerable<Activity>, IEnumerable<Activity>> activitySelector)
     {
         TrackingNumber = routingSlip.TrackingNumber;
@@ -58,6 +71,12 @@ public class RoutingSlipBuilder :
         _sourceItinerary = new List<Activity>();
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="routingSlip">The routing slip value.</param>
+    /// <param name="itinerary">The itinerary value.</param>
+    /// <param name="sourceItinerary">The source itinerary value.</param>
     public RoutingSlipBuilder(RoutingSlip routingSlip, IEnumerable<Activity> itinerary, IEnumerable<Activity> sourceItinerary)
     {
         TrackingNumber = routingSlip.TrackingNumber;
@@ -72,6 +91,11 @@ public class RoutingSlipBuilder :
         _sourceItinerary = new List<Activity>(sourceItinerary);
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="routingSlip">The routing slip value.</param>
+    /// <param name="compensateLogs">The compensate logs value.</param>
     public RoutingSlipBuilder(RoutingSlip routingSlip, IEnumerable<CompensateLog> compensateLogs)
     {
         TrackingNumber = routingSlip.TrackingNumber;
@@ -86,6 +110,9 @@ public class RoutingSlipBuilder :
         _sourceItinerary = new List<Activity>();
     }
 
+    /// <summary>
+    /// Gets the source itinerary value.
+    /// </summary>
     public IList<Activity> SourceItinerary => _sourceItinerary;
 
     /// <summary>
@@ -194,6 +221,10 @@ public class RoutingSlipBuilder :
         SetVariablesFromDictionary(dictionary);
     }
 
+    /// <summary>
+    /// Sets variables.
+    /// </summary>
+    /// <param name="values">The values value.</param>
     public void SetVariables(IEnumerable<KeyValuePair<string, object>> values)
     {
         SetVariablesFromDictionary(values);
@@ -316,11 +347,25 @@ public class RoutingSlipBuilder :
         _subscriptions.Add(new RoutingSlipSubscription(address, events, contents, activityName, message));
     }
 
+    /// <summary>
+    /// Adds activity log to the configuration.
+    /// </summary>
+    /// <param name="host">The host value.</param>
+    /// <param name="name">The name value.</param>
+    /// <param name="activityTrackingNumber">The activity tracking number value.</param>
+    /// <param name="timestamp">The timestamp value.</param>
+    /// <param name="duration">The duration value.</param>
     public void AddActivityLog(HostInfo host, string name, Guid activityTrackingNumber, DateTimeOffset timestamp, TimeSpan duration)
     {
         _activityLogs.Add(new RoutingSlipActivityLog(host, activityTrackingNumber, name, timestamp, duration));
     }
 
+    /// <summary>
+    /// Adds compensate log to the configuration.
+    /// </summary>
+    /// <param name="activityTrackingNumber">The activity tracking number value.</param>
+    /// <param name="compensateAddress">The compensate address value.</param>
+    /// <param name="data">The data value.</param>
     public void AddCompensateLog(Guid activityTrackingNumber, Uri compensateAddress, IDictionary<string, object> data)
     {
         _compensateLogs.Add(new RoutingSlipCompensateLog(activityTrackingNumber, compensateAddress, data));
@@ -371,6 +416,10 @@ public class RoutingSlipBuilder :
         _activityExceptions.Add(activityException);
     }
 
+    /// <summary>
+    /// Adds activity exception to the configuration.
+    /// </summary>
+    /// <param name="activityException">The activity exception value.</param>
     public void AddActivityException(ActivityException activityException)
     {
         if (activityException == null)
@@ -390,6 +439,11 @@ public class RoutingSlipBuilder :
         }
     }
 
+    /// <summary>
+    /// Gets object as dictionary.
+    /// </summary>
+    /// <param name="values">The values value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IDictionary<string, object> GetObjectAsDictionary(object values)
     {
         return ConvertObject.ToDictionary(values);

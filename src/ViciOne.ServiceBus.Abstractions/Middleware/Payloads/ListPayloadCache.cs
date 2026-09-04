@@ -4,20 +4,35 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ViciOne.ServiceBus.Payloads;
 
+/// <summary>
+/// Provides a list payload cache implementation.
+/// </summary>
 public class ListPayloadCache :
     IPayloadCache
 {
     IList<object>? _cache;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public ListPayloadCache()
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="payloads">The payloads value.</param>
     public ListPayloadCache(object[] payloads)
     {
         _cache = new List<object>(payloads);
     }
 
+    /// <summary>
+    /// Determines whether the current value has payload type.
+    /// </summary>
+    /// <param name="payloadType">The payload type value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool HasPayloadType(Type payloadType)
     {
         if (_cache == null)
@@ -35,6 +50,12 @@ public class ListPayloadCache :
         return false;
     }
 
+    /// <summary>
+    /// Attempts to get payload.
+    /// </summary>
+    /// <typeparam name="TPayload">The t payload type.</typeparam>
+    /// <param name="payload">The payload value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetPayload<TPayload>([NotNullWhen(true)] out TPayload? payload)
         where TPayload : class
     {
@@ -60,6 +81,12 @@ public class ListPayloadCache :
         return false;
     }
 
+    /// <summary>
+    /// Gets or add payload.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="payloadFactory">The payload factory value.</param>
+    /// <returns>The result of the operation.</returns>
     public T GetOrAddPayload<T>(PayloadFactory<T> payloadFactory)
         where T : class
     {
@@ -85,6 +112,13 @@ public class ListPayloadCache :
         }
     }
 
+    /// <summary>
+    /// Adds or update payload to the configuration.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="addFactory">The add factory value.</param>
+    /// <param name="updateFactory">The update factory value.</param>
+    /// <returns>The result of the operation.</returns>
     public T AddOrUpdatePayload<T>(PayloadFactory<T> addFactory, UpdatePayloadFactory<T> updateFactory)
         where T : class
     {

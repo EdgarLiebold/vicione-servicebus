@@ -6,6 +6,12 @@ using ViciOne.ServiceBus.SagaStateMachine;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a future result configurator implementation.
+/// </summary>
+/// <typeparam name="TCommand">The t command type.</typeparam>
+/// <typeparam name="TResult">The t result type.</typeparam>
+/// <typeparam name="TInput">The t input type.</typeparam>
 public class FutureResultConfigurator<TCommand, TResult, TInput> :
     IFutureResultConfigurator<TResult, TInput>
     where TCommand : class
@@ -14,11 +20,19 @@ public class FutureResultConfigurator<TCommand, TResult, TInput> :
 {
     readonly FutureResult<TCommand, TResult, TInput> _result;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="result">The result value.</param>
     public FutureResultConfigurator(FutureResult<TCommand, TResult, TInput> result)
     {
         _result = result;
     }
 
+    /// <summary>
+    /// Sets completed using factory.
+    /// </summary>
+    /// <param name="factoryMethod">The factory method value.</param>
     public void SetCompletedUsingFactory(EventMessageFactory<FutureState, TInput, TResult> factoryMethod)
     {
         if (factoryMethod == null)
@@ -27,6 +41,10 @@ public class FutureResultConfigurator<TCommand, TResult, TInput> :
         _result.Factory = MessageFactory<TResult>.Create(factoryMethod);
     }
 
+    /// <summary>
+    /// Sets completed using factory.
+    /// </summary>
+    /// <param name="factoryMethod">The factory method value.</param>
     public void SetCompletedUsingFactory(AsyncEventMessageFactory<FutureState, TInput, TResult> factoryMethod)
     {
         if (factoryMethod == null)
@@ -35,12 +53,16 @@ public class FutureResultConfigurator<TCommand, TResult, TInput> :
         _result.Factory = MessageFactory<TResult>.Create(factoryMethod);
     }
 
+    /// <summary>
+    /// Sets completed using initializer.
+    /// </summary>
+    /// <param name="valueProvider">The value provider value.</param>
     public void SetCompletedUsingInitializer(InitializerValueProvider<TInput> valueProvider)
     {
         if (valueProvider == null)
             throw new ArgumentNullException(nameof(valueProvider));
 
-        Task<SendTuple<TResult>> FactoryAsync(BehaviorContext<FutureState, TInput> context)
+        Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TResult>> FactoryAsync(BehaviorContext<FutureState, TInput> context)
         {
             return MessageInitializerCache<TResult>.InitializeMessageAsync(context, valueProvider(context), new object?[]
             {
@@ -56,11 +78,16 @@ public class FutureResultConfigurator<TCommand, TResult, TInput> :
             });
         }
 
-        _result.Factory = MessageFactory<TResult>.Create((Func<BehaviorContext<FutureState, TInput>, Task<SendTuple<TResult>>>)FactoryAsync);
+        _result.Factory = MessageFactory<TResult>.Create((Func<BehaviorContext<FutureState, TInput>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TResult>>>)FactoryAsync);
     }
 }
 
 
+/// <summary>
+/// Provides a future result configurator implementation.
+/// </summary>
+/// <typeparam name="TCommand">The t command type.</typeparam>
+/// <typeparam name="TResult">The t result type.</typeparam>
 public class FutureResultConfigurator<TCommand, TResult> :
     IFutureResultConfigurator<TResult>
     where TCommand : class
@@ -68,11 +95,19 @@ public class FutureResultConfigurator<TCommand, TResult> :
 {
     readonly FutureResult<TCommand, TResult> _result;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="result">The result value.</param>
     public FutureResultConfigurator(FutureResult<TCommand, TResult> result)
     {
         _result = result;
     }
 
+    /// <summary>
+    /// Sets completed using factory.
+    /// </summary>
+    /// <param name="factoryMethod">The factory method value.</param>
     public void SetCompletedUsingFactory(EventMessageFactory<FutureState, TResult> factoryMethod)
     {
         if (factoryMethod == null)
@@ -81,6 +116,10 @@ public class FutureResultConfigurator<TCommand, TResult> :
         _result.Factory = MessageFactory<TResult>.Create(factoryMethod);
     }
 
+    /// <summary>
+    /// Sets completed using factory.
+    /// </summary>
+    /// <param name="factoryMethod">The factory method value.</param>
     public void SetCompletedUsingFactory(AsyncEventMessageFactory<FutureState, TResult> factoryMethod)
     {
         if (factoryMethod == null)
@@ -89,12 +128,16 @@ public class FutureResultConfigurator<TCommand, TResult> :
         _result.Factory = MessageFactory<TResult>.Create(factoryMethod);
     }
 
+    /// <summary>
+    /// Sets completed using initializer.
+    /// </summary>
+    /// <param name="valueProvider">The value provider value.</param>
     public void SetCompletedUsingInitializer(InitializerValueProvider valueProvider)
     {
         if (valueProvider == null)
             throw new ArgumentNullException(nameof(valueProvider));
 
-        Task<SendTuple<TResult>> FactoryAsync(BehaviorContext<FutureState> context)
+        Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TResult>> FactoryAsync(BehaviorContext<FutureState> context)
         {
             return MessageInitializerCache<TResult>.InitializeMessageAsync(context, valueProvider(context), new object?[]
             {
@@ -109,6 +152,6 @@ public class FutureResultConfigurator<TCommand, TResult> :
             });
         }
 
-        _result.Factory = MessageFactory<TResult>.Create((Func<BehaviorContext<FutureState>, Task<SendTuple<TResult>>>)FactoryAsync);
+        _result.Factory = MessageFactory<TResult>.Create((Func<BehaviorContext<FutureState>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TResult>>>)FactoryAsync);
     }
 }

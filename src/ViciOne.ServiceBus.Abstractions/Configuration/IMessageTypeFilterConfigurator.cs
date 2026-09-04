@@ -1,6 +1,6 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
 /// Configures a message filter, for including and excluding message types

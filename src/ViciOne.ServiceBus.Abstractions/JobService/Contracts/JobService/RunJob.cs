@@ -6,5 +6,8 @@ namespace ViciOne.ServiceBus.Contracts.JobService;
 /// </summary>
 public interface RunJob
 {
+    /// <summary>
+    /// Gets the job id value.
+    /// </summary>
     Guid JobId { get; }
 }

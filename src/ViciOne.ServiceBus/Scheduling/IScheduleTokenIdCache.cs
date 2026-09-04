@@ -2,6 +2,10 @@ using System;
 
 namespace ViciOne.ServiceBus.Scheduling;
 
+/// <summary>
+/// Defines the contract for schedule token id cache.
+/// </summary>
+/// <typeparam name="T">The t type.</typeparam>
 public interface IScheduleTokenIdCache<in T>
     where T : class
 {

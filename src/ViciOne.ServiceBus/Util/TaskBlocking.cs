@@ -12,6 +12,11 @@ namespace ViciOne.ServiceBus.Util;
 /// </summary>
 public static class TaskBlocking
 {
+    /// <summary>
+    /// Performs the wait operation.
+    /// </summary>
+    /// <param name="taskFactory">The task factory value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public static void Wait(Func<Task> taskFactory, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(taskFactory);
@@ -20,6 +25,11 @@ public static class TaskBlocking
         Wait(task, cancellationToken);
     }
 
+    /// <summary>
+    /// Performs the wait operation.
+    /// </summary>
+    /// <param name="task">The task value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public static void Wait(Task task, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(task);
@@ -30,6 +40,13 @@ public static class TaskBlocking
         task.GetAwaiter().GetResult();
     }
 
+    /// <summary>
+    /// Performs the wait operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="taskFactory">The task factory value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static T Wait<T>(Func<Task<T>> taskFactory, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(taskFactory);

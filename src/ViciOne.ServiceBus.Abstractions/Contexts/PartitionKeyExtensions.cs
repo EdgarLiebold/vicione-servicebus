@@ -1,14 +1,27 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides extension methods for partition key.
+/// </summary>
 public static class PartitionKeyExtensions
 {
+    /// <summary>
+    /// Performs the partition key operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public static string? PartitionKey(this ConsumeContext context)
     {
         return context.TryGetPayload(out PartitionKeyConsumeContext? consumeContext) ? consumeContext.PartitionKey : string.Empty;
     }
 
+    /// <summary>
+    /// Performs the partition key operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public static string? PartitionKey(this SendContext context)
     {
         return context.TryGetPayload(out PartitionKeySendContext? sendContext) ? sendContext.PartitionKey : string.Empty;

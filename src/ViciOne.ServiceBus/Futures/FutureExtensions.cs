@@ -1,8 +1,11 @@
 using System;
 using ViciOne.ServiceBus.Courier.Contracts;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Futures;
 
+/// <summary>
+/// Provides extension methods for future.
+/// </summary>
 public static class FutureExtensions
 {
     /// <summary>

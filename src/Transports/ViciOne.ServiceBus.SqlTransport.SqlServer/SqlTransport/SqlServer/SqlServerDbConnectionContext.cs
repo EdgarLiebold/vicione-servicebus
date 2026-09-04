@@ -13,6 +13,9 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.SqlTransport.SqlServer;
 
+/// <summary>
+/// Provides a sql server db connection context implementation.
+/// </summary>
 public class SqlServerDbConnectionContext :
     BasePipeContext,
     ConnectionContext,
@@ -29,6 +32,11 @@ public class SqlServerDbConnectionContext :
         SqlMapper.AddTypeHandler(new UriTypeHandler());
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="hostConfiguration">The host configuration value.</param>
+    /// <param name="supervisor">The supervisor value.</param>
     public SqlServerDbConnectionContext(ISqlHostConfiguration hostConfiguration, ITransportSupervisor<ConnectionContext> supervisor)
         : base(supervisor.Stopped)
     {
@@ -47,14 +55,31 @@ public class SqlServerDbConnectionContext :
         _executor = new TaskExecutor(hostConfiguration.Settings.ConnectionLimit);
     }
 
+    /// <summary>
+    /// Gets the topology value.
+    /// </summary>
     public ISqlBusTopology Topology { get; }
 
+    /// <summary>
+    /// Gets the isolation level value.
+    /// </summary>
     public IsolationLevel IsolationLevel => _hostSettings.IsolationLevel;
 
+    /// <summary>
+    /// Gets the host address value.
+    /// </summary>
     public Uri HostAddress => _hostConfiguration.HostAddress;
 
+    /// <summary>
+    /// Gets the schema value.
+    /// </summary>
     public string? Schema => _hostSettings.Schema;
 
+    /// <summary>
+    /// Creates client context.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public ClientContext CreateClientContext(CancellationToken cancellationToken)
     {
         return new SqlServerClientContext(this, cancellationToken);
@@ -65,6 +90,13 @@ public class SqlServerDbConnectionContext :
         return await CreateConnectionAsync(cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Performs the query operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="callback">The callback value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<T> QueryAsync<T>(Func<IDbConnection, IDbTransaction, Task<T>> callback, CancellationToken cancellationToken)
     {
         return _executor.ExecuteAsync(() =>
@@ -97,11 +129,20 @@ public class SqlServerDbConnectionContext :
         return Task.Delay(timeout, timeProvider, cancellationToken);
     }
 
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public async ValueTask DisposeAsync()
     {
         TransportLogMessages.DisconnectedHost(_hostConfiguration.HostAddress.ToString());
     }
 
+    /// <summary>
+    /// Creates connection.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task<ISqlServerSqlTransportConnection> CreateConnectionAsync(CancellationToken cancellationToken)
     {
         var connection = new SqlServerSqlTransportConnection(_hostSettings.GetConnectionString());

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Apache.NMS;
 using NDesk.Options;
 using ViciOne.ServiceBus;
-using ViciOne.ServiceBus.ActiveMqTransport.Configuration;
+using ViciOne.ServiceBus.ActiveMq.Configuration;
 
 #nullable enable
 namespace ViciOneServiceBusBenchmark;
@@ -52,7 +52,7 @@ internal sealed class ActiveMqOptionSet :
     public ActiveMqTransportProtocol Protocol => _protocol
         ?? throw new OptionException("The ActiveMQ protocol was not configured.", "protocol");
 
-    public IConnection CreateConnection()
+    public Apache.NMS.IConnection CreateConnection()
     {
         return HostSettings.CreateConnection();
     }

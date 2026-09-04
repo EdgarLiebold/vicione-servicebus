@@ -7,5 +7,8 @@ namespace ViciOne.ServiceBus.Caching;
 public readonly record struct ResourceCacheStatistics(int Count, int PendingCreations, long TotalCreated, long Hits, long Misses,
     long CreationFaults, long Evictions)
 {
+    /// <summary>
+    /// Gets the hit ratio value.
+    /// </summary>
     public double HitRatio => Hits + Misses == 0 ? 0 : (double)Hits / (Hits + Misses);
 }

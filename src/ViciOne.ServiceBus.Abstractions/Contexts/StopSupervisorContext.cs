@@ -1,5 +1,8 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Defines the contract for stop supervisor context.
+/// </summary>
 public interface StopSupervisorContext :
     StopContext
 {

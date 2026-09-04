@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for health check options configurator.
+/// </summary>
 public interface IHealthCheckOptionsConfigurator
 {
     /// <summary>

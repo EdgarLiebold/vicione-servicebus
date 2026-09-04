@@ -7,11 +7,17 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace ViciOne.ServiceBus.Analyzers;
 
+/// <summary>
+/// Provides an async method analyzer implementation.
+/// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class AsyncMethodAnalyzer :
     DiagnosticAnalyzer
 {
-    public const string MissingAwaitRuleId = "ViciOneServiceBus0001";
+    /// <summary>
+    /// Defines the missing await rule id value.
+    /// </summary>
+    public const string MissingAwaitRuleId = "VOSB1001";
 
     const string Category = "Usage";
 
@@ -21,8 +27,15 @@ public class AsyncMethodAnalyzer :
         Category, DiagnosticSeverity.Warning, true,
         "ViciOne.ServiceBus method is not awaited or captured.");
 
+    /// <summary>
+    /// Gets the supported diagnostics value.
+    /// </summary>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(MissingAwaitRule);
 
+    /// <summary>
+    /// Performs the initialize operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public override void Initialize(AnalysisContext context)
     {
         if (context == null)

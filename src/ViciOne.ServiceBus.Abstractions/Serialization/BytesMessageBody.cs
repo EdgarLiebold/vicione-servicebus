@@ -1,19 +1,29 @@
 using System.IO;
 using System.Text;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Serialization;
 
+/// <summary>
+/// Provides a bytes message body implementation.
+/// </summary>
 public class BytesMessageBody :
     MessageBody
 {
     readonly byte[] _bytes;
     string? _string;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="bytes">The bytes value.</param>
     public BytesMessageBody(byte[]? bytes)
     {
         _bytes = bytes ?? [];
     }
 
+    /// <summary>
+    /// Gets the length value.
+    /// </summary>
     public long? Length => _bytes.Length;
 
     /// <summary>
@@ -27,11 +37,19 @@ public class BytesMessageBody :
         return new MemoryStream(_bytes, false);
     }
 
+    /// <summary>
+    /// Gets bytes.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public byte[] GetBytes()
     {
         return _bytes;
     }
 
+    /// <summary>
+    /// Gets string.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public string GetString()
     {
         return _string ??= Encoding.UTF8.GetString(_bytes);

@@ -19,6 +19,11 @@ public class ProviderHeaderInitializer<TMessage, TInput, TProperty> :
     readonly IWriteProperty<SendContext, TProperty> _messageProperty;
     readonly IPropertyProvider<TInput, TProperty> _propertyProvider;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="propertyProvider">The property provider value.</param>
+    /// <param name="propertyInfo">The property info value.</param>
     public ProviderHeaderInitializer(IPropertyProvider<TInput, TProperty> propertyProvider, PropertyInfo propertyInfo)
     {
         if (propertyProvider == null)
@@ -32,6 +37,13 @@ public class ProviderHeaderInitializer<TMessage, TInput, TProperty> :
         _messageProperty = WritePropertyCache<SendContext>.GetProperty<TProperty>(propertyInfo);
     }
 
+    /// <summary>
+    /// Applies this specification to the target builder.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="sendContext">The send context value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task ApplyAsync(InitializeContext<TMessage, TInput> context, SendContext sendContext, CancellationToken cancellationToken = default)
     {
         Task<TProperty?> propertyTask = _propertyProvider.GetPropertyAsync(context, cancellationToken: cancellationToken);

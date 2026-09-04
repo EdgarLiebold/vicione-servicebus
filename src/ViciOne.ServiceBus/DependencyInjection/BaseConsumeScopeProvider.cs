@@ -6,22 +6,47 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.DependencyInjection;
 
+/// <summary>
+/// Provides a base consume scope provider implementation.
+/// </summary>
 public abstract class BaseConsumeScopeProvider
 {
     readonly IServiceProvider _serviceProvider;
+    /// <summary>
+    /// Defines the set scoped consume context value.
+    /// </summary>
     protected readonly ISetScopedConsumeContext SetScopedConsumeContext;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     protected BaseConsumeScopeProvider(IRegistrationContext context)
         : this(context, context as ISetScopedConsumeContext ?? throw new ArgumentException(nameof(context)))
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="serviceProvider">The service provider value.</param>
+    /// <param name="setScopedConsumeContext">The set scoped consume context value.</param>
     protected BaseConsumeScopeProvider(IServiceProvider serviceProvider, ISetScopedConsumeContext setScopedConsumeContext)
     {
         _serviceProvider = serviceProvider;
         SetScopedConsumeContext = setScopedConsumeContext;
     }
 
+    /// <summary>
+    /// Gets scope context.
+    /// </summary>
+    /// <typeparam name="TScopeContext">The t scope context type.</typeparam>
+    /// <typeparam name="TPipeContext">The t pipe context type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="existingScopeContextFactory">The existing scope context factory value.</param>
+    /// <param name="createdScopeContextFactory">The created scope context factory value.</param>
+    /// <param name="pipeContextFactory">The pipe context factory value.</param>
+    /// <returns>The result of the operation.</returns>
     protected ValueTask<TScopeContext> GetScopeContextAsync<TScopeContext, TPipeContext>(TPipeContext context,
         Func<TPipeContext, IServiceScope, IDisposable, TScopeContext> existingScopeContextFactory,
         Func<TPipeContext, IServiceScope, IDisposable, TScopeContext> createdScopeContextFactory,

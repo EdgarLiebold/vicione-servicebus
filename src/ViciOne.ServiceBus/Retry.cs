@@ -6,8 +6,11 @@ using ViciOne.ServiceBus.Observables;
 using ViciOne.ServiceBus.RetryPolicies;
 using ViciOne.ServiceBus.RetryPolicies.ExceptionFilters;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides a retry implementation.
+/// </summary>
 public static class Retry
 {
     static readonly IExceptionFilter _all = new AllExceptionFilter();
@@ -195,6 +198,11 @@ public static class Retry
         return new IncrementalRetryPolicy(filter, retryLimit, initialInterval, intervalIncrement);
     }
 
+    /// <summary>
+    /// Creates policy.
+    /// </summary>
+    /// <param name="configure">The configuration callback.</param>
+    /// <returns>The result of the operation.</returns>
     public static IRetryPolicy CreatePolicy(Action<IRetryConfigurator> configure)
     {
         var configurator = new RetryConfigurator();

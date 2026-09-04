@@ -30,7 +30,7 @@ namespace ConsoleApplication1
         await AssertDiagnosticsAsync(
             source,
             new DiagnosticObservation(
-                "MCA2016",
+                "VOSB2001",
                 DiagnosticSeverity.Info,
                 "Cancellation token from 'context.CancellationToken' can be used in cancellation token overload for 'Task.Delay' method",
                 "Test0.cs",
@@ -85,14 +85,14 @@ namespace ConsoleApplication1
         await AssertDiagnosticsAsync(
             source,
             new DiagnosticObservation(
-                "MCA2016",
+                "VOSB2001",
                 DiagnosticSeverity.Info,
                 "Cancellation token from 'context.CancellationToken' can be used in cancellation token overload for 'Task.Delay' method",
                 "Test0.cs",
                 41,
                 20),
             new DiagnosticObservation(
-                "MCA2016",
+                "VOSB2001",
                 DiagnosticSeverity.Info,
                 "Cancellation token from 'ctx.CancellationToken' can be used in cancellation token overload for 'Task.Run' method",
                 "Test0.cs",
@@ -124,7 +124,7 @@ namespace ConsoleApplication1
         await AssertDiagnosticsAsync(
             source,
             new DiagnosticObservation(
-                "MCA2016",
+                "VOSB2001",
                 DiagnosticSeverity.Info,
                 "Cancellation token from 'context.CancellationToken' can be used in cancellation token overload for 'Task.Run' method",
                 "Test0.cs",

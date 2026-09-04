@@ -1,8 +1,13 @@
 using System;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides an execute activity definition implementation.
+/// </summary>
+/// <typeparam name="TActivity">The t activity type.</typeparam>
+/// <typeparam name="TArguments">The t arguments type.</typeparam>
 public class ExecuteActivityDefinition<TActivity, TArguments> :
     IExecuteActivityDefinition<TActivity, TArguments>
     where TActivity : class, IExecuteActivity<TArguments>
@@ -11,6 +16,9 @@ public class ExecuteActivityDefinition<TActivity, TArguments> :
     int? _concurrentMessageLimit;
     string? _executeEndpointName;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     protected ExecuteActivityDefinition()
     {
     }
@@ -25,6 +33,9 @@ public class ExecuteActivityDefinition<TActivity, TArguments> :
         set => _executeEndpointName = value;
     }
 
+    /// <summary>
+    /// Gets or sets the execute endpoint definition value.
+    /// </summary>
     public IEndpointDefinition<IExecuteActivity<TArguments>>? ExecuteEndpointDefinition { get; set; }
 
     IEndpointDefinition? IExecuteActivityDefinition.ExecuteEndpointDefinition => ExecuteEndpointDefinition;

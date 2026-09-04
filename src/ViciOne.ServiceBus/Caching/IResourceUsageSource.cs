@@ -9,5 +9,8 @@ namespace ViciOne.ServiceBus.Caching;
 /// </summary>
 public interface IResourceUsageSource
 {
+    /// <summary>
+    /// Occurs when used.
+    /// </summary>
     event Action? Used;
 }

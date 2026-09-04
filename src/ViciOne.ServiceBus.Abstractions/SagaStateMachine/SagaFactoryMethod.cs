@@ -1,4 +1,4 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
 /// <summary>
 /// Used to create the saga instance

@@ -1,7 +1,6 @@
 using System;
-using System.ComponentModel;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Providers.Persistence;
 
 /// <summary>
 /// Hard retained-record and logical retained-content-byte bounds owned by one durable-send store registration.
@@ -9,9 +8,13 @@ namespace ViciOne.ServiceBus;
 /// serialized body + ServiceBus metadata bytes; it is not a claim about a provider's physical database allocation.
 /// Physical store quotas/row/index overhead remain provider/host capacity concerns.
 /// </summary>
-[EditorBrowsable(EditorBrowsableState.Never)]
 public readonly record struct DurableSendStoreLimits
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="maximumStoredCount">The maximum stored count value.</param>
+    /// <param name="maximumStoredBytes">The maximum stored bytes value.</param>
     public DurableSendStoreLimits(int maximumStoredCount, long maximumStoredBytes)
     {
         if (maximumStoredCount < 1)
@@ -23,6 +26,9 @@ public readonly record struct DurableSendStoreLimits
         MaximumStoredBytes = maximumStoredBytes;
     }
 
+    /// <summary>
+    /// Gets the maximum stored count value.
+    /// </summary>
     public int MaximumStoredCount { get; }
 
     /// <summary>

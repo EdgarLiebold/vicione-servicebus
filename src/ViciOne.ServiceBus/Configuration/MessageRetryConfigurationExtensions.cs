@@ -3,8 +3,11 @@ using System.Threading;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Middleware;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for message retry configuration.
+/// </summary>
 public static class MessageRetryConfigurationExtensions
 {
     /// <summary>

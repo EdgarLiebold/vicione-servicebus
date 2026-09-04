@@ -4,6 +4,9 @@ using System.Text.Json;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for serialization configuration.
+/// </summary>
 public interface ISerializationConfiguration :
     ISpecification
 {
@@ -17,8 +20,18 @@ public interface ISerializationConfiguration :
     /// </summary>
     ContentType SerializerContentType { set; }
 
+    /// <summary>
+    /// Adds serializer to the configuration.
+    /// </summary>
+    /// <param name="factory">The factory value.</param>
+    /// <param name="isSerializer">The is serializer value.</param>
     void AddSerializer(ISerializerFactory factory, bool isSerializer = true);
 
+    /// <summary>
+    /// Adds deserializer to the configuration.
+    /// </summary>
+    /// <param name="factory">The factory value.</param>
+    /// <param name="isDefault">The is default value.</param>
     void AddDeserializer(ISerializerFactory factory, bool isDefault = false);
 
     /// <summary>
@@ -33,6 +46,10 @@ public interface ISerializationConfiguration :
     /// </summary>
     void Clear();
 
+    /// <summary>
+    /// Creates serialization configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     ISerializationConfiguration CreateSerializationConfiguration();
 
     /// <summary>

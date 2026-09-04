@@ -10,6 +10,9 @@ using ViciOne.ServiceBus.Transports.Fabric;
 
 namespace ViciOne.ServiceBus.InMemoryTransport;
 
+/// <summary>
+/// Provides an in memory send transport context implementation.
+/// </summary>
 public class InMemorySendTransportContext :
     BaseSendTransportContext,
     SendTransportContext<PipeContext>
@@ -19,6 +22,13 @@ public class InMemorySendTransportContext :
     readonly IInMemoryDelayProvider _delayProvider;
     readonly IMessageExchange<InMemoryTransportMessage> _exchange;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="hostConfiguration">The host configuration value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <param name="exchange">The exchange value.</param>
+    /// <param name="delayProvider">The delay provider value.</param>
     public InMemorySendTransportContext(IHostConfiguration hostConfiguration, ReceiveEndpointContext context,
         IMessageExchange<InMemoryTransportMessage> exchange, IInMemoryDelayProvider delayProvider)
         : base(hostConfiguration, context.Serialization)
@@ -27,9 +37,23 @@ public class InMemorySendTransportContext :
         _delayProvider = delayProvider ?? throw new ArgumentNullException(nameof(delayProvider));
     }
 
+    /// <summary>
+    /// Gets the entity name value.
+    /// </summary>
     public override string EntityName => _exchange.Name;
+    /// <summary>
+    /// Gets the activity system value.
+    /// </summary>
     public override string ActivitySystem => "in-memory";
 
+    /// <summary>
+    /// Creates send context.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="message">The message value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public override async Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
     {
         var sendContext = new InMemorySendContext<T>(message, cancellationToken);
@@ -39,6 +63,15 @@ public class InMemorySendTransportContext :
         return sendContext;
     }
 
+    /// <summary>
+    /// Creates send context.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="message">The message value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<SendContext<T>> CreateSendContextAsync<T>(PipeContext context, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
@@ -46,6 +79,14 @@ public class InMemorySendTransportContext :
         return CreateSendContextAsync(message, pipe, cancellationToken);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="transportContext">The transport context value.</param>
+    /// <param name="sendContext">The send context value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task SendAsync<T>(PipeContext transportContext, SendContext<T> sendContext, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -74,6 +115,12 @@ public class InMemorySendTransportContext :
         return _exchange.DeliverAsync(deliveryContext, cancellationToken: cancellationToken);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="pipe">The pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task SendAsync(IPipe<PipeContext> pipe, CancellationToken cancellationToken = default)
     {
         var pipeContext = new Context(cancellationToken);
@@ -81,6 +128,10 @@ public class InMemorySendTransportContext :
         return pipe.SendAsync(pipeContext);
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         _exchange.Probe(context);

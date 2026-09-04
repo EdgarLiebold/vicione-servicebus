@@ -8,6 +8,9 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Testing.Implementations;
 
+/// <summary>
+/// Provides an async inactivity observer implementation.
+/// </summary>
 public class AsyncInactivityObserver :
     IDisposable,
     IInactivityObserver
@@ -19,11 +22,22 @@ public class AsyncInactivityObserver :
     readonly TimeProvider _timeProvider;
     int _disposed;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="timeout">The timeout value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public AsyncInactivityObserver(TimeSpan timeout, CancellationToken cancellationToken)
         : this(timeout, cancellationToken, TimeProvider.System)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="timeout">The timeout value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="timeProvider">The time provider value.</param>
     public AsyncInactivityObserver(TimeSpan timeout, CancellationToken cancellationToken, TimeProvider timeProvider)
     {
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
@@ -34,10 +48,20 @@ public class AsyncInactivityObserver :
         _inactivityTokenSource = new CancellationTokenSource();
     }
 
+    /// <summary>
+    /// Gets the inactivity task value.
+    /// </summary>
     public Task InactivityTask => _inactivityTask.Value;
 
+    /// <summary>
+    /// Gets the inactivity token value.
+    /// </summary>
     public CancellationToken InactivityToken => _inactivityTokenSource.Token;
 
+    /// <summary>
+    /// Connects ed.
+    /// </summary>
+    /// <param name="source">The source value.</param>
     public void Connected(IInactivityObservationSource source)
     {
         ArgumentNullException.ThrowIfNull(source);
@@ -46,11 +70,19 @@ public class AsyncInactivityObserver :
             _sources.Add(source);
     }
 
+    /// <summary>
+    /// Performs the no activity operation.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task NoActivityAsync(CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return CheckSourceActivityAsync();
     }
 
+    /// <summary>
+    /// Performs the force inactive operation.
+    /// </summary>
     public void ForceInactive()
     {
         if (Volatile.Read(ref _disposed) != 0)
@@ -60,6 +92,9 @@ public class AsyncInactivityObserver :
         _inactivityTokenSource.Cancel();
     }
 
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
     public void Dispose()
     {
         if (Interlocked.Exchange(ref _disposed, 1) != 0)

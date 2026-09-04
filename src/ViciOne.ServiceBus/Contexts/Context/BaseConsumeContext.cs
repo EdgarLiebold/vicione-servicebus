@@ -8,10 +8,18 @@ using ViciOne.ServiceBus.Transports;
 #nullable enable
 namespace ViciOne.ServiceBus.Context;
 
+/// <summary>
+/// Provides a base consume context implementation.
+/// </summary>
 public abstract class BaseConsumeContext :
     PublishEndpoint,
     ConsumeContext
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="receiveContext">The receive context value.</param>
+    /// <param name="serializerContext">The serializer context value.</param>
     protected BaseConsumeContext(ReceiveContext receiveContext, SerializerContext serializerContext)
         : base(receiveContext.PublishEndpointProvider)
     {
@@ -19,44 +27,139 @@ public abstract class BaseConsumeContext :
         SerializerContext = serializerContext;
     }
 
+    /// <summary>
+    /// Gets the cancellation token value.
+    /// </summary>
     public virtual CancellationToken CancellationToken => ReceiveContext.CancellationToken;
 
+    /// <summary>
+    /// Determines whether the current value has payload type.
+    /// </summary>
+    /// <param name="payloadType">The payload type value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public abstract bool HasPayloadType(Type payloadType);
 
+    /// <summary>
+    /// Attempts to get payload.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="payload">The payload value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public abstract bool TryGetPayload<T>([NotNullWhen(true)] out T? payload)
         where T : class;
 
+    /// <summary>
+    /// Gets or add payload.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="payloadFactory">The payload factory value.</param>
+    /// <returns>The result of the operation.</returns>
     public abstract T GetOrAddPayload<T>(PayloadFactory<T> payloadFactory)
         where T : class;
 
+    /// <summary>
+    /// Adds or update payload to the configuration.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="addFactory">The add factory value.</param>
+    /// <param name="updateFactory">The update factory value.</param>
+    /// <returns>The result of the operation.</returns>
     public abstract T AddOrUpdatePayload<T>(PayloadFactory<T> addFactory, UpdatePayloadFactory<T> updateFactory)
         where T : class;
 
+    /// <summary>
+    /// Gets or sets the receive context value.
+    /// </summary>
     public ReceiveContext ReceiveContext { get; protected set; }
 
+    /// <summary>
+    /// Gets the serializer context value.
+    /// </summary>
     public SerializerContext SerializerContext { get; }
 
+    /// <summary>
+    /// Gets the consume completed value.
+    /// </summary>
     public abstract Task ConsumeCompleted { get; }
 
+    /// <summary>
+    /// Gets the message id value.
+    /// </summary>
     public abstract Guid? MessageId { get; }
+    /// <summary>
+    /// Gets the request id value.
+    /// </summary>
     public abstract Guid? RequestId { get; }
+    /// <summary>
+    /// Gets the correlation id value.
+    /// </summary>
     public abstract Guid? CorrelationId { get; }
+    /// <summary>
+    /// Gets the conversation id value.
+    /// </summary>
     public abstract Guid? ConversationId { get; }
+    /// <summary>
+    /// Gets the initiator id value.
+    /// </summary>
     public abstract Guid? InitiatorId { get; }
+    /// <summary>
+    /// Gets the expiration time value.
+    /// </summary>
     public abstract DateTimeOffset? ExpirationTime { get; }
+    /// <summary>
+    /// Gets the source address value.
+    /// </summary>
     public abstract Uri? SourceAddress { get; }
+    /// <summary>
+    /// Gets the destination address value.
+    /// </summary>
     public abstract Uri? DestinationAddress { get; }
+    /// <summary>
+    /// Gets the response address value.
+    /// </summary>
     public abstract Uri? ResponseAddress { get; }
+    /// <summary>
+    /// Gets the fault address value.
+    /// </summary>
     public abstract Uri? FaultAddress { get; }
+    /// <summary>
+    /// Gets the sent time value.
+    /// </summary>
     public abstract DateTimeOffset? SentTime { get; }
+    /// <summary>
+    /// Gets the headers value.
+    /// </summary>
     public abstract Headers Headers { get; }
+    /// <summary>
+    /// Gets the host value.
+    /// </summary>
     public abstract HostInfo Host { get; }
+    /// <summary>
+    /// Gets the supported message types value.
+    /// </summary>
     public abstract IEnumerable<string> SupportedMessageTypes { get; }
+    /// <summary>
+    /// Determines whether the current value has message type.
+    /// </summary>
+    /// <param name="messageType">The message type value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public abstract bool HasMessageType(Type messageType);
 
+    /// <summary>
+    /// Attempts to get message.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="consumeContext">The consume context value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public abstract bool TryGetMessage<T>([NotNullWhen(true)] out ConsumeContext<T>? consumeContext)
         where T : class;
 
+    /// <summary>
+    /// Performs the respond operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="message">The message value.</param>
+    /// <returns>The result of the operation.</returns>
     public virtual Task RespondAsync<T>(T message)
         where T : class
     {
@@ -66,6 +169,13 @@ public abstract class BaseConsumeContext :
         return ConsumeTaskAsync(RespondInternalAsync(message));
     }
 
+    /// <summary>
+    /// Performs the respond operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="message">The message value.</param>
+    /// <param name="sendPipe">The send pipe value.</param>
+    /// <returns>The result of the operation.</returns>
     public virtual Task RespondAsync<T>(T message, IPipe<SendContext<T>> sendPipe)
         where T : class
     {
@@ -77,6 +187,13 @@ public abstract class BaseConsumeContext :
         return ConsumeTaskAsync(RespondInternalAsync(message, sendPipe));
     }
 
+    /// <summary>
+    /// Performs the respond operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="message">The message value.</param>
+    /// <param name="sendPipe">The send pipe value.</param>
+    /// <returns>The result of the operation.</returns>
     public virtual Task RespondAsync<T>(T message, IPipe<SendContext> sendPipe)
         where T : class
     {
@@ -88,6 +205,11 @@ public abstract class BaseConsumeContext :
         return ConsumeTaskAsync(RespondInternalAsync(message, sendPipe));
     }
 
+    /// <summary>
+    /// Performs the respond operation.
+    /// </summary>
+    /// <param name="message">The message value.</param>
+    /// <returns>The result of the operation.</returns>
     public virtual Task RespondAsync(object message)
     {
         if (message == null)
@@ -98,6 +220,12 @@ public abstract class BaseConsumeContext :
         return ResponseEndpointConverterCache.RespondAsync(this, message, messageType);
     }
 
+    /// <summary>
+    /// Performs the respond operation.
+    /// </summary>
+    /// <param name="message">The message value.</param>
+    /// <param name="messageType">The message type value.</param>
+    /// <returns>The result of the operation.</returns>
     public virtual Task RespondAsync(object message, Type messageType)
     {
         if (message == null)
@@ -108,6 +236,12 @@ public abstract class BaseConsumeContext :
         return ResponseEndpointConverterCache.RespondAsync(this, message, messageType);
     }
 
+    /// <summary>
+    /// Performs the respond operation.
+    /// </summary>
+    /// <param name="message">The message value.</param>
+    /// <param name="sendPipe">The send pipe value.</param>
+    /// <returns>The result of the operation.</returns>
     public virtual Task RespondAsync(object message, IPipe<SendContext> sendPipe)
     {
         if (message == null)
@@ -120,6 +254,13 @@ public abstract class BaseConsumeContext :
         return ResponseEndpointConverterCache.RespondAsync(this, message, messageType, sendPipe);
     }
 
+    /// <summary>
+    /// Performs the respond operation.
+    /// </summary>
+    /// <param name="message">The message value.</param>
+    /// <param name="messageType">The message type value.</param>
+    /// <param name="sendPipe">The send pipe value.</param>
+    /// <returns>The result of the operation.</returns>
     public virtual Task RespondAsync(object message, Type messageType, IPipe<SendContext> sendPipe)
     {
         if (message == null)
@@ -132,6 +273,12 @@ public abstract class BaseConsumeContext :
         return ResponseEndpointConverterCache.RespondAsync(this, message, messageType, sendPipe);
     }
 
+    /// <summary>
+    /// Performs the respond operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="values">The values value.</param>
+    /// <returns>The result of the operation.</returns>
     public virtual Task RespondAsync<T>(object values)
         where T : class
     {
@@ -141,24 +288,49 @@ public abstract class BaseConsumeContext :
         return ConsumeTaskAsync(RespondInternalAsync<T>(values));
     }
 
+    /// <summary>
+    /// Performs the respond operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="values">The values value.</param>
+    /// <param name="sendPipe">The send pipe value.</param>
+    /// <returns>The result of the operation.</returns>
     public virtual Task RespondAsync<T>(object values, IPipe<SendContext<T>> sendPipe)
         where T : class
     {
         return ConsumeTaskAsync(RespondInternalAsync(values, sendPipe));
     }
 
+    /// <summary>
+    /// Performs the respond operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="values">The values value.</param>
+    /// <param name="sendPipe">The send pipe value.</param>
+    /// <returns>The result of the operation.</returns>
     public virtual Task RespondAsync<T>(object values, IPipe<SendContext> sendPipe)
         where T : class
     {
         return ConsumeTaskAsync(RespondInternalAsync<T>(values, sendPipe));
     }
 
+    /// <summary>
+    /// Performs the defer response operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="message">The message value.</param>
     public virtual void DeferResponse<T>(T message)
         where T : class
     {
         AddConsumeTask(RespondInternalAsync(message));
     }
 
+    /// <summary>
+    /// Gets send endpoint.
+    /// </summary>
+    /// <param name="address">The address value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public virtual async Task<ISendEndpoint> GetSendEndpointAsync(Uri address, CancellationToken cancellationToken = default)
     {
         var sendEndpoint = await ReceiveContext.SendEndpointProvider.GetSendEndpointAsync(address, cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -166,12 +338,31 @@ public abstract class BaseConsumeContext :
         return new ConsumeSendEndpoint(sendEndpoint, this);
     }
 
+    /// <summary>
+    /// Performs the notify consumed operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="duration">The duration value.</param>
+    /// <param name="consumerType">The consumer type value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public virtual Task NotifyConsumedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
         where T : class
     {
         return ReceiveContext.NotifyConsumedAsync(context, duration, consumerType, cancellationToken: cancellationToken);
     }
 
+    /// <summary>
+    /// Performs the notify faulted operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="duration">The duration value.</param>
+    /// <param name="consumerType">The consumer type value.</param>
+    /// <param name="exception">The exception associated with the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public virtual async Task NotifyFaultedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -189,11 +380,20 @@ public abstract class BaseConsumeContext :
         await ReceiveContext.NotifyFaultedAsync(context, duration, consumerType, exception, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Connects send observer.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
     {
         return ReceiveContext.SendEndpointProvider.ConnectSendObserver(observer);
     }
 
+    /// <summary>
+    /// Adds consume task to the configuration.
+    /// </summary>
+    /// <param name="task">The task value.</param>
     public abstract void AddConsumeTask(Task task);
 
     Task RespondInternalAsync<T>(T message, IPipe<SendContext<T>>? pipe = null)
@@ -248,6 +448,13 @@ public abstract class BaseConsumeContext :
         return RespondInternalAsync();
     }
 
+    /// <summary>
+    /// Performs the generate fault operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="exception">The exception associated with the operation.</param>
+    /// <returns>The result of the operation.</returns>
     protected virtual Task GenerateFaultAsync<T>(ConsumeContext<T> context, Exception exception)
         where T : class
     {
@@ -261,6 +468,11 @@ public abstract class BaseConsumeContext :
         return task;
     }
 
+    /// <summary>
+    /// Gets publish send endpoint.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     protected override async Task<ISendEndpoint> GetPublishSendEndpointAsync<T>()
     {
         var publishSendEndpoint = await base.GetPublishSendEndpointAsync<T>().ConfigureAwait(false);

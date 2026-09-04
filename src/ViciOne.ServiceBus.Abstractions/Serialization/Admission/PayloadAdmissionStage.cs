@@ -1,4 +1,4 @@
-namespace ViciOne.ServiceBus.Serialization;
+namespace ViciOne.ServiceBus.Advanced.Serialization;
 
 /// <summary>The serialized boundary at which payload admission failed.</summary>
 public enum PayloadAdmissionStage

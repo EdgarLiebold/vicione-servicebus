@@ -15,14 +15,28 @@ public class NewOrExistingSagaPolicy<TSaga, TMessage> :
     readonly bool _insertOnInitial;
     readonly ISagaFactory<TSaga, TMessage> _sagaFactory;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="sagaFactory">The saga factory value.</param>
+    /// <param name="insertOnInitial">The insert on initial value.</param>
     public NewOrExistingSagaPolicy(ISagaFactory<TSaga, TMessage> sagaFactory, bool insertOnInitial)
     {
         _sagaFactory = sagaFactory;
         _insertOnInitial = insertOnInitial;
     }
 
+    /// <summary>
+    /// Gets the is read only value.
+    /// </summary>
     public bool IsReadOnly => false;
 
+    /// <summary>
+    /// Performs the pre insert instance operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="instance">The instance value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool PreInsertInstance(ConsumeContext<TMessage> context, [NotNullWhen(true)] out TSaga? instance)
     {
         if (_insertOnInitial)

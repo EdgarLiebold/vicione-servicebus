@@ -5,11 +5,18 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.SqlTransport;
 
+/// <summary>
+/// Provides a scope client context factory implementation.
+/// </summary>
 public class ScopeClientContextFactory :
     IPipeContextFactory<ClientContext>
 {
     readonly IConnectionContextSupervisor _connectionContextSupervisor;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="connectionContextSupervisor">The connection context supervisor value.</param>
     public ScopeClientContextFactory(IConnectionContextSupervisor connectionContextSupervisor)
     {
         _connectionContextSupervisor = connectionContextSupervisor;

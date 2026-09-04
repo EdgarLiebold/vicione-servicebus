@@ -5,6 +5,10 @@ using ViciOne.ServiceBus.Testing.Implementations;
 
 namespace ViciOne.ServiceBus.Testing;
 
+/// <summary>
+/// Provides a test saga repository decorator implementation.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
 public class TestSagaRepositoryDecorator<TSaga> :
     ISagaRepository<TSaga>
     where TSaga : class, ISaga
@@ -14,6 +18,13 @@ public class TestSagaRepositoryDecorator<TSaga> :
     readonly ISagaRepository<TSaga> _sagaRepository;
     readonly SagaList<TSaga> _sagas;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="sagaRepository">The saga repository value.</param>
+    /// <param name="received">The received value.</param>
+    /// <param name="created">The created value.</param>
+    /// <param name="sagas">The sagas value.</param>
     public TestSagaRepositoryDecorator(ISagaRepository<TSaga> sagaRepository, ReceivedMessageList received, SagaList<TSaga> created,
         SagaList<TSaga> sagas)
     {

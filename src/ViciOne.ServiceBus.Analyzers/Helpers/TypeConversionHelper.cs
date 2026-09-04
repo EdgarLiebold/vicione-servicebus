@@ -7,10 +7,17 @@ using Microsoft.CodeAnalysis;
 
 namespace ViciOne.ServiceBus.Analyzers.Helpers;
 
+/// <summary>
+/// Provides a type conversion helper implementation.
+/// </summary>
 public class TypeConversionHelper
 {
     readonly SemanticModel _semanticModel;
     readonly NodeList<ITypeSymbol> _typeSymbols;
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="semanticModel">The semantic model value.</param>
     public TypeConversionHelper(SemanticModel semanticModel)
     {
         _semanticModel = semanticModel;
@@ -120,6 +127,12 @@ public class TypeConversionHelper
             ?? throw new InvalidOperationException($"The compilation does not reference '{metadataName}'.");
     }
 
+    /// <summary>
+    /// Determines whether the current value can convert.
+    /// </summary>
+    /// <param name="type">The type value.</param>
+    /// <param name="sourceSymbol">The source symbol value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool CanConvert(Type type, ITypeSymbol sourceSymbol)
     {
         var symbol = GetRequiredType(type);
@@ -127,6 +140,12 @@ public class TypeConversionHelper
         return CanConvert(symbol, sourceSymbol);
     }
 
+    /// <summary>
+    /// Determines whether the current value can convert.
+    /// </summary>
+    /// <param name="symbol">The symbol value.</param>
+    /// <param name="sourceSymbol">The source symbol value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool CanConvert(ITypeSymbol symbol, ITypeSymbol sourceSymbol)
     {
         while (true)
@@ -233,11 +252,17 @@ public class TypeConversionHelper
         return false;
     }
 
+    /// <summary>
+    /// Determines whether message data.
+    /// </summary>
+    /// <param name="symbol">The symbol value.</param>
+    /// <param name="result">The result value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool IsMessageData(ITypeSymbol symbol, [NotNullWhen(true)] out ITypeSymbol? result)
     {
         if (symbol.TypeKind == TypeKind.Interface
             && symbol.Name == "MessageData"
-            && symbol.ContainingNamespace.ToString() == "ViciOne.ServiceBus"
+            && symbol.ContainingNamespace.ToString() == "ViciOne.ServiceBus.Advanced.Serialization"
             && symbol is INamedTypeSymbol messageDataTypeSymbol
             && messageDataTypeSymbol.IsGenericType
             && messageDataTypeSymbol.TypeArguments.Length == 1)

@@ -5,29 +5,57 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Transports;
 
+/// <summary>
+/// Provides a pending receive lock context implementation.
+/// </summary>
 public class PendingReceiveLockContext :
     ReceiveLockContext
 {
     Lock? _lockContext;
     Queue<Lock> _pending = null!;
 
+    /// <summary>
+    /// Gets the is empty value.
+    /// </summary>
     public bool IsEmpty => _lockContext == null && (_pending == null || _pending.Count == 0);
 
+    /// <summary>
+    /// Performs the complete operation.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task CompleteAsync(CancellationToken cancellationToken = default)
     {
         return ExecuteAsync(context => context.CompleteAsync(cancellationToken: cancellationToken), true);
     }
 
+    /// <summary>
+    /// Performs the faulted operation.
+    /// </summary>
+    /// <param name="exception">The exception associated with the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task FaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {
         return ExecuteAsync(context => context.FaultedAsync(exception, cancellationToken: cancellationToken), true);
     }
 
+    /// <summary>
+    /// Validates lock status.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task ValidateLockStatusAsync(CancellationToken cancellationToken = default)
     {
         return ExecuteAsync(context => context.ValidateLockStatusAsync(cancellationToken: cancellationToken));
     }
 
+    /// <summary>
+    /// Performs the enqueue operation.
+    /// </summary>
+    /// <param name="receiveContext">The receive context value.</param>
+    /// <param name="receiveLockContext">The receive lock context value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Enqueue(BaseReceiveContext receiveContext, ReceiveLockContext receiveLockContext)
     {
         var lockContext = new Lock(receiveContext, receiveLockContext);
@@ -108,6 +136,9 @@ public class PendingReceiveLockContext :
         }
     }
 
+    /// <summary>
+    /// Determines whether the current value can cel.
+    /// </summary>
     public void Cancel()
     {
         lock (this)

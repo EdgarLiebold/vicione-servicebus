@@ -1,14 +1,23 @@
 using System;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Providers.Transports;
 
+/// <summary>
+/// Defines the contract for sql bus factory configurator.
+/// </summary>
 public interface ISqlBusFactoryConfigurator :
     IBusFactoryConfigurator<ISqlReceiveEndpointConfigurator>,
     ISqlQueueEndpointConfigurator
 {
+    /// <summary>
+    /// Gets the send topology value.
+    /// </summary>
     new ISqlSendTopologyConfigurator SendTopology { get; }
 
+    /// <summary>
+    /// Gets the publish topology value.
+    /// </summary>
     new ISqlPublishTopologyConfigurator PublishTopology { get; }
 
     /// <summary>
@@ -27,6 +36,11 @@ public interface ISqlBusFactoryConfigurator :
     void Publish<T>(Action<ISqlMessagePublishTopologyConfigurator<T>>? configureTopology = null)
         where T : class;
 
+    /// <summary>
+    /// Publishes a message to its configured consumers.
+    /// </summary>
+    /// <param name="messageType">The message type value.</param>
+    /// <param name="configure">The configuration callback.</param>
     void Publish(Type messageType, Action<ISqlMessagePublishTopologyConfigurator>? configure = null);
 
     /// <summary>

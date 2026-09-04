@@ -7,6 +7,10 @@ namespace ViciOne.ServiceBus;
 /// </summary>
 public readonly record struct DurableSendId
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="value">The value.</param>
     public DurableSendId(Guid value)
     {
         if (value == Guid.Empty)
@@ -15,7 +19,14 @@ public readonly record struct DurableSendId
         Value = value;
     }
 
+    /// <summary>
+    /// Gets the underlying value.
+    /// </summary>
     public Guid Value { get; }
 
+    /// <summary>
+    /// Returns the string representation of this instance.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public override string ToString() => Value.ToString("D");
 }

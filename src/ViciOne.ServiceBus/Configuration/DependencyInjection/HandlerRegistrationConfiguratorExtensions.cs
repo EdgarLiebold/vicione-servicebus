@@ -3,8 +3,11 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ViciOne.ServiceBus.DependencyInjection;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for handler registration configurator.
+/// </summary>
 public static class HandlerRegistrationConfiguratorExtensions
 {
     /// <summary>
@@ -18,7 +21,7 @@ public static class HandlerRegistrationConfiguratorExtensions
         if (!MessageTypeCache<T>.IsValidMessageType)
             throw new ArgumentException(MessageTypeCache<T>.InvalidMessageTypeReason, nameof(T));
 
-        configurator.TryAddSingleton(new MessageHandlerMethod<T>((ConsumeContext<T> context) => Task.CompletedTask));
+        configurator.Services.TryAddSingleton(new MessageHandlerMethod<T>((ConsumeContext<T> context) => Task.CompletedTask));
 
         return configurator.AddConsumer<MessageHandlerConsumer<T>, MessageHandlerConsumerDefinition<MessageHandlerConsumer<T>, T>>();
     }
@@ -34,7 +37,7 @@ public static class HandlerRegistrationConfiguratorExtensions
         if (!MessageTypeCache<T>.IsValidMessageType)
             throw new ArgumentException(MessageTypeCache<T>.InvalidMessageTypeReason, nameof(T));
 
-        configurator.TryAddSingleton(new MessageHandlerMethod<T>(handler));
+        configurator.Services.TryAddSingleton(new MessageHandlerMethod<T>(handler));
 
         return configurator.AddConsumer<MessageHandlerConsumer<T>, MessageHandlerConsumerDefinition<MessageHandlerConsumer<T>, T>>();
     }
@@ -50,7 +53,7 @@ public static class HandlerRegistrationConfiguratorExtensions
         if (!MessageTypeCache<T>.IsValidMessageType)
             throw new ArgumentException(MessageTypeCache<T>.InvalidMessageTypeReason, nameof(T));
 
-        configurator.TryAddSingleton(new MessageHandlerMethod<T>(handler));
+        configurator.Services.TryAddSingleton(new MessageHandlerMethod<T>(handler));
 
         return configurator.AddConsumer<MessageHandlerConsumer<T>, MessageHandlerConsumerDefinition<MessageHandlerConsumer<T>, T>>();
     }
@@ -68,7 +71,7 @@ public static class HandlerRegistrationConfiguratorExtensions
         if (!MessageTypeCache<T>.IsValidMessageType)
             throw new ArgumentException(MessageTypeCache<T>.InvalidMessageTypeReason, nameof(T));
 
-        configurator.TryAddSingleton(new RequestHandlerMethod<T, TResponse>(handler));
+        configurator.Services.TryAddSingleton(new RequestHandlerMethod<T, TResponse>(handler));
 
         return configurator.AddConsumer<RequestHandlerConsumer<T, TResponse>, MessageHandlerConsumerDefinition<RequestHandlerConsumer<T, TResponse>, T>>();
     }
@@ -85,7 +88,7 @@ public static class HandlerRegistrationConfiguratorExtensions
         if (!MessageTypeCache<T>.IsValidMessageType)
             throw new ArgumentException(MessageTypeCache<T>.InvalidMessageTypeReason, nameof(T));
 
-        configurator.TryAddSingleton(new RequestHandlerMethod<T, TResponse>(handler));
+        configurator.Services.TryAddSingleton(new RequestHandlerMethod<T, TResponse>(handler));
 
         return configurator.AddConsumer<RequestHandlerConsumer<T, TResponse>, MessageHandlerConsumerDefinition<RequestHandlerConsumer<T, TResponse>, T>>();
     }
@@ -103,7 +106,7 @@ public static class HandlerRegistrationConfiguratorExtensions
         if (!MessageTypeCache<T>.IsValidMessageType)
             throw new ArgumentException(MessageTypeCache<T>.InvalidMessageTypeReason, nameof(T));
 
-        configurator.TryAddSingleton(new MessageHandlerMethod<T, T1>(handler));
+        configurator.Services.TryAddSingleton(new MessageHandlerMethod<T, T1>(handler));
 
         return configurator.AddConsumer<MessageHandlerConsumer<T, T1>, MessageHandlerConsumerDefinition<MessageHandlerConsumer<T, T1>, T>>();
     }
@@ -122,7 +125,7 @@ public static class HandlerRegistrationConfiguratorExtensions
         if (!MessageTypeCache<T>.IsValidMessageType)
             throw new ArgumentException(MessageTypeCache<T>.InvalidMessageTypeReason, nameof(T));
 
-        configurator.TryAddSingleton(new RequestHandlerMethod<T, T1, TResponse>(handler));
+        configurator.Services.TryAddSingleton(new RequestHandlerMethod<T, T1, TResponse>(handler));
 
         return configurator.AddConsumer<RequestHandlerConsumer<T, T1, TResponse>,
             MessageHandlerConsumerDefinition<RequestHandlerConsumer<T, T1, TResponse>, T>>();
@@ -140,7 +143,7 @@ public static class HandlerRegistrationConfiguratorExtensions
         if (!MessageTypeCache<T>.IsValidMessageType)
             throw new ArgumentException(MessageTypeCache<T>.InvalidMessageTypeReason, nameof(T));
 
-        configurator.TryAddSingleton(new MessageHandlerMethod<T, T1>(handler));
+        configurator.Services.TryAddSingleton(new MessageHandlerMethod<T, T1>(handler));
 
         return configurator.AddConsumer<MessageHandlerConsumer<T, T1>, MessageHandlerConsumerDefinition<MessageHandlerConsumer<T, T1>, T>>();
     }
@@ -159,7 +162,7 @@ public static class HandlerRegistrationConfiguratorExtensions
         if (!MessageTypeCache<T>.IsValidMessageType)
             throw new ArgumentException(MessageTypeCache<T>.InvalidMessageTypeReason, nameof(T));
 
-        configurator.TryAddSingleton(new RequestHandlerMethod<T, T1, TResponse>(handler));
+        configurator.Services.TryAddSingleton(new RequestHandlerMethod<T, T1, TResponse>(handler));
 
         return configurator.AddConsumer<RequestHandlerConsumer<T, T1, TResponse>,
             MessageHandlerConsumerDefinition<RequestHandlerConsumer<T, T1, TResponse>, T>>();
@@ -179,7 +182,7 @@ public static class HandlerRegistrationConfiguratorExtensions
         if (!MessageTypeCache<T>.IsValidMessageType)
             throw new ArgumentException(MessageTypeCache<T>.InvalidMessageTypeReason, nameof(T));
 
-        configurator.TryAddSingleton(new MessageHandlerMethod<T, T1, T2>(handler));
+        configurator.Services.TryAddSingleton(new MessageHandlerMethod<T, T1, T2>(handler));
 
         return configurator.AddConsumer<MessageHandlerConsumer<T, T1, T2>, MessageHandlerConsumerDefinition<MessageHandlerConsumer<T, T1, T2>, T>>();
     }
@@ -199,7 +202,7 @@ public static class HandlerRegistrationConfiguratorExtensions
         if (!MessageTypeCache<T>.IsValidMessageType)
             throw new ArgumentException(MessageTypeCache<T>.InvalidMessageTypeReason, nameof(T));
 
-        configurator.TryAddSingleton(new RequestHandlerMethod<T, T1, T2, TResponse>(handler));
+        configurator.Services.TryAddSingleton(new RequestHandlerMethod<T, T1, T2, TResponse>(handler));
 
         return configurator.AddConsumer<RequestHandlerConsumer<T, T1, T2, TResponse>,
             MessageHandlerConsumerDefinition<RequestHandlerConsumer<T, T1, T2, TResponse>, T>>();
@@ -218,7 +221,7 @@ public static class HandlerRegistrationConfiguratorExtensions
         if (!MessageTypeCache<T>.IsValidMessageType)
             throw new ArgumentException(MessageTypeCache<T>.InvalidMessageTypeReason, nameof(T));
 
-        configurator.TryAddSingleton(new MessageHandlerMethod<T, T1, T2>(handler));
+        configurator.Services.TryAddSingleton(new MessageHandlerMethod<T, T1, T2>(handler));
 
         return configurator.AddConsumer<MessageHandlerConsumer<T, T1, T2>, MessageHandlerConsumerDefinition<MessageHandlerConsumer<T, T1, T2>, T>>();
     }
@@ -238,7 +241,7 @@ public static class HandlerRegistrationConfiguratorExtensions
         if (!MessageTypeCache<T>.IsValidMessageType)
             throw new ArgumentException(MessageTypeCache<T>.InvalidMessageTypeReason, nameof(T));
 
-        configurator.TryAddSingleton(new RequestHandlerMethod<T, T1, T2, TResponse>(handler));
+        configurator.Services.TryAddSingleton(new RequestHandlerMethod<T, T1, T2, TResponse>(handler));
 
         return configurator.AddConsumer<RequestHandlerConsumer<T, T1, T2, TResponse>,
             MessageHandlerConsumerDefinition<RequestHandlerConsumer<T, T1, T2, TResponse>, T>>();
@@ -259,7 +262,7 @@ public static class HandlerRegistrationConfiguratorExtensions
         if (!MessageTypeCache<T>.IsValidMessageType)
             throw new ArgumentException(MessageTypeCache<T>.InvalidMessageTypeReason, nameof(T));
 
-        configurator.TryAddSingleton(new MessageHandlerMethod<T, T1, T2, T3>(handler));
+        configurator.Services.TryAddSingleton(new MessageHandlerMethod<T, T1, T2, T3>(handler));
 
         return configurator.AddConsumer<MessageHandlerConsumer<T, T1, T2, T3>, MessageHandlerConsumerDefinition<MessageHandlerConsumer<T, T1, T2, T3>,
             T>>();
@@ -281,7 +284,7 @@ public static class HandlerRegistrationConfiguratorExtensions
         if (!MessageTypeCache<T>.IsValidMessageType)
             throw new ArgumentException(MessageTypeCache<T>.InvalidMessageTypeReason, nameof(T));
 
-        configurator.TryAddSingleton(new RequestHandlerMethod<T, T1, T2, T3, TResponse>(handler));
+        configurator.Services.TryAddSingleton(new RequestHandlerMethod<T, T1, T2, T3, TResponse>(handler));
 
         return configurator.AddConsumer<RequestHandlerConsumer<T, T1, T2, T3, TResponse>,
             MessageHandlerConsumerDefinition<RequestHandlerConsumer<T, T1, T2, T3, TResponse>, T>>();
@@ -302,7 +305,7 @@ public static class HandlerRegistrationConfiguratorExtensions
         if (!MessageTypeCache<T>.IsValidMessageType)
             throw new ArgumentException(MessageTypeCache<T>.InvalidMessageTypeReason, nameof(T));
 
-        configurator.TryAddSingleton(new MessageHandlerMethod<T, T1, T2, T3>(handler));
+        configurator.Services.TryAddSingleton(new MessageHandlerMethod<T, T1, T2, T3>(handler));
 
         return configurator.AddConsumer<MessageHandlerConsumer<T, T1, T2, T3>,
             MessageHandlerConsumerDefinition<MessageHandlerConsumer<T, T1, T2, T3>, T>>();
@@ -324,7 +327,7 @@ public static class HandlerRegistrationConfiguratorExtensions
         if (!MessageTypeCache<T>.IsValidMessageType)
             throw new ArgumentException(MessageTypeCache<T>.InvalidMessageTypeReason, nameof(T));
 
-        configurator.TryAddSingleton(new RequestHandlerMethod<T, T1, T2, T3, TResponse>(handler));
+        configurator.Services.TryAddSingleton(new RequestHandlerMethod<T, T1, T2, T3, TResponse>(handler));
 
         return configurator.AddConsumer<RequestHandlerConsumer<T, T1, T2, T3, TResponse>,
             MessageHandlerConsumerDefinition<RequestHandlerConsumer<T, T1, T2, T3, TResponse>, T>>();

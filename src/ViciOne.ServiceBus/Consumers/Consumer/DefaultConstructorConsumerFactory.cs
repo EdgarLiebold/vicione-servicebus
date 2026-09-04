@@ -4,10 +4,21 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.Consumer;
 
+/// <summary>
+/// Provides a default constructor consumer factory implementation.
+/// </summary>
+/// <typeparam name="TConsumer">The t consumer type.</typeparam>
 public class DefaultConstructorConsumerFactory<TConsumer> :
     IConsumerFactory<TConsumer>
     where TConsumer : class, new()
 {
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SendAsync<T>(ConsumeContext<T> context, IPipe<ConsumerConsumeContext<TConsumer, T>> next)
         where T : class
     {

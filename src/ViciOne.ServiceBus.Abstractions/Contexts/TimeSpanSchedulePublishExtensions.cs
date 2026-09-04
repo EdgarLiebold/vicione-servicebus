@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides extension methods for time span schedule publish.
+/// </summary>
 public static class TimeSpanSchedulePublishExtensions
 {
     /// <summary>

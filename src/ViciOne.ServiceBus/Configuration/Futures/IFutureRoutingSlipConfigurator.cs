@@ -1,8 +1,14 @@
 using System;
 using ViciOne.ServiceBus.Courier.Contracts;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for future routing slip configurator.
+/// </summary>
+/// <typeparam name="TResult">The t result type.</typeparam>
+/// <typeparam name="TFault">The t fault type.</typeparam>
+/// <typeparam name="TInput">The t input type.</typeparam>
 public interface IFutureRoutingSlipConfigurator<TResult, TFault, out TInput>
     where TResult : class
     where TFault : class

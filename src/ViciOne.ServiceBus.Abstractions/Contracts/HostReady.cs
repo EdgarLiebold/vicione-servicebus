@@ -1,7 +1,10 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Observers;
 
+/// <summary>
+/// Defines the contract for host ready.
+/// </summary>
 public interface HostReady
 {
     /// <summary>

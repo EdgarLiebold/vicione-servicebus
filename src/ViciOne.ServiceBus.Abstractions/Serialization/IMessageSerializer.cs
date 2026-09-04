@@ -1,12 +1,15 @@
 using System.Net.Mime;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Serialization;
 
 /// <summary>
 /// A message serializer is responsible for serializing a message. Shocking, I know.
 /// </summary>
 public interface IMessageSerializer
 {
+    /// <summary>
+    /// Gets the content type value.
+    /// </summary>
     ContentType ContentType { get; }
 
     /// <summary>

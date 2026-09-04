@@ -5,6 +5,10 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a message consume pipe specification implementation.
+/// </summary>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public class MessageConsumePipeSpecification<TMessage> :
     IMessageConsumePipeSpecification<TMessage>,
     IMessageConsumePipeSpecification
@@ -14,6 +18,9 @@ public class MessageConsumePipeSpecification<TMessage> :
     readonly List<ISpecificationPipeSpecification<ConsumeContext<TMessage>>> _parentMessageSpecifications;
     readonly List<IPipeSpecification<ConsumeContext<TMessage>>> _specifications;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public MessageConsumePipeSpecification()
     {
         _specifications = new List<IPipeSpecification<ConsumeContext<TMessage>>>();
@@ -21,6 +28,10 @@ public class MessageConsumePipeSpecification<TMessage> :
         _parentMessageSpecifications = new List<ISpecificationPipeSpecification<ConsumeContext<TMessage>>>();
     }
 
+    /// <summary>
+    /// Adds pipe specification to the configuration.
+    /// </summary>
+    /// <param name="specification">The specification value.</param>
     public void AddPipeSpecification(IPipeSpecification<ConsumeContext> specification)
     {
         _baseSpecifications.Add(specification);
@@ -34,16 +45,28 @@ public class MessageConsumePipeSpecification<TMessage> :
         throw new ArgumentException($"The expected message type was invalid: {TypeCache<T>.ShortName}");
     }
 
+    /// <summary>
+    /// Adds pipe specification to the configuration.
+    /// </summary>
+    /// <param name="specification">The specification value.</param>
     public void AddPipeSpecification(IPipeSpecification<ConsumeContext<TMessage>> specification)
     {
         _specifications.Add(specification);
     }
 
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         return _specifications.SelectMany(x => x.Validate());
     }
 
+    /// <summary>
+    /// Applies this specification to the target builder.
+    /// </summary>
+    /// <param name="builder">The builder value.</param>
     public void Apply(ISpecificationPipeBuilder<ConsumeContext<TMessage>> builder)
     {
         var parentCount = _parentMessageSpecifications.Count;
@@ -70,6 +93,11 @@ public class MessageConsumePipeSpecification<TMessage> :
         }
     }
 
+    /// <summary>
+    /// Performs the build message pipe operation.
+    /// </summary>
+    /// <param name="pipe">The pipe value.</param>
+    /// <returns>The result of the operation.</returns>
     public IPipe<ConsumeContext<TMessage>> BuildMessagePipe(IPipe<ConsumeContext<TMessage>> pipe)
     {
         var pipeBuilder = new PipeConfigurator<ConsumeContext<TMessage>>.SpecificationPipeBuilder();
@@ -79,6 +107,10 @@ public class MessageConsumePipeSpecification<TMessage> :
         return pipeBuilder.Build(pipe);
     }
 
+    /// <summary>
+    /// Adds parent message specification to the configuration.
+    /// </summary>
+    /// <param name="parentSpecification">The parent specification value.</param>
     public void AddParentMessageSpecification(ISpecificationPipeSpecification<ConsumeContext<TMessage>> parentSpecification)
     {
         _parentMessageSpecifications.Add(parentSpecification);

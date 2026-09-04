@@ -23,6 +23,11 @@ public sealed class AmazonS3MessageDataRepository :
     private readonly IAmazonS3 _client;
     private readonly AmazonS3MessageDataRepositoryOptions _options;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="client">The client value.</param>
+    /// <param name="options">The options value.</param>
     public AmazonS3MessageDataRepository(
         IAmazonS3 client,
         AmazonS3MessageDataRepositoryOptions options)
@@ -34,16 +39,35 @@ public sealed class AmazonS3MessageDataRepository :
         _options = options;
     }
 
+    /// <summary>
+    /// Performs the post create operation.
+    /// </summary>
+    /// <param name="bus">The bus value.</param>
     public void PostCreate(IBus bus) => ArgumentNullException.ThrowIfNull(bus);
 
+    /// <summary>
+    /// Creates faulted.
+    /// </summary>
+    /// <param name="exception">The exception associated with the operation.</param>
     public void CreateFaulted(Exception exception) => ArgumentNullException.ThrowIfNull(exception);
 
+    /// <summary>
+    /// Performs the pre start operation.
+    /// </summary>
+    /// <param name="bus">The bus value.</param>
+    /// <returns>The result of the operation.</returns>
     public Task PreStartAsync(IBus bus)
     {
         ArgumentNullException.ThrowIfNull(bus);
         return EnsureReadyAsync(CancellationToken.None);
     }
 
+    /// <summary>
+    /// Performs the post start operation.
+    /// </summary>
+    /// <param name="bus">The bus value.</param>
+    /// <param name="busReady">The bus ready value.</param>
+    /// <returns>The result of the operation.</returns>
     public Task PostStartAsync(IBus bus, Task<BusReady> busReady)
     {
         ArgumentNullException.ThrowIfNull(bus);
@@ -51,6 +75,12 @@ public sealed class AmazonS3MessageDataRepository :
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Starts faulted.
+    /// </summary>
+    /// <param name="bus">The bus value.</param>
+    /// <param name="exception">The exception associated with the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task StartFaultedAsync(IBus bus, Exception exception)
     {
         ArgumentNullException.ThrowIfNull(bus);
@@ -58,18 +88,34 @@ public sealed class AmazonS3MessageDataRepository :
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Performs the pre stop operation.
+    /// </summary>
+    /// <param name="bus">The bus value.</param>
+    /// <returns>The result of the operation.</returns>
     public Task PreStopAsync(IBus bus)
     {
         ArgumentNullException.ThrowIfNull(bus);
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Performs the post stop operation.
+    /// </summary>
+    /// <param name="bus">The bus value.</param>
+    /// <returns>The result of the operation.</returns>
     public Task PostStopAsync(IBus bus)
     {
         ArgumentNullException.ThrowIfNull(bus);
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Stops faulted.
+    /// </summary>
+    /// <param name="bus">The bus value.</param>
+    /// <param name="exception">The exception associated with the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task StopFaultedAsync(IBus bus, Exception exception)
     {
         ArgumentNullException.ThrowIfNull(bus);
@@ -77,6 +123,12 @@ public sealed class AmazonS3MessageDataRepository :
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Performs the get operation.
+    /// </summary>
+    /// <param name="address">The address value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task<Stream> GetAsync(Uri address, CancellationToken cancellationToken = default)
     {
         string objectKey = ParseObjectKey(address);
@@ -87,6 +139,13 @@ public sealed class AmazonS3MessageDataRepository :
             .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Performs the put operation.
+    /// </summary>
+    /// <param name="stream">The stream value.</param>
+    /// <param name="timeToLive">The time to live value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task<Uri> PutAsync(
         Stream stream,
         TimeSpan? timeToLive = null,

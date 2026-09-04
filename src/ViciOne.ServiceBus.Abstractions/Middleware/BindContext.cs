@@ -1,4 +1,4 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Middleware;
 
 /// <summary>
 /// The binding of a value to the context, which is a fancy form of Tuple
@@ -10,6 +10,12 @@ public interface BindContext<out TLeft, out TRight> :
     where TLeft : class, PipeContext
     where TRight : class
 {
+    /// <summary>
+    /// Gets the left value.
+    /// </summary>
     TLeft Left { get; }
+    /// <summary>
+    /// Gets the right value.
+    /// </summary>
     TRight Right { get; }
 }

@@ -3,8 +3,18 @@ using System.Collections.Concurrent;
 
 namespace ViciOne.ServiceBus.Metadata;
 
+/// <summary>
+/// Provides an activation implementation.
+/// </summary>
 public static class Activation
 {
+    /// <summary>
+    /// Performs the activate operation.
+    /// </summary>
+    /// <typeparam name="TResult">The t result type.</typeparam>
+    /// <param name="type">The type value.</param>
+    /// <param name="activationType">The activation type value.</param>
+    /// <returns>The result of the operation.</returns>
     public static TResult Activate<TResult>(Type type, IActivationType<TResult> activationType)
     {
         return Cached.Instance.Value
@@ -13,6 +23,15 @@ public static class Activation
             .ActivateType(activationType);
     }
 
+    /// <summary>
+    /// Performs the activate operation.
+    /// </summary>
+    /// <typeparam name="TResult">The t result type.</typeparam>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <param name="type">The type value.</param>
+    /// <param name="activationType">The activation type value.</param>
+    /// <param name="arg1">The arg1 value.</param>
+    /// <returns>The result of the operation.</returns>
     public static TResult Activate<TResult, T1>(Type type, IActivationType<TResult, T1> activationType, T1 arg1)
     {
         return Cached.Instance.Value
@@ -21,6 +40,17 @@ public static class Activation
             .ActivateType(activationType, arg1);
     }
 
+    /// <summary>
+    /// Performs the activate operation.
+    /// </summary>
+    /// <typeparam name="TResult">The t result type.</typeparam>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <typeparam name="T2">The t2 type.</typeparam>
+    /// <param name="type">The type value.</param>
+    /// <param name="activationType">The activation type value.</param>
+    /// <param name="arg1">The arg1 value.</param>
+    /// <param name="arg2">The arg2 value.</param>
+    /// <returns>The result of the operation.</returns>
     public static TResult Activate<TResult, T1, T2>(Type type, IActivationType<TResult, T1, T2> activationType, T1 arg1, T2 arg2)
     {
         return Cached.Instance.Value

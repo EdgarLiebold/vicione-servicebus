@@ -6,8 +6,11 @@ using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Transports;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides extension methods for consume context endpoint.
+/// </summary>
 public static class ConsumeContextEndpointExtensions
 {
     /// <summary>

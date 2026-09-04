@@ -1,4 +1,4 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>
 /// The reason this batch was made ready for consumption

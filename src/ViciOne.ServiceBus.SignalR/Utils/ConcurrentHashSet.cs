@@ -6,21 +6,35 @@ using System.Threading;
 namespace ViciOne.ServiceBus.SignalR.Utils;
 
 // From here: https://stackoverflow.com/a/11034999/6558597
+/// <summary>
+/// Provides a concurrent hash set implementation.
+/// </summary>
+/// <typeparam name="T">The t type.</typeparam>
 public class ConcurrentHashSet<T> : IDisposable
 {
     readonly HashSet<T> _hashSet;
     readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public ConcurrentHashSet()
     {
         _hashSet = new HashSet<T>();
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="equalityComparer">The equality comparer value.</param>
     public ConcurrentHashSet(IEqualityComparer<T> equalityComparer)
     {
         _hashSet = new HashSet<T>(equalityComparer);
     }
 
+    /// <summary>
+    /// Gets the count value.
+    /// </summary>
     public int Count
     {
         get
@@ -40,6 +54,9 @@ public class ConcurrentHashSet<T> : IDisposable
 
     #region Dispose
 
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
     public void Dispose()
     {
         if (_lock != null)
@@ -48,6 +65,11 @@ public class ConcurrentHashSet<T> : IDisposable
 
     #endregion
 
+    /// <summary>
+    /// Performs the add operation.
+    /// </summary>
+    /// <param name="item">The item value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Add(T item)
     {
         try
@@ -62,6 +84,9 @@ public class ConcurrentHashSet<T> : IDisposable
         }
     }
 
+    /// <summary>
+    /// Performs the clear operation.
+    /// </summary>
     public void Clear()
     {
         try
@@ -76,6 +101,11 @@ public class ConcurrentHashSet<T> : IDisposable
         }
     }
 
+    /// <summary>
+    /// Performs the contains operation.
+    /// </summary>
+    /// <param name="item">The item value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Contains(T item)
     {
         try
@@ -90,6 +120,11 @@ public class ConcurrentHashSet<T> : IDisposable
         }
     }
 
+    /// <summary>
+    /// Performs the remove operation.
+    /// </summary>
+    /// <param name="item">The item value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Remove(T item)
     {
         try
@@ -104,6 +139,10 @@ public class ConcurrentHashSet<T> : IDisposable
         }
     }
 
+    /// <summary>
+    /// Performs the to array operation.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public T[] ToArray()
     {
         try

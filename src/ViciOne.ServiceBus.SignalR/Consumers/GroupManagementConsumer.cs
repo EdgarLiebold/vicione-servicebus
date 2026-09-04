@@ -4,17 +4,30 @@ using ViciOne.ServiceBus.SignalR.Contracts;
 
 namespace ViciOne.ServiceBus.SignalR.Consumers;
 
+/// <summary>
+/// Provides a group management consumer implementation.
+/// </summary>
+/// <typeparam name="THub">The t hub type.</typeparam>
 public class GroupManagementConsumer<THub> :
     IConsumer<GroupManagement<THub>>
     where THub : Hub
 {
     readonly ViciOneServiceBusHubLifetimeManager<THub> _hubLifetimeManager;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="hubLifetimeManager">The hub lifetime manager value.</param>
     public GroupManagementConsumer(ViciOneServiceBusHubLifetimeManager<THub> hubLifetimeManager)
     {
         _hubLifetimeManager = hubLifetimeManager;
     }
 
+    /// <summary>
+    /// Consumes the message provided by the context.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public Task ConsumeAsync(ConsumeContext<GroupManagement<THub>> context)
     {
         var connection = _hubLifetimeManager.Connections[context.Message.ConnectionId];

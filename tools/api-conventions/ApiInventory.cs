@@ -9,14 +9,15 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 
-if (args.Length != 2)
+if (args.Length is < 2 or > 3)
 {
-    Console.Error.WriteLine("Usage: dotnet run tools/api-conventions/ApiInventory.cs -- <artifacts-bin-root> <output.json>");
+    Console.Error.WriteLine("Usage: dotnet run tools/api-conventions/ApiInventory.cs -- <artifacts-bin-root> <output.json> [application-api.txt]");
     return 2;
 }
 
 string binRoot = Path.GetFullPath(args[0]);
 string outPath = Path.GetFullPath(args[1]);
+string? applicationApiPath = args.Length == 3 ? Path.GetFullPath(args[2]) : null;
 
 string[] products =
 [
@@ -24,27 +25,26 @@ string[] products =
     "ViciOne.ServiceBus",
     "ViciOne.ServiceBus.Analyzers",
     "ViciOne.ServiceBus.Analyzers.CodeFixes",
-    "ViciOne.ServiceBus.Analyzers.Package",
     "ViciOne.ServiceBus.Testing",
     "ViciOne.ServiceBus.MessagePack",
     "ViciOne.ServiceBus.SignalR",
     "ViciOne.ServiceBus.StateMachineVisualizer",
-    "ViciOne.ServiceBus.RabbitMqTransport",
-    "ViciOne.ServiceBus.RabbitMqTransport.Testing",
-    "ViciOne.ServiceBus.ActiveMqTransport",
-    "ViciOne.ServiceBus.AmazonSqsTransport",
-    "ViciOne.ServiceBus.Azure.ServiceBus.Core",
-    "ViciOne.ServiceBus.Azure.ServiceBus.Testing",
-    "ViciOne.ServiceBus.EventHubIntegration",
-    "ViciOne.ServiceBus.EventHubIntegration.Testing",
+    "ViciOne.ServiceBus.RabbitMq",
+    "ViciOne.ServiceBus.RabbitMq.Testing",
+    "ViciOne.ServiceBus.ActiveMq",
+    "ViciOne.ServiceBus.AmazonSqs",
+    "ViciOne.ServiceBus.AzureServiceBus",
+    "ViciOne.ServiceBus.AzureServiceBus.Testing",
+    "ViciOne.ServiceBus.EventHubs",
+    "ViciOne.ServiceBus.EventHubs.Testing",
     "ViciOne.ServiceBus.SqlTransport.PostgreSql",
     "ViciOne.ServiceBus.SqlTransport.SqlServer",
-    "ViciOne.ServiceBus.EntityFrameworkCoreIntegration",
+    "ViciOne.ServiceBus.EntityFrameworkCore",
     "ViciOne.ServiceBus.Azure.Table",
     "ViciOne.ServiceBus.Azure.Storage",
-    "ViciOne.ServiceBus.DynamoDbIntegration",
+    "ViciOne.ServiceBus.DynamoDb",
     "ViciOne.ServiceBus.AmazonS3",
-    "ViciOne.ServiceBus.QuartzIntegration",
+    "ViciOne.ServiceBus.Quartz",
 ];
 
 string[] nameBuckets =
@@ -57,39 +57,39 @@ string[] nameBuckets =
 string[] callbackContractNames =
 [
     "ViciOne.ServiceBus.IConsumer`1",
-    "ViciOne.ServiceBus.IFilter`1",
-    "ViciOne.ServiceBus.IPipe`1",
-    "ViciOne.ServiceBus.IProbeSite",
-    "ViciOne.ServiceBus.IExecuteActivity`1",
-    "ViciOne.ServiceBus.ICompensateActivity`1",
-    "ViciOne.ServiceBus.IActivity`2",
-    "ViciOne.ServiceBus.IJobConsumer`1",
-    "ViciOne.ServiceBus.IActivityObserver",
-    "ViciOne.ServiceBus.ISendObserver",
-    "ViciOne.ServiceBus.IPublishObserver",
-    "ViciOne.ServiceBus.IConsumeObserver",
-    "ViciOne.ServiceBus.IConsumeMessageObserver`1",
-    "ViciOne.ServiceBus.IReceiveObserver",
-    "ViciOne.ServiceBus.IReceiveEndpointObserver",
-    "ViciOne.ServiceBus.IReceiveTransportObserver",
-    "ViciOne.ServiceBus.IFilterObserver",
-    "ViciOne.ServiceBus.IFilterObserver`1",
-    "ViciOne.ServiceBus.IRetryObserver",
-    "ViciOne.ServiceBus.IBusObserver",
-    "ViciOne.ServiceBus.IConsumerFactory`1",
-    "ViciOne.ServiceBus.ISagaFactory`2",
-    "ViciOne.ServiceBus.ISagaPolicy`2",
-    "ViciOne.ServiceBus.ISagaRepository`1",
+    "ViciOne.ServiceBus.Advanced.Middleware.IFilter`1",
+    "ViciOne.ServiceBus.Advanced.Middleware.IPipe`1",
+    "ViciOne.ServiceBus.Operations.IProbeSite",
+    "ViciOne.ServiceBus.Courier.IExecuteActivity`1",
+    "ViciOne.ServiceBus.Courier.ICompensateActivity`1",
+    "ViciOne.ServiceBus.Courier.IActivity`2",
+    "ViciOne.ServiceBus.Advanced.IJobConsumer`1",
+    "ViciOne.ServiceBus.Advanced.Observers.IActivityObserver",
+    "ViciOne.ServiceBus.Advanced.Observers.ISendObserver",
+    "ViciOne.ServiceBus.Advanced.Observers.IPublishObserver",
+    "ViciOne.ServiceBus.Advanced.Observers.IConsumeObserver",
+    "ViciOne.ServiceBus.Advanced.Observers.IConsumeMessageObserver`1",
+    "ViciOne.ServiceBus.Advanced.Observers.IReceiveObserver",
+    "ViciOne.ServiceBus.Advanced.Observers.IReceiveEndpointObserver",
+    "ViciOne.ServiceBus.Advanced.Observers.IReceiveTransportObserver",
+    "ViciOne.ServiceBus.Advanced.Observers.IFilterObserver",
+    "ViciOne.ServiceBus.Advanced.Observers.IFilterObserver`1",
+    "ViciOne.ServiceBus.Advanced.Observers.IRetryObserver",
+    "ViciOne.ServiceBus.Advanced.Observers.IBusObserver",
+    "ViciOne.ServiceBus.Advanced.IConsumerFactory`1",
+    "ViciOne.ServiceBus.Sagas.ISagaFactory`2",
+    "ViciOne.ServiceBus.Sagas.ISagaPolicy`2",
+    "ViciOne.ServiceBus.Sagas.ISagaRepository`1",
     "ViciOne.ServiceBus.Saga.ISagaRepositoryContextFactory`1",
     "ViciOne.ServiceBus.Saga.ISagaConsumeContextFactory`1",
     "ViciOne.ServiceBus.Saga.ISagaConsumeContextFactory`2",
-    "ViciOne.ServiceBus.IStateMachineActivity",
-    "ViciOne.ServiceBus.IStateMachineActivity`1",
-    "ViciOne.ServiceBus.IStateMachineActivity`2",
-    "ViciOne.ServiceBus.IBehavior`1",
-    "ViciOne.ServiceBus.IBehavior`2",
-    "ViciOne.ServiceBus.IEventObserver`1",
-    "ViciOne.ServiceBus.IStateObserver`1",
+    "ViciOne.ServiceBus.Sagas.IStateMachineActivity",
+    "ViciOne.ServiceBus.Sagas.IStateMachineActivity`1",
+    "ViciOne.ServiceBus.Sagas.IStateMachineActivity`2",
+    "ViciOne.ServiceBus.Sagas.IBehavior`1",
+    "ViciOne.ServiceBus.Sagas.IBehavior`2",
+    "ViciOne.ServiceBus.Sagas.IEventObserver`1",
+    "ViciOne.ServiceBus.Sagas.IStateObserver`1",
 ];
 var callbackContracts = callbackContractNames.ToHashSet(StringComparer.Ordinal);
 
@@ -209,7 +209,7 @@ try
 catch (Exception exception)
 {
     loadErrors["application-surface"] = exception.Message;
-    applicationSurface = new ApplicationSurfaceInventory(0, 0, 0, 0, [], [], [], []);
+    applicationSurface = new ApplicationSurfaceInventory(0, 0, 0, 0, 0, [], [], [], [], []);
 }
 
 var aggregate = new AggregateInventory(
@@ -226,7 +226,7 @@ var aggregate = new AggregateInventory(
     reports.Sum(report => report.AsyncCancellationTokenNotOptional),
     reports.Sum(report => report.AsyncCancellationTokenWrongName),
     reports.Sum(report => report.DateTimeInSignatures),
-    reports.Sum(report => report.TypesInInternalsNamespace),
+    reports.Sum(report => report.PublicInternalsTypes),
     reports.Sum(report => report.Obsolete),
     reports.Sum(report => report.EditorBrowsableNever),
     reports.Sum(report => report.ExtensionMethodsInRootNamespace),
@@ -234,7 +234,8 @@ var aggregate = new AggregateInventory(
     applicationSurface.SendShapes,
     applicationSurface.PublishShapes,
     applicationSurface.ConsumeContextMembers,
-    applicationSurface.ConsumeContextCompletions);
+    applicationSurface.ConsumeContextCompletions,
+    applicationSurface.ApplicationBuilderMembers);
 
 Directory.CreateDirectory(Path.GetDirectoryName(outPath)!);
 File.WriteAllText(
@@ -257,6 +258,24 @@ File.WriteAllText(
         new JsonSerializerOptions { WriteIndented = true }));
 
 Console.WriteLine($"Wrote {outPath}");
+if (applicationApiPath is not null)
+{
+    string[] applicationTypes = allTypes
+        .Where(type => type.Namespace == "ViciOne.ServiceBus")
+        .Select(type => $"{type.Namespace}.{type.Name}")
+        .Distinct(StringComparer.Ordinal)
+        .Order(StringComparer.Ordinal)
+        .ToArray();
+    Directory.CreateDirectory(Path.GetDirectoryName(applicationApiPath)!);
+    File.WriteAllLines(
+        applicationApiPath,
+        [
+            "# ViciOne ServiceBus application API",
+            "# Generated from the public top-level types in the ViciOne.ServiceBus namespace.",
+            .. applicationTypes,
+        ]);
+    Console.WriteLine($"Wrote {applicationApiPath}");
+}
 return missingAssemblies.Count == 0 && loadErrors.Count == 0 ? 0 : 1;
 
 AssemblyInventory InventoryAssembly(string assemblyName, List<Type> publicTypes, List<Type> topLevelTypes)
@@ -269,6 +288,7 @@ AssemblyInventory InventoryAssembly(string assemblyName, List<Type> publicTypes,
     var asyncNoCancellationTokenSample = new List<string>();
     var asyncCancellationTokenExceptionSample = new List<CancellationTokenException>();
     var asyncCancellationTokenNotLastSample = new List<string>();
+    var obsoleteSample = new List<string>();
     var dateTimeSignatures = new HashSet<string>(StringComparer.Ordinal);
     var sendShapes = new HashSet<string>(StringComparer.Ordinal);
     var publishShapes = new HashSet<string>(StringComparer.Ordinal);
@@ -298,7 +318,10 @@ AssemblyInventory InventoryAssembly(string assemblyName, List<Type> publicTypes,
         }
 
         if (HasAttribute(type, "System.ObsoleteAttribute"))
+        {
             obsolete++;
+            obsoleteSample.Add(type.FullName ?? type.Name);
+        }
         if (HasEditorBrowsableNever(type))
             editorBrowsableNever++;
 
@@ -313,16 +336,25 @@ AssemblyInventory InventoryAssembly(string assemblyName, List<Type> publicTypes,
             throw new InvalidOperationException($"Could not inspect public members of '{type.FullName}'.", exception);
         }
 
+        bool compilerGeneratedDelegate = type.BaseType?.FullName == "System.MulticastDelegate";
         foreach (MemberInfo member in declaredMembers)
         {
             if (member is MethodInfo { IsSpecialName: true })
                 continue;
 
+            // The runtime synthesizes delegate Invoke/BeginInvoke/EndInvoke members and may mark
+            // the legacy APM pair obsolete. They are CLR infrastructure, not declared product API.
+            if (compilerGeneratedDelegate && member is MethodInfo)
+                continue;
+
             members++;
             if (SignatureContainsDateTime(member))
                 dateTimeSignatures.Add(MemberSignature(type, member));
-            if (HasAttribute(member, "System.ObsoleteAttribute"))
+            if (HasAttribute(member, "System.ObsoleteAttribute") && !IsRequiredMembersCompatibilityConstructor(member))
+            {
                 obsolete++;
+                obsoleteSample.Add(MemberSignature(type, member));
+            }
             if (HasEditorBrowsableNever(member))
                 editorBrowsableNever++;
 
@@ -358,8 +390,7 @@ AssemblyInventory InventoryAssembly(string assemblyName, List<Type> publicTypes,
                     }
                 }
 
-                bool delegateInfrastructureMethod = type.BaseType?.FullName == "System.MulticastDelegate";
-                if (!IsTaskLike(method.ReturnType) || delegateInfrastructureMethod)
+                if (!IsTaskLike(method.ReturnType))
                     continue;
 
                 asyncMethods++;
@@ -454,7 +485,7 @@ AssemblyInventory InventoryAssembly(string assemblyName, List<Type> publicTypes,
         editorBrowsableNever,
         publicFields,
         publicMutableProperties,
-        topLevelTypes.Count(type => (type.Namespace ?? string.Empty).Contains(".Internals", StringComparison.Ordinal)),
+        publicTypes.Count(type => (type.Namespace ?? string.Empty).Contains(".Internals", StringComparison.Ordinal)),
         topLevelTypes.Count(type => type.Namespace == "ViciOne.ServiceBus"),
         extensionMethodsPerNamespace.GetValueOrDefault("ViciOne.ServiceBus"),
         dateTimeSignatures.Count,
@@ -472,6 +503,7 @@ AssemblyInventory InventoryAssembly(string assemblyName, List<Type> publicTypes,
         asyncNoCancellationTokenSample,
         asyncCancellationTokenExceptionSample,
         asyncCancellationTokenNotLastSample,
+        obsoleteSample,
         dateTimeSignatures.Order(StringComparer.Ordinal).ToArray());
 }
 
@@ -491,6 +523,7 @@ ApplicationSurfaceInventory InventoryApplicationSurface(IReadOnlyCollection<Type
     var publishShapes = new HashSet<string>(StringComparer.Ordinal);
     var consumeMemberShapes = new HashSet<string>(StringComparer.Ordinal);
     var consumeExtensionShapes = new HashSet<string>(StringComparer.Ordinal);
+    var applicationBuilderMembers = new HashSet<string>(StringComparer.Ordinal);
 
     Type consumeContext = publicTypes.Single(type => type.FullName == "ViciOne.ServiceBus.ConsumeContext`1");
     IReadOnlyCollection<Type> consumeContextClosure = InterfaceClosure(consumeContext);
@@ -555,15 +588,31 @@ ApplicationSurfaceInventory InventoryApplicationSurface(IReadOnlyCollection<Type
     var consumeCompletions = new HashSet<string>(consumeMemberShapes, StringComparer.Ordinal);
     consumeCompletions.UnionWith(consumeExtensionShapes);
 
+    Type applicationBuilder = publicTypes.Single(type =>
+        type.FullName == "ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator");
+    foreach (Type contract in InterfaceClosure(applicationBuilder))
+    {
+        foreach (MemberInfo member in contract.GetMembers(
+                     BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
+        {
+            if (member is MethodInfo { IsSpecialName: true })
+                continue;
+            if (member.MemberType is MemberTypes.Method or MemberTypes.Property or MemberTypes.Event)
+                applicationBuilderMembers.Add(CompletionShape(member));
+        }
+    }
+
     return new ApplicationSurfaceInventory(
         sendShapes.Count,
         publishShapes.Count,
         consumeMemberShapes.Count,
         consumeCompletions.Count,
+        applicationBuilderMembers.Count,
         sendShapes.Order(StringComparer.Ordinal).ToArray(),
         publishShapes.Order(StringComparer.Ordinal).ToArray(),
         consumeMemberShapes.Order(StringComparer.Ordinal).ToArray(),
-        consumeExtensionShapes.Order(StringComparer.Ordinal).ToArray());
+        consumeExtensionShapes.Order(StringComparer.Ordinal).ToArray(),
+        applicationBuilderMembers.Order(StringComparer.Ordinal).ToArray());
 }
 
 static IReadOnlyCollection<Type> InterfaceClosure(Type type)
@@ -920,6 +969,17 @@ static bool HasAttribute(MemberInfo member, string fullName)
     return member.GetCustomAttributesData().Any(attribute => attribute.AttributeType.FullName == fullName);
 }
 
+static bool IsRequiredMembersCompatibilityConstructor(MemberInfo member)
+{
+    if (member is not ConstructorInfo)
+        return false;
+
+    return member.GetCustomAttributesData().Any(attribute =>
+        attribute.AttributeType.FullName == "System.Runtime.CompilerServices.CompilerFeatureRequiredAttribute" &&
+        attribute.ConstructorArguments.Count == 1 &&
+        string.Equals(attribute.ConstructorArguments[0].Value as string, "RequiredMembers", StringComparison.Ordinal));
+}
+
 static bool HasEditorBrowsableNever(MemberInfo member)
 {
     CustomAttributeData? attribute = member.GetCustomAttributesData()
@@ -971,7 +1031,7 @@ internal sealed record AssemblyInventory(
     int EditorBrowsableNever,
     int PublicFields,
     int PublicMutableProperties,
-    int TypesInInternalsNamespace,
+    int PublicInternalsTypes,
     int RootNamespacePublicTypes,
     int ExtensionMethodsInRootNamespace,
     int DateTimeInSignatures,
@@ -986,6 +1046,7 @@ internal sealed record AssemblyInventory(
     IReadOnlyList<string> AsyncNoCancellationTokenSample,
     IReadOnlyList<CancellationTokenException> AsyncCancellationTokenExceptionSample,
     IReadOnlyList<string> AsyncCancellationTokenNotLastSample,
+    IReadOnlyList<string> ObsoleteSample,
     IReadOnlyList<string> DateTimeSignatureSample);
 
 internal sealed record AggregateInventory(
@@ -1002,7 +1063,7 @@ internal sealed record AggregateInventory(
     int AsyncCancellationTokenNotOptional,
     int AsyncCancellationTokenWrongName,
     int DateTimeInSignatures,
-    int TypesInInternalsNamespace,
+    int PublicInternalsTypes,
     int Obsolete,
     int EditorBrowsableNever,
     int ExtensionMethodsInRootNamespace,
@@ -1010,17 +1071,20 @@ internal sealed record AggregateInventory(
     int SendShapes,
     int PublishShapes,
     int ConsumeContextMembers,
-    int ConsumeContextCompletions);
+    int ConsumeContextCompletions,
+    int ApplicationBuilderMembers);
 
 internal sealed record ApplicationSurfaceInventory(
     int SendShapes,
     int PublishShapes,
     int ConsumeContextMembers,
     int ConsumeContextCompletions,
+    int ApplicationBuilderMembers,
     IReadOnlyList<string> SendShapeSignatures,
     IReadOnlyList<string> PublishShapeSignatures,
     IReadOnlyList<string> ConsumeContextMemberSignatures,
-    IReadOnlyList<string> ConsumeContextExtensionSignatures);
+    IReadOnlyList<string> ConsumeContextExtensionSignatures,
+    IReadOnlyList<string> ApplicationBuilderMemberSignatures);
 
 internal sealed record TypeInventory(string Assembly, string Namespace, string Name, string Kind);
 

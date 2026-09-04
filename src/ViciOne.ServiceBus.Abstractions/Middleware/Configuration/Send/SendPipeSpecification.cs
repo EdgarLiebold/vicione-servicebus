@@ -6,6 +6,9 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a send pipe specification implementation.
+/// </summary>
 public class SendPipeSpecification :
     ISendPipeConfigurator,
     ISendPipeSpecification
@@ -15,6 +18,9 @@ public class SendPipeSpecification :
     readonly SendPipeSpecificationObservable _observers;
     readonly List<IPipeSpecification<SendContext>> _specifications;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public SendPipeSpecification()
     {
         _specifications = new List<IPipeSpecification<SendContext>>();
@@ -22,6 +28,10 @@ public class SendPipeSpecification :
         _observers = new SendPipeSpecificationObservable();
     }
 
+    /// <summary>
+    /// Adds pipe specification to the configuration.
+    /// </summary>
+    /// <param name="specification">The specification value.</param>
     public void AddPipeSpecification(IPipeSpecification<SendContext> specification)
     {
         ArgumentNullException.ThrowIfNull(specification);
@@ -44,11 +54,20 @@ public class SendPipeSpecification :
         messageSpecification.AddPipeSpecification(specification);
     }
 
+    /// <summary>
+    /// Connects send pipe specification observer.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectSendPipeSpecificationObserver(ISendPipeSpecificationObserver observer)
     {
         return _observers.Connect(observer);
     }
 
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         lock (_lock)
@@ -59,6 +78,11 @@ public class SendPipeSpecification :
         }
     }
 
+    /// <summary>
+    /// Gets message specification.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     public IMessageSendPipeSpecification<T> GetMessageSpecification<T>()
         where T : class
     {

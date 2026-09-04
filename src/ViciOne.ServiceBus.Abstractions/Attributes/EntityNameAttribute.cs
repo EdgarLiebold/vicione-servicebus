@@ -19,5 +19,8 @@ public class EntityNameAttribute :
         EntityName = entityName;
     }
 
+    /// <summary>
+    /// Gets the entity name value.
+    /// </summary>
     public string EntityName { get; }
 }

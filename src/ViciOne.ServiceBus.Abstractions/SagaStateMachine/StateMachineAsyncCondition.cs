@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
 /// <summary>
 /// Filters activities based on the async conditional statement

@@ -6,6 +6,9 @@ using ViciOne.ServiceBus.Testing.Implementations;
 
 namespace ViciOne.ServiceBus.Testing;
 
+/// <summary>
+/// Provides a mediator test harness implementation.
+/// </summary>
 public class MediatorTestHarness :
     AsyncTestHarness,
     IBaseTestHarness
@@ -15,29 +18,74 @@ public class MediatorTestHarness :
     BusTestPublishObserver? _published;
     BusTestSendObserver? _sent;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public MediatorTestHarness()
         : this(TimeProvider.System)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="timeProvider">The time provider value.</param>
     public MediatorTestHarness(TimeProvider timeProvider)
         : base(timeProvider)
     {
         TestInactivityTimeout = TimeSpan.FromSeconds(1);
     }
 
+    /// <summary>
+    /// Gets the mediator value.
+    /// </summary>
     public IMediator Mediator => _mediator ?? throw new InvalidOperationException("The mediator test harness has not been started.");
+    /// <summary>
+    /// Gets the cancellation token value.
+    /// </summary>
     public CancellationToken CancellationToken => TestCancellationToken;
 
+    /// <summary>
+    /// Connects consume observer.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectConsumeObserver(IConsumeObserver observer) => Mediator.ConnectConsumeObserver(observer);
+    /// <summary>
+    /// Connects publish observer.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectPublishObserver(IPublishObserver observer) => Mediator.ConnectPublishObserver(observer);
+    /// <summary>
+    /// Connects send observer.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectSendObserver(ISendObserver observer) => Mediator.ConnectSendObserver(observer);
+    /// <summary>
+    /// Gets the consumed value.
+    /// </summary>
     public IReceivedMessageList Consumed => _consumed?.Messages ?? throw new InvalidOperationException("The mediator test harness has not been started.");
+    /// <summary>
+    /// Gets the published value.
+    /// </summary>
     public IPublishedMessageList Published => _published?.Messages ?? throw new InvalidOperationException("The mediator test harness has not been started.");
+    /// <summary>
+    /// Gets the sent value.
+    /// </summary>
     public ISentMessageList Sent => _sent?.Messages ?? throw new InvalidOperationException("The mediator test harness has not been started.");
 
+    /// <summary>
+    /// Occurs when on configure mediator.
+    /// </summary>
     public event Action<IMediatorConfigurator>? OnConfigureMediator;
 
+    /// <summary>
+    /// Starts the configured component.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public virtual async Task StartAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); _consumed = new BusTestConsumeObserver(TestTimeout, InactivityToken, TimeProvider);
@@ -59,11 +107,18 @@ public class MediatorTestHarness :
         _mediator.ConnectSendObserver(_sent);
     }
 
+    /// <summary>
+    /// Configures mediator.
+    /// </summary>
+    /// <param name="configurator">The configurator value.</param>
     protected virtual void ConfigureMediator(IMediatorConfigurator configurator)
     {
         OnConfigureMediator?.Invoke(configurator);
     }
 
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
     public override void Dispose()
     {
         _consumed?.Dispose();
@@ -73,6 +128,11 @@ public class MediatorTestHarness :
         base.Dispose();
     }
 
+    /// <summary>
+    /// Creates request client.
+    /// </summary>
+    /// <typeparam name="TRequest">The t request type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     public virtual IRequestClient<TRequest> CreateRequestClient<TRequest>()
         where TRequest : class
     {

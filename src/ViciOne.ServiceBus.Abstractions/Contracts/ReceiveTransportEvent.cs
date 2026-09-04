@@ -1,7 +1,10 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Observers;
 
+/// <summary>
+/// Defines the contract for receive transport event.
+/// </summary>
 public interface ReceiveTransportEvent
 {
     /// <summary>

@@ -1,3 +1,0 @@
-namespace ViciOne.ServiceBus;
-
-public delegate void ServiceBusConfigureEndpointsCallback(IRegistrationContext context, string queueName, IServiceBusReceiveEndpointConfigurator configurator);

@@ -8,11 +8,17 @@ using ViciOne.ServiceBus.JobService.Messages;
 using ViciOne.ServiceBus.JobService.Scheduling;
 using ViciOne.ServiceBus.Logging;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.JobService;
 
+/// <summary>
+/// Provides a job state machine implementation.
+/// </summary>
 public sealed class JobStateMachine :
     ViciOneServiceBusStateMachine<JobSaga>
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public JobStateMachine()
     {
         Event(() => JobSubmitted, x => x.CorrelateById(m => m.Message.JobId));
@@ -396,37 +402,127 @@ public sealed class JobStateMachine :
     //
     // ReSharper disable UnassignedGetOnlyAutoProperty
     // ReSharper disable MemberCanBePrivate.Global
+    /// <summary>
+    /// Gets the submitted value.
+    /// </summary>
     public State Submitted { get; } = null!;
+    /// <summary>
+    /// Gets the waiting to start value.
+    /// </summary>
     public State WaitingToStart { get; } = null!; // no longer used, but do not remove as it would change the CurrentState int values
+    /// <summary>
+    /// Gets the waiting to retry value.
+    /// </summary>
     public State WaitingToRetry { get; } = null!;
+    /// <summary>
+    /// Gets the waiting for slot value.
+    /// </summary>
     public State WaitingForSlot { get; } = null!;
+    /// <summary>
+    /// Gets the started value.
+    /// </summary>
     public State Started { get; } = null!;
+    /// <summary>
+    /// Gets the completed value.
+    /// </summary>
     public State Completed { get; } = null!;
+    /// <summary>
+    /// Gets the canceled value.
+    /// </summary>
     public State Canceled { get; } = null!;
+    /// <summary>
+    /// Gets the faulted value.
+    /// </summary>
     public State Faulted { get; } = null!;
+    /// <summary>
+    /// Gets the allocating job slot value.
+    /// </summary>
     public State AllocatingJobSlot { get; } = null!;
+    /// <summary>
+    /// Gets the starting job attempt value.
+    /// </summary>
     public State StartingJobAttempt { get; } = null!;
+    /// <summary>
+    /// Gets the cancellation pending value.
+    /// </summary>
     public State CancellationPending { get; } = null!;
 
+    /// <summary>
+    /// Gets the job slot allocated value.
+    /// </summary>
     public Event<JobSlotAllocated> JobSlotAllocated { get; } = null!;
+    /// <summary>
+    /// Gets the job slot unavailable value.
+    /// </summary>
     public Event<JobSlotUnavailable> JobSlotUnavailable { get; } = null!;
+    /// <summary>
+    /// Gets the allocate job slot faulted value.
+    /// </summary>
     public Event<Fault<AllocateJobSlot>> AllocateJobSlotFaulted { get; } = null!;
+    /// <summary>
+    /// Gets the start job attempt faulted value.
+    /// </summary>
     public Event<Fault<StartJobAttempt>> StartJobAttemptFaulted { get; } = null!;
+    /// <summary>
+    /// Gets the job submitted value.
+    /// </summary>
     public Event<JobSubmitted> JobSubmitted { get; } = null!;
+    /// <summary>
+    /// Gets the attempt started value.
+    /// </summary>
     public Event<JobAttemptStarted> AttemptStarted { get; } = null!;
+    /// <summary>
+    /// Gets the attempt completed value.
+    /// </summary>
     public Event<JobAttemptCompleted> AttemptCompleted { get; } = null!;
+    /// <summary>
+    /// Gets the attempt canceled value.
+    /// </summary>
     public Event<JobAttemptCanceled> AttemptCanceled { get; } = null!;
+    /// <summary>
+    /// Gets the attempt faulted value.
+    /// </summary>
     public Event<JobAttemptFaulted> AttemptFaulted { get; } = null!;
+    /// <summary>
+    /// Gets the job completed value.
+    /// </summary>
     public Event<JobCompleted> JobCompleted { get; } = null!;
+    /// <summary>
+    /// Gets the cancel job value.
+    /// </summary>
     public Event<CancelJob> CancelJob { get; } = null!;
+    /// <summary>
+    /// Gets the retry job value.
+    /// </summary>
     public Event<RetryJob> RetryJob { get; } = null!;
+    /// <summary>
+    /// Gets the run job value.
+    /// </summary>
     public Event<RunJob> RunJob { get; } = null!;
+    /// <summary>
+    /// Gets the finalize job value.
+    /// </summary>
     public Event<FinalizeJob> FinalizeJob { get; } = null!;
+    /// <summary>
+    /// Gets the set job progress value.
+    /// </summary>
     public Event<SetJobProgress> SetJobProgress { get; } = null!;
+    /// <summary>
+    /// Gets the save job state value.
+    /// </summary>
     public Event<SaveJobState> SaveJobState { get; } = null!;
+    /// <summary>
+    /// Gets the get job state value.
+    /// </summary>
     public Event<GetJobState> GetJobState { get; } = null!;
+    /// <summary>
+    /// Gets the job slot wait elapsed value.
+    /// </summary>
     public Schedule<JobSaga, JobSlotWaitElapsed> JobSlotWaitElapsed { get; } = null!;
 
+    /// <summary>
+    /// Gets the job retry delay elapsed value.
+    /// </summary>
     public Schedule<JobSaga, JobRetryDelayElapsed> JobRetryDelayElapsed { get; } = null!;
 }
 

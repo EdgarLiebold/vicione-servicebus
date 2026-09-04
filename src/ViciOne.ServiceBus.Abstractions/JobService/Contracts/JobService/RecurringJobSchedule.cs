@@ -2,6 +2,9 @@ using System;
 
 namespace ViciOne.ServiceBus.Contracts.JobService;
 
+/// <summary>
+/// Defines the contract for recurring job schedule.
+/// </summary>
 public interface RecurringJobSchedule
 {
     /// <summary>

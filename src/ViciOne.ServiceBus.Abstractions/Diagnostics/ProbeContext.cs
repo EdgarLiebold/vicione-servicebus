@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Operations;
 
 /// <summary>
 /// Passed to a probe site to inspect it for interesting things
@@ -39,5 +39,10 @@ public interface ProbeContext
     /// <param name="values"></param>
     void Set(IEnumerable<KeyValuePair<string, object>> values);
 
+    /// <summary>
+    /// Creates scope.
+    /// </summary>
+    /// <param name="key">The key value.</param>
+    /// <returns>The result of the operation.</returns>
     ProbeContext CreateScope(string key);
 }

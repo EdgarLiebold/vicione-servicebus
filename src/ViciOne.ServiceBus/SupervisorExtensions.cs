@@ -3,8 +3,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Agents;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides extension methods for supervisor.
+/// </summary>
 public static class SupervisorExtensions
 {
     /// <summary>
@@ -150,6 +153,16 @@ public static class SupervisorExtensions
         });
     }
 
+    /// <summary>
+    /// Creates agent.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="TAgent">The t agent type.</typeparam>
+    /// <param name="supervisor">The supervisor value.</param>
+    /// <param name="asyncContext">The async context value.</param>
+    /// <param name="agentFactory">The agent factory value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static async Task<TAgent> CreateAgentAsync<T, TAgent>(this ISupervisor<T> supervisor, IAsyncPipeContextAgent<TAgent> asyncContext,
         Func<T, CancellationToken, Task<TAgent>> agentFactory, CancellationToken cancellationToken)
         where T : class, PipeContext

@@ -16,12 +16,23 @@ public class PipeContextSourceBindFilter<TLeft, TRight> :
     readonly IPipe<BindContext<TLeft, TRight>> _output;
     readonly IPipeContextSource<TRight, TLeft> _source;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="output">The output value.</param>
+    /// <param name="source">The source value.</param>
     public PipeContextSourceBindFilter(IPipe<BindContext<TLeft, TRight>> output, IPipeContextSource<TRight, TLeft> source)
     {
         _output = output;
         _source = source;
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public Task SendAsync(TLeft context, IPipe<TLeft> next)
     {
         var bindPipe = new BindPipe(context, _output);
@@ -40,6 +51,10 @@ public class PipeContextSourceBindFilter<TLeft, TRight> :
         return SendAsync();
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("bind");

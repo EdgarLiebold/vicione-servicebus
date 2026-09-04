@@ -17,6 +17,9 @@ public class SagaConnectorCache<TSaga> :
         _connector = new Lazy<SagaConnector<TSaga>>(() => new SagaConnector<TSaga>());
     }
 
+    /// <summary>
+    /// Gets the connector value.
+    /// </summary>
     public static ISagaConnector Connector => Cached.Instance.Value.Connector;
 
     ISagaConnector ISagaConnectorCache.Connector => _connector.Value;

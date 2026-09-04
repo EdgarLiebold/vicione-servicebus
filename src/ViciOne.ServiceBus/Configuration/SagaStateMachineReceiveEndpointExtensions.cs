@@ -2,8 +2,11 @@ using System;
 using ViciOne.ServiceBus.Configuration;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for saga state machine receive endpoint.
+/// </summary>
 public static class SagaStateMachineReceiveEndpointExtensions
 {
     /// <summary>
@@ -30,6 +33,15 @@ public static class SagaStateMachineReceiveEndpointExtensions
         configurator.AddEndpointSpecification(stateMachineConfigurator);
     }
 
+    /// <summary>
+    /// Connects state machine saga.
+    /// </summary>
+    /// <typeparam name="TInstance">The t instance type.</typeparam>
+    /// <param name="bus">The bus value.</param>
+    /// <param name="stateMachine">The state machine value.</param>
+    /// <param name="repository">The repository value.</param>
+    /// <param name="configure">The configuration callback.</param>
+    /// <returns>The result of the operation.</returns>
     public static ConnectHandle ConnectStateMachineSaga<TInstance>(this IConsumePipeConnector bus, SagaStateMachine<TInstance> stateMachine,
         ISagaRepository<TInstance> repository, Action<ISagaConfigurator<TInstance>>? configure = null)
         where TInstance : class, SagaStateMachineInstance

@@ -12,11 +12,21 @@ public class InMemoryOutboxHandlerConfigurationObserver :
     readonly Action<IOutboxConfigurator>? _configure;
     readonly ISetScopedConsumeContext? _setter;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="configure">The configuration callback.</param>
     public InMemoryOutboxHandlerConfigurationObserver(IRegistrationContext context, Action<IOutboxConfigurator>? configure)
         : this(context as ISetScopedConsumeContext ?? throw new ArgumentException(nameof(context)), configure)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="setter">The setter value.</param>
+    /// <param name="configure">The configuration callback.</param>
     public InMemoryOutboxHandlerConfigurationObserver(ISetScopedConsumeContext? setter, Action<IOutboxConfigurator>? configure)
     {
         _setter = setter;

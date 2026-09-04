@@ -4,11 +4,18 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a publish pipe configuration implementation.
+/// </summary>
 public class PublishPipeConfiguration :
     IPublishPipeConfiguration
 {
     readonly PublishPipeSpecification _specification;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="publishTopology">The publish topology value.</param>
     public PublishPipeConfiguration(IPublishTopology publishTopology)
     {
         ArgumentNullException.ThrowIfNull(publishTopology);
@@ -17,6 +24,10 @@ public class PublishPipeConfiguration :
         _specification.ConnectPublishPipeSpecificationObserver(new TopologyPublishPipeSpecificationObserver(publishTopology));
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="parentSpecification">The parent specification value.</param>
     public PublishPipeConfiguration(IPublishPipeSpecification parentSpecification)
     {
         ArgumentNullException.ThrowIfNull(parentSpecification);
@@ -25,9 +36,19 @@ public class PublishPipeConfiguration :
         _specification.ConnectPublishPipeSpecificationObserver(new ParentPublishPipeSpecificationObserver(parentSpecification));
     }
 
+    /// <summary>
+    /// Gets the specification value.
+    /// </summary>
     public IPublishPipeSpecification Specification => _specification;
+    /// <summary>
+    /// Gets the configurator value.
+    /// </summary>
     public IPublishPipeConfigurator Configurator => _specification;
 
+    /// <summary>
+    /// Creates pipe.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IPublishPipe CreatePipe()
     {
         return new PublishPipe(_specification);

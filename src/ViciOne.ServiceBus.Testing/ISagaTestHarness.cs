@@ -5,11 +5,24 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Testing;
 
+/// <summary>
+/// Defines the contract for saga test harness.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
 public interface ISagaTestHarness<TSaga>
     where TSaga : class, ISaga
 {
+    /// <summary>
+    /// Gets the consumed value.
+    /// </summary>
     IReceivedMessageList Consumed { get; }
+    /// <summary>
+    /// Gets the sagas value.
+    /// </summary>
     ISagaList<TSaga> Sagas { get; }
+    /// <summary>
+    /// Gets the created value.
+    /// </summary>
     ISagaList<TSaga> Created { get; }
 
     /// <summary>

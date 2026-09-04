@@ -1,7 +1,10 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for saga definition.
+/// </summary>
 public interface ISagaDefinition :
     IDefinition
 {
@@ -10,6 +13,9 @@ public interface ISagaDefinition :
     /// </summary>
     Type SagaType { get; }
 
+    /// <summary>
+    /// Gets the endpoint definition value.
+    /// </summary>
     IEndpointDefinition? EndpointDefinition { get; }
 
     /// <summary>
@@ -21,6 +27,10 @@ public interface ISagaDefinition :
 }
 
 
+/// <summary>
+/// Defines the contract for saga definition.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
 public interface ISagaDefinition<TSaga> :
     ISagaDefinition
     where TSaga : class, ISaga

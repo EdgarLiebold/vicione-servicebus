@@ -1,7 +1,10 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides extension methods for host connect receive endpoint.
+/// </summary>
 public static class HostConnectReceiveEndpointExtensions
 {
     /// <summary>

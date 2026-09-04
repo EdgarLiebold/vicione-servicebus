@@ -2,7 +2,7 @@ using System;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Transports.Components;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 /// <summary>
 /// Configures the endpoint kill switch. The configuration is captured as an immutable snapshot
 /// when <see cref="KillSwitchConfigurationExtensions.UseKillSwitch(IBusFactoryConfigurator, Action{KillSwitchOptions}?)" />
@@ -12,6 +12,9 @@ namespace ViciOne.ServiceBus;
 public sealed class KillSwitchOptions :
     IOptions
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public KillSwitchOptions()
     {
         ActivationThreshold = 100;
@@ -52,6 +55,11 @@ public sealed class KillSwitchOptions :
     /// </summary>
     public IExceptionFilter ExceptionFilter { get; private set; }
 
+    /// <summary>
+    /// Sets activation threshold.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns>The result of the operation.</returns>
     public KillSwitchOptions SetActivationThreshold(int value)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(value, 1);
@@ -60,6 +68,11 @@ public sealed class KillSwitchOptions :
         return this;
     }
 
+    /// <summary>
+    /// Sets trip threshold ratio.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns>The result of the operation.</returns>
     public KillSwitchOptions SetTripThresholdRatio(double value)
     {
         if (!double.IsFinite(value) || value is < 0 or > 1)
@@ -69,6 +82,11 @@ public sealed class KillSwitchOptions :
         return this;
     }
 
+    /// <summary>
+    /// Sets tracking period.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns>The result of the operation.</returns>
     public KillSwitchOptions SetTrackingPeriod(TimeSpan value)
     {
         if (value <= TimeSpan.Zero)
@@ -78,6 +96,11 @@ public sealed class KillSwitchOptions :
         return this;
     }
 
+    /// <summary>
+    /// Sets restart delay.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns>The result of the operation.</returns>
     public KillSwitchOptions SetRestartDelay(TimeSpan value)
     {
         if (value < TimeSpan.FromSeconds(1))
@@ -87,12 +110,22 @@ public sealed class KillSwitchOptions :
         return this;
     }
 
+    /// <summary>
+    /// Sets time provider.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns>The result of the operation.</returns>
     public KillSwitchOptions SetTimeProvider(TimeProvider value)
     {
         TimeProvider = value ?? throw new ArgumentNullException(nameof(value));
         return this;
     }
 
+    /// <summary>
+    /// Sets exception filter.
+    /// </summary>
+    /// <param name="configure">The configuration callback.</param>
+    /// <returns>The result of the operation.</returns>
     public KillSwitchOptions SetExceptionFilter(Action<IExceptionConfigurator> configure)
     {
         ArgumentNullException.ThrowIfNull(configure);

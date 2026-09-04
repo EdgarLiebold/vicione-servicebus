@@ -5,5 +5,8 @@ namespace ViciOne.ServiceBus.Testing.Implementations;
 /// </summary>
 public interface ICondition
 {
+    /// <summary>
+    /// Gets the is met value.
+    /// </summary>
     bool IsMet { get; }
 }

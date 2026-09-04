@@ -1,4 +1,4 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>
 /// Used to identify a message as correlated so that the CorrelationId can be returned

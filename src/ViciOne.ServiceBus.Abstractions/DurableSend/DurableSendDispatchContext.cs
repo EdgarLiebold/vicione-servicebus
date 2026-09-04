@@ -1,11 +1,9 @@
-using System.ComponentModel;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Providers.Persistence;
 /// <summary>
 /// One claimed durable-send dispatch attempt. <see cref="ConsumerCompletion"/> is an unforgeable process-local capability
 /// that a volatile in-process transport may propagate as pipeline context. It must never be serialized onto a wire.
 /// </summary>
-[EditorBrowsable(EditorBrowsableState.Never)]
 public readonly record struct DurableSendDispatchContext(
     SerializedDurableSend Message,
     DurableSendId DurableSendId,

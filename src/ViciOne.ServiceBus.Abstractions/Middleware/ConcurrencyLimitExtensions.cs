@@ -2,8 +2,11 @@ using System;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Contracts;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Middleware;
 
+/// <summary>
+/// Provides extension methods for concurrency limit.
+/// </summary>
 public static class ConcurrencyLimitExtensions
 {
     /// <summary>

@@ -1,8 +1,11 @@
 using System;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Providers.Transports;
 
+/// <summary>
+/// Provides extension methods for sql receive endpoint configuration.
+/// </summary>
 public static class SqlReceiveEndpointConfigurationExtensions
 {
     /// <summary>

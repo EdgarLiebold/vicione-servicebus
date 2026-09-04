@@ -3,7 +3,7 @@ using System.Threading;
 
 #nullable enable
 
-namespace ViciOne.ServiceBus.Serialization;
+namespace ViciOne.ServiceBus.Advanced.Serialization;
 /// <summary>
 /// Managed writer that never owns more memory than its configured hard maximum.
 /// </summary>

@@ -7,6 +7,9 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.MessageData;
 
+/// <summary>
+/// Provides an encrypted message data repository implementation.
+/// </summary>
 public class EncryptedMessageDataRepository :
     IMessageDataRepository
 {
@@ -27,6 +30,12 @@ public class EncryptedMessageDataRepository :
         _streamProvider = streamProvider;
     }
 
+    /// <summary>
+    /// Performs the get operation.
+    /// </summary>
+    /// <param name="address">The address value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task<Stream> GetAsync(Uri address, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(address);
@@ -44,6 +53,13 @@ public class EncryptedMessageDataRepository :
         }
     }
 
+    /// <summary>
+    /// Performs the put operation.
+    /// </summary>
+    /// <param name="stream">The stream value.</param>
+    /// <param name="timeToLive">The time to live value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task<Uri> PutAsync(Stream stream, TimeSpan? timeToLive = null, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(stream);

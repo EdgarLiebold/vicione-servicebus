@@ -1,12 +1,10 @@
 using System;
-using System.ComponentModel;
 
-namespace ViciOne.ServiceBus.Serialization;
+namespace ViciOne.ServiceBus.Advanced.Serialization;
 /// <summary>
 /// Evaluates the exact bytes produced at the bus-owned serialization boundaries.
 /// </summary>
 /// <typeparam name="TBus">The bus whose immutable policy owns the decision.</typeparam>
-[EditorBrowsable(EditorBrowsableState.Never)]
 public interface IPayloadAdmissionEvaluator<TBus>
     where TBus : class, IBus
 {

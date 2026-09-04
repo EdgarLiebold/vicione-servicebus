@@ -6,8 +6,11 @@ using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Serialization.JsonConverters;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for json serializer configuration.
+/// </summary>
 public static class JsonSerializerConfigurationExtensions
 {
     /// <summary>

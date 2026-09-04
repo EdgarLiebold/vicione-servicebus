@@ -1,17 +1,18 @@
 using System;
-using System.ComponentModel;
 
 #nullable enable
 
-namespace ViciOne.ServiceBus.ProviderAbstractions;
+namespace ViciOne.ServiceBus.Providers.Persistence;
 /// <summary>
 /// The one stable persistence namespace owned by a typed bus and shared by all persistent features.
 /// Applications configure it through the typed AddViciOneServiceBus overload; provider packages consume it here.
 /// </summary>
-[EditorBrowsable(EditorBrowsableState.Never)]
 public sealed class BusPersistenceIdentity<TBus>
     where TBus : class, IBus
 {
+    /// <summary>
+    /// Defines the maximum length value.
+    /// </summary>
     public const int MaximumLength = 128;
 
     private readonly string? _value;
@@ -25,11 +26,24 @@ public sealed class BusPersistenceIdentity<TBus>
 
     internal static BusPersistenceIdentity<TBus> Unspecified { get; } = new(null);
 
+    /// <summary>
+    /// Performs the create operation.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns>The result of the operation.</returns>
     public static BusPersistenceIdentity<TBus> Create(string value)
         => new(Validate(value));
 
+    /// <summary>
+    /// Gets the is specified value.
+    /// </summary>
     public bool IsSpecified => _value is not null;
 
+    /// <summary>
+    /// Performs the require operation.
+    /// </summary>
+    /// <param name="feature">The feature value.</param>
+    /// <returns>The result of the operation.</returns>
     public string Require(string feature)
     {
         if (_value is not null)

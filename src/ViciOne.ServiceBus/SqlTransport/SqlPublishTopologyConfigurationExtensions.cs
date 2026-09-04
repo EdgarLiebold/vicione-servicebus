@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using ViciOne.ServiceBus.Util;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Providers.Transports;
 
+/// <summary>
+/// Provides extension methods for sql publish topology configuration.
+/// </summary>
 public static class SqlPublishTopologyConfigurationExtensions
 {
     /// <summary>

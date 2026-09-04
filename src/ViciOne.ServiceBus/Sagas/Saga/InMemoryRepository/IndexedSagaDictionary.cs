@@ -9,6 +9,10 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Saga;
 
+/// <summary>
+/// Provides an indexed saga dictionary implementation.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
 public class IndexedSagaDictionary<TSaga>
     where TSaga : class, ISaga
 {
@@ -17,6 +21,9 @@ public class IndexedSagaDictionary<TSaga>
     readonly SemaphoreSlim _inUse = new SemaphoreSlim(1);
     readonly object _lock = new object();
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public IndexedSagaDictionary()
     {
         _indices = new Dictionary<string, IIndexedSagaProperty<TSaga>>();
@@ -26,6 +33,10 @@ public class IndexedSagaDictionary<TSaga>
         _indexById = _indices["CorrelationId"];
     }
 
+    /// <summary>
+    /// Gets or sets the value at the specified index.
+    /// </summary>
+    /// <param name="sagaId">The saga id value.</param>
     public SagaInstance<TSaga>? this[Guid sagaId]
     {
         get
@@ -35,6 +46,9 @@ public class IndexedSagaDictionary<TSaga>
         }
     }
 
+    /// <summary>
+    /// Gets the count value.
+    /// </summary>
     public int Count
     {
         get
@@ -44,16 +58,28 @@ public class IndexedSagaDictionary<TSaga>
         }
     }
 
+    /// <summary>
+    /// Performs the mark in use operation.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task MarkInUseAsync(CancellationToken cancellationToken)
     {
         return _inUse.WaitAsync(cancellationToken);
     }
 
+    /// <summary>
+    /// Performs the release operation.
+    /// </summary>
     public void Release()
     {
         _inUse.Release();
     }
 
+    /// <summary>
+    /// Performs the add operation.
+    /// </summary>
+    /// <param name="instance">The instance value.</param>
     public void Add(SagaInstance<TSaga> instance)
     {
         lock (_lock)
@@ -63,6 +89,10 @@ public class IndexedSagaDictionary<TSaga>
         }
     }
 
+    /// <summary>
+    /// Performs the remove operation.
+    /// </summary>
+    /// <param name="item">The item value.</param>
     public void Remove(SagaInstance<TSaga> item)
     {
         lock (_lock)
@@ -72,6 +102,11 @@ public class IndexedSagaDictionary<TSaga>
         }
     }
 
+    /// <summary>
+    /// Performs the where operation.
+    /// </summary>
+    /// <param name="query">The query value.</param>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<SagaInstance<TSaga>> Where(ISagaQuery<TSaga> query)
     {
         lock (_lock)
@@ -88,6 +123,12 @@ public class IndexedSagaDictionary<TSaga>
         }
     }
 
+    /// <summary>
+    /// Performs the select operation.
+    /// </summary>
+    /// <typeparam name="TResult">The t result type.</typeparam>
+    /// <param name="transformer">The transformer value.</param>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<TResult> Select<TResult>(Func<TSaga, TResult> transformer)
     {
         lock (_lock)

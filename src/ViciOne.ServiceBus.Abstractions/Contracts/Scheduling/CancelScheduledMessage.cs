@@ -2,6 +2,9 @@ using System;
 
 namespace ViciOne.ServiceBus.Scheduling;
 
+/// <summary>
+/// Defines the contract for cancel scheduled message.
+/// </summary>
 public interface CancelScheduledMessage
 {
     /// <summary>

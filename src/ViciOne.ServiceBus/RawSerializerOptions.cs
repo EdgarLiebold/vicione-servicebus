@@ -1,7 +1,10 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Specifies the available raw serializer options values.
+/// </summary>
 [Flags]
 public enum RawSerializerOptions
 {
@@ -20,7 +23,13 @@ public enum RawSerializerOptions
     /// </summary>
     CopyHeaders = 4,
 
+    /// <summary>
+    /// Indicates default.
+    /// </summary>
     Default = CopyHeaders | AddTransportHeaders,
 
+    /// <summary>
+    /// Indicates all.
+    /// </summary>
     All = AnyMessageType | AddTransportHeaders | CopyHeaders
 }

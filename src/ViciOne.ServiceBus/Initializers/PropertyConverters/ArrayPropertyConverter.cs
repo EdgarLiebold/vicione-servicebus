@@ -5,9 +5,21 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Initializers.PropertyConverters;
 
+/// <summary>
+/// Provides an array property converter implementation.
+/// </summary>
+/// <typeparam name="TElement">The t element type.</typeparam>
 public class ArrayPropertyConverter<TElement> :
     IPropertyConverter<TElement[], IEnumerable<TElement>>
 {
+    /// <summary>
+    /// Performs the convert operation.
+    /// </summary>
+    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="input">The input value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<TElement[]?> ConvertAsync<TMessage>(InitializeContext<TMessage> context, IEnumerable<TElement>? input, CancellationToken cancellationToken = default)
         where TMessage : class
     {
@@ -24,17 +36,34 @@ public class ArrayPropertyConverter<TElement> :
 }
 
 
+/// <summary>
+/// Provides an array property converter implementation.
+/// </summary>
+/// <typeparam name="TElement">The t element type.</typeparam>
+/// <typeparam name="TInputElement">The t input element type.</typeparam>
 public class ArrayPropertyConverter<TElement, TInputElement> :
     IPropertyConverter<TElement[], IEnumerable<TInputElement>>
 {
     static readonly TElement[] _emptyArray = new TElement[0];
     readonly IPropertyConverter<TElement, TInputElement> _converter;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="converter">The converter value.</param>
     public ArrayPropertyConverter(IPropertyConverter<TElement, TInputElement> converter)
     {
         _converter = converter;
     }
 
+    /// <summary>
+    /// Performs the convert operation.
+    /// </summary>
+    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="input">The input value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<TElement[]?> ConvertAsync<TMessage>(InitializeContext<TMessage> context, IEnumerable<TInputElement>? input, CancellationToken cancellationToken = default)
         where TMessage : class
     {

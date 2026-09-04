@@ -7,7 +7,7 @@ using Microsoft.Extensions.Hosting;
 
 #nullable enable
 
-namespace ViciOne.ServiceBus.DurableSend;
+namespace ViciOne.ServiceBus.Configuration;
 
 internal static class DurableSenderComposition
 {

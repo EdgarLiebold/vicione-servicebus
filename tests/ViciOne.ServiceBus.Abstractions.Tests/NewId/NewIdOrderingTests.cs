@@ -12,7 +12,7 @@ public sealed class NewIdOrderingTests
     {
         var generator = NewIdTestInputs.CreateGenerator();
         generator.Next();
-        var ids = new global::ViciOne.ServiceBus.NewId[1024];
+        var ids = new global::ViciOne.ServiceBus.Advanced.NewId[1024];
 
         generator.Next(ids, 0, ids.Length);
 
@@ -29,7 +29,7 @@ public sealed class NewIdOrderingTests
     {
         var generator = NewIdTestInputs.CreateGenerator();
         generator.Next();
-        var ids = new global::ViciOne.ServiceBus.NewId[1024];
+        var ids = new global::ViciOne.ServiceBus.Advanced.NewId[1024];
 
         generator.Next(ids, 0, ids.Length);
 
@@ -49,7 +49,7 @@ public sealed class NewIdOrderingTests
             TimeSpan.FromSeconds(2).Ticks,
             TimeSpan.FromSeconds(30).Ticks);
         var generator = new NewIdGenerator(tickProvider, new NewIdTestInputs.FixedWorkerIdProvider([1, 2, 3, 4, 5, 6]));
-        var ids = new global::ViciOne.ServiceBus.NewId[1024];
+        var ids = new global::ViciOne.ServiceBus.Advanced.NewId[1024];
 
         generator.Next(ids, 0, ids.Length);
 

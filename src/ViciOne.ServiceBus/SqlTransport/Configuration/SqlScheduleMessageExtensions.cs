@@ -6,8 +6,11 @@ using ViciOne.ServiceBus.Scheduling;
 using ViciOne.ServiceBus.SqlTransport.Configuration;
 using ViciOne.ServiceBus.Transports;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Providers.Transports;
 
+/// <summary>
+/// Provides extension methods for sql schedule message.
+/// </summary>
 public static class SqlScheduleMessageExtensions
 {
 
@@ -31,7 +34,7 @@ public static class SqlScheduleMessageExtensions
     /// <param name="configurator"></param>
     public static void AddSqlMessageScheduler(this IBusRegistrationConfigurator configurator)
     {
-        configurator.TryAddScoped<IMessageScheduler>(provider =>
+        configurator.Services.TryAddScoped<IMessageScheduler>(provider =>
         {
             var busInstance = provider.GetRequiredService<Bind<IBus, IBusInstance>>().Value;
             var sendEndpointProvider = provider.GetRequiredService<ISendEndpointProvider>();
@@ -51,7 +54,7 @@ public static class SqlScheduleMessageExtensions
     public static void AddSqlMessageScheduler<TBus>(this IBusRegistrationConfigurator<TBus> configurator)
         where TBus : class, IBus
     {
-        configurator.TryAddScoped(provider =>
+        configurator.Services.TryAddScoped(provider =>
         {
             var busInstance = provider.GetRequiredService<IBusInstance<TBus>>();
             var sendEndpointProvider = provider.GetRequiredService<Bind<TBus, ISendEndpointProvider>>().Value;

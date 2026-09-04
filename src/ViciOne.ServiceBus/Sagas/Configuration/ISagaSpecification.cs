@@ -9,6 +9,11 @@ public interface ISagaSpecification<TSaga> :
     ISpecification
     where TSaga : class, ISaga
 {
+    /// <summary>
+    /// Gets message specification.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     ISagaMessageSpecification<TSaga, T> GetMessageSpecification<T>()
         where T : class;
 

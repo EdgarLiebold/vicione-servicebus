@@ -1,7 +1,10 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for mediator registration configurator.
+/// </summary>
 public interface IMediatorRegistrationConfigurator :
     IRegistrationConfigurator
 {

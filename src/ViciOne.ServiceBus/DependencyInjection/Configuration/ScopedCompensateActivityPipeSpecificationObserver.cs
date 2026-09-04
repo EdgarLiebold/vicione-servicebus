@@ -5,6 +5,9 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a scoped compensate activity pipe specification observer implementation.
+/// </summary>
 public class ScopedCompensateActivityPipeSpecificationObserver :
     IActivityConfigurationObserver
 {
@@ -12,6 +15,12 @@ public class ScopedCompensateActivityPipeSpecificationObserver :
     readonly Type _filterType;
     readonly CompositeFilter<Type> _messageTypeFilter;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="filterType">The filter type value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <param name="messageTypeFilter">The message type filter value.</param>
     public ScopedCompensateActivityPipeSpecificationObserver(Type filterType, IRegistrationContext context,
         CompositeFilter<Type> messageTypeFilter)
     {
@@ -20,18 +29,37 @@ public class ScopedCompensateActivityPipeSpecificationObserver :
         _messageTypeFilter = messageTypeFilter;
     }
 
+    /// <summary>
+    /// Performs the activity configured operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TArguments">The t arguments type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="compensateAddress">The compensate address value.</param>
     public void ActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator, Uri compensateAddress)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
     }
 
+    /// <summary>
+    /// Performs the execute activity configured operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TArguments">The t arguments type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
     public void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
     }
 
+    /// <summary>
+    /// Performs the compensate activity configured operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TLog">The t log type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
     public void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityConfigurator<TActivity, TLog> configurator)
         where TActivity : class, ICompensateActivity<TLog>
         where TLog : class

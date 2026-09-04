@@ -2,8 +2,11 @@ using System;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Topology;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for correlation id convention.
+/// </summary>
 public static class CorrelationIdConventionExtensions
 {
     /// <summary>

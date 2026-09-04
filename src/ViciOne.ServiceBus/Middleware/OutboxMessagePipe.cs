@@ -9,6 +9,10 @@ using ViciOne.ServiceBus.Serialization;
 #nullable enable
 namespace ViciOne.ServiceBus.Middleware;
 
+/// <summary>
+/// Provides an outbox message pipe implementation.
+/// </summary>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public class OutboxMessagePipe<TMessage> :
     IPipe<OutboxConsumeContext<TMessage>>
     where TMessage : class
@@ -17,6 +21,12 @@ public class OutboxMessagePipe<TMessage> :
     readonly OutboxConsumeOptions _options;
     readonly IConsumeScopeContext<TMessage> _scopeContext;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="options">The options value.</param>
+    /// <param name="scopeContext">The scope context value.</param>
+    /// <param name="next">The next value.</param>
     public OutboxMessagePipe(OutboxConsumeOptions options, IConsumeScopeContext<TMessage> scopeContext, IPipe<ConsumeContext<TMessage>> next)
     {
         _options = options;
@@ -24,6 +34,11 @@ public class OutboxMessagePipe<TMessage> :
         _next = next;
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SendAsync(OutboxConsumeContext<TMessage> context)
     {
         using var pop = _scopeContext.PushConsumeContext(context);
@@ -71,6 +86,10 @@ public class OutboxMessagePipe<TMessage> :
         context.ContinueProcessing = false;
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("outbox");

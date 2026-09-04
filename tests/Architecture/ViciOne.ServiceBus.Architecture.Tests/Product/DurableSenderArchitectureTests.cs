@@ -1,10 +1,8 @@
-using System.ComponentModel;
 using System.Reflection;
 using ViciOne.ServiceBus.Architecture.Tests.Repository;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Diagnostics;
-using ViciOne.ServiceBus.DurableSend;
-using ViciOne.ServiceBus.ProviderAbstractions;
+using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -20,22 +18,27 @@ public sealed class DurableSenderArchitectureTests
         Type[] applicationApi =
         [
             typeof(DurableSendId),
-            typeof(DurableSendAdmissionDisposition),
             typeof(DurableSendOptions),
             typeof(DurableSendReceipt),
+            typeof(IDurableSender<>),
+        ];
+        Assert.All(applicationApi, type => Assert.Equal("ViciOne.ServiceBus", type.Namespace));
+
+        Type[] operationsApi =
+        [
             typeof(DurableSendQuarantineQuery),
             typeof(DurableSendQuarantinePage),
             typeof(DurableSendQuarantineEntry),
             typeof(DurableSendOperationOutcome),
             typeof(DurableSendOperationResult),
-            typeof(IDurableSender<>),
             typeof(IDurableSenderOperations<>),
         ];
-        Assert.All(applicationApi, AssertVisibleApplicationType);
+        Assert.All(operationsApi, type => Assert.Equal("ViciOne.ServiceBus.Operations", type.Namespace));
 
         Type[] providerSpi =
         [
             typeof(SerializedDurableSend),
+            typeof(DurableSendAdmissionDisposition),
             typeof(DurableSendAdmissionResult),
             typeof(DurableSendDelivery),
             typeof(DurableSendDispatchContext),
@@ -48,6 +51,18 @@ public sealed class DurableSenderArchitectureTests
             typeof(IDurableSendDispatcher<>),
             typeof(IDurableSendAdmission<>),
             typeof(IDurableSendConsumerCompletion),
+            typeof(BusPersistenceIdentity<>),
+            typeof(IDurableSenderProviderConfigurator),
+        ];
+
+        Assert.All(providerSpi, contract =>
+        {
+            Assert.True(contract.IsPublic);
+            Assert.Equal("ViciOne.ServiceBus.Providers.Persistence", contract.Namespace);
+        });
+
+        Type[] advancedSpi =
+        [
             typeof(IConsumerConcurrencyGate<>),
             typeof(ConsumerConcurrencyGate<>),
             typeof(PartitionedConsumerConcurrencyGate<,>),
@@ -61,18 +76,9 @@ public sealed class DurableSenderArchitectureTests
             typeof(MessageDiagnosticRedactor),
             typeof(EndpointQosDeclaration),
             typeof(EndpointQosTopologyValidator),
-            typeof(BusPersistenceIdentity<>),
-            typeof(IDurableSenderProviderConfigurator),
         ];
-
-        Assert.All(providerSpi, contract =>
-        {
-            Assert.True(contract.IsPublic);
-            Assert.NotNull(contract.GetCustomAttribute<EditorBrowsableAttribute>());
-            Assert.Equal(
-                EditorBrowsableState.Never,
-                contract.GetCustomAttribute<EditorBrowsableAttribute>()!.State);
-        });
+        Assert.All(advancedSpi, contract =>
+            Assert.StartsWith("ViciOne.ServiceBus.Advanced", contract.Namespace, StringComparison.Ordinal));
         Assert.Same(ProductAssemblyFacts.Abstractions, typeof(SerializedDurableSend).Assembly);
         Assert.Same(ProductAssemblyFacts.Core, typeof(DurableSenderOptions<>).Assembly);
         Assert.DoesNotContain(typeof(SerializedDurableSend).GetProperties(), property => property.PropertyType == typeof(Type));
@@ -99,17 +105,17 @@ public sealed class DurableSenderArchitectureTests
     {
         string[] implementationNames =
         [
-            "ViciOne.ServiceBus.DurableSend.InMemoryDurableSendStore`1",
-            "ViciOne.ServiceBus.DurableSend.DurableSendAdmission`1",
-            "ViciOne.ServiceBus.DurableSend.TypedDurableSender`1",
-            "ViciOne.ServiceBus.DurableSend.DurableSenderDeliveryService`1",
-            "ViciOne.ServiceBus.DurableSend.DurableSenderOperations`1",
-            "ViciOne.ServiceBus.DurableSend.DurableSendConsumerCompletion`1",
-            "ViciOne.ServiceBus.DurableSend.DurableSenderConfigurator`1",
-            "ViciOne.ServiceBus.DurableSend.DurableSenderStartupValidator`1",
-            "ViciOne.ServiceBus.InMemoryTransport.InMemoryDurableSendDispatcher`1",
-            "ViciOne.ServiceBus.InMemoryTransport.InMemoryDurableSendCompletionFilter",
-            "ViciOne.ServiceBus.InMemoryTransport.InMemoryDurableSendContext",
+            "ViciOne.ServiceBus.Providers.Persistence.InMemoryDurableSendStore`1",
+            "ViciOne.ServiceBus.Providers.Persistence.DurableSendAdmission`1",
+            "ViciOne.ServiceBus.Providers.Persistence.TypedDurableSender`1",
+            "ViciOne.ServiceBus.Providers.Persistence.DurableSenderDeliveryService`1",
+            "ViciOne.ServiceBus.Operations.DurableSenderOperations`1",
+            "ViciOne.ServiceBus.Providers.Persistence.DurableSendConsumerCompletion`1",
+            "ViciOne.ServiceBus.Configuration.DurableSenderConfigurator`1",
+            "ViciOne.ServiceBus.Configuration.DurableSenderStartupValidator`1",
+            "ViciOne.ServiceBus.Providers.Transports.InMemoryDurableSendDispatcher`1",
+            "ViciOne.ServiceBus.Providers.Transports.InMemoryDurableSendCompletionFilter",
+            "ViciOne.ServiceBus.Providers.Transports.InMemoryDurableSendContext",
         ];
 
         foreach (string name in implementationNames)
@@ -162,14 +168,14 @@ public sealed class DurableSenderArchitectureTests
         Assert.True(storeAdmission > catalogLookup);
 
         string efStore = Source(
-            "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/DurableSend/EntityFrameworkDurableSendStore.cs");
+            "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/DurableSend/EntityFrameworkDurableSendStore.cs");
         int preflight = efStore.IndexOf("_commitDurabilityValidator.ValidateAsync", StringComparison.Ordinal);
         int capacityLookup = efStore.IndexOf("Set<DurableSendCapacityState>()", preflight, StringComparison.Ordinal);
         Assert.True(preflight >= 0);
         Assert.True(capacityLookup > preflight);
 
         string validator = Source(
-            "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/DurableSend/EntityFrameworkDurableSendCommitDurabilityValidator.cs");
+            "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/DurableSend/EntityFrameworkDurableSendCommitDurabilityValidator.cs");
         Assert.Contains("Microsoft.EntityFrameworkCore.SqlServer", validator, StringComparison.Ordinal);
         Assert.Contains("Npgsql.EntityFrameworkCore.PostgreSQL", validator, StringComparison.Ordinal);
         Assert.Contains("Microsoft.EntityFrameworkCore.Sqlite", validator, StringComparison.Ordinal);
@@ -179,11 +185,4 @@ public sealed class DurableSenderArchitectureTests
     private static string Source(string relativePath) =>
         File.ReadAllText(Path.Combine(RepositoryLayout.Root, relativePath));
 
-    private static void AssertVisibleApplicationType(Type type)
-    {
-        Assert.True(type.IsPublic);
-        Assert.NotEqual(
-            EditorBrowsableState.Never,
-            type.GetCustomAttribute<EditorBrowsableAttribute>()?.State);
-    }
 }

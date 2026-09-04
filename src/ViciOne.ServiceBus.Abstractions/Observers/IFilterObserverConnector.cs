@@ -1,5 +1,8 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Observers;
 
+/// <summary>
+/// Defines the contract for filter observer connector.
+/// </summary>
 public interface IFilterObserverConnector
 {
     /// <summary>
@@ -19,6 +22,10 @@ public interface IFilterObserverConnector
 }
 
 
+/// <summary>
+/// Defines the contract for filter observer connector.
+/// </summary>
+/// <typeparam name="TContext">The t context type.</typeparam>
 public interface IFilterObserverConnector<out TContext>
     where TContext : class, PipeContext
 {

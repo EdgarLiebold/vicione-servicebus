@@ -1,8 +1,7 @@
-using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Providers.Persistence;
 
 /// <summary>
 /// Process-local completion capability for a durable send dispatched through a volatile transport. Transport adapters
@@ -10,9 +9,11 @@ namespace ViciOne.ServiceBus;
 /// Invoking it after the logical consumer pipeline has committed removes the persisted producer intent only when the
 /// capability still matches that intent's persisted generation. A stale capability cannot remove a later re-admission.
 /// </summary>
-[EditorBrowsable(EditorBrowsableState.Never)]
 public interface IDurableSendConsumerCompletion
 {
+    /// <summary>
+    /// Gets the durable send id value.
+    /// </summary>
     DurableSendId DurableSendId { get; }
 
     /// <summary>

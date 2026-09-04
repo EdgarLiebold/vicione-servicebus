@@ -8,15 +8,26 @@ using ViciOne.ServiceBus.Initializers.TypeConverters;
 #nullable enable
 namespace ViciOne.ServiceBus.Serialization;
 
+/// <summary>
+/// Provides a system text json message serializer implementation.
+/// </summary>
 public class SystemTextJsonMessageSerializer :
     IMessageDeserializer,
     IMessageSerializer,
     IObjectDeserializer
 {
+    /// <summary>
+    /// Defines the json content type value.
+    /// </summary>
     public static readonly ContentType JsonContentType = new ContentType("application/vnd.vicione.servicebus+json");
 
     readonly JsonSerializerOptions _options;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="options">The options value.</param>
+    /// <param name="contentType">The content type value.</param>
     public SystemTextJsonMessageSerializer(JsonSerializerOptions options, ContentType? contentType = null)
     {
         _options = options ?? throw new ArgumentNullException(nameof(options));
@@ -26,8 +37,15 @@ public class SystemTextJsonMessageSerializer :
         ContentType = contentType ?? JsonContentType;
     }
 
+    /// <summary>
+    /// Gets the content type value.
+    /// </summary>
     public ContentType ContentType { get; }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("json");
@@ -35,11 +53,23 @@ public class SystemTextJsonMessageSerializer :
         scope.Add("provider", "System.Text.Json");
     }
 
+    /// <summary>
+    /// Performs the deserialize operation.
+    /// </summary>
+    /// <param name="receiveContext">The receive context value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConsumeContext Deserialize(ReceiveContext receiveContext)
     {
         return new BodyConsumeContext(receiveContext, Deserialize(receiveContext.Body, receiveContext.TransportHeaders, receiveContext.InputAddress));
     }
 
+    /// <summary>
+    /// Performs the deserialize operation.
+    /// </summary>
+    /// <param name="body">The body value.</param>
+    /// <param name="headers">The headers value.</param>
+    /// <param name="destinationAddress">The destination address value.</param>
+    /// <returns>The result of the operation.</returns>
     public SerializerContext Deserialize(MessageBody body, Headers headers, Uri? destinationAddress = null)
     {
         try
@@ -68,17 +98,35 @@ public class SystemTextJsonMessageSerializer :
         }
     }
 
+    /// <summary>
+    /// Gets message body.
+    /// </summary>
+    /// <param name="text">The text value.</param>
+    /// <returns>The result of the operation.</returns>
     public MessageBody GetMessageBody(string text)
     {
         return new StringMessageBody(text);
     }
 
+    /// <summary>
+    /// Gets message body.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public MessageBody GetMessageBody<T>(SendContext<T> context)
         where T : class
     {
         return new SystemTextJsonMessageBody<T>(context, _options);
     }
 
+    /// <summary>
+    /// Performs the deserialize object operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="value">The value.</param>
+    /// <param name="defaultValue">The default value value.</param>
+    /// <returns>The result of the operation.</returns>
     public T? DeserializeObject<T>(object? value, T? defaultValue = default)
         where T : class
     {
@@ -106,6 +154,13 @@ public class SystemTextJsonMessageSerializer :
             : element.GetObject<T>(_options);
     }
 
+    /// <summary>
+    /// Performs the deserialize object operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="value">The value.</param>
+    /// <param name="defaultValue">The default value value.</param>
+    /// <returns>The result of the operation.</returns>
     public T? DeserializeObject<T>(object? value, T? defaultValue = null)
         where T : struct
     {
@@ -133,6 +188,11 @@ public class SystemTextJsonMessageSerializer :
             : element.Deserialize<T>(_options);
     }
 
+    /// <summary>
+    /// Performs the serialize object operation.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns>The result of the operation.</returns>
     public MessageBody SerializeObject(object? value)
     {
         if (value == null)

@@ -6,6 +6,9 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 
+/// <summary>
+/// Provides an outbox send endpoint implementation.
+/// </summary>
 public class OutboxSendEndpoint :
     ITransportSendEndpoint
 {
@@ -28,11 +31,24 @@ public class OutboxSendEndpoint :
     /// </summary>
     public ISendEndpoint Endpoint => _endpoint;
 
+    /// <summary>
+    /// Connects send observer.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
     {
         return _endpoint.ConnectSendObserver(observer);
     }
 
+    /// <summary>
+    /// Creates send context.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="message">The message value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {

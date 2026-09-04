@@ -3,10 +3,20 @@ using System.Threading.Tasks;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Serialization;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides extension methods for forward.
+/// </summary>
 public static class ForwardExtensions
 {
+    /// <summary>
+    /// Performs the forward operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="address">The address value.</param>
+    /// <returns>The result of the operation.</returns>
     public static async Task ForwardAsync<T>(this ConsumeContext<T> context, Uri address)
         where T : class
     {
@@ -20,6 +30,14 @@ public static class ForwardExtensions
         await ForwardAsync(context, endpoint).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Performs the forward operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="address">The address value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <returns>The result of the operation.</returns>
     public static async Task ForwardAsync<T>(this ConsumeContext<T> context, Uri address, IPipe<SendContext<T>> pipe)
         where T : class
     {
@@ -33,6 +51,13 @@ public static class ForwardExtensions
         await ForwardAsync(context, endpoint, pipe).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Performs the forward operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="endpoint">The endpoint value.</param>
+    /// <returns>The result of the operation.</returns>
     public static Task ForwardAsync<T>(this ConsumeContext<T> context, ISendEndpoint endpoint)
         where T : class
     {
@@ -46,6 +71,14 @@ public static class ForwardExtensions
         return endpoint.SendAsync(context.Message, messagePipe, context.CancellationToken);
     }
 
+    /// <summary>
+    /// Performs the forward operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="endpoint">The endpoint value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <returns>The result of the operation.</returns>
     public static Task ForwardAsync<T>(this ConsumeContext<T> context, ISendEndpoint endpoint, IPipe<SendContext<T>> pipe)
         where T : class
     {
@@ -59,6 +92,14 @@ public static class ForwardExtensions
         return endpoint.SendAsync(context.Message, messagePipe, context.CancellationToken);
     }
 
+    /// <summary>
+    /// Performs the forward operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="address">The address value.</param>
+    /// <param name="message">The message value.</param>
+    /// <returns>The result of the operation.</returns>
     public static async Task ForwardAsync<T>(this ConsumeContext context, Uri address, T message)
         where T : class
     {

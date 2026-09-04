@@ -8,8 +8,19 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for registration service collection.
+/// </summary>
 public static class RegistrationServiceCollectionExtensions
 {
+    /// <summary>
+    /// Performs the register saga repository operation.
+    /// </summary>
+    /// <typeparam name="TSaga">The t saga type.</typeparam>
+    /// <typeparam name="TContext">The t context type.</typeparam>
+    /// <typeparam name="TConsumeContextFactory">The t consume context factory type.</typeparam>
+    /// <typeparam name="TRepositoryContextFactory">The t repository context factory type.</typeparam>
+    /// <param name="collection">The collection value.</param>
     public static void RegisterSagaRepository<TSaga, TContext, TConsumeContextFactory, TRepositoryContextFactory>(this IServiceCollection collection)
         where TSaga : class, ISaga
         where TContext : class
@@ -23,6 +34,12 @@ public static class RegistrationServiceCollectionExtensions
         collection.TryAddSingleton<ILoadSagaRepository<TSaga>, NotSupportedSagaRepository<TSaga>>();
     }
 
+    /// <summary>
+    /// Performs the register query saga repository operation.
+    /// </summary>
+    /// <typeparam name="TSaga">The t saga type.</typeparam>
+    /// <typeparam name="TQueryRepositoryContextFactory">The t query repository context factory type.</typeparam>
+    /// <param name="collection">The collection value.</param>
     public static void RegisterQuerySagaRepository<TSaga, TQueryRepositoryContextFactory>(this IServiceCollection collection)
         where TSaga : class, ISaga
         where TQueryRepositoryContextFactory : class, IQuerySagaRepositoryContextFactory<TSaga>
@@ -31,6 +48,12 @@ public static class RegistrationServiceCollectionExtensions
         collection.AddScoped<IQuerySagaRepositoryContextFactory<TSaga>, TQueryRepositoryContextFactory>();
     }
 
+    /// <summary>
+    /// Performs the register load saga repository operation.
+    /// </summary>
+    /// <typeparam name="TSaga">The t saga type.</typeparam>
+    /// <typeparam name="TLoadRepositoryContextFactory">The t load repository context factory type.</typeparam>
+    /// <param name="collection">The collection value.</param>
     public static void RegisterLoadSagaRepository<TSaga, TLoadRepositoryContextFactory>(this IServiceCollection collection)
         where TSaga : class, ISaga
         where TLoadRepositoryContextFactory : class, ILoadSagaRepositoryContextFactory<TSaga>

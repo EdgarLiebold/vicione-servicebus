@@ -22,16 +22,16 @@ are deliberately absent here rather than listed as if they still shipped.
 
 ### Transports
 
-* [ViciOne.ServiceBus.ActiveMQ](https://nuget.org/packages/ViciOne.ServiceBus.ActiveMQ/)
-* [ViciOne.ServiceBus.AmazonSQS](https://nuget.org/packages/ViciOne.ServiceBus.AmazonSQS/)
-* [ViciOne.ServiceBus.Azure.ServiceBus.Core](https://nuget.org/packages/ViciOne.ServiceBus.Azure.ServiceBus.Core/)
-* [ViciOne.ServiceBus.RabbitMQ](https://nuget.org/packages/ViciOne.ServiceBus.RabbitMQ/)
-* [ViciOne.ServiceBus.SqlTransport.PostgreSQL](https://nuget.org/packages/ViciOne.ServiceBus.SqlTransport.PostgreSQL/)
+* [ViciOne.ServiceBus.ActiveMq](https://nuget.org/packages/ViciOne.ServiceBus.ActiveMq/)
+* [ViciOne.ServiceBus.AmazonSqs](https://nuget.org/packages/ViciOne.ServiceBus.AmazonSqs/)
+* [ViciOne.ServiceBus.AzureServiceBus](https://nuget.org/packages/ViciOne.ServiceBus.AzureServiceBus/)
+* [ViciOne.ServiceBus.RabbitMq](https://nuget.org/packages/ViciOne.ServiceBus.RabbitMq/)
+* [ViciOne.ServiceBus.SqlTransport.PostgreSql](https://nuget.org/packages/ViciOne.ServiceBus.SqlTransport.PostgreSql/)
 * [ViciOne.ServiceBus.SqlTransport.SqlServer](https://nuget.org/packages/ViciOne.ServiceBus.SqlTransport.SqlServer/)
 
 ### Riders
 
-* [ViciOne.ServiceBus.EventHub](https://nuget.org/packages/ViciOne.ServiceBus.EventHub/)
+* [ViciOne.ServiceBus.EventHubs](https://nuget.org/packages/ViciOne.ServiceBus.EventHubs/)
 
 ### Saga persistence
 

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
 /// <summary>
 /// A state machine definition
@@ -106,7 +106,23 @@ public interface StateMachine<TSaga> :
     Task RaiseEventAsync<T>(BehaviorContext<TSaga, T> context, CancellationToken cancellationToken = default)
         where T : class;
 
+    /// <summary>
+    /// Connects event observer.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     IDisposable ConnectEventObserver(IEventObserver<TSaga> observer);
+    /// <summary>
+    /// Connects event observer.
+    /// </summary>
+    /// <param name="event">The event value.</param>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     IDisposable ConnectEventObserver(Event @event, IEventObserver<TSaga> observer);
+    /// <summary>
+    /// Connects state observer.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     IDisposable ConnectStateObserver(IStateObserver<TSaga> observer);
 }

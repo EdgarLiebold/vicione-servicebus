@@ -5,6 +5,9 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Util;
 
+/// <summary>
+/// Provides an exception util implementation.
+/// </summary>
 public static class ExceptionUtil
 {
     static readonly Regex _trim;
@@ -20,6 +23,11 @@ public static class ExceptionUtil
         _trim = new Regex(@"in\s.*ViciOne.ServiceBus.*\.cs.*$", RegexOptions.Multiline | RegexOptions.Compiled);
     }
 
+    /// <summary>
+    /// Gets message.
+    /// </summary>
+    /// <param name="exception">The exception associated with the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static string GetMessage(Exception exception)
     {
         try
@@ -37,6 +45,11 @@ public static class ExceptionUtil
         }
     }
 
+    /// <summary>
+    /// Gets stack trace.
+    /// </summary>
+    /// <param name="exception">The exception associated with the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static string GetStackTrace(Exception? exception)
     {
         var stackTrace = exception?.StackTrace;
@@ -52,6 +65,12 @@ public static class ExceptionUtil
         return stackTrace;
     }
 
+    /// <summary>
+    /// Gets exception header detail.
+    /// </summary>
+    /// <param name="exception">The exception associated with the operation.</param>
+    /// <param name="adapter">The adapter value.</param>
+    /// <returns>The result of the operation.</returns>
     public static (Dictionary<string, object>, string) GetExceptionHeaderDetail(Exception exception, ITransportSetHeaderAdapter<object> adapter)
     {
         exception = exception.GetBaseException() ?? exception;

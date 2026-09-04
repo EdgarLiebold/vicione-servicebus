@@ -4,9 +4,17 @@ using System.Net.NetworkInformation;
 
 namespace ViciOne.ServiceBus.NewIdProviders;
 
+/// <summary>
+/// Provides a network address worker id provider implementation.
+/// </summary>
 public class NetworkAddressWorkerIdProvider :
     IWorkerIdProvider
 {
+    /// <summary>
+    /// Gets worker id.
+    /// </summary>
+    /// <param name="index">The index value.</param>
+    /// <returns>The result of the operation.</returns>
     public byte[] GetWorkerId(int index)
     {
         return GetNetworkAddress(index);

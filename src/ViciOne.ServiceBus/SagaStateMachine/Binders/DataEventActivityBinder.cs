@@ -5,6 +5,11 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
+/// <summary>
+/// Provides a data event activity binder implementation.
+/// </summary>
+/// <typeparam name="TInstance">The t instance type.</typeparam>
+/// <typeparam name="TData">The t data type.</typeparam>
 public class DataEventActivityBinder<TInstance, TData> :
     EventActivityBinder<TInstance, TData>
     where TInstance : class, SagaStateMachineInstance
@@ -15,6 +20,12 @@ public class DataEventActivityBinder<TInstance, TData> :
     readonly StateMachineCondition<TInstance, TData>? _filter = null!;
     readonly StateMachine<TInstance> _machine;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="machine">The machine value.</param>
+    /// <param name="event">The event value.</param>
+    /// <param name="activities">The activities value.</param>
     public DataEventActivityBinder(StateMachine<TInstance> machine, Event<TData> @event, params IActivityBinder<TInstance>[] activities)
     {
         _event = @event ?? throw new ArgumentNullException(nameof(@event));
@@ -22,6 +33,13 @@ public class DataEventActivityBinder<TInstance, TData> :
         _machine = machine;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="machine">The machine value.</param>
+    /// <param name="event">The event value.</param>
+    /// <param name="filter">The filter value.</param>
+    /// <param name="activities">The activities value.</param>
     public DataEventActivityBinder(StateMachine<TInstance> machine, Event<TData> @event, StateMachineCondition<TInstance, TData>? filter,
         params IActivityBinder<TInstance>[] activities)
     {
@@ -68,6 +86,12 @@ public class DataEventActivityBinder<TInstance, TData> :
         return new DataEventActivityBinder<TInstance, TData>(_machine, _event, _filter, _activities, activityBinder);
     }
 
+    /// <summary>
+    /// Performs the retry operation.
+    /// </summary>
+    /// <param name="configure">The configuration callback.</param>
+    /// <param name="activityCallback">The activity callback value.</param>
+    /// <returns>The result of the operation.</returns>
     public EventActivityBinder<TInstance, TData> Retry(Action<IRetryConfigurator> configure,
         Func<EventActivityBinder<TInstance, TData>, EventActivityBinder<TInstance, TData>> activityCallback)
     {
@@ -98,6 +122,13 @@ public class DataEventActivityBinder<TInstance, TData> :
         return IfElseAsync(condition, activityCallback, b => b);
     }
 
+    /// <summary>
+    /// Performs the if else operation.
+    /// </summary>
+    /// <param name="condition">The condition value.</param>
+    /// <param name="thenActivityCallback">The then activity callback value.</param>
+    /// <param name="elseActivityCallback">The else activity callback value.</param>
+    /// <returns>The result of the operation.</returns>
     public EventActivityBinder<TInstance, TData> IfElse(StateMachineCondition<TInstance, TData> condition,
         Func<EventActivityBinder<TInstance, TData>, EventActivityBinder<TInstance, TData>> thenActivityCallback,
         Func<EventActivityBinder<TInstance, TData>, EventActivityBinder<TInstance, TData>> elseActivityCallback)
@@ -110,6 +141,13 @@ public class DataEventActivityBinder<TInstance, TData> :
         return new DataEventActivityBinder<TInstance, TData>(_machine, _event, _filter, _activities, conditionBinder);
     }
 
+    /// <summary>
+    /// Performs the if else operation.
+    /// </summary>
+    /// <param name="condition">The condition value.</param>
+    /// <param name="thenActivityCallback">The then activity callback value.</param>
+    /// <param name="elseActivityCallback">The else activity callback value.</param>
+    /// <returns>The result of the operation.</returns>
     public EventActivityBinder<TInstance, TData> IfElseAsync(StateMachineAsyncCondition<TInstance, TData> condition,
         Func<EventActivityBinder<TInstance, TData>, EventActivityBinder<TInstance, TData>> thenActivityCallback,
         Func<EventActivityBinder<TInstance, TData>, EventActivityBinder<TInstance, TData>> elseActivityCallback)
@@ -124,6 +162,10 @@ public class DataEventActivityBinder<TInstance, TData> :
 
     StateMachine<TInstance> EventActivityBinder<TInstance, TData>.StateMachine => _machine;
 
+    /// <summary>
+    /// Gets state activity binders.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<IActivityBinder<TInstance>> GetStateActivityBinders()
     {
         if (_filter != null)

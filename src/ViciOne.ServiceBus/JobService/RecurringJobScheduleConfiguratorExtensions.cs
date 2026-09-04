@@ -1,8 +1,11 @@
 using System;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.JobService;
 
+/// <summary>
+/// Provides extension methods for recurring job schedule configurator.
+/// </summary>
 public static class RecurringJobScheduleConfiguratorExtensions
 {
     /// <summary>

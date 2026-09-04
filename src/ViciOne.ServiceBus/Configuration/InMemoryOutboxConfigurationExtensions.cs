@@ -6,8 +6,11 @@ using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Middleware.Outbox;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for in memory outbox configuration.
+/// </summary>
 public static class InMemoryOutboxConfigurationExtensions
 {
     /// <summary>

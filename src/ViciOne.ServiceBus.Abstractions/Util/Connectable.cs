@@ -16,6 +16,9 @@ public class Connectable<T>
     T[]? _connected;
     long _nextId;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public Connectable()
     {
         _connections = new Dictionary<long, T>();

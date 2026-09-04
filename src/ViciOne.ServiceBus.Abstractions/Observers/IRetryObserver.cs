@@ -1,7 +1,10 @@
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Observers;
 
+/// <summary>
+/// Defines the contract for retry observer.
+/// </summary>
 public interface IRetryObserver
 {
     /// <summary>

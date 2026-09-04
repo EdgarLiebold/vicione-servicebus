@@ -2,8 +2,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Middleware;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Middleware;
 
+/// <summary>
+/// Provides extension methods for agent.
+/// </summary>
 public static class AgentExtensions
 {
     /// <summary>

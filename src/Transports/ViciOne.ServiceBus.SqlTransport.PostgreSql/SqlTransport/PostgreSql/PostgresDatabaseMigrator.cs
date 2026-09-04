@@ -7,6 +7,9 @@ using ViciOne.ServiceBus.SqlTransport.PostgreSql.Helpers;
 
 namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
 
+/// <summary>
+/// Provides a postgres database migrator implementation.
+/// </summary>
 public class PostgresDatabaseMigrator :
     ISqlTransportDatabaseMigrator
 {
@@ -1458,16 +1461,32 @@ public class PostgresDatabaseMigrator :
 
     readonly ILogger<PostgresDatabaseMigrator> _logger;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="logger">The logger value.</param>
     public PostgresDatabaseMigrator(ILogger<PostgresDatabaseMigrator> logger)
     {
         _logger = logger;
     }
 
+    /// <summary>
+    /// Creates database.
+    /// </summary>
+    /// <param name="options">The options value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task CreateDatabaseAsync(SqlTransportOptions options, CancellationToken cancellationToken = default)
     {
         await CreateDatabaseIfNotExistAsync(options, cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Performs the delete database operation.
+    /// </summary>
+    /// <param name="options">The options value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task DeleteDatabaseAsync(SqlTransportOptions options, CancellationToken cancellationToken = default)
     {
         await using var connection = PostgresSqlTransportConnection.GetSystemDatabaseConnection(options);
@@ -1482,6 +1501,12 @@ public class PostgresDatabaseMigrator :
         }
     }
 
+    /// <summary>
+    /// Creates infrastructure.
+    /// </summary>
+    /// <param name="options">The options value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task CreateInfrastructureAsync(SqlTransportOptions options, CancellationToken cancellationToken)
     {
         await using var connection = PostgresSqlTransportConnection.GetDatabaseConnection(options);
@@ -1525,6 +1550,12 @@ public class PostgresDatabaseMigrator :
         }
     }
 
+    /// <summary>
+    /// Creates schema if not exist.
+    /// </summary>
+    /// <param name="options">The options value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task CreateSchemaIfNotExistAsync(SqlTransportOptions options, CancellationToken cancellationToken)
     {
         await using var connection = PostgresSqlTransportConnection.GetDatabaseAdminConnection(options);

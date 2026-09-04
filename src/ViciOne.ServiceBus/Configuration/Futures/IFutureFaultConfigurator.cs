@@ -1,5 +1,10 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for future fault configurator.
+/// </summary>
+/// <typeparam name="TFault">The t fault type.</typeparam>
+/// <typeparam name="TInput">The t input type.</typeparam>
 public interface IFutureFaultConfigurator<TFault, out TInput>
     where TInput : class
     where TFault : class
@@ -25,6 +30,10 @@ public interface IFutureFaultConfigurator<TFault, out TInput>
 }
 
 
+/// <summary>
+/// Defines the contract for future fault configurator.
+/// </summary>
+/// <typeparam name="TFault">The t fault type.</typeparam>
 public interface IFutureFaultConfigurator<TFault>
     where TFault : class
 {

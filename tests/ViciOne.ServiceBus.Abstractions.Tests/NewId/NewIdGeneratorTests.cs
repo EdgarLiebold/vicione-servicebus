@@ -1,6 +1,6 @@
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
-using NewIdValue = global::ViciOne.ServiceBus.NewId;
+using NewIdValue = global::ViciOne.ServiceBus.Advanced.NewId;
 
 namespace ViciOne.ServiceBus.Abstractions.Tests.NewId;
 

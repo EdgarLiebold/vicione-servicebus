@@ -6,11 +6,18 @@ using ViciOne.ServiceBus.SqlTransport.Configuration;
 
 namespace ViciOne.ServiceBus.SqlTransport.SqlServer;
 
+/// <summary>
+/// Provides a sql server sql host settings implementation.
+/// </summary>
 public class SqlServerSqlHostSettings :
     ConfigurationSqlHostSettings
 {
     SqlConnectionStringBuilder? _builder;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="hostAddress">The host address value.</param>
     public SqlServerSqlHostSettings(Uri hostAddress)
         : base(hostAddress)
     {
@@ -20,11 +27,19 @@ public class SqlServerSqlHostSettings :
         InstanceName = address.InstanceName;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="connectionString">The connection string value.</param>
     public SqlServerSqlHostSettings(string connectionString)
     {
         ConnectionString = connectionString;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="options">The options value.</param>
     public SqlServerSqlHostSettings(SqlTransportOptions options)
     {
         var builder = SqlServerSqlTransportConnection.CreateBuilder(options);
@@ -45,6 +60,9 @@ public class SqlServerSqlHostSettings :
         MaintenanceEnabled = !options.DisableMaintenance;
     }
 
+    /// <summary>
+    /// Gets or sets the connection string value.
+    /// </summary>
     public string? ConnectionString
     {
         set
@@ -62,11 +80,20 @@ public class SqlServerSqlHostSettings :
         }
     }
 
+    /// <summary>
+    /// Creates connection context factory.
+    /// </summary>
+    /// <param name="hostConfiguration">The host configuration value.</param>
+    /// <returns>The result of the operation.</returns>
     public override ConnectionContextFactory CreateConnectionContextFactory(ISqlHostConfiguration hostConfiguration)
     {
         return new SqlServerConnectionContextFactory(hostConfiguration);
     }
 
+    /// <summary>
+    /// Gets connection string.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public string GetConnectionString()
     {
         var builder = _builder ??= new SqlConnectionStringBuilder

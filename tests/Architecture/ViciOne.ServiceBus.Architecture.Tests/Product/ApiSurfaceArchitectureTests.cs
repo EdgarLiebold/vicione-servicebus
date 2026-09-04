@@ -1,9 +1,10 @@
 using System.ComponentModel;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using ViciOne.ServiceBus.Architecture.Tests.Repository;
 using ViciOne.ServiceBus.DependencyInjection;
-using ViciOne.ServiceBus.DurableSend;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -78,9 +79,10 @@ public sealed class ApiSurfaceArchitectureTests
             typeof(IRequestClient<>),
             typeof(IMessageScheduler),
             typeof(IDurableSender<>),
-            typeof(IDurableSenderOperations<>),
         ];
-        Assert.All(applicationContracts, AssertApplicationVisible);
+        Assert.All(applicationContracts, type => Assert.Equal("ViciOne.ServiceBus", type.Namespace));
+
+        Assert.Equal("ViciOne.ServiceBus.Operations", typeof(IDurableSenderOperations<>).Namespace);
 
         Type[] advancedContracts =
         [
@@ -91,26 +93,119 @@ public sealed class ApiSurfaceArchitectureTests
             typeof(Bind<,,>),
             typeof(Bind<>),
             typeof(MessageSchedulerBusExtensions),
-            typeof(ValidateViciOneServiceBusHostOptions),
             typeof(SerializedDurableSend),
             typeof(IDurableSendStore<>),
             typeof(IDurableSendDispatcher<>),
         ];
-        Assert.All(advancedContracts, AssertAdvancedHidden);
+        Assert.All(advancedContracts, type =>
+        {
+            Assert.True(type.IsPublic);
+            Assert.True(
+                type.Namespace!.StartsWith("ViciOne.ServiceBus.Advanced", StringComparison.Ordinal)
+                || type.Namespace.StartsWith("ViciOne.ServiceBus.Providers", StringComparison.Ordinal));
+            Assert.NotEqual(EditorBrowsableState.Never, type.GetCustomAttribute<EditorBrowsableAttribute>()?.State);
+        });
+        Assert.Equal("ViciOne.ServiceBus.Configuration", typeof(ValidateViciOneServiceBusHostOptions).Namespace);
 
         string rabbitRegistration = Source(
-            "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Configuration/RabbitMqBusFactoryConfiguratorExtensions.cs");
+            "src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqBusFactoryConfiguratorExtensions.cs");
         string rabbitOperations = Source(
-            "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Operations/IRabbitMqQueueOperations.cs");
+            "src/Transports/ViciOne.ServiceBus.RabbitMq/Operations/IRabbitMqQueueOperations.cs");
         Assert.Contains("public static void UsingRabbitMq", rabbitRegistration, StringComparison.Ordinal);
+        Assert.Contains("namespace ViciOne.ServiceBus.Configuration;", rabbitRegistration, StringComparison.Ordinal);
         Assert.Contains("public interface IRabbitMqQueueOperations", rabbitOperations, StringComparison.Ordinal);
+
+        (string Path, string Method)[] transportSelectionEntryPoints =
+        [
+            ("src/ViciOne.ServiceBus/InMemoryTransport/InMemoryConfigurationExtensions.cs", "public static void UsingInMemory"),
+            ("src/Transports/ViciOne.ServiceBus.ActiveMq/Configuration/ActiveMqBusFactoryConfiguratorExtensions.cs", "public static void UsingActiveMq"),
+            ("src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs", "public static void UsingAmazonSqs"),
+            ("src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureBusFactory.cs", "public static IBusControl CreateUsingServiceBus"),
+            ("src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/ServiceBusConfigurationExtensions.cs", "public static void UsingAzureServiceBus"),
+            ("src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegrationExtensions.cs", "public static void UsingEventHub"),
+            ("src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqBusFactoryConfiguratorExtensions.cs", "public static void UsingRabbitMq"),
+            ("src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/Configuration/PostgresBusFactoryConfiguratorExtensions.cs", "public static void UsingPostgres"),
+            ("src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/Configuration/SqlServerBusFactoryConfiguratorExtensions.cs", "public static void UsingSqlServer"),
+        ];
+        Assert.All(transportSelectionEntryPoints, entry =>
+        {
+            string entryPoint = Source(entry.Path);
+            Assert.Contains(entry.Method, entryPoint, StringComparison.Ordinal);
+            Assert.Contains("namespace ViciOne.ServiceBus.Configuration;", entryPoint, StringComparison.Ordinal);
+        });
+
+        string[] transportRoots =
+        [
+            Path.Combine(RepositoryLayout.Root, "src", "Transports"),
+            Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus", "InMemoryTransport"),
+        ];
+        Regex transportSelector = new(
+            @"public\s+static[^\r\n{;]*\b(?:Using|CreateUsing)[A-Za-z0-9_]*\s*\(",
+            RegexOptions.CultureInvariant);
+        string[] discoveredTransportSelectors = transportRoots
+            .SelectMany(static root => Directory.GetFiles(root, "*.cs", SearchOption.AllDirectories))
+            .Where(path => transportSelector.IsMatch(File.ReadAllText(path)))
+            .ToArray();
+        Assert.Equal(transportSelectionEntryPoints.Length, discoveredTransportSelectors.Length);
+        Assert.All(discoveredTransportSelectors, path => Assert.Contains(
+            "namespace ViciOne.ServiceBus.Configuration;",
+            File.ReadAllText(path),
+            StringComparison.Ordinal));
 
         string shipping = Source("ViciOne.ServiceBus.slnx");
         string engineering = Source("ViciOne.ServiceBus.Engineering.slnx");
         Assert.DoesNotContain("ViciOne.ServiceBus.Testing.csproj", shipping, StringComparison.Ordinal);
         Assert.Contains("ViciOne.ServiceBus.Testing.csproj", engineering, StringComparison.Ordinal);
-        Assert.DoesNotContain("RabbitMqTransport.Testing.csproj", shipping, StringComparison.Ordinal);
-        Assert.Contains("RabbitMqTransport.Testing.csproj", engineering, StringComparison.Ordinal);
+        Assert.DoesNotContain("ViciOne.ServiceBus.RabbitMq.Testing.csproj", shipping, StringComparison.Ordinal);
+        Assert.Contains("ViciOne.ServiceBus.RabbitMq.Testing.csproj", engineering, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-API-BASELINE", "application-root-is-exactly-the-versioned-baseline")]
+    public void ApplicationApi_IsExactlyTheVersionedRootNamespaceBaseline()
+    {
+        string[] expected = Source("docs/api/application-api.txt")
+            .Split('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+            .Where(line => !line.StartsWith('#'))
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        Assembly[] assemblies = [ProductAssemblyFacts.Abstractions, ProductAssemblyFacts.Core];
+        Type[] publicTypes = assemblies
+            .SelectMany(static assembly => assembly.GetExportedTypes())
+            .Where(static type => !type.IsNested)
+            .DistinctBy(static type => type.FullName, StringComparer.Ordinal)
+            .ToArray();
+        string[] actual = publicTypes
+            .Where(static type => type.Namespace == "ViciOne.ServiceBus")
+            .Select(static type => type.FullName!)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Equal(expected, actual);
+
+        int rootExtensionMethods = publicTypes
+            .Where(static type => type.Namespace == "ViciOne.ServiceBus")
+            .SelectMany(static type => type.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly))
+            .Count(static method => method.IsDefined(typeof(ExtensionAttribute), inherit: false));
+        Assert.InRange(rootExtensionMethods, 0, 120);
+
+        Assert.DoesNotContain(publicTypes, static type =>
+            type.GetCustomAttribute<EditorBrowsableAttribute>()?.State == EditorBrowsableState.Never);
+        Assert.DoesNotContain(publicTypes, static type => type.IsDefined(typeof(ObsoleteAttribute), inherit: false));
+        Assert.DoesNotContain(publicTypes, static type =>
+            (type.Namespace ?? string.Empty).Contains(".Internals", StringComparison.Ordinal));
+
+        Type applicationBuilder = typeof(IBusRegistrationConfigurator);
+        Type[] builderClosure = [applicationBuilder, .. applicationBuilder.GetInterfaces()];
+        int builderMembers = builderClosure
+            .SelectMany(static type => type.GetMembers(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
+            .Where(static member => member is PropertyInfo or EventInfo
+                || member is MethodInfo { IsSpecialName: false })
+            .Select(static member => member.ToString())
+            .Distinct(StringComparer.Ordinal)
+            .Count();
+        Assert.InRange(builderMembers, 0, 20);
     }
 
     [Fact]
@@ -226,15 +321,4 @@ public sealed class ApiSurfaceArchitectureTests
     private static string Source(string relativePath) =>
         File.ReadAllText(Path.Combine(RepositoryLayout.Root, relativePath));
 
-    private static void AssertApplicationVisible(Type type)
-    {
-        Assert.True(type.IsPublic);
-        Assert.NotEqual(EditorBrowsableState.Never, type.GetCustomAttribute<EditorBrowsableAttribute>()?.State);
-    }
-
-    private static void AssertAdvancedHidden(Type type)
-    {
-        Assert.True(type.IsPublic);
-        Assert.Equal(EditorBrowsableState.Never, type.GetCustomAttribute<EditorBrowsableAttribute>()?.State);
-    }
 }

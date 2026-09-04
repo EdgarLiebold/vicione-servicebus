@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>
 /// A message handler is a delegate type that asynchronously consumes the message

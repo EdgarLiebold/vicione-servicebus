@@ -5,22 +5,37 @@ using ViciOne.ServiceBus.SqlTransport.Configuration;
 
 namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
 
+/// <summary>
+/// Provides a postgres sql host settings implementation.
+/// </summary>
 public class PostgresSqlHostSettings :
     ConfigurationSqlHostSettings
 {
     readonly NpgsqlDataSource? _dataSource;
     NpgsqlConnectionStringBuilder? _builder;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="hostAddress">The host address value.</param>
     public PostgresSqlHostSettings(Uri hostAddress)
         : base(hostAddress)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="connectionString">The connection string value.</param>
     public PostgresSqlHostSettings(string connectionString)
     {
         ConnectionString = connectionString;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="dataSource">The data source value.</param>
     public PostgresSqlHostSettings(NpgsqlDataSource dataSource)
     {
         if (dataSource == null)
@@ -33,6 +48,10 @@ public class PostgresSqlHostSettings :
         ConnectionString = dataSource.ConnectionString;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="options">The options value.</param>
     public PostgresSqlHostSettings(SqlTransportOptions options)
     {
         var builder = PostgresSqlTransportConnection.CreateBuilder(options);
@@ -55,6 +74,9 @@ public class PostgresSqlHostSettings :
         MaintenanceEnabled = !options.DisableMaintenance;
     }
 
+    /// <summary>
+    /// Gets or sets the multiple hosts value.
+    /// </summary>
     public string? MultipleHosts { get; set; }
 
     /// <summary>
@@ -62,6 +84,9 @@ public class PostgresSqlHostSettings :
     /// </summary>
     public bool IsProvidedDataSource { get; private set; }
 
+    /// <summary>
+    /// Gets or sets the connection string value.
+    /// </summary>
     public string? ConnectionString
     {
         set
@@ -83,6 +108,10 @@ public class PostgresSqlHostSettings :
         }
     }
 
+    /// <summary>
+    /// Gets data source.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public NpgsqlDataSource GetDataSource()
     {
         if (_dataSource != null)
@@ -102,6 +131,11 @@ public class PostgresSqlHostSettings :
         return NpgsqlDataSource.Create(builder);
     }
 
+    /// <summary>
+    /// Creates connection context factory.
+    /// </summary>
+    /// <param name="hostConfiguration">The host configuration value.</param>
+    /// <returns>The result of the operation.</returns>
     public override ConnectionContextFactory CreateConnectionContextFactory(ISqlHostConfiguration hostConfiguration)
     {
         return new PostgresConnectionContextFactory(hostConfiguration);

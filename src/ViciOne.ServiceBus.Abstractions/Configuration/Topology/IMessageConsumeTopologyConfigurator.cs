@@ -1,7 +1,7 @@
 using System;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
 /// Configures the Consuming of a message type, allowing filters to be applied
@@ -13,6 +13,10 @@ public interface IMessageConsumeTopologyConfigurator<TMessage> :
     IMessageConsumeTopology<TMessage>
     where TMessage : class
 {
+    /// <summary>
+    /// Performs the add operation.
+    /// </summary>
+    /// <param name="consumeTopology">The consume topology value.</param>
     void Add(IMessageConsumeTopology<TMessage> consumeTopology);
 
     /// <summary>
@@ -50,6 +54,9 @@ public interface IMessageConsumeTopologyConfigurator<TMessage> :
 }
 
 
+/// <summary>
+/// Defines the contract for message consume topology configurator.
+/// </summary>
 public interface IMessageConsumeTopologyConfigurator :
     ISpecification
 {
@@ -59,5 +66,10 @@ public interface IMessageConsumeTopologyConfigurator :
     /// </summary>
     bool ConfigureConsumeTopology { get; set; }
 
+    /// <summary>
+    /// Performs the try add convention operation.
+    /// </summary>
+    /// <param name="convention">The convention value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     bool TryAddConvention(IConsumeTopologyConvention convention);
 }

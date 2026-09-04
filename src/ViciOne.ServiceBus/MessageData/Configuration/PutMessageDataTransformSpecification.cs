@@ -10,11 +10,21 @@ using ViciOne.ServiceBus.Transformation;
 
 namespace ViciOne.ServiceBus.MessageData.Configuration;
 
+/// <summary>
+/// Provides a put message data transform specification implementation.
+/// </summary>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public class PutMessageDataTransformSpecification<TMessage> :
     TransformSpecification<TMessage>,
     ISendTransformSpecification<TMessage>
     where TMessage : class
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="repository">The repository value.</param>
+    /// <param name="policy">The policy value.</param>
+    /// <param name="knownTypes">The known types value.</param>
     public PutMessageDataTransformSpecification(IMessageDataRepository repository, MessageDataPolicy policy, IEnumerable<Type>? knownTypes = null)
     {
         if (repository == null)
@@ -39,6 +49,11 @@ public class PutMessageDataTransformSpecification<TMessage> :
         }
     }
 
+    /// <summary>
+    /// Attempts to get send topology.
+    /// </summary>
+    /// <param name="topology">The topology value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetSendTopology([NotNullWhen(true)] out IMessageSendTopology<TMessage>? topology)
     {
         if (Count > 0)
@@ -53,6 +68,11 @@ public class PutMessageDataTransformSpecification<TMessage> :
         return false;
     }
 
+    /// <summary>
+    /// Attempts to get converter.
+    /// </summary>
+    /// <param name="converter">The converter value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetConverter([NotNullWhen(true)] out IPropertyConverter<TMessage, TMessage>? converter)
     {
         if (Count > 0)

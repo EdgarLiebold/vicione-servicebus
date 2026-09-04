@@ -7,6 +7,9 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Transports;
 
+/// <summary>
+/// Provides a receive endpoint dispatcher factory implementation.
+/// </summary>
 public class ReceiveEndpointDispatcherFactory :
     IReceiveEndpointDispatcherFactory
 {
@@ -14,6 +17,11 @@ public class ReceiveEndpointDispatcherFactory :
     readonly IHostConfiguration _hostConfiguration;
     readonly IBusRegistrationContext _registration;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="registration">The registration value.</param>
+    /// <param name="busInstance">The bus instance value.</param>
     public ReceiveEndpointDispatcherFactory(IBusRegistrationContext registration, IBusInstance busInstance)
     {
         _hostConfiguration = busInstance.HostConfiguration;
@@ -22,6 +30,11 @@ public class ReceiveEndpointDispatcherFactory :
         _dispatchers = new ConcurrentDictionary<string, Lazy<IReceiveEndpointDispatcher>>();
     }
 
+    /// <summary>
+    /// Creates receiver.
+    /// </summary>
+    /// <param name="queueName">The queue name value.</param>
+    /// <returns>The result of the operation.</returns>
     public IReceiveEndpointDispatcher CreateReceiver(string queueName)
     {
         return CreateMessageReceiver(queueName, cfg =>
@@ -31,6 +44,12 @@ public class ReceiveEndpointDispatcherFactory :
         });
     }
 
+    /// <summary>
+    /// Creates consumer receiver.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="queueName">The queue name value.</param>
+    /// <returns>The result of the operation.</returns>
     public IReceiveEndpointDispatcher CreateConsumerReceiver<T>(string queueName)
         where T : class, IConsumer
     {
@@ -40,6 +59,12 @@ public class ReceiveEndpointDispatcherFactory :
         });
     }
 
+    /// <summary>
+    /// Creates saga receiver.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="queueName">The queue name value.</param>
+    /// <returns>The result of the operation.</returns>
     public IReceiveEndpointDispatcher CreateSagaReceiver<T>(string queueName)
         where T : class, ISaga
     {
@@ -49,6 +74,12 @@ public class ReceiveEndpointDispatcherFactory :
         });
     }
 
+    /// <summary>
+    /// Creates execute activity receiver.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="queueName">The queue name value.</param>
+    /// <returns>The result of the operation.</returns>
     public IReceiveEndpointDispatcher CreateExecuteActivityReceiver<T>(string queueName)
         where T : class, IExecuteActivity
     {
@@ -58,6 +89,10 @@ public class ReceiveEndpointDispatcherFactory :
         });
     }
 
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public ValueTask DisposeAsync()
     {
         IEnumerable<IReceiveEndpointDispatcher> dispatchers = _dispatchers.Values.Where(x => x.IsValueCreated).Select(x => x.Value);

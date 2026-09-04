@@ -28,6 +28,13 @@ public class InstanceMessageConnector<TConsumer, TMessage> :
 
     Type IInstanceMessageConnector.MessageType => typeof(TMessage);
 
+    /// <summary>
+    /// Connects instance.
+    /// </summary>
+    /// <param name="pipeConnector">The pipe connector value.</param>
+    /// <param name="instance">The instance value.</param>
+    /// <param name="specification">The specification value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectInstance(IConsumePipeConnector pipeConnector, TConsumer instance, IConsumerSpecification<TConsumer> specification)
     {
         if (pipeConnector == null)
@@ -51,6 +58,10 @@ public class InstanceMessageConnector<TConsumer, TMessage> :
         return pipeConnector.ConnectConsumePipe(messagePipe);
     }
 
+    /// <summary>
+    /// Creates consumer message specification.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IConsumerMessageSpecification<TConsumer> CreateConsumerMessageSpecification()
     {
         return new ConsumerMessageSpecification<TConsumer, TMessage>();

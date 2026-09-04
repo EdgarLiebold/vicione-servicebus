@@ -1,7 +1,12 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
+/// <summary>
+/// Defines the contract for schedule configurator.
+/// </summary>
+/// <typeparam name="TInstance">The t instance type.</typeparam>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public interface IScheduleConfigurator<TInstance, TMessage>
     where TInstance : class, SagaStateMachineInstance
     where TMessage : class

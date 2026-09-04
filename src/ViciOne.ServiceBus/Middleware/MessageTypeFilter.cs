@@ -19,6 +19,9 @@ public class ConsumeContextMessageTypeFilter :
 
     IOutputFilter[] _outputPipeArray;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public ConsumeContextMessageTypeFilter()
     {
         _outputPipes = new Dictionary<Type, IOutputFilter>();
@@ -29,18 +32,35 @@ public class ConsumeContextMessageTypeFilter :
         _observers = new ConsumeObservable();
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         foreach (var pipe in _outputPipes.Values)
             pipe.Probe(context);
     }
 
+    /// <summary>
+    /// Connects message pipe.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="pipe">The pipe value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectMessagePipe<T>(IPipe<ConsumeContext<T>> pipe)
         where T : class
     {
         return GetMessagePipe<T>().Filter.ConnectPipe(pipe);
     }
 
+    /// <summary>
+    /// Connects message pipe.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="key">The key value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectMessagePipe<T>(Guid key, IPipe<ConsumeContext<T>> pipe)
         where T : class
     {
@@ -50,6 +70,12 @@ public class ConsumeContextMessageTypeFilter :
         return GetMessagePipe<T>().Filter.ConnectPipe(key, pipe);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public Task SendAsync(ConsumeContext context, IPipe<ConsumeContext> next)
     {
         IOutputFilter[] outputPipes = _outputPipeArray;
@@ -79,12 +105,23 @@ public class ConsumeContextMessageTypeFilter :
         return SendAsync();
     }
 
+    /// <summary>
+    /// Connects consume message observer.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectConsumeMessageObserver<T>(IConsumeMessageObserver<T> observer)
         where T : class
     {
         return GetMessagePipe<T>().Filter.ConnectConsumeMessageObserver(observer);
     }
 
+    /// <summary>
+    /// Connects consume observer.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectConsumeObserver(IConsumeObserver observer)
     {
         return _observers.Connect(observer);

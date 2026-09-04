@@ -1,5 +1,10 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for rescue configurator.
+/// </summary>
+/// <typeparam name="TContext">The t context type.</typeparam>
+/// <typeparam name="TRescue">The t rescue type.</typeparam>
 public interface IRescueConfigurator<TContext, TRescue> :
     IExceptionConfigurator,
     IPipeConfigurator<TRescue>

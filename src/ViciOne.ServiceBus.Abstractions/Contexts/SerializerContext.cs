@@ -3,22 +3,50 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using ViciOne.ServiceBus.Serialization;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Defines the contract for serializer context.
+/// </summary>
 public interface SerializerContext :
     MessageContext,
     IObjectDeserializer
 {
+    /// <summary>
+    /// Gets the supported message types value.
+    /// </summary>
     string[] SupportedMessageTypes { get; }
 
+    /// <summary>
+    /// Determines whether supported message type.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     bool IsSupportedMessageType<T>()
         where T : class;
 
+    /// <summary>
+    /// Determines whether supported message type.
+    /// </summary>
+    /// <param name="messageType">The message type value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     bool IsSupportedMessageType(Type messageType);
 
+    /// <summary>
+    /// Attempts to get message.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="message">The message value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     bool TryGetMessage<T>([NotNullWhen(true)] out T? message)
         where T : class;
 
+    /// <summary>
+    /// Attempts to get message.
+    /// </summary>
+    /// <param name="messageType">The message type value.</param>
+    /// <param name="message">The message value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     bool TryGetMessage(Type messageType, [NotNullWhen(true)] out object? message);
 
     /// <summary>

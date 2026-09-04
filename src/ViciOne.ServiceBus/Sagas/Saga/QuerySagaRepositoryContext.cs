@@ -4,6 +4,11 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Saga;
 
+/// <summary>
+/// Defines the contract for saga repository context.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public interface SagaRepositoryContext<TSaga, TMessage> :
     ISagaConsumeContextFactory<TSaga>,
     ConsumeContext<TMessage>
@@ -80,6 +85,10 @@ public interface SagaRepositoryContext<TSaga, TMessage> :
 }
 
 
+/// <summary>
+/// Defines the contract for query saga repository context.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
 public interface QuerySagaRepositoryContext<TSaga> :
     PipeContext
     where TSaga : class, ISaga
@@ -94,6 +103,10 @@ public interface QuerySagaRepositoryContext<TSaga> :
 }
 
 
+/// <summary>
+/// Defines the contract for load saga repository context.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
 public interface LoadSagaRepositoryContext<TSaga> :
     PipeContext
     where TSaga : class, ISaga

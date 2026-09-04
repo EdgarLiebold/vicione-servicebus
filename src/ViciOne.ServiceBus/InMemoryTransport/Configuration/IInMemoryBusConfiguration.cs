@@ -2,12 +2,21 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
 
+/// <summary>
+/// Defines the contract for in memory bus configuration.
+/// </summary>
 public interface IInMemoryBusConfiguration :
     IBusConfiguration,
     IInMemoryEndpointConfiguration
 {
+    /// <summary>
+    /// Gets the host configuration value.
+    /// </summary>
     new IInMemoryHostConfiguration HostConfiguration { get; }
 
+    /// <summary>
+    /// Gets the bus endpoint configuration value.
+    /// </summary>
     new IInMemoryEndpointConfiguration BusEndpointConfiguration { get; }
 
     /// <summary>

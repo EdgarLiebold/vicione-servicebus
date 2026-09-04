@@ -1,0 +1,142 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
+using ViciOne.ServiceBus.Initializers.TypeConverters;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.RabbitMq;
+
+/// <summary>
+/// Provides a rabbit mq header provider implementation.
+/// </summary>
+public class RabbitMqHeaderProvider :
+    IHeaderProvider
+{
+    static readonly DateTimeOffsetTypeConverter _dateTimeConverter = new DateTimeOffsetTypeConverter();
+
+    readonly RabbitMqBasicConsumeContext _context;
+
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    public RabbitMqHeaderProvider(RabbitMqBasicConsumeContext context)
+    {
+        _context = context;
+    }
+
+    /// <summary>
+    /// Gets all.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
+    public IEnumerable<KeyValuePair<string, object>> GetAll()
+    {
+        if (!string.IsNullOrWhiteSpace(_context.Exchange))
+            yield return new KeyValuePair<string, object>(RabbitMqHeaders.Exchange, _context.Exchange);
+        if (!string.IsNullOrWhiteSpace(_context.RoutingKey))
+            yield return new KeyValuePair<string, object>(RabbitMqHeaders.RoutingKey, _context.RoutingKey);
+        yield return new KeyValuePair<string, object>(RabbitMqHeaders.DeliveryTag, _context.DeliveryTag);
+        if (!string.IsNullOrWhiteSpace(_context.ConsumerTag))
+            yield return new KeyValuePair<string, object>(RabbitMqHeaders.ConsumerTag, _context.ConsumerTag);
+        if (!string.IsNullOrWhiteSpace(_context.Properties.MessageId))
+            yield return new KeyValuePair<string, object>(nameof(MessageHeaders.MessageId), _context.Properties.MessageId);
+        if (!string.IsNullOrWhiteSpace(_context.Properties.CorrelationId))
+            yield return new KeyValuePair<string, object>(nameof(_context.Properties.CorrelationId), _context.Properties.CorrelationId);
+
+        if (_context.Properties.IsHeadersPresent() && _context.Properties.Headers != null)
+        {
+            foreach (KeyValuePair<string, object?> header in _context.Properties.Headers)
+            {
+                var value = header.Value;
+
+                if (value is byte[] bytes)
+                {
+                    var text = Encoding.UTF8.GetString(bytes);
+
+                    if (!string.IsNullOrWhiteSpace(text))
+                        yield return new KeyValuePair<string, object>(header.Key, text);
+                }
+                else if (value is string s && !string.IsNullOrWhiteSpace(s))
+                    yield return new KeyValuePair<string, object>(header.Key, s);
+                else if (value != null)
+                    yield return new KeyValuePair<string, object>(header.Key, value);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Attempts to get header.
+    /// </summary>
+    /// <param name="key">The key value.</param>
+    /// <param name="value">The value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
+    {
+        if (_context.Properties.IsHeadersPresent() && _context.Properties.Headers != null
+            && _context.Properties.Headers.TryGetValue(key, out var headerValue) && headerValue != null)
+        {
+            value = headerValue;
+            if (value is byte[] bytes)
+            {
+                var text = Encoding.UTF8.GetString(bytes);
+
+                value = text;
+                return !string.IsNullOrWhiteSpace(text);
+            }
+
+            if (value is string s)
+                return !string.IsNullOrWhiteSpace(s);
+
+            return value != default;
+        }
+
+        if (MessageHeaders.TransportSentTime.Equals(key, StringComparison.OrdinalIgnoreCase) && _context.Properties.IsTimestampPresent())
+        {
+            if (_dateTimeConverter.TryConvert(_context.Properties.Timestamp.UnixTime, out var result))
+            {
+                value = result;
+                return true;
+            }
+        }
+
+        if (RabbitMqHeaders.Exchange.Equals(key, StringComparison.OrdinalIgnoreCase))
+        {
+            value = _context.Exchange;
+            return value != default;
+        }
+
+        if (RabbitMqHeaders.RoutingKey.Equals(key, StringComparison.OrdinalIgnoreCase))
+        {
+            value = _context.RoutingKey;
+            return value != default;
+        }
+
+        if (RabbitMqHeaders.DeliveryTag.Equals(key, StringComparison.OrdinalIgnoreCase))
+        {
+            value = _context.DeliveryTag;
+            return value != default;
+        }
+
+        if (RabbitMqHeaders.ConsumerTag.Equals(key, StringComparison.OrdinalIgnoreCase))
+        {
+            value = _context.ConsumerTag;
+            return value != default;
+        }
+
+        if (nameof(_context.Properties.MessageId).Equals(key, StringComparison.OrdinalIgnoreCase))
+        {
+            value = _context.Properties.MessageId;
+            return value != default;
+        }
+
+        if (nameof(_context.Properties.CorrelationId).Equals(key, StringComparison.OrdinalIgnoreCase))
+        {
+            value = _context.Properties.CorrelationId;
+            return value != default;
+        }
+
+        value = null;
+        return false;
+    }
+}

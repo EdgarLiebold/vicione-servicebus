@@ -10,5 +10,8 @@ public readonly record struct DurableSendReceipt(
     int StoredCount,
     long StoredBytes)
 {
+    /// <summary>
+    /// Gets the is new value.
+    /// </summary>
     public bool IsNew => Disposition == DurableSendAdmissionDisposition.Accepted;
 }

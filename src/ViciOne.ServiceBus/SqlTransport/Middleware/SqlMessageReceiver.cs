@@ -49,6 +49,11 @@ public sealed class SqlMessageReceiver :
         TrySetConsumeTask(ConsumeAsync());
     }
 
+    /// <summary>
+    /// Performs the active and actual agents completed operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     protected override async Task ActiveAndActualAgentsCompletedAsync(StopContext context)
     {
         await base.ActiveAndActualAgentsCompletedAsync(context).ConfigureAwait(false);
@@ -208,6 +213,9 @@ public sealed class SqlMessageReceiver :
         }
     }
 
+    /// <summary>
+    /// Performs the message handled operation.
+    /// </summary>
     public void MessageHandled()
     {
         lock (_lock)

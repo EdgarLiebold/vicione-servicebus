@@ -12,6 +12,10 @@ public class Recycle<T>
 {
     Lazy<T> _supervisor = null!;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="supervisorFactory">The supervisor factory value.</param>
     public Recycle(Func<T> supervisorFactory)
     {
         CancellationTokenRegistration registration = default;
@@ -33,5 +37,8 @@ public class Recycle<T>
         RecycleSupervisor();
     }
 
+    /// <summary>
+    /// Gets the supervisor value.
+    /// </summary>
     public T Supervisor => Volatile.Read(ref _supervisor).Value;
 }

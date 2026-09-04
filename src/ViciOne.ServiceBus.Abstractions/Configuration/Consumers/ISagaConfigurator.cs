@@ -1,8 +1,12 @@
 using System;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for saga configurator.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
 public interface ISagaConfigurator<TSaga> :
     IPipeConfigurator<SagaConsumeContext<TSaga>>,
     ISagaConfigurationObserverConnector,
@@ -10,6 +14,9 @@ public interface ISagaConfigurator<TSaga> :
     IOptionsSet
     where TSaga : class, ISaga
 {
+    /// <summary>
+    /// Gets or sets the concurrent message limit value.
+    /// </summary>
     int? ConcurrentMessageLimit { set; }
 
     /// <summary>

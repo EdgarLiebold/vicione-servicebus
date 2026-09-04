@@ -16,17 +16,32 @@ public class OutboxConsumeFilter<TContext, TMessage> :
     readonly OutboxConsumeOptions _options;
     readonly IConsumeScopeProvider _scopeProvider;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="scopeProvider">The scope provider value.</param>
+    /// <param name="options">The options value.</param>
     public OutboxConsumeFilter(IConsumeScopeProvider scopeProvider, OutboxConsumeOptions options)
     {
         _scopeProvider = scopeProvider;
         _options = options;
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         context.CreateFilterScope("outbox");
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SendAsync(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
     {
         await using IConsumeScopeContext<TMessage> scope = await _scopeProvider.GetScopeAsync(context).ConfigureAwait(false);

@@ -10,6 +10,14 @@ public class ScopedBusContextProvider<TBus> :
     IScopedBusContextProvider<TBus>
     where TBus : class, IBus
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="bus">The bus value.</param>
+    /// <param name="clientFactory">The client factory value.</param>
+    /// <param name="busConsumeContextProvider">The bus consume context provider value.</param>
+    /// <param name="globalConsumeContextProvider">The global consume context provider value.</param>
+    /// <param name="provider">The service provider.</param>
     public ScopedBusContextProvider(TBus bus, Bind<TBus, IClientFactory> clientFactory,
         Bind<TBus, IScopedConsumeContextProvider> busConsumeContextProvider,
         IScopedConsumeContextProvider globalConsumeContextProvider,
@@ -23,5 +31,8 @@ public class ScopedBusContextProvider<TBus> :
             Context = new BusScopedBusContext<TBus>(bus, clientFactory.Value, provider);
     }
 
+    /// <summary>
+    /// Gets the context value.
+    /// </summary>
     public ScopedBusContext Context { get; }
 }

@@ -32,6 +32,9 @@ public class PipeContextSupervisor<TContext> :
         _activeSupervisor = new Supervisor();
     }
 
+    /// <summary>
+    /// Gets the has context value.
+    /// </summary>
     protected bool HasContext
     {
         get
@@ -41,6 +44,12 @@ public class PipeContextSupervisor<TContext> :
         }
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="pipe">The pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SendAsync(IPipe<TContext> pipe, CancellationToken cancellationToken)
     {
         IActivePipeContextAgent<TContext> activeContext = CreateActiveContext(cancellationToken);
@@ -95,6 +104,10 @@ public class PipeContextSupervisor<TContext> :
     }
 
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("source");
@@ -105,6 +118,11 @@ public class PipeContextSupervisor<TContext> :
         });
     }
 
+    /// <summary>
+    /// Stops supervisor.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     protected override async Task StopSupervisorAsync(StopSupervisorContext context)
     {
         SetCompleted(ActiveAndActualAgentsCompletedAsync(context));

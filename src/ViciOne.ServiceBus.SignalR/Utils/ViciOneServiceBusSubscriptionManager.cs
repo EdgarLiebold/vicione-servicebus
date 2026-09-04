@@ -4,10 +4,17 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace ViciOne.ServiceBus.SignalR.Utils;
 
+/// <summary>
+/// Provides a vici one service bus subscription manager implementation.
+/// </summary>
 public class ViciOneServiceBusSubscriptionManager
 {
     readonly ConcurrentDictionary<string, HubConnectionStore> _subscriptions = new ConcurrentDictionary<string, HubConnectionStore>(StringComparer.Ordinal);
 
+    /// <summary>
+    /// Gets or sets the value at the specified index.
+    /// </summary>
+    /// <param name="identifier">The identifier value.</param>
     public HubConnectionStore? this[string identifier]
     {
         get
@@ -17,8 +24,16 @@ public class ViciOneServiceBusSubscriptionManager
         }
     }
 
+    /// <summary>
+    /// Gets the count value.
+    /// </summary>
     public int Count => _subscriptions.Count;
 
+    /// <summary>
+    /// Adds subscription to the configuration.
+    /// </summary>
+    /// <param name="id">The id value.</param>
+    /// <param name="connection">The connection value.</param>
     public void AddSubscription(string id, HubConnectionContext connection)
     {
         var subscription = _subscriptions.GetOrAdd(id, _ => new HubConnectionStore());
@@ -26,6 +41,11 @@ public class ViciOneServiceBusSubscriptionManager
         subscription.Add(connection);
     }
 
+    /// <summary>
+    /// Performs the remove subscription operation.
+    /// </summary>
+    /// <param name="id">The id value.</param>
+    /// <param name="connection">The connection value.</param>
     public void RemoveSubscription(string id, HubConnectionContext connection)
     {
         if (!_subscriptions.TryGetValue(id, out var subscription))

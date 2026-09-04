@@ -23,7 +23,7 @@ public sealed class ResourceCacheExpirationTests
 
         Assert.Equal(3, cache.Statistics.Count);
         Assert.Equal(0, cache.Statistics.Evictions);
-        Assert.Equal(["one", "three", "two"], (await cache.GetValuesAsync(TestContext.Current.CancellationToken)).Select(x => x.Id).Order().ToArray());
+        Assert.Equal(["one", "three", "two"], cache.GetValues(TestContext.Current.CancellationToken).Select(x => x.Id).Order().ToArray());
         Assert.Equal("one", (await index.GetAsync("one", TestContext.Current.CancellationToken)).Id);
     }
 
@@ -114,7 +114,7 @@ public sealed class ResourceCacheExpirationTests
         await index.GetAsync("first", TestContext.Current.CancellationToken);
         await cache.AddAsync(new Resource("third"), TestContext.Current.CancellationToken);
 
-        Assert.Equal(["first", "third"], (await cache.GetValuesAsync(TestContext.Current.CancellationToken)).Select(x => x.Id).Order().ToArray());
+        Assert.Equal(["first", "third"], cache.GetValues(TestContext.Current.CancellationToken).Select(x => x.Id).Order().ToArray());
     }
 
     [Fact]
@@ -175,7 +175,7 @@ public sealed class ResourceCacheExpirationTests
         await cache.AddAsync(new Resource("new"), TestContext.Current.CancellationToken);
 
         Assert.Equal(1, evicted.DisposeCount);
-        Assert.DoesNotContain(await cache.GetValuesAsync(TestContext.Current.CancellationToken), value => value.Id == "old");
+        Assert.DoesNotContain(cache.GetValues(TestContext.Current.CancellationToken), value => value.Id == "old");
         await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.GetAsync("old", TestContext.Current.CancellationToken));
         Assert.Equal("new", (await index.GetAsync("new", TestContext.Current.CancellationToken)).Id);
     }
@@ -267,7 +267,7 @@ public sealed class ResourceCacheExpirationTests
 
         Assert.Equal(1, expired.DisposeCount);
         Assert.Equal(0, live.DisposeCount);
-        Assert.Equal(["live"], (await cache.GetValuesAsync(TestContext.Current.CancellationToken)).Select(x => x.Id).ToArray());
+        Assert.Equal(["live"], cache.GetValues(TestContext.Current.CancellationToken).Select(x => x.Id).ToArray());
     }
 
     [Fact]
@@ -341,7 +341,7 @@ public sealed class ResourceCacheExpirationTests
         }
 
         string[] expected = Enumerable.Range(15, capacity).Select(index => $"item-{index:D2}").ToArray();
-        Assert.Equal(expected, (await cache.GetValuesAsync(TestContext.Current.CancellationToken)).Select(x => x.Id).Order().ToArray());
+        Assert.Equal(expected, cache.GetValues(TestContext.Current.CancellationToken).Select(x => x.Id).Order().ToArray());
         Assert.Equal(capacity, cache.Statistics.Count);
         Assert.Equal(15, cache.Statistics.Evictions);
     }
@@ -361,7 +361,7 @@ public sealed class ResourceCacheExpirationTests
 
         await cache.AddAsync(new Resource("four"), TestContext.Current.CancellationToken);
 
-        Assert.Equal(["four", "one", "two"], (await cache.GetValuesAsync(TestContext.Current.CancellationToken)).Select(x => x.Id).Order().ToArray());
+        Assert.Equal(["four", "one", "two"], cache.GetValues(TestContext.Current.CancellationToken).Select(x => x.Id).Order().ToArray());
     }
 
     [Fact]

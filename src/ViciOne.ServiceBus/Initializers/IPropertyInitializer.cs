@@ -11,6 +11,12 @@ public interface IPropertyInitializer<in TMessage, in TInput>
     where TMessage : class
     where TInput : class
 {
+    /// <summary>
+    /// Applies this specification to the target builder.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     Task ApplyAsync(InitializeContext<TMessage, TInput> context, CancellationToken cancellationToken = default);
 }
 

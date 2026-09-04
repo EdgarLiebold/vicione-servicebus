@@ -1,7 +1,10 @@
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Topology;
 
+/// <summary>
+/// Defines the contract for consume topology.
+/// </summary>
 public interface IConsumeTopology :
     IConsumeTopologyConfigurationObserverConnector
 {

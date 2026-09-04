@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 using ViciOne.ServiceBus.Diagnostics;
 using ViciOne.ServiceBus.Transports;
 
-namespace ViciOne.ServiceBus.DurableSend;
+namespace ViciOne.ServiceBus.Providers.Persistence;
 
 internal sealed partial class DurableSenderDeliveryService<TBus> : BackgroundService
     where TBus : class, IBus

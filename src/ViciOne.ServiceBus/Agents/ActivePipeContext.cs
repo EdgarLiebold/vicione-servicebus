@@ -48,6 +48,10 @@ public class ActivePipeContext<TContext> :
         await _contextHandle.DisposeAsync().ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public ValueTask DisposeAsync()
     {
         // An active usage doesn't actually dispose the actual context

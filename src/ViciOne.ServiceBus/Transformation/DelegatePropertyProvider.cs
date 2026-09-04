@@ -17,6 +17,11 @@ public class DelegatePropertyProvider<TInput, TProperty> :
     readonly IPropertyProvider<TInput, TProperty> _inputProvider;
     readonly Func<TransformPropertyContext<TProperty, TInput>, Task<TProperty>> _valueProvider;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="inputProvider">The input provider value.</param>
+    /// <param name="valueProvider">The value provider value.</param>
     public DelegatePropertyProvider(IPropertyProvider<TInput, TProperty> inputProvider,
         Func<TransformPropertyContext<TProperty, TInput>, Task<TProperty>> valueProvider)
     {
@@ -27,6 +32,13 @@ public class DelegatePropertyProvider<TInput, TProperty> :
         _valueProvider = valueProvider;
     }
 
+    /// <summary>
+    /// Gets property.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<TProperty?> GetPropertyAsync<T>(InitializeContext<T, TInput> context, CancellationToken cancellationToken = default)
         where T : class
     {

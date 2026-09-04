@@ -1,5 +1,8 @@
 namespace ViciOne.ServiceBus.Transports;
 
+/// <summary>
+/// Defines the contract for delivery metrics.
+/// </summary>
 public interface DeliveryMetrics
 {
     /// <summary>

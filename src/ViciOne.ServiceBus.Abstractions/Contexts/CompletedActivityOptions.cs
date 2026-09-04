@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Defines the contract for completed activity options.
+/// </summary>
 public interface CompletedActivityOptions
 {
     /// <summary>

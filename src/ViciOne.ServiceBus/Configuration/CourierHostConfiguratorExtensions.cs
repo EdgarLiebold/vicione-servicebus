@@ -2,10 +2,20 @@ using System;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Courier;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for courier host configurator.
+/// </summary>
 public static class CourierHostConfiguratorExtensions
 {
+    /// <summary>
+    /// Performs the execute activity host operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TArguments">The t arguments type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="configure">The configuration callback.</param>
     public static void ExecuteActivityHost<TActivity, TArguments>(this IReceiveEndpointConfigurator configurator,
         Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>, new()
@@ -14,6 +24,14 @@ public static class CourierHostConfiguratorExtensions
         ExecuteActivityHost(configurator, DefaultConstructorExecuteActivityFactory<TActivity, TArguments>.ExecuteFactory, configure);
     }
 
+    /// <summary>
+    /// Performs the execute activity host operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TArguments">The t arguments type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="compensateAddress">The compensate address value.</param>
+    /// <param name="configure">The configuration callback.</param>
     public static void ExecuteActivityHost<TActivity, TArguments>(this IReceiveEndpointConfigurator configurator,
         Uri compensateAddress, Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>, new()
@@ -22,6 +40,15 @@ public static class CourierHostConfiguratorExtensions
         ExecuteActivityHost(configurator, compensateAddress, DefaultConstructorExecuteActivityFactory<TActivity, TArguments>.ExecuteFactory, configure);
     }
 
+    /// <summary>
+    /// Performs the execute activity host operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TArguments">The t arguments type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="compensateAddress">The compensate address value.</param>
+    /// <param name="activityFactory">The activity factory value.</param>
+    /// <param name="configure">The configuration callback.</param>
     public static void ExecuteActivityHost<TActivity, TArguments>(this IReceiveEndpointConfigurator configurator,
         Uri compensateAddress, Func<TActivity> activityFactory, Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>
@@ -30,6 +57,14 @@ public static class CourierHostConfiguratorExtensions
         ExecuteActivityHost(configurator, compensateAddress, _ => activityFactory(), configure);
     }
 
+    /// <summary>
+    /// Performs the execute activity host operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TArguments">The t arguments type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="activityFactory">The activity factory value.</param>
+    /// <param name="configure">The configuration callback.</param>
     public static void ExecuteActivityHost<TActivity, TArguments>(this IReceiveEndpointConfigurator configurator,
         Func<TActivity> activityFactory, Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>
@@ -38,6 +73,15 @@ public static class CourierHostConfiguratorExtensions
         ExecuteActivityHost(configurator, _ => activityFactory(), configure);
     }
 
+    /// <summary>
+    /// Performs the execute activity host operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TArguments">The t arguments type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="compensateAddress">The compensate address value.</param>
+    /// <param name="activityFactory">The activity factory value.</param>
+    /// <param name="configure">The configuration callback.</param>
     public static void ExecuteActivityHost<TActivity, TArguments>(this IReceiveEndpointConfigurator configurator,
         Uri compensateAddress, Func<TArguments, TActivity> activityFactory,
         Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
@@ -52,6 +96,14 @@ public static class CourierHostConfiguratorExtensions
         ExecuteActivityHost(configurator, compensateAddress, factory, configure);
     }
 
+    /// <summary>
+    /// Performs the execute activity host operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TArguments">The t arguments type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="activityFactory">The activity factory value.</param>
+    /// <param name="configure">The configuration callback.</param>
     public static void ExecuteActivityHost<TActivity, TArguments>(this IReceiveEndpointConfigurator configurator,
         Func<TArguments, TActivity> activityFactory,
         Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
@@ -66,6 +118,15 @@ public static class CourierHostConfiguratorExtensions
         ExecuteActivityHost(configurator, factory, configure);
     }
 
+    /// <summary>
+    /// Performs the execute activity host operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TArguments">The t arguments type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="compensateAddress">The compensate address value.</param>
+    /// <param name="factory">The factory value.</param>
+    /// <param name="configure">The configuration callback.</param>
     public static void ExecuteActivityHost<TActivity, TArguments>(this IReceiveEndpointConfigurator configurator, Uri compensateAddress,
         IExecuteActivityFactory<TActivity, TArguments> factory, Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>
@@ -90,6 +151,14 @@ public static class CourierHostConfiguratorExtensions
         configurator.AddEndpointSpecification(specification);
     }
 
+    /// <summary>
+    /// Performs the execute activity host operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TArguments">The t arguments type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="factory">The factory value.</param>
+    /// <param name="configure">The configuration callback.</param>
     public static void ExecuteActivityHost<TActivity, TArguments>(this IReceiveEndpointConfigurator configurator,
         IExecuteActivityFactory<TActivity, TArguments> factory, Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>
@@ -111,6 +180,13 @@ public static class CourierHostConfiguratorExtensions
         configurator.AddEndpointSpecification(specification);
     }
 
+    /// <summary>
+    /// Performs the compensate activity host operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TLog">The t log type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="configure">The configuration callback.</param>
     public static void CompensateActivityHost<TActivity, TLog>(this IReceiveEndpointConfigurator configurator,
         Action<ICompensateActivityConfigurator<TActivity, TLog>>? configure = null)
         where TActivity : class, ICompensateActivity<TLog>, new()
@@ -119,6 +195,14 @@ public static class CourierHostConfiguratorExtensions
         CompensateActivityHost(configurator, DefaultConstructorCompensateActivityFactory<TActivity, TLog>.CompensateFactory, configure);
     }
 
+    /// <summary>
+    /// Performs the compensate activity host operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TLog">The t log type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="activityFactory">The activity factory value.</param>
+    /// <param name="configure">The configuration callback.</param>
     public static void CompensateActivityHost<TActivity, TLog>(this IReceiveEndpointConfigurator configurator, Func<TActivity> activityFactory,
         Action<ICompensateActivityConfigurator<TActivity, TLog>>? configure = null)
         where TActivity : class, ICompensateActivity<TLog>
@@ -130,6 +214,14 @@ public static class CourierHostConfiguratorExtensions
         CompensateActivityHost(configurator, _ => activityFactory(), configure);
     }
 
+    /// <summary>
+    /// Performs the compensate activity host operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TLog">The t log type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="activityFactory">The activity factory value.</param>
+    /// <param name="configure">The configuration callback.</param>
     public static void CompensateActivityHost<TActivity, TLog>(this IReceiveEndpointConfigurator configurator, Func<TLog, TActivity> activityFactory,
         Action<ICompensateActivityConfigurator<TActivity, TLog>>? configure = null)
         where TActivity : class, ICompensateActivity<TLog>
@@ -143,6 +235,14 @@ public static class CourierHostConfiguratorExtensions
         CompensateActivityHost(configurator, factory, configure);
     }
 
+    /// <summary>
+    /// Performs the compensate activity host operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TLog">The t log type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="factory">The factory value.</param>
+    /// <param name="configure">The configuration callback.</param>
     public static void CompensateActivityHost<TActivity, TLog>(this IReceiveEndpointConfigurator configurator,
         ICompensateActivityFactory<TActivity, TLog> factory, Action<ICompensateActivityConfigurator<TActivity, TLog>>? configure = null)
         where TActivity : class, ICompensateActivity<TLog>

@@ -4,16 +4,30 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Saga;
 
+/// <summary>
+/// Provides a saga filter expression converter implementation.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public class SagaFilterExpressionConverter<TSaga, TMessage> :
     ExpressionVisitor
 {
     readonly TMessage _message;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="message">The message value.</param>
     public SagaFilterExpressionConverter(TMessage message)
     {
         _message = message;
     }
 
+    /// <summary>
+    /// Performs the convert operation.
+    /// </summary>
+    /// <param name="expression">The expression value.</param>
+    /// <returns>The result of the operation.</returns>
     public Expression<Func<TSaga, bool>> Convert(Expression<Func<TSaga, TMessage, bool>> expression)
     {
         var result = Visit(expression) as LambdaExpression
@@ -22,6 +36,11 @@ public class SagaFilterExpressionConverter<TSaga, TMessage> :
         return RemoveMessageParameter(result);
     }
 
+    /// <summary>
+    /// Performs the visit member operation.
+    /// </summary>
+    /// <param name="m">The m value.</param>
+    /// <returns>The result of the operation.</returns>
     protected override Expression VisitMember(MemberExpression m)
     {
         if (m.Expression != null && m.Expression.NodeType == ExpressionType.Parameter && m.Expression.Type == typeof(TMessage))

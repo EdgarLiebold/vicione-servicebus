@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using NDesk.Options;
 using RabbitMQ.Client;
 using ViciOne.ServiceBus;
-using ViciOne.ServiceBus.RabbitMqTransport;
-using ViciOne.ServiceBus.RabbitMqTransport.Configuration;
+using ViciOne.ServiceBus.RabbitMq;
+using ViciOne.ServiceBus.RabbitMq.Configuration;
 using ViciOne.ServiceBus.Transports;
 
 namespace ViciOneServiceBusBenchmark;
@@ -117,7 +117,7 @@ public class RabbitMqOptionSet :
     /// --batch-timeout wrote to two properties nobody read again: the tool reported the limit it
     /// had been given and published with 100 and one millisecond.
     /// </summary>
-    public BatchSettings BatchSettings => new ConfigurationBatchSettings
+    public ViciOne.ServiceBus.RabbitMq.Configuration.BatchSettings BatchSettings => new ConfigurationBatchSettings
     {
         Enabled = BatchEnabled,
         MessageLimit = BatchLimit,
@@ -211,7 +211,7 @@ public class RabbitMqOptionSet :
 
 
 class ConfigurationBatchSettings :
-    BatchSettings
+    ViciOne.ServiceBus.RabbitMq.Configuration.BatchSettings
 {
     public bool Enabled { get; set; }
 

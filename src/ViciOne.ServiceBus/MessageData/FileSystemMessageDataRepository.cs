@@ -7,6 +7,9 @@ using ViciOne.ServiceBus.Util;
 #nullable enable annotations
 namespace ViciOne.ServiceBus.MessageData;
 
+/// <summary>
+/// Provides a file system message data repository implementation.
+/// </summary>
 public class FileSystemMessageDataRepository :
     IMessageDataRepository
 {
@@ -15,6 +18,11 @@ public class FileSystemMessageDataRepository :
     readonly DirectoryInfo _dataDirectory;
     readonly TimeProvider _timeProvider;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="dataDirectory">The data directory value.</param>
+    /// <param name="timeProvider">The time provider value.</param>
     public FileSystemMessageDataRepository(DirectoryInfo dataDirectory, TimeProvider? timeProvider = null)
     {
         _dataDirectory = dataDirectory;

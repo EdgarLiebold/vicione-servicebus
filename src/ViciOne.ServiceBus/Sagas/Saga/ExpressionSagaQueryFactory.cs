@@ -15,6 +15,10 @@ public class ExpressionSagaQueryFactory<TSaga, TMessage> :
 {
     readonly Expression<Func<TSaga, TMessage, bool>> _filterExpression;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="filterExpression">The filter expression value.</param>
     public ExpressionSagaQueryFactory(Expression<Func<TSaga, TMessage, bool>> filterExpression)
     {
         _filterExpression = filterExpression;

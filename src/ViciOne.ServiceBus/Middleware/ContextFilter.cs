@@ -14,11 +14,21 @@ public class ContextFilter<TContext> :
 {
     readonly Func<TContext, Task<bool>> _filter;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="filter">The filter value.</param>
     public ContextFilter(Func<TContext, Task<bool>> filter)
     {
         _filter = filter ?? throw new ArgumentNullException(nameof(filter));
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public Task SendAsync(TContext context, IPipe<TContext> next)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -39,6 +49,10 @@ public class ContextFilter<TContext> :
         return SendAsync();
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         ArgumentNullException.ThrowIfNull(context);

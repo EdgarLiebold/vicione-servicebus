@@ -4,8 +4,11 @@ using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Transports.Components;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for kill switch configuration.
+/// </summary>
 public static class KillSwitchConfigurationExtensions
 {
     /// <summary>

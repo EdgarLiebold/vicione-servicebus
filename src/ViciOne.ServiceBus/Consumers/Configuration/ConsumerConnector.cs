@@ -6,12 +6,19 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a consumer connector implementation.
+/// </summary>
+/// <typeparam name="T">The t type.</typeparam>
 public class ConsumerConnector<T> :
     IConsumerConnector
     where T : class
 {
     readonly List<IConsumerMessageConnector<T>> _connectors;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public ConsumerConnector()
     {
         if (RegistrationMetadata.IsSaga(typeof(T)))
@@ -20,6 +27,9 @@ public class ConsumerConnector<T> :
         _connectors = Consumes().ToList();
     }
 
+    /// <summary>
+    /// Gets the connectors value.
+    /// </summary>
     public IEnumerable<IConsumerMessageConnector> Connectors => _connectors;
 
     ConnectHandle IConsumerConnector.ConnectConsumer<TConsumer>(IConsumePipeConnector consumePipe, IConsumerFactory<TConsumer> consumerFactory,

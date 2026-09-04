@@ -1,6 +1,6 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 /// <summary>
 /// Provides one context-scoped source of time for message-pipeline decisions. A context without an
 /// explicit provider uses <see cref="TimeProvider.System" />.

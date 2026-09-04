@@ -3,6 +3,9 @@ using ViciOne.ServiceBus.SqlTransport.Topology;
 
 namespace ViciOne.ServiceBus.SqlTransport;
 
+/// <summary>
+/// Defines the contract for send settings.
+/// </summary>
 public interface SendSettings :
     EntitySettings
 {

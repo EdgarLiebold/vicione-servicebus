@@ -3,13 +3,16 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Scheduling;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>
 /// A message scheduler is able to schedule a message for delivery.
 /// </summary>
 public interface IRecurringMessageScheduler
 {
+    /// <summary>
+    /// Gets the time provider value.
+    /// </summary>
     TimeProvider TimeProvider { get; }
 
     /// <summary>

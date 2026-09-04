@@ -4,8 +4,11 @@ using ViciOne.ServiceBus.SqlTransport.Configuration;
 using ViciOne.ServiceBus.SqlTransport.Topology;
 using ViciOne.ServiceBus.Topology;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Providers.Transports;
 
+/// <summary>
+/// Provides a sql bus factory implementation.
+/// </summary>
 public static class SqlBusFactory
 {
     /// <summary>
@@ -25,6 +28,10 @@ public static class SqlBusFactory
         return configurator.Build(busConfiguration);
     }
 
+    /// <summary>
+    /// Creates message topology.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public static IMessageTopologyConfigurator CreateMessageTopology()
     {
         return new MessageTopology(Cached.EntityNameFormatter);

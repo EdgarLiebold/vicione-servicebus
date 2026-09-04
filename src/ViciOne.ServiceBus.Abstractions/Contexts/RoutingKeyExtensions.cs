@@ -1,14 +1,27 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides extension methods for routing key.
+/// </summary>
 public static class RoutingKeyExtensions
 {
+    /// <summary>
+    /// Performs the routing key operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public static string? RoutingKey(this ConsumeContext context)
     {
         return context.TryGetPayload(out RoutingKeyConsumeContext? consumeContext) ? consumeContext.RoutingKey : string.Empty;
     }
 
+    /// <summary>
+    /// Performs the routing key operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public static string? RoutingKey(this SendContext context)
     {
         return context.TryGetPayload(out RoutingKeySendContext? sendContext) ? sendContext.RoutingKey : string.Empty;

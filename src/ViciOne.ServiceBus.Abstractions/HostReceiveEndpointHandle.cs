@@ -1,13 +1,16 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>
 /// Returned when a receive endpoint is connected
 /// </summary>
 public interface HostReceiveEndpointHandle
 {
+    /// <summary>
+    /// Gets the receive endpoint value.
+    /// </summary>
     IReceiveEndpoint ReceiveEndpoint { get; }
 
     /// <summary>

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Contracts.JobService;
 
+/// <summary>
+/// Defines the contract for job submitted.
+/// </summary>
 public interface JobSubmitted
 {
     /// <summary>
@@ -10,6 +13,9 @@ public interface JobSubmitted
     /// </summary>
     Guid JobId { get; }
 
+    /// <summary>
+    /// Gets the job type id value.
+    /// </summary>
     Guid JobTypeId { get; }
 
     /// <summary>

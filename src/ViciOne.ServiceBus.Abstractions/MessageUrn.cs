@@ -4,12 +4,18 @@ using System.Reflection;
 using System.Text;
 using ViciOne.ServiceBus.Metadata;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides a message urn implementation.
+/// </summary>
 [Serializable]
 public class MessageUrn :
     Uri
 {
+    /// <summary>
+    /// Defines the prefix value.
+    /// </summary>
     public const string Prefix = "urn:message:";
 
     static readonly ConcurrentDictionary<Type, Cached> _cache = new ConcurrentDictionary<Type, Cached>();
@@ -19,16 +25,31 @@ public class MessageUrn :
     {
     }
 
+    /// <summary>
+    /// Performs the for type operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     public static MessageUrn ForType<T>()
     {
         return MessageUrnCache<T>.Urn;
     }
 
+    /// <summary>
+    /// Performs the for type string operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     public static string ForTypeString<T>()
     {
         return MessageUrnCache<T>.UrnString;
     }
 
+    /// <summary>
+    /// Performs the for type operation.
+    /// </summary>
+    /// <param name="type">The type value.</param>
+    /// <returns>The result of the operation.</returns>
     public static MessageUrn ForType(Type type)
     {
         ValidateType(type);
@@ -36,6 +57,11 @@ public class MessageUrn :
         return _cache.GetOrAdd(type, ValueFactory).Urn;
     }
 
+    /// <summary>
+    /// Performs the for type string operation.
+    /// </summary>
+    /// <param name="type">The type value.</param>
+    /// <returns>The result of the operation.</returns>
     public static string ForTypeString(Type type)
     {
         ValidateType(type);
@@ -68,6 +94,12 @@ public class MessageUrn :
     }
 
 
+    /// <summary>
+    /// Deconstructs this value into its components.
+    /// </summary>
+    /// <param name="name">The name value.</param>
+    /// <param name="ns">The ns value.</param>
+    /// <param name="assemblyName">The assembly name value.</param>
     public void Deconstruct(out string? name, out string? ns, out string? assemblyName)
     {
         name = null;

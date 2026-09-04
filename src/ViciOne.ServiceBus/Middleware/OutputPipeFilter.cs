@@ -19,6 +19,12 @@ public class OutputPipeFilter<TInput, TOutput> :
     readonly FilterObservable _outerObservers;
     readonly ITeeFilter<TOutput> _output;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="contextConverter">The context converter value.</param>
+    /// <param name="observers">The observers value.</param>
+    /// <param name="outputFilter">The output filter value.</param>
     public OutputPipeFilter(IPipeContextConverter<TInput, TOutput> contextConverter, FilterObservable observers, ITeeFilter<TOutput> outputFilter)
     {
         _outerObservers = observers ?? throw new ArgumentNullException(nameof(observers));
@@ -114,6 +120,12 @@ public class OutputPipeFilter<TInput, TOutput> :
 }
 
 
+/// <summary>
+/// Provides an output pipe filter implementation.
+/// </summary>
+/// <typeparam name="TInput">The t input type.</typeparam>
+/// <typeparam name="TOutput">The t output type.</typeparam>
+/// <typeparam name="TKey">The t key type.</typeparam>
 public class OutputPipeFilter<TInput, TOutput, TKey> :
     OutputPipeFilter<TInput, TOutput>,
     IOutputPipeFilter<TInput, TOutput, TKey>
@@ -123,17 +135,36 @@ public class OutputPipeFilter<TInput, TOutput, TKey> :
 {
     readonly ITeeFilter<TOutput, TKey> _outputFilter;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="contextConverter">The context converter value.</param>
+    /// <param name="observers">The observers value.</param>
+    /// <param name="keyAccessor">The key accessor value.</param>
     public OutputPipeFilter(IPipeContextConverter<TInput, TOutput> contextConverter, FilterObservable observers, KeyAccessor<TInput, TKey> keyAccessor)
         : this(contextConverter, observers, new TeeFilter<TOutput, TKey>(keyAccessor))
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="contextConverter">The context converter value.</param>
+    /// <param name="observers">The observers value.</param>
+    /// <param name="outputFilter">The output filter value.</param>
     protected OutputPipeFilter(IPipeContextConverter<TInput, TOutput> contextConverter, FilterObservable observers, ITeeFilter<TOutput, TKey> outputFilter)
         : base(contextConverter, observers, outputFilter)
     {
         _outputFilter = outputFilter;
     }
 
+    /// <summary>
+    /// Connects pipe.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="key">The key value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectPipe<T>(TKey key, IPipe<T> pipe)
         where T : class, PipeContext
     {

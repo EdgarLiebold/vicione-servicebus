@@ -1,5 +1,10 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for future result configurator.
+/// </summary>
+/// <typeparam name="TResult">The t result type.</typeparam>
+/// <typeparam name="TInput">The t input type.</typeparam>
 public interface IFutureResultConfigurator<TResult, out TInput>
     where TInput : class
     where TResult : class
@@ -25,6 +30,10 @@ public interface IFutureResultConfigurator<TResult, out TInput>
 }
 
 
+/// <summary>
+/// Defines the contract for future result configurator.
+/// </summary>
+/// <typeparam name="TResult">The t result type.</typeparam>
 public interface IFutureResultConfigurator<TResult>
     where TResult : class
 {

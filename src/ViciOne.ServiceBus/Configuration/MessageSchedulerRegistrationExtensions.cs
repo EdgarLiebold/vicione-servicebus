@@ -4,8 +4,11 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.Scheduling;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for message scheduler registration.
+/// </summary>
 public static class MessageSchedulerRegistrationExtensions
 {
     /// <summary>
@@ -19,7 +22,7 @@ public static class MessageSchedulerRegistrationExtensions
         if (schedulerEndpointAddress == null)
             throw new ArgumentNullException(nameof(schedulerEndpointAddress));
 
-        configurator.TryAddScoped(provider =>
+        configurator.Services.TryAddScoped(provider =>
         {
             var bus = provider.GetRequiredService<IBus>();
             var sendEndpointProvider = provider.GetRequiredService<ISendEndpointProvider>();
@@ -27,7 +30,7 @@ public static class MessageSchedulerRegistrationExtensions
             return sendEndpointProvider.CreateMessageScheduler(bus.Topology, schedulerEndpointAddress, timeProvider);
         });
 
-        configurator.TryAddScoped<IRecurringMessageScheduler>(provider =>
+        configurator.Services.TryAddScoped<IRecurringMessageScheduler>(provider =>
         {
             var bus = provider.GetRequiredService<IBus>();
             var sendEndpointProvider = provider.GetRequiredService<ISendEndpointProvider>();
@@ -48,7 +51,7 @@ public static class MessageSchedulerRegistrationExtensions
         if (schedulerEndpointAddress == null)
             throw new ArgumentNullException(nameof(schedulerEndpointAddress));
 
-        configurator.TryAddScoped(provider =>
+        configurator.Services.TryAddScoped(provider =>
         {
             var bus = provider.GetRequiredService<TBus>();
             var sendEndpointProvider = provider.GetRequiredService<Bind<TBus, ISendEndpointProvider>>().Value;
@@ -56,7 +59,7 @@ public static class MessageSchedulerRegistrationExtensions
             return Bind<TBus>.Create(sendEndpointProvider.CreateMessageScheduler(bus.Topology, schedulerEndpointAddress, timeProvider));
         });
 
-        configurator.TryAddScoped(provider =>
+        configurator.Services.TryAddScoped(provider =>
         {
             var bus = provider.GetRequiredService<TBus>();
             var sendEndpointProvider = provider.GetRequiredService<Bind<TBus, ISendEndpointProvider>>().Value;
@@ -73,7 +76,7 @@ public static class MessageSchedulerRegistrationExtensions
     /// <param name="configurator"></param>
     public static void AddPublishMessageScheduler(this IBusRegistrationConfigurator configurator)
     {
-        configurator.TryAddScoped(provider =>
+        configurator.Services.TryAddScoped(provider =>
         {
             var bus = provider.GetRequiredService<IBus>();
             var publishEndpoint = provider.GetRequiredService<IPublishEndpoint>();
@@ -81,7 +84,7 @@ public static class MessageSchedulerRegistrationExtensions
             return publishEndpoint.CreateMessageScheduler(bus.Topology, timeProvider);
         });
 
-        configurator.TryAddScoped<IRecurringMessageScheduler>(provider =>
+        configurator.Services.TryAddScoped<IRecurringMessageScheduler>(provider =>
         {
             var bus = provider.GetRequiredService<IBus>();
             var publishEndpoint = provider.GetRequiredService<IPublishEndpoint>();
@@ -98,7 +101,7 @@ public static class MessageSchedulerRegistrationExtensions
     public static void AddPublishMessageScheduler<TBus>(this IBusRegistrationConfigurator<TBus> configurator)
         where TBus : class, IBus
     {
-        configurator.TryAddScoped(provider =>
+        configurator.Services.TryAddScoped(provider =>
         {
             var bus = provider.GetRequiredService<TBus>();
             var publishEndpoint = provider.GetRequiredService<Bind<TBus, IPublishEndpoint>>().Value;
@@ -106,7 +109,7 @@ public static class MessageSchedulerRegistrationExtensions
             return Bind<TBus>.Create(publishEndpoint.CreateMessageScheduler(bus.Topology, timeProvider));
         });
 
-        configurator.TryAddScoped(provider =>
+        configurator.Services.TryAddScoped(provider =>
         {
             var bus = provider.GetRequiredService<TBus>();
             var publishEndpoint = provider.GetRequiredService<Bind<TBus, IPublishEndpoint>>().Value;

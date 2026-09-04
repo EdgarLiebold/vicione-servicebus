@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for options set.
+/// </summary>
 public interface IOptionsSet
 {
     /// <summary>

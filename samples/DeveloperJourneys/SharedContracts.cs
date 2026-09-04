@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
+using ViciOne.ServiceBus.Advanced.Serialization;
+using ViciOne.ServiceBus.EntityFrameworkCore;
 
 namespace ViciOne.ServiceBus.Samples.DeveloperJourneys;
 

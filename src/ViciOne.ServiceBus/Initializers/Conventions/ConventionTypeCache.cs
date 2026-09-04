@@ -3,6 +3,10 @@ using System.Collections.Concurrent;
 
 namespace ViciOne.ServiceBus.Initializers.Conventions;
 
+/// <summary>
+/// Provides a convention type cache implementation.
+/// </summary>
+/// <typeparam name="TValue">The t value type.</typeparam>
 public class ConventionTypeCache<TValue> :
     IConventionTypeCache<TValue>
     where TValue : class
@@ -11,6 +15,11 @@ public class ConventionTypeCache<TValue> :
     readonly ConcurrentDictionary<Type, Cached> _dictionary;
     readonly IConventionTypeCacheFactory<TValue> _typeFactory;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="typeFactory">The type factory value.</param>
+    /// <param name="convention">The convention value.</param>
     public ConventionTypeCache(IConventionTypeCacheFactory<TValue> typeFactory, IInitializerConvention convention)
     {
         _typeFactory = typeFactory ?? throw new ArgumentNullException(nameof(typeFactory));

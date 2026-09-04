@@ -9,13 +9,26 @@ namespace ViciOne.ServiceBus.Configuration;
 public class ConcurrencyLimitHandlerConfigurationObserver :
     IHandlerConfigurationObserver
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="concurrentMessageLimit">The concurrent message limit value.</param>
+    /// <param name="id">The id value.</param>
     public ConcurrencyLimitHandlerConfigurationObserver(int concurrentMessageLimit, string? id = null)
     {
         Limiter = new ConcurrencyLimiter(concurrentMessageLimit, id);
     }
 
+    /// <summary>
+    /// Gets the limiter value.
+    /// </summary>
     public IConcurrencyLimiter Limiter { get; }
 
+    /// <summary>
+    /// Performs the handler configured operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
     public void HandlerConfigured<T>(IHandlerConfigurator<T> configurator)
         where T : class
     {

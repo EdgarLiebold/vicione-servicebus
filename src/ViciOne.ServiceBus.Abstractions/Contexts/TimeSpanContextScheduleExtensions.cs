@@ -2,8 +2,11 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides extension methods for time span context schedule.
+/// </summary>
 public static class TimeSpanContextScheduleExtensions
 {
     /// <summary>

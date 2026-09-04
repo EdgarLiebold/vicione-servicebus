@@ -3,6 +3,9 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.Transports;
 
+/// <summary>
+/// Provides extension methods for endpoint address.
+/// </summary>
 public static class EndpointAddressExtensions
 {
     /// <summary>
@@ -16,6 +19,11 @@ public static class EndpointAddressExtensions
         return address?.AbsolutePath?.Split('/').LastOrDefault();
     }
 
+    /// <summary>
+    /// Gets diagnostic endpoint name.
+    /// </summary>
+    /// <param name="address">The address value.</param>
+    /// <returns>The result of the operation.</returns>
     public static string GetDiagnosticEndpointName(this Uri address)
     {
         var endpointName = address.GetEndpointName();

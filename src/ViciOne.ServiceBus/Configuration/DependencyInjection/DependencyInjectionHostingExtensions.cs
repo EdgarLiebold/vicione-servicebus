@@ -1,9 +1,13 @@
 using System;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for dependency injection hosting.
+/// </summary>
 public static class DependencyInjectionHostingExtensions
 {
     /// <summary>

@@ -1,12 +1,18 @@
 using System;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for service instance configurator.
+/// </summary>
 public interface IServiceInstanceConfigurator :
     IReceiveConfigurator,
     IOptionsSet
 {
+    /// <summary>
+    /// Gets the endpoint name formatter value.
+    /// </summary>
     IEndpointNameFormatter EndpointNameFormatter { get; }
 
     /// <summary>
@@ -14,7 +20,13 @@ public interface IServiceInstanceConfigurator :
     /// </summary>
     Uri InstanceAddress { get; }
 
+    /// <summary>
+    /// Gets the bus configurator value.
+    /// </summary>
     IReceiveConfigurator BusConfigurator { get; }
+    /// <summary>
+    /// Gets the instance endpoint configurator value.
+    /// </summary>
     IReceiveEndpointConfigurator InstanceEndpointConfigurator { get; }
 
     /// <summary>
@@ -25,11 +37,21 @@ public interface IServiceInstanceConfigurator :
 }
 
 
+/// <summary>
+/// Defines the contract for service instance configurator.
+/// </summary>
+/// <typeparam name="TEndpointConfigurator">The t endpoint configurator type.</typeparam>
 public interface IServiceInstanceConfigurator<out TEndpointConfigurator> :
     IServiceInstanceConfigurator,
     IReceiveConfigurator<TEndpointConfigurator>
     where TEndpointConfigurator : IReceiveEndpointConfigurator
 {
+    /// <summary>
+    /// Gets the bus configurator value.
+    /// </summary>
     new IReceiveConfigurator<TEndpointConfigurator> BusConfigurator { get; }
+    /// <summary>
+    /// Gets the instance endpoint configurator value.
+    /// </summary>
     new TEndpointConfigurator InstanceEndpointConfigurator { get; }
 }

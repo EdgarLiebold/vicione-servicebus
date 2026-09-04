@@ -15,7 +15,7 @@ public sealed class TechnicalRetryArchitectureTests
             ["src/ViciOne.ServiceBus/JobService/Configuration/JobSagaDefinition.cs"] = (1, 0),
             ["src/ViciOne.ServiceBus/JobService/Configuration/JobServiceConfigurator.cs"] = (3, 0),
             ["src/ViciOne.ServiceBus/JobService/Configuration/JobTypeSagaDefinition.cs"] = (1, 0),
-            ["src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/Configuration/ScheduleMessageConsumerDefinition.cs"] = (1, 0),
+            ["src/Scheduling/ViciOne.ServiceBus.Quartz/Configuration/ScheduleMessageConsumerDefinition.cs"] = (1, 0),
         };
 
     [Fact]
@@ -51,7 +51,7 @@ public sealed class TechnicalRetryArchitectureTests
     {
         string source = File.ReadAllText(Path.Combine(
             RepositoryLayout.Root,
-            "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/Configuration/RabbitMqQueueRedeliveryExtensions.cs"));
+            "src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqQueueRedeliveryExtensions.cs"));
 
         Assert.Equal(1, Count(source, "public static void UseTechnicalQueueRedelivery"));
         Assert.Equal(1, Count(source, "TechnicalRetryPolicy.RedeliveryIntervals.ToArray()"));

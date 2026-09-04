@@ -3,9 +3,15 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Contracts.JobService;
 
+/// <summary>
+/// Defines the contract for fault job.
+/// </summary>
 [ConfigureConsumeTopology(false)]
 public interface FaultJob
 {
+    /// <summary>
+    /// Gets the job id value.
+    /// </summary>
     Guid JobId { get; }
 
     /// <summary>
@@ -23,6 +29,9 @@ public interface FaultJob
     /// </summary>
     TimeSpan? Duration { get; }
 
+    /// <summary>
+    /// Gets the exceptions value.
+    /// </summary>
     ExceptionInfo Exceptions { get; }
 
     /// <summary>

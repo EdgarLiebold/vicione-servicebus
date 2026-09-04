@@ -13,18 +13,33 @@ using static ViciOne.ServiceBus.Analyzers.CancellationTokenOverloadMethodAnalyze
 
 namespace ViciOne.ServiceBus.Analyzers;
 
+/// <summary>
+/// Provides a cancellation token overload method fixer implementation.
+/// </summary>
 [ExportCodeFixProvider(LanguageNames.CSharp)]
 [Shared]
 public class CancellationTokenOverloadMethodFixer :
     CodeFixProvider
 {
+    /// <summary>
+    /// Gets the fixable diagnostic ids value.
+    /// </summary>
     public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(CancellationTokenOverloadMethodRuleId);
 
+    /// <summary>
+    /// Gets fix all provider.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public override FixAllProvider GetFixAllProvider()
     {
         return WellKnownFixAllProviders.BatchFixer;
     }
 
+    /// <summary>
+    /// Performs the register code fixes operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public override async Task RegisterCodeFixesAsync(CodeFixContext context)
     {
         var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);

@@ -1,7 +1,10 @@
 using ViciOne.ServiceBus.Contracts.JobService;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for job saga bus configuration.
+/// </summary>
 public static class JobSagaBusConfigurationExtensions
 {
     /// <summary>

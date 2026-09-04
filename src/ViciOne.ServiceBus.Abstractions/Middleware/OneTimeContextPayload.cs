@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Middleware;
 
 class OneTimeContextPayload<TPayload> :
     OneTimeContext<TPayload>

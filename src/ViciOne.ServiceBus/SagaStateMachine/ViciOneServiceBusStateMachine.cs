@@ -10,7 +10,7 @@ using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.SagaStateMachine;
 using ViciOne.ServiceBus.Util;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
 /// <summary>
 /// A ViciOne.ServiceBus state machine adds functionality on top of Automatonymous supporting
@@ -39,6 +39,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     List<PropertyInfo> _stateMachineProperties = null!;
     UnhandledEventCallback<TInstance> _unhandledEventCallback;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     protected ViciOneServiceBusStateMachine()
     {
         _registrations = new Lazy<StateMachineRegistration[]>(() => GetRegistrations());
@@ -84,6 +87,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         }
     }
 
+    /// <summary>
+    /// Gets the correlations value.
+    /// </summary>
     public IEnumerable<EventCorrelation> Correlations
     {
         get
@@ -102,8 +108,17 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     }
 
     string StateMachine.Name => _name;
+    /// <summary>
+    /// Gets the accessor value.
+    /// </summary>
     public IStateAccessor<TInstance> Accessor => _accessor;
+    /// <summary>
+    /// Gets the initial value.
+    /// </summary>
     public State Initial => _initial;
+    /// <summary>
+    /// Gets the final value.
+    /// </summary>
     public State Final => _final;
 
     State StateMachine.GetState(string name)
@@ -136,6 +151,11 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         await instanceState.RaiseAsync(context, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Gets state.
+    /// </summary>
+    /// <param name="name">The name value.</param>
+    /// <returns>The result of the operation.</returns>
     public State<TInstance> GetState(string name)
     {
         if (TryGetState(name, out State<TInstance>? result))
@@ -144,6 +164,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         throw new UnknownStateException(_name, name);
     }
 
+    /// <summary>
+    /// Gets the states value.
+    /// </summary>
     public IEnumerable<State> States => _stateCache.Values;
 
     Event StateMachine.GetEvent(string name)
@@ -154,6 +177,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         throw new UnknownEventException(_name, name);
     }
 
+    /// <summary>
+    /// Gets the events value.
+    /// </summary>
     public IEnumerable<Event> Events
     {
         get { return _eventCache.Values.Where(x => false == x.IsTransitionEvent).Select(x => x.Event); }
@@ -161,6 +187,11 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
 
     Type StateMachine.InstanceType => typeof(TInstance);
 
+    /// <summary>
+    /// Performs the next events operation.
+    /// </summary>
+    /// <param name="state">The state value.</param>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<Event> NextEvents(State state)
     {
         if (_stateCache.TryGetValue(state.Name, out State<TInstance>? result))
@@ -169,17 +200,30 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         throw new UnknownStateException(_name, state.Name);
     }
 
+    /// <summary>
+    /// Determines whether composite event.
+    /// </summary>
+    /// <param name="event">The event value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool IsCompositeEvent(Event @event)
     {
         return _compositeEvents.Contains(@event.Name);
     }
 
+    /// <summary>
+    /// Performs the accept operation.
+    /// </summary>
+    /// <param name="visitor">The visitor value.</param>
     public void Accept(StateMachineVisitor visitor)
     {
         foreach (State<TInstance> x in IntrospectionStates)
             x.Accept(visitor);
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("stateMachine");
@@ -194,6 +238,11 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
             state.Probe(scope);
     }
 
+    /// <summary>
+    /// Connects event observer.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     public IDisposable ConnectEventObserver(IEventObserver<TInstance> observer)
     {
         var eventObserver = new NonTransitionEventObserver<TInstance>(_eventCache, observer);
@@ -201,6 +250,12 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         return _eventObservers.Connect(eventObserver);
     }
 
+    /// <summary>
+    /// Connects event observer.
+    /// </summary>
+    /// <param name="event">The event value.</param>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     public IDisposable ConnectEventObserver(Event @event, IEventObserver<TInstance> observer)
     {
         var eventObserver = new SelectedEventObserver(@event, observer);
@@ -208,6 +263,11 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         return _eventObservers.Connect(eventObserver);
     }
 
+    /// <summary>
+    /// Connects state observer.
+    /// </summary>
+    /// <param name="stateObserver">The state observer value.</param>
+    /// <returns>The result of the operation.</returns>
     public IDisposable ConnectStateObserver(IStateObserver<TInstance> stateObserver)
     {
         return _stateObservers.Connect(stateObserver);
@@ -285,6 +345,11 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         DeclarePropertyBasedEvent(prop => DeclareTriggerEvent(prop.Name), propertyExpression.GetPropertyInfo());
     }
 
+    /// <summary>
+    /// Performs the event operation.
+    /// </summary>
+    /// <param name="name">The name value.</param>
+    /// <returns>The result of the operation.</returns>
     protected internal Event Event(string name)
     {
         return DeclareTriggerEvent(name);
@@ -306,6 +371,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
             : NotCompletedByDefaultAsync;
     }
 
+    /// <summary>
+    /// Sets completed.
+    /// </summary>
+    /// <param name="completed">The completed value.</param>
     protected void SetCompleted(Func<BehaviorContext<TInstance>, Task<bool>> completed)
     {
         _isCompleted = completed ?? NotCompletedByDefaultAsync;
@@ -572,6 +641,14 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         return CompositeEvent(name, trackingPropertyExpression, CompositeEventOptions.None, events);
     }
 
+    /// <summary>
+    /// Performs the composite event operation.
+    /// </summary>
+    /// <param name="name">The name value.</param>
+    /// <param name="trackingPropertyExpression">The tracking property expression value.</param>
+    /// <param name="options">The options value.</param>
+    /// <param name="events">The events value.</param>
+    /// <returns>The result of the operation.</returns>
     protected internal Event CompositeEvent(string name, Expression<Func<TInstance, CompositeEventStatus>> trackingPropertyExpression,
         CompositeEventOptions options,
         params Event[] events)
@@ -584,18 +661,41 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         return CompositeEvent(name, trackingPropertyExpression, CompositeEventOptions.None, events);
     }
 
+    /// <summary>
+    /// Performs the composite event operation.
+    /// </summary>
+    /// <param name="name">The name value.</param>
+    /// <param name="trackingPropertyExpression">The tracking property expression value.</param>
+    /// <param name="options">The options value.</param>
+    /// <param name="events">The events value.</param>
+    /// <returns>The result of the operation.</returns>
     protected internal Event CompositeEvent(string name, Expression<Func<TInstance, int>> trackingPropertyExpression, CompositeEventOptions options,
         params Event[] events)
     {
         return CompositeEvent(name, new IntCompositeEventStatusAccessor<TInstance>(trackingPropertyExpression.GetPropertyInfo()), options, events);
     }
 
+    /// <summary>
+    /// Performs the composite event operation.
+    /// </summary>
+    /// <param name="event">The event value.</param>
+    /// <param name="trackingPropertyExpression">The tracking property expression value.</param>
+    /// <param name="events">The events value.</param>
+    /// <returns>The result of the operation.</returns>
     protected internal Event CompositeEvent(Event @event, Expression<Func<TInstance, CompositeEventStatus>> trackingPropertyExpression,
         params Event[] events)
     {
         return CompositeEvent(@event, trackingPropertyExpression, CompositeEventOptions.None, events);
     }
 
+    /// <summary>
+    /// Performs the composite event operation.
+    /// </summary>
+    /// <param name="event">The event value.</param>
+    /// <param name="trackingPropertyExpression">The tracking property expression value.</param>
+    /// <param name="options">The options value.</param>
+    /// <param name="events">The events value.</param>
+    /// <returns>The result of the operation.</returns>
     protected internal Event CompositeEvent(Event @event,
         Expression<Func<TInstance, CompositeEventStatus>> trackingPropertyExpression,
         CompositeEventOptions options,
@@ -604,6 +704,13 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         return CompositeEvent(@event, new StructCompositeEventStatusAccessor<TInstance>(trackingPropertyExpression.GetPropertyInfo()), options, events);
     }
 
+    /// <summary>
+    /// Performs the composite event operation.
+    /// </summary>
+    /// <param name="event">The event value.</param>
+    /// <param name="trackingPropertyExpression">The tracking property expression value.</param>
+    /// <param name="events">The events value.</param>
+    /// <returns>The result of the operation.</returns>
     protected internal Event CompositeEvent(Event @event,
         Expression<Func<TInstance, int>> trackingPropertyExpression,
         params Event[] events)
@@ -611,6 +718,14 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         return CompositeEvent(@event, trackingPropertyExpression, CompositeEventOptions.None, events);
     }
 
+    /// <summary>
+    /// Performs the composite event operation.
+    /// </summary>
+    /// <param name="event">The event value.</param>
+    /// <param name="trackingPropertyExpression">The tracking property expression value.</param>
+    /// <param name="options">The options value.</param>
+    /// <param name="events">The events value.</param>
+    /// <returns>The result of the operation.</returns>
     protected internal Event CompositeEvent(Event @event,
         Expression<Func<TInstance, int>> trackingPropertyExpression,
         CompositeEventOptions options,
@@ -709,6 +824,11 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         DeclareState(property);
     }
 
+    /// <summary>
+    /// Performs the state operation.
+    /// </summary>
+    /// <param name="name">The name value.</param>
+    /// <returns>The result of the operation.</returns>
     protected internal State<TInstance> State(string name)
     {
         if (TryGetState(name, out State<TInstance>? foundState))
@@ -812,6 +932,12 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         SetState(name, state);
     }
 
+    /// <summary>
+    /// Performs the sub state operation.
+    /// </summary>
+    /// <param name="name">The name value.</param>
+    /// <param name="superState">The super state value.</param>
+    /// <returns>The result of the operation.</returns>
     protected internal State<TInstance> SubState(string name, State superState)
     {
         if (superState == null)

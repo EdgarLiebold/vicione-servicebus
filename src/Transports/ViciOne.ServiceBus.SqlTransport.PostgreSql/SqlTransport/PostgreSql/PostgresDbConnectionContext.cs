@@ -16,6 +16,9 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
 
+/// <summary>
+/// Provides a postgres db connection context implementation.
+/// </summary>
 public class PostgresDbConnectionContext :
     BasePipeContext,
     ConnectionContext,
@@ -34,6 +37,11 @@ public class PostgresDbConnectionContext :
         SqlMapper.AddTypeHandler(new UriTypeHandler());
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="hostConfiguration">The host configuration value.</param>
+    /// <param name="supervisor">The supervisor value.</param>
     public PostgresDbConnectionContext(ISqlHostConfiguration hostConfiguration, ITransportSupervisor<ConnectionContext> supervisor)
         : base(supervisor.Stopped)
     {
@@ -57,14 +65,31 @@ public class PostgresDbConnectionContext :
         _executor = new TaskExecutor(hostConfiguration.Settings.ConnectionLimit);
     }
 
+    /// <summary>
+    /// Gets the topology value.
+    /// </summary>
     public ISqlBusTopology Topology { get; }
 
+    /// <summary>
+    /// Gets the isolation level value.
+    /// </summary>
     public IsolationLevel IsolationLevel => _hostSettings.IsolationLevel;
 
+    /// <summary>
+    /// Gets the host address value.
+    /// </summary>
     public Uri HostAddress => _hostConfiguration.HostAddress;
 
+    /// <summary>
+    /// Gets the schema value.
+    /// </summary>
     public string? Schema => _hostSettings.Schema;
 
+    /// <summary>
+    /// Creates client context.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public ClientContext CreateClientContext(CancellationToken cancellationToken)
     {
         return new PostgresClientContext(this, cancellationToken);
@@ -75,6 +100,13 @@ public class PostgresDbConnectionContext :
         return await CreateConnectionAsync(cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Performs the query operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="callback">The callback value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<T> QueryAsync<T>(Func<IDbConnection, IDbTransaction, Task<T>> callback, CancellationToken cancellationToken)
     {
         return _executor.ExecuteAsync(() =>
@@ -95,6 +127,14 @@ public class PostgresDbConnectionContext :
         }, cancellationToken);
     }
 
+    /// <summary>
+    /// Performs the delay until message ready operation.
+    /// </summary>
+    /// <param name="queueId">The queue id value.</param>
+    /// <param name="timeout">The timeout value.</param>
+    /// <param name="timeProvider">The time provider value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task DelayUntilMessageReadyAsync(long queueId, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(timeProvider);
@@ -115,6 +155,10 @@ public class PostgresDbConnectionContext :
         return WaitAsync();
     }
 
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public async ValueTask DisposeAsync()
     {
         if (_hostSettings.IsProvidedDataSource == false)

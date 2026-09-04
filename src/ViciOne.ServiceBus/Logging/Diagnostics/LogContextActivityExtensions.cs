@@ -10,8 +10,20 @@ using ViciOne.ServiceBus.Transports;
 // ReSharper disable once CheckNamespace
 namespace ViciOne.ServiceBus.Logging;
 
+/// <summary>
+/// Provides extension methods for log context activity.
+/// </summary>
 public static class LogContextActivityExtensions
 {
+    /// <summary>
+    /// Starts send activity.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="logContext">The log context value.</param>
+    /// <param name="transportContext">The transport context value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <param name="tags">The tags value.</param>
+    /// <returns>The result of the operation.</returns>
     public static StartedActivity? StartSendActivity<T>(this ILogContext logContext, SendTransportContext transportContext, SendContext<T> context,
         params (string Key, object? Value)[] tags)
         where T : class
@@ -35,6 +47,13 @@ public static class LogContextActivityExtensions
         return PopulateSendActivity<T>(context, activity, currentActivity, tags);
     }
 
+    /// <summary>
+    /// Starts outbox send activity.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="logContext">The log context value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public static StartedActivity? StartOutboxSendActivity<T>(this ILogContext logContext, SendContext<T> context)
         where T : class
     {
@@ -55,6 +74,12 @@ public static class LogContextActivityExtensions
         return PopulateSendActivity<T>(context, activity, currentActivity);
     }
 
+    /// <summary>
+    /// Starts outbox deliver activity.
+    /// </summary>
+    /// <param name="logContext">The log context value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public static StartedActivity? StartOutboxDeliverActivity(this ILogContext logContext, OutboxMessageContext context)
     {
         var parentActivityContext = GetParentActivityContext(context.Headers);
@@ -69,6 +94,15 @@ public static class LogContextActivityExtensions
         return new StartedActivity(activity);
     }
 
+    /// <summary>
+    /// Starts receive activity.
+    /// </summary>
+    /// <param name="logContext">The log context value.</param>
+    /// <param name="name">The name value.</param>
+    /// <param name="inputAddress">The input address value.</param>
+    /// <param name="endpointName">The endpoint name value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public static StartedActivity? StartReceiveActivity(this ILogContext logContext, string name, string inputAddress, string endpointName,
         ReceiveContext context)
     {
@@ -112,6 +146,14 @@ public static class LogContextActivityExtensions
         return new StartedActivity(activity, context.GetTimeProvider());
     }
 
+    /// <summary>
+    /// Starts consumer activity.
+    /// </summary>
+    /// <typeparam name="TConsumer">The t consumer type.</typeparam>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="logContext">The log context value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public static StartedActivity? StartConsumerActivity<TConsumer, T>(this ILogContext logContext, ConsumeContext<T> context)
         where T : class
     {
@@ -122,6 +164,13 @@ public static class LogContextActivityExtensions
         });
     }
 
+    /// <summary>
+    /// Starts handler activity.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="logContext">The log context value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public static StartedActivity? StartHandlerActivity<T>(this ILogContext logContext, ConsumeContext<T> context)
         where T : class
     {
@@ -132,6 +181,14 @@ public static class LogContextActivityExtensions
         });
     }
 
+    /// <summary>
+    /// Starts saga activity.
+    /// </summary>
+    /// <typeparam name="TSaga">The t saga type.</typeparam>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="logContext">The log context value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public static StartedActivity? StartSagaActivity<TSaga, T>(this ILogContext logContext, SagaConsumeContext<TSaga, T> context)
         where TSaga : class, ISaga
         where T : class
@@ -144,6 +201,14 @@ public static class LogContextActivityExtensions
         });
     }
 
+    /// <summary>
+    /// Starts saga state machine activity.
+    /// </summary>
+    /// <typeparam name="TSaga">The t saga type.</typeparam>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="logContext">The log context value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public static StartedActivity? StartSagaStateMachineActivity<TSaga, T>(this ILogContext logContext, BehaviorContext<TSaga, T> context)
         where TSaga : class, SagaStateMachineInstance
         where T : class
@@ -156,6 +221,14 @@ public static class LogContextActivityExtensions
         });
     }
 
+    /// <summary>
+    /// Starts execute activity.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TArguments">The t arguments type.</typeparam>
+    /// <param name="logContext">The log context value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public static StartedActivity? StartExecuteActivity<TActivity, TArguments>(this ILogContext logContext, ConsumeContext<RoutingSlip> context)
         where TActivity : IExecuteActivity<TArguments>
         where TArguments : class
@@ -168,6 +241,14 @@ public static class LogContextActivityExtensions
         });
     }
 
+    /// <summary>
+    /// Starts compensate activity.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TLog">The t log type.</typeparam>
+    /// <param name="logContext">The log context value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public static StartedActivity? StartCompensateActivity<TActivity, TLog>(this ILogContext logContext, ConsumeContext<RoutingSlip> context)
         where TActivity : ICompensateActivity<TLog>
         where TLog : class
@@ -180,6 +261,12 @@ public static class LogContextActivityExtensions
         });
     }
 
+    /// <summary>
+    /// Starts generic activity.
+    /// </summary>
+    /// <param name="logContext">The log context value.</param>
+    /// <param name="operationName">The operation name value.</param>
+    /// <returns>The result of the operation.</returns>
     public static StartedActivity? StartGenericActivity(this ILogContext logContext, string operationName)
     {
         var activity = ActivityObservation.TryCreate(Cached.Source, operationName, ActivityKind.Client);

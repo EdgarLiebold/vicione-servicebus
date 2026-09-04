@@ -13,6 +13,10 @@ public class MessagePublishPipe<TMessage> :
 {
     readonly IPipe<PublishContext<TMessage>> _outputPipe;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="outputPipe">The output pipe value.</param>
     public MessagePublishPipe(IPipe<PublishContext<TMessage>> outputPipe)
     {
         _outputPipe = outputPipe;

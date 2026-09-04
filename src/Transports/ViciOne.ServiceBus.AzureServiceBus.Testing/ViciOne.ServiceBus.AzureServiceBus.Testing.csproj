@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../../signing.props" />
+
+  <PropertyGroup>
+    <!-- Nullable warnings are completed in work package B; annotations remain active in the interim. -->
+    <Nullable>enable</Nullable>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>ViciOne.ServiceBus.AzureServiceBus.Testing</RootNamespace>
+    <PackageId>ViciOne.ServiceBus.AzureServiceBus.Testing</PackageId>
+    <PackageTags>ViciOne.ServiceBus;Azure;ServiceBus;Testing</PackageTags>
+    <Description>Azure Service Bus-specific ViciOne ServiceBus test harness support.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Messaging.ServiceBus" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ViciOne.ServiceBus.Testing\ViciOne.ServiceBus.Testing.csproj" />
+    <ProjectReference Include="..\ViciOne.ServiceBus.AzureServiceBus\ViciOne.ServiceBus.AzureServiceBus.csproj" />
+  </ItemGroup>
+</Project>

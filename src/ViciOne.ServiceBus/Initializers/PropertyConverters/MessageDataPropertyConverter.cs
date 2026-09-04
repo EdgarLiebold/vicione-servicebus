@@ -6,6 +6,9 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Initializers.PropertyConverters;
 
+/// <summary>
+/// Provides a message data property converter implementation.
+/// </summary>
 public class MessageDataPropertyConverter :
     IPropertyConverter<MessageData<byte[]>, MessageData<byte[]>>,
     IPropertyConverter<MessageData<byte[]>, MessageData<string>>,
@@ -16,12 +19,23 @@ public class MessageDataPropertyConverter :
     IPropertyConverter<MessageData<byte[]>, byte[]>,
     IPropertyConverter<MessageData<Stream>, Stream>
 {
+    /// <summary>
+    /// Defines the instance value.
+    /// </summary>
     public static readonly MessageDataPropertyConverter Instance = new MessageDataPropertyConverter();
 
     MessageDataPropertyConverter()
     {
     }
 
+    /// <summary>
+    /// Performs the convert operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="input">The input value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<MessageData<byte[]>?> ConvertAsync<T>(InitializeContext<T> context, byte[]? input, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -30,6 +44,14 @@ public class MessageDataPropertyConverter :
             : Task.FromResult<MessageData<byte[]>?>(new PutMessageData<byte[]>(input));
     }
 
+    /// <summary>
+    /// Performs the convert operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="input">The input value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<MessageData<byte[]>?> ConvertAsync<T>(InitializeContext<T> context, MessageData<byte[]>? input, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -66,6 +88,14 @@ public class MessageDataPropertyConverter :
             : new PutMessageData<byte[]>(bytes));
     }
 
+    /// <summary>
+    /// Performs the convert operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="input">The input value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<MessageData<Stream>?> ConvertAsync<T>(InitializeContext<T> context, MessageData<Stream>? input, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -74,6 +104,14 @@ public class MessageDataPropertyConverter :
             : Task.FromResult<MessageData<Stream>?>(input);
     }
 
+    /// <summary>
+    /// Performs the convert operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="input">The input value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<MessageData<Stream>?> ConvertAsync<T>(InitializeContext<T> context, Stream? input, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -97,11 +135,23 @@ public class MessageDataPropertyConverter :
 }
 
 
+/// <summary>
+/// Provides a message data property converter implementation.
+/// </summary>
+/// <typeparam name="TValue">The t value type.</typeparam>
 public class MessageDataPropertyConverter<TValue> :
     IPropertyConverter<MessageData<TValue>, MessageData<TValue>>,
     IPropertyConverter<MessageData<TValue>, TValue>
     where TValue : class
 {
+    /// <summary>
+    /// Performs the convert operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="input">The input value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<MessageData<TValue>?> ConvertAsync<T>(InitializeContext<T> context, MessageData<TValue>? input, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -110,6 +160,14 @@ public class MessageDataPropertyConverter<TValue> :
             : Task.FromResult<MessageData<TValue>?>(input);
     }
 
+    /// <summary>
+    /// Performs the convert operation.
+    /// </summary>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="input">The input value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<MessageData<TValue>?> ConvertAsync<T1>(InitializeContext<T1> context, TValue? input, CancellationToken cancellationToken = default)
         where T1 : class
     {

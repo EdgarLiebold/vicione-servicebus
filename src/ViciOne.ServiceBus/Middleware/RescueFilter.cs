@@ -19,6 +19,12 @@ public class RescueFilter<TContext, TRescueContext> :
     readonly RescueContextFactory<TContext, TRescueContext> _rescueContextFactory;
     readonly IPipe<TRescueContext> _rescuePipe;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="rescuePipe">The rescue pipe value.</param>
+    /// <param name="exceptionFilter">The exception filter value.</param>
+    /// <param name="rescueContextFactory">The rescue context factory value.</param>
     public RescueFilter(IPipe<TRescueContext> rescuePipe, IExceptionFilter exceptionFilter,
         RescueContextFactory<TContext, TRescueContext> rescueContextFactory)
     {

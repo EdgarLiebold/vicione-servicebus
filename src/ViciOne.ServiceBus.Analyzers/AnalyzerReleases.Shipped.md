@@ -1,11 +1,10 @@
-; Rule id MTA0001 was renamed to ViciOneServiceBus0001. Table content is otherwise unchanged.
 ## Release 1.0
 
 ### New Rules
 Rule ID | Category | Severity | Notes
 --------|----------|----------|--------------------
-ViciOneServiceBus0001 | Usage       | Warning  | ViciOneServiceBus0001_AnalyzerName 
-MCA0001 | Usage       | Error    | MCA0001_AnalyzerName 
-MCA0002 | Usage       | Error    | MCA0002_AnalyzerName 
-MCA0003 | Usage       | Info     | MCA0003_AnalyzerName 
-MCA2016 | Reliability | Info     | MCA2016_AnalyzerName 
+VOSB1001 | Usage       | Warning  | Service bus task-returning call is not awaited or captured
+VOSB1002 | Usage       | Error    | Anonymous value is structurally incompatible with the message contract
+VOSB1003 | Usage       | Error    | Message contract has an unsupported structure
+VOSB1004 | Usage       | Info     | Anonymous value omits message-contract properties
+VOSB2001 | Reliability | Info     | Available context cancellation token is not passed to an overload

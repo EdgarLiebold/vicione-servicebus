@@ -1,0 +1,86 @@
+using System;
+using System.Collections.Generic;
+using Apache.NMS;
+using ViciOne.ServiceBus.Initializers.TypeConverters;
+
+namespace ViciOne.ServiceBus.ActiveMq;
+
+/// <summary>
+/// Provides extension methods for transport header.
+/// </summary>
+public static class TransportHeaderExtensions
+{
+    static readonly DateTimeOffsetTypeConverter _dateTimeOffsetConverter = new DateTimeOffsetTypeConverter();
+
+    /// <summary>
+    /// Sets headers.
+    /// </summary>
+    /// <param name="dictionary">The dictionary value.</param>
+    /// <param name="headers">The headers value.</param>
+    public static void SetHeaders(this IPrimitiveMap dictionary, SendHeaders headers)
+    {
+        foreach (KeyValuePair<string, object> header in headers.GetAll())
+        {
+            if (header.Value == null)
+            {
+                if (dictionary.Contains(header.Key))
+                    dictionary.Remove(header.Key);
+
+                continue;
+            }
+
+            if (header.Key == MessageHeaders.TransportMessageId)
+                continue;
+
+            if (dictionary.Contains(header.Key))
+                continue;
+
+            switch (header.Value)
+            {
+                case DateTimeOffset dateTimeOffset:
+                    if (_dateTimeOffsetConverter.TryConvert(dateTimeOffset, out long result))
+                        dictionary[header.Key] = result;
+                    else if (_dateTimeOffsetConverter.TryConvert(dateTimeOffset, out string text))
+                        dictionary[header.Key] = text;
+
+                    break;
+
+                case DateTime dateTime:
+                    DateTimeOffset instant = dateTime.Kind switch
+                    {
+                        DateTimeKind.Local => new DateTimeOffset(dateTime).ToUniversalTime(),
+                        DateTimeKind.Utc => new DateTimeOffset(dateTime),
+                        _ => new DateTimeOffset(DateTime.SpecifyKind(dateTime, DateTimeKind.Utc)),
+                    };
+                    if (_dateTimeOffsetConverter.TryConvert(instant, out result))
+                        dictionary[header.Key] = result;
+                    else if (_dateTimeOffsetConverter.TryConvert(instant, out string text))
+                        dictionary[header.Key] = text;
+
+                    break;
+
+                case Uri value:
+                    dictionary[header.Key] = value.ToString();
+                    break;
+
+                case string s:
+                    dictionary[header.Key] = s;
+                    break;
+
+                case bool boolValue when boolValue:
+                    dictionary[header.Key] = bool.TrueString;
+                    break;
+
+                case IFormattable formatValue:
+                    if (header.Value.GetType().IsValueType)
+                        dictionary[header.Key] = header.Value;
+                    else
+                        dictionary[header.Key] = formatValue.ToString();
+                    break;
+            }
+
+            if (header.Key == "AMQ_SCHEDULED_DELAY")
+                headers.Set(header.Key, null);
+        }
+    }
+}

@@ -5,19 +5,36 @@ using ViciOne.ServiceBus.Contracts;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
+/// <summary>
+/// Provides a complete request activity implementation.
+/// </summary>
 public class CompleteRequestActivity :
     IStateMachineActivity<RequestState, RequestCompleted>
 {
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         context.CreateScope("completeRequest");
     }
 
+    /// <summary>
+    /// Performs the accept operation.
+    /// </summary>
+    /// <param name="visitor">The visitor value.</param>
     public void Accept(StateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
 
+    /// <summary>
+    /// Performs the execute operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task ExecuteAsync(BehaviorContext<RequestState, RequestCompleted> context, IBehavior<RequestState, RequestCompleted> next)
     {
         if (!context.Saga.ExpirationTime.HasValue || context.Saga.ExpirationTime.Value > context.GetTimeProvider().GetUtcNow().UtcDateTime)
@@ -34,6 +51,13 @@ public class CompleteRequestActivity :
         await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Performs the faulted operation.
+    /// </summary>
+    /// <typeparam name="TException">The t exception type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public Task FaultedAsync<TException>(BehaviorExceptionContext<RequestState, RequestCompleted, TException> context,
         IBehavior<RequestState, RequestCompleted> next)
         where TException : Exception

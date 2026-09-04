@@ -5,6 +5,9 @@ using ViciOne.ServiceBus.Testing.Implementations;
 #nullable enable
 namespace ViciOne.ServiceBus.Testing;
 
+/// <summary>
+/// Provides extension methods for active test harness.
+/// </summary>
 public static class ActiveTestHarnessExtensions
 {
     /// <summary>

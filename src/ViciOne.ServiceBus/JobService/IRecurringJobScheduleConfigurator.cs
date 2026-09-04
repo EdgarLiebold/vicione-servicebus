@@ -1,7 +1,7 @@
 using System;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.JobService;
 /// <summary>
 /// Configure the optional settings of a recurring job
 /// </summary>

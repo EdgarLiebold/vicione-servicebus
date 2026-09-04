@@ -1,4 +1,4 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Futures;
 
 /// <summary>
 /// Given the event context and request, returns an object used to complete the initialization of the object type

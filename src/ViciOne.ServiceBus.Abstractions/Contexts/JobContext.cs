@@ -2,15 +2,24 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Defines the contract for job context.
+/// </summary>
 public interface JobContext :
     PipeContext,
     MessageContext,
     ISendEndpointProvider,
     IPublishEndpoint
 {
+    /// <summary>
+    /// Gets the job id value.
+    /// </summary>
     Guid JobId { get; }
+    /// <summary>
+    /// Gets the attempt id value.
+    /// </summary>
     Guid AttemptId { get; }
 
     /// <summary>
@@ -67,11 +76,21 @@ public interface JobContext :
     Task SaveJobStateAsync<T>(T? jobState, CancellationToken cancellationToken = default)
         where T : class;
 
+    /// <summary>
+    /// Attempts to get job state.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="jobState">The job state value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     bool TryGetJobState<T>([NotNullWhen(true)] out T? jobState)
         where T : class;
 }
 
 
+/// <summary>
+/// Defines the contract for job context.
+/// </summary>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public interface JobContext<out TMessage> :
     JobContext
     where TMessage : class

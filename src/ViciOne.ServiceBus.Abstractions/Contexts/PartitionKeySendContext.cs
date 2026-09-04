@@ -1,5 +1,8 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Defines the contract for partition key send context.
+/// </summary>
 public interface PartitionKeySendContext
 {
     /// <summary>

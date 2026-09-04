@@ -2,6 +2,9 @@ using System;
 
 namespace ViciOne.ServiceBus.Contracts;
 
+/// <summary>
+/// Defines the contract for event context.
+/// </summary>
 public interface EventContext :
     PipeContext
 {
@@ -12,6 +15,10 @@ public interface EventContext :
 }
 
 
+/// <summary>
+/// Defines the contract for event context.
+/// </summary>
+/// <typeparam name="T">The t type.</typeparam>
 public interface EventContext<out T> :
     EventContext
     where T : class

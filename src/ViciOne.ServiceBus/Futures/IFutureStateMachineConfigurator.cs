@@ -3,8 +3,16 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Futures;
 
+/// <summary>
+/// Defines the contract for future state machine configurator.
+/// </summary>
 public interface IFutureStateMachineConfigurator
 {
+    /// <summary>
+    /// Creates response event.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     Event<T> CreateResponseEvent<T>()
         where T : class;
 

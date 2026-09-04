@@ -88,7 +88,7 @@
       "id": "bus-persistence-identity",
       "boundary": "registration",
       "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/BusPersistenceIdentity.cs",
-      "test": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/DurableSend/EntityFrameworkDurableSendStoreTests.cs",
+      "test": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/DurableSend/EntityFrameworkDurableSendStoreTests.cs",
       "testMethod": "Registration_PreservesProviderValidatorAndUsesOneValidatedPersistenceIdentity",
       "exception": "ArgumentException",
       "actionableFragment": "persistence identity"
@@ -96,8 +96,8 @@
     {
       "id": "provider-address-and-topology",
       "boundary": "registration",
-      "source": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/RabbitMqHostAddress.cs",
-      "test": "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.Tests/RabbitMqHostAddressTests.cs",
+      "source": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqHostAddress.cs",
+      "test": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/RabbitMqHostAddressTests.cs",
       "testMethod": "InvalidOrDuplicateNumericOptions_AreRejected",
       "exception": "RabbitMqAddressException",
       "actionableFragment": "RabbitMQ"

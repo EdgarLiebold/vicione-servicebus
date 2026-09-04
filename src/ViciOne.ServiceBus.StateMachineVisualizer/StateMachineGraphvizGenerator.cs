@@ -8,13 +8,24 @@ using ViciOne.ServiceBus.Visualizer.Abstractions;
 
 namespace ViciOne.ServiceBus.Visualizer;
 
+/// <summary>
+/// Provides a state machine graphviz generator implementation.
+/// </summary>
 public class StateMachineGraphvizGenerator : StateMachineGenerator
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="data">The data value.</param>
     public StateMachineGraphvizGenerator(StateMachineGraph data)
         : base(data)
     {
     }
 
+    /// <summary>
+    /// Creates dot file.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public string CreateDotFile()
     {
         var algorithm = new GraphvizAlgorithm<Vertex, Edge<Vertex>>(Graph);

@@ -9,6 +9,9 @@ using ViciOne.ServiceBus.Transports;
 #nullable enable
 namespace ViciOne.ServiceBus.Initializers;
 
+/// <summary>
+/// Provides a message initializer implementation.
+/// </summary>
 public static class MessageInitializer
 {
     static readonly InitializerConventionRegistry _conventions;
@@ -22,8 +25,15 @@ public static class MessageInitializer
         });
     }
 
+    /// <summary>
+    /// Gets the conventions value.
+    /// </summary>
     public static IReadOnlyList<IInitializerConvention> Conventions => _conventions.Conventions;
 
+    /// <summary>
+    /// Adds convention to the configuration.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
     public static void AddConvention<T>()
         where T : IInitializerConvention, new()
     {
@@ -46,6 +56,12 @@ public class MessageInitializer<TMessage, TInput> :
     readonly IHeaderInitializer<TMessage, TInput>[] _headerInitializers;
     readonly IPropertyInitializer<TMessage, TInput>[] _initializers;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="factory">The factory value.</param>
+    /// <param name="initializers">The initializers value.</param>
+    /// <param name="headerInitializers">The header initializers value.</param>
     public MessageInitializer(IMessageFactory<TMessage> factory, IEnumerable<IPropertyInitializer<TMessage, TInput>> initializers,
         IEnumerable<IHeaderInitializer<TMessage, TInput>> headerInitializers)
     {
@@ -54,6 +70,11 @@ public class MessageInitializer<TMessage, TInput> :
         _headerInitializers = headerInitializers.ToArray();
     }
 
+    /// <summary>
+    /// Performs the create operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public InitializeContext<TMessage> Create(PipeContext context)
     {
         var baseContext = new ScopeInitializeContext(context);
@@ -61,6 +82,11 @@ public class MessageInitializer<TMessage, TInput> :
         return _factory.Create(baseContext);
     }
 
+    /// <summary>
+    /// Performs the create operation.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public InitializeContext<TMessage> Create(CancellationToken cancellationToken)
     {
         var baseContext = new BaseInitializeContext(cancellationToken);
@@ -68,27 +94,64 @@ public class MessageInitializer<TMessage, TInput> :
         return _factory.Create(baseContext);
     }
 
+    /// <summary>
+    /// Performs the initialize operation.
+    /// </summary>
+    /// <param name="input">The input value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<InitializeContext<TMessage>> InitializeAsync(object input, CancellationToken cancellationToken)
     {
         return InitializeMessageAsync((TInput)input, cancellationToken);
     }
 
+    /// <summary>
+    /// Performs the initialize operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="input">The input value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<InitializeContext<TMessage>> InitializeAsync(InitializeContext<TMessage> context, object input, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Initializers.InitializeContext<TMessage>>(cancellationToken); return InitializeMessageAsync(context, (TInput)input);
     }
 
-    public Task<SendTuple<TMessage>> InitializeMessageAsync(PipeContext context, object input, IPipe<SendContext<TMessage>>? pipe, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Performs the initialize message operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="input">The input value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
+    public Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(PipeContext context, object input, IPipe<SendContext<TMessage>>? pipe, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.SendTuple<TMessage>>(cancellationToken); return PrepareSendTupleAsync(Create(context), (TInput)input, pipe);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>>(cancellationToken); return PrepareInitializedMessageAsync(Create(context), (TInput)input, pipe);
     }
 
-    public Task<SendTuple<TMessage>> InitializeMessageAsync(object input, IPipe<SendContext<TMessage>> pipe, CancellationToken cancellationToken)
+    /// <summary>
+    /// Performs the initialize message operation.
+    /// </summary>
+    /// <param name="input">The input value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
+    public Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(object input, IPipe<SendContext<TMessage>> pipe, CancellationToken cancellationToken)
     {
-        return PrepareSendTupleAsync(Create(cancellationToken), (TInput)input, pipe);
+        return PrepareInitializedMessageAsync(Create(cancellationToken), (TInput)input, pipe);
     }
 
-    public async Task<SendTuple<TMessage>> InitializeMessageAsync(PipeContext context, object input, object?[] moreInputs, IPipe<SendContext<TMessage>>? pipe, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Performs the initialize message operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="input">The input value.</param>
+    /// <param name="moreInputs">The more inputs value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
+    public async Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> InitializeMessageAsync(PipeContext context, object input, object?[] moreInputs, IPipe<SendContext<TMessage>>? pipe, CancellationToken cancellationToken = default)
     {
         InitializeContext<TMessage> initializeContext = Create(context);
 
@@ -103,7 +166,7 @@ public class MessageInitializer<TMessage, TInput> :
             }
         }
 
-        return await PrepareSendTupleAsync(initializeContext, (TInput)input, pipe).ConfigureAwait(false);
+        return await PrepareInitializedMessageAsync(initializeContext, (TInput)input, pipe).ConfigureAwait(false);
     }
 
     Task<InitializeContext<TMessage>> InitializeMessageAsync(TInput input, CancellationToken cancellationToken)
@@ -124,15 +187,15 @@ public class MessageInitializer<TMessage, TInput> :
         return messageContext;
     }
 
-    async Task<SendTuple<TMessage>> PrepareSendTupleAsync(InitializeContext<TMessage> messageContext, TInput input, IPipe<SendContext<TMessage>>? pipe = null)
+    async Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>> PrepareInitializedMessageAsync(InitializeContext<TMessage> messageContext, TInput input, IPipe<SendContext<TMessage>>? pipe = null)
     {
         InitializeContext<TMessage, TInput> inputContext = messageContext.CreateInputContext(input);
 
         await Task.WhenAll(_initializers.Select(x => x.ApplyAsync(inputContext))).ConfigureAwait(false);
 
         return _headerInitializers.Length > 0
-            ? new SendTuple<TMessage>(inputContext.Message, new InitializerSendContextPipe(_headerInitializers, inputContext, pipe))
-            : new SendTuple<TMessage>(inputContext.Message, pipe);
+            ? new global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>(inputContext.Message, new InitializerSendContextPipe(_headerInitializers, inputContext, pipe))
+            : new global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TMessage>(inputContext.Message, pipe);
     }
 
 

@@ -1,8 +1,11 @@
 using System;
 using ViciOne.ServiceBus.DependencyInjection;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for job service container configuration.
+/// </summary>
 public static class JobServiceContainerConfigurationExtensions
 {
     /// <summary>

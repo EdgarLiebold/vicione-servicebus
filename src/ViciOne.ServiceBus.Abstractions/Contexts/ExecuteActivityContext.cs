@@ -1,5 +1,9 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Defines the contract for execute activity context.
+/// </summary>
+/// <typeparam name="TArguments">The t arguments type.</typeparam>
 public interface ExecuteActivityContext<out TArguments> :
     ExecuteContext<TArguments>
     where TArguments : class

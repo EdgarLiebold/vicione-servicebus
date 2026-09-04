@@ -1,4 +1,4 @@
-namespace ViciOne.ServiceBus.Serialization;
+namespace ViciOne.ServiceBus.Advanced.Serialization;
 
 /// <summary>The action selected for an admitted serialized application body.</summary>
 public enum PayloadAdmissionDisposition

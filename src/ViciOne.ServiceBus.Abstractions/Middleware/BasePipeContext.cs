@@ -79,6 +79,9 @@ public abstract class BasePipeContext :
         _payloadCache = payloadCache;
     }
 
+    /// <summary>
+    /// Gets the payload cache value.
+    /// </summary>
     protected IPayloadCache PayloadCache
     {
         get

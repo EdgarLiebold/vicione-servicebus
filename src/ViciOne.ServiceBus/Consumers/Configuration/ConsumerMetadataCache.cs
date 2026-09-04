@@ -3,6 +3,10 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a consumer metadata cache implementation.
+/// </summary>
+/// <typeparam name="T">The t type.</typeparam>
 public class ConsumerMetadataCache<T> :
     IConsumerMetadataCache<T>
     where T : class
@@ -18,6 +22,9 @@ public class ConsumerMetadataCache<T> :
             .ToArray();
     }
 
+    /// <summary>
+    /// Gets the consumer types value.
+    /// </summary>
     public static IMessageInterfaceType[] ConsumerTypes => Cached.Metadata.Value.ConsumerTypes;
 
     IMessageInterfaceType[] IConsumerMetadataCache<T>.ConsumerTypes => _consumerTypes;

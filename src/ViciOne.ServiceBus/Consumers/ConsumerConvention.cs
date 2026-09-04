@@ -1,7 +1,7 @@
 using System;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Registration;
 
 /// <summary>
 /// Used to register conventions for consumer message types

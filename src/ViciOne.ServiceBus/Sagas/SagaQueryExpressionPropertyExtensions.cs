@@ -3,8 +3,11 @@ using System.Linq.Expressions;
 using ViciOne.ServiceBus.Saga;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
+/// <summary>
+/// Provides extension methods for saga query expression property.
+/// </summary>
 public static class SagaQueryExpressionPropertyExtensions
 {
     /// <summary>

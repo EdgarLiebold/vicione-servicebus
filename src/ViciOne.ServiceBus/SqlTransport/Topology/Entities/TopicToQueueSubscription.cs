@@ -16,6 +16,9 @@ public interface TopicToQueueSubscription
     /// </summary>
     Queue Destination { get; }
 
+    /// <summary>
+    /// Gets the subscription type value.
+    /// </summary>
     SqlSubscriptionType SubscriptionType { get; }
 
     /// <summary>

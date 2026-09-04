@@ -2,6 +2,9 @@ using System;
 
 namespace ViciOne.ServiceBus.Contracts.JobService;
 
+/// <summary>
+/// Defines the contract for job attempt started.
+/// </summary>
 public interface JobAttemptStarted
 {
     /// <summary>

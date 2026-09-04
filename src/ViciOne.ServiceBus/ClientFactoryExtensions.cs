@@ -1,8 +1,11 @@
 using System;
 using ViciOne.ServiceBus.Clients;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides extension methods for client factory.
+/// </summary>
 public static class ClientFactoryExtensions
 {
     /// <summary>

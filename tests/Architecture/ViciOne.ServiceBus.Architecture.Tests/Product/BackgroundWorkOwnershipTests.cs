@@ -8,9 +8,9 @@ public sealed class BackgroundWorkOwnershipTests
 {
     private static readonly string[] DirectLoopOwners =
     [
-        "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Batcher.cs",
-        "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/AmazonSqsTransport/Middleware/AmazonSqsMessageReceiver.cs",
-        "src/Transports/ViciOne.ServiceBus.EventHubIntegration/EventHubIntegration/Checkpoints/BatchCheckpointer.cs",
+        "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Batcher.cs",
+        "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Middleware/AmazonSqsMessageReceiver.cs",
+        "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Checkpoints/BatchCheckpointer.cs",
         "src/ViciOne.ServiceBus/JobService/JobProgressBuffer.cs",
         "src/ViciOne.ServiceBus/SqlTransport/Middleware/SqlMessageReceiver.cs",
         "src/ViciOne.ServiceBus/SqlTransport/SqlReceiveLockContext.cs",
@@ -74,7 +74,7 @@ public sealed class BackgroundWorkOwnershipTests
         Assert.Contains("public Task RemoveAsync(CancellationToken cancellationToken = default)", gauge, StringComparison.Ordinal);
 
         string activeMqConsumer = Source(
-            "src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ActiveMqTransport/Middleware/ActiveMqConsumerFilter.cs");
+            "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/Middleware/ActiveMqConsumerFilter.cs");
         Assert.DoesNotContain(".ContinueWith(", activeMqConsumer, StringComparison.Ordinal);
         Assert.Contains("Task? connectionStopTask", activeMqConsumer, StringComparison.Ordinal);
         Assert.Contains("connectionStopTask = StopAfterConnectionExceptionAsync(exception);", activeMqConsumer, StringComparison.Ordinal);
@@ -86,9 +86,9 @@ public sealed class BackgroundWorkOwnershipTests
     {
         string[] activeMqOwners =
         [
-            "src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ActiveMqTransport/ConnectionContextFactory.cs",
-            "src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ActiveMqTransport/ScopeSessionContextFactory.cs",
-            "src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ActiveMqTransport/SessionContextFactory.cs",
+            "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/ConnectionContextFactory.cs",
+            "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/ScopeSessionContextFactory.cs",
+            "src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/SessionContextFactory.cs",
         ];
         foreach (string relativePath in activeMqOwners.Skip(1))
         {
@@ -107,8 +107,8 @@ public sealed class BackgroundWorkOwnershipTests
 
         string[] azureOwners =
         [
-            "src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/AzureServiceBusTransport/Contexts/QueueClientContext.cs",
-            "src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/AzureServiceBusTransport/Contexts/SubscriptionClientContext.cs",
+            "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/QueueClientContext.cs",
+            "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/SubscriptionClientContext.cs",
         ];
         foreach (string relativePath in azureOwners)
         {
@@ -121,11 +121,11 @@ public sealed class BackgroundWorkOwnershipTests
         (string Path, string ReturnedStop)[] rabbitCallbackOwners =
         [
             (
-                "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/RabbitMqTransport/ChannelContextFactory.cs",
+                "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/ChannelContextFactory.cs",
                 "return asyncContext.StopAsync(args.ReplyText);"
             ),
             (
-                "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/RabbitMqTransport/ConnectionContextFactory.cs",
+                "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/ConnectionContextFactory.cs",
                 "return contextHandle.StopAsync(args.ReplyText);"
             ),
         ];
@@ -138,12 +138,12 @@ public sealed class BackgroundWorkOwnershipTests
         }
 
         string rabbitChannel = Source(
-            "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/RabbitMqTransport/RabbitMqChannelContext.cs");
+            "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqChannelContext.cs");
         Assert.Contains("Task? _faultStopTask", rabbitChannel, StringComparison.Ordinal);
         Assert.Contains("_faultStopTask = StopAfterCallbackAsync(inputAddress);", rabbitChannel, StringComparison.Ordinal);
         Assert.Contains("await _agent.Stop", rabbitChannel, StringComparison.Ordinal);
 
-        string rabbit = Source("src/Transports/ViciOne.ServiceBus.RabbitMqTransport/RabbitMqTransport/TransportLifetime.cs");
+        string rabbit = Source("src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/TransportLifetime.cs");
         Assert.Contains("_scheduleSubjectDisposal(DisposeSubjectAsync);", rabbit, StringComparison.Ordinal);
         Assert.Contains("var failure = await _disposed.Task.ConfigureAwait(false);", rabbit, StringComparison.Ordinal);
         Assert.Contains("_disposed.TrySetResult(failure);", rabbit, StringComparison.Ordinal);

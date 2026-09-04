@@ -3,6 +3,11 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Saga;
 
+/// <summary>
+/// Defines the contract for saga repository query context.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <typeparam name="T">The t type.</typeparam>
 public interface SagaRepositoryQueryContext<TSaga, T> :
     SagaRepositoryContext<TSaga, T>,
     IEnumerable<Guid>
@@ -16,6 +21,10 @@ public interface SagaRepositoryQueryContext<TSaga, T> :
 }
 
 
+/// <summary>
+/// Defines the contract for saga repository query context.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
 public interface SagaRepositoryQueryContext<TSaga> :
     QuerySagaRepositoryContext<TSaga>,
     IEnumerable<Guid>

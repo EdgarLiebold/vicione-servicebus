@@ -4,18 +4,31 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Middleware;
 
+/// <summary>
+/// Provides a copy context pipe implementation.
+/// </summary>
 public class CopyContextPipe :
     IPipe<SendContext>
 {
     readonly Action<ConsumeContext, SendContext>? _callback;
     readonly ConsumeContext _context;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="callback">The callback value.</param>
     public CopyContextPipe(ConsumeContext context, Action<ConsumeContext, SendContext>? callback = null)
     {
         _context = context;
         _callback = callback;
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public Task SendAsync(SendContext context)
     {
         context.MessageId = _context.MessageId;
@@ -50,6 +63,10 @@ public class CopyContextPipe :
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         context.CreateScope("copyContext");

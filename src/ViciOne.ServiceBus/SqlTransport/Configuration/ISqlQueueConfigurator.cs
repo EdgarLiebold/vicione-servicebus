@@ -1,6 +1,6 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Providers.Transports;
 
 /// <summary>
 /// Configure a database transport queue

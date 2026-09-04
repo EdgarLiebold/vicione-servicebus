@@ -2,6 +2,10 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace ViciOne.ServiceBus.SignalR.Contracts;
 
+/// <summary>
+/// Defines the contract for group management.
+/// </summary>
+/// <typeparam name="THub">The t hub type.</typeparam>
 public interface GroupManagement<THub>
     where THub : Hub
 {

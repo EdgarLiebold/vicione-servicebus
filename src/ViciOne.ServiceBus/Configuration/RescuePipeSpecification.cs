@@ -3,6 +3,11 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a rescue pipe specification implementation.
+/// </summary>
+/// <typeparam name="TContext">The t context type.</typeparam>
+/// <typeparam name="TRescue">The t rescue type.</typeparam>
 public class RescuePipeSpecification<TContext, TRescue> :
     ExceptionSpecification,
     IPipeSpecification<TContext>,
@@ -14,6 +19,10 @@ public class RescuePipeSpecification<TContext, TRescue> :
     readonly IBuildPipeConfigurator<TRescue> _pipeConfigurator;
     readonly RescueContextFactory<TContext, TRescue> _rescueContextFactory;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="rescueContextFactory">The rescue context factory value.</param>
     public RescuePipeSpecification(RescueContextFactory<TContext, TRescue> rescueContextFactory)
     {
         _rescueContextFactory = rescueContextFactory;
@@ -22,6 +31,10 @@ public class RescuePipeSpecification<TContext, TRescue> :
         _contextPipeConfigurator = new ContextPipeConfigurator(_pipeConfigurator);
     }
 
+    /// <summary>
+    /// Applies this specification to the target builder.
+    /// </summary>
+    /// <param name="builder">The builder value.</param>
     public void Apply(IPipeBuilder<TContext> builder)
     {
         IPipe<TRescue> rescuePipe = _pipeConfigurator.Build();
@@ -29,6 +42,10 @@ public class RescuePipeSpecification<TContext, TRescue> :
         builder.AddFilter(new RescueFilter<TContext, TRescue>(rescuePipe, Filter, _rescueContextFactory));
     }
 
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (_rescueContextFactory == null)

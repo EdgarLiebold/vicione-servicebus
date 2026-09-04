@@ -7,6 +7,12 @@ using ViciOne.ServiceBus.Events;
 
 namespace ViciOne.ServiceBus.Courier;
 
+/// <summary>
+/// Provides a routing slip response proxy implementation.
+/// </summary>
+/// <typeparam name="TRequest">The t request type.</typeparam>
+/// <typeparam name="TResponse">The t response type.</typeparam>
+/// <typeparam name="TFault">The t fault type.</typeparam>
 public abstract class RoutingSlipResponseProxy<TRequest, TResponse, TFault> :
     IConsumer<RoutingSlipCompleted>,
     IConsumer<RoutingSlipFaulted>
@@ -14,8 +20,16 @@ public abstract class RoutingSlipResponseProxy<TRequest, TResponse, TFault> :
     where TResponse : class
     where TFault : class
 {
+    /// <summary>
+    /// Gets the retry policy value.
+    /// </summary>
     protected virtual IRetryPolicy? RetryPolicy => null;
 
+    /// <summary>
+    /// Consumes the message provided by the context.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public virtual async Task ConsumeAsync(ConsumeContext<RoutingSlipCompleted> context)
     {
         var requestInfo = new RoutingSlipRequestInfo<TRequest>(context.Advanced().SerializerContext, context.Message.Variables);
@@ -27,6 +41,11 @@ public abstract class RoutingSlipResponseProxy<TRequest, TResponse, TFault> :
         await endpoint.SendAsync(response).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Consumes the message provided by the context.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public virtual async Task ConsumeAsync(ConsumeContext<RoutingSlipFaulted> context)
     {
         var requestInfo = new RoutingSlipRequestInfo<TRequest>(context.Advanced().SerializerContext, context.Message.Variables);
@@ -89,17 +108,42 @@ public abstract class RoutingSlipResponseProxy<TRequest, TResponse, TFault> :
         return true;
     }
 
+    /// <summary>
+    /// Creates response message.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="request">The request value.</param>
+    /// <returns>The result of the operation.</returns>
     protected abstract Task<TResponse> CreateResponseMessageAsync(ConsumeContext<RoutingSlipCompleted> context, TRequest request);
 
+    /// <summary>
+    /// Creates faulted response message.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="request">The request value.</param>
+    /// <param name="requestId">The request id value.</param>
+    /// <returns>The result of the operation.</returns>
     protected abstract Task<TFault> CreateFaultedResponseMessageAsync(ConsumeContext<RoutingSlipFaulted> context, TRequest request, Guid requestId);
 }
 
 
+/// <summary>
+/// Provides a routing slip response proxy implementation.
+/// </summary>
+/// <typeparam name="TRequest">The t request type.</typeparam>
+/// <typeparam name="TResponse">The t response type.</typeparam>
 public abstract class RoutingSlipResponseProxy<TRequest, TResponse> :
     RoutingSlipResponseProxy<TRequest, TResponse, Fault<TRequest>>
     where TRequest : class
     where TResponse : class
 {
+    /// <summary>
+    /// Creates faulted response message.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="request">The request value.</param>
+    /// <param name="requestId">The request id value.</param>
+    /// <returns>The result of the operation.</returns>
     protected override Task<Fault<TRequest>> CreateFaultedResponseMessageAsync(ConsumeContext<RoutingSlipFaulted> context, TRequest request, Guid requestId)
     {
         IEnumerable<ExceptionInfo> exceptions = context.Message.ActivityExceptions.Select(x => x.ExceptionInfo);

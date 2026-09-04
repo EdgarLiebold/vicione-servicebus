@@ -19,6 +19,11 @@ public sealed class AzureTableMessageJournalStore : IMessageJournalStore
     private readonly string _partitionKey;
     private readonly TableClient _table;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="table">The table value.</param>
+    /// <param name="options">The options value.</param>
     public AzureTableMessageJournalStore(
         TableClient table,
         AzureTableMessageJournalStoreOptions options)
@@ -31,8 +36,17 @@ public sealed class AzureTableMessageJournalStore : IMessageJournalStore
         Limits = options.Limits;
     }
 
+    /// <summary>
+    /// Gets the limits value.
+    /// </summary>
     public MessageJournalStoreLimits Limits { get; }
 
+    /// <summary>
+    /// Performs the append operation.
+    /// </summary>
+    /// <param name="entry">The entry value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async ValueTask AppendAsync(MessageJournalEntry entry, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(entry);
@@ -85,7 +99,7 @@ public sealed class AzureTableMessageJournalStore : IMessageJournalStore
     {
         try
         {
-            Azure.Response<MessageJournalCapacityLease> response = await _table
+            global::Azure.Response<MessageJournalCapacityLease> response = await _table
                 .GetEntityAsync<MessageJournalCapacityLease>(
                     _partitionKey,
                     MessageJournalCapacityLease.RowKeyValue,
@@ -105,7 +119,7 @@ public sealed class AzureTableMessageJournalStore : IMessageJournalStore
                 // A concurrent writer created the single lease. Read its server ETag below.
             }
 
-            Azure.Response<MessageJournalCapacityLease> response = await _table
+            global::Azure.Response<MessageJournalCapacityLease> response = await _table
                 .GetEntityAsync<MessageJournalCapacityLease>(
                     _partitionKey,
                     MessageJournalCapacityLease.RowKeyValue,

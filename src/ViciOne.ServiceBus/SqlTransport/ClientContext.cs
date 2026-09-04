@@ -6,9 +6,15 @@ using ViciOne.ServiceBus.SqlTransport.Topology;
 
 namespace ViciOne.ServiceBus.SqlTransport;
 
+/// <summary>
+/// Defines the contract for client context.
+/// </summary>
 public interface ClientContext :
     PipeContext
 {
+    /// <summary>
+    /// Gets the connection context value.
+    /// </summary>
     ConnectionContext ConnectionContext { get; }
 
     /// <summary>
@@ -51,15 +57,47 @@ public interface ClientContext :
     /// <returns></returns>
     Task<long> PurgeQueueAsync(string queueName, CancellationToken cancellationToken);
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="queueName">The queue name value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     Task SendAsync<T>(string queueName, SqlMessageSendContext<T> context, CancellationToken cancellationToken = default)
         where T : class;
 
+    /// <summary>
+    /// Publishes a message to its configured consumers.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="topicName">The topic name value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     Task PublishAsync<T>(string topicName, SqlMessageSendContext<T> context, CancellationToken cancellationToken = default)
         where T : class;
 
+    /// <summary>
+    /// Performs the receive messages operation.
+    /// </summary>
+    /// <param name="queueName">The queue name value.</param>
+    /// <param name="mode">The mode value.</param>
+    /// <param name="messageLimit">The message limit value.</param>
+    /// <param name="concurrentCount">The concurrent count value.</param>
+    /// <param name="lockDuration">The lock duration value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     Task<IEnumerable<SqlTransportMessage>> ReceiveMessagesAsync(string queueName, SqlReceiveMode mode, int messageLimit, int concurrentCount,
         TimeSpan lockDuration, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Performs the touch queue operation.
+    /// </summary>
+    /// <param name="queueName">The queue name value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     Task TouchQueueAsync(string queueName, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -71,10 +109,51 @@ public interface ClientContext :
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     Task<int?> DeadLetterQueueAsync(string queueName, int messageCount, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Performs the delete message operation.
+    /// </summary>
+    /// <param name="lockId">The lock id value.</param>
+    /// <param name="messageDeliveryId">The message delivery id value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     Task<bool> DeleteMessageAsync(Guid lockId, long messageDeliveryId, CancellationToken cancellationToken = default);
+    /// <summary>
+    /// Performs the delete scheduled message operation.
+    /// </summary>
+    /// <param name="tokenId">The token id value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     Task<bool> DeleteScheduledMessageAsync(Guid tokenId, CancellationToken cancellationToken);
+    /// <summary>
+    /// Performs the move message operation.
+    /// </summary>
+    /// <param name="lockId">The lock id value.</param>
+    /// <param name="messageDeliveryId">The message delivery id value.</param>
+    /// <param name="queueName">The queue name value.</param>
+    /// <param name="queueType">The queue type value.</param>
+    /// <param name="expirationTime">The expiration time value.</param>
+    /// <param name="sendHeaders">The send headers value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     Task<bool> MoveMessageAsync(Guid lockId, long messageDeliveryId, string queueName, SqlQueueType queueType, DateTimeOffset? expirationTime,
         SendHeaders sendHeaders, CancellationToken cancellationToken = default);
+    /// <summary>
+    /// Performs the renew lock operation.
+    /// </summary>
+    /// <param name="lockId">The lock id value.</param>
+    /// <param name="messageDeliveryId">The message delivery id value.</param>
+    /// <param name="duration">The duration value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     Task<bool> RenewLockAsync(Guid lockId, long messageDeliveryId, TimeSpan duration, CancellationToken cancellationToken = default);
+    /// <summary>
+    /// Performs the unlock operation.
+    /// </summary>
+    /// <param name="lockId">The lock id value.</param>
+    /// <param name="messageDeliveryId">The message delivery id value.</param>
+    /// <param name="delay">The delay value.</param>
+    /// <param name="sendHeaders">The send headers value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     Task<bool> UnlockAsync(Guid lockId, long messageDeliveryId, TimeSpan delay, SendHeaders sendHeaders, CancellationToken cancellationToken = default);
 }

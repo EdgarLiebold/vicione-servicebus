@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Context;
 
+/// <summary>
+/// Defines the contract for transport receive context.
+/// </summary>
 public interface TransportReceiveContext
 {
     /// <summary>

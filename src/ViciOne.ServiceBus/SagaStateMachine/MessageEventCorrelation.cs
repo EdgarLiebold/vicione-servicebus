@@ -5,6 +5,11 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
+/// <summary>
+/// Provides a message event correlation implementation.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public class MessageEventCorrelation<TSaga, TMessage> :
     EventCorrelation<TSaga, TMessage>
     where TSaga : class, SagaStateMachineInstance
@@ -18,6 +23,18 @@ public class MessageEventCorrelation<TSaga, TMessage> :
     readonly bool _readOnly;
     readonly ISagaFactory<TSaga, TMessage> _sagaFactory;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="machine">The machine value.</param>
+    /// <param name="event">The event value.</param>
+    /// <param name="sagaFilterFactory">The saga filter factory value.</param>
+    /// <param name="messageFilter">The message filter value.</param>
+    /// <param name="missingPipe">The missing pipe value.</param>
+    /// <param name="sagaFactory">The saga factory value.</param>
+    /// <param name="insertOnInitial">The insert on initial value.</param>
+    /// <param name="readOnly">The read only value.</param>
+    /// <param name="configureConsumeTopology">The configure consume topology value.</param>
     public MessageEventCorrelation(SagaStateMachine<TSaga> machine, Event<TMessage> @event, SagaFilterFactory<TSaga, TMessage>? sagaFilterFactory,
         IFilter<ConsumeContext<TMessage>>? messageFilter, IPipe<ConsumeContext<TMessage>> missingPipe, ISagaFactory<TSaga, TMessage> sagaFactory,
         bool insertOnInitial, bool readOnly, bool configureConsumeTopology)
@@ -36,18 +53,40 @@ public class MessageEventCorrelation<TSaga, TMessage> :
         _includesInitial = new Lazy<bool>(() => IncludesInitial());
     }
 
+    /// <summary>
+    /// Gets the configure consume topology value.
+    /// </summary>
     public bool ConfigureConsumeTopology { get; }
 
+    /// <summary>
+    /// Gets the filter factory value.
+    /// </summary>
     public SagaFilterFactory<TSaga, TMessage>? FilterFactory { get; }
 
+    /// <summary>
+    /// Gets the event value.
+    /// </summary>
     public Event<TMessage> Event { get; }
 
+    /// <summary>
+    /// Gets the data type value.
+    /// </summary>
     public Type DataType => typeof(TMessage);
 
+    /// <summary>
+    /// Gets the message filter value.
+    /// </summary>
     public IFilter<ConsumeContext<TMessage>>? MessageFilter { get; }
 
+    /// <summary>
+    /// Gets the policy value.
+    /// </summary>
     public ISagaPolicy<TSaga, TMessage> Policy => _policy.Value;
 
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (_insertOnInitial && _readOnly)

@@ -1,6 +1,6 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Middleware;
 
 /// <summary>
 /// Filter exceptions for policies that act based on an exception

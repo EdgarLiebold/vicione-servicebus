@@ -3,8 +3,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Util;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides extension methods for bus control.
+/// </summary>
 public static class BusControlExtensions
 {
     /// <summary>
@@ -60,11 +63,15 @@ public static class BusControlExtensions
     /// <param name="bus">The bus handle</param>
     /// <param name="startTimeout">The wait time before throwing an exception</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    public static async Task<BusHandle> StartAsync(this IBusControl bus, TimeSpan startTimeout, CancellationToken cancellationToken = default)
+    public static async Task StartAsync(this IBusControl bus, TimeSpan startTimeout, CancellationToken cancellationToken = default)
     {
-        cancellationToken.ThrowIfCancellationRequested(); using var cancellationTokenSource = new CancellationTokenSource(startTimeout);
+        cancellationToken.ThrowIfCancellationRequested();
+        using var timeoutTokenSource = new CancellationTokenSource(startTimeout);
+        using var linkedTokenSource = cancellationToken.CanBeCanceled
+            ? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutTokenSource.Token)
+            : null;
 
-        return await bus.StartAsync(cancellationTokenSource.Token).ConfigureAwait(false);
+        await bus.StartAsync(linkedTokenSource?.Token ?? timeoutTokenSource.Token).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -75,9 +82,13 @@ public static class BusControlExtensions
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public static async Task StopAsync(this IBusControl bus, TimeSpan stopTimeout, CancellationToken cancellationToken = default)
     {
-        cancellationToken.ThrowIfCancellationRequested(); using var cancellationTokenSource = new CancellationTokenSource(stopTimeout);
+        cancellationToken.ThrowIfCancellationRequested();
+        using var timeoutTokenSource = new CancellationTokenSource(stopTimeout);
+        using var linkedTokenSource = cancellationToken.CanBeCanceled
+            ? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutTokenSource.Token)
+            : null;
 
-        await bus.StopAsync(cancellationTokenSource.Token).ConfigureAwait(false);
+        await bus.StopAsync(linkedTokenSource?.Token ?? timeoutTokenSource.Token).ConfigureAwait(false);
     }
 
     /// <summary>

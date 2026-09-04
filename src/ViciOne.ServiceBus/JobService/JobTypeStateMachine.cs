@@ -9,11 +9,17 @@ using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.JobService;
 using ViciOne.ServiceBus.JobService.Messages;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.JobService;
 
+/// <summary>
+/// Provides a job type state machine implementation.
+/// </summary>
 public sealed class JobTypeStateMachine :
     ViciOneServiceBusStateMachine<JobTypeSaga>
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public JobTypeStateMachine()
     {
         Event(() => JobSlotRequested, x =>
@@ -81,11 +87,26 @@ public sealed class JobTypeStateMachine :
     //
     // ReSharper disable UnassignedGetOnlyAutoProperty
     // ReSharper disable MemberCanBePrivate.Global
+    /// <summary>
+    /// Gets the active value.
+    /// </summary>
     public State Active { get; } = null!;
+    /// <summary>
+    /// Gets the idle value.
+    /// </summary>
     public State Idle { get; } = null!;
 
+    /// <summary>
+    /// Gets the job slot requested value.
+    /// </summary>
     public Event<AllocateJobSlot> JobSlotRequested { get; } = null!;
+    /// <summary>
+    /// Gets the job slot released value.
+    /// </summary>
     public Event<JobSlotReleased> JobSlotReleased { get; } = null!;
+    /// <summary>
+    /// Gets the set concurrent job limit value.
+    /// </summary>
     public Event<SetConcurrentJobLimit> SetConcurrentJobLimit { get; } = null!;
 }
 

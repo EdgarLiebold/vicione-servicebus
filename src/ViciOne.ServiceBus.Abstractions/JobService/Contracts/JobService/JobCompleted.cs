@@ -13,8 +13,14 @@ public interface JobCompleted
     /// </summary>
     Guid JobId { get; }
 
+    /// <summary>
+    /// Gets the timestamp value.
+    /// </summary>
     DateTimeOffset Timestamp { get; }
 
+    /// <summary>
+    /// Gets the duration value.
+    /// </summary>
     TimeSpan Duration { get; }
 
     /// <summary>
@@ -45,12 +51,24 @@ public interface JobCompleted
 public interface JobCompleted<out T>
     where T : class
 {
+    /// <summary>
+    /// Gets the job id value.
+    /// </summary>
     Guid JobId { get; }
 
+    /// <summary>
+    /// Gets the timestamp value.
+    /// </summary>
     DateTimeOffset Timestamp { get; }
 
+    /// <summary>
+    /// Gets the duration value.
+    /// </summary>
     TimeSpan Duration { get; }
 
+    /// <summary>
+    /// Gets the job value.
+    /// </summary>
     T Job { get; }
 
     /// <summary>

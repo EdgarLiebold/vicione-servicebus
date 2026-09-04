@@ -1,7 +1,10 @@
 using ViciOne.ServiceBus.Courier.Contracts;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for future routing slip handle.
+/// </summary>
 public interface FutureRoutingSlipHandle
 {
     /// <summary>

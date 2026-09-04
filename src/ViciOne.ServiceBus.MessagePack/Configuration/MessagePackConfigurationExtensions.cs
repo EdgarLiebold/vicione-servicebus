@@ -1,7 +1,10 @@
 using ViciOne.ServiceBus.Serialization;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.MessagePack;
 
+/// <summary>
+/// Provides extension methods for message pack configuration.
+/// </summary>
 public static class MessagePackConfigurationExtensions
 {
     /// <summary>

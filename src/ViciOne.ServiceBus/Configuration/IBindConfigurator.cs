@@ -1,7 +1,11 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for bind configurator.
+/// </summary>
+/// <typeparam name="TLeft">The t left type.</typeparam>
 public interface IBindConfigurator<TLeft>
     where TLeft : class, PipeContext
 {

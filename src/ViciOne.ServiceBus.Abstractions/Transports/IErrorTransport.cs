@@ -7,5 +7,11 @@ namespace ViciOne.ServiceBus.Transports;
 /// </summary>
 public interface IErrorTransport
 {
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     Task SendAsync(ExceptionReceiveContext context, CancellationToken cancellationToken = default);
 }

@@ -1,6 +1,6 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
 /// Configure the execution of the activity and arguments with some tasty middleware.
@@ -14,6 +14,9 @@ public interface IExecuteActivityConfigurator<TActivity, TArguments> :
     where TActivity : class, IExecuteActivity<TArguments>
     where TArguments : class
 {
+    /// <summary>
+    /// Gets or sets the concurrent message limit value.
+    /// </summary>
     int? ConcurrentMessageLimit { set; }
 
     /// <summary>

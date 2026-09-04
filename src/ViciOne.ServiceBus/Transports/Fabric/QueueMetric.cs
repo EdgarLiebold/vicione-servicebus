@@ -1,7 +1,14 @@
 namespace ViciOne.ServiceBus.Transports.Fabric;
 
+/// <summary>
+/// Provides a queue metric implementation.
+/// </summary>
 public class QueueMetric
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="name">The name value.</param>
     public QueueMetric(string name)
     {
         Name = name;
@@ -11,6 +18,9 @@ public class QueueMetric
         MessageCount = new Gauge();
     }
 
+    /// <summary>
+    /// Gets the name value.
+    /// </summary>
     public string Name { get; }
 
     /// <summary>

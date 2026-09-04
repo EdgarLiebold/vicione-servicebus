@@ -4,8 +4,11 @@ using ViciOne.ServiceBus.MessageJournal.Observers;
 using ViciOne.ServiceBus.Util;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for message journal configuration.
+/// </summary>
 public static class MessageJournalConfigurationExtensions
 {
     /// <summary>

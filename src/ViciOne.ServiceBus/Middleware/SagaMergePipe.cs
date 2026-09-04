@@ -15,6 +15,10 @@ public class SagaMergePipe<TSaga, TMessage> :
 {
     readonly IPipe<SagaConsumeContext<TSaga, TMessage>> _output;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="output">The output value.</param>
     public SagaMergePipe(IPipe<SagaConsumeContext<TSaga, TMessage>> output)
     {
         _output = output;
@@ -32,6 +36,11 @@ public class SagaMergePipe<TSaga, TMessage> :
         _output.Probe(scope);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public Task SendAsync(SagaConsumeContext<TSaga> context)
     {
         if (context is SagaConsumeContext<TSaga, TMessage> consumerContext)

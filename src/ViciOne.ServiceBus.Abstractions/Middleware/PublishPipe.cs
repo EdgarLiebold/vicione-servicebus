@@ -7,18 +7,29 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Middleware;
 
+/// <summary>
+/// Provides a publish pipe implementation.
+/// </summary>
 public class PublishPipe :
     IPublishPipe
 {
     readonly ConcurrentDictionary<Type, IMessagePipe> _outputPipes;
     readonly IPublishPipeSpecification _specification;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="specification">The specification value.</param>
     public PublishPipe(IPublishPipeSpecification specification)
     {
         _specification = specification;
         _outputPipes = new ConcurrentDictionary<Type, IMessagePipe>();
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("publishPipe");
@@ -27,6 +38,13 @@ public class PublishPipe :
             outputPipe.Probe(scope);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     [DebuggerNonUserCode]
     [DebuggerStepThrough]
     public Task SendAsync<T>(PublishContext<T> context, CancellationToken cancellationToken = default)

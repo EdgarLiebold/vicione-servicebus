@@ -1,8 +1,11 @@
 using System;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides extension methods for respond async execute.
+/// </summary>
 public static class RespondAsyncExecuteExtensions
 {
     /// <summary>

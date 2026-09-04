@@ -32,6 +32,13 @@ public class PropertyProviderFactory<TInput> :
         return CreateProviderFactory<TResult>(propertyInfo.PropertyType).TryGetProvider(propertyInfo, out provider);
     }
 
+    /// <summary>
+    /// Attempts to get property converter.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="TProperty">The t property type.</typeparam>
+    /// <param name="converter">The converter value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetPropertyConverter<T, TProperty>([NotNullWhen(true)] out IPropertyConverter<T, TProperty>? converter)
     {
         return CreateProviderFactory<T>(typeof(TProperty)).TryGetConverter(out converter);

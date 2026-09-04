@@ -3,6 +3,10 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Transports;
 
+/// <summary>
+/// Defines the contract for send endpoint cache.
+/// </summary>
+/// <typeparam name="TKey">The t key type.</typeparam>
 public interface ISendEndpointCache<TKey> :
     IAsyncDisposable
 {

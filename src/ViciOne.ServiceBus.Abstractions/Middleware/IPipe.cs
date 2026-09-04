@@ -1,7 +1,11 @@
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Middleware;
 
+/// <summary>
+/// Defines the contract for pipe.
+/// </summary>
+/// <typeparam name="TContext">The t context type.</typeparam>
 public interface IPipe<in TContext> :
     IProbeSite
     where TContext : class, PipeContext

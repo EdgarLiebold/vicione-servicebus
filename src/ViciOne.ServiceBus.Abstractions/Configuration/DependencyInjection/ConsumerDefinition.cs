@@ -1,15 +1,13 @@
 using System;
-using System.ComponentModel;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Registration;
 
 /// <summary>
 /// A consumer definition defines the configuration for a consumer, which can be used by the automatic registration code to
 /// configure the consumer on a receive endpoint.
 /// </summary>
 /// <typeparam name="TConsumer"></typeparam>
-[EditorBrowsable(EditorBrowsableState.Never)]
 public class ConsumerDefinition<TConsumer> :
     IConsumerDefinition<TConsumer>
     where TConsumer : class, IConsumer
@@ -18,6 +16,9 @@ public class ConsumerDefinition<TConsumer> :
     ConsumerConcurrencyPolicy? _concurrencyPolicy;
     string? _endpointName;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     protected ConsumerDefinition()
     {
         // TODO if the partitionKey is specified, use a partition filter instead of a semaphore
@@ -32,6 +33,9 @@ public class ConsumerDefinition<TConsumer> :
         set => _endpointName = value;
     }
 
+    /// <summary>
+    /// Gets or sets the endpoint definition value.
+    /// </summary>
     public IEndpointDefinition<TConsumer>? EndpointDefinition { get; set; }
 
     IEndpointDefinition? IConsumerDefinition.EndpointDefinition => EndpointDefinition;

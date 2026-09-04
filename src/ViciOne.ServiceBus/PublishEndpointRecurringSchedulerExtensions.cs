@@ -3,8 +3,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Scheduling;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides extension methods for publish endpoint recurring scheduler.
+/// </summary>
 public static class PublishEndpointRecurringSchedulerExtensions
 {
     /// <summary>

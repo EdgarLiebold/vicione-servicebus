@@ -15,11 +15,11 @@ public sealed class DeveloperJourneyArchitectureTests
     private static readonly string[] ExpectedViciOnePackages =
     [
         "ViciOne.ServiceBus",
-        "ViciOne.ServiceBus.Azure.ServiceBus.Core",
+        "ViciOne.ServiceBus.AzureServiceBus",
         "ViciOne.ServiceBus.EntityFrameworkCore",
         "ViciOne.ServiceBus.MessagePack",
         "ViciOne.ServiceBus.Quartz",
-        "ViciOne.ServiceBus.RabbitMQ",
+        "ViciOne.ServiceBus.RabbitMq",
         "ViciOne.ServiceBus.Testing",
     ];
 

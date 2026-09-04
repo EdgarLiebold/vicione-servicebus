@@ -18,11 +18,24 @@ public class RollingTimer :
     ITimer? _timer;
     int _triggered;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="callback">The callback value.</param>
+    /// <param name="timeout">The timeout value.</param>
+    /// <param name="state">The state value.</param>
     public RollingTimer(TimerCallback callback, TimeSpan timeout, object? state = default)
         : this(callback, timeout, state, TimeProvider.System)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="callback">The callback value.</param>
+    /// <param name="timeout">The timeout value.</param>
+    /// <param name="state">The state value.</param>
+    /// <param name="timeProvider">The time provider value.</param>
     public RollingTimer(TimerCallback callback, TimeSpan timeout, object? state, TimeProvider timeProvider)
     {
         ArgumentNullException.ThrowIfNull(callback);
@@ -39,8 +52,14 @@ public class RollingTimer :
         _state = state;
     }
 
+    /// <summary>
+    /// Gets the triggered value.
+    /// </summary>
     public bool Triggered => _triggered == 1;
 
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
     public void Dispose()
     {
         lock (_lock)

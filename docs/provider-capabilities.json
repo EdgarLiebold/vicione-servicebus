@@ -23,8 +23,8 @@
     {
       "id": "active-mq",
       "kind": "bus-transport",
-      "package": "ViciOne.ServiceBus.ActiveMQ",
-      "project": "src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ViciOne.ServiceBus.ActiveMqTransport.csproj",
+      "package": "ViciOne.ServiceBus.ActiveMq",
+      "project": "src/Transports/ViciOne.ServiceBus.ActiveMq/ViciOne.ServiceBus.ActiveMq.csproj",
       "registration": "UsingActiveMq",
       "send": "supported",
       "publish": "supported",
@@ -37,8 +37,8 @@
     {
       "id": "amazon-sqs",
       "kind": "bus-transport",
-      "package": "ViciOne.ServiceBus.AmazonSQS",
-      "project": "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/ViciOne.ServiceBus.AmazonSqsTransport.csproj",
+      "package": "ViciOne.ServiceBus.AmazonSqs",
+      "project": "src/Transports/ViciOne.ServiceBus.AmazonSqs/ViciOne.ServiceBus.AmazonSqs.csproj",
       "registration": "UsingAmazonSqs",
       "send": "supported",
       "publish": "supported",
@@ -51,8 +51,8 @@
     {
       "id": "azure-service-bus",
       "kind": "bus-transport",
-      "package": "ViciOne.ServiceBus.Azure.ServiceBus.Core",
-      "project": "src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/ViciOne.ServiceBus.Azure.ServiceBus.Core.csproj",
+      "package": "ViciOne.ServiceBus.AzureServiceBus",
+      "project": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/ViciOne.ServiceBus.AzureServiceBus.csproj",
       "registration": "UsingAzureServiceBus",
       "send": "supported",
       "publish": "supported",
@@ -65,8 +65,8 @@
     {
       "id": "event-hub",
       "kind": "rider",
-      "package": "ViciOne.ServiceBus.EventHub",
-      "project": "src/Transports/ViciOne.ServiceBus.EventHubIntegration/ViciOne.ServiceBus.EventHubIntegration.csproj",
+      "package": "ViciOne.ServiceBus.EventHubs",
+      "project": "src/Transports/ViciOne.ServiceBus.EventHubs/ViciOne.ServiceBus.EventHubs.csproj",
       "registration": "UsingEventHub",
       "send": "rider-specific",
       "publish": "not-applicable",
@@ -79,8 +79,8 @@
     {
       "id": "rabbit-mq",
       "kind": "bus-transport",
-      "package": "ViciOne.ServiceBus.RabbitMQ",
-      "project": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/ViciOne.ServiceBus.RabbitMqTransport.csproj",
+      "package": "ViciOne.ServiceBus.RabbitMq",
+      "project": "src/Transports/ViciOne.ServiceBus.RabbitMq/ViciOne.ServiceBus.RabbitMq.csproj",
       "registration": "UsingRabbitMq",
       "send": "supported",
       "publish": "supported",
@@ -88,12 +88,12 @@
       "durableSendDispatch": "publisher-confirmed-persistent-mandatory",
       "durableSendAcceptanceBoundary": "publisher-confirm-after-route-admission",
       "durableSendAcceptanceEnvironment": "real-rabbitmq-container",
-      "durableSendEvidence": "tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/RabbitMqDurableSendAcceptanceTests.cs"
+      "durableSendEvidence": "tests/Transports/ViciOne.ServiceBus.RabbitMq.LocalIntegration.Tests/RabbitMqDurableSendAcceptanceTests.cs"
     },
     {
       "id": "postgresql-sql-transport",
       "kind": "bus-transport",
-      "package": "ViciOne.ServiceBus.SqlTransport.PostgreSQL",
+      "package": "ViciOne.ServiceBus.SqlTransport.PostgreSql",
       "project": "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/ViciOne.ServiceBus.SqlTransport.PostgreSql.csproj",
       "registration": "UsingPostgres",
       "send": "supported",
@@ -155,15 +155,15 @@
     {
       "id": "dynamo-db",
       "package": "ViciOne.ServiceBus.DynamoDb",
-      "project": "src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/ViciOne.ServiceBus.DynamoDbIntegration.csproj",
+      "project": "src/Persistence/ViciOne.ServiceBus.DynamoDb/ViciOne.ServiceBus.DynamoDb.csproj",
       "durableSendStore": "unsupported"
     },
     {
       "id": "entity-framework-core",
       "package": "ViciOne.ServiceBus.EntityFrameworkCore",
-      "project": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.csproj",
+      "project": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/ViciOne.ServiceBus.EntityFrameworkCore.csproj",
       "durableSendStore": "supported",
-      "durableSendEvidence": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/DurableSend/EntityFrameworkDurableSendStoreTests.cs"
+      "durableSendEvidence": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/DurableSend/EntityFrameworkDurableSendStoreTests.cs"
     }
   ]
 }

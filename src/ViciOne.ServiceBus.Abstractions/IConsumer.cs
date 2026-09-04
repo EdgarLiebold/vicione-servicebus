@@ -11,6 +11,11 @@ public interface IConsumer<in TMessage> :
     IConsumer
     where TMessage : class
 {
+    /// <summary>
+    /// Consumes the message provided by the context.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     Task ConsumeAsync(ConsumeContext<TMessage> context);
 }
 

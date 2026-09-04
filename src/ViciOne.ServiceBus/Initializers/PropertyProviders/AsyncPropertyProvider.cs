@@ -14,6 +14,10 @@ public class AsyncPropertyProvider<TInput, TProperty> :
 {
     readonly IPropertyProvider<TInput, Task<TProperty?>> _provider;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="provider">The service provider.</param>
     public AsyncPropertyProvider(IPropertyProvider<TInput, Task<TProperty?>> provider)
     {
         _provider = provider;
@@ -62,6 +66,11 @@ public class AsyncPropertyProvider<TInput, TProperty, TTask> :
     readonly IPropertyConverter<TProperty, TTask> _converter;
     readonly IPropertyProvider<TInput, Task<TTask?>> _provider;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="provider">The service provider.</param>
+    /// <param name="converter">The converter value.</param>
     public AsyncPropertyProvider(IPropertyProvider<TInput, Task<TTask?>> provider, IPropertyConverter<TProperty, TTask> converter)
     {
         _provider = provider;

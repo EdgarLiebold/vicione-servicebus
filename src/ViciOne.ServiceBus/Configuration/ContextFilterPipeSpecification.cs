@@ -5,22 +5,38 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a context filter pipe specification implementation.
+/// </summary>
+/// <typeparam name="TContext">The t context type.</typeparam>
 public class ContextFilterPipeSpecification<TContext> :
     IPipeSpecification<TContext>
     where TContext : class, PipeContext
 {
     readonly Func<TContext, Task<bool>> _filter;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="filter">The filter value.</param>
     public ContextFilterPipeSpecification(Func<TContext, Task<bool>> filter)
     {
         _filter = filter;
     }
 
+    /// <summary>
+    /// Applies this specification to the target builder.
+    /// </summary>
+    /// <param name="builder">The builder value.</param>
     public void Apply(IPipeBuilder<TContext> builder)
     {
         builder.AddFilter(new ContextFilter<TContext>(_filter));
     }
 
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (_filter == null)

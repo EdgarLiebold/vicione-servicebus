@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using ViciOne.ServiceBus.Transports;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides extension methods for send headers.
+/// </summary>
 public static class SendHeadersExtensions
 {
     /// <summary>

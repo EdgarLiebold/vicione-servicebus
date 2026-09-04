@@ -17,12 +17,19 @@ public sealed class MetricOperation
         _complete = complete ?? throw new ArgumentNullException(nameof(complete));
     }
 
+    /// <summary>
+    /// Performs the record exception operation.
+    /// </summary>
+    /// <param name="exception">The exception associated with the operation.</param>
     public void RecordException(Exception exception)
     {
         ArgumentNullException.ThrowIfNull(exception);
         Interlocked.CompareExchange(ref _exception, exception, null);
     }
 
+    /// <summary>
+    /// Performs the complete operation.
+    /// </summary>
     public void Complete()
     {
         Action<Exception?>? complete = Interlocked.Exchange(ref _complete, null);

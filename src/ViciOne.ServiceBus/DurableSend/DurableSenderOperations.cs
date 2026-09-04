@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.ProviderAbstractions;
+using ViciOne.ServiceBus.Providers.Persistence;
 
-namespace ViciOne.ServiceBus.DurableSend;
+namespace ViciOne.ServiceBus.Operations;
 
 internal sealed class DurableSenderOperations<TBus> : IDurableSenderOperations<TBus>
     where TBus : class, IBus

@@ -137,7 +137,7 @@ public sealed class ResourceCacheConcurrencyTests
         Assert.Same(expected, observed);
         await Assert.ThrowsAsync<KeyNotFoundException>(async () =>
             await index.GetAsync("one", TestContext.Current.CancellationToken));
-        Assert.Empty(await cache.GetValuesAsync(TestContext.Current.CancellationToken));
+        Assert.Empty(cache.GetValues(TestContext.Current.CancellationToken));
         Assert.Equal(0, cache.Statistics.Count);
         Assert.Equal(0, cache.Statistics.PendingCreations);
     }
@@ -206,7 +206,7 @@ public sealed class ResourceCacheConcurrencyTests
         await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.GetAsync("one", TestContext.Current.CancellationToken));
         Assert.Equal(0, cache.Statistics.Count);
         Assert.Equal(0, cache.Statistics.PendingCreations);
-        Assert.Empty(await cache.GetValuesAsync(TestContext.Current.CancellationToken));
+        Assert.Empty(cache.GetValues(TestContext.Current.CancellationToken));
     }
 
     [Fact]

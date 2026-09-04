@@ -1,7 +1,7 @@
 using System;
 using ViciOne.ServiceBus.Contracts;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
 /// <summary>
 /// The request settings include the address of the request handler, as well as the timeout to use

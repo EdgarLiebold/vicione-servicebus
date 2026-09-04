@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using ViciOne.ServiceBus;
-using ViciOne.ServiceBus.DurableSend;
 
 #nullable enable
 
 namespace Microsoft.Extensions.DependencyInjection;
 
+/// <summary>
+/// Provides extension methods for durable sender health check.
+/// </summary>
 public static class DurableSenderHealthCheckExtensions
 {
     /// <summary>

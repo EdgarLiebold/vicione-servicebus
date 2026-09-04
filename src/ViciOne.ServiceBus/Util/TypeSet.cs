@@ -13,6 +13,11 @@ public class TypeSet
     readonly IEnumerable<AssemblyScanTypeInfo> _allTypes;
     readonly Func<Type, bool>? _filter = null!;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="allTypes">The all types value.</param>
+    /// <param name="filter">The filter value.</param>
     public TypeSet(IEnumerable<AssemblyScanTypeInfo> allTypes, Func<Type, bool>? filter = null)
     {
         _allTypes = allTypes;

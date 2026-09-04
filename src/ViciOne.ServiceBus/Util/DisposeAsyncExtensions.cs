@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Util;
 
+/// <summary>
+/// Provides extension methods for dispose async.
+/// </summary>
 public static class DisposeAsyncExtensions
 {
     /// <summary>

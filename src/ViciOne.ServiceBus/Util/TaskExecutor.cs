@@ -48,6 +48,10 @@ public sealed class TaskExecutor :
         _workers = workers.Length == 1 ? workers[0] : Task.WhenAll(workers);
     }
 
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public async ValueTask DisposeAsync()
     {
         if (Interlocked.CompareExchange(ref _lifecycleState, 1, 0) == 0)
@@ -57,6 +61,12 @@ public sealed class TaskExecutor :
         Volatile.Write(ref _lifecycleState, 2);
     }
 
+    /// <summary>
+    /// Performs the execute operation.
+    /// </summary>
+    /// <param name="method">The method value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task ExecuteAsync(Action method, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(method);
@@ -68,6 +78,12 @@ public sealed class TaskExecutor :
         }, cancellationToken);
     }
 
+    /// <summary>
+    /// Performs the execute operation.
+    /// </summary>
+    /// <param name="method">The method value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task ExecuteAsync(Func<Task> method, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(method);
@@ -77,12 +93,25 @@ public sealed class TaskExecutor :
         await item.Completed.ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Performs the execute value task operation.
+    /// </summary>
+    /// <param name="method">The method value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task ExecuteValueTaskAsync(Func<ValueTask> method, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(method);
         return ExecuteAsync(async () => await method().ConfigureAwait(false), cancellationToken);
     }
 
+    /// <summary>
+    /// Performs the execute operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="method">The method value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<T> ExecuteAsync<T>(Func<T> method, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(method);
@@ -90,6 +119,13 @@ public sealed class TaskExecutor :
         return ExecuteAsync(() => Task.FromResult(method()), cancellationToken);
     }
 
+    /// <summary>
+    /// Performs the execute operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="method">The method value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task<T> ExecuteAsync<T>(Func<Task<T>> method, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(method);
@@ -99,6 +135,13 @@ public sealed class TaskExecutor :
         return await item.Completed.ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Performs the execute value task operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="method">The method value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<T> ExecuteValueTaskAsync<T>(Func<ValueTask<T>> method, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(method);
@@ -134,6 +177,12 @@ public sealed class TaskExecutor :
         await EnqueueCoreAsync(new QueuedWorkItem(method, cancellationToken), cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Performs the enqueue value task operation.
+    /// </summary>
+    /// <param name="method">The method value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task EnqueueValueTaskAsync(Func<ValueTask> method, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(method);

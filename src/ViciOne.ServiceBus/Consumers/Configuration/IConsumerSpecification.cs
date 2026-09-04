@@ -9,6 +9,11 @@ public interface IConsumerSpecification<TConsumer> :
     ISpecification
     where TConsumer : class
 {
+    /// <summary>
+    /// Gets message specification.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     IConsumerMessageSpecification<TConsumer, T> GetMessageSpecification<T>()
         where T : class;
 

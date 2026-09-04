@@ -7,21 +7,57 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Util;
 
+/// <summary>
+/// Provides a request rate algorithm implementation.
+/// </summary>
 public class RequestRateAlgorithm :
     IDisposable
 {
+    /// <summary>
+    /// Represents the method that handles group callback.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="TKey">The t key type.</typeparam>
+    /// <param name="results">The results value.</param>
+    /// <returns>The result of the operation.</returns>
     public delegate IEnumerable<IGrouping<TKey, T>> GroupCallback<T, out TKey>(IEnumerable<T> results);
 
 
+    /// <summary>
+    /// Represents the method that handles order callback.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="results">The results value.</param>
+    /// <returns>The result of the operation.</returns>
     public delegate IEnumerable<T> OrderCallback<T>(IEnumerable<T> results);
 
 
+    /// <summary>
+    /// Represents the method that handles request callback.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="resultLimit">The result limit value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public delegate Task<IEnumerable<T>> RequestCallback<T>(int resultLimit, CancellationToken cancellationToken);
 
 
+    /// <summary>
+    /// Represents the method that handles request callback.
+    /// </summary>
+    /// <param name="resultLimit">The result limit value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public delegate Task<int> RequestCallback(int resultLimit, CancellationToken cancellationToken);
 
 
+    /// <summary>
+    /// Represents the method that handles result callback.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="result">The result value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public delegate Task ResultCallback<in T>(T result, CancellationToken cancellationToken);
 
 
@@ -49,6 +85,11 @@ public class RequestRateAlgorithm :
     int _rateLimit;
     int _requestCount;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="options">The options value.</param>
+    /// <param name="timeProvider">The time provider value.</param>
     public RequestRateAlgorithm(RequestRateAlgorithmOptions options, TimeProvider? timeProvider = null)
     {
         if (options.PrefetchCount == 0)
@@ -108,6 +149,9 @@ public class RequestRateAlgorithm :
 
     int ActiveResultCount => _tasks.Count;
 
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
     public void Dispose()
     {
         if (_disposed)
@@ -321,6 +365,11 @@ public class RequestRateAlgorithm :
         return count;
     }
 
+    /// <summary>
+    /// Performs the begin request operation.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task<ActiveRequest> BeginRequestAsync(CancellationToken cancellationToken = default)
     {
         try
@@ -418,6 +467,12 @@ public class RequestRateAlgorithm :
         _requestSemaphore.Release();
     }
 
+    /// <summary>
+    /// Performs the change rate limit operation.
+    /// </summary>
+    /// <param name="newRateLimit">The new rate limit value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task ChangeRateLimitAsync(int newRateLimit, CancellationToken cancellationToken = default)
     {
         if (newRateLimit < 1)

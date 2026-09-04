@@ -4,12 +4,23 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Observables;
 
+/// <summary>
+/// Provides a retry fault observer cache implementation.
+/// </summary>
 public class RetryFaultObserverCache
 {
     readonly ConcurrentDictionary<Type, Lazy<IRetryFaultObserver>> _types = new ConcurrentDictionary<Type, Lazy<IRetryFaultObserver>>();
 
     IRetryFaultObserver this[Type type] => _types.GetOrAdd(type, CreateTypeConverter).Value;
 
+    /// <summary>
+    /// Performs the retry fault operation.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <param name="contextType">The context type value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static Task RetryFaultAsync(IRetryObserver observer, RetryContext context, Type contextType, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Cached.Converters.Value[contextType].RetryFaultAsync(observer, context);

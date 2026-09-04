@@ -383,19 +383,49 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
 
 internal enum DurableSendDeliveryOutcome
 {
+    /// <summary>
+    /// Indicates delivered.
+    /// </summary>
     Delivered = 0,
+    /// <summary>
+    /// Indicates retry scheduled.
+    /// </summary>
     RetryScheduled = 1,
+    /// <summary>
+    /// Indicates quarantined.
+    /// </summary>
     Quarantined = 2,
+    /// <summary>
+    /// Indicates cancelled.
+    /// </summary>
     Cancelled = 3,
+    /// <summary>
+    /// Indicates state persistence failed.
+    /// </summary>
     StatePersistenceFailed = 4,
+    /// <summary>
+    /// Indicates awaiting consumer completion.
+    /// </summary>
     AwaitingConsumerCompletion = 5,
 }
 
 internal enum DurableSendAdmissionFailure
 {
+    /// <summary>
+    /// Indicates capacity exceeded.
+    /// </summary>
     CapacityExceeded = 0,
+    /// <summary>
+    /// Indicates identity conflict.
+    /// </summary>
     IdentityConflict = 1,
+    /// <summary>
+    /// Indicates contract not registered.
+    /// </summary>
     ContractNotRegistered = 2,
+    /// <summary>
+    /// Indicates store failure.
+    /// </summary>
     StoreFailure = 3,
 }
 

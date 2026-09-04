@@ -1,6 +1,6 @@
 using System;
 
-namespace ViciOne.ServiceBus.InMemoryTransport;
+namespace ViciOne.ServiceBus.Providers.Transports;
 
 /// <summary>
 /// Process-local durable-send state carried by the InMemory transport. This object is a pipeline payload only and is

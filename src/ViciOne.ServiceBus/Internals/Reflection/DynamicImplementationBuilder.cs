@@ -21,13 +21,25 @@ internal class DynamicImplementationBuilder :
 
     readonly ConcurrentDictionary<string, ModuleBuilder> _moduleBuilders;
     readonly string _proxyNamespaceSuffix = "ViciOne.ServiceBus.DynamicInternal" + Guid.NewGuid().ToString("N");
+    readonly ConcurrentDictionary<Type, Lazy<Type>> _busProxyTypes;
     readonly ConcurrentDictionary<Type, Lazy<Type>> _proxyTypes;
+
+    internal static DynamicImplementationBuilder Instance { get; } = new();
 
     public DynamicImplementationBuilder()
     {
         _moduleBuilders = new ConcurrentDictionary<string, ModuleBuilder>();
 
+        _busProxyTypes = new ConcurrentDictionary<Type, Lazy<Type>>();
         _proxyTypes = new ConcurrentDictionary<Type, Lazy<Type>>();
+    }
+
+    internal Type GetBusInstanceType(Type interfaceType)
+    {
+        ArgumentNullException.ThrowIfNull(interfaceType);
+
+        return _busProxyTypes.GetOrAdd(interfaceType, static (type, builder) =>
+            new Lazy<Type>(() => builder.CreateBusImplementation(type)), this).Value;
     }
 
     public Type GetImplementationType(Type interfaceType)
@@ -48,6 +60,95 @@ internal class DynamicImplementationBuilder :
         PropertyInfo[] properties = GetContractProperties(interfaceType);
 
         return GetModuleBuilderForType(interfaceType, moduleBuilder => CreateTypeFromInterface(moduleBuilder, interfaceType, properties));
+    }
+
+    Type CreateBusImplementation(Type interfaceType)
+    {
+        if (!interfaceType.IsInterface)
+            throw new ArgumentException("Bus instance types can only be created for interfaces: " + interfaceType.Name, nameof(interfaceType));
+
+        if (interfaceType.IsGenericType)
+            throw new ArgumentException("Bus instance types cannot be generic: " + interfaceType.Name, nameof(interfaceType));
+
+        if (!interfaceType.ImplementsInterface<IBus>())
+            throw new ArgumentException("Bus instance types must include the IBus interface: " + interfaceType.Name, nameof(interfaceType));
+
+        return GetModuleBuilderForType(interfaceType, moduleBuilder => CreateBusTypeFromInterface(moduleBuilder, interfaceType));
+    }
+
+    static Type CreateBusTypeFromInterface(ModuleBuilder builder, Type interfaceType)
+    {
+        string classTypeName = interfaceType.Name.StartsWith("I", StringComparison.Ordinal)
+            ? interfaceType.Name[1..]
+            : interfaceType.Name + "Instance";
+        string? ns = interfaceType.IsNested && interfaceType.DeclaringType != null
+            ? interfaceType.DeclaringType.Namespace
+            : interfaceType.Namespace;
+        if (ns != null)
+            ns += ".";
+
+        string typeName = "ViciOne.ServiceBus.BusInstances." +
+            (interfaceType.IsNested && interfaceType.DeclaringType != null
+                ? $"{ns}{interfaceType.DeclaringType.Name}+{classTypeName}"
+                : $"{ns}{classTypeName}");
+
+        try
+        {
+            Type parentType = typeof(BusInstance<>).MakeGenericType(interfaceType);
+            TypeBuilder typeBuilder = builder.DefineType(
+                typeName,
+                TypeAttributes.Class | TypeAttributes.Public | TypeAttributes.Sealed,
+                parentType,
+                [interfaceType]);
+
+            Type[] parameterTypes = [typeof(IBusControl)];
+            ConstructorInfo parentConstructor = parentType.GetConstructor(
+                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+                    null,
+                    parameterTypes,
+                    null)
+                ?? throw new InvalidOperationException($"The bus instance base type '{parentType}' does not expose the required constructor.");
+            ConstructorBuilder constructorBuilder = typeBuilder.DefineConstructor(
+                MethodAttributes.Public,
+                CallingConventions.Standard,
+                parameterTypes);
+            constructorBuilder.DefineParameter(1, ParameterAttributes.None, "busControl");
+
+            ILGenerator constructorIl = constructorBuilder.GetILGenerator();
+            constructorIl.Emit(OpCodes.Ldarg_0);
+            constructorIl.Emit(OpCodes.Ldarg_1);
+            constructorIl.Emit(OpCodes.Call, parentConstructor);
+            constructorIl.Emit(OpCodes.Ret);
+
+            Type[] extraInterfaces = interfaceType.GetAllInterfaces().Except(typeof(IBus).GetAllInterfaces()).ToArray();
+            foreach (PropertyInfo property in interfaceType.GetReadableInstanceProperties())
+            {
+                if (!extraInterfaces.Contains(property.DeclaringType))
+                    continue;
+
+                FieldBuilder fieldBuilder = typeBuilder.DefineField(
+                    "field_" + property.Name,
+                    property.PropertyType,
+                    FieldAttributes.Private);
+                PropertyBuilder propertyBuilder = typeBuilder.DefineProperty(
+                    property.Name,
+                    property.Attributes | PropertyAttributes.HasDefault,
+                    property.PropertyType,
+                    null);
+                MethodBuilder getMethod = GetGetMethodBuilder(property, typeBuilder, fieldBuilder);
+                MethodBuilder setMethod = GetSetMethodBuilder(property, typeBuilder, fieldBuilder);
+                propertyBuilder.SetGetMethod(getMethod);
+                propertyBuilder.SetSetMethod(setMethod);
+            }
+
+            return typeBuilder.CreateTypeInfo().AsType();
+        }
+        catch (Exception exception)
+        {
+            throw new InvalidOperationException(
+                $"Exception creating bus instance ({typeName}) for {TypeCache.GetShortName(interfaceType)}",
+                exception);
+        }
     }
 
     static Type CreateTypeFromInterface(ModuleBuilder builder, Type interfaceType, IEnumerable<PropertyInfo> properties)

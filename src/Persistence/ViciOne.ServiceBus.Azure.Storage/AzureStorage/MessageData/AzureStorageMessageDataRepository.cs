@@ -14,6 +14,9 @@ using Azure.Storage.Blobs.Specialized;
 #nullable enable annotations
 namespace ViciOne.ServiceBus.AzureStorage.MessageData;
 
+/// <summary>
+/// Provides an azure storage message data repository implementation.
+/// </summary>
 public class AzureStorageMessageDataRepository :
     IMessageDataRepository,
     IBusObserver
@@ -23,33 +26,82 @@ public class AzureStorageMessageDataRepository :
     readonly bool _compress;
     readonly TimeProvider _timeProvider;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="connectionString">The connection string value.</param>
+    /// <param name="containerName">The container name value.</param>
+    /// <param name="compress">The compress value.</param>
+    /// <param name="timeProvider">The time provider value.</param>
     public AzureStorageMessageDataRepository(string connectionString, string containerName, bool compress = false, TimeProvider? timeProvider = null)
         : this(new BlobServiceClient(connectionString), containerName, compress, timeProvider)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="serviceUri">The service uri value.</param>
+    /// <param name="containerName">The container name value.</param>
+    /// <param name="accountName">The account name value.</param>
+    /// <param name="accountKey">The account key value.</param>
+    /// <param name="compress">The compress value.</param>
+    /// <param name="timeProvider">The time provider value.</param>
     public AzureStorageMessageDataRepository(Uri serviceUri, string containerName, string accountName, string accountKey, bool compress = false,
         TimeProvider? timeProvider = null)
         : this(new BlobServiceClient(serviceUri, new StorageSharedKeyCredential(accountName, accountKey)), containerName, compress, timeProvider)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="serviceUri">The service uri value.</param>
+    /// <param name="containerName">The container name value.</param>
+    /// <param name="signature">The signature value.</param>
+    /// <param name="compress">The compress value.</param>
+    /// <param name="timeProvider">The time provider value.</param>
     public AzureStorageMessageDataRepository(Uri serviceUri, string containerName, string signature, bool compress = false, TimeProvider? timeProvider = null)
         : this(new BlobServiceClient(serviceUri, new AzureSasCredential(signature)), containerName, compress, timeProvider)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="serviceUri">The service uri value.</param>
+    /// <param name="containerName">The container name value.</param>
+    /// <param name="tenantId">The tenant id value.</param>
+    /// <param name="clientId">The client id value.</param>
+    /// <param name="clientSecret">The client secret value.</param>
+    /// <param name="compress">The compress value.</param>
+    /// <param name="timeProvider">The time provider value.</param>
     public AzureStorageMessageDataRepository(Uri serviceUri, string containerName, string tenantId, string clientId, string clientSecret,
         bool compress = false, TimeProvider? timeProvider = null)
         : this(new BlobServiceClient(serviceUri, new ClientSecretCredential(tenantId, clientId, clientSecret)), containerName, compress, timeProvider)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="client">The client value.</param>
+    /// <param name="containerName">The container name value.</param>
+    /// <param name="compress">The compress value.</param>
+    /// <param name="timeProvider">The time provider value.</param>
     public AzureStorageMessageDataRepository(BlobServiceClient client, string containerName, bool compress = false, TimeProvider? timeProvider = null)
         : this(client, containerName, new NewIdBlobNameGenerator(), compress, timeProvider)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="client">The client value.</param>
+    /// <param name="containerName">The container name value.</param>
+    /// <param name="nameGenerator">The name generator value.</param>
+    /// <param name="compress">The compress value.</param>
+    /// <param name="timeProvider">The time provider value.</param>
     public AzureStorageMessageDataRepository(BlobServiceClient client, string containerName, IBlobNameGenerator nameGenerator, bool compress = false,
         TimeProvider? timeProvider = null)
     {
@@ -59,19 +111,32 @@ public class AzureStorageMessageDataRepository :
         _timeProvider = timeProvider ?? TimeProvider.System;
     }
 
+    /// <summary>
+    /// Performs the post create operation.
+    /// </summary>
+    /// <param name="bus">The bus value.</param>
     public void PostCreate(IBus bus)
     {
     }
 
+    /// <summary>
+    /// Creates faulted.
+    /// </summary>
+    /// <param name="exception">The exception associated with the operation.</param>
     public void CreateFaulted(Exception exception)
     {
     }
 
+    /// <summary>
+    /// Performs the pre start operation.
+    /// </summary>
+    /// <param name="bus">The bus value.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task PreStartAsync(IBus bus)
     {
         try
         {
-            Azure.Response<bool> containerExists = await _container.ExistsAsync().ConfigureAwait(false);
+            global::Azure.Response<bool> containerExists = await _container.ExistsAsync().ConfigureAwait(false);
             if (!containerExists.Value)
             {
                 try
@@ -90,31 +155,65 @@ public class AzureStorageMessageDataRepository :
         }
     }
 
+    /// <summary>
+    /// Performs the post start operation.
+    /// </summary>
+    /// <param name="bus">The bus value.</param>
+    /// <param name="busReady">The bus ready value.</param>
+    /// <returns>The result of the operation.</returns>
     public Task PostStartAsync(IBus bus, Task<BusReady> busReady)
     {
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Starts faulted.
+    /// </summary>
+    /// <param name="bus">The bus value.</param>
+    /// <param name="exception">The exception associated with the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task StartFaultedAsync(IBus bus, Exception exception)
     {
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Performs the pre stop operation.
+    /// </summary>
+    /// <param name="bus">The bus value.</param>
+    /// <returns>The result of the operation.</returns>
     public Task PreStopAsync(IBus bus)
     {
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Performs the post stop operation.
+    /// </summary>
+    /// <param name="bus">The bus value.</param>
+    /// <returns>The result of the operation.</returns>
     public Task PostStopAsync(IBus bus)
     {
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Stops faulted.
+    /// </summary>
+    /// <param name="bus">The bus value.</param>
+    /// <param name="exception">The exception associated with the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task StopFaultedAsync(IBus bus, Exception exception)
     {
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Performs the get operation.
+    /// </summary>
+    /// <param name="address">The address value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task<Stream> GetAsync(Uri address, CancellationToken cancellationToken = default)
     {
         var blobName = new BlobUriBuilder(address).BlobName;
@@ -132,6 +231,13 @@ public class AzureStorageMessageDataRepository :
         }
     }
 
+    /// <summary>
+    /// Performs the put operation.
+    /// </summary>
+    /// <param name="stream">The stream value.</param>
+    /// <param name="timeToLive">The time to live value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task<Uri> PutAsync(Stream stream, TimeSpan? timeToLive = default, CancellationToken cancellationToken = default)
     {
         var blobName = _nameGenerator.GenerateBlobName();

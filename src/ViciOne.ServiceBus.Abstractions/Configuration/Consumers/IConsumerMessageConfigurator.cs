@@ -1,7 +1,11 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for consumer message configurator.
+/// </summary>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public interface IConsumerMessageConfigurator<TMessage> :
     IPipeConfigurator<ConsumeContext<TMessage>>
     where TMessage : class
@@ -9,6 +13,11 @@ public interface IConsumerMessageConfigurator<TMessage> :
 }
 
 
+/// <summary>
+/// Defines the contract for consumer message configurator.
+/// </summary>
+/// <typeparam name="TConsumer">The t consumer type.</typeparam>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public interface IConsumerMessageConfigurator<TConsumer, TMessage> :
     IPipeConfigurator<ConsumerConsumeContext<TConsumer, TMessage>>
     where TConsumer : class

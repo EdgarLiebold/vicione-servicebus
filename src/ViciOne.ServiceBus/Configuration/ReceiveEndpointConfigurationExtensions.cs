@@ -1,7 +1,10 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for receive endpoint configuration.
+/// </summary>
 public static class ReceiveEndpointConfigurationExtensions
 {
     /// <summary>

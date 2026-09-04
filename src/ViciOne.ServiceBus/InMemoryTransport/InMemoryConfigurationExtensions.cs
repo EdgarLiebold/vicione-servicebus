@@ -6,8 +6,11 @@ using ViciOne.ServiceBus.InMemoryTransport;
 using ViciOne.ServiceBus.InMemoryTransport.Configuration;
 using ViciOne.ServiceBus.Transports;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for in memory configuration.
+/// </summary>
 public static class InMemoryConfigurationExtensions
 {
     /// <summary>
@@ -54,9 +57,9 @@ public static class InMemoryConfigurationExtensions
         Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator>? configure = null)
     {
         configurator.SetBusFactory(new InMemoryRegistrationBusFactory(baseAddress, configure));
-        configurator.TryAddSingleton<IDurableSendDispatcher<IBus>, InMemoryDurableSendDispatcher<IBus>>();
+        configurator.Services.TryAddSingleton<IDurableSendDispatcher<IBus>, InMemoryDurableSendDispatcher<IBus>>();
 
-        configurator.TryAddSingleton(provider =>
+        configurator.Services.TryAddSingleton(provider =>
         {
             var delayProvider = provider.GetRequiredService<Bind<IBus, IBusInstance>>().Value as IInMemoryDelayProvider;
 
@@ -87,9 +90,9 @@ public static class InMemoryConfigurationExtensions
         where TBus : class, IBus
     {
         configurator.SetBusFactory(new InMemoryRegistrationBusFactory(baseAddress, configure));
-        configurator.TryAddSingleton<IDurableSendDispatcher<TBus>, InMemoryDurableSendDispatcher<TBus>>();
+        configurator.Services.TryAddSingleton<IDurableSendDispatcher<TBus>, InMemoryDurableSendDispatcher<TBus>>();
 
-        AddDelayProvider<TBus>(configurator);
+        AddDelayProvider<TBus>(configurator.Services);
     }
 
     static void AddDelayProvider<TBus>(IServiceCollection services)

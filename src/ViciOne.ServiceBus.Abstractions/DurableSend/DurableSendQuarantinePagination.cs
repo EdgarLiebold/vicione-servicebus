@@ -1,19 +1,22 @@
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 
 #nullable enable
 
-namespace ViciOne.ServiceBus.ProviderAbstractions;
+namespace ViciOne.ServiceBus.Providers.Persistence;
 /// <summary>Canonical seek-token codec shared by durable persistence providers.</summary>
-[EditorBrowsable(EditorBrowsableState.Never)]
 public static class DurableSendQuarantinePagination
 {
     private const byte Version = 1;
     private const int TokenBytes = 25;
 
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <param name="query">The query value.</param>
+    /// <returns>The result of the operation.</returns>
     public static DurableSendQuarantineSeek Validate(DurableSendQuarantineQuery query)
     {
         ArgumentNullException.ThrowIfNull(query);
@@ -23,6 +26,12 @@ public static class DurableSendQuarantinePagination
             : Decode(query.ContinuationToken);
     }
 
+    /// <summary>
+    /// Creates page.
+    /// </summary>
+    /// <param name="fetchedEntries">The fetched entries value.</param>
+    /// <param name="pageSize">The page size value.</param>
+    /// <returns>The result of the operation.</returns>
     public static DurableSendQuarantinePage CreatePage(
         IEnumerable<DurableSendQuarantineEntry> fetchedEntries,
         int pageSize)
@@ -38,6 +47,11 @@ public static class DurableSendQuarantinePagination
         return new DurableSendQuarantinePage(entries, continuation);
     }
 
+    /// <summary>
+    /// Performs the encode operation.
+    /// </summary>
+    /// <param name="seek">The seek value.</param>
+    /// <returns>The result of the operation.</returns>
     public static string Encode(DurableSendQuarantineSeek seek)
     {
         if (!seek.HasValue)
@@ -82,8 +96,10 @@ public static class DurableSendQuarantinePagination
 }
 
 /// <summary>Decoded provider seek. Ordering is QuarantinedAt descending, then DurableSendId ascending.</summary>
-[EditorBrowsable(EditorBrowsableState.Never)]
 public readonly record struct DurableSendQuarantineSeek(DateTimeOffset QuarantinedAt, DurableSendId Id)
 {
+    /// <summary>
+    /// Gets the has value value.
+    /// </summary>
     public bool HasValue => Id.Value != Guid.Empty;
 }

@@ -3,10 +3,21 @@ using Azure.Data.Tables;
 using ViciOne.ServiceBus.AzureTable;
 using ViciOne.ServiceBus.AzureTable.Saga;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Azure.Table;
 
+/// <summary>
+/// Provides extension methods for azure table job service configuration.
+/// </summary>
 public static class AzureTableJobServiceConfigurationExtensions
 {
+    /// <summary>
+    /// Configures azure table saga repository for the current pipeline.
+    /// </summary>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="contextFactory">The context factory value.</param>
+    /// <param name="jobTypeKeyFormatter">The job type key formatter value.</param>
+    /// <param name="jobKeyFormatter">The job key formatter value.</param>
+    /// <param name="jobAttemptKeyFormatter">The job attempt key formatter value.</param>
     public static void UseAzureTableSagaRepository(this IJobServiceConfigurator configurator,
         Func<TableClient> contextFactory,
         ISagaKeyFormatter<JobTypeSaga> jobTypeKeyFormatter,
@@ -26,6 +37,11 @@ public static class AzureTableJobServiceConfigurationExtensions
         configurator.JobAttemptRepository = AzureTableSagaRepository<JobAttemptSaga>.Create(contextFactory, jobAttemptKeyFormatter);
     }
 
+    /// <summary>
+    /// Configures azure table saga repository for the current pipeline.
+    /// </summary>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="contextFactory">The context factory value.</param>
     public static void UseAzureTableSagaRepository(this IJobServiceConfigurator configurator,
         Func<TableClient> contextFactory)
     {

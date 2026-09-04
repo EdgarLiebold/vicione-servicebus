@@ -1,8 +1,13 @@
 using System;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
+/// <summary>
+/// Defines the contract for missing instance configurator.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public interface IMissingInstanceConfigurator<TSaga, TMessage>
     where TSaga : SagaStateMachineInstance
     where TMessage : class

@@ -6,6 +6,10 @@ using Microsoft.Extensions.Options;
 #nullable enable
 namespace ViciOne.ServiceBus.Middleware.Outbox;
 
+/// <summary>
+/// Provides a bus outbox notification implementation.
+/// </summary>
+/// <typeparam name="TScope">The t scope type.</typeparam>
 public class BusOutboxNotification<TScope> :
     IBusOutboxNotification<TScope>
     where TScope : class
@@ -16,6 +20,11 @@ public class BusOutboxNotification<TScope> :
     CancellationTokenSource? _deliverySignal;
     bool _deliveryPending;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="options">The options value.</param>
+    /// <param name="timeProvider">The time provider value.</param>
     public BusOutboxNotification(IOptions<OutboxDeliveryServiceOptions<TScope>> options, TimeProvider timeProvider)
     {
         ArgumentNullException.ThrowIfNull(options);
@@ -23,6 +32,11 @@ public class BusOutboxNotification<TScope> :
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
     }
 
+    /// <summary>
+    /// Performs the wait for delivery operation.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task WaitForDeliveryAsync(CancellationToken cancellationToken)
     {
         CancellationTokenSource signal;
@@ -69,6 +83,9 @@ public class BusOutboxNotification<TScope> :
         }
     }
 
+    /// <summary>
+    /// Performs the delivered operation.
+    /// </summary>
     public void Delivered()
     {
         lock (_lock)

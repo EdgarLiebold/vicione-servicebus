@@ -18,6 +18,10 @@ public class SanitizedRoutingSlip :
 {
     readonly SerializerContext _serializerContext;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     [SuppressMessage("ReSharper", "ConstantNullCoalescingCondition")]
     public SanitizedRoutingSlip(ConsumeContext<RoutingSlip> context)
     {
@@ -51,15 +55,44 @@ public class SanitizedRoutingSlip :
             .ToList();
     }
 
+    /// <summary>
+    /// Gets or sets the tracking number value.
+    /// </summary>
     public Guid TrackingNumber { get; private set; }
+    /// <summary>
+    /// Gets or sets the create timestamp value.
+    /// </summary>
     public DateTimeOffset CreateTimestamp { get; private set; }
+    /// <summary>
+    /// Gets or sets the itinerary value.
+    /// </summary>
     public IList<Activity> Itinerary { get; private set; }
+    /// <summary>
+    /// Gets or sets the activity logs value.
+    /// </summary>
     public IList<ActivityLog> ActivityLogs { get; private set; }
+    /// <summary>
+    /// Gets or sets the compensate logs value.
+    /// </summary>
     public IList<CompensateLog> CompensateLogs { get; private set; }
+    /// <summary>
+    /// Gets or sets the variables value.
+    /// </summary>
     public IDictionary<string, object> Variables { get; private set; }
+    /// <summary>
+    /// Gets or sets the activity exceptions value.
+    /// </summary>
     public IList<ActivityException> ActivityExceptions { get; private set; }
+    /// <summary>
+    /// Gets or sets the subscriptions value.
+    /// </summary>
     public IList<Subscription> Subscriptions { get; private set; }
 
+    /// <summary>
+    /// Gets activity arguments.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     public T GetActivityArguments<T>()
         where T : class
     {
@@ -85,6 +118,11 @@ public class SanitizedRoutingSlip :
         }
     }
 
+    /// <summary>
+    /// Gets compensate log data.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     public T GetCompensateLogData<T>()
         where T : class
     {

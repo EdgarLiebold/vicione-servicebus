@@ -7,6 +7,9 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Events;
 
+/// <summary>
+/// Provides a fault exception info implementation.
+/// </summary>
 [Serializable]
 public sealed class FaultExceptionInfo : ExceptionInfo
 {
@@ -16,10 +19,17 @@ public sealed class FaultExceptionInfo : ExceptionInfo
     const int MaximumTextLength = 2048;
 
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public FaultExceptionInfo()
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="exception">The exception associated with the operation.</param>
     public FaultExceptionInfo(Exception exception)
         : this(exception, 0)
     {
@@ -52,16 +62,34 @@ public sealed class FaultExceptionInfo : ExceptionInfo
         Source = Limit(GetSource(reportedException), MaximumTextLength);
     }
 
+    /// <summary>
+    /// Gets or sets the exception type value.
+    /// </summary>
     public string ExceptionType { get; set; } = null!;
 
+    /// <summary>
+    /// Gets or sets the inner exception value.
+    /// </summary>
     public ExceptionInfo? InnerException { get; set; }
 
+    /// <summary>
+    /// Gets or sets the stack trace value.
+    /// </summary>
     public string StackTrace { get; set; } = null!;
 
+    /// <summary>
+    /// Gets or sets the message value.
+    /// </summary>
     public string Message { get; set; } = null!;
 
+    /// <summary>
+    /// Gets or sets the source value.
+    /// </summary>
     public string Source { get; set; } = null!;
 
+    /// <summary>
+    /// Gets or sets the data value.
+    /// </summary>
     public IDictionary<string, object>? Data { get; set; }
 
     static IDictionary? GetData(Exception exception)

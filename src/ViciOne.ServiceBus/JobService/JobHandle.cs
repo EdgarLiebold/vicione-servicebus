@@ -10,8 +10,14 @@ namespace ViciOne.ServiceBus.JobService;
 public interface JobHandle :
     IAsyncDisposable
 {
+    /// <summary>
+    /// Gets the job id value.
+    /// </summary>
     Guid JobId { get; }
 
+    /// <summary>
+    /// Gets the job task value.
+    /// </summary>
     Task JobTask { get; }
 
     /// <summary>

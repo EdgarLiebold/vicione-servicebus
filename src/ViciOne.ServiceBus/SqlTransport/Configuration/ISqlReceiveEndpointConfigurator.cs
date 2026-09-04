@@ -2,7 +2,7 @@ using System;
 using ViciOne.ServiceBus.SqlTransport;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Providers.Transports;
 
 /// <summary>
 /// Configure a database transport receive endpoint

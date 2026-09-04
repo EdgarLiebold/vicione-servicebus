@@ -10,14 +10,28 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.Serialization.JsonConverters;
 
+/// <summary>
+/// Provides a system text json message data converter implementation.
+/// </summary>
 public class SystemTextJsonMessageDataConverter :
     JsonConverterFactory
 {
+    /// <summary>
+    /// Determines whether the current value can convert.
+    /// </summary>
+    /// <param name="typeToConvert">The type to convert value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public override bool CanConvert(Type typeToConvert)
     {
         return typeToConvert.ClosesGenericType(typeof(MessageData<>));
     }
 
+    /// <summary>
+    /// Creates converter.
+    /// </summary>
+    /// <param name="typeToConvert">The type to convert value.</param>
+    /// <param name="options">The options value.</param>
+    /// <returns>The result of the operation.</returns>
     public override JsonConverter? CreateConverter(Type typeToConvert, JsonSerializerOptions options)
     {
         if (!typeToConvert.TryGetSingleClosedGenericArguments(typeof(MessageData<>), out Type[] types))

@@ -30,10 +30,11 @@ public sealed class ApplicationMessageTopologyTests
     public void RuntimeGlobalTopologyAndEndpointConventionCaches_AreNotPublicApi()
     {
         Type assemblyMarker = typeof(MessageCorrelation);
-        Type? globalTopology = assemblyMarker.Assembly.GetType("ViciOne.ServiceBus.GlobalTopology");
+        Type? globalTopology = assemblyMarker.Assembly.GetType("ViciOne.ServiceBus.Advanced.Topology.GlobalTopology");
 
         Assert.NotNull(globalTopology);
         Assert.False(globalTopology.IsPublic);
+        Assert.Null(assemblyMarker.Assembly.GetType("ViciOne.ServiceBus.GlobalTopology"));
         Assert.Null(assemblyMarker.Assembly.GetType("ViciOne.ServiceBus.IGlobalTopology"));
         Assert.Null(assemblyMarker.Assembly.GetType("ViciOne.ServiceBus.EndpointConventionCache"));
         Assert.Null(assemblyMarker.Assembly.GetType("ViciOne.ServiceBus.IEndpointConventionCache"));

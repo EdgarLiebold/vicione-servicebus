@@ -13,16 +13,29 @@ public class LastPipe<TContext> :
 {
     readonly IFilter<TContext> _filter;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="filter">The filter value.</param>
     public LastPipe(IFilter<TContext> filter)
     {
         _filter = filter;
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         _filter.Probe(context);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     [DebuggerStepThrough]
     public Task SendAsync(TContext context)
     {

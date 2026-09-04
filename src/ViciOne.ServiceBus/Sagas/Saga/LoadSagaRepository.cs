@@ -13,16 +13,30 @@ public class LoadSagaRepository<TSaga> :
 {
     readonly ILoadSagaRepositoryContextFactory<TSaga> _repositoryContextFactory;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="repositoryContextFactory">The repository context factory value.</param>
     public LoadSagaRepository(ILoadSagaRepositoryContextFactory<TSaga> repositoryContextFactory)
     {
         _repositoryContextFactory = repositoryContextFactory;
     }
 
+    /// <summary>
+    /// Performs the load operation.
+    /// </summary>
+    /// <param name="correlationId">The correlation id value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<TSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
         return _repositoryContextFactory.ExecuteAsync(context => context.LoadAsync(correlationId, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("loadSagaRepository");

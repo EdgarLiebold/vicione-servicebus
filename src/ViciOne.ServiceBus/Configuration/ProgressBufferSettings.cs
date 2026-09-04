@@ -1,12 +1,15 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 /// <summary>
 /// Specifies the settings for the progress buffer, which defers updating the job progress until the
 /// thresholds (steps or duration) have been reached.
 /// </summary>
 public class ProgressBufferSettings
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public ProgressBufferSettings()
     {
         UpdateLimit = 1000;

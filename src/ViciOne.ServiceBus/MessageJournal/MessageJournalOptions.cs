@@ -24,8 +24,14 @@ public sealed class MessageJournalOptions
         TimeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
     }
 
+    /// <summary>
+    /// Gets the write timeout value.
+    /// </summary>
     public TimeSpan WriteTimeout { get; }
 
+    /// <summary>
+    /// Gets the time provider value.
+    /// </summary>
     public TimeProvider TimeProvider { get; }
 
     /// <summary>

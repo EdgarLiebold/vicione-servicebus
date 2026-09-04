@@ -1,7 +1,11 @@
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Topology;
 
+/// <summary>
+/// Defines the contract for message topology.
+/// </summary>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public interface IMessageTopology<in TMessage>
     where TMessage : class
 {
@@ -17,6 +21,9 @@ public interface IMessageTopology<in TMessage>
 }
 
 
+/// <summary>
+/// Defines the contract for message topology.
+/// </summary>
 public interface IMessageTopology :
     IMessageTopologyConfigurationObserverConnector
 {

@@ -15,6 +15,9 @@ using Microsoft.CodeAnalysis.Simplification;
 
 namespace ViciOne.ServiceBus.Analyzers;
 
+/// <summary>
+/// Provides a message contract code fix provider implementation.
+/// </summary>
 [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MessageContractCodeFixProvider))]
 [Shared]
 public class MessageContractCodeFixProvider :
@@ -22,14 +25,26 @@ public class MessageContractCodeFixProvider :
 {
     const string Title = "Add missing properties";
 
+    /// <summary>
+    /// Gets the fixable diagnostic ids value.
+    /// </summary>
     public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MessageContractAnalyzer.MissingPropertiesRuleId);
 
+    /// <summary>
+    /// Gets fix all provider.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public sealed override FixAllProvider GetFixAllProvider()
     {
         // See https://github.com/dotnet/roslyn/blob/master/docs/analyzers/FixAllProvider.md for more information on Fix All Providers
         return WellKnownFixAllProviders.BatchFixer;
     }
 
+    /// <summary>
+    /// Performs the register code fixes operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
     {
         var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);

@@ -1,4 +1,4 @@
-namespace ViciOne.ServiceBus.Diagnostics;
+namespace ViciOne.ServiceBus;
 
 /// <summary>Controls whether ServiceBus diagnostics may render individual safe values.</summary>
 public enum MessagePayloadSensitivity

@@ -1,14 +1,21 @@
 using System.IO;
 using System.Text;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Serialization;
 
+/// <summary>
+/// Provides a string message body implementation.
+/// </summary>
 public class StringMessageBody :
     MessageBody
 {
     readonly string _body;
     byte[]? _bytes;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="body">The body value.</param>
     public StringMessageBody(string body)
     {
         _body = body;
@@ -43,6 +50,10 @@ public class StringMessageBody :
             : [];
     }
 
+    /// <summary>
+    /// Gets string.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public string GetString()
     {
         return _body;

@@ -1,4 +1,4 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Providers.Persistence;
 
 /// <summary>Outcome of idempotent durable-send admission.</summary>
 public enum DurableSendAdmissionDisposition

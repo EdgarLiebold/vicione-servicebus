@@ -2,8 +2,11 @@ using System;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.SagaStateMachine;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
+/// <summary>
+/// Provides extension methods for then.
+/// </summary>
 public static class ThenExtensions
 {
     /// <summary>

@@ -7,6 +7,9 @@ using ViciOne.ServiceBus.RetryPolicies;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a consume context retry pipe specification implementation.
+/// </summary>
 public class ConsumeContextRetryPipeSpecification :
     ExceptionSpecification,
     IRetryConfigurator,
@@ -16,6 +19,10 @@ public class ConsumeContextRetryPipeSpecification :
     readonly RetryObservable _observers;
     RetryPolicyFactory _policyFactory = null!;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public ConsumeContextRetryPipeSpecification(CancellationToken cancellationToken = default)
     {
         _observers = new RetryObservable();
@@ -23,6 +30,10 @@ public class ConsumeContextRetryPipeSpecification :
         _cancellationToken = cancellationToken;
     }
 
+    /// <summary>
+    /// Applies this specification to the target builder.
+    /// </summary>
+    /// <param name="builder">The builder value.</param>
     public void Apply(IPipeBuilder<ConsumeContext> builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
@@ -37,12 +48,20 @@ public class ConsumeContextRetryPipeSpecification :
         builder.AddFilter(new RetryFilter<ConsumeContext>(contextRetryPolicy, _observers));
     }
 
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (_policyFactory == null)
             yield return this.Failure("RetryPolicy", "must not be null");
     }
 
+    /// <summary>
+    /// Sets retry policy.
+    /// </summary>
+    /// <param name="factory">The factory value.</param>
     public void SetRetryPolicy(RetryPolicyFactory factory)
     {
         _policyFactory = factory ?? throw new ArgumentNullException(nameof(factory));
@@ -57,6 +76,11 @@ public class ConsumeContextRetryPipeSpecification :
 }
 
 
+/// <summary>
+/// Provides a consume context retry pipe specification implementation.
+/// </summary>
+/// <typeparam name="TFilter">The t filter type.</typeparam>
+/// <typeparam name="TContext">The t context type.</typeparam>
 public class ConsumeContextRetryPipeSpecification<TFilter, TContext> :
     ExceptionSpecification,
     IRetryConfigurator,
@@ -69,6 +93,11 @@ public class ConsumeContextRetryPipeSpecification<TFilter, TContext> :
     readonly RetryObservable _observers;
     RetryPolicyFactory _policyFactory = null!;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="contextFactory">The context factory value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public ConsumeContextRetryPipeSpecification(Func<TFilter, IRetryPolicy, RetryContext?, TContext> contextFactory,
         CancellationToken cancellationToken = default)
     {
@@ -78,6 +107,10 @@ public class ConsumeContextRetryPipeSpecification<TFilter, TContext> :
         _cancellationToken = cancellationToken;
     }
 
+    /// <summary>
+    /// Applies this specification to the target builder.
+    /// </summary>
+    /// <param name="builder">The builder value.</param>
     public void Apply(IPipeBuilder<TFilter> builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
@@ -92,12 +125,20 @@ public class ConsumeContextRetryPipeSpecification<TFilter, TContext> :
         builder.AddFilter(new RetryFilter<TFilter>(contextRetryPolicy, _observers));
     }
 
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (_policyFactory == null)
             yield return this.Failure("RetryPolicy", "must not be null");
     }
 
+    /// <summary>
+    /// Sets retry policy.
+    /// </summary>
+    /// <param name="factory">The factory value.</param>
     public void SetRetryPolicy(RetryPolicyFactory factory)
     {
         _policyFactory = factory ?? throw new ArgumentNullException(nameof(factory));

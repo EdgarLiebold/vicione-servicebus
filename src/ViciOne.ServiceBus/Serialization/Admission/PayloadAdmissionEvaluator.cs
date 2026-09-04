@@ -1,11 +1,9 @@
 using System;
-using System.ComponentModel;
 
 #nullable enable
 
-namespace ViciOne.ServiceBus.Serialization;
+namespace ViciOne.ServiceBus.Advanced.Serialization;
 /// <summary>Evaluates only exact bytes already produced by the configured serializer.</summary>
-[EditorBrowsable(EditorBrowsableState.Never)]
 public sealed class PayloadAdmissionEvaluator<TBus> : IPayloadAdmissionEvaluator<TBus>
     where TBus : class, IBus
 {
@@ -23,6 +21,10 @@ public sealed class PayloadAdmissionEvaluator<TBus> : IPayloadAdmissionEvaluator
         _policy = (policy ?? throw new ArgumentNullException(nameof(policy))).Validate();
     }
 
+    /// <summary>
+    /// Creates serialized body buffer.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IPayloadSerializationBuffer CreateSerializedBodyBuffer()
         => CreateSerializedBodyBuffer(rejectionObserver: null);
 
@@ -34,6 +36,12 @@ public sealed class PayloadAdmissionEvaluator<TBus> : IPayloadAdmissionEvaluator
             PayloadAdmissionStage.SerializedBody,
             rejectionObserver);
 
+    /// <summary>
+    /// Performs the evaluate serialized body operation.
+    /// </summary>
+    /// <param name="serializedBody">The serialized body value.</param>
+    /// <param name="messageDataAvailable">The message data available value.</param>
+    /// <returns>The result of the operation.</returns>
     public PayloadAdmissionResult EvaluateSerializedBody(ReadOnlyMemory<byte> serializedBody, bool messageDataAvailable)
     {
         int bodyBytes = serializedBody.Length;
@@ -65,6 +73,10 @@ public sealed class PayloadAdmissionEvaluator<TBus> : IPayloadAdmissionEvaluator
         return new PayloadAdmissionResult(PayloadAdmissionDisposition.Inline, bodyBytes, warning);
     }
 
+    /// <summary>
+    /// Creates transport envelope buffer.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IPayloadSerializationBuffer CreateTransportEnvelopeBuffer()
         => CreateTransportEnvelopeBuffer(rejectionObserver: null);
 
@@ -76,6 +88,10 @@ public sealed class PayloadAdmissionEvaluator<TBus> : IPayloadAdmissionEvaluator
             PayloadAdmissionStage.TransportEnvelope,
             rejectionObserver);
 
+    /// <summary>
+    /// Validates transport envelope.
+    /// </summary>
+    /// <param name="serializedEnvelope">The serialized envelope value.</param>
     public void ValidateTransportEnvelope(ReadOnlyMemory<byte> serializedEnvelope)
     {
         int envelopeBytes = serializedEnvelope.Length;

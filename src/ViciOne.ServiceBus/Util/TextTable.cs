@@ -33,11 +33,19 @@ public class TextTable
     readonly List<object?[]> _rows;
     Type[] _columnTypes = null!;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="columns">The columns value.</param>
     public TextTable(params string[] columns)
         : this(new TextTableOptions { Columns = new List<string>(columns) })
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="options">The options value.</param>
     public TextTable(TextTableOptions options)
     {
         Options = options ?? throw new ArgumentNullException(nameof(options));
@@ -48,13 +56,26 @@ public class TextTable
         _columns = new List<object?>(options.Columns);
     }
 
+    /// <summary>
+    /// Gets the options value.
+    /// </summary>
     public TextTableOptions Options { get; }
 
+    /// <summary>
+    /// Adds columns to the configuration.
+    /// </summary>
+    /// <param name="names">The names value.</param>
+    /// <returns>The result of the operation.</returns>
     public TextTable AddColumns(params string[] names)
     {
         return AddColumns((IEnumerable<string>)names);
     }
 
+    /// <summary>
+    /// Adds columns to the configuration.
+    /// </summary>
+    /// <param name="names">The names value.</param>
+    /// <returns>The result of the operation.</returns>
     public TextTable AddColumns(IEnumerable<string> names)
     {
         foreach (var name in names)
@@ -63,6 +84,11 @@ public class TextTable
         return this;
     }
 
+    /// <summary>
+    /// Adds row to the configuration.
+    /// </summary>
+    /// <param name="values">The values value.</param>
+    /// <returns>The result of the operation.</returns>
     public TextTable AddRow(params object?[] values)
     {
         if (values == null)
@@ -77,6 +103,11 @@ public class TextTable
         return this;
     }
 
+    /// <summary>
+    /// Performs the configure operation.
+    /// </summary>
+    /// <param name="action">The action value.</param>
+    /// <returns>The result of the operation.</returns>
     public TextTable Configure(Action<TextTableOptions> action)
     {
         action(Options);
@@ -105,6 +136,10 @@ public class TextTable
         return table;
     }
 
+    /// <summary>
+    /// Returns the string representation of this instance.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public override string ToString()
     {
         var builder = new StringBuilder();
@@ -171,11 +206,21 @@ public class TextTable
         return columnLengths;
     }
 
+    /// <summary>
+    /// Performs the write operation.
+    /// </summary>
     public void Write()
     {
         Options.Out.WriteLine(ToString());
     }
 
+    /// <summary>
+    /// Sets column.
+    /// </summary>
+    /// <param name="column">The column value.</param>
+    /// <param name="name">The name value.</param>
+    /// <param name="columnType">The column type value.</param>
+    /// <returns>The result of the operation.</returns>
     public TextTable SetColumn(int column, string name, Type? columnType = default)
     {
         if (column < 0 || column >= _columns.Count)
@@ -191,24 +236,42 @@ public class TextTable
         return this;
     }
 
+    /// <summary>
+    /// Performs the hide row separator operation.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public TextTable HideRowSeparator()
     {
         Options.ShowRowSeparator = false;
         return this;
     }
 
+    /// <summary>
+    /// Performs the enable count operation.
+    /// </summary>
+    /// <param name="enabled">The enabled value.</param>
+    /// <returns>The result of the operation.</returns>
     public TextTable EnableCount(bool enabled)
     {
         Options.EnableCount = enabled;
         return this;
     }
 
+    /// <summary>
+    /// Sets right number alignment.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public TextTable SetRightNumberAlignment()
     {
         Options.NumberAlignment = NumberAlignment.Right;
         return this;
     }
 
+    /// <summary>
+    /// Performs the output to operation.
+    /// </summary>
+    /// <param name="textWriter">The text writer value.</param>
+    /// <returns>The result of the operation.</returns>
     public TextTable OutputTo(TextWriter textWriter)
     {
         Options.Out = textWriter ?? TextWriter.Null;
@@ -217,6 +280,9 @@ public class TextTable
 }
 
 
+/// <summary>
+/// Defines configuration options for text table.
+/// </summary>
 public class TextTableOptions
 {
     /// <summary>
@@ -239,12 +305,24 @@ public class TextTableOptions
     /// </summary>
     public TextWriter Out { get; set; } = Console.Out;
 
+    /// <summary>
+    /// Gets or sets the show row separator value.
+    /// </summary>
     public bool ShowRowSeparator { get; set; }
 }
 
 
+/// <summary>
+/// Specifies the available number alignment values.
+/// </summary>
 public enum NumberAlignment
 {
+    /// <summary>
+    /// Indicates left.
+    /// </summary>
     Left,
+    /// <summary>
+    /// Indicates right.
+    /// </summary>
     Right
 }

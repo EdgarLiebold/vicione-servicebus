@@ -1,8 +1,10 @@
-using System.ComponentModel;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for publish pipe configurator.
+/// </summary>
 public interface IPublishPipeConfigurator :
     IPipeConfigurator<PublishContext>,
     IPublishPipeSpecificationObserverConnector
@@ -11,7 +13,6 @@ public interface IPublishPipeConfigurator :
     /// Adds a type-specific pipe specification to the consume pipe
     /// </summary>
     /// <param name="specification"></param>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     void AddPipeSpecification(IPipeSpecification<SendContext> specification);
 
     /// <summary>
@@ -19,7 +20,6 @@ public interface IPublishPipeConfigurator :
     /// </summary>
     /// <typeparam name="T">The message type</typeparam>
     /// <param name="specification"></param>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     void AddPipeSpecification<T>(IPipeSpecification<SendContext<T>> specification)
         where T : class;
 
@@ -28,7 +28,6 @@ public interface IPublishPipeConfigurator :
     /// </summary>
     /// <typeparam name="T">The message type</typeparam>
     /// <param name="specification"></param>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     void AddPipeSpecification<T>(IPipeSpecification<PublishContext<T>> specification)
         where T : class;
 }

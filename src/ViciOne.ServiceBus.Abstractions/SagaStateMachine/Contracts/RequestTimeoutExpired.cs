@@ -2,6 +2,10 @@ using System;
 
 namespace ViciOne.ServiceBus.Contracts;
 
+/// <summary>
+/// Defines the contract for request timeout expired.
+/// </summary>
+/// <typeparam name="TRequest">The t request type.</typeparam>
 public interface RequestTimeoutExpired<out TRequest>
     where TRequest : class
 {

@@ -1,9 +1,9 @@
 using System;
 using System.Text;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
-public static class MessageDefaults
+internal static class MessageDefaults
 {
     static readonly Lazy<Encoding> _encoding = new Lazy<Encoding>(() => new UTF8Encoding(false, true));
 

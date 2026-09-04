@@ -12,6 +12,12 @@ namespace ViciOne.ServiceBus.MessageJournal;
 /// </remarks>
 public sealed class MessageJournalStoreLimits
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="maximumEntryBytes">The maximum entry bytes value.</param>
+    /// <param name="maximumEntries">The maximum entries value.</param>
+    /// <param name="retentionPeriod">The retention period value.</param>
     public MessageJournalStoreLimits(int maximumEntryBytes, int maximumEntries, TimeSpan retentionPeriod)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(maximumEntryBytes, 1);
@@ -30,9 +36,18 @@ public sealed class MessageJournalStoreLimits
         RetentionPeriod = retentionPeriod;
     }
 
+    /// <summary>
+    /// Gets the maximum entry bytes value.
+    /// </summary>
     public int MaximumEntryBytes { get; }
 
+    /// <summary>
+    /// Gets the maximum entries value.
+    /// </summary>
     public int MaximumEntries { get; }
 
+    /// <summary>
+    /// Gets the retention period value.
+    /// </summary>
     public TimeSpan RetentionPeriod { get; }
 }

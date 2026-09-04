@@ -6,6 +6,9 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Testing;
 
+/// <summary>
+/// Provides a multi test consumer implementation.
+/// </summary>
 public class MultiTestConsumer
 {
     readonly List<IConsumerConfigurator> _configures;
@@ -13,11 +16,22 @@ public class MultiTestConsumer
     readonly CancellationToken _testCompleted;
     readonly TimeProvider _timeProvider;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="timeout">The timeout value.</param>
+    /// <param name="testCompleted">The test completed value.</param>
     public MultiTestConsumer(TimeSpan timeout, CancellationToken testCompleted = default)
         : this(timeout, TimeProvider.System, testCompleted)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="timeout">The timeout value.</param>
+    /// <param name="timeProvider">The time provider value.</param>
+    /// <param name="testCompleted">The test completed value.</param>
     public MultiTestConsumer(TimeSpan timeout, TimeProvider timeProvider, CancellationToken testCompleted = default)
     {
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
@@ -28,9 +42,20 @@ public class MultiTestConsumer
         _received = new ReceivedMessageList(timeout, testCompleted, timeProvider);
     }
 
+    /// <summary>
+    /// Gets the received value.
+    /// </summary>
     public IReceivedMessageList Received => _received;
+    /// <summary>
+    /// Gets the timeout value.
+    /// </summary>
     public TimeSpan Timeout { get; }
 
+    /// <summary>
+    /// Consumes the message provided by the context.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     public ReceivedMessageList<T> Consume<T>()
         where T : class
     {
@@ -41,6 +66,11 @@ public class MultiTestConsumer
         return consumer.Received;
     }
 
+    /// <summary>
+    /// Performs the fault operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     public ReceivedMessageList<T> Fault<T>()
         where T : class
     {
@@ -51,6 +81,11 @@ public class MultiTestConsumer
         return consumer.Received;
     }
 
+    /// <summary>
+    /// Performs the connect operation.
+    /// </summary>
+    /// <param name="bus">The bus value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle Connect(IConsumePipeConnector bus)
     {
         var handles = new List<ConnectHandle>(_configures.Count);
@@ -73,6 +108,10 @@ public class MultiTestConsumer
         }
     }
 
+    /// <summary>
+    /// Performs the configure operation.
+    /// </summary>
+    /// <param name="configurator">The configurator value.</param>
     public void Configure(IReceiveEndpointConfigurator configurator)
     {
         foreach (var configure in _configures)

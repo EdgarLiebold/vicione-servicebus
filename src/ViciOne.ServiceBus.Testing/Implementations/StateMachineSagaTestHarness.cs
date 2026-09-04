@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Testing.Implementations;
 
+/// <summary>
+/// Provides a state machine saga test harness implementation.
+/// </summary>
+/// <typeparam name="TInstance">The t instance type.</typeparam>
+/// <typeparam name="TStateMachine">The t state machine type.</typeparam>
 public class StateMachineSagaTestHarness<TInstance, TStateMachine> :
     SagaTestHarness<TInstance>,
     ISagaStateMachineTestHarness<TStateMachine, TInstance>
@@ -16,6 +21,15 @@ public class StateMachineSagaTestHarness<TInstance, TStateMachine> :
     readonly IDisposable _eventObserverHandle;
     readonly IDisposable _stateObserverHandle;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="testHarness">The test harness value.</param>
+    /// <param name="repository">The repository value.</param>
+    /// <param name="querySagaRepository">The query saga repository value.</param>
+    /// <param name="loadSagaRepository">The load saga repository value.</param>
+    /// <param name="stateMachine">The state machine value.</param>
+    /// <param name="queueName">The queue name value.</param>
     public StateMachineSagaTestHarness(BusTestHarness testHarness, ISagaRepository<TInstance> repository,
         IQuerySagaRepository<TInstance>? querySagaRepository, ILoadSagaRepository<TInstance>? loadSagaRepository, TStateMachine stateMachine,
         string? queueName)
@@ -27,11 +41,23 @@ public class StateMachineSagaTestHarness<TInstance, TStateMachine> :
         _stateObserverHandle = StateMachine.ConnectStateObserver(_observations);
     }
 
+    /// <summary>
+    /// Gets the state machine value.
+    /// </summary>
     public TStateMachine StateMachine { get; }
 
+    /// <summary>
+    /// Gets the events value.
+    /// </summary>
     public IReadOnlyList<StateMachineEventObservation> Events => _observations.Events;
+    /// <summary>
+    /// Gets the state changes value.
+    /// </summary>
     public IReadOnlyList<StateMachineStateChange> StateChanges => _observations.StateChanges;
 
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
     public void Dispose()
     {
         _stateObserverHandle.Dispose();
@@ -112,11 +138,20 @@ public class StateMachineSagaTestHarness<TInstance, TStateMachine> :
             timeout).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Configures receive endpoint.
+    /// </summary>
+    /// <param name="configurator">The configurator value.</param>
     protected override void ConfigureReceiveEndpoint(IReceiveEndpointConfigurator configurator)
     {
         configurator.StateMachineSaga(StateMachine, TestRepository);
     }
 
+    /// <summary>
+    /// Configures named receive endpoint.
+    /// </summary>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="queueName">The queue name value.</param>
     protected override void ConfigureNamedReceiveEndpoint(IBusFactoryConfigurator configurator, string queueName)
     {
         configurator.ReceiveEndpoint(queueName, x =>

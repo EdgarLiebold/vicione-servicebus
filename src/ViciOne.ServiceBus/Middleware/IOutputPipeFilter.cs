@@ -1,5 +1,10 @@
 namespace ViciOne.ServiceBus.Middleware;
 
+/// <summary>
+/// Defines the contract for output pipe filter.
+/// </summary>
+/// <typeparam name="TInput">The t input type.</typeparam>
+/// <typeparam name="TOutput">The t output type.</typeparam>
 public interface IOutputPipeFilter<TInput, out TOutput> :
     IFilter<TInput>,
     IPipeConnector<TOutput>,
@@ -10,6 +15,12 @@ public interface IOutputPipeFilter<TInput, out TOutput> :
 }
 
 
+/// <summary>
+/// Defines the contract for output pipe filter.
+/// </summary>
+/// <typeparam name="TInput">The t input type.</typeparam>
+/// <typeparam name="TOutput">The t output type.</typeparam>
+/// <typeparam name="TKey">The t key type.</typeparam>
 public interface IOutputPipeFilter<TInput, out TOutput, in TKey> :
     IOutputPipeFilter<TInput, TOutput>,
     IKeyPipeConnector<TKey>

@@ -2,8 +2,11 @@ using System;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Metadata;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for registration configurator.
+/// </summary>
 public static class RegistrationConfiguratorExtensions
 {
     /// <summary>

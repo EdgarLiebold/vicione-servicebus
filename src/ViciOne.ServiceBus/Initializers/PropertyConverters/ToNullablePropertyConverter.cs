@@ -2,10 +2,22 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Initializers.PropertyConverters;
 
+/// <summary>
+/// Provides a to nullable property converter implementation.
+/// </summary>
+/// <typeparam name="TResult">The t result type.</typeparam>
 public class ToNullablePropertyConverter<TResult> :
     IPropertyConverter<TResult?, TResult>
     where TResult : struct
 {
+    /// <summary>
+    /// Performs the convert operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="input">The input value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<TResult?> ConvertAsync<T>(InitializeContext<T> context, TResult input, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -14,17 +26,34 @@ public class ToNullablePropertyConverter<TResult> :
 }
 
 
+/// <summary>
+/// Provides a to nullable property converter implementation.
+/// </summary>
+/// <typeparam name="TResult">The t result type.</typeparam>
+/// <typeparam name="TInput">The t input type.</typeparam>
 public class ToNullablePropertyConverter<TResult, TInput> :
     IPropertyConverter<TResult?, TInput>
     where TResult : struct
 {
     readonly IPropertyConverter<TResult, TInput> _converter;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="converter">The converter value.</param>
     public ToNullablePropertyConverter(IPropertyConverter<TResult, TInput> converter)
     {
         _converter = converter;
     }
 
+    /// <summary>
+    /// Performs the convert operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="input">The input value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<TResult?> ConvertAsync<T>(InitializeContext<T> context, TInput? input, CancellationToken cancellationToken = default)
         where T : class
     {

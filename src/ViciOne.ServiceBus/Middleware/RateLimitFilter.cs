@@ -24,6 +24,12 @@ public class RateLimitFilter<TContext> :
     int _count;
     int _rateLimit;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="rateLimit">The rate limit value.</param>
+    /// <param name="interval">The interval value.</param>
+    /// <param name="timeProvider">The time provider value.</param>
     public RateLimitFilter(int rateLimit, TimeSpan interval, TimeProvider? timeProvider = null)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(rateLimit, 1);
@@ -37,6 +43,9 @@ public class RateLimitFilter<TContext> :
         _timer = (timeProvider ?? TimeProvider.System).CreateTimer(Reset, null, interval, interval);
     }
 
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
     public void Dispose()
     {
         _timer.Dispose();
@@ -44,6 +53,10 @@ public class RateLimitFilter<TContext> :
         _limit.Dispose();
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("rateLimit");
@@ -52,6 +65,12 @@ public class RateLimitFilter<TContext> :
         scope.Add("interval", _interval);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     [DebuggerNonUserCode]
     public Task SendAsync(TContext context, IPipe<TContext> next)
     {
@@ -75,6 +94,11 @@ public class RateLimitFilter<TContext> :
         return SendAsync();
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SendAsync(CommandContext<SetRateLimit> context)
     {
         ArgumentNullException.ThrowIfNull(context);

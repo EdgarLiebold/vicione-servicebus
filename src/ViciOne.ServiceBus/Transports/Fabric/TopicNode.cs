@@ -7,6 +7,10 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Transports.Fabric;
 
+/// <summary>
+/// Provides a topic node implementation.
+/// </summary>
+/// <typeparam name="T">The t type.</typeparam>
 public class TopicNode<T> :
     IProbeSite
     where T : class
@@ -15,6 +19,10 @@ public class TopicNode<T> :
     readonly StringComparer _comparer;
     readonly Connectable<IMessageSink<T>> _sinks;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="comparer">The comparer value.</param>
     public TopicNode(StringComparer comparer)
     {
         _comparer = comparer;
@@ -23,6 +31,9 @@ public class TopicNode<T> :
         _children = new ConcurrentDictionary<string, TopicNode<T>>(comparer);
     }
 
+    /// <summary>
+    /// Gets the sinks value.
+    /// </summary>
     public IEnumerable<IMessageSink<T>> Sinks
     {
         get
@@ -38,6 +49,10 @@ public class TopicNode<T> :
         }
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         _sinks.ForEach(s => s.Probe(context));
@@ -50,6 +65,12 @@ public class TopicNode<T> :
         }
     }
 
+    /// <summary>
+    /// Performs the add operation.
+    /// </summary>
+    /// <param name="sink">The sink value.</param>
+    /// <param name="pattern">The pattern value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle Add(IMessageSink<T> sink, string? pattern)
     {
         if (string.IsNullOrWhiteSpace(pattern))
@@ -64,6 +85,13 @@ public class TopicNode<T> :
         return GetChild(word).Add(sink, pattern, separator + 1);
     }
 
+    /// <summary>
+    /// Performs the deliver operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="routingKey">The routing key value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task DeliverAsync(DeliveryContext<T> context, string? routingKey, CancellationToken cancellationToken = default)
     {
         if (_children.TryGetValue("#", out TopicNode<T>? hashNode))

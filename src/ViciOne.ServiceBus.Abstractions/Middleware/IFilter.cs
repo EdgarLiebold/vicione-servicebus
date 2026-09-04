@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Middleware;
 
 /// <summary>
 /// A filter is a functional node in a pipeline, connected by pipes to

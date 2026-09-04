@@ -1,5 +1,8 @@
 namespace ViciOne.ServiceBus.Testing.Implementations;
 
+/// <summary>
+/// Defines the contract for inactivity observation source.
+/// </summary>
 public interface IInactivityObservationSource
 {
     /// <summary>
@@ -7,5 +10,10 @@ public interface IInactivityObservationSource
     /// </summary>
     bool IsInactive { get; }
 
+    /// <summary>
+    /// Connects inactivity observer.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     ConnectHandle ConnectInactivityObserver(IInactivityObserver observer);
 }

@@ -1,8 +1,10 @@
 using System;
-using System.ComponentModel;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for activity configuration observer.
+/// </summary>
 public interface IActivityConfigurationObserver
 {
     /// <summary>
@@ -12,7 +14,6 @@ public interface IActivityConfigurationObserver
     /// <param name="compensateAddress">The address of the compensation endpoint</param>
     /// <typeparam name="TActivity"></typeparam>
     /// <typeparam name="TArguments"></typeparam>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     void ActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator, Uri compensateAddress)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class;
@@ -23,7 +24,6 @@ public interface IActivityConfigurationObserver
     /// <param name="configurator"></param>
     /// <typeparam name="TActivity"></typeparam>
     /// <typeparam name="TArguments"></typeparam>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class;
@@ -34,7 +34,6 @@ public interface IActivityConfigurationObserver
     /// <param name="configurator"></param>
     /// <typeparam name="TActivity"></typeparam>
     /// <typeparam name="TLog"></typeparam>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityConfigurator<TActivity, TLog> configurator)
         where TActivity : class, ICompensateActivity<TLog>
         where TLog : class;

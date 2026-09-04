@@ -12,5 +12,9 @@ public interface IPublishEndpointBrokerTopologyBuilder :
     /// </summary>
     TopicHandle? Topic { get; set; }
 
+    /// <summary>
+    /// Creates implemented builder.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     IPublishEndpointBrokerTopologyBuilder CreateImplementedBuilder();
 }

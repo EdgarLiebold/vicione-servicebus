@@ -1,6 +1,6 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>
 /// A timeout, which can be a default (none) or a valid TimeSpan > 0, includes factory methods to make it "cute"
@@ -18,6 +18,9 @@ public readonly struct RequestTimeout :
         _timeout = timeout;
     }
 
+    /// <summary>
+    /// Gets the has value value.
+    /// </summary>
     public bool HasValue => _timeout.HasValue && _timeout.Value > TimeSpan.Zero;
 
     /// <summary>
@@ -25,34 +28,71 @@ public readonly struct RequestTimeout :
     /// <exception cref="InvalidOperationException"></exception>
     public TimeSpan Value => _timeout ?? throw new InvalidOperationException("RequestTimeout does not have a value");
 
+    /// <summary>
+    /// Gets the none value.
+    /// </summary>
     public static RequestTimeout None { get; } = new RequestTimeout();
+    /// <summary>
+    /// Gets the default value.
+    /// </summary>
     public static RequestTimeout Default { get; } = new RequestTimeout(TimeSpan.FromSeconds(30));
 
+    /// <summary>
+    /// Determines whether this instance equals the supplied value.
+    /// </summary>
+    /// <param name="other">The other value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Equals(RequestTimeout other)
     {
         return Nullable.Equals(_timeout, other._timeout);
     }
 
+    /// <summary>
+    /// Determines whether this instance equals the supplied value.
+    /// </summary>
+    /// <param name="obj">The obj value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public override bool Equals(object? obj)
     {
         return obj is RequestTimeout other && Equals(other);
     }
 
+    /// <summary>
+    /// Gets hash code.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public override int GetHashCode()
     {
         return _timeout.GetHashCode();
     }
 
+    /// <summary>
+    /// Applies the <c>==</c> operator.
+    /// </summary>
+    /// <param name="left">The left value.</param>
+    /// <param name="right">The right value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool operator ==(RequestTimeout left, RequestTimeout right)
     {
         return left.Equals(right);
     }
 
+    /// <summary>
+    /// Applies the <c>!=</c> operator.
+    /// </summary>
+    /// <param name="left">The left value.</param>
+    /// <param name="right">The right value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool operator !=(RequestTimeout left, RequestTimeout right)
     {
         return !left.Equals(right);
     }
 
+    /// <summary>
+    /// Converts a value to <see cref="RequestTimeout" />.
+    /// </summary>
+    /// <param name="timeout">The timeout value.</param>
+    /// <returns>The result of the operation.</returns>
     public static implicit operator RequestTimeout(TimeSpan timeout)
     {
         if (timeout <= TimeSpan.Zero)
@@ -61,6 +101,11 @@ public readonly struct RequestTimeout :
         return new RequestTimeout(timeout);
     }
 
+    /// <summary>
+    /// Converts a value to <see cref="RequestTimeout" />.
+    /// </summary>
+    /// <param name="milliseconds">The milliseconds value.</param>
+    /// <returns>The result of the operation.</returns>
     public static implicit operator RequestTimeout(int milliseconds)
     {
         if (milliseconds <= 0)

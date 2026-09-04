@@ -5,17 +5,32 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Util;
 
+/// <summary>
+/// Provides a chart table implementation.
+/// </summary>
 public class ChartTable
 {
     readonly int _chartWidth;
     readonly List<Line> _lines;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="chartWidth">The chart width value.</param>
     public ChartTable(int chartWidth = 60)
     {
         _chartWidth = chartWidth;
         _lines = new List<Line>();
     }
 
+    /// <summary>
+    /// Performs the add operation.
+    /// </summary>
+    /// <param name="text">The text value.</param>
+    /// <param name="startTime">The start time value.</param>
+    /// <param name="duration">The duration value.</param>
+    /// <param name="columns">The columns value.</param>
+    /// <returns>The result of the operation.</returns>
     public ChartTable Add(string text, DateTimeOffset startTime, TimeSpan? duration, params object[] columns)
     {
         _lines.Add(new Line(text, startTime, duration, columns));
@@ -23,6 +38,10 @@ public class ChartTable
         return this;
     }
 
+    /// <summary>
+    /// Gets rows.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<ChartRow> GetRows()
     {
         if (_lines.Count == 0)
@@ -46,6 +65,10 @@ public class ChartTable
         }
     }
 
+    /// <summary>
+    /// Performs the calculate range operation.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public (DateTimeOffset low, DateTimeOffset high) CalculateRange()
     {
         var low = _lines.Min(x => x.StartTime);
@@ -55,8 +78,18 @@ public class ChartTable
     }
 
 
+    /// <summary>
+    /// Provides a line implementation.
+    /// </summary>
     public class Line
     {
+        /// <summary>
+        /// Initializes a new instance of the containing type.
+        /// </summary>
+        /// <param name="text">The text value.</param>
+        /// <param name="startTime">The start time value.</param>
+        /// <param name="duration">The duration value.</param>
+        /// <param name="columns">The columns value.</param>
         public Line(string text, DateTimeOffset startTime, TimeSpan? duration, object[] columns)
         {
             Text = text;
@@ -65,20 +98,45 @@ public class ChartTable
             Duration = duration ?? new TimeSpan(1);
         }
 
+        /// <summary>
+        /// Gets the text value.
+        /// </summary>
         public string Text { get; }
+        /// <summary>
+        /// Gets the start time value.
+        /// </summary>
         public DateTimeOffset StartTime { get; }
+        /// <summary>
+        /// Gets the duration value.
+        /// </summary>
         public TimeSpan Duration { get; }
+        /// <summary>
+        /// Gets the columns value.
+        /// </summary>
         public object[] Columns { get; }
 
+        /// <summary>
+        /// Gets the end time value.
+        /// </summary>
         public DateTimeOffset EndTime => StartTime + Duration;
     }
 }
 
 
+/// <summary>
+/// Provides a chart row implementation.
+/// </summary>
 public class ChartRow
 {
     readonly object[] _columns;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="title">The title value.</param>
+    /// <param name="duration">The duration value.</param>
+    /// <param name="timeline">The timeline value.</param>
+    /// <param name="columns">The columns value.</param>
     public ChartRow(string title, string duration, string timeline, object[] columns)
     {
         _columns = columns;
@@ -87,10 +145,24 @@ public class ChartRow
         Timeline = timeline;
     }
 
+    /// <summary>
+    /// Gets the title value.
+    /// </summary>
     public string Title { get; }
+    /// <summary>
+    /// Gets the duration value.
+    /// </summary>
     public string Duration { get; }
+    /// <summary>
+    /// Gets the timeline value.
+    /// </summary>
     public string Timeline { get; }
 
+    /// <summary>
+    /// Gets column.
+    /// </summary>
+    /// <param name="column">The column value.</param>
+    /// <returns>The result of the operation.</returns>
     public object GetColumn(int column)
     {
         if (_columns == null || column < 0 || column >= _columns.Length)

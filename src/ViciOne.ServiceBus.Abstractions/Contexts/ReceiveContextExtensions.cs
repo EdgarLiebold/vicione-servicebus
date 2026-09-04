@@ -1,8 +1,11 @@
 using System;
 using System.Text;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides extension methods for receive context.
+/// </summary>
 public static class ReceiveContextExtensions
 {
     /// <summary>
@@ -106,6 +109,11 @@ public static class ReceiveContextExtensions
         return context.TransportHeaders.GetTimestamp(MessageHeaders.TransportSentTime);
     }
 
+    /// <summary>
+    /// Gets message types.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public static string[] GetMessageTypes(this ReceiveContext context)
     {
         if (context.TransportHeaders.TryGetHeader(MessageHeaders.MessageType, out var value) && value is string text && !string.IsNullOrWhiteSpace(text))
@@ -218,6 +226,11 @@ public static class ReceiveContextExtensions
         return headers.GetEndpointAddress(MessageHeaders.FaultAddress);
     }
 
+    /// <summary>
+    /// Gets message types.
+    /// </summary>
+    /// <param name="headers">The headers value.</param>
+    /// <returns>The result of the operation.</returns>
     public static string[] GetMessageTypes(this Headers headers)
     {
         if (headers.TryGetHeader(MessageHeaders.MessageType, out var value))
@@ -242,11 +255,24 @@ public static class ReceiveContextExtensions
         return MessageDefaults.Encoding;
     }
 
+    /// <summary>
+    /// Gets header id.
+    /// </summary>
+    /// <param name="headers">The headers value.</param>
+    /// <param name="key">The key value.</param>
+    /// <param name="defaultValue">The default value value.</param>
+    /// <returns>The result of the operation.</returns>
     public static Guid GetHeaderId(this Headers headers, string key, Guid defaultValue)
     {
         return GetHeaderId(headers, key) ?? defaultValue;
     }
 
+    /// <summary>
+    /// Gets header id.
+    /// </summary>
+    /// <param name="headers">The headers value.</param>
+    /// <param name="key">The key value.</param>
+    /// <returns>The result of the operation.</returns>
     public static Guid? GetHeaderId(this Headers headers, string key)
     {
         if (headers.TryGetHeader(key, out var value))
@@ -277,6 +303,12 @@ public static class ReceiveContextExtensions
         return default;
     }
 
+    /// <summary>
+    /// Gets endpoint address.
+    /// </summary>
+    /// <param name="headers">The headers value.</param>
+    /// <param name="key">The key value.</param>
+    /// <returns>The result of the operation.</returns>
     public static Uri? GetEndpointAddress(this Headers headers, string key)
     {
         if (headers.TryGetHeader(key, out var value))

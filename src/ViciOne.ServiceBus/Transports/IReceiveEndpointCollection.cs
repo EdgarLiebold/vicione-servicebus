@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Transports;
 
+/// <summary>
+/// Defines the contract for receive endpoint collection.
+/// </summary>
 public interface IReceiveEndpointCollection :
     IReceiveEndpointObserverConnector,
     IConsumeMessageObserverConnector,
@@ -39,5 +42,9 @@ public interface IReceiveEndpointCollection :
     /// <returns></returns>
     Task StopEndpointsAsync(CancellationToken cancellationToken);
 
+    /// <summary>
+    /// Performs the check endpoint health operation.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     IEnumerable<EndpointHealthResult> CheckEndpointHealth();
 }

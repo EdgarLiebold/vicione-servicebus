@@ -6,7 +6,7 @@ using Azure.Messaging.ServiceBus;
 using Azure.Messaging.ServiceBus.Administration;
 using NDesk.Options;
 using ViciOne.ServiceBus;
-using ViciOne.ServiceBus.AzureServiceBusTransport.Configuration;
+using ViciOne.ServiceBus.AzureServiceBus.Configuration;
 
 namespace ViciOneServiceBusBenchmark;
 

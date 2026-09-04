@@ -13,6 +13,9 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.JobService;
 
+/// <summary>
+/// Provides a job service implementation.
+/// </summary>
 public class JobService :
     IJobService
 {
@@ -49,6 +52,10 @@ public class JobService :
     /// <summary>Guarded by <see cref="_admission" />; never read outside it.</summary>
     bool _stopping;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="settings">The settings value.</param>
     public JobService(JobServiceSettings settings)
     {
         Settings = settings ?? throw new ArgumentNullException(nameof(settings));
@@ -58,16 +65,34 @@ public class JobService :
         _jobCompletions = new PendingTaskCollection(16);
     }
 
+    /// <summary>
+    /// Gets the settings value.
+    /// </summary>
     public JobServiceSettings Settings { get; }
 
+    /// <summary>
+    /// Gets the instance address value.
+    /// </summary>
     public Uri InstanceAddress => Settings.InstanceAddress
         ?? throw new ConfigurationException("The job service instance address must be configured before the service is used.");
 
+    /// <summary>
+    /// Attempts to get job.
+    /// </summary>
+    /// <param name="jobId">The job id value.</param>
+    /// <param name="jobReference">The job reference value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetJob(Guid jobId, [NotNullWhen(true)] out JobHandle? jobReference)
     {
         return _jobs.TryGetValue(jobId, out jobReference);
     }
 
+    /// <summary>
+    /// Performs the try remove job operation.
+    /// </summary>
+    /// <param name="jobId">The job id value.</param>
+    /// <param name="jobHandle">The job handle value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryRemoveJob(Guid jobId, [NotNullWhen(true)] out JobHandle? jobHandle)
     {
         var removed = _jobs.TryRemove(jobId, out jobHandle);
@@ -81,6 +106,16 @@ public class JobService :
         return false;
     }
 
+    /// <summary>
+    /// Starts job.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="job">The job value.</param>
+    /// <param name="jobPipe">The job pipe value.</param>
+    /// <param name="jobOptions">The job options value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task StartJobAsync<T>(ConsumeContext<StartJob> context, T job, IPipe<ConsumeContext<T>> jobPipe, JobOptions<T> jobOptions, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -135,6 +170,12 @@ public class JobService :
         }
     }
 
+    /// <summary>
+    /// Stops the configured component.
+    /// </summary>
+    /// <param name="publishEndpoint">The publish endpoint value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task StopAsync(IPublishEndpoint publishEndpoint, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); await _lifecycle.WaitAsync().ConfigureAwait(false);
@@ -212,6 +253,14 @@ public class JobService :
         await heartbeat.StopAsync().ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Performs the register job type operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="options">The options value.</param>
+    /// <param name="jobTypeId">The job type id value.</param>
+    /// <param name="jobTypeName">The job type name value.</param>
     public void RegisterJobType<T>(IReceiveEndpointConfigurator configurator, JobOptions<T> options, Guid jobTypeId, string jobTypeName)
         where T : class
     {
@@ -221,6 +270,12 @@ public class JobService :
         _jobTypes.Add(typeof(T), new JobTypeRegistration<T>(options, InstanceAddress, jobTypeId, jobTypeName));
     }
 
+    /// <summary>
+    /// Performs the bus started operation.
+    /// </summary>
+    /// <param name="publishEndpoint">The publish endpoint value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task BusStartedAsync(IPublishEndpoint publishEndpoint, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); await _lifecycle.WaitAsync().ConfigureAwait(false);
@@ -263,6 +318,11 @@ public class JobService :
         return Task.WhenAll(_jobTypes.Values.Select(x => x.PublishHeartbeatAsync(publishEndpoint)));
     }
 
+    /// <summary>
+    /// Gets job type id.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     public Guid GetJobTypeId<T>()
         where T : class
     {
@@ -272,6 +332,10 @@ public class JobService :
         throw new ConfigurationException($"The job type was not registered: {TypeCache<T>.ShortName}");
     }
 
+    /// <summary>
+    /// Configures supervise job consumer.
+    /// </summary>
+    /// <param name="configurator">The configurator value.</param>
     public void ConfigureSuperviseJobConsumer(IReceiveEndpointConfigurator configurator)
     {
         var partition = new Middleware.Partitioner(16, new Murmur3UnsafeHashGenerator());

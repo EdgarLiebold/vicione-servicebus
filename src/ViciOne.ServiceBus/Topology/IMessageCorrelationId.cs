@@ -1,7 +1,11 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Topology;
 
+/// <summary>
+/// Defines the contract for message correlation id.
+/// </summary>
+/// <typeparam name="T">The t type.</typeparam>
 public interface IMessageCorrelationId<in T>
     where T : class
 {

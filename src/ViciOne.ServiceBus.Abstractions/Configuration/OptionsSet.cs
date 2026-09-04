@@ -4,11 +4,17 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides an options set implementation.
+/// </summary>
 public class OptionsSet :
     IOptionsSet
 {
     readonly IDictionary<Type, IOptions> _options;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public OptionsSet()
     {
         _options = new Dictionary<Type, IOptions>();

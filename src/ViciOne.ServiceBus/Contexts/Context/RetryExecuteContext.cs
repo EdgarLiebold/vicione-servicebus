@@ -3,6 +3,10 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Context;
 
+/// <summary>
+/// Provides a retry execute context implementation.
+/// </summary>
+/// <typeparam name="TArguments">The t arguments type.</typeparam>
 public class RetryExecuteContext<TArguments> :
     ExecuteContextScope<TArguments>,
     ConsumeRetryContext
@@ -12,6 +16,12 @@ public class RetryExecuteContext<TArguments> :
     readonly ExecutionResult _existingResult = null!;
     readonly IRetryPolicy _retryPolicy;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="retryPolicy">The retry policy value.</param>
+    /// <param name="retryContext">The retry context value.</param>
     public RetryExecuteContext(ExecuteContext<TArguments> context, IRetryPolicy retryPolicy, RetryContext? retryContext)
         : base(context)
     {
@@ -35,10 +45,22 @@ public class RetryExecuteContext<TArguments> :
         }
     }
 
+    /// <summary>
+    /// Gets the retry attempt value.
+    /// </summary>
     public int RetryAttempt { get; }
 
+    /// <summary>
+    /// Gets the retry count value.
+    /// </summary>
     public int RetryCount { get; }
 
+    /// <summary>
+    /// Creates next.
+    /// </summary>
+    /// <typeparam name="TContext">The t context type.</typeparam>
+    /// <param name="retryContext">The retry context value.</param>
+    /// <returns>The result of the operation.</returns>
     public TContext CreateNext<TContext>(RetryContext retryContext)
         where TContext : class, ConsumeRetryContext
     {
@@ -49,6 +71,11 @@ public class RetryExecuteContext<TArguments> :
             ?? throw new InvalidOperationException($"The retry context cannot be represented as {TypeCache<TContext>.ShortName}.");
     }
 
+    /// <summary>
+    /// Performs the notify pending faults operation.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task NotifyPendingFaultsAsync(CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (_existingResult != null && Result is RetryExecutionResult)

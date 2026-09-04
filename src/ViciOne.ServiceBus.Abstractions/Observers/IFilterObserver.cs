@@ -1,8 +1,11 @@
 using System;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Observers;
 
+/// <summary>
+/// Defines the contract for filter observer.
+/// </summary>
 public interface IFilterObserver
 {
     /// <summary>
@@ -33,6 +36,10 @@ public interface IFilterObserver
 }
 
 
+/// <summary>
+/// Defines the contract for filter observer.
+/// </summary>
+/// <typeparam name="TContext">The t context type.</typeparam>
 public interface IFilterObserver<in TContext>
     where TContext : class, PipeContext
 {

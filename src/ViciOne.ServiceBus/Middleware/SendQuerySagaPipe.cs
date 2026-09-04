@@ -5,6 +5,11 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.Middleware;
 
+/// <summary>
+/// Provides a send query saga pipe implementation.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <typeparam name="T">The t type.</typeparam>
 public class SendQuerySagaPipe<TSaga, T> :
     IPipe<SagaRepositoryQueryContext<TSaga, T>>
     where TSaga : class, ISaga
@@ -13,16 +18,30 @@ public class SendQuerySagaPipe<TSaga, T> :
     readonly IPipe<SagaConsumeContext<TSaga, T>> _next;
     readonly ISagaPolicy<TSaga, T> _policy;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="policy">The policy value.</param>
+    /// <param name="next">The next value.</param>
     public SendQuerySagaPipe(ISagaPolicy<TSaga, T> policy, IPipe<SagaConsumeContext<TSaga, T>> next)
     {
         _policy = policy;
         _next = next;
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SendAsync(SagaRepositoryQueryContext<TSaga, T> context)
     {
         if (context.Count > 0)

@@ -19,6 +19,10 @@ public class HandlerMessageFilter<TMessage> :
     long _faulted;
 
     // TODO this needs a pipe like instance and consumer, to handle things like retry, etc.
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="handler">The handler value.</param>
     public HandlerMessageFilter(MessageHandler<TMessage> handler)
     {
         _handler = handler ?? throw new ArgumentNullException(nameof(handler));

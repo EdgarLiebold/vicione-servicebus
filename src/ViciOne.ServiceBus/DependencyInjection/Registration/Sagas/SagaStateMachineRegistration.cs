@@ -22,6 +22,10 @@ public class SagaStateMachineRegistration<TStateMachine, TInstance> :
     readonly List<Action<IRegistrationContext, ISagaConfigurator<TInstance>>> _configureActions;
     ISagaDefinition<TInstance> _definition = null!;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="selector">The selector value.</param>
     public SagaStateMachineRegistration(IContainerSelector selector)
     {
         _selector = selector;
@@ -29,10 +33,21 @@ public class SagaStateMachineRegistration<TStateMachine, TInstance> :
         IncludeInConfigureEndpoints = !Type.HasAttribute<ExcludeFromConfigureEndpointsAttribute>();
     }
 
+    /// <summary>
+    /// Gets the type value.
+    /// </summary>
     public Type Type => typeof(TInstance);
 
+    /// <summary>
+    /// Gets or sets the include in configure endpoints value.
+    /// </summary>
     public bool IncludeInConfigureEndpoints { get; set; }
 
+    /// <summary>
+    /// Adds configure action to the configuration.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="configure">The configuration callback.</param>
     public void AddConfigureAction<T>(Action<IRegistrationContext, ISagaConfigurator<T>>? configure)
         where T : class, ISaga
     {
@@ -40,6 +55,11 @@ public class SagaStateMachineRegistration<TStateMachine, TInstance> :
             _configureActions.Add(action);
     }
 
+    /// <summary>
+    /// Performs the configure operation.
+    /// </summary>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="context">The operation context.</param>
     public void Configure(IReceiveEndpointConfigurator configurator, IRegistrationContext context)
     {
         var stateMachine = context.GetRequiredService<SagaStateMachine<TInstance>>();

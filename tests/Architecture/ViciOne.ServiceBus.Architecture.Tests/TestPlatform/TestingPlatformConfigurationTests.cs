@@ -181,9 +181,9 @@ public sealed class TestingPlatformConfigurationTests
     {
         string[] projectNames =
         [
-            "ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests",
-            "ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests",
-            "ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests",
+            "ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests",
+            "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+            "ViciOne.ServiceBus.RabbitMq.LocalIntegration.Tests",
         ];
 
         foreach (string projectName in projectNames)
@@ -236,8 +236,8 @@ public sealed class TestingPlatformConfigurationTests
             RepositoryLayout.Root,
             "tests",
             "Transports",
-            "ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests",
-            "ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.csproj");
+            "ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests",
+            "ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests.csproj");
         CSharpParseOptions parseOptions = ReleaseParseOptions(projectPath);
         var syntaxTrees = new List<SyntaxTree>
         {

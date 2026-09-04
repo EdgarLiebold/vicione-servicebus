@@ -6,17 +6,28 @@ using ViciOne.ServiceBus.Util;
 #nullable enable
 namespace ViciOne.ServiceBus.Context;
 
+/// <summary>
+/// Provides a deserializer consume context implementation.
+/// </summary>
 public abstract class DeserializerConsumeContext :
     BaseConsumeContext
 {
     readonly PendingTaskCollection _consumeTasks;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="receiveContext">The receive context value.</param>
+    /// <param name="serializerContext">The serializer context value.</param>
     protected DeserializerConsumeContext(ReceiveContext receiveContext, SerializerContext serializerContext)
         : base(receiveContext, serializerContext)
     {
         _consumeTasks = new PendingTaskCollection(4);
     }
 
+    /// <summary>
+    /// Gets the consume completed value.
+    /// </summary>
     public override Task ConsumeCompleted => _consumeTasks.CompletedAsync(CancellationToken);
 
     /// <summary>
@@ -76,6 +87,10 @@ public abstract class DeserializerConsumeContext :
         return ReceiveContext.AddOrUpdatePayload(addFactory, updateFactory);
     }
 
+    /// <summary>
+    /// Adds consume task to the configuration.
+    /// </summary>
+    /// <param name="task">The task value.</param>
     public override void AddConsumeTask(Task task)
     {
         _consumeTasks.Add(task);

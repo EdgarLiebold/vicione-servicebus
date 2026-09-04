@@ -3,6 +3,9 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a pipe configurator implementation.
+/// </summary>
 public partial class PipeConfigurator<TContext>
     where TContext : class, PipeContext
 {
@@ -18,6 +21,12 @@ public partial class PipeConfigurator<TContext>
         readonly FilterContextProvider<TFilter, TContext> _inputContextProvider;
         readonly IPipeSpecification<TFilter> _specification;
 
+        /// <summary>
+        /// Initializes a new instance of the containing type.
+        /// </summary>
+        /// <param name="specification">The specification value.</param>
+        /// <param name="contextProvider">The context provider value.</param>
+        /// <param name="inputContextProvider">The input context provider value.</param>
         public SplitFilterPipeSpecification(IPipeSpecification<TFilter> specification, MergeFilterContextProvider<TContext, TFilter> contextProvider,
             FilterContextProvider<TFilter, TContext> inputContextProvider)
         {
@@ -26,6 +35,10 @@ public partial class PipeConfigurator<TContext>
             _inputContextProvider = inputContextProvider;
         }
 
+        /// <summary>
+        /// Applies this specification to the target builder.
+        /// </summary>
+        /// <param name="builder">The builder value.</param>
         public void Apply(IPipeBuilder<TContext> builder)
         {
             var splitBuilder = new Builder(builder, _contextProvider, _inputContextProvider);
@@ -33,6 +46,10 @@ public partial class PipeConfigurator<TContext>
             _specification.Apply(splitBuilder);
         }
 
+        /// <summary>
+        /// Validates the current configuration.
+        /// </summary>
+        /// <returns>The result of the operation.</returns>
         public IEnumerable<ValidationResult> Validate()
         {
             if (_specification == null)

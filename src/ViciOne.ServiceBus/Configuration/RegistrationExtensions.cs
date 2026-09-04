@@ -7,8 +7,11 @@ using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Util;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for registration.
+/// </summary>
 public static class RegistrationExtensions
 {
     /// <summary>
@@ -431,6 +434,12 @@ public static class RegistrationExtensions
         AddActivities(configurator, null, types);
     }
 
+    /// <summary>
+    /// Adds activities to the configuration.
+    /// </summary>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="filter">The filter value.</param>
+    /// <param name="types">The types value.</param>
     public static void AddActivities(this IRegistrationConfigurator configurator, Func<Type, bool>? filter, params Type[] types)
     {
         filter ??= _ => true;
@@ -477,6 +486,10 @@ public static class RegistrationExtensions
         configurator.SetEndpointNameFormatter(DefaultEndpointNameFormatter.Instance);
     }
 
+    /// <summary>
+    /// Sets snake case endpoint name formatter.
+    /// </summary>
+    /// <param name="configurator">The configurator value.</param>
     public static void SetSnakeCaseEndpointNameFormatter(this IRegistrationConfigurator configurator)
     {
         configurator.SetEndpointNameFormatter(SnakeCaseEndpointNameFormatter.Instance);

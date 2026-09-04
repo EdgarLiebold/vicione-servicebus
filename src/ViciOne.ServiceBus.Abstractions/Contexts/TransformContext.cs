@@ -1,4 +1,4 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>
 /// Context used by a message transform
@@ -23,5 +23,8 @@ public interface TransformContext<out TMessage> :
     /// </summary>
     bool HasInput { get; }
 
+    /// <summary>
+    /// Gets the input value.
+    /// </summary>
     TMessage Input { get; }
 }

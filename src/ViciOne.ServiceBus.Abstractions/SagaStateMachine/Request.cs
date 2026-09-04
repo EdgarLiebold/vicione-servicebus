@@ -1,7 +1,7 @@
 using System;
 using ViciOne.ServiceBus.Contracts;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
 /// <summary>
 /// A request is a state-machine based request configuration that includes

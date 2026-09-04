@@ -16,6 +16,10 @@ public class InputDictionaryPropertyProvider<TInput, TProperty> :
 {
     readonly string _key;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="key">The key value.</param>
     public InputDictionaryPropertyProvider(string key)
     {
         if (key == null)
@@ -24,6 +28,13 @@ public class InputDictionaryPropertyProvider<TInput, TProperty> :
         _key = key;
     }
 
+    /// <summary>
+    /// Gets property.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<TProperty?> GetPropertyAsync<T>(InitializeContext<T, TInput> context, CancellationToken cancellationToken = default)
         where T : class
     {

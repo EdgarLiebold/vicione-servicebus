@@ -254,7 +254,7 @@ public sealed class ResourceCacheGenerationAndLockingTests
     private static void CompleteConcurrentRead<T>(ResourceCache<T> cache)
         where T : class
     {
-        Task read = Task.Run(async () => await cache.GetValuesAsync());
+        Task read = Task.Run(() => cache.GetValues());
         read.WaitAsync(OperationTimeout).GetAwaiter().GetResult();
     }
 

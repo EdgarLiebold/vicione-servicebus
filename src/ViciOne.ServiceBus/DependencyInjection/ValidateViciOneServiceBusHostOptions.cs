@@ -1,14 +1,21 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using Microsoft.Extensions.Options;
 
-namespace ViciOne.ServiceBus.DependencyInjection;
+namespace ViciOne.ServiceBus.Configuration;
 
-[EditorBrowsable(EditorBrowsableState.Never)]
+/// <summary>
+/// Defines configuration options for validate vici one service bus host.
+/// </summary>
 public class ValidateViciOneServiceBusHostOptions :
     IValidateOptions<ViciOneServiceBusHostOptions>
 {
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <param name="name">The name value.</param>
+    /// <param name="options">The options value.</param>
+    /// <returns>The result of the operation.</returns>
     public ValidateOptionsResult Validate(string? name, ViciOneServiceBusHostOptions options)
     {
         ArgumentNullException.ThrowIfNull(options);

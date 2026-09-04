@@ -2,9 +2,19 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Transports;
 
+/// <summary>
+/// Provides a receive endpoint dispatcher receive context implementation.
+/// </summary>
 public sealed class ReceiveEndpointDispatcherReceiveContext :
     BaseReceiveContext
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="receiveEndpointContext">The receive endpoint context value.</param>
+    /// <param name="body">The body value.</param>
+    /// <param name="headers">The headers value.</param>
+    /// <param name="payloads">The payloads value.</param>
     public ReceiveEndpointDispatcherReceiveContext(ReceiveEndpointContext receiveEndpointContext, byte[] body, IReadOnlyDictionary<string, object> headers,
         params object[] payloads)
         : base(IsRedelivered(headers), receiveEndpointContext, payloads)
@@ -14,8 +24,14 @@ public sealed class ReceiveEndpointDispatcherReceiveContext :
         HeaderProvider = new ReadOnlyDictionaryHeaderProvider(headers);
     }
 
+    /// <summary>
+    /// Gets the header provider value.
+    /// </summary>
     protected override IHeaderProvider HeaderProvider { get; }
 
+    /// <summary>
+    /// Gets the body value.
+    /// </summary>
     public override MessageBody Body { get; }
 
     static bool IsRedelivered(IReadOnlyDictionary<string, object> headers)

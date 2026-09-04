@@ -11,16 +11,30 @@ public class DictionaryHeaderProvider :
 {
     readonly IDictionary<string, object> _headers;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="headers">The headers value.</param>
     public DictionaryHeaderProvider(IDictionary<string, object>? headers = default)
     {
         _headers = headers ?? new Dictionary<string, object>();
     }
 
+    /// <summary>
+    /// Gets all.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<KeyValuePair<string, object>> GetAll()
     {
         return _headers;
     }
 
+    /// <summary>
+    /// Attempts to get header.
+    /// </summary>
+    /// <param name="key">The key value.</param>
+    /// <param name="value">The value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
     {
         return _headers.TryGetValue(key, out value);

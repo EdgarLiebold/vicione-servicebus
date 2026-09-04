@@ -5,6 +5,11 @@ using ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 
 namespace ViciOne.ServiceBus.Middleware;
 
+/// <summary>
+/// Provides an in memory outbox filter implementation.
+/// </summary>
+/// <typeparam name="TContext">The t context type.</typeparam>
+/// <typeparam name="TResult">The t result type.</typeparam>
 public class InMemoryOutboxFilter<TContext, TResult> :
     IFilter<TContext>
     where TContext : class, PipeContext
@@ -19,6 +24,12 @@ public class InMemoryOutboxFilter<TContext, TResult> :
     /// </summary>
     readonly ISetScopedConsumeContext? _setter;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="setter">The setter value.</param>
+    /// <param name="contextFactory">The context factory value.</param>
+    /// <param name="concurrentMessageDelivery">The concurrent message delivery value.</param>
     public InMemoryOutboxFilter(ISetScopedConsumeContext? setter, Func<TContext, TResult> contextFactory, bool concurrentMessageDelivery)
     {
         _setter = setter;
@@ -26,6 +37,12 @@ public class InMemoryOutboxFilter<TContext, TResult> :
         _concurrentMessageDelivery = concurrentMessageDelivery;
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SendAsync(TContext context, IPipe<TContext> next)
     {
         var outboxContext = _contextFactory(context);
@@ -54,6 +71,10 @@ public class InMemoryOutboxFilter<TContext, TResult> :
         }
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("outbox");

@@ -2,6 +2,9 @@ using ViciOne.ServiceBus.SqlTransport.Topology;
 
 namespace ViciOne.ServiceBus.SqlTransport;
 
+/// <summary>
+/// Defines the contract for dead letter settings.
+/// </summary>
 public interface DeadLetterSettings :
     EntitySettings
 {

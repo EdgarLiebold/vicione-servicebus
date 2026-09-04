@@ -7,6 +7,9 @@ using System.Text.Json;
 #nullable enable
 namespace ViciOne.ServiceBus.Serialization;
 
+/// <summary>
+/// Provides a system text json object message body implementation.
+/// </summary>
 public class SystemTextJsonObjectMessageBody :
     MessageBody
 {
@@ -15,6 +18,11 @@ public class SystemTextJsonObjectMessageBody :
     byte[]? _bytes;
     string? _string;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="options">The options value.</param>
     public SystemTextJsonObjectMessageBody(object value, JsonSerializerOptions options)
     {
         _value = value;
@@ -29,11 +37,19 @@ public class SystemTextJsonObjectMessageBody :
     /// </summary>
     public long? Length => GetBytes().LongLength;
 
+    /// <summary>
+    /// Gets stream.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public Stream GetStream()
     {
         return new MemoryStream(GetBytes(), false);
     }
 
+    /// <summary>
+    /// Gets bytes.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public byte[] GetBytes()
     {
         if (_bytes != null)
@@ -57,6 +73,10 @@ public class SystemTextJsonObjectMessageBody :
         }
     }
 
+    /// <summary>
+    /// Gets string.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public string GetString()
     {
         if (_string != null)

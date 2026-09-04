@@ -8,12 +8,24 @@ namespace ViciOne.ServiceBus.Contracts.JobService;
 /// </summary>
 public interface SetConcurrentJobLimit
 {
+    /// <summary>
+    /// Gets the job type id value.
+    /// </summary>
     Guid JobTypeId { get; }
 
+    /// <summary>
+    /// Gets the instance address value.
+    /// </summary>
     Uri InstanceAddress { get; }
 
+    /// <summary>
+    /// Gets the concurrent job limit value.
+    /// </summary>
     int ConcurrentJobLimit { get; }
 
+    /// <summary>
+    /// Gets the kind value.
+    /// </summary>
     ConcurrentLimitKind Kind { get; }
 
     /// <summary>

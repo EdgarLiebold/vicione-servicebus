@@ -4,8 +4,11 @@ using Microsoft.Extensions.Options;
 using Npgsql;
 using ViciOne.ServiceBus.SqlTransport.PostgreSql;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
 
+/// <summary>
+/// Provides extension methods for postgres host configuration.
+/// </summary>
 public static class PostgresHostConfigurationExtensions
 {
     /// <summary>

@@ -14,6 +14,10 @@ public class ObserverPipeSpecification<T> :
 {
     readonly IObserver<ConsumeContext<T>> _observer;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
     public ObserverPipeSpecification(IObserver<ConsumeContext<T>> observer)
     {
         _observer = observer;

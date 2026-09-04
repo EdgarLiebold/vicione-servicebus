@@ -7,6 +7,10 @@ using System.Text.Json;
 #nullable enable
 namespace ViciOne.ServiceBus.Serialization;
 
+/// <summary>
+/// Provides a system text json raw message body implementation.
+/// </summary>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public class SystemTextJsonRawMessageBody<TMessage> :
     MessageBody
     where TMessage : class
@@ -17,6 +21,12 @@ public class SystemTextJsonRawMessageBody<TMessage> :
     byte[]? _bytes;
     string? _string;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="options">The options value.</param>
+    /// <param name="message">The message value.</param>
     public SystemTextJsonRawMessageBody(SendContext<TMessage> context, JsonSerializerOptions options, object? message = null)
     {
         _context = context;
@@ -32,11 +42,19 @@ public class SystemTextJsonRawMessageBody<TMessage> :
     /// </summary>
     public long? Length => GetBytes().LongLength;
 
+    /// <summary>
+    /// Gets stream.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public Stream GetStream()
     {
         return new MemoryStream(GetBytes(), false);
     }
 
+    /// <summary>
+    /// Gets bytes.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public byte[] GetBytes()
     {
         if (_bytes != null)
@@ -83,6 +101,10 @@ public class SystemTextJsonRawMessageBody<TMessage> :
         }
     }
 
+    /// <summary>
+    /// Gets string.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public string GetString()
     {
         if (_string != null)

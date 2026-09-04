@@ -1,8 +1,10 @@
-using System.ComponentModel;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for send pipe configurator.
+/// </summary>
 public interface ISendPipeConfigurator :
     IPipeConfigurator<SendContext>,
     ISendPipeSpecificationObserverConnector
@@ -12,7 +14,6 @@ public interface ISendPipeConfigurator :
     /// </summary>
     /// <typeparam name="T">The message type</typeparam>
     /// <param name="specification"></param>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     void AddPipeSpecification<T>(IPipeSpecification<SendContext<T>> specification)
         where T : class;
 }

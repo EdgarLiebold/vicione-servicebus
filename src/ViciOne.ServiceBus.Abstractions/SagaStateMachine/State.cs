@@ -2,12 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
+/// <summary>
+/// Defines the contract for state.
+/// </summary>
 public interface State :
     IVisitable,
     IComparable<State>
 {
+    /// <summary>
+    /// Gets the name value.
+    /// </summary>
     string Name { get; }
 
     /// <summary>
@@ -40,6 +46,9 @@ public interface State<TSaga> :
     State
     where TSaga : class, SagaStateMachineInstance
 {
+    /// <summary>
+    /// Gets the events value.
+    /// </summary>
     IEnumerable<Event> Events { get; }
 
     /// <summary>
@@ -47,6 +56,12 @@ public interface State<TSaga> :
     /// </summary>
     State<TSaga>? SuperState { get; }
 
+    /// <summary>
+    /// Performs the raise operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     Task RaiseAsync(BehaviorContext<TSaga> context, CancellationToken cancellationToken = default);
 
     /// <summary>

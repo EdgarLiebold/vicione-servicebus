@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>
 /// A service endpoint has an inbound transport that pushes messages to consumers
@@ -17,8 +17,14 @@ public interface IReceiveEndpoint :
     IConsumeMessageObserverConnector,
     IProbeSite
 {
+    /// <summary>
+    /// Gets the input address value.
+    /// </summary>
     Uri InputAddress { get; }
 
+    /// <summary>
+    /// Gets the started value.
+    /// </summary>
     Task<ReceiveEndpointReady> Started { get; }
 
     /// <summary>

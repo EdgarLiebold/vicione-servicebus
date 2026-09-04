@@ -1,8 +1,11 @@
 using System;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Observers;
 
+/// <summary>
+/// Defines the contract for activity observer.
+/// </summary>
 public interface IActivityObserver
 {
     /// <summary>

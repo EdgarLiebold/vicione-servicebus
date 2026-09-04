@@ -1,7 +1,10 @@
 using ViciOne.ServiceBus.Middleware;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for receive pipe configuration.
+/// </summary>
 public static class ReceivePipeConfigurationExtensions
 {
     /// <summary>

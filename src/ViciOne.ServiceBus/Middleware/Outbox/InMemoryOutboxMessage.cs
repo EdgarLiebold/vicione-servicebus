@@ -6,6 +6,9 @@ using ViciOne.ServiceBus.Serialization;
 #nullable enable
 namespace ViciOne.ServiceBus.Middleware.Outbox;
 
+/// <summary>
+/// Provides an in memory outbox message implementation.
+/// </summary>
 public class InMemoryOutboxMessage :
     OutboxMessageContext
 {
@@ -17,8 +20,14 @@ public class InMemoryOutboxMessage :
     /// </summary>
     public DateTimeOffset? EnqueueTime { get; set; }
 
+    /// <summary>
+    /// Gets or sets the sent time value.
+    /// </summary>
     public DateTimeOffset SentTime { get; set; }
 
+    /// <summary>
+    /// Gets or sets the headers value.
+    /// </summary>
     public string? Headers { get; set; }
 
     /// <summary>
@@ -26,24 +35,66 @@ public class InMemoryOutboxMessage :
     /// </summary>
     public string? Properties { get; set; }
 
+    /// <summary>
+    /// Gets or sets the sequence number value.
+    /// </summary>
     public long SequenceNumber { get; set; }
 
+    /// <summary>
+    /// Gets or sets the message id value.
+    /// </summary>
     public Guid MessageId { get; set; }
 
+    /// <summary>
+    /// Gets or sets the content type value.
+    /// </summary>
     public string ContentType { get; set; } = null!;
+    /// <summary>
+    /// Gets or sets the message type value.
+    /// </summary>
     public string MessageType { get; set; } = null!;
+    /// <summary>
+    /// Gets or sets the body value.
+    /// </summary>
     public string Body { get; set; } = null!;
 
+    /// <summary>
+    /// Gets or sets the conversation id value.
+    /// </summary>
     public Guid? ConversationId { get; set; }
+    /// <summary>
+    /// Gets or sets the correlation id value.
+    /// </summary>
     public Guid? CorrelationId { get; set; }
+    /// <summary>
+    /// Gets or sets the initiator id value.
+    /// </summary>
     public Guid? InitiatorId { get; set; }
+    /// <summary>
+    /// Gets or sets the request id value.
+    /// </summary>
     public Guid? RequestId { get; set; }
 
+    /// <summary>
+    /// Gets or sets the source address value.
+    /// </summary>
     public Uri? SourceAddress { get; set; }
+    /// <summary>
+    /// Gets or sets the destination address value.
+    /// </summary>
     public Uri? DestinationAddress { get; set; }
+    /// <summary>
+    /// Gets or sets the response address value.
+    /// </summary>
     public Uri? ResponseAddress { get; set; }
+    /// <summary>
+    /// Gets or sets the fault address value.
+    /// </summary>
     public Uri? FaultAddress { get; set; }
 
+    /// <summary>
+    /// Gets or sets the expiration time value.
+    /// </summary>
     public DateTimeOffset? ExpirationTime { get; set; }
 
     Guid? MessageContext.MessageId => MessageId;
@@ -53,6 +104,10 @@ public class InMemoryOutboxMessage :
 
     IReadOnlyDictionary<string, object> OutboxMessageContext.Properties => _properties!;
 
+    /// <summary>
+    /// Performs the deserialize operation.
+    /// </summary>
+    /// <param name="deserializer">The deserializer value.</param>
     public void Deserialize(IObjectDeserializer deserializer)
     {
         _headers = DeserializerHeaders(deserializer);

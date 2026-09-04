@@ -14,6 +14,11 @@ public class MediatorPublishSendEndpoint :
     readonly PublishObservable _observers;
     readonly IPublishPipe _publishPipe;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="endpoint">The endpoint value.</param>
+    /// <param name="publishPipe">The publish pipe value.</param>
     public MediatorPublishSendEndpoint(ISendEndpoint endpoint, IPublishPipe publishPipe)
         : base(endpoint)
     {
@@ -22,11 +27,22 @@ public class MediatorPublishSendEndpoint :
         _observers = new PublishObservable();
     }
 
+    /// <summary>
+    /// Connects publish observer.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectPublishObserver(IPublishObserver observer)
     {
         return _observers.Connect(observer);
     }
 
+    /// <summary>
+    /// Gets pipe proxy.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="pipe">The pipe value.</param>
+    /// <returns>The result of the operation.</returns>
     protected override IPipe<SendContext<T>> GetPipeProxy<T>(IPipe<SendContext<T>>? pipe = default)
     {
         return new PublishPipeAdapter<T>(_publishPipe, pipe);

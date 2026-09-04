@@ -1,13 +1,16 @@
 using System;
 using System.Threading;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>
 /// The client factory is used to create request clients
 /// </summary>
 public interface IClientFactory
 {
+    /// <summary>
+    /// Gets the context value.
+    /// </summary>
     ClientFactoryContext Context { get; }
 
     /// <summary>

@@ -6,8 +6,11 @@ using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Saga;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for dependency injection.
+/// </summary>
 public static class DependencyInjectionExtensions
 {
     /// <summary>

@@ -1,8 +1,14 @@
 using System;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides an activity definition implementation.
+/// </summary>
+/// <typeparam name="TActivity">The t activity type.</typeparam>
+/// <typeparam name="TArguments">The t arguments type.</typeparam>
+/// <typeparam name="TLog">The t log type.</typeparam>
 public class ActivityDefinition<TActivity, TArguments, TLog> :
     ExecuteActivityDefinition<TActivity, TArguments>,
     IActivityDefinition<TActivity, TArguments, TLog>
@@ -22,6 +28,9 @@ public class ActivityDefinition<TActivity, TArguments, TLog> :
         set => _compensateEndpointName = value;
     }
 
+    /// <summary>
+    /// Gets or sets the compensate endpoint definition value.
+    /// </summary>
     public IEndpointDefinition<ICompensateActivity<TLog>>? CompensateEndpointDefinition { get; set; }
 
     IEndpointDefinition? IActivityDefinition.CompensateEndpointDefinition => CompensateEndpointDefinition;

@@ -16,6 +16,11 @@ public class ConsumerMessageMergePipe<TConsumer, TMessage> :
     readonly ConsumerConsumeContext<TConsumer, TMessage> _context;
     readonly IPipe<ConsumerConsumeContext<TConsumer, TMessage>> _output;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="output">The output value.</param>
+    /// <param name="context">The operation context.</param>
     public ConsumerMessageMergePipe(IPipe<ConsumerConsumeContext<TConsumer, TMessage>> output, ConsumerConsumeContext<TConsumer, TMessage> context)
     {
         _output = output;
@@ -34,6 +39,11 @@ public class ConsumerMessageMergePipe<TConsumer, TMessage> :
         _output.Probe(scope);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public Task SendAsync(ConsumeContext<TMessage> context)
     {
         if (ReferenceEquals(context, _context))

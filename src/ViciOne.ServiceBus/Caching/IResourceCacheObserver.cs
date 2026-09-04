@@ -11,7 +11,24 @@ namespace ViciOne.ServiceBus.Caching;
 public interface IResourceCacheObserver<in TValue>
     where TValue : class
 {
+    /// <summary>
+    /// Performs the resource added operation.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     ValueTask ResourceAddedAsync(TValue value, CancellationToken cancellationToken);
+    /// <summary>
+    /// Performs the resource removed operation.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     ValueTask ResourceRemovedAsync(TValue value, CancellationToken cancellationToken);
+    /// <summary>
+    /// Performs the cache cleared operation.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     ValueTask CacheClearedAsync(CancellationToken cancellationToken);
 }

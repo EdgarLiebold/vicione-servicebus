@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
 /// Configures the sending of a message type, allowing filters to be applied
@@ -14,6 +14,10 @@ public interface IMessageSendTopologyConfigurator<TMessage> :
     IMessageSendTopology<TMessage>
     where TMessage : class
 {
+    /// <summary>
+    /// Performs the add operation.
+    /// </summary>
+    /// <param name="sendTopology">The send topology value.</param>
     void Add(IMessageSendTopology<TMessage> sendTopology);
 
     /// <summary>
@@ -60,8 +64,16 @@ public interface IMessageSendTopologyConfigurator<TMessage> :
 }
 
 
+/// <summary>
+/// Defines the contract for message send topology configurator.
+/// </summary>
 public interface IMessageSendTopologyConfigurator :
     ISpecification
 {
+    /// <summary>
+    /// Performs the try add convention operation.
+    /// </summary>
+    /// <param name="convention">The convention value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     bool TryAddConvention(ISendTopologyConvention convention);
 }

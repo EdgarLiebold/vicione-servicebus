@@ -2,13 +2,13 @@
   <!-- Profile AzureServiceBusLocalIntegration: official emulator, isolated from the seven-provider host profile. -->
   <Folder Name="/tests/">
     <Project Path="tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj" />
-    <Project Path="tests/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests/ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests.csproj" />
+    <Project Path="tests/Transports/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests.csproj" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj" />
     <Project Path="src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
-    <Project Path="src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/ViciOne.ServiceBus.Azure.ServiceBus.Core.csproj" />
-    <Project Path="src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Testing/ViciOne.ServiceBus.Azure.ServiceBus.Testing.csproj" />
+    <Project Path="src/Transports/ViciOne.ServiceBus.AzureServiceBus/ViciOne.ServiceBus.AzureServiceBus.csproj" />
+    <Project Path="src/Transports/ViciOne.ServiceBus.AzureServiceBus.Testing/ViciOne.ServiceBus.AzureServiceBus.Testing.csproj" />
     <Project Path="src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj" />
   </Folder>
 </Solution>

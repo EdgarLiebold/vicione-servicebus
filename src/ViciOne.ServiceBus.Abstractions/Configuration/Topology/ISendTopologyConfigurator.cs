@@ -1,7 +1,10 @@
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for send topology configurator.
+/// </summary>
 public interface ISendTopologyConfigurator :
     ISendTopology,
     ISpecification

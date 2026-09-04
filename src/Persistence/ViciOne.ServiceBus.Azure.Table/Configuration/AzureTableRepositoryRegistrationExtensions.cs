@@ -1,8 +1,11 @@
 using System;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Azure.Table;
 
+/// <summary>
+/// Provides extension methods for azure table repository registration.
+/// </summary>
 public static class AzureTableRepositoryRegistrationExtensions
 {
     /// <summary>

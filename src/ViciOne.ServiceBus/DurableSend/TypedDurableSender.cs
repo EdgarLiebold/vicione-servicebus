@@ -3,13 +3,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.MessageData;
-using ViciOne.ServiceBus.ProviderAbstractions;
+using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Transports;
 
 #nullable enable
 
-namespace ViciOne.ServiceBus.DurableSend;
+namespace ViciOne.ServiceBus.Providers.Persistence;
 /// <summary>Owns the application-to-persisted-intent transition for one typed bus.</summary>
 internal sealed class TypedDurableSender<TBus> : IDurableSender<TBus>
     where TBus : class, IBus

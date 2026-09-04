@@ -1,7 +1,9 @@
-using System.ComponentModel;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for saga configuration observer.
+/// </summary>
 public interface ISagaConfigurationObserver
 {
     /// <summary>
@@ -9,7 +11,6 @@ public interface ISagaConfigurationObserver
     /// </summary>
     /// <typeparam name="TSaga"></typeparam>
     /// <param name="configurator"></param>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     void SagaConfigured<TSaga>(ISagaConfigurator<TSaga> configurator)
         where TSaga : class, ISaga;
 
@@ -21,7 +22,6 @@ public interface ISagaConfigurationObserver
     /// <param name="configurator"></param>
     /// <param name="stateMachine"></param>
     /// <typeparam name="TInstance"></typeparam>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, SagaStateMachine<TInstance> stateMachine)
         where TInstance : class, ISaga, SagaStateMachineInstance;
 
@@ -31,7 +31,6 @@ public interface ISagaConfigurationObserver
     /// <typeparam name="TSaga"></typeparam>
     /// <typeparam name="TMessage"></typeparam>
     /// <param name="configurator"></param>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     void SagaMessageConfigured<TSaga, TMessage>(ISagaMessageConfigurator<TSaga, TMessage> configurator)
         where TSaga : class, ISaga
         where TMessage : class;

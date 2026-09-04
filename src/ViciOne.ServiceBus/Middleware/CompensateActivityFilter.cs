@@ -17,6 +17,10 @@ public class CompensateActivityFilter<TActivity, TLog> :
 {
     readonly ActivityObservable _observers;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="observers">The observers value.</param>
     public CompensateActivityFilter(ActivityObservable observers)
     {
         _observers = observers;
@@ -27,6 +31,12 @@ public class CompensateActivityFilter<TActivity, TLog> :
         context.CreateFilterScope("compensate");
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SendAsync(CompensateActivityContext<TActivity, TLog> context, IPipe<CompensateActivityContext<TActivity, TLog>> next)
     {
         try

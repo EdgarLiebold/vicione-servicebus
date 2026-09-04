@@ -2,6 +2,9 @@ using ViciOne.ServiceBus.SqlTransport.Topology;
 
 namespace ViciOne.ServiceBus.SqlTransport;
 
+/// <summary>
+/// Defines the contract for error settings.
+/// </summary>
 public interface ErrorSettings :
     EntitySettings
 {

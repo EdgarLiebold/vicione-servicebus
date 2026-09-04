@@ -7,7 +7,7 @@ using ViciOne.ServiceBus.Courier.Contracts;
 using ViciOne.ServiceBus.Futures;
 using ViciOne.ServiceBus.Futures.Contracts;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Futures;
 
 /// <summary>
 /// A future is a deterministic, durable service that given a command, executes any number
@@ -27,6 +27,9 @@ public abstract class Future<TCommand, TResult, TFault> :
     readonly FutureFault<TFault> _fault = new FutureFault<TFault>();
     readonly FutureResult<TCommand, TResult> _result = new FutureResult<TCommand, TResult>();
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     protected Future()
     {
         InstanceState(x => x.CurrentState, WaitingForCompletion, Completed, Faulted);
@@ -93,8 +96,17 @@ public abstract class Future<TCommand, TResult, TFault> :
     // States
     // ReSharper disable MemberCanBePrivate.Global
     // ReSharper disable UnusedAutoPropertyAccessor.Global
+    /// <summary>
+    /// Gets or sets the waiting for completion value.
+    /// </summary>
     public State WaitingForCompletion { get; protected set; } = null!;
+    /// <summary>
+    /// Gets or sets the completed value.
+    /// </summary>
     public State Completed { get; protected set; } = null!;
+    /// <summary>
+    /// Gets or sets the faulted value.
+    /// </summary>
     public State Faulted { get; protected set; } = null!;
 
     // ReSharper disable once MemberCanBeProtected.Global
@@ -315,6 +327,12 @@ public abstract class Future<TCommand, TResult, TFault> :
         );
     }
 
+    /// <summary>
+    /// Performs the fault pending request operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="requestFaulted">The request faulted value.</param>
+    /// <param name="pendingIdProvider">The pending id provider value.</param>
     public void FaultPendingRequest<T>(Event<Fault<T>> requestFaulted, PendingFutureIdProvider<T> pendingIdProvider)
         where T : class
     {
@@ -357,6 +375,12 @@ public abstract class Future<TCommand, TResult, TFault> :
         );
     }
 
+    /// <summary>
+    /// Sets faulted.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="faultEvent">The fault event value.</param>
+    /// <param name="callback">The callback value.</param>
     public void SetFaulted<T>(Event<T> faultEvent, Func<BehaviorContext<FutureState, T>, Task> callback)
         where T : class
     {
@@ -373,16 +397,32 @@ public abstract class Future<TCommand, TResult, TFault> :
         return DefaultEndpointNameFormatter.Instance.Message<T>();
     }
 
+    /// <summary>
+    /// Performs the request id or fault operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     protected static Guid RequestIdOrFault(MessageContext context)
     {
         return context.RequestId ?? throw new RequestException("RequestId not present, but required");
     }
 
+    /// <summary>
+    /// Performs the request id or default operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     protected static Guid RequestIdOrDefault(MessageContext context)
     {
         return context.RequestId ?? default;
     }
 
+    /// <summary>
+    /// Performs the future id or fault operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="variables">The variables value.</param>
+    /// <returns>The result of the operation.</returns>
     protected static Guid FutureIdOrFault(ConsumeContext context, IDictionary<string, object> variables)
     {
         if (context.SerializerContext.TryGetValue(variables, MessageHeaders.FutureId, out Guid? correlationId))
@@ -391,11 +431,21 @@ public abstract class Future<TCommand, TResult, TFault> :
         throw new RequestException("CorrelationId not present, define the routing slip using Event");
     }
 
+    /// <summary>
+    /// Performs the future id or default operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="variables">The variables value.</param>
+    /// <returns>The result of the operation.</returns>
     protected static Guid FutureIdOrDefault(ConsumeContext context, IDictionary<string, object> variables)
     {
         return context.SerializerContext.TryGetValue(variables, MessageHeaders.FutureId, out Guid? correlationId) ? correlationId.Value : default;
     }
 
+    /// <summary>
+    /// Performs the when all completed operation.
+    /// </summary>
+    /// <param name="configure">The configuration callback.</param>
     protected void WhenAllCompleted(Action<IFutureResultConfigurator<TResult>> configure)
     {
         var configurator = new FutureResultConfigurator<TCommand, TResult>(_result);
@@ -444,6 +494,11 @@ public abstract class Future<TCommand, TResult, TFault> :
 }
 
 
+/// <summary>
+/// Provides a future implementation.
+/// </summary>
+/// <typeparam name="TCommand">The t command type.</typeparam>
+/// <typeparam name="TResult">The t result type.</typeparam>
 public abstract class Future<TCommand, TResult> :
     Future<TCommand, TResult, Fault<TCommand>>
     where TCommand : class

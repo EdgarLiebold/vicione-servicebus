@@ -1,27 +1,52 @@
 using System;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides extension methods for consume context execute.
+/// </summary>
 public static class ConsumeContextExecuteExtensions
 {
+    /// <summary>
+    /// Performs the to pipe operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="callback">The callback value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IPipe<ConsumeContext<T>> ToPipe<T>(this Action<ConsumeContext<T>> callback)
         where T : class
     {
         return new ConsumeContextPipe<T>(callback);
     }
 
+    /// <summary>
+    /// Performs the to pipe operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="callback">The callback value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IPipe<ConsumeContext<T>> ToPipe<T>(this Func<ConsumeContext<T>, Task> callback)
         where T : class
     {
         return new ConsumeContextAsyncPipe<T>(callback);
     }
 
+    /// <summary>
+    /// Performs the to pipe operation.
+    /// </summary>
+    /// <param name="callback">The callback value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IPipe<ConsumeContext> ToPipe(this Action<ConsumeContext> callback)
     {
         return new ConsumeContextPipe(callback);
     }
 
+    /// <summary>
+    /// Performs the to pipe operation.
+    /// </summary>
+    /// <param name="callback">The callback value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IPipe<ConsumeContext> ToPipe(this Func<ConsumeContext, Task> callback)
     {
         return new ConsumeContextAsyncPipe(callback);

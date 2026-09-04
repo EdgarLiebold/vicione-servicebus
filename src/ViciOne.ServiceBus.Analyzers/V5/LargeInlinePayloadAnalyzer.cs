@@ -10,9 +10,15 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace ViciOne.ServiceBus.Analyzers.V5;
 
+/// <summary>
+/// Provides a large inline payload analyzer implementation.
+/// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class LargeInlinePayloadAnalyzer : DiagnosticAnalyzer
 {
+    /// <summary>
+    /// Defines the diagnostic id value.
+    /// </summary>
     public const string DiagnosticId = "VOSB5005";
 
     private static readonly DiagnosticDescriptor s_rule = new(
@@ -24,8 +30,15 @@ public sealed class LargeInlinePayloadAnalyzer : DiagnosticAnalyzer
         isEnabledByDefault: true,
         description: "Large byte or stream members create broker-limit and resource-pressure risk.");
 
+    /// <summary>
+    /// Gets the supported diagnostics value.
+    /// </summary>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [s_rule];
 
+    /// <summary>
+    /// Performs the initialize operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public override void Initialize(AnalysisContext context)
     {
         if (context is null)

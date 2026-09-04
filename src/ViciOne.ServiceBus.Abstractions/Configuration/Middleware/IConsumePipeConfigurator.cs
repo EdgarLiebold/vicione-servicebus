@@ -1,8 +1,10 @@
-using System.ComponentModel;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for consume pipe configurator.
+/// </summary>
 public interface IConsumePipeConfigurator :
     IPipeConfigurator<ConsumeContext>,
     IConsumerConfigurationObserverConnector,
@@ -24,7 +26,6 @@ public interface IConsumePipeConfigurator :
     /// </summary>
     /// <typeparam name="T">The message type</typeparam>
     /// <param name="specification"></param>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     void AddPipeSpecification<T>(IPipeSpecification<ConsumeContext<T>> specification)
         where T : class;
 
@@ -33,6 +34,5 @@ public interface IConsumePipeConfigurator :
     /// instance is used for all message types
     /// </summary>
     /// <param name="specification"></param>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     void AddPrePipeSpecification(IPipeSpecification<ConsumeContext> specification);
 }

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>
 /// A batch of messages which are delivered to a consumer all at once
@@ -11,6 +11,9 @@ public interface Batch<out T> :
     IEnumerable<ConsumeContext<T>>
     where T : class
 {
+    /// <summary>
+    /// Gets the mode value.
+    /// </summary>
     BatchCompletionMode Mode { get; }
 
     /// <summary>

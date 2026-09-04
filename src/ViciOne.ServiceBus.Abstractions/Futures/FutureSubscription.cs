@@ -1,22 +1,44 @@
 using System;
 using System.Collections.Generic;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Futures;
 
+/// <summary>
+/// Provides a future subscription implementation.
+/// </summary>
 public class FutureSubscription :
     IEquatable<FutureSubscription>
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="address">The address value.</param>
+    /// <param name="requestId">The request id value.</param>
     public FutureSubscription(Uri address, Guid? requestId = default)
     {
         RequestId = requestId;
         Address = address;
     }
 
+    /// <summary>
+    /// Gets the comparer value.
+    /// </summary>
     public static IEqualityComparer<FutureSubscription> Comparer { get; } = new EqualityComparer();
 
+    /// <summary>
+    /// Gets the request id value.
+    /// </summary>
     public Guid? RequestId { get; }
+    /// <summary>
+    /// Gets the address value.
+    /// </summary>
     public Uri Address { get; }
 
+    /// <summary>
+    /// Determines whether this instance equals the supplied value.
+    /// </summary>
+    /// <param name="other">The other value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Equals(FutureSubscription? other)
     {
         if (ReferenceEquals(null, other))
@@ -26,6 +48,11 @@ public class FutureSubscription :
         return Nullable.Equals(RequestId, other.RequestId) && Equals(Address, other.Address);
     }
 
+    /// <summary>
+    /// Determines whether this instance equals the supplied value.
+    /// </summary>
+    /// <param name="obj">The obj value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(null, obj))
@@ -37,6 +64,10 @@ public class FutureSubscription :
         return Equals((FutureSubscription)obj);
     }
 
+    /// <summary>
+    /// Gets hash code.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public override int GetHashCode()
     {
         unchecked
@@ -45,11 +76,23 @@ public class FutureSubscription :
         }
     }
 
+    /// <summary>
+    /// Applies the <c>==</c> operator.
+    /// </summary>
+    /// <param name="left">The left value.</param>
+    /// <param name="right">The right value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool operator ==(FutureSubscription? left, FutureSubscription? right)
     {
         return Equals(left, right);
     }
 
+    /// <summary>
+    /// Applies the <c>!=</c> operator.
+    /// </summary>
+    /// <param name="left">The left value.</param>
+    /// <param name="right">The right value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool operator !=(FutureSubscription? left, FutureSubscription? right)
     {
         return !Equals(left, right);

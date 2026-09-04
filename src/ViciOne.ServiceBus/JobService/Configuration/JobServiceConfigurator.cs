@@ -6,6 +6,10 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a job service configurator implementation.
+/// </summary>
+/// <typeparam name="TReceiveEndpointConfigurator">The t receive endpoint configurator type.</typeparam>
 public class JobServiceConfigurator<TReceiveEndpointConfigurator> :
     IJobServiceConfigurator,
     ISpecification
@@ -21,6 +25,11 @@ public class JobServiceConfigurator<TReceiveEndpointConfigurator> :
     ISagaRepository<JobTypeSaga> _jobTypeRepository = null!;
     IReceiveEndpointConfigurator _jobTypeSagaEndpointConfigurator = null!;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="instanceConfigurator">The instance configurator value.</param>
+    /// <param name="options">The options value.</param>
     public JobServiceConfigurator(IServiceInstanceConfigurator<TReceiveEndpointConfigurator> instanceConfigurator, JobServiceOptions? options = null)
     {
         _busConfigurator = instanceConfigurator.BusConfigurator;
@@ -60,51 +69,81 @@ public class JobServiceConfigurator<TReceiveEndpointConfigurator> :
         }));
     }
 
+    /// <summary>
+    /// Gets or sets the repository value.
+    /// </summary>
     public ISagaRepository<JobTypeSaga> Repository
     {
         set => _jobTypeRepository = value;
     }
 
+    /// <summary>
+    /// Gets or sets the job repository value.
+    /// </summary>
     public ISagaRepository<JobSaga> JobRepository
     {
         set => _jobRepository = value;
     }
 
+    /// <summary>
+    /// Gets or sets the job attempt repository value.
+    /// </summary>
     public ISagaRepository<JobAttemptSaga> JobAttemptRepository
     {
         set => _jobAttemptRepository = value;
     }
 
+    /// <summary>
+    /// Gets or sets the job service state endpoint name value.
+    /// </summary>
     public string JobServiceStateEndpointName
     {
         set => _options.JobTypeSagaEndpointName = value;
     }
 
+    /// <summary>
+    /// Gets or sets the job service job state endpoint name value.
+    /// </summary>
     public string JobServiceJobStateEndpointName
     {
         set => _options.JobStateSagaEndpointName = value;
     }
 
+    /// <summary>
+    /// Gets or sets the job service job attempt state endpoint name value.
+    /// </summary>
     public string JobServiceJobAttemptStateEndpointName
     {
         set => _options.JobAttemptSagaEndpointName = value;
     }
 
+    /// <summary>
+    /// Gets or sets the slot wait time value.
+    /// </summary>
     public TimeSpan SlotWaitTime
     {
         set => _options.SlotWaitTime = value;
     }
 
+    /// <summary>
+    /// Gets or sets the status check interval value.
+    /// </summary>
     public TimeSpan StatusCheckInterval
     {
         set => _options.StatusCheckInterval = value;
     }
 
+    /// <summary>
+    /// Gets or sets the suspect job retry count value.
+    /// </summary>
     public int SuspectJobRetryCount
     {
         set => _options.SuspectJobRetryCount = value;
     }
 
+    /// <summary>
+    /// Gets or sets the suspect job retry delay value.
+    /// </summary>
     public TimeSpan SuspectJobRetryDelay
     {
         set
@@ -116,21 +155,34 @@ public class JobServiceConfigurator<TReceiveEndpointConfigurator> :
         }
     }
 
+    /// <summary>
+    /// Gets or sets the saga partition count value.
+    /// </summary>
     public int? SagaPartitionCount
     {
         set => _options.SagaPartitionCount = value;
     }
 
+    /// <summary>
+    /// Gets or sets the finalize completed value.
+    /// </summary>
     public bool FinalizeCompleted
     {
         set => _options.FinalizeCompleted = value;
     }
 
+    /// <summary>
+    /// Gets or sets the time zone resolver value.
+    /// </summary>
     public Func<string, TimeZoneInfo> TimeZoneResolver
     {
         set => _options.TimeZoneResolver = value;
     }
 
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         ISpecification options = _options;
@@ -138,11 +190,19 @@ public class JobServiceConfigurator<TReceiveEndpointConfigurator> :
         return options.Validate();
     }
 
+    /// <summary>
+    /// Performs the on configure endpoint operation.
+    /// </summary>
+    /// <param name="callback">The callback value.</param>
     public void OnConfigureEndpoint(Action<IReceiveEndpointConfigurator> callback)
     {
         _options.OnConfigureEndpoint = callback;
     }
 
+    /// <summary>
+    /// Configures job service endpoints.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void ConfigureJobServiceEndpoints(IRegistrationContext? context = null)
     {
         if (_endpointsConfigured)

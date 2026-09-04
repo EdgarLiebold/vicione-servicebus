@@ -5,6 +5,9 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.Advanced.Initializers;
 
+/// <summary>
+/// Provides extension methods for send endpoint.
+/// </summary>
 public static class SendEndpointExtensions
 {
     /// <summary>

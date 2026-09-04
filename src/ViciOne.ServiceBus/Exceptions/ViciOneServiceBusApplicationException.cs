@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ViciOne.ServiceBus.Util;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>
 /// For use by application developers to include additional data elements along with the exception, which will be
@@ -15,16 +15,28 @@ public class ViciOneServiceBusApplicationException :
 {
     Dictionary<string, object> _data = null!;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     protected ViciOneServiceBusApplicationException()
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="innerException">The inner exception value.</param>
     public ViciOneServiceBusApplicationException(Exception innerException)
         : base(innerException.Message, innerException)
     {
         ImportExceptionData(innerException);
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="innerException">The inner exception value.</param>
+    /// <param name="values">The values value.</param>
     public ViciOneServiceBusApplicationException(Exception innerException, object values)
         : base(innerException.Message, innerException)
     {
@@ -33,6 +45,11 @@ public class ViciOneServiceBusApplicationException :
         ImportExceptionData(innerException);
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="innerException">The inner exception value.</param>
+    /// <param name="values">The values value.</param>
     public ViciOneServiceBusApplicationException(Exception innerException, IEnumerable<KeyValuePair<string, object>> values)
         : base(innerException.Message, innerException)
     {
@@ -41,12 +58,23 @@ public class ViciOneServiceBusApplicationException :
         ImportExceptionData(innerException);
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="message">The message value.</param>
+    /// <param name="innerException">The inner exception value.</param>
     public ViciOneServiceBusApplicationException(string message, Exception innerException)
         : base(message, innerException)
     {
         ImportExceptionData(innerException);
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="message">The message value.</param>
+    /// <param name="innerException">The inner exception value.</param>
+    /// <param name="values">The values value.</param>
     public ViciOneServiceBusApplicationException(string message, Exception innerException, object values)
         : base(message, innerException)
     {
@@ -55,6 +83,12 @@ public class ViciOneServiceBusApplicationException :
         ImportExceptionData(innerException);
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="message">The message value.</param>
+    /// <param name="innerException">The inner exception value.</param>
+    /// <param name="values">The values value.</param>
     public ViciOneServiceBusApplicationException(string message, Exception innerException, IEnumerable<KeyValuePair<string, object>> values)
         : base(message, innerException)
     {
@@ -63,8 +97,14 @@ public class ViciOneServiceBusApplicationException :
         ImportExceptionData(innerException);
     }
 
+    /// <summary>
+    /// Gets the data value.
+    /// </summary>
     public override IDictionary Data => _data ?? base.Data;
 
+    /// <summary>
+    /// Gets the application data value.
+    /// </summary>
     public IDictionary<string, object> ApplicationData => _data;
 
     void ImportExceptionData(Exception exception)

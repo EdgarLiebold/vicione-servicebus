@@ -1,8 +1,11 @@
 using System;
 using ViciOne.ServiceBus.Courier.Contracts;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for endpoint registration configurator.
+/// </summary>
 public interface IEndpointRegistrationConfigurator
 {
     /// <summary>

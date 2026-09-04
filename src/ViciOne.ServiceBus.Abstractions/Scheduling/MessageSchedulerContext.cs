@@ -2,11 +2,17 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Defines the contract for message scheduler context.
+/// </summary>
 public interface MessageSchedulerContext :
     Advanced.IAdvancedMessageScheduler
 {
+    /// <summary>
+    /// Gets the scheduler factory value.
+    /// </summary>
     MessageSchedulerFactory SchedulerFactory { get; }
 
     /// <summary>

@@ -6,10 +6,18 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.DependencyInjection;
 
+/// <summary>
+/// Provides a dependency injection query saga repository implementation.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
 public class DependencyInjectionQuerySagaRepository<TSaga> :
     QuerySagaRepository<TSaga>
     where TSaga : class, ISaga
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="provider">The service provider.</param>
     public DependencyInjectionQuerySagaRepository(IServiceProvider provider)
         : base(new DependencyInjectionQuerySagaRepositoryContextFactory(provider))
     {

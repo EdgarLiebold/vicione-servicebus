@@ -9,6 +9,9 @@ using ViciOne.ServiceBus.Internals;
 #nullable enable
 namespace ViciOne.ServiceBus.JobService.Scheduling;
 
+/// <summary>
+/// Provides a cron expression implementation.
+/// </summary>
 public sealed class CronExpression :
     IEquatable<CronExpression>
 {
@@ -38,6 +41,10 @@ public sealed class CronExpression :
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="cronExpression">The cron expression value.</param>
     public CronExpression(string? cronExpression)
     {
         if (cronExpression is null)
@@ -48,6 +55,9 @@ public sealed class CronExpression :
         BuildExpression(CronExpressionString);
     }
 
+    /// <summary>
+    /// Gets or sets the time zone value.
+    /// </summary>
     public TimeZoneInfo TimeZone
     {
         set => _timeZone = value;
@@ -56,6 +66,11 @@ public sealed class CronExpression :
 
     string CronExpressionString { get; }
 
+    /// <summary>
+    /// Determines whether this instance equals the supplied value.
+    /// </summary>
+    /// <param name="other">The other value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Equals(CronExpression? other)
     {
         if (other is null)
@@ -65,11 +80,20 @@ public sealed class CronExpression :
         return Equals(_timeZone, other._timeZone) && CronExpressionString == other.CronExpressionString;
     }
 
+    /// <summary>
+    /// Determines whether this instance equals the supplied value.
+    /// </summary>
+    /// <param name="obj">The obj value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public override bool Equals(object? obj)
     {
         return ReferenceEquals(this, obj) || (obj is CronExpression other && Equals(other));
     }
 
+    /// <summary>
+    /// Gets hash code.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public override int GetHashCode()
     {
         unchecked
@@ -78,16 +102,33 @@ public sealed class CronExpression :
         }
     }
 
+    /// <summary>
+    /// Applies the <c>==</c> operator.
+    /// </summary>
+    /// <param name="left">The left value.</param>
+    /// <param name="right">The right value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool operator ==(CronExpression? left, CronExpression? right)
     {
         return Equals(left, right);
     }
 
+    /// <summary>
+    /// Applies the <c>!=</c> operator.
+    /// </summary>
+    /// <param name="left">The left value.</param>
+    /// <param name="right">The right value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool operator !=(CronExpression? left, CronExpression? right)
     {
         return !Equals(left, right);
     }
 
+    /// <summary>
+    /// Determines whether satisfied by.
+    /// </summary>
+    /// <param name="date">The date value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool IsSatisfiedBy(DateTimeOffset date)
     {
         var withoutMilliseconds = new DateTimeOffset(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, date.Offset);
@@ -97,16 +138,30 @@ public sealed class CronExpression :
         return timeAfter.HasValue && timeAfter.Value.Equals(withoutMilliseconds);
     }
 
+    /// <summary>
+    /// Gets next valid time after.
+    /// </summary>
+    /// <param name="date">The date value.</param>
+    /// <returns>The result of the operation.</returns>
     public DateTimeOffset? GetNextValidTimeAfter(DateTimeOffset date)
     {
         return GetTimeAfter(date);
     }
 
+    /// <summary>
+    /// Returns the string representation of this instance.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public override string ToString()
     {
         return CronExpressionString;
     }
 
+    /// <summary>
+    /// Determines whether valid expression.
+    /// </summary>
+    /// <param name="cronExpression">The cron expression value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool IsValidExpression(string cronExpression)
     {
         try
@@ -121,6 +176,10 @@ public sealed class CronExpression :
         return true;
     }
 
+    /// <summary>
+    /// Validates expression.
+    /// </summary>
+    /// <param name="cronExpression">The cron expression value.</param>
     public static void ValidateExpression(string cronExpression)
     {
         _ = new CronExpression(cronExpression);
@@ -651,6 +710,10 @@ public sealed class CronExpression :
         data.Add(value);
     }
 
+    /// <summary>
+    /// Gets expression summary.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public string GetExpressionSummary()
     {
         return new CronExpressionSummary(
@@ -810,6 +873,11 @@ public sealed class CronExpression :
         }
     }
 
+    /// <summary>
+    /// Gets set.
+    /// </summary>
+    /// <param name="type">The type value.</param>
+    /// <returns>The result of the operation.</returns>
     public CronField GetSet(int type)
     {
         var field = type switch
@@ -1311,6 +1379,11 @@ public sealed class CronExpression :
             : new NextFireTimeCursor(false, new DateTimeOffset(year, date.Month, date.Day, date.Hour, date.Minute, date.Second, date.Offset));
     }
 
+    /// <summary>
+    /// Gets time after.
+    /// </summary>
+    /// <param name="afterTime">The after time value.</param>
+    /// <returns>The result of the operation.</returns>
     public DateTimeOffset? GetTimeAfter(DateTimeOffset afterTime)
     {
         afterTime = afterTime.AddSeconds(1);

@@ -20,12 +20,20 @@ public class KeyFilter<TContext, TKey> :
     readonly KeyAccessor<TContext, TKey> _keyAccessor;
     readonly ConcurrentDictionary<TKey, IPipe<TContext>> _pipes;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="keyAccessor">The key accessor value.</param>
     public KeyFilter(KeyAccessor<TContext, TKey> keyAccessor)
     {
         _keyAccessor = keyAccessor ?? throw new ArgumentNullException(nameof(keyAccessor));
         _pipes = new ConcurrentDictionary<TKey, IPipe<TContext>>();
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("key");
@@ -37,6 +45,12 @@ public class KeyFilter<TContext, TKey> :
             pipe.Probe(scope);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     [DebuggerNonUserCode]
     public async Task SendAsync(TContext context, IPipe<TContext> next)
     {
@@ -50,6 +64,13 @@ public class KeyFilter<TContext, TKey> :
         await next.SendAsync(context).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Connects pipe.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="key">The key value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectPipe<T>(TKey key, IPipe<T> pipe)
         where T : class, PipeContext
     {

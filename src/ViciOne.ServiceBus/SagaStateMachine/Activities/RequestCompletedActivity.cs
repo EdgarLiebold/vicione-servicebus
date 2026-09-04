@@ -15,16 +15,30 @@ public class RequestCompletedActivity<TSaga, TMessage> :
     where TSaga : class, SagaStateMachineInstance
     where TMessage : class
 {
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         context.CreateScope("requestStarted");
     }
 
+    /// <summary>
+    /// Performs the accept operation.
+    /// </summary>
+    /// <param name="visitor">The visitor value.</param>
     public void Accept(StateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
 
+    /// <summary>
+    /// Performs the execute operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
         await context.PublishAsync<RequestCompleted>(new
@@ -38,6 +52,13 @@ public class RequestCompletedActivity<TSaga, TMessage> :
         await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Performs the faulted operation.
+    /// </summary>
+    /// <typeparam name="TException">The t exception type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
         where TException : Exception
     {
@@ -61,21 +82,39 @@ public class RequestCompletedActivity<TSaga, TMessage, TResponse> :
 {
     readonly AsyncEventMessageFactory<TSaga, TMessage, TResponse> _messageFactory;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="messageFactory">The message factory value.</param>
     public RequestCompletedActivity(AsyncEventMessageFactory<TSaga, TMessage, TResponse> messageFactory)
     {
         _messageFactory = messageFactory;
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         context.CreateScope("requestStarted");
     }
 
+    /// <summary>
+    /// Performs the accept operation.
+    /// </summary>
+    /// <param name="visitor">The visitor value.</param>
     public void Accept(StateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
 
+    /// <summary>
+    /// Performs the execute operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
         await context.PublishAsync<RequestCompleted>(new
@@ -89,6 +128,13 @@ public class RequestCompletedActivity<TSaga, TMessage, TResponse> :
         await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Performs the faulted operation.
+    /// </summary>
+    /// <typeparam name="TException">The t exception type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
         where TException : Exception
     {

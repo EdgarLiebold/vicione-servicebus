@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
+/// <summary>
+/// Provides extension methods for missing instance redelivery.
+/// </summary>
 public static class MissingInstanceRedeliveryExtensions
 {
     /// <summary>

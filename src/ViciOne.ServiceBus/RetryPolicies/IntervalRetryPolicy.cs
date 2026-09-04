@@ -4,11 +4,19 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.RetryPolicies;
 
+/// <summary>
+/// Provides an interval retry policy implementation.
+/// </summary>
 public class IntervalRetryPolicy :
     IRetryPolicy
 {
     readonly IExceptionFilter _filter;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="filter">The filter value.</param>
+    /// <param name="intervals">The intervals value.</param>
     public IntervalRetryPolicy(IExceptionFilter filter, params TimeSpan[] intervals)
     {
         ArgumentNullException.ThrowIfNull(filter);
@@ -22,6 +30,11 @@ public class IntervalRetryPolicy :
         Intervals = Array.AsReadOnly([.. intervals]);
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="filter">The filter value.</param>
+    /// <param name="intervals">The intervals value.</param>
     public IntervalRetryPolicy(IExceptionFilter filter, params int[] intervals)
     {
         ArgumentNullException.ThrowIfNull(filter);
@@ -35,6 +48,9 @@ public class IntervalRetryPolicy :
         Intervals = Array.AsReadOnly(intervals.Select(x => TimeSpan.FromMilliseconds(x)).ToArray());
     }
 
+    /// <summary>
+    /// Gets the intervals value.
+    /// </summary>
     public IReadOnlyList<TimeSpan> Intervals { get; }
 
     void IProbeSite.Probe(ProbeContext context)
@@ -54,11 +70,20 @@ public class IntervalRetryPolicy :
         return new IntervalRetryPolicyContext<T>(this, context);
     }
 
+    /// <summary>
+    /// Determines whether handled.
+    /// </summary>
+    /// <param name="exception">The exception associated with the operation.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool IsHandled(Exception exception)
     {
         return _filter.Match(exception);
     }
 
+    /// <summary>
+    /// Returns the string representation of this instance.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public override string ToString()
     {
         return $"Interval (limit {Intervals.Count}, intervals {string.Join(";", Intervals.Take(5).Select(x => x.ToString()))})";

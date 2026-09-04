@@ -1,4 +1,4 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Courier;
 
 /// <summary>
 /// An Activity implements the execute and compensate methods for an activity

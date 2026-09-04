@@ -6,14 +6,35 @@ using System.Reflection;
 
 namespace ViciOne.ServiceBus.Util.Scanning;
 
+/// <summary>
+/// Provides an assembly finder implementation.
+/// </summary>
 public class AssemblyFinder
 {
+    /// <summary>
+    /// Represents the method that handles assembly filter.
+    /// </summary>
+    /// <param name="filename">The filename value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public delegate bool AssemblyFilter(string filename);
 
 
+    /// <summary>
+    /// Represents the method that handles assembly load failure.
+    /// </summary>
+    /// <param name="assemblyName">The assembly name value.</param>
+    /// <param name="exception">The exception associated with the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public delegate void AssemblyLoadFailure(string assemblyName, Exception exception);
 
 
+    /// <summary>
+    /// Performs the find assemblies operation.
+    /// </summary>
+    /// <param name="loadFailure">The load failure value.</param>
+    /// <param name="includeExeFiles">The include exe files value.</param>
+    /// <param name="filter">The filter value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IEnumerable<Assembly> FindAssemblies(AssemblyLoadFailure loadFailure, bool includeExeFiles, AssemblyFilter filter)
     {
         var assemblyPath = AppDomain.CurrentDomain.BaseDirectory;
@@ -33,6 +54,14 @@ public class AssemblyFinder
         });
     }
 
+    /// <summary>
+    /// Performs the find assemblies operation.
+    /// </summary>
+    /// <param name="assemblyPath">The assembly path value.</param>
+    /// <param name="loadFailure">The load failure value.</param>
+    /// <param name="includeExeFiles">The include exe files value.</param>
+    /// <param name="filter">The filter value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IEnumerable<Assembly> FindAssemblies(string assemblyPath, AssemblyLoadFailure loadFailure, bool includeExeFiles, AssemblyFilter filter)
     {
         LogContext.Debug?.Log("Scanning assembly directory: {Path}", assemblyPath);

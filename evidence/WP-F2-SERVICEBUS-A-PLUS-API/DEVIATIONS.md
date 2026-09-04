@@ -87,3 +87,16 @@ exact cancel repository task is observable and asserts that this task is still p
 the unrelated-instance message or releases the held completion. This is a causal task-state barrier;
 no timeout increase or production behavior change was used. The corrected test passed ten isolated
 runs and all three final full-suite runs.
+
+## Related defect: durable intent retired after failed or unconsumed delivery
+
+Replacing the durable-send integration test's early consumer-fault signal with the terminal
+`IReceiveObserver.PostReceiveAsync` boundary made a production defect deterministic. The in-memory
+durable-send completion filter treated receive-pipeline completion as successful consumer delivery and
+removed the stored intent even when the context was faulted or no consumer accepted the message.
+
+The completion filter now retires an intent only when `IsDelivered` is true and `IsFaulted` is false.
+Separate regressions preserve the intent after consumer failure and after an unconsumed/dead-lettered
+message. The hardened class failed six of six times before the correction and passed three of three in
+six repeated executions after it, followed by all three complete UnitArchitecture runs. The test uses
+a causal receive-terminal barrier; no polling delay or timeout increase is involved.

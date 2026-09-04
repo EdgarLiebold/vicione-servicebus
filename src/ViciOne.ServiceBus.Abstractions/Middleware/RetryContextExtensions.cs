@@ -1,5 +1,8 @@
 namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides extension methods for retry context.
+/// </summary>
 public static class RetryContextExtensions
 {
     /// <summary>

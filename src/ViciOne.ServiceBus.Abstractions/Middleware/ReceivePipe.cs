@@ -4,18 +4,29 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Middleware;
 
+/// <summary>
+/// Provides a receive pipe implementation.
+/// </summary>
 public class ReceivePipe :
     IReceivePipe
 {
     readonly IConsumePipe _consumePipe;
     readonly IPipe<ReceiveContext> _receivePipe;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="receivePipe">The receive pipe value.</param>
+    /// <param name="consumePipe">The consume pipe value.</param>
     public ReceivePipe(IPipe<ReceiveContext> receivePipe, IConsumePipe consumePipe)
     {
         _receivePipe = receivePipe;
         _consumePipe = consumePipe;
     }
 
+    /// <summary>
+    /// Gets the connected value.
+    /// </summary>
     public Task Connected => _consumePipe.Connected;
 
     Task IPipe<ReceiveContext>.SendAsync(ReceiveContext context)

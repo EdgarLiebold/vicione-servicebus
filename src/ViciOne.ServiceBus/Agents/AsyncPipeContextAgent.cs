@@ -16,6 +16,9 @@ public class AsyncPipeContextAgent<TContext> :
     readonly IPipeContextAgent<TContext> _agent;
     readonly TaskCompletionSource<TContext> _context;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public AsyncPipeContextAgent()
     {
         _context = TaskCompletionSources.Create<TContext>();

@@ -1,7 +1,9 @@
-using System.ComponentModel;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for consumer configuration observer.
+/// </summary>
 public interface IConsumerConfigurationObserver
 {
     /// <summary>
@@ -9,7 +11,6 @@ public interface IConsumerConfigurationObserver
     /// </summary>
     /// <typeparam name="TConsumer"></typeparam>
     /// <param name="configurator"></param>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     void ConsumerConfigured<TConsumer>(IConsumerConfigurator<TConsumer> configurator)
         where TConsumer : class;
 
@@ -19,7 +20,6 @@ public interface IConsumerConfigurationObserver
     /// <typeparam name="TConsumer"></typeparam>
     /// <typeparam name="TMessage"></typeparam>
     /// <param name="configurator"></param>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     void ConsumerMessageConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, TMessage> configurator)
         where TConsumer : class
         where TMessage : class;

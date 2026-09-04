@@ -14,16 +14,31 @@ using ViciOne.ServiceBus.Analyzers.Helpers;
 #nullable enable
 namespace ViciOne.ServiceBus.Analyzers;
 
+/// <summary>
+/// Provides a cancellation token overload method analyzer implementation.
+/// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class CancellationTokenOverloadMethodAnalyzer :
     DiagnosticAnalyzer
 {
-    public const string CancellationTokenOverloadMethodRuleId = "MCA2016";
+    /// <summary>
+    /// Defines the cancellation token overload method rule id value.
+    /// </summary>
+    public const string CancellationTokenOverloadMethodRuleId = "VOSB2001";
 
     // Diagnostic property keys. The code fix reads them from its own assembly, so they are part of
     // the contract between the two.
+    /// <summary>
+    /// Defines the parameter index value.
+    /// </summary>
     public const string ParameterIndex = "ParameterIndex";
+    /// <summary>
+    /// Defines the parameter name value.
+    /// </summary>
     public const string ParameterName = "ParameterName";
+    /// <summary>
+    /// Defines the cancellation tokens value.
+    /// </summary>
     public const string CancellationTokens = "CancellationTokens";
 
     const string Category = "Reliability";
@@ -34,8 +49,15 @@ public class CancellationTokenOverloadMethodAnalyzer :
         Category, DiagnosticSeverity.Info, true,
         "Context.CancellationToken can be passed in method with overload.");
 
+    /// <summary>
+    /// Gets the supported diagnostics value.
+    /// </summary>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(CancellationTokenOverloadMethodRule);
 
+    /// <summary>
+    /// Performs the initialize operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public override void Initialize(AnalysisContext context)
     {
         if (context == null)
@@ -49,7 +71,7 @@ public class CancellationTokenOverloadMethodAnalyzer :
     void AnalyzeCompilationStart(CompilationStartAnalysisContext context)
     {
         var cancellationTokenSymbol = GetBestTypeByMetadataName(context.Compilation, "System.Threading.CancellationToken");
-        var pipeContextTypeSymbol = GetBestTypeByMetadataName(context.Compilation, "ViciOne.ServiceBus.PipeContext");
+        var pipeContextTypeSymbol = GetBestTypeByMetadataName(context.Compilation, "ViciOne.ServiceBus.Advanced.PipeContext");
         var cancellationTokenSourceSymbol = GetBestTypeByMetadataName(context.Compilation, "System.Threading.CancellationTokenSource");
         if (cancellationTokenSymbol == null || pipeContextTypeSymbol == null)
             return;
@@ -110,7 +132,7 @@ public class CancellationTokenOverloadMethodAnalyzer :
     static bool TryGetInterface(ITypeSymbol? symbol, ISymbol expectedSymbol, out ITypeSymbol? result)
     {
         result = null;
-        if (symbol == null || !SymbolEqualityComparer.Default.Equals(symbol.ContainingNamespace, expectedSymbol.ContainingNamespace))
+        if (symbol == null)
             return false;
 
         if (SymbolEqualityComparer.Default.Equals(symbol, expectedSymbol))
@@ -386,11 +408,11 @@ public class CancellationTokenOverloadMethodAnalyzer :
                 switch (member)
                 {
                     case IPropertySymbol propertySymbol when SymbolEqualityComparer.Default.Equals(propertySymbol.Type, cancellationTokenSymbol):
-                        result.Add(propertySymbol.Type);
+                        result.Add(propertySymbol);
                         break;
 
                     case IFieldSymbol fieldSymbol when SymbolEqualityComparer.Default.Equals(fieldSymbol.Type, cancellationTokenSymbol):
-                        result.Add(fieldSymbol.Type);
+                        result.Add(fieldSymbol);
                         break;
                 }
             }
@@ -418,8 +440,17 @@ public class CancellationTokenOverloadMethodAnalyzer :
 
     enum SymbolVisibility
     {
+        /// <summary>
+        /// Indicates public.
+        /// </summary>
         Public,
+        /// <summary>
+        /// Indicates internal.
+        /// </summary>
         Internal,
+        /// <summary>
+        /// Indicates private.
+        /// </summary>
         Private,
     }
 }

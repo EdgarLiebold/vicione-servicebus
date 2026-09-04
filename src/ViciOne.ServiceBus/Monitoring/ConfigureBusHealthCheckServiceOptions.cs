@@ -9,6 +9,9 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Monitoring;
 
+/// <summary>
+/// Defines configuration options for configure bus health check service.
+/// </summary>
 public class ConfigureBusHealthCheckServiceOptions :
     IConfigureOptions<HealthCheckServiceOptions>
 {
@@ -16,6 +19,11 @@ public class ConfigureBusHealthCheckServiceOptions :
     readonly IServiceProvider _provider;
     readonly string[] _tags;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="busInstances">The bus instances value.</param>
+    /// <param name="provider">The service provider.</param>
     public ConfigureBusHealthCheckServiceOptions(IEnumerable<IBusInstance> busInstances, IServiceProvider provider)
     {
         _busInstances = busInstances;
@@ -23,6 +31,10 @@ public class ConfigureBusHealthCheckServiceOptions :
         _tags = new[] { "ready", "vicione-servicebus" };
     }
 
+    /// <summary>
+    /// Performs the configure operation.
+    /// </summary>
+    /// <param name="options">The options value.</param>
     public void Configure(HealthCheckServiceOptions options)
     {
         foreach (var busInstance in _busInstances)

@@ -19,12 +19,21 @@ public class InMemoryReceiveTransport :
     readonly InMemoryReceiveEndpointContext _context;
     readonly string _queueName;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="queueName">The queue name value.</param>
     public InMemoryReceiveTransport(InMemoryReceiveEndpointContext context, string queueName)
     {
         _context = context;
         _queueName = queueName;
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("receiveTransport");

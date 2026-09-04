@@ -3,8 +3,12 @@ using System.Net.Mime;
 using System.Text.Json;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for bus factory configurator.
+/// </summary>
+/// <typeparam name="TEndpointConfigurator">The t endpoint configurator type.</typeparam>
 public interface IBusFactoryConfigurator<out TEndpointConfigurator> :
     IBusFactoryConfigurator,
     IReceiveConfigurator<TEndpointConfigurator>
@@ -13,6 +17,9 @@ public interface IBusFactoryConfigurator<out TEndpointConfigurator> :
 }
 
 
+/// <summary>
+/// Defines the contract for bus factory configurator.
+/// </summary>
 public interface IBusFactoryConfigurator :
     IReceiveConfigurator,
     IConsumePipeConfigurator,
@@ -24,9 +31,21 @@ public interface IBusFactoryConfigurator :
     ISendObserverConnector,
     IPublishObserverConnector
 {
+    /// <summary>
+    /// Gets the message topology value.
+    /// </summary>
     IMessageTopologyConfigurator MessageTopology { get; }
+    /// <summary>
+    /// Gets the consume topology value.
+    /// </summary>
     IConsumeTopologyConfigurator ConsumeTopology { get; }
+    /// <summary>
+    /// Gets the send topology value.
+    /// </summary>
     ISendTopologyConfigurator SendTopology { get; }
+    /// <summary>
+    /// Gets the publish topology value.
+    /// </summary>
     IPublishTopologyConfigurator PublishTopology { get; }
 
     /// <summary>

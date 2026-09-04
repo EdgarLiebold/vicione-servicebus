@@ -1,7 +1,13 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
+/// <summary>
+/// Defines the contract for state machine faulted activity selector.
+/// </summary>
+/// <typeparam name="TInstance">The t instance type.</typeparam>
+/// <typeparam name="TData">The t data type.</typeparam>
+/// <typeparam name="TException">The t exception type.</typeparam>
 public interface IStateMachineFaultedActivitySelector<TInstance, TData, TException>
     where TInstance : class, SagaStateMachineInstance
     where TData : class
@@ -25,6 +31,11 @@ public interface IStateMachineFaultedActivitySelector<TInstance, TData, TExcepti
 }
 
 
+/// <summary>
+/// Defines the contract for state machine faulted activity selector.
+/// </summary>
+/// <typeparam name="TInstance">The t instance type.</typeparam>
+/// <typeparam name="TException">The t exception type.</typeparam>
 public interface IStateMachineFaultedActivitySelector<TInstance, TException>
     where TInstance : class, SagaStateMachineInstance
     where TException : Exception

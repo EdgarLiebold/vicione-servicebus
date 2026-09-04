@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 #nullable enable
 namespace ViciOne.ServiceBus.Testing;
 
+/// <summary>
+/// Provides extension methods for telemetry monitor.
+/// </summary>
 public static class TelemetryMonitorExtensions
 {
     /// <summary>
@@ -23,6 +26,16 @@ public static class TelemetryMonitorExtensions
         await WaitAsync(publishEndpoint, callback, timeout, idleTimeout, TimeProvider.System, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Performs the wait operation.
+    /// </summary>
+    /// <param name="publishEndpoint">The publish endpoint value.</param>
+    /// <param name="callback">The callback value.</param>
+    /// <param name="timeout">The timeout value.</param>
+    /// <param name="idleTimeout">The idle timeout value.</param>
+    /// <param name="timeProvider">The time provider value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static async Task WaitAsync(this IPublishEndpoint publishEndpoint, Func<IPublishEndpoint, Task>? callback, TimeSpan? timeout,
         TimeSpan? idleTimeout, TimeProvider timeProvider, CancellationToken cancellationToken = default)
     {
@@ -59,6 +72,16 @@ public static class TelemetryMonitorExtensions
         await WaitAsync(sendEndpoint, callback, timeout, idleTimeout, TimeProvider.System, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Performs the wait operation.
+    /// </summary>
+    /// <param name="sendEndpoint">The send endpoint value.</param>
+    /// <param name="callback">The callback value.</param>
+    /// <param name="timeout">The timeout value.</param>
+    /// <param name="idleTimeout">The idle timeout value.</param>
+    /// <param name="timeProvider">The time provider value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static async Task WaitAsync(this ISendEndpoint sendEndpoint, Func<ISendEndpoint, Task>? callback, TimeSpan? timeout,
         TimeSpan? idleTimeout, TimeProvider timeProvider, CancellationToken cancellationToken = default)
     {
@@ -97,6 +120,18 @@ public static class TelemetryMonitorExtensions
         return await WaitAsync(client, callback, timeout, idleTimeout, TimeProvider.System, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Performs the wait operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <param name="client">The client value.</param>
+    /// <param name="callback">The callback value.</param>
+    /// <param name="timeout">The timeout value.</param>
+    /// <param name="idleTimeout">The idle timeout value.</param>
+    /// <param name="timeProvider">The time provider value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static async Task<Response<T1>> WaitAsync<T, T1>(this IRequestClient<T> client, Func<IRequestClient<T>, Task<Response<T1>>> callback,
         TimeSpan? timeout, TimeSpan? idleTimeout, TimeProvider timeProvider, CancellationToken cancellationToken = default)
         where T : class
@@ -140,6 +175,19 @@ public static class TelemetryMonitorExtensions
         return await WaitAsync(client, callback, timeout, idleTimeout, TimeProvider.System, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Performs the wait operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <typeparam name="T2">The t2 type.</typeparam>
+    /// <param name="client">The client value.</param>
+    /// <param name="callback">The callback value.</param>
+    /// <param name="timeout">The timeout value.</param>
+    /// <param name="idleTimeout">The idle timeout value.</param>
+    /// <param name="timeProvider">The time provider value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static async Task<Response<T1, T2>> WaitAsync<T, T1, T2>(this IRequestClient<T> client, Func<IRequestClient<T>, Task<Response<T1, T2>>> callback,
         TimeSpan? timeout, TimeSpan? idleTimeout, TimeProvider timeProvider, CancellationToken cancellationToken = default)
         where T : class
@@ -185,6 +233,20 @@ public static class TelemetryMonitorExtensions
         return await WaitAsync(client, callback, timeout, idleTimeout, TimeProvider.System, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Performs the wait operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <typeparam name="T2">The t2 type.</typeparam>
+    /// <typeparam name="T3">The t3 type.</typeparam>
+    /// <param name="client">The client value.</param>
+    /// <param name="callback">The callback value.</param>
+    /// <param name="timeout">The timeout value.</param>
+    /// <param name="idleTimeout">The idle timeout value.</param>
+    /// <param name="timeProvider">The time provider value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static async Task<Response<T1, T2, T3>> WaitAsync<T, T1, T2, T3>(this IRequestClient<T> client,
         Func<IRequestClient<T>, Task<Response<T1, T2, T3>>> callback, TimeSpan? timeout, TimeSpan? idleTimeout, TimeProvider timeProvider, CancellationToken cancellationToken = default)
         where T : class

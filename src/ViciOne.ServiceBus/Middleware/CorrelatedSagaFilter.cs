@@ -17,6 +17,12 @@ public class CorrelatedSagaFilter<TSaga, TMessage> :
     readonly ISagaPolicy<TSaga, TMessage> _policy;
     readonly ISagaRepository<TSaga> _sagaRepository;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="sagaRepository">The saga repository value.</param>
+    /// <param name="policy">The policy value.</param>
+    /// <param name="messagePipe">The message pipe value.</param>
     public CorrelatedSagaFilter(ISagaRepository<TSaga> sagaRepository, ISagaPolicy<TSaga, TMessage> policy,
         IPipe<SagaConsumeContext<TSaga, TMessage>> messagePipe)
     {
@@ -25,6 +31,10 @@ public class CorrelatedSagaFilter<TSaga, TMessage> :
         _policy = policy;
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("saga");
@@ -35,6 +45,12 @@ public class CorrelatedSagaFilter<TSaga, TMessage> :
         _messagePipe.Probe(scope);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SendAsync(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
     {
         TimeProvider timeProvider = context.GetTimeProvider();

@@ -5,7 +5,7 @@ set -euo pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repository_root="$(cd "$script_dir/../.." && pwd)"
-dotnet_cli="${DOTNET_CLI:-/usr/local/share/dotnet/dotnet}"
+dotnet_cli="${DOTNET_CLI:-dotnet}"
 temporary_root="$(mktemp -d "${TMPDIR:-/tmp}/vicione-developer-journeys.XXXXXX")"
 package_feed="$temporary_root/packages"
 global_packages="$temporary_root/global-packages"
@@ -32,7 +32,6 @@ printf '%s\n' \
   '</configuration>' > "$nuget_config"
 
 export DOTNET_CLI_HOME="${DOTNET_CLI_HOME:-/private/tmp/dotnet-home}"
-export DOTNET_ROOT="${DOTNET_ROOT:-/usr/local/share/dotnet}"
 export DOTNET_MULTILEVEL_LOOKUP=0
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
@@ -43,10 +42,10 @@ export NUGET_PACKAGES="$global_packages"
 projects=(
   "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj"
   "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
-  "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/ViciOne.ServiceBus.RabbitMqTransport.csproj"
-  "src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/ViciOne.ServiceBus.Azure.ServiceBus.Core.csproj"
-  "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.csproj"
-  "src/Scheduling/ViciOne.ServiceBus.QuartzIntegration/ViciOne.ServiceBus.QuartzIntegration.csproj"
+  "src/Transports/ViciOne.ServiceBus.RabbitMq/ViciOne.ServiceBus.RabbitMq.csproj"
+  "src/Transports/ViciOne.ServiceBus.AzureServiceBus/ViciOne.ServiceBus.AzureServiceBus.csproj"
+  "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/ViciOne.ServiceBus.EntityFrameworkCore.csproj"
+  "src/Scheduling/ViciOne.ServiceBus.Quartz/ViciOne.ServiceBus.Quartz.csproj"
   "src/ViciOne.ServiceBus.MessagePack/ViciOne.ServiceBus.MessagePack.csproj"
   "src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj"
 )
@@ -62,8 +61,8 @@ done
 expected_packages=(
   "ViciOne.ServiceBus.Abstractions.1.0.0.nupkg"
   "ViciOne.ServiceBus.1.0.0.nupkg"
-  "ViciOne.ServiceBus.RabbitMQ.1.0.0.nupkg"
-  "ViciOne.ServiceBus.Azure.ServiceBus.Core.1.0.0.nupkg"
+  "ViciOne.ServiceBus.RabbitMq.1.0.0.nupkg"
+  "ViciOne.ServiceBus.AzureServiceBus.1.0.0.nupkg"
   "ViciOne.ServiceBus.EntityFrameworkCore.1.0.0.nupkg"
   "ViciOne.ServiceBus.Quartz.1.0.0.nupkg"
   "ViciOne.ServiceBus.MessagePack.1.0.0.nupkg"

@@ -17,6 +17,11 @@ public sealed class AmazonS3MessageDataRepositoryOptions
         "--table-s3",
     ];
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="bucketName">The bucket name value.</param>
+    /// <param name="lifecycleExpirationDays">The lifecycle expiration days value.</param>
     public AmazonS3MessageDataRepositoryOptions(
         string bucketName,
         int? lifecycleExpirationDays = null)
@@ -34,8 +39,14 @@ public sealed class AmazonS3MessageDataRepositoryOptions
         LifecycleExpirationDays = lifecycleExpirationDays;
     }
 
+    /// <summary>
+    /// Gets the bucket name value.
+    /// </summary>
     public string BucketName { get; }
 
+    /// <summary>
+    /// Gets the lifecycle expiration days value.
+    /// </summary>
     public int? LifecycleExpirationDays { get; }
 
     internal void ValidateTimeToLive(TimeSpan? timeToLive)

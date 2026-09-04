@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.JobService;
 /// <summary>
 /// Every job type has one entry in this state machine
 /// </summary>
@@ -10,6 +10,9 @@ public class JobTypeSaga :
     JobTypeInfo,
     ISagaVersion
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public JobTypeSaga()
     {
         ConcurrentJobLimit = 1;
@@ -18,8 +21,14 @@ public class JobTypeSaga :
         ActiveJobs = [];
     }
 
+    /// <summary>
+    /// Gets or sets the current state value.
+    /// </summary>
     public int CurrentState { get; set; }
 
+    /// <summary>
+    /// Gets or sets the active job count value.
+    /// </summary>
     public int ActiveJobCount { get; set; }
 
     /// <summary>
@@ -53,9 +62,18 @@ public class JobTypeSaga :
     /// Job properties passed by the <see cref="JobOptions{TJob}" /> configuration
     /// </summary>
     public Dictionary<string, object> Properties { get; set; } = null!;
+    /// <summary>
+    /// Gets or sets the row version value.
+    /// </summary>
     public byte[] RowVersion { get; set; } = null!;
+    /// <summary>
+    /// Gets or sets the global concurrent job limit value.
+    /// </summary>
     public int? GlobalConcurrentJobLimit { get; set; }
 
+    /// <summary>
+    /// Gets or sets the version value.
+    /// </summary>
     public int Version { get; set; }
 
     /// <summary>

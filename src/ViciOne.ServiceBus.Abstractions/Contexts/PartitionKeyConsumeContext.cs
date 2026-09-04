@@ -1,5 +1,8 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Defines the contract for partition key consume context.
+/// </summary>
 public interface PartitionKeyConsumeContext
 {
     /// <summary>

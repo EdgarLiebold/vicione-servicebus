@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Topology;
 
 /// <summary>
 /// The message-specific publish topology, which may be configured or otherwise
@@ -13,10 +13,17 @@ public interface IMessagePublishTopology<TMessage> :
     IMessagePublishTopology
     where TMessage : class
 {
+    /// <summary>
+    /// Applies this specification to the target builder.
+    /// </summary>
+    /// <param name="builder">The builder value.</param>
     void Apply(ITopologyPipeBuilder<PublishContext<TMessage>> builder);
 }
 
 
+/// <summary>
+/// Defines the contract for message publish topology.
+/// </summary>
 public interface IMessagePublishTopology
 {
     /// <summary>

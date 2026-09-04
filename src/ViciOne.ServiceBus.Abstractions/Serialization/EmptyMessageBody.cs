@@ -1,12 +1,21 @@
 using System.IO;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Serialization;
 
+/// <summary>
+/// Provides an empty message body implementation.
+/// </summary>
 public class EmptyMessageBody :
     MessageBody
 {
+    /// <summary>
+    /// Gets the instance value.
+    /// </summary>
     public static MessageBody Instance { get; } = new EmptyMessageBody();
 
+    /// <summary>
+    /// Gets the length value.
+    /// </summary>
     public long? Length => 0;
 
     /// <summary>
@@ -18,11 +27,19 @@ public class EmptyMessageBody :
         return new MemoryStream([], false);
     }
 
+    /// <summary>
+    /// Gets bytes.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public byte[] GetBytes()
     {
         return [];
     }
 
+    /// <summary>
+    /// Gets string.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public string GetString()
     {
         return string.Empty;

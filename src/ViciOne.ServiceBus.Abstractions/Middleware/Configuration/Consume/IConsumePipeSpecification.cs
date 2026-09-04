@@ -2,6 +2,9 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for consume pipe specification.
+/// </summary>
 public interface IConsumePipeSpecification :
     IConsumePipeSpecificationObserverConnector,
     ISpecification
@@ -20,5 +23,9 @@ public interface IConsumePipeSpecification :
     /// <returns></returns>
     IConsumePipe BuildConsumePipe();
 
+    /// <summary>
+    /// Creates consume pipe specification.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     IConsumePipeSpecification CreateConsumePipeSpecification();
 }

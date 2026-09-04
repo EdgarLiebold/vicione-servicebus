@@ -5,8 +5,11 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.Transactions;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for dependency injection transaction.
+/// </summary>
 public static class DependencyInjectionTransactionExtensions
 {
     /// <summary>
@@ -19,17 +22,17 @@ public static class DependencyInjectionTransactionExtensions
         if (busConfigurator == null)
             throw new ArgumentNullException(nameof(busConfigurator));
 
-        EnsureCompatible<IBus, IBufferedBus>(busConfigurator, nameof(AddAmbientTransactionBus));
+        EnsureCompatible<IBus, IBufferedBus>(busConfigurator.Services, nameof(AddAmbientTransactionBus));
         EnsureScopedContextOwner<IBus, AmbientTransactionScopedBusContextProvider<IBus>>(
-            busConfigurator,
+            busConfigurator.Services,
             nameof(AddAmbientTransactionBus));
 
-        busConfigurator.TryAddSingleton<IAmbientTransactionBus>(provider =>
+        busConfigurator.Services.TryAddSingleton<IAmbientTransactionBus>(provider =>
             new AmbientTransactionBus(provider.GetRequiredService<IBus>()));
-        busConfigurator.TryAddSingleton(provider =>
+        busConfigurator.Services.TryAddSingleton(provider =>
             Bind<IBus>.Create(provider.GetRequiredService<IAmbientTransactionBus>()));
 
-        busConfigurator.ReplaceScoped<IScopedBusContextProvider<IBus>, AmbientTransactionScopedBusContextProvider<IBus>>();
+        busConfigurator.Services.ReplaceScoped<IScopedBusContextProvider<IBus>, AmbientTransactionScopedBusContextProvider<IBus>>();
     }
 
     /// <summary>
@@ -41,15 +44,15 @@ public static class DependencyInjectionTransactionExtensions
         if (busConfigurator == null)
             throw new ArgumentNullException(nameof(busConfigurator));
 
-        EnsureCompatible<TBus, IBufferedBus>(busConfigurator, nameof(AddAmbientTransactionBus));
+        EnsureCompatible<TBus, IBufferedBus>(busConfigurator.Services, nameof(AddAmbientTransactionBus));
         EnsureScopedContextOwner<TBus, AmbientTransactionScopedBusContextProvider<TBus>>(
-            busConfigurator,
+            busConfigurator.Services,
             nameof(AddAmbientTransactionBus));
 
-        busConfigurator.TryAddSingleton(provider =>
+        busConfigurator.Services.TryAddSingleton(provider =>
             Bind<TBus>.Create<IAmbientTransactionBus>(new AmbientTransactionBus(provider.GetRequiredService<TBus>())));
 
-        busConfigurator.ReplaceScoped<IScopedBusContextProvider<TBus>, AmbientTransactionScopedBusContextProvider<TBus>>();
+        busConfigurator.Services.ReplaceScoped<IScopedBusContextProvider<TBus>, AmbientTransactionScopedBusContextProvider<TBus>>();
     }
 
     /// <summary>
@@ -63,16 +66,16 @@ public static class DependencyInjectionTransactionExtensions
         if (capacity <= 0)
             throw new ArgumentOutOfRangeException(nameof(capacity), capacity, "Buffered bus capacity must be greater than zero.");
 
-        EnsureCompatible<IBus, IAmbientTransactionBus>(busConfigurator, nameof(AddBufferedBus));
+        EnsureCompatible<IBus, IAmbientTransactionBus>(busConfigurator.Services, nameof(AddBufferedBus));
         EnsureScopedContextOwner<IBus, BufferedBusScopedBusContextProvider<IBus>>(
-            busConfigurator,
+            busConfigurator.Services,
             nameof(AddBufferedBus));
-        EnsureBufferedCapacity<IBus>(busConfigurator, capacity);
+        EnsureBufferedCapacity<IBus>(busConfigurator.Services, capacity);
 
-        busConfigurator.TryAddScoped<IBufferedBus>(provider => new BufferedBus(provider.GetRequiredService<IBus>(), capacity));
-        busConfigurator.TryAddScoped(provider => Bind<IBus>.Create(provider.GetRequiredService<IBufferedBus>()));
+        busConfigurator.Services.TryAddScoped<IBufferedBus>(provider => new BufferedBus(provider.GetRequiredService<IBus>(), capacity));
+        busConfigurator.Services.TryAddScoped(provider => Bind<IBus>.Create(provider.GetRequiredService<IBufferedBus>()));
 
-        busConfigurator.ReplaceScoped<IScopedBusContextProvider<IBus>, BufferedBusScopedBusContextProvider<IBus>>();
+        busConfigurator.Services.ReplaceScoped<IScopedBusContextProvider<IBus>, BufferedBusScopedBusContextProvider<IBus>>();
     }
 
     /// <summary>
@@ -87,16 +90,16 @@ public static class DependencyInjectionTransactionExtensions
         if (capacity <= 0)
             throw new ArgumentOutOfRangeException(nameof(capacity), capacity, "Buffered bus capacity must be greater than zero.");
 
-        EnsureCompatible<TBus, IAmbientTransactionBus>(busConfigurator, nameof(AddBufferedBus));
+        EnsureCompatible<TBus, IAmbientTransactionBus>(busConfigurator.Services, nameof(AddBufferedBus));
         EnsureScopedContextOwner<TBus, BufferedBusScopedBusContextProvider<TBus>>(
-            busConfigurator,
+            busConfigurator.Services,
             nameof(AddBufferedBus));
-        EnsureBufferedCapacity<TBus>(busConfigurator, capacity);
+        EnsureBufferedCapacity<TBus>(busConfigurator.Services, capacity);
 
-        busConfigurator.TryAddScoped(provider =>
+        busConfigurator.Services.TryAddScoped(provider =>
             Bind<TBus>.Create<IBufferedBus>(new BufferedBus(provider.GetRequiredService<TBus>(), capacity)));
 
-        busConfigurator.ReplaceScoped<IScopedBusContextProvider<TBus>, BufferedBusScopedBusContextProvider<TBus>>();
+        busConfigurator.Services.ReplaceScoped<IScopedBusContextProvider<TBus>, BufferedBusScopedBusContextProvider<TBus>>();
     }
 
     static void EnsureBufferedCapacity<TBus>(IServiceCollection services, int capacity)

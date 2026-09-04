@@ -2,8 +2,11 @@ using System;
 using System.Net.Mime;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for set serializer send convention.
+/// </summary>
 public static class SetSerializerSendConventionExtensions
 {
     /// <summary>

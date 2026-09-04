@@ -5,6 +5,9 @@ using ViciOne.ServiceBus.Transports;
 #nullable enable
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for host configuration.
+/// </summary>
 public interface IHostConfiguration :
     IEndpointConfigurationObserverConnector,
     IReceiveObserverConnector,
@@ -13,8 +16,14 @@ public interface IHostConfiguration :
     ISendObserverConnector,
     ISpecification
 {
+    /// <summary>
+    /// Gets the bus configuration value.
+    /// </summary>
     IBusConfiguration BusConfiguration { get; }
 
+    /// <summary>
+    /// Gets the host address value.
+    /// </summary>
     Uri HostAddress { get; }
 
     /// <summary>
@@ -27,19 +36,46 @@ public interface IHostConfiguration :
     /// </summary>
     bool DeployPublishTopology { get; set; }
 
+    /// <summary>
+    /// Gets the send observers value.
+    /// </summary>
     ISendObserver SendObservers { get; }
 
+    /// <summary>
+    /// Gets or sets the log context value.
+    /// </summary>
     ILogContext? LogContext { get; set; }
+    /// <summary>
+    /// Gets the receive log context value.
+    /// </summary>
     ILogContext? ReceiveLogContext { get; }
+    /// <summary>
+    /// Gets the send log context value.
+    /// </summary>
     ILogContext? SendLogContext { get; }
 
+    /// <summary>
+    /// Gets the topology value.
+    /// </summary>
     IBusTopology Topology { get; }
 
+    /// <summary>
+    /// Gets the receive transport retry policy value.
+    /// </summary>
     IRetryPolicy ReceiveTransportRetryPolicy { get; }
 
+    /// <summary>
+    /// Gets the send transport retry policy value.
+    /// </summary>
     IRetryPolicy SendTransportRetryPolicy { get; }
 
+    /// <summary>
+    /// Gets or sets the consumer stop timeout value.
+    /// </summary>
     TimeSpan? ConsumerStopTimeout { get; set; }
+    /// <summary>
+    /// Gets or sets the stop timeout value.
+    /// </summary>
     TimeSpan? StopTimeout { get; set; }
 
     /// <summary>
@@ -57,5 +93,9 @@ public interface IHostConfiguration :
     /// <returns></returns>
     ConnectHandle ConnectReceiveEndpointContext(ReceiveEndpointContext context);
 
+    /// <summary>
+    /// Performs the build operation.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     IHost Build();
 }

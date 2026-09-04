@@ -3,7 +3,7 @@ using System.IO;
 using System.Net.Mime;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>
 /// The receive context is sent from the transport when a message is ready to be processed
@@ -13,6 +13,9 @@ public interface ReceiveContext :
     PipeContext
 {
     // the amount of time elapsed since the message was read from the queue
+    /// <summary>
+    /// Gets the elapsed time value.
+    /// </summary>
     TimeSpan ElapsedTime { get; }
 
     /// <summary>
@@ -106,6 +109,9 @@ public interface ReceiveContext :
 }
 
 
+/// <summary>
+/// Provides extension methods for receive context body.
+/// </summary>
 public static class ReceiveContextBodyExtensions
 {
     /// <summary>

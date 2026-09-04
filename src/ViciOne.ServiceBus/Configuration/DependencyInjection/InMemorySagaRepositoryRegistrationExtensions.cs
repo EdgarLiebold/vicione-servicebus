@@ -1,7 +1,10 @@
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for in memory saga repository registration.
+/// </summary>
 public static class InMemorySagaRepositoryRegistrationExtensions
 {
     /// <summary>

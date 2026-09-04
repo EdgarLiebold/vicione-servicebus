@@ -5,6 +5,9 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 #nullable enable
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for health check options.
+/// </summary>
 public interface IHealthCheckOptions
 {
     /// <summary>

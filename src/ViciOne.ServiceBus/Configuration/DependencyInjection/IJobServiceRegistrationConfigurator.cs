@@ -1,7 +1,10 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for job service registration configurator.
+/// </summary>
 public interface IJobServiceRegistrationConfigurator
 {
     /// <summary>

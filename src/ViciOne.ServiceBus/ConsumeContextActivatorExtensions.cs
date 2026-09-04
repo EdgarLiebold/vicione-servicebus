@@ -1,8 +1,11 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides extension methods for consume context activator.
+/// </summary>
 public static class ConsumeContextActivatorExtensions
 {
     /// <summary>

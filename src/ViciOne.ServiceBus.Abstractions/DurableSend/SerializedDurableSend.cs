@@ -1,8 +1,7 @@
 using System;
-using System.ComponentModel;
 using System.Linq;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Providers.Persistence;
 
 /// <summary>
 /// Immutable serialized representation admitted into producer-side durable storage.
@@ -11,19 +10,39 @@ namespace ViciOne.ServiceBus;
 /// <see cref="ContractIdentity"/> is the durable protocol identity. No assembly-qualified CLR type name is persisted.
 /// Metadata is ServiceBus-owned infrastructure metadata; payload body remains opaque to the durable store.
 /// </remarks>
-[EditorBrowsable(EditorBrowsableState.Never)]
 public sealed record SerializedDurableSend
 {
+    /// <summary>
+    /// Defines the maximum destination address characters value.
+    /// </summary>
     public const int MaximumDestinationAddressCharacters = 2048;
+    /// <summary>
+    /// Defines the maximum content type characters value.
+    /// </summary>
     public const int MaximumContentTypeCharacters = 256;
+    /// <summary>
+    /// Gets or sets the id value.
+    /// </summary>
     public required DurableSendId Id { get; init; }
 
+    /// <summary>
+    /// Gets or sets the contract identity value.
+    /// </summary>
     public required MessageContractIdentity ContractIdentity { get; init; }
 
+    /// <summary>
+    /// Gets or sets the destination address value.
+    /// </summary>
     public required Uri DestinationAddress { get; init; }
 
+    /// <summary>
+    /// Gets or sets the content type value.
+    /// </summary>
     public required string ContentType { get; init; }
 
+    /// <summary>
+    /// Gets or sets the body value.
+    /// </summary>
     public required ReadOnlyMemory<byte> Body { get; init; }
 
     /// <summary>
@@ -31,8 +50,14 @@ public sealed record SerializedDurableSend
     /// </summary>
     public ReadOnlyMemory<byte> Metadata { get; init; }
 
+    /// <summary>
+    /// Gets or sets the message id value.
+    /// </summary>
     public Guid? MessageId { get; init; }
 
+    /// <summary>
+    /// Gets or sets the correlation id value.
+    /// </summary>
     public Guid? CorrelationId { get; init; }
 
     /// <summary>

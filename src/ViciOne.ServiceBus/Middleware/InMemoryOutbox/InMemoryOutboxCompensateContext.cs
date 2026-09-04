@@ -4,6 +4,10 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 
+/// <summary>
+/// Provides an in memory outbox compensate context implementation.
+/// </summary>
+/// <typeparam name="TLog">The t log type.</typeparam>
 public class InMemoryOutboxCompensateContext<TLog> :
     InMemoryOutboxCourierContextProxy,
     CompensateContext<TLog>
@@ -11,6 +15,10 @@ public class InMemoryOutboxCompensateContext<TLog> :
 {
     readonly CompensateContext<TLog> _context;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public InMemoryOutboxCompensateContext(CompensateContext<TLog> context)
         : base(context)
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>
 /// A scoped client factory

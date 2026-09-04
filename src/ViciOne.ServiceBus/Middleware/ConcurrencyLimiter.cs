@@ -17,6 +17,11 @@ public class ConcurrencyLimiter :
     int _concurrencyLimit;
     DateTimeOffset _lastUpdated;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="concurrencyLimit">The concurrency limit value.</param>
+    /// <param name="id">The id value.</param>
     public ConcurrencyLimiter(int concurrencyLimit, string? id = null)
     {
         _concurrencyLimit = concurrencyLimit;
@@ -29,16 +34,29 @@ public class ConcurrencyLimiter :
     int IConcurrencyLimiter.Available => _limit.CurrentCount;
     int IConcurrencyLimiter.Limit => _concurrencyLimit;
 
+    /// <summary>
+    /// Performs the wait operation.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task WaitAsync(CancellationToken cancellationToken)
     {
         return _limit.WaitAsync(cancellationToken);
     }
 
+    /// <summary>
+    /// Performs the release operation.
+    /// </summary>
     public void Release()
     {
         _limit.Release();
     }
 
+    /// <summary>
+    /// Consumes the message provided by the context.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task ConsumeAsync(ConsumeContext<SetConcurrencyLimit> context)
     {
         if (_id == null || _id.Equals(context.Message.Id, StringComparison.OrdinalIgnoreCase))

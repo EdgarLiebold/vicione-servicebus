@@ -1,11 +1,17 @@
 using System;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Providers.Transports;
 
+/// <summary>
+/// Defines the contract for in memory bus factory configurator.
+/// </summary>
 public interface IInMemoryBusFactoryConfigurator :
     IBusFactoryConfigurator<IInMemoryReceiveEndpointConfigurator>
 {
+    /// <summary>
+    /// Gets the publish topology value.
+    /// </summary>
     new IInMemoryPublishTopologyConfigurator PublishTopology { get; }
 
     /// <summary>
@@ -16,6 +22,11 @@ public interface IInMemoryBusFactoryConfigurator :
     void Publish<T>(Action<IInMemoryMessagePublishTopologyConfigurator<T>>? configureTopology = null)
         where T : class;
 
+    /// <summary>
+    /// Publishes a message to its configured consumers.
+    /// </summary>
+    /// <param name="messageType">The message type value.</param>
+    /// <param name="configure">The configuration callback.</param>
     void Publish(Type messageType, Action<IInMemoryMessagePublishTopologyConfigurator>? configure = null);
 
     /// <summary>

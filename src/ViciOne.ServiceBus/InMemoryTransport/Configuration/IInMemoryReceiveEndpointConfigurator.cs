@@ -1,8 +1,11 @@
 using ViciOne.ServiceBus.Transports.Fabric;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Providers.Transports;
 
+/// <summary>
+/// Defines the contract for in memory receive endpoint configurator.
+/// </summary>
 public interface IInMemoryReceiveEndpointConfigurator :
     IReceiveEndpointConfigurator
 {

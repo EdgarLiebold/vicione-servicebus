@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides extension methods for time span schedule.
+/// </summary>
 public static class TimeSpanScheduleExtensions
 {
     /// <summary>

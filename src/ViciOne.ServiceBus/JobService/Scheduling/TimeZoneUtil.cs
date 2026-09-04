@@ -5,6 +5,9 @@ using System.Linq;
 #nullable enable
 namespace ViciOne.ServiceBus.JobService.Scheduling;
 
+/// <summary>
+/// Provides a time zone util implementation.
+/// </summary>
 public static class TimeZoneUtil
 {
     static readonly Dictionary<string, string> TimeZoneIdAliases = new Dictionary<string, string>();
@@ -70,6 +73,12 @@ public static class TimeZoneUtil
         return timeZoneInfo.GetUtcOffset(dateTimeOffset);
     }
 
+    /// <summary>
+    /// Gets ambiguous time utc offset.
+    /// </summary>
+    /// <param name="dateTime">The date time value.</param>
+    /// <param name="timeZoneInfo">The time zone info value.</param>
+    /// <returns>The result of the operation.</returns>
     public static TimeSpan GetAmbiguousTimeUtcOffset(DateTimeOffset dateTime, TimeZoneInfo timeZoneInfo)
     {
         // Unlike the default behavior of TimeZoneInfo.GetUtcOffset, it is prefered to choose

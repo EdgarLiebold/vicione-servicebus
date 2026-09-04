@@ -1,12 +1,21 @@
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Topology;
 
+/// <summary>
+/// Defines the contract for send topology.
+/// </summary>
 public interface ISendTopology :
     ISendTopologyConfigurationObserverConnector
 {
+    /// <summary>
+    /// Gets the dead letter queue name formatter value.
+    /// </summary>
     IDeadLetterQueueNameFormatter DeadLetterQueueNameFormatter { get; }
 
+    /// <summary>
+    /// Gets the error queue name formatter value.
+    /// </summary>
     IErrorQueueNameFormatter ErrorQueueNameFormatter { get; }
 
     /// <summary>

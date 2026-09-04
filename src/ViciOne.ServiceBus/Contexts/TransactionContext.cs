@@ -2,8 +2,11 @@ using System;
 using System.Threading.Tasks;
 using System.Transactions;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Defines the contract for transaction context.
+/// </summary>
 public interface TransactionContext
 {
     /// <summary>

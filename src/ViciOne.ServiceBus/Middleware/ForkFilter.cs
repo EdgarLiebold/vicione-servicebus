@@ -13,6 +13,10 @@ public class ForkFilter<TContext> :
 {
     readonly IPipe<TContext> _pipe;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="pipe">The pipe value.</param>
     public ForkFilter(IPipe<TContext> pipe)
     {
         _pipe = pipe ?? throw new ArgumentNullException(nameof(pipe));

@@ -1,7 +1,9 @@
-using System.ComponentModel;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for handler configuration observer.
+/// </summary>
 public interface IHandlerConfigurationObserver
 {
     /// <summary>
@@ -9,7 +11,6 @@ public interface IHandlerConfigurationObserver
     /// </summary>
     /// <typeparam name="TMessage"></typeparam>
     /// <param name="configurator"></param>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     void HandlerConfigured<TMessage>(IHandlerConfigurator<TMessage> configurator)
         where TMessage : class;
 }

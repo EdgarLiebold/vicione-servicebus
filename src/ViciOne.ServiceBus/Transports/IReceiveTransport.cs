@@ -1,5 +1,8 @@
 namespace ViciOne.ServiceBus.Transports;
 
+/// <summary>
+/// Defines the contract for receive transport.
+/// </summary>
 public interface IReceiveTransport :
     IReceiveObserverConnector,
     IPublishObserverConnector,

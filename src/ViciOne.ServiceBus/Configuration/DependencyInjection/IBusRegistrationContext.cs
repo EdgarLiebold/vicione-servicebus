@@ -2,11 +2,17 @@ using System;
 using ViciOne.ServiceBus.DependencyInjection.Registration;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for bus registration context.
+/// </summary>
 public interface IBusRegistrationContext :
     IRegistrationContext
 {
+    /// <summary>
+    /// Gets the endpoint name formatter value.
+    /// </summary>
     IEndpointNameFormatter EndpointNameFormatter { get; }
 
     /// <summary>

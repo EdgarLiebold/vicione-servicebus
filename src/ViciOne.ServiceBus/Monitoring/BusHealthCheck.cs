@@ -8,16 +8,29 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Monitoring;
 
+/// <summary>
+/// Provides a bus health check implementation.
+/// </summary>
 public class BusHealthCheck :
     IHealthCheck
 {
     readonly IBusInstance _busInstance;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="busInstance">The bus instance value.</param>
     public BusHealthCheck(IBusInstance busInstance)
     {
         _busInstance = busInstance;
     }
 
+    /// <summary>
+    /// Performs the check health operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult>(cancellationToken); var result = _busInstance.BusControl.CheckHealth();

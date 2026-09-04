@@ -5,6 +5,9 @@ using System.Runtime.Intrinsics.X86;
 
 namespace ViciOne.ServiceBus.NewIdFormatters;
 
+/// <summary>
+/// Provides a z base32 formatter implementation.
+/// </summary>
 public class ZBase32Formatter : INewIdFormatter
 {
     // taken from analysis done at http://philzimmermann.com/docs/human-oriented-base-32-encoding.txt
@@ -14,14 +17,26 @@ public class ZBase32Formatter : INewIdFormatter
     readonly string _chars;
     readonly bool _isUpper;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="upperCase">The upper case value.</param>
     public ZBase32Formatter(bool upperCase = false)
     {
         _chars = upperCase ? UpperCaseChars : LowerCaseChars;
         _isUpper = upperCase;
     }
 
+    /// <summary>
+    /// Defines the lower case value.
+    /// </summary>
     public static readonly INewIdFormatter LowerCase = new ZBase32Formatter();
 
+    /// <summary>
+    /// Performs the format operation.
+    /// </summary>
+    /// <param name="bytes">The bytes value.</param>
+    /// <returns>The result of the operation.</returns>
     public unsafe string Format(in byte[] bytes)
     {
         if (Avx2.IsSupported)

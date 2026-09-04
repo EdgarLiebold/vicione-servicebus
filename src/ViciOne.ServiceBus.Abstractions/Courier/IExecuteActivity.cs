@@ -1,7 +1,11 @@
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Courier;
 
+/// <summary>
+/// Defines the contract for execute activity.
+/// </summary>
+/// <typeparam name="TArguments">The t arguments type.</typeparam>
 public interface IExecuteActivity<in TArguments> :
     IExecuteActivity
     where TArguments : class

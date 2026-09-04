@@ -1,5 +1,8 @@
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for publish pipe specification.
+/// </summary>
 public interface IPublishPipeSpecification :
     IPublishPipeSpecificationObserverConnector,
     ISpecification

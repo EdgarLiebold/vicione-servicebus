@@ -18,6 +18,10 @@ public class TransformFilter<T> :
 {
     readonly IMessageInitializer<T> _initializer;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="initializer">The initializer value.</param>
     public TransformFilter(IMessageInitializer<T> initializer)
     {
         _initializer = initializer;

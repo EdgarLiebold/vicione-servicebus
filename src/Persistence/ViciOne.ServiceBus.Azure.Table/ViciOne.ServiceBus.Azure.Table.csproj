@@ -4,13 +4,11 @@
   <PropertyGroup>
     <!-- Nullable warnings are completed in work package B; annotations remain active in the interim. -->
     <Nullable>enable</Nullable>
-    <!-- Documentation is completed in work package C; until then CS1591 stays a warning here. -->
-    <NoWarn>$(NoWarn);CS1591</NoWarn>
     <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup>
-    <RootNamespace>ViciOne.ServiceBus</RootNamespace>
+    <RootNamespace>ViciOne.ServiceBus.Azure.Table</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup>

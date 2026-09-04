@@ -1,7 +1,11 @@
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Courier;
 
+/// <summary>
+/// Defines the contract for compensate activity.
+/// </summary>
+/// <typeparam name="TLog">The t log type.</typeparam>
 public interface ICompensateActivity<in TLog> :
     ICompensateActivity
     where TLog : class

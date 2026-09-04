@@ -6,6 +6,9 @@ using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Topology;
 
+/// <summary>
+/// Provides a send topology implementation.
+/// </summary>
 public class SendTopology :
     ISendTopologyConfigurator,
     ISendTopologyConfigurationObserver
@@ -15,6 +18,9 @@ public class SendTopology :
     readonly ConcurrentDictionary<Type, Lazy<IMessageSendTopologyConfigurator>> _messageTypes;
     readonly SendTopologyConfigurationObservable _observers;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public SendTopology()
     {
         _messageTypes = new ConcurrentDictionary<Type, Lazy<IMessageSendTopologyConfigurator>>();
@@ -34,9 +40,20 @@ public class SendTopology :
         ApplyConventionsToMessageTopology(messageTopology);
     }
 
+    /// <summary>
+    /// Gets or sets the dead letter queue name formatter value.
+    /// </summary>
     public IDeadLetterQueueNameFormatter DeadLetterQueueNameFormatter { get; set; }
+    /// <summary>
+    /// Gets or sets the error queue name formatter value.
+    /// </summary>
     public IErrorQueueNameFormatter ErrorQueueNameFormatter { get; set; }
 
+    /// <summary>
+    /// Gets message topology.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     public IMessageSendTopologyConfigurator<T> GetMessageTopology<T>()
         where T : class
     {
@@ -49,11 +66,21 @@ public class SendTopology :
         return (IMessageSendTopologyConfigurator<T>)specification.Value;
     }
 
+    /// <summary>
+    /// Connects send topology configuration observer.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectSendTopologyConfigurationObserver(ISendTopologyConfigurationObserver observer)
     {
         return _observers.Connect(observer);
     }
 
+    /// <summary>
+    /// Performs the try add convention operation.
+    /// </summary>
+    /// <param name="convention">The convention value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryAddConvention(ISendTopologyConvention convention)
     {
         var conventionType = convention.GetType();
@@ -82,11 +109,21 @@ public class SendTopology :
         messageConfiguration.Add(topology);
     }
 
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public virtual IEnumerable<ValidationResult> Validate()
     {
         return _messageTypes.Values.SelectMany(x => x.Value.Validate());
     }
 
+    /// <summary>
+    /// Creates message topology.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="type">The type value.</param>
+    /// <returns>The result of the operation.</returns>
     protected virtual IMessageSendTopologyConfigurator CreateMessageTopology<T>(Type type)
         where T : class
     {
@@ -96,6 +133,11 @@ public class SendTopology :
         return messageTopology;
     }
 
+    /// <summary>
+    /// Performs the on message topology created operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="messageTopology">The message topology value.</param>
     protected void OnMessageTopologyCreated<T>(IMessageSendTopologyConfigurator<T> messageTopology)
         where T : class
     {

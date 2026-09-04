@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Courier.Contracts;
 
+/// <summary>
+/// Defines the contract for routing slip compensation failed.
+/// </summary>
 public interface RoutingSlipCompensationFailed
 {
     /// <summary>

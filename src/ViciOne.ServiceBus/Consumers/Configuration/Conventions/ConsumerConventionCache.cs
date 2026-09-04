@@ -3,6 +3,9 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a consumer convention cache implementation.
+/// </summary>
 public static class ConsumerConventionCache
 {
     static ConsumerConventionCache()
@@ -12,6 +15,12 @@ public static class ConsumerConventionCache
         ConsumerConvention.Register<JobConsumerConvention>();
     }
 
+    /// <summary>
+    /// Performs the try add operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="convention">The convention value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool TryAdd<T>(T convention)
         where T : IConsumerConvention
     {
@@ -26,6 +35,11 @@ public static class ConsumerConventionCache
         return true;
     }
 
+    /// <summary>
+    /// Performs the remove operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool Remove<T>()
         where T : IConsumerConvention
     {

@@ -2,6 +2,9 @@ using System;
 
 namespace ViciOne.ServiceBus.RetryPolicies.ExceptionFilters;
 
+/// <summary>
+/// Provides an all exception filter implementation.
+/// </summary>
 public class AllExceptionFilter :
     IExceptionFilter
 {

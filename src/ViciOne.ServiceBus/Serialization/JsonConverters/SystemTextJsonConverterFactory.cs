@@ -15,6 +15,9 @@ using ViciOne.ServiceBus.Scheduling;
 
 namespace ViciOne.ServiceBus.Serialization.JsonConverters;
 
+/// <summary>
+/// Provides a system text json converter factory implementation.
+/// </summary>
 public class SystemTextJsonConverterFactory :
     JsonConverterFactory
 {
@@ -93,6 +96,11 @@ public class SystemTextJsonConverterFactory :
             .Add<StartJobAttempt, StartJobAttemptCommand>();
     }
 
+    /// <summary>
+    /// Determines whether the current value can convert.
+    /// </summary>
+    /// <param name="typeToConvert">The type to convert value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public override bool CanConvert(Type typeToConvert)
     {
         if (typeToConvert.IsGenericType)
@@ -132,6 +140,12 @@ public class SystemTextJsonConverterFactory :
         return false;
     }
 
+    /// <summary>
+    /// Creates converter.
+    /// </summary>
+    /// <param name="typeToConvert">The type to convert value.</param>
+    /// <param name="options">The options value.</param>
+    /// <returns>The result of the operation.</returns>
     public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
     {
         if (_converterFactory.TryGetValue(typeToConvert, out Func<JsonConverter>? converterFactory))

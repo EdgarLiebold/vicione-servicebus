@@ -2,8 +2,11 @@ using System;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Context;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides extension methods for redeliver.
+/// </summary>
 public static class RedeliverExtensions
 {
     /// <summary>

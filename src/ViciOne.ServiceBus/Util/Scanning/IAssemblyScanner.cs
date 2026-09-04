@@ -3,6 +3,9 @@ using System.Reflection;
 
 namespace ViciOne.ServiceBus.Util.Scanning;
 
+/// <summary>
+/// Defines the contract for assembly scanner.
+/// </summary>
 public interface IAssemblyScanner
 {
     /// <summary>
@@ -79,18 +82,57 @@ public interface IAssemblyScanner
     /// <typeparam name="T"></typeparam>
     void ExcludeType<T>();
 
+    /// <summary>
+    /// Performs the the calling assembly operation.
+    /// </summary>
     void TheCallingAssembly();
 
+    /// <summary>
+    /// Performs the assemblies from application base directory operation.
+    /// </summary>
     void AssembliesFromApplicationBaseDirectory();
 
+    /// <summary>
+    /// Performs the assemblies and executables from path operation.
+    /// </summary>
+    /// <param name="path">The path value.</param>
     void AssembliesAndExecutablesFromPath(string path);
+    /// <summary>
+    /// Performs the assemblies from path operation.
+    /// </summary>
+    /// <param name="path">The path value.</param>
     void AssembliesFromPath(string path);
 
+    /// <summary>
+    /// Performs the assemblies and executables from path operation.
+    /// </summary>
+    /// <param name="path">The path value.</param>
+    /// <param name="assemblyFilter">The assembly filter value.</param>
     void AssembliesAndExecutablesFromPath(string path, Func<Assembly, bool> assemblyFilter);
 
+    /// <summary>
+    /// Performs the assemblies from path operation.
+    /// </summary>
+    /// <param name="path">The path value.</param>
+    /// <param name="assemblyFilter">The assembly filter value.</param>
     void AssembliesFromPath(string path, Func<Assembly, bool> assemblyFilter);
+    /// <summary>
+    /// Performs the exclude file name starts with operation.
+    /// </summary>
+    /// <param name="startsWith">The starts with value.</param>
     void ExcludeFileNameStartsWith(params string[] startsWith);
+    /// <summary>
+    /// Performs the include file name starts with operation.
+    /// </summary>
+    /// <param name="startsWith">The starts with value.</param>
     void IncludeFileNameStartsWith(params string[] startsWith);
+    /// <summary>
+    /// Performs the assemblies and executables from application base directory operation.
+    /// </summary>
     void AssembliesAndExecutablesFromApplicationBaseDirectory();
+    /// <summary>
+    /// Performs the scan for types operation.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     TypeSet ScanForTypes();
 }

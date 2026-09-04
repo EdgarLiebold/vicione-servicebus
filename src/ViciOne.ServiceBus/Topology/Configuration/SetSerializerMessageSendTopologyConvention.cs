@@ -3,6 +3,10 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a set serializer message send topology convention implementation.
+/// </summary>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public class SetSerializerMessageSendTopologyConvention<TMessage> :
     ISetSerializerMessageSendTopologyConvention<TMessage>
     where TMessage : class
@@ -29,6 +33,10 @@ public class SetSerializerMessageSendTopologyConvention<TMessage> :
         return false;
     }
 
+    /// <summary>
+    /// Sets serializer.
+    /// </summary>
+    /// <param name="contentType">The content type value.</param>
     public void SetSerializer(ContentType contentType)
     {
         _contentType = contentType;

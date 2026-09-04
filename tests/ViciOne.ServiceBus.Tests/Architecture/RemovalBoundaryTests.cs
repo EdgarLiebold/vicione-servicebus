@@ -226,7 +226,7 @@ public sealed class RemovalBoundaryTests
             .ToArray();
 
         Assert.Empty(exported.Intersect(InternalImplementationTypes, StringComparer.Ordinal));
-        Assert.Contains("ViciOne.ServiceBus.Internals.DateTimeConstants", exported);
+        Assert.DoesNotContain("ViciOne.ServiceBus.Internals.DateTimeConstants", exported);
         Assert.Null(typeof(ViciOne.ServiceBus.Metadata.TypeMetadataCache).GetProperty(
             "ImplementationBuilder",
             BindingFlags.Public | BindingFlags.Static));

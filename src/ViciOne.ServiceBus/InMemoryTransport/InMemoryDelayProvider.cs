@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.InMemoryTransport;
 
+/// <summary>
+/// Provides an in memory delay provider implementation.
+/// </summary>
 public sealed class InMemoryDelayProvider :
     IAsyncDisposable,
     IInMemoryDelayProvider
@@ -20,11 +23,18 @@ public sealed class InMemoryDelayProvider :
     TimeSpan _offset;
     long _sequence;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public InMemoryDelayProvider()
         : this(TimeProvider.System)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="timeProvider">The time provider value.</param>
     public InMemoryDelayProvider(TimeProvider timeProvider)
     {
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
@@ -35,6 +45,9 @@ public sealed class InMemoryDelayProvider :
             Timeout.InfiniteTimeSpan);
     }
 
+    /// <summary>
+    /// Gets the utc now value.
+    /// </summary>
     public DateTimeOffset UtcNow
     {
         get
@@ -47,6 +60,12 @@ public sealed class InMemoryDelayProvider :
         }
     }
 
+    /// <summary>
+    /// Performs the delay operation.
+    /// </summary>
+    /// <param name="delay">The delay value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task DelayAsync(TimeSpan delay, CancellationToken cancellationToken = default)
     {
         if (delay < TimeSpan.Zero)
@@ -75,6 +94,12 @@ public sealed class InMemoryDelayProvider :
         }
     }
 
+    /// <summary>
+    /// Performs the delay operation.
+    /// </summary>
+    /// <param name="delayUntil">The delay until value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task DelayAsync(DateTimeOffset delayUntil, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -90,6 +115,10 @@ public sealed class InMemoryDelayProvider :
         }
     }
 
+    /// <summary>
+    /// Performs the advance operation.
+    /// </summary>
+    /// <param name="duration">The duration value.</param>
     public void Advance(TimeSpan duration)
     {
         if (duration <= TimeSpan.Zero)
@@ -121,6 +150,10 @@ public sealed class InMemoryDelayProvider :
         Complete(due);
     }
 
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public async ValueTask DisposeAsync()
     {
         ScheduledDelay[] pending;

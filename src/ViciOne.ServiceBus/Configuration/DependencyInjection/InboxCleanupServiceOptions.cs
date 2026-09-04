@@ -1,7 +1,10 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines configuration options for inbox cleanup service.
+/// </summary>
 public class InboxCleanupServiceOptions
 {
     /// <summary>
@@ -26,6 +29,10 @@ public class InboxCleanupServiceOptions
 }
 
 
+/// <summary>
+/// Defines configuration options for inbox cleanup service.
+/// </summary>
+/// <typeparam name="T">The t type.</typeparam>
 public class InboxCleanupServiceOptions<T> :
     InboxCleanupServiceOptions
     where T : class

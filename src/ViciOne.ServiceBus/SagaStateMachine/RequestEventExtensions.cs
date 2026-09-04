@@ -1,7 +1,10 @@
 using ViciOne.ServiceBus.SagaStateMachine;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
+/// <summary>
+/// Provides extension methods for request event.
+/// </summary>
 public static class RequestEventExtensions
 {
     /// <summary>

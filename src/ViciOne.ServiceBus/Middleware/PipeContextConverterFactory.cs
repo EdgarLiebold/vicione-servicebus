@@ -5,9 +5,17 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Middleware;
 
+/// <summary>
+/// Provides a pipe context converter factory implementation.
+/// </summary>
 public class PipeContextConverterFactory :
     IPipeContextConverterFactory<PipeContext>
 {
+    /// <summary>
+    /// Gets converter.
+    /// </summary>
+    /// <typeparam name="TOutput">The t output type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     public IPipeContextConverter<PipeContext, TOutput> GetConverter<TOutput>()
         where TOutput : class, PipeContext
     {

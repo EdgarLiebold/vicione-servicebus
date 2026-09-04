@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Contracts.JobService;
 
+/// <summary>
+/// Defines the contract for job state.
+/// </summary>
 public interface JobState
 {
     /// <summary>
@@ -87,6 +90,10 @@ public interface JobState
 }
 
 
+/// <summary>
+/// Defines the contract for job state.
+/// </summary>
+/// <typeparam name="T">The t type.</typeparam>
 public interface JobState<out T> :
     JobState
     where T : class

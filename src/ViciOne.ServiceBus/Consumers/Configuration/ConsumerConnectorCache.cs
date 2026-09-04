@@ -4,6 +4,10 @@ using ViciOne.ServiceBus.Consumer;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a consumer connector cache implementation.
+/// </summary>
+/// <typeparam name="TConsumer">The t consumer type.</typeparam>
 public class ConsumerConnectorCache<TConsumer> :
     IConsumerConnectorCache
     where TConsumer : class
@@ -15,6 +19,9 @@ public class ConsumerConnectorCache<TConsumer> :
         _connector = new Lazy<ConsumerConnector<TConsumer>>(() => new ConsumerConnector<TConsumer>());
     }
 
+    /// <summary>
+    /// Gets the connector value.
+    /// </summary>
     public static IConsumerConnector Connector => Cached.Instance.Value.Connector;
 
     IConsumerConnector IConsumerConnectorCache.Connector => _connector.Value;
@@ -27,6 +34,9 @@ public class ConsumerConnectorCache<TConsumer> :
 }
 
 
+/// <summary>
+/// Provides a consumer connector cache implementation.
+/// </summary>
 public static class ConsumerConnectorCache
 {
     static CachedConnector GetOrAdd(Type type)
@@ -36,6 +46,13 @@ public static class ConsumerConnectorCache
                 ?? throw new InvalidOperationException($"Could not create a consumer connector for '{type}'.")));
     }
 
+    /// <summary>
+    /// Performs the connect operation.
+    /// </summary>
+    /// <param name="consumePipe">The consume pipe value.</param>
+    /// <param name="consumerType">The consumer type value.</param>
+    /// <param name="objectFactory">The object factory value.</param>
+    /// <returns>The result of the operation.</returns>
     public static ConnectHandle Connect(IConsumePipeConnector consumePipe, Type consumerType, Func<Type, object> objectFactory)
     {
         return GetOrAdd(consumerType).Connect(consumePipe, objectFactory);

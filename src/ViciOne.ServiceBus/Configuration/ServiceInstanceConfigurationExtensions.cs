@@ -1,8 +1,11 @@
 using System;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for service instance configuration.
+/// </summary>
 public static class ServiceInstanceConfigurationExtensions
 {
     /// <summary>

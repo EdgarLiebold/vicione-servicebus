@@ -5,8 +5,18 @@ using ViciOne.ServiceBus.Metadata;
 #nullable enable
 namespace ViciOne.ServiceBus.Serialization;
 
+/// <summary>
+/// Provides extension methods for system text json.
+/// </summary>
 public static class SystemTextJsonExtensions
 {
+    /// <summary>
+    /// Gets object.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="jsonElement">The json element value.</param>
+    /// <param name="options">The options value.</param>
+    /// <returns>The result of the operation.</returns>
     public static T? GetObject<T>(this JsonElement jsonElement, JsonSerializerOptions options)
         where T : class
     {
@@ -21,6 +31,13 @@ public static class SystemTextJsonExtensions
         return jsonElement.Deserialize<T>(options);
     }
 
+    /// <summary>
+    /// Performs the transform operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="objectToTransform">The object to transform value.</param>
+    /// <param name="options">The options value.</param>
+    /// <returns>The result of the operation.</returns>
     public static T? Transform<T>(this object objectToTransform, JsonSerializerOptions options)
         where T : class
     {
@@ -29,6 +46,13 @@ public static class SystemTextJsonExtensions
         return jsonElement.GetObject<T>(options);
     }
 
+    /// <summary>
+    /// Performs the transform operation.
+    /// </summary>
+    /// <param name="objectToTransform">The object to transform value.</param>
+    /// <param name="targetType">The target type value.</param>
+    /// <param name="options">The options value.</param>
+    /// <returns>The result of the operation.</returns>
     public static object? Transform(this object objectToTransform, Type targetType, JsonSerializerOptions options)
     {
         var jsonElement = JsonSerializer.SerializeToElement(objectToTransform, options);

@@ -6,6 +6,10 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.AzureTable.Saga;
 
+/// <summary>
+/// Provides an azure table saga repository context factory implementation.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
 public class AzureTableSagaRepositoryContextFactory<TSaga> :
     ISagaRepositoryContextFactory<TSaga>,
     ILoadSagaRepositoryContextFactory<TSaga>
@@ -28,6 +32,12 @@ public class AzureTableSagaRepositoryContextFactory<TSaga> :
         _keyFormatter = keyFormatter;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="tableClient">The table client value.</param>
+    /// <param name="factory">The factory value.</param>
+    /// <param name="keyFormatter">The key formatter value.</param>
     public AzureTableSagaRepositoryContextFactory(TableClient tableClient,
         ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> factory,
         ISagaKeyFormatter<TSaga> keyFormatter)
@@ -35,6 +45,13 @@ public class AzureTableSagaRepositoryContextFactory<TSaga> :
     {
     }
 
+    /// <summary>
+    /// Performs the execute operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="asyncMethod">The async method value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<T?> ExecuteAsync<T>(Func<LoadSagaRepositoryContext<TSaga>, Task<T?>> asyncMethod, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -48,12 +65,23 @@ public class AzureTableSagaRepositoryContextFactory<TSaga> :
         return asyncMethod(repositoryContext);
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
         context.Add("persistence", "azuretable");
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SendAsync<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
         where T : class
     {
@@ -69,6 +97,14 @@ public class AzureTableSagaRepositoryContextFactory<TSaga> :
         await next.SendAsync(repositoryContext).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Sends query.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="query">The query value.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
         where T : class
     {

@@ -3,8 +3,11 @@ using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Contracts;
 using ViciOne.ServiceBus.Middleware;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for concurrency limit configuration.
+/// </summary>
 public static class ConcurrencyLimitConfigurationExtensions
 {
     /// <summary>

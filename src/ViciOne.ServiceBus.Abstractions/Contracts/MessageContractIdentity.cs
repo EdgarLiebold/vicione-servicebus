@@ -15,6 +15,11 @@ public readonly record struct MessageContractIdentity
 {
     private const string VersionSeparator = ";v=";
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="name">The name value.</param>
+    /// <param name="majorVersion">The major version value.</param>
     public MessageContractIdentity(string name, int majorVersion)
     {
         Name = ValidateName(name);
@@ -31,9 +36,18 @@ public readonly record struct MessageContractIdentity
     /// </summary>
     public int MajorVersion { get; }
 
+    /// <summary>
+    /// Returns the string representation of this instance.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public override string ToString()
         => string.Concat(Name, VersionSeparator, MajorVersion.ToString(CultureInfo.InvariantCulture));
 
+    /// <summary>
+    /// Parses the supplied representation.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns>The result of the operation.</returns>
     public static MessageContractIdentity Parse(string value)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(value);
@@ -52,6 +66,12 @@ public readonly record struct MessageContractIdentity
         return new MessageContractIdentity(value[..separator], majorVersion);
     }
 
+    /// <summary>
+    /// Attempts to parse the supplied representation.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="identity">The identity value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool TryParse(string? value, out MessageContractIdentity identity)
     {
         identity = default;

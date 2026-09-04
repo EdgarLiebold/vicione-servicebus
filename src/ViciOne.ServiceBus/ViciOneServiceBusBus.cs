@@ -14,7 +14,7 @@ using ViciOne.ServiceBus.Util;
 #nullable enable
 namespace ViciOne.ServiceBus;
 
-public class ViciOneServiceBusBus :
+internal sealed class ViciOneServiceBusBus :
     IBusControl,
     Advanced.IAdvancedPublishEndpoint,
     IMessageRouteProvider
@@ -398,14 +398,14 @@ public class ViciOneServiceBusBus :
         return _receiveEndpoint.GetSendEndpointAsync(address, cancellationToken: cancellationToken);
     }
 
-    public async Task<BusHandle> StartAsync(CancellationToken cancellationToken)
+    public async Task StartAsync(CancellationToken cancellationToken)
     {
         LogContext.SetCurrentIfNull(_logContext);
 
         if (_busHandle != null)
         {
             LogContext.Warning?.Log("StartAsync called, but the bus was already started: {Address} ({Reason})", Address, "Already Started");
-            return _busHandle;
+            return;
         }
 
         await _busObservable.PreStartAsync(this).ConfigureAwait(false);
@@ -435,7 +435,10 @@ public class ViciOneServiceBusBus :
 
                 try
                 {
-                    await busHandle.StopAsync(TimeSpan.FromSeconds(30), cancellationToken: cancellationToken).ConfigureAwait(false);
+                    using var stopTimeoutTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30), _timeProvider);
+                    using var stopTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, stopTimeoutTokenSource.Token);
+
+                    await busHandle.StopAsync(stopTokenSource.Token).ConfigureAwait(false);
                 }
                 catch (Exception stopException)
                 {
@@ -457,7 +460,7 @@ public class ViciOneServiceBusBus :
 
             LogContext.Info?.Log("Bus started: {HostAddress}", _host.Address);
 
-            return _busHandle;
+            return;
         }
         catch (Exception ex)
         {
@@ -600,8 +603,7 @@ public class ViciOneServiceBusBus :
     }
 
 
-    class Handle :
-        BusHandle
+    sealed class Handle
     {
         readonly ViciOneServiceBusBus _bus;
         readonly IBusObserver _busObserver;

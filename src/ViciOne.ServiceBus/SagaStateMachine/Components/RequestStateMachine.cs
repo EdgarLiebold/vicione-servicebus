@@ -12,6 +12,10 @@ namespace ViciOne.ServiceBus.Components;
 public class RequestStateMachine :
     ViciOneServiceBusStateMachine<RequestState>
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="configureMissingInstanceRedelivery">The configure missing instance redelivery value.</param>
     public RequestStateMachine(Action<IMissingInstanceRedeliveryConfigurator>? configureMissingInstanceRedelivery = null)
     {
         IRequestStateMachineMissingInstanceConfigurator? missingInstanceConfigurator = configureMissingInstanceRedelivery == null
@@ -60,10 +64,22 @@ public class RequestStateMachine :
     //
     // ReSharper disable UnassignedGetOnlyAutoProperty
     // ReSharper disable MemberCanBePrivate.Global
+    /// <summary>
+    /// Gets the pending value.
+    /// </summary>
     public State Pending { get; } = null!;
 
+    /// <summary>
+    /// Gets the started value.
+    /// </summary>
     public Event<RequestStarted> Started { get; } = null!;
+    /// <summary>
+    /// Gets the completed value.
+    /// </summary>
     public Event<RequestCompleted> Completed { get; } = null!;
+    /// <summary>
+    /// Gets the faulted value.
+    /// </summary>
     public Event<RequestFaulted> Faulted { get; } = null!;
     static void InitializeInstance(BehaviorContext<RequestState, RequestStarted> context)
     {

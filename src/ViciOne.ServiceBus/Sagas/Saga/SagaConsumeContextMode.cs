@@ -1,5 +1,8 @@
 namespace ViciOne.ServiceBus.Saga;
 
+/// <summary>
+/// Specifies the available saga consume context mode values.
+/// </summary>
 public enum SagaConsumeContextMode
 {
     /// <summary>

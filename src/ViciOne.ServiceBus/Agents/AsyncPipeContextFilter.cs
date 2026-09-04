@@ -12,11 +12,21 @@ public class AsyncPipeContextFilter<TContext> :
 {
     readonly IAsyncPipeContextAgent<TContext> _agent;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="agent">The agent value.</param>
     public AsyncPipeContextFilter(IAsyncPipeContextAgent<TContext> agent)
     {
         _agent = agent;
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SendAsync(TContext context, IPipe<TContext> next)
     {
         await _agent.CreatedAsync(context).ConfigureAwait(false);
@@ -26,6 +36,10 @@ public class AsyncPipeContextFilter<TContext> :
         await _agent.Completed.ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
     }

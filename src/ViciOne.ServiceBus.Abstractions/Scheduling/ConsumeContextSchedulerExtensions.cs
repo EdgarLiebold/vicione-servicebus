@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides extension methods for consume context scheduler.
+/// </summary>
 public static class ConsumeContextSchedulerExtensions
 {
     /// <summary>

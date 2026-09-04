@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for filter configuration.
+/// </summary>
 public static class FilterConfigurationExtensions
 {
     /// <summary>

@@ -6,10 +6,16 @@ namespace ViciOne.ServiceBus.Util;
 public class EmptyConnectHandle :
     ConnectHandle
 {
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
     public void Dispose()
     {
     }
 
+    /// <summary>
+    /// Performs the disconnect operation.
+    /// </summary>
     public void Disconnect()
     {
     }

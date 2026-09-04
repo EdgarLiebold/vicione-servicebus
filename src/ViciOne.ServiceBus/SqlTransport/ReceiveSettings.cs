@@ -23,10 +23,19 @@ public interface ReceiveSettings :
     /// </summary>
     int PrefetchCount { get; }
 
+    /// <summary>
+    /// Gets the concurrent message limit value.
+    /// </summary>
     int ConcurrentMessageLimit { get; }
 
+    /// <summary>
+    /// Gets the concurrent delivery limit value.
+    /// </summary>
     int ConcurrentDeliveryLimit { get; }
 
+    /// <summary>
+    /// Gets the receive mode value.
+    /// </summary>
     SqlReceiveMode ReceiveMode { get; }
 
     /// <summary>
@@ -61,7 +70,13 @@ public interface ReceiveSettings :
     /// </summary>
     TimeSpan? UnlockDelay { get; }
 
+    /// <summary>
+    /// Gets the maintenance batch size value.
+    /// </summary>
     int MaintenanceBatchSize { get; }
 
+    /// <summary>
+    /// Gets the dead letter expired messages value.
+    /// </summary>
     bool DeadLetterExpiredMessages { get; }
 }

@@ -1,22 +1,25 @@
 using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
 #nullable enable
 
-namespace ViciOne.ServiceBus.Diagnostics;
+namespace ViciOne.ServiceBus.Advanced.Serialization;
 /// <summary>
 /// Caches immutable sensitivity metadata without pinning collectible message assemblies.
 /// </summary>
-[EditorBrowsable(EditorBrowsableState.Never)]
 public sealed class MessageSensitivityInspector : IMessageSensitivityInspector
 {
     private readonly ConditionalWeakTable<Type, MessageSensitivityDescriptor> _cache = new();
 
+    /// <summary>
+    /// Performs the inspect operation.
+    /// </summary>
+    /// <param name="messageType">The message type value.</param>
+    /// <returns>The result of the operation.</returns>
     public MessageSensitivityDescriptor Inspect(Type messageType)
     {
         ArgumentNullException.ThrowIfNull(messageType);

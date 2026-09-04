@@ -1,7 +1,13 @@
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Courier;
 
+/// <summary>
+/// Defines the contract for activity factory.
+/// </summary>
+/// <typeparam name="TActivity">The t activity type.</typeparam>
+/// <typeparam name="TArguments">The t arguments type.</typeparam>
+/// <typeparam name="TLog">The t log type.</typeparam>
 public interface IActivityFactory<out TActivity, TArguments, TLog> :
     IExecuteActivityFactory<TActivity, TArguments>,
     ICompensateActivityFactory<TActivity, TLog>

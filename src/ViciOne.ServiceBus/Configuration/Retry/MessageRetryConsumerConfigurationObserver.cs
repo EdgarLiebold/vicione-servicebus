@@ -18,6 +18,12 @@ public class MessageRetryConsumerConfigurationObserver<TConsumer> :
     readonly IConsumerConfigurator<TConsumer> _configurator;
     readonly Action<IRetryConfigurator> _configure;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="configure">The configuration callback.</param>
     public MessageRetryConsumerConfigurationObserver(IConsumerConfigurator<TConsumer> configurator, CancellationToken cancellationToken,
         Action<IRetryConfigurator> configure)
     {
@@ -53,6 +59,11 @@ public class MessageRetryConsumerConfigurationObserver<TConsumer> :
         }
     }
 
+    /// <summary>
+    /// Performs the batch consumer configured operation.
+    /// </summary>
+    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
     public void BatchConsumerConfigured<TMessage>(IConsumerMessageConfigurator<TConsumer, Batch<TMessage>> configurator)
         where TMessage : class
     {

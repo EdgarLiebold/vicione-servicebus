@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.JobService;
 
 /// <summary>
 /// Individual turnout jobs are tracked by this state
@@ -10,25 +10,70 @@ public class JobSaga :
     SagaStateMachineInstance,
     ISagaVersion
 {
+    /// <summary>
+    /// Gets or sets the current state value.
+    /// </summary>
     public int CurrentState { get; set; }
 
+    /// <summary>
+    /// Gets or sets the submitted value.
+    /// </summary>
     public DateTimeOffset? Submitted { get; set; }
+    /// <summary>
+    /// Gets or sets the service address value.
+    /// </summary>
     public Uri ServiceAddress { get; set; } = null!;
+    /// <summary>
+    /// Gets or sets the job timeout value.
+    /// </summary>
     public TimeSpan? JobTimeout { get; set; }
+    /// <summary>
+    /// Gets or sets the job value.
+    /// </summary>
     public Dictionary<string, object> Job { get; set; } = null!;
+    /// <summary>
+    /// Gets or sets the job type id value.
+    /// </summary>
     public Guid JobTypeId { get; set; }
 
+    /// <summary>
+    /// Gets or sets the attempt id value.
+    /// </summary>
     public Guid AttemptId { get; set; }
+    /// <summary>
+    /// Gets or sets the retry attempt value.
+    /// </summary>
     public int RetryAttempt { get; set; }
 
+    /// <summary>
+    /// Gets or sets the started value.
+    /// </summary>
     public DateTimeOffset? Started { get; set; }
 
+    /// <summary>
+    /// Gets or sets the completed value.
+    /// </summary>
     public DateTimeOffset? Completed { get; set; }
+    /// <summary>
+    /// Gets or sets the duration value.
+    /// </summary>
     public TimeSpan? Duration { get; set; }
 
+    /// <summary>
+    /// Gets or sets the faulted value.
+    /// </summary>
     public DateTimeOffset? Faulted { get; set; }
+    /// <summary>
+    /// Gets or sets the reason value.
+    /// </summary>
     public string? Reason { get; set; }
+    /// <summary>
+    /// Gets or sets the job slot wait token value.
+    /// </summary>
     public Guid? JobSlotWaitToken { get; set; }
+    /// <summary>
+    /// Gets or sets the job retry delay token value.
+    /// </summary>
     public Guid? JobRetryDelayToken { get; set; }
 
     /// <summary>
@@ -81,8 +126,17 @@ public class JobSaga :
     /// </summary>
     public DateTimeOffset? NextStartDate { get; set; }
 
+    /// <summary>
+    /// Gets or sets the row version value.
+    /// </summary>
     public byte[] RowVersion { get; set; } = null!;
+    /// <summary>
+    /// Gets or sets the version value.
+    /// </summary>
     public int Version { get; set; }
 
+    /// <summary>
+    /// Gets or sets the correlation id value.
+    /// </summary>
     public Guid CorrelationId { get; set; }
 }

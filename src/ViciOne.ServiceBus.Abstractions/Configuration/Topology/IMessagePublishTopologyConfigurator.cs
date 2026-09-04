@@ -1,7 +1,7 @@
 using System;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
 /// Configures the Publishing of a message type, allowing filters to be applied
@@ -13,6 +13,10 @@ public interface IMessagePublishTopologyConfigurator<TMessage> :
     IMessagePublishTopology<TMessage>
     where TMessage : class
 {
+    /// <summary>
+    /// Performs the add operation.
+    /// </summary>
+    /// <param name="publishTopology">The publish topology value.</param>
     void Add(IMessagePublishTopology<TMessage> publishTopology);
 
     /// <summary>
@@ -41,6 +45,9 @@ public interface IMessagePublishTopologyConfigurator<TMessage> :
 }
 
 
+/// <summary>
+/// Defines the contract for message publish topology configurator.
+/// </summary>
 public interface IMessagePublishTopologyConfigurator :
     IMessagePublishTopology,
     ISpecification
@@ -50,5 +57,10 @@ public interface IMessagePublishTopologyConfigurator :
     /// </summary>
     new bool Exclude { set; }
 
+    /// <summary>
+    /// Performs the try add convention operation.
+    /// </summary>
+    /// <param name="convention">The convention value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     bool TryAddConvention(IPublishTopologyConvention convention);
 }

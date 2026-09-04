@@ -18,6 +18,11 @@ public class MissingSagaPipe<TSaga, TMessage> :
     readonly IPipe<SagaConsumeContext<TSaga, TMessage>> _next;
     readonly SagaRepositoryContext<TSaga, TMessage> _repositoryContext;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="repositoryContext">The repository context value.</param>
+    /// <param name="next">The next value.</param>
     public MissingSagaPipe(SagaRepositoryContext<TSaga, TMessage> repositoryContext, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
     {
         _repositoryContext = repositoryContext;
@@ -29,6 +34,11 @@ public class MissingSagaPipe<TSaga, TMessage> :
         _next.Probe(context);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SendAsync(SagaConsumeContext<TSaga, TMessage> context)
     {
         SagaConsumeContext<TSaga, TMessage> sagaConsumeContext = await _repositoryContext.AddAsync(context.Saga).ConfigureAwait(false);

@@ -4,10 +4,19 @@ using ViciOne.ServiceBus.Courier.Contracts;
 
 namespace ViciOne.ServiceBus.Courier;
 
+/// <summary>
+/// Provides a routing slip request proxy implementation.
+/// </summary>
+/// <typeparam name="TRequest">The t request type.</typeparam>
 public abstract class RoutingSlipRequestProxy<TRequest> :
     IConsumer<TRequest>
     where TRequest : class
 {
+    /// <summary>
+    /// Consumes the message provided by the context.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public virtual async Task ConsumeAsync(ConsumeContext<TRequest> context)
     {
         var builder = new RoutingSlipBuilder(NewId.NextGuid());
@@ -31,6 +40,12 @@ public abstract class RoutingSlipRequestProxy<TRequest> :
         await context.Advanced().ExecuteAsync(routingSlip, context.CancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Performs the build routing slip operation.
+    /// </summary>
+    /// <param name="builder">The builder value.</param>
+    /// <param name="request">The request value.</param>
+    /// <returns>The result of the operation.</returns>
     protected abstract Task BuildRoutingSlipAsync(RoutingSlipBuilder builder, ConsumeContext<TRequest> request);
 
     /// <summary>

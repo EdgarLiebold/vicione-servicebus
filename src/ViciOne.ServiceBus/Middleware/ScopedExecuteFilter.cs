@@ -4,6 +4,12 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.Middleware;
 
+/// <summary>
+/// Provides a scoped execute filter implementation.
+/// </summary>
+/// <typeparam name="TActivity">The t activity type.</typeparam>
+/// <typeparam name="TArguments">The t arguments type.</typeparam>
+/// <typeparam name="TFilter">The t filter type.</typeparam>
 public class ScopedExecuteFilter<TActivity, TArguments, TFilter> :
     IFilter<ExecuteContext<TArguments>>
     where TActivity : class, IExecuteActivity<TArguments>
@@ -12,11 +18,21 @@ public class ScopedExecuteFilter<TActivity, TArguments, TFilter> :
 {
     readonly IExecuteActivityScopeProvider<TActivity, TArguments> _scopeProvider;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="scopeProvider">The scope provider value.</param>
     public ScopedExecuteFilter(IExecuteActivityScopeProvider<TActivity, TArguments> scopeProvider)
     {
         _scopeProvider = scopeProvider;
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SendAsync(ExecuteContext<TArguments> context, IPipe<ExecuteContext<TArguments>> next)
     {
         await using IExecuteScopeContext<TArguments> scope = await _scopeProvider.GetScopeAsync(context).ConfigureAwait(false);
@@ -26,6 +42,10 @@ public class ScopedExecuteFilter<TActivity, TArguments, TFilter> :
         await filter.SendAsync(scope.Context, next).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("scopedFilter");

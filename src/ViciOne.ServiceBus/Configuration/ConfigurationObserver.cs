@@ -20,6 +20,10 @@ public class ConfigurationObserver :
     readonly IConsumePipeConfigurator _configurator;
     readonly HashSet<Type> _messageTypes;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="configurator">The configurator value.</param>
     protected ConfigurationObserver(IConsumePipeConfigurator configurator)
     {
         _configurator = configurator;
@@ -32,6 +36,13 @@ public class ConfigurationObserver :
         configurator.ConnectActivityConfigurationObserver(this);
     }
 
+    /// <summary>
+    /// Performs the activity configured operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TArguments">The t arguments type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="compensateAddress">The compensate address value.</param>
     public virtual void ActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator,
         Uri compensateAddress)
         where TActivity : class, IExecuteActivity<TArguments>
@@ -40,6 +51,12 @@ public class ConfigurationObserver :
         NotifyObserver<RoutingSlip>();
     }
 
+    /// <summary>
+    /// Performs the execute activity configured operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TArguments">The t arguments type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
     public virtual void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
@@ -47,6 +64,12 @@ public class ConfigurationObserver :
         NotifyObserver<RoutingSlip>();
     }
 
+    /// <summary>
+    /// Performs the compensate activity configured operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TLog">The t log type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
     public virtual void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityConfigurator<TActivity, TLog> configurator)
         where TActivity : class, ICompensateActivity<TLog>
         where TLog : class
@@ -83,6 +106,12 @@ public class ConfigurationObserver :
     {
     }
 
+    /// <summary>
+    /// Performs the state machine saga configured operation.
+    /// </summary>
+    /// <typeparam name="TInstance">The t instance type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="stateMachine">The state machine value.</param>
     public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, SagaStateMachine<TInstance> stateMachine)
         where TInstance : class, ISaga, SagaStateMachineInstance
     {
@@ -93,6 +122,12 @@ public class ConfigurationObserver :
         NotifyObserver<TMessage>();
     }
 
+    /// <summary>
+    /// Performs the batch consumer configured operation.
+    /// </summary>
+    /// <typeparam name="TConsumer">The t consumer type.</typeparam>
+    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
     public virtual void BatchConsumerConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, Batch<TMessage>> configurator)
         where TConsumer : class, IConsumer<Batch<TMessage>>
         where TMessage : class

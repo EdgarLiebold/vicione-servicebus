@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Diagnostics;
-using ViciOne.ServiceBus.ProviderAbstractions;
+using ViciOne.ServiceBus.Providers.Persistence;
 
-namespace ViciOne.ServiceBus.DurableSend;
+namespace ViciOne.ServiceBus.Providers.Persistence;
 
 internal sealed class DurableSendAdmission<TBus> : IDurableSendAdmission<TBus>
     where TBus : class, IBus

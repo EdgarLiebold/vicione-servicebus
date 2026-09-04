@@ -12,11 +12,19 @@ public class CorrelationIdConsumeContextProxy<TMessage> :
 {
     readonly Guid _correlationId;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="correlationId">The correlation id value.</param>
     public CorrelationIdConsumeContextProxy(ConsumeContext<TMessage> context, Guid correlationId)
         : base(context)
     {
         _correlationId = correlationId;
     }
 
+    /// <summary>
+    /// Gets the correlation id value.
+    /// </summary>
     public override Guid? CorrelationId => _correlationId;
 }

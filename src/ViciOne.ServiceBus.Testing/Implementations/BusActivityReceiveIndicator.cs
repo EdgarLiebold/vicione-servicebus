@@ -17,35 +17,60 @@ public class BusActivityReceiveIndicator : BaseBusActivityIndicatorConnectable,
     readonly ISignalResource? _signalResource;
     int _activityStarted;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="signalResource">The signal resource value.</param>
+    /// <param name="receiveIdleTimeout">The receive idle timeout value.</param>
     public BusActivityReceiveIndicator(ISignalResource? signalResource, TimeSpan receiveIdleTimeout)
         : this(signalResource, receiveIdleTimeout, TimeProvider.System)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="signalResource">The signal resource value.</param>
+    /// <param name="receiveIdleTimeout">The receive idle timeout value.</param>
+    /// <param name="timeProvider">The time provider value.</param>
     public BusActivityReceiveIndicator(ISignalResource? signalResource, TimeSpan receiveIdleTimeout, TimeProvider timeProvider)
     {
         _signalResource = signalResource;
         _receiveIdleTimer = new RollingTimer(SignalInactivity, receiveIdleTimeout, null, timeProvider);
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="signalResource">The signal resource value.</param>
     public BusActivityReceiveIndicator(ISignalResource? signalResource)
         :
         this(signalResource, TimeSpan.FromSeconds(5))
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="receiveIdleTimeout">The receive idle timeout value.</param>
     public BusActivityReceiveIndicator(TimeSpan receiveIdleTimeout)
         :
         this(null, receiveIdleTimeout)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public BusActivityReceiveIndicator()
         :
         this(null)
     {
     }
 
+    /// <summary>
+    /// Gets the is met value.
+    /// </summary>
     public override bool IsMet =>
         _receiveIdleTimer.Triggered ||
         Interlocked.CompareExchange(ref _activityStarted, int.MinValue, int.MinValue) == 0;
@@ -79,11 +104,17 @@ public class BusActivityReceiveIndicator : BaseBusActivityIndicatorConnectable,
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Performs the signal operation.
+    /// </summary>
     public void Signal()
     {
         SignalInactivity(null);
     }
 
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
     public void Dispose()
     {
         _receiveIdleTimer.Dispose();

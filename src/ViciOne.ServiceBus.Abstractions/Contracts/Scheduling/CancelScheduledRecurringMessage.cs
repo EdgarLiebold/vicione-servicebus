@@ -2,6 +2,9 @@ using System;
 
 namespace ViciOne.ServiceBus.Scheduling;
 
+/// <summary>
+/// Defines the contract for cancel scheduled recurring message.
+/// </summary>
 public interface CancelScheduledRecurringMessage
 {
     /// <summary>
@@ -9,7 +12,13 @@ public interface CancelScheduledRecurringMessage
     /// </summary>
     DateTimeOffset Timestamp { get; }
 
+    /// <summary>
+    /// Gets the schedule id value.
+    /// </summary>
     string ScheduleId { get; }
 
+    /// <summary>
+    /// Gets the schedule group value.
+    /// </summary>
     string ScheduleGroup { get; }
 }

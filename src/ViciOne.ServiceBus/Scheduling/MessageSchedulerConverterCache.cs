@@ -15,18 +15,50 @@ public class MessageSchedulerConverterCache
 
     IMessageSchedulerConverter this[Type type] => _types.GetOrAdd(type, CreateTypeConverter).Value;
 
+    /// <summary>
+    /// Schedules send.
+    /// </summary>
+    /// <param name="scheduler">The scheduler value.</param>
+    /// <param name="destinationAddress">The destination address value.</param>
+    /// <param name="dueAt">The due at value.</param>
+    /// <param name="message">The message value.</param>
+    /// <param name="messageType">The message type value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static Task<ScheduledMessage> ScheduleSendAsync(IMessageScheduler scheduler, Uri destinationAddress, DateTimeOffset dueAt, object message,
         Type messageType, CancellationToken cancellationToken)
     {
         return Cached.Converters.Value[messageType].ScheduleSendAsync(scheduler, destinationAddress, dueAt, message, cancellationToken);
     }
 
+    /// <summary>
+    /// Schedules send.
+    /// </summary>
+    /// <param name="scheduler">The scheduler value.</param>
+    /// <param name="destinationAddress">The destination address value.</param>
+    /// <param name="dueAt">The due at value.</param>
+    /// <param name="message">The message value.</param>
+    /// <param name="messageType">The message type value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static Task<ScheduledMessage> ScheduleSendAsync(IMessageScheduler scheduler, Uri destinationAddress, DateTimeOffset dueAt, object message,
         Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
         return Cached.Converters.Value[messageType].ScheduleSendAsync(scheduler, destinationAddress, dueAt, message, pipe, cancellationToken);
     }
 
+    /// <summary>
+    /// Schedules recurring send.
+    /// </summary>
+    /// <param name="scheduler">The scheduler value.</param>
+    /// <param name="destinationAddress">The destination address value.</param>
+    /// <param name="schedule">The schedule value.</param>
+    /// <param name="message">The message value.</param>
+    /// <param name="messageType">The message type value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static Task<ScheduledRecurringMessage> ScheduleRecurringSendAsync(IRecurringMessageScheduler scheduler, Uri destinationAddress,
         RecurringSchedule schedule, object message,
         Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken)
@@ -34,6 +66,16 @@ public class MessageSchedulerConverterCache
         return Cached.Converters.Value[messageType].ScheduleRecurringSendAsync(scheduler, destinationAddress, schedule, message, pipe, cancellationToken);
     }
 
+    /// <summary>
+    /// Schedules recurring send.
+    /// </summary>
+    /// <param name="scheduler">The scheduler value.</param>
+    /// <param name="destinationAddress">The destination address value.</param>
+    /// <param name="schedule">The schedule value.</param>
+    /// <param name="message">The message value.</param>
+    /// <param name="messageType">The message type value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static Task<ScheduledRecurringMessage> ScheduleRecurringSendAsync(IRecurringMessageScheduler scheduler, Uri destinationAddress,
         RecurringSchedule schedule, object message,
         Type messageType, CancellationToken cancellationToken)

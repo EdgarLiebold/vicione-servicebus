@@ -1,4 +1,4 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
 /// Specifies a temporary endpoint, with the prefix "response"
@@ -6,6 +6,9 @@ namespace ViciOne.ServiceBus;
 public class ResponseEndpointDefinition :
     TemporaryEndpointDefinition
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public ResponseEndpointDefinition()
         : base("response")
     {

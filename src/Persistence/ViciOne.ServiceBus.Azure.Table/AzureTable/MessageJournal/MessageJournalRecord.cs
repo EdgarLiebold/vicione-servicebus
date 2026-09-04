@@ -20,34 +20,79 @@ public sealed class MessageJournalRecord : ITableEntity
 
     private static readonly JsonSerializerOptions JsonOptions = JsonSerializerOptions.Web;
 
+    /// <summary>
+    /// Gets or sets the partition key value.
+    /// </summary>
     public string PartitionKey { get; set; } = "";
 
+    /// <summary>
+    /// Gets or sets the row key value.
+    /// </summary>
     public string RowKey { get; set; } = "";
 
+    /// <summary>
+    /// Gets or sets the timestamp value.
+    /// </summary>
     public DateTimeOffset? Timestamp { get; set; }
 
+    /// <summary>
+    /// Gets or sets the e tag value.
+    /// </summary>
     public ETag ETag { get; set; }
 
+    /// <summary>
+    /// Gets or sets the entry id value.
+    /// </summary>
     public Guid EntryId { get; set; }
 
+    /// <summary>
+    /// Gets or sets the observed at value.
+    /// </summary>
     public DateTimeOffset ObservedAt { get; set; }
 
+    /// <summary>
+    /// Gets or sets the operation value.
+    /// </summary>
     public string Operation { get; set; } = "";
 
+    /// <summary>
+    /// Gets or sets the outcome value.
+    /// </summary>
     public string Outcome { get; set; } = "";
 
+    /// <summary>
+    /// Gets or sets the data classification value.
+    /// </summary>
     public string DataClassification { get; set; } = "";
 
+    /// <summary>
+    /// Gets or sets the content type value.
+    /// </summary>
     public string? ContentType { get; set; }
 
+    /// <summary>
+    /// Gets or sets the message types json value.
+    /// </summary>
     public string MessageTypesJson { get; set; } = "[]";
 
+    /// <summary>
+    /// Gets or sets the metadata json value.
+    /// </summary>
     public string MetadataJson { get; set; } = "{}";
 
+    /// <summary>
+    /// Gets or sets the headers json value.
+    /// </summary>
     public string HeadersJson { get; set; } = "{}";
 
+    /// <summary>
+    /// Gets or sets the body value.
+    /// </summary>
     public byte[] Body { get; set; } = [];
 
+    /// <summary>
+    /// Gets or sets the content size in bytes value.
+    /// </summary>
     public int ContentSizeInBytes { get; set; }
 
     internal static MessageJournalRecord FromEntry(MessageJournalEntry entry, string partitionKey)

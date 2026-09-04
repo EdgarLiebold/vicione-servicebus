@@ -6,11 +6,17 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.MessageData;
 
+/// <summary>
+/// Provides an in memory message data repository implementation.
+/// </summary>
 public class InMemoryMessageDataRepository :
     IMessageDataRepository
 {
     readonly ConcurrentDictionary<Uri, byte[]> _values;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public InMemoryMessageDataRepository()
     {
         _values = new ConcurrentDictionary<Uri, byte[]>();

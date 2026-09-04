@@ -4,6 +4,10 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a partition message specification implementation.
+/// </summary>
+/// <typeparam name="T">The t type.</typeparam>
 public class PartitionMessageSpecification<T> :
     IPipeSpecification<ConsumeContext<T>>
     where T : class
@@ -11,11 +15,19 @@ public class PartitionMessageSpecification<T> :
     readonly IPartitioner _partitioner;
     PartitionKeyProvider<ConsumeContext<T>> _keyProvider = null!;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="partitioner">The partitioner value.</param>
     public PartitionMessageSpecification(IPartitioner partitioner)
     {
         _partitioner = partitioner;
     }
 
+    /// <summary>
+    /// Applies this specification to the target builder.
+    /// </summary>
+    /// <param name="builder">The builder value.</param>
     public void Apply(IPipeBuilder<ConsumeContext<T>> builder)
     {
         if (_keyProvider == null)
@@ -24,6 +36,10 @@ public class PartitionMessageSpecification<T> :
         builder.AddFilter(new PartitionFilter<ConsumeContext<T>>(_keyProvider, _partitioner));
     }
 
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (GlobalTopology.Send.GetMessageTopology<T>().TryGetConvention(out ICorrelationIdMessageSendTopologyConvention<T>? convention)

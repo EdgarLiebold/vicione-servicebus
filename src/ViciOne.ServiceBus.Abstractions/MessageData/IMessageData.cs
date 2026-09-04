@@ -1,7 +1,10 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Serialization;
 
+/// <summary>
+/// Defines the contract for message data.
+/// </summary>
 public interface IMessageData
 {
     /// <summary>

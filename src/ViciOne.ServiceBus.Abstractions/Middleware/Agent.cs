@@ -58,8 +58,14 @@ public class Agent :
     /// </summary>
     protected bool IsStopped { get; private set; }
 
+    /// <summary>
+    /// Gets the is already ready value.
+    /// </summary>
     protected bool IsAlreadyReady => _ready.Task.IsCompleted;
 
+    /// <summary>
+    /// Gets the is already completed value.
+    /// </summary>
     protected bool IsAlreadyCompleted => _completed.Task.IsCompleted;
 
     /// <inheritdoc />

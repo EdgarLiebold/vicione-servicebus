@@ -5,16 +5,30 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.DependencyInjection.Registration;
 
+/// <summary>
+/// Provides a registration bus factory implementation.
+/// </summary>
 public class RegistrationBusFactory :
     IRegistrationBusFactory
 {
     readonly Func<IBusRegistrationContext, IBusControl> _configure;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="configure">The configuration callback.</param>
     public RegistrationBusFactory(Func<IBusRegistrationContext, IBusControl> configure)
     {
         _configure = configure ?? throw new ArgumentNullException(nameof(configure));
     }
 
+    /// <summary>
+    /// Creates bus.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="specifications">The specifications value.</param>
+    /// <param name="busName">The bus name value.</param>
+    /// <returns>The result of the operation.</returns>
     public IBusInstance CreateBus(IBusRegistrationContext context, IEnumerable<IBusInstanceSpecification> specifications, string busName)
     {
         LogContext.ConfigureCurrentLogContextIfNull(context);

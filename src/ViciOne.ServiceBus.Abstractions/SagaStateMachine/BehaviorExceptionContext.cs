@@ -1,6 +1,6 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
 /// <summary>
 /// An exceptional behavior context
@@ -12,6 +12,9 @@ public interface BehaviorExceptionContext<TSaga, out TException> :
     where TException : Exception
     where TSaga : class, SagaStateMachineInstance
 {
+    /// <summary>
+    /// Gets the exception value.
+    /// </summary>
     TException Exception { get; }
 
     /// <summary>

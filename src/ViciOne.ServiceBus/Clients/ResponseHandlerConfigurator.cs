@@ -19,6 +19,12 @@ public class ResponseHandlerConfigurator<TResponse> :
     readonly Task _requestTask;
     readonly TaskScheduler _taskScheduler;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="taskScheduler">The task scheduler value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <param name="requestTask">The request task value.</param>
     public ResponseHandlerConfigurator(TaskScheduler taskScheduler, MessageHandler<TResponse>? handler, Task requestTask)
     {
         _taskScheduler = taskScheduler;
@@ -29,16 +35,31 @@ public class ResponseHandlerConfigurator<TResponse> :
         _completed = TaskCompletionSources.Create<ConsumeContext<TResponse>>();
     }
 
+    /// <summary>
+    /// Adds pipe specification to the configuration.
+    /// </summary>
+    /// <param name="specification">The specification value.</param>
     public void AddPipeSpecification(IPipeSpecification<ConsumeContext<TResponse>> specification)
     {
         _pipeConfigurator.AddPipeSpecification(specification);
     }
 
+    /// <summary>
+    /// Connects handler configuration observer.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectHandlerConfigurationObserver(IHandlerConfigurationObserver observer)
     {
         return new EmptyConnectHandle();
     }
 
+    /// <summary>
+    /// Performs the connect operation.
+    /// </summary>
+    /// <param name="connector">The connector value.</param>
+    /// <param name="requestId">The request id value.</param>
+    /// <returns>The result of the operation.</returns>
     public HandlerConnectHandle<TResponse> Connect(IRequestPipeConnector connector, Guid requestId)
     {
         MessageHandler<TResponse> messageHandler = _handler != null ? AsyncMessageHandlerAsync : MessageHandlerAsync;

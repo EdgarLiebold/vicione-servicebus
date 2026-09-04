@@ -1,5 +1,9 @@
 namespace ViciOne.ServiceBus.Middleware;
 
+/// <summary>
+/// Defines the contract for pipe context converter factory.
+/// </summary>
+/// <typeparam name="TInput">The t input type.</typeparam>
 public interface IPipeContextConverterFactory<in TInput>
     where TInput : class, PipeContext
 {

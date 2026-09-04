@@ -13,8 +13,16 @@ public class ScopedConsumeContextProvider :
 {
     ConsumeContext _context = null!;
 
+    /// <summary>
+    /// Gets the has context value.
+    /// </summary>
     public bool HasContext => _context != null && !(_context is MissingConsumeContext);
 
+    /// <summary>
+    /// Performs the push context operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public virtual IDisposable PushContext(ConsumeContext context)
     {
         if (context == null)
@@ -30,6 +38,10 @@ public class ScopedConsumeContextProvider :
         }
     }
 
+    /// <summary>
+    /// Gets context.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public ConsumeContext GetContext()
     {
         return _context;

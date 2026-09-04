@@ -2,8 +2,12 @@ using System;
 using ViciOne.ServiceBus.SqlTransport.Topology;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Providers.Transports;
 
+/// <summary>
+/// Defines the contract for sql message consume topology configurator.
+/// </summary>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public interface ISqlMessageConsumeTopologyConfigurator<TMessage> :
     IMessageConsumeTopologyConfigurator<TMessage>,
     ISqlMessageConsumeTopology<TMessage>
@@ -17,6 +21,9 @@ public interface ISqlMessageConsumeTopologyConfigurator<TMessage> :
 }
 
 
+/// <summary>
+/// Defines the contract for db message consume topology configurator.
+/// </summary>
 public interface IDbMessageConsumeTopologyConfigurator :
     IMessageConsumeTopologyConfigurator
 {

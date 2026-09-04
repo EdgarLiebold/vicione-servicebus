@@ -8,6 +8,9 @@ using JobServiceState = ViciOne.ServiceBus.JobService.JobService;
 #nullable enable
 namespace ViciOne.ServiceBus.DependencyInjection.Registration;
 
+/// <summary>
+/// Provides a job service registration implementation.
+/// </summary>
 public class JobServiceRegistration :
     IJobServiceRegistration
 {
@@ -16,6 +19,9 @@ public class JobServiceRegistration :
     readonly EndpointRegistrationConfigurator<JobServiceState> _endpointConfigurator;
     readonly Lazy<InstanceJobServiceSettings> _settings;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public JobServiceRegistration()
     {
         _configureActions = new List<Action<JobConsumerOptions>>();
@@ -35,13 +41,29 @@ public class JobServiceRegistration :
 
     JobServiceSettings Settings => _settings.Value;
 
+    /// <summary>
+    /// Gets the type value.
+    /// </summary>
     public Type Type => typeof(JobServiceState);
 
+    /// <summary>
+    /// Gets or sets the include in configure endpoints value.
+    /// </summary>
     public bool IncludeInConfigureEndpoints { get; set; }
 
+    /// <summary>
+    /// Gets the endpoint registration configurator value.
+    /// </summary>
     public IEndpointRegistrationConfigurator EndpointRegistrationConfigurator => _endpointConfigurator;
+    /// <summary>
+    /// Gets the endpoint definition value.
+    /// </summary>
     public IEndpointDefinition EndpointDefinition => new JobServiceEndpointDefinition(_endpointConfigurator.Settings, _settings.Value);
 
+    /// <summary>
+    /// Adds configure action to the configuration.
+    /// </summary>
+    /// <param name="configure">The configuration callback.</param>
     public void AddConfigureAction(Action<JobConsumerOptions>? configure)
     {
         if (_settings.IsValueCreated)
@@ -51,11 +73,20 @@ public class JobServiceRegistration :
             _configureActions.Add(configure);
     }
 
+    /// <summary>
+    /// Adds receive endpoint dependency to the configuration.
+    /// </summary>
+    /// <param name="dependency">The dependency value.</param>
     public void AddReceiveEndpointDependency(IReceiveEndpointConfigurator dependency)
     {
         _dependencies.Add(dependency);
     }
 
+    /// <summary>
+    /// Performs the configure operation.
+    /// </summary>
+    /// <param name="instanceConfigurator">The instance configurator value.</param>
+    /// <param name="context">The operation context.</param>
     public void Configure(IServiceInstanceConfigurator instanceConfigurator, IRegistrationContext context)
     {
         AddReceiveEndpointDependency(instanceConfigurator.InstanceEndpointConfigurator);

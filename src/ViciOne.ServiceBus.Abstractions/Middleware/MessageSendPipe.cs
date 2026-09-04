@@ -13,6 +13,10 @@ public class MessageSendPipe<TOutput> :
 {
     readonly IPipe<SendContext<TOutput>> _outputPipe;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="outputPipe">The output pipe value.</param>
     public MessageSendPipe(IPipe<SendContext<TOutput>> outputPipe)
     {
         _outputPipe = outputPipe;

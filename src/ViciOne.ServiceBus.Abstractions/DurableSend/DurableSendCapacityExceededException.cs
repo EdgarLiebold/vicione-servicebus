@@ -8,6 +8,12 @@ namespace ViciOne.ServiceBus;
 /// </summary>
 public sealed class DurableSendCapacityExceededException : Exception
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="message">The message value.</param>
+    /// <param name="storedCount">The stored count value.</param>
+    /// <param name="storedBytes">The stored bytes value.</param>
     public DurableSendCapacityExceededException(string message, int storedCount, long storedBytes)
         : base(message)
     {
@@ -15,7 +21,13 @@ public sealed class DurableSendCapacityExceededException : Exception
         StoredBytes = storedBytes;
     }
 
+    /// <summary>
+    /// Gets the stored count value.
+    /// </summary>
     public int StoredCount { get; }
 
+    /// <summary>
+    /// Gets the stored bytes value.
+    /// </summary>
     public long StoredBytes { get; }
 }

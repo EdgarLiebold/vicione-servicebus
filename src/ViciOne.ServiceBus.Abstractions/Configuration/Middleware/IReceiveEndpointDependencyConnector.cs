@@ -1,7 +1,10 @@
 using ViciOne.ServiceBus.Transports;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for receive endpoint dependency connector.
+/// </summary>
 public interface IReceiveEndpointDependencyConnector
 {
     /// <summary>

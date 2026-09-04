@@ -3,10 +3,23 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Initializers.PropertyConverters;
 
+/// <summary>
+/// Provides a variable property converter implementation.
+/// </summary>
+/// <typeparam name="TResult">The t result type.</typeparam>
+/// <typeparam name="TVariable">The t variable type.</typeparam>
 public class VariablePropertyConverter<TResult, TVariable> :
     IPropertyConverter<TResult, TVariable>
     where TVariable : class, IInitializerVariable<TResult>
 {
+    /// <summary>
+    /// Performs the convert operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="input">The input value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<TResult?> ConvertAsync<T>(InitializeContext<T> context, TVariable? input, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -23,17 +36,35 @@ public class VariablePropertyConverter<TResult, TVariable> :
 }
 
 
+/// <summary>
+/// Provides a variable property converter implementation.
+/// </summary>
+/// <typeparam name="TResult">The t result type.</typeparam>
+/// <typeparam name="TVariable">The t variable type.</typeparam>
+/// <typeparam name="TValue">The t value type.</typeparam>
 public class VariablePropertyConverter<TResult, TVariable, TValue> :
     IPropertyConverter<TResult, TVariable>
     where TVariable : class, IInitializerVariable<TValue>
 {
     readonly IPropertyConverter<TResult, TValue> _propertyConverter;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="propertyConverter">The property converter value.</param>
     public VariablePropertyConverter(IPropertyConverter<TResult, TValue> propertyConverter)
     {
         _propertyConverter = propertyConverter;
     }
 
+    /// <summary>
+    /// Performs the convert operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="input">The input value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<TResult?> ConvertAsync<T>(InitializeContext<T> context, TVariable? input, CancellationToken cancellationToken = default)
         where T : class
     {

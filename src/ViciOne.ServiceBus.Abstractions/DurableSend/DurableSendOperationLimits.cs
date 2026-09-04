@@ -1,6 +1,6 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Operations;
 
 /// <summary>
 /// Absolute process-safety bounds for durable-send storage operations. Runtime options may choose lower values but
@@ -8,12 +8,30 @@ namespace ViciOne.ServiceBus;
 /// </summary>
 public static class DurableSendOperationLimits
 {
+    /// <summary>
+    /// Defines the absolute maximum claim count value.
+    /// </summary>
     public const int AbsoluteMaximumClaimCount = 1024;
+    /// <summary>
+    /// Defines the absolute maximum quarantine page size value.
+    /// </summary>
     public const int AbsoluteMaximumQuarantinePageSize = 1000;
 
+    /// <summary>
+    /// Validates claim count.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="parameterName">The parameter name value.</param>
+    /// <returns>The result of the operation.</returns>
     public static int ValidateClaimCount(int value, string parameterName)
         => Validate(value, AbsoluteMaximumClaimCount, parameterName, "claim count");
 
+    /// <summary>
+    /// Validates quarantine page size.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="parameterName">The parameter name value.</param>
+    /// <returns>The result of the operation.</returns>
     public static int ValidateQuarantinePageSize(int value, string parameterName)
         => Validate(value, AbsoluteMaximumQuarantinePageSize, parameterName, "quarantine page size");
 

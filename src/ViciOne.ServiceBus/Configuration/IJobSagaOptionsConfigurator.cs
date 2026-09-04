@@ -1,7 +1,10 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for job saga options configurator.
+/// </summary>
 public interface IJobSagaOptionsConfigurator
 {
     /// <summary>

@@ -15,18 +15,34 @@ public class TeeFilter<TContext> :
 {
     readonly Connectable<IPipe<TContext>> _connections;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public TeeFilter()
     {
         _connections = new Connectable<IPipe<TContext>>();
     }
 
+    /// <summary>
+    /// Gets the count value.
+    /// </summary>
     public int Count => _connections.Count;
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         _connections.ForEach(pipe => pipe.Probe(context));
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     [DebuggerNonUserCode]
     public Task SendAsync(TContext context, IPipe<TContext> next)
     {
@@ -44,6 +60,11 @@ public class TeeFilter<TContext> :
         return SendAsync();
     }
 
+    /// <summary>
+    /// Connects pipe.
+    /// </summary>
+    /// <param name="pipe">The pipe value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectPipe(IPipe<TContext> pipe)
     {
         return _connections.Connect(pipe);
@@ -65,6 +86,10 @@ public class TeeFilter<TContext, TKey> :
     readonly KeyAccessor<TContext, TKey> _keyAccessor;
     readonly Lazy<IKeyPipeConnector<TKey>> _keyConnections;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="keyAccessor">The key accessor value.</param>
     public TeeFilter(KeyAccessor<TContext, TKey> keyAccessor)
     {
         _keyAccessor = keyAccessor ?? throw new ArgumentNullException(nameof(keyAccessor));
@@ -72,6 +97,13 @@ public class TeeFilter<TContext, TKey> :
         _keyConnections = new Lazy<IKeyPipeConnector<TKey>>(ConnectKeyFilter);
     }
 
+    /// <summary>
+    /// Connects pipe.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="key">The key value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectPipe<T>(TKey key, IPipe<T> pipe)
         where T : class, PipeContext
     {

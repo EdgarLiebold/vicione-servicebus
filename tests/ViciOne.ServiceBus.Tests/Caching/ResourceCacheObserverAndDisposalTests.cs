@@ -63,7 +63,7 @@ public sealed class ResourceCacheObserverAndDisposalTests
         await cache.ClearAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(["clear"], recording.Events);
-        Assert.Empty(await cache.GetValuesAsync(TestContext.Current.CancellationToken));
+        Assert.Empty(cache.GetValues(TestContext.Current.CancellationToken));
         await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.GetAsync("one", TestContext.Current.CancellationToken));
     }
 
@@ -172,7 +172,7 @@ public sealed class ResourceCacheObserverAndDisposalTests
 
         Assert.NotNull(observed);
         Assert.Contains("must not re-enter", observed.Message, StringComparison.Ordinal);
-        Assert.Equal(["original"], (await cache.GetValuesAsync(TestContext.Current.CancellationToken)).Select(x => x.Id).ToArray());
+        Assert.Equal(["original"], cache.GetValues(TestContext.Current.CancellationToken).Select(x => x.Id).ToArray());
     }
 
     [Fact]
@@ -223,7 +223,7 @@ public sealed class ResourceCacheObserverAndDisposalTests
         Assert.Equal(1, first.DisposeCount);
         Assert.Equal(1, second.DisposeCount);
         Assert.Throws<ObjectDisposedException>(() => cache.AddIndex("late", value => value.Id));
-        await Assert.ThrowsAsync<ObjectDisposedException>(async () => await cache.GetValuesAsync(TestContext.Current.CancellationToken));
+        Assert.Throws<ObjectDisposedException>(() => cache.GetValues(TestContext.Current.CancellationToken));
     }
 
     [Fact]

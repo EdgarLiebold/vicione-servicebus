@@ -2,8 +2,11 @@ using System;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for delegate configuration.
+/// </summary>
 public static class DelegateConfigurationExtensions
 {
     /// <summary>

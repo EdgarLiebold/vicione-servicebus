@@ -8,6 +8,10 @@ using ViciOne.ServiceBus.RetryPolicies;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a compensate context retry pipe specification implementation.
+/// </summary>
+/// <typeparam name="TLog">The t log type.</typeparam>
 public class CompensateContextRetryPipeSpecification<TLog> :
     ExceptionSpecification,
     IRetryConfigurator,
@@ -18,12 +22,20 @@ public class CompensateContextRetryPipeSpecification<TLog> :
     readonly RetryObservable _observers;
     RetryPolicyFactory _policyFactory = null!;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public CompensateContextRetryPipeSpecification(CancellationToken cancellationToken = default)
     {
         _cancellationToken = cancellationToken;
         _observers = new RetryObservable();
     }
 
+    /// <summary>
+    /// Applies this specification to the target builder.
+    /// </summary>
+    /// <param name="builder">The builder value.</param>
     public void Apply(IPipeBuilder<CompensateContext<TLog>> builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
@@ -38,12 +50,20 @@ public class CompensateContextRetryPipeSpecification<TLog> :
         builder.AddFilter(new RetryFilter<CompensateContext<TLog>>(policy, _observers));
     }
 
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (_policyFactory == null)
             yield return this.Failure("RetryPolicy", "must not be null");
     }
 
+    /// <summary>
+    /// Sets retry policy.
+    /// </summary>
+    /// <param name="factory">The factory value.</param>
     public void SetRetryPolicy(RetryPolicyFactory factory)
     {
         _policyFactory = factory ?? throw new ArgumentNullException(nameof(factory));

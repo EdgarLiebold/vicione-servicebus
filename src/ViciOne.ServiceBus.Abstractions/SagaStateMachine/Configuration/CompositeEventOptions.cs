@@ -1,10 +1,16 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
+/// <summary>
+/// Specifies the available composite event options values.
+/// </summary>
 [Flags]
 public enum CompositeEventOptions
 {
+    /// <summary>
+    /// Indicates none.
+    /// </summary>
     None = 0,
 
     /// <summary>

@@ -7,6 +7,9 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Initializers.TypeConverters;
 
+/// <summary>
+/// Provides a type converter cache implementation.
+/// </summary>
 public class TypeConverterCache :
     ITypeConverterCache
 {
@@ -132,6 +135,13 @@ public class TypeConverterCache :
         }
     }
 
+    /// <summary>
+    /// Attempts to get type converter.
+    /// </summary>
+    /// <typeparam name="TProperty">The t property type.</typeparam>
+    /// <typeparam name="TInputProperty">The t input property type.</typeparam>
+    /// <param name="typeConverter">The type converter value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool TryGetTypeConverter<TProperty, TInputProperty>(
         [NotNullWhen(true)] out ITypeConverter<TProperty, TInputProperty>? typeConverter)
     {

@@ -5,11 +5,18 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 #nullable enable
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines configuration options for vici one service bus health check.
+/// </summary>
+/// <typeparam name="TBus">The t bus type.</typeparam>
 public class ViciOneServiceBusHealthCheckOptions<TBus> :
     IHealthCheckOptionsConfigurator,
     IHealthCheckOptions
     where TBus : IBus
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public ViciOneServiceBusHealthCheckOptions()
     {
         Tags = new HashSet<string>(StringComparer.OrdinalIgnoreCase);

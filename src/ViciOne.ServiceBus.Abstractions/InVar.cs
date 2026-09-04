@@ -1,6 +1,6 @@
 using ViciOne.ServiceBus.Initializers.Variables;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>
 /// Variables, which can be used for message initialization

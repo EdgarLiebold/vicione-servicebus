@@ -7,17 +7,29 @@ using System.Runtime.Intrinsics.X86;
 
 namespace ViciOne.ServiceBus.NewIdFormatters;
 
+/// <summary>
+/// Provides a hex formatter implementation.
+/// </summary>
 public class HexFormatter :
     INewIdFormatter
 {
     readonly uint _alpha;
     const uint LowerCaseUInt = 0x2020U;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="upperCase">The upper case value.</param>
     public HexFormatter(bool upperCase = false)
     {
         _alpha = upperCase ? 0 : LowerCaseUInt;
     }
 
+    /// <summary>
+    /// Performs the format operation.
+    /// </summary>
+    /// <param name="bytes">The bytes value.</param>
+    /// <returns>The result of the operation.</returns>
     public unsafe string Format(in byte[] bytes)
     {
         Debug.Assert(bytes.Length == 16);

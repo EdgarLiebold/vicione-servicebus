@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Transports;
 
+/// <summary>
+/// Defines the contract for receive endpoint dispatcher.
+/// </summary>
 public interface IReceiveEndpointDispatcher :
     IConsumeObserverConnector,
     IConsumeMessageObserverConnector,
@@ -14,6 +17,9 @@ public interface IReceiveEndpointDispatcher :
     ISendObserverConnector,
     IProbeSite
 {
+    /// <summary>
+    /// Gets the input address value.
+    /// </summary>
     Uri InputAddress { get; }
 
     /// <summary>
@@ -31,6 +37,10 @@ public interface IReceiveEndpointDispatcher :
 }
 
 
+/// <summary>
+/// Defines the contract for receive endpoint dispatcher.
+/// </summary>
+/// <typeparam name="T">The t type.</typeparam>
 public interface IReceiveEndpointDispatcher<T> :
     IReceiveEndpointDispatcher
     where T : class

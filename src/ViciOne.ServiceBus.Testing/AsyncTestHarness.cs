@@ -7,6 +7,9 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Testing;
 
+/// <summary>
+/// Provides an async test harness implementation.
+/// </summary>
 public abstract class AsyncTestHarness :
     IDisposable
 {
@@ -18,11 +21,18 @@ public abstract class AsyncTestHarness :
     int _maximumSavedContexts;
     bool _disposed;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     protected AsyncTestHarness()
         : this(TimeProvider.System)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="timeProvider">The time provider value.</param>
     protected AsyncTestHarness(TimeProvider timeProvider)
     {
         TimeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
@@ -105,6 +115,9 @@ public abstract class AsyncTestHarness :
     /// </summary>
     public CancellationToken InactivityToken => _inactivityObserver.Value.InactivityToken;
 
+    /// <summary>
+    /// Gets the inactivity observer value.
+    /// </summary>
     public IInactivityObserver InactivityObserver => _inactivityObserver.Value;
 
     /// <summary>
@@ -117,16 +130,28 @@ public abstract class AsyncTestHarness :
     /// </summary>
     public TimeSpan TestInactivityTimeout { get; set; }
 
+    /// <summary>
+    /// Gets the time provider value.
+    /// </summary>
     public TimeProvider TimeProvider { get; }
 
+    /// <summary>
+    /// Gets or sets the context save mode value.
+    /// </summary>
     public TestContextSaveMode ContextSaveMode { get; set; }
 
+    /// <summary>
+    /// Gets or sets the maximum saved contexts value.
+    /// </summary>
     public int MaximumSavedContexts
     {
         get => _maximumSavedContexts;
         set => _maximumSavedContexts = value > 0 ? value : throw new ArgumentOutOfRangeException(nameof(value));
     }
 
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
     public virtual void Dispose()
     {
         // Disposing twice has to stay harmless: a container fixture disposes the harness itself and
@@ -162,6 +187,9 @@ public abstract class AsyncTestHarness :
         source?.Cancel();
     }
 
+    /// <summary>
+    /// Performs the force inactive operation.
+    /// </summary>
     public void ForceInactive()
     {
         _inactivityObserver.Value.ForceInactive();
@@ -185,12 +213,21 @@ public abstract class AsyncTestHarness :
         return source;
     }
 
+    /// <summary>
+    /// Gets consume observer.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     public TestConsumeMessageObserver<T> GetConsumeObserver<T>()
         where T : class
     {
         return new TestConsumeMessageObserver<T>(GetTask<T>(), GetTask<T>(), GetTask<T>());
     }
 
+    /// <summary>
+    /// Gets consume observer.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public TestConsumeObserver GetConsumeObserver()
     {
         return new TestConsumeObserver(TestTimeout, InactivityToken, TimeProvider);

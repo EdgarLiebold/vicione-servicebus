@@ -5,6 +5,9 @@ using System.Text.Json.Serialization;
 
 namespace ViciOne.ServiceBus.Serialization.JsonConverters;
 
+/// <summary>
+/// Provides a string decimal json converter implementation.
+/// </summary>
 public class StringDecimalJsonConverter :
     JsonConverter<decimal>
 {
@@ -13,6 +16,13 @@ public class StringDecimalJsonConverter :
         NumberStyles.AllowTrailingSign | NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands |
         NumberStyles.AllowExponent;
 
+    /// <summary>
+    /// Performs the read operation.
+    /// </summary>
+    /// <param name="reader">The reader value.</param>
+    /// <param name="typeToConvert">The type to convert value.</param>
+    /// <param name="options">The options value.</param>
+    /// <returns>The result of the operation.</returns>
     public override decimal Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         if (reader.TokenType == JsonTokenType.Null)
@@ -35,6 +45,12 @@ public class StringDecimalJsonConverter :
         throw new JsonException($"Expected String, Number or Null, found: {reader.TokenType}");
     }
 
+    /// <summary>
+    /// Performs the write operation.
+    /// </summary>
+    /// <param name="writer">The writer value.</param>
+    /// <param name="value">The value.</param>
+    /// <param name="options">The options value.</param>
     public override void Write(Utf8JsonWriter writer, decimal value, JsonSerializerOptions options)
     {
         var text = Convert.ToString(value, CultureInfo.InvariantCulture);

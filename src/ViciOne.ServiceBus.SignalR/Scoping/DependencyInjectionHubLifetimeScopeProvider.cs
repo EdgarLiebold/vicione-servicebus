@@ -6,16 +6,28 @@ using ViciOne.ServiceBus.SignalR.Contracts;
 
 namespace ViciOne.ServiceBus.SignalR.Scoping;
 
+/// <summary>
+/// Provides a dependency injection hub lifetime scope provider implementation.
+/// </summary>
 public class DependencyInjectionHubLifetimeScopeProvider :
     IHubLifetimeScopeProvider
 {
     readonly IServiceScopeFactory _serviceScopeFactory;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="serviceScopeFactory">The service scope factory value.</param>
     public DependencyInjectionHubLifetimeScopeProvider(IServiceScopeFactory serviceScopeFactory)
     {
         _serviceScopeFactory = serviceScopeFactory;
     }
 
+    /// <summary>
+    /// Creates scope.
+    /// </summary>
+    /// <typeparam name="THub">The t hub type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     public IHubLifetimeScope<THub> CreateScope<THub>()
         where THub : Hub
     {

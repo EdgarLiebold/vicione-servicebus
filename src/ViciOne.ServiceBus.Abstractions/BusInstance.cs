@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>
 /// When configuring multiple bus instances in a single container (MultiBus), this base class should be used
@@ -18,152 +18,321 @@ public abstract class BusInstance<TBus> :
 {
     readonly IBusControl _busControl;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="busControl">The bus control value.</param>
     protected BusInstance(IBusControl busControl)
     {
         _busControl = busControl;
     }
 
+    /// <summary>
+    /// Connects publish observer.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectPublishObserver(IPublishObserver observer)
     {
         return _busControl.ConnectPublishObserver(observer);
     }
 
+    /// <summary>
+    /// Publishes a message to its configured consumers.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="message">The message value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task PublishAsync<T>(T message, CancellationToken cancellationToken = default)
         where T : class
     {
         return _busControl.PublishAsync(message, cancellationToken);
     }
 
+    /// <summary>
+    /// Publishes a message to its configured consumers.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="message">The message value.</param>
+    /// <param name="publishPipe">The publish pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task PublishAsync<T>(T message, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken = default)
         where T : class
     {
         return _busControl.PublishAsync(message, publishPipe, cancellationToken);
     }
 
+    /// <summary>
+    /// Publishes a message to its configured consumers.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="message">The message value.</param>
+    /// <param name="publishPipe">The publish pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task PublishAsync<T>(T message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
         where T : class
     {
         return _busControl.PublishAsync(message, publishPipe, cancellationToken);
     }
 
+    /// <summary>
+    /// Publishes a message to its configured consumers.
+    /// </summary>
+    /// <param name="message">The message value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task PublishAsync(object message, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(message);
         return _busControl.Advanced().PublishAsync(message, message.GetType(), cancellationToken);
     }
 
+    /// <summary>
+    /// Publishes a message to its configured consumers.
+    /// </summary>
+    /// <param name="message">The message value.</param>
+    /// <param name="publishPipe">The publish pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task PublishAsync(object message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(message);
         return _busControl.Advanced().PublishAsync(message, message.GetType(), publishPipe, cancellationToken);
     }
 
+    /// <summary>
+    /// Publishes a message to its configured consumers.
+    /// </summary>
+    /// <param name="message">The message value.</param>
+    /// <param name="messageType">The message type value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task PublishAsync(object message, Type messageType, CancellationToken cancellationToken = default)
     {
         return _busControl.PublishAsync(message, messageType, cancellationToken);
     }
 
+    /// <summary>
+    /// Publishes a message to its configured consumers.
+    /// </summary>
+    /// <param name="message">The message value.</param>
+    /// <param name="messageType">The message type value.</param>
+    /// <param name="publishPipe">The publish pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task PublishAsync(object message, Type messageType, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
     {
         return _busControl.PublishAsync(message, messageType, publishPipe, cancellationToken);
     }
 
+    /// <summary>
+    /// Publishes a message to its configured consumers.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="values">The values value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task PublishAsync<T>(object values, CancellationToken cancellationToken = default)
         where T : class
     {
         return _busControl.PublishAsync<T>(values, cancellationToken);
     }
 
+    /// <summary>
+    /// Publishes a message to its configured consumers.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="values">The values value.</param>
+    /// <param name="publishPipe">The publish pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task PublishAsync<T>(object values, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken = default)
         where T : class
     {
         return _busControl.PublishAsync(values, publishPipe, cancellationToken);
     }
 
+    /// <summary>
+    /// Publishes a message to its configured consumers.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="values">The values value.</param>
+    /// <param name="publishPipe">The publish pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task PublishAsync<T>(object values, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
         where T : class
     {
         return _busControl.PublishAsync<T>(values, publishPipe, cancellationToken);
     }
 
+    /// <summary>
+    /// Gets publish send endpoint.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<ISendEndpoint> GetPublishSendEndpointAsync<T>(CancellationToken cancellationToken = default)
         where T : class
     {
         return _busControl.GetPublishSendEndpointAsync<T>(cancellationToken: cancellationToken);
     }
 
+    /// <summary>
+    /// Connects send observer.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
     {
         return _busControl.ConnectSendObserver(observer);
     }
 
+    /// <summary>
+    /// Gets send endpoint.
+    /// </summary>
+    /// <param name="address">The address value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<ISendEndpoint> GetSendEndpointAsync(Uri address, CancellationToken cancellationToken = default)
     {
         return _busControl.GetSendEndpointAsync(address, cancellationToken: cancellationToken);
     }
 
+    /// <summary>
+    /// Connects consume pipe.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="pipe">The pipe value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)
         where T : class
     {
         return _busControl.ConnectConsumePipe(pipe);
     }
 
+    /// <summary>
+    /// Connects consume pipe.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="pipe">The pipe value.</param>
+    /// <param name="options">The options value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
         where T : class
     {
         return _busControl.ConnectConsumePipe(pipe, options);
     }
 
+    /// <summary>
+    /// Connects request pipe.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="requestId">The request id value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectRequestPipe<T>(Guid requestId, IPipe<ConsumeContext<T>> pipe)
         where T : class
     {
         return _busControl.ConnectRequestPipe(requestId, pipe);
     }
 
+    /// <summary>
+    /// Connects consume message observer.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectConsumeMessageObserver<T>(IConsumeMessageObserver<T> observer)
         where T : class
     {
         return _busControl.ConnectConsumeMessageObserver(observer);
     }
 
+    /// <summary>
+    /// Connects consume observer.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectConsumeObserver(IConsumeObserver observer)
     {
         return _busControl.ConnectConsumeObserver(observer);
     }
 
+    /// <summary>
+    /// Connects receive observer.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectReceiveObserver(IReceiveObserver observer)
     {
         return _busControl.ConnectReceiveObserver(observer);
     }
 
+    /// <summary>
+    /// Connects receive endpoint observer.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectReceiveEndpointObserver(IReceiveEndpointObserver observer)
     {
         return _busControl.ConnectReceiveEndpointObserver(observer);
     }
 
+    /// <summary>
+    /// Connects endpoint configuration observer.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectEndpointConfigurationObserver(IEndpointConfigurationObserver observer)
     {
         return _busControl.ConnectEndpointConfigurationObserver(observer);
     }
 
+    /// <summary>
+    /// Connects receive endpoint.
+    /// </summary>
+    /// <param name="definition">The definition value.</param>
+    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
+    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <returns>The result of the operation.</returns>
     public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
         return _busControl.ConnectReceiveEndpoint(definition, endpointNameFormatter, configureEndpoint);
     }
 
+    /// <summary>
+    /// Connects receive endpoint.
+    /// </summary>
+    /// <param name="queueName">The queue name value.</param>
+    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <returns>The result of the operation.</returns>
     public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint)
     {
         return _busControl.ConnectReceiveEndpoint(queueName, configureEndpoint);
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         _busControl.Probe(context);
     }
 
+    /// <summary>
+    /// Gets the address value.
+    /// </summary>
     public Uri Address => _busControl.Address;
 
+    /// <summary>
+    /// Gets the topology value.
+    /// </summary>
     public IBusTopology Topology => _busControl.Topology;
 
     IMessageRouteTable IMessageRouteProvider.MessageRoutes => _busControl is IMessageRouteProvider routeProvider
@@ -171,16 +340,30 @@ public abstract class BusInstance<TBus> :
         : throw new ConfigurationException(
             $"The wrapped bus control {_busControl.GetType().Name} does not expose its message routes.");
 
-    public Task<BusHandle> StartAsync(CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Starts the configured component.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
+    public Task StartAsync(CancellationToken cancellationToken = default)
     {
         return _busControl.StartAsync(cancellationToken);
     }
 
+    /// <summary>
+    /// Stops the configured component.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task StopAsync(CancellationToken cancellationToken = default)
     {
         return _busControl.StopAsync(cancellationToken);
     }
 
+    /// <summary>
+    /// Performs the check health operation.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public BusHealthResult CheckHealth()
     {
         return _busControl.CheckHealth();

@@ -1,10 +1,8 @@
 using System;
-using System.ComponentModel;
 using System.Linq;
 using ViciOne.ServiceBus;
-using ViciOne.ServiceBus.DurableSend;
 using ViciOne.ServiceBus.InMemoryTransport;
-using ViciOne.ServiceBus.ProviderAbstractions;
+using ViciOne.ServiceBus.Providers.Persistence;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -25,7 +23,6 @@ public static class InMemoryDurableSendServiceCollectionExtensions
     }
 
     /// <summary>Low-level adapter registration. InMemory bus configuration adds this capability automatically.</summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     public static IServiceCollection AddViciOneInMemoryDurableSendDispatcher<TBus>(this IServiceCollection services)
         where TBus : class, IBus
     {

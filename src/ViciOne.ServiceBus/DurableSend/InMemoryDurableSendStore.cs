@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.ProviderAbstractions;
+using ViciOne.ServiceBus.Providers.Persistence;
 
-namespace ViciOne.ServiceBus.DurableSend;
+namespace ViciOne.ServiceBus.Providers.Persistence;
 /// <summary>
 /// Deterministic in-memory implementation used by unit/in-memory integration tests. It obeys the exact durable-store
 /// atomicity/fencing/boundedness contract but is intentionally not a production durability substitute.

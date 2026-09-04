@@ -8,5 +8,10 @@ namespace ViciOne.ServiceBus.Transports;
 /// </summary>
 public interface IMessageNameFormatter
 {
+    /// <summary>
+    /// Gets message name.
+    /// </summary>
+    /// <param name="type">The type value.</param>
+    /// <returns>The result of the operation.</returns>
     string GetMessageName(Type type);
 }

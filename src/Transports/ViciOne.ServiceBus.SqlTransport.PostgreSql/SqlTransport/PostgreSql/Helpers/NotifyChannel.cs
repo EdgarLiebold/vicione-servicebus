@@ -1,5 +1,8 @@
 namespace ViciOne.ServiceBus.SqlTransport.PostgreSql.Helpers;
 
+/// <summary>
+/// Provides a notify channel implementation.
+/// </summary>
 public static class NotifyChannel
 {
     // Postgres channel name is an identifier and can contain maximum 63 characters.
@@ -9,6 +12,11 @@ public static class NotifyChannel
     const int MaxSchemaNameLength = 39;
     const string DefaultSchemaName = "transport";
 
+    /// <summary>
+    /// Performs the sanitize schema name operation.
+    /// </summary>
+    /// <param name="schemaName">The schema name value.</param>
+    /// <returns>The result of the operation.</returns>
     public static string SanitizeSchemaName(string? schemaName)
     {
         if (string.IsNullOrWhiteSpace(schemaName))

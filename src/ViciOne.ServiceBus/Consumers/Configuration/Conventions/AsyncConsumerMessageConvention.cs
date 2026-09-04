@@ -11,6 +11,10 @@ public class AsyncConsumerMessageConvention<T> :
     IConsumerMessageConvention
     where T : class
 {
+    /// <summary>
+    /// Gets message types.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<IMessageInterfaceType> GetMessageTypes()
     {
         var consumerType = typeof(T);

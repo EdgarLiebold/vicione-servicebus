@@ -22,6 +22,10 @@ public class ConcurrencyLimitFilter<TContext> :
     readonly SemaphoreSlim _limit;
     int _concurrencyLimit;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="concurrencyLimit">The concurrency limit value.</param>
     public ConcurrencyLimitFilter(int concurrencyLimit)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(concurrencyLimit, 1);
@@ -32,12 +36,19 @@ public class ConcurrencyLimitFilter<TContext> :
         _limit = new SemaphoreSlim(concurrencyLimit);
     }
 
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
     public void Dispose()
     {
         _adjustment.Dispose();
         _limit.Dispose();
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("concurrencyLimit");
@@ -45,6 +56,12 @@ public class ConcurrencyLimitFilter<TContext> :
         scope.Add("available", _limit.CurrentCount);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     [DebuggerNonUserCode]
     public async Task SendAsync(TContext context, IPipe<TContext> next)
     {
@@ -62,6 +79,11 @@ public class ConcurrencyLimitFilter<TContext> :
         }
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SendAsync(CommandContext<SetConcurrencyLimit> context)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -87,6 +109,11 @@ public class ConcurrencyLimitFilter<TContext> :
         }
     }
 
+    /// <summary>
+    /// Stops agent.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     protected override async Task StopAgentAsync(StopContext context)
     {
         var slot = 0;

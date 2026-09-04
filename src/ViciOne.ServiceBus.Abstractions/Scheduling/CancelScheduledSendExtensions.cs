@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides extension methods for cancel scheduled send.
+/// </summary>
 public static class CancelScheduledSendExtensions
 {
     /// <summary>

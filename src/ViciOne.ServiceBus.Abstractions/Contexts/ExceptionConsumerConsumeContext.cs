@@ -1,7 +1,11 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Defines the contract for exception consumer consume context.
+/// </summary>
+/// <typeparam name="T">The t type.</typeparam>
 public interface ExceptionConsumerConsumeContext<out T> :
     ConsumerConsumeContext<T>
     where T : class

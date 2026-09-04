@@ -3,8 +3,11 @@ using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Consumer;
 using ViciOne.ServiceBus.Internals;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Registration;
 
+/// <summary>
+/// Provides extension methods for consumer.
+/// </summary>
 public static class ConsumerExtensions
 {
     /// <summary>

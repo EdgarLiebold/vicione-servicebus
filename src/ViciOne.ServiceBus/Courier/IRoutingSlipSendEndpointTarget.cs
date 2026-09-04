@@ -4,6 +4,9 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.Courier;
 
+/// <summary>
+/// Defines the contract for routing slip send endpoint target.
+/// </summary>
 public interface IRoutingSlipSendEndpointTarget
 {
     /// <summary>

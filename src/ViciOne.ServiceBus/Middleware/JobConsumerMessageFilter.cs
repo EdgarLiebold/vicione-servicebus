@@ -15,17 +15,31 @@ public class JobConsumerMessageFilter<TConsumer, TJob> :
 {
     readonly IRetryPolicy _retryPolicy;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="retryPolicy">The retry policy value.</param>
     public JobConsumerMessageFilter(IRetryPolicy retryPolicy)
     {
         _retryPolicy = retryPolicy;
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("consume");
         scope.Add("method", $"Consume(ConsumeContext<{TypeCache<TJob>.ShortName}> context)");
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public Task SendAsync(ConsumerConsumeContext<TConsumer, TJob> context,
         IPipe<ConsumerConsumeContext<TConsumer, TJob>> next)
     {

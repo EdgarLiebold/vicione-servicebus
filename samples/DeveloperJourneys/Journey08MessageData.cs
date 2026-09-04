@@ -1,4 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Advanced.Serialization;
 
 namespace ViciOne.ServiceBus.Samples.DeveloperJourneys;
 

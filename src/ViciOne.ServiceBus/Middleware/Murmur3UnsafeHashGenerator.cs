@@ -1,5 +1,8 @@
 namespace ViciOne.ServiceBus.Middleware;
 
+/// <summary>
+/// Provides a murmur3 unsafe hash generator implementation.
+/// </summary>
 public class Murmur3UnsafeHashGenerator :
     IHashGenerator
 {
@@ -8,6 +11,11 @@ public class Murmur3UnsafeHashGenerator :
     const uint C1 = 0xcc9e2d51;
     const uint C2 = 0x1b873593;
 
+    /// <summary>
+    /// Determines whether the current value has h.
+    /// </summary>
+    /// <param name="data">The data value.</param>
+    /// <returns>The result of the operation.</returns>
     public unsafe uint Hash(byte[] data)
     {
         fixed (byte* input = &data[0])
@@ -16,6 +24,11 @@ public class Murmur3UnsafeHashGenerator :
         }
     }
 
+    /// <summary>
+    /// Determines whether the current value has h.
+    /// </summary>
+    /// <param name="s">The s value.</param>
+    /// <returns>The result of the operation.</returns>
     public unsafe uint Hash(string s)
     {
         var data = s.ToCharArray();
@@ -25,6 +38,14 @@ public class Murmur3UnsafeHashGenerator :
         }
     }
 
+    /// <summary>
+    /// Determines whether the current value has h.
+    /// </summary>
+    /// <param name="data">The data value.</param>
+    /// <param name="offset">The offset value.</param>
+    /// <param name="count">The count value.</param>
+    /// <param name="seed">The seed value.</param>
+    /// <returns>The result of the operation.</returns>
     public unsafe uint Hash(byte[] data, int offset, uint count, uint seed)
     {
         fixed (byte* input = &data[offset])

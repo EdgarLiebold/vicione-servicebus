@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.DependencyInjection;
 
+/// <summary>
+/// Provides a scoped consume send endpoint provider implementation.
+/// </summary>
 public class ScopedConsumeSendEndpointProvider :
     ISendEndpointProvider,
     IMessageRouteProvider
@@ -11,6 +14,12 @@ public class ScopedConsumeSendEndpointProvider :
     readonly ISendEndpointProvider _provider;
     readonly IServiceProvider _scope;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="provider">The service provider.</param>
+    /// <param name="consumeContext">The consume context value.</param>
+    /// <param name="scope">The scope value.</param>
     public ScopedConsumeSendEndpointProvider(ISendEndpointProvider provider, ConsumeContext consumeContext, IServiceProvider scope)
     {
         _provider = provider;

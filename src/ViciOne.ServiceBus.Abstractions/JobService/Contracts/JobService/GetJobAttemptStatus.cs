@@ -2,6 +2,9 @@ using System;
 
 namespace ViciOne.ServiceBus.Contracts.JobService;
 
+/// <summary>
+/// Defines the contract for get job attempt status.
+/// </summary>
 [ConfigureConsumeTopology(false)]
 public interface GetJobAttemptStatus
 {

@@ -14,11 +14,28 @@ public class ResponseEndpointConverterCache
 
     IResponseEndpointConverter this[Type type] => _types.GetOrAdd(type, CreateTypeConverter).Value;
 
+    /// <summary>
+    /// Performs the respond operation.
+    /// </summary>
+    /// <param name="consumeContext">The consume context value.</param>
+    /// <param name="message">The message value.</param>
+    /// <param name="messageType">The message type value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static Task RespondAsync(ConsumeContext consumeContext, object message, Type messageType, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Cached.Converters.Value[messageType].RespondAsync(consumeContext, message);
     }
 
+    /// <summary>
+    /// Performs the respond operation.
+    /// </summary>
+    /// <param name="consumeContext">The consume context value.</param>
+    /// <param name="message">The message value.</param>
+    /// <param name="messageType">The message type value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static Task RespondAsync(ConsumeContext consumeContext, object message, Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Cached.Converters.Value[messageType].RespondAsync(consumeContext, message, pipe);

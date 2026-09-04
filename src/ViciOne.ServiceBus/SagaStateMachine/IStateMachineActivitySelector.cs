@@ -1,5 +1,10 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
+/// <summary>
+/// Defines the contract for state machine activity selector.
+/// </summary>
+/// <typeparam name="TInstance">The t instance type.</typeparam>
+/// <typeparam name="TData">The t data type.</typeparam>
 public interface IStateMachineActivitySelector<TInstance, TData>
     where TInstance : class, SagaStateMachineInstance
     where TData : class
@@ -22,6 +27,10 @@ public interface IStateMachineActivitySelector<TInstance, TData>
 }
 
 
+/// <summary>
+/// Defines the contract for state machine activity selector.
+/// </summary>
+/// <typeparam name="TInstance">The t instance type.</typeparam>
 public interface IStateMachineActivitySelector<TInstance>
     where TInstance : class, SagaStateMachineInstance
 {

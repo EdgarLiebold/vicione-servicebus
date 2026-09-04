@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
 /// Batch options are applied to a <see cref="Batch{T}" /> consumer to configure
@@ -21,6 +21,9 @@ public class BatchOptions :
 
     ConfigurationCallback _configurationCallback;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public BatchOptions()
     {
         ConcurrencyLimit = 1;
@@ -56,11 +59,20 @@ public class BatchOptions :
     /// </summary>
     public object? GroupKeyProvider { get; private set; }
 
+    /// <summary>
+    /// Performs the configure operation.
+    /// </summary>
+    /// <param name="name">The name value.</param>
+    /// <param name="configurator">The configurator value.</param>
     public void Configure(string? name, IReceiveEndpointConfigurator configurator)
     {
         _configurationCallback(name, configurator);
     }
 
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (TimeLimit <= TimeSpan.Zero)
@@ -71,6 +83,11 @@ public class BatchOptions :
             yield return this.Failure("Batch", "ConcurrencyLimit", "Must be > 0");
     }
 
+    /// <summary>
+    /// Sets configuration callback.
+    /// </summary>
+    /// <param name="callback">The callback value.</param>
+    /// <returns>The result of the operation.</returns>
     public BatchOptions SetConfigurationCallback(ConfigurationCallback callback)
     {
         if (callback == null)
@@ -144,6 +161,13 @@ public class BatchOptions :
         return this;
     }
 
+    /// <summary>
+    /// Performs the group by operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="TProperty">The t property type.</typeparam>
+    /// <param name="provider">The service provider.</param>
+    /// <returns>The result of the operation.</returns>
     public BatchOptions GroupBy<T, TProperty>(Func<ConsumeContext<T>, TProperty?> provider)
         where T : class
         where TProperty : struct
@@ -153,6 +177,13 @@ public class BatchOptions :
         return this;
     }
 
+    /// <summary>
+    /// Performs the group by operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="TProperty">The t property type.</typeparam>
+    /// <param name="provider">The service provider.</param>
+    /// <returns>The result of the operation.</returns>
     public BatchOptions GroupBy<T, TProperty>(Func<ConsumeContext<T>, TProperty> provider)
         where T : class
         where TProperty : class

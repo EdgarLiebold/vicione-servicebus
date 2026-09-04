@@ -4,8 +4,11 @@ using System.Diagnostics;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Transports.Fabric;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Providers.Transports;
 
+/// <summary>
+/// Represents an in memory endpoint address value.
+/// </summary>
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
 public readonly struct InMemoryEndpointAddress
 {
@@ -13,15 +16,41 @@ public readonly struct InMemoryEndpointAddress
     const string QueueNameKey = "queue";
     const string ExchangeTypeKey = "type";
 
+    /// <summary>
+    /// Defines the scheme value.
+    /// </summary>
     public readonly string Scheme;
+    /// <summary>
+    /// Defines the host value.
+    /// </summary>
     public readonly string Host;
+    /// <summary>
+    /// Defines the virtual host value.
+    /// </summary>
     public readonly string VirtualHost = null!;
 
+    /// <summary>
+    /// Defines the name value.
+    /// </summary>
     public readonly string Name;
+    /// <summary>
+    /// Defines the bind to queue value.
+    /// </summary>
     public readonly bool BindToQueue;
+    /// <summary>
+    /// Defines the queue name value.
+    /// </summary>
     public readonly string? QueueName;
+    /// <summary>
+    /// Defines the exchange type value.
+    /// </summary>
     public readonly ExchangeType ExchangeType;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="hostAddress">The host address value.</param>
+    /// <param name="address">The address value.</param>
     public InMemoryEndpointAddress(Uri hostAddress, Uri address)
     {
         Scheme = null!;
@@ -82,6 +111,14 @@ public readonly struct InMemoryEndpointAddress
         }
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="hostAddress">The host address value.</param>
+    /// <param name="exchangeName">The exchange name value.</param>
+    /// <param name="bindToQueue">The bind to queue value.</param>
+    /// <param name="queueName">The queue name value.</param>
+    /// <param name="exchangeType">The exchange type value.</param>
     public InMemoryEndpointAddress(Uri hostAddress, string exchangeName, bool bindToQueue = false, string? queueName = default,
         ExchangeType exchangeType = ExchangeType.FanOut)
     {
@@ -102,6 +139,11 @@ public readonly struct InMemoryEndpointAddress
         virtualHost = hostAddress.VirtualHost;
     }
 
+    /// <summary>
+    /// Converts a value to <see cref="Uri" />.
+    /// </summary>
+    /// <param name="address">The address value.</param>
+    /// <returns>The result of the operation.</returns>
     public static implicit operator Uri(in InMemoryEndpointAddress address)
     {
         var builder = new UriBuilder

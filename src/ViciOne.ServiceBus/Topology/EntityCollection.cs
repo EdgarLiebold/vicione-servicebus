@@ -4,21 +4,40 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Topology;
 
+/// <summary>
+/// Provides an entity collection implementation.
+/// </summary>
+/// <typeparam name="TEntity">The t entity type.</typeparam>
+/// <typeparam name="THandle">The t handle type.</typeparam>
 public class EntityCollection<TEntity, THandle> :
     IEnumerable<TEntity>
     where TEntity : THandle
     where THandle : EntityHandle
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="entityComparer">The entity comparer value.</param>
     public EntityCollection(IEqualityComparer<TEntity> entityComparer)
     {
         EntityIds = new Dictionary<long, TEntity>();
         Entities = new Dictionary<TEntity, TEntity>(entityComparer);
     }
 
+    /// <summary>
+    /// Gets the entities value.
+    /// </summary>
     protected IDictionary<TEntity, TEntity> Entities { get; }
 
+    /// <summary>
+    /// Gets the entity ids value.
+    /// </summary>
     protected IDictionary<long, TEntity> EntityIds { get; }
 
+    /// <summary>
+    /// Gets enumerator.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerator<TEntity> GetEnumerator()
     {
         return Entities.Values.GetEnumerator();
@@ -29,6 +48,11 @@ public class EntityCollection<TEntity, THandle> :
         return GetEnumerator();
     }
 
+    /// <summary>
+    /// Gets or add.
+    /// </summary>
+    /// <param name="entity">The entity value.</param>
+    /// <returns>The result of the operation.</returns>
     public virtual THandle GetOrAdd(TEntity entity)
     {
         if (entity == null)
@@ -44,6 +68,11 @@ public class EntityCollection<TEntity, THandle> :
         return entity;
     }
 
+    /// <summary>
+    /// Performs the get operation.
+    /// </summary>
+    /// <param name="entityHandle">The entity handle value.</param>
+    /// <returns>The result of the operation.</returns>
     public virtual TEntity Get(THandle entityHandle)
     {
         if (entityHandle == null)

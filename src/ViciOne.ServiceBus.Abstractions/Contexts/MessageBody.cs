@@ -1,9 +1,15 @@
 using System.IO;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Defines the contract for message body.
+/// </summary>
 public interface MessageBody
 {
+    /// <summary>
+    /// Gets the length value.
+    /// </summary>
     long? Length { get; }
 
     /// <summary>

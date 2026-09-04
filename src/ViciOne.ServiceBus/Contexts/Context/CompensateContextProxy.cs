@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Context;
 
+/// <summary>
+/// Provides a compensate context proxy implementation.
+/// </summary>
+/// <typeparam name="TLog">The t log type.</typeparam>
 public class CompensateContextProxy<TLog> :
     CourierContextProxy,
     CompensateContext<TLog>
@@ -11,6 +15,11 @@ public class CompensateContextProxy<TLog> :
     readonly CompensateContext<TLog> _context;
     readonly TLog _log;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="log">The log value.</param>
     public CompensateContextProxy(CompensateContext<TLog> context, TLog log)
         : base(context)
     {
@@ -18,6 +27,10 @@ public class CompensateContextProxy<TLog> :
         _log = log;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     protected CompensateContextProxy(CompensateContext<TLog> context)
         : base(context)
     {

@@ -4,14 +4,23 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a send message filter configurator implementation.
+/// </summary>
 public class SendMessageFilterConfigurator :
     IMessageFilterConfigurator
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public SendMessageFilterConfigurator()
     {
         Filter = new CompositeFilter<SendContext>();
     }
 
+    /// <summary>
+    /// Gets the filter value.
+    /// </summary>
     public CompositeFilter<SendContext> Filter { get; }
 
     void IMessageTypeFilterConfigurator.Include(params Type[] messageTypes)

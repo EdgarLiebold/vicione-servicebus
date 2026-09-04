@@ -1,7 +1,11 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Defines the contract for request pipe configurator.
+/// </summary>
+/// <typeparam name="TRequest">The t request type.</typeparam>
 public interface IRequestPipeConfigurator<TRequest> :
     IRequestPipeConfigurator,
     IPipeConfigurator<SendContext<TRequest>>
@@ -10,6 +14,9 @@ public interface IRequestPipeConfigurator<TRequest> :
 }
 
 
+/// <summary>
+/// Defines the contract for request pipe configurator.
+/// </summary>
 public interface IRequestPipeConfigurator
 {
     /// <summary>

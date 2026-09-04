@@ -5,7 +5,7 @@ using Amazon.SimpleNotificationService;
 using Amazon.SQS;
 using NDesk.Options;
 using ViciOne.ServiceBus;
-using ViciOne.ServiceBus.AmazonSqsTransport;
+using ViciOne.ServiceBus.AmazonSqs;
 using ViciOne.ServiceBus.Transports;
 
 namespace ViciOneServiceBusBenchmark;
@@ -58,7 +58,7 @@ class AmazonSqsOptionSet :
     {
         get
         {
-            var configurator = new ViciOne.ServiceBus.AmazonSqsTransport.Configuration.AmazonSqsHostConfigurator(HostAddress);
+            var configurator = new ViciOne.ServiceBus.AmazonSqs.Configuration.AmazonSqsHostConfigurator(HostAddress);
             configurator.ClientFactories(
                 () => Credentials == null
                     ? new AmazonSQSClient(AmazonSqsConfig)

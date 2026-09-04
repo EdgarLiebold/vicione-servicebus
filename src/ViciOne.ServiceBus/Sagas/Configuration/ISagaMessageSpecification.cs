@@ -2,19 +2,36 @@ using System;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for saga message specification.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
 public interface ISagaMessageSpecification<TSaga> :
     IPipeConfigurator<SagaConsumeContext<TSaga>>,
     ISagaConfigurationObserverConnector,
     ISpecification
     where TSaga : class, ISaga
 {
+    /// <summary>
+    /// Gets the message type value.
+    /// </summary>
     Type MessageType { get; }
 
+    /// <summary>
+    /// Gets message specification.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     ISagaMessageSpecification<TSaga, T> GetMessageSpecification<T>()
         where T : class;
 }
 
 
+/// <summary>
+/// Defines the contract for saga message specification.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public interface ISagaMessageSpecification<TSaga, TMessage> :
     ISagaMessageSpecification<TSaga>,
     ISagaMessageConfigurator<TSaga, TMessage>,

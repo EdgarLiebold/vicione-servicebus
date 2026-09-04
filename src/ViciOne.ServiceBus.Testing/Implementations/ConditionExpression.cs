@@ -20,11 +20,20 @@ public class ConditionExpression :
     readonly ISignalResource _resource;
     bool _disposed;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="resource">The resource value.</param>
     public ConditionExpression(ISignalResource resource)
     {
         _resource = resource ?? throw new ArgumentNullException(nameof(resource));
     }
 
+    /// <summary>
+    /// Performs the condition updated operation.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task ConditionUpdatedAsync(CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (TryCheckCondition(out var isMet) && isMet)
@@ -63,6 +72,9 @@ public class ConditionExpression :
         }
     }
 
+    /// <summary>
+    /// Performs the clear all conditions operation.
+    /// </summary>
     public void ClearAllConditions()
     {
         ConnectHandle[] connections;
@@ -77,6 +89,10 @@ public class ConditionExpression :
             connection.Disconnect();
     }
 
+    /// <summary>
+    /// Performs the check condition operation.
+    /// </summary>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool CheckCondition()
     {
         if (!TryCheckCondition(out var isMet))
@@ -85,6 +101,9 @@ public class ConditionExpression :
         return isMet;
     }
 
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
     public void Dispose()
     {
         ConnectHandle[] connections;

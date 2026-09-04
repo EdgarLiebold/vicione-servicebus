@@ -8,9 +8,15 @@ using Microsoft.CodeAnalysis.Operations;
 
 namespace ViciOne.ServiceBus.Analyzers.V5;
 
+/// <summary>
+/// Provides a consumer endpoint qos analyzer implementation.
+/// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ConsumerEndpointQosAnalyzer : DiagnosticAnalyzer
 {
+    /// <summary>
+    /// Defines the diagnostic id value.
+    /// </summary>
     public const string DiagnosticId = "VOSB5002";
 
     private static readonly DiagnosticDescriptor s_rule = new(
@@ -22,8 +28,15 @@ public sealed class ConsumerEndpointQosAnalyzer : DiagnosticAnalyzer
         isEnabledByDefault: true,
         description: "Endpoint prefetch affects every consumer on a shared endpoint and must be owned by endpoint topology.");
 
+    /// <summary>
+    /// Gets the supported diagnostics value.
+    /// </summary>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [s_rule];
 
+    /// <summary>
+    /// Performs the initialize operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public override void Initialize(AnalysisContext context)
     {
         if (context is null)

@@ -4,6 +4,9 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Metadata;
 
+/// <summary>
+/// Provides a registration metadata implementation.
+/// </summary>
 public static class RegistrationMetadata
 {
     /// <summary>

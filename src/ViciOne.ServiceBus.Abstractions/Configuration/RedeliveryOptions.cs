@@ -1,6 +1,6 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
 /// Customize the redelivery experience
@@ -8,6 +8,9 @@ namespace ViciOne.ServiceBus;
 [Flags]
 public enum RedeliveryOptions
 {
+    /// <summary>
+    /// Indicates none.
+    /// </summary>
     None = 0,
 
     /// <summary>

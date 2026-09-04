@@ -2,6 +2,10 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
+/// <summary>
+/// Provides a conditional activity binder implementation.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
 public class ConditionalActivityBinder<TSaga> :
     IActivityBinder<TSaga>
     where TSaga : class, SagaStateMachineInstance
@@ -10,12 +14,26 @@ public class ConditionalActivityBinder<TSaga> :
     readonly EventActivities<TSaga> _elseActivities;
     readonly EventActivities<TSaga> _thenActivities;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="event">The event value.</param>
+    /// <param name="condition">The condition value.</param>
+    /// <param name="thenActivities">The then activities value.</param>
+    /// <param name="elseActivities">The else activities value.</param>
     public ConditionalActivityBinder(Event @event, StateMachineCondition<TSaga> condition,
         EventActivities<TSaga> thenActivities, EventActivities<TSaga> elseActivities)
         : this(@event, context => Task.FromResult(condition(context)), thenActivities, elseActivities)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="event">The event value.</param>
+    /// <param name="condition">The condition value.</param>
+    /// <param name="thenActivities">The then activities value.</param>
+    /// <param name="elseActivities">The else activities value.</param>
     public ConditionalActivityBinder(Event @event, StateMachineAsyncCondition<TSaga> condition,
         EventActivities<TSaga> thenActivities, EventActivities<TSaga> elseActivities)
     {
@@ -25,14 +43,26 @@ public class ConditionalActivityBinder<TSaga> :
         Event = @event;
     }
 
+    /// <summary>
+    /// Gets the event value.
+    /// </summary>
     public Event Event { get; }
 
+    /// <summary>
+    /// Determines whether state transition event.
+    /// </summary>
+    /// <param name="state">The state value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool IsStateTransitionEvent(State state)
     {
         return Equals(Event, state.Enter) || Equals(Event, state.BeforeEnter)
             || Equals(Event, state.AfterLeave) || Equals(Event, state.Leave);
     }
 
+    /// <summary>
+    /// Performs the bind operation.
+    /// </summary>
+    /// <param name="state">The state value.</param>
     public void Bind(State<TSaga> state)
     {
         IBehavior<TSaga> thenBehavior = GetBehavior(_thenActivities);
@@ -43,6 +73,10 @@ public class ConditionalActivityBinder<TSaga> :
         state.Bind(Event, conditionActivity);
     }
 
+    /// <summary>
+    /// Performs the bind operation.
+    /// </summary>
+    /// <param name="builder">The builder value.</param>
     public void Bind(IBehaviorBuilder<TSaga> builder)
     {
         IBehavior<TSaga> thenBehavior = GetBehavior(_thenActivities);
@@ -65,6 +99,11 @@ public class ConditionalActivityBinder<TSaga> :
 }
 
 
+/// <summary>
+/// Provides a conditional activity binder implementation.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public class ConditionalActivityBinder<TSaga, TMessage> :
     IActivityBinder<TSaga>
     where TSaga : class, SagaStateMachineInstance
@@ -74,12 +113,26 @@ public class ConditionalActivityBinder<TSaga, TMessage> :
     readonly EventActivities<TSaga> _elseActivities;
     readonly EventActivities<TSaga> _thenActivities;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="event">The event value.</param>
+    /// <param name="condition">The condition value.</param>
+    /// <param name="thenActivities">The then activities value.</param>
+    /// <param name="elseActivities">The else activities value.</param>
     public ConditionalActivityBinder(Event @event, StateMachineCondition<TSaga, TMessage> condition,
         EventActivities<TSaga> thenActivities, EventActivities<TSaga> elseActivities)
         : this(@event, context => Task.FromResult(condition(context)), thenActivities, elseActivities)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="event">The event value.</param>
+    /// <param name="condition">The condition value.</param>
+    /// <param name="thenActivities">The then activities value.</param>
+    /// <param name="elseActivities">The else activities value.</param>
     public ConditionalActivityBinder(Event @event, StateMachineAsyncCondition<TSaga, TMessage> condition,
         EventActivities<TSaga> thenActivities, EventActivities<TSaga> elseActivities)
     {
@@ -89,14 +142,26 @@ public class ConditionalActivityBinder<TSaga, TMessage> :
         Event = @event;
     }
 
+    /// <summary>
+    /// Gets the event value.
+    /// </summary>
     public Event Event { get; }
 
+    /// <summary>
+    /// Determines whether state transition event.
+    /// </summary>
+    /// <param name="state">The state value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool IsStateTransitionEvent(State state)
     {
         return Equals(Event, state.Enter) || Equals(Event, state.BeforeEnter)
             || Equals(Event, state.AfterLeave) || Equals(Event, state.Leave);
     }
 
+    /// <summary>
+    /// Performs the bind operation.
+    /// </summary>
+    /// <param name="state">The state value.</param>
     public void Bind(State<TSaga> state)
     {
         IBehavior<TSaga> thenBehavior = GetBehavior(_thenActivities);
@@ -107,6 +172,10 @@ public class ConditionalActivityBinder<TSaga, TMessage> :
         state.Bind(Event, conditionActivity);
     }
 
+    /// <summary>
+    /// Performs the bind operation.
+    /// </summary>
+    /// <param name="builder">The builder value.</param>
     public void Bind(IBehaviorBuilder<TSaga> builder)
     {
         IBehavior<TSaga> thenBehavior = GetBehavior(_thenActivities);

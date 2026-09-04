@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for activity observer configuration.
+/// </summary>
 public static class ActivityObserverConfigurationExtensions
 {
     /// <summary>

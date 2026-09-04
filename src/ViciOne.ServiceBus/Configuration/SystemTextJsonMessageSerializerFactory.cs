@@ -6,12 +6,18 @@ using ViciOne.ServiceBus.Serialization;
 #nullable enable
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a system text json message serializer factory implementation.
+/// </summary>
 public class SystemTextJsonMessageSerializerFactory :
     ISerializerFactory,
     IJsonSerializerFactory
 {
     readonly Lazy<SystemTextJsonMessageSerializer>? _serializer;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public SystemTextJsonMessageSerializerFactory()
     {
     }
@@ -21,13 +27,24 @@ public class SystemTextJsonMessageSerializerFactory :
         _serializer = new Lazy<SystemTextJsonMessageSerializer>(() => new SystemTextJsonMessageSerializer(options));
     }
 
+    /// <summary>
+    /// Gets the content type value.
+    /// </summary>
     public ContentType ContentType => SystemTextJsonMessageSerializer.JsonContentType;
 
+    /// <summary>
+    /// Creates serializer.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IMessageSerializer CreateSerializer()
     {
         return GetSerializer();
     }
 
+    /// <summary>
+    /// Creates deserializer.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IMessageDeserializer CreateDeserializer()
     {
         return GetSerializer();

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using ViciOne.ServiceBus;
-using ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
+using ViciOne.ServiceBus.EntityFrameworkCore;
 
 namespace ViciOneServiceBusBenchmark.BusOutbox;
 

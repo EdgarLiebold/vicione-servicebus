@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using ViciOne.ServiceBus;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.DependencyInjection.Registration;
@@ -18,8 +19,11 @@ using ViciOne.ServiceBus.Testing.Implementations;
 using ViciOne.ServiceBus.Transports;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace Microsoft.Extensions.DependencyInjection;
 
+/// <summary>
+/// Provides extension methods for dependency injection testing.
+/// </summary>
 public static class DependencyInjectionTestingExtensions
 {
     /// <summary>
@@ -151,7 +155,7 @@ public static class DependencyInjectionTestingExtensions
     public static IBusRegistrationConfigurator SetTestTimeouts(this IBusRegistrationConfigurator configurator, TimeSpan? testTimeout = null,
         TimeSpan? testInactivityTimeout = null)
     {
-        configurator.AddOptions<TestHarnessOptions>()
+        configurator.Services.AddOptions<TestHarnessOptions>()
             .Configure(options =>
             {
                 if (testTimeout.HasValue)
@@ -173,7 +177,7 @@ public static class DependencyInjectionTestingExtensions
         if (maximumSavedContexts <= 0)
             throw new ArgumentOutOfRangeException(nameof(maximumSavedContexts));
 
-        configurator.AddOptions<TestHarnessOptions>().Configure(options =>
+        configurator.Services.AddOptions<TestHarnessOptions>().Configure(options =>
         {
             options.ContextSaveMode = saveMode;
             options.MaximumSavedContexts = maximumSavedContexts;

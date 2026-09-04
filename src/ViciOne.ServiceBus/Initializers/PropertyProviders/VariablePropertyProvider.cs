@@ -16,11 +16,22 @@ public class VariablePropertyProvider<TInput, TProperty, TValue> :
 {
     readonly IPropertyProvider<TInput, TProperty> _provider;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="provider">The service provider.</param>
     public VariablePropertyProvider(IPropertyProvider<TInput, TProperty> provider)
     {
         _provider = provider;
     }
 
+    /// <summary>
+    /// Gets property.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<TValue?> GetPropertyAsync<T>(InitializeContext<T, TInput> context, CancellationToken cancellationToken = default)
         where T : class
     {

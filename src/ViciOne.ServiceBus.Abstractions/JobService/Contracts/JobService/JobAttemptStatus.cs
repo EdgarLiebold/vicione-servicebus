@@ -2,6 +2,9 @@ using System;
 
 namespace ViciOne.ServiceBus.Contracts.JobService;
 
+/// <summary>
+/// Defines the contract for job attempt status.
+/// </summary>
 public interface JobAttemptStatus
 {
     /// <summary>
@@ -14,7 +17,13 @@ public interface JobAttemptStatus
     /// </summary>
     Guid AttemptId { get; }
 
+    /// <summary>
+    /// Gets the timestamp value.
+    /// </summary>
     DateTimeOffset Timestamp { get; }
 
+    /// <summary>
+    /// Gets the status value.
+    /// </summary>
     JobStatus Status { get; }
 }

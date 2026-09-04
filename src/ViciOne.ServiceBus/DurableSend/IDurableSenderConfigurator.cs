@@ -1,9 +1,8 @@
 using System;
-using ViciOne.ServiceBus.DurableSend;
 
 #nullable enable
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 /// <summary>High-level configuration shared by producer-side durable senders.</summary>
 public interface IDurableSenderConfigurator
 {

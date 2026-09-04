@@ -7,6 +7,9 @@ using ViciOne.ServiceBus.Metadata;
 
 namespace ViciOne.ServiceBus.Topology;
 
+/// <summary>
+/// Provides a publish topology implementation.
+/// </summary>
 public class PublishTopology :
     IPublishTopologyConfigurator,
     IPublishTopologyConfigurationObserver
@@ -17,6 +20,9 @@ public class PublishTopology :
     readonly ConcurrentDictionary<Type, IMessageTypeSelector> _messageTypeSelectorCache;
     readonly PublishTopologyConfigurationObservable _observers;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public PublishTopology()
     {
         _messageTypes = new ConcurrentDictionary<Type, Lazy<IMessagePublishTopologyConfigurator>>();
@@ -43,16 +49,33 @@ public class PublishTopology :
         return GetMessageTopology<T>();
     }
 
+    /// <summary>
+    /// Attempts to get publish address.
+    /// </summary>
+    /// <param name="messageType">The message type value.</param>
+    /// <param name="baseAddress">The base address value.</param>
+    /// <param name="publishAddress">The publish address value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetPublishAddress(Type messageType, Uri baseAddress, out Uri? publishAddress)
     {
         return GetMessageTopology(messageType).TryGetPublishAddress(baseAddress, out publishAddress);
     }
 
+    /// <summary>
+    /// Connects publish topology configuration observer.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectPublishTopologyConfigurationObserver(IPublishTopologyConfigurationObserver observer)
     {
         return _observers.Connect(observer);
     }
 
+    /// <summary>
+    /// Performs the try add convention operation.
+    /// </summary>
+    /// <param name="convention">The convention value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryAddConvention(IPublishTopologyConvention convention)
     {
         var conventionType = convention.GetType();
@@ -81,6 +104,10 @@ public class PublishTopology :
         messageConfiguration.Add(topology);
     }
 
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public virtual IEnumerable<ValidationResult> Validate()
     {
         return _messageTypes.Values.SelectMany(x => x.Value.Validate());
@@ -91,6 +118,11 @@ public class PublishTopology :
         return GetMessageTopology(messageType);
     }
 
+    /// <summary>
+    /// Gets message topology.
+    /// </summary>
+    /// <param name="messageType">The message type value.</param>
+    /// <returns>The result of the operation.</returns>
     public IMessagePublishTopologyConfigurator GetMessageTopology(Type messageType)
     {
         if (MessageTypeCache.IsValidMessageType(messageType) == false)
@@ -100,6 +132,11 @@ public class PublishTopology :
             .GetMessageTopology();
     }
 
+    /// <summary>
+    /// Creates message topology.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     protected virtual IMessagePublishTopologyConfigurator CreateMessageTopology<T>()
         where T : class
     {
@@ -114,6 +151,11 @@ public class PublishTopology :
         return messageTopology;
     }
 
+    /// <summary>
+    /// Gets message topology.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     protected IMessagePublishTopologyConfigurator<T> GetMessageTopology<T>()
         where T : class
     {
@@ -126,12 +168,22 @@ public class PublishTopology :
         return (IMessagePublishTopologyConfigurator<T>)topology.Value;
     }
 
+    /// <summary>
+    /// Performs the on message topology created operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="messageTopology">The message topology value.</param>
     protected void OnMessageTopologyCreated<T>(IMessagePublishTopologyConfigurator<T> messageTopology)
         where T : class
     {
         _observers.MessageTopologyCreated(messageTopology);
     }
 
+    /// <summary>
+    /// Performs the for each message type operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="callback">The callback value.</param>
     protected void ForEachMessageType<T>(Action<T> callback)
     {
         foreach (Lazy<IMessagePublishTopologyConfigurator> configurator in _messageTypes.Values)

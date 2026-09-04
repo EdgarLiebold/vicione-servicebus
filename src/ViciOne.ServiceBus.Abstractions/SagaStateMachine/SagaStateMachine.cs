@@ -1,8 +1,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
+/// <summary>
+/// Defines the contract for saga state machine.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
 public interface SagaStateMachine<TSaga> :
     StateMachine<TSaga>
     where TSaga : class, SagaStateMachineInstance

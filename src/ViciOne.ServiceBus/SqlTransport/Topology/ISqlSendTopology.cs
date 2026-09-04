@@ -1,10 +1,18 @@
 using ViciOne.ServiceBus.SqlTransport;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Providers.Transports;
 
+/// <summary>
+/// Defines the contract for sql send topology.
+/// </summary>
 public interface ISqlSendTopology :
     ISendTopology
 {
+    /// <summary>
+    /// Gets message topology.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     new ISqlMessageSendTopologyConfigurator<T> GetMessageTopology<T>()
         where T : class;
 

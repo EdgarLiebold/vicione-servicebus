@@ -21,6 +21,12 @@ public interface IContainerSelector
     bool TryGetRegistration<T>(IServiceProvider provider, Type type, [NotNullWhen(true)] out T? value)
         where T : class, IRegistration;
 
+    /// <summary>
+    /// Gets registrations.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="provider">The service provider.</param>
+    /// <returns>The result of the operation.</returns>
     IEnumerable<T> GetRegistrations<T>(IServiceProvider provider)
         where T : class, IRegistration;
 
@@ -42,6 +48,11 @@ public interface IContainerSelector
     IEndpointDefinition<T>? GetEndpointDefinition<T>(IServiceProvider provider)
         where T : class;
 
+    /// <summary>
+    /// Gets configure receive endpoints.
+    /// </summary>
+    /// <param name="provider">The service provider.</param>
+    /// <returns>The result of the operation.</returns>
     IConfigureReceiveEndpoint GetConfigureReceiveEndpoints(IServiceProvider provider);
 
     /// <summary>

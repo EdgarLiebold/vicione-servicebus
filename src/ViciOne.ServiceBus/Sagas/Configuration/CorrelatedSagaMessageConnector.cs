@@ -3,6 +3,9 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a saga connector implementation.
+/// </summary>
 public partial class SagaConnector<TSaga, TMessage>
     where TSaga : class, ISaga
     where TMessage : class
@@ -17,6 +20,12 @@ public partial class SagaConnector<TSaga, TMessage>
         readonly Func<ConsumeContext<TMessage>, Guid> _correlationIdSelector;
         readonly ISagaPolicy<TSaga, TMessage> _policy;
 
+        /// <summary>
+        /// Initializes a new instance of the containing type.
+        /// </summary>
+        /// <param name="consumeFilter">The consume filter value.</param>
+        /// <param name="policy">The policy value.</param>
+        /// <param name="correlationIdSelector">The correlation id selector value.</param>
         public CorrelatedSagaMessageConnector(IFilter<SagaConsumeContext<TSaga, TMessage>> consumeFilter, ISagaPolicy<TSaga, TMessage> policy,
             Func<ConsumeContext<TMessage>, Guid> correlationIdSelector)
             : base(consumeFilter)
@@ -25,6 +34,12 @@ public partial class SagaConnector<TSaga, TMessage>
             _correlationIdSelector = correlationIdSelector;
         }
 
+        /// <summary>
+        /// Configures message pipe.
+        /// </summary>
+        /// <param name="configurator">The configurator value.</param>
+        /// <param name="repository">The repository value.</param>
+        /// <param name="sagaPipe">The saga pipe value.</param>
         protected override void ConfigureMessagePipe(IPipeConfigurator<ConsumeContext<TMessage>> configurator, ISagaRepository<TSaga> repository,
             IPipe<SagaConsumeContext<TSaga, TMessage>> sagaPipe)
         {

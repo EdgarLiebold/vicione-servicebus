@@ -6,6 +6,12 @@ using ViciOne.ServiceBus.SagaStateMachine;
 
 namespace ViciOne.ServiceBus.Futures;
 
+/// <summary>
+/// Provides a future fault implementation.
+/// </summary>
+/// <typeparam name="TCommand">The t command type.</typeparam>
+/// <typeparam name="TFault">The t fault type.</typeparam>
+/// <typeparam name="TInput">The t input type.</typeparam>
 public class FutureFault<TCommand, TFault, TInput> :
     ISpecification
     where TCommand : class
@@ -15,23 +21,42 @@ public class FutureFault<TCommand, TFault, TInput> :
     static readonly object _defaultValues = new Default();
     ContextMessageFactory<BehaviorContext<FutureState, TInput>, TFault> _factory;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public FutureFault()
     {
         _factory = new ContextMessageFactory<BehaviorContext<FutureState, TInput>, TFault>(DefaultFactoryAsync);
     }
 
+    /// <summary>
+    /// Gets or sets the factory value.
+    /// </summary>
     public ContextMessageFactory<BehaviorContext<FutureState, TInput>, TFault> Factory
     {
         set => _factory = value;
     }
 
+    /// <summary>
+    /// Gets or sets the wait for pending value.
+    /// </summary>
     public bool WaitForPending { get; set; }
 
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         yield break;
     }
 
+    /// <summary>
+    /// Sets faulted.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SetFaultedAsync(BehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default)
     {
         if (!WaitForPending || !context.Saga.HasPending())
@@ -45,7 +70,7 @@ public class FutureFault<TCommand, TFault, TInput> :
         }
     }
 
-    static Task<SendTuple<TFault>> DefaultFactoryAsync(BehaviorContext<FutureState, TInput> context)
+    static Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TFault>> DefaultFactoryAsync(BehaviorContext<FutureState, TInput> context)
     {
         if (context.Message is Fault fault)
         {
@@ -73,6 +98,10 @@ public class FutureFault<TCommand, TFault, TInput> :
 }
 
 
+/// <summary>
+/// Provides a future fault implementation.
+/// </summary>
+/// <typeparam name="TFault">The t fault type.</typeparam>
 public class FutureFault<TFault> :
     ISpecification
     where TFault : class
@@ -80,23 +109,42 @@ public class FutureFault<TFault> :
     static readonly object _defaultValues = new Default();
     ContextMessageFactory<BehaviorContext<FutureState>, TFault> _factory;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public FutureFault()
     {
-        _factory = MessageFactory<TFault>.Create((Func<BehaviorContext<FutureState>, Task<SendTuple<TFault>>>)DefaultFactoryAsync);
+        _factory = MessageFactory<TFault>.Create((Func<BehaviorContext<FutureState>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TFault>>>)DefaultFactoryAsync);
     }
 
+    /// <summary>
+    /// Gets or sets the factory value.
+    /// </summary>
     public ContextMessageFactory<BehaviorContext<FutureState>, TFault> Factory
     {
         set => _factory = value;
     }
 
+    /// <summary>
+    /// Gets or sets the wait for pending value.
+    /// </summary>
     public bool WaitForPending { get; set; }
 
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         yield break;
     }
 
+    /// <summary>
+    /// Sets faulted.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SetFaultedAsync(BehaviorContext<FutureState> context, CancellationToken cancellationToken = default)
     {
         if (!WaitForPending || !context.Saga.HasPending())
@@ -110,7 +158,7 @@ public class FutureFault<TFault> :
         }
     }
 
-    static Task<SendTuple<TFault>> DefaultFactoryAsync(BehaviorContext<FutureState> context)
+    static Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TFault>> DefaultFactoryAsync(BehaviorContext<FutureState> context)
     {
         return context.InitAsync<TFault>(_defaultValues);
     }

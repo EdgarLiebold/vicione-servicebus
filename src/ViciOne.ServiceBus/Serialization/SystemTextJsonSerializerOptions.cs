@@ -11,6 +11,10 @@ namespace ViciOne.ServiceBus.Serialization;
 /// </summary>
 public static class SystemTextJsonSerializerOptions
 {
+    /// <summary>
+    /// Creates default.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public static JsonSerializerOptions CreateDefault()
     {
         var options = new JsonSerializerOptions

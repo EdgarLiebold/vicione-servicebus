@@ -4,6 +4,9 @@ using ViciOne.ServiceBus.Observables;
 
 namespace ViciOne.ServiceBus.Transports;
 
+/// <summary>
+/// Provides a publish endpoint provider implementation.
+/// </summary>
 public class PublishEndpointProvider :
     IPublishEndpointProvider,
     IAsyncDisposable
@@ -16,6 +19,15 @@ public class PublishEndpointProvider :
     readonly ISendPipe _publishPipe;
     readonly IPublishTransportProvider _transportProvider;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="transportProvider">The transport provider value.</param>
+    /// <param name="hostAddress">The host address value.</param>
+    /// <param name="publishObservers">The publish observers value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <param name="publishPipe">The publish pipe value.</param>
+    /// <param name="publishTopology">The publish topology value.</param>
     public PublishEndpointProvider(IPublishTransportProvider transportProvider, Uri hostAddress, PublishObservable publishObservers,
         ReceiveEndpointContext context, IPublishPipe publishPipe, IPublishTopology publishTopology)
     {
@@ -30,17 +42,32 @@ public class PublishEndpointProvider :
         _cache = new SendEndpointCache<Type>();
     }
 
+    /// <summary>
+    /// Gets publish send endpoint.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<ISendEndpoint> GetPublishSendEndpointAsync<T>(CancellationToken cancellationToken = default)
         where T : class
     {
         return _cache.GetSendEndpointAsync(typeof(T), type => CreateSendEndpointAsync<T>(), cancellationToken: cancellationToken);
     }
 
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public ValueTask DisposeAsync()
     {
         return _cache.DisposeAsync();
     }
 
+    /// <summary>
+    /// Connects publish observer.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectPublishObserver(IPublishObserver observer)
     {
         return _publishObservers.Connect(observer);

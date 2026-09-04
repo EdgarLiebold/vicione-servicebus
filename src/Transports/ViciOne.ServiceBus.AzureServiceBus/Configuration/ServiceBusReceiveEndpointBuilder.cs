@@ -1,0 +1,89 @@
+using System;
+using System.Linq;
+using ViciOne.ServiceBus.AzureServiceBus;
+using ViciOne.ServiceBus.AzureServiceBus.Configuration;
+using ViciOne.ServiceBus.AzureServiceBus.Topology;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+/// <summary>
+/// Provides a service bus receive endpoint builder implementation.
+/// </summary>
+public class ServiceBusReceiveEndpointBuilder :
+    ReceiveEndpointBuilder
+{
+    static readonly char[] Separator = { '/' };
+    readonly IServiceBusReceiveEndpointConfiguration _configuration;
+    readonly IServiceBusHostConfiguration _hostConfiguration;
+
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="hostConfiguration">The host configuration value.</param>
+    /// <param name="configuration">The configuration callback.</param>
+    public ServiceBusReceiveEndpointBuilder(IServiceBusHostConfiguration hostConfiguration, IServiceBusReceiveEndpointConfiguration configuration)
+        : base(configuration)
+    {
+        _hostConfiguration = hostConfiguration;
+        _configuration = configuration;
+    }
+
+    /// <summary>
+    /// Connects consume pipe.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="pipe">The pipe value.</param>
+    /// <param name="options">The options value.</param>
+    /// <returns>The result of the operation.</returns>
+    public override ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
+    {
+        if (_configuration.ConfigureConsumeTopology && options.HasFlag(ConnectPipeOptions.ConfigureConsumeTopology))
+        {
+            IServiceBusMessageConsumeTopologyConfigurator<T> topology = _configuration.Topology.Consume.GetMessageTopology<T>();
+            if (topology.ConfigureConsumeTopology)
+            {
+                var subscriptionName = GenerateSubscriptionName();
+                topology.Subscribe(subscriptionName);
+            }
+        }
+
+        return base.ConnectConsumePipe(pipe, options);
+    }
+
+    /// <summary>
+    /// Creates receive endpoint context.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
+    public ServiceBusReceiveEndpointContext CreateReceiveEndpointContext()
+    {
+        var topologyLayout = BuildTopology(_configuration.Settings);
+
+        return new ServiceBusEntityReceiveEndpointContext(_hostConfiguration, _configuration, topologyLayout, ClientContextFactory);
+    }
+
+    string GenerateSubscriptionName()
+    {
+        var subscriptionName = _configuration.Settings.Name.Split(Separator, StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
+        var hostScope = _configuration.HostAddress.AbsolutePath.Split(Separator, StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
+
+        return _configuration.Topology.Publish.GenerateSubscriptionName(
+            subscriptionName ?? throw new ConfigurationException("The Azure Service Bus endpoint name is invalid."), hostScope);
+    }
+
+    BrokerTopology BuildTopology(ReceiveSettings settings)
+    {
+        var topologyBuilder = new ReceiveEndpointBrokerTopologyBuilder();
+
+        topologyBuilder.Queue = topologyBuilder.CreateQueue(settings.GetCreateQueueOptions());
+
+        _configuration.Topology.Consume.Apply(topologyBuilder);
+
+        return topologyBuilder.BuildBrokerTopology();
+    }
+
+    IClientContextSupervisor ClientContextFactory()
+    {
+        return _hostConfiguration.ConnectionContextSupervisor
+            .CreateClientContextSupervisor(supervisor => new QueueClientContextFactory(supervisor, _configuration.Settings));
+    }
+}

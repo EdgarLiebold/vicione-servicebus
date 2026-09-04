@@ -13,18 +13,37 @@ public class InMemoryHost :
 {
     readonly IInMemoryHostConfiguration _hostConfiguration;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="hostConfiguration">The host configuration value.</param>
+    /// <param name="busTopology">The bus topology value.</param>
     public InMemoryHost(IInMemoryHostConfiguration hostConfiguration, IInMemoryBusTopology busTopology)
         : base(hostConfiguration, busTopology)
     {
         _hostConfiguration = hostConfiguration;
     }
 
+    /// <summary>
+    /// Connects receive endpoint.
+    /// </summary>
+    /// <param name="definition">The definition value.</param>
+    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
+    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <returns>The result of the operation.</returns>
     public override HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
         return ConnectReceiveEndpoint(definition, endpointNameFormatter, configureEndpoint);
     }
 
+    /// <summary>
+    /// Connects receive endpoint.
+    /// </summary>
+    /// <param name="definition">The definition value.</param>
+    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
+    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <returns>The result of the operation.</returns>
     public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IInMemoryReceiveEndpointConfigurator>? configureEndpoint = null)
     {
@@ -37,11 +56,23 @@ public class InMemoryHost :
         });
     }
 
+    /// <summary>
+    /// Connects receive endpoint.
+    /// </summary>
+    /// <param name="queueName">The queue name value.</param>
+    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <returns>The result of the operation.</returns>
     public override HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
         return ConnectReceiveEndpoint(queueName, configureEndpoint);
     }
 
+    /// <summary>
+    /// Connects receive endpoint.
+    /// </summary>
+    /// <param name="queueName">The queue name value.</param>
+    /// <param name="configure">The configuration callback.</param>
+    /// <returns>The result of the operation.</returns>
     public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IInMemoryReceiveEndpointConfigurator>? configure = null)
     {
         LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
@@ -57,8 +88,15 @@ public class InMemoryHost :
         return ReceiveEndpoints.Start(queueName);
     }
 
+    /// <summary>
+    /// Gets the delay provider value.
+    /// </summary>
     public IInMemoryDelayProvider DelayProvider => _hostConfiguration.TransportProvider.MessageFabric.DelayProvider;
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     protected override void Probe(ProbeContext context)
     {
         context.Add("type", "InMemory");
@@ -67,6 +105,10 @@ public class InMemoryHost :
         _hostConfiguration.TransportProvider.Probe(context);
     }
 
+    /// <summary>
+    /// Gets agent handles.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     protected override IAgent[] GetAgentHandles()
     {
         return [_hostConfiguration.TransportProvider];

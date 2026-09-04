@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using ViciOne.ServiceBus.Configuration;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
+/// <summary>
+/// Provides a vici one service bus state machine implementation.
+/// </summary>
 public partial class ViciOneServiceBusStateMachine<TInstance>
     where TInstance : class, SagaStateMachineInstance
 {

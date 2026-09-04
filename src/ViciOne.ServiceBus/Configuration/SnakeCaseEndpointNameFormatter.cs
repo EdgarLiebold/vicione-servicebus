@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
 /// Formats the endpoint name using snake case. For example,
@@ -11,6 +11,9 @@ namespace ViciOne.ServiceBus;
 public class SnakeCaseEndpointNameFormatter :
     DefaultEndpointNameFormatter
 {
+    /// <summary>
+    /// Defines the snake case separator value.
+    /// </summary>
     protected const char SnakeCaseSeparator = '_';
 
     static readonly Regex _pattern = new Regex("(?<=[a-z0-9])[A-Z]", RegexOptions.Compiled);
@@ -68,6 +71,9 @@ public class SnakeCaseEndpointNameFormatter :
         Separator = _separator.ToString();
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     protected SnakeCaseEndpointNameFormatter()
     {
         _separator = SnakeCaseSeparator;
@@ -75,8 +81,16 @@ public class SnakeCaseEndpointNameFormatter :
         Separator = _separator.ToString();
     }
 
+    /// <summary>
+    /// Gets the instance value.
+    /// </summary>
     public new static IEndpointNameFormatter Instance { get; } = new SnakeCaseEndpointNameFormatter();
 
+    /// <summary>
+    /// Performs the sanitize name operation.
+    /// </summary>
+    /// <param name="name">The name value.</param>
+    /// <returns>The result of the operation.</returns>
     public override string SanitizeName(string name)
     {
         return _pattern.Replace(name, m => _separator + m.Value).ToLowerInvariant();

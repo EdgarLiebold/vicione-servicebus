@@ -1,5 +1,8 @@
 namespace ViciOne.ServiceBus.Transports;
 
+/// <summary>
+/// Defines the contract for partition key formatter.
+/// </summary>
 public interface IPartitionKeyFormatter
 {
     /// <summary>

@@ -17,49 +17,86 @@ public class BusActivitySendIndicator : BaseBusActivityIndicatorConnectable,
     readonly ISignalResource? _signalResource;
     int _activityStarted;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="signalResource">The signal resource value.</param>
+    /// <param name="receiveIdleTimeout">The receive idle timeout value.</param>
     public BusActivitySendIndicator(ISignalResource? signalResource, TimeSpan receiveIdleTimeout)
         : this(signalResource, receiveIdleTimeout, TimeProvider.System)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="signalResource">The signal resource value.</param>
+    /// <param name="receiveIdleTimeout">The receive idle timeout value.</param>
+    /// <param name="timeProvider">The time provider value.</param>
     public BusActivitySendIndicator(ISignalResource? signalResource, TimeSpan receiveIdleTimeout, TimeProvider timeProvider)
     {
         _signalResource = signalResource;
         _receiveIdleTimer = new RollingTimer(SignalInactivity, receiveIdleTimeout, null, timeProvider);
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="signalResource">The signal resource value.</param>
     public BusActivitySendIndicator(ISignalResource? signalResource)
         :
         this(signalResource, TimeSpan.FromSeconds(5))
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="receiveIdleTimeout">The receive idle timeout value.</param>
     public BusActivitySendIndicator(TimeSpan receiveIdleTimeout)
         :
         this(null, receiveIdleTimeout)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public BusActivitySendIndicator()
         :
         this(null)
     {
     }
 
+    /// <summary>
+    /// Gets the is met value.
+    /// </summary>
     public override bool IsMet =>
         _receiveIdleTimer.Triggered ||
         Interlocked.CompareExchange(ref _activityStarted, int.MinValue, int.MinValue) == 0;
 
+    /// <summary>
+    /// Performs the signal operation.
+    /// </summary>
     public void Signal()
     {
         SignalInactivity(null);
     }
 
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
     public void Dispose()
     {
         _receiveIdleTimer.Dispose();
     }
 
+    /// <summary>
+    /// Performs the pre send operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public Task PreSendAsync<T>(SendContext<T> context)
         where T : class
     {
@@ -68,6 +105,12 @@ public class BusActivitySendIndicator : BaseBusActivityIndicatorConnectable,
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Performs the post send operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public Task PostSendAsync<T>(SendContext<T> context)
         where T : class
     {
@@ -75,6 +118,13 @@ public class BusActivitySendIndicator : BaseBusActivityIndicatorConnectable,
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Sends fault.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="exception">The exception associated with the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
         where T : class
     {

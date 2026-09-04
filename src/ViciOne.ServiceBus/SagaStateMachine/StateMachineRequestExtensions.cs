@@ -4,8 +4,11 @@ using ViciOne.ServiceBus.Contracts;
 using ViciOne.ServiceBus.SagaStateMachine;
 using ViciOne.ServiceBus.Scheduling;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
+/// <summary>
+/// Provides extension methods for state machine request.
+/// </summary>
 public static class StateMachineRequestExtensions
 {
     /// <summary>
@@ -68,7 +71,7 @@ public static class StateMachineRequestExtensions
     /// <param name="messageFactory">The request message factory</param>
     /// <returns></returns>
     public static EventActivityBinder<TInstance, TData> Request<TInstance, TData, TRequest, TResponse>(this EventActivityBinder<TInstance, TData> binder,
-        Request<TInstance, TRequest, TResponse> request, Func<BehaviorContext<TInstance, TData>, Task<SendTuple<TRequest>>> messageFactory)
+        Request<TInstance, TRequest, TResponse> request, Func<BehaviorContext<TInstance, TData>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
         where TInstance : class, SagaStateMachineInstance
         where TData : class
         where TRequest : class
@@ -148,7 +151,7 @@ public static class StateMachineRequestExtensions
     /// <returns></returns>
     public static EventActivityBinder<TInstance, TData> Request<TInstance, TData, TRequest, TResponse>(this EventActivityBinder<TInstance, TData> binder,
         Request<TInstance, TRequest, TResponse> request, ServiceAddressProvider<TInstance, TData> serviceAddressProvider,
-        Func<BehaviorContext<TInstance, TData>, Task<SendTuple<TRequest>>> messageFactory)
+        Func<BehaviorContext<TInstance, TData>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
         where TInstance : class, SagaStateMachineInstance
         where TData : class
         where TRequest : class
@@ -224,7 +227,7 @@ public static class StateMachineRequestExtensions
     /// <returns></returns>
     public static ExceptionActivityBinder<TInstance, TException> Request<TInstance, TException, TRequest, TResponse>(
         this ExceptionActivityBinder<TInstance, TException> binder, Request<TInstance, TRequest, TResponse> request,
-        Func<BehaviorExceptionContext<TInstance, TException>, Task<SendTuple<TRequest>>> messageFactory)
+        Func<BehaviorExceptionContext<TInstance, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
         where TInstance : class, SagaStateMachineInstance
         where TRequest : class
         where TResponse : class
@@ -307,7 +310,7 @@ public static class StateMachineRequestExtensions
     public static ExceptionActivityBinder<TInstance, TException> Request<TInstance, TException, TRequest, TResponse>(
         this ExceptionActivityBinder<TInstance, TException> binder, Request<TInstance, TRequest, TResponse> request,
         ServiceAddressExceptionProvider<TInstance, TException> serviceAddressProvider,
-        Func<BehaviorExceptionContext<TInstance, TException>, Task<SendTuple<TRequest>>> messageFactory)
+        Func<BehaviorExceptionContext<TInstance, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
         where TInstance : class, SagaStateMachineInstance
         where TRequest : class
         where TResponse : class
@@ -390,7 +393,7 @@ public static class StateMachineRequestExtensions
     /// <returns></returns>
     public static ExceptionActivityBinder<TInstance, TData, TException> Request<TInstance, TData, TException, TRequest, TResponse>(
         this ExceptionActivityBinder<TInstance, TData, TException> binder, Request<TInstance, TRequest, TResponse> request,
-        Func<BehaviorExceptionContext<TInstance, TData, TException>, Task<SendTuple<TRequest>>> messageFactory)
+        Func<BehaviorExceptionContext<TInstance, TData, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
         where TInstance : class, SagaStateMachineInstance
         where TData : class
         where TRequest : class
@@ -480,7 +483,7 @@ public static class StateMachineRequestExtensions
     public static ExceptionActivityBinder<TInstance, TData, TException> Request<TInstance, TData, TException, TRequest, TResponse>(
         this ExceptionActivityBinder<TInstance, TData, TException> binder, Request<TInstance, TRequest, TResponse> request,
         ServiceAddressExceptionProvider<TInstance, TData, TException> serviceAddressProvider,
-        Func<BehaviorExceptionContext<TInstance, TData, TException>, Task<SendTuple<TRequest>>> messageFactory)
+        Func<BehaviorExceptionContext<TInstance, TData, TException>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
         where TInstance : class, SagaStateMachineInstance
         where TData : class
         where TRequest : class
@@ -549,7 +552,7 @@ public static class StateMachineRequestExtensions
     /// <param name="messageFactory">The request message factory</param>
     /// <returns></returns>
     public static EventActivityBinder<TInstance> Request<TInstance, TRequest, TResponse>(this EventActivityBinder<TInstance> binder,
-        Request<TInstance, TRequest, TResponse> request, Func<BehaviorContext<TInstance>, Task<SendTuple<TRequest>>> messageFactory)
+        Request<TInstance, TRequest, TResponse> request, Func<BehaviorContext<TInstance>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
         where TInstance : class, SagaStateMachineInstance
         where TRequest : class
         where TResponse : class
@@ -623,7 +626,7 @@ public static class StateMachineRequestExtensions
     /// <returns></returns>
     public static EventActivityBinder<TInstance> Request<TInstance, TRequest, TResponse>(this EventActivityBinder<TInstance> binder,
         Request<TInstance, TRequest, TResponse> request, ServiceAddressProvider<TInstance> serviceAddressProvider,
-        Func<BehaviorContext<TInstance>, Task<SendTuple<TRequest>>> messageFactory)
+        Func<BehaviorContext<TInstance>, Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest>>> messageFactory)
         where TInstance : class, SagaStateMachineInstance
         where TRequest : class
         where TResponse : class

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a transport configuration implementation.
+/// </summary>
 public class TransportConfiguration :
     ITransportConfiguration,
     ITransportConfigurator
@@ -11,6 +14,10 @@ public class TransportConfiguration :
     int? _concurrentMessageLimit;
     int? _prefetchCount;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="parent">The parent value.</param>
     public TransportConfiguration(ITransportConfiguration parent)
     {
         if (parent == null)
@@ -19,30 +26,50 @@ public class TransportConfiguration :
         _parent = parent;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public TransportConfiguration()
     {
         _parent = new DefaultTransportConfiguration();
     }
 
+    /// <summary>
+    /// Gets the configurator value.
+    /// </summary>
     public ITransportConfigurator Configurator => this;
 
+    /// <summary>
+    /// Gets or sets the prefetch count value.
+    /// </summary>
     public int PrefetchCount
     {
         get => _prefetchCount ?? _parent.PrefetchCount;
         set => _prefetchCount = value;
     }
 
+    /// <summary>
+    /// Gets or sets the concurrent message limit value.
+    /// </summary>
     public int? ConcurrentMessageLimit
     {
         get => _concurrentMessageLimit ?? _parent.ConcurrentMessageLimit;
         set => _concurrentMessageLimit = value;
     }
 
+    /// <summary>
+    /// Gets concurrent message limit.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public int GetConcurrentMessageLimit()
     {
         return ConcurrentMessageLimit ?? PrefetchCount;
     }
 
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (PrefetchCount < ConcurrentMessageLimit)

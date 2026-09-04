@@ -3,6 +3,11 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a message publish pipe split filter specification implementation.
+/// </summary>
+/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <typeparam name="T">The t type.</typeparam>
 public class MessagePublishPipeSplitFilterSpecification<TMessage, T> :
     ISpecificationPipeSpecification<PublishContext<TMessage>>
     where TMessage : class
@@ -10,11 +15,19 @@ public class MessagePublishPipeSplitFilterSpecification<TMessage, T> :
 {
     readonly ISpecificationPipeSpecification<PublishContext<T>> _specification;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="specification">The specification value.</param>
     public MessagePublishPipeSplitFilterSpecification(ISpecificationPipeSpecification<PublishContext<T>> specification)
     {
         _specification = specification;
     }
 
+    /// <summary>
+    /// Applies this specification to the target builder.
+    /// </summary>
+    /// <param name="builder">The builder value.</param>
     public void Apply(ISpecificationPipeBuilder<PublishContext<TMessage>> builder)
     {
         var splitBuilder = new Builder(builder);
@@ -22,6 +35,10 @@ public class MessagePublishPipeSplitFilterSpecification<TMessage, T> :
         _specification.Apply(splitBuilder);
     }
 
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         yield break;

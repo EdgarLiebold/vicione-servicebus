@@ -1,19 +1,21 @@
 using System;
-using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Registration;
 
 /// <summary>
 /// Bounded consumer-local gate for serial or fixed parallel execution.
 /// </summary>
-[EditorBrowsable(EditorBrowsableState.Never)]
 public sealed class ConsumerConcurrencyGate<TMessage> : IConsumerConcurrencyGate<TMessage>, IDisposable
 {
     private readonly SemaphoreSlim _semaphore;
     private int _disposed;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="policy">The policy value.</param>
     public ConsumerConcurrencyGate(ConsumerConcurrencyPolicy policy)
     {
         ArgumentNullException.ThrowIfNull(policy);
@@ -28,6 +30,15 @@ public sealed class ConsumerConcurrencyGate<TMessage> : IConsumerConcurrencyGate
         _semaphore = new SemaphoreSlim(concurrency, concurrency);
     }
 
+    /// <summary>
+    /// Performs the execute operation.
+    /// </summary>
+    /// <typeparam name="TState">The t state type.</typeparam>
+    /// <param name="message">The message value.</param>
+    /// <param name="state">The state value.</param>
+    /// <param name="next">The next value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public ValueTask ExecuteAsync<TState>(
         TMessage message,
         TState state,
@@ -39,6 +50,9 @@ public sealed class ConsumerConcurrencyGate<TMessage> : IConsumerConcurrencyGate
         return ExecuteCoreAsync(_semaphore, state, next, cancellationToken);
     }
 
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
     public void Dispose()
     {
         // SemaphoreSlim.Dispose is unsafe while an invocation is waiting or active. These gates never access

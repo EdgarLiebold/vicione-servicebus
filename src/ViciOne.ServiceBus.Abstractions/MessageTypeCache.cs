@@ -6,8 +6,11 @@ using System.Reflection;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Metadata;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides a message type cache implementation.
+/// </summary>
 public static class MessageTypeCache
 {
     static CachedType GetOrAdd(Type type)
@@ -15,31 +18,61 @@ public static class MessageTypeCache
         return Cached.Instance.GetOrAdd(type, _ => Activation.Activate(type, new Factory()));
     }
 
+    /// <summary>
+    /// Gets properties.
+    /// </summary>
+    /// <param name="type">The type value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IEnumerable<PropertyInfo> GetProperties(Type type)
     {
         return GetOrAdd(type).Properties;
     }
 
+    /// <summary>
+    /// Determines whether valid message type.
+    /// </summary>
+    /// <param name="type">The type value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool IsValidMessageType(Type type)
     {
         return GetOrAdd(type).IsValidMessageType;
     }
 
+    /// <summary>
+    /// Performs the invalid message type reason operation.
+    /// </summary>
+    /// <param name="type">The type value.</param>
+    /// <returns>The result of the operation.</returns>
     public static string? InvalidMessageTypeReason(Type type)
     {
         return GetOrAdd(type).InvalidMessageTypeReason;
     }
 
+    /// <summary>
+    /// Determines whether temporary message type.
+    /// </summary>
+    /// <param name="type">The type value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool IsTemporaryMessageType(Type type)
     {
         return GetOrAdd(type).IsTemporaryMessageType;
     }
 
+    /// <summary>
+    /// Gets message types.
+    /// </summary>
+    /// <param name="type">The type value.</param>
+    /// <returns>The result of the operation.</returns>
     public static Type[] GetMessageTypes(Type type)
     {
         return GetOrAdd(type).MessageTypes;
     }
 
+    /// <summary>
+    /// Gets message type names.
+    /// </summary>
+    /// <param name="type">The type value.</param>
+    /// <returns>The result of the operation.</returns>
     public static string[] GetMessageTypeNames(Type type)
     {
         return GetOrAdd(type).MessageTypeNames;
@@ -88,6 +121,10 @@ public static class MessageTypeCache
 }
 
 
+/// <summary>
+/// Provides a message type cache implementation.
+/// </summary>
+/// <typeparam name="T">The t type.</typeparam>
 public class MessageTypeCache<T> :
     IMessageTypeCache
 {
@@ -107,12 +144,33 @@ public class MessageTypeCache<T> :
         _diagnosticAddress = new Lazy<string>(GetDiagnosticAddress);
     }
 
+    /// <summary>
+    /// Gets the diagnostic address value.
+    /// </summary>
     public static string DiagnosticAddress => Cached.Metadata.Value.DiagnosticAddress;
+    /// <summary>
+    /// Gets the properties value.
+    /// </summary>
     public static IEnumerable<PropertyInfo> Properties => Cached.Metadata.Value.Properties;
+    /// <summary>
+    /// Gets the is valid message type value.
+    /// </summary>
     public static bool IsValidMessageType => Cached.Metadata.Value.IsValidMessageType;
+    /// <summary>
+    /// Gets the invalid message type reason value.
+    /// </summary>
     public static string? InvalidMessageTypeReason => Cached.Metadata.Value.InvalidMessageTypeReason;
+    /// <summary>
+    /// Gets the is temporary message type value.
+    /// </summary>
     public static bool IsTemporaryMessageType => Cached.Metadata.Value.IsTemporaryMessageType;
+    /// <summary>
+    /// Gets the message types value.
+    /// </summary>
     public static Type[] MessageTypes => Cached.Metadata.Value.MessageTypes;
+    /// <summary>
+    /// Gets the message type names value.
+    /// </summary>
     public static string[] MessageTypeNames => Cached.Metadata.Value.MessageTypeNames;
 
     bool IMessageTypeCache.IsTemporaryMessageType => _isTemporaryMessageType.Value;

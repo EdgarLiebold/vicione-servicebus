@@ -1,4 +1,4 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
 /// Formats the endpoint names using kebab-case (dashed snake case)
@@ -39,13 +39,24 @@ public class KebabCaseEndpointNameFormatter :
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     protected KebabCaseEndpointNameFormatter()
         : base(KebabCaseSeparator, null, false)
     {
     }
 
+    /// <summary>
+    /// Gets the instance value.
+    /// </summary>
     public new static IEndpointNameFormatter Instance { get; } = new KebabCaseEndpointNameFormatter();
 
+    /// <summary>
+    /// Performs the sanitize name operation.
+    /// </summary>
+    /// <param name="name">The name value.</param>
+    /// <returns>The result of the operation.</returns>
     public override string SanitizeName(string name)
     {
         return base.SanitizeName(name).Replace(SnakeCaseSeparator, KebabCaseSeparator);

@@ -17,6 +17,12 @@ public static class Behavior
         return Cached<TSaga>.EmptyBehavior;
     }
 
+    /// <summary>
+    /// Performs the empty operation.
+    /// </summary>
+    /// <typeparam name="TSaga">The t saga type.</typeparam>
+    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     public static IBehavior<TSaga, TMessage> Empty<TSaga, TMessage>()
         where TSaga : class, SagaStateMachineInstance
         where TMessage : class
@@ -24,12 +30,23 @@ public static class Behavior
         return Cached<TSaga, TMessage>.EmptyBehavior;
     }
 
+    /// <summary>
+    /// Performs the faulted operation.
+    /// </summary>
+    /// <typeparam name="TSaga">The t saga type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     public static IBehavior<TSaga> Faulted<TSaga>()
         where TSaga : class, SagaStateMachineInstance
     {
         return Cached<TSaga>.FaultedBehavior;
     }
 
+    /// <summary>
+    /// Performs the faulted operation.
+    /// </summary>
+    /// <typeparam name="TSaga">The t saga type.</typeparam>
+    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     public static IBehavior<TSaga, TMessage> Faulted<TSaga, TMessage>()
         where TSaga : class, SagaStateMachineInstance
         where TMessage : class

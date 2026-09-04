@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.JobService;
 
+/// <summary>
+/// Defines the contract for set property collection.
+/// </summary>
 public interface ISetPropertyCollection :
     IPropertyCollection
 {

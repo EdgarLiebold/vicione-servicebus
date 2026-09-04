@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Transports;
 
+/// <summary>
+/// Defines the contract for host handle.
+/// </summary>
 public interface HostHandle
 {
     /// <summary>

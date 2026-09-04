@@ -1,5 +1,8 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Defines the contract for publish context.
+/// </summary>
 public interface PublishContext :
     SendContext
 {
@@ -10,6 +13,10 @@ public interface PublishContext :
 }
 
 
+/// <summary>
+/// Defines the contract for publish context.
+/// </summary>
+/// <typeparam name="T">The t type.</typeparam>
 public interface PublishContext<out T> :
     SendContext<T>,
     PublishContext

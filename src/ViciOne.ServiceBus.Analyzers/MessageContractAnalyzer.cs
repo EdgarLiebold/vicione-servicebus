@@ -10,13 +10,25 @@ using ViciOne.ServiceBus.Analyzers.Helpers;
 
 namespace ViciOne.ServiceBus.Analyzers;
 
+/// <summary>
+/// Provides a message contract analyzer implementation.
+/// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class MessageContractAnalyzer :
     DiagnosticAnalyzer
 {
-    public const string StructurallyCompatibleRuleId = "MCA0001";
-    public const string ValidMessageContractStructureRuleId = "MCA0002";
-    public const string MissingPropertiesRuleId = "MCA0003";
+    /// <summary>
+    /// Defines the structurally compatible rule id value.
+    /// </summary>
+    public const string StructurallyCompatibleRuleId = "VOSB1002";
+    /// <summary>
+    /// Defines the valid message contract structure rule id value.
+    /// </summary>
+    public const string ValidMessageContractStructureRuleId = "VOSB1003";
+    /// <summary>
+    /// Defines the missing properties rule id value.
+    /// </summary>
+    public const string MissingPropertiesRuleId = "VOSB1004";
 
     // You can change these strings in the Resources.resx file. If you do not want your analyzer to be localize-able, you can use regular strings for Title and MessageFormat.
     // See https://github.com/dotnet/roslyn/blob/master/docs/analyzers/Localizing%20Analyzers.md for more on localization
@@ -41,9 +53,16 @@ public class MessageContractAnalyzer :
         Category, DiagnosticSeverity.Info, true,
         "Anonymous type misses properties that are in the message contract.");
 
+    /// <summary>
+    /// Gets the supported diagnostics value.
+    /// </summary>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         ImmutableArray.Create(StructurallyCompatibleRule, ValidMessageContractStructureRule, MissingPropertiesRule);
 
+    /// <summary>
+    /// Performs the initialize operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public override void Initialize(AnalysisContext context)
     {
         if (context == null)

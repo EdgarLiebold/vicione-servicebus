@@ -4,6 +4,12 @@ using ViciOne.ServiceBus.Contracts;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
+/// <summary>
+/// Provides a request activity impl implementation.
+/// </summary>
+/// <typeparam name="TInstance">The t instance type.</typeparam>
+/// <typeparam name="TRequest">The t request type.</typeparam>
+/// <typeparam name="TResponse">The t response type.</typeparam>
 public abstract class RequestActivityImpl<TInstance, TRequest, TResponse>
     where TInstance : class, SagaStateMachineInstance
     where TRequest : class
@@ -11,12 +17,23 @@ public abstract class RequestActivityImpl<TInstance, TRequest, TResponse>
 {
     readonly Request<TInstance, TRequest, TResponse> _request;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="request">The request value.</param>
     protected RequestActivityImpl(Request<TInstance, TRequest, TResponse> request)
     {
         _request = request;
     }
 
-    protected async Task SendRequestAsync(BehaviorContext<TInstance> context, SendTuple<TRequest> sendTuple, Uri serviceAddress)
+    /// <summary>
+    /// Sends request.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="sendTuple">The send tuple value.</param>
+    /// <param name="serviceAddress">The service address value.</param>
+    /// <returns>The result of the operation.</returns>
+    protected async Task SendRequestAsync(BehaviorContext<TInstance> context, global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<TRequest> sendTuple, Uri serviceAddress)
     {
         var requestId = _request.GenerateRequestId(context.Saga);
 
@@ -45,6 +62,10 @@ public abstract class RequestActivityImpl<TInstance, TRequest, TResponse>
         }
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public virtual void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("request");

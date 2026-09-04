@@ -1,6 +1,7 @@
 using System.Reflection;
 using global::Amazon.S3;
 using global::Amazon.S3.Model;
+using ViciOne.ServiceBus.Advanced.Observers;
 using ViciOne.ServiceBus.AmazonS3.MessageData;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;

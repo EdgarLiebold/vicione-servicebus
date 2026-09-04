@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Time.Testing;
-using ViciOne.ServiceBus.DurableSend;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.InternalAccess.DurableSend;
 using Xunit;

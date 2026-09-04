@@ -21,6 +21,10 @@ public class ConsumerRegistration<TConsumer> :
     readonly IContainerSelector _selector;
     IConsumerDefinition<TConsumer> _definition = null!;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="selector">The selector value.</param>
     public ConsumerRegistration(IContainerSelector selector)
     {
         _selector = selector;
@@ -28,8 +32,14 @@ public class ConsumerRegistration<TConsumer> :
         IncludeInConfigureEndpoints = !Type.HasAttribute<ExcludeFromConfigureEndpointsAttribute>();
     }
 
+    /// <summary>
+    /// Gets the type value.
+    /// </summary>
     public Type Type => typeof(TConsumer);
 
+    /// <summary>
+    /// Gets or sets the include in configure endpoints value.
+    /// </summary>
     public bool IncludeInConfigureEndpoints { get; set; }
 
     void IConsumerRegistration.AddConfigureAction<T>(Action<IRegistrationContext, IConsumerConfigurator<T>>? configure)
@@ -70,6 +80,11 @@ public class ConsumerRegistration<TConsumer> :
         return GetConsumerDefinition(context);
     }
 
+    /// <summary>
+    /// Gets consumer registration configurator.
+    /// </summary>
+    /// <param name="registrationConfigurator">The registration configurator value.</param>
+    /// <returns>The result of the operation.</returns>
     public IConsumerRegistrationConfigurator GetConsumerRegistrationConfigurator(IRegistrationConfigurator registrationConfigurator)
     {
         return new ConsumerRegistrationConfigurator<TConsumer>(registrationConfigurator, this);

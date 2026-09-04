@@ -3,11 +3,25 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Middleware.Outbox;
 
+/// <summary>
+/// Represents an in memory inbox message key value.
+/// </summary>
 public readonly struct InMemoryInboxMessageKey
 {
+    /// <summary>
+    /// Defines the message id value.
+    /// </summary>
     public readonly Guid MessageId;
+    /// <summary>
+    /// Defines the consumer id value.
+    /// </summary>
     public readonly Guid ConsumerId;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="messageId">The message id value.</param>
+    /// <param name="consumerId">The consumer id value.</param>
     public InMemoryInboxMessageKey(Guid messageId, Guid consumerId)
     {
         MessageId = messageId;
@@ -33,5 +47,8 @@ public readonly struct InMemoryInboxMessageKey
     }
 
 
+    /// <summary>
+    /// Gets the comparer value.
+    /// </summary>
     public static IEqualityComparer<InMemoryInboxMessageKey> Comparer { get; } = new EqualityComparer();
 }

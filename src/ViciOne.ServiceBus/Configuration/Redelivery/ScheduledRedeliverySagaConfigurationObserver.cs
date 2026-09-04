@@ -14,6 +14,11 @@ public class ScheduledRedeliverySagaConfigurationObserver<TSaga> :
     readonly ISagaConfigurator<TSaga> _configurator;
     readonly Action<IRetryConfigurator> _configure;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="configure">The configuration callback.</param>
     public ScheduledRedeliverySagaConfigurationObserver(ISagaConfigurator<TSaga> configurator, Action<IRetryConfigurator> configure)
     {
         _configurator = configurator;
@@ -24,6 +29,12 @@ public class ScheduledRedeliverySagaConfigurationObserver<TSaga> :
     {
     }
 
+    /// <summary>
+    /// Performs the state machine saga configured operation.
+    /// </summary>
+    /// <typeparam name="TInstance">The t instance type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="stateMachine">The state machine value.</param>
     public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, SagaStateMachine<TInstance> stateMachine)
         where TInstance : class, ISaga, SagaStateMachineInstance
     {

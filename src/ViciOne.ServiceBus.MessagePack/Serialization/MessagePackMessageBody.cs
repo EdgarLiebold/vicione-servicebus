@@ -5,14 +5,26 @@ using MessagePack;
 
 namespace ViciOne.ServiceBus.Serialization;
 
+/// <summary>
+/// Provides a message pack message body implementation.
+/// </summary>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public class MessagePackMessageBody<TMessage> :
     MessageBody
     where TMessage : class
 {
+    /// <summary>
+    /// Gets the length value.
+    /// </summary>
     public long? Length => _lazyMessagePackSerializedObject.Value.Length;
 
     readonly Lazy<byte[]> _lazyMessagePackSerializedObject;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="envelope">The envelope value.</param>
     public MessagePackMessageBody(SendContext<TMessage> context, MessagePackEnvelope? envelope = null)
     {
         _lazyMessagePackSerializedObject = new Lazy<byte[]>(() =>
@@ -51,21 +63,37 @@ public class MessagePackMessageBody<TMessage> :
         });
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="message">The message value.</param>
     public MessagePackMessageBody(TMessage message)
     {
         _lazyMessagePackSerializedObject = new Lazy<byte[]>(() => InternalMessagePackResolver.Serialize(message));
     }
 
+    /// <summary>
+    /// Gets stream.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public Stream GetStream()
     {
         return new MemoryStream(_lazyMessagePackSerializedObject.Value, false);
     }
 
+    /// <summary>
+    /// Gets bytes.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public byte[] GetBytes()
     {
         return _lazyMessagePackSerializedObject.Value;
     }
 
+    /// <summary>
+    /// Gets string.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public string GetString()
     {
         return Convert.ToBase64String(_lazyMessagePackSerializedObject.Value);

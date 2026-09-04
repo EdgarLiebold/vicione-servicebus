@@ -5,6 +5,11 @@ using System.Threading.Tasks;
 #nullable enable
 namespace ViciOne.ServiceBus.Middleware;
 
+/// <summary>
+/// Provides a timeout filter implementation.
+/// </summary>
+/// <typeparam name="TContext">The t context type.</typeparam>
+/// <typeparam name="TResult">The t result type.</typeparam>
 public sealed class TimeoutFilter<TContext, TResult> :
     IFilter<TContext>
     where TContext : class, PipeContext
@@ -14,11 +19,22 @@ public sealed class TimeoutFilter<TContext, TResult> :
     readonly TimeProvider? _timeProvider;
     readonly TimeSpan _timeout;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="contextFactory">The context factory value.</param>
+    /// <param name="timeout">The timeout value.</param>
     public TimeoutFilter(Func<TContext, CancellationToken, TResult> contextFactory, TimeSpan timeout)
         : this(contextFactory, timeout, null, useContextTimeProvider: true)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="contextFactory">The context factory value.</param>
+    /// <param name="timeout">The timeout value.</param>
+    /// <param name="timeProvider">The time provider value.</param>
     public TimeoutFilter(Func<TContext, CancellationToken, TResult> contextFactory, TimeSpan timeout, TimeProvider timeProvider)
         : this(contextFactory, timeout, timeProvider, useContextTimeProvider: false)
     {
@@ -38,6 +54,12 @@ public sealed class TimeoutFilter<TContext, TResult> :
         _timeout = timeout;
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SendAsync(TContext context, IPipe<TContext> next)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -71,6 +93,10 @@ public sealed class TimeoutFilter<TContext, TResult> :
         }
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("timeout");

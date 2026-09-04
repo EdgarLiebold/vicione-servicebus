@@ -3,8 +3,11 @@ using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.InMemoryTransport.Configuration;
 using ViciOne.ServiceBus.Topology;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Providers.Transports;
 
+/// <summary>
+/// Provides an in memory bus implementation.
+/// </summary>
 public static class InMemoryBus
 {
     /// <summary>
@@ -35,6 +38,10 @@ public static class InMemoryBus
         return configurator.Build(busConfiguration);
     }
 
+    /// <summary>
+    /// Creates message topology.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public static IMessageTopologyConfigurator CreateMessageTopology()
     {
         return new MessageTopology(Cached.EntityNameFormatter);

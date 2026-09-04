@@ -5,6 +5,9 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Testing.Implementations;
 
+/// <summary>
+/// Provides an inactivity test observer implementation.
+/// </summary>
 public abstract class InactivityTestObserver :
     Connectable<IInactivityObserver>,
     IDisposable,
@@ -14,20 +17,35 @@ public abstract class InactivityTestObserver :
     RollingTimer? _inactivityTimer;
     TimeProvider _timeProvider = TimeProvider.System;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     protected InactivityTestObserver()
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="timeProvider">The time provider value.</param>
     protected InactivityTestObserver(TimeProvider timeProvider)
     {
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
     }
 
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
     public void Dispose()
     {
         _inactivityTimer?.Dispose();
     }
 
+    /// <summary>
+    /// Connects inactivity observer.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectInactivityObserver(IInactivityObserver observer)
     {
         var handle = Connect(observer);
@@ -37,14 +55,27 @@ public abstract class InactivityTestObserver :
         return handle;
     }
 
+    /// <summary>
+    /// Gets the is inactive value.
+    /// </summary>
     public virtual bool IsInactive => _inactivityTimer?.Triggered == true && _activityDetected == 0;
 
+    /// <summary>
+    /// Starts timer.
+    /// </summary>
+    /// <param name="inactivityTimout">The inactivity timout value.</param>
     protected void StartTimer(TimeSpan inactivityTimout)
     {
         _inactivityTimer = new RollingTimer(OnActivityTimeout, inactivityTimout, null, _timeProvider);
         _inactivityTimer.Start();
     }
 
+    /// <summary>
+    /// Performs the restart timer operation.
+    /// </summary>
+    /// <param name="activityDetected">The activity detected value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task RestartTimerAsync(bool activityDetected = true, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (activityDetected)
@@ -55,6 +86,10 @@ public abstract class InactivityTestObserver :
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Performs the notify inactive operation.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     protected Task NotifyInactiveAsync()
     {
         return ForEachAsync(x => x.NoActivityAsync());

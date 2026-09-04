@@ -6,5 +6,10 @@ namespace ViciOne.ServiceBus.DependencyInjection.Registration;
 public interface IConsumerFactoryDecoratorRegistration<TConsumer>
     where TConsumer : class, IConsumer
 {
+    /// <summary>
+    /// Performs the decorate consumer factory operation.
+    /// </summary>
+    /// <param name="consumerFactory">The consumer factory value.</param>
+    /// <returns>The result of the operation.</returns>
     IConsumerFactory<TConsumer> DecorateConsumerFactory(IConsumerFactory<TConsumer> consumerFactory);
 }

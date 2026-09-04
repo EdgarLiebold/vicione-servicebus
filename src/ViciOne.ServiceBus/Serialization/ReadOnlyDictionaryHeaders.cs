@@ -15,6 +15,11 @@ public class ReadOnlyDictionaryHeaders :
     readonly IObjectDeserializer _deserializer;
     readonly IReadOnlyDictionary<string, object?> _headers;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="deserializer">The deserializer value.</param>
+    /// <param name="headers">The headers value.</param>
     public ReadOnlyDictionaryHeaders(IObjectDeserializer deserializer, IReadOnlyDictionary<string, object?> headers)
     {
         _deserializer = deserializer;
@@ -22,11 +27,21 @@ public class ReadOnlyDictionaryHeaders :
         _headers = headers ?? new Dictionary<string, object?>();
     }
 
+    /// <summary>
+    /// Gets all.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<KeyValuePair<string, object>> GetAll()
     {
         return (IEnumerable<KeyValuePair<string, object>>)(object)_headers;
     }
 
+    /// <summary>
+    /// Attempts to get header.
+    /// </summary>
+    /// <param name="key">The key value.</param>
+    /// <param name="value">The value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetHeader(string key, out object value)
     {
         if (key == null)
@@ -37,18 +52,36 @@ public class ReadOnlyDictionaryHeaders :
         return found;
     }
 
+    /// <summary>
+    /// Performs the get operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="key">The key value.</param>
+    /// <param name="defaultValue">The default value value.</param>
+    /// <returns>The result of the operation.</returns>
     public T? Get<T>(string key, T? defaultValue)
         where T : class
     {
         return _deserializer.GetValue(AsNonNullableDictionary(), key, defaultValue);
     }
 
+    /// <summary>
+    /// Performs the get operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="key">The key value.</param>
+    /// <param name="defaultValue">The default value value.</param>
+    /// <returns>The result of the operation.</returns>
     public T? Get<T>(string key, T? defaultValue = null)
         where T : struct
     {
         return _deserializer.GetValue(AsNonNullableDictionary(), key, defaultValue);
     }
 
+    /// <summary>
+    /// Gets enumerator.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerator<HeaderValue> GetEnumerator()
     {
         return _headers.Select(x => new HeaderValue(x.Key, x.Value!)).GetEnumerator();

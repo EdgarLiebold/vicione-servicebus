@@ -1,8 +1,11 @@
 using System;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Providers.Transports;
 
+/// <summary>
+/// Provides extension methods for sql send context.
+/// </summary>
 public static class SqlSendContextExtensions
 {
     /// <summary>

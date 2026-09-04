@@ -4,6 +4,11 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a bind pipe specification implementation.
+/// </summary>
+/// <typeparam name="TLeft">The t left type.</typeparam>
+/// <typeparam name="TRight">The t right type.</typeparam>
 public class BindPipeSpecification<TLeft, TRight> :
     IPipeSpecification<TLeft>,
     IBindConfigurator<TLeft, TRight>
@@ -14,6 +19,10 @@ public class BindPipeSpecification<TLeft, TRight> :
     readonly IBuildPipeConfigurator<BindContext<TLeft, TRight>> _pipeConfigurator;
     readonly IPipeContextSource<TRight, TLeft> _source;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="source">The source value.</param>
     public BindPipeSpecification(IPipeContextSource<TRight, TLeft> source)
     {
         _source = source;

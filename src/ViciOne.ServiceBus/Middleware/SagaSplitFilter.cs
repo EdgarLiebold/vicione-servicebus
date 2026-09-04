@@ -15,6 +15,10 @@ public class SagaSplitFilter<TSaga, TMessage> :
 {
     readonly IFilter<SagaConsumeContext<TSaga>> _next;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="next">The next value.</param>
     public SagaSplitFilter(IFilter<SagaConsumeContext<TSaga>> next)
     {
         _next = next;
@@ -28,6 +32,12 @@ public class SagaSplitFilter<TSaga, TMessage> :
         _next.Probe(scope);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public Task SendAsync(SagaConsumeContext<TSaga, TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
     {
         var mergePipe = new SagaMergePipe<TSaga, TMessage>(next);

@@ -12,6 +12,10 @@ public class InterceptFilter<TContext> :
 {
     readonly IPipe<TContext> _pipe;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="pipe">The pipe value.</param>
     public InterceptFilter(IPipe<TContext> pipe)
     {
         _pipe = pipe;

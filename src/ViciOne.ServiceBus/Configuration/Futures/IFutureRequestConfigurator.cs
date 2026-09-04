@@ -1,7 +1,13 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for future request configurator.
+/// </summary>
+/// <typeparam name="TFault">The t fault type.</typeparam>
+/// <typeparam name="TInput">The t input type.</typeparam>
+/// <typeparam name="TRequest">The t request type.</typeparam>
 public interface IFutureRequestConfigurator<TFault, out TInput, TRequest>
     where TFault : class
     where TInput : class

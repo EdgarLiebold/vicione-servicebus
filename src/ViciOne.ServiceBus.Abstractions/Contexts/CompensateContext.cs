@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Defines the contract for compensate context.
+/// </summary>
 public interface CompensateContext :
     CourierContext
 {
@@ -46,6 +49,10 @@ public interface CompensateContext :
 }
 
 
+/// <summary>
+/// Defines the contract for compensate context.
+/// </summary>
+/// <typeparam name="TLog">The t log type.</typeparam>
 public interface CompensateContext<out TLog> :
     CompensateContext
     where TLog : class
@@ -55,6 +62,12 @@ public interface CompensateContext<out TLog> :
     /// </summary>
     TLog Log { get; }
 
+    /// <summary>
+    /// Creates activity context.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <param name="activity">The activity value.</param>
+    /// <returns>The result of the operation.</returns>
     CompensateActivityContext<TActivity, TLog> CreateActivityContext<TActivity>(TActivity activity)
         where TActivity : class, ICompensateActivity<TLog>;
 }

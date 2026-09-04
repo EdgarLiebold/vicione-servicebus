@@ -32,5 +32,8 @@ public interface ExceptionInfo
     /// </summary>
     string Source { get; }
 
+    /// <summary>
+    /// Gets the data value.
+    /// </summary>
     IDictionary<string, object>? Data { get; }
 }

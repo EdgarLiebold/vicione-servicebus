@@ -2,18 +2,31 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a partition key message send topology convention implementation.
+/// </summary>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public class PartitionKeyMessageSendTopologyConvention<TMessage> :
     IPartitionKeyMessageSendTopologyConvention<TMessage>
     where TMessage : class
 {
     IMessagePartitionKeyFormatter<TMessage>? _formatter;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="formatter">The formatter value.</param>
     public PartitionKeyMessageSendTopologyConvention(IPartitionKeyFormatter? formatter)
     {
         if (formatter != null)
             SetFormatter(formatter);
     }
 
+    /// <summary>
+    /// Attempts to get message send topology.
+    /// </summary>
+    /// <param name="messageSendTopology">The message send topology value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetMessageSendTopology([NotNullWhen(true)] out IMessageSendTopology<TMessage>? messageSendTopology)
     {
         if (_formatter != null)
@@ -26,6 +39,12 @@ public class PartitionKeyMessageSendTopologyConvention<TMessage> :
         return false;
     }
 
+    /// <summary>
+    /// Attempts to get message send topology convention.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="convention">The convention value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetMessageSendTopologyConvention<T>([NotNullWhen(true)] out IMessageSendTopologyConvention<T>? convention)
         where T : class
     {
@@ -34,11 +53,19 @@ public class PartitionKeyMessageSendTopologyConvention<TMessage> :
         return convention != null;
     }
 
+    /// <summary>
+    /// Sets formatter.
+    /// </summary>
+    /// <param name="formatter">The formatter value.</param>
     public void SetFormatter(IPartitionKeyFormatter formatter)
     {
         _formatter = new MessagePartitionKeyFormatter<TMessage>(formatter);
     }
 
+    /// <summary>
+    /// Sets formatter.
+    /// </summary>
+    /// <param name="formatter">The formatter value.</param>
     public void SetFormatter(IMessagePartitionKeyFormatter<TMessage> formatter)
     {
         _formatter = formatter;

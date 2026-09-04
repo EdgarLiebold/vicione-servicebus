@@ -1,13 +1,11 @@
 using System;
-using System.ComponentModel;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using ViciOne.ServiceBus;
 using ViciOne.ServiceBus.Diagnostics;
-using ViciOne.ServiceBus.DurableSend;
-using ViciOne.ServiceBus.ProviderAbstractions;
+using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Serialization;
 
 #nullable enable
@@ -22,7 +20,7 @@ public static class DurableSenderServiceCollectionExtensions
         Action<IDurableSenderConfigurator<IBus>> configure)
     {
         ArgumentNullException.ThrowIfNull(configurator);
-        ConfigureDurableSender(configurator, configure);
+        ConfigureDurableSender(configurator.Services, configure);
         return configurator;
     }
 
@@ -33,7 +31,7 @@ public static class DurableSenderServiceCollectionExtensions
         where TBus : class, IBus
     {
         ArgumentNullException.ThrowIfNull(configurator);
-        ConfigureDurableSender(configurator, configure);
+        ConfigureDurableSender(configurator.Services, configure);
         return configurator;
     }
 
@@ -41,7 +39,6 @@ public static class DurableSenderServiceCollectionExtensions
     /// Provider/testing-level registration for one durable sender runtime. Application configuration should use
     /// <see cref="UseDurableSender(IBusRegistrationConfigurator,Action{IDurableSenderConfigurator{IBus}})"/>.
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     public static IServiceCollection AddViciOneDurableSender<TBus>(
         this IServiceCollection services,
         Action<DurableSenderOptions<TBus>>? configure = null)

@@ -1,4 +1,4 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
 /// <summary>
 /// An Automatonymous state machine instance that is usable as a saga by ViciOne.ServiceBus must implement this interface.

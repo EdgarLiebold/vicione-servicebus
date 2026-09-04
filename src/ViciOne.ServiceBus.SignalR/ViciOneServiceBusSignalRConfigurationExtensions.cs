@@ -9,8 +9,17 @@ using ViciOne.ServiceBus.SignalR.Scoping;
 
 namespace ViciOne.ServiceBus.SignalR;
 
+/// <summary>
+/// Provides extension methods for vici one service bus signal r configuration.
+/// </summary>
 public static class ViciOneServiceBusSignalRConfigurationExtensions
 {
+    /// <summary>
+    /// Adds signal r hub to the configuration.
+    /// </summary>
+    /// <typeparam name="THub">The t hub type.</typeparam>
+    /// <param name="busConfigurator">The bus configurator value.</param>
+    /// <param name="configureHubLifetimeOptions">The configure hub lifetime options value.</param>
     public static void AddSignalRHub<THub>(this IBusRegistrationConfigurator busConfigurator,
         Action<IHubLifetimeManagerOptions<THub>>? configureHubLifetimeOptions = null)
         where THub : Hub
@@ -18,10 +27,10 @@ public static class ViciOneServiceBusSignalRConfigurationExtensions
         var options = new HubLifetimeManagerOptions<THub>();
         configureHubLifetimeOptions?.Invoke(options);
 
-        busConfigurator.TryAddSingleton<IHubLifetimeScopeProvider, DependencyInjectionHubLifetimeScopeProvider>();
+        busConfigurator.Services.TryAddSingleton<IHubLifetimeScopeProvider, DependencyInjectionHubLifetimeScopeProvider>();
 
-        busConfigurator.AddSingleton(provider => GetViciOneServiceBusHubLifetimeManager(provider, options));
-        busConfigurator.AddSingleton<HubLifetimeManager<THub>>(sp => sp.GetRequiredService<ViciOneServiceBusHubLifetimeManager<THub>>());
+        busConfigurator.Services.AddSingleton(provider => GetViciOneServiceBusHubLifetimeManager(provider, options));
+        busConfigurator.Services.AddSingleton<HubLifetimeManager<THub>>(sp => sp.GetRequiredService<ViciOneServiceBusHubLifetimeManager<THub>>());
 
         busConfigurator.AddRequestClient<GroupManagement<THub>>(options.RequestTimeout);
 
@@ -31,13 +40,13 @@ public static class ViciOneServiceBusSignalRConfigurationExtensions
     static void RegisterConsumers<THub>(IRegistrationConfigurator configurator)
         where THub : Hub
     {
-        configurator.AddSingleton<HubConsumerDefinition<THub>>();
+        configurator.Services.AddSingleton<HubConsumerDefinition<THub>>();
 
-        configurator.TryAddSingleton<IConsumerDefinition<AllConsumer<THub>>, AllConsumerDefinition<THub>>();
-        configurator.TryAddSingleton<IConsumerDefinition<ConnectionConsumer<THub>>, ConnectionConsumerDefinition<THub>>();
-        configurator.TryAddSingleton<IConsumerDefinition<GroupConsumer<THub>>, GroupConsumerDefinition<THub>>();
-        configurator.TryAddSingleton<IConsumerDefinition<GroupManagementConsumer<THub>>, GroupManagementConsumerDefinition<THub>>();
-        configurator.TryAddSingleton<IConsumerDefinition<UserConsumer<THub>>, UserConsumerDefinition<THub>>();
+        configurator.Services.TryAddSingleton<IConsumerDefinition<AllConsumer<THub>>, AllConsumerDefinition<THub>>();
+        configurator.Services.TryAddSingleton<IConsumerDefinition<ConnectionConsumer<THub>>, ConnectionConsumerDefinition<THub>>();
+        configurator.Services.TryAddSingleton<IConsumerDefinition<GroupConsumer<THub>>, GroupConsumerDefinition<THub>>();
+        configurator.Services.TryAddSingleton<IConsumerDefinition<GroupManagementConsumer<THub>>, GroupManagementConsumerDefinition<THub>>();
+        configurator.Services.TryAddSingleton<IConsumerDefinition<UserConsumer<THub>>, UserConsumerDefinition<THub>>();
 
         configurator.AddConsumer<AllConsumer<THub>>();
         configurator.AddConsumer<ConnectionConsumer<THub>>();

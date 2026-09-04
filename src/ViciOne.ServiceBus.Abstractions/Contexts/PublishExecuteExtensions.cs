@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides extension methods for publish execute.
+/// </summary>
 public static class PublishExecuteExtensions
 {
     /// <summary>
@@ -128,23 +131,45 @@ public static class PublishExecuteExtensions
         return endpoint.PublishAsync(values, callback.ToPipe(), cancellationToken);
     }
 
+    /// <summary>
+    /// Performs the to pipe operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="callback">The callback value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IPipe<PublishContext<T>> ToPipe<T>(this Action<PublishContext<T>> callback)
         where T : class
     {
         return new PublishContextPipe<T>(callback);
     }
 
+    /// <summary>
+    /// Performs the to pipe operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="callback">The callback value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IPipe<PublishContext<T>> ToPipe<T>(this Func<PublishContext<T>, Task> callback)
         where T : class
     {
         return new PublishContextAsyncPipe<T>(callback);
     }
 
+    /// <summary>
+    /// Performs the to pipe operation.
+    /// </summary>
+    /// <param name="callback">The callback value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IPipe<PublishContext> ToPipe(this Action<PublishContext> callback)
     {
         return new PublishContextPipe(callback);
     }
 
+    /// <summary>
+    /// Performs the to pipe operation.
+    /// </summary>
+    /// <param name="callback">The callback value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IPipe<PublishContext> ToPipe(this Func<PublishContext, Task> callback)
     {
         return new PublishContextAsyncPipe(callback);

@@ -1,7 +1,6 @@
-using System.ComponentModel;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
 /// Configures a pipe with specifications
@@ -14,6 +13,5 @@ public interface IPipeConfigurator<TContext>
     /// Adds a pipe specification to the pipe configurator at the end of the chain
     /// </summary>
     /// <param name="specification">The pipe specification to add</param>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     void AddPipeSpecification(IPipeSpecification<TContext> specification);
 }

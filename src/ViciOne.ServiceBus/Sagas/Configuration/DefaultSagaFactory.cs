@@ -14,6 +14,11 @@ public class DefaultSagaFactory<TSaga, TMessage> :
     where TSaga : class, ISaga
     where TMessage : class
 {
+    /// <summary>
+    /// Performs the create operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public TSaga Create(ConsumeContext<TMessage> context)
     {
         if (!context.CorrelationId.HasValue)
@@ -22,6 +27,12 @@ public class DefaultSagaFactory<TSaga, TMessage> :
         return SagaMetadataCache<TSaga>.FactoryMethod(context.CorrelationId.Value);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public Task SendAsync(ConsumeContext<TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
     {
         if (!context.CorrelationId.HasValue)

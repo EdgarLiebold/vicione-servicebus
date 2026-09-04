@@ -2,8 +2,11 @@ using System;
 using Azure.Storage.Blobs;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Azure.Storage;
 
+/// <summary>
+/// Provides extension methods for message data repository selector.
+/// </summary>
 public static class MessageDataRepositorySelectorExtensions
 {
     /// <summary>

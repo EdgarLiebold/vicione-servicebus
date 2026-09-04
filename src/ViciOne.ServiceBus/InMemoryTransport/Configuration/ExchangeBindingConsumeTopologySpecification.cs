@@ -15,6 +15,12 @@ public class ExchangeBindingConsumeTopologySpecification :
     readonly ExchangeType _exchangeType;
     readonly string? _routingKey;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="exchange">The exchange value.</param>
+    /// <param name="exchangeType">The exchange type value.</param>
+    /// <param name="routingKey">The routing key value.</param>
     public ExchangeBindingConsumeTopologySpecification(string exchange, ExchangeType exchangeType, string? routingKey)
     {
         _exchange = exchange;
@@ -22,11 +28,19 @@ public class ExchangeBindingConsumeTopologySpecification :
         _routingKey = routingKey;
     }
 
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         yield break;
     }
 
+    /// <summary>
+    /// Applies this specification to the target builder.
+    /// </summary>
+    /// <param name="builder">The builder value.</param>
     public void Apply(IMessageFabricConsumeTopologyBuilder builder)
     {
         builder.ExchangeDeclare(_exchange, _exchangeType);

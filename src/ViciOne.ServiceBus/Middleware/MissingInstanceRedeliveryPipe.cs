@@ -4,6 +4,11 @@ using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus.Middleware;
 
+/// <summary>
+/// Provides a missing instance redelivery pipe implementation.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public class MissingInstanceRedeliveryPipe<TSaga, TMessage> :
     IPipe<ConsumeContext<TMessage>>
     where TSaga : SagaStateMachineInstance
@@ -13,6 +18,12 @@ public class MissingInstanceRedeliveryPipe<TSaga, TMessage> :
     readonly RedeliveryOptions _options;
     readonly IRetryPolicy _retryPolicy;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="retryPolicy">The retry policy value.</param>
+    /// <param name="finalPipe">The final pipe value.</param>
+    /// <param name="options">The options value.</param>
     public MissingInstanceRedeliveryPipe(IRetryPolicy retryPolicy, IPipe<ConsumeContext<TMessage>> finalPipe, RedeliveryOptions options)
     {
         _retryPolicy = retryPolicy;
@@ -20,6 +31,11 @@ public class MissingInstanceRedeliveryPipe<TSaga, TMessage> :
         _options = options;
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public Task SendAsync(ConsumeContext<TMessage> context)
     {
         using RetryPolicyContext<ConsumeContext<TMessage>> policyContext = _retryPolicy.CreatePolicyContext(context);
@@ -45,6 +61,10 @@ public class MissingInstanceRedeliveryPipe<TSaga, TMessage> :
         return redeliveryContext.ScheduleRedeliveryAsync(delay);
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
     }

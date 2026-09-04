@@ -5,8 +5,11 @@ using ViciOne.ServiceBus.MessageData.Conventions;
 
 #nullable enable
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for message data configurator.
+/// </summary>
 public static class MessageDataConfiguratorExtensions
 {
     /// <summary>

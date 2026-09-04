@@ -1,7 +1,10 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for activity definition.
+/// </summary>
 public interface IActivityDefinition :
     IExecuteActivityDefinition
 {
@@ -10,6 +13,9 @@ public interface IActivityDefinition :
     /// </summary>
     Type LogType { get; }
 
+    /// <summary>
+    /// Gets the compensate endpoint definition value.
+    /// </summary>
     IEndpointDefinition? CompensateEndpointDefinition { get; }
 
     /// <summary>
@@ -21,6 +27,12 @@ public interface IActivityDefinition :
 }
 
 
+/// <summary>
+/// Defines the contract for activity definition.
+/// </summary>
+/// <typeparam name="TActivity">The t activity type.</typeparam>
+/// <typeparam name="TArguments">The t arguments type.</typeparam>
+/// <typeparam name="TLog">The t log type.</typeparam>
 public interface IActivityDefinition<TActivity, TArguments, TLog> :
     IActivityDefinition,
     IExecuteActivityDefinition<TActivity, TArguments>

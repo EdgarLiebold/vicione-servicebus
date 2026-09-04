@@ -1,16 +1,14 @@
 using System;
-using System.ComponentModel;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Scheduling;
 
 #nullable enable annotations
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>
 /// Advanced scheduler construction hooks. Application code should register a scheduler with the
 /// service-bus configurator and inject <see cref="IMessageScheduler"/>.
 /// </summary>
-[EditorBrowsable(EditorBrowsableState.Never)]
 public static class MessageSchedulerBusExtensions
 {
     /// <summary>

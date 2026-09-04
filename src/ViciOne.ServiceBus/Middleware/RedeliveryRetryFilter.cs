@@ -18,6 +18,11 @@ public class RedeliveryRetryFilter<TContext, TMessage> :
     readonly RetryObservable _observers;
     readonly IRetryPolicy _retryPolicy;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="retryPolicy">The retry policy value.</param>
+    /// <param name="observers">The observers value.</param>
     public RedeliveryRetryFilter(IRetryPolicy retryPolicy, RetryObservable observers)
     {
         _retryPolicy = retryPolicy;
@@ -32,6 +37,12 @@ public class RedeliveryRetryFilter<TContext, TMessage> :
         _retryPolicy.Probe(scope);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     [DebuggerNonUserCode]
     public async Task SendAsync(TContext context, IPipe<TContext> next)
     {

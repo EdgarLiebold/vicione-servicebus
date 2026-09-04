@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Contracts.JobService;
 
+/// <summary>
+/// Defines the contract for start job.
+/// </summary>
 [ConfigureConsumeTopology(false)]
 public interface StartJob
 {

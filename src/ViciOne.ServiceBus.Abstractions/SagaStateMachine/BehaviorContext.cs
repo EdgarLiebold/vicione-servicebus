@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
 /// <summary>
 /// A behavior context is an event context delivered to a behavior, including the state instance
@@ -11,8 +11,14 @@ public interface BehaviorContext<TSaga> :
     SagaConsumeContext<TSaga>
     where TSaga : class, SagaStateMachineInstance
 {
+    /// <summary>
+    /// Gets the state machine value.
+    /// </summary>
     StateMachine<TSaga> StateMachine { get; }
 
+    /// <summary>
+    /// Gets the event value.
+    /// </summary>
     Event Event { get; }
 
     /// <summary>
@@ -33,7 +39,14 @@ public interface BehaviorContext<TSaga> :
     Task RaiseAsync<T>(Event<T> @event, T data, CancellationToken cancellationToken = default)
         where T : class;
 
-    Task<SendTuple<T>> InitAsync<T>(object values, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Performs the init operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="values">The values value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
+    Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> InitAsync<T>(object values, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>
@@ -66,8 +79,18 @@ public interface BehaviorContext<TSaga, out TMessage> :
     where TSaga : class, SagaStateMachineInstance
     where TMessage : class
 {
+    /// <summary>
+    /// Gets the event value.
+    /// </summary>
     new Event<TMessage> Event { get; }
 
-    new Task<SendTuple<T>> InitAsync<T>(object values, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Performs the init operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="values">The values value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
+    new Task<global::ViciOne.ServiceBus.Advanced.Initializers.InitializedMessage<T>> InitAsync<T>(object values, CancellationToken cancellationToken = default)
         where T : class;
 }

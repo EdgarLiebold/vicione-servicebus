@@ -1,7 +1,12 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for future response configurator.
+/// </summary>
+/// <typeparam name="TResult">The t result type.</typeparam>
+/// <typeparam name="TResponse">The t response type.</typeparam>
 public interface IFutureResponseConfigurator<TResult, TResponse> :
     IFutureResultConfigurator<TResult, TResponse>
     where TResult : class

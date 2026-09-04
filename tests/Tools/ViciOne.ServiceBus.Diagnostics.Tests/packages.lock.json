@@ -225,25 +225,25 @@
         "type": "Project",
         "dependencies": {
           "ViciOne.ServiceBus": "[1.0.0, )",
-          "ViciOne.ServiceBus.RabbitMQ": "[1.0.0, )",
-          "ViciOne.ServiceBus.RabbitMQ.Testing": "[1.0.0, )",
+          "ViciOne.ServiceBus.RabbitMq": "[1.0.0, )",
+          "ViciOne.ServiceBus.RabbitMq.Testing": "[1.0.0, )",
           "ViciOne.ServiceBus.Testing": "[1.0.0, )"
         }
       },
-      "ViciOne.ServiceBus.RabbitMQ": {
+      "vicione.servicebus.rabbitmq": {
         "type": "Project",
         "dependencies": {
           "RabbitMQ.Client": "[7.2.2, )",
           "ViciOne.ServiceBus": "[1.0.0, )"
         }
       },
-      "ViciOne.ServiceBus.RabbitMQ.Testing": {
+      "vicione.servicebus.rabbitmq.testing": {
         "type": "Project",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection": "[10.0.11, )",
           "Microsoft.Extensions.Hosting.Abstractions": "[10.0.11, )",
           "RabbitMQ.Client": "[7.2.2, )",
-          "ViciOne.ServiceBus.RabbitMQ": "[1.0.0, )",
+          "ViciOne.ServiceBus.RabbitMq": "[1.0.0, )",
           "ViciOne.ServiceBus.Testing": "[1.0.0, )"
         }
       },

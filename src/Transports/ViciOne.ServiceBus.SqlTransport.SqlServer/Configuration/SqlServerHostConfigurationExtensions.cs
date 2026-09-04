@@ -3,8 +3,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using ViciOne.ServiceBus.SqlTransport.SqlServer;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.SqlTransport.SqlServer;
 
+/// <summary>
+/// Provides extension methods for sql server host configuration.
+/// </summary>
 public static class SqlServerHostConfigurationExtensions
 {
     /// <summary>

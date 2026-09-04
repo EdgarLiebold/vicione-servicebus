@@ -9,9 +9,20 @@ namespace ViciOne.ServiceBus.AzureTable.MessageJournal;
 /// </summary>
 public sealed class AzureTableMessageJournalStoreOptions
 {
+    /// <summary>
+    /// Defines the maximum batch bound entries value.
+    /// </summary>
     public const int MaximumBatchBoundEntries = 98;
+    /// <summary>
+    /// Defines the maximum binary property bytes value.
+    /// </summary>
     public const int MaximumBinaryPropertyBytes = 64 * 1024;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="partitionKey">The partition key value.</param>
+    /// <param name="limits">The limits value.</param>
     public AzureTableMessageJournalStoreOptions(
         string partitionKey,
         MessageJournalStoreLimits limits)
@@ -39,7 +50,13 @@ public sealed class AzureTableMessageJournalStoreOptions
         Limits = limits;
     }
 
+    /// <summary>
+    /// Gets the limits value.
+    /// </summary>
     public MessageJournalStoreLimits Limits { get; }
 
+    /// <summary>
+    /// Gets the partition key value.
+    /// </summary>
     public string PartitionKey { get; }
 }

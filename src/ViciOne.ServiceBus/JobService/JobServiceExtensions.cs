@@ -8,8 +8,11 @@ using ViciOne.ServiceBus.JobService.Messages;
 using ViciOne.ServiceBus.Serialization;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.JobService;
 
+/// <summary>
+/// Provides extension methods for job service.
+/// </summary>
 public static class JobServiceExtensions
 {
     /// <summary>

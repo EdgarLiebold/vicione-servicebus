@@ -15,22 +15,56 @@ public class SendEndpointConverterCache
 
     ISendEndpointConverter this[Type type] => _types.GetOrAdd(type, CreateTypeConverter).Value;
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="endpoint">The endpoint value.</param>
+    /// <param name="message">The message value.</param>
+    /// <param name="messageType">The message type value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static Task SendAsync(ISendEndpoint endpoint, object message, Type messageType, CancellationToken cancellationToken = default)
     {
         return Cached.Converters.Value[messageType].SendAsync(endpoint, message, cancellationToken);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="endpoint">The endpoint value.</param>
+    /// <param name="message">The message value.</param>
+    /// <param name="messageType">The message type value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static Task SendAsync(ISendEndpoint endpoint, object message, Type messageType, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
     {
         return Cached.Converters.Value[messageType].SendAsync(endpoint, message, pipe, cancellationToken);
     }
 
+    /// <summary>
+    /// Sends initializer.
+    /// </summary>
+    /// <param name="endpoint">The endpoint value.</param>
+    /// <param name="messageType">The message type value.</param>
+    /// <param name="values">The values value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static Task SendInitializerAsync(ISendEndpoint endpoint, Type messageType, object values, CancellationToken cancellationToken = default)
     {
         return Cached.Converters.Value[messageType].SendInitializerAsync(endpoint, values, cancellationToken);
     }
 
+    /// <summary>
+    /// Sends initializer.
+    /// </summary>
+    /// <param name="endpoint">The endpoint value.</param>
+    /// <param name="messageType">The message type value.</param>
+    /// <param name="values">The values value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static Task SendInitializerAsync(ISendEndpoint endpoint, Type messageType, object values, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
     {

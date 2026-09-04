@@ -3,8 +3,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ViciOne.ServiceBus.DependencyInjection;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for delayed message scheduler registration.
+/// </summary>
 public static class DelayedMessageSchedulerRegistrationExtensions
 {
     /// <summary>
@@ -13,7 +16,7 @@ public static class DelayedMessageSchedulerRegistrationExtensions
     /// <param name="configurator"></param>
     public static void AddDelayedMessageScheduler(this IBusRegistrationConfigurator configurator)
     {
-        configurator.TryAddScoped(provider =>
+        configurator.Services.TryAddScoped(provider =>
         {
             var bus = provider.GetRequiredService<IBus>();
             var sendEndpointProvider = provider.GetRequiredService<ISendEndpointProvider>();
@@ -29,7 +32,7 @@ public static class DelayedMessageSchedulerRegistrationExtensions
     public static void AddDelayedMessageScheduler<TBus>(this IBusRegistrationConfigurator<TBus> configurator)
         where TBus : class, IBus
     {
-        configurator.TryAddScoped(provider =>
+        configurator.Services.TryAddScoped(provider =>
         {
             var bus = provider.GetRequiredService<TBus>();
             var sendEndpointProvider = provider.GetRequiredService<Bind<TBus, ISendEndpointProvider>>().Value;

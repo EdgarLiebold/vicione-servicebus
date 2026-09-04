@@ -1,8 +1,11 @@
 using System;
 using System.Transactions;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides extension methods for transaction context.
+/// </summary>
 public static class TransactionContextExtensions
 {
     /// <summary>

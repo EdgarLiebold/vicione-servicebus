@@ -11,11 +11,19 @@ public class ConsumerConsumeContextProxy<TConsumer, TMessage> :
     where TMessage : class
     where TConsumer : class
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="consumer">The consumer value.</param>
     public ConsumerConsumeContextProxy(ConsumeContext<TMessage> context, TConsumer consumer)
         : base(context)
     {
         Consumer = consumer;
     }
 
+    /// <summary>
+    /// Gets the consumer value.
+    /// </summary>
     public TConsumer Consumer { get; }
 }

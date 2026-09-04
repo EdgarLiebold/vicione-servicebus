@@ -75,6 +75,7 @@ public sealed class InMemoryDurableSendIntegrationTests
         var observation = new ConsumerObservation();
         await using ServiceProvider provider = BuildProvider(observation, shouldFail: true);
         IBus bus = provider.GetRequiredService<IBus>();
+        using ConnectHandle receiveObserver = bus.ConnectReceiveObserver(observation);
         var store = new SignalingDurableSendStore(
             DurableSenderTestFactory.CreateInMemoryStore<IBus>());
         IDurableSendDispatcher<IBus> dispatcher = provider.GetRequiredService<IDurableSendDispatcher<IBus>>();
@@ -93,7 +94,8 @@ public sealed class InMemoryDurableSendIntegrationTests
         try
         {
             Assert.True(await driver.DeliverDueBatchAsync(cancellationToken).WaitAsync(timeout, cancellationToken));
-            await observation.Failed.Task.WaitAsync(timeout, cancellationToken);
+            await observation.PostReceived.Task.WaitAsync(timeout, cancellationToken);
+            Assert.True(observation.Failed.Task.IsCompletedSuccessfully);
             Assert.True(await store.AwaitingConsumerCompletionPersisted.Task.WaitAsync(timeout, cancellationToken));
 
             DurableSendStoreSnapshot waiting = await store.GetSnapshotAsync(cancellationToken);
@@ -109,7 +111,52 @@ public sealed class InMemoryDurableSendIntegrationTests
         }
     }
 
-    private static ServiceProvider BuildProvider(ConsumerObservation observation, bool shouldFail)
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-DURABLE-COMPLETION", "unconsumed-message-never-retires-intent")]
+    public async Task Dispatch_NoMatchingConsumerLeavesTheIntentAwaitingRecoveryAsync()
+    {
+        TimeSpan timeout = TimeSpan.FromSeconds(15);
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        var observation = new ConsumerObservation();
+        await using ServiceProvider provider = BuildProvider(observation, shouldFail: false, includeConsumer: false);
+        IBus bus = provider.GetRequiredService<IBus>();
+        using ConnectHandle receiveObserver = bus.ConnectReceiveObserver(observation);
+        var store = new SignalingDurableSendStore(
+            DurableSenderTestFactory.CreateInMemoryStore<IBus>());
+        IDurableSendDispatcher<IBus> dispatcher = provider.GetRequiredService<IDurableSendDispatcher<IBus>>();
+        var time = new FakeTimeProvider(DateTimeOffset.Parse("2026-09-03T12:00:00+00:00"));
+        using DurableSenderDeliveryTestDriver<IBus> driver = DurableSenderTestFactory.CreateDeliveryDriver(
+            store,
+            dispatcher,
+            time);
+        await store.AdmitAsync(
+            Message(),
+            new DurableSendStoreLimits(10, 100_000),
+            time.GetUtcNow(),
+            cancellationToken);
+
+        await ((IBusControl)bus).StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
+        try
+        {
+            Assert.True(await driver.DeliverDueBatchAsync(cancellationToken).WaitAsync(timeout, cancellationToken));
+            await observation.PostReceived.Task.WaitAsync(timeout, cancellationToken);
+            Assert.False(observation.Entered.Task.IsCompleted);
+            Assert.True(await store.AwaitingConsumerCompletionPersisted.Task.WaitAsync(timeout, cancellationToken));
+
+            DurableSendStoreSnapshot waiting = await store.GetSnapshotAsync(cancellationToken);
+            Assert.Equal(1, waiting.StoredCount);
+            Assert.Equal(1, waiting.AwaitingConsumerCompletionCount);
+        }
+        finally
+        {
+            await ((IBusControl)bus).StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    private static ServiceProvider BuildProvider(
+        ConsumerObservation observation,
+        bool shouldFail,
+        bool includeConsumer = true)
     {
         var services = new ServiceCollection();
         services.AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance);
@@ -121,22 +168,28 @@ public sealed class InMemoryDurableSendIntegrationTests
         services.AddViciOneServiceBus(configuration => configuration.UsingInMemory((_, bus) =>
         {
             bus.Host(new Uri("loopback://durable-host/"));
-            bus.ReceiveEndpoint("durable-input", endpoint => endpoint.Handler<DurablePayload>(context =>
+            bus.ReceiveEndpoint("durable-input", endpoint =>
             {
-                var snapshot = new ConsumerSnapshot(
-                    context.Message.Value,
-                    context.Advanced().ReceiveContext.Body.GetBytes(),
-                    context.Headers.GetAll().ToArray());
-                observation.Entered.TrySetResult(snapshot);
-                if (shouldFail)
-                {
-                    observation.Failed.TrySetResult();
-                    return Task.FromException(new ExpectedConsumerException());
-                }
+                if (!includeConsumer)
+                    return;
 
-                context.Advanced().AddConsumeTask(observation.Release.Task);
-                return Task.CompletedTask;
-            }));
+                endpoint.Handler<DurablePayload>(context =>
+                {
+                    var snapshot = new ConsumerSnapshot(
+                        context.Message.Value,
+                        context.Advanced().ReceiveContext.Body.GetBytes(),
+                        context.Headers.GetAll().ToArray());
+                    observation.Entered.TrySetResult(snapshot);
+                    if (shouldFail)
+                    {
+                        observation.Failed.TrySetResult();
+                        return Task.FromException(new ExpectedConsumerException());
+                    }
+
+                    context.Advanced().AddConsumeTask(observation.Release.Task);
+                    return Task.CompletedTask;
+                });
+            });
         }));
         return services.BuildServiceProvider(new ServiceProviderOptions
         {
@@ -179,14 +232,36 @@ public sealed class InMemoryDurableSendIntegrationTests
         byte[] RawBody,
         KeyValuePair<string, object>[] Headers);
 
-    private sealed class ConsumerObservation
+    private sealed class ConsumerObservation : IReceiveObserver
     {
         public TaskCompletionSource<ConsumerSnapshot> Entered { get; } =
             new(TaskCreationOptions.RunContinuationsAsynchronously);
         public TaskCompletionSource Failed { get; } =
             new(TaskCreationOptions.RunContinuationsAsynchronously);
+        public TaskCompletionSource PostReceived { get; } =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
         public TaskCompletionSource Release { get; } =
             new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public Task PreReceiveAsync(ReceiveContext context) => Task.CompletedTask;
+
+        public Task PostReceiveAsync(ReceiveContext context)
+        {
+            PostReceived.TrySetResult();
+            return Task.CompletedTask;
+        }
+
+        public Task PostConsumeAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
+            where T : class => Task.CompletedTask;
+
+        public Task ConsumeFaultAsync<T>(
+            ConsumeContext<T> context,
+            TimeSpan duration,
+            string consumerType,
+            Exception exception)
+            where T : class => Task.CompletedTask;
+
+        public Task ReceiveFaultAsync(ReceiveContext context, Exception exception) => Task.CompletedTask;
     }
 
     private sealed class SignalingDurableSendStore(IDurableSendStore<IBus> inner) : IDurableSendStore<IBus>

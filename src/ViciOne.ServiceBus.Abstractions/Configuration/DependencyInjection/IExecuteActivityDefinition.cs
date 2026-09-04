@@ -1,7 +1,10 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for execute activity definition.
+/// </summary>
 public interface IExecuteActivityDefinition :
     IDefinition
 {
@@ -15,6 +18,9 @@ public interface IExecuteActivityDefinition :
     /// </summary>
     Type ArgumentType { get; }
 
+    /// <summary>
+    /// Gets the execute endpoint definition value.
+    /// </summary>
     IEndpointDefinition? ExecuteEndpointDefinition { get; }
 
     /// <summary>
@@ -26,6 +32,11 @@ public interface IExecuteActivityDefinition :
 }
 
 
+/// <summary>
+/// Defines the contract for execute activity definition.
+/// </summary>
+/// <typeparam name="TActivity">The t activity type.</typeparam>
+/// <typeparam name="TArguments">The t arguments type.</typeparam>
 public interface IExecuteActivityDefinition<TActivity, TArguments> :
     IExecuteActivityDefinition
     where TActivity : class, IExecuteActivity<TArguments>

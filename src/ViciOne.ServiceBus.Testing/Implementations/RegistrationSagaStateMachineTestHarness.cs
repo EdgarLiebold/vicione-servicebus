@@ -7,6 +7,11 @@ using ViciOne.ServiceBus.DependencyInjection.Testing;
 
 namespace ViciOne.ServiceBus.Testing.Implementations;
 
+/// <summary>
+/// Provides a registration saga state machine test harness implementation.
+/// </summary>
+/// <typeparam name="TStateMachine">The t state machine type.</typeparam>
+/// <typeparam name="TInstance">The t instance type.</typeparam>
 public class RegistrationSagaStateMachineTestHarness<TStateMachine, TInstance> :
     BaseSagaTestHarness<TInstance>,
     ISagaStateMachineTestHarness<TStateMachine, TInstance>
@@ -17,6 +22,14 @@ public class RegistrationSagaStateMachineTestHarness<TStateMachine, TInstance> :
     readonly IDisposable _eventObserverHandle;
     readonly IDisposable _stateObserverHandle;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="registration">The registration value.</param>
+    /// <param name="querySagaRepository">The query saga repository value.</param>
+    /// <param name="loadSagaRepository">The load saga repository value.</param>
+    /// <param name="stateMachine">The state machine value.</param>
+    /// <param name="testHarness">The test harness value.</param>
     public RegistrationSagaStateMachineTestHarness(SagaContainerTestHarnessRegistration<TInstance> registration,
         IQuerySagaRepository<TInstance>? querySagaRepository, ILoadSagaRepository<TInstance>? loadSagaRepository, TStateMachine stateMachine,
         ITestHarness testHarness)
@@ -31,17 +44,38 @@ public class RegistrationSagaStateMachineTestHarness<TStateMachine, TInstance> :
         Sagas = registration.Sagas;
     }
 
+    /// <summary>
+    /// Gets the consumed value.
+    /// </summary>
     public IReceivedMessageList Consumed { get; }
 
+    /// <summary>
+    /// Gets the sagas value.
+    /// </summary>
     public ISagaList<TInstance> Sagas { get; }
 
+    /// <summary>
+    /// Gets the created value.
+    /// </summary>
     public ISagaList<TInstance> Created { get; }
 
+    /// <summary>
+    /// Gets the state machine value.
+    /// </summary>
     public TStateMachine StateMachine { get; }
 
+    /// <summary>
+    /// Gets the events value.
+    /// </summary>
     public IReadOnlyList<StateMachineEventObservation> Events => _observations.Events;
+    /// <summary>
+    /// Gets the state changes value.
+    /// </summary>
     public IReadOnlyList<StateMachineStateChange> StateChanges => _observations.StateChanges;
 
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
     public void Dispose()
     {
         _stateObserverHandle.Dispose();

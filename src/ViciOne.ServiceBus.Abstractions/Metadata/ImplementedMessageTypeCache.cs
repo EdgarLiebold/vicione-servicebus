@@ -5,6 +5,10 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Metadata;
 
+/// <summary>
+/// Provides an implemented message type cache implementation.
+/// </summary>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public class ImplementedMessageTypeCache<TMessage> :
     IImplementedMessageTypeCache<TMessage>
     where TMessage : class

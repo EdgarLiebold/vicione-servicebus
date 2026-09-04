@@ -2,6 +2,9 @@ using System;
 
 namespace ViciOne.ServiceBus.Scheduling;
 
+/// <summary>
+/// Defines the contract for recurring schedule.
+/// </summary>
 public interface RecurringSchedule
 {
     /// <summary>
@@ -40,5 +43,8 @@ public interface RecurringSchedule
     /// </summary>
     string Description { get; }
 
+    /// <summary>
+    /// Gets the misfire policy value.
+    /// </summary>
     MissedEventPolicy MisfirePolicy { get; }
 }

@@ -9,6 +9,10 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides an azure table saga repository configurator implementation.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
 public class AzureTableSagaRepositoryConfigurator<TSaga> :
     IAzureTableSagaRepositoryConfigurator<TSaga>,
     ISpecification
@@ -49,12 +53,20 @@ public class AzureTableSagaRepositoryConfigurator<TSaga> :
         _formatterFactory = provider => formatterFactory();
     }
 
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (_tableClientFactory == null)
             yield return this.Failure("TableClientFactory", "must be specified");
     }
 
+    /// <summary>
+    /// Performs the register operation.
+    /// </summary>
+    /// <param name="configurator">The configurator value.</param>
     public void Register(ISagaRepositoryRegistrationConfigurator<TSaga> configurator)
     {
         ArgumentNullException.ThrowIfNull(configurator);

@@ -2,6 +2,10 @@ using System;
 
 namespace ViciOne.ServiceBus.Transports;
 
+/// <summary>
+/// Provides a consume send pipe adapter implementation.
+/// </summary>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public class ConsumeSendPipeAdapter<TMessage> :
     SendContextPipeAdapter<TMessage>
     where TMessage : class
@@ -10,6 +14,12 @@ public class ConsumeSendPipeAdapter<TMessage> :
     readonly bool _inheritRequestTimeToLive;
     readonly Guid? _requestId;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="consumeContext">The consume context value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <param name="requestId">The request id value.</param>
     public ConsumeSendPipeAdapter(ConsumeContext consumeContext, IPipe<SendContext<TMessage>> pipe, Guid? requestId)
         : this(consumeContext, pipe, requestId, false)
     {
@@ -24,6 +34,11 @@ public class ConsumeSendPipeAdapter<TMessage> :
         _inheritRequestTimeToLive = inheritRequestTimeToLive;
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
     protected override void Send<T>(SendContext<T> context)
     {
         if (_requestId.HasValue)
@@ -50,6 +65,10 @@ public class ConsumeSendPipeAdapter<TMessage> :
         }
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     protected override void Send(SendContext<TMessage> context)
     {
     }

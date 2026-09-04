@@ -2,6 +2,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Transports;
 
+/// <summary>
+/// Defines the contract for receive pipe.
+/// </summary>
 public interface IReceivePipe :
     IPipe<ReceiveContext>,
     IConsumePipeConnector,

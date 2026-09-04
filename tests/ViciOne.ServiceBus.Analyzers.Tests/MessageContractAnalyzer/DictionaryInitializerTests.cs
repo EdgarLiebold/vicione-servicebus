@@ -66,7 +66,7 @@ namespace ConsoleApplication1
         await AssertDiagnosticsAsync(
             source,
             new DiagnosticObservation(
-                "MCA0003",
+                "VOSB1004",
                 DiagnosticSeverity.Info,
                 "Anonymous type is missing properties that are in the message contract 'OrderSubmitted'. The following properties are missing: Id, CustomerId, OrderItems.",
                 "Test0.cs",
@@ -114,7 +114,7 @@ namespace ConsoleApplication1
         await AssertDiagnosticsAsync(
             source,
             new DiagnosticObservation(
-                "MCA0001",
+                "VOSB1002",
                 DiagnosticSeverity.Error,
                 "Anonymous type does not map to message contract 'OrderSubmitted'. The following properties of the anonymous type are incompatible: OrderItems.",
                 "Test0.cs",

@@ -1,5 +1,8 @@
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for send pipe specification.
+/// </summary>
 public interface ISendPipeSpecification :
     ISendPipeSpecificationObserverConnector,
     ISpecification

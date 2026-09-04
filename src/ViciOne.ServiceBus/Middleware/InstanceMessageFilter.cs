@@ -19,6 +19,11 @@ public class InstanceMessageFilter<TConsumer, TMessage> :
     readonly TConsumer _instance;
     readonly IPipe<ConsumerConsumeContext<TConsumer, TMessage>> _instancePipe;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="instance">The instance value.</param>
+    /// <param name="instancePipe">The instance pipe value.</param>
     public InstanceMessageFilter(TConsumer instance, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> instancePipe)
     {
         _instance = instance ?? throw new ArgumentNullException(nameof(instance));

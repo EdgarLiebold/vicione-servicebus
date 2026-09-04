@@ -20,12 +20,22 @@ public class SubmitJobConsumer<TJob> :
     readonly Guid _jobTypeId;
     readonly JobOptions<TJob> _options;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="options">The options value.</param>
+    /// <param name="jobTypeId">The job type id value.</param>
     public SubmitJobConsumer(JobOptions<TJob> options, Guid jobTypeId)
     {
         _options = options;
         _jobTypeId = jobTypeId;
     }
 
+    /// <summary>
+    /// Consumes the message provided by the context.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public Task ConsumeAsync(ConsumeContext<SubmitJob<TJob>> context)
     {
         if (context.Message.Schedule != null)
@@ -41,6 +51,11 @@ public class SubmitJobConsumer<TJob> :
             context.Message.Properties);
     }
 
+    /// <summary>
+    /// Consumes the message provided by the context.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public Task ConsumeAsync(ConsumeContext<TJob> context)
     {
         var jobId = context.RequestId ?? NewId.NextGuid();

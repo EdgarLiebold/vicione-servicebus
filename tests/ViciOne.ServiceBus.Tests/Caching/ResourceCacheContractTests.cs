@@ -40,7 +40,7 @@ public sealed class ResourceCacheContractTests
         await cache.AddAsync(expected, TestContext.Current.CancellationToken);
 
         CacheValue actual = await index.GetOrAddAsync("one", cancellationToken: TestContext.Current.CancellationToken);
-        CacheValue visible = Assert.Single(await cache.GetValuesAsync(TestContext.Current.CancellationToken));
+        CacheValue visible = Assert.Single(cache.GetValues(TestContext.Current.CancellationToken));
         ResourceCacheStatistics statistics = cache.Statistics;
 
         Assert.Same(expected, actual);
@@ -66,7 +66,7 @@ public sealed class ResourceCacheContractTests
 
         CacheValue created = await index.GetOrAddAsync("one", cancellationToken: TestContext.Current.CancellationToken);
         CacheValue read = await index.GetAsync("one", TestContext.Current.CancellationToken);
-        CacheValue visible = Assert.Single(await cache.GetValuesAsync(TestContext.Current.CancellationToken));
+        CacheValue visible = Assert.Single(cache.GetValues(TestContext.Current.CancellationToken));
 
         Assert.Same(expected, created);
         Assert.Same(expected, read);
@@ -125,7 +125,7 @@ public sealed class ResourceCacheContractTests
             await idIndex.GetAsync("one", TestContext.Current.CancellationToken));
         await Assert.ThrowsAsync<KeyNotFoundException>(async () =>
             await numberIndex.GetAsync(1, TestContext.Current.CancellationToken));
-        Assert.Empty(await cache.GetValuesAsync(TestContext.Current.CancellationToken));
+        Assert.Empty(cache.GetValues(TestContext.Current.CancellationToken));
 
         var replacement = new CacheValue("one", "replacement", 1);
         await cache.AddAsync(replacement, TestContext.Current.CancellationToken);
@@ -154,7 +154,7 @@ public sealed class ResourceCacheContractTests
             await idIndex.GetAsync("one", TestContext.Current.CancellationToken));
         await Assert.ThrowsAsync<KeyNotFoundException>(async () =>
             await numberIndex.GetAsync(1, TestContext.Current.CancellationToken));
-        Assert.Empty(await cache.GetValuesAsync(TestContext.Current.CancellationToken));
+        Assert.Empty(cache.GetValues(TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -231,7 +231,7 @@ public sealed class ResourceCacheContractTests
 
         Assert.Contains("requested", exception.Message, StringComparison.Ordinal);
         Assert.Contains("different", exception.Message, StringComparison.Ordinal);
-        Assert.Empty(await cache.GetValuesAsync(TestContext.Current.CancellationToken));
+        Assert.Empty(cache.GetValues(TestContext.Current.CancellationToken));
         Assert.Equal(1, cache.Statistics.CreationFaults);
         Assert.Equal(0, cache.Statistics.PendingCreations);
     }

@@ -5,9 +5,19 @@ using ViciOne.ServiceBus.Serialization.JsonConverters;
 
 namespace ViciOne.ServiceBus.Serialization.MessagePackFormatters;
 
+/// <summary>
+/// Provides a message data formatter implementation.
+/// </summary>
+/// <typeparam name="T">The t type.</typeparam>
 public class MessageDataFormatter<T> :
     IMessagePackFormatter<MessageData<T>?>
 {
+    /// <summary>
+    /// Performs the serialize operation.
+    /// </summary>
+    /// <param name="writer">The writer value.</param>
+    /// <param name="value">The value.</param>
+    /// <param name="options">The options value.</param>
     public void Serialize(ref MessagePackWriter writer, MessageData<T>? value, MessagePackSerializerOptions options)
     {
         var reference = new SystemTextMessageDataReference { Reference = value?.Address };
@@ -18,6 +28,12 @@ public class MessageDataFormatter<T> :
         innerFormatter.Serialize(ref writer, reference, options);
     }
 
+    /// <summary>
+    /// Performs the deserialize operation.
+    /// </summary>
+    /// <param name="reader">The reader value.</param>
+    /// <param name="options">The options value.</param>
+    /// <returns>The result of the operation.</returns>
     public MessageData<T>? Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
     {
         IMessagePackFormatter<SystemTextMessageDataReference> innerFormatter = options.Resolver.GetFormatterWithVerify<SystemTextMessageDataReference>();

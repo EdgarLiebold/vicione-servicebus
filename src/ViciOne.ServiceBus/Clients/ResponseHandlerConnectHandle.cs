@@ -17,6 +17,12 @@ public class ResponseHandlerConnectHandle<TResponse> :
     readonly ConnectHandle _handle;
     readonly Task _requestTask;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="handle">The handle value.</param>
+    /// <param name="completed">The completed value.</param>
+    /// <param name="requestTask">The request task value.</param>
     public ResponseHandlerConnectHandle(ConnectHandle handle, TaskCompletionSource<ConsumeContext<TResponse>> completed, Task requestTask)
     {
         _handle = handle;
@@ -26,28 +32,45 @@ public class ResponseHandlerConnectHandle<TResponse> :
         Task = GetTaskAsync();
     }
 
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
     public void Dispose()
     {
         _handle.Dispose();
     }
 
+    /// <summary>
+    /// Performs the disconnect operation.
+    /// </summary>
     public void Disconnect()
     {
         _handle.Disconnect();
     }
 
+    /// <summary>
+    /// Performs the try set exception operation.
+    /// </summary>
+    /// <param name="exception">The exception associated with the operation.</param>
     public void TrySetException(Exception exception)
     {
         _completed.TrySetException(exception);
         _completed.Task.IgnoreUnobservedExceptions();
     }
 
+    /// <summary>
+    /// Performs the try set canceled operation.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public void TrySetCanceled(CancellationToken cancellationToken)
     {
         _completed.TrySetCanceled(cancellationToken);
         _completed.Task.IgnoreUnobservedExceptions();
     }
 
+    /// <summary>
+    /// Gets the task value.
+    /// </summary>
     public Task<Response<TResponse>> Task { get; }
 
     async Task<Response<TResponse>> GetTaskAsync()

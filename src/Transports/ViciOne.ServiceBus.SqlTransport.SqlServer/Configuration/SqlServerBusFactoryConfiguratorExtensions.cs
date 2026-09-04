@@ -4,8 +4,11 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ViciOne.ServiceBus.SqlTransport.Configuration;
 using ViciOne.ServiceBus.SqlTransport.SqlServer;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for sql server bus factory configurator.
+/// </summary>
 public static class SqlServerBusFactoryConfiguratorExtensions
 {
     /// <summary>
@@ -16,7 +19,7 @@ public static class SqlServerBusFactoryConfiguratorExtensions
     public static void UsingSqlServer(this IBusRegistrationConfigurator configurator,
         Action<IBusRegistrationContext, ISqlBusFactoryConfigurator>? configure = null)
     {
-        configurator.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, SqlServerSendFailureClassifier>());
+        configurator.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, SqlServerSendFailureClassifier>());
         configurator.SetBusFactory(new SqlRegistrationBusFactory((context, cfg) =>
         {
             cfg.UseSqlServer(context);
@@ -37,7 +40,7 @@ public static class SqlServerBusFactoryConfiguratorExtensions
     public static void UsingSqlServer(this IBusRegistrationConfigurator configurator, string connectionString,
         Action<IBusRegistrationContext, ISqlBusFactoryConfigurator>? configure = null)
     {
-        configurator.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, SqlServerSendFailureClassifier>());
+        configurator.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, SqlServerSendFailureClassifier>());
         configurator.SetBusFactory(new SqlRegistrationBusFactory((context, cfg) =>
         {
             cfg.UseSqlServer(connectionString);

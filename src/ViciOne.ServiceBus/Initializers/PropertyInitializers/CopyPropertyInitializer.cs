@@ -20,6 +20,11 @@ public class CopyPropertyInitializer<TMessage, TInput, TProperty> :
     readonly IReadProperty<TInput, TProperty> _inputProperty;
     readonly IWriteProperty<TMessage, TProperty> _messageProperty;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="messagePropertyInfo">The message property info value.</param>
+    /// <param name="inputPropertyInfo">The input property info value.</param>
     public CopyPropertyInitializer(PropertyInfo messagePropertyInfo, PropertyInfo inputPropertyInfo)
     {
         if (messagePropertyInfo == null)
@@ -29,6 +34,12 @@ public class CopyPropertyInitializer<TMessage, TInput, TProperty> :
         _messageProperty = WritePropertyCache<TMessage>.GetProperty<TProperty>(messagePropertyInfo);
     }
 
+    /// <summary>
+    /// Applies this specification to the target builder.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task ApplyAsync(InitializeContext<TMessage, TInput> context, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (context.HasInput)

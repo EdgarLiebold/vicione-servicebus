@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides extension methods for send execute.
+/// </summary>
 public static class SendExecuteExtensions
 {
     /// <summary>
@@ -123,23 +126,45 @@ public static class SendExecuteExtensions
         return endpoint.SendAsync(values, callback.ToPipe(), cancellationToken);
     }
 
+    /// <summary>
+    /// Performs the to pipe operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="callback">The callback value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IPipe<SendContext<T>> ToPipe<T>(this Action<SendContext<T>> callback)
         where T : class
     {
         return new SendContextPipe<T>(callback);
     }
 
+    /// <summary>
+    /// Performs the to pipe operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="callback">The callback value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IPipe<SendContext<T>> ToPipe<T>(this Func<SendContext<T>, Task> callback)
         where T : class
     {
         return new SendContextAsyncPipe<T>(callback);
     }
 
+    /// <summary>
+    /// Performs the to pipe operation.
+    /// </summary>
+    /// <param name="callback">The callback value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IPipe<SendContext> ToPipe(this Action<SendContext> callback)
     {
         return new SendContextPipe(callback);
     }
 
+    /// <summary>
+    /// Performs the to pipe operation.
+    /// </summary>
+    /// <param name="callback">The callback value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IPipe<SendContext> ToPipe(this Func<SendContext, Task> callback)
     {
         return new SendContextAsyncPipe(callback);

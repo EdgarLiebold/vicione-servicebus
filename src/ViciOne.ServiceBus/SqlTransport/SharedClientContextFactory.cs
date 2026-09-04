@@ -5,11 +5,18 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.SqlTransport;
 
+/// <summary>
+/// Provides a shared client context factory implementation.
+/// </summary>
 public class SharedClientContextFactory :
     IPipeContextFactory<ClientContext>
 {
     readonly IClientContextSupervisor _supervisor;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="supervisor">The supervisor value.</param>
     public SharedClientContextFactory(IClientContextSupervisor supervisor)
     {
         _supervisor = supervisor;

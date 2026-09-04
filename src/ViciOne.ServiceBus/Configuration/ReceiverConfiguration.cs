@@ -5,13 +5,23 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a receiver configuration implementation.
+/// </summary>
 public class ReceiverConfiguration :
     EndpointConfiguration,
     IReceiveEndpointConfigurator
 {
     readonly IReceiveEndpointConfiguration _configuration;
+    /// <summary>
+    /// Defines the specifications value.
+    /// </summary>
     protected readonly List<IReceiveEndpointSpecification> Specifications;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="endpointConfiguration">The endpoint configuration value.</param>
     protected ReceiverConfiguration(IReceiveEndpointConfiguration endpointConfiguration)
         : base(endpointConfiguration)
     {
@@ -23,18 +33,31 @@ public class ReceiverConfiguration :
         this.RethrowFaultedMessages();
     }
 
+    /// <summary>
+    /// Gets the input address value.
+    /// </summary>
     public Uri InputAddress => _configuration.InputAddress;
 
+    /// <summary>
+    /// Gets or sets the configure consume topology value.
+    /// </summary>
     public bool ConfigureConsumeTopology
     {
         set { }
     }
 
+    /// <summary>
+    /// Gets or sets the publish faults value.
+    /// </summary>
     public bool PublishFaults
     {
         set { }
     }
 
+    /// <summary>
+    /// Adds dependency to the configuration.
+    /// </summary>
+    /// <param name="dependent">The dependent value.</param>
     public void AddDependency(IReceiveEndpointDependency dependent)
     {
     }
@@ -44,24 +67,46 @@ public class ReceiverConfiguration :
         return _configuration.ConnectReceiveEndpointObserver(observer);
     }
 
+    /// <summary>
+    /// Adds dependent to the configuration.
+    /// </summary>
+    /// <param name="dependent">The dependent value.</param>
     public void AddDependent(IReceiveEndpointDependent dependent)
     {
     }
 
+    /// <summary>
+    /// Configures message topology.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="enabled">The enabled value.</param>
     public void ConfigureMessageTopology<T>(bool enabled = true)
         where T : class
     {
     }
 
+    /// <summary>
+    /// Configures message topology.
+    /// </summary>
+    /// <param name="messageType">The message type value.</param>
+    /// <param name="enabled">The enabled value.</param>
     public void ConfigureMessageTopology(Type messageType, bool enabled = true)
     {
     }
 
+    /// <summary>
+    /// Adds endpoint specification to the configuration.
+    /// </summary>
+    /// <param name="specification">The specification value.</param>
     public void AddEndpointSpecification(IReceiveEndpointSpecification specification)
     {
         Specifications.Add(specification ?? throw new ArgumentNullException(nameof(specification)));
     }
 
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public override IEnumerable<ValidationResult> Validate()
     {
         return Specifications.SelectMany(x => x.Validate())

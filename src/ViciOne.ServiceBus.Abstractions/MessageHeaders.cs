@@ -2,6 +2,9 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus;
 
+/// <summary>
+/// Provides a message headers implementation.
+/// </summary>
 public static class MessageHeaders
 {
     /// <summary>
@@ -171,6 +174,9 @@ public static class MessageHeaders
     public const string FutureId = "FutureId";
 
 
+    /// <summary>
+    /// Provides a host implementation.
+    /// </summary>
     public static class Host
     {
         /// <summary>
@@ -178,20 +184,53 @@ public static class MessageHeaders
         /// </summary>
         public const string Prefix = MessageHeaders.Prefix + "Host-";
 
+        /// <summary>
+        /// Defines the info value.
+        /// </summary>
         public const string Info = MessageHeaders.Prefix + "Host-Info";
+        /// <summary>
+        /// Defines the machine name value.
+        /// </summary>
         public const string MachineName = MessageHeaders.Prefix + "Host-MachineName";
+        /// <summary>
+        /// Defines the process name value.
+        /// </summary>
         public const string ProcessName = MessageHeaders.Prefix + "Host-ProcessName";
+        /// <summary>
+        /// Defines the process id value.
+        /// </summary>
         public const string ProcessId = MessageHeaders.Prefix + "Host-ProcessId";
+        /// <summary>
+        /// Defines the assembly value.
+        /// </summary>
         public const string Assembly = MessageHeaders.Prefix + "Host-Assembly";
+        /// <summary>
+        /// Defines the assembly version value.
+        /// </summary>
         public const string AssemblyVersion = MessageHeaders.Prefix + "Host-AssemblyVersion";
+        /// <summary>
+        /// Defines the vici one service bus version value.
+        /// </summary>
         public const string ViciOneServiceBusVersion = MessageHeaders.Prefix + "Host-ViciOneServiceBusVersion";
+        /// <summary>
+        /// Defines the framework version value.
+        /// </summary>
         public const string FrameworkVersion = MessageHeaders.Prefix + "Host-FrameworkVersion";
+        /// <summary>
+        /// Defines the operating system version value.
+        /// </summary>
         public const string OperatingSystemVersion = MessageHeaders.Prefix + "Host-OperatingSystemVersion";
     }
 
 
+    /// <summary>
+    /// Provides a request implementation.
+    /// </summary>
     public static class Request
     {
+        /// <summary>
+        /// Defines the accept value.
+        /// </summary>
         public const string Accept = MessageHeaders.Prefix + "Request-AcceptType";
 
         /// <summary>
@@ -201,6 +240,9 @@ public static class MessageHeaders
     }
 
 
+    /// <summary>
+    /// Provides a quartz implementation.
+    /// </summary>
     public static class Quartz
     {
         /// <summary>

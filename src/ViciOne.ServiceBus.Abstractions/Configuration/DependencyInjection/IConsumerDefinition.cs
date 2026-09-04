@@ -1,9 +1,10 @@
 using System;
-using System.ComponentModel;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Registration;
 
-[EditorBrowsable(EditorBrowsableState.Never)]
+/// <summary>
+/// Defines the contract for consumer definition.
+/// </summary>
 public interface IConsumerDefinition :
     IDefinition
 {
@@ -12,6 +13,9 @@ public interface IConsumerDefinition :
     /// </summary>
     Type ConsumerType { get; }
 
+    /// <summary>
+    /// Gets the endpoint definition value.
+    /// </summary>
     IEndpointDefinition? EndpointDefinition { get; }
 
     /// <summary>
@@ -23,7 +27,10 @@ public interface IConsumerDefinition :
 }
 
 
-[EditorBrowsable(EditorBrowsableState.Never)]
+/// <summary>
+/// Defines the contract for consumer definition.
+/// </summary>
+/// <typeparam name="TConsumer">The t consumer type.</typeparam>
 public interface IConsumerDefinition<TConsumer> :
     IConsumerDefinition
     where TConsumer : class, IConsumer

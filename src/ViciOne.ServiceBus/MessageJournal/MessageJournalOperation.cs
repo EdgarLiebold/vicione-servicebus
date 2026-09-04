@@ -6,7 +6,16 @@ namespace ViciOne.ServiceBus.MessageJournal;
 /// </summary>
 public enum MessageJournalOperation
 {
+    /// <summary>
+    /// Indicates send.
+    /// </summary>
     Send = 1,
+    /// <summary>
+    /// Indicates publish.
+    /// </summary>
     Publish = 2,
+    /// <summary>
+    /// Indicates consume.
+    /// </summary>
     Consume = 3,
 }

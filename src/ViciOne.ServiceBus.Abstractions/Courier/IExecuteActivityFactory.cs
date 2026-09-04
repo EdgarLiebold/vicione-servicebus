@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Courier;
 
 /// <summary>
 /// A factory that creates an execute activity and then invokes the pipe for the activity context

@@ -2,17 +2,29 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a message publish topology pipe specification implementation.
+/// </summary>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public class MessagePublishTopologyPipeSpecification<TMessage> :
     ISpecificationPipeSpecification<PublishContext<TMessage>>
     where TMessage : class
 {
     readonly IMessagePublishTopology<TMessage> _messagePublishTopology;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="messagePublishTopology">The message publish topology value.</param>
     public MessagePublishTopologyPipeSpecification(IMessagePublishTopology<TMessage> messagePublishTopology)
     {
         _messagePublishTopology = messagePublishTopology;
     }
 
+    /// <summary>
+    /// Applies this specification to the target builder.
+    /// </summary>
+    /// <param name="builder">The builder value.</param>
     public void Apply(ISpecificationPipeBuilder<PublishContext<TMessage>> builder)
     {
         var typeBuilder = new Builder(builder);
@@ -20,6 +32,10 @@ public class MessagePublishTopologyPipeSpecification<TMessage> :
         _messagePublishTopology.Apply(typeBuilder);
     }
 
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         yield break;

@@ -3,10 +3,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus;
 
-public class ViciOneServiceBusHostedService :
+internal sealed class ViciOneServiceBusHostedService :
     IHostedService,
     IAsyncDisposable
 {

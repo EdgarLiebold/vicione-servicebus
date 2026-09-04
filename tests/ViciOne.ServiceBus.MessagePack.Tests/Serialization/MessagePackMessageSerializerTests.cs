@@ -1,4 +1,5 @@
 using System.Text;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.MessageData;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -286,6 +287,6 @@ public sealed class MessagePackMessageSerializerTests
 
     private sealed class MessageDataContainer
     {
-        public MessageData<string> Value { get; set; } = null!;
+        public ViciOne.ServiceBus.Advanced.Serialization.MessageData<string> Value { get; set; } = null!;
     }
 }

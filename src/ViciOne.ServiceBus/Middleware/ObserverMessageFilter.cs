@@ -15,6 +15,10 @@ public class ObserverMessageFilter<TMessage> :
     readonly IObserver<ConsumeContext<TMessage>> _observer;
     readonly string _observerType;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
     public ObserverMessageFilter(IObserver<ConsumeContext<TMessage>> observer)
     {
         if (observer == null)

@@ -13,6 +13,10 @@ public class TypePropertyConverter<TResult, TInput> :
 {
     readonly ITypeConverter<TResult, TInput> _converter;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="converter">The converter value.</param>
     public TypePropertyConverter(ITypeConverter<TResult, TInput> converter)
     {
         _converter = converter;

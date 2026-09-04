@@ -13,15 +13,28 @@ namespace ViciOne.ServiceBus.MessageData.Values;
 public class DeserializedMessageData<T> :
     MessageData<T>
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="address">The address value.</param>
     public DeserializedMessageData(Uri address)
     {
         Address = address;
         HasValue = true;
     }
 
+    /// <summary>
+    /// Gets the address value.
+    /// </summary>
     public Uri Address { get; }
+    /// <summary>
+    /// Gets the has value value.
+    /// </summary>
     public bool HasValue { get; }
 
+    /// <summary>
+    /// Gets the underlying value.
+    /// </summary>
     public Task<T?> Value
     {
         get

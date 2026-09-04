@@ -13,18 +13,33 @@ public class ConcurrencyLimitSagaConfigurationObserver<TSaga> :
 {
     readonly ISagaConfigurator<TSaga> _configurator;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="concurrentMessageLimit">The concurrent message limit value.</param>
+    /// <param name="id">The id value.</param>
     public ConcurrencyLimitSagaConfigurationObserver(ISagaConfigurator<TSaga> configurator, int concurrentMessageLimit, string? id = null)
     {
         _configurator = configurator;
         Limiter = new ConcurrencyLimiter(concurrentMessageLimit, id);
     }
 
+    /// <summary>
+    /// Gets the limiter value.
+    /// </summary>
     public IConcurrencyLimiter Limiter { get; }
 
     void ISagaConfigurationObserver.SagaConfigured<T>(ISagaConfigurator<T> configurator)
     {
     }
 
+    /// <summary>
+    /// Performs the state machine saga configured operation.
+    /// </summary>
+    /// <typeparam name="TInstance">The t instance type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="stateMachine">The state machine value.</param>
     public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, SagaStateMachine<TInstance> stateMachine)
         where TInstance : class, ISaga, SagaStateMachineInstance
     {

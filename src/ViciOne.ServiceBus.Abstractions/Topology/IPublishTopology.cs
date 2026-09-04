@@ -1,8 +1,11 @@
 using System;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Topology;
 
+/// <summary>
+/// Defines the contract for publish topology.
+/// </summary>
 public interface IPublishTopology :
     IPublishTopologyConfigurationObserverConnector
 {

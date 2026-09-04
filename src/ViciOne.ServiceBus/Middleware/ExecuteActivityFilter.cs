@@ -17,6 +17,10 @@ public class ExecuteActivityFilter<TActivity, TArguments> :
 {
     readonly ActivityObservable _observers;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="observers">The observers value.</param>
     public ExecuteActivityFilter(ActivityObservable observers)
     {
         _observers = observers;
@@ -27,6 +31,12 @@ public class ExecuteActivityFilter<TActivity, TArguments> :
         context.CreateFilterScope("execute");
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SendAsync(ExecuteActivityContext<TActivity, TArguments> context, IPipe<ExecuteActivityContext<TActivity, TArguments>> next)
     {
         try

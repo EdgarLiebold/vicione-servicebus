@@ -3,6 +3,11 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Initializers.PropertyConverters;
 
+/// <summary>
+/// Provides an initialize property converter implementation.
+/// </summary>
+/// <typeparam name="TProperty">The t property type.</typeparam>
+/// <typeparam name="TInput">The t input type.</typeparam>
 public class InitializePropertyConverter<TProperty, TInput> :
     IPropertyConverter<TProperty, TInput>
     where TProperty : class
@@ -10,6 +15,9 @@ public class InitializePropertyConverter<TProperty, TInput> :
 {
     readonly IMessageInitializer<TProperty> _initializer;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public InitializePropertyConverter()
     {
         _initializer = MessageInitializerCache<TProperty>.GetInitializer(typeof(TInput));
@@ -38,6 +46,10 @@ public class InitializePropertyConverter<TProperty, TInput> :
 }
 
 
+/// <summary>
+/// Provides an initialize property converter implementation.
+/// </summary>
+/// <typeparam name="TProperty">The t property type.</typeparam>
 public class InitializePropertyConverter<TProperty> :
     IPropertyConverter<TProperty, object>
     where TProperty : class

@@ -36,6 +36,12 @@ public class InterfaceMessagePackFormatter<TInterface> :
     /// </summary>
     internal static int CompiledInvokerCount => _cache.CompiledCount;
 
+    /// <summary>
+    /// Performs the serialize operation.
+    /// </summary>
+    /// <param name="writer">The writer value.</param>
+    /// <param name="value">The value.</param>
+    /// <param name="options">The options value.</param>
     public void Serialize(ref MessagePackWriter writer, TInterface value, MessagePackSerializerOptions options)
     {
         // A value that is still typed as an interface has no formatter of its own; the type declared for
@@ -50,6 +56,12 @@ public class InterfaceMessagePackFormatter<TInterface> :
         access.Serialize(access.GetFormatter(options.Resolver), ref writer, value, options);
     }
 
+    /// <summary>
+    /// Performs the deserialize operation.
+    /// </summary>
+    /// <param name="reader">The reader value.</param>
+    /// <param name="options">The options value.</param>
+    /// <returns>The result of the operation.</returns>
     public TInterface Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
     {
         var access = _cache.Get(_declaredConcreteType);

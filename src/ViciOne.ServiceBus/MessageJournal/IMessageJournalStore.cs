@@ -12,7 +12,16 @@ namespace ViciOne.ServiceBus.MessageJournal;
 /// </remarks>
 public interface IMessageJournalStore
 {
+    /// <summary>
+    /// Gets the limits value.
+    /// </summary>
     MessageJournalStoreLimits Limits { get; }
 
+    /// <summary>
+    /// Performs the append operation.
+    /// </summary>
+    /// <param name="entry">The entry value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     ValueTask AppendAsync(MessageJournalEntry entry, CancellationToken cancellationToken);
 }

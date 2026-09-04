@@ -1,9 +1,8 @@
 using System;
-using System.ComponentModel;
 using System.Net.Mime;
 using System.Text.Json;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
 /// Configure a receiving endpoint
@@ -66,7 +65,10 @@ public interface IReceiveEndpointConfigurator :
     /// </summary>
     void ConfigureMessageTopology(Type messageType, bool enabled = true);
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    /// <summary>
+    /// Adds endpoint specification to the configuration.
+    /// </summary>
+    /// <param name="configurator">The configurator value.</param>
     void AddEndpointSpecification(IReceiveEndpointSpecification configurator);
 
     /// <summary>

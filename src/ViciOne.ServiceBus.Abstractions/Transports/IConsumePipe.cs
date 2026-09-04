@@ -2,6 +2,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Transports;
 
+/// <summary>
+/// Defines the contract for consume pipe.
+/// </summary>
 public interface IConsumePipe :
     IPipe<ConsumeContext>,
     IConsumePipeConnector,

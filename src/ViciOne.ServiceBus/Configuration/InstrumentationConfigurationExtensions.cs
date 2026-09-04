@@ -2,8 +2,11 @@ using System;
 using ViciOne.ServiceBus.Logging;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for instrumentation configuration.
+/// </summary>
 public static class InstrumentationConfigurationExtensions
 {
     /// <summary>

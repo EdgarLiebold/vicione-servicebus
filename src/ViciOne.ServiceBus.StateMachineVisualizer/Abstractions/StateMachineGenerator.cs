@@ -5,10 +5,20 @@ using ViciOne.ServiceBus.SagaStateMachine;
 
 namespace ViciOne.ServiceBus.Visualizer.Abstractions;
 
+/// <summary>
+/// Provides a state machine generator implementation.
+/// </summary>
 public abstract class StateMachineGenerator
 {
+    /// <summary>
+    /// Defines the graph value.
+    /// </summary>
     protected readonly AdjacencyGraph<Vertex, Edge<Vertex>> Graph;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="data">The data value.</param>
     public StateMachineGenerator(StateMachineGraph data)
     {
         Graph = CreateAdjacencyGraph(data);

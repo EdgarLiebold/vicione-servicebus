@@ -1,7 +1,7 @@
 using System;
 using System.Linq.Expressions;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
 /// <summary>
 /// A saga query is used when a LINQ expression is accepted to query

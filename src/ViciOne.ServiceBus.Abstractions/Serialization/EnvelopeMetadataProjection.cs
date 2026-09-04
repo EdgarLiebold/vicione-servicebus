@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ViciOne.ServiceBus.Metadata;
-using ViciOne.ServiceBus.ProviderAbstractions;
+using ViciOne.ServiceBus.Providers.Persistence;
 
 namespace ViciOne.ServiceBus.Serialization;
 /// <summary>

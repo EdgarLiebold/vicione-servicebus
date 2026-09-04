@@ -4,6 +4,9 @@ using System.Text;
 
 namespace ViciOne.ServiceBus.Transports;
 
+/// <summary>
+/// Provides a default message name formatter implementation.
+/// </summary>
 public class DefaultMessageNameFormatter :
     IMessageNameFormatter
 {
@@ -14,12 +17,27 @@ public class DefaultMessageNameFormatter :
     readonly string _namespaceSeparator;
     readonly string _nestedTypeSeparator;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="genericArgumentSeparator">The generic argument separator value.</param>
+    /// <param name="genericTypeSeparator">The generic type separator value.</param>
+    /// <param name="namespaceSeparator">The namespace separator value.</param>
+    /// <param name="nestedTypeSeparator">The nested type separator value.</param>
     public DefaultMessageNameFormatter(string genericArgumentSeparator, string genericTypeSeparator,
         string namespaceSeparator, string nestedTypeSeparator)
         : this(genericArgumentSeparator, genericTypeSeparator, namespaceSeparator, nestedTypeSeparator, true)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="genericArgumentSeparator">The generic argument separator value.</param>
+    /// <param name="genericTypeSeparator">The generic type separator value.</param>
+    /// <param name="namespaceSeparator">The namespace separator value.</param>
+    /// <param name="nestedTypeSeparator">The nested type separator value.</param>
+    /// <param name="includeNamespace">The include namespace value.</param>
     public DefaultMessageNameFormatter(string genericArgumentSeparator, string genericTypeSeparator,
         string namespaceSeparator, string nestedTypeSeparator, bool includeNamespace)
     {
@@ -32,6 +50,11 @@ public class DefaultMessageNameFormatter :
         _cache = new ConcurrentDictionary<Type, string>();
     }
 
+    /// <summary>
+    /// Gets message name.
+    /// </summary>
+    /// <param name="type">The type value.</param>
+    /// <returns>The result of the operation.</returns>
     public string GetMessageName(Type type)
     {
         return _cache.GetOrAdd(type, CreateMessageName);

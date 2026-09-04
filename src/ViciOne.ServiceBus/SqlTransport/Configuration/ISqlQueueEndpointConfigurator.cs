@@ -1,7 +1,10 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Providers.Transports;
 
+/// <summary>
+/// Defines the contract for sql queue endpoint configurator.
+/// </summary>
 public interface ISqlQueueEndpointConfigurator :
     ISqlQueueConfigurator
 {

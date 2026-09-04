@@ -6,14 +6,30 @@ using ViciOne.ServiceBus.DependencyInjection;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for dependency injection handler registration.
+/// </summary>
 public static class DependencyInjectionHandlerRegistrationExtensions
 {
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T>(this IServiceCollection collection)
         where T : class
     {
         return RegisterHandler<T>(collection, new DependencyInjectionContainerRegistrar(collection));
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T>(this IServiceCollection collection, IContainerRegistrar registrar)
         where T : class
     {
@@ -25,12 +41,27 @@ public static class DependencyInjectionHandlerRegistrationExtensions
         return collection.RegisterConsumer<MessageHandlerConsumer<T>, MessageHandlerConsumerDefinition<MessageHandlerConsumer<T>, T>>(registrar);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T>(this IServiceCollection collection, Func<ConsumeContext<T>, Task> handler)
         where T : class
     {
         return RegisterHandler(collection, new DependencyInjectionContainerRegistrar(collection), handler);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T>(this IServiceCollection collection, IContainerRegistrar registrar,
         Func<ConsumeContext<T>, Task> handler)
         where T : class
@@ -43,12 +74,27 @@ public static class DependencyInjectionHandlerRegistrationExtensions
         return collection.RegisterConsumer<MessageHandlerConsumer<T>, MessageHandlerConsumerDefinition<MessageHandlerConsumer<T>, T>>(registrar);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T>(this IServiceCollection collection, Func<T, Task> handler)
         where T : class
     {
         return RegisterHandler(collection, new DependencyInjectionContainerRegistrar(collection), handler);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T>(this IServiceCollection collection, IContainerRegistrar registrar, Func<T, Task> handler)
         where T : class
     {
@@ -60,6 +106,14 @@ public static class DependencyInjectionHandlerRegistrationExtensions
         return collection.RegisterConsumer<MessageHandlerConsumer<T>, MessageHandlerConsumerDefinition<MessageHandlerConsumer<T>, T>>(registrar);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="TResponse">The t response type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T, TResponse>(this IServiceCollection collection, Func<ConsumeContext<T>, Task<TResponse>> handler)
         where T : class
         where TResponse : class
@@ -67,6 +121,15 @@ public static class DependencyInjectionHandlerRegistrationExtensions
         return RegisterHandler(collection, new DependencyInjectionContainerRegistrar(collection), handler);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="TResponse">The t response type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T, TResponse>(this IServiceCollection collection, IContainerRegistrar registrar,
         Func<ConsumeContext<T>, Task<TResponse>> handler)
         where T : class
@@ -84,6 +147,14 @@ public static class DependencyInjectionHandlerRegistrationExtensions
             .RegisterConsumer<RequestHandlerConsumer<T, TResponse>, MessageHandlerConsumerDefinition<RequestHandlerConsumer<T, TResponse>, T>>(registrar);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="TResponse">The t response type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T, TResponse>(this IServiceCollection collection, Func<T, Task<TResponse>> handler)
         where T : class
         where TResponse : class
@@ -91,6 +162,15 @@ public static class DependencyInjectionHandlerRegistrationExtensions
         return RegisterHandler(collection, new DependencyInjectionContainerRegistrar(collection), handler);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="TResponse">The t response type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T, TResponse>(this IServiceCollection collection, IContainerRegistrar registrar,
         Func<T, Task<TResponse>> handler)
         where T : class
@@ -108,6 +188,14 @@ public static class DependencyInjectionHandlerRegistrationExtensions
             .RegisterConsumer<RequestHandlerConsumer<T, TResponse>, MessageHandlerConsumerDefinition<RequestHandlerConsumer<T, TResponse>, T>>(registrar);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T, T1>(this IServiceCollection collection, Func<ConsumeContext<T>, T1, Task> handler)
         where T : class
         where T1 : class
@@ -115,6 +203,15 @@ public static class DependencyInjectionHandlerRegistrationExtensions
         return RegisterHandler(collection, new DependencyInjectionContainerRegistrar(collection), handler);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T, T1>(this IServiceCollection collection, IContainerRegistrar registrar,
         Func<ConsumeContext<T>, T1, Task> handler)
         where T : class
@@ -128,6 +225,14 @@ public static class DependencyInjectionHandlerRegistrationExtensions
         return collection.RegisterConsumer<MessageHandlerConsumer<T, T1>, MessageHandlerConsumerDefinition<MessageHandlerConsumer<T, T1>, T>>(registrar);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T, T1>(this IServiceCollection collection, Func<T, T1, Task> handler)
         where T : class
         where T1 : class
@@ -135,6 +240,15 @@ public static class DependencyInjectionHandlerRegistrationExtensions
         return RegisterHandler(collection, new DependencyInjectionContainerRegistrar(collection), handler);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T, T1>(this IServiceCollection collection, IContainerRegistrar registrar, Func<T, T1, Task> handler)
         where T : class
         where T1 : class
@@ -147,6 +261,15 @@ public static class DependencyInjectionHandlerRegistrationExtensions
         return collection.RegisterConsumer<MessageHandlerConsumer<T, T1>, MessageHandlerConsumerDefinition<MessageHandlerConsumer<T, T1>, T>>(registrar);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <typeparam name="TResponse">The t response type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T, T1, TResponse>(this IServiceCollection collection, Func<ConsumeContext<T>, T1, Task<TResponse>>
         handler)
         where T : class
@@ -156,6 +279,16 @@ public static class DependencyInjectionHandlerRegistrationExtensions
         return RegisterHandler(collection, new DependencyInjectionContainerRegistrar(collection), handler);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <typeparam name="TResponse">The t response type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T, T1, TResponse>(this IServiceCollection collection, IContainerRegistrar registrar,
         Func<ConsumeContext<T>, T1, Task<TResponse>> handler)
         where T : class
@@ -175,6 +308,15 @@ public static class DependencyInjectionHandlerRegistrationExtensions
                 MessageHandlerConsumerDefinition<RequestHandlerConsumer<T, T1, TResponse>, T>>(registrar);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <typeparam name="TResponse">The t response type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T, T1, TResponse>(this IServiceCollection collection, Func<T, T1, Task<TResponse>> handler)
         where T : class
         where T1 : class
@@ -183,6 +325,16 @@ public static class DependencyInjectionHandlerRegistrationExtensions
         return RegisterHandler(collection, new DependencyInjectionContainerRegistrar(collection), handler);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <typeparam name="TResponse">The t response type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T, T1, TResponse>(this IServiceCollection collection, IContainerRegistrar registrar,
         Func<T, T1, Task<TResponse>> handler)
         where T : class
@@ -202,6 +354,15 @@ public static class DependencyInjectionHandlerRegistrationExtensions
                 MessageHandlerConsumerDefinition<RequestHandlerConsumer<T, T1, TResponse>, T>>(registrar);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <typeparam name="T2">The t2 type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T, T1, T2>(this IServiceCollection collection, Func<ConsumeContext<T>, T1, T2, Task> handler)
         where T : class
         where T1 : class
@@ -210,6 +371,16 @@ public static class DependencyInjectionHandlerRegistrationExtensions
         return RegisterHandler(collection, new DependencyInjectionContainerRegistrar(collection), handler);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <typeparam name="T2">The t2 type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T, T1, T2>(this IServiceCollection collection, IContainerRegistrar registrar,
         Func<ConsumeContext<T>, T1, T2, Task> handler)
         where T : class
@@ -225,6 +396,15 @@ public static class DependencyInjectionHandlerRegistrationExtensions
             MessageHandlerConsumerDefinition<MessageHandlerConsumer<T, T1, T2>, T>>(registrar);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <typeparam name="T2">The t2 type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T, T1, T2>(this IServiceCollection collection, Func<T, T1, T2, Task> handler)
         where T : class
         where T1 : class
@@ -233,6 +413,16 @@ public static class DependencyInjectionHandlerRegistrationExtensions
         return RegisterHandler(collection, new DependencyInjectionContainerRegistrar(collection), handler);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <typeparam name="T2">The t2 type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T, T1, T2>(this IServiceCollection collection, IContainerRegistrar registrar, Func<T, T1, T2, Task>
         handler)
         where T : class
@@ -248,6 +438,16 @@ public static class DependencyInjectionHandlerRegistrationExtensions
             MessageHandlerConsumerDefinition<MessageHandlerConsumer<T, T1, T2>, T>>(registrar);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <typeparam name="T2">The t2 type.</typeparam>
+    /// <typeparam name="TResponse">The t response type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T, T1, T2, TResponse>(this IServiceCollection collection, Func<ConsumeContext<T>, T1, T2,
             Task<TResponse>>
         handler)
@@ -259,6 +459,17 @@ public static class DependencyInjectionHandlerRegistrationExtensions
         return RegisterHandler(collection, new DependencyInjectionContainerRegistrar(collection), handler);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <typeparam name="T2">The t2 type.</typeparam>
+    /// <typeparam name="TResponse">The t response type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T, T1, T2, TResponse>(this IServiceCollection collection, IContainerRegistrar registrar,
         Func<ConsumeContext<T>, T1, T2, Task<TResponse>> handler)
         where T : class
@@ -279,6 +490,16 @@ public static class DependencyInjectionHandlerRegistrationExtensions
                 MessageHandlerConsumerDefinition<RequestHandlerConsumer<T, T1, T2, TResponse>, T>>(registrar);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <typeparam name="T2">The t2 type.</typeparam>
+    /// <typeparam name="TResponse">The t response type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T, T1, T2, TResponse>(this IServiceCollection collection, Func<T, T1, T2, Task<TResponse>> handler)
         where T : class
         where T1 : class
@@ -288,6 +509,17 @@ public static class DependencyInjectionHandlerRegistrationExtensions
         return RegisterHandler(collection, new DependencyInjectionContainerRegistrar(collection), handler);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <typeparam name="T2">The t2 type.</typeparam>
+    /// <typeparam name="TResponse">The t response type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T, T1, T2, TResponse>(this IServiceCollection collection, IContainerRegistrar registrar,
         Func<T, T1, T2, Task<TResponse>> handler)
         where T : class
@@ -308,6 +540,16 @@ public static class DependencyInjectionHandlerRegistrationExtensions
                 MessageHandlerConsumerDefinition<RequestHandlerConsumer<T, T1, T2, TResponse>, T>>(registrar);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <typeparam name="T2">The t2 type.</typeparam>
+    /// <typeparam name="T3">The t3 type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T, T1, T2, T3>(this IServiceCollection collection, Func<ConsumeContext<T>, T1, T2, T3, Task>
         handler)
         where T : class
@@ -318,6 +560,17 @@ public static class DependencyInjectionHandlerRegistrationExtensions
         return RegisterHandler(collection, new DependencyInjectionContainerRegistrar(collection), handler);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <typeparam name="T2">The t2 type.</typeparam>
+    /// <typeparam name="T3">The t3 type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T, T1, T2, T3>(this IServiceCollection collection, IContainerRegistrar registrar,
         Func<ConsumeContext<T>, T1, T2, T3, Task> handler)
         where T : class
@@ -334,6 +587,16 @@ public static class DependencyInjectionHandlerRegistrationExtensions
             MessageHandlerConsumerDefinition<MessageHandlerConsumer<T, T1, T2, T3>, T>>(registrar);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <typeparam name="T2">The t2 type.</typeparam>
+    /// <typeparam name="T3">The t3 type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T, T1, T2, T3>(this IServiceCollection collection, Func<T, T1, T2, T3, Task> handler)
         where T : class
         where T1 : class
@@ -343,6 +606,17 @@ public static class DependencyInjectionHandlerRegistrationExtensions
         return RegisterHandler(collection, new DependencyInjectionContainerRegistrar(collection), handler);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <typeparam name="T2">The t2 type.</typeparam>
+    /// <typeparam name="T3">The t3 type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T, T1, T2, T3>(this IServiceCollection collection, IContainerRegistrar registrar, Func<T, T1, T2,
             T3,
             Task>
@@ -361,6 +635,17 @@ public static class DependencyInjectionHandlerRegistrationExtensions
             MessageHandlerConsumerDefinition<MessageHandlerConsumer<T, T1, T2, T3>, T>>(registrar);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <typeparam name="T2">The t2 type.</typeparam>
+    /// <typeparam name="T3">The t3 type.</typeparam>
+    /// <typeparam name="TResponse">The t response type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T, T1, T2, T3, TResponse>(this IServiceCollection collection, Func<ConsumeContext<T>, T1, T2, T3,
             Task<TResponse>>
         handler)
@@ -373,6 +658,18 @@ public static class DependencyInjectionHandlerRegistrationExtensions
         return RegisterHandler(collection, new DependencyInjectionContainerRegistrar(collection), handler);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <typeparam name="T2">The t2 type.</typeparam>
+    /// <typeparam name="T3">The t3 type.</typeparam>
+    /// <typeparam name="TResponse">The t response type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T, T1, T2, T3, TResponse>(this IServiceCollection collection, IContainerRegistrar registrar,
         Func<ConsumeContext<T>, T1, T2, T3, Task<TResponse>> handler)
         where T : class
@@ -394,6 +691,17 @@ public static class DependencyInjectionHandlerRegistrationExtensions
                 MessageHandlerConsumerDefinition<RequestHandlerConsumer<T, T1, T2, T3, TResponse>, T>>(registrar);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <typeparam name="T2">The t2 type.</typeparam>
+    /// <typeparam name="T3">The t3 type.</typeparam>
+    /// <typeparam name="TResponse">The t response type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T, T1, T2, T3, TResponse>(this IServiceCollection collection, Func<T, T1, T2, T3, Task<TResponse>>
         handler)
         where T : class
@@ -405,6 +713,18 @@ public static class DependencyInjectionHandlerRegistrationExtensions
         return RegisterHandler(collection, new DependencyInjectionContainerRegistrar(collection), handler);
     }
 
+    /// <summary>
+    /// Performs the register handler operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="T1">The t1 type.</typeparam>
+    /// <typeparam name="T2">The t2 type.</typeparam>
+    /// <typeparam name="T3">The t3 type.</typeparam>
+    /// <typeparam name="TResponse">The t response type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
+    /// <param name="handler">The handler value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IConsumerRegistration RegisterHandler<T, T1, T2, T3, TResponse>(this IServiceCollection collection, IContainerRegistrar registrar,
         Func<T, T1, T2, T3, Task<TResponse>> handler)
         where T : class

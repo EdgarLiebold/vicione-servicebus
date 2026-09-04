@@ -20,6 +20,13 @@ public class SystemTextJsonBodyMessageSerializer :
     readonly RawSerializerOptions? _rawOptions;
     object? _message;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="envelope">The envelope value.</param>
+    /// <param name="contentType">The content type value.</param>
+    /// <param name="options">The options value.</param>
+    /// <param name="messageTypes">The message types value.</param>
     public SystemTextJsonBodyMessageSerializer(MessageEnvelope envelope, ContentType contentType, JsonSerializerOptions options,
         string[]? messageTypes = null)
     {
@@ -32,6 +39,14 @@ public class SystemTextJsonBodyMessageSerializer :
         ContentType = contentType;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="message">The message value.</param>
+    /// <param name="contentType">The content type value.</param>
+    /// <param name="options">The options value.</param>
+    /// <param name="rawOptions">The raw options value.</param>
+    /// <param name="messageTypes">The message types value.</param>
     public SystemTextJsonBodyMessageSerializer(object message, ContentType contentType, JsonSerializerOptions options, RawSerializerOptions rawOptions,
         string[]? messageTypes = null)
     {
@@ -50,8 +65,17 @@ public class SystemTextJsonBodyMessageSerializer :
         ContentType = contentType;
     }
 
+    /// <summary>
+    /// Gets the content type value.
+    /// </summary>
     public ContentType ContentType { get; }
 
+    /// <summary>
+    /// Gets message body.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public MessageBody GetMessageBody<T>(SendContext<T> context)
         where T : class
     {
@@ -71,6 +95,10 @@ public class SystemTextJsonBodyMessageSerializer :
         return new SystemTextJsonMessageBody<T>(context, _options, _envelope);
     }
 
+    /// <summary>
+    /// Performs the overlay operation.
+    /// </summary>
+    /// <param name="message">The message value.</param>
     public void Overlay(object message)
     {
         if (_message is JsonElement element)

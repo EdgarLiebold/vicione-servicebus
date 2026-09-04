@@ -1,7 +1,10 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Defines the contract for exception receive context.
+/// </summary>
 public interface ExceptionReceiveContext :
     ReceiveContext
 {

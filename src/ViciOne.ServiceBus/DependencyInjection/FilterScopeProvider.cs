@@ -17,16 +17,29 @@ public class FilterScopeProvider<TFilter, TContext> :
 {
     readonly IServiceProvider _serviceProvider;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="serviceProvider">The service provider value.</param>
     public FilterScopeProvider(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
     }
 
+    /// <summary>
+    /// Performs the create operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public IFilterScopeContext<TContext> Create(TContext context)
     {
         return new DependencyInjectionFilterScopeContext(context, _serviceProvider);
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         context.Add("filter", TypeCache<TFilter>.ShortName);

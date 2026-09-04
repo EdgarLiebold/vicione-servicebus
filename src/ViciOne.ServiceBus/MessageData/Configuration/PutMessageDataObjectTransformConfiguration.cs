@@ -6,6 +6,11 @@ using ViciOne.ServiceBus.Initializers.PropertyProviders;
 
 namespace ViciOne.ServiceBus.MessageData.Configuration;
 
+/// <summary>
+/// Provides a put message data object transform configuration implementation.
+/// </summary>
+/// <typeparam name="TInput">The t input type.</typeparam>
+/// <typeparam name="TProperty">The t property type.</typeparam>
 public class PutMessageDataObjectTransformConfiguration<TInput, TProperty> :
     IMessageDataTransformConfiguration<TInput>
     where TInput : class
@@ -14,6 +19,13 @@ public class PutMessageDataObjectTransformConfiguration<TInput, TProperty> :
     readonly PropertyInfo _property;
     readonly PutMessageDataTransformSpecification<TProperty> _transformConfigurator;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="repository">The repository value.</param>
+    /// <param name="policy">The policy value.</param>
+    /// <param name="knownTypes">The known types value.</param>
+    /// <param name="property">The property value.</param>
     public PutMessageDataObjectTransformConfiguration(IMessageDataRepository repository, MessageDataPolicy policy, IEnumerable<Type> knownTypes,
         PropertyInfo property)
     {
@@ -22,6 +34,10 @@ public class PutMessageDataObjectTransformConfiguration<TInput, TProperty> :
         _transformConfigurator = new PutMessageDataTransformSpecification<TProperty>(repository, policy, knownTypes);
     }
 
+    /// <summary>
+    /// Applies this specification to the target builder.
+    /// </summary>
+    /// <param name="configurator">The configurator value.</param>
     public void Apply(ITransformConfigurator<TInput> configurator)
     {
         if (_transformConfigurator.TryGetConverter(out IPropertyConverter<TProperty, TProperty>? converter))

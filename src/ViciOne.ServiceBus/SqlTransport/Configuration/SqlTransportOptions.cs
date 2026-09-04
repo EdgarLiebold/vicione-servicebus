@@ -1,17 +1,47 @@
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Providers.Transports;
 
+/// <summary>
+/// Defines configuration options for sql transport.
+/// </summary>
 public class SqlTransportOptions
 {
+    /// <summary>
+    /// Gets or sets the host value.
+    /// </summary>
     public string? Host { get; set; }
+    /// <summary>
+    /// Gets or sets the port value.
+    /// </summary>
     public int? Port { get; set; }
+    /// <summary>
+    /// Gets or sets the database value.
+    /// </summary>
     public string? Database { get; set; }
+    /// <summary>
+    /// Gets or sets the schema value.
+    /// </summary>
     public string? Schema { get; set; }
+    /// <summary>
+    /// Gets or sets the role value.
+    /// </summary>
     public string? Role { get; set; }
+    /// <summary>
+    /// Gets or sets the username value.
+    /// </summary>
     public string? Username { get; set; }
+    /// <summary>
+    /// Gets or sets the password value.
+    /// </summary>
     public string? Password { get; set; }
 
+    /// <summary>
+    /// Gets or sets the admin username value.
+    /// </summary>
     public string? AdminUsername { get; set; }
+    /// <summary>
+    /// Gets or sets the admin password value.
+    /// </summary>
     public string? AdminPassword { get; set; }
 
     /// <summary>

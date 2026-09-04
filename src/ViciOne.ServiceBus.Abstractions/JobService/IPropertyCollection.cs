@@ -1,8 +1,11 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.JobService;
 
+/// <summary>
+/// Defines the contract for property collection.
+/// </summary>
 public interface IPropertyCollection :
     IReadOnlyDictionary<string, object>
 {

@@ -5,6 +5,9 @@ using ViciOne.ServiceBus.Initializers;
 
 namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides extension methods for endpoint convention.
+/// </summary>
 public static class EndpointConventionExtensions
 {
     /// <summary>

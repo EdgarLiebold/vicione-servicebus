@@ -8,6 +8,10 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides an outbox consume pipe specification observer implementation.
+/// </summary>
+/// <typeparam name="TContext">The t context type.</typeparam>
 public class OutboxConsumePipeSpecificationObserver<TContext> :
     IConsumerConfigurationObserver,
     ISagaConfigurationObserver,
@@ -20,6 +24,11 @@ public class OutboxConsumePipeSpecificationObserver<TContext> :
     readonly ISetScopedConsumeContext _setter;
     readonly string _busKey;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="context">The operation context.</param>
     public OutboxConsumePipeSpecificationObserver(IReceiveEndpointConfigurator configurator, IRegistrationContext context)
         : this(configurator, context, context as ISetScopedConsumeContext ?? throw new ArgumentException(nameof(context)),
             context is IBusRegistrationIdentity identity ? identity.BusKey : "default")
@@ -38,6 +47,13 @@ public class OutboxConsumePipeSpecificationObserver<TContext> :
         MessageDeliveryTimeout = TimeSpan.FromSeconds(30);
     }
 
+    /// <summary>
+    /// Performs the activity configured operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TArguments">The t arguments type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="compensateAddress">The compensate address value.</param>
     public void ActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator, Uri compensateAddress)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
@@ -45,6 +61,12 @@ public class OutboxConsumePipeSpecificationObserver<TContext> :
         configurator.RoutingSlip(e => AddScopedFilter<TActivity, RoutingSlip>(e));
     }
 
+    /// <summary>
+    /// Performs the execute activity configured operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TArguments">The t arguments type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
     public void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
@@ -52,6 +74,12 @@ public class OutboxConsumePipeSpecificationObserver<TContext> :
         configurator.RoutingSlip(e => AddScopedFilter<TActivity, RoutingSlip>(e));
     }
 
+    /// <summary>
+    /// Performs the compensate activity configured operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TLog">The t log type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
     public void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityConfigurator<TActivity, TLog> configurator)
         where TActivity : class, ICompensateActivity<TLog>
         where TLog : class
@@ -59,11 +87,22 @@ public class OutboxConsumePipeSpecificationObserver<TContext> :
         configurator.RoutingSlip(e => AddScopedFilter<TActivity, RoutingSlip>(e));
     }
 
+    /// <summary>
+    /// Consumes r configured.
+    /// </summary>
+    /// <typeparam name="TConsumer">The t consumer type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
     public void ConsumerConfigured<TConsumer>(IConsumerConfigurator<TConsumer> configurator)
         where TConsumer : class
     {
     }
 
+    /// <summary>
+    /// Consumes r message configured.
+    /// </summary>
+    /// <typeparam name="TConsumer">The t consumer type.</typeparam>
+    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
     public void ConsumerMessageConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, TMessage> configurator)
         where TConsumer : class
         where TMessage : class
@@ -74,19 +113,42 @@ public class OutboxConsumePipeSpecificationObserver<TContext> :
         AddScopedFilter<TConsumer, TMessage>(messageConfigurator);
     }
 
+    /// <summary>
+    /// Gets or sets the message delivery limit value.
+    /// </summary>
     public int MessageDeliveryLimit { get; set; } = 1;
+    /// <summary>
+    /// Gets or sets the message delivery timeout value.
+    /// </summary>
     public TimeSpan MessageDeliveryTimeout { get; set; } = TimeSpan.FromSeconds(10);
 
+    /// <summary>
+    /// Performs the saga configured operation.
+    /// </summary>
+    /// <typeparam name="TSaga">The t saga type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
     public void SagaConfigured<TSaga>(ISagaConfigurator<TSaga> configurator)
         where TSaga : class, ISaga
     {
     }
 
+    /// <summary>
+    /// Performs the state machine saga configured operation.
+    /// </summary>
+    /// <typeparam name="TInstance">The t instance type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="stateMachine">The state machine value.</param>
     public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, SagaStateMachine<TInstance> stateMachine)
         where TInstance : class, ISaga, SagaStateMachineInstance
     {
     }
 
+    /// <summary>
+    /// Performs the saga message configured operation.
+    /// </summary>
+    /// <typeparam name="TSaga">The t saga type.</typeparam>
+    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
     public void SagaMessageConfigured<TSaga, TMessage>(ISagaMessageConfigurator<TSaga, TMessage> configurator)
         where TSaga : class, ISaga
         where TMessage : class

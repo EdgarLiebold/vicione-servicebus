@@ -5,18 +5,54 @@ using ViciOne.ServiceBus.Contracts.JobService;
 #nullable enable
 namespace ViciOne.ServiceBus.JobService.Messages;
 
+/// <summary>
+/// Provides a start job attempt command implementation.
+/// </summary>
 public class StartJobAttemptCommand :
     StartJobAttempt
 {
+    /// <summary>
+    /// Gets or sets the job id value.
+    /// </summary>
     public Guid JobId { get; set; }
+    /// <summary>
+    /// Gets or sets the attempt id value.
+    /// </summary>
     public Guid AttemptId { get; set; }
+    /// <summary>
+    /// Gets or sets the retry attempt value.
+    /// </summary>
     public int RetryAttempt { get; set; }
+    /// <summary>
+    /// Gets or sets the service address value.
+    /// </summary>
     public Uri ServiceAddress { get; set; } = null!;
+    /// <summary>
+    /// Gets or sets the instance address value.
+    /// </summary>
     public Uri InstanceAddress { get; set; } = null!;
+    /// <summary>
+    /// Gets or sets the job value.
+    /// </summary>
     public Dictionary<string, object> Job { get; set; } = null!;
+    /// <summary>
+    /// Gets or sets the job type id value.
+    /// </summary>
     public Guid JobTypeId { get; set; }
+    /// <summary>
+    /// Gets or sets the last progress value value.
+    /// </summary>
     public long? LastProgressValue { get; set; }
+    /// <summary>
+    /// Gets or sets the last progress limit value.
+    /// </summary>
     public long? LastProgressLimit { get; set; }
+    /// <summary>
+    /// Gets or sets the job state value.
+    /// </summary>
     public Dictionary<string, object>? JobState { get; set; } = null!;
+    /// <summary>
+    /// Gets or sets the job properties value.
+    /// </summary>
     public Dictionary<string, object>? JobProperties { get; set; }
 }

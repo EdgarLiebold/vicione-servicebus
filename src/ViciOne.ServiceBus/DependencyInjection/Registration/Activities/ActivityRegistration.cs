@@ -6,6 +6,12 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.DependencyInjection.Registration;
 
+/// <summary>
+/// Provides an activity registration implementation.
+/// </summary>
+/// <typeparam name="TActivity">The t activity type.</typeparam>
+/// <typeparam name="TArguments">The t arguments type.</typeparam>
+/// <typeparam name="TLog">The t log type.</typeparam>
 public class ActivityRegistration<TActivity, TArguments, TLog> :
     IActivityRegistration
     where TActivity : class, IActivity<TArguments, TLog>
@@ -17,6 +23,10 @@ public class ActivityRegistration<TActivity, TArguments, TLog> :
     readonly IContainerSelector _selector;
     IActivityDefinition<TActivity, TArguments, TLog> _definition = null!;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="selector">The selector value.</param>
     public ActivityRegistration(IContainerSelector selector)
     {
         _selector = selector;
@@ -25,10 +35,22 @@ public class ActivityRegistration<TActivity, TArguments, TLog> :
         IncludeInConfigureEndpoints = !Type.HasAttribute<ExcludeFromConfigureEndpointsAttribute>();
     }
 
+    /// <summary>
+    /// Gets the type value.
+    /// </summary>
     public Type Type => typeof(TActivity);
 
+    /// <summary>
+    /// Gets or sets the include in configure endpoints value.
+    /// </summary>
     public bool IncludeInConfigureEndpoints { get; set; }
 
+    /// <summary>
+    /// Adds configure action to the configuration.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="TA">The ta type.</typeparam>
+    /// <param name="configure">The configuration callback.</param>
     public void AddConfigureAction<T, TA>(Action<IRegistrationContext, IExecuteActivityConfigurator<T, TA>>? configure)
         where T : class, IExecuteActivity<TA>
         where TA : class
@@ -37,6 +59,12 @@ public class ActivityRegistration<TActivity, TArguments, TLog> :
             _executeActions.Add(action);
     }
 
+    /// <summary>
+    /// Adds configure action to the configuration.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="TL">The tl type.</typeparam>
+    /// <param name="configure">The configuration callback.</param>
     public void AddConfigureAction<T, TL>(Action<IRegistrationContext, ICompensateActivityConfigurator<T, TL>>? configure)
         where T : class, ICompensateActivity<TL>
         where TL : class
@@ -45,6 +73,12 @@ public class ActivityRegistration<TActivity, TArguments, TLog> :
             _compensateActions.Add(action);
     }
 
+    /// <summary>
+    /// Performs the configure operation.
+    /// </summary>
+    /// <param name="executeEndpointConfigurator">The execute endpoint configurator value.</param>
+    /// <param name="compensateEndpointConfigurator">The compensate endpoint configurator value.</param>
+    /// <param name="context">The operation context.</param>
     public void Configure(IReceiveEndpointConfigurator executeEndpointConfigurator, IReceiveEndpointConfigurator compensateEndpointConfigurator,
         IRegistrationContext context)
     {
@@ -58,6 +92,11 @@ public class ActivityRegistration<TActivity, TArguments, TLog> :
         return GetActivityDefinition(context);
     }
 
+    /// <summary>
+    /// Configures compensate.
+    /// </summary>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="context">The operation context.</param>
     public void ConfigureCompensate(IReceiveEndpointConfigurator configurator, IRegistrationContext context)
     {
         var activityScopeProvider = new CompensateActivityScopeProvider<TActivity, TLog>(context);
@@ -80,6 +119,12 @@ public class ActivityRegistration<TActivity, TArguments, TLog> :
         configurator.AddEndpointSpecification(specification);
     }
 
+    /// <summary>
+    /// Configures execute.
+    /// </summary>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <param name="compensateAddress">The compensate address value.</param>
     public void ConfigureExecute(IReceiveEndpointConfigurator configurator, IRegistrationContext context,
         Uri compensateAddress)
     {

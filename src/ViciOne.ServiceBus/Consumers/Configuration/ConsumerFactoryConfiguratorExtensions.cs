@@ -6,8 +6,17 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for consumer factory configurator.
+/// </summary>
 public static class ConsumerFactoryConfiguratorExtensions
 {
+    /// <summary>
+    /// Validates consumer.
+    /// </summary>
+    /// <typeparam name="TConsumer">The t consumer type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IEnumerable<ValidationResult> ValidateConsumer<TConsumer>(this ISpecification? configurator)
         where TConsumer : class
     {
@@ -32,6 +41,12 @@ public static class ConsumerFactoryConfiguratorExtensions
             yield return message;
     }
 
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <typeparam name="TConsumer">The t consumer type.</typeparam>
+    /// <param name="consumerFactory">The consumer factory value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IEnumerable<ValidationResult> Validate<TConsumer>(this IConsumerFactory<TConsumer> consumerFactory)
         where TConsumer : class
     {

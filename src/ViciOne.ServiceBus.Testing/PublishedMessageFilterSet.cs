@@ -2,9 +2,17 @@ using System;
 
 namespace ViciOne.ServiceBus.Testing;
 
+/// <summary>
+/// Provides a published message filter set implementation.
+/// </summary>
 public class PublishedMessageFilterSet :
     FilterSet<IPublishedMessage>
 {
+    /// <summary>
+    /// Performs the add operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     public PublishedMessageFilterSet Add<T>()
         where T : class
     {
@@ -18,6 +26,12 @@ public class PublishedMessageFilterSet :
         return this;
     }
 
+    /// <summary>
+    /// Performs the add operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="filter">The filter value.</param>
+    /// <returns>The result of the operation.</returns>
     public PublishedMessageFilterSet Add<T>(FilterDelegate<IPublishedMessage<T>> filter)
         where T : class
     {

@@ -1,9 +1,7 @@
 using System;
-using System.ComponentModel;
 
-namespace ViciOne.ServiceBus.Diagnostics;
+namespace ViciOne.ServiceBus.Advanced.Serialization;
 /// <summary>Renders bounded values for ServiceBus-owned diagnostics.</summary>
-[EditorBrowsable(EditorBrowsableState.Never)]
 public interface IMessageDiagnosticRedactor
 {
     /// <summary>Renders a value without exposing classified content or invoking application formatting code.</summary>

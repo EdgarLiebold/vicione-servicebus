@@ -11,7 +11,7 @@
     <!-- Dedicated infrastructure tests exercise internal behavior without making test-only
          injection seams part of the reusable public surface. -->
     <InternalsVisibleTo Include="ViciOne.ServiceBus.Tests.Infrastructure.Tests" />
-    <InternalsVisibleTo Include="ViciOne.ServiceBus.ActiveMqTransport.Tests" />
+    <InternalsVisibleTo Include="ViciOne.ServiceBus.ActiveMq.Tests" />
   </ItemGroup>
 
   <ItemGroup>

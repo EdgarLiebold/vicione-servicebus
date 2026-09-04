@@ -16,6 +16,9 @@ using ViciOne.ServiceBus.Transports;
 #nullable enable
 namespace ViciOne.ServiceBus.Logging;
 
+/// <summary>
+/// Provides extension methods for log context instrumentation.
+/// </summary>
 public static class LogContextInstrumentationExtensions
 {
     private static readonly ConditionalWeakTable<ILogContext, LogContextInstrumentationState> LogContextStates = new();
@@ -25,6 +28,12 @@ public static class LogContextInstrumentationExtensions
 
     private static LogContextInstrumentationState? _fallbackState;
 
+    /// <summary>
+    /// Starts receive instrument.
+    /// </summary>
+    /// <param name="logContext">The log context value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public static MetricOperation? StartReceiveInstrument(this ILogContext logContext, ReceiveContext context) =>
         TryStart(logContext, context, state =>
         {
@@ -48,12 +57,27 @@ public static class LogContextInstrumentationExtensions
             });
         });
 
+    /// <summary>
+    /// Starts handler instrument.
+    /// </summary>
+    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <param name="logContext">The log context value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public static MetricOperation? StartHandlerInstrument<TMessage>(
         this ILogContext logContext,
         ConsumeContext<TMessage> context)
         where TMessage : class =>
         StartProcess(logContext, context, "handle", "handler");
 
+    /// <summary>
+    /// Starts saga instrument.
+    /// </summary>
+    /// <typeparam name="TSaga">The t saga type.</typeparam>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="logContext">The log context value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public static MetricOperation? StartSagaInstrument<TSaga, T>(
         this ILogContext logContext,
         SagaConsumeContext<TSaga, T> context)
@@ -61,6 +85,14 @@ public static class LogContextInstrumentationExtensions
         where TSaga : class, ISaga =>
         StartProcess(logContext, context, "saga", "saga");
 
+    /// <summary>
+    /// Starts saga state machine instrument.
+    /// </summary>
+    /// <typeparam name="TSaga">The t saga type.</typeparam>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="logContext">The log context value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public static MetricOperation? StartSagaStateMachineInstrument<TSaga, T>(
         this ILogContext logContext,
         BehaviorContext<TSaga, T> context)
@@ -68,6 +100,14 @@ public static class LogContextInstrumentationExtensions
         where TSaga : class, SagaStateMachineInstance =>
         StartProcess(logContext, context, "saga", "saga_state_machine");
 
+    /// <summary>
+    /// Starts consume instrument.
+    /// </summary>
+    /// <typeparam name="TConsumer">The t consumer type.</typeparam>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="logContext">The log context value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public static MetricOperation? StartConsumeInstrument<TConsumer, T>(
         this ILogContext logContext,
         ConsumeContext<T> context)
@@ -78,6 +118,14 @@ public static class LogContextInstrumentationExtensions
             ConsumerProcessorIdentity<TConsumer>.OperationName,
             ConsumerProcessorIdentity<TConsumer>.ProcessorKind);
 
+    /// <summary>
+    /// Starts activity execute instrument.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TArguments">The t arguments type.</typeparam>
+    /// <param name="logContext">The log context value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public static MetricOperation? StartActivityExecuteInstrument<TActivity, TArguments>(
         this ILogContext logContext,
         ConsumeContext<Courier.Contracts.RoutingSlip> context)
@@ -85,6 +133,14 @@ public static class LogContextInstrumentationExtensions
         where TArguments : class =>
         StartProcess(logContext, context, "execute", "courier_execute");
 
+    /// <summary>
+    /// Starts activity compensate instrument.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TLog">The t log type.</typeparam>
+    /// <param name="logContext">The log context value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public static MetricOperation? StartActivityCompensateInstrument<TActivity, TLog>(
         this ILogContext logContext,
         ConsumeContext<Courier.Contracts.RoutingSlip> context)
@@ -92,6 +148,14 @@ public static class LogContextInstrumentationExtensions
         where TLog : class =>
         StartProcess(logContext, context, "compensate", "courier_compensate");
 
+    /// <summary>
+    /// Starts send instrument.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="logContext">The log context value.</param>
+    /// <param name="transportContext">The transport context value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public static MetricOperation? StartSendInstrument<T>(
         this ILogContext logContext,
         SendTransportContext transportContext,
@@ -119,9 +183,19 @@ public static class LogContextInstrumentationExtensions
             });
         });
 
+    /// <summary>
+    /// Starts outbox enqueue instrument.
+    /// </summary>
+    /// <param name="logContext">The log context value.</param>
+    /// <returns>The result of the operation.</returns>
     public static MetricOperation? StartOutboxEnqueueInstrument(this ILogContext logContext) =>
         StartOutbox(logContext, "enqueue");
 
+    /// <summary>
+    /// Starts outbox delivery instrument.
+    /// </summary>
+    /// <param name="logContext">The log context value.</param>
+    /// <returns>The result of the operation.</returns>
     public static MetricOperation? StartOutboxDeliveryInstrument(this ILogContext logContext) =>
         StartOutbox(logContext, "deliver");
 

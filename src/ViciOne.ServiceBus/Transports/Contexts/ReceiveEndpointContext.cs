@@ -17,29 +17,68 @@ public interface ReceiveEndpointContext :
     IReceiveEndpointObserverConnector,
     IProbeSite
 {
+    /// <summary>
+    /// Gets the consumer stop timeout value.
+    /// </summary>
     TimeSpan? ConsumerStopTimeout { get; }
+    /// <summary>
+    /// Gets the stop timeout value.
+    /// </summary>
     TimeSpan? StopTimeout { get; }
 
+    /// <summary>
+    /// Gets the input address value.
+    /// </summary>
     Uri InputAddress { get; }
 
+    /// <summary>
+    /// Gets the is bus endpoint value.
+    /// </summary>
     bool IsBusEndpoint { get; }
 
+    /// <summary>
+    /// Gets the endpoint observers value.
+    /// </summary>
     IReceiveEndpointObserver EndpointObservers { get; }
 
+    /// <summary>
+    /// Gets the receive observers value.
+    /// </summary>
     IReceiveObserver ReceiveObservers { get; }
 
+    /// <summary>
+    /// Gets the transport observers value.
+    /// </summary>
     IReceiveTransportObserver TransportObservers { get; }
 
+    /// <summary>
+    /// Gets the log context value.
+    /// </summary>
     ILogContext LogContext { get; }
 
+    /// <summary>
+    /// Gets the publish value.
+    /// </summary>
     IPublishTopology Publish { get; }
 
+    /// <summary>
+    /// Gets the receive pipe value.
+    /// </summary>
     IReceivePipe ReceivePipe { get; }
 
+    /// <summary>
+    /// Gets the publish endpoint provider value.
+    /// </summary>
     IPublishEndpointProvider PublishEndpointProvider { get; }
 
+    /// <summary>
+    /// Gets the send endpoint provider value.
+    /// </summary>
     ISendEndpointProvider SendEndpointProvider { get; }
 
+    /// <summary>
+    /// Gets the message routes value.
+    /// </summary>
     IMessageRouteTable MessageRoutes { get; }
 
     /// <summary>
@@ -57,10 +96,19 @@ public interface ReceiveEndpointContext :
     /// </summary>
     bool PublishFaults { get; }
 
+    /// <summary>
+    /// Gets the prefetch count value.
+    /// </summary>
     int PrefetchCount { get; }
 
+    /// <summary>
+    /// Gets the concurrent message limit value.
+    /// </summary>
     int? ConcurrentMessageLimit { get; }
 
+    /// <summary>
+    /// Gets the serialization value.
+    /// </summary>
     ISerialization Serialization { get; }
 
     /// <summary>
@@ -72,6 +120,10 @@ public interface ReceiveEndpointContext :
     /// <returns></returns>
     Exception ConvertException(Exception exception, string message);
 
+    /// <summary>
+    /// Creates receive pipe dispatcher.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     IReceivePipeDispatcher CreateReceivePipeDispatcher();
 
     /// <summary>

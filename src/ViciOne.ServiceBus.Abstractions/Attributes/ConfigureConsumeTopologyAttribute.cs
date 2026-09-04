@@ -11,6 +11,9 @@ namespace ViciOne.ServiceBus;
 public class ConfigureConsumeTopologyAttribute :
     Attribute
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public ConfigureConsumeTopologyAttribute()
     {
         ConfigureConsumeTopology = true;
@@ -22,5 +25,8 @@ public class ConfigureConsumeTopologyAttribute :
         ConfigureConsumeTopology = configureConsumeTopology;
     }
 
+    /// <summary>
+    /// Gets the configure consume topology value.
+    /// </summary>
     public bool ConfigureConsumeTopology { get; }
 }

@@ -1,8 +1,11 @@
 using System;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for consume topology configurator.
+/// </summary>
 public interface IConsumeTopologyConfigurator :
     IConsumeTopology,
     ISpecification

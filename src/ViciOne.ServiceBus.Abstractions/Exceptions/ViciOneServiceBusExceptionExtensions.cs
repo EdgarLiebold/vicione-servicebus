@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides extension methods for vici one service bus exception.
+/// </summary>
 public static class ViciOneServiceBusExceptionExtensions
 {
     /// <summary>
@@ -26,6 +29,11 @@ public static class ViciOneServiceBusExceptionExtensions
         throw new ConfigurationException(resultList, message);
     }
 
+    /// <summary>
+    /// Performs the contains failure operation.
+    /// </summary>
+    /// <param name="results">The results value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public static bool ContainsFailure(this IEnumerable<ValidationResult> results)
     {
         return results.Any(x => x.Disposition == ValidationResultDisposition.Failure);

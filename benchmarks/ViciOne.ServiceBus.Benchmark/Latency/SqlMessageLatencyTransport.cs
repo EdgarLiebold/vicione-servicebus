@@ -37,7 +37,7 @@ public class SqlMessageLatencyTransport :
             .AddPostgresMigrationHostedService(true, true)
             .AddViciOneServiceBus(x =>
             {
-                x.AddOptions<SqlTransportOptions>().Configure(options =>
+                x.Services.AddOptions<SqlTransportOptions>().Configure(options =>
                 {
                     options.Host = _options.Host;
                     options.Database = _options.Database;

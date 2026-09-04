@@ -3,8 +3,11 @@ using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Configuration;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for vici one service bus health check options.
+/// </summary>
 public static class ViciOneServiceBusHealthCheckOptionsExtensions
 {
     /// <summary>
@@ -16,7 +19,7 @@ public static class ViciOneServiceBusHealthCheckOptionsExtensions
     public static IBusRegistrationConfigurator ConfigureHealthCheckOptions(this IBusRegistrationConfigurator configurator,
         Action<IHealthCheckOptionsConfigurator>? callback)
     {
-        configurator.AddOptions<ViciOneServiceBusHealthCheckOptions<IBus>>()
+        configurator.Services.AddOptions<ViciOneServiceBusHealthCheckOptions<IBus>>()
             .Configure(options =>
             {
                 callback?.Invoke(options);
@@ -35,7 +38,7 @@ public static class ViciOneServiceBusHealthCheckOptionsExtensions
         Action<IHealthCheckOptionsConfigurator>? callback)
         where T : class, IBus
     {
-        configurator.AddOptions<ViciOneServiceBusHealthCheckOptions<T>>()
+        configurator.Services.AddOptions<ViciOneServiceBusHealthCheckOptions<T>>()
             .Configure(options =>
             {
                 callback?.Invoke(options);

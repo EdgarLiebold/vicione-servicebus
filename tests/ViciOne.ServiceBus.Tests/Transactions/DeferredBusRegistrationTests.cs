@@ -5,6 +5,7 @@ using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Tests.InternalAccess.Internals;
 using ViciOne.ServiceBus.Tests.InternalAccess.Transactions;
 using ViciOne.ServiceBus.Transactions;
 using Xunit;
@@ -344,7 +345,7 @@ public sealed class DeferredBusRegistrationTests
         var callback = new ThrowingBusInstanceCallback(expected);
 
         ConfigurationException actual = Assert.Throws<ConfigurationException>(() =>
-            BusInstanceBuilder.Instance.GetBusInstanceType<ISecondaryBus, object>(callback));
+            BusInstanceBuilderTestDriver.GetBusInstanceType<ISecondaryBus, object>(callback));
 
         Assert.Same(expected, actual);
         Assert.Contains(

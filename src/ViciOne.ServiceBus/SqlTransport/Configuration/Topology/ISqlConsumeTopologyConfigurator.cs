@@ -1,18 +1,28 @@
 using System;
-using System.ComponentModel;
 using ViciOne.ServiceBus.SqlTransport.Configuration;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Providers.Transports;
 
+/// <summary>
+/// Defines the contract for sql consume topology configurator.
+/// </summary>
 public interface ISqlConsumeTopologyConfigurator :
     IConsumeTopologyConfigurator,
     ISqlConsumeTopology
 {
+    /// <summary>
+    /// Gets message topology.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     new ISqlMessageConsumeTopologyConfigurator<T> GetMessageTopology<T>()
         where T : class;
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    /// <summary>
+    /// Adds specification to the configuration.
+    /// </summary>
+    /// <param name="specification">The specification value.</param>
     void AddSpecification(ISqlConsumeTopologySpecification specification);
 
     /// <summary>

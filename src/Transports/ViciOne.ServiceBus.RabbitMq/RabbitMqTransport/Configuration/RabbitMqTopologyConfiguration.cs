@@ -1,0 +1,72 @@
+using System.Collections.Generic;
+using System.Linq;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.RabbitMq.Topology;
+
+namespace ViciOne.ServiceBus.RabbitMq.Configuration;
+
+/// <summary>
+/// Provides a rabbit mq topology configuration implementation.
+/// </summary>
+public class RabbitMqTopologyConfiguration :
+    IRabbitMqTopologyConfiguration
+{
+    readonly IRabbitMqConsumeTopologyConfigurator _consumeTopology;
+    readonly IMessageTopologyConfigurator _messageTopology;
+    readonly IRabbitMqPublishTopologyConfigurator _publishTopology;
+    readonly IRabbitMqSendTopologyConfigurator _sendTopology;
+
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="messageTopology">The message topology value.</param>
+    public RabbitMqTopologyConfiguration(IMessageTopologyConfigurator messageTopology)
+    {
+        _messageTopology = messageTopology;
+
+        _sendTopology = new RabbitMqSendTopology(RabbitMqEntityNameValidator.Validator);
+        _sendTopology.ConnectSendTopologyConfigurationObserver(new DelegateSendTopologyConfigurationObserver(GlobalTopology.Send));
+        _sendTopology.TryAddConvention(new RoutingKeySendTopologyConvention());
+
+        _publishTopology = new RabbitMqPublishTopology(messageTopology);
+        _publishTopology.ConnectPublishTopologyConfigurationObserver(new DelegatePublishTopologyConfigurationObserver(GlobalTopology.Publish));
+
+        var observer = new PublishToSendTopologyConfigurationObserver(_sendTopology);
+        _publishTopology.ConnectPublishTopologyConfigurationObserver(observer);
+
+        _consumeTopology = new RabbitMqConsumeTopology(messageTopology, _publishTopology);
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="topologyConfiguration">The topology configuration value.</param>
+    public RabbitMqTopologyConfiguration(IRabbitMqTopologyConfiguration topologyConfiguration)
+    {
+        _messageTopology = topologyConfiguration.Message;
+        _sendTopology = topologyConfiguration.Send;
+        _publishTopology = topologyConfiguration.Publish;
+
+        _consumeTopology = new RabbitMqConsumeTopology(topologyConfiguration.Message, topologyConfiguration.Publish);
+    }
+
+    IMessageTopologyConfigurator ITopologyConfiguration.Message => _messageTopology;
+    ISendTopologyConfigurator ITopologyConfiguration.Send => _sendTopology;
+    IPublishTopologyConfigurator ITopologyConfiguration.Publish => _publishTopology;
+    IConsumeTopologyConfigurator ITopologyConfiguration.Consume => _consumeTopology;
+
+    IRabbitMqPublishTopologyConfigurator IRabbitMqTopologyConfiguration.Publish => _publishTopology;
+    IRabbitMqSendTopologyConfigurator IRabbitMqTopologyConfiguration.Send => _sendTopology;
+    IRabbitMqConsumeTopologyConfigurator IRabbitMqTopologyConfiguration.Consume => _consumeTopology;
+
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
+    public IEnumerable<ValidationResult> Validate()
+    {
+        return _sendTopology.Validate()
+            .Concat(_publishTopology.Validate())
+            .Concat(_consumeTopology.Validate());
+    }
+}

@@ -3,10 +3,11 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Transports;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
-public class AsyncBusHandle :
+internal sealed class AsyncBusHandle :
     IAsyncBusHandle
 {
     readonly IBusDepot _depot;

@@ -2,6 +2,9 @@ using System;
 
 namespace ViciOne.ServiceBus.Contracts;
 
+/// <summary>
+/// Defines the contract for request faulted.
+/// </summary>
 public interface RequestFaulted
 {
     /// <summary>

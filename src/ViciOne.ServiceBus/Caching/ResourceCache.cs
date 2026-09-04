@@ -43,6 +43,10 @@ public sealed class ResourceCache<TValue> :
     Task _cleanupTask = Task.CompletedTask;
     bool _cleanupRunning;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="options">The options value.</param>
     public ResourceCache(ResourceCacheOptions? options = null)
     {
         _options = options ?? new ResourceCacheOptions();
@@ -58,6 +62,9 @@ public sealed class ResourceCache<TValue> :
         _cleanupTimer = _options.TimeProvider.CreateTimer(TriggerCleanup, null, _options.CleanupInterval, _options.CleanupInterval);
     }
 
+    /// <summary>
+    /// Gets the statistics value.
+    /// </summary>
     public ResourceCacheStatistics Statistics
     {
         get
@@ -134,6 +141,12 @@ public sealed class ResourceCache<TValue> :
         }
     }
 
+    /// <summary>
+    /// Gets index.
+    /// </summary>
+    /// <typeparam name="TKey">The t key type.</typeparam>
+    /// <param name="name">The name value.</param>
+    /// <returns>The result of the operation.</returns>
     public IResourceCacheIndex<TKey, TValue> GetIndex<TKey>(string name)
         where TKey : notnull
     {
@@ -217,18 +230,27 @@ public sealed class ResourceCache<TValue> :
         }
     }
 
-    public ValueTask<IReadOnlyList<TValue>> GetValuesAsync(CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Gets values.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
+    public IReadOnlyList<TValue> GetValues(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
         lock (_sync)
         {
             ThrowIfUnavailable_NoLock();
-            IReadOnlyList<TValue> values = _entries.Values.Select(x => x.Value).ToArray();
-            return ValueTask.FromResult(values);
+            return _entries.Values.Select(x => x.Value).ToArray();
         }
     }
 
+    /// <summary>
+    /// Performs the connect operation.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle Connect(IResourceCacheObserver<TValue> observer)
     {
         ArgumentNullException.ThrowIfNull(observer);
@@ -242,6 +264,11 @@ public sealed class ResourceCache<TValue> :
         return new ObserverConnectHandle(this, observer);
     }
 
+    /// <summary>
+    /// Performs the cleanup expired operation.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async ValueTask CleanupExpiredAsync(CancellationToken cancellationToken = default)
     {
         using var operation = EnterOperation();
@@ -256,6 +283,11 @@ public sealed class ResourceCache<TValue> :
         await ReleaseEntriesAsync(removed, true, cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Performs the clear operation.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async ValueTask ClearAsync(CancellationToken cancellationToken = default)
     {
         using var operation = EnterOperation();
@@ -293,6 +325,10 @@ public sealed class ResourceCache<TValue> :
         await NotifyClearedAsync(cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public ValueTask DisposeAsync()
     {
         TaskCompletionSource completion;

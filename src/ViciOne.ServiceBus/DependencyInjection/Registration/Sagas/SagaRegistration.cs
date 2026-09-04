@@ -20,6 +20,10 @@ public class SagaRegistration<TSaga> :
     readonly IContainerSelector _selector;
     ISagaDefinition<TSaga> _definition = null!;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="selector">The selector value.</param>
     public SagaRegistration(IContainerSelector selector)
     {
         _selector = selector;
@@ -27,8 +31,14 @@ public class SagaRegistration<TSaga> :
         IncludeInConfigureEndpoints = !Type.HasAttribute<ExcludeFromConfigureEndpointsAttribute>();
     }
 
+    /// <summary>
+    /// Gets the type value.
+    /// </summary>
     public Type Type => typeof(TSaga);
 
+    /// <summary>
+    /// Gets or sets the include in configure endpoints value.
+    /// </summary>
     public bool IncludeInConfigureEndpoints { get; set; }
 
     void ISagaRegistration.AddConfigureAction<T>(Action<IRegistrationContext, ISagaConfigurator<T>>? configure)

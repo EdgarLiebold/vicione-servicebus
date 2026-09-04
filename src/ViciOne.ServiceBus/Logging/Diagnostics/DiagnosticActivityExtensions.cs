@@ -6,6 +6,9 @@ using System.Runtime.CompilerServices;
 #nullable enable
 namespace ViciOne.ServiceBus.Logging;
 
+/// <summary>
+/// Provides extension methods for diagnostic activity.
+/// </summary>
 public static class DiagnosticActivityExtensions
 {
     static void SetTag(Activity activity, string key, Guid? value)
@@ -20,6 +23,11 @@ public static class DiagnosticActivityExtensions
             activity.SetTag(key, value.ToString());
     }
 
+    /// <summary>
+    /// Adds consume context tags to the configuration.
+    /// </summary>
+    /// <param name="activity">The activity value.</param>
+    /// <param name="context">The operation context.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void AddConsumeContextTags(this Activity activity, ConsumeContext context)
     {

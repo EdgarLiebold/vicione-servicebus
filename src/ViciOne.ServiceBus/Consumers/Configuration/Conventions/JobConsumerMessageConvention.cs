@@ -4,10 +4,18 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a job consumer message convention implementation.
+/// </summary>
+/// <typeparam name="T">The t type.</typeparam>
 public class JobConsumerMessageConvention<T> :
     IConsumerMessageConvention
     where T : class
 {
+    /// <summary>
+    /// Gets message types.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<IMessageInterfaceType> GetMessageTypes()
     {
         var consumerType = typeof(T);

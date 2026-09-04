@@ -4,9 +4,16 @@ using System.Threading;
 #nullable enable
 namespace ViciOne.ServiceBus.Transports.Fabric;
 
+/// <summary>
+/// Defines the contract for delivery context.
+/// </summary>
+/// <typeparam name="T">The t type.</typeparam>
 public interface DeliveryContext<T>
     where T : class
 {
+    /// <summary>
+    /// Gets the cancellation token value.
+    /// </summary>
     CancellationToken CancellationToken { get; }
 
     /// <summary>

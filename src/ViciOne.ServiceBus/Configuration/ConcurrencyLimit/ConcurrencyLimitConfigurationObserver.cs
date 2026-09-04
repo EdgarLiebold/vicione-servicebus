@@ -9,6 +9,12 @@ public class ConcurrencyLimitConfigurationObserver :
     ConfigurationObserver,
     IMessageConfigurationObserver
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="concurrentMessageLimit">The concurrent message limit value.</param>
+    /// <param name="id">The id value.</param>
     public ConcurrencyLimitConfigurationObserver(IConsumePipeConfigurator configurator, int concurrentMessageLimit, string? id = null)
         : base(configurator)
     {
@@ -17,8 +23,16 @@ public class ConcurrencyLimitConfigurationObserver :
         Connect(this);
     }
 
+    /// <summary>
+    /// Gets the limiter value.
+    /// </summary>
     public IConcurrencyLimiter Limiter { get; }
 
+    /// <summary>
+    /// Performs the message configured operation.
+    /// </summary>
+    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
     public void MessageConfigured<TMessage>(IConsumePipeConfigurator configurator)
         where TMessage : class
     {

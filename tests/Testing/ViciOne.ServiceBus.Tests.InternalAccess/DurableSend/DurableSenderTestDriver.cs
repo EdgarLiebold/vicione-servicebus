@@ -1,7 +1,6 @@
 using System.Diagnostics.Metrics;
 using Microsoft.Extensions.Logging.Abstractions;
 using ViciOne.ServiceBus.Diagnostics;
-using ViciOne.ServiceBus.DurableSend;
 
 namespace ViciOne.ServiceBus.Tests.InternalAccess.DurableSend;
 /// <summary>Signed, xUnit-free access bridge for the internal durable-sender state machines.</summary>

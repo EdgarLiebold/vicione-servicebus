@@ -3,6 +3,9 @@ using ViciOne.ServiceBus.Courier;
 
 namespace ViciOne.ServiceBus.Testing;
 
+/// <summary>
+/// Provides extension methods for activity test harness.
+/// </summary>
 public static class ActivityTestHarnessExtensions
 {
     /// <summary>

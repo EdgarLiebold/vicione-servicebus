@@ -2,6 +2,9 @@ using System;
 
 namespace ViciOne.ServiceBus.Contracts;
 
+/// <summary>
+/// Defines the contract for command context.
+/// </summary>
 public interface CommandContext :
     PipeContext
 {
@@ -12,6 +15,10 @@ public interface CommandContext :
 }
 
 
+/// <summary>
+/// Defines the contract for command context.
+/// </summary>
+/// <typeparam name="T">The t type.</typeparam>
 public interface CommandContext<out T> :
     CommandContext
     where T : class

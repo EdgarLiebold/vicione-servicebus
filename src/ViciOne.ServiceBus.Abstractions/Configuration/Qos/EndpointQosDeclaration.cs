@@ -1,18 +1,20 @@
 using System;
-using System.ComponentModel;
 
-namespace ViciOne.ServiceBus.Configuration;
+namespace ViciOne.ServiceBus.Advanced.Topology;
 
 /// <summary>
 /// A discovered endpoint QoS declaration used during topology validation.
 /// </summary>
-[EditorBrowsable(EditorBrowsableState.Never)]
 public sealed record EndpointQosDeclaration(
     string EndpointName,
     Type ConsumerType,
     EndpointTransportQos Qos,
     EndpointQosOwnership Ownership)
 {
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public EndpointQosDeclaration Validate()
     {
         if (string.IsNullOrWhiteSpace(EndpointName))

@@ -18,6 +18,11 @@ public class ConsumerMessageFilter<TConsumer, TMessage> :
     readonly IConsumerFactory<TConsumer> _consumerFactory;
     readonly IPipe<ConsumerConsumeContext<TConsumer, TMessage>> _consumerPipe;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="consumerFactory">The consumer factory value.</param>
+    /// <param name="consumerPipe">The consumer pipe value.</param>
     public ConsumerMessageFilter(IConsumerFactory<TConsumer> consumerFactory, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> consumerPipe)
     {
         _consumerFactory = consumerFactory;

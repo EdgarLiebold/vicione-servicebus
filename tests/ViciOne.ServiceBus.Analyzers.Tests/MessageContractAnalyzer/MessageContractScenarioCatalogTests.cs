@@ -31,7 +31,7 @@ public sealed class MessageContractScenarioCatalogTests
             }
 
             Assert.True(
-                scenario.ExpectedAddedInitializers.Length == 0 || scenario.ExpectedDiagnostic?.Id == "MCA0003",
+                scenario.ExpectedAddedInitializers.Length == 0 || scenario.ExpectedDiagnostic?.Id == "VOSB1004",
                 $"Scenario '{scenario.Key}' requests a code fix without a missing-property diagnostic.");
         }
     }

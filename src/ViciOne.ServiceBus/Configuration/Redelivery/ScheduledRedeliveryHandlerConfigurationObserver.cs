@@ -11,6 +11,10 @@ public class ScheduledRedeliveryHandlerConfigurationObserver :
 {
     readonly Action<IRetryConfigurator> _configure;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="configure">The configuration callback.</param>
     public ScheduledRedeliveryHandlerConfigurationObserver(Action<IRetryConfigurator> configure)
     {
         _configure = configure;

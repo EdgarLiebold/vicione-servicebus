@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus.InMemoryTransport;
+namespace ViciOne.ServiceBus.Providers.Transports;
 
 /// <summary>
 /// Completes a volatile durable send only after the full receive pipeline and all receive-owned tasks succeed.
@@ -20,6 +20,10 @@ internal sealed class InMemoryDurableSendCompletionFilter : IFilter<ReceiveConte
             return;
 
         await context.ReceiveCompleted.ConfigureAwait(false);
+
+        if (!context.IsDelivered || context.IsFaulted)
+            return;
+
         await durableContext.ConsumerCompletion.CompleteAsync(CancellationToken.None).ConfigureAwait(false);
     }
 

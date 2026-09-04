@@ -4,29 +4,51 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a pipe configurator implementation.
+/// </summary>
 public partial class PipeConfigurator<TContext>
     where TContext : class, PipeContext
 {
+    /// <summary>
+    /// Provides a pipe builder implementation.
+    /// </summary>
     public class PipeBuilder :
         IPipeBuilder<TContext>
     {
         readonly List<IFilter<TContext>> _filters;
 
+        /// <summary>
+        /// Initializes a new instance of the containing type.
+        /// </summary>
+        /// <param name="capacity">The capacity value.</param>
         public PipeBuilder(int capacity = 16)
         {
             _filters = new List<IFilter<TContext>>(capacity);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the containing type.
+        /// </summary>
+        /// <param name="filters">The filters value.</param>
         public PipeBuilder(params IFilter<TContext>[] filters)
         {
             _filters = new List<IFilter<TContext>>(filters);
         }
 
+        /// <summary>
+        /// Adds filter to the configuration.
+        /// </summary>
+        /// <param name="filter">The filter value.</param>
         public void AddFilter(IFilter<TContext> filter)
         {
             _filters.Add(filter);
         }
 
+        /// <summary>
+        /// Performs the build operation.
+        /// </summary>
+        /// <returns>The result of the operation.</returns>
         public IPipe<TContext> Build()
         {
             if (_filters.Count == 0)
@@ -49,6 +71,9 @@ public partial class PipeConfigurator<TContext>
     }
 
 
+    /// <summary>
+    /// Provides an empty pipe implementation.
+    /// </summary>
     public class EmptyPipe :
         IPipe<TContext>
     {
@@ -64,24 +89,41 @@ public partial class PipeConfigurator<TContext>
     }
 
 
+    /// <summary>
+    /// Provides a filter pipe implementation.
+    /// </summary>
     public class FilterPipe :
         IPipe<TContext>
     {
         readonly IFilter<TContext> _filter;
         readonly IPipe<TContext> _next;
 
+        /// <summary>
+        /// Initializes a new instance of the containing type.
+        /// </summary>
+        /// <param name="filter">The filter value.</param>
+        /// <param name="next">The next value.</param>
         public FilterPipe(IFilter<TContext> filter, IPipe<TContext> next)
         {
             _filter = filter;
             _next = next;
         }
 
+        /// <summary>
+        /// Performs the probe operation.
+        /// </summary>
+        /// <param name="context">The operation context.</param>
         public void Probe(ProbeContext context)
         {
             _filter.Probe(context);
             _next.Probe(context);
         }
 
+        /// <summary>
+        /// Sends a message to the configured destination.
+        /// </summary>
+        /// <param name="context">The operation context.</param>
+        /// <returns>The result of the operation.</returns>
         [DebuggerStepThrough]
         public Task SendAsync(TContext context)
         {
@@ -98,16 +140,29 @@ public partial class PipeConfigurator<TContext>
     {
         readonly IFilter<TContext> _filter;
 
+        /// <summary>
+        /// Initializes a new instance of the containing type.
+        /// </summary>
+        /// <param name="filter">The filter value.</param>
         public LastPipe(IFilter<TContext> filter)
         {
             _filter = filter;
         }
 
+        /// <summary>
+        /// Performs the probe operation.
+        /// </summary>
+        /// <param name="context">The operation context.</param>
         public void Probe(ProbeContext context)
         {
             _filter.Probe(context);
         }
 
+        /// <summary>
+        /// Sends a message to the configured destination.
+        /// </summary>
+        /// <param name="context">The operation context.</param>
+        /// <returns>The result of the operation.</returns>
         [DebuggerStepThrough]
         public Task SendAsync(TContext context)
         {

@@ -1,7 +1,11 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for future definition.
+/// </summary>
+/// <typeparam name="TFuture">The t future type.</typeparam>
 public interface IFutureDefinition<TFuture> :
     IFutureDefinition
     where TFuture : class, SagaStateMachine<FutureState>
@@ -18,11 +22,20 @@ public interface IFutureDefinition<TFuture> :
 }
 
 
+/// <summary>
+/// Defines the contract for future definition.
+/// </summary>
 public interface IFutureDefinition :
     IDefinition
 {
+    /// <summary>
+    /// Gets the future type value.
+    /// </summary>
     Type FutureType { get; }
 
+    /// <summary>
+    /// Gets the endpoint definition value.
+    /// </summary>
     IEndpointDefinition? EndpointDefinition { get; }
 
     /// <summary>

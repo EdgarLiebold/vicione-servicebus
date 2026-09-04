@@ -11,6 +11,13 @@ public interface IHeaderInitializer<in TMessage, in TInput>
     where TMessage : class
     where TInput : class
 {
+    /// <summary>
+    /// Applies this specification to the target builder.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="sendContext">The send context value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     Task ApplyAsync(InitializeContext<TMessage, TInput> context, SendContext sendContext, CancellationToken cancellationToken = default);
 }
 
@@ -22,5 +29,12 @@ public interface IHeaderInitializer<in TMessage, in TInput>
 public interface IHeaderInitializer<in TMessage>
     where TMessage : class
 {
+    /// <summary>
+    /// Applies this specification to the target builder.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="sendContext">The send context value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     Task ApplyAsync(InitializeContext<TMessage> context, SendContext sendContext, CancellationToken cancellationToken = default);
 }

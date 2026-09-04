@@ -2,13 +2,13 @@
   <!-- Profile RabbitMqLocalIntegration: pinned RabbitMQ 4.2 with management and delayed-exchange plugin. -->
   <Folder Name="/tests/">
     <Project Path="tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj" />
-    <Project Path="tests/Transports/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests/ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests.csproj" />
+    <Project Path="tests/Transports/ViciOne.ServiceBus.RabbitMq.LocalIntegration.Tests/ViciOne.ServiceBus.RabbitMq.LocalIntegration.Tests.csproj" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj" />
     <Project Path="src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
-    <Project Path="src/Transports/ViciOne.ServiceBus.RabbitMqTransport/ViciOne.ServiceBus.RabbitMqTransport.csproj" />
-    <Project Path="src/Transports/ViciOne.ServiceBus.RabbitMqTransport.Testing/ViciOne.ServiceBus.RabbitMqTransport.Testing.csproj" />
+    <Project Path="src/Transports/ViciOne.ServiceBus.RabbitMq/ViciOne.ServiceBus.RabbitMq.csproj" />
+    <Project Path="src/Transports/ViciOne.ServiceBus.RabbitMq.Testing/ViciOne.ServiceBus.RabbitMq.Testing.csproj" />
     <Project Path="src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj" />
   </Folder>
 </Solution>

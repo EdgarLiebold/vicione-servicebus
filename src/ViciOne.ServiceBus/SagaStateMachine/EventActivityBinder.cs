@@ -1,15 +1,30 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
+/// <summary>
+/// Defines the contract for event activity binder.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
 public interface EventActivityBinder<TSaga> :
     EventActivities<TSaga>
     where TSaga : class, SagaStateMachineInstance
 {
+    /// <summary>
+    /// Gets the state machine value.
+    /// </summary>
     StateMachine<TSaga> StateMachine { get; }
 
+    /// <summary>
+    /// Gets the event value.
+    /// </summary>
     Event Event { get; }
 
+    /// <summary>
+    /// Performs the add operation.
+    /// </summary>
+    /// <param name="activity">The activity value.</param>
+    /// <returns>The result of the operation.</returns>
     EventActivityBinder<TSaga> Add(IStateMachineActivity<TSaga> activity);
 
     /// <summary>
@@ -72,17 +87,38 @@ public interface EventActivityBinder<TSaga> :
 }
 
 
+/// <summary>
+/// Defines the contract for event activity binder.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public interface EventActivityBinder<TSaga, TMessage> :
     EventActivities<TSaga>
     where TSaga : class, SagaStateMachineInstance
     where TMessage : class
 {
+    /// <summary>
+    /// Gets the state machine value.
+    /// </summary>
     StateMachine<TSaga> StateMachine { get; }
 
+    /// <summary>
+    /// Gets the event value.
+    /// </summary>
     Event<TMessage> Event { get; }
 
+    /// <summary>
+    /// Performs the add operation.
+    /// </summary>
+    /// <param name="activity">The activity value.</param>
+    /// <returns>The result of the operation.</returns>
     EventActivityBinder<TSaga, TMessage> Add(IStateMachineActivity<TSaga> activity);
 
+    /// <summary>
+    /// Performs the add operation.
+    /// </summary>
+    /// <param name="activity">The activity value.</param>
+    /// <returns>The result of the operation.</returns>
     EventActivityBinder<TSaga, TMessage> Add(IStateMachineActivity<TSaga, TMessage> activity);
 
     /// <summary>

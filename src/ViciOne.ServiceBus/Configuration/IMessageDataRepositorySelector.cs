@@ -6,5 +6,8 @@ namespace ViciOne.ServiceBus.Configuration;
 /// </summary>
 public interface IMessageDataRepositorySelector
 {
+    /// <summary>
+    /// Gets the configurator value.
+    /// </summary>
     IBusFactoryConfigurator Configurator { get; }
 }

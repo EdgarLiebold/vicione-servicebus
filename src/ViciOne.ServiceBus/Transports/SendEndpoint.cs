@@ -6,6 +6,9 @@ using ViciOne.ServiceBus.Initializers;
 
 namespace ViciOne.ServiceBus.Transports;
 
+/// <summary>
+/// Provides a send endpoint implementation.
+/// </summary>
 public class SendEndpoint :
     ITransportSendEndpoint,
     IAsyncDisposable
@@ -14,6 +17,14 @@ public class SendEndpoint :
     readonly ISendPipe _sendPipe;
     readonly ISendTransport _transport;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="transport">The transport value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <param name="destinationAddress">The destination address value.</param>
+    /// <param name="sendPipe">The send pipe value.</param>
+    /// <param name="observerHandle">The observer handle value.</param>
     public SendEndpoint(ISendTransport transport, ReceiveEndpointContext context, Uri destinationAddress, ISendPipe sendPipe,
         ConnectHandle? observerHandle = null)
     {
@@ -33,6 +44,10 @@ public class SendEndpoint :
     IMessageSerializer Serializer { get; }
     ISerialization Serialization { get; }
 
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public ValueTask DisposeAsync()
     {
         _observerHandle?.Disconnect();
@@ -44,17 +59,37 @@ public class SendEndpoint :
         };
     }
 
+    /// <summary>
+    /// Connects send observer.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
     {
         return _transport.ConnectSendObserver(observer);
     }
 
+    /// <summary>
+    /// Creates send context.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="message">The message value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
         return _transport.CreateSendContextAsync(message, new SendEndpointPipe<T>(this, pipe), cancellationToken);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="message">The message value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task SendAsync<T>(T message, CancellationToken cancellationToken)
         where T : class
     {
@@ -64,6 +99,14 @@ public class SendEndpoint :
         return _transport.SendAsync(message, new SendEndpointPipe<T>(this), cancellationToken);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="message">The message value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task SendAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
@@ -75,6 +118,12 @@ public class SendEndpoint :
         return _transport.SendAsync(message, new SendEndpointPipe<T>(this, pipe), cancellationToken);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="message">The message value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task SendAsync(object message, CancellationToken cancellationToken)
     {
         if (message == null)
@@ -85,6 +134,13 @@ public class SendEndpoint :
         return SendEndpointConverterCache.SendAsync(this, message, messageType, cancellationToken);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="message">The message value.</param>
+    /// <param name="messageType">The message type value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task SendAsync(object message, Type messageType, CancellationToken cancellationToken)
     {
         if (message == null)
@@ -95,6 +151,14 @@ public class SendEndpoint :
         return SendEndpointConverterCache.SendAsync(this, message, messageType, cancellationToken);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="message">The message value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task SendAsync<T>(T message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
         where T : class
     {
@@ -106,6 +170,13 @@ public class SendEndpoint :
         return _transport.SendAsync(message, new SendEndpointPipe<T>(this, pipe), cancellationToken);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="message">The message value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task SendAsync(object message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
         if (message == null)
@@ -118,6 +189,14 @@ public class SendEndpoint :
         return SendEndpointConverterCache.SendAsync(this, message, messageType, pipe, cancellationToken);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="message">The message value.</param>
+    /// <param name="messageType">The message type value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task SendAsync(object message, Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
         if (message == null)
@@ -130,6 +209,13 @@ public class SendEndpoint :
         return SendEndpointConverterCache.SendAsync(this, message, messageType, pipe, cancellationToken);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="values">The values value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SendAsync<T>(object values, CancellationToken cancellationToken)
         where T : class
     {
@@ -142,6 +228,14 @@ public class SendEndpoint :
         await _transport.SendAsync(message, sendPipe, cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="values">The values value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SendAsync<T>(object values, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
@@ -154,6 +248,14 @@ public class SendEndpoint :
         await _transport.SendAsync(message, sendPipe, cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="values">The values value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SendAsync<T>(object values, IPipe<SendContext> pipe, CancellationToken cancellationToken)
         where T : class
     {

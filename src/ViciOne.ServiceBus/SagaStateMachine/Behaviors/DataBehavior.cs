@@ -14,16 +14,28 @@ public class DataBehavior<TSaga, TMessage> :
 {
     readonly IBehavior<TSaga> _behavior;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="behavior">The behavior value.</param>
     public DataBehavior(IBehavior<TSaga> behavior)
     {
         _behavior = behavior;
     }
 
+    /// <summary>
+    /// Performs the accept operation.
+    /// </summary>
+    /// <param name="visitor">The visitor value.</param>
     public void Accept(StateMachineVisitor visitor)
     {
         _behavior.Accept(visitor);
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         _behavior.Probe(context);

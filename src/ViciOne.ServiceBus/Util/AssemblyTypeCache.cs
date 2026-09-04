@@ -37,6 +37,10 @@ public static class AssemblyTypeCache
             throw new AggregateException(exceptions);
     }
 
+    /// <summary>
+    /// Performs the failed assemblies operation.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public static IEnumerable<AssemblyScanTypeInfo> FailedAssemblies()
     {
         return Cached.Assemblies.Values
@@ -44,6 +48,11 @@ public static class AssemblyTypeCache
             .Where(x => x.Record.LoadException is not null);
     }
 
+    /// <summary>
+    /// Performs the for assembly operation.
+    /// </summary>
+    /// <param name="assembly">The assembly value.</param>
+    /// <returns>The result of the operation.</returns>
     public static AssemblyScanTypeInfo ForAssembly(Assembly assembly)
     {
         ArgumentNullException.ThrowIfNull(assembly);
@@ -51,12 +60,25 @@ public static class AssemblyTypeCache
             static value => new Lazy<AssemblyScanTypeInfo>(() => new AssemblyScanTypeInfo(value), LazyThreadSafetyMode.ExecutionAndPublication)).Value;
     }
 
+    /// <summary>
+    /// Performs the find types operation.
+    /// </summary>
+    /// <param name="assemblies">The assemblies value.</param>
+    /// <param name="filter">The filter value.</param>
+    /// <returns>The result of the operation.</returns>
     public static TypeSet FindTypes(IEnumerable<Assembly> assemblies, Func<Type, bool>? filter = null)
     {
         ArgumentNullException.ThrowIfNull(assemblies);
         return new TypeSet(assemblies.Select(ForAssembly).ToArray(), filter);
     }
 
+    /// <summary>
+    /// Performs the find types operation.
+    /// </summary>
+    /// <param name="assemblies">The assemblies value.</param>
+    /// <param name="classification">The classification value.</param>
+    /// <param name="filter">The filter value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IEnumerable<Type> FindTypes(IEnumerable<Assembly> assemblies, TypeClassification classification, Func<Type, bool>? filter = null)
     {
         ArgumentNullException.ThrowIfNull(assemblies);
@@ -64,6 +86,13 @@ public static class AssemblyTypeCache
         return assemblies.SelectMany(assembly => query.Find(ForAssembly(assembly)));
     }
 
+    /// <summary>
+    /// Performs the find types operation.
+    /// </summary>
+    /// <param name="assembly">The assembly value.</param>
+    /// <param name="classification">The classification value.</param>
+    /// <param name="filter">The filter value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IEnumerable<Type> FindTypes(Assembly assembly, TypeClassification classification, Func<Type, bool>? filter = null)
     {
         ArgumentNullException.ThrowIfNull(assembly);
@@ -71,6 +100,13 @@ public static class AssemblyTypeCache
         return query.Find(ForAssembly(assembly));
     }
 
+    /// <summary>
+    /// Performs the find types in namespace operation.
+    /// </summary>
+    /// <param name="type">The type value.</param>
+    /// <param name="typeFilter">The type filter value.</param>
+    /// <param name="typeClassification">The type classification value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IEnumerable<Type> FindTypesInNamespace(Type type, Func<Type, bool> typeFilter, TypeClassification typeClassification)
     {
         ArgumentNullException.ThrowIfNull(type);

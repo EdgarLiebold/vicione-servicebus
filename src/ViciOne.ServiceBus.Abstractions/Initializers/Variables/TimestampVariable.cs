@@ -13,11 +13,18 @@ public class TimestampVariable :
 {
     readonly DateTimeOffset _timestamp;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public TimestampVariable()
     {
         _timestamp = TimeProvider.System.GetUtcNow();
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="timestamp">The timestamp value.</param>
     public TimestampVariable(DateTimeOffset timestamp)
     {
         _timestamp = timestamp;
@@ -32,6 +39,11 @@ public class TimestampVariable :
         return Task.FromResult(timestampContext.Timestamp);
     }
 
+    /// <summary>
+    /// Converts a value to <see cref="DateTimeOffset" />.
+    /// </summary>
+    /// <param name="variable">The variable value.</param>
+    /// <returns>The result of the operation.</returns>
     public static implicit operator DateTimeOffset(TimestampVariable variable)
     {
         return variable._timestamp;

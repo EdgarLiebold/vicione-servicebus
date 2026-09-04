@@ -1,8 +1,11 @@
 using System;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Registration;
 
+/// <summary>
+/// Provides extension methods for handler.
+/// </summary>
 public static class HandlerExtensions
 {
     /// <summary>

@@ -5,7 +5,7 @@ using ViciOne.ServiceBus.Observables;
 using ViciOne.ServiceBus.Serialization;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 /// <summary>
 /// JobOptions contains the options used to configure the job consumer and related components
 /// </summary>
@@ -18,6 +18,9 @@ public class JobOptions<TJob> :
     readonly JobPropertyCollection _instanceProperties;
     readonly JobPropertyCollection _jobTypeProperties;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public JobOptions()
     {
         ConcurrentJobLimit = 1;
@@ -49,6 +52,9 @@ public class JobOptions<TJob> :
     /// </summary>
     public int ConcurrentJobLimit { get; set; }
 
+    /// <summary>
+    /// Gets or sets the retry policy value.
+    /// </summary>
     public IRetryPolicy RetryPolicy { get; private set; }
 
     /// <summary>

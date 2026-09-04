@@ -14,6 +14,11 @@ public class MessageRetryHandlerConfigurationObserver :
     readonly CancellationToken _cancellationToken;
     readonly Action<IRetryConfigurator> _configure;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="configure">The configuration callback.</param>
     public MessageRetryHandlerConfigurationObserver(CancellationToken cancellationToken,
         Action<IRetryConfigurator> configure)
     {

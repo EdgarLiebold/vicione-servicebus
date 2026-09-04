@@ -5,6 +5,10 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Serialization;
 
+/// <summary>
+/// Provides a forward message pipe implementation.
+/// </summary>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public class ForwardMessagePipe<TMessage> :
     IPipe<SendContext<TMessage>>,
     ISendPipe
@@ -13,6 +17,11 @@ public class ForwardMessagePipe<TMessage> :
     readonly ConsumeContext<TMessage> _context;
     readonly IPipe<SendContext<TMessage>>? _pipe = null!;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="pipe">The pipe value.</param>
     public ForwardMessagePipe(ConsumeContext<TMessage> context, IPipe<SendContext<TMessage>>? pipe = default)
     {
         _context = context;
@@ -24,6 +33,11 @@ public class ForwardMessagePipe<TMessage> :
         _pipe?.Probe(context);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SendAsync(SendContext<TMessage> context)
     {
         context.MessageId = _context.MessageId;
@@ -60,6 +74,13 @@ public class ForwardMessagePipe<TMessage> :
             context.Serializer = new CopyBodySerializer(_context.Advanced().ReceiveContext.ContentType, _context.Advanced().ReceiveContext.Body);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task SendAsync<T>(SendContext<T> context, CancellationToken cancellationToken = default)
         where T : class
     {

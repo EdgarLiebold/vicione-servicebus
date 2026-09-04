@@ -19,6 +19,13 @@ public class GetMessageData<T> :
     readonly IMessageDataRepository _repository;
     readonly Lazy<Task<T?>> _value;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="address">The address value.</param>
+    /// <param name="repository">The repository value.</param>
+    /// <param name="converter">The converter value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public GetMessageData(Uri address, IMessageDataRepository repository, IMessageDataConverter<T> converter, CancellationToken cancellationToken)
     {
         Address = address;
@@ -30,10 +37,19 @@ public class GetMessageData<T> :
         _value = new Lazy<Task<T?>>(GetValueAsync);
     }
 
+    /// <summary>
+    /// Gets the address value.
+    /// </summary>
     public Uri Address { get; }
 
+    /// <summary>
+    /// Gets the has value value.
+    /// </summary>
     public bool HasValue => true;
 
+    /// <summary>
+    /// Gets the underlying value.
+    /// </summary>
     public Task<T?> Value => _value.Value;
 
     async Task<T?> GetValueAsync()

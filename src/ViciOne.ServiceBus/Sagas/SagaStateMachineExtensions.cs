@@ -3,8 +3,11 @@ using System.Linq.Expressions;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Saga;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
+/// <summary>
+/// Provides extension methods for saga state machine.
+/// </summary>
 public static class SagaStateMachineExtensions
 {
     /// <summary>

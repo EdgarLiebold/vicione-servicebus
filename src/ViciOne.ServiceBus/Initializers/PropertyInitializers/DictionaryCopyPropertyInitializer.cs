@@ -20,6 +20,11 @@ public class DictionaryCopyPropertyInitializer<TMessage, TInput, TProperty> :
     readonly string _key;
     readonly IWriteProperty<TMessage, TProperty> _messageProperty;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="propertyInfo">The property info value.</param>
+    /// <param name="key">The key value.</param>
     public DictionaryCopyPropertyInitializer(PropertyInfo propertyInfo, string key)
     {
         if (propertyInfo == null)
@@ -29,6 +34,12 @@ public class DictionaryCopyPropertyInitializer<TMessage, TInput, TProperty> :
         _messageProperty = WritePropertyCache<TMessage>.GetProperty<TProperty>(propertyInfo);
     }
 
+    /// <summary>
+    /// Applies this specification to the target builder.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task ApplyAsync(InitializeContext<TMessage, TInput> context, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (context.HasInput && context.Input.TryGetValue(_key, out var value))

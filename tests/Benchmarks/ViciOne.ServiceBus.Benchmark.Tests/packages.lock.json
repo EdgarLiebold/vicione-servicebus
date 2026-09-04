@@ -583,12 +583,12 @@
           "Microsoft.Extensions.DependencyInjection": "[10.0.11, )",
           "OpenTelemetry.Exporter.OpenTelemetryProtocol": "[1.18.0, )",
           "ViciOne.ServiceBus": "[1.0.0, )",
-          "ViciOne.ServiceBus.ActiveMQ": "[1.0.0, )",
-          "ViciOne.ServiceBus.AmazonSQS": "[1.0.0, )",
-          "ViciOne.ServiceBus.Azure.ServiceBus.Core": "[1.0.0, )",
+          "ViciOne.ServiceBus.ActiveMq": "[1.0.0, )",
+          "ViciOne.ServiceBus.AmazonSqs": "[1.0.0, )",
+          "ViciOne.ServiceBus.AzureServiceBus": "[1.0.0, )",
           "ViciOne.ServiceBus.EntityFrameworkCore": "[1.0.0, )",
-          "ViciOne.ServiceBus.RabbitMQ": "[1.0.0, )",
-          "ViciOne.ServiceBus.SqlTransport.PostgreSQL": "[1.0.0, )"
+          "ViciOne.ServiceBus.RabbitMq": "[1.0.0, )",
+          "ViciOne.ServiceBus.SqlTransport.PostgreSql": "[1.0.0, )"
         }
       },
       "vicione.servicebus": {
@@ -606,7 +606,7 @@
       "vicione.servicebus.abstractions": {
         "type": "Project"
       },
-      "ViciOne.ServiceBus.ActiveMQ": {
+      "vicione.servicebus.activemq": {
         "type": "Project",
         "dependencies": {
           "Apache.NMS.AMQP": "[2.4.0, )",
@@ -614,7 +614,7 @@
           "ViciOne.ServiceBus": "[1.0.0, )"
         }
       },
-      "ViciOne.ServiceBus.AmazonSQS": {
+      "vicione.servicebus.amazonsqs": {
         "type": "Project",
         "dependencies": {
           "AWSSDK.SQS": "[4.0.100.11, )",
@@ -622,7 +622,7 @@
           "ViciOne.ServiceBus": "[1.0.0, )"
         }
       },
-      "vicione.servicebus.azure.servicebus.core": {
+      "vicione.servicebus.azureservicebus": {
         "type": "Project",
         "dependencies": {
           "Azure.Identity": "[1.21.0, )",
@@ -638,7 +638,7 @@
           "ViciOne.ServiceBus.MessagePack": "[1.0.0, )"
         }
       },
-      "ViciOne.ServiceBus.EntityFrameworkCore": {
+      "vicione.servicebus.entityframeworkcore": {
         "type": "Project",
         "dependencies": {
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
@@ -654,7 +654,7 @@
           "ViciOne.ServiceBus.Abstractions": "[1.0.0, )"
         }
       },
-      "ViciOne.ServiceBus.RabbitMQ": {
+      "vicione.servicebus.rabbitmq": {
         "type": "Project",
         "dependencies": {
           "RabbitMQ.Client": "[7.2.2, )",

@@ -1,7 +1,10 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for timeout configurator.
+/// </summary>
 public interface ITimeoutConfigurator
 {
     /// <summary>

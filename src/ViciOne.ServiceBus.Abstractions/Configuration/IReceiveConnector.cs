@@ -1,7 +1,11 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for receive connector.
+/// </summary>
+/// <typeparam name="TEndpointConfigurator">The t endpoint configurator type.</typeparam>
 public interface IReceiveConnector<out TEndpointConfigurator> :
     IReceiveConnector
     where TEndpointConfigurator : IReceiveEndpointConfigurator
@@ -26,6 +30,9 @@ public interface IReceiveConnector<out TEndpointConfigurator> :
 }
 
 
+/// <summary>
+/// Defines the contract for receive connector.
+/// </summary>
 public interface IReceiveConnector :
     IEndpointConfigurationObserverConnector
 {

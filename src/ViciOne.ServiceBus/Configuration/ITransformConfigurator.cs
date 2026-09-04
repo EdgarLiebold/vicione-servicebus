@@ -4,8 +4,12 @@ using System.Reflection;
 using ViciOne.ServiceBus.Initializers;
 using ViciOne.ServiceBus.Transformation;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for transform configurator.
+/// </summary>
+/// <typeparam name="TInput">The t input type.</typeparam>
 public interface ITransformConfigurator<TInput>
     where TInput : class
 {

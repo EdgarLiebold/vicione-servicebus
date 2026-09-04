@@ -4,6 +4,9 @@ using System.Linq;
 #nullable enable
 namespace ViciOne.ServiceBus.SqlTransport.Topology;
 
+/// <summary>
+/// Provides a topic subscription entity implementation.
+/// </summary>
 public class TopicSubscriptionEntity :
     TopicToTopicSubscription,
     TopicSubscriptionHandle
@@ -11,6 +14,14 @@ public class TopicSubscriptionEntity :
     readonly TopicEntity _destination;
     readonly TopicEntity _source;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="id">The id value.</param>
+    /// <param name="source">The source value.</param>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="subscriptionType">The subscription type value.</param>
+    /// <param name="routingKey">The routing key value.</param>
     public TopicSubscriptionEntity(long id, TopicEntity source, TopicEntity destination, SqlSubscriptionType subscriptionType, string? routingKey)
     {
         Id = id;
@@ -20,15 +31,40 @@ public class TopicSubscriptionEntity :
         _destination = destination;
     }
 
+    /// <summary>
+    /// Gets the entity comparer value.
+    /// </summary>
     public static IEqualityComparer<TopicSubscriptionEntity> EntityComparer { get; } = new TopicSubscriptionEntityEqualityComparer();
+    /// <summary>
+    /// Gets the id value.
+    /// </summary>
     public long Id { get; }
+    /// <summary>
+    /// Gets the subscription value.
+    /// </summary>
     public TopicToTopicSubscription Subscription => this;
+    /// <summary>
+    /// Gets the subscription type value.
+    /// </summary>
     public SqlSubscriptionType SubscriptionType { get; }
 
+    /// <summary>
+    /// Gets the source value.
+    /// </summary>
     public Topic Source => _source.Topic;
+    /// <summary>
+    /// Gets the destination value.
+    /// </summary>
     public Topic Destination => _destination.Topic;
+    /// <summary>
+    /// Gets the routing key value.
+    /// </summary>
     public string? RoutingKey { get; }
 
+    /// <summary>
+    /// Returns the string representation of this instance.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public override string ToString()
     {
         return string.Join(", ",

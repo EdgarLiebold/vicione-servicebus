@@ -4,15 +4,26 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Clients;
 
+/// <summary>
+/// Provides a client factory implementation.
+/// </summary>
 public class ClientFactory :
     IClientFactory,
     IAsyncDisposable
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public ClientFactory(ClientFactoryContext context)
     {
         Context = context;
     }
 
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public ValueTask DisposeAsync()
     {
         if (Context is IAsyncDisposable asyncDisposable)
@@ -21,8 +32,19 @@ public class ClientFactory :
         return default;
     }
 
+    /// <summary>
+    /// Gets the context value.
+    /// </summary>
     public ClientFactoryContext Context { get; }
 
+    /// <summary>
+    /// Creates request.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="message">The message value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="timeout">The timeout value.</param>
+    /// <returns>The result of the operation.</returns>
     public RequestHandle<T> CreateRequest<T>(T message, CancellationToken cancellationToken, RequestTimeout timeout)
         where T : class
     {
@@ -31,6 +53,15 @@ public class ClientFactory :
         return client.Create(message, cancellationToken);
     }
 
+    /// <summary>
+    /// Creates request.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="destinationAddress">The destination address value.</param>
+    /// <param name="message">The message value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="timeout">The timeout value.</param>
+    /// <returns>The result of the operation.</returns>
     public RequestHandle<T> CreateRequest<T>(Uri destinationAddress, T message, CancellationToken cancellationToken, RequestTimeout timeout)
         where T : class
     {
@@ -39,6 +70,15 @@ public class ClientFactory :
         return client.Create(message, cancellationToken);
     }
 
+    /// <summary>
+    /// Creates request.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="consumeContext">The consume context value.</param>
+    /// <param name="message">The message value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="timeout">The timeout value.</param>
+    /// <returns>The result of the operation.</returns>
     public RequestHandle<T> CreateRequest<T>(ConsumeContext consumeContext, T message, CancellationToken cancellationToken, RequestTimeout timeout)
         where T : class
     {
@@ -47,6 +87,16 @@ public class ClientFactory :
         return client.Create(message, cancellationToken);
     }
 
+    /// <summary>
+    /// Creates request.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="consumeContext">The consume context value.</param>
+    /// <param name="destinationAddress">The destination address value.</param>
+    /// <param name="message">The message value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="timeout">The timeout value.</param>
+    /// <returns>The result of the operation.</returns>
     public RequestHandle<T> CreateRequest<T>(ConsumeContext consumeContext, Uri destinationAddress, T message, CancellationToken cancellationToken,
         RequestTimeout timeout)
         where T : class
@@ -56,6 +106,14 @@ public class ClientFactory :
         return client.Create(message, cancellationToken);
     }
 
+    /// <summary>
+    /// Creates request.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="values">The values value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="timeout">The timeout value.</param>
+    /// <returns>The result of the operation.</returns>
     public RequestHandle<T> CreateRequest<T>(object values, CancellationToken cancellationToken, RequestTimeout timeout)
         where T : class
     {
@@ -64,6 +122,15 @@ public class ClientFactory :
         return client.Create(values, cancellationToken);
     }
 
+    /// <summary>
+    /// Creates request.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="destinationAddress">The destination address value.</param>
+    /// <param name="values">The values value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="timeout">The timeout value.</param>
+    /// <returns>The result of the operation.</returns>
     public RequestHandle<T> CreateRequest<T>(Uri destinationAddress, object values, CancellationToken cancellationToken, RequestTimeout timeout)
         where T : class
     {
@@ -72,6 +139,15 @@ public class ClientFactory :
         return client.Create(values, cancellationToken);
     }
 
+    /// <summary>
+    /// Creates request.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="consumeContext">The consume context value.</param>
+    /// <param name="values">The values value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="timeout">The timeout value.</param>
+    /// <returns>The result of the operation.</returns>
     public RequestHandle<T> CreateRequest<T>(ConsumeContext consumeContext, object values, CancellationToken cancellationToken, RequestTimeout timeout)
         where T : class
     {
@@ -80,6 +156,16 @@ public class ClientFactory :
         return client.Create(values, cancellationToken);
     }
 
+    /// <summary>
+    /// Creates request.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="consumeContext">The consume context value.</param>
+    /// <param name="destinationAddress">The destination address value.</param>
+    /// <param name="values">The values value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="timeout">The timeout value.</param>
+    /// <returns>The result of the operation.</returns>
     public RequestHandle<T> CreateRequest<T>(ConsumeContext consumeContext, Uri destinationAddress, object values, CancellationToken cancellationToken,
         RequestTimeout timeout)
         where T : class
@@ -89,6 +175,12 @@ public class ClientFactory :
         return client.Create(values, cancellationToken);
     }
 
+    /// <summary>
+    /// Creates request client.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="timeout">The timeout value.</param>
+    /// <returns>The result of the operation.</returns>
     public IRequestClient<T> CreateRequestClient<T>(RequestTimeout timeout)
         where T : class
     {
@@ -98,6 +190,13 @@ public class ClientFactory :
         return new RequestClient<T>(Context, Context.GetRequestEndpoint<T>(), timeout.Or(Context.DefaultTimeout));
     }
 
+    /// <summary>
+    /// Creates request client.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="consumeContext">The consume context value.</param>
+    /// <param name="timeout">The timeout value.</param>
+    /// <returns>The result of the operation.</returns>
     public IRequestClient<T> CreateRequestClient<T>(ConsumeContext? consumeContext, RequestTimeout timeout)
         where T : class
     {
@@ -107,6 +206,13 @@ public class ClientFactory :
         return new RequestClient<T>(Context, Context.GetRequestEndpoint<T>(consumeContext), timeout.Or(Context.DefaultTimeout));
     }
 
+    /// <summary>
+    /// Creates request client.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="destinationAddress">The destination address value.</param>
+    /// <param name="timeout">The timeout value.</param>
+    /// <returns>The result of the operation.</returns>
     public IRequestClient<T> CreateRequestClient<T>(Uri destinationAddress, RequestTimeout timeout)
         where T : class
     {
@@ -115,6 +221,14 @@ public class ClientFactory :
         return new RequestClient<T>(Context, requestSendEndpoint, timeout.Or(Context.DefaultTimeout));
     }
 
+    /// <summary>
+    /// Creates request client.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="consumeContext">The consume context value.</param>
+    /// <param name="destinationAddress">The destination address value.</param>
+    /// <param name="timeout">The timeout value.</param>
+    /// <returns>The result of the operation.</returns>
     public IRequestClient<T> CreateRequestClient<T>(ConsumeContext? consumeContext, Uri destinationAddress, RequestTimeout timeout)
         where T : class
     {

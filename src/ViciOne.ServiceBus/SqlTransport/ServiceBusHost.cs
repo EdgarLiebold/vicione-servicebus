@@ -5,12 +5,20 @@ using ViciOne.ServiceBus.Transports;
 #nullable enable
 namespace ViciOne.ServiceBus.SqlTransport;
 
+/// <summary>
+/// Provides a sql host implementation.
+/// </summary>
 public class SqlHost :
     BaseHost,
     ISqlHost
 {
     readonly ISqlHostConfiguration _hostConfiguration;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="hostConfiguration">The host configuration value.</param>
+    /// <param name="busTopology">The bus topology value.</param>
     public SqlHost(ISqlHostConfiguration hostConfiguration, ISqlBusTopology busTopology)
         : base(hostConfiguration, busTopology)
     {
@@ -18,19 +26,42 @@ public class SqlHost :
         Topology = busTopology;
     }
 
+    /// <summary>
+    /// Gets the topology value.
+    /// </summary>
     public new ISqlBusTopology Topology { get; }
 
+    /// <summary>
+    /// Connects receive endpoint.
+    /// </summary>
+    /// <param name="definition">The definition value.</param>
+    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
+    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <returns>The result of the operation.</returns>
     public override HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
         Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
         return ConnectReceiveEndpoint(definition, endpointNameFormatter, configureEndpoint);
     }
 
+    /// <summary>
+    /// Connects receive endpoint.
+    /// </summary>
+    /// <param name="queueName">The queue name value.</param>
+    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <returns>The result of the operation.</returns>
     public override HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
         return ConnectReceiveEndpoint(queueName, configureEndpoint);
     }
 
+    /// <summary>
+    /// Connects receive endpoint.
+    /// </summary>
+    /// <param name="definition">The definition value.</param>
+    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
+    /// <param name="configureEndpoint">The configure endpoint value.</param>
+    /// <returns>The result of the operation.</returns>
     public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter = null,
         Action<ISqlReceiveEndpointConfigurator>? configureEndpoint = null)
     {
@@ -43,6 +74,12 @@ public class SqlHost :
         });
     }
 
+    /// <summary>
+    /// Connects receive endpoint.
+    /// </summary>
+    /// <param name="queueName">The queue name value.</param>
+    /// <param name="configure">The configuration callback.</param>
+    /// <returns>The result of the operation.</returns>
     public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<ISqlReceiveEndpointConfigurator>? configure = null)
     {
         LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
@@ -58,6 +95,10 @@ public class SqlHost :
         return ReceiveEndpoints.Start(configuration.Settings.QueueName);
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     protected override void Probe(ProbeContext context)
     {
         context.Set(new
@@ -69,6 +110,10 @@ public class SqlHost :
         _hostConfiguration.ConnectionContextSupervisor.Probe(context);
     }
 
+    /// <summary>
+    /// Gets agent handles.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     protected override IAgent[] GetAgentHandles()
     {
         return new IAgent[] { _hostConfiguration.ConnectionContextSupervisor };

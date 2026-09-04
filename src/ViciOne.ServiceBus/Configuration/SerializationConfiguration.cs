@@ -9,6 +9,9 @@ using ViciOne.ServiceBus.Util;
 #nullable enable
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a serialization configuration implementation.
+/// </summary>
 public class SerializationConfiguration :
     ISerializationConfiguration
 {
@@ -20,6 +23,9 @@ public class SerializationConfiguration :
     ContentType? _serializerContentType;
     SerializationConfiguration? _source;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public SerializationConfiguration()
     {
         _serializers = new Dictionary<string, ISerializerFactory>(StringComparer.OrdinalIgnoreCase);
@@ -40,6 +46,9 @@ public class SerializationConfiguration :
         _source = source;
     }
 
+    /// <summary>
+    /// Gets or sets the default content type value.
+    /// </summary>
     public ContentType DefaultContentType
     {
         set
@@ -49,6 +58,9 @@ public class SerializationConfiguration :
         }
     }
 
+    /// <summary>
+    /// Gets or sets the serializer content type value.
+    /// </summary>
     public ContentType SerializerContentType
     {
         set
@@ -58,6 +70,9 @@ public class SerializationConfiguration :
         }
     }
 
+    /// <summary>
+    /// Performs the clear operation.
+    /// </summary>
     public void Clear()
     {
         EnsureMutable();
@@ -72,6 +87,11 @@ public class SerializationConfiguration :
         _source = null;
     }
 
+    /// <summary>
+    /// Adds serializer to the configuration.
+    /// </summary>
+    /// <param name="factory">The factory value.</param>
+    /// <param name="isSerializer">The is serializer value.</param>
     public void AddSerializer(ISerializerFactory factory, bool isSerializer = true)
     {
         ArgumentNullException.ThrowIfNull(factory);
@@ -83,6 +103,11 @@ public class SerializationConfiguration :
             _serializerContentType = factory.ContentType;
     }
 
+    /// <summary>
+    /// Adds deserializer to the configuration.
+    /// </summary>
+    /// <param name="factory">The factory value.</param>
+    /// <param name="isDefault">The is default value.</param>
     public void AddDeserializer(ISerializerFactory factory, bool isDefault = false)
     {
         ArgumentNullException.ThrowIfNull(factory);
@@ -94,6 +119,10 @@ public class SerializationConfiguration :
             _defaultContentType = factory.ContentType;
     }
 
+    /// <summary>
+    /// Configures system text json serializer options.
+    /// </summary>
+    /// <param name="configure">The configuration callback.</param>
     public void ConfigureSystemTextJsonSerializerOptions(Func<JsonSerializerOptions, JsonSerializerOptions> configure)
     {
         ArgumentNullException.ThrowIfNull(configure);
@@ -101,16 +130,28 @@ public class SerializationConfiguration :
         _jsonOptionsConfigurators.Add(configure);
     }
 
+    /// <summary>
+    /// Creates serialization configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public ISerializationConfiguration CreateSerializationConfiguration()
     {
         return new SerializationConfiguration(this);
     }
 
+    /// <summary>
+    /// Creates serializer collection.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public ISerialization CreateSerializerCollection()
     {
         return _collection.Value;
     }
 
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         var serializers = ResolveFactories(static x => x._serializers);

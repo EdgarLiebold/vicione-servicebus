@@ -4,10 +4,19 @@ using ViciOne.ServiceBus.Contracts.JobService;
 
 namespace ViciOne.ServiceBus.JobService;
 
+/// <summary>
+/// Defines the contract for job service.
+/// </summary>
 public interface IJobService
 {
+    /// <summary>
+    /// Gets the instance address value.
+    /// </summary>
     Uri InstanceAddress { get; }
 
+    /// <summary>
+    /// Gets the settings value.
+    /// </summary>
     JobServiceSettings Settings { get; }
 
     /// <summary>
@@ -30,6 +39,12 @@ public interface IJobService
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     Task StopAsync(IPublishEndpoint publishEndpoint, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Attempts to get job.
+    /// </summary>
+    /// <param name="jobId">The job id value.</param>
+    /// <param name="jobReference">The job reference value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     bool TryGetJob(Guid jobId, [NotNullWhen(true)] out JobHandle? jobReference);
 
     /// <summary>
@@ -50,6 +65,12 @@ public interface IJobService
     void RegisterJobType<T>(IReceiveEndpointConfigurator configurator, JobOptions<T> options, Guid jobTypeId, string jobTypeName)
         where T : class;
 
+    /// <summary>
+    /// Performs the bus started operation.
+    /// </summary>
+    /// <param name="publishEndpoint">The publish endpoint value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     Task BusStartedAsync(IPublishEndpoint publishEndpoint, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -60,5 +81,9 @@ public interface IJobService
     Guid GetJobTypeId<T>()
         where T : class;
 
+    /// <summary>
+    /// Configures supervise job consumer.
+    /// </summary>
+    /// <param name="configurator">The configurator value.</param>
     void ConfigureSuperviseJobConsumer(IReceiveEndpointConfigurator configurator);
 }

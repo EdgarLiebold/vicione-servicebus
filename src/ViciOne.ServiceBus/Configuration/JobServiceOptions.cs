@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.JobService;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines configuration options for job service.
+/// </summary>
 public class JobServiceOptions :
     JobSagaSettings,
     IOptions,
@@ -14,6 +17,9 @@ public class JobServiceOptions :
     string _jobSagaEndpointName = null!;
     string _jobTypeSagaEndpointName = null!;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public JobServiceOptions()
     {
         StatusCheckInterval = TimeSpan.FromMinutes(1);
@@ -25,6 +31,9 @@ public class JobServiceOptions :
         SagaPartitionCount = 16;
     }
 
+    /// <summary>
+    /// Gets or sets the job type saga endpoint name value.
+    /// </summary>
     public string JobTypeSagaEndpointName
     {
         get => _jobTypeSagaEndpointName;
@@ -35,6 +44,9 @@ public class JobServiceOptions :
         }
     }
 
+    /// <summary>
+    /// Gets or sets the job state saga endpoint name value.
+    /// </summary>
     public string JobStateSagaEndpointName
     {
         get => _jobSagaEndpointName;
@@ -45,6 +57,9 @@ public class JobServiceOptions :
         }
     }
 
+    /// <summary>
+    /// Gets or sets the job attempt saga endpoint name value.
+    /// </summary>
     public string JobAttemptSagaEndpointName
     {
         get => _jobAttemptSagaEndpointName;
@@ -70,8 +85,17 @@ public class JobServiceOptions :
     /// </summary>
     public int? SagaPartitionCount { get; set; }
 
+    /// <summary>
+    /// Gets or sets the instance endpoint configurator value.
+    /// </summary>
     public IReceiveEndpointConfigurator InstanceEndpointConfigurator { get; set; } = null!;
+    /// <summary>
+    /// Gets or sets the on configure endpoint value.
+    /// </summary>
     public Action<IReceiveEndpointConfigurator> OnConfigureEndpoint { get; set; } = null!;
+    /// <summary>
+    /// Gets the concurrent message limit value.
+    /// </summary>
     public int? ConcurrentMessageLimit => SagaPartitionCount;
 
     IEnumerable<ValidationResult> ISpecification.Validate()

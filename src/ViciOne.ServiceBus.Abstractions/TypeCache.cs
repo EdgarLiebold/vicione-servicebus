@@ -3,8 +3,11 @@ using System.Runtime.CompilerServices;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Metadata;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides a type cache implementation.
+/// </summary>
 public static class TypeCache
 {
     static CachedType GetOrAdd(Type type)
@@ -22,6 +25,11 @@ public static class TypeCache
         Cached.Instance.GetValue(type, _ => new CachedType(typeCache.ShortName));
     }
 
+    /// <summary>
+    /// Gets short name.
+    /// </summary>
+    /// <param name="type">The type value.</param>
+    /// <returns>The result of the operation.</returns>
     public static string GetShortName(Type type)
     {
         return GetOrAdd(type).ShortName;
@@ -45,6 +53,10 @@ public static class TypeCache
 }
 
 
+/// <summary>
+/// Provides a type cache implementation.
+/// </summary>
+/// <typeparam name="T">The t type.</typeparam>
 public class TypeCache<T> :
     ITypeCache<T>
 {
@@ -61,9 +73,18 @@ public class TypeCache<T> :
         TypeCache.GetOrAdd(typeof(T), this);
     }
 
+    /// <summary>
+    /// Gets the read only property cache value.
+    /// </summary>
     public static IReadOnlyPropertyCache<T> ReadOnlyPropertyCache => Cached.Metadata.Value.ReadOnlyPropertyCache;
+    /// <summary>
+    /// Gets the read write property cache value.
+    /// </summary>
     public static IReadWritePropertyCache<T> ReadWritePropertyCache => Cached.Metadata.Value.ReadWritePropertyCache;
 
+    /// <summary>
+    /// Gets the short name value.
+    /// </summary>
     public static string ShortName => Cached.Metadata.Value.ShortName;
 
     IReadOnlyPropertyCache<T> ITypeCache<T>.ReadOnlyPropertyCache => _readPropertyCache.Value;

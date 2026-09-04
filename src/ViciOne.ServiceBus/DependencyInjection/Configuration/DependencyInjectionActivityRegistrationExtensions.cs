@@ -6,8 +6,19 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for dependency injection activity registration.
+/// </summary>
 public static class DependencyInjectionActivityRegistrationExtensions
 {
+    /// <summary>
+    /// Performs the register activity operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TArguments">The t arguments type.</typeparam>
+    /// <typeparam name="TLog">The t log type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IActivityRegistration RegisterActivity<TActivity, TArguments, TLog>(this IServiceCollection collection)
         where TActivity : class, IActivity<TArguments, TLog>
         where TArguments : class
@@ -16,6 +27,15 @@ public static class DependencyInjectionActivityRegistrationExtensions
         return RegisterActivity<TActivity, TArguments, TLog>(collection, new DependencyInjectionContainerRegistrar(collection));
     }
 
+    /// <summary>
+    /// Performs the register activity operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TArguments">The t arguments type.</typeparam>
+    /// <typeparam name="TLog">The t log type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IActivityRegistration RegisterActivity<TActivity, TArguments, TLog>(this IServiceCollection collection, IContainerRegistrar registrar)
         where TActivity : class, IActivity<TArguments, TLog>
         where TArguments : class
@@ -24,6 +44,15 @@ public static class DependencyInjectionActivityRegistrationExtensions
         return new ActivityRegistrar<TActivity, TArguments, TLog>().Register(collection, registrar);
     }
 
+    /// <summary>
+    /// Performs the register activity operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TArguments">The t arguments type.</typeparam>
+    /// <typeparam name="TLog">The t log type.</typeparam>
+    /// <typeparam name="TDefinition">The t definition type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IActivityRegistration RegisterActivity<TActivity, TArguments, TLog, TDefinition>(this IServiceCollection collection)
         where TActivity : class, IActivity<TArguments, TLog>
         where TArguments : class
@@ -33,6 +62,16 @@ public static class DependencyInjectionActivityRegistrationExtensions
         return RegisterActivity<TActivity, TArguments, TLog, TDefinition>(collection, new DependencyInjectionContainerRegistrar(collection));
     }
 
+    /// <summary>
+    /// Performs the register activity operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TArguments">The t arguments type.</typeparam>
+    /// <typeparam name="TLog">The t log type.</typeparam>
+    /// <typeparam name="TDefinition">The t definition type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IActivityRegistration RegisterActivity<TActivity, TArguments, TLog, TDefinition>(this IServiceCollection collection,
         IContainerRegistrar registrar)
         where TActivity : class, IActivity<TArguments, TLog>
@@ -43,6 +82,15 @@ public static class DependencyInjectionActivityRegistrationExtensions
         return new ActivityDefinitionRegistrar<TActivity, TArguments, TLog, TDefinition>().Register(collection, registrar);
     }
 
+    /// <summary>
+    /// Performs the register activity operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TArguments">The t arguments type.</typeparam>
+    /// <typeparam name="TLog">The t log type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="activityDefinitionType">The activity definition type value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IActivityRegistration RegisterActivity<TActivity, TArguments, TLog>(this IServiceCollection collection, Type activityDefinitionType)
         where TActivity : class, IActivity<TArguments, TLog>
         where TArguments : class
@@ -51,6 +99,16 @@ public static class DependencyInjectionActivityRegistrationExtensions
         return RegisterActivity<TActivity, TArguments, TLog>(collection, new DependencyInjectionContainerRegistrar(collection), activityDefinitionType);
     }
 
+    /// <summary>
+    /// Performs the register activity operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TArguments">The t arguments type.</typeparam>
+    /// <typeparam name="TLog">The t log type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
+    /// <param name="activityDefinitionType">The activity definition type value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IActivityRegistration RegisterActivity<TActivity, TArguments, TLog>(this IServiceCollection collection, IContainerRegistrar registrar,
         Type? activityDefinitionType)
         where TActivity : class, IActivity<TArguments, TLog>
@@ -73,6 +131,14 @@ public static class DependencyInjectionActivityRegistrationExtensions
         return register.Register(collection, registrar);
     }
 
+    /// <summary>
+    /// Performs the register activity operation.
+    /// </summary>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
+    /// <param name="activityType">The activity type value.</param>
+    /// <param name="activityDefinitionType">The activity definition type value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IActivityRegistration RegisterActivity(this IServiceCollection collection, IContainerRegistrar registrar, Type activityType,
         Type? activityDefinitionType = null)
     {

@@ -18,11 +18,20 @@ public class PipeContextAgent<TContext> :
     readonly TaskCompletionSource<DateTime> _inactive;
     readonly TimeProvider _timeProvider;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public PipeContextAgent(TContext context)
         : this(Task.FromResult(context), context.GetTimeProvider())
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="timeProvider">The time provider value.</param>
     public PipeContextAgent(Task<TContext> context, TimeProvider? timeProvider = null)
     {
         _context = context;

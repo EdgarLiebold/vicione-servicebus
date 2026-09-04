@@ -18,6 +18,10 @@ public class ActivePipeContextAgent<TContext> :
 
     readonly ActivePipeContextHandle<TContext> _contextHandle;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public ActivePipeContextAgent(ActivePipeContextHandle<TContext> context)
     {
         _contextHandle = context;

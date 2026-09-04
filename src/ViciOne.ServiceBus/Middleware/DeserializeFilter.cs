@@ -14,12 +14,21 @@ public class DeserializeFilter :
     readonly IPipe<ConsumeContext> _output;
     readonly ISerialization _serializers;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="serializers">The serializers value.</param>
+    /// <param name="output">The output value.</param>
     public DeserializeFilter(ISerialization serializers, IPipe<ConsumeContext> output)
     {
         _serializers = serializers;
         _output = output;
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("deserialize");
@@ -28,6 +37,12 @@ public class DeserializeFilter :
         _output.Probe(scope);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     [DebuggerNonUserCode]
     public async Task SendAsync(ReceiveContext context, IPipe<ReceiveContext> next)
     {

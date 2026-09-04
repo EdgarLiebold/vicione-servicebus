@@ -2,11 +2,20 @@ using System;
 
 namespace ViciOne.ServiceBus.Initializers.TypeConverters;
 
+/// <summary>
+/// Provides a version type converter implementation.
+/// </summary>
 public class VersionTypeConverter :
     ITypeConverter<string, Version>,
     ITypeConverter<Version, string>,
     ITypeConverter<Version, object>
 {
+    /// <summary>
+    /// Performs the try convert operation.
+    /// </summary>
+    /// <param name="input">The input value.</param>
+    /// <param name="result">The result value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(Version? input, out string? result)
     {
         result = input?.ToString();
@@ -14,6 +23,12 @@ public class VersionTypeConverter :
         return true;
     }
 
+    /// <summary>
+    /// Performs the try convert operation.
+    /// </summary>
+    /// <param name="input">The input value.</param>
+    /// <param name="result">The result value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(object? input, out Version? result)
     {
         switch (input)
@@ -40,6 +55,12 @@ public class VersionTypeConverter :
         }
     }
 
+    /// <summary>
+    /// Performs the try convert operation.
+    /// </summary>
+    /// <param name="input">The input value.</param>
+    /// <param name="result">The result value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(string? input, out Version? result)
     {
         if (string.IsNullOrWhiteSpace(input))

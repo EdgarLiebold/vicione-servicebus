@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Internals;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Middleware;
 
 class OneTimeSetupMethod
 {
@@ -71,7 +71,13 @@ class OneTimeSetupMethod
 }
 
 
+/// <summary>
+/// Defines the contract for one time context.
+/// </summary>
 public interface OneTimeContext
 {
+    /// <summary>
+    /// Performs the evict operation.
+    /// </summary>
     void Evict();
 }

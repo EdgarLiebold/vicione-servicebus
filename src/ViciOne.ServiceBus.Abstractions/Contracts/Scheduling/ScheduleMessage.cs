@@ -2,8 +2,14 @@ using System;
 
 namespace ViciOne.ServiceBus.Scheduling;
 
+/// <summary>
+/// Defines the contract for schedule message.
+/// </summary>
 public interface ScheduleMessage
 {
+    /// <summary>
+    /// Gets the token id value.
+    /// </summary>
     Guid TokenId { get; }
 
     /// <summary>

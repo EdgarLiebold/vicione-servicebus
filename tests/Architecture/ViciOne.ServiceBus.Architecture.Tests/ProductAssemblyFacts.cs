@@ -11,7 +11,7 @@ namespace ViciOne.ServiceBus.Architecture.Tests;
 /// list. A hand-written catalogue is a second inventory truth: it keeps asserting after the thing it
 /// names has moved, been renamed or been dropped, and the tests stay green because they are only
 /// comparing a list against itself. A type anchor cannot do that - if
-/// <see cref="ViciOne.ServiceBus.IBus"/> or <see cref="ViciOne.ServiceBus.Bus"/> stops existing,
+/// <see cref="ViciOne.ServiceBus.IBus"/> or <see cref="ViciOne.ServiceBus.Advanced.Bus"/> stops existing,
 /// this file stops compiling.
 /// </remarks>
 internal static class ProductAssemblyFacts

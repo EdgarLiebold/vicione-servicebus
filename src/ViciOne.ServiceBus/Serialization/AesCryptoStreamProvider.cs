@@ -5,6 +5,9 @@ using System.Security.Cryptography;
 
 namespace ViciOne.ServiceBus.Serialization;
 
+/// <summary>
+/// Provides an aes crypto stream provider implementation.
+/// </summary>
 public class AesCryptoStreamProvider :
     ICryptoStreamProvider
 {
@@ -12,6 +15,12 @@ public class AesCryptoStreamProvider :
     readonly ISymmetricKeyProvider _keyProvider;
     readonly PaddingMode _paddingMode;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="keyProvider">The key provider value.</param>
+    /// <param name="defaultKeyId">The default key id value.</param>
+    /// <param name="paddingMode">The padding mode value.</param>
     public AesCryptoStreamProvider(ISymmetricKeyProvider keyProvider, string defaultKeyId, PaddingMode paddingMode = PaddingMode.PKCS7)
     {
         _paddingMode = paddingMode;
@@ -49,6 +58,10 @@ public class AesCryptoStreamProvider :
         return new DisposingCryptoStream(stream, encryptor, streamMode);
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         context.Add("defaultKeyId", _defaultKeyId);
@@ -62,6 +75,12 @@ public class AesCryptoStreamProvider :
         return provider.CreateDecryptor(key, iv);
     }
 
+    /// <summary>
+    /// Creates encryptor.
+    /// </summary>
+    /// <param name="key">The key value.</param>
+    /// <param name="iv">The iv value.</param>
+    /// <returns>The result of the operation.</returns>
     public ICryptoTransform CreateEncryptor(byte[] key, byte[] iv)
     {
         using (var provider = CreateAes())

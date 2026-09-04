@@ -4,12 +4,19 @@ using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.InMemoryTransport;
 
+/// <summary>
+/// Provides an in memory publish topology implementation.
+/// </summary>
 public class InMemoryPublishTopology :
     PublishTopology,
     IInMemoryPublishTopologyConfigurator
 {
     readonly IMessageTopology _messageTopology;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="messageTopology">The message topology value.</param>
     public InMemoryPublishTopology(IMessageTopology messageTopology)
     {
         _messageTopology = messageTopology;
@@ -33,6 +40,11 @@ public class InMemoryPublishTopology :
             ?? throw new InvalidOperationException($"The publish topology for {TypeCache.GetShortName(messageType)} is not configurable.");
     }
 
+    /// <summary>
+    /// Creates message topology.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     protected override IMessagePublishTopologyConfigurator CreateMessageTopology<T>()
     {
         var topology = new InMemoryMessagePublishTopology<T>(this, _messageTopology.GetMessageTopology<T>());

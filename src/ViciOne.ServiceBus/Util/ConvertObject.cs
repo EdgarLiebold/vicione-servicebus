@@ -6,8 +6,16 @@ using System.Reflection;
 
 namespace ViciOne.ServiceBus.Util;
 
+/// <summary>
+/// Provides a convert object implementation.
+/// </summary>
 public static class ConvertObject
 {
+    /// <summary>
+    /// Performs the to dictionary operation.
+    /// </summary>
+    /// <param name="values">The values value.</param>
+    /// <returns>The result of the operation.</returns>
     public static Dictionary<string, object> ToDictionary(object? values)
     {
         if (values == null)

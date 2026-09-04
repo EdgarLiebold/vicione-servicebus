@@ -7,9 +7,20 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.Testing.Implementations;
 
+/// <summary>
+/// Provides a base saga test harness implementation.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
 public abstract class BaseSagaTestHarness<TSaga>
     where TSaga : class, ISaga
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="querySagaRepository">The query saga repository value.</param>
+    /// <param name="loadSagaRepository">The load saga repository value.</param>
+    /// <param name="testTimeout">The test timeout value.</param>
+    /// <param name="timeProvider">The time provider value.</param>
     protected BaseSagaTestHarness(IQuerySagaRepository<TSaga>? querySagaRepository, ILoadSagaRepository<TSaga>? loadSagaRepository, TimeSpan testTimeout,
         TimeProvider timeProvider)
     {
@@ -20,10 +31,22 @@ public abstract class BaseSagaTestHarness<TSaga>
         TimeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
     }
 
+    /// <summary>
+    /// Gets the test timeout value.
+    /// </summary>
     protected TimeSpan TestTimeout { get; }
+    /// <summary>
+    /// Gets the time provider value.
+    /// </summary>
     protected TimeProvider TimeProvider { get; }
 
+    /// <summary>
+    /// Gets the query saga repository value.
+    /// </summary>
     protected IQuerySagaRepository<TSaga>? QuerySagaRepository { get; }
+    /// <summary>
+    /// Gets the load saga repository value.
+    /// </summary>
     protected ILoadSagaRepository<TSaga>? LoadSagaRepository { get; }
 
     /// <summary>
@@ -87,6 +110,15 @@ public abstract class BaseSagaTestHarness<TSaga>
         return saga?.CorrelationId;
     }
 
+    /// <summary>
+    /// Performs the poll operation.
+    /// </summary>
+    /// <typeparam name="TResult">The t result type.</typeparam>
+    /// <param name="probe">The probe value.</param>
+    /// <param name="completed">The completed value.</param>
+    /// <param name="timeoutResult">The timeout result value.</param>
+    /// <param name="timeout">The timeout value.</param>
+    /// <returns>The result of the operation.</returns>
     protected async Task<TResult> PollAsync<TResult>(Func<Task<TResult>> probe, Func<TResult, bool> completed, TResult timeoutResult,
         TimeSpan? timeout = default)
     {

@@ -24,6 +24,11 @@ public interface IPipeConnector
 public interface IPipeConnector<out TContext>
     where TContext : class, PipeContext
 {
+    /// <summary>
+    /// Connects pipe.
+    /// </summary>
+    /// <param name="pipe">The pipe value.</param>
+    /// <returns>The result of the operation.</returns>
     ConnectHandle ConnectPipe(IPipe<TContext> pipe);
 }
 

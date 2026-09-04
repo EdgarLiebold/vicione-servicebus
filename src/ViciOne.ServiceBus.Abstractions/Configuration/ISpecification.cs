@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using System.ComponentModel;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
 /// A specification, that can be validated as part of a configurator, is used
@@ -14,6 +13,5 @@ public interface ISpecification
     /// Validate the specification, ensuring that a successful build will occur.
     /// </summary>
     /// <returns></returns>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     IEnumerable<ValidationResult> Validate();
 }

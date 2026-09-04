@@ -13,11 +13,11 @@
     <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Persistence\ViciOne.ServiceBus.EntityFrameworkCoreIntegration\ViciOne.ServiceBus.EntityFrameworkCoreIntegration.csproj" />
-    <ProjectReference Include="..\..\src\Transports\ViciOne.ServiceBus.ActiveMqTransport\ViciOne.ServiceBus.ActiveMqTransport.csproj" />
-    <ProjectReference Include="..\..\src\Transports\ViciOne.ServiceBus.AmazonSqsTransport\ViciOne.ServiceBus.AmazonSqsTransport.csproj" />
-    <ProjectReference Include="..\..\src\Transports\ViciOne.ServiceBus.Azure.ServiceBus.Core\ViciOne.ServiceBus.Azure.ServiceBus.Core.csproj" />
-    <ProjectReference Include="..\..\src\Transports\ViciOne.ServiceBus.RabbitMqTransport\ViciOne.ServiceBus.RabbitMqTransport.csproj" />
+    <ProjectReference Include="..\..\src\Persistence\ViciOne.ServiceBus.EntityFrameworkCore\ViciOne.ServiceBus.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\..\src\Transports\ViciOne.ServiceBus.ActiveMq\ViciOne.ServiceBus.ActiveMq.csproj" />
+    <ProjectReference Include="..\..\src\Transports\ViciOne.ServiceBus.AmazonSqs\ViciOne.ServiceBus.AmazonSqs.csproj" />
+    <ProjectReference Include="..\..\src\Transports\ViciOne.ServiceBus.AzureServiceBus\ViciOne.ServiceBus.AzureServiceBus.csproj" />
+    <ProjectReference Include="..\..\src\Transports\ViciOne.ServiceBus.RabbitMq\ViciOne.ServiceBus.RabbitMq.csproj" />
     <ProjectReference Include="..\..\src\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
     <ProjectReference Include="..\..\src\Transports\ViciOne.ServiceBus.SqlTransport.PostgreSql\ViciOne.ServiceBus.SqlTransport.PostgreSql.csproj" />
   </ItemGroup>

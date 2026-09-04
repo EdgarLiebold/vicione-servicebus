@@ -4,8 +4,11 @@ using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Transports;
 using ViciOne.ServiceBus.Util;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides extension methods for send context.
+/// </summary>
 public static class SendContextExtensions
 {
     /// <summary>
@@ -131,6 +134,12 @@ public static class SendContextExtensions
         }
     }
 
+    /// <summary>
+    /// Performs the apply redelivery options operation.
+    /// </summary>
+    /// <param name="sendContext">The send context value.</param>
+    /// <param name="consumeContext">The consume context value.</param>
+    /// <param name="options">The options value.</param>
     public static void ApplyRedeliveryOptions(this SendContext sendContext, ConsumeContext consumeContext, RedeliveryOptions options)
     {
         if (options.HasFlag(RedeliveryOptions.ReplaceMessageId))

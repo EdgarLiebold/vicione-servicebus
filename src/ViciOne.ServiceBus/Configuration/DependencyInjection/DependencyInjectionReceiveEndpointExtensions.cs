@@ -3,8 +3,11 @@ using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.DependencyInjection;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for dependency injection receive endpoint.
+/// </summary>
 public static class DependencyInjectionReceiveEndpointExtensions
 {
     /// <summary>
@@ -128,6 +131,15 @@ public static class DependencyInjectionReceiveEndpointExtensions
     }
 
 
+    /// <summary>
+    /// Performs the execute activity host operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TArguments">The t arguments type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="compensateAddress">The compensate address value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <param name="configure">The configuration callback.</param>
     public static void ExecuteActivityHost<TActivity, TArguments>(this IReceiveEndpointConfigurator configurator, Uri compensateAddress,
         IRegistrationContext context, Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>
@@ -141,6 +153,14 @@ public static class DependencyInjectionReceiveEndpointExtensions
     }
 
 
+    /// <summary>
+    /// Performs the execute activity host operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TArguments">The t arguments type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <param name="configure">The configuration callback.</param>
     public static void ExecuteActivityHost<TActivity, TArguments>(this IReceiveEndpointConfigurator configurator, IRegistrationContext context,
         Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>
@@ -154,6 +174,14 @@ public static class DependencyInjectionReceiveEndpointExtensions
     }
 
 
+    /// <summary>
+    /// Performs the compensate activity host operation.
+    /// </summary>
+    /// <typeparam name="TActivity">The t activity type.</typeparam>
+    /// <typeparam name="TLog">The t log type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <param name="configure">The configuration callback.</param>
     public static void CompensateActivityHost<TActivity, TLog>(this IReceiveEndpointConfigurator configurator, IRegistrationContext context,
         Action<ICompensateActivityConfigurator<TActivity, TLog>>? configure = null)
         where TActivity : class, ICompensateActivity<TLog>

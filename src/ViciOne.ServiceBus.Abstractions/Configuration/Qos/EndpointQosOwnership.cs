@@ -5,6 +5,12 @@ namespace ViciOne.ServiceBus.Configuration;
 /// </summary>
 public enum EndpointQosOwnership
 {
+    /// <summary>
+    /// Indicates endpoint.
+    /// </summary>
     Endpoint = 0,
+    /// <summary>
+    /// Indicates consumer definition.
+    /// </summary>
     ConsumerDefinition = 1
 }

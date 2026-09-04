@@ -9,8 +9,8 @@ namespace ViciOne.ServiceBus.Tests.Infrastructure.Analyzers.MessageContracts;
 /// </summary>
 public static class MessageContractScenarioCatalog
 {
-    private const string MissingId = "MCA0003";
-    private const string IncompatibleId = "MCA0001";
+    private const string MissingId = "VOSB1004";
+    private const string IncompatibleId = "VOSB1002";
 
     private const string SimpleArrayContract = """
         namespace ConsoleApplication1

@@ -7,17 +7,30 @@ using ViciOne.ServiceBus.SignalR.Utils;
 
 namespace ViciOne.ServiceBus.SignalR.Consumers;
 
+/// <summary>
+/// Provides a connection consumer implementation.
+/// </summary>
+/// <typeparam name="THub">The t hub type.</typeparam>
 public class ConnectionConsumer<THub> :
     IConsumer<Connection<THub>>
     where THub : Hub
 {
     readonly ViciOneServiceBusHubLifetimeManager<THub> _hubLifetimeManager;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="hubLifetimeManager">The hub lifetime manager value.</param>
     public ConnectionConsumer(ViciOneServiceBusHubLifetimeManager<THub> hubLifetimeManager)
     {
         _hubLifetimeManager = hubLifetimeManager;
     }
 
+    /// <summary>
+    /// Consumes the message provided by the context.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     public Task ConsumeAsync(ConsumeContext<Connection<THub>> context)
     {
         return HandleAsync(context.Message.ConnectionId, context.Message.Messages);

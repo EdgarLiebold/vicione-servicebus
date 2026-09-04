@@ -897,13 +897,13 @@ internal static partial class ExpressionCompiler
 
     public static readonly ConstructorInfo ArrayClosureWithNonPassedParamsConstructorWithoutConstants = _nonPassedParamsArrayClosureCtors[1];
 
-    public class ArrayClosure
+    internal class ArrayClosure
     {
         public readonly object[] ConstantsAndNestedLambdas; // todo: @feature split into two to reduce copying - it mostly need to set up nested lambdas and constants externally without closure collecting phase
         public ArrayClosure(object[] constantsAndNestedLambdas) => ConstantsAndNestedLambdas = constantsAndNestedLambdas;
     }
 
-    public sealed class DebugArrayClosure : ArrayClosure, IDelegateDebugInfo
+    internal sealed class DebugArrayClosure : ArrayClosure, IDelegateDebugInfo
     {
         public LambdaExpression Expression { get; internal set; }
 
@@ -922,7 +922,7 @@ internal static partial class ExpressionCompiler
     }
 
     // todo: @perf better to move the case with no constants to another class OR we can reuse ArrayClosure but now ConstantsAndNestedLambdas will hold NonPassedParams
-    public sealed class ArrayClosureWithNonPassedParams : ArrayClosure
+    internal sealed class ArrayClosureWithNonPassedParams : ArrayClosure
     {
         public readonly object[] NonPassedParams;
 
@@ -935,7 +935,7 @@ internal static partial class ExpressionCompiler
     }
 
     // todo: @perf this class is required until we move to a single constants list per lambda hierarchy
-    public sealed class NestedLambdaWithConstantsAndNestedLambdas
+    internal sealed class NestedLambdaWithConstantsAndNestedLambdas
     {
         public static readonly FieldInfo NestedLambdaField =
             typeof(NestedLambdaWithConstantsAndNestedLambdas).GetTypeInfo().GetDeclaredField(nameof(NestedLambda));
@@ -7217,7 +7217,7 @@ internal static class CodePrinter
     private static Type[] GetGenericTypeParametersOrArguments(this TypeInfo typeInfo) =>
         typeInfo.IsGenericTypeDefinition ? typeInfo.GenericTypeParameters : typeInfo.GenericTypeArguments;
 
-    public interface IObjectToCode
+    internal interface IObjectToCode
     {
         string ToCode(object x, bool stripNamespace = false, Func<Type, string, string> printType = null);
     }

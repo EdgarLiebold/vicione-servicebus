@@ -9,6 +9,9 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Testing;
 
+/// <summary>
+/// Provides extension methods for timeline.
+/// </summary>
 public static class TimelineExtensions
 {
     /// <summary>
@@ -129,6 +132,9 @@ public static class TimelineExtensions
     }
 
 
+    /// <summary>
+    /// Defines configuration options for output timeline.
+    /// </summary>
     public class OutputTimelineOptions
     {
         bool _includeAddress;

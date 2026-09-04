@@ -3,6 +3,10 @@ using System.Collections.Concurrent;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides an instance connector cache implementation.
+/// </summary>
+/// <typeparam name="T">The t type.</typeparam>
 public class InstanceConnectorCache<T> :
     IInstanceConnectorCache<T>
     where T : class
@@ -14,6 +18,9 @@ public class InstanceConnectorCache<T> :
         _connector = new Lazy<InstanceConnector<T>>(() => new InstanceConnector<T>());
     }
 
+    /// <summary>
+    /// Gets the connector value.
+    /// </summary>
     public static IInstanceConnector Connector => InstanceCache.Cached.Value.Connector;
 
     IInstanceConnector IInstanceConnectorCache<T>.Connector => _connector.Value;
@@ -26,8 +33,16 @@ public class InstanceConnectorCache<T> :
 }
 
 
+/// <summary>
+/// Provides an instance connector cache implementation.
+/// </summary>
 public static class InstanceConnectorCache
 {
+    /// <summary>
+    /// Gets instance connector.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     public static IInstanceConnector GetInstanceConnector<T>()
         where T : class
     {
@@ -35,6 +50,11 @@ public static class InstanceConnectorCache
             _ => new Lazy<IInstanceConnector>(() => InstanceConnectorCache<T>.Connector)).Value;
     }
 
+    /// <summary>
+    /// Gets instance connector.
+    /// </summary>
+    /// <param name="type">The type value.</param>
+    /// <returns>The result of the operation.</returns>
     public static IInstanceConnector GetInstanceConnector(Type type)
     {
         return InstanceCache.Cached.Value.GetOrAdd(type, _ => new Lazy<IInstanceConnector>(() =>

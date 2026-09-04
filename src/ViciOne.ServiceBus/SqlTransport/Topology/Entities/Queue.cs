@@ -2,8 +2,14 @@ using System;
 
 namespace ViciOne.ServiceBus.SqlTransport.Topology;
 
+/// <summary>
+/// Defines the contract for queue.
+/// </summary>
 public interface Queue
 {
+    /// <summary>
+    /// Gets the queue name value.
+    /// </summary>
     string QueueName { get; }
 
     /// <summary>

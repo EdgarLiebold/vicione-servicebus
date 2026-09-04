@@ -5,14 +5,15 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using ViciOne.ServiceBus;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.Mediator;
 using ViciOne.ServiceBus.Monitoring;
-using ViciOne.ServiceBus.ProviderAbstractions;
+using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Transports;
 
-namespace ViciOne.ServiceBus;
+namespace Microsoft.Extensions.DependencyInjection;
 
 /// <summary>
 /// Standard registration extensions, which are used to configure consumers, sagas, and activities on receive endpoints from a

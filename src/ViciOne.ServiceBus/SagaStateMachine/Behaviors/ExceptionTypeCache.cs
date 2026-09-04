@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
+/// <summary>
+/// Provides an exception type cache implementation.
+/// </summary>
 public static class ExceptionTypeCache
 {
     static CachedConfigurator GetOrAdd(Type type)
@@ -13,6 +16,15 @@ public static class ExceptionTypeCache
                 ?? throw new InvalidOperationException($"Could not create an exception configurator for '{type}'.")));
     }
 
+    /// <summary>
+    /// Performs the faulted operation.
+    /// </summary>
+    /// <typeparam name="TSaga">The t saga type.</typeparam>
+    /// <param name="behavior">The behavior value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <param name="exception">The exception associated with the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static Task FaultedAsync<TSaga>(IBehavior<TSaga> behavior, BehaviorContext<TSaga> context, Exception exception, CancellationToken cancellationToken = default)
         where TSaga : class, SagaStateMachineInstance
     {
@@ -22,6 +34,16 @@ public static class ExceptionTypeCache
         return GetOrAdd(exception.GetType()).FaultedAsync(behavior, context, exception);
     }
 
+    /// <summary>
+    /// Performs the faulted operation.
+    /// </summary>
+    /// <typeparam name="TSaga">The t saga type.</typeparam>
+    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <param name="behavior">The behavior value.</param>
+    /// <param name="context">The operation context.</param>
+    /// <param name="exception">The exception associated with the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static Task FaultedAsync<TSaga, TMessage>(IBehavior<TSaga, TMessage> behavior, BehaviorContext<TSaga, TMessage> context, Exception exception, CancellationToken cancellationToken = default)
         where TSaga : class, SagaStateMachineInstance
         where TMessage : class

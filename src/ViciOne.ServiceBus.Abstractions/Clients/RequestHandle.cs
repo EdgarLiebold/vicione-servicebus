@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>
 /// A request handle manages the client-side request, and allows the request to be configured, response types added, etc. The handle
@@ -20,6 +20,9 @@ public interface RequestHandle<TRequest> :
 }
 
 
+/// <summary>
+/// Defines the contract for request handle.
+/// </summary>
 public interface RequestHandle :
     IRequestPipeConfigurator,
     IDisposable

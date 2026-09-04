@@ -3,8 +3,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Mediator;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Provides extension methods for mediator request.
+/// </summary>
 public static class MediatorRequestExtensions
 {
     /// <summary>

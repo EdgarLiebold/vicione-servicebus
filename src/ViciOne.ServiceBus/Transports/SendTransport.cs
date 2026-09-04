@@ -7,6 +7,10 @@ using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.Transports;
 
+/// <summary>
+/// Provides a send transport implementation.
+/// </summary>
+/// <typeparam name="TContext">The t context type.</typeparam>
 public class SendTransport<TContext> :
     Supervisor,
     ISendTransport,
@@ -15,6 +19,10 @@ public class SendTransport<TContext> :
 {
     readonly SendTransportContext<TContext> _context;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public SendTransport(SendTransportContext<TContext> context)
     {
         _context = context;
@@ -23,16 +31,33 @@ public class SendTransport<TContext> :
             Add(agent);
     }
 
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public async ValueTask DisposeAsync()
     {
         await this.StopAsync("Disposed").ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Connects send observer.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
     {
         return _context.ConnectSendObserver(observer);
     }
 
+    /// <summary>
+    /// Creates send context.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="message">The message value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
@@ -41,6 +66,14 @@ public class SendTransport<TContext> :
         return _context.CreateSendContextAsync(message, pipe, cancellationToken);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="message">The message value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task SendAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
@@ -54,6 +87,11 @@ public class SendTransport<TContext> :
         return _context.SendAsync(sendPipe, cancellationToken);
     }
 
+    /// <summary>
+    /// Stops supervisor.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     protected override Task StopSupervisorAsync(StopSupervisorContext context)
     {
         TransportLogMessages.StoppingSendTransport(_context.EntityName);

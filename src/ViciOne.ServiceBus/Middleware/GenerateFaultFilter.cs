@@ -12,11 +12,21 @@ namespace ViciOne.ServiceBus.Middleware;
 public class GenerateFaultFilter :
     IFilter<ExceptionReceiveContext>
 {
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         context.CreateFilterScope("generateFault");
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SendAsync(ExceptionReceiveContext context, IPipe<ExceptionReceiveContext> next)
     {
         if (!context.IsFaulted)

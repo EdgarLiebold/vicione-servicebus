@@ -1,7 +1,10 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Providers.Transports;
 
+/// <summary>
+/// Provides extension methods for sql configure endpoint callback.
+/// </summary>
 public static class SqlConfigureEndpointCallbackExtensions
 {
     /// <summary>

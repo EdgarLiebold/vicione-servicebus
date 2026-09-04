@@ -4,15 +4,30 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ViciOne.ServiceBus.Testing;
 
+/// <summary>
+/// Defines the contract for test harness.
+/// </summary>
 public interface ITestHarness :
     IBaseTestHarness
 {
+    /// <summary>
+    /// Gets the bus value.
+    /// </summary>
     IBus Bus { get; }
 
+    /// <summary>
+    /// Gets the scope value.
+    /// </summary>
     IServiceScope Scope { get; }
 
+    /// <summary>
+    /// Gets the provider value.
+    /// </summary>
     IServiceProvider Provider { get; }
 
+    /// <summary>
+    /// Gets the endpoint name formatter value.
+    /// </summary>
     IEndpointNameFormatter EndpointNameFormatter { get; }
 
     /// <summary>
@@ -51,6 +66,11 @@ public interface ITestHarness :
         where TStateMachine : class, SagaStateMachine<T>
         where T : class, SagaStateMachineInstance;
 
+    /// <summary>
+    /// Gets request client.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     IRequestClient<T> GetRequestClient<T>()
         where T : class;
 
@@ -126,5 +146,10 @@ public interface ITestHarness :
         where T : class, IExecuteActivity<TArguments>
         where TArguments : class;
 
+    /// <summary>
+    /// Starts the configured component.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     Task StartAsync(CancellationToken cancellationToken = default);
 }

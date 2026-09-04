@@ -4,6 +4,11 @@ using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides an initiated by or orchestrates saga connector factory implementation.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public class InitiatedByOrOrchestratesSagaConnectorFactory<TSaga, TMessage> :
     ISagaConnectorFactory
     where TSaga : class, ISaga, InitiatedByOrOrchestrates<TMessage>
@@ -11,6 +16,9 @@ public class InitiatedByOrOrchestratesSagaConnectorFactory<TSaga, TMessage> :
 {
     readonly ISagaMessageConnector<TSaga> _connector;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public InitiatedByOrOrchestratesSagaConnectorFactory()
     {
         var consumeFilter = new InitiatedByOrOrchestratesSagaMessageFilter<TSaga, TMessage>();

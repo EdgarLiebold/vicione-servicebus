@@ -13,11 +13,21 @@ public class ConsumeConcurrencyLimitFilter<TMessage> :
 {
     readonly IConcurrencyLimiter _limiter;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="limiter">The limiter value.</param>
     public ConsumeConcurrencyLimitFilter(IConcurrencyLimiter limiter)
     {
         _limiter = limiter;
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SendAsync(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
     {
         await _limiter.WaitAsync(context.CancellationToken).ConfigureAwait(false);
@@ -32,6 +42,10 @@ public class ConsumeConcurrencyLimitFilter<TMessage> :
         }
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("concurrencyLimit");

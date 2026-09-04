@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Serialization;
 
+/// <summary>
+/// Provides extension methods for camel case dictionary.
+/// </summary>
 public static class CamelCaseDictionaryExtensions
 {
     /// <summary>

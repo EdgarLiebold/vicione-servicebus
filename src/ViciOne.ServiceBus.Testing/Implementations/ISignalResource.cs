@@ -5,5 +5,8 @@ namespace ViciOne.ServiceBus.Testing.Implementations;
 /// </summary>
 public interface ISignalResource
 {
+    /// <summary>
+    /// Performs the signal operation.
+    /// </summary>
     void Signal();
 }

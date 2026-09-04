@@ -15,6 +15,9 @@ public class LatestFilter<T> :
     readonly TaskCompletionSource<bool> _hasValue;
     T _latest = null!;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public LatestFilter()
     {
         _hasValue = new TaskCompletionSource<bool>(TaskCreationOptions.None | TaskCreationOptions.RunContinuationsAsynchronously);

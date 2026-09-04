@@ -15,6 +15,10 @@ public class DynamicRouter<TContext> :
     readonly IDynamicFilter<TContext> _filter;
     readonly IPipe<TContext> _pipe;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="converterFactory">The converter factory value.</param>
     public DynamicRouter(IPipeContextConverterFactory<TContext> converterFactory)
     {
         ArgumentNullException.ThrowIfNull(converterFactory);
@@ -35,6 +39,12 @@ public class DynamicRouter<TContext> :
         return _pipe.SendAsync(context);
     }
 
+    /// <summary>
+    /// Connects pipe.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="pipe">The pipe value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectPipe<T>(IPipe<T> pipe)
         where T : class, PipeContext
     {
@@ -53,6 +63,11 @@ public class DynamicRouter<TContext> :
 }
 
 
+/// <summary>
+/// Provides a dynamic router implementation.
+/// </summary>
+/// <typeparam name="TContext">The t context type.</typeparam>
+/// <typeparam name="TKey">The t key type.</typeparam>
 public class DynamicRouter<TContext, TKey> :
     IDynamicRouter<TContext, TKey>
     where TContext : class, PipeContext
@@ -61,6 +76,11 @@ public class DynamicRouter<TContext, TKey> :
     readonly IDynamicFilter<TContext, TKey> _filter;
     readonly IPipe<TContext> _pipe;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="converterFactory">The converter factory value.</param>
+    /// <param name="keyAccessor">The key accessor value.</param>
     public DynamicRouter(IPipeContextConverterFactory<TContext> converterFactory, KeyAccessor<TContext, TKey> keyAccessor)
     {
         ArgumentNullException.ThrowIfNull(converterFactory);
@@ -82,6 +102,12 @@ public class DynamicRouter<TContext, TKey> :
         return _pipe.SendAsync(context);
     }
 
+    /// <summary>
+    /// Connects pipe.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="pipe">The pipe value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectPipe<T>(IPipe<T> pipe)
         where T : class, PipeContext
     {
@@ -98,6 +124,13 @@ public class DynamicRouter<TContext, TKey> :
         return _filter.ConnectObserver(observer);
     }
 
+    /// <summary>
+    /// Connects pipe.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="key">The key value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectPipe<T>(TKey key, IPipe<T> pipe)
         where T : class, PipeContext
     {

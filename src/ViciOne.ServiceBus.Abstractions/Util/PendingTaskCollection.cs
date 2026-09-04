@@ -6,22 +6,37 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Util;
 
+/// <summary>
+/// Provides a pending task collection implementation.
+/// </summary>
 public class PendingTaskCollection
 {
     readonly Dictionary<long, Task> _tasks;
     long _nextId;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="capacity">The capacity value.</param>
     public PendingTaskCollection(int capacity)
     {
         _tasks = new Dictionary<long, Task>(capacity);
     }
 
+    /// <summary>
+    /// Performs the add operation.
+    /// </summary>
+    /// <param name="tasks">The tasks value.</param>
     public void Add(IEnumerable<Task> tasks)
     {
         foreach (var task in tasks)
             Add(task);
     }
 
+    /// <summary>
+    /// Performs the add operation.
+    /// </summary>
+    /// <param name="task">The task value.</param>
     public void Add(Task task)
     {
         if (task == null)
@@ -38,6 +53,11 @@ public class PendingTaskCollection
         task.ContinueWith(x => Remove(id), TaskContinuationOptions.OnlyOnRanToCompletion | TaskContinuationOptions.ExecuteSynchronously);
     }
 
+    /// <summary>
+    /// Performs the completed operation.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task CompletedAsync(CancellationToken cancellationToken = default)
     {
         Task[] tasks;

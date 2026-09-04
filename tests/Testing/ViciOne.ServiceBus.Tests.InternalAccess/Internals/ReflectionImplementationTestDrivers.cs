@@ -1,4 +1,5 @@
 using System.Reflection;
+using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Tests.InternalAccess.Internals;
@@ -8,6 +9,13 @@ public sealed class DynamicImplementationBuilderTestDriver
     private readonly DynamicImplementationBuilder _builder = new();
 
     public Type GetImplementationType(Type interfaceType) => _builder.GetImplementationType(interfaceType);
+}
+
+public static class BusInstanceBuilderTestDriver
+{
+    public static TResult GetBusInstanceType<TBus, TResult>(IBusInstanceBuilderCallback<TBus, TResult> callback)
+        where TBus : class, IBus =>
+        BusInstanceBuilder.Instance.GetBusInstanceType(callback);
 }
 
 public sealed class ReadPropertyTestDriver<T, TProperty>

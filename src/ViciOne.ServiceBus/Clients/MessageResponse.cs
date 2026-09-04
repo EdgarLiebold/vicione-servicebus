@@ -13,6 +13,10 @@ public class MessageResponse<TResult> :
 {
     readonly ConsumeContext<TResult> _context;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public MessageResponse(ConsumeContext<TResult> context)
     {
         _context = context;
@@ -34,9 +38,18 @@ public class MessageResponse<TResult> :
     Headers MessageContext.Headers => _context.Headers;
     HostInfo MessageContext.Host => _context.Host;
 
+    /// <summary>
+    /// Gets the message value.
+    /// </summary>
     public TResult Message { get; }
     object Response.Message => Message;
 
+    /// <summary>
+    /// Performs the deserialize object operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="dictionary">The dictionary value.</param>
+    /// <returns>The result of the operation.</returns>
     public T? DeserializeObject<T>(Dictionary<string, object> dictionary)
         where T : class
     {

@@ -2,17 +2,29 @@ using System.Collections.Generic;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a message consume topology pipe specification implementation.
+/// </summary>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public class MessageConsumeTopologyPipeSpecification<TMessage> :
     ISpecificationPipeSpecification<ConsumeContext<TMessage>>
     where TMessage : class
 {
     readonly IMessageConsumeTopology<TMessage> _messageConsumeTopology;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="messageConsumeTopology">The message consume topology value.</param>
     public MessageConsumeTopologyPipeSpecification(IMessageConsumeTopology<TMessage> messageConsumeTopology)
     {
         _messageConsumeTopology = messageConsumeTopology;
     }
 
+    /// <summary>
+    /// Applies this specification to the target builder.
+    /// </summary>
+    /// <param name="builder">The builder value.</param>
     public void Apply(ISpecificationPipeBuilder<ConsumeContext<TMessage>> builder)
     {
         var typeBuilder = new Builder(builder);
@@ -20,6 +32,10 @@ public class MessageConsumeTopologyPipeSpecification<TMessage> :
         _messageConsumeTopology.Apply(typeBuilder);
     }
 
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         yield break;

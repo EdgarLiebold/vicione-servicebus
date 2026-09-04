@@ -6,6 +6,10 @@ using ViciOne.ServiceBus.Middleware;
 #nullable enable
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a consumer specification implementation.
+/// </summary>
+/// <typeparam name="TConsumer">The t consumer type.</typeparam>
 public class ConsumerSpecification<TConsumer> :
     OptionsSet,
     IConsumerSpecification<TConsumer>
@@ -19,6 +23,10 @@ public class ConsumerSpecification<TConsumer> :
     ConsumerConcurrencyGate<object>? _concurrencyGate;
     ConsumerConcurrencyPolicy? _concurrencyPolicy;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="messageSpecifications">The message specifications value.</param>
     public ConsumerSpecification(IEnumerable<IConsumerMessageSpecification<TConsumer>> messageSpecifications)
     {
         _messageTypes = messageSpecifications.ToDictionary(x => x.MessageType);
@@ -27,6 +35,9 @@ public class ConsumerSpecification<TConsumer> :
         _handles = _messageTypes.Values.Select(x => x.ConnectConsumerConfigurationObserver(_observers)).ToArray();
     }
 
+    /// <summary>
+    /// Gets or sets the concurrent message limit value.
+    /// </summary>
     public int? ConcurrentMessageLimit
     {
         get => _concurrencyPolicy?.Mode == ConsumerConcurrencyMode.Parallel
@@ -39,11 +50,19 @@ public class ConsumerSpecification<TConsumer> :
         }
     }
 
+    /// <summary>
+    /// Gets or sets the concurrency policy value.
+    /// </summary>
     public ConsumerConcurrencyPolicy ConcurrencyPolicy
     {
         set => SetConcurrencyPolicy(value);
     }
 
+    /// <summary>
+    /// Performs the message operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="configure">The configuration callback.</param>
     public void Message<T>(Action<IConsumerMessageConfigurator<T>>? configure)
         where T : class
     {
@@ -52,6 +71,11 @@ public class ConsumerSpecification<TConsumer> :
         configure?.Invoke(specification);
     }
 
+    /// <summary>
+    /// Consumes r message.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="configure">The configuration callback.</param>
     public void ConsumerMessage<T>(Action<IConsumerMessageConfigurator<TConsumer, T>>? configure)
         where T : class
     {
@@ -60,6 +84,11 @@ public class ConsumerSpecification<TConsumer> :
         configure?.Invoke(specification);
     }
 
+    /// <summary>
+    /// Gets message specification.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     public IConsumerMessageSpecification<TConsumer, T> GetMessageSpecification<T>()
         where T : class
     {
@@ -72,6 +101,11 @@ public class ConsumerSpecification<TConsumer> :
         throw new ArgumentException($"MessageType {TypeCache<T>.ShortName} is not consumed by {TypeCache<TConsumer>.ShortName}");
     }
 
+    /// <summary>
+    /// Configures message pipe.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="pipeConfigurator">The pipe configurator value.</param>
     public void ConfigureMessagePipe<T>(IPipeConfigurator<ConsumeContext<T>> pipeConfigurator)
         where T : class
     {
@@ -82,6 +116,14 @@ public class ConsumerSpecification<TConsumer> :
         pipeConfigurator.AddPipeSpecification(new ConsumerConcurrencyPipeSpecification<T>(_concurrencyGate, _concurrencyPolicy));
     }
 
+    /// <summary>
+    /// Configures partitioned concurrency for the current pipeline.
+    /// </summary>
+    /// <typeparam name="TMessage">The t message type.</typeparam>
+    /// <typeparam name="TKey">The t key type.</typeparam>
+    /// <param name="partitionCount">The partition count value.</param>
+    /// <param name="selector">The selector value.</param>
+    /// <param name="comparer">The comparer value.</param>
     public void UsePartitionedConcurrency<TMessage, TKey>(
         int partitionCount,
         ConsumerPartitionKeySelector<TMessage, TKey> selector,
@@ -109,6 +151,10 @@ public class ConsumerSpecification<TConsumer> :
         specification.AddPipeSpecification(new ConsumerConcurrencyPipeSpecification<TMessage>(gate, policy));
     }
 
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         _configurationNotification.EnsureNotified(() =>
@@ -119,12 +165,21 @@ public class ConsumerSpecification<TConsumer> :
             .ToArray();
     }
 
+    /// <summary>
+    /// Adds pipe specification to the configuration.
+    /// </summary>
+    /// <param name="specification">The specification value.</param>
     public void AddPipeSpecification(IPipeSpecification<ConsumerConsumeContext<TConsumer>> specification)
     {
         foreach (IConsumerMessageSpecification<TConsumer> messageSpecification in _messageTypes.Values)
             messageSpecification.AddPipeSpecification(specification);
     }
 
+    /// <summary>
+    /// Connects consumer configuration observer.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectConsumerConfigurationObserver(IConsumerConfigurationObserver observer)
     {
         return _observers.Connect(observer);

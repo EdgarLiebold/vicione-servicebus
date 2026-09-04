@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.DurableSend;
 using ViciOne.ServiceBus.Serialization;
 
-namespace ViciOne.ServiceBus.InMemoryTransport;
+namespace ViciOne.ServiceBus.Providers.Transports;
 
 /// <summary>
 /// Dispatches a retained serialized message into the volatile InMemory transport and reports consumer completion as

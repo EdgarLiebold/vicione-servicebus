@@ -1,8 +1,11 @@
 using System;
 using ViciOne.ServiceBus.Contracts;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
+/// <summary>
+/// Defines the contract for request configurator.
+/// </summary>
 public interface IRequestConfigurator
 {
     /// <summary>
@@ -28,6 +31,12 @@ public interface IRequestConfigurator
 }
 
 
+/// <summary>
+/// Defines the contract for request configurator.
+/// </summary>
+/// <typeparam name="TInstance">The t instance type.</typeparam>
+/// <typeparam name="TRequest">The t request type.</typeparam>
+/// <typeparam name="TResponse">The t response type.</typeparam>
 public interface IRequestConfigurator<TInstance, TRequest, TResponse> :
     IRequestConfigurator
     where TInstance : class, SagaStateMachineInstance
@@ -54,6 +63,13 @@ public interface IRequestConfigurator<TInstance, TRequest, TResponse> :
 }
 
 
+/// <summary>
+/// Defines the contract for request configurator.
+/// </summary>
+/// <typeparam name="TInstance">The t instance type.</typeparam>
+/// <typeparam name="TRequest">The t request type.</typeparam>
+/// <typeparam name="TResponse">The t response type.</typeparam>
+/// <typeparam name="TResponse2">The t response2 type.</typeparam>
 public interface IRequestConfigurator<TInstance, TRequest, TResponse, TResponse2> :
     IRequestConfigurator<TInstance, TRequest, TResponse>
     where TInstance : class, SagaStateMachineInstance
@@ -69,6 +85,14 @@ public interface IRequestConfigurator<TInstance, TRequest, TResponse, TResponse2
 }
 
 
+/// <summary>
+/// Defines the contract for request configurator.
+/// </summary>
+/// <typeparam name="TInstance">The t instance type.</typeparam>
+/// <typeparam name="TRequest">The t request type.</typeparam>
+/// <typeparam name="TResponse">The t response type.</typeparam>
+/// <typeparam name="TResponse2">The t response2 type.</typeparam>
+/// <typeparam name="TResponse3">The t response3 type.</typeparam>
 public interface IRequestConfigurator<TInstance, TRequest, TResponse, TResponse2, TResponse3> :
     IRequestConfigurator<TInstance, TRequest, TResponse, TResponse2>
     where TInstance : class, SagaStateMachineInstance

@@ -4,6 +4,10 @@ using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
+/// <summary>
+/// Provides a catch behavior builder implementation.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
 public class CatchBehaviorBuilder<TSaga> :
     IBehaviorBuilder<TSaga>
     where TSaga : class, SagaStateMachineInstance
@@ -11,14 +15,24 @@ public class CatchBehaviorBuilder<TSaga> :
     readonly List<IStateMachineActivity<TSaga>> _activities;
     readonly Lazy<IBehavior<TSaga>> _behavior;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public CatchBehaviorBuilder()
     {
         _activities = new List<IStateMachineActivity<TSaga>>();
         _behavior = new Lazy<IBehavior<TSaga>>(CreateBehavior);
     }
 
+    /// <summary>
+    /// Gets the behavior value.
+    /// </summary>
     public IBehavior<TSaga> Behavior => _behavior.Value;
 
+    /// <summary>
+    /// Performs the add operation.
+    /// </summary>
+    /// <param name="activity">The activity value.</param>
     public void Add(IStateMachineActivity<TSaga> activity)
     {
         if (_behavior.IsValueCreated)

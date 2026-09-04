@@ -1,5 +1,9 @@
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for build pipe configurator.
+/// </summary>
+/// <typeparam name="TContext">The t context type.</typeparam>
 public interface IBuildPipeConfigurator<TContext> :
     IPipeConfigurator<TContext>,
     ISpecification

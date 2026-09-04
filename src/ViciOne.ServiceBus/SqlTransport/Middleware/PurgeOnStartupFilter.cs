@@ -11,6 +11,10 @@ public class PurgeOnStartupFilter :
     readonly string _queueName;
     bool _queueAlreadyPurged;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="queueName">The queue name value.</param>
     public PurgeOnStartupFilter(string queueName)
     {
         _queueName = queueName;

@@ -2,6 +2,9 @@ using System;
 
 namespace ViciOne.ServiceBus.Util;
 
+/// <summary>
+/// Defines configuration options for request rate algorithm.
+/// </summary>
 public class RequestRateAlgorithmOptions
 {
     /// <summary>

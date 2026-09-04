@@ -2,12 +2,18 @@ using System;
 using System.Collections.Generic;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for consumer configurator.
+/// </summary>
 public interface IConsumerConfigurator :
     IConsumeConfigurator,
     IConsumerConfigurationObserverConnector
 {
+    /// <summary>
+    /// Gets or sets the concurrent message limit value.
+    /// </summary>
     int? ConcurrentMessageLimit { set; }
 
     /// <summary>
@@ -18,6 +24,10 @@ public interface IConsumerConfigurator :
 }
 
 
+/// <summary>
+/// Defines the contract for consumer configurator.
+/// </summary>
+/// <typeparam name="TConsumer">The t consumer type.</typeparam>
 public interface IConsumerConfigurator<TConsumer> :
     IPipeConfigurator<ConsumerConsumeContext<TConsumer>>,
     IConsumerConfigurator,

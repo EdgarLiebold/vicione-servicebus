@@ -1,8 +1,11 @@
 using System;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Providers.Transports;
 
+/// <summary>
+/// Defines the contract for sql topic to topic binding configurator.
+/// </summary>
 public interface ISqlTopicToTopicBindingConfigurator :
     ISqlTopicSubscriptionConfigurator
 {

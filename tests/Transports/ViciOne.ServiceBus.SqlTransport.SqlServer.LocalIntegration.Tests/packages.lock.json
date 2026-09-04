@@ -421,7 +421,7 @@
       "vicione.servicebus.abstractions": {
         "type": "Project"
       },
-      "ViciOne.ServiceBus.EntityFrameworkCore": {
+      "vicione.servicebus.entityframeworkcore": {
         "type": "Project",
         "dependencies": {
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",

@@ -1,5 +1,8 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Providers.Transports;
 
+/// <summary>
+/// Defines configuration options for sql transport migration.
+/// </summary>
 public class SqlTransportMigrationOptions
 {
     /// <summary>

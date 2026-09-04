@@ -4,6 +4,10 @@ using System.Reflection;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a topology convention cache implementation.
+/// </summary>
+/// <typeparam name="TValue">The t value type.</typeparam>
 public class TopologyConventionCache<TValue> :
     ITopologyConventionCache<TValue>
     where TValue : class
@@ -11,6 +15,11 @@ public class TopologyConventionCache<TValue> :
     readonly ConcurrentDictionary<Type, Cached> _dictionary;
     readonly IConventionTypeFactory<TValue> _typeFactory;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="genericType">The generic type value.</param>
+    /// <param name="typeFactory">The type factory value.</param>
     public TopologyConventionCache(Type genericType, IConventionTypeFactory<TValue> typeFactory)
     {
         if (genericType == null)

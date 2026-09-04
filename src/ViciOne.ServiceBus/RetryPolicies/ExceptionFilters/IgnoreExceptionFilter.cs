@@ -3,11 +3,18 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.RetryPolicies.ExceptionFilters;
 
+/// <summary>
+/// Provides an ignore exception filter implementation.
+/// </summary>
 public class IgnoreExceptionFilter :
     IExceptionFilter
 {
     readonly Type[] _exceptionTypes;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="exceptionTypes">The exception types value.</param>
     public IgnoreExceptionFilter(params Type[] exceptionTypes)
     {
         _exceptionTypes = exceptionTypes;

@@ -20,6 +20,11 @@ public class StateMachineSagaMessageFilter<TInstance, TMessage> :
     readonly Event<TMessage> _event;
     readonly SagaStateMachine<TInstance> _machine;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="machine">The machine value.</param>
+    /// <param name="event">The event value.</param>
     public StateMachineSagaMessageFilter(SagaStateMachine<TInstance> machine, Event<TMessage> @event)
     {
         _machine = machine;
@@ -45,6 +50,12 @@ public class StateMachineSagaMessageFilter<TInstance, TMessage> :
         _machine.Probe(context);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SendAsync(SagaConsumeContext<TInstance, TMessage> context, IPipe<SagaConsumeContext<TInstance, TMessage>> next)
     {
         BehaviorContext<TInstance, TMessage> behaviorContext =

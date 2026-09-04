@@ -15,22 +15,56 @@ public class PublishEndpointConverterCache
 
     IPublishEndpointConverter this[Type type] => _types.GetOrAdd(type, CreateTypeConverter).Value;
 
+    /// <summary>
+    /// Publishes a message to its configured consumers.
+    /// </summary>
+    /// <param name="endpoint">The endpoint value.</param>
+    /// <param name="message">The message value.</param>
+    /// <param name="messageType">The message type value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static Task PublishAsync(IPublishEndpoint endpoint, object message, Type messageType, CancellationToken cancellationToken = default)
     {
         return Cached.Converters.Value[messageType].PublishAsync(endpoint, message, cancellationToken);
     }
 
+    /// <summary>
+    /// Publishes a message to its configured consumers.
+    /// </summary>
+    /// <param name="endpoint">The endpoint value.</param>
+    /// <param name="message">The message value.</param>
+    /// <param name="messageType">The message type value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static Task PublishAsync(IPublishEndpoint endpoint, object message, Type messageType, IPipe<PublishContext> pipe,
         CancellationToken cancellationToken = default)
     {
         return Cached.Converters.Value[messageType].PublishAsync(endpoint, message, pipe, cancellationToken);
     }
 
+    /// <summary>
+    /// Publishes initializer.
+    /// </summary>
+    /// <param name="endpoint">The endpoint value.</param>
+    /// <param name="messageType">The message type value.</param>
+    /// <param name="values">The values value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static Task PublishInitializerAsync(IPublishEndpoint endpoint, Type messageType, object values, CancellationToken cancellationToken = default)
     {
         return Cached.Converters.Value[messageType].PublishInitializerAsync(endpoint, values, cancellationToken);
     }
 
+    /// <summary>
+    /// Publishes initializer.
+    /// </summary>
+    /// <param name="endpoint">The endpoint value.</param>
+    /// <param name="messageType">The message type value.</param>
+    /// <param name="values">The values value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static Task PublishInitializerAsync(IPublishEndpoint endpoint, Type messageType, object values, IPipe<PublishContext> pipe,
         CancellationToken cancellationToken = default)
     {
@@ -54,12 +88,42 @@ public class PublishEndpointConverterCache
     /// </summary>
     public interface IPublishEndpointConverter
     {
+        /// <summary>
+        /// Publishes a message to its configured consumers.
+        /// </summary>
+        /// <param name="endpoint">The endpoint value.</param>
+        /// <param name="message">The message value.</param>
+        /// <param name="cancellationToken">The token used to cancel the operation.</param>
+        /// <returns>The result of the operation.</returns>
         Task PublishAsync(IPublishEndpoint endpoint, object message, CancellationToken cancellationToken = default);
 
+        /// <summary>
+        /// Publishes a message to its configured consumers.
+        /// </summary>
+        /// <param name="endpoint">The endpoint value.</param>
+        /// <param name="message">The message value.</param>
+        /// <param name="pipe">The pipe value.</param>
+        /// <param name="cancellationToken">The token used to cancel the operation.</param>
+        /// <returns>The result of the operation.</returns>
         Task PublishAsync(IPublishEndpoint endpoint, object message, IPipe<PublishContext> pipe, CancellationToken cancellationToken = default);
 
+        /// <summary>
+        /// Publishes initializer.
+        /// </summary>
+        /// <param name="endpoint">The endpoint value.</param>
+        /// <param name="values">The values value.</param>
+        /// <param name="cancellationToken">The token used to cancel the operation.</param>
+        /// <returns>The result of the operation.</returns>
         Task PublishInitializerAsync(IPublishEndpoint endpoint, object values, CancellationToken cancellationToken = default);
 
+        /// <summary>
+        /// Publishes initializer.
+        /// </summary>
+        /// <param name="endpoint">The endpoint value.</param>
+        /// <param name="values">The values value.</param>
+        /// <param name="pipe">The pipe value.</param>
+        /// <param name="cancellationToken">The token used to cancel the operation.</param>
+        /// <returns>The result of the operation.</returns>
         Task PublishInitializerAsync(IPublishEndpoint endpoint, object values, IPipe<PublishContext> pipe, CancellationToken cancellationToken = default);
     }
 

@@ -12,8 +12,8 @@ internal static class AnalyzerSymbolFacts
     private const string AbstractionsAssemblyName = "ViciOne.ServiceBus.Abstractions";
     private static readonly string[] s_consumerDefinitionMetadataNames =
     [
-        "ViciOne.ServiceBus.ConsumerDefinition",
-        "ViciOne.ServiceBus.ConsumerDefinition`1",
+        "ViciOne.ServiceBus.Advanced.Registration.ConsumerDefinition",
+        "ViciOne.ServiceBus.Advanced.Registration.ConsumerDefinition`1",
     ];
 
     public static bool IsConsumerType(Compilation compilation, INamedTypeSymbol? type)
@@ -125,7 +125,7 @@ internal static class AnalyzerSymbolFacts
 
         INamedTypeSymbol? configurator = GetCanonicalAbstractionsType(
             compilation,
-            "ViciOne.ServiceBus.IReceiveEndpointConfigurator");
+            "ViciOne.ServiceBus.Configuration.IReceiveEndpointConfigurator");
         return configurator is not null
             && configurator.GetMembers(propertyName).OfType<IPropertySymbol>().Any(candidate =>
                 SymbolEqualityComparer.Default.Equals(
@@ -138,7 +138,7 @@ internal static class AnalyzerSymbolFacts
         INamedTypeSymbol? containingType = symbol?.ContainingType;
         INamedTypeSymbol? canonical = GetCanonicalAbstractionsType(
             compilation,
-            "ViciOne.ServiceBus.ConsumerDefinition`1");
+            "ViciOne.ServiceBus.Advanced.Registration.ConsumerDefinition`1");
         if (containingType is null || canonical is null)
             return false;
 
@@ -160,7 +160,9 @@ internal static class AnalyzerSymbolFacts
 
     public static bool IsCanonicalMessageData(Compilation compilation, INamedTypeSymbol type)
     {
-        INamedTypeSymbol? messageData = GetCanonicalAbstractionsType(compilation, "ViciOne.ServiceBus.MessageData`1");
+        INamedTypeSymbol? messageData = GetCanonicalAbstractionsType(
+            compilation,
+            "ViciOne.ServiceBus.Advanced.Serialization.MessageData`1");
         return messageData is not null
             && SymbolEqualityComparer.Default.Equals(type.OriginalDefinition, messageData.OriginalDefinition);
     }

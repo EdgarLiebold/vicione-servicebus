@@ -20,6 +20,12 @@ public class ObservesSagaMessageFilter<TSaga, TMessage> :
         scope.Add("method", $"Consume({TypeCache<TMessage>.ShortName} message)");
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SendAsync(SagaConsumeContext<TSaga, TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
     {
         StartedActivity? activity = LogContext.Current?.StartSagaActivity(context);

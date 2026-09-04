@@ -3,6 +3,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ViciOne.ServiceBus.Serialization;
 
+/// <summary>
+/// Provides extension methods for deserialize variable.
+/// </summary>
 public static class DeserializeVariableExtensions
 {
     /// <summary>

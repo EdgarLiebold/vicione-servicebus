@@ -1,20 +1,23 @@
 using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 
 #nullable enable
 
-namespace ViciOne.ServiceBus.Configuration;
+namespace ViciOne.ServiceBus.Advanced.Topology;
 
 /// <summary>
 /// Validates endpoint transport-QoS ownership after consumer topology discovery and before receive endpoints are
 /// materialized.
 /// </summary>
-[EditorBrowsable(EditorBrowsableState.Never)]
 public sealed class EndpointQosTopologyValidator
 {
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <param name="declarations">The declarations value.</param>
+    /// <returns>The result of the operation.</returns>
     public FrozenDictionary<string, EndpointTransportQos> Validate(IEnumerable<EndpointQosDeclaration> declarations)
     {
         ArgumentNullException.ThrowIfNull(declarations);

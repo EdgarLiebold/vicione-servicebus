@@ -2,8 +2,12 @@ using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Transports.Fabric;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Providers.Transports;
 
+/// <summary>
+/// Defines the contract for in memory message consume topology configurator.
+/// </summary>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public interface IInMemoryMessageConsumeTopologyConfigurator<TMessage> :
     IMessageConsumeTopologyConfigurator<TMessage>,
     IInMemoryMessageConsumeTopology<TMessage>
@@ -16,6 +20,9 @@ public interface IInMemoryMessageConsumeTopologyConfigurator<TMessage> :
 }
 
 
+/// <summary>
+/// Defines the contract for in memory message consume topology configurator.
+/// </summary>
 public interface IInMemoryMessageConsumeTopologyConfigurator :
     IMessageConsumeTopologyConfigurator
 {

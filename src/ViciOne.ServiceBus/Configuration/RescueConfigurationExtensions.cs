@@ -2,8 +2,11 @@ using System;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Middleware;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for rescue configuration.
+/// </summary>
 public static class RescueConfigurationExtensions
 {
     /// <summary>

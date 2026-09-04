@@ -14,6 +14,11 @@ public class DelayedRedeliveryConsumerConfigurationObserver<TConsumer> :
     readonly IConsumerConfigurator<TConsumer> _configurator;
     readonly Action<IRedeliveryConfigurator> _configure;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="configure">The configuration callback.</param>
     public DelayedRedeliveryConsumerConfigurationObserver(IConsumerConfigurator<TConsumer> configurator, Action<IRedeliveryConfigurator> configure)
     {
         _configurator = configurator;

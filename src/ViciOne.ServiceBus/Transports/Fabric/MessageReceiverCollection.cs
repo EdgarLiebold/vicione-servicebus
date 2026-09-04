@@ -8,6 +8,10 @@ using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Transports.Fabric;
 
+/// <summary>
+/// Provides a message receiver collection implementation.
+/// </summary>
+/// <typeparam name="T">The t type.</typeparam>
 public class MessageReceiverCollection<T> :
     IProbeSite
     where T : class
@@ -17,6 +21,10 @@ public class MessageReceiverCollection<T> :
     TaskCompletionSource<IReceiverLoadBalancer<T>> _balancer;
     long _nextId;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="balancerFactory">The balancer factory value.</param>
     public MessageReceiverCollection(LoadBalancerFactory<T> balancerFactory)
     {
         _balancerFactory = balancerFactory;
@@ -25,6 +33,10 @@ public class MessageReceiverCollection<T> :
         _receivers = new Dictionary<long, IMessageReceiver<T>>();
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         IMessageReceiver<T>[] connected;
@@ -40,6 +52,11 @@ public class MessageReceiverCollection<T> :
             connected[i].Probe(scope);
     }
 
+    /// <summary>
+    /// Performs the connect operation.
+    /// </summary>
+    /// <param name="receiver">The receiver value.</param>
+    /// <returns>The result of the operation.</returns>
     public TopologyHandle Connect(IMessageReceiver<T> receiver)
     {
         if (receiver == null)
@@ -67,6 +84,12 @@ public class MessageReceiverCollection<T> :
         }
     }
 
+    /// <summary>
+    /// Performs the next operation.
+    /// </summary>
+    /// <param name="message">The message value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<IMessageReceiver<T>> NextAsync(T message, CancellationToken cancellationToken)
     {
         Task<IReceiverLoadBalancer<T>> task = _balancer.Task;
@@ -88,6 +111,12 @@ public class MessageReceiverCollection<T> :
         return NextAsync();
     }
 
+    /// <summary>
+    /// Attempts to get receiver.
+    /// </summary>
+    /// <param name="id">The id value.</param>
+    /// <param name="consumer">The consumer value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetReceiver(long id, [NotNullWhen(true)] out IMessageReceiver<T>? consumer)
     {
         lock (_receivers)

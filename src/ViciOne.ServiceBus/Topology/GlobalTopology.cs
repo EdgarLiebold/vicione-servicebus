@@ -6,7 +6,7 @@ using ViciOne.ServiceBus.Contracts.JobService;
 using ViciOne.ServiceBus.Courier.Contracts;
 using ViciOne.ServiceBus.Topology;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Topology;
 
 /// <summary>
 /// Application-wide message-contract conventions. Configuration is frozen when the first

@@ -1,5 +1,8 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Providers.Transports;
 
+/// <summary>
+/// Specifies the available sql receive mode values.
+/// </summary>
 public enum SqlReceiveMode
 {
     /// <summary>

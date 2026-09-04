@@ -1,4 +1,4 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>
 /// A consumer and consume context mixed together, carrying both a consumer and the message
@@ -15,6 +15,10 @@ public interface ConsumerConsumeContext<out TConsumer, out TMessage> :
 }
 
 
+/// <summary>
+/// Defines the contract for consumer consume context.
+/// </summary>
+/// <typeparam name="TConsumer">The t consumer type.</typeparam>
 public interface ConsumerConsumeContext<out TConsumer> :
     ConsumeContext
     where TConsumer : class

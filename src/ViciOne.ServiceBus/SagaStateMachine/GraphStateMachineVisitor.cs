@@ -4,6 +4,10 @@ using System.Linq;
 
 namespace ViciOne.ServiceBus.SagaStateMachine;
 
+/// <summary>
+/// Provides a graph state machine visitor implementation.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
 public class GraphStateMachineVisitor<TSaga> :
     StateMachineVisitor
     where TSaga : class, SagaStateMachineInstance
@@ -16,6 +20,10 @@ public class GraphStateMachineVisitor<TSaga> :
     Vertex? _currentEvent;
     Vertex? _currentState;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="machine">The machine value.</param>
     public GraphStateMachineVisitor(StateMachine<TSaga> machine)
     {
         _machine = machine;
@@ -25,6 +33,9 @@ public class GraphStateMachineVisitor<TSaga> :
         _events = new Dictionary<Event, Vertex>();
     }
 
+    /// <summary>
+    /// Gets the graph value.
+    /// </summary>
     public StateMachineGraph Graph
     {
         get
@@ -44,6 +55,11 @@ public class GraphStateMachineVisitor<TSaga> :
         }
     }
 
+    /// <summary>
+    /// Performs the visit operation.
+    /// </summary>
+    /// <param name="state">The state value.</param>
+    /// <param name="next">The next value.</param>
     public void Visit(State state, Action<State> next)
     {
         _currentState = GetStateVertex(state);
@@ -51,6 +67,11 @@ public class GraphStateMachineVisitor<TSaga> :
         next(state);
     }
 
+    /// <summary>
+    /// Performs the visit operation.
+    /// </summary>
+    /// <param name="event">The event value.</param>
+    /// <param name="next">The next value.</param>
     public void Visit(Event @event, Action<Event> next)
     {
         _currentEvent = GetEventVertex(@event);
@@ -59,6 +80,12 @@ public class GraphStateMachineVisitor<TSaga> :
         next(@event);
     }
 
+    /// <summary>
+    /// Performs the visit operation.
+    /// </summary>
+    /// <typeparam name="TData">The t data type.</typeparam>
+    /// <param name="event">The event value.</param>
+    /// <param name="next">The next value.</param>
     public void Visit<TData>(Event<TData> @event, Action<Event<TData>> next)
         where TData : class
     {
@@ -68,6 +95,10 @@ public class GraphStateMachineVisitor<TSaga> :
         next(@event);
     }
 
+    /// <summary>
+    /// Performs the visit operation.
+    /// </summary>
+    /// <param name="activity">The activity value.</param>
     public void Visit(IStateMachineActivity activity)
     {
         Visit(activity, x =>
@@ -75,6 +106,11 @@ public class GraphStateMachineVisitor<TSaga> :
         });
     }
 
+    /// <summary>
+    /// Performs the visit operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="behavior">The behavior value.</param>
     public void Visit<T>(IBehavior<T> behavior)
         where T : class, SagaStateMachineInstance
     {
@@ -83,12 +119,24 @@ public class GraphStateMachineVisitor<TSaga> :
         });
     }
 
+    /// <summary>
+    /// Performs the visit operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="behavior">The behavior value.</param>
+    /// <param name="next">The next value.</param>
     public void Visit<T>(IBehavior<T> behavior, Action<IBehavior<T>> next)
         where T : class, SagaStateMachineInstance
     {
         next(behavior);
     }
 
+    /// <summary>
+    /// Performs the visit operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="TData">The t data type.</typeparam>
+    /// <param name="behavior">The behavior value.</param>
     public void Visit<T, TData>(IBehavior<T, TData> behavior)
         where T : class, SagaStateMachineInstance
         where TData : class
@@ -98,6 +146,13 @@ public class GraphStateMachineVisitor<TSaga> :
         });
     }
 
+    /// <summary>
+    /// Performs the visit operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="TData">The t data type.</typeparam>
+    /// <param name="behavior">The behavior value.</param>
+    /// <param name="next">The next value.</param>
     public void Visit<T, TData>(IBehavior<T, TData> behavior, Action<IBehavior<T, TData>> next)
         where T : class, SagaStateMachineInstance
         where TData : class
@@ -105,6 +160,11 @@ public class GraphStateMachineVisitor<TSaga> :
         next(behavior);
     }
 
+    /// <summary>
+    /// Performs the visit operation.
+    /// </summary>
+    /// <param name="activity">The activity value.</param>
+    /// <param name="next">The next value.</param>
     public void Visit(IStateMachineActivity activity, Action<IStateMachineActivity> next)
     {
         if (activity is TransitionActivity<TSaga> transitionActivity)

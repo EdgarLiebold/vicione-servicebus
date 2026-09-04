@@ -8,6 +8,10 @@ using ViciOne.ServiceBus.Transports.Fabric;
 #nullable enable
 namespace ViciOne.ServiceBus.InMemoryTransport;
 
+/// <summary>
+/// Provides an in memory message publish topology implementation.
+/// </summary>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public class InMemoryMessagePublishTopology<TMessage> :
     MessagePublishTopology<TMessage>,
     IInMemoryMessagePublishTopologyConfigurator<TMessage>
@@ -16,6 +20,11 @@ public class InMemoryMessagePublishTopology<TMessage> :
     readonly List<IInMemoryMessagePublishTopology> _implementedMessageTypes;
     readonly IMessageTopology<TMessage> _messageTopology;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="publishTopology">The publish topology value.</param>
+    /// <param name="messageTopology">The message topology value.</param>
     public InMemoryMessagePublishTopology(IPublishTopologyConfigurator publishTopology, IMessageTopology<TMessage> messageTopology)
         : base(publishTopology)
     {
@@ -23,8 +32,15 @@ public class InMemoryMessagePublishTopology<TMessage> :
         _implementedMessageTypes = new List<IInMemoryMessagePublishTopology>();
     }
 
+    /// <summary>
+    /// Gets or sets the exchange type value.
+    /// </summary>
     public ExchangeType ExchangeType { get; set; }
 
+    /// <summary>
+    /// Applies this specification to the target builder.
+    /// </summary>
+    /// <param name="builder">The builder value.</param>
     public void Apply(IMessageFabricPublishTopologyBuilder builder)
     {
         if (Exclude)
@@ -46,12 +62,24 @@ public class InMemoryMessagePublishTopology<TMessage> :
             configurator.Apply(builder);
     }
 
+    /// <summary>
+    /// Attempts to get publish address.
+    /// </summary>
+    /// <param name="baseAddress">The base address value.</param>
+    /// <param name="publishAddress">The publish address value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public override bool TryGetPublishAddress(Uri baseAddress, [NotNullWhen(true)] out Uri? publishAddress)
     {
         publishAddress = new InMemoryEndpointAddress(new InMemoryHostAddress(baseAddress), _messageTopology.EntityName, exchangeType: ExchangeType);
         return true;
     }
 
+    /// <summary>
+    /// Adds implemented message configurator to the configuration.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="direct">The direct value.</param>
     public void AddImplementedMessageConfigurator<T>(IInMemoryMessagePublishTopologyConfigurator<T> configurator, bool direct)
         where T : class
     {

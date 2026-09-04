@@ -22,6 +22,23 @@ namespace ViciOne.ServiceBus.Tests.Infrastructure.Roslyn;
 public static class RoslynTestHost
 {
     private const string ProjectName = "AnalyzerFixture";
+    private const string FixtureImportsFileName = "ApiSurfaceGlobalUsings.g.cs";
+    private const string FixtureImports = """
+        global using ViciOne.ServiceBus;
+        global using ViciOne.ServiceBus.Advanced;
+        global using ViciOne.ServiceBus.Advanced.Initializers;
+        global using ViciOne.ServiceBus.Advanced.Middleware;
+        global using ViciOne.ServiceBus.Advanced.Observers;
+        global using ViciOne.ServiceBus.Advanced.Registration;
+        global using ViciOne.ServiceBus.Advanced.Serialization;
+        global using ViciOne.ServiceBus.Advanced.Topology;
+        global using ViciOne.ServiceBus.Configuration;
+        global using ViciOne.ServiceBus.MessageData;
+        global using ViciOne.ServiceBus.Operations;
+        global using ViciOne.ServiceBus.Providers.Persistence;
+        global using ViciOne.ServiceBus.Providers.Transports;
+        global using ViciOne.ServiceBus.Sagas;
+        """;
 
     /// <summary>Validates that one or more fixture sources form a binding compilation.</summary>
     /// <param name="sources">The sources used by the operation.</param>
@@ -103,7 +120,7 @@ public static class RoslynTestHost
 
         using var workspace = new AdhocWorkspace();
         var project = CreateProject(workspace, [source], referenceRoots ?? []);
-        var document = project.Documents.Single();
+        var document = project.Documents.Single(static document => document.Name == "Test0.cs");
         var diagnostics = await AnalyzeProjectAsync(project, analyzer, cancellationToken).ConfigureAwait(false);
         var maximumApplications = diagnostics.Count;
 
@@ -185,6 +202,16 @@ public static class RoslynTestHost
                     OutputKind.DynamicallyLinkedLibrary,
                     nullableContextOptions: NullableContextOptions.Enable))
             .AddMetadataReferences(projectId, MetadataReferenceClosure.Create(referenceRoots));
+
+        if (referenceRoots.Any(static assembly =>
+                assembly.GetName().Name?.StartsWith("ViciOne.ServiceBus", StringComparison.Ordinal) == true))
+        {
+            solution = solution.AddDocument(
+                DocumentId.CreateNewId(projectId, FixtureImportsFileName),
+                FixtureImportsFileName,
+                SourceText.From(FixtureImports),
+                filePath: FixtureImportsFileName);
+        }
 
         for (var index = 0; index < sources.Count; index++)
         {

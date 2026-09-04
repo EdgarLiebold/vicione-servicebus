@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Serialization;
 
 /// <summary>
 /// MessageData is used when a property size may be larger than what should be sent via the message

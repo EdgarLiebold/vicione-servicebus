@@ -16,6 +16,11 @@ public class ConcurrencyLimitPipeSpecification<T> :
 
     readonly IPipeRouter? _router = null!;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="concurrencyLimit">The concurrency limit value.</param>
+    /// <param name="router">The router value.</param>
     public ConcurrencyLimitPipeSpecification(int concurrencyLimit, IPipeRouter? router = null)
     {
         _concurrencyLimit = concurrencyLimit;
@@ -23,6 +28,10 @@ public class ConcurrencyLimitPipeSpecification<T> :
         _router = router;
     }
 
+    /// <summary>
+    /// Applies this specification to the target builder.
+    /// </summary>
+    /// <param name="builder">The builder value.</param>
     public void Apply(IPipeBuilder<T> builder)
     {
         var filter = new ConcurrencyLimitFilter<T>(_concurrencyLimit);
@@ -32,6 +41,10 @@ public class ConcurrencyLimitPipeSpecification<T> :
         _router?.ConnectPipe(filter);
     }
 
+    /// <summary>
+    /// Validates the current configuration.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IEnumerable<ValidationResult> Validate()
     {
         if (_concurrencyLimit < 1)

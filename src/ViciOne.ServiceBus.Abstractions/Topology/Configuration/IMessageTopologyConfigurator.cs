@@ -1,5 +1,9 @@
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for message topology configurator.
+/// </summary>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public interface IMessageTopologyConfigurator<TMessage> :
     IMessageTypeTopologyConfigurator,
     IMessageTopology<TMessage>
@@ -19,6 +23,9 @@ public interface IMessageTopologyConfigurator<TMessage> :
 }
 
 
+/// <summary>
+/// Defines the contract for message topology configurator.
+/// </summary>
 public interface IMessageTopologyConfigurator :
     IMessageTopology
 {
@@ -27,6 +34,11 @@ public interface IMessageTopologyConfigurator :
     /// </summary>
     void SetEntityNameFormatter(IEntityNameFormatter entityNameFormatter);
 
+    /// <summary>
+    /// Gets message topology.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     new IMessageTopologyConfigurator<T> GetMessageTopology<T>()
         where T : class;
 }

@@ -4,7 +4,7 @@ using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.RetryPolicies;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
 /// Adds retry middleware directly to a pipe.
@@ -17,6 +17,11 @@ namespace ViciOne.ServiceBus;
 /// </summary>
 public static class RetryConfigurationExtensions
 {
+    /// <summary>
+    /// Configures message retry for the current pipeline.
+    /// </summary>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="configure">The configuration callback.</param>
     public static void UseMessageRetry(this IPipeConfigurator<ConsumeContext> configurator, Action<IRetryConfigurator> configure)
     {
         ArgumentNullException.ThrowIfNull(configurator);
@@ -29,6 +34,12 @@ public static class RetryConfigurationExtensions
         configurator.AddPipeSpecification(specification);
     }
 
+    /// <summary>
+    /// Configures message retry for the current pipeline.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="configure">The configuration callback.</param>
     public static void UseMessageRetry<T>(this IPipeConfigurator<ConsumeContext<T>> configurator, Action<IRetryConfigurator> configure)
         where T : class
     {
@@ -42,6 +53,12 @@ public static class RetryConfigurationExtensions
         configurator.AddPipeSpecification(specification);
     }
 
+    /// <summary>
+    /// Configures message retry for the current pipeline.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="configure">The configuration callback.</param>
     public static void UseMessageRetry<T>(this IConsumePipeConfigurator configurator, Action<IRetryConfigurator> configure)
         where T : class
     {
@@ -61,6 +78,12 @@ public static class RetryConfigurationExtensions
         return new RetryConsumeContext<T>(context, retryPolicy, retryContext);
     }
 
+    /// <summary>
+    /// Configures message retry for the current pipeline.
+    /// </summary>
+    /// <typeparam name="TConsumer">The t consumer type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="configure">The configuration callback.</param>
     public static void UseMessageRetry<TConsumer>(this IPipeConfigurator<ConsumerConsumeContext<TConsumer>> configurator, Action<IRetryConfigurator> configure)
         where TConsumer : class
     {
@@ -82,6 +105,12 @@ public static class RetryConfigurationExtensions
         return new RetryConsumerConsumeContext<TConsumer>(context, retryPolicy, retryContext);
     }
 
+    /// <summary>
+    /// Configures message retry for the current pipeline.
+    /// </summary>
+    /// <typeparam name="TSaga">The t saga type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="configure">The configuration callback.</param>
     public static void UseMessageRetry<TSaga>(this IPipeConfigurator<SagaConsumeContext<TSaga>> configurator, Action<IRetryConfigurator> configure)
         where TSaga : class, ISaga
     {
@@ -101,6 +130,12 @@ public static class RetryConfigurationExtensions
         return new RetrySagaConsumeContext<TSaga>(context, retryPolicy, retryContext);
     }
 
+    /// <summary>
+    /// Configures retry for the current pipeline.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="configure">The configuration callback.</param>
     public static void UseRetry<T>(this IPipeConfigurator<T> configurator, Action<IRetryConfigurator> configure)
         where T : class, PipeContext
     {
@@ -114,6 +149,12 @@ public static class RetryConfigurationExtensions
         configurator.AddPipeSpecification(specification);
     }
 
+    /// <summary>
+    /// Configures message retry for the current pipeline.
+    /// </summary>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="connector">The connector value.</param>
+    /// <param name="configure">The configuration callback.</param>
     public static void UseMessageRetry(this IPipeConfigurator<ConsumeContext> configurator, IBusFactoryConfigurator connector,
         Action<IRetryConfigurator> configure)
     {
@@ -131,6 +172,13 @@ public static class RetryConfigurationExtensions
         configurator.AddPipeSpecification(specification);
     }
 
+    /// <summary>
+    /// Configures message retry for the current pipeline.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="connector">The connector value.</param>
+    /// <param name="configure">The configuration callback.</param>
     public static void UseMessageRetry<T>(this IPipeConfigurator<ConsumeContext<T>> configurator, IBusFactoryConfigurator connector,
         Action<IRetryConfigurator> configure)
         where T : class
@@ -149,6 +197,13 @@ public static class RetryConfigurationExtensions
         configurator.AddPipeSpecification(specification);
     }
 
+    /// <summary>
+    /// Configures message retry for the current pipeline.
+    /// </summary>
+    /// <typeparam name="TConsumer">The t consumer type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="connector">The connector value.</param>
+    /// <param name="configure">The configuration callback.</param>
     public static void UseMessageRetry<TConsumer>(this IPipeConfigurator<ConsumerConsumeContext<TConsumer>> configurator, IBusFactoryConfigurator connector,
         Action<IRetryConfigurator> configure)
         where TConsumer : class
@@ -168,6 +223,13 @@ public static class RetryConfigurationExtensions
         configurator.AddPipeSpecification(specification);
     }
 
+    /// <summary>
+    /// Configures message retry for the current pipeline.
+    /// </summary>
+    /// <typeparam name="TSaga">The t saga type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="connector">The connector value.</param>
+    /// <param name="configure">The configuration callback.</param>
     public static void UseMessageRetry<TSaga>(this IPipeConfigurator<SagaConsumeContext<TSaga>> configurator, IBusFactoryConfigurator connector,
         Action<IRetryConfigurator> configure)
         where TSaga : class, ISaga

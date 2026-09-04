@@ -390,7 +390,7 @@
       "vicione.servicebus.abstractions": {
         "type": "Project"
       },
-      "ViciOne.ServiceBus.ActiveMQ": {
+      "vicione.servicebus.activemq": {
         "type": "Project",
         "dependencies": {
           "Apache.NMS.AMQP": "[2.4.0, )",
@@ -398,7 +398,7 @@
           "ViciOne.ServiceBus": "[1.0.0, )"
         }
       },
-      "ViciOne.ServiceBus.AmazonSQS": {
+      "vicione.servicebus.amazonsqs": {
         "type": "Project",
         "dependencies": {
           "AWSSDK.SQS": "[4.0.100.11, )",
@@ -406,7 +406,7 @@
           "ViciOne.ServiceBus": "[1.0.0, )"
         }
       },
-      "vicione.servicebus.azure.servicebus.core": {
+      "vicione.servicebus.azureservicebus": {
         "type": "Project",
         "dependencies": {
           "Azure.Identity": "[1.21.0, )",
@@ -414,7 +414,7 @@
           "ViciOne.ServiceBus": "[1.0.0, )"
         }
       },
-      "ViciOne.ServiceBus.EntityFrameworkCore": {
+      "vicione.servicebus.entityframeworkcore": {
         "type": "Project",
         "dependencies": {
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
@@ -422,7 +422,7 @@
           "ViciOne.ServiceBus": "[1.0.0, )"
         }
       },
-      "ViciOne.ServiceBus.RabbitMQ": {
+      "vicione.servicebus.rabbitmq": {
         "type": "Project",
         "dependencies": {
           "RabbitMQ.Client": "[7.2.2, )",

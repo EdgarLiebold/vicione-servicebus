@@ -1,5 +1,9 @@
 namespace ViciOne.ServiceBus.Metadata;
 
+/// <summary>
+/// Defines the contract for implemented message type cache.
+/// </summary>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public interface IImplementedMessageTypeCache<TMessage>
     where TMessage : class
 {

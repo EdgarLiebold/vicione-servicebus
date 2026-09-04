@@ -5,8 +5,16 @@ using System.Reflection;
 
 namespace ViciOne.ServiceBus.AzureTable.Saga;
 
+/// <summary>
+/// Provides an entity converter factory implementation.
+/// </summary>
 public static class EntityConverterFactory
 {
+    /// <summary>
+    /// Creates converter.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <returns>The result of the operation.</returns>
     public static IEntityConverter<T> CreateConverter<T>()
         where T : class
     {

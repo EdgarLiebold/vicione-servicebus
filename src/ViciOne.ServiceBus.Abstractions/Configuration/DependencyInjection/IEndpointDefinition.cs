@@ -1,4 +1,4 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
 /// Defines an endpoint in a transport-independent way
@@ -47,6 +47,10 @@ public interface IEndpointDefinition
 }
 
 
+/// <summary>
+/// Defines the contract for endpoint definition.
+/// </summary>
+/// <typeparam name="T">The t type.</typeparam>
 public interface IEndpointDefinition<T> :
     IEndpointDefinition
     where T : class

@@ -1,16 +1,32 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
+/// <summary>
+/// Defines the contract for exception activity binder.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <typeparam name="TException">The t exception type.</typeparam>
 public interface ExceptionActivityBinder<TSaga, TException> :
     EventActivities<TSaga>
     where TSaga : class, SagaStateMachineInstance
     where TException : Exception
 {
+    /// <summary>
+    /// Gets the state machine value.
+    /// </summary>
     StateMachine<TSaga> StateMachine { get; }
 
+    /// <summary>
+    /// Gets the event value.
+    /// </summary>
     Event Event { get; }
 
+    /// <summary>
+    /// Performs the add operation.
+    /// </summary>
+    /// <param name="activity">The activity value.</param>
+    /// <returns>The result of the operation.</returns>
     ExceptionActivityBinder<TSaga, TException> Add(IStateMachineActivity<TSaga> activity);
 
     /// <summary>
@@ -64,18 +80,40 @@ public interface ExceptionActivityBinder<TSaga, TException> :
 }
 
 
+/// <summary>
+/// Defines the contract for exception activity binder.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <typeparam name="TException">The t exception type.</typeparam>
 public interface ExceptionActivityBinder<TSaga, TMessage, TException> :
     EventActivities<TSaga>
     where TSaga : class, SagaStateMachineInstance
     where TException : Exception
     where TMessage : class
 {
+    /// <summary>
+    /// Gets the state machine value.
+    /// </summary>
     StateMachine<TSaga> StateMachine { get; }
 
+    /// <summary>
+    /// Gets the event value.
+    /// </summary>
     Event<TMessage> Event { get; }
 
+    /// <summary>
+    /// Performs the add operation.
+    /// </summary>
+    /// <param name="activity">The activity value.</param>
+    /// <returns>The result of the operation.</returns>
     ExceptionActivityBinder<TSaga, TMessage, TException> Add(IStateMachineActivity<TSaga> activity);
 
+    /// <summary>
+    /// Performs the add operation.
+    /// </summary>
+    /// <param name="activity">The activity value.</param>
+    /// <returns>The result of the operation.</returns>
     ExceptionActivityBinder<TSaga, TMessage, TException> Add(IStateMachineActivity<TSaga, TMessage> activity);
 
     /// <summary>

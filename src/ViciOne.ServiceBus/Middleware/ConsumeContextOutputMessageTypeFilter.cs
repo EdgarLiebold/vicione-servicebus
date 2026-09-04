@@ -16,6 +16,11 @@ public class ConsumeContextOutputMessageTypeFilter<TMessage> :
     readonly ConsumeMessageObservable<TMessage> _observers;
     readonly IRequestIdTeeFilter<TMessage> _output;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="observers">The observers value.</param>
+    /// <param name="output">The output value.</param>
     public ConsumeContextOutputMessageTypeFilter(ConsumeObservable observers, IRequestIdTeeFilter<TMessage> output)
     {
         _output = output;
@@ -24,6 +29,10 @@ public class ConsumeContextOutputMessageTypeFilter<TMessage> :
         _observers = new ConsumeMessageObservable<TMessage>();
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("dispatchPipe");
@@ -32,6 +41,12 @@ public class ConsumeContextOutputMessageTypeFilter<TMessage> :
         _output.Probe(scope);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public Task SendAsync(ConsumeContext context, IPipe<ConsumeContext> next)
     {
         return context.TryGetMessage(out ConsumeContext<TMessage>? pipeContext)
@@ -39,16 +54,32 @@ public class ConsumeContextOutputMessageTypeFilter<TMessage> :
             : next.SendAsync(context);
     }
 
+    /// <summary>
+    /// Connects consume message observer.
+    /// </summary>
+    /// <param name="observer">The observer value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectConsumeMessageObserver(IConsumeMessageObserver<TMessage> observer)
     {
         return _observers.Connect(observer);
     }
 
+    /// <summary>
+    /// Connects pipe.
+    /// </summary>
+    /// <param name="pipe">The pipe value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectPipe(IPipe<ConsumeContext<TMessage>> pipe)
     {
         return _output.ConnectPipe(pipe);
     }
 
+    /// <summary>
+    /// Connects pipe.
+    /// </summary>
+    /// <param name="key">The key value.</param>
+    /// <param name="pipe">The pipe value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectPipe(Guid key, IPipe<ConsumeContext<TMessage>> pipe)
     {
         return _output.ConnectPipe(key, pipe);

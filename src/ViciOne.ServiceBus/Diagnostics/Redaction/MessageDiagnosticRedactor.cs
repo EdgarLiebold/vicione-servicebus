@@ -1,14 +1,12 @@
 using System;
-using System.ComponentModel;
 using System.Globalization;
 
 #nullable enable
 
-namespace ViciOne.ServiceBus.Diagnostics;
+namespace ViciOne.ServiceBus.Advanced.Serialization;
 /// <summary>
 /// Conservative bounded rendering that never invokes arbitrary application <see cref="object.ToString"/> implementations.
 /// </summary>
-[EditorBrowsable(EditorBrowsableState.Never)]
 public sealed class MessageDiagnosticRedactor : IMessageDiagnosticRedactor
 {
     /// <summary>The stable redacted marker.</summary>
@@ -30,6 +28,13 @@ public sealed class MessageDiagnosticRedactor : IMessageDiagnosticRedactor
         _maximumStringLength = maximumStringLength;
     }
 
+    /// <summary>
+    /// Performs the render value operation.
+    /// </summary>
+    /// <param name="messageType">The message type value.</param>
+    /// <param name="memberName">The member name value.</param>
+    /// <param name="value">The value.</param>
+    /// <returns>The result of the operation.</returns>
     public string RenderValue(Type messageType, string? memberName, object? value)
     {
         ArgumentNullException.ThrowIfNull(messageType);

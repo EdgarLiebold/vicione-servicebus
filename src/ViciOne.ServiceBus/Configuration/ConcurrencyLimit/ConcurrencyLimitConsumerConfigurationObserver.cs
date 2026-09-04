@@ -13,12 +13,21 @@ public class ConcurrencyLimitConsumerConfigurationObserver<TConsumer> :
 {
     readonly IConsumerConfigurator<TConsumer> _configurator;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="concurrentMessageLimit">The concurrent message limit value.</param>
+    /// <param name="id">The id value.</param>
     public ConcurrencyLimitConsumerConfigurationObserver(IConsumerConfigurator<TConsumer> configurator, int concurrentMessageLimit, string? id = null)
     {
         _configurator = configurator;
         Limiter = new ConcurrencyLimiter(concurrentMessageLimit, id);
     }
 
+    /// <summary>
+    /// Gets the limiter value.
+    /// </summary>
     public IConcurrencyLimiter Limiter { get; }
 
     void IConsumerConfigurationObserver.ConsumerConfigured<T>(IConsumerConfigurator<T> configurator)

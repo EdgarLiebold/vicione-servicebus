@@ -12,10 +12,10 @@ public static class MessageRedactionServiceCollectionExtensions
     public static IServiceCollection AddViciOneMessageDiagnosticRedaction(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
-        services.TryAddSingleton<ViciOne.ServiceBus.Diagnostics.IMessageSensitivityInspector,
-            ViciOne.ServiceBus.Diagnostics.MessageSensitivityInspector>();
-        services.TryAddSingleton<ViciOne.ServiceBus.Diagnostics.IMessageDiagnosticRedactor,
-            ViciOne.ServiceBus.Diagnostics.MessageDiagnosticRedactor>();
+        services.TryAddSingleton<ViciOne.ServiceBus.Advanced.Serialization.IMessageSensitivityInspector,
+            ViciOne.ServiceBus.Advanced.Serialization.MessageSensitivityInspector>();
+        services.TryAddSingleton<ViciOne.ServiceBus.Advanced.Serialization.IMessageDiagnosticRedactor,
+            ViciOne.ServiceBus.Advanced.Serialization.MessageDiagnosticRedactor>();
         return services;
     }
 }

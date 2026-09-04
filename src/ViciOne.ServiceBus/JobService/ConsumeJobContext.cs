@@ -11,6 +11,10 @@ using ViciOne.ServiceBus.Serialization;
 #nullable enable
 namespace ViciOne.ServiceBus.JobService;
 
+/// <summary>
+/// Provides a consume job context implementation.
+/// </summary>
+/// <typeparam name="TJob">The t job type.</typeparam>
 public class ConsumeJobContext<TJob> :
     ConsumeContextProxy,
     ConsumeContext<TJob>,
@@ -28,6 +32,13 @@ public class ConsumeJobContext<TJob> :
     string? _cancellationReason;
     JobProgressBuffer? _updateBuffer;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="instanceAddress">The instance address value.</param>
+    /// <param name="job">The job value.</param>
+    /// <param name="jobOptions">The job options value.</param>
     public ConsumeJobContext(ConsumeContext<StartJob> context, Uri instanceAddress, TJob job, JobOptions<TJob> jobOptions)
         : base(context.Advanced())
     {
@@ -54,20 +65,45 @@ public class ConsumeJobContext<TJob> :
         _startedAt = _timeProvider.GetTimestamp();
     }
 
+    /// <summary>
+    /// Gets the cancellation token value.
+    /// </summary>
     public override CancellationToken CancellationToken => _source.Token;
 
+    /// <summary>
+    /// Gets the message value.
+    /// </summary>
     public TJob Message => Job;
 
+    /// <summary>
+    /// Performs the notify consumed operation.
+    /// </summary>
+    /// <param name="duration">The duration value.</param>
+    /// <param name="consumerType">The consumer type value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task NotifyConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
     {
         return _context.NotifyConsumedAsync(_context, duration, consumerType, cancellationToken: cancellationToken);
     }
 
+    /// <summary>
+    /// Performs the notify faulted operation.
+    /// </summary>
+    /// <param name="duration">The duration value.</param>
+    /// <param name="consumerType">The consumer type value.</param>
+    /// <param name="exception">The exception associated with the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task NotifyFaultedAsync(TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
     {
         return _context.NotifyFaultedAsync(_context, duration, consumerType, exception, cancellationToken: cancellationToken);
     }
 
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public async ValueTask DisposeAsync()
     {
         if (_updateBuffer != null)
@@ -76,6 +112,11 @@ public class ConsumeJobContext<TJob> :
         _source.Dispose();
     }
 
+    /// <summary>
+    /// Performs the notify canceled operation.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task NotifyCanceledAsync(CancellationToken cancellationToken = default)
     {
         LogContext.Debug?.Log("Job Canceled: {JobId} {AttemptId} ({RetryAttempt}) {Reason}", JobId, AttemptId, RetryAttempt, _cancellationReason);
@@ -92,6 +133,11 @@ public class ConsumeJobContext<TJob> :
         }).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Performs the notify started operation.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task NotifyStartedAsync(CancellationToken cancellationToken = default)
     {
         LogContext.Debug?.Log("Job Started: {JobId} {AttemptId} ({RetryAttempt})", JobId, AttemptId, RetryAttempt);
@@ -118,6 +164,11 @@ public class ConsumeJobContext<TJob> :
         }, CancellationToken.None).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Performs the notify completed operation.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task NotifyCompletedAsync(CancellationToken cancellationToken = default)
     {
         LogContext.Debug?.Log("Job Completed: {JobId} {AttemptId} ({RetryAttempt})", JobId, AttemptId, RetryAttempt);
@@ -137,11 +188,24 @@ public class ConsumeJobContext<TJob> :
         }).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Performs the notify job progress operation.
+    /// </summary>
+    /// <param name="progress">The progress value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task NotifyJobProgressAsync(SetJobProgress progress, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return NotifyAsync(progress);
     }
 
+    /// <summary>
+    /// Performs the notify faulted operation.
+    /// </summary>
+    /// <param name="exception">The exception associated with the operation.</param>
+    /// <param name="delay">The delay value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task NotifyFaultedAsync(Exception exception, TimeSpan? delay, CancellationToken cancellationToken = default)
     {
         LogContext.Debug?.Log(exception, "Job Faulted: {JobId} {AttemptId} ({RetryAttempt})", JobId, AttemptId, RetryAttempt);
@@ -160,15 +224,43 @@ public class ConsumeJobContext<TJob> :
         }).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Gets the job id value.
+    /// </summary>
     public Guid JobId { get; }
+    /// <summary>
+    /// Gets the attempt id value.
+    /// </summary>
     public Guid AttemptId { get; }
+    /// <summary>
+    /// Gets the retry attempt value.
+    /// </summary>
     public int RetryAttempt { get; }
+    /// <summary>
+    /// Gets the last progress value value.
+    /// </summary>
     public long? LastProgressValue { get; }
+    /// <summary>
+    /// Gets the last progress limit value.
+    /// </summary>
     public long? LastProgressLimit { get; }
+    /// <summary>
+    /// Gets the job value.
+    /// </summary>
     public TJob Job { get; }
 
+    /// <summary>
+    /// Gets the elapsed time value.
+    /// </summary>
     public TimeSpan ElapsedTime => _timeProvider.GetElapsedTime(_startedAt);
 
+    /// <summary>
+    /// Sets job progress.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="limit">The limit value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task SetJobProgressAsync(long value, long? limit, CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); _updateBuffer ??= new JobProgressBuffer(this, _timeProvider, _jobOptions.ProgressBuffer);
@@ -176,6 +268,13 @@ public class ConsumeJobContext<TJob> :
         return _updateBuffer.UpdateAsync(new JobProgressBuffer.ProgressUpdate(JobId, AttemptId, value, limit), CancellationToken.None);
     }
 
+    /// <summary>
+    /// Performs the save job state operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="jobState">The job state value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task SaveJobStateAsync<T>(T? jobState, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -187,6 +286,12 @@ public class ConsumeJobContext<TJob> :
         });
     }
 
+    /// <summary>
+    /// Attempts to get job state.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="jobState">The job state value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetJobState<T>([NotNullWhen(true)] out T? jobState)
         where T : class
     {
@@ -200,8 +305,17 @@ public class ConsumeJobContext<TJob> :
         return false;
     }
 
+    /// <summary>
+    /// Gets or sets the job properties value.
+    /// </summary>
     public IPropertyCollection JobProperties { get; set; }
+    /// <summary>
+    /// Gets the job type properties value.
+    /// </summary>
     public IPropertyCollection JobTypeProperties => _jobOptions.JobTypeProperties;
+    /// <summary>
+    /// Gets the instance properties value.
+    /// </summary>
     public IPropertyCollection InstanceProperties => _jobOptions.InstanceProperties;
 
     DateTime UtcNow => _timeProvider.GetUtcNow().UtcDateTime;
@@ -214,6 +328,10 @@ public class ConsumeJobContext<TJob> :
         await endpoint.SendAsync(message, CancellationToken.None).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Determines whether the current value can cel.
+    /// </summary>
+    /// <param name="reason">The reason value.</param>
     public void Cancel(string? reason)
     {
         _cancellationReason = reason;

@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines configuration options for job saga.
+/// </summary>
 public class JobSagaOptions :
     JobSagaSettingsConfigurator,
     ISpecification
@@ -12,6 +15,9 @@ public class JobSagaOptions :
     Uri _jobSagaEndpointAddress = null!;
     Uri _jobTypeSagaEndpointAddress = null!;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public JobSagaOptions()
     {
         StatusCheckInterval = TimeSpan.FromMinutes(1);

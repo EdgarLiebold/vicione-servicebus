@@ -1,8 +1,11 @@
 using System;
 using ViciOne.ServiceBus.SagaStateMachine;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
+/// <summary>
+/// Provides extension methods for container activity.
+/// </summary>
 public static class ContainerActivityExtensions
 {
     /// <summary>

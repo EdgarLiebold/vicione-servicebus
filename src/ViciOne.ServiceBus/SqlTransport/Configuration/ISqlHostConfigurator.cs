@@ -2,8 +2,11 @@ using System;
 using System.Data;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Providers.Transports;
 
+/// <summary>
+/// Defines the contract for sql host configurator.
+/// </summary>
 public interface ISqlHostConfigurator
 {
     /// <summary>
@@ -51,8 +54,14 @@ public interface ISqlHostConfigurator
     /// </summary>
     string? Password { set; }
 
+    /// <summary>
+    /// Gets or sets the virtual host value.
+    /// </summary>
     string? VirtualHost { set; }
 
+    /// <summary>
+    /// Gets or sets the area value.
+    /// </summary>
     string? Area { set; }
 
     /// <summary>

@@ -1,6 +1,6 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
 /// Configure the execution of the activity and arguments with some tasty middleware.
@@ -14,8 +14,15 @@ public interface ICompensateActivityConfigurator<TActivity, TLog> :
     where TActivity : class, ICompensateActivity<TLog>
     where TLog : class
 {
+    /// <summary>
+    /// Gets or sets the concurrent message limit value.
+    /// </summary>
     int? ConcurrentMessageLimit { set; }
 
+    /// <summary>
+    /// Performs the log operation.
+    /// </summary>
+    /// <param name="configure">The configuration callback.</param>
     void Log(Action<ICompensateLogConfigurator<TLog>> configure);
 
     /// <summary>

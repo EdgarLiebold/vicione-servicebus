@@ -13,11 +13,19 @@ public class MessageSchedulerFilter :
 {
     readonly Uri _schedulerAddress;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="schedulerAddress">The scheduler address value.</param>
     public MessageSchedulerFilter(Uri schedulerAddress)
     {
         _schedulerAddress = schedulerAddress;
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("scheduler");
@@ -25,6 +33,12 @@ public class MessageSchedulerFilter :
         scope.Add("address", _schedulerAddress);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public Task SendAsync(ConsumeContext context, IPipe<ConsumeContext> next)
     {
         context.GetOrAddPayload<MessageSchedulerContext>(() => new ConsumeMessageSchedulerContext(context, SchedulerFactory));

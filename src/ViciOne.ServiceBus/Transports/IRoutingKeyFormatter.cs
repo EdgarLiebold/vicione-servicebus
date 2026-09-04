@@ -1,5 +1,8 @@
 namespace ViciOne.ServiceBus.Transports;
 
+/// <summary>
+/// Defines the contract for routing key formatter.
+/// </summary>
 public interface IRoutingKeyFormatter
 {
     /// <summary>

@@ -4,6 +4,9 @@ using System.Threading;
 
 namespace ViciOne.ServiceBus.NewIdParsers;
 
+/// <summary>
+/// Provides a base32 parser implementation.
+/// </summary>
 public class Base32Parser :
     INewIdParser
 {
@@ -14,11 +17,18 @@ public class Base32Parser :
     static readonly ThreadLocal<char[]> _buffer = new ThreadLocal<char[]>(() => new char[32]);
     readonly string _chars;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public Base32Parser()
         : this(ConvertChars)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="chars">The chars value.</param>
     public Base32Parser(in string chars)
     {
         if (chars.Length % 32 != 0)
@@ -27,6 +37,11 @@ public class Base32Parser :
         _chars = chars;
     }
 
+    /// <summary>
+    /// Parses the supplied representation.
+    /// </summary>
+    /// <param name="text">The text value.</param>
+    /// <returns>The result of the operation.</returns>
     public NewId Parse(in string text)
     {
         if (text.Length != 26)

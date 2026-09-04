@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable enable
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>
 /// Bus-owned message routes that are mutable only during bus configuration.
@@ -24,12 +24,24 @@ public sealed class MessageRouteTable :
         return table;
     }
 
+    /// <summary>
+    /// Attempts to get destination address.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="destinationAddress">The destination address value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetDestinationAddress<T>(out Uri destinationAddress)
         where T : class
     {
         return TryGetDestinationAddress(typeof(T), out destinationAddress);
     }
 
+    /// <summary>
+    /// Attempts to get destination address.
+    /// </summary>
+    /// <param name="messageType">The message type value.</param>
+    /// <param name="destinationAddress">The destination address value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetDestinationAddress(Type messageType, out Uri destinationAddress)
     {
         ArgumentNullException.ThrowIfNull(messageType);

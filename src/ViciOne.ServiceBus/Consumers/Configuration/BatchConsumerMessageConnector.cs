@@ -7,18 +7,37 @@ using ViciOne.ServiceBus.Middleware;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a batch consumer message connector implementation.
+/// </summary>
+/// <typeparam name="TConsumer">The t consumer type.</typeparam>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public class BatchConsumerMessageConnector<TConsumer, TMessage> :
     IConsumerMessageConnector<TConsumer>
     where TConsumer : class, IConsumer<Batch<TMessage>>
     where TMessage : class
 {
+    /// <summary>
+    /// Gets the message type value.
+    /// </summary>
     public Type MessageType => typeof(TMessage);
 
+    /// <summary>
+    /// Creates consumer message specification.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IConsumerMessageSpecification<TConsumer> CreateConsumerMessageSpecification()
     {
         return new BatchConsumerMessageSpecification<TConsumer, TMessage>();
     }
 
+    /// <summary>
+    /// Connects consumer.
+    /// </summary>
+    /// <param name="consumePipe">The consume pipe value.</param>
+    /// <param name="consumerFactory">The consumer factory value.</param>
+    /// <param name="specification">The specification value.</param>
+    /// <returns>The result of the operation.</returns>
     public ConnectHandle ConnectConsumer(IConsumePipeConnector consumePipe, IConsumerFactory<TConsumer> consumerFactory,
         IConsumerSpecification<TConsumer> specification)
     {

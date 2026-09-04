@@ -7,6 +7,9 @@ using ViciOne.ServiceBus.Internals;
 #nullable enable
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides a bus registration context implementation.
+/// </summary>
 public class BusRegistrationContext :
     RegistrationContext,
     IBusRegistrationContext,
@@ -14,6 +17,13 @@ public class BusRegistrationContext :
 {
     IConfigureReceiveEndpoint? _configureReceiveEndpoints;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="provider">The service provider.</param>
+    /// <param name="selector">The selector value.</param>
+    /// <param name="setScopedConsumeContext">The set scoped consume context value.</param>
+    /// <param name="busType">The bus type value.</param>
     public BusRegistrationContext(IServiceProvider provider, IContainerSelector selector, ISetScopedConsumeContext setScopedConsumeContext, Type busType)
         : base(provider, selector, setScopedConsumeContext)
     {
@@ -24,14 +34,30 @@ public class BusRegistrationContext :
 
     internal string BusKey { get; }
 
+    /// <summary>
+    /// Gets the endpoint name formatter value.
+    /// </summary>
     public IEndpointNameFormatter EndpointNameFormatter => Selector.GetEndpointNameFormatter(this);
 
+    /// <summary>
+    /// Configures endpoints.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
     public void ConfigureEndpoints<T>(IReceiveConfigurator<T> configurator, IEndpointNameFormatter? endpointNameFormatter = null)
         where T : IReceiveEndpointConfigurator
     {
         ConfigureEndpoints(configurator, endpointNameFormatter, NoFilter);
     }
 
+    /// <summary>
+    /// Configures endpoints.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
+    /// <param name="endpointNameFormatter">The endpoint name formatter value.</param>
+    /// <param name="configureFilter">The configure filter value.</param>
     public void ConfigureEndpoints<T>(IReceiveConfigurator<T> configurator, IEndpointNameFormatter? endpointNameFormatter,
         Action<IRegistrationFilterConfigurator>? configureFilter)
         where T : IReceiveEndpointConfigurator
@@ -153,6 +179,10 @@ public class BusRegistrationContext :
             ConfigureTheEndpoints(endpoints, endpointNameFormatter, GetEndpointDefinitionByName, configurator);
     }
 
+    /// <summary>
+    /// Gets configure receive endpoints.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     public IConfigureReceiveEndpoint GetConfigureReceiveEndpoints()
     {
         if (_configureReceiveEndpoints != null)

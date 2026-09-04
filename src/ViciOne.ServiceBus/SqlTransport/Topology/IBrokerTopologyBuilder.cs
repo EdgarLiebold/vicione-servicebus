@@ -3,6 +3,9 @@ using System;
 #nullable enable
 namespace ViciOne.ServiceBus.SqlTransport.Topology;
 
+/// <summary>
+/// Defines the contract for broker topology builder.
+/// </summary>
 public interface IBrokerTopologyBuilder
 {
     /// <summary>

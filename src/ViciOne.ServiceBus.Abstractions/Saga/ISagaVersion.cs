@@ -1,4 +1,4 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Sagas;
 
 /// <summary>
 /// For saga repositories that use an incrementing version
@@ -6,5 +6,8 @@ namespace ViciOne.ServiceBus;
 public interface ISagaVersion :
     ISaga
 {
+    /// <summary>
+    /// Gets or sets the version value.
+    /// </summary>
     int Version { get; set; }
 }

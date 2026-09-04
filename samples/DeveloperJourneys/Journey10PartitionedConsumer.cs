@@ -1,4 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Providers.Transports;
 
 namespace ViciOne.ServiceBus.Samples.DeveloperJourneys;
 

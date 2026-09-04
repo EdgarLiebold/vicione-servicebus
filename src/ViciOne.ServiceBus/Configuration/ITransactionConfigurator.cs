@@ -1,8 +1,11 @@
 using System;
 using System.Transactions;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for transaction configurator.
+/// </summary>
 public interface ITransactionConfigurator
 {
     /// <summary>

@@ -2,6 +2,9 @@ using System;
 
 namespace ViciOne.ServiceBus.Courier.Contracts;
 
+/// <summary>
+/// Specifies the available routing slip events values.
+/// </summary>
 [Flags]
 public enum RoutingSlipEvents
 {

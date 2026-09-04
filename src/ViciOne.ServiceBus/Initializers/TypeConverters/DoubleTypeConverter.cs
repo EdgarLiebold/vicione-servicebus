@@ -3,6 +3,9 @@ using System.Globalization;
 
 namespace ViciOne.ServiceBus.Initializers.TypeConverters;
 
+/// <summary>
+/// Provides a double type converter implementation.
+/// </summary>
 public class DoubleTypeConverter :
     ITypeConverter<string, double>,
     ITypeConverter<double, string>,
@@ -16,24 +19,48 @@ public class DoubleTypeConverter :
     ITypeConverter<double, long>,
     ITypeConverter<double, ulong>
 {
+    /// <summary>
+    /// Performs the try convert operation.
+    /// </summary>
+    /// <param name="input">The input value.</param>
+    /// <param name="result">The result value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(byte input, out double result)
     {
         result = Convert.ToDouble(input);
         return true;
     }
 
+    /// <summary>
+    /// Performs the try convert operation.
+    /// </summary>
+    /// <param name="input">The input value.</param>
+    /// <param name="result">The result value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(int input, out double result)
     {
         result = Convert.ToDouble(input);
         return true;
     }
 
+    /// <summary>
+    /// Performs the try convert operation.
+    /// </summary>
+    /// <param name="input">The input value.</param>
+    /// <param name="result">The result value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(long input, out double result)
     {
         result = Convert.ToDouble(input);
         return true;
     }
 
+    /// <summary>
+    /// Performs the try convert operation.
+    /// </summary>
+    /// <param name="input">The input value.</param>
+    /// <param name="result">The result value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(object? input, out double result)
     {
         if (input != null)
@@ -46,41 +73,83 @@ public class DoubleTypeConverter :
         return false;
     }
 
+    /// <summary>
+    /// Performs the try convert operation.
+    /// </summary>
+    /// <param name="input">The input value.</param>
+    /// <param name="result">The result value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(sbyte input, out double result)
     {
         result = Convert.ToDouble(input);
         return true;
     }
 
+    /// <summary>
+    /// Performs the try convert operation.
+    /// </summary>
+    /// <param name="input">The input value.</param>
+    /// <param name="result">The result value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(short input, out double result)
     {
         result = Convert.ToDouble(input);
         return true;
     }
 
+    /// <summary>
+    /// Performs the try convert operation.
+    /// </summary>
+    /// <param name="input">The input value.</param>
+    /// <param name="result">The result value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(string? input, out double result)
     {
         return double.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out result);
     }
 
+    /// <summary>
+    /// Performs the try convert operation.
+    /// </summary>
+    /// <param name="input">The input value.</param>
+    /// <param name="result">The result value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(uint input, out double result)
     {
         result = Convert.ToDouble(input);
         return true;
     }
 
+    /// <summary>
+    /// Performs the try convert operation.
+    /// </summary>
+    /// <param name="input">The input value.</param>
+    /// <param name="result">The result value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(ulong input, out double result)
     {
         result = Convert.ToDouble(input);
         return true;
     }
 
+    /// <summary>
+    /// Performs the try convert operation.
+    /// </summary>
+    /// <param name="input">The input value.</param>
+    /// <param name="result">The result value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(ushort input, out double result)
     {
         result = Convert.ToDouble(input);
         return true;
     }
 
+    /// <summary>
+    /// Performs the try convert operation.
+    /// </summary>
+    /// <param name="input">The input value.</param>
+    /// <param name="result">The result value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryConvert(double input, out string result)
     {
         result = input.ToString(CultureInfo.InvariantCulture);

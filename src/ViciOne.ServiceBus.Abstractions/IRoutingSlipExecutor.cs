@@ -2,8 +2,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Courier.Contracts;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
+/// <summary>
+/// Defines the contract for routing slip executor.
+/// </summary>
 public interface IRoutingSlipExecutor
 {
     /// <summary>

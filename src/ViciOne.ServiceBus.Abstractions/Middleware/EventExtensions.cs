@@ -3,10 +3,22 @@ using System.Threading.Tasks;
 using ViciOne.ServiceBus.Contracts;
 using ViciOne.ServiceBus.Middleware;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Middleware;
 
+/// <summary>
+/// Provides extension methods for event.
+/// </summary>
 public static class EventExtensions
 {
+    /// <summary>
+    /// Publishes event.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="pipe">The pipe value.</param>
+    /// <param name="message">The message value.</param>
+    /// <param name="timeProvider">The time provider value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static Task PublishEventAsync<T>(this IPipe<EventContext> pipe, T message, TimeProvider? timeProvider = null, CancellationToken cancellationToken = default)
         where T : class
     {

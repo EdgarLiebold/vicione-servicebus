@@ -10,6 +10,11 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Initializers.Conventions;
 
+/// <summary>
+/// Provides a default initializer convention implementation.
+/// </summary>
+/// <typeparam name="TMessage">The t message type.</typeparam>
+/// <typeparam name="TInput">The t input type.</typeparam>
 public class DefaultInitializerConvention<TMessage, TInput> :
     IInitializerConvention<TMessage, TInput>
     where TMessage : class
@@ -18,12 +23,22 @@ public class DefaultInitializerConvention<TMessage, TInput> :
     readonly IReadOnlyDictionary<string, PropertyInfo> _inputProperties;
     readonly IPropertyProviderFactory<TInput> _providerFactory;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public DefaultInitializerConvention()
     {
         _inputProperties = MessageTypeCache<TInput>.Properties.ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
         _providerFactory = new PropertyProviderFactory<TInput>();
     }
 
+    /// <summary>
+    /// Attempts to get property initializer.
+    /// </summary>
+    /// <typeparam name="TProperty">The t property type.</typeparam>
+    /// <param name="propertyInfo">The property info value.</param>
+    /// <param name="initializer">The initializer value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetPropertyInitializer<TProperty>(PropertyInfo propertyInfo,
         [NotNullWhen(true)] out IPropertyInitializer<TMessage, TInput>? initializer)
     {
@@ -69,6 +84,13 @@ public class DefaultInitializerConvention<TMessage, TInput> :
         return false;
     }
 
+    /// <summary>
+    /// Attempts to get header initializer.
+    /// </summary>
+    /// <typeparam name="TProperty">The t property type.</typeparam>
+    /// <param name="propertyInfo">The property info value.</param>
+    /// <param name="initializer">The initializer value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetHeaderInitializer<TProperty>(PropertyInfo propertyInfo,
         [NotNullWhen(true)] out IHeaderInitializer<TMessage, TInput>? initializer)
     {
@@ -100,6 +122,13 @@ public class DefaultInitializerConvention<TMessage, TInput> :
         return false;
     }
 
+    /// <summary>
+    /// Attempts to get headers initializer.
+    /// </summary>
+    /// <typeparam name="TProperty">The t property type.</typeparam>
+    /// <param name="propertyInfo">The property info value.</param>
+    /// <param name="initializer">The initializer value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetHeadersInitializer<TProperty>(PropertyInfo propertyInfo,
         [NotNullWhen(true)] out IHeaderInitializer<TMessage, TInput>? initializer)
     {
@@ -132,10 +161,18 @@ public class DefaultInitializerConvention<TMessage, TInput> :
 }
 
 
+/// <summary>
+/// Provides a default initializer convention implementation.
+/// </summary>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public class DefaultInitializerConvention<TMessage> :
     InitializerConvention<TMessage>
     where TMessage : class
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="convention">The convention value.</param>
     public DefaultInitializerConvention(IInitializerConvention convention)
         : base(new CacheFactory(), convention)
     {
@@ -154,9 +191,15 @@ public class DefaultInitializerConvention<TMessage> :
 }
 
 
+/// <summary>
+/// Provides a default initializer convention implementation.
+/// </summary>
 public class DefaultInitializerConvention :
     InitializerConvention
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
     public DefaultInitializerConvention()
         : base(new CacheFactory())
     {

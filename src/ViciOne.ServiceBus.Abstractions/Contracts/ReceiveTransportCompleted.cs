@@ -1,5 +1,8 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Observers;
 
+/// <summary>
+/// Defines the contract for receive transport completed.
+/// </summary>
 public interface ReceiveTransportCompleted :
     ReceiveTransportEvent
 {

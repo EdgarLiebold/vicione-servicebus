@@ -5,8 +5,18 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for dependency injection saga state machine registration.
+/// </summary>
 public static class DependencyInjectionSagaStateMachineRegistrationExtensions
 {
+    /// <summary>
+    /// Performs the register saga state machine operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="TSaga">The t saga type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <returns>The result of the operation.</returns>
     public static ISagaRegistration RegisterSagaStateMachine<T, TSaga>(this IServiceCollection collection)
         where T : class, SagaStateMachine<TSaga>
         where TSaga : class, SagaStateMachineInstance
@@ -14,6 +24,14 @@ public static class DependencyInjectionSagaStateMachineRegistrationExtensions
         return RegisterSagaStateMachine<T, TSaga>(collection, new DependencyInjectionContainerRegistrar(collection));
     }
 
+    /// <summary>
+    /// Performs the register saga state machine operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="TSaga">The t saga type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
+    /// <returns>The result of the operation.</returns>
     public static ISagaRegistration RegisterSagaStateMachine<T, TSaga>(this IServiceCollection collection, IContainerRegistrar registrar)
         where T : class, SagaStateMachine<TSaga>
         where TSaga : class, SagaStateMachineInstance
@@ -21,6 +39,14 @@ public static class DependencyInjectionSagaStateMachineRegistrationExtensions
         return new SagaRegistrar<T, TSaga>().Register(collection, registrar);
     }
 
+    /// <summary>
+    /// Performs the register saga operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="TSaga">The t saga type.</typeparam>
+    /// <typeparam name="TDefinition">The t definition type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <returns>The result of the operation.</returns>
     public static ISagaRegistration RegisterSaga<T, TSaga, TDefinition>(this IServiceCollection collection)
         where T : class, SagaStateMachine<TSaga>
         where TSaga : class, SagaStateMachineInstance
@@ -29,6 +55,15 @@ public static class DependencyInjectionSagaStateMachineRegistrationExtensions
         return RegisterSaga<T, TSaga, TDefinition>(collection, new DependencyInjectionContainerRegistrar(collection));
     }
 
+    /// <summary>
+    /// Performs the register saga operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="TSaga">The t saga type.</typeparam>
+    /// <typeparam name="TDefinition">The t definition type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
+    /// <returns>The result of the operation.</returns>
     public static ISagaRegistration RegisterSaga<T, TSaga, TDefinition>(this IServiceCollection collection, IContainerRegistrar registrar)
         where T : class, SagaStateMachine<TSaga>
         where TSaga : class, SagaStateMachineInstance
@@ -37,6 +72,14 @@ public static class DependencyInjectionSagaStateMachineRegistrationExtensions
         return new SagaDefinitionRegistrar<T, TSaga, TDefinition>().Register(collection, registrar);
     }
 
+    /// <summary>
+    /// Performs the register saga state machine operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="TSaga">The t saga type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="sagaDefinitionType">The saga definition type value.</param>
+    /// <returns>The result of the operation.</returns>
     public static ISagaRegistration RegisterSagaStateMachine<T, TSaga>(this IServiceCollection collection, Type sagaDefinitionType)
         where T : class, SagaStateMachine<TSaga>
         where TSaga : class, SagaStateMachineInstance
@@ -44,6 +87,15 @@ public static class DependencyInjectionSagaStateMachineRegistrationExtensions
         return RegisterSagaStateMachine<T, TSaga>(collection, new DependencyInjectionContainerRegistrar(collection), sagaDefinitionType);
     }
 
+    /// <summary>
+    /// Performs the register saga state machine operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <typeparam name="TSaga">The t saga type.</typeparam>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
+    /// <param name="sagaDefinitionType">The saga definition type value.</param>
+    /// <returns>The result of the operation.</returns>
     public static ISagaRegistration RegisterSagaStateMachine<T, TSaga>(this IServiceCollection collection, IContainerRegistrar registrar,
         Type? sagaDefinitionType)
         where T : class, SagaStateMachine<TSaga>
@@ -64,6 +116,14 @@ public static class DependencyInjectionSagaStateMachineRegistrationExtensions
         return register.Register(collection, registrar);
     }
 
+    /// <summary>
+    /// Performs the register saga state machine operation.
+    /// </summary>
+    /// <param name="collection">The collection value.</param>
+    /// <param name="registrar">The registrar value.</param>
+    /// <param name="sagaType">The saga type value.</param>
+    /// <param name="sagaDefinitionType">The saga definition type value.</param>
+    /// <returns>The result of the operation.</returns>
     public static ISagaRegistration RegisterSagaStateMachine(this IServiceCollection collection, IContainerRegistrar registrar, Type sagaType,
         Type? sagaDefinitionType = null)
     {

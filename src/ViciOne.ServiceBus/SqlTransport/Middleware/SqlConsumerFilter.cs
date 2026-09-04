@@ -11,6 +11,10 @@ public class SqlConsumerFilter :
 {
     readonly SqlReceiveEndpointContext _context;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public SqlConsumerFilter(SqlReceiveEndpointContext context)
     {
         _context = context;

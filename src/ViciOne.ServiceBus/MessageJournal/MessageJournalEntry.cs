@@ -34,24 +34,54 @@ public sealed class MessageJournalEntry
         ContentSizeInBytes = CalculateContentSize();
     }
 
+    /// <summary>
+    /// Gets the entry id value.
+    /// </summary>
     public Guid EntryId { get; }
 
+    /// <summary>
+    /// Gets the observed at value.
+    /// </summary>
     public DateTimeOffset ObservedAt { get; }
 
+    /// <summary>
+    /// Gets the operation value.
+    /// </summary>
     public MessageJournalOperation Operation { get; }
 
+    /// <summary>
+    /// Gets the outcome value.
+    /// </summary>
     public MessageJournalOutcome Outcome { get; }
 
+    /// <summary>
+    /// Gets the data classification value.
+    /// </summary>
     public MessageJournalDataClassification DataClassification { get; }
 
+    /// <summary>
+    /// Gets the content type value.
+    /// </summary>
     public string? ContentType { get; }
 
+    /// <summary>
+    /// Gets the message types value.
+    /// </summary>
     public IReadOnlyList<string> MessageTypes { get; }
 
+    /// <summary>
+    /// Gets the metadata value.
+    /// </summary>
     public IReadOnlyDictionary<string, string> Metadata { get; }
 
+    /// <summary>
+    /// Gets the headers value.
+    /// </summary>
     public IReadOnlyDictionary<string, string> Headers { get; }
 
+    /// <summary>
+    /// Gets the body value.
+    /// </summary>
     public ReadOnlyMemory<byte> Body => _body.ToArray();
 
     /// <summary>

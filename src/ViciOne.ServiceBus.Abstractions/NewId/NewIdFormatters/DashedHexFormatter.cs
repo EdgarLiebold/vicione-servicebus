@@ -6,6 +6,9 @@ using System.Runtime.Intrinsics.X86;
 
 namespace ViciOne.ServiceBus.NewIdFormatters;
 
+/// <summary>
+/// Provides a dashed hex formatter implementation.
+/// </summary>
 public class DashedHexFormatter :
     INewIdFormatter
 {
@@ -15,6 +18,12 @@ public class DashedHexFormatter :
     readonly char _suffix;
     const uint LowerCaseUInt = 0x2020U;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="prefix">The prefix value.</param>
+    /// <param name="suffix">The suffix value.</param>
+    /// <param name="upperCase">The upper case value.</param>
     public DashedHexFormatter(char prefix = '\0', char suffix = '\0', bool upperCase = false)
     {
         if (prefix == '\0' || suffix == '\0')
@@ -29,6 +38,11 @@ public class DashedHexFormatter :
         _alpha = upperCase ? 0 : LowerCaseUInt;
     }
 
+    /// <summary>
+    /// Performs the format operation.
+    /// </summary>
+    /// <param name="bytes">The bytes value.</param>
+    /// <returns>The result of the operation.</returns>
     public unsafe string Format(in byte[] bytes)
     {
         if (Avx2.IsSupported && BitConverter.IsLittleEndian)

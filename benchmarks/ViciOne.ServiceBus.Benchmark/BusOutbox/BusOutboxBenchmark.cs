@@ -52,7 +52,7 @@ public class BusOutboxBenchmark
 
                 x.SetKebabCaseEndpointNameFormatter();
 
-                x.AddDbContext<BusOutboxDbContext>(db =>
+                x.Services.AddDbContext<BusOutboxDbContext>(db =>
                 {
                     db.UseSqlServer(_options.ResolveDatabaseConnectionString(), options =>
                     {

@@ -4,8 +4,11 @@ using ViciOne.ServiceBus.AzureTable.MessageJournal;
 using ViciOne.ServiceBus.MessageJournal;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Azure.Table;
 
+/// <summary>
+/// Provides extension methods for azure table message journal configuration.
+/// </summary>
 public static class AzureTableMessageJournalConfigurationExtensions
 {
     /// <summary>

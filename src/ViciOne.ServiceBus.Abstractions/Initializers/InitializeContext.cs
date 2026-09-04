@@ -19,6 +19,9 @@ public interface InitializeContext<out TMessage, out TInput> :
     /// </summary>
     bool HasInput { get; }
 
+    /// <summary>
+    /// Gets the input value.
+    /// </summary>
     TInput Input { get; }
 }
 
@@ -31,6 +34,9 @@ public interface InitializeContext<out TMessage> :
     InitializeContext
     where TMessage : class
 {
+    /// <summary>
+    /// Gets the message type value.
+    /// </summary>
     Type MessageType { get; }
 
     /// <summary>
@@ -38,11 +44,20 @@ public interface InitializeContext<out TMessage> :
     /// </summary>
     TMessage Message { get; }
 
+    /// <summary>
+    /// Creates input context.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="input">The input value.</param>
+    /// <returns>The result of the operation.</returns>
     InitializeContext<TMessage, T> CreateInputContext<T>(T input)
         where T : class;
 }
 
 
+/// <summary>
+/// Defines the contract for initialize context.
+/// </summary>
 public interface InitializeContext :
     PipeContext
 {
@@ -66,6 +81,12 @@ public interface InitializeContext :
     bool TryGetParent<T>([NotNullWhen(true)] out InitializeContext<T>? parentContext)
         where T : class;
 
+    /// <summary>
+    /// Creates message context.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="message">The message value.</param>
+    /// <returns>The result of the operation.</returns>
     InitializeContext<T> CreateMessageContext<T>(T message)
         where T : class;
 }

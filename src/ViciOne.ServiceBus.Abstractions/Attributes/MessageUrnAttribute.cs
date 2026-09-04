@@ -27,6 +27,9 @@ public class MessageUrnAttribute :
         Urn = FormatUrn(urn, useDefaultPrefix);
     }
 
+    /// <summary>
+    /// Gets the urn value.
+    /// </summary>
     public Uri Urn { get; }
 
     static Uri FormatUrn(string urn, bool useDefaultPrefix)

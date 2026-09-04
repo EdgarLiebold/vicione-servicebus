@@ -4,6 +4,10 @@ using ViciOne.ServiceBus.MessageData.Configuration;
 
 namespace ViciOne.ServiceBus.MessageData.Conventions;
 
+/// <summary>
+/// Provides a message data message send topology convention implementation.
+/// </summary>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public class MessageDataMessageSendTopologyConvention<TMessage> :
     IMessageDataMessageSendTopologyConvention<TMessage>
     where TMessage : class
@@ -11,6 +15,11 @@ public class MessageDataMessageSendTopologyConvention<TMessage> :
     readonly IMessageDataRepository _repository;
     readonly MessageDataPolicy _policy;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="repository">The repository value.</param>
+    /// <param name="policy">The policy value.</param>
     public MessageDataMessageSendTopologyConvention(IMessageDataRepository repository, MessageDataPolicy policy)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));

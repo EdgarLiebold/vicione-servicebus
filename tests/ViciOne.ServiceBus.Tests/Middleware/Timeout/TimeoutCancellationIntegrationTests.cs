@@ -26,7 +26,7 @@ public sealed class TimeoutCancellationIntegrationTests
             .AddViciOneServiceBusTestHarness(configuration =>
             {
                 configuration.SetTestTimeouts(operationTimeout, operationTimeout);
-                configuration.AddOptions<ViciOneServiceBusHostOptions>()
+                configuration.Services.AddOptions<ViciOneServiceBusHostOptions>()
                     .Configure(options =>
                     {
                         options.ConsumerStopTimeout = TimeSpan.FromMilliseconds(100);
@@ -160,7 +160,7 @@ public sealed class TimeoutCancellationIntegrationTests
             .AddViciOneServiceBusTestHarness(configuration =>
             {
                 configuration.SetTestTimeouts(operationTimeout, operationTimeout);
-                configuration.AddOptions<ViciOneServiceBusHostOptions>()
+                configuration.Services.AddOptions<ViciOneServiceBusHostOptions>()
                     .Configure(options =>
                     {
                         options.ConsumerStopTimeout = TimeSpan.FromMilliseconds(100);
@@ -227,7 +227,7 @@ public sealed class TimeoutCancellationIntegrationTests
             .AddViciOneServiceBusTestHarness(configuration =>
             {
                 configuration.SetTestTimeouts(operationTimeout, operationTimeout);
-                configuration.AddOptions<ViciOneServiceBusHostOptions>()
+                configuration.Services.AddOptions<ViciOneServiceBusHostOptions>()
                     .Configure(options =>
                     {
                         options.ConsumerStopTimeout = TimeSpan.FromMilliseconds(100);

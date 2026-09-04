@@ -16,6 +16,11 @@ public class RetryFilter<TContext> :
     readonly RetryObservable _observers;
     readonly IRetryPolicy _retryPolicy;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="retryPolicy">The retry policy value.</param>
+    /// <param name="observers">The observers value.</param>
     public RetryFilter(IRetryPolicy retryPolicy, RetryObservable observers)
     {
         _retryPolicy = retryPolicy ?? throw new ArgumentNullException(nameof(retryPolicy));

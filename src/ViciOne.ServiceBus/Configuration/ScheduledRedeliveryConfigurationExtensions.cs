@@ -3,8 +3,11 @@ using System.Threading;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.RetryPolicies;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for scheduled redelivery configuration.
+/// </summary>
 public static class ScheduledRedeliveryConfigurationExtensions
 {
     /// <summary>

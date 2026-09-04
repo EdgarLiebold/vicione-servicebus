@@ -5,7 +5,7 @@ using ViciOne.ServiceBus.MessageData;
 
 #nullable enable
 
-namespace ViciOne.ServiceBus.Serialization;
+namespace ViciOne.ServiceBus.Advanced.Serialization;
 /// <summary>
 /// Non-generic bridge kept inside the runtime so the transport serialization owner does not lose the
 /// typed-bus policy boundary.

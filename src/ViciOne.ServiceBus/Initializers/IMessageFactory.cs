@@ -7,6 +7,11 @@ namespace ViciOne.ServiceBus.Initializers;
 public interface IMessageFactory<out TMessage>
     where TMessage : class
 {
+    /// <summary>
+    /// Performs the create operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <returns>The result of the operation.</returns>
     InitializeContext<TMessage> Create(InitializeContext context);
 }
 
@@ -16,5 +21,9 @@ public interface IMessageFactory<out TMessage>
 /// </summary>
 public interface IMessageFactory
 {
+    /// <summary>
+    /// Performs the create operation.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
     object Create();
 }

@@ -40,7 +40,7 @@ public sealed class NativeTestSourceLayoutTests
         foreach (string source in MsBuildEvaluation.ItemMetadata(project, "Compile", "FullPath"))
         {
             string fullPath = Path.GetFullPath(source);
-            if (Path.GetFileName(fullPath).Equals("GlobalUsings.cs", StringComparison.Ordinal))
+            if (Path.GetFileName(fullPath).EndsWith("GlobalUsings.cs", StringComparison.Ordinal))
                 continue;
 
             string relativePath = Path.GetRelativePath(projectDirectory, fullPath);

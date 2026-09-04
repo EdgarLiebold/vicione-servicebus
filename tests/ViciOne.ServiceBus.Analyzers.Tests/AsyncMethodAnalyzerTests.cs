@@ -207,7 +207,7 @@ namespace ConsoleApplication1
         ServiceBusAnalyzerFixture.AssertDiagnostics(
             actual,
             new DiagnosticObservation(
-                "ViciOneServiceBus0001",
+                "VOSB1001",
                 DiagnosticSeverity.Warning,
                 message,
                 "Test0.cs",

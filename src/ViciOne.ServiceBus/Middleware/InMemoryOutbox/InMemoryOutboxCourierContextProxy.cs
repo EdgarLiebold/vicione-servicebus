@@ -3,12 +3,19 @@ using ViciOne.ServiceBus.Courier.Contracts;
 
 namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 
+/// <summary>
+/// Provides an in memory outbox courier context proxy implementation.
+/// </summary>
 public abstract class InMemoryOutboxCourierContextProxy :
     InMemoryOutboxConsumeContext<RoutingSlip>,
     CourierContext
 {
     readonly CourierContext _courierContext;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="courierContext">The courier context value.</param>
     protected InMemoryOutboxCourierContextProxy(CourierContext courierContext)
         : base(courierContext)
     {

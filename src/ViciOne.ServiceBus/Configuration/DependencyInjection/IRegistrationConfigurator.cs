@@ -2,10 +2,13 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for registration configurator.
+/// </summary>
 public interface IRegistrationConfigurator :
-    IServiceCollection
+    IRegistrationConfiguratorServices
 {
     /// <summary>
     /// Adds the consumer, allowing configuration when it is configured on an endpoint
@@ -130,10 +133,6 @@ public interface IRegistrationConfigurator :
     /// <param name="endpointDefinition">The endpoint definition to add</param>
     void AddEndpoint(Type endpointDefinition);
 
-    void AddEndpoint<TDefinition, T>(IRegistration registration, IEndpointSettings<IEndpointDefinition<T>>? settings = null)
-        where TDefinition : class, IEndpointDefinition<T>
-        where T : class;
-
     /// <summary>
     /// Add a request client, for the request type, which uses the <see cref="ConsumeContext" /> if present, otherwise
     /// uses the <see cref="IBus" />. The request is published, unless an endpoint convention is specified for the
@@ -179,16 +178,6 @@ public interface IRegistrationConfigurator :
     void SetDefaultRequestTimeout(RequestTimeout timeout);
 
     /// <summary>
-    /// Sets the default request timeout for this bus instance, used by the client factory to create request clients
-    /// </summary>
-    /// <param name="d">days</param>
-    /// <param name="h">hours</param>
-    /// <param name="m">minutes</param>
-    /// <param name="s">seconds</param>
-    /// <param name="ms">milliseconds</param>
-    void SetDefaultRequestTimeout(int? d = null, int? h = null, int? m = null, int? s = null, int? ms = null);
-
-    /// <summary>
     /// Set the default endpoint name formatter used for endpoint names
     /// </summary>
     /// <param name="endpointNameFormatter"></param>
@@ -204,17 +193,22 @@ public interface IRegistrationConfigurator :
         where T : class, ISaga;
 
     /// <summary>
-    /// Specify a saga repository provider, that will be called when a saga is configured by type
-    /// (without a specific generic call to AddSaga/AddSagaStateMachine)
-    /// </summary>
-    /// <param name="provider"></param>
-    void SetSagaRepositoryProvider(ISagaRepositoryRegistrationProvider provider);
-
-    /// <summary>
     /// Adds a future registration, along with an optional definition
     /// </summary>
     /// <param name="futureDefinitionType">The future definition type</param>
     /// <typeparam name="TFuture"></typeparam>
     IFutureRegistrationConfigurator<TFuture> AddFuture<TFuture>(Type? futureDefinitionType = null)
         where TFuture : class, SagaStateMachine<FutureState>;
+}
+
+/// <summary>
+/// Exposes the underlying dependency-injection collection to advanced registration extensions.
+/// Application configuration should use the typed registration methods instead.
+/// </summary>
+public interface IRegistrationConfiguratorServices
+{
+    /// <summary>
+    /// Gets the dependency-injection collection owned by this configurator.
+    /// </summary>
+    IServiceCollection Services { get; }
 }

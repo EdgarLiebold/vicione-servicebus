@@ -1,6 +1,6 @@
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Topology;
 
 /// <summary>
 /// The message-specific Consume topology, which may be configured or otherwise
@@ -10,5 +10,9 @@ namespace ViciOne.ServiceBus;
 public interface IMessageConsumeTopology<TMessage>
     where TMessage : class
 {
+    /// <summary>
+    /// Applies this specification to the target builder.
+    /// </summary>
+    /// <param name="builder">The builder value.</param>
     void Apply(ITopologyPipeBuilder<ConsumeContext<TMessage>> builder);
 }

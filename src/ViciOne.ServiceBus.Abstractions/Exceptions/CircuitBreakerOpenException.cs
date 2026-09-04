@@ -7,6 +7,12 @@ namespace ViciOne.ServiceBus;
 /// </summary>
 public sealed class CircuitBreakerOpenException : ViciOneServiceBusException
 {
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="retryAfter">The retry after value.</param>
+    /// <param name="probeInProgress">The probe in progress value.</param>
+    /// <param name="lastFailure">The last failure value.</param>
     public CircuitBreakerOpenException(TimeSpan retryAfter, bool probeInProgress, Exception? lastFailure)
         : base(CreateMessage(retryAfter, probeInProgress), lastFailure)
     {

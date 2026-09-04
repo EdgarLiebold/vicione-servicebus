@@ -7,6 +7,9 @@ using Microsoft.Extensions.Logging;
 
 namespace ViciOne.ServiceBus.SqlTransport.SqlServer;
 
+/// <summary>
+/// Provides a sql server database migrator implementation.
+/// </summary>
 public class SqlServerDatabaseMigrator :
     ISqlTransportDatabaseMigrator
 {
@@ -1884,16 +1887,32 @@ END
 
     readonly ILogger<SqlServerDatabaseMigrator> _logger;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="logger">The logger value.</param>
     public SqlServerDatabaseMigrator(ILogger<SqlServerDatabaseMigrator> logger)
     {
         _logger = logger;
     }
 
+    /// <summary>
+    /// Creates database.
+    /// </summary>
+    /// <param name="options">The options value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task CreateDatabaseAsync(SqlTransportOptions options, CancellationToken cancellationToken)
     {
         await CreateDatabaseIfNotExistAsync(options, cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Performs the delete database operation.
+    /// </summary>
+    /// <param name="options">The options value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task DeleteDatabaseAsync(SqlTransportOptions options, CancellationToken cancellationToken)
     {
         await using var connection = SqlServerSqlTransportConnection.GetSystemDatabaseConnection(options);
@@ -1908,6 +1927,12 @@ END
         }
     }
 
+    /// <summary>
+    /// Creates infrastructure.
+    /// </summary>
+    /// <param name="options">The options value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task CreateInfrastructureAsync(SqlTransportOptions options, CancellationToken cancellationToken)
     {
         await using var connection = SqlServerSqlTransportConnection.GetDatabaseConnection(options);
@@ -1984,6 +2009,12 @@ END
         }
     }
 
+    /// <summary>
+    /// Creates schema if not exist.
+    /// </summary>
+    /// <param name="options">The options value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task CreateSchemaIfNotExistAsync(SqlTransportOptions options, CancellationToken cancellationToken)
     {
         await using var connection = SqlServerSqlTransportConnection.GetDatabaseAdminConnection(options);

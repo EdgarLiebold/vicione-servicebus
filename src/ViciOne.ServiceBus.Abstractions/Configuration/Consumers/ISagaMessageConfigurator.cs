@@ -1,7 +1,11 @@
 using System;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Defines the contract for saga message configurator.
+/// </summary>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public interface ISagaMessageConfigurator<TMessage> :
     IPipeConfigurator<ConsumeContext<TMessage>>
     where TMessage : class
@@ -9,6 +13,11 @@ public interface ISagaMessageConfigurator<TMessage> :
 }
 
 
+/// <summary>
+/// Defines the contract for saga message configurator.
+/// </summary>
+/// <typeparam name="TSaga">The t saga type.</typeparam>
+/// <typeparam name="TMessage">The t message type.</typeparam>
 public interface ISagaMessageConfigurator<TSaga, TMessage> :
     IPipeConfigurator<SagaConsumeContext<TSaga, TMessage>>
     where TMessage : class

@@ -5,8 +5,11 @@ using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.DependencyInjection.Registration;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for job service registration.
+/// </summary>
 public static class JobServiceRegistrationExtensions
 {
     /// <summary>
@@ -18,7 +21,7 @@ public static class JobServiceRegistrationExtensions
     public static IJobServiceRegistrationConfigurator SetJobConsumerOptions(this IBusRegistrationConfigurator configurator,
         Action<JobConsumerOptions>? configure = null)
     {
-        var registration = configurator.RegisterJobService(configurator.Registrar);
+        var registration = configurator.Services.RegisterJobService(configurator.Advanced().Registrar);
 
         registration.AddConfigureAction(configure);
 

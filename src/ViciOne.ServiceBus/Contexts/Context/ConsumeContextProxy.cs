@@ -15,6 +15,10 @@ public abstract class ConsumeContextProxy :
 {
     readonly ConsumeContext _context;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     protected ConsumeContextProxy(ConsumeContext context)
         : base(context.ReceiveContext, context.SerializerContext)
     {
@@ -26,29 +30,85 @@ public abstract class ConsumeContextProxy :
     /// </summary>
     public override CancellationToken CancellationToken => _context.CancellationToken;
 
+    /// <summary>
+    /// Gets the message id value.
+    /// </summary>
     public override Guid? MessageId => _context.MessageId;
+    /// <summary>
+    /// Gets the request id value.
+    /// </summary>
     public override Guid? RequestId => _context.RequestId;
+    /// <summary>
+    /// Gets the correlation id value.
+    /// </summary>
     public override Guid? CorrelationId => _context.CorrelationId;
+    /// <summary>
+    /// Gets the conversation id value.
+    /// </summary>
     public override Guid? ConversationId => _context.ConversationId;
+    /// <summary>
+    /// Gets the initiator id value.
+    /// </summary>
     public override Guid? InitiatorId => _context.InitiatorId;
+    /// <summary>
+    /// Gets the expiration time value.
+    /// </summary>
     public override DateTimeOffset? ExpirationTime => _context.ExpirationTime;
+    /// <summary>
+    /// Gets the source address value.
+    /// </summary>
     public override Uri? SourceAddress => _context.SourceAddress;
+    /// <summary>
+    /// Gets the destination address value.
+    /// </summary>
     public override Uri? DestinationAddress => _context.DestinationAddress;
+    /// <summary>
+    /// Gets the response address value.
+    /// </summary>
     public override Uri? ResponseAddress => _context.ResponseAddress;
+    /// <summary>
+    /// Gets the fault address value.
+    /// </summary>
     public override Uri? FaultAddress => _context.FaultAddress;
+    /// <summary>
+    /// Gets the sent time value.
+    /// </summary>
     public override DateTimeOffset? SentTime => _context.SentTime;
+    /// <summary>
+    /// Gets the headers value.
+    /// </summary>
     public override Headers Headers => _context.Headers;
+    /// <summary>
+    /// Gets the host value.
+    /// </summary>
     public override HostInfo Host => _context.Host;
 
+    /// <summary>
+    /// Gets the consume completed value.
+    /// </summary>
     public override Task ConsumeCompleted => _context.ConsumeCompleted;
 
+    /// <summary>
+    /// Gets the supported message types value.
+    /// </summary>
     public override IEnumerable<string> SupportedMessageTypes => _context.SupportedMessageTypes;
 
+    /// <summary>
+    /// Determines whether the current value has message type.
+    /// </summary>
+    /// <param name="messageType">The message type value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public override bool HasMessageType(Type messageType)
     {
         return _context.HasMessageType(messageType);
     }
 
+    /// <summary>
+    /// Attempts to get message.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="consumeContext">The consume context value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public override bool TryGetMessage<T>([NotNullWhen(true)] out ConsumeContext<T>? consumeContext)
     {
         if (_context.TryGetMessage(out ConsumeContext<T>? messageContext))
@@ -61,6 +121,10 @@ public abstract class ConsumeContextProxy :
         return false;
     }
 
+    /// <summary>
+    /// Adds consume task to the configuration.
+    /// </summary>
+    /// <param name="task">The task value.</param>
     public override void AddConsumeTask(Task task)
     {
         _context.AddConsumeTask(task);
@@ -123,11 +187,30 @@ public abstract class ConsumeContextProxy :
         return _context.AddOrUpdatePayload(addFactory, updateFactory);
     }
 
+    /// <summary>
+    /// Performs the notify consumed operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="duration">The duration value.</param>
+    /// <param name="consumerType">The consumer type value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public override Task NotifyConsumedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
     {
         return _context.NotifyConsumedAsync(context, duration, consumerType, cancellationToken: cancellationToken);
     }
 
+    /// <summary>
+    /// Performs the notify faulted operation.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="duration">The duration value.</param>
+    /// <param name="consumerType">The consumer type value.</param>
+    /// <param name="exception">The exception associated with the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public override Task NotifyFaultedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
     {
         return _context.NotifyFaultedAsync(context, duration, consumerType, exception, cancellationToken: cancellationToken);
@@ -147,19 +230,41 @@ public class ConsumeContextProxy<TMessage> :
 {
     readonly ConsumeContext<TMessage> _context;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public ConsumeContextProxy(ConsumeContext<TMessage> context)
         : base(context.Advanced())
     {
         _context = context;
     }
 
+    /// <summary>
+    /// Gets the message value.
+    /// </summary>
     public TMessage Message => _context.Message;
 
+    /// <summary>
+    /// Performs the notify consumed operation.
+    /// </summary>
+    /// <param name="duration">The duration value.</param>
+    /// <param name="consumerType">The consumer type value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public virtual Task NotifyConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
     {
         return NotifyConsumedAsync(this, duration, consumerType, cancellationToken: cancellationToken);
     }
 
+    /// <summary>
+    /// Performs the notify faulted operation.
+    /// </summary>
+    /// <param name="duration">The duration value.</param>
+    /// <param name="consumerType">The consumer type value.</param>
+    /// <param name="exception">The exception associated with the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public virtual Task NotifyFaultedAsync(TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
     {
         return NotifyFaultedAsync(this, duration, consumerType, exception, cancellationToken: cancellationToken);

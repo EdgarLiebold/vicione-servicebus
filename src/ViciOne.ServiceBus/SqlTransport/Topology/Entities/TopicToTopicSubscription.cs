@@ -16,6 +16,9 @@ public interface TopicToTopicSubscription
     /// </summary>
     Topic Destination { get; }
 
+    /// <summary>
+    /// Gets the subscription type value.
+    /// </summary>
     SqlSubscriptionType SubscriptionType { get; }
 
     /// <summary>

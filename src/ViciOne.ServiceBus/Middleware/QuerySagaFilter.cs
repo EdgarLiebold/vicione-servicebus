@@ -18,6 +18,13 @@ public class QuerySagaFilter<TSaga, TMessage> :
     readonly ISagaQueryFactory<TSaga, TMessage> _queryFactory;
     readonly ISagaRepository<TSaga> _sagaRepository;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="sagaRepository">The saga repository value.</param>
+    /// <param name="policy">The policy value.</param>
+    /// <param name="queryFactory">The query factory value.</param>
+    /// <param name="messagePipe">The message pipe value.</param>
     public QuerySagaFilter(ISagaRepository<TSaga> sagaRepository, ISagaPolicy<TSaga, TMessage> policy,
         ISagaQueryFactory<TSaga, TMessage> queryFactory, IPipe<SagaConsumeContext<TSaga, TMessage>> messagePipe)
     {
@@ -27,6 +34,10 @@ public class QuerySagaFilter<TSaga, TMessage> :
         _queryFactory = queryFactory;
     }
 
+    /// <summary>
+    /// Performs the probe operation.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateFilterScope("saga");
@@ -38,6 +49,12 @@ public class QuerySagaFilter<TSaga, TMessage> :
         _messagePipe.Probe(scope);
     }
 
+    /// <summary>
+    /// Sends a message to the configured destination.
+    /// </summary>
+    /// <param name="context">The operation context.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result of the operation.</returns>
     public async Task SendAsync(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
     {
         TimeProvider timeProvider = context.GetTimeProvider();

@@ -2,6 +2,9 @@ using System;
 
 namespace ViciOne.ServiceBus.Middleware;
 
+/// <summary>
+/// Defines configuration options for outbox consume.
+/// </summary>
 public class OutboxConsumeOptions
 {
     /// <summary>

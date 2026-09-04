@@ -9,13 +9,27 @@ using ViciOne.ServiceBus.Saga;
 #nullable enable
 namespace ViciOne.ServiceBus.Testing;
 
+/// <summary>
+/// Provides extension methods for testing service provider.
+/// </summary>
 public static class TestingServiceProviderExtensions
 {
+    /// <summary>
+    /// Gets test harness.
+    /// </summary>
+    /// <param name="provider">The service provider.</param>
+    /// <returns>The result of the operation.</returns>
     public static ITestHarness GetTestHarness(this IServiceProvider provider)
     {
         return provider.GetRequiredService<ITestHarness>();
     }
 
+    /// <summary>
+    /// Starts test harness.
+    /// </summary>
+    /// <param name="provider">The service provider.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static async Task<ITestHarness> StartTestHarnessAsync(this IServiceProvider provider, CancellationToken cancellationToken = default)
     {
         var testHarness = provider.GetRequiredService<ITestHarness>();
@@ -25,6 +39,14 @@ public static class TestingServiceProviderExtensions
         return testHarness;
     }
 
+    /// <summary>
+    /// Connects publish handler.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="harness">The harness value.</param>
+    /// <param name="filter">The filter value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static async Task<Task<ConsumeContext<T>>> ConnectPublishHandlerAsync<T>(this ITestHarness harness, Func<ConsumeContext<T>, bool> filter, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -49,9 +71,14 @@ public static class TestingServiceProviderExtensions
         return source.Task;
     }
 
+    /// <summary>
+    /// Adds task completion source to the configuration.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="configurator">The configurator value.</param>
     public static void AddTaskCompletionSource<T>(this IBusRegistrationConfigurator configurator)
     {
-        configurator.AddSingleton(provider => provider.GetRequiredService<ITestHarness>().GetTask<T>());
+        configurator.Services.AddSingleton(provider => provider.GetRequiredService<ITestHarness>().GetTask<T>());
     }
 
     /// <summary>
@@ -67,6 +94,12 @@ public static class TestingServiceProviderExtensions
             await service.StopAsync(cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Performs the restart hosted services operation.
+    /// </summary>
+    /// <param name="harness">The harness value.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public static async Task RestartHostedServicesAsync(this ITestHarness harness, CancellationToken cancellationToken = default)
     {
         IHostedService[] services = harness.Provider.GetServices<IHostedService>().ToArray();

@@ -7,8 +7,11 @@ using ViciOne.ServiceBus.JobService;
 using ViciOne.ServiceBus.JobService.Messages;
 using ViciOne.ServiceBus.Serialization;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.JobService;
 
+/// <summary>
+/// Provides extension methods for recurring job consumer.
+/// </summary>
 public static class RecurringJobConsumerExtensions
 {
     /// <summary>

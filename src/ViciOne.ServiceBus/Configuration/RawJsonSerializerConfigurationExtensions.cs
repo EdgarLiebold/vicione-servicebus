@@ -1,7 +1,10 @@
 using ViciOne.ServiceBus.Configuration;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Configuration;
 
+/// <summary>
+/// Provides extension methods for raw json serializer configuration.
+/// </summary>
 public static class RawJsonSerializerConfigurationExtensions
 {
     /// <summary>

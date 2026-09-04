@@ -13,6 +13,9 @@ using ViciOne.ServiceBus.Util;
 #nullable enable
 namespace ViciOne.ServiceBus.Testing;
 
+/// <summary>
+/// Provides a test activity listener implementation.
+/// </summary>
 public class TestActivityListener :
     IAsyncDisposable
 {
@@ -26,6 +29,13 @@ public class TestActivityListener :
     readonly TextWriter _writer;
     int _disposed;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="writer">The writer value.</param>
+    /// <param name="methodName">The method name value.</param>
+    /// <param name="className">The class name value.</param>
+    /// <param name="includeDetails">The include details value.</param>
     public TestActivityListener(TextWriter writer, string? methodName, string? className, bool includeDetails)
     {
         _writer = writer ?? throw new ArgumentNullException(nameof(writer));
@@ -48,20 +58,25 @@ public class TestActivityListener :
             _testActivity = _source.StartActivity(methodName);
     }
 
-    public async ValueTask DisposeAsync()
+    /// <summary>
+    /// Releases the resources owned by this instance.
+    /// </summary>
+    /// <returns>The result of the operation.</returns>
+    public ValueTask DisposeAsync()
     {
         if (Interlocked.Exchange(ref _disposed, 1) != 0)
-            return;
+            return ValueTask.CompletedTask;
 
         _testActivity?.Stop();
         _testActivity?.Dispose();
 
         _listener.Dispose();
 
-        await GenerateOutputAsync().ConfigureAwait(false);
+        GenerateOutput();
+        return ValueTask.CompletedTask;
     }
 
-    async Task GenerateOutputAsync()
+    void GenerateOutput()
     {
         var chart = new ChartTable(50);
 

@@ -10,6 +10,11 @@ public class ScheduleTokenIdCache<T> :
     IScheduleTokenIdCache<T>
     where T : class
 {
+    /// <summary>
+    /// Represents the method that handles token id selector.
+    /// </summary>
+    /// <param name="instance">The instance value.</param>
+    /// <returns>The result of the operation.</returns>
     public delegate Guid? TokenIdSelector(T instance);
 
 
@@ -25,6 +30,12 @@ public class ScheduleTokenIdCache<T> :
         _selector = x => default;
     }
 
+    /// <summary>
+    /// Attempts to get token id.
+    /// </summary>
+    /// <param name="message">The message value.</param>
+    /// <param name="tokenId">The token id value.</param>
+    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool TryGetTokenId(T message, out Guid tokenId)
     {
         Guid? result = _selector(message);
@@ -38,6 +49,12 @@ public class ScheduleTokenIdCache<T> :
         return false;
     }
 
+    /// <summary>
+    /// Gets token id.
+    /// </summary>
+    /// <param name="message">The message value.</param>
+    /// <param name="defaultValue">The default value value.</param>
+    /// <returns>The result of the operation.</returns>
     public static Guid GetTokenId(T message, Guid? defaultValue = default)
     {
         if (Cached.Metadata.Value.TryGetTokenId(message, out var tokenId))

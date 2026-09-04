@@ -4,7 +4,7 @@ using System.Diagnostics;
 using ViciOne.ServiceBus.Internals;
 
 #nullable enable
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Providers.Transports;
 
 /// <summary>
 /// The database host address is composed of specific parts
@@ -35,17 +35,42 @@ namespace ViciOne.ServiceBus;
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
 public readonly struct SqlHostAddress
 {
+    /// <summary>
+    /// Defines the db scheme value.
+    /// </summary>
     public const string DbScheme = "db";
 
     const string InstanceNameKey = "instance";
 
+    /// <summary>
+    /// Defines the scheme value.
+    /// </summary>
     public readonly string Scheme;
+    /// <summary>
+    /// Defines the host value.
+    /// </summary>
     public readonly string Host;
+    /// <summary>
+    /// Defines the port value.
+    /// </summary>
     public readonly int? Port;
+    /// <summary>
+    /// Defines the instance name value.
+    /// </summary>
     public readonly string? InstanceName;
+    /// <summary>
+    /// Defines the virtual host value.
+    /// </summary>
     public readonly string VirtualHost;
+    /// <summary>
+    /// Defines the area value.
+    /// </summary>
     public readonly string? Area;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="address">The address value.</param>
     public SqlHostAddress(Uri address)
     {
         var scheme = address.Scheme.ToLowerInvariant();
@@ -70,6 +95,14 @@ public readonly struct SqlHostAddress
         }
     }
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="host">The host value.</param>
+    /// <param name="instanceName">The instance name value.</param>
+    /// <param name="port">The port value.</param>
+    /// <param name="virtualHost">The virtual host value.</param>
+    /// <param name="area">The area value.</param>
     public SqlHostAddress(string host, string? instanceName, int? port, string virtualHost, string? area)
     {
         Scheme = DbScheme;
@@ -132,6 +165,11 @@ public readonly struct SqlHostAddress
         return (virtualHost, area);
     }
 
+    /// <summary>
+    /// Converts a value to <see cref="Uri" />.
+    /// </summary>
+    /// <param name="address">The address value.</param>
+    /// <returns>The result of the operation.</returns>
     public static implicit operator Uri(in SqlHostAddress address)
     {
         var path = address.VirtualHost == "/" ? "/" : Uri.EscapeDataString(address.VirtualHost);

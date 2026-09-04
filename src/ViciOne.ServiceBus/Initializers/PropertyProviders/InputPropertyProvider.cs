@@ -16,6 +16,10 @@ public class InputPropertyProvider<TInput, TProperty> :
 {
     readonly IReadProperty<TInput, TProperty> _inputProperty;
 
+    /// <summary>
+    /// Initializes a new instance of the containing type.
+    /// </summary>
+    /// <param name="propertyInfo">The property info value.</param>
     public InputPropertyProvider(PropertyInfo? propertyInfo)
     {
         if (propertyInfo == null)
@@ -24,6 +28,13 @@ public class InputPropertyProvider<TInput, TProperty> :
         _inputProperty = ReadPropertyCache<TInput>.GetProperty<TProperty>(propertyInfo);
     }
 
+    /// <summary>
+    /// Gets property.
+    /// </summary>
+    /// <typeparam name="T">The t type.</typeparam>
+    /// <param name="context">The operation context.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The result of the operation.</returns>
     public Task<TProperty?> GetPropertyAsync<T>(InitializeContext<T, TInput> context, CancellationToken cancellationToken = default)
         where T : class
     {
