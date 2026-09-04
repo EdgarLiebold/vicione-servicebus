@@ -16,7 +16,7 @@ public class CompensateContextRetryPipeSpecification<TLog> :
 {
     readonly CancellationToken _cancellationToken;
     readonly RetryObservable _observers;
-    RetryPolicyFactory _policyFactory;
+    RetryPolicyFactory _policyFactory = null!;
 
     public CompensateContextRetryPipeSpecification(CancellationToken cancellationToken = default)
     {
@@ -56,7 +56,7 @@ public class CompensateContextRetryPipeSpecification<TLog> :
         return _observers.Connect(observer);
     }
 
-    static RetryCompensateContext<TLog> Factory(CompensateContext<TLog> context, IRetryPolicy retryPolicy, RetryContext retryContext)
+    static RetryCompensateContext<TLog> Factory(CompensateContext<TLog> context, IRetryPolicy retryPolicy, RetryContext? retryContext)
     {
         return new RetryCompensateContext<TLog>(context, retryPolicy, retryContext);
     }

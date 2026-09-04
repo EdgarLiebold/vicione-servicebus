@@ -26,16 +26,16 @@ public class RespondActivity<TSaga, TMessage, T> :
         context.CreateScope("respond");
     }
 
-    public async Task Execute(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
+    public async Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
-        await _messageFactory.Use(context, (ctx, s) => ctx.RespondAsync(s.Message, s.Pipe)).ConfigureAwait(false);
+        await _messageFactory.UseAsync(context, (ctx, s) => ctx.RespondAsync(s.Message, s.Pipe)).ConfigureAwait(false);
 
-        await next.Execute(context).ConfigureAwait(false);
+        await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
+    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
         where TException : Exception
     {
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 }

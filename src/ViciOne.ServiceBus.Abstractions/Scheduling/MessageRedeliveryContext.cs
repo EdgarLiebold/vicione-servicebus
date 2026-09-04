@@ -14,5 +14,6 @@ public interface MessageRedeliveryContext
     /// <param name="delay">The minimum delay before the message will be redelivered to the queue</param>
     /// <param name="callback">Operation which perform during message redeliver to queue</param>
     /// <returns></returns>
-    Task ScheduleRedelivery(TimeSpan delay, Action<ConsumeContext, SendContext>? callback = null);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task ScheduleRedeliveryAsync(TimeSpan delay, Action<ConsumeContext, SendContext>? callback = null, CancellationToken cancellationToken = default);
 }

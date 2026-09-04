@@ -10,10 +10,10 @@ public sealed class AmazonSqsFaultOwnershipTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0267", "product-error-and-skipped-queues-exclude-native-redrive")]
-    public async Task ProductErrorAndSkippedQueues_RejectNativeRedriveAndDoNotDuplicate()
+    public async Task ProductErrorAndSkippedQueues_RejectNativeRedriveAndDoNotDuplicateAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("faultownership");
-        await AssertNativeRedriveRejected(fixture);
+        await AssertNativeRedriveRejectedAsync(fixture);
 
         using AmazonSQSClient sqs = fixture.CreateSqsClient();
         string inputQueue = fixture.Name("input");
@@ -61,11 +61,10 @@ public sealed class AmazonSqsFaultOwnershipTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{inputQueue}"))
+            ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{inputQueue}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await input.SendAsync(new FaultOwnedMessage(faultId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await input.Send(new FaultOwnedMessage(faultId), cancellationToken)
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await input.Send(new SkippedOwnedMessage(skippedId), cancellationToken)
+            await input.SendAsync(new SkippedOwnedMessage(skippedId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             Assert.Equal(faultId, await faultMoved.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
@@ -91,7 +90,7 @@ public sealed class AmazonSqsFaultOwnershipTests
         }
     }
 
-    private static async Task AssertNativeRedriveRejected(AmazonSqsLocalStack fixture)
+    private static async Task AssertNativeRedriveRejectedAsync(AmazonSqsLocalStack fixture)
     {
         IBusControl? invalidBus = null;
         bool started = false;

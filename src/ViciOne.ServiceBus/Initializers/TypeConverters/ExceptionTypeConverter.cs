@@ -9,7 +9,7 @@ public class ExceptionTypeConverter :
     ITypeConverter<ExceptionInfo, Exception>,
     ITypeConverter<ExceptionInfo, object>
 {
-    public bool TryConvert(Exception input, out ExceptionInfo result)
+    public bool TryConvert(Exception? input, out ExceptionInfo? result)
     {
         if (input != null)
         {
@@ -21,7 +21,7 @@ public class ExceptionTypeConverter :
         return false;
     }
 
-    public bool TryConvert(object input, out ExceptionInfo result)
+    public bool TryConvert(object? input, out ExceptionInfo? result)
     {
         switch (input)
         {
@@ -39,7 +39,7 @@ public class ExceptionTypeConverter :
         }
     }
 
-    public bool TryConvert(Exception input, out string result)
+    public bool TryConvert(Exception? input, out string? result)
     {
         if (input != null)
         {

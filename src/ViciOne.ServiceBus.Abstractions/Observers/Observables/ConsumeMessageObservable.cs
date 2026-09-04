@@ -9,18 +9,18 @@ public class ConsumeMessageObservable<T> :
     IConsumeMessageObserver<T>
     where T : class
 {
-    public Task PreConsume(ConsumeContext<T> context)
+    public Task PreConsumeAsync(ConsumeContext<T> context)
     {
-        return ForEachAsync(x => x.PreConsume(context));
+        return ForEachAsync(x => x.PreConsumeAsync(context));
     }
 
-    public Task PostConsume(ConsumeContext<T> context)
+    public Task PostConsumeAsync(ConsumeContext<T> context)
     {
-        return ForEachAsync(x => x.PostConsume(context));
+        return ForEachAsync(x => x.PostConsumeAsync(context));
     }
 
-    public Task ConsumeFault(ConsumeContext<T> context, Exception exception)
+    public Task ConsumeFaultAsync(ConsumeContext<T> context, Exception exception)
     {
-        return ForEachAsync(x => x.ConsumeFault(context, exception));
+        return ForEachAsync(x => x.ConsumeFaultAsync(context, exception));
     }
 }

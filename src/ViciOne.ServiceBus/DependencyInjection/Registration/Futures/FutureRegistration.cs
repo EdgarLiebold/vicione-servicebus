@@ -11,7 +11,7 @@ public class FutureRegistration<TFuture> :
     where TFuture : class, SagaStateMachine<FutureState>
 {
     readonly IContainerSelector _selector;
-    IFutureDefinition<TFuture> _definition;
+    IFutureDefinition<TFuture> _definition = null!;
 
     public FutureRegistration(IContainerSelector selector)
     {
@@ -55,7 +55,7 @@ public class FutureRegistration<TFuture> :
 
         _definition = _selector.GetDefinition<IFutureDefinition<TFuture>>(provider) ?? new DefaultFutureDefinition<TFuture>();
 
-        IEndpointDefinition<TFuture> endpointDefinition = _selector.GetEndpointDefinition<TFuture>(provider);
+        IEndpointDefinition<TFuture>? endpointDefinition = _selector.GetEndpointDefinition<TFuture>(provider);
         if (endpointDefinition != null)
             _definition.EndpointDefinition = endpointDefinition;
 

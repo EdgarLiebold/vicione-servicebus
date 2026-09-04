@@ -46,7 +46,7 @@ public class MissingConsumeContext :
 
     public Guid? InitiatorId => throw new ConsumeContextNotAvailableException();
 
-    public DateTime? ExpirationTime => throw new ConsumeContextNotAvailableException();
+    public DateTimeOffset? ExpirationTime => throw new ConsumeContextNotAvailableException();
 
     public Uri SourceAddress => throw new ConsumeContextNotAvailableException();
 
@@ -56,7 +56,7 @@ public class MissingConsumeContext :
 
     public Uri FaultAddress => throw new ConsumeContextNotAvailableException();
 
-    public DateTime? SentTime => throw new ConsumeContextNotAvailableException();
+    public DateTimeOffset? SentTime => throw new ConsumeContextNotAvailableException();
 
     public Headers Headers => throw new ConsumeContextNotAvailableException();
 
@@ -67,60 +67,60 @@ public class MissingConsumeContext :
         throw new ConsumeContextNotAvailableException();
     }
 
-    public Task Publish<T>(T message, CancellationToken cancellationToken)
+    public Task PublishAsync<T>(T message, CancellationToken cancellationToken)
         where T : class
     {
-        throw new ConsumeContextNotAvailableException();
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); throw new ConsumeContextNotAvailableException();
     }
 
-    public Task Publish<T>(T message, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken)
+    public Task PublishAsync<T>(T message, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken)
         where T : class
     {
-        throw new ConsumeContextNotAvailableException();
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); throw new ConsumeContextNotAvailableException();
     }
 
-    public Task Publish<T>(T message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
+    public Task PublishAsync<T>(T message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
         where T : class
     {
-        throw new ConsumeContextNotAvailableException();
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); throw new ConsumeContextNotAvailableException();
     }
 
-    public Task Publish(object message, CancellationToken cancellationToken)
+    public Task PublishAsync(object message, CancellationToken cancellationToken)
     {
-        throw new ConsumeContextNotAvailableException();
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); throw new ConsumeContextNotAvailableException();
     }
 
-    public Task Publish(object message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
+    public Task PublishAsync(object message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
     {
-        throw new ConsumeContextNotAvailableException();
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); throw new ConsumeContextNotAvailableException();
     }
 
-    public Task Publish(object message, Type messageType, CancellationToken cancellationToken)
+    public Task PublishAsync(object message, Type messageType, CancellationToken cancellationToken)
     {
-        throw new ConsumeContextNotAvailableException();
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); throw new ConsumeContextNotAvailableException();
     }
 
-    public Task Publish(object message, Type messageType, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
+    public Task PublishAsync(object message, Type messageType, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
     {
-        throw new ConsumeContextNotAvailableException();
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); throw new ConsumeContextNotAvailableException();
     }
 
-    public Task Publish<T>(object values, CancellationToken cancellationToken)
+    public Task PublishAsync<T>(object values, CancellationToken cancellationToken)
         where T : class
     {
-        throw new ConsumeContextNotAvailableException();
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); throw new ConsumeContextNotAvailableException();
     }
 
-    public Task Publish<T>(object values, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken)
+    public Task PublishAsync<T>(object values, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken)
         where T : class
     {
-        throw new ConsumeContextNotAvailableException();
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); throw new ConsumeContextNotAvailableException();
     }
 
-    public Task Publish<T>(object values, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
+    public Task PublishAsync<T>(object values, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
         where T : class
     {
-        throw new ConsumeContextNotAvailableException();
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); throw new ConsumeContextNotAvailableException();
     }
 
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
@@ -128,9 +128,9 @@ public class MissingConsumeContext :
         throw new ConsumeContextNotAvailableException();
     }
 
-    public Task<ISendEndpoint> GetSendEndpoint(Uri address)
+    public Task<ISendEndpoint> GetSendEndpointAsync(Uri address, CancellationToken cancellationToken = default)
     {
-        throw new ConsumeContextNotAvailableException();
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.ISendEndpoint>(cancellationToken); throw new ConsumeContextNotAvailableException();
     }
 
     public ReceiveContext ReceiveContext => throw new ConsumeContextNotAvailableException();
@@ -145,7 +145,7 @@ public class MissingConsumeContext :
         throw new ConsumeContextNotAvailableException();
     }
 
-    public bool TryGetMessage<T>(out ConsumeContext<T> consumeContext)
+    public bool TryGetMessage<T>([NotNullWhen(true)] out ConsumeContext<T>? consumeContext)
         where T : class
     {
         throw new ConsumeContextNotAvailableException();
@@ -212,21 +212,21 @@ public class MissingConsumeContext :
         throw new ConsumeContextNotAvailableException();
     }
 
-    public void Respond<T>(T message)
+    public void DeferResponse<T>(T message)
         where T : class
     {
         throw new ConsumeContextNotAvailableException();
     }
 
-    public Task NotifyConsumed<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
+    public Task NotifyConsumedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
         where T : class
     {
-        throw new ConsumeContextNotAvailableException();
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); throw new ConsumeContextNotAvailableException();
     }
 
-    public Task NotifyFaulted<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
+    public Task NotifyFaultedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
         where T : class
     {
-        throw new ConsumeContextNotAvailableException();
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); throw new ConsumeContextNotAvailableException();
     }
 }

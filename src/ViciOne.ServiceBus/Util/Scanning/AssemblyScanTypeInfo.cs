@@ -16,7 +16,7 @@ public class AssemblyScanTypeInfo
     {
     }
 
-    public AssemblyScanTypeInfo(string name, Func<IEnumerable<Type>> source)
+    public AssemblyScanTypeInfo(string? name, Func<IEnumerable<Type>> source)
     {
         Record.Name = name;
 

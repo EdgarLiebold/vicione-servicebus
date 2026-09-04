@@ -10,7 +10,7 @@ public class TriggerEventActivityBinder<TInstance> :
     where TInstance : class, SagaStateMachineInstance
 {
     readonly IActivityBinder<TInstance>[] _activities;
-    readonly StateMachineCondition<TInstance> _filter;
+    readonly StateMachineCondition<TInstance>? _filter = null!;
     readonly StateMachine<TInstance> _machine;
 
     public TriggerEventActivityBinder(StateMachine<TInstance> machine, Event @event, params IActivityBinder<TInstance>[] activities)
@@ -20,7 +20,7 @@ public class TriggerEventActivityBinder<TInstance> :
         _activities = activities ?? [];
     }
 
-    public TriggerEventActivityBinder(StateMachine<TInstance> machine, Event @event, StateMachineCondition<TInstance> filter,
+    public TriggerEventActivityBinder(StateMachine<TInstance> machine, Event @event, StateMachineCondition<TInstance>? filter,
         params IActivityBinder<TInstance>[] activities)
     {
         Event = @event;
@@ -29,7 +29,7 @@ public class TriggerEventActivityBinder<TInstance> :
         _activities = activities ?? [];
     }
 
-    TriggerEventActivityBinder(StateMachine<TInstance> machine, Event @event, StateMachineCondition<TInstance> filter,
+    TriggerEventActivityBinder(StateMachine<TInstance> machine, Event @event, StateMachineCondition<TInstance>? filter,
         IActivityBinder<TInstance>[] activities,
         params IActivityBinder<TInstance>[] appendActivity)
     {
@@ -140,7 +140,8 @@ public class TriggerEventActivityBinder<TInstance> :
         EventActivityBinder<TInstance> thenBinder = new TriggerEventActivityBinder<TInstance>(_machine, Event, _activities);
         EventActivityBinder<TInstance> elseBinder = new TriggerEventActivityBinder<TInstance>(_machine, Event);
 
-        var conditionBinder = new ConditionalActivityBinder<TInstance>(Event, context => _filter(context), thenBinder, elseBinder);
+        var filter = _filter ?? throw new InvalidOperationException("A conditional activity requires a filter.");
+        var conditionBinder = new ConditionalActivityBinder<TInstance>(Event, context => filter(context), thenBinder, elseBinder);
 
         return conditionBinder;
     }

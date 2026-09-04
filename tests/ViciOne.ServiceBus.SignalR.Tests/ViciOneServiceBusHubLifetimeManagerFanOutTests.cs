@@ -24,7 +24,7 @@ public sealed class ViciOneServiceBusHubLifetimeManagerFanOutTests : IAsyncLifet
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SIGNALR-CONNECTION", "multiple-targets")]
-    public async Task SendConnections_DeliversToEverySelectedConnectionOnly()
+    public async Task SendConnections_DeliversToEverySelectedConnectionOnlyAsync()
     {
         await using var firstSelected = new HubConnectionTestClient();
         await using var secondSelected = new HubConnectionTestClient();
@@ -46,7 +46,7 @@ public sealed class ViciOneServiceBusHubLifetimeManagerFanOutTests : IAsyncLifet
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SIGNALR-GROUP", "multiple-targets-and-empty-name")]
-    public async Task SendGroups_DeliversToEveryNamedGroupAndIgnoresEmptyNames()
+    public async Task SendGroups_DeliversToEveryNamedGroupAndIgnoresEmptyNamesAsync()
     {
         await using var firstMember = new HubConnectionTestClient();
         await using var secondMember = new HubConnectionTestClient();
@@ -84,7 +84,7 @@ public sealed class ViciOneServiceBusHubLifetimeManagerFanOutTests : IAsyncLifet
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SIGNALR-USER", "multiple-targets")]
-    public async Task SendUsers_DeliversToEverySelectedUserOnly()
+    public async Task SendUsers_DeliversToEverySelectedUserOnlyAsync()
     {
         await using var firstSelected = new HubConnectionTestClient("user-a");
         await using var secondSelected = new HubConnectionTestClient("user-b");
@@ -106,7 +106,7 @@ public sealed class ViciOneServiceBusHubLifetimeManagerFanOutTests : IAsyncLifet
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SIGNALR-FANOUT", "empty-target-sets-are-no-op")]
-    public async Task EmptyTargetSets_DoNotPublishToTheBackplane()
+    public async Task EmptyTargetSets_DoNotPublishToTheBackplaneAsync()
     {
         await _first.Manager.SendConnectionsAsync(
             [],

@@ -15,7 +15,7 @@ public class ActivityRegistration<TActivity, TArguments, TLog> :
     readonly List<Action<IRegistrationContext, ICompensateActivityConfigurator<TActivity, TLog>>> _compensateActions;
     readonly List<Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>> _executeActions;
     readonly IContainerSelector _selector;
-    IActivityDefinition<TActivity, TArguments, TLog> _definition;
+    IActivityDefinition<TActivity, TArguments, TLog> _definition = null!;
 
     public ActivityRegistration(IContainerSelector selector)
     {
@@ -29,7 +29,7 @@ public class ActivityRegistration<TActivity, TArguments, TLog> :
 
     public bool IncludeInConfigureEndpoints { get; set; }
 
-    public void AddConfigureAction<T, TA>(Action<IRegistrationContext, IExecuteActivityConfigurator<T, TA>> configure)
+    public void AddConfigureAction<T, TA>(Action<IRegistrationContext, IExecuteActivityConfigurator<T, TA>>? configure)
         where T : class, IExecuteActivity<TA>
         where TA : class
     {
@@ -37,7 +37,7 @@ public class ActivityRegistration<TActivity, TArguments, TLog> :
             _executeActions.Add(action);
     }
 
-    public void AddConfigureAction<T, TL>(Action<IRegistrationContext, ICompensateActivityConfigurator<T, TL>> configure)
+    public void AddConfigureAction<T, TL>(Action<IRegistrationContext, ICompensateActivityConfigurator<T, TL>>? configure)
         where T : class, ICompensateActivity<TL>
         where TL : class
     {
@@ -113,12 +113,12 @@ public class ActivityRegistration<TActivity, TArguments, TLog> :
         _definition = _selector.GetDefinition<IActivityDefinition<TActivity, TArguments, TLog>>(provider)
             ?? new DefaultActivityDefinition<TActivity, TArguments, TLog>();
 
-        IEndpointDefinition<IExecuteActivity<TArguments>> executeEndpointDefinition =
+        IEndpointDefinition<IExecuteActivity<TArguments>>? executeEndpointDefinition =
             _selector.GetEndpointDefinition<IExecuteActivity<TArguments>>(provider);
         if (executeEndpointDefinition != null)
             _definition.ExecuteEndpointDefinition = executeEndpointDefinition;
 
-        IEndpointDefinition<ICompensateActivity<TLog>> compensateEndpointDefinition = _selector.GetEndpointDefinition<ICompensateActivity<TLog>>(provider);
+        IEndpointDefinition<ICompensateActivity<TLog>>? compensateEndpointDefinition = _selector.GetEndpointDefinition<ICompensateActivity<TLog>>(provider);
         if (compensateEndpointDefinition != null)
             _definition.CompensateEndpointDefinition = compensateEndpointDefinition;
 

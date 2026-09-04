@@ -29,7 +29,7 @@ public static class ConcurrentMessageLimitExtensions
     /// <param name="managementEndpointConfigurator">A management endpoint configurator to support runtime adjustment</param>
     /// <param name="id">An identifier for the concurrency limit to allow selective adjustment</param>
     public static void UseConcurrentMessageLimit<TConsumer>(this IConsumerConfigurator<TConsumer> configurator, int concurrentMessageLimit,
-        IReceiveEndpointConfigurator managementEndpointConfigurator, string id = null)
+        IReceiveEndpointConfigurator managementEndpointConfigurator, string? id = null)
         where TConsumer : class
     {
         if (configurator == null)
@@ -71,7 +71,7 @@ public static class ConcurrentMessageLimitExtensions
     /// <param name="managementEndpointConfigurator">A management endpoint configurator to support runtime adjustment</param>
     /// <param name="id">An identifier for the concurrency limit to allow selective adjustment</param>
     public static void UseConcurrentMessageLimit<TSaga>(this ISagaConfigurator<TSaga> configurator, int concurrentMessageLimit,
-        IReceiveEndpointConfigurator managementEndpointConfigurator, string id = null)
+        IReceiveEndpointConfigurator managementEndpointConfigurator, string? id = null)
         where TSaga : class, ISaga
     {
         if (configurator == null)
@@ -110,7 +110,7 @@ public static class ConcurrentMessageLimitExtensions
     /// <param name="managementEndpointConfigurator">A management endpoint configurator to support runtime adjustment</param>
     /// <param name="id">An identifier for the concurrency limit to allow selective adjustment</param>
     public static void UseConcurrentMessageLimit<TMessage>(this IHandlerConfigurator<TMessage> configurator, int concurrentMessageLimit,
-        IReceiveEndpointConfigurator managementEndpointConfigurator, string id = null)
+        IReceiveEndpointConfigurator managementEndpointConfigurator, string? id = null)
         where TMessage : class
     {
         if (configurator == null)
@@ -152,7 +152,7 @@ public static class ConcurrentMessageLimitExtensions
     /// <param name="managementEndpointConfigurator">A management endpoint configurator to support runtime adjustment</param>
     /// <param name="id">An identifier for the concurrency limit to allow selective adjustment</param>
     public static void UseConcurrentMessageLimit<TMessage>(this IPipeConfigurator<ConsumeContext<TMessage>> configurator, int concurrentMessageLimit,
-        IReceiveEndpointConfigurator managementEndpointConfigurator, string id = null)
+        IReceiveEndpointConfigurator managementEndpointConfigurator, string? id = null)
         where TMessage : class
     {
         if (configurator == null)

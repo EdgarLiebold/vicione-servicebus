@@ -10,7 +10,7 @@ public sealed class InMemoryDurableSendStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DURABLE-STORE-ADMISSION", "exact-idempotence-without-second-capacity-charge")]
-    public async Task Admission_ExactDuplicateIsIdempotentWithoutASecondCapacityCharge()
+    public async Task Admission_ExactDuplicateIsIdempotentWithoutASecondCapacityChargeAsync()
     {
         StoreHarness store = Store();
         SerializedDurableSend message = Message(body: [1, 2], metadata: [3]);
@@ -31,7 +31,7 @@ public sealed class InMemoryDurableSendStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DURABLE-STORE-ADMISSION", "same-id-different-intent-conflicts")]
-    public async Task Admission_SameIdWithAnyDifferentImmutableIntentFailsLoudly()
+    public async Task Admission_SameIdWithAnyDifferentImmutableIntentFailsLoudlyAsync()
     {
         StoreHarness store = Store();
         SerializedDurableSend original = Message(
@@ -64,7 +64,7 @@ public sealed class InMemoryDurableSendStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DURABLE-STORE-CAPACITY", "atomic-concurrent-count-bound")]
-    public async Task Admission_ConcurrentWritersCannotOvershootCountCapacity()
+    public async Task Admission_ConcurrentWritersCannotOvershootCountCapacityAsync()
     {
         StoreHarness store = Store();
         var limits = new DurableSendStoreLimits(10, 10_000);
@@ -94,7 +94,7 @@ public sealed class InMemoryDurableSendStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DURABLE-STORE-CAPACITY", "exact-logical-byte-bound-and-zero-body")]
-    public async Task Admission_UsesExactBodyPlusMetadataBytesAndStillCountBoundsZeroByteRecords()
+    public async Task Admission_UsesExactBodyPlusMetadataBytesAndStillCountBoundsZeroByteRecordsAsync()
     {
         StoreHarness bytesStore = Store();
         var byteLimits = new DurableSendStoreLimits(10, 10);
@@ -118,7 +118,7 @@ public sealed class InMemoryDurableSendStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DURABLE-STORE-SNAPSHOT", "caller-buffers-copied-before-success")]
-    public async Task Admission_SnapshotsCallerOwnedBodyAndMetadataBuffers()
+    public async Task Admission_SnapshotsCallerOwnedBodyAndMetadataBuffersAsync()
     {
         StoreHarness store = Store();
         byte[] body = [1, 2, 3];
@@ -136,7 +136,7 @@ public sealed class InMemoryDurableSendStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DURABLE-STORE-LEASE", "exclusive-lease-expiry-and-takeover")]
-    public async Task Claim_ExcludesLiveLeaseAndIssuesANewTokenAtExpiry()
+    public async Task Claim_ExcludesLiveLeaseAndIssuesANewTokenAtExpiryAsync()
     {
         StoreHarness store = Store();
         SerializedDurableSend message = Message();
@@ -158,7 +158,7 @@ public sealed class InMemoryDurableSendStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DURABLE-STORE-LEASE", "bounded-ordered-claim-and-input-validation")]
-    public async Task Claim_IsBoundedOrderedAndRejectsUnsafeRequests()
+    public async Task Claim_IsBoundedOrderedAndRejectsUnsafeRequestsAsync()
     {
         StoreHarness store = Store();
         SerializedDurableSend later = Message(GuidFrom(2));
@@ -185,7 +185,7 @@ public sealed class InMemoryDurableSendStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DURABLE-STORE-RETRY", "retry-state-evidence-and-due-time")]
-    public async Task Retry_PersistsBoundedEvidenceAndBecomesClaimableOnlyWhenDue()
+    public async Task Retry_PersistsBoundedEvidenceAndBecomesClaimableOnlyWhenDueAsync()
     {
         StoreHarness store = Store();
         SerializedDurableSend message = Message();
@@ -212,7 +212,7 @@ public sealed class InMemoryDurableSendStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DURABLE-STORE-QUARANTINE", "retained-capacity-requeue-and-single-release")]
-    public async Task Quarantine_RetainsCapacityUntilDiscardAndRequeueDoesNotDoubleCharge()
+    public async Task Quarantine_RetainsCapacityUntilDiscardAndRequeueDoesNotDoubleChargeAsync()
     {
         StoreHarness store = Store();
         var limits = new DurableSendStoreLimits(1, 8);
@@ -264,7 +264,7 @@ public sealed class InMemoryDurableSendStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DURABLE-STORE-COMPLETION", "generation-fenced-late-completion")]
-    public async Task Completion_ValidGenerationWinsQuarantineRaceButStaleGenerationCannotRetireReadmission()
+    public async Task Completion_ValidGenerationWinsQuarantineRaceButStaleGenerationCannotRetireReadmissionAsync()
     {
         StoreHarness store = Store();
         SerializedDurableSend message = Message();
@@ -294,7 +294,7 @@ public sealed class InMemoryDurableSendStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DURABLE-STORE-COMPLETION", "early-completion-and-await-transition-race")]
-    public async Task Completion_MayRetireBeforeTheAwaitingTransitionIsPersisted()
+    public async Task Completion_MayRetireBeforeTheAwaitingTransitionIsPersistedAsync()
     {
         StoreHarness store = Store();
         SerializedDurableSend message = Message();
@@ -312,7 +312,7 @@ public sealed class InMemoryDurableSendStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DURABLE-STORE-QUARANTINE", "bounded-payload-free-ordered-page")]
-    public async Task QuarantineQuery_ReturnsOnlyTheBoundedNewestPayloadFreeEvidence()
+    public async Task QuarantineQuery_ReturnsOnlyTheBoundedNewestPayloadFreeEvidenceAsync()
     {
         StoreHarness store = Store();
         var limits = new DurableSendStoreLimits(10, 100);
@@ -349,7 +349,7 @@ public sealed class InMemoryDurableSendStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DURABLE-STORE-PAGINATION", "complete-seek-traversal-with-concurrent-changes")]
-    public async Task QuarantinePagination_TraversesMoreThanOneThousandEqualTimestampsWithoutDuplicatesOrGaps()
+    public async Task QuarantinePagination_TraversesMoreThanOneThousandEqualTimestampsWithoutDuplicatesOrGapsAsync()
     {
         const int retainedCount = 1005;
         StoreHarness store = Store();
@@ -447,7 +447,7 @@ public sealed class InMemoryDurableSendStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DURABLE-STORE-CANCELLATION", "pre-canceled-operations-do-not-mutate")]
-    public async Task Operations_PreCanceledTokenIsPreservedWithoutMutation()
+    public async Task Operations_PreCanceledTokenIsPreservedWithoutMutationAsync()
     {
         StoreHarness store = Store();
         using var source = new CancellationTokenSource();

@@ -18,5 +18,5 @@ public interface IPendingConfirmation
     void Faulted(string message);
     void Canceled(CancellationToken cancellationToken);
 
-    Task Checkpoint(CancellationToken cancellationToken);
+    Task CheckpointAsync(CancellationToken cancellationToken);
 }

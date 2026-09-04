@@ -17,25 +17,25 @@ public class GenerateFaultFilter :
         context.CreateFilterScope("generateFault");
     }
 
-    public async Task Send(ExceptionReceiveContext context, IPipe<ExceptionReceiveContext> next)
+    public async Task SendAsync(ExceptionReceiveContext context, IPipe<ExceptionReceiveContext> next)
     {
         if (!context.IsFaulted)
         {
-            await GenerateFault(context).ConfigureAwait(false);
+            await GenerateFaultAsync(context).ConfigureAwait(false);
 
-            await context.NotifyFaulted(context.Exception).ConfigureAwait(false);
+            await context.NotifyFaultedAsync(context.Exception).ConfigureAwait(false);
         }
 
-        await next.Send(context).ConfigureAwait(false);
+        await next.SendAsync(context).ConfigureAwait(false);
     }
 
-    static async Task GenerateFault(ExceptionReceiveContext context)
+    static async Task GenerateFaultAsync(ExceptionReceiveContext context)
     {
         Guid? messageId;
         Guid? requestId;
-        string[] messageTypes = null;
+        string[]? messageTypes = null;
 
-        if (context.TryGetPayload(out ConsumeContext consumeContext))
+        if (context.TryGetPayload(out ConsumeContext? consumeContext))
         {
             messageId = consumeContext.MessageId;
             requestId = consumeContext.RequestId;
@@ -49,11 +49,12 @@ public class GenerateFaultFilter :
 
         if (context.PublishFaults || consumeContext?.FaultAddress != null || consumeContext?.ResponseAddress != null)
         {
-            ReceiveFault fault = new ReceiveFaultEvent(HostMetadataCache.Host, context.Exception, context.ContentType?.MediaType, messageId, messageTypes);
+            ReceiveFault fault = new ReceiveFaultEvent(HostMetadataCache.Host, context.Exception, context.ContentType?.MediaType, messageId, messageTypes,
+                context.GetTimeProvider());
 
-            var faultEndpoint = await context.GetReceiveFaultEndpoint(consumeContext, requestId).ConfigureAwait(false);
+            var faultEndpoint = await context.GetReceiveFaultEndpointAsync(consumeContext, requestId).ConfigureAwait(false);
 
-            await faultEndpoint.Send(fault).ConfigureAwait(false);
+            await faultEndpoint.SendAsync(fault).ConfigureAwait(false);
         }
     }
 }

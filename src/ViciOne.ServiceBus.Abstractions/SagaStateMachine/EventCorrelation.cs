@@ -25,15 +25,15 @@ public interface EventCorrelation<TInstance, TData> :
     /// Returns the saga policy for the event correlation
     /// </summary>
     /// <value></value>
-    ISagaPolicy<TInstance, TData> Policy { get; }
+    ISagaPolicy<TInstance, TData>? Policy { get; }
 
     /// <summary>
     /// The filter factory creates the filter when requested by the connector
     /// </summary>
-    SagaFilterFactory<TInstance, TData> FilterFactory { get; }
+    SagaFilterFactory<TInstance, TData>? FilterFactory { get; }
 
     /// <summary>
     /// The message filter which extracts the correlationId from the message
     /// </summary>
-    IFilter<ConsumeContext<TData>> MessageFilter { get; }
+    IFilter<ConsumeContext<TData>>? MessageFilter { get; }
 }

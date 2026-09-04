@@ -17,7 +17,7 @@ public sealed class AmazonSqsLifecycleBoundaryTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SQS-LIFECYCLE", "purge-is-single-flight-and-retryable")]
-    public async Task PurgeOnStartup_IsSingleFlightAndRetriesAfterFailure()
+    public async Task PurgeOnStartup_IsSingleFlightAndRetriesAfterFailureAsync()
     {
         var filter = new PurgeOnStartupFilter("orders");
         var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -26,24 +26,24 @@ public sealed class AmazonSqsLifecycleBoundaryTests
         ClientContext context = InterfaceProxy<ClientContext>.Create((method, _) => method.Name switch
         {
             "get_CancellationToken" => CancellationToken.None,
-            nameof(ClientContext.PurgeQueue) => Purge(),
+            nameof(ClientContext.PurgeQueueAsync) => PurgeAsync(),
             _ => throw new NotSupportedException(method.Name)
         });
 
-        async Task Purge()
+        async Task PurgeAsync()
         {
             Interlocked.Increment(ref calls);
             firstStarted.TrySetResult();
             await release.Task.WaitAsync(TestContext.Current.CancellationToken);
         }
 
-        Task[] callers = Enumerable.Range(0, 16).Select(_ => filter.PurgeIfRequested(context)).ToArray();
+        Task[] callers = Enumerable.Range(0, 16).Select(_ => filter.PurgeIfRequestedAsync(context)).ToArray();
         await firstStarted.Task.WaitAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(1, Volatile.Read(ref calls));
         release.TrySetResult();
         await Task.WhenAll(callers);
-        await filter.PurgeIfRequested(context);
+        await filter.PurgeIfRequestedAsync(context);
         Assert.Equal(1, Volatile.Read(ref calls));
 
         var retryFilter = new PurgeOnStartupFilter("orders");
@@ -52,21 +52,21 @@ public sealed class AmazonSqsLifecycleBoundaryTests
         ClientContext retryContext = InterfaceProxy<ClientContext>.Create((method, _) => method.Name switch
         {
             "get_CancellationToken" => CancellationToken.None,
-            nameof(ClientContext.PurgeQueue) => Interlocked.Increment(ref attempts) == 1
+            nameof(ClientContext.PurgeQueueAsync) => Interlocked.Increment(ref attempts) == 1
                 ? Task.FromException(expected)
                 : Task.CompletedTask,
             _ => throw new NotSupportedException(method.Name)
         });
 
-        InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() => retryFilter.PurgeIfRequested(retryContext));
+        InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() => retryFilter.PurgeIfRequestedAsync(retryContext));
         Assert.Same(expected, actual);
-        await retryFilter.PurgeIfRequested(retryContext);
+        await retryFilter.PurgeIfRequestedAsync(retryContext);
         Assert.Equal(2, Volatile.Read(ref attempts));
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SQS-LIFECYCLE", "topology-entities-declared-exactly-once")]
-    public async Task TopologyDeclaration_CreatesEachEntityExactlyOnce()
+    public async Task TopologyDeclaration_CreatesEachEntityExactlyOnceAsync()
     {
         var topicCalls = 0;
         var queueCalls = 0;
@@ -80,25 +80,25 @@ public sealed class AmazonSqsLifecycleBoundaryTests
             false);
         ClientContext context = InterfaceProxy<ClientContext>.Create((method, _) => method.Name switch
         {
-            nameof(ClientContext.CreateTopic) => ReturnTopic(),
-            nameof(ClientContext.CreateQueue) => ReturnQueue(),
+            nameof(ClientContext.CreateTopicAsync) => ReturnTopicAsync(),
+            nameof(ClientContext.CreateQueueAsync) => ReturnQueueAsync(),
             _ => throw new NotSupportedException(method.Name)
         });
 
-        Task<TopicInfo> ReturnTopic()
+        Task<TopicInfo> ReturnTopicAsync()
         {
             Interlocked.Increment(ref topicCalls);
             return Task.FromResult(topicInfo);
         }
 
-        Task<QueueInfo> ReturnQueue()
+        Task<QueueInfo> ReturnQueueAsync()
         {
             Interlocked.Increment(ref queueCalls);
             return Task.FromResult(queueInfo);
         }
 
-        TopicInfo declaredTopic = await ConfigureAmazonSqsTopologyFilter<object>.Declare(context, (SqsTopic)null!, CancellationToken.None);
-        QueueInfo declaredQueue = await ConfigureAmazonSqsTopologyFilter<object>.Declare(context, (SqsQueue)null!, CancellationToken.None);
+        TopicInfo declaredTopic = await ConfigureAmazonSqsTopologyFilter<object>.DeclareAsync(context, (SqsTopic)null!, CancellationToken.None);
+        QueueInfo declaredQueue = await ConfigureAmazonSqsTopologyFilter<object>.DeclareAsync(context, (SqsQueue)null!, CancellationToken.None);
 
         Assert.Same(topicInfo, declaredTopic);
         Assert.Same(queueInfo, declaredQueue);
@@ -108,7 +108,7 @@ public sealed class AmazonSqsLifecycleBoundaryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SNS-SUBSCRIPTION", "attribute-update-failure-propagates")]
-    public async Task ExistingSubscriptionAttributeUpdateFailure_IsNotReportedAsSuccess()
+    public async Task ExistingSubscriptionAttributeUpdateFailure_IsNotReportedAsSuccessAsync()
     {
         const string topicArn = "arn:aws:sns:eu-central-1:123456789012:events";
         const string queueArn = "arn:aws:sqs:eu-central-1:123456789012:orders";
@@ -153,8 +153,8 @@ public sealed class AmazonSqsLifecycleBoundaryTests
         ConnectionContext connection = InterfaceProxy<ConnectionContext>.Create((method, _) => method.Name switch
         {
             "get_CancellationToken" => CancellationToken.None,
-            nameof(ConnectionContext.GetTopic) => Task.FromResult(topicInfo),
-            nameof(ConnectionContext.GetQueue) => Task.FromResult(queueInfo),
+            nameof(ConnectionContext.GetTopicAsync) => Task.FromResult(topicInfo),
+            nameof(ConnectionContext.GetQueueAsync) => Task.FromResult(queueInfo),
             _ => throw new NotSupportedException(method.Name)
         });
         var context = new AmazonSqsClientContext(connection, sqs, sns, CancellationToken.None);
@@ -170,7 +170,7 @@ public sealed class AmazonSqsLifecycleBoundaryTests
         });
 
         InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(
-            () => context.CreateQueueSubscription(topic, queue, CancellationToken.None));
+            () => context.CreateQueueSubscriptionAsync(topic, queue, CancellationToken.None));
 
         Assert.Same(expected, actual);
         Assert.Empty(queueInfo.SubscriptionArns);

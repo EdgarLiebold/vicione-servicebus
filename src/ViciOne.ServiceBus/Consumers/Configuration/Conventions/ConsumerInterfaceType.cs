@@ -15,8 +15,8 @@ public class ConsumerInterfaceType :
         MessageType = messageType;
 
         _consumeConnectorFactory = new Lazy<IMessageConnectorFactory>(() => (IMessageConnectorFactory)
-            Activator.CreateInstance(typeof(ConsumeMessageConnectorFactory<,>).MakeGenericType(consumerType,
-                messageType)));
+            (Activator.CreateInstance(typeof(ConsumeMessageConnectorFactory<,>).MakeGenericType(consumerType,
+                messageType)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated.")));
     }
 
     public Type MessageType { get; }

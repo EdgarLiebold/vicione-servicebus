@@ -43,7 +43,9 @@ public interface ConnectionContext :
     /// Create a channel on the connection
     /// </summary>
     /// <returns></returns>
-    Task<IChannel> CreateChannel(ushort? concurrentMessageLimit, CancellationToken cancellationToken);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="concurrentMessageLimit">The concurrent message limit used by the operation.</param>
+    Task<IChannel> CreateChannelAsync(ushort? concurrentMessageLimit, CancellationToken cancellationToken);
 
     /// <summary>
     /// Create a channel, and return the <see cref="ChannelContext" />.
@@ -52,5 +54,5 @@ public interface ConnectionContext :
     /// <param name="concurrentMessageLimit"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ChannelContext> CreateChannelContext(IAgent agent, ushort? concurrentMessageLimit, CancellationToken cancellationToken);
+    Task<ChannelContext> CreateChannelContextAsync(IAgent agent, ushort? concurrentMessageLimit, CancellationToken cancellationToken);
 }

@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.Configuration;
 public interface IExecuteActivityRegistration :
     IRegistration
 {
-    void AddConfigureAction<T, TArguments>(Action<IRegistrationContext, IExecuteActivityConfigurator<T, TArguments>> configure)
+    void AddConfigureAction<T, TArguments>(Action<IRegistrationContext, IExecuteActivityConfigurator<T, TArguments>>? configure)
         where T : class, IExecuteActivity<TArguments>
         where TArguments : class;
 

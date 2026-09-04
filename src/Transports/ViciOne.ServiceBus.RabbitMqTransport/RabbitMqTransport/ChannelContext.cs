@@ -38,26 +38,26 @@ public interface ChannelContext :
     /// </returns>
     Task BasicPublishAsync(string exchange, string routingKey, bool mandatory, BasicProperties basicProperties, byte[] body, bool awaitAck, CancellationToken cancellationToken);
 
-    Task ExchangeBind(string destination, string source, string routingKey, IDictionary<string, object> arguments, CancellationToken cancellationToken);
-    Task ExchangeDeclare(string exchange, string type, bool durable, bool autoDelete, IDictionary<string, object> arguments, CancellationToken cancellationToken);
-    Task ExchangeDeclarePassive(string exchange, CancellationToken cancellationToken);
+    Task ExchangeBindAsync(string destination, string source, string routingKey, IDictionary<string, object?> arguments, CancellationToken cancellationToken);
+    Task ExchangeDeclareAsync(string exchange, string type, bool durable, bool autoDelete, IDictionary<string, object?> arguments, CancellationToken cancellationToken);
+    Task ExchangeDeclarePassiveAsync(string exchange, CancellationToken cancellationToken);
 
-    Task QueueBind(string queue, string exchange, string routingKey, IDictionary<string, object> arguments, CancellationToken cancellationToken);
-    Task<QueueDeclareOk> QueueDeclare(string queue, bool durable, bool exclusive, bool autoDelete, IDictionary<string, object> arguments, CancellationToken cancellationToken);
-    Task<QueueDeclareOk> QueueDeclarePassive(string queue, CancellationToken cancellationToken);
+    Task QueueBindAsync(string queue, string exchange, string routingKey, IDictionary<string, object?> arguments, CancellationToken cancellationToken);
+    Task<QueueDeclareOk> QueueDeclareAsync(string queue, bool durable, bool exclusive, bool autoDelete, IDictionary<string, object?> arguments, CancellationToken cancellationToken);
+    Task<QueueDeclareOk> QueueDeclarePassiveAsync(string queue, CancellationToken cancellationToken);
 
-    Task<uint> QueuePurge(string queue, CancellationToken cancellationToken);
+    Task<uint> QueuePurgeAsync(string queue, CancellationToken cancellationToken);
 
-    Task BasicQos(uint prefetchSize, ushort prefetchCount, bool global, CancellationToken cancellationToken);
+    Task BasicQosAsync(uint prefetchSize, ushort prefetchCount, bool global, CancellationToken cancellationToken);
 
-    ValueTask BasicAck(ulong deliveryTag, bool multiple, CancellationToken cancellationToken);
+    ValueTask BasicAckAsync(ulong deliveryTag, bool multiple, CancellationToken cancellationToken);
 
-    Task BasicNack(ulong deliveryTag, bool multiple, bool requeue, CancellationToken cancellationToken);
+    Task BasicNackAsync(ulong deliveryTag, bool multiple, bool requeue, CancellationToken cancellationToken);
 
-    Task<string> BasicConsume(string queue, bool noAck, bool exclusive, IDictionary<string, object> arguments, IAsyncBasicConsumer consumer,
+    Task<string> BasicConsumeAsync(string queue, bool noAck, bool exclusive, IDictionary<string, object?> arguments, IAsyncBasicConsumer consumer,
         string consumerTag, CancellationToken cancellationToken);
 
-    Task BasicCancel(string consumerTag, CancellationToken cancellationToken);
+    Task BasicCancelAsync(string consumerTag, CancellationToken cancellationToken);
 
     void NotifyFaulted(Exception exception, Uri inputAddress);
 }

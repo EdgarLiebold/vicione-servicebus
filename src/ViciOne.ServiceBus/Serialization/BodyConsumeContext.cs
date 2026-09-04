@@ -22,12 +22,12 @@ public class BodyConsumeContext :
     public override Guid? CorrelationId => SerializerContext.CorrelationId;
     public override Guid? ConversationId => SerializerContext.ConversationId;
     public override Guid? InitiatorId => SerializerContext.InitiatorId;
-    public override DateTime? ExpirationTime => SerializerContext.ExpirationTime;
+    public override DateTimeOffset? ExpirationTime => SerializerContext.ExpirationTime;
     public override Uri SourceAddress => SerializerContext.SourceAddress!;
     public override Uri DestinationAddress => SerializerContext.DestinationAddress!;
     public override Uri ResponseAddress => SerializerContext.ResponseAddress!;
     public override Uri FaultAddress => SerializerContext.FaultAddress!;
-    public override DateTime? SentTime => SerializerContext.SentTime;
+    public override DateTimeOffset? SentTime => SerializerContext.SentTime;
     public override Headers Headers => SerializerContext.Headers;
     public override HostInfo Host => SerializerContext.Host;
     public override IEnumerable<string> SupportedMessageTypes => SerializerContext.SupportedMessageTypes;
@@ -59,7 +59,8 @@ public class BodyConsumeContext :
                 {
                     if (SerializerContext.TryGetMessage(typeof(T), out var messageObj))
                     {
-                        _messageTypes[typeof(T)] = message = new MessageConsumeContext<T>(this, (T)messageObj);
+                        message = new MessageConsumeContext<T>(this, (T)messageObj);
+                        _messageTypes[typeof(T)] = message.Advanced();
                         return true;
                     }
                 }
@@ -67,11 +68,13 @@ public class BodyConsumeContext :
 
             if (SerializerContext.TryGetMessage<T>(out var messageOfT))
             {
-                _messageTypes[typeof(T)] = message = new MessageConsumeContext<T>(this, messageOfT!);
+                message = new MessageConsumeContext<T>(this, messageOfT!);
+                _messageTypes[typeof(T)] = message.Advanced();
                 return true;
             }
 
-            _messageTypes[typeof(T)] = message = null;
+            message = null;
+            _messageTypes[typeof(T)] = null;
             return false;
         }
     }

@@ -11,7 +11,7 @@ public interface Subscription
 
     TopicHandle Topic { get; }
 
-    CreateRuleOptions Rule { get; }
+    CreateRuleOptions? Rule { get; }
 
-    RuleFilter Filter { get; }
+    RuleFilter? Filter { get; }
 }

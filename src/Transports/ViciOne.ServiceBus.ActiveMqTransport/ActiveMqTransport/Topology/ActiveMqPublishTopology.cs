@@ -20,7 +20,8 @@ public class ActiveMqPublishTopology :
 
     IActiveMqMessagePublishTopology<T> IActiveMqPublishTopology.GetMessageTopology<T>()
     {
-        return GetMessageTopology<T>() as IActiveMqMessagePublishTopology<T>;
+        return GetMessageTopology<T>() as IActiveMqMessagePublishTopology<T>
+            ?? throw new InvalidOperationException($"The publish topology for {typeof(T).FullName} is not an ActiveMQ topology.");
     }
 
     public string VirtualTopicPrefix { get; set; }
@@ -29,7 +30,8 @@ public class ActiveMqPublishTopology :
 
     IActiveMqMessagePublishTopologyConfigurator IActiveMqPublishTopologyConfigurator.GetMessageTopology(Type messageType)
     {
-        return GetMessageTopology(messageType) as IActiveMqMessagePublishTopologyConfigurator;
+        return GetMessageTopology(messageType) as IActiveMqMessagePublishTopologyConfigurator
+            ?? throw new InvalidOperationException($"The publish topology for {messageType.FullName} is not an ActiveMQ topology.");
     }
 
     public BrokerTopology GetPublishBrokerTopology()
@@ -48,7 +50,8 @@ public class ActiveMqPublishTopology :
 
     IActiveMqMessagePublishTopologyConfigurator<T> IActiveMqPublishTopologyConfigurator.GetMessageTopology<T>()
     {
-        return GetMessageTopology<T>() as IActiveMqMessagePublishTopologyConfigurator<T>;
+        return GetMessageTopology<T>() as IActiveMqMessagePublishTopologyConfigurator<T>
+            ?? throw new InvalidOperationException($"The publish topology for {typeof(T).FullName} is not an ActiveMQ topology.");
     }
 
     protected override IMessagePublishTopologyConfigurator CreateMessageTopology<T>()

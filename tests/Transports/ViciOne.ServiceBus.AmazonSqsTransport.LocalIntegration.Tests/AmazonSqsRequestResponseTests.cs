@@ -10,7 +10,7 @@ public sealed class AmazonSqsRequestResponseTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0183", "one-hundred-overlapping-requests-exactly-correlate")]
-    public async Task ConcurrentRequests_ReturnTheirExactResponses()
+    public async Task ConcurrentRequests_ReturnTheirExactResponsesAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("requests");
         string queueName = fixture.Name("service");
@@ -43,7 +43,7 @@ public sealed class AmazonSqsRequestResponseTests
                 .ToArray();
 
             Task<Response<ResponseMessage>>[] pending = requests
-                .Select(request => client.GetResponse<ResponseMessage>(request, cancellationToken))
+                .Select(request => client.GetResponseAsync<ResponseMessage>(request, cancellationToken))
                 .ToArray();
             Response<ResponseMessage>[] responses = await Task.WhenAll(pending)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);

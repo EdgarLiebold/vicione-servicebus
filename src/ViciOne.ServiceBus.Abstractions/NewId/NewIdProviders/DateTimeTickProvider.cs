@@ -5,5 +5,12 @@ namespace ViciOne.ServiceBus.NewIdProviders;
 public class DateTimeTickProvider :
     ITickProvider
 {
-    public long Ticks => DateTime.UtcNow.Ticks;
+    readonly TimeProvider _timeProvider;
+
+    public DateTimeTickProvider(TimeProvider? timeProvider = null)
+    {
+        _timeProvider = timeProvider ?? TimeProvider.System;
+    }
+
+    public long Ticks => _timeProvider.GetUtcNow().UtcDateTime.Ticks;
 }

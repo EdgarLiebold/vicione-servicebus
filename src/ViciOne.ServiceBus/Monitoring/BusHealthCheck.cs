@@ -20,7 +20,7 @@ public class BusHealthCheck :
 
     public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken)
     {
-        var result = _busInstance.BusControl.CheckHealth();
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult>(cancellationToken); var result = _busInstance.BusControl.CheckHealth();
 
         var data = new Dictionary<string, object>
         {
@@ -64,15 +64,14 @@ public class BusHealthCheck :
 
     class Endpoint
     {
-        public Endpoint(string status, string description)
+        public Endpoint(string? status, string? description)
         {
             Status = status;
             Description = description;
         }
 
-        public string Status { get; set; }
-        public string Description { get; set; }
-
+        public string? Status { get; set; }
+        public string? Description { get; set; }
         public override string ToString()
         {
             return $"{Status} - {Description}";

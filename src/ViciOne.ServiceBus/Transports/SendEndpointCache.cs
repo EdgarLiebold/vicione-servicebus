@@ -9,6 +9,7 @@ namespace ViciOne.ServiceBus.Transports;
 /// </summary>
 public class SendEndpointCache<TKey> :
     ISendEndpointCache<TKey>
+    where TKey : notnull
 {
     readonly KeyedResourceCache<TKey, CachedSendEndpoint<TKey>> _cache;
 
@@ -25,12 +26,12 @@ public class SendEndpointCache<TKey> :
         return _cache.DisposeAsync();
     }
 
-    public async Task<ISendEndpoint> GetSendEndpoint(TKey key, SendEndpointFactory<TKey> factory)
+    public async Task<ISendEndpoint> GetSendEndpointAsync(TKey key, SendEndpointFactory<TKey> factory, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(factory);
 
         CachedSendEndpoint<TKey> sendEndpoint = await _cache.GetOrAddAsync(key,
-            async (address, _) => new CachedSendEndpoint<TKey>(address, await factory(address).ConfigureAwait(false))).ConfigureAwait(false);
+            async (address, _) => new CachedSendEndpoint<TKey>(address, await factory(address).ConfigureAwait(false)), cancellationToken: cancellationToken).ConfigureAwait(false);
 
         return sendEndpoint;
     }

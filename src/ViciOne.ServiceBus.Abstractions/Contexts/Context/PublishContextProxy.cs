@@ -99,7 +99,7 @@ public class PublishContextProxy :
         set => _context.TimeToLive = value;
     }
 
-    public DateTime? SentTime => _context.SentTime;
+    public DateTimeOffset? SentTime => _context.SentTime;
 
     public ContentType? ContentType
     {

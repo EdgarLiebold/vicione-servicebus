@@ -10,7 +10,7 @@ public sealed class MediatorSendObserverTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-MEDIATOR-SEND-OBSERVER", "one-way-and-request-response")]
-    public async Task Observer_ReportsOneSendForOneWayAndBothSendsForRequestResponse()
+    public async Task Observer_ReportsOneSendForOneWayAndBothSendsForRequestResponseAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -30,7 +30,7 @@ public sealed class MediatorSendObserverTests
         using ConnectHandle observerHandle = mediator.ConnectSendObserver(observer);
         var oneWay = new OneWayMessage(NewId.NextGuid());
 
-        await mediator.Send(oneWay, cancellationToken);
+        await mediator.SendAsync(oneWay, cancellationToken);
         ConsumeContext<OneWayMessage> oneWayContext = await oneWayConsumed.Task.WaitAsync(timeout, cancellationToken);
 
         Assert.Equal(oneWay, oneWayContext.Message);
@@ -44,7 +44,7 @@ public sealed class MediatorSendObserverTests
 
         IRequestClient<MediatorRequest> client = mediator.CreateRequestClient<MediatorRequest>(timeout);
         var request = new MediatorRequest(NewId.NextGuid(), "request");
-        Response<MediatorResponse> response = await client.GetResponse<MediatorResponse>(request, cancellationToken);
+        Response<MediatorResponse> response = await client.GetResponseAsync<MediatorResponse>(request, cancellationToken);
 
         Assert.Equal(new MediatorResponse(request.CorrelationId, "reply:request"), response.Message);
         Assert.Equal(["Pre", "Post", "Pre", "Pre", "Post", "Post"],
@@ -64,7 +64,7 @@ public sealed class MediatorSendObserverTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MEDIATOR-SEND-OBSERVER", "dispatch-fault-without-post")]
-    public async Task HandlerFailure_ReportsTheExactSendFaultWithoutPostSend()
+    public async Task HandlerFailure_ReportsTheExactSendFaultWithoutPostSendAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var expected = new InvalidOperationException("mediator handler failed");
@@ -75,7 +75,7 @@ public sealed class MediatorSendObserverTests
         var message = new FaultingMediatorMessage(NewId.NextGuid());
 
         InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            mediator.Send(message, cancellationToken));
+            mediator.SendAsync(message, cancellationToken));
 
         Assert.Same(expected, failure);
         Assert.Equal(["Pre", "Fault"], observer.Events.Select(observation => observation.Stage));
@@ -99,21 +99,21 @@ public sealed class MediatorSendObserverTests
 
         public SendObservation[] Events => _events.ToArray();
 
-        public Task PreSend<T>(SendContext<T> context)
+        public Task PreSendAsync<T>(SendContext<T> context)
             where T : class
         {
             _events.Enqueue(new SendObservation("Pre", typeof(T), context.Message, context, null));
             return Task.CompletedTask;
         }
 
-        public Task PostSend<T>(SendContext<T> context)
+        public Task PostSendAsync<T>(SendContext<T> context)
             where T : class
         {
             _events.Enqueue(new SendObservation("Post", typeof(T), context.Message, context, null));
             return Task.CompletedTask;
         }
 
-        public Task SendFault<T>(SendContext<T> context, Exception exception)
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
             where T : class
         {
             _events.Enqueue(new SendObservation("Fault", typeof(T), context.Message, context, exception));

@@ -46,7 +46,7 @@ public class ConcurrencyLimitFilter<TContext> :
     }
 
     [DebuggerNonUserCode]
-    public async Task Send(TContext context, IPipe<TContext> next)
+    public async Task SendAsync(TContext context, IPipe<TContext> next)
     {
         var waitAsyncTask = _limit.WaitAsync(context.CancellationToken);
         if (waitAsyncTask.Status != TaskStatus.RanToCompletion)
@@ -54,7 +54,7 @@ public class ConcurrencyLimitFilter<TContext> :
 
         try
         {
-            await next.Send(context).ConfigureAwait(false);
+            await next.SendAsync(context).ConfigureAwait(false);
         }
         finally
         {
@@ -62,7 +62,7 @@ public class ConcurrencyLimitFilter<TContext> :
         }
     }
 
-    public async Task Send(CommandContext<SetConcurrencyLimit> context)
+    public async Task SendAsync(CommandContext<SetConcurrencyLimit> context)
     {
         ArgumentNullException.ThrowIfNull(context);
 
@@ -77,7 +77,7 @@ public class ConcurrencyLimitFilter<TContext> :
             if (concurrencyLimit > previousLimit)
                 _limit.Release(concurrencyLimit - previousLimit);
             else if (concurrencyLimit < previousLimit)
-                await TakePermits(previousLimit - concurrencyLimit, context.CancellationToken).ConfigureAwait(false);
+                await TakePermitsAsync(previousLimit - concurrencyLimit, context.CancellationToken).ConfigureAwait(false);
 
             Volatile.Write(ref _concurrencyLimit, concurrencyLimit);
         }
@@ -87,7 +87,7 @@ public class ConcurrencyLimitFilter<TContext> :
         }
     }
 
-    protected override async Task StopAgent(StopContext context)
+    protected override async Task StopAgentAsync(StopContext context)
     {
         var slot = 0;
         await _adjustment.WaitAsync(context.CancellationToken).ConfigureAwait(false);
@@ -97,7 +97,7 @@ public class ConcurrencyLimitFilter<TContext> :
             for (; slot < concurrencyLimit; slot++)
                 await _limit.WaitAsync(context.CancellationToken).ConfigureAwait(false);
 
-            await base.StopAgent(context).ConfigureAwait(false);
+            await base.StopAgentAsync(context).ConfigureAwait(false);
         }
         finally
         {
@@ -106,7 +106,7 @@ public class ConcurrencyLimitFilter<TContext> :
         }
     }
 
-    async Task TakePermits(int count, CancellationToken cancellationToken)
+    async Task TakePermitsAsync(int count, CancellationToken cancellationToken)
     {
         var acquired = 0;
         try

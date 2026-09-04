@@ -19,12 +19,12 @@ public class AllConsumer<THub> :
         _hubLifetimeManager = hubLifetimeManager;
     }
 
-    public Task Consume(ConsumeContext<All<THub>> context)
+    public Task ConsumeAsync(ConsumeContext<All<THub>> context)
     {
-        return Handle(context.Message.ExcludedConnectionIds, context.Message.Messages);
+        return HandleAsync(context.Message.ExcludedConnectionIds, context.Message.Messages);
     }
 
-    async Task Handle(string[] excludedConnectionIds, IReadOnlyDictionary<string, byte[]> messages)
+    async Task HandleAsync(string[] excludedConnectionIds, IReadOnlyDictionary<string, byte[]> messages)
     {
         var message = new Lazy<SerializedHubMessage>(messages.ToSerializedHubMessage);
 

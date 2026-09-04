@@ -18,11 +18,11 @@ public class PublishMessageSchedulerFilter :
     }
 
     [DebuggerNonUserCode]
-    Task IFilter<ConsumeContext>.Send(ConsumeContext context, IPipe<ConsumeContext> next)
+    Task IFilter<ConsumeContext>.SendAsync(ConsumeContext context, IPipe<ConsumeContext> next)
     {
         context.GetOrAddPayload<MessageSchedulerContext>(() => new ConsumeMessageSchedulerContext(context, SchedulerFactory));
 
-        return next.Send(context);
+        return next.SendAsync(context);
     }
 
     static IMessageScheduler SchedulerFactory(ConsumeContext context)

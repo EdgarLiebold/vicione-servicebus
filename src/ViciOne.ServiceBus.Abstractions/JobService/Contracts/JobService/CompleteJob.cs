@@ -8,7 +8,7 @@ public interface CompleteJob
 {
     Guid JobId { get; }
 
-    DateTime Timestamp { get; }
+    DateTimeOffset Timestamp { get; }
 
     TimeSpan Duration { get; }
 

@@ -32,22 +32,22 @@ public class ProviderHeaderInitializer<TMessage, TInput, TProperty> :
         _messageProperty = WritePropertyCache<SendContext>.GetProperty<TProperty>(propertyInfo);
     }
 
-    public Task Apply(InitializeContext<TMessage, TInput> context, SendContext sendContext)
+    public Task ApplyAsync(InitializeContext<TMessage, TInput> context, SendContext sendContext, CancellationToken cancellationToken = default)
     {
-        Task<TProperty> propertyTask = _propertyProvider.GetProperty(context);
+        Task<TProperty?> propertyTask = _propertyProvider.GetPropertyAsync(context, cancellationToken: cancellationToken);
         if (propertyTask.IsCompleted)
         {
-            _messageProperty.Set(sendContext, propertyTask.Result);
+            _messageProperty.Set(sendContext, propertyTask.Result!);
             return Task.CompletedTask;
         }
 
         return ApplyAsync(sendContext, propertyTask);
     }
 
-    async Task ApplyAsync(SendContext sendContext, Task<TProperty> propertyTask)
+    async Task ApplyAsync(SendContext sendContext, Task<TProperty?> propertyTask)
     {
         var propertyValue = await propertyTask.ConfigureAwait(false);
 
-        _messageProperty.Set(sendContext, propertyValue);
+        _messageProperty.Set(sendContext, propertyValue!);
     }
 }

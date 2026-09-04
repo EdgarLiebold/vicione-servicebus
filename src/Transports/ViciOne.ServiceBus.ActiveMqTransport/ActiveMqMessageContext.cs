@@ -8,6 +8,6 @@ public interface ActiveMqMessageContext
 
     IPrimitiveMap Properties { get; }
 
-    string GroupId { get; }
+    string? GroupId { get; }
     int GroupSequence { get; }
 }

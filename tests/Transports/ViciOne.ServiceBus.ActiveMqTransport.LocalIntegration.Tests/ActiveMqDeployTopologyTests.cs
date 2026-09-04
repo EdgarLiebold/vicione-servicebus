@@ -9,8 +9,8 @@ public sealed class ActiveMqDeployTopologyTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-BRK-0442", "explicit-types-exclude-unreachable-topic-at-startup")]
-    public Task ExplicitTypes_ExcludeUnreachableTopicsAtStartup() =>
-        AssertDeployedTopics(
+    public Task ExplicitTypes_ExcludeUnreachableTopicsAtStartupAsync() =>
+        AssertDeployedTopicsAsync(
             "deploy-explicit",
             configurator =>
             {
@@ -22,8 +22,8 @@ public sealed class ActiveMqDeployTopologyTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-BRK-0443", "explicit-types-create-included-topics-at-startup")]
-    public Task ExplicitTypes_CreateIncludedTopicsAtStartup() =>
-        AssertDeployedTopics(
+    public Task ExplicitTypes_CreateIncludedTopicsAtStartupAsync() =>
+        AssertDeployedTopicsAsync(
             "deploy-explicit",
             configurator =>
             {
@@ -35,8 +35,8 @@ public sealed class ActiveMqDeployTopologyTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-BRK-0444", "namespace-scan-excludes-marked-topic-at-startup")]
-    public Task NamespaceScan_ExcludesMarkedTopicAtStartup() =>
-        AssertDeployedTopics(
+    public Task NamespaceScan_ExcludesMarkedTopicAtStartupAsync() =>
+        AssertDeployedTopicsAsync(
             "deploy-namespace",
             configurator => configurator.AddPublishMessageTypesFromNamespaceContaining<OrderSubmitted>(),
             [],
@@ -44,14 +44,14 @@ public sealed class ActiveMqDeployTopologyTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-BRK-0445", "namespace-scan-creates-every-included-topic-at-startup")]
-    public Task NamespaceScan_CreatesEveryIncludedTopicAtStartup() =>
-        AssertDeployedTopics(
+    public Task NamespaceScan_CreatesEveryIncludedTopicAtStartupAsync() =>
+        AssertDeployedTopicsAsync(
             "deploy-namespace",
             configurator => configurator.AddPublishMessageTypesFromNamespaceContaining<OrderSubmitted>(),
             [typeof(CustomerEvent), typeof(OrderSubmitted), typeof(OrderEvent), typeof(PackageShipped)],
             []);
 
-    private static async Task AssertDeployedTopics(
+    private static async Task AssertDeployedTopicsAsync(
         string purpose,
         Action<IActiveMqBusFactoryConfigurator> configurePublishTopology,
         Type[] includedTypes,
@@ -97,7 +97,7 @@ public sealed class ActiveMqDeployTopologyTests
             {
                 string topicName = $"VirtualTopic.{entityNames[type]}";
                 Assert.True(
-                    await fixture.ClassicTopicExists(topicName, cancellationToken),
+                    await fixture.ClassicTopicExistsAsync(topicName, cancellationToken),
                     $"The included topic '{topicName}' was not deployed.");
             }
 
@@ -105,7 +105,7 @@ public sealed class ActiveMqDeployTopologyTests
             {
                 string topicName = $"VirtualTopic.{entityNames[type]}";
                 Assert.False(
-                    await fixture.ClassicTopicExists(topicName, cancellationToken),
+                    await fixture.ClassicTopicExistsAsync(topicName, cancellationToken),
                     $"The excluded topic '{topicName}' was deployed.");
             }
         }

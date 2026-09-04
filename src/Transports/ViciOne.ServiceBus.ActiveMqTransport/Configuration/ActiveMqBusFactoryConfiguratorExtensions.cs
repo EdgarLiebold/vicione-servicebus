@@ -22,7 +22,7 @@ public static class ActiveMqBusFactoryConfiguratorExtensions
     /// <param name="configurator">The registration configurator (configured via AddViciOneServiceBus)</param>
     /// <param name="configure">The configuration callback for the bus factory</param>
     public static void UsingActiveMq(this IBusRegistrationConfigurator configurator,
-        Action<IBusRegistrationContext, IActiveMqBusFactoryConfigurator> configure = null)
+        Action<IBusRegistrationContext, IActiveMqBusFactoryConfigurator>? configure = null)
     {
         configurator.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, ActiveMqSendFailureClassifier>());
         configurator.SetBusFactory(new ActiveMqRegistrationBusFactory(configure));

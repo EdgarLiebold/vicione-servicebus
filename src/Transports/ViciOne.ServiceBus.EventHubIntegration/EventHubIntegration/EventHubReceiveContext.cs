@@ -38,7 +38,7 @@ public sealed class EventHubReceiveContext :
 
     protected override ContentType GetContentType()
     {
-        ContentType contentType = default;
+        ContentType? contentType = default;
         if (!string.IsNullOrWhiteSpace(_eventData.ContentType))
             contentType = ConvertToContentType(_eventData.ContentType);
 

@@ -161,7 +161,7 @@ public sealed class StateMachineInputTests
 
             Initially(
                 When(Start)
-                    .Request(Process, context => context.Init<RequestMessage>(new { context.Message.Id }))
+                    .Request(Process, context => context.InitAsync<RequestMessage>(new { context.Message.Id }))
                     .TransitionTo(Process.Pending));
             During(
                 Process.Pending,

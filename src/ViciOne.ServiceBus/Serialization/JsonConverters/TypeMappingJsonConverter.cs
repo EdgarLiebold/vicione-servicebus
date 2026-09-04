@@ -8,7 +8,7 @@ public class TypeMappingJsonConverter<TType, TImplementation> :
     JsonConverter<TType>
     where TImplementation : TType
 {
-    public override TType Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override TType? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         return JsonSerializer.Deserialize<TImplementation>(ref reader, options);
     }

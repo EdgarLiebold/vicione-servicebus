@@ -7,14 +7,14 @@ public class QueueEntity :
     Queue,
     QueueHandle
 {
-    public QueueEntity(long id, string name, bool durable, bool autoDelete, bool exclusive, IDictionary<string, object> arguments)
+    public QueueEntity(long id, string name, bool durable, bool autoDelete, bool exclusive, IDictionary<string, object?> arguments)
     {
         Id = id;
         QueueName = name;
         Durable = durable;
         AutoDelete = autoDelete;
         Exclusive = exclusive;
-        QueueArguments = arguments ?? new Dictionary<string, object>();
+        QueueArguments = arguments ?? new Dictionary<string, object?>();
     }
 
     public static IEqualityComparer<QueueEntity> NameComparer { get; } = new NameEqualityComparer();
@@ -25,7 +25,7 @@ public class QueueEntity :
     public bool Durable { get; }
     public bool AutoDelete { get; }
     public bool Exclusive { get; }
-    public IDictionary<string, object> QueueArguments { get; }
+    public IDictionary<string, object?> QueueArguments { get; }
     public long Id { get; }
     public Queue Queue => this;
 
@@ -45,7 +45,7 @@ public class QueueEntity :
 
     sealed class QueueEntityEqualityComparer : IEqualityComparer<QueueEntity>
     {
-        public bool Equals(QueueEntity x, QueueEntity y)
+        public bool Equals(QueueEntity? x, QueueEntity? y)
         {
             if (ReferenceEquals(x, y))
                 return true;
@@ -56,7 +56,8 @@ public class QueueEntity :
             if (x.GetType() != y.GetType())
                 return false;
             return string.Equals(x.QueueName, y.QueueName) && x.Durable == y.Durable && x.AutoDelete == y.AutoDelete && x.Exclusive == y.Exclusive
-                && x.QueueArguments.All(a => y.QueueArguments.TryGetValue(a.Key, out var value) && a.Value.Equals(value));
+                && x.QueueArguments.Count == y.QueueArguments.Count
+                && x.QueueArguments.All(a => y.QueueArguments.TryGetValue(a.Key, out var value) && Equals(a.Value, value));
         }
 
         public int GetHashCode(QueueEntity obj)
@@ -67,10 +68,10 @@ public class QueueEntity :
                 hashCode = (hashCode * 397) ^ obj.Durable.GetHashCode();
                 hashCode = (hashCode * 397) ^ obj.AutoDelete.GetHashCode();
                 hashCode = (hashCode * 397) ^ obj.Exclusive.GetHashCode();
-                foreach (KeyValuePair<string, object> keyValuePair in obj.QueueArguments)
+                foreach (KeyValuePair<string, object?> keyValuePair in obj.QueueArguments.OrderBy(x => x.Key, System.StringComparer.Ordinal))
                 {
                     hashCode = (hashCode * 397) ^ keyValuePair.Key.GetHashCode();
-                    hashCode = (hashCode * 397) ^ keyValuePair.Value.GetHashCode();
+                    hashCode = (hashCode * 397) ^ (keyValuePair.Value?.GetHashCode() ?? 0);
                 }
 
                 return hashCode;
@@ -81,7 +82,7 @@ public class QueueEntity :
 
     sealed class NameEqualityComparer : IEqualityComparer<QueueEntity>
     {
-        public bool Equals(QueueEntity x, QueueEntity y)
+        public bool Equals(QueueEntity? x, QueueEntity? y)
         {
             if (ReferenceEquals(x, y))
                 return true;

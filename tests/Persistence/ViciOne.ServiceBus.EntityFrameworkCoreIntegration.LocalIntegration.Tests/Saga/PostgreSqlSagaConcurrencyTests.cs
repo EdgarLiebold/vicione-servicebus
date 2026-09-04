@@ -16,7 +16,7 @@ public sealed class PostgreSqlSagaConcurrencyTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-SAGA-EXECUTION-STRATEGY", "retry-reloads-state-after-a-rolled-back-attempt")]
-    public async Task TransientRetry_ReloadsTheSagaBeforeApplyingTheOperationAgain()
+    public async Task TransientRetry_ReloadsTheSagaBeforeApplyingTheOperationAgainAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
@@ -46,27 +46,27 @@ public sealed class PostgreSqlSagaConcurrencyTests
                     });
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Guid sagaId = Guid.NewGuid();
-            ISendEndpoint endpoint = await harness.GetSagaEndpoint<SerializedState>();
-            await endpoint.Send(new BeginSerializedSaga(sagaId), cancellationToken);
+            ISendEndpoint endpoint = await harness.GetSagaEndpointAsync<SerializedState>(TestContext.Current.CancellationToken);
+            await endpoint.SendAsync(new BeginSerializedSaga(sagaId), cancellationToken);
             await harness.Published
                 .SelectAsync<SerializedSagaStarted>(
                     observation => observation.Context.Message.CorrelationId == sagaId,
                     cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             handler.Release();
             transientFailure.StartObserving();
 
-            await endpoint.Send(new IncrementSerializedSaga(sagaId), cancellationToken);
+            await endpoint.SendAsync(new IncrementSerializedSaga(sagaId), cancellationToken);
             IPublishedMessage<SerializedSagaIncremented> incremented = await harness.Published
                 .SelectAsync<SerializedSagaIncremented>(
                     observation => observation.Context.Message.CorrelationId == sagaId,
                     cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             await using var verification = CreateContext(database.ConnectionString);
             SerializedState persisted = await verification.States.AsNoTracking()
@@ -83,13 +83,13 @@ public sealed class PostgreSqlSagaConcurrencyTests
         finally
         {
             handler.Release();
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-SAGA-CONCURRENCY", "same-correlation-is-serialized-by-the-database-row-lock")]
-    public async Task SameCorrelation_EntersOneHandlerAtATimeAndPersistsBothUpdates()
+    public async Task SameCorrelation_EntersOneHandlerAtATimeAndPersistsBothUpdatesAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
@@ -119,23 +119,23 @@ public sealed class PostgreSqlSagaConcurrencyTests
                     });
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Guid sagaId = Guid.NewGuid();
-            ISendEndpoint endpoint = await harness.GetSagaEndpoint<SerializedState>();
-            await endpoint.Send(new BeginSerializedSaga(sagaId), cancellationToken);
+            ISendEndpoint endpoint = await harness.GetSagaEndpointAsync<SerializedState>(TestContext.Current.CancellationToken);
+            await endpoint.SendAsync(new BeginSerializedSaga(sagaId), cancellationToken);
             await harness.Published
                 .SelectAsync<SerializedSagaStarted>(
                     observation => observation.Context.Message.CorrelationId == sagaId,
                     cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             rowLocks.StartObserving();
 
-            await endpoint.Send(new IncrementSerializedSaga(sagaId), cancellationToken);
+            await endpoint.SendAsync(new IncrementSerializedSaga(sagaId), cancellationToken);
             await handler.FirstInvocationEntered.WaitAsync(timeout, cancellationToken);
-            await endpoint.Send(new IncrementSerializedSaga(sagaId), cancellationToken);
+            await endpoint.SendAsync(new IncrementSerializedSaga(sagaId), cancellationToken);
             await rowLocks.WaitForAttemptsAsync(expectedCount: 2, timeout, cancellationToken);
 
             Assert.Equal(1, handler.InvocationCount);
@@ -145,7 +145,7 @@ public sealed class PostgreSqlSagaConcurrencyTests
                     observation => observation.Context.Message.CorrelationId == sagaId
                         && observation.Context.Message.Counter == 2,
                     cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             await using var verification = CreateContext(database.ConnectionString);
             SerializedState persisted = await verification.States.AsNoTracking()
@@ -158,7 +158,7 @@ public sealed class PostgreSqlSagaConcurrencyTests
         finally
         {
             handler.Release();
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -288,9 +288,9 @@ public sealed class PostgreSqlSagaConcurrencyTests
             InterceptionResult<DbDataReader> result,
             CancellationToken cancellationToken = default)
         {
-            if (Volatile.Read(ref _isObserving) == 1
-                && command.CommandText.Contains("SerializedSagas", StringComparison.Ordinal)
-                && command.CommandText.Contains("FOR UPDATE", StringComparison.OrdinalIgnoreCase))
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled<global::Microsoft.EntityFrameworkCore.Diagnostics.InterceptionResult<global::System.Data.Common.DbDataReader>>(cancellationToken); if (Volatile.Read(ref _isObserving) == 1
+                            && command.CommandText.Contains("SerializedSagas", StringComparison.Ordinal)
+                            && command.CommandText.Contains("FOR UPDATE", StringComparison.OrdinalIgnoreCase))
             {
                 int attempt = Interlocked.Increment(ref _attemptCount);
                 if (!_attempts.Writer.TryWrite(attempt))
@@ -315,9 +315,9 @@ public sealed class PostgreSqlSagaConcurrencyTests
             InterceptionResult<int> result,
             CancellationToken cancellationToken = default)
         {
-            if (Volatile.Read(ref _isObserving) == 0
-                || eventData.Context?.ChangeTracker.Entries<SerializedState>()
-                    .Any(entry => entry.State == EntityState.Modified) != true)
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled<global::Microsoft.EntityFrameworkCore.Diagnostics.InterceptionResult<int>>(cancellationToken); if (Volatile.Read(ref _isObserving) == 0
+                            || eventData.Context?.ChangeTracker.Entries<SerializedState>()
+                                .Any(entry => entry.State == EntityState.Modified) != true)
                 return ValueTask.FromResult(result);
 
             if (Interlocked.Increment(ref _saveAttempts) == 1)

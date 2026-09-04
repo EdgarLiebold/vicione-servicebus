@@ -15,7 +15,7 @@ public class ExecuteContextRedeliveryPipeSpecification<TArguments> :
     where TArguments : class
 {
     readonly RetryObservable _observers;
-    RetryPolicyFactory _policyFactory;
+    RetryPolicyFactory _policyFactory = null!;
 
     public ExecuteContextRedeliveryPipeSpecification()
     {
@@ -50,7 +50,7 @@ public class ExecuteContextRedeliveryPipeSpecification<TArguments> :
 
     public bool ReplaceMessageId { get; set; }
 
-    static RetryExecuteContext<TArguments> Factory(ExecuteContext<TArguments> context, IRetryPolicy retryPolicy, RetryContext retryContext)
+    static RetryExecuteContext<TArguments> Factory(ExecuteContext<TArguments> context, IRetryPolicy retryPolicy, RetryContext? retryContext)
     {
         return new RetryExecuteContext<TArguments>(context, retryPolicy, retryContext);
     }

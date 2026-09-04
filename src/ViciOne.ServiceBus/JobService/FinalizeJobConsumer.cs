@@ -18,14 +18,14 @@ public class FinalizeJobConsumer<TJob> :
         _jobTypeId = jobTypeId;
     }
 
-    public Task Consume(ConsumeContext<CompleteJob> context)
+    public Task ConsumeAsync(ConsumeContext<CompleteJob> context)
     {
         if (context.Message.JobTypeId != _jobTypeId)
             return Task.CompletedTask;
 
         var job = context.GetJob<TJob>() ?? throw new SerializationException($"The job could not be deserialized: {TypeCache<TJob>.ShortName}");
 
-        return context.Publish<JobCompleted<TJob>>(new JobCompletedEvent<TJob>
+        return context.Advanced().PublishAsync<JobCompleted<TJob>>(new JobCompletedEvent<TJob>
         {
             JobId = context.Message.JobId,
             Timestamp = context.Message.Timestamp,
@@ -37,7 +37,7 @@ public class FinalizeJobConsumer<TJob> :
         });
     }
 
-    public Task Consume(ConsumeContext<FaultJob> context)
+    public Task ConsumeAsync(ConsumeContext<FaultJob> context)
     {
         var message = context.Message;
         if (message.JobTypeId != _jobTypeId)
@@ -47,6 +47,6 @@ public class FinalizeJobConsumer<TJob> :
 
         var jobContext = new FaultJobContext<TJob>(context, job);
 
-        return jobContext.GenerateFault(new ExceptionInfoException(message.Exceptions));
+        return jobContext.GenerateFaultAsync(new ExceptionInfoException(message.Exceptions));
     }
 }

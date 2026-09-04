@@ -14,14 +14,14 @@ public class SetPartitionKeyFilter<TMessage> :
         _routingKeyFormatter = routingKeyFormatter;
     }
 
-    public Task Send(SendContext<TMessage> context, IPipe<SendContext<TMessage>> next)
+    public Task SendAsync(SendContext<TMessage> context, IPipe<SendContext<TMessage>> next)
     {
         var routingKey = _routingKeyFormatter.FormatPartitionKey(context);
 
-        if (context.TryGetPayload(out PartitionKeySendContext routingKeySendContext))
+        if (context.TryGetPayload(out PartitionKeySendContext? routingKeySendContext))
             routingKeySendContext.PartitionKey = routingKey;
 
-        return next.Send(context);
+        return next.SendAsync(context);
     }
 
     public void Probe(ProbeContext context)

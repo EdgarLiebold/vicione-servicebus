@@ -14,7 +14,7 @@ public static class HealthReportExtensions
         var healthResult = new JsonObject
         {
             ["status"] = result.Status.ToString(),
-            ["results"] = new JsonObject(result.Entries.Select(entry => new KeyValuePair<string, JsonNode>(entry.Key,
+            ["results"] = new JsonObject(result.Entries.Select(entry => new KeyValuePair<string, JsonNode?>(entry.Key,
                 new JsonObject
                 {
                     ["status"] = entry.Value.Status.ToString(),

@@ -16,7 +16,7 @@ public interface ICryptoStreamProvider :
     /// <param name="keyId">The encryption key identifier</param>
     /// <param name="streamMode"></param>
     /// <returns>A stream for serializing the message which will be encrypted</returns>
-    Stream GetEncryptStream(Stream stream, string keyId, CryptoStreamMode streamMode);
+    Stream GetEncryptStream(Stream stream, string? keyId, CryptoStreamMode streamMode);
 
     /// <summary>
     /// Returns a stream for decrypting the message
@@ -25,5 +25,5 @@ public interface ICryptoStreamProvider :
     /// <param name="keyId">The encryption key identifier</param>
     /// <param name="streamMode"></param>
     /// <returns>A stream for deserializing the encrypted message</returns>
-    Stream GetDecryptStream(Stream stream, string keyId, CryptoStreamMode streamMode);
+    Stream GetDecryptStream(Stream stream, string? keyId, CryptoStreamMode streamMode);
 }

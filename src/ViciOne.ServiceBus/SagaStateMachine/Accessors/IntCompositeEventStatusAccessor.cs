@@ -14,6 +14,7 @@ public class IntCompositeEventStatusAccessor<TSaga> :
 
     public IntCompositeEventStatusAccessor(PropertyInfo propertyInfo)
     {
+        ArgumentNullException.ThrowIfNull(propertyInfo);
         _read = ReadPropertyCache<TSaga>.GetProperty<int>(propertyInfo);
         _write = WritePropertyCache<TSaga>.GetProperty<int>(propertyInfo);
         _name = propertyInfo.Name;

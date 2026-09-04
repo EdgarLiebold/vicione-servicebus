@@ -44,14 +44,14 @@ public class JobService :
     int _admitted;
 
     /// <summary>The running heartbeat, or null. Only ever touched while <see cref="_lifecycle" /> is held.</summary>
-    Heartbeat _heartbeat;
+    Heartbeat? _heartbeat;
 
     /// <summary>Guarded by <see cref="_admission" />; never read outside it.</summary>
     bool _stopping;
 
     public JobService(JobServiceSettings settings)
     {
-        Settings = settings;
+        Settings = settings ?? throw new ArgumentNullException(nameof(settings));
 
         _jobTypes = new Dictionary<Type, IJobTypeRegistration>();
         _jobs = new ConcurrentDictionary<Guid, JobHandle>();
@@ -60,17 +60,18 @@ public class JobService :
 
     public JobServiceSettings Settings { get; }
 
-    public Uri InstanceAddress => Settings.InstanceAddress;
+    public Uri InstanceAddress => Settings.InstanceAddress
+        ?? throw new ConfigurationException("The job service instance address must be configured before the service is used.");
 
-    public bool TryGetJob(Guid jobId, out JobHandle jobReference)
+    public bool TryGetJob(Guid jobId, [NotNullWhen(true)] out JobHandle? jobReference)
     {
         return _jobs.TryGetValue(jobId, out jobReference);
     }
 
-    public bool TryRemoveJob(Guid jobId, out JobHandle jobHandle)
+    public bool TryRemoveJob(Guid jobId, [NotNullWhen(true)] out JobHandle? jobHandle)
     {
         var removed = _jobs.TryRemove(jobId, out jobHandle);
-        if (removed)
+        if (removed && jobHandle != null)
         {
             LogContext.Debug?.Log("Removed job: {JobId} ({Status})", jobId, jobHandle.JobTask.Status);
 
@@ -80,7 +81,7 @@ public class JobService :
         return false;
     }
 
-    public async Task StartJob<T>(ConsumeContext<StartJob> context, T job, IPipe<ConsumeContext<T>> jobPipe, JobOptions<T> jobOptions)
+    public async Task StartJobAsync<T>(ConsumeContext<StartJob> context, T job, IPipe<ConsumeContext<T>> jobPipe, JobOptions<T> jobOptions, CancellationToken cancellationToken = default)
         where T : class
     {
         var startJob = context.Message;
@@ -109,7 +110,7 @@ public class JobService :
             LogContext.Debug?.Log("Rejecting job: {JobType} {JobId} ({RetryAttempt}) - Job Service is stopping", TypeCache<T>.ShortName, startJob.JobId,
                 startJob.RetryAttempt);
 
-            await jobContext.NotifyFaulted(new JobServiceStoppingException(startJob.JobId), Settings.RejectedJobDelay);
+            await jobContext.NotifyFaultedAsync(new JobServiceStoppingException(startJob.JobId), Settings.RejectedJobDelay, cancellationToken: cancellationToken);
         }
         else
         {
@@ -118,7 +119,7 @@ public class JobService :
 
             try
             {
-                var jobTask = jobPipe.Send(jobContext);
+                var jobTask = jobPipe.SendAsync(jobContext);
 
                 var jobHandle = new ConsumerJobHandle<T>(jobContext, jobTask, jobOptions.JobCancellationTimeout);
 
@@ -134,12 +135,12 @@ public class JobService :
         }
     }
 
-    public async Task Stop(IPublishEndpoint publishEndpoint)
+    public async Task StopAsync(IPublishEndpoint publishEndpoint, CancellationToken cancellationToken = default)
     {
-        await _lifecycle.WaitAsync().ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested(); await _lifecycle.WaitAsync().ConfigureAwait(false);
         try
         {
-            await StopUnderGate(publishEndpoint).ConfigureAwait(false);
+            await StopUnderGateAsync(publishEndpoint).ConfigureAwait(false);
         }
         finally
         {
@@ -147,22 +148,22 @@ public class JobService :
         }
     }
 
-    async Task StopUnderGate(IPublishEndpoint publishEndpoint)
+    async Task StopUnderGateAsync(IPublishEndpoint publishEndpoint)
     {
         // Set before anything else and cleared only by a BusStarted that completes: while the stop
         // drains, and until a start has really succeeded, no new job is accepted.
         lock (_admission)
             _stopping = true;
 
-        await StopHeartbeat().ConfigureAwait(false);
+        await StopHeartbeatAsync().ConfigureAwait(false);
 
-        await Task.WhenAll(_jobTypes.Values.Select(x => x.PublishJobInstanceStopped(publishEndpoint))).ConfigureAwait(false);
+        await Task.WhenAll(_jobTypes.Values.Select(x => x.PublishJobInstanceStoppedAsync(publishEndpoint))).ConfigureAwait(false);
 
         // Admitted but not yet registered counts as outstanding. Draining only the registered jobs
         // would let a job that was admitted a moment before the stop appear after it had finished.
         while (_jobs.IsEmpty == false || Volatile.Read(ref _admitted) > 0)
         {
-            async Task CancelJob(JobHandle jobHandle)
+            async Task CancelJobAsync(JobHandle jobHandle)
             {
                 if (!jobHandle.JobTask.IsCompleted)
                 {
@@ -170,7 +171,7 @@ public class JobService :
                     {
                         LogContext.Debug?.Log("Canceling job: {JobId}", jobHandle.JobId);
 
-                        await jobHandle.Cancel(JobCancellationReasons.Shutdown).ConfigureAwait(false);
+                        await jobHandle.CancelAsync(JobCancellationReasons.Shutdown).ConfigureAwait(false);
                     }
                     catch (Exception ex)
                     {
@@ -182,13 +183,13 @@ public class JobService :
                     await jobHandle.DisposeAsync().ConfigureAwait(false);
             }
 
-            await Task.WhenAll(_jobs.Values.Select(CancelJob)).ConfigureAwait(false);
+            await Task.WhenAll(_jobs.Values.Select(CancelJobAsync)).ConfigureAwait(false);
 
             if (_jobs.IsEmpty && Volatile.Read(ref _admitted) > 0)
                 await Task.Yield();
         }
 
-        await _jobCompletions.Completed().ConfigureAwait(false);
+        await _jobCompletions.CompletedAsync().ConfigureAwait(false);
     }
 
     /// <summary>
@@ -200,7 +201,7 @@ public class JobService :
     /// so when this returns nothing of it is still in flight.
     /// </para>
     /// </summary>
-    async Task StopHeartbeat()
+    async Task StopHeartbeatAsync()
     {
         var heartbeat = _heartbeat;
         if (heartbeat == null)
@@ -208,7 +209,7 @@ public class JobService :
 
         _heartbeat = null;
 
-        await heartbeat.Stop().ConfigureAwait(false);
+        await heartbeat.StopAsync().ConfigureAwait(false);
     }
 
     public void RegisterJobType<T>(IReceiveEndpointConfigurator configurator, JobOptions<T> options, Guid jobTypeId, string jobTypeName)
@@ -220,16 +221,16 @@ public class JobService :
         _jobTypes.Add(typeof(T), new JobTypeRegistration<T>(options, InstanceAddress, jobTypeId, jobTypeName));
     }
 
-    public async Task BusStarted(IPublishEndpoint publishEndpoint)
+    public async Task BusStartedAsync(IPublishEndpoint publishEndpoint, CancellationToken cancellationToken = default)
     {
-        await _lifecycle.WaitAsync().ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested(); await _lifecycle.WaitAsync().ConfigureAwait(false);
         try
         {
             // Whatever a previous lifecycle left behind goes first, so a successful start owns exactly
             // one heartbeat rather than adding a second one beside an older timer.
-            await StopHeartbeat().ConfigureAwait(false);
+            await StopHeartbeatAsync().ConfigureAwait(false);
 
-            await Task.WhenAll(_jobTypes.Values.Select(x => x.PublishConcurrentJobLimit(publishEndpoint))).ConfigureAwait(false);
+            await Task.WhenAll(_jobTypes.Values.Select(x => x.PublishConcurrentJobLimitAsync(publishEndpoint))).ConfigureAwait(false);
 
             // Exactly one generation per successful start: the previous one is ended and awaited above,
             // so two loops never publish side by side.
@@ -244,7 +245,7 @@ public class JobService :
         catch
         {
             // A start that did not complete leaves no running state and no live heartbeat behind.
-            await StopHeartbeat().ConfigureAwait(false);
+            await StopHeartbeatAsync().ConfigureAwait(false);
 
             lock (_admission)
                 _stopping = true;
@@ -257,9 +258,9 @@ public class JobService :
         }
     }
 
-    Task PublishHeartbeats(IPublishEndpoint publishEndpoint)
+    Task PublishHeartbeatsAsync(IPublishEndpoint publishEndpoint)
     {
-        return Task.WhenAll(_jobTypes.Values.Select(x => x.PublishHeartbeat(publishEndpoint)));
+        return Task.WhenAll(_jobTypes.Values.Select(x => x.PublishHeartbeatAsync(publishEndpoint)));
     }
 
     public Guid GetJobTypeId<T>()
@@ -290,10 +291,10 @@ public class JobService :
         if (!_jobs.TryAdd(jobHandle.JobId, jobHandle))
             throw new JobAlreadyExistsException(jobHandle.JobId);
 
-        _jobCompletions.Add(CompleteJob(jobHandle));
+        _jobCompletions.Add(CompleteJobAsync(jobHandle));
     }
 
-    async Task CompleteJob(JobHandle jobHandle)
+    async Task CompleteJobAsync(JobHandle jobHandle)
     {
         try
         {
@@ -331,10 +332,10 @@ public class JobService :
         public Heartbeat(JobService service, IPublishEndpoint publishEndpoint, TimeSpan interval, TimeProvider timeProvider)
         {
             _stopping = new CancellationTokenSource();
-            _publishing = Run(service, publishEndpoint, interval, timeProvider, _stopping.Token);
+            _publishing = RunAsync(service, publishEndpoint, interval, timeProvider, _stopping.Token);
         }
 
-        public async Task Stop()
+        public async Task StopAsync()
         {
             _stopping.Cancel();
 
@@ -352,7 +353,7 @@ public class JobService :
             }
         }
 
-        static async Task Run(JobService service, IPublishEndpoint publishEndpoint, TimeSpan interval, TimeProvider timeProvider,
+        static async Task RunAsync(JobService service, IPublishEndpoint publishEndpoint, TimeSpan interval, TimeProvider timeProvider,
             CancellationToken cancellationToken)
         {
             while (!cancellationToken.IsCancellationRequested)
@@ -371,7 +372,7 @@ public class JobService :
 
                 try
                 {
-                    await service.PublishHeartbeats(publishEndpoint).ConfigureAwait(false);
+                    await service.PublishHeartbeatsAsync(publishEndpoint).ConfigureAwait(false);
                 }
                 catch (Exception exception)
                 {
@@ -385,9 +386,9 @@ public class JobService :
     interface IJobTypeRegistration
     {
         Guid JobTypeId { get; }
-        Task PublishConcurrentJobLimit(IPublishEndpoint publishEndpoint);
-        Task PublishHeartbeat(IPublishEndpoint publishEndpoint);
-        Task PublishJobInstanceStopped(IPublishEndpoint publishEndpoint);
+        Task PublishConcurrentJobLimitAsync(IPublishEndpoint publishEndpoint);
+        Task PublishHeartbeatAsync(IPublishEndpoint publishEndpoint);
+        Task PublishJobInstanceStoppedAsync(IPublishEndpoint publishEndpoint);
     }
 
 
@@ -408,28 +409,28 @@ public class JobService :
 
         string JobTypeName { get; }
 
-        public Task PublishConcurrentJobLimit(IPublishEndpoint publishEndpoint)
+        public Task PublishConcurrentJobLimitAsync(IPublishEndpoint publishEndpoint)
         {
             LogContext.Debug?.Log("Job Service type: {JobType}", TypeCache<T>.ShortName);
 
-            return PublishSetConcurrentJobLimit(publishEndpoint, ConcurrentLimitKind.Configured);
+            return PublishSetConcurrentJobLimitAsync(publishEndpoint, ConcurrentLimitKind.Configured);
         }
 
-        public Task PublishHeartbeat(IPublishEndpoint publishEndpoint)
+        public Task PublishHeartbeatAsync(IPublishEndpoint publishEndpoint)
         {
-            return PublishSetConcurrentJobLimit(publishEndpoint, ConcurrentLimitKind.Heartbeat);
+            return PublishSetConcurrentJobLimitAsync(publishEndpoint, ConcurrentLimitKind.Heartbeat);
         }
 
-        public Task PublishJobInstanceStopped(IPublishEndpoint publishEndpoint)
+        public Task PublishJobInstanceStoppedAsync(IPublishEndpoint publishEndpoint)
         {
-            return PublishSetConcurrentJobLimit(publishEndpoint, ConcurrentLimitKind.Stopped);
+            return PublishSetConcurrentJobLimitAsync(publishEndpoint, ConcurrentLimitKind.Stopped);
         }
 
         public Guid JobTypeId { get; }
 
-        Task PublishSetConcurrentJobLimit(IPublishEndpoint publishEndpoint, ConcurrentLimitKind kind)
+        Task PublishSetConcurrentJobLimitAsync(IPublishEndpoint publishEndpoint, ConcurrentLimitKind kind)
         {
-            return publishEndpoint.Publish<SetConcurrentJobLimit>(new SetConcurrentJobLimitCommand
+            return publishEndpoint.PublishAsync<SetConcurrentJobLimit>(new SetConcurrentJobLimitCommand
             {
                 JobTypeId = JobTypeId,
                 JobTypeName = JobTypeName,

@@ -11,7 +11,7 @@ public interface ICompensateActivity<in TLog> :
     /// </summary>
     /// <param name="context">The compensation information for the activity</param>
     /// <returns></returns>
-    Task<CompensationResult> Compensate(CompensateContext<TLog> context);
+    Task<CompensationResult> CompensateAsync(CompensateContext<TLog> context);
 }
 
 

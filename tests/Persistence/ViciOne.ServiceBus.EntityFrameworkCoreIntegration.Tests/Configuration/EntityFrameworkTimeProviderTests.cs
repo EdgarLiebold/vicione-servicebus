@@ -36,7 +36,7 @@ public sealed class EntityFrameworkTimeProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-TIME-SOURCE", "outbox-message-timestamps-use-one-clock")]
-    public async Task AddSend_UsesTheInjectedTimeProviderForDerivedTimestamps()
+    public async Task AddSend_UsesTheInjectedTimeProviderForDerivedTimestampsAsync()
     {
         var timeProvider = new FakeTimeProvider(Now)
         {

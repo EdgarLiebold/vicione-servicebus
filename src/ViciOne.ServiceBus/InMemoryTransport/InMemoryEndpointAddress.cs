@@ -15,18 +15,18 @@ public readonly struct InMemoryEndpointAddress
 
     public readonly string Scheme;
     public readonly string Host;
-    public readonly string VirtualHost;
+    public readonly string VirtualHost = null!;
 
     public readonly string Name;
     public readonly bool BindToQueue;
-    public readonly string QueueName;
+    public readonly string? QueueName;
     public readonly ExchangeType ExchangeType;
 
     public InMemoryEndpointAddress(Uri hostAddress, Uri address)
     {
-        Scheme = default;
-        Host = default;
-        VirtualHost = default;
+        Scheme = null!;
+        Host = null!;
+        VirtualHost = null!;
 
         BindToQueue = false;
         QueueName = default;
@@ -82,7 +82,7 @@ public readonly struct InMemoryEndpointAddress
         }
     }
 
-    public InMemoryEndpointAddress(Uri hostAddress, string exchangeName, bool bindToQueue = false, string queueName = default,
+    public InMemoryEndpointAddress(Uri hostAddress, string exchangeName, bool bindToQueue = false, string? queueName = default,
         ExchangeType exchangeType = ExchangeType.FanOut)
     {
         ParseLeft(hostAddress, out Scheme, out Host, out VirtualHost);

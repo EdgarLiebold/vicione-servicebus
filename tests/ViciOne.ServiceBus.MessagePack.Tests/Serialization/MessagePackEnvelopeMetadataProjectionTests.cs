@@ -65,7 +65,7 @@ public sealed class MessagePackEnvelopeMetadataProjectionTests
 
         var envelope = new MessagePackEnvelope(context, new TestMessage("payload"), ["urn:message:test"]);
 
-        Assert.Equal(ProjectionTime.UtcDateTime, envelope.SentTime);
+        Assert.Equal(ProjectionTime, envelope.SentTime);
         Assert.Equal(ProjectionTime + TimeSpan.FromSeconds(1), timeProvider.GetUtcNow());
     }
 
@@ -81,12 +81,12 @@ public sealed class MessagePackEnvelopeMetadataProjectionTests
         context.SetTimeProvider(timeProvider);
         var envelope = new MessagePackEnvelope(context, context.Message)
         {
-            ExpirationTime = ProjectionTime.UtcDateTime + TimeSpan.FromHours(1),
+            ExpirationTime = ProjectionTime + TimeSpan.FromHours(1),
         };
 
         envelope.Update(context);
 
-        Assert.Equal(ProjectionTime.UtcDateTime - TimeSpan.FromSeconds(30), envelope.ExpirationTime);
+        Assert.Equal(ProjectionTime - TimeSpan.FromSeconds(30), envelope.ExpirationTime);
     }
 
     private sealed record TestMessage(string Value);
@@ -105,12 +105,12 @@ public sealed class MessagePackEnvelopeMetadataProjectionTests
         public Guid? CorrelationId => null;
         public Guid? ConversationId => null;
         public Guid? InitiatorId => null;
-        public DateTime? ExpirationTime => null;
+        public DateTimeOffset? ExpirationTime => null;
         public Uri? SourceAddress => null;
         public Uri? DestinationAddress => null;
         public Uri? ResponseAddress => null;
         public Uri? FaultAddress => null;
-        public DateTime? SentTime => null;
+        public DateTimeOffset? SentTime => null;
         public Headers Headers => _headers;
         public HostInfo Host => HostMetadataCache.Host;
     }

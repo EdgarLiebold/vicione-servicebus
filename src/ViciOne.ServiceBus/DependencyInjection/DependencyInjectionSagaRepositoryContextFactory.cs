@@ -29,28 +29,28 @@ public class DependencyInjectionSagaRepositoryContextFactory<TSaga> :
         context.Add("provider", "dependencyInjection");
     }
 
-    public Task Send<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
+    public Task SendAsync<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
         where T : class
     {
-        return Send(context, (consumeContext, factory) => factory.Send(consumeContext, next));
+        return SendAsync(context, (consumeContext, factory) => factory.SendAsync(consumeContext, next));
     }
 
-    public Task SendQuery<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
+    public Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
         where T : class
     {
-        return Send(context, (consumeContext, factory) => factory.SendQuery(consumeContext, query, next));
+        return SendAsync(context, (consumeContext, factory) => factory.SendQueryAsync(consumeContext, query, next));
     }
 
-    async Task Send<T>(ConsumeContext<T> context, Func<ConsumeContext<T>, ISagaRepositoryContextFactory<TSaga>, Task> send)
+    async Task SendAsync<T>(ConsumeContext<T> context, Func<ConsumeContext<T>, ISagaRepositoryContextFactory<TSaga>, Task> send)
         where T : class
     {
         var serviceProvider = context.GetPayload(_serviceProvider);
 
-        IDisposable disposable = null;
+        IDisposable? disposable = null;
 
         if (context.TryGetPayload<IServiceScope>(out var existingScope))
         {
-            disposable = _setter.PushContext(existingScope, context);
+            disposable = _setter.PushContext(existingScope, context.Advanced());
 
             try
             {
@@ -70,7 +70,7 @@ public class DependencyInjectionSagaRepositoryContextFactory<TSaga> :
         {
             var scopeContext = new ConsumeContextScope<T>(context, serviceScope, serviceScope.ServiceProvider);
 
-            if (scopeContext.TryGetPayload(out MessageSchedulerContext schedulerContext))
+            if (scopeContext.TryGetPayload(out MessageSchedulerContext? schedulerContext))
             {
                 scopeContext.AddOrUpdatePayload<MessageSchedulerContext>(
                     () => new ConsumeMessageSchedulerContext(scopeContext, schedulerContext.SchedulerFactory),

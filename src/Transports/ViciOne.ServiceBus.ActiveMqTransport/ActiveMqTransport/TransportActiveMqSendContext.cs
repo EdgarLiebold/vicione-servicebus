@@ -15,10 +15,10 @@ public class TransportActiveMqSendContext<T> :
     {
     }
 
-    public string GroupId { get; set; }
+    public string? GroupId { get; set; }
     public int? GroupSequence { get; set; }
     public MsgPriority? Priority { get; set; }
-    public IDestination ReplyDestination { get; set; }
+    public IDestination? ReplyDestination { get; set; }
 
     public override void ReadPropertiesFrom(IReadOnlyDictionary<string, object> properties)
     {
@@ -34,7 +34,7 @@ public class TransportActiveMqSendContext<T> :
         base.WritePropertiesTo(properties);
 
         if (Priority != null)
-            properties[ActiveMqTransportPropertyNames.Priority] = Priority.ToString();
+            properties[ActiveMqTransportPropertyNames.Priority] = Priority.Value.ToString();
         if (GroupId != null)
             properties[ActiveMqTransportPropertyNames.GroupId] = GroupId;
         if (GroupSequence != null)

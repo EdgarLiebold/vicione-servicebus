@@ -44,7 +44,7 @@ public class JobTypeSagaDefinition :
 
         _setOptions.JobTypeSagaEndpointAddress = configurator.InputAddress;
 
-        if (context.GetRequiredService<IContainerSelector>().TryGetRegistration(context, typeof(JobServiceState), out IJobServiceRegistration registration))
+        if (context.GetRequiredService<IContainerSelector>().TryGetRegistration(context, typeof(JobServiceState), out IJobServiceRegistration? registration))
             registration.AddReceiveEndpointDependency(configurator);
     }
 }

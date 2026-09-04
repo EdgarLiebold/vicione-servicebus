@@ -18,7 +18,7 @@ public interface RoutingSlipActivityCompleted
     /// <summary>
     /// The date/time when the routing slip compensation was finished
     /// </summary>
-    DateTime Timestamp { get; }
+    DateTimeOffset Timestamp { get; }
 
     /// <summary>
     /// The duration of the activity execution

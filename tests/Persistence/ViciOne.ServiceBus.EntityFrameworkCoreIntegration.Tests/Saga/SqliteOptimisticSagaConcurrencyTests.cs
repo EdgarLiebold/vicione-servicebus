@@ -13,9 +13,9 @@ public sealed class SqliteOptimisticSagaConcurrencyTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-SQLITE-OPTIMISTIC-CONCURRENCY", "stale-token-is-rejected")]
-    public async Task ApplicationManagedToken_RejectsAStaleSagaUpdate()
+    public async Task ApplicationManagedToken_RejectsAStaleSagaUpdateAsync()
     {
-        await using SqliteDatabase database = await SqliteDatabase.Create();
+        await using SqliteDatabase database = await SqliteDatabase.CreateAsync();
         Guid sagaId = Guid.NewGuid();
         await using (var seed = database.CreateContext())
         {
@@ -27,11 +27,11 @@ public sealed class SqliteOptimisticSagaConcurrencyTests
         await using OptimisticSagaDbContext secondContext = database.CreateContext();
         var firstStrategy = CreateStrategy();
         var secondStrategy = CreateStrategy();
-        OptimisticSaga first = Assert.IsType<OptimisticSaga>(await firstStrategy.Load(
+        OptimisticSaga first = Assert.IsType<OptimisticSaga>(await firstStrategy.LoadAsync(
             firstContext,
             sagaId,
             TestContext.Current.CancellationToken));
-        OptimisticSaga second = Assert.IsType<OptimisticSaga>(await secondStrategy.Load(
+        OptimisticSaga second = Assert.IsType<OptimisticSaga>(await secondStrategy.LoadAsync(
             secondContext,
             sagaId,
             TestContext.Current.CancellationToken));
@@ -53,13 +53,13 @@ public sealed class SqliteOptimisticSagaConcurrencyTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-SQLITE-OPTIMISTIC-CONCURRENCY", "retry-and-outbox-converge-once")]
-    public async Task SagaRetry_AbsorbsOneConcurrencyConflictWithoutDuplicatePublication()
+    public async Task SagaRetry_AbsorbsOneConcurrencyConflictWithoutDuplicatePublicationAsync()
     {
         TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
             .OperationTimeout!.Value;
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        await using SqliteDatabase database = await SqliteDatabase.Create();
+        await using SqliteDatabase database = await SqliteDatabase.CreateAsync();
         var conflict = new FailFirstSagaUpdateInterceptor();
         await using ServiceProvider provider = new ServiceCollection()
             .AddSingleton(conflict)
@@ -76,21 +76,21 @@ public sealed class SqliteOptimisticSagaConcurrencyTests
                     });
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Guid sagaId = Guid.NewGuid();
-            ISendEndpoint endpoint = await harness.GetSagaEndpoint<OptimisticSaga>();
+            ISendEndpoint endpoint = await harness.GetSagaEndpointAsync<OptimisticSaga>(TestContext.Current.CancellationToken);
 
-            await endpoint.Send(new StartOptimisticSaga(sagaId), cancellationToken);
+            await endpoint.SendAsync(new StartOptimisticSaga(sagaId), cancellationToken);
             IPublishedMessage<OptimisticSagaStarted> started = await harness.Published
                 .SelectAsync<OptimisticSagaStarted>(cancellationToken)
-                .First();
-            await endpoint.Send(new UpdateOptimisticSaga(sagaId), cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
+            await endpoint.SendAsync(new UpdateOptimisticSaga(sagaId), cancellationToken);
             IPublishedMessage<OptimisticSagaUpdated> updated = await harness.Published
                 .SelectAsync<OptimisticSagaUpdated>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             Assert.Equal(sagaId, started.Context.Message.CorrelationId);
             Assert.Equal(sagaId, updated.Context.Message.CorrelationId);
@@ -107,7 +107,7 @@ public sealed class SqliteOptimisticSagaConcurrencyTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -135,13 +135,13 @@ public sealed class SqliteOptimisticSagaConcurrencyTests
         public int Value { get; set; }
         public Guid Version { get; set; }
 
-        public Task Consume(ConsumeContext<StartOptimisticSaga> context) =>
-            context.Publish(new OptimisticSagaStarted(CorrelationId), context.CancellationToken);
+        public Task ConsumeAsync(ConsumeContext<StartOptimisticSaga> context) =>
+            context.Advanced().PublishAsync(new OptimisticSagaStarted(CorrelationId), context.CancellationToken);
 
-        public Task Consume(ConsumeContext<UpdateOptimisticSaga> context)
+        public Task ConsumeAsync(ConsumeContext<UpdateOptimisticSaga> context)
         {
             Value++;
-            return context.Publish(new OptimisticSagaUpdated(CorrelationId, Value), context.CancellationToken);
+            return context.Advanced().PublishAsync(new OptimisticSagaUpdated(CorrelationId, Value), context.CancellationToken);
         }
     }
 
@@ -208,7 +208,7 @@ public sealed class SqliteOptimisticSagaConcurrencyTests
         public override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData,
             InterceptionResult<int> result, CancellationToken cancellationToken = default)
         {
-            ThrowFirstUpdate(eventData.Context);
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled<global::Microsoft.EntityFrameworkCore.Diagnostics.InterceptionResult<int>>(cancellationToken); ThrowFirstUpdate(eventData.Context);
             return ValueTask.FromResult(result);
         }
 
@@ -234,7 +234,7 @@ public sealed class SqliteOptimisticSagaConcurrencyTests
 
         public string ConnectionString { get; }
 
-        public static async Task<SqliteDatabase> Create()
+        public static async Task<SqliteDatabase> CreateAsync()
         {
             string databasePath = Path.Combine(Path.GetTempPath(), $"vicioneservicebus-ef-{Guid.NewGuid():N}.db");
             string connectionString = $"Data Source={databasePath};Pooling=False";

@@ -10,7 +10,7 @@ public class RoutingKeySendTopologyConvention :
         _cache = new TopologyConventionCache<IMessageSendTopologyConvention>(typeof(IRoutingKeyMessageSendTopologyConvention<>), new Factory());
     }
 
-    public bool TryGetMessageSendTopologyConvention<T>(out IMessageSendTopologyConvention<T> convention)
+    public bool TryGetMessageSendTopologyConvention<T>([NotNullWhen(true)] out IMessageSendTopologyConvention<T>? convention)
         where T : class
     {
         return _cache.GetOrAdd<T, IMessageSendTopologyConvention<T>>().TryGetMessageSendTopologyConvention(out convention);

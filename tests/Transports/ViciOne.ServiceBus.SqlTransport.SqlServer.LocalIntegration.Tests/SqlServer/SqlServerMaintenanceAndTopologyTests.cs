@@ -12,7 +12,7 @@ public sealed class SqlServerMaintenanceAndTopologyTests
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("OBL-R0-SQL-0117", "sqlserver-native-owner")]
-    public async Task MaintenanceExecutesOrphanCleanupForEmptyAndPopulatedBatches(bool insertOrphan)
+    public async Task MaintenanceExecutesOrphanCleanupForEmptyAndPopulatedBatchesAsync(bool insertOrphan)
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using SqlServerTestDatabase fixture = await SqlServerTestDatabase.CreateAsync(
@@ -20,7 +20,7 @@ public sealed class SqlServerMaintenanceAndTopologyTests
             cancellationToken);
         Guid orphanId = Guid.NewGuid();
         await using SqlConnection inspection = fixture.CreateConnection();
-        await inspection.OpenWithin(fixture.OperationTimeout, cancellationToken);
+        await inspection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
         if (insertOrphan)
         {
             await using var insert = new SqlCommand(
@@ -43,7 +43,7 @@ public sealed class SqlServerMaintenanceAndTopologyTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            await WaitForProcedureExecution(inspection, fixture, "RemoveOrphanedMessages", cancellationToken);
+            await WaitForProcedureExecutionAsync(inspection, fixture, "RemoveOrphanedMessages", cancellationToken);
         }
         finally
         {
@@ -51,57 +51,57 @@ public sealed class SqlServerMaintenanceAndTopologyTests
                 await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
         }
 
-        Assert.Equal(0, await OrphanCount(inspection, fixture, orphanId, cancellationToken));
+        Assert.Equal(0, await OrphanCountAsync(inspection, fixture, orphanId, cancellationToken));
     }
 
     [Theory]
     [InlineData(1, 2)]
     [InlineData(2, 2)]
     [RequirementCoverage("OBL-R0-SQL-0118", "sqlserver-native-owner")]
-    public async Task DeadLetterPassReportsFewerThanAndExactlyTheRequestedBatch(int exhaustedCount, int batchSize)
+    public async Task DeadLetterPassReportsFewerThanAndExactlyTheRequestedBatchAsync(int exhaustedCount, int batchSize)
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using SqlServerTestDatabase fixture = await SqlServerTestDatabase.CreateAsync(
             "dead-letter-count",
             cancellationToken);
         await using SqlConnection connection = fixture.CreateConnection();
-        await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
+        await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
         string queueName = fixture.Name("input");
-        await CreateQueue(connection, fixture.Schema, queueName, cancellationToken);
+        await CreateQueueAsync(connection, fixture.Schema, queueName, cancellationToken);
         for (int index = 0; index < exhaustedCount; ++index)
         {
-            long deliveryId = await Send(connection, fixture.Schema, queueName, Guid.NewGuid(), cancellationToken);
-            await Exhaust(connection, fixture.Schema, deliveryId, cancellationToken);
+            long deliveryId = await SendAsync(connection, fixture.Schema, queueName, Guid.NewGuid(), cancellationToken);
+            await ExhaustAsync(connection, fixture.Schema, deliveryId, cancellationToken);
         }
 
-        long moved = await DeadLetter(connection, fixture.Schema, queueName, batchSize, cancellationToken);
+        long moved = await DeadLetterAsync(connection, fixture.Schema, queueName, batchSize, cancellationToken);
 
         Assert.Equal(exhaustedCount, moved);
-        Assert.Equal(exhaustedCount, await connection.DeliveryCount(fixture.Schema, queueName, 3, cancellationToken));
+        Assert.Equal(exhaustedCount, await connection.DeliveryCountAsync(fixture.Schema, queueName, 3, cancellationToken));
     }
 
     [Theory]
     [InlineData(0)]
     [InlineData(1)]
     [RequirementCoverage("OBL-R0-SQL-0119", "sqlserver-native-owner")]
-    public async Task DeadLetterMetricIsAbsentForNoOpAndExactForMovedRows(int exhaustedCount)
+    public async Task DeadLetterMetricIsAbsentForNoOpAndExactForMovedRowsAsync(int exhaustedCount)
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using SqlServerTestDatabase fixture = await SqlServerTestDatabase.CreateAsync(
             "dead-letter-metric",
             cancellationToken);
         await using SqlConnection connection = fixture.CreateConnection();
-        await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
+        await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
         string queueName = fixture.Name("input");
-        long queueId = await CreateQueue(connection, fixture.Schema, queueName, cancellationToken);
+        long queueId = await CreateQueueAsync(connection, fixture.Schema, queueName, cancellationToken);
         if (exhaustedCount == 1)
         {
-            long deliveryId = await Send(connection, fixture.Schema, queueName, Guid.NewGuid(), cancellationToken);
-            await Exhaust(connection, fixture.Schema, deliveryId, cancellationToken);
+            long deliveryId = await SendAsync(connection, fixture.Schema, queueName, Guid.NewGuid(), cancellationToken);
+            await ExhaustAsync(connection, fixture.Schema, deliveryId, cancellationToken);
         }
 
-        Assert.Equal(exhaustedCount, await DeadLetter(connection, fixture.Schema, queueName, 10, cancellationToken));
-        (int rows, long count) = await DeadLetterMetric(connection, fixture.Schema, queueId, cancellationToken);
+        Assert.Equal(exhaustedCount, await DeadLetterAsync(connection, fixture.Schema, queueName, 10, cancellationToken));
+        (int rows, long count) = await DeadLetterMetricAsync(connection, fixture.Schema, queueId, cancellationToken);
 
         Assert.Equal(exhaustedCount, rows);
         Assert.Equal(exhaustedCount, count);
@@ -114,60 +114,60 @@ public sealed class SqlServerMaintenanceAndTopologyTests
     [InlineData("TouchQueue")]
     [InlineData("DeadLetterMessages")]
     [RequirementCoverage("OBL-R0-SQL-0121", "sqlserver-native-owner")]
-    public async Task ClientFacingStoredProcedureReportsItsExactOutcome(string procedure)
+    public async Task ClientFacingStoredProcedureReportsItsExactOutcomeAsync(string procedure)
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using SqlServerTestDatabase fixture = await SqlServerTestDatabase.CreateAsync(
             "procedure-outcome",
             cancellationToken);
         await using SqlConnection connection = fixture.CreateConnection();
-        await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
+        await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
         string entityName = fixture.Name(procedure);
 
         switch (procedure)
         {
             case "SendMessageV2":
                 {
-                    await CreateQueue(connection, fixture.Schema, entityName, cancellationToken);
-                    long deliveryId = await Send(connection, fixture.Schema, entityName, Guid.NewGuid(), cancellationToken);
+                    await CreateQueueAsync(connection, fixture.Schema, entityName, cancellationToken);
+                    long deliveryId = await SendAsync(connection, fixture.Schema, entityName, Guid.NewGuid(), cancellationToken);
                     Assert.True(deliveryId > 0);
-                    Assert.Equal(1, await DeliveryIdCount(connection, fixture.Schema, deliveryId, cancellationToken));
+                    Assert.Equal(1, await DeliveryIdCountAsync(connection, fixture.Schema, deliveryId, cancellationToken));
                     break;
                 }
             case "PublishMessageV2":
                 {
                     string queueName = fixture.Name("publish-destination");
-                    await CreateTopic(connection, fixture.Schema, entityName, cancellationToken);
-                    await CreateQueue(connection, fixture.Schema, queueName, cancellationToken);
-                    await CreateQueueSubscription(connection, fixture.Schema, entityName, queueName, cancellationToken);
-                    long deliveryCount = await Publish(connection, fixture.Schema, entityName, Guid.NewGuid(), cancellationToken);
+                    await CreateTopicAsync(connection, fixture.Schema, entityName, cancellationToken);
+                    await CreateQueueAsync(connection, fixture.Schema, queueName, cancellationToken);
+                    await CreateQueueSubscriptionAsync(connection, fixture.Schema, entityName, queueName, cancellationToken);
+                    long deliveryCount = await PublishAsync(connection, fixture.Schema, entityName, Guid.NewGuid(), cancellationToken);
                     Assert.Equal(1, deliveryCount);
-                    Assert.Equal(1, await connection.DeliveryCount(fixture.Schema, queueName, 1, cancellationToken));
+                    Assert.Equal(1, await connection.DeliveryCountAsync(fixture.Schema, queueName, 1, cancellationToken));
                     break;
                 }
             case "DeleteMessage":
                 {
-                    await CreateQueue(connection, fixture.Schema, entityName, cancellationToken);
-                    await Send(connection, fixture.Schema, entityName, Guid.NewGuid(), cancellationToken);
-                    FetchedDelivery delivery = Assert.Single(await Fetch(connection, fixture.Schema, entityName, cancellationToken));
-                    Assert.Null(await Delete(connection, fixture.Schema, delivery.DeliveryId, Guid.NewGuid(), cancellationToken));
-                    Assert.Equal(delivery.DeliveryId, await Delete(connection, fixture.Schema, delivery.DeliveryId, delivery.LockId, cancellationToken));
-                    Assert.Equal(0, await DeliveryIdCount(connection, fixture.Schema, delivery.DeliveryId, cancellationToken));
+                    await CreateQueueAsync(connection, fixture.Schema, entityName, cancellationToken);
+                    await SendAsync(connection, fixture.Schema, entityName, Guid.NewGuid(), cancellationToken);
+                    FetchedDelivery delivery = Assert.Single(await FetchAsync(connection, fixture.Schema, entityName, cancellationToken));
+                    Assert.Null(await DeleteAsync(connection, fixture.Schema, delivery.DeliveryId, Guid.NewGuid(), cancellationToken));
+                    Assert.Equal(delivery.DeliveryId, await DeleteAsync(connection, fixture.Schema, delivery.DeliveryId, delivery.LockId, cancellationToken));
+                    Assert.Equal(0, await DeliveryIdCountAsync(connection, fixture.Schema, delivery.DeliveryId, cancellationToken));
                     break;
                 }
             case "TouchQueue":
                 {
-                    long queueId = await CreateQueue(connection, fixture.Schema, entityName, cancellationToken);
-                    Assert.Equal(queueId, await TouchQueue(connection, fixture.Schema, entityName, cancellationToken));
-                    Assert.Equal((1, 0L), await DeadLetterMetric(connection, fixture.Schema, queueId, cancellationToken));
+                    long queueId = await CreateQueueAsync(connection, fixture.Schema, entityName, cancellationToken);
+                    Assert.Equal(queueId, await TouchQueueAsync(connection, fixture.Schema, entityName, cancellationToken));
+                    Assert.Equal((1, 0L), await DeadLetterMetricAsync(connection, fixture.Schema, queueId, cancellationToken));
                     break;
                 }
             case "DeadLetterMessages":
                 {
-                    await CreateQueue(connection, fixture.Schema, entityName, cancellationToken);
-                    long deliveryId = await Send(connection, fixture.Schema, entityName, Guid.NewGuid(), cancellationToken);
-                    await Exhaust(connection, fixture.Schema, deliveryId, cancellationToken);
-                    Assert.Equal(1, await DeadLetter(connection, fixture.Schema, entityName, 10, cancellationToken));
+                    await CreateQueueAsync(connection, fixture.Schema, entityName, cancellationToken);
+                    long deliveryId = await SendAsync(connection, fixture.Schema, entityName, Guid.NewGuid(), cancellationToken);
+                    await ExhaustAsync(connection, fixture.Schema, deliveryId, cancellationToken);
+                    Assert.Equal(1, await DeadLetterAsync(connection, fixture.Schema, entityName, 10, cancellationToken));
                     break;
                 }
             default:
@@ -177,7 +177,7 @@ public sealed class SqlServerMaintenanceAndTopologyTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0122", "sqlserver-native-owner")]
-    public async Task ConcurrentQueueDeclarationsCreateOneRowForEachQueueType()
+    public async Task ConcurrentQueueDeclarationsCreateOneRowForEachQueueTypeAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using SqlServerTestDatabase fixture = await SqlServerTestDatabase.CreateAsync(
@@ -188,51 +188,51 @@ public sealed class SqlServerMaintenanceAndTopologyTests
         var allReady = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         int ready = 0;
 
-        async Task<long> CreateConcurrently()
+        async Task<long> CreateConcurrentlyAsync()
         {
             await using SqlConnection connection = fixture.CreateConnection();
-            await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
+            await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
             if (Interlocked.Increment(ref ready) == 8)
                 allReady.TrySetResult();
             await release.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
-            return await CreateQueueWithTransientRetry(
+            return await CreateQueueWithTransientRetryAsync(
                 connection,
                 fixture.Schema,
                 queueName,
                 cancellationToken);
         }
 
-        Task<long>[] declarations = Enumerable.Range(0, 8).Select(_ => CreateConcurrently()).ToArray();
+        Task<long>[] declarations = Enumerable.Range(0, 8).Select(_ => CreateConcurrentlyAsync()).ToArray();
         await allReady.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
         release.SetResult();
         long[] queueIds = await Task.WhenAll(declarations).WaitAsync(fixture.OperationTimeout, cancellationToken);
 
         Assert.Single(queueIds.Distinct());
         await using SqlConnection inspection = fixture.CreateConnection();
-        await inspection.OpenWithin(fixture.OperationTimeout, cancellationToken);
-        Assert.Equal(3, await QueueRowCount(inspection, fixture.Schema, queueName, cancellationToken));
-        Assert.True(await QueueIndexIsUnique(inspection, fixture.Schema, cancellationToken));
+        await inspection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
+        Assert.Equal(3, await QueueRowCountAsync(inspection, fixture.Schema, queueName, cancellationToken));
+        Assert.True(await QueueIndexIsUniqueAsync(inspection, fixture.Schema, cancellationToken));
     }
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0123", "sqlserver-native-owner")]
-    public async Task DeletingMiddleTopicRemovesIncomingAndOutgoingSubscriptions()
+    public async Task DeletingMiddleTopicRemovesIncomingAndOutgoingSubscriptionsAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using SqlServerTestDatabase fixture = await SqlServerTestDatabase.CreateAsync(
             "topic-cascade",
             cancellationToken);
         await using SqlConnection connection = fixture.CreateConnection();
-        await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
+        await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
         string source = fixture.Name("source");
         string middle = fixture.Name("middle");
         string destination = fixture.Name("destination");
-        long sourceId = await CreateTopic(connection, fixture.Schema, source, cancellationToken);
-        long middleId = await CreateTopic(connection, fixture.Schema, middle, cancellationToken);
-        long destinationId = await CreateTopic(connection, fixture.Schema, destination, cancellationToken);
-        await CreateTopicSubscription(connection, fixture.Schema, source, middle, cancellationToken);
-        await CreateTopicSubscription(connection, fixture.Schema, middle, destination, cancellationToken);
-        Assert.Equal(2, await SubscriptionCount(connection, fixture.Schema, middleId, cancellationToken));
+        long sourceId = await CreateTopicAsync(connection, fixture.Schema, source, cancellationToken);
+        long middleId = await CreateTopicAsync(connection, fixture.Schema, middle, cancellationToken);
+        long destinationId = await CreateTopicAsync(connection, fixture.Schema, destination, cancellationToken);
+        await CreateTopicSubscriptionAsync(connection, fixture.Schema, source, middle, cancellationToken);
+        await CreateTopicSubscriptionAsync(connection, fixture.Schema, middle, destination, cancellationToken);
+        Assert.Equal(2, await SubscriptionCountAsync(connection, fixture.Schema, middleId, cancellationToken));
 
         await using (var delete = new SqlCommand($"DELETE FROM [{fixture.Schema}].[Topic] WHERE Id = @id", connection))
         {
@@ -240,11 +240,11 @@ public sealed class SqlServerMaintenanceAndTopologyTests
             Assert.Equal(1, await delete.ExecuteNonQueryAsync(cancellationToken));
         }
 
-        Assert.Equal(0, await SubscriptionCount(connection, fixture.Schema, middleId, cancellationToken));
-        Assert.Equal(2, await TopicCount(connection, fixture.Schema, sourceId, destinationId, cancellationToken));
+        Assert.Equal(0, await SubscriptionCountAsync(connection, fixture.Schema, middleId, cancellationToken));
+        Assert.Equal(2, await TopicCountAsync(connection, fixture.Schema, sourceId, destinationId, cancellationToken));
     }
 
-    private static async Task WaitForProcedureExecution(
+    private static async Task WaitForProcedureExecutionAsync(
         SqlConnection connection,
         SqlServerTestDatabase fixture,
         string procedure,
@@ -267,7 +267,7 @@ public sealed class SqlServerMaintenanceAndTopologyTests
         timeout.Token.ThrowIfCancellationRequested();
     }
 
-    private static async Task<int> OrphanCount(
+    private static async Task<int> OrphanCountAsync(
         SqlConnection connection,
         SqlServerTestDatabase fixture,
         Guid id,
@@ -280,14 +280,14 @@ public sealed class SqlServerMaintenanceAndTopologyTests
         return Convert.ToInt32(await command.ExecuteScalarAsync(cancellationToken));
     }
 
-    private static async Task<long> CreateQueue(
+    private static async Task<long> CreateQueueAsync(
         SqlConnection connection,
         string schema,
         string queueName,
         CancellationToken cancellationToken) =>
-        await ExecuteScalar(connection, schema, "CreateQueueV2", cancellationToken, ("QueueName", queueName));
+        await ExecuteScalarAsync(connection, schema, "CreateQueueV2", cancellationToken, ("QueueName", queueName));
 
-    private static async Task<long> CreateQueueWithTransientRetry(
+    private static async Task<long> CreateQueueWithTransientRetryAsync(
         SqlConnection connection,
         string schema,
         string queueName,
@@ -299,7 +299,7 @@ public sealed class SqlServerMaintenanceAndTopologyTests
         {
             try
             {
-                return await CreateQueue(connection, schema, queueName, cancellationToken);
+                return await CreateQueueAsync(connection, schema, queueName, cancellationToken);
             }
             catch (SqlException exception) when (
                 attempt < retryLimit
@@ -313,52 +313,52 @@ public sealed class SqlServerMaintenanceAndTopologyTests
         }
     }
 
-    private static async Task<long> CreateTopic(
+    private static async Task<long> CreateTopicAsync(
         SqlConnection connection,
         string schema,
         string topicName,
         CancellationToken cancellationToken) =>
-        await ExecuteScalar(connection, schema, "CreateTopic", cancellationToken, ("TopicName", topicName));
+        await ExecuteScalarAsync(connection, schema, "CreateTopic", cancellationToken, ("TopicName", topicName));
 
-    private static async Task<long> CreateQueueSubscription(
+    private static async Task<long> CreateQueueSubscriptionAsync(
         SqlConnection connection,
         string schema,
         string topicName,
         string queueName,
         CancellationToken cancellationToken) =>
-        await ExecuteScalar(connection, schema, "CreateQueueSubscription", cancellationToken,
+        await ExecuteScalarAsync(connection, schema, "CreateQueueSubscription", cancellationToken,
             ("SourceTopicName", topicName), ("DestinationQueueName", queueName));
 
-    private static async Task<long> CreateTopicSubscription(
+    private static async Task<long> CreateTopicSubscriptionAsync(
         SqlConnection connection,
         string schema,
         string source,
         string destination,
         CancellationToken cancellationToken) =>
-        await ExecuteScalar(connection, schema, "CreateTopicSubscription", cancellationToken,
+        await ExecuteScalarAsync(connection, schema, "CreateTopicSubscription", cancellationToken,
             ("SourceTopicName", source), ("DestinationTopicName", destination));
 
-    private static async Task<long> Send(
+    private static async Task<long> SendAsync(
         SqlConnection connection,
         string schema,
         string queueName,
         Guid messageId,
         CancellationToken cancellationToken) =>
-        await ExecuteScalar(connection, schema, "SendMessageV2", cancellationToken,
+        await ExecuteScalarAsync(connection, schema, "SendMessageV2", cancellationToken,
             ("entityName", queueName), ("transportMessageId", Guid.NewGuid()), ("messageId", messageId),
             ("sentTime", DateTimeOffset.UtcNow));
 
-    private static async Task<long> Publish(
+    private static async Task<long> PublishAsync(
         SqlConnection connection,
         string schema,
         string topicName,
         Guid messageId,
         CancellationToken cancellationToken) =>
-        await ExecuteScalar(connection, schema, "PublishMessageV2", cancellationToken,
+        await ExecuteScalarAsync(connection, schema, "PublishMessageV2", cancellationToken,
             ("entityName", topicName), ("transportMessageId", Guid.NewGuid()), ("messageId", messageId),
             ("sentTime", DateTimeOffset.UtcNow));
 
-    private static async Task Exhaust(
+    private static async Task ExhaustAsync(
         SqlConnection connection,
         string schema,
         long deliveryId,
@@ -371,23 +371,23 @@ public sealed class SqlServerMaintenanceAndTopologyTests
         Assert.Equal(1, await command.ExecuteNonQueryAsync(cancellationToken));
     }
 
-    private static async Task<long> DeadLetter(
+    private static async Task<long> DeadLetterAsync(
         SqlConnection connection,
         string schema,
         string queueName,
         int batchSize,
         CancellationToken cancellationToken) =>
-        await ExecuteScalar(connection, schema, "DeadLetterMessages", cancellationToken,
+        await ExecuteScalarAsync(connection, schema, "DeadLetterMessages", cancellationToken,
             ("queueName", queueName), ("messageCount", batchSize));
 
-    private static async Task<long> TouchQueue(
+    private static async Task<long> TouchQueueAsync(
         SqlConnection connection,
         string schema,
         string queueName,
         CancellationToken cancellationToken) =>
-        await ExecuteScalar(connection, schema, "TouchQueue", cancellationToken, ("queueName", queueName));
+        await ExecuteScalarAsync(connection, schema, "TouchQueue", cancellationToken, ("queueName", queueName));
 
-    private static async Task<FetchedDelivery[]> Fetch(
+    private static async Task<FetchedDelivery[]> FetchAsync(
         SqlConnection connection,
         string schema,
         string queueName,
@@ -407,7 +407,7 @@ public sealed class SqlServerMaintenanceAndTopologyTests
         return result.ToArray();
     }
 
-    private static async Task<long?> Delete(
+    private static async Task<long?> DeleteAsync(
         SqlConnection connection,
         string schema,
         long deliveryId,
@@ -420,7 +420,7 @@ public sealed class SqlServerMaintenanceAndTopologyTests
         return value is null or DBNull ? null : Convert.ToInt64(value);
     }
 
-    private static async Task<(int Rows, long Count)> DeadLetterMetric(
+    private static async Task<(int Rows, long Count)> DeadLetterMetricAsync(
         SqlConnection connection,
         string schema,
         long queueId,
@@ -435,7 +435,7 @@ public sealed class SqlServerMaintenanceAndTopologyTests
         return (reader.GetInt32(0), reader.GetInt64(1));
     }
 
-    private static async Task<int> DeliveryIdCount(
+    private static async Task<int> DeliveryIdCountAsync(
         SqlConnection connection,
         string schema,
         long deliveryId,
@@ -448,7 +448,7 @@ public sealed class SqlServerMaintenanceAndTopologyTests
         return Convert.ToInt32(await command.ExecuteScalarAsync(cancellationToken));
     }
 
-    private static async Task<int> QueueRowCount(
+    private static async Task<int> QueueRowCountAsync(
         SqlConnection connection,
         string schema,
         string queueName,
@@ -461,7 +461,7 @@ public sealed class SqlServerMaintenanceAndTopologyTests
         return Convert.ToInt32(await command.ExecuteScalarAsync(cancellationToken));
     }
 
-    private static async Task<bool> QueueIndexIsUnique(
+    private static async Task<bool> QueueIndexIsUniqueAsync(
         SqlConnection connection,
         string schema,
         CancellationToken cancellationToken)
@@ -473,7 +473,7 @@ public sealed class SqlServerMaintenanceAndTopologyTests
         return Convert.ToBoolean(await command.ExecuteScalarAsync(cancellationToken));
     }
 
-    private static async Task<int> SubscriptionCount(
+    private static async Task<int> SubscriptionCountAsync(
         SqlConnection connection,
         string schema,
         long topicId,
@@ -486,7 +486,7 @@ public sealed class SqlServerMaintenanceAndTopologyTests
         return Convert.ToInt32(await command.ExecuteScalarAsync(cancellationToken));
     }
 
-    private static async Task<int> TopicCount(
+    private static async Task<int> TopicCountAsync(
         SqlConnection connection,
         string schema,
         long first,
@@ -501,7 +501,7 @@ public sealed class SqlServerMaintenanceAndTopologyTests
         return Convert.ToInt32(await command.ExecuteScalarAsync(cancellationToken));
     }
 
-    private static async Task<long> ExecuteScalar(
+    private static async Task<long> ExecuteScalarAsync(
         SqlConnection connection,
         string schema,
         string procedure,

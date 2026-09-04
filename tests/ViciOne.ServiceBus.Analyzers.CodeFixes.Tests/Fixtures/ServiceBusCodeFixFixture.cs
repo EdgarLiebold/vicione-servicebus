@@ -11,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus;
+using ViciOne.ServiceBus; using ViciOne.ServiceBus.Advanced; using ViciOne.ServiceBus.Advanced.Initializers;
 ";
 
     internal const string SimpleMessageContracts = @"

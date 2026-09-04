@@ -11,17 +11,17 @@ public sealed class ActiveMqTopicEndpointTests
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [RequirementCoverage("OBL-R0-BRK-0465", "topic-endpoint-delivers-across-classic-protocols")]
-    public Task TopicEndpoint_DeliversAcrossOpenWireAndAmqp(string flavor) =>
-        AssertTopicDelivery(flavor, virtualTopic: false);
+    public Task TopicEndpoint_DeliversAcrossOpenWireAndAmqpAsync(string flavor) =>
+        AssertTopicDeliveryAsync(flavor, virtualTopic: false);
 
     [Theory]
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [RequirementCoverage("OBL-R0-BRK-0466", "virtual-topic-endpoint-delivers-across-classic-protocols")]
-    public Task VirtualTopicEndpoint_DeliversAcrossOpenWireAndAmqp(string flavor) =>
-        AssertTopicDelivery(flavor, virtualTopic: true);
+    public Task VirtualTopicEndpoint_DeliversAcrossOpenWireAndAmqpAsync(string flavor) =>
+        AssertTopicDeliveryAsync(flavor, virtualTopic: true);
 
-    private static async Task AssertTopicDelivery(string flavor, bool virtualTopic)
+    private static async Task AssertTopicDeliveryAsync(string flavor, bool virtualTopic)
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(
             flavor,
@@ -55,9 +55,9 @@ public sealed class ActiveMqTopicEndpointTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint topic = await bus.GetSendEndpoint(new Uri($"topic:{topicName}"))
+            ISendEndpoint topic = await bus.GetSendEndpointAsync(new Uri($"topic:{topicName}"))
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await topic.Send(new TopicMessage(flowId), cancellationToken)
+            await topic.SendAsync(new TopicMessage(flowId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             Assert.Equal(flowId, await delivered.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
@@ -82,7 +82,7 @@ public sealed class ActiveMqSharedSubscriptionTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-BRK-0462", "artemis-amqp-shared-durable-subscription-load-balances-exactly-once")]
-    public async Task ArtemisAmqpSharedDurableSubscription_LoadBalancesExactlyOnce()
+    public async Task ArtemisAmqpSharedDurableSubscription_LoadBalancesExactlyOnceAsync()
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(ActiveMqBroker.ArtemisFlavor, "shared-subscription");
         string topicName = fixture.Name("shared");
@@ -106,9 +106,8 @@ public sealed class ActiveMqSharedSubscriptionTests
             firstStarted = true;
             await secondBus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             secondStarted = true;
-            ISendEndpoint topic = await firstBus.GetSendEndpoint(new Uri($"topic:{topicName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await Task.WhenAll(expected.Select(flowId => topic.Send(new SharedMessage(flowId), cancellationToken)))
+            ISendEndpoint topic = await firstBus.GetSendEndpointAsync(new Uri($"topic:{topicName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await Task.WhenAll(expected.Select(flowId => topic.SendAsync(new SharedMessage(flowId), cancellationToken)))
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             Task finished = await Task.WhenAny(allDelivered.Task, duplicate.Task)
@@ -130,7 +129,7 @@ public sealed class ActiveMqSharedSubscriptionTests
             Assert.Equal(["a", "b"], deliveries.Values.Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal));
             Assert.Equal(
                 new ActiveMqBroker.BrokerQueueStatistics(MessageCount, MessageCount, 0, 0, 0),
-                await fixture.GetQueueStatistics(consumerName, cancellationToken));
+                await fixture.GetQueueStatisticsAsync(consumerName, cancellationToken));
         }
         finally
         {

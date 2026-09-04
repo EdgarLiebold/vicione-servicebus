@@ -147,7 +147,7 @@ public sealed class MessageFilterTests
 
         SendContext IPublishedMessage.Context => Context;
 
-        public DateTime StartTime => default;
+        public DateTimeOffset StartTime => default;
 
         public TimeSpan ElapsedTime => TimeSpan.Zero;
 
@@ -167,9 +167,9 @@ public sealed class MessageFilterTests
 
         public ConsumeContext<T> Context => null!;
 
-        ConsumeContext IReceivedMessage.Context => Context;
+        ConsumeContext IReceivedMessage.Context => Context.Advanced();
 
-        public DateTime StartTime => default;
+        public DateTimeOffset StartTime => default;
 
         public TimeSpan ElapsedTime => TimeSpan.Zero;
 
@@ -191,7 +191,7 @@ public sealed class MessageFilterTests
 
         SendContext ISentMessage.Context => Context;
 
-        public DateTime StartTime => default;
+        public DateTimeOffset StartTime => default;
 
         public TimeSpan ElapsedTime => TimeSpan.Zero;
 

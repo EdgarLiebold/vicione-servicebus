@@ -1,0 +1,505 @@
+{
+  "renameReport": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-F2-SERVICEBUS-A-PLUS-API/B/async-tasklike-renames.json",
+  "renameCount": 1684,
+  "changedReferenceCount": 83,
+  "changes": [
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 658,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceFaultIntegrationTests.UnhandledConsumerFailure_PublishesOneTerminalJobFault",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceFaultIntegrationTests.UnhandledConsumerFailure_PublishesOneTerminalJobFaultAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 668,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceFaultIntegrationTests.UnhandledConsumerFailure_PublishesOneTerminalJobFault",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceFaultIntegrationTests.UnhandledConsumerFailure_PublishesOneTerminalJobFaultAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 678,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceFaultIntegrationTests.UnhandledConsumerFailure_PublishesOneTerminalJobFault",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceFaultIntegrationTests.UnhandledConsumerFailure_PublishesOneTerminalJobFaultAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 688,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceFaultIntegrationTests.UnhandledConsumerFailure_PublishesOneTerminalJobFault",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceFaultIntegrationTests.UnhandledConsumerFailure_PublishesOneTerminalJobFaultAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 698,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceFaultIntegrationTests.ConfiguredRetry_IsScheduledThroughQuartzAndCompletesOnTheNextAttempt",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceFaultIntegrationTests.ConfiguredRetry_IsScheduledThroughQuartzAndCompletesOnTheNextAttemptAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 708,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceFaultIntegrationTests.ConfiguredRetry_IsScheduledThroughQuartzAndCompletesOnTheNextAttempt",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceFaultIntegrationTests.ConfiguredRetry_IsScheduledThroughQuartzAndCompletesOnTheNextAttemptAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 718,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceFaultIntegrationTests.ConfiguredRetry_IsScheduledThroughQuartzAndCompletesOnTheNextAttempt",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceFaultIntegrationTests.ConfiguredRetry_IsScheduledThroughQuartzAndCompletesOnTheNextAttemptAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 728,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceFaultIntegrationTests.ConfiguredRetry_IsScheduledThroughQuartzAndCompletesOnTheNextAttempt",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceFaultIntegrationTests.ConfiguredRetry_IsScheduledThroughQuartzAndCompletesOnTheNextAttemptAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 738,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceFaultIntegrationTests.ConfiguredRetry_IsScheduledThroughQuartzAndCompletesOnTheNextAttempt",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceFaultIntegrationTests.ConfiguredRetry_IsScheduledThroughQuartzAndCompletesOnTheNextAttemptAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 498,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.DefaultRequestClient_ObservesTheCompleteJobLifecycle",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.DefaultRequestClient_ObservesTheCompleteJobLifecycleAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 508,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.DefaultRequestClient_ObservesTheCompleteJobLifecycle",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.DefaultRequestClient_ObservesTheCompleteJobLifecycleAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 518,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.DefaultRequestClient_ObservesTheCompleteJobLifecycle",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.DefaultRequestClient_ObservesTheCompleteJobLifecycleAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 528,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.DefaultRequestClient_ObservesTheCompleteJobLifecycle",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.DefaultRequestClient_ObservesTheCompleteJobLifecycleAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 538,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.AddressedRequestClient_ObservesTheCompleteJobLifecycle",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.AddressedRequestClient_ObservesTheCompleteJobLifecycleAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 548,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.AddressedRequestClient_ObservesTheCompleteJobLifecycle",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.AddressedRequestClient_ObservesTheCompleteJobLifecycleAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 558,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.AddressedRequestClient_ObservesTheCompleteJobLifecycle",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.AddressedRequestClient_ObservesTheCompleteJobLifecycleAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 568,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.AddressedRequestClient_ObservesTheCompleteJobLifecycle",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.AddressedRequestClient_ObservesTheCompleteJobLifecycleAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 458,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.CancelJob_CancelsTheRunningConsumerAndPublishesTheReason",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.CancelJob_CancelsTheRunningConsumerAndPublishesTheReasonAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 468,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.CancelJob_CancelsTheRunningConsumerAndPublishesTheReason",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.CancelJob_CancelsTheRunningConsumerAndPublishesTheReasonAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 478,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.CancelJob_CancelsTheRunningConsumerAndPublishesTheReason",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.CancelJob_CancelsTheRunningConsumerAndPublishesTheReasonAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 488,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.CancelJob_CancelsTheRunningConsumerAndPublishesTheReason",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.CancelJob_CancelsTheRunningConsumerAndPublishesTheReasonAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 578,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.ConcurrentJobLimit_BoundsExecutionAndStillCompletesEveryAcceptedJob",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.ConcurrentJobLimit_BoundsExecutionAndStillCompletesEveryAcceptedJobAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 588,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.ConcurrentJobLimit_BoundsExecutionAndStillCompletesEveryAcceptedJob",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.ConcurrentJobLimit_BoundsExecutionAndStillCompletesEveryAcceptedJobAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 598,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.ConcurrentJobLimit_BoundsExecutionAndStillCompletesEveryAcceptedJob",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.ConcurrentJobLimit_BoundsExecutionAndStillCompletesEveryAcceptedJobAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 608,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.ConcurrentJobLimit_BoundsExecutionAndStillCompletesEveryAcceptedJob",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.ConcurrentJobLimit_BoundsExecutionAndStillCompletesEveryAcceptedJobAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 618,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.RunningJob_AnswersTheStatusCheckScheduledThroughQuartz",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.RunningJob_AnswersTheStatusCheckScheduledThroughQuartzAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 628,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.RunningJob_AnswersTheStatusCheckScheduledThroughQuartz",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.RunningJob_AnswersTheStatusCheckScheduledThroughQuartzAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 638,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.RunningJob_AnswersTheStatusCheckScheduledThroughQuartz",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.RunningJob_AnswersTheStatusCheckScheduledThroughQuartzAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 648,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.RunningJob_AnswersTheStatusCheckScheduledThroughQuartz",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceLifecycleIntegrationTests.RunningJob_AnswersTheStatusCheckScheduledThroughQuartzAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 748,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SilentAttempt_UsesQuartzStatusChecksAndFaultsWithoutASuspectRetry",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SilentAttempt_UsesQuartzStatusChecksAndFaultsWithoutASuspectRetryAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 758,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SilentAttempt_UsesQuartzStatusChecksAndFaultsWithoutASuspectRetry",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SilentAttempt_UsesQuartzStatusChecksAndFaultsWithoutASuspectRetryAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 768,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SilentAttempt_UsesQuartzStatusChecksAndFaultsWithoutASuspectRetry",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SilentAttempt_UsesQuartzStatusChecksAndFaultsWithoutASuspectRetryAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 778,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SilentAttempt_UsesQuartzStatusChecksAndFaultsWithoutASuspectRetry",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SilentAttempt_UsesQuartzStatusChecksAndFaultsWithoutASuspectRetryAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 788,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SilentAttempt_UsesQuartzStatusChecksAndFaultsWithoutASuspectRetry",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SilentAttempt_UsesQuartzStatusChecksAndFaultsWithoutASuspectRetryAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 798,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SilentAttempt_UsesQuartzStatusChecksAndFaultsWithoutASuspectRetry",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SilentAttempt_UsesQuartzStatusChecksAndFaultsWithoutASuspectRetryAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 808,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttempt",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttemptAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 818,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttempt",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttemptAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 828,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttempt",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttemptAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 838,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttempt",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttemptAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 848,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttempt",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttemptAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 858,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttempt",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttemptAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 868,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttempt",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.JobService.QuartzJobServiceSuspectAttemptIntegrationTests.SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttemptAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 348,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzChainedSchedulingIntegrationTests.ScheduledHandler_CanScheduleAnotherMessageWithoutLosingItsTraceOrInterfaceContract",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzChainedSchedulingIntegrationTests.ScheduledHandler_CanScheduleAnotherMessageWithoutLosingItsTraceOrInterfaceContractAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 358,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzChainedSchedulingIntegrationTests.ScheduledHandler_CanScheduleAnotherMessageWithoutLosingItsTraceOrInterfaceContract",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzChainedSchedulingIntegrationTests.ScheduledHandler_CanScheduleAnotherMessageWithoutLosingItsTraceOrInterfaceContractAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 428,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzChainedSchedulingIntegrationTests.ScheduledHandler_CanScheduleAnotherMessageWithoutLosingItsTraceOrInterfaceContract",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzChainedSchedulingIntegrationTests.ScheduledHandler_CanScheduleAnotherMessageWithoutLosingItsTraceOrInterfaceContractAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 368,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzChainedSchedulingIntegrationTests.ChainedSchedule_PreservesTheConfiguredTimeToLiveWithinSchedulingPrecision",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzChainedSchedulingIntegrationTests.ChainedSchedule_PreservesTheConfiguredTimeToLiveWithinSchedulingPrecisionAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 28,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzCourierRedeliveryIntegrationTests.PermanentActivityFailure_FaultsTheSlipAndCompensatesTheCompletedActivity",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzCourierRedeliveryIntegrationTests.PermanentActivityFailure_FaultsTheSlipAndCompensatesTheCompletedActivityAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 48,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzCourierRedeliveryIntegrationTests.PermanentActivityFailure_FaultsTheSlipAndCompensatesTheCompletedActivity",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzCourierRedeliveryIntegrationTests.PermanentActivityFailure_FaultsTheSlipAndCompensatesTheCompletedActivityAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 38,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzCourierRedeliveryIntegrationTests.TransientActivityFailure_RetriesAndCompletesTheSlip",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzCourierRedeliveryIntegrationTests.TransientActivityFailure_RetriesAndCompletesTheSlipAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 58,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzCourierRedeliveryIntegrationTests.TransientActivityFailure_RetriesAndCompletesTheSlip",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzCourierRedeliveryIntegrationTests.TransientActivityFailure_RetriesAndCompletesTheSlipAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 108,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzExplicitRedeliveryIntegrationTests.Redeliver_SchedulesEachRequestedDeliveryThroughQuartz",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzExplicitRedeliveryIntegrationTests.Redeliver_SchedulesEachRequestedDeliveryThroughQuartzAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 118,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzExplicitRedeliveryIntegrationTests.Redeliver_CallbackRunsBeforeSchedulingAndMutatesTheRedeliveredMessage",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzExplicitRedeliveryIntegrationTests.Redeliver_CallbackRunsBeforeSchedulingAndMutatesTheRedeliveredMessageAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 148,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzMissingSagaRedeliveryIntegrationTests.MissingSaga_IsScheduledThroughQuartzAndDeliveredAfterTheInstanceExists",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzMissingSagaRedeliveryIntegrationTests.MissingSaga_IsScheduledThroughQuartzAndDeliveredAfterTheInstanceExistsAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 308,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzNestedRequestIntegrationTests.NestedSagaRequest_ResponseCompletesTheOriginalRequestAndClearsBothSagas",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzNestedRequestIntegrationTests.NestedSagaRequest_ResponseCompletesTheOriginalRequestAndClearsBothSagasAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 298,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzNestedRequestIntegrationTests.NestedSagaRequest_FaultPropagatesToTheOriginalRequesterAndClearsBothSagas",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzNestedRequestIntegrationTests.NestedSagaRequest_FaultPropagatesToTheOriginalRequesterAndClearsBothSagasAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 158,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzOutboxSchedulingIntegrationTests.FaultingConsumer_CancelsTheQuartzTriggerOnlyWhenTheOutboxOwnsTheSchedule",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzOutboxSchedulingIntegrationTests.FaultingConsumer_CancelsTheQuartzTriggerOnlyWhenTheOutboxOwnsTheScheduleAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 168,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzOutboxSchedulingIntegrationTests.FaultingConsumer_CancelsTheQuartzTriggerOnlyWhenTheOutboxOwnsTheSchedule",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzOutboxSchedulingIntegrationTests.FaultingConsumer_CancelsTheQuartzTriggerOnlyWhenTheOutboxOwnsTheScheduleAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 268,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzRecurringDeliveryIntegrationTests.RecurringSchedule_DeliversThroughThePublicApiWithExactScheduleContext",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzRecurringDeliveryIntegrationTests.RecurringSchedule_DeliversThroughThePublicApiWithExactScheduleContextAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 278,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzRecurringDeliveryIntegrationTests.RecurringSchedule_DeliversThroughThePublicApiWithExactScheduleContext",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzRecurringDeliveryIntegrationTests.RecurringSchedule_DeliversThroughThePublicApiWithExactScheduleContextAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 288,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzRecurringDeliveryIntegrationTests.RecurringSchedule_DeliversThroughThePublicApiWithExactScheduleContext",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzRecurringDeliveryIntegrationTests.RecurringSchedule_DeliversThroughThePublicApiWithExactScheduleContextAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 328,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzSagaRequestTimeoutIntegrationTests.SagaRequest_ResponseCancelsItsQuartzTimeoutAndClearsTheRequestIdentity",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzSagaRequestTimeoutIntegrationTests.SagaRequest_ResponseCancelsItsQuartzTimeoutAndClearsTheRequestIdentityAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 318,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzSagaRequestTimeoutIntegrationTests.SagaRequest_QuartzTimeoutIsDeliveredToThePendingSaga",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzSagaRequestTimeoutIntegrationTests.SagaRequest_QuartzTimeoutIsDeliveredToThePendingSagaAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 338,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzSagaSchedulingIntegrationTests.Rescheduling_ReplacesTheOldTriggerAndFinalizationCancelsTheReplacement",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzSagaSchedulingIntegrationTests.Rescheduling_ReplacesTheOldTriggerAndFinalizationCancelsTheReplacementAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 378,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzSagaSchedulingIntegrationTests.Rescheduling_ReplacesTheOldTriggerAndFinalizationCancelsTheReplacement",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzSagaSchedulingIntegrationTests.Rescheduling_ReplacesTheOldTriggerAndFinalizationCancelsTheReplacementAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 398,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzSagaSchedulingIntegrationTests.Rescheduling_ReplacesTheOldTriggerAndFinalizationCancelsTheReplacement",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzSagaSchedulingIntegrationTests.Rescheduling_ReplacesTheOldTriggerAndFinalizationCancelsTheReplacementAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 388,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzSagaSchedulingIntegrationTests.ScheduledMessage_CorrelatesToItsSagaAndFinalizesIt",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzSagaSchedulingIntegrationTests.ScheduledMessage_CorrelatesToItsSagaAndFinalizesItAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 448,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzSagaSchedulingIntegrationTests.Saga_CanOwnAndReceiveTwoIndependentSchedules",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzSagaSchedulingIntegrationTests.Saga_CanOwnAndReceiveTwoIndependentSchedulesAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 418,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzSagaSchedulingIntegrationTests.ConcurrentScheduledSagas_FinalizeAndLeaveNoStoredInstances",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzSagaSchedulingIntegrationTests.ConcurrentScheduledSagas_FinalizeAndLeaveNoStoredInstancesAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 178,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzScheduleTimingIntegrationTests.DueSchedule_IsDeliveredWithoutManualSchedulerIntervention",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzScheduleTimingIntegrationTests.DueSchedule_IsDeliveredWithoutManualSchedulerInterventionAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 188,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzScheduleTimingIntegrationTests.DueSchedule_IsDeliveredWithoutManualSchedulerIntervention",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzScheduleTimingIntegrationTests.DueSchedule_IsDeliveredWithoutManualSchedulerInterventionAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 238,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzScheduleTimingIntegrationTests.DueSchedule_IsDeliveredWithoutManualSchedulerIntervention",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzScheduleTimingIntegrationTests.DueSchedule_IsDeliveredWithoutManualSchedulerInterventionAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 198,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzScheduleTimingIntegrationTests.ScheduledDelivery_RestoresTheCompleteMessageContext",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzScheduleTimingIntegrationTests.ScheduledDelivery_RestoresTheCompleteMessageContextAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 218,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzScheduleTimingIntegrationTests.CancelingAFutureSchedule_RemovesTheTriggerBeforeItCanDeliver",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzScheduleTimingIntegrationTests.CancelingAFutureSchedule_RemovesTheTriggerBeforeItCanDeliverAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 438,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzScheduleTimingIntegrationTests.CancelingAFutureSchedule_RemovesTheTriggerBeforeItCanDeliver",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzScheduleTimingIntegrationTests.CancelingAFutureSchedule_RemovesTheTriggerBeforeItCanDeliverAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 408,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzScheduledRedeliveryIntegrationTests.ScheduledRedelivery_UsesEveryConfiguredIntervalInOrder",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzScheduledRedeliveryIntegrationTests.ScheduledRedelivery_UsesEveryConfiguredIntervalInOrderAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 68,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzScheduledRedeliveryScopeTests.ConfiguredScope_RedeliversTwiceThroughQuartzAndPreservesTheCounter",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzScheduledRedeliveryScopeTests.ConfiguredScope_RedeliversTwiceThroughQuartzAndPreservesTheCounterAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 78,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzScheduledRedeliveryScopeTests.ConfiguredScope_RedeliversTwiceThroughQuartzAndPreservesTheCounter",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzScheduledRedeliveryScopeTests.ConfiguredScope_RedeliversTwiceThroughQuartzAndPreservesTheCounterAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 88,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzScheduledRedeliveryScopeTests.ConfiguredScope_RedeliversTwiceThroughQuartzAndPreservesTheCounter",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzScheduledRedeliveryScopeTests.ConfiguredScope_RedeliversTwiceThroughQuartzAndPreservesTheCounterAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 98,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzScheduledRedeliveryScopeTests.ConfiguredScope_RedeliversTwiceThroughQuartzAndPreservesTheCounter",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.QuartzScheduledRedeliveryScopeTests.ConfiguredScope_RedeliversTwiceThroughQuartzAndPreservesTheCounterAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 228,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.SchedulerCommandIntegrationTests.ReusingTheToken_ReplacesRatherThanDuplicatesTheTrigger",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.SchedulerCommandIntegrationTests.ReusingTheToken_ReplacesRatherThanDuplicatesTheTriggerAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 248,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.SchedulerCommandIntegrationTests.RecurringControlCommands_OperateOnOneCanonicalTrigger",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.SchedulerCommandIntegrationTests.RecurringControlCommands_OperateOnOneCanonicalTriggerAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 258,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.SchedulerCommandIntegrationTests.RecurringControlCommands_OperateOnOneCanonicalTrigger",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.SchedulerCommandIntegrationTests.RecurringControlCommands_OperateOnOneCanonicalTriggerAsync"
+    },
+    {
+      "File": "tests/Scheduling/ViciOne.ServiceBus.QuartzIntegration.Tests/Requirements/QuartzInheritedBehaviorDisposition.json",
+      "Line": 208,
+      "OldIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.SchedulerCommandIntegrationTests.TriggeredJob_DeliversTheSerializedPayloadAndUserHeaders",
+      "NewIdentity": "ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration.SchedulerCommandIntegrationTests.TriggeredJob_DeliversTheSerializedPayloadAndUserHeadersAsync"
+    }
+  ]
+}

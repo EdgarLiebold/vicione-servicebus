@@ -7,14 +7,14 @@ public class VersionTypeConverter :
     ITypeConverter<Version, string>,
     ITypeConverter<Version, object>
 {
-    public bool TryConvert(Version input, out string result)
+    public bool TryConvert(Version? input, out string? result)
     {
         result = input?.ToString();
 
         return true;
     }
 
-    public bool TryConvert(object input, out Version result)
+    public bool TryConvert(object? input, out Version? result)
     {
         switch (input)
         {
@@ -40,7 +40,7 @@ public class VersionTypeConverter :
         }
     }
 
-    public bool TryConvert(string input, out Version result)
+    public bool TryConvert(string? input, out Version? result)
     {
         if (string.IsNullOrWhiteSpace(input))
         {

@@ -26,7 +26,7 @@ public static class ServiceBusConfigurationExtensions
     /// <param name="configurator">The registration configurator (configured via AddViciOneServiceBus)</param>
     /// <param name="configure">The configuration callback for the bus factory</param>
     public static void UsingAzureServiceBus(this IBusRegistrationConfigurator configurator,
-        Action<IBusRegistrationContext, IServiceBusBusFactoryConfigurator> configure = null)
+        Action<IBusRegistrationContext, IServiceBusBusFactoryConfigurator>? configure = null)
     {
         configurator.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, ServiceBusSendFailureClassifier>());
         configurator.SetBusFactory(new ServiceBusRegistrationBusFactory(configure));
@@ -45,7 +45,7 @@ public static class ServiceBusConfigurationExtensions
     /// <param name="configurator">The registration configurator (configured via AddViciOneServiceBus)</param>
     /// <param name="configure">The configuration callback for the bus factory</param>
     public static void UsingAzureServiceBus<TBus>(this IBusRegistrationConfigurator<TBus> configurator,
-        Action<IBusRegistrationContext, IServiceBusBusFactoryConfigurator> configure = null)
+        Action<IBusRegistrationContext, IServiceBusBusFactoryConfigurator>? configure = null)
         where TBus : class, IBus
     {
         configurator.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, ServiceBusSendFailureClassifier>());

@@ -6,7 +6,7 @@ public interface IInactivityObserver
 {
     void Connected(IInactivityObservationSource source);
 
-    Task NoActivity();
+    Task NoActivityAsync(CancellationToken cancellationToken = default);
 
     void ForceInactive();
 }

@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace ViciOne.ServiceBus;
 
 /// <summary>
@@ -16,5 +18,5 @@ public interface ISagaQueryFactory<TSaga, in TMessage> :
     /// <param name="context">The message context</param>
     /// <param name="query"></param>
     /// <returns></returns>
-    bool TryCreateQuery(ConsumeContext<TMessage> context, out ISagaQuery<TSaga> query);
+    bool TryCreateQuery(ConsumeContext<TMessage> context, [NotNullWhen(true)] out ISagaQuery<TSaga>? query);
 }

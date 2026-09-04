@@ -13,6 +13,6 @@ public class EventHubMessageSendContext<T> :
     {
     }
 
-    public string PartitionId { get; set; }
-    public string PartitionKey { get; set; }
+    public string? PartitionId { get; set; }
+    public string? PartitionKey { get; set; }
 }

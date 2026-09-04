@@ -12,9 +12,9 @@ public interface IConnectionContextSupervisor :
 
     ISendEndpointContextSupervisor CreateSendEndpointContextSupervisor(SendSettings settings);
 
-    Task<ISendTransport> CreateSendTransport(ReceiveEndpointContext context, Uri address);
+    Task<ISendTransport> CreateSendTransportAsync(ReceiveEndpointContext context, Uri address, CancellationToken cancellationToken = default);
 
-    Task<ISendTransport> CreatePublishTransport<T>(ReceiveEndpointContext context, Uri publishAddress)
+    Task<ISendTransport> CreatePublishTransportAsync<T>(ReceiveEndpointContext context, Uri publishAddress, CancellationToken cancellationToken = default)
         where T : class;
 
     Uri NormalizeAddress(Uri address);

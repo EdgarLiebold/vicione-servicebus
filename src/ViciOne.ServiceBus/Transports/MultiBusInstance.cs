@@ -37,13 +37,13 @@ public class MultiBusInstance<TBus> :
     }
 
     public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
-        Action<IBusRegistrationContext, IReceiveEndpointConfigurator> configure = null)
+        Action<IBusRegistrationContext, IReceiveEndpointConfigurator>? configure = null)
     {
         return BusInstance.ConnectReceiveEndpoint(definition, endpointNameFormatter, configure);
     }
 
     public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName,
-        Action<IBusRegistrationContext, IReceiveEndpointConfigurator> configure = null)
+        Action<IBusRegistrationContext, IReceiveEndpointConfigurator>? configure = null)
     {
         return BusInstance.ConnectReceiveEndpoint(queueName, configure);
     }

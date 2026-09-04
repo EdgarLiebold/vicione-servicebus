@@ -50,10 +50,10 @@ public sealed class EntityFrameworkDurableSendStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-DURABLE-STORE", "real-sqlite-lifecycle-and-generation-fencing")]
-    public async Task Store_PersistsTheCompleteLifecycleAndFencesAReusedIdentityGeneration()
+    public async Task Store_PersistsTheCompleteLifecycleAndFencesAReusedIdentityGenerationAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        await using DurableDatabase database = await DurableDatabase.Create(cancellationToken);
+        await using DurableDatabase database = await DurableDatabase.CreateAsync(cancellationToken);
         var validator = new RecordingValidator();
         IDurableSendStore<ITestBus> store = database.CreateStore<ITestBus>("lifecycle", validator);
         SerializedDurableSend message = Message(1, body: [1, 2, 3], metadata: [4, 5]);
@@ -166,10 +166,10 @@ public sealed class EntityFrameworkDurableSendStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-DURABLE-CAPACITY", "concurrent-conditional-ledger-admission")]
-    public async Task Store_ConcurrentAdmissionsCannotOvershootTheHardLedger()
+    public async Task Store_ConcurrentAdmissionsCannotOvershootTheHardLedgerAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        await using DurableDatabase database = await DurableDatabase.Create(cancellationToken);
+        await using DurableDatabase database = await DurableDatabase.CreateAsync(cancellationToken);
         IDurableSendStore<ITestBus> store = database.CreateStore<ITestBus>("concurrent", new RecordingValidator());
         var limits = new DurableSendStoreLimits(5, 20);
 
@@ -216,10 +216,10 @@ public sealed class EntityFrameworkDurableSendStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-DURABLE-RECOVERY", "missing-ledger-rebuilt-by-server-aggregate")]
-    public async Task Store_ReconstructsAMissingCapacityLedgerFromRetainedRows()
+    public async Task Store_ReconstructsAMissingCapacityLedgerFromRetainedRowsAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        await using DurableDatabase database = await DurableDatabase.Create(cancellationToken);
+        await using DurableDatabase database = await DurableDatabase.CreateAsync(cancellationToken);
         await using (DurableDbContext seed = database.Factory.CreateDbContext())
         {
             seed.AddRange(
@@ -240,11 +240,11 @@ public sealed class EntityFrameworkDurableSendStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-DURABLE-PAGINATION", "restart-stable-complete-seek-traversal-with-concurrent-changes")]
-    public async Task QuarantinePagination_ResumesAfterRestartAndTraversesEveryEqualTimestampExactlyOnce()
+    public async Task QuarantinePagination_ResumesAfterRestartAndTraversesEveryEqualTimestampExactlyOnceAsync()
     {
         const int retainedCount = 1005;
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        await using DurableDatabase database = await DurableDatabase.Create(cancellationToken);
+        await using DurableDatabase database = await DurableDatabase.CreateAsync(cancellationToken);
         DurableSendId[] expected = Enumerable.Range(1, retainedCount)
             .Select(index => new DurableSendId(PageGuid(index)))
             .ToArray();
@@ -297,7 +297,7 @@ public sealed class EntityFrameworkDurableSendStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-DURABLE-PREFLIGHT", "custom-validator-runs-before-store-query")]
-    public async Task Store_ExecutesTheProviderDurabilityPreflightBeforeInitializationQueries()
+    public async Task Store_ExecutesTheProviderDurabilityPreflightBeforeInitializationQueriesAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var expected = new ExpectedPreflightException();
@@ -471,7 +471,7 @@ public sealed class EntityFrameworkDurableSendStoreTests
 
         public DurableDbContextFactory Factory { get; }
 
-        public static async Task<DurableDatabase> Create(CancellationToken cancellationToken)
+        public static async Task<DurableDatabase> CreateAsync(CancellationToken cancellationToken)
         {
             string path = Path.Combine(Path.GetTempPath(), $"vicione-durable-store-{Guid.NewGuid():N}.db");
             var options = new DbContextOptionsBuilder<DurableDbContext>()

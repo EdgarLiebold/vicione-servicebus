@@ -27,7 +27,7 @@ public interface IBusObserver
     /// </summary>
     /// <param name="bus"></param>
     /// <returns></returns>
-    Task PreStart(IBus bus);
+    Task PreStartAsync(IBus bus);
 
     /// <summary>
     /// Called once the bus has started and is running
@@ -37,7 +37,7 @@ public interface IBusObserver
     /// A task which is completed once the bus is ready and all receive endpoints are ready.
     /// </param>
     /// <returns></returns>
-    Task PostStart(IBus bus, Task<BusReady> busReady);
+    Task PostStartAsync(IBus bus, Task<BusReady> busReady);
 
     /// <summary>
     /// Called when the bus fails to start
@@ -45,21 +45,21 @@ public interface IBusObserver
     /// <param name="bus"></param>
     /// <param name="exception"></param>
     /// <returns></returns>
-    Task StartFaulted(IBus bus, Exception exception);
+    Task StartFaultedAsync(IBus bus, Exception exception);
 
     /// <summary>
     /// Called when the bus is being stopped, before the actual Stop commences.
     /// </summary>
     /// <param name="bus"></param>
     /// <returns></returns>
-    Task PreStop(IBus bus);
+    Task PreStopAsync(IBus bus);
 
     /// <summary>
     /// Called when the bus has been stopped.
     /// </summary>
     /// <param name="bus"></param>
     /// <returns></returns>
-    Task PostStop(IBus bus);
+    Task PostStopAsync(IBus bus);
 
     /// <summary>
     /// Called when the bus failed to Stop.
@@ -67,5 +67,5 @@ public interface IBusObserver
     /// <param name="bus"></param>
     /// <param name="exception"></param>
     /// <returns></returns>
-    Task StopFaulted(IBus bus, Exception exception);
+    Task StopFaultedAsync(IBus bus, Exception exception);
 }

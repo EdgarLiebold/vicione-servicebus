@@ -24,7 +24,7 @@ public class RateLimitFilter<TContext> :
     int _count;
     int _rateLimit;
 
-    public RateLimitFilter(int rateLimit, TimeSpan interval, TimeProvider timeProvider = null)
+    public RateLimitFilter(int rateLimit, TimeSpan interval, TimeProvider? timeProvider = null)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(rateLimit, 1);
         if (interval <= TimeSpan.Zero)
@@ -53,14 +53,14 @@ public class RateLimitFilter<TContext> :
     }
 
     [DebuggerNonUserCode]
-    public Task Send(TContext context, IPipe<TContext> next)
+    public Task SendAsync(TContext context, IPipe<TContext> next)
     {
         var waitAsync = _limit.WaitAsync(context.CancellationToken);
         if (waitAsync.Status == TaskStatus.RanToCompletion)
         {
             Interlocked.Increment(ref _count);
 
-            return next.Send(context);
+            return next.SendAsync(context);
         }
 
         async Task SendAsync()
@@ -69,13 +69,13 @@ public class RateLimitFilter<TContext> :
 
             Interlocked.Increment(ref _count);
 
-            await next.Send(context).ConfigureAwait(false);
+            await next.SendAsync(context).ConfigureAwait(false);
         }
 
         return SendAsync();
     }
 
-    public async Task Send(CommandContext<SetRateLimit> context)
+    public async Task SendAsync(CommandContext<SetRateLimit> context)
     {
         ArgumentNullException.ThrowIfNull(context);
 
@@ -90,7 +90,7 @@ public class RateLimitFilter<TContext> :
             if (rateLimit > previousLimit)
                 _limit.Release(rateLimit - previousLimit);
             else if (rateLimit < previousLimit)
-                await TakePermits(previousLimit - rateLimit, context.CancellationToken).ConfigureAwait(false);
+                await TakePermitsAsync(previousLimit - rateLimit, context.CancellationToken).ConfigureAwait(false);
 
             Volatile.Write(ref _rateLimit, rateLimit);
         }
@@ -100,14 +100,14 @@ public class RateLimitFilter<TContext> :
         }
     }
 
-    void Reset(object state)
+    void Reset(object? state)
     {
         var processed = Interlocked.Exchange(ref _count, 0);
         if (processed > 0)
             _limit.Release(processed);
     }
 
-    async Task TakePermits(int count, CancellationToken cancellationToken)
+    async Task TakePermitsAsync(int count, CancellationToken cancellationToken)
     {
         var acquired = 0;
         try

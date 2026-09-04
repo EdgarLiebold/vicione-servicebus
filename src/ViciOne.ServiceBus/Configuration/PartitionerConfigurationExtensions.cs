@@ -139,7 +139,7 @@ public static class PartitionerConfigurationExtensions
     /// <param name="keyProvider">Provides the key from the message</param>
     /// <param name="encoding"></param>
     public static void UsePartitioner<TConsumer>(this IPipeConfigurator<ConsumerConsumeContext<TConsumer>> configurator, int partitionCount,
-        Func<ConsumerConsumeContext<TConsumer>, string> keyProvider, Encoding encoding = null)
+        Func<ConsumerConsumeContext<TConsumer>, string> keyProvider, Encoding? encoding = null)
         where TConsumer : class
     {
         if (configurator == null)
@@ -201,7 +201,7 @@ public static class PartitionerConfigurationExtensions
     /// <param name="keyProvider">Provides the key from the message</param>
     /// <param name="encoding"></param>
     public static void UsePartitioner<TSaga>(this IPipeConfigurator<SagaConsumeContext<TSaga>> configurator, int partitionCount,
-        Func<SagaConsumeContext<TSaga>, string> keyProvider, Encoding encoding = null)
+        Func<SagaConsumeContext<TSaga>, string> keyProvider, Encoding? encoding = null)
         where TSaga : class, ISaga
     {
         if (configurator == null)
@@ -298,7 +298,7 @@ public static class PartitionerConfigurationExtensions
     /// <param name="keyProvider">Provides the key from the message</param>
     /// <param name="encoding">The text encoding to use to convert the string to byte[] (defaults to UTF8)</param>
     public static void UsePartitioner<TActivity, TArguments>(this IPipeConfigurator<ExecuteActivityContext<TActivity, TArguments>> configurator,
-        int partitionCount, Func<ExecuteActivityContext<TActivity, TArguments>, string> keyProvider, Encoding encoding = null)
+        int partitionCount, Func<ExecuteActivityContext<TActivity, TArguments>, string> keyProvider, Encoding? encoding = null)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
@@ -329,7 +329,7 @@ public static class PartitionerConfigurationExtensions
     /// <param name="keyProvider">Provides the key from the message</param>
     /// <param name="encoding">The text encoding to use to convert the string to byte[] (defaults to UTF8)</param>
     public static void UsePartitioner<TActivity, TArguments>(this IPipeConfigurator<ExecuteActivityContext<TActivity, TArguments>> configurator,
-        IPartitioner partitioner, Func<ExecuteActivityContext<TActivity, TArguments>, string> keyProvider, Encoding encoding = null)
+        IPartitioner partitioner, Func<ExecuteActivityContext<TActivity, TArguments>, string> keyProvider, Encoding? encoding = null)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
@@ -420,7 +420,7 @@ public static class PartitionerConfigurationExtensions
     /// <param name="keyProvider">Provides the key from the message</param>
     /// <param name="encoding">The text encoding to use to convert the string to byte[] (defaults to UTF8)</param>
     public static void UsePartitioner<TActivity, TLog>(this IPipeConfigurator<CompensateActivityContext<TActivity, TLog>> configurator,
-        int partitionCount, Func<CompensateActivityContext<TActivity, TLog>, string> keyProvider, Encoding encoding = null)
+        int partitionCount, Func<CompensateActivityContext<TActivity, TLog>, string> keyProvider, Encoding? encoding = null)
         where TActivity : class, ICompensateActivity<TLog>
         where TLog : class
     {
@@ -451,7 +451,7 @@ public static class PartitionerConfigurationExtensions
     /// <param name="keyProvider">Provides the key from the message</param>
     /// <param name="encoding">The text encoding to use to convert the string to byte[] (defaults to UTF8)</param>
     public static void UsePartitioner<TActivity, TLog>(this IPipeConfigurator<CompensateActivityContext<TActivity, TLog>> configurator,
-        IPartitioner partitioner, Func<CompensateActivityContext<TActivity, TLog>, string> keyProvider, Encoding encoding = null)
+        IPartitioner partitioner, Func<CompensateActivityContext<TActivity, TLog>, string> keyProvider, Encoding? encoding = null)
         where TActivity : class, ICompensateActivity<TLog>
         where TLog : class
     {
@@ -547,7 +547,7 @@ public static class PartitionerConfigurationExtensions
     /// <param name="partitionCount">The number of partitions to use when distributing message delivery</param>
     /// <param name="keyProvider">Provides the key from the message</param>
     /// <param name="encoding"></param>
-    public static void UsePartitioner<T>(this IPipeConfigurator<T> configurator, int partitionCount, Func<T, string> keyProvider, Encoding encoding = null)
+    public static void UsePartitioner<T>(this IPipeConfigurator<T> configurator, int partitionCount, Func<T, string> keyProvider, Encoding? encoding = null)
         where T : class, PipeContext
     {
         if (configurator == null)
@@ -576,7 +576,7 @@ public static class PartitionerConfigurationExtensions
     /// <param name="keyProvider">Provides the key from the message</param>
     /// <param name="encoding"></param>
     public static void UsePartitioner<T>(this IPipeConfigurator<T> configurator, IPartitioner partitioner, Func<T, string> keyProvider,
-        Encoding encoding = null)
+        Encoding? encoding = null)
         where T : class, PipeContext
     {
         if (configurator == null)

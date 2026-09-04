@@ -26,24 +26,24 @@ public class SharedSendEndpointContext :
 
     public string EntityPath => _context.EntityPath;
 
-    public async Task Send(ServiceBusMessage message, CancellationToken cancellationToken)
+    public async Task SendAsync(ServiceBusMessage message, CancellationToken cancellationToken)
     {
         using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
 
-        await _context.Send(message, tokenSource.Token).ConfigureAwait(false);
+        await _context.SendAsync(message, tokenSource.Token).ConfigureAwait(false);
     }
 
-    public async Task<long> ScheduleSend(ServiceBusMessage message, DateTime scheduleEnqueueTimeUtc, CancellationToken cancellationToken)
+    public async Task<long> ScheduleSendAsync(ServiceBusMessage message, DateTimeOffset scheduleEnqueueTimeUtc, CancellationToken cancellationToken)
     {
         using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
 
-        return await _context.ScheduleSend(message, scheduleEnqueueTimeUtc, tokenSource.Token).ConfigureAwait(false);
+        return await _context.ScheduleSendAsync(message, scheduleEnqueueTimeUtc, tokenSource.Token).ConfigureAwait(false);
     }
 
-    public async Task CancelScheduledSend(long sequenceNumber, CancellationToken cancellationToken)
+    public async Task CancelScheduledSendAsync(long sequenceNumber, CancellationToken cancellationToken)
     {
         using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
 
-        await _context.CancelScheduledSend(sequenceNumber, tokenSource.Token).ConfigureAwait(false);
+        await _context.CancelScheduledSendAsync(sequenceNumber, tokenSource.Token).ConfigureAwait(false);
     }
 }

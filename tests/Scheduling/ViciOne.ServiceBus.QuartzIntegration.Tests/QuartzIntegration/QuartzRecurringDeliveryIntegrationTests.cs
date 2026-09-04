@@ -15,13 +15,13 @@ public sealed class QuartzRecurringDeliveryIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-RECURRING-DELIVERY", "public-api-and-time-domain-headers")]
-    public async Task RecurringSchedule_DeliversThroughThePublicApiWithExactScheduleContext()
+    public async Task RecurringSchedule_DeliversThroughThePublicApiWithExactScheduleContextAsync()
     {
         TimeSpan timeout = OperationTimeout();
         var deliveries = new ConcurrentQueue<ConsumeContext<RecurringPayload>>();
         var secondDelivery = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var deliveryCount = 0;
-        await using QuartzTestBus fixture = await QuartzTestBus.Start(
+        await using QuartzTestBus fixture = await QuartzTestBus.StartAsync(
             timeout,
             configure: configurator => configurator.ReceiveEndpoint("quartz-recurring-destination", endpoint =>
                 endpoint.Handler<RecurringPayload>(context =>
@@ -50,7 +50,7 @@ public sealed class QuartzRecurringDeliveryIntegrationTests
         using ConnectHandle scheduledObserver = fixture.Bus.ConnectConsumeObserver(scheduledCommand);
         using ConnectHandle canceledObserver = fixture.Bus.ConnectConsumeObserver(canceledCommand);
 
-        await recurringScheduler.ScheduleRecurringSend(
+        await recurringScheduler.ScheduleRecurringSendAsync(
             Destination,
             schedule,
             new RecurringPayload("recurring"),
@@ -77,7 +77,7 @@ public sealed class QuartzRecurringDeliveryIntegrationTests
         Assert.Equal(TimeSpan.FromSeconds(1), scheduled - previous);
         Assert.Equal(TimeSpan.FromSeconds(1), next - scheduled);
 
-        await recurringScheduler.CancelScheduledRecurringSend(scheduleId, scheduleGroup);
+        await recurringScheduler.CancelScheduledRecurringSendAsync(scheduleId, scheduleGroup, TestContext.Current.CancellationToken);
         await canceledCommand.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
         Assert.Null(await fixture.Scheduler.GetTrigger(
             QuartzTriggerKey.ForRecurring(scheduleId, scheduleGroup),

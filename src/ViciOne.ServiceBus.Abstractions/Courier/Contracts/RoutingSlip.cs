@@ -18,7 +18,7 @@ public interface RoutingSlip
     /// <summary>
     /// The time when the routing slip was created
     /// </summary>
-    DateTime CreateTimestamp { get; }
+    DateTimeOffset CreateTimestamp { get; }
 
     /// <summary>
     /// The list of activities that are remaining

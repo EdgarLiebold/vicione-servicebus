@@ -13,12 +13,12 @@ public interface RequestTimeoutExpired<out TRequest>
     /// <summary>
     /// When the request expired
     /// </summary>
-    DateTime Timestamp { get; }
+    DateTimeOffset Timestamp { get; }
 
     /// <summary>
     /// The expiration time that was scheduled for the request
     /// </summary>
-    DateTime ExpirationTime { get; }
+    DateTimeOffset ExpirationTime { get; }
 
     /// <summary>
     /// The requestId of the request

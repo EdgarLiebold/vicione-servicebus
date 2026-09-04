@@ -11,15 +11,15 @@ public sealed class SqlServerScheduleCancellationTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0063", "sqlserver-native-owner")]
-    public Task ConsumeContextCancellation_DeletesThePersistedFutureDelivery() =>
-        AssertCancellation(cancelInsideConsumer: true);
+    public Task ConsumeContextCancellation_DeletesThePersistedFutureDeliveryAsync() =>
+        AssertCancellationAsync(cancelInsideConsumer: true);
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0065", "sqlserver-native-owner")]
-    public Task CallerCancellation_DeletesThePersistedFutureDelivery() =>
-        AssertCancellation(cancelInsideConsumer: false);
+    public Task CallerCancellation_DeletesThePersistedFutureDeliveryAsync() =>
+        AssertCancellationAsync(cancelInsideConsumer: false);
 
-    private static async Task AssertCancellation(bool cancelInsideConsumer)
+    private static async Task AssertCancellationAsync(bool cancelInsideConsumer)
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using SqlServerTestDatabase fixture = await SqlServerTestDatabase.CreateAsync(
@@ -38,7 +38,7 @@ public sealed class SqlServerScheduleCancellationTests
             {
                 endpoint.Handler<ScheduleRequest>(async context =>
                 {
-                    ScheduledMessage<ScheduledPayload> scheduled = await context.ScheduleSend(
+                    ScheduledMessage<ScheduledPayload> scheduled = await context.Advanced().ScheduleSendAsync(
                         ScheduledDelay,
                         new ScheduledPayload(context.Message.Id),
                         context.CancellationToken);
@@ -46,7 +46,7 @@ public sealed class SqlServerScheduleCancellationTests
                     scheduledReady.TrySetResult(new ScheduleState(scheduled, scheduler));
                     await allowHandler.Task;
                     if (cancelInsideConsumer)
-                        await context.CancelScheduledSend(scheduled);
+                        await context.Advanced().CancelScheduledSendAsync(scheduled);
                     handlerFinished.TrySetResult(true);
                 });
                 endpoint.Handler<ScheduledPayload>(_ =>
@@ -63,15 +63,15 @@ public sealed class SqlServerScheduleCancellationTests
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
             Guid id = Guid.NewGuid();
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"))
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await endpoint.Send(new ScheduleRequest(id), cancellationToken)
+            await endpoint.SendAsync(new ScheduleRequest(id), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             ScheduleState state = await scheduledReady.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
             await using SqlConnection inspection = fixture.CreateConnection();
-            await inspection.OpenWithin(fixture.OperationTimeout, cancellationToken);
+            await inspection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
 
-            Assert.Equal(new PersistedSchedule(1, 1, 1), await PersistedState(
+            Assert.Equal(new PersistedSchedule(1, 1, 1), await PersistedStateAsync(
                 inspection,
                 fixture.Schema,
                 state.Scheduled.TokenId,
@@ -81,7 +81,7 @@ public sealed class SqlServerScheduleCancellationTests
                 allowHandler.TrySetResult(true);
             else
             {
-                await state.Scheduler.CancelScheduledSend(
+                await state.Scheduler.CancelScheduledSendAsync(
                         state.Scheduled.Destination,
                         state.Scheduled.TokenId,
                         cancellationToken)
@@ -90,7 +90,7 @@ public sealed class SqlServerScheduleCancellationTests
             }
 
             await handlerFinished.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
-            Assert.Equal(new PersistedSchedule(0, 0, 0), await PersistedState(
+            Assert.Equal(new PersistedSchedule(0, 0, 0), await PersistedStateAsync(
                 inspection,
                 fixture.Schema,
                 state.Scheduled.TokenId,
@@ -108,7 +108,7 @@ public sealed class SqlServerScheduleCancellationTests
         }
     }
 
-    private static async Task<PersistedSchedule> PersistedState(
+    private static async Task<PersistedSchedule> PersistedStateAsync(
         SqlConnection connection,
         string schema,
         Guid tokenId,

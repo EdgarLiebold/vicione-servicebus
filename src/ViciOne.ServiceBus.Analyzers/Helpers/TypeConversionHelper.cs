@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,14 +11,10 @@ public class TypeConversionHelper
 {
     readonly SemanticModel _semanticModel;
     readonly NodeList<ITypeSymbol> _typeSymbols;
-    INamedTypeSymbol _taskTypeSymbol;
-
     public TypeConversionHelper(SemanticModel semanticModel)
     {
         _semanticModel = semanticModel;
         _typeSymbols = new NodeList<ITypeSymbol>(100);
-
-        _taskTypeSymbol = semanticModel.Compilation.GetTypeByMetadataName(typeof(Task<>).FullName);
 
         _typeSymbols.Add(semanticModel, SpecialType.System_String, SpecialType.System_Boolean);
         _typeSymbols.Add(semanticModel, SpecialType.System_Boolean, SpecialType.System_String, SpecialType.System_Object, SpecialType.System_SByte,
@@ -60,7 +57,7 @@ public class TypeConversionHelper
         _typeSymbols.Add(semanticModel, SpecialType.System_DateTime, SpecialType.System_String, SpecialType.System_Object, SpecialType.System_Int32,
             SpecialType.System_Int64);
 
-        var dateTimeOffsetSymbol = semanticModel.Compilation.GetTypeByMetadataName(typeof(DateTimeOffset).FullName);
+        var dateTimeOffsetSymbol = GetRequiredType(typeof(DateTimeOffset));
 
         _typeSymbols.Add(semanticModel, SpecialType.System_DateTime, dateTimeOffsetSymbol);
 
@@ -70,7 +67,7 @@ public class TypeConversionHelper
         _typeSymbols.Add(semanticModel, dateTimeOffsetSymbol, SpecialType.System_String, SpecialType.System_Object, SpecialType.System_Int32,
             SpecialType.System_Int64);
 
-        var timeSpanSymbol = semanticModel.Compilation.GetTypeByMetadataName(typeof(TimeSpan).FullName);
+        var timeSpanSymbol = GetRequiredType(typeof(TimeSpan));
 
         _typeSymbols.Add(semanticModel, SpecialType.System_String, timeSpanSymbol);
         _typeSymbols.Add(semanticModel, SpecialType.System_Int32, timeSpanSymbol);
@@ -85,7 +82,7 @@ public class TypeConversionHelper
 
         _typeSymbols.Add(semanticModel, SpecialType.System_String, SpecialType.System_Object);
 
-        var exceptionSymbol = semanticModel.Compilation.GetTypeByMetadataName(typeof(Exception).FullName);
+        var exceptionSymbol = GetRequiredType(typeof(Exception));
 
         var exceptionInfoSymbol = semanticModel.Compilation.GetTypeByMetadataName("ViciOne.ServiceBus.ExceptionInfo");
         if (exceptionInfoSymbol != null)
@@ -95,17 +92,17 @@ public class TypeConversionHelper
             _typeSymbols.Add(semanticModel, exceptionInfoSymbol, SpecialType.System_Object);
         }
 
-        var uriSymbol = semanticModel.Compilation.GetTypeByMetadataName(typeof(Uri).FullName);
+        var uriSymbol = GetRequiredType(typeof(Uri));
 
         _typeSymbols.Add(semanticModel, SpecialType.System_String, uriSymbol);
         _typeSymbols.Add(semanticModel, uriSymbol, SpecialType.System_Object, SpecialType.System_String);
 
-        var versionSymbol = semanticModel.Compilation.GetTypeByMetadataName(typeof(Version).FullName);
+        var versionSymbol = GetRequiredType(typeof(Version));
 
         _typeSymbols.Add(semanticModel, SpecialType.System_String, versionSymbol);
         _typeSymbols.Add(semanticModel, versionSymbol, SpecialType.System_Object, SpecialType.System_String);
 
-        var guidSymbol = semanticModel.Compilation.GetTypeByMetadataName(typeof(Guid).FullName);
+        var guidSymbol = GetRequiredType(typeof(Guid));
 
         _typeSymbols.Add(semanticModel, SpecialType.System_String, guidSymbol);
         _typeSymbols.Add(semanticModel, guidSymbol, SpecialType.System_Object, SpecialType.System_String);
@@ -115,9 +112,17 @@ public class TypeConversionHelper
             _typeSymbols.Add(guidSymbol, newIdSymbol);
     }
 
+    ITypeSymbol GetRequiredType(Type type)
+    {
+        var metadataName = type.FullName ?? throw new ArgumentException("The type must have a metadata name.", nameof(type));
+
+        return _semanticModel.Compilation.GetTypeByMetadataName(metadataName)
+            ?? throw new InvalidOperationException($"The compilation does not reference '{metadataName}'.");
+    }
+
     public bool CanConvert(Type type, ITypeSymbol sourceSymbol)
     {
-        var symbol = _semanticModel.Compilation.GetTypeByMetadataName(type.FullName);
+        var symbol = GetRequiredType(type);
 
         return CanConvert(symbol, sourceSymbol);
     }
@@ -183,7 +188,7 @@ public class TypeConversionHelper
                     return false;
                 }
 
-                INamedTypeSymbol streamType = _semanticModel.Compilation.GetTypeByMetadataName(typeof(Stream).FullName);
+                var streamType = GetRequiredType(typeof(Stream));
                 if (SymbolEqualityComparer.Default.Equals(messageDataType, streamType))
                 {
                     if (sourceSymbol.ImplementsType(streamType))
@@ -209,7 +214,7 @@ public class TypeConversionHelper
         }
     }
 
-    static bool IsTask(ITypeSymbol symbol, out ITypeSymbol result)
+    static bool IsTask(ITypeSymbol symbol, [NotNullWhen(true)] out ITypeSymbol? result)
     {
         if (symbol.TypeKind == TypeKind.Class
             && symbol.Name == "Task"
@@ -224,11 +229,11 @@ public class TypeConversionHelper
             return true;
         }
 
-        result = default;
+        result = null;
         return false;
     }
 
-    public static bool IsMessageData(ITypeSymbol symbol, out ITypeSymbol result)
+    public static bool IsMessageData(ITypeSymbol symbol, [NotNullWhen(true)] out ITypeSymbol? result)
     {
         if (symbol.TypeKind == TypeKind.Interface
             && symbol.Name == "MessageData"
@@ -241,7 +246,7 @@ public class TypeConversionHelper
             return true;
         }
 
-        result = default;
+        result = null;
         return false;
     }
 }

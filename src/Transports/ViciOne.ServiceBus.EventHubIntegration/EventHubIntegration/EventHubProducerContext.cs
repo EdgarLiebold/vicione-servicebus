@@ -19,17 +19,17 @@ public class EventHubProducerContext :
         _producerClient = producerClient;
     }
 
-    public Task Produce(IEnumerable<EventData> eventData, SendEventOptions options, CancellationToken cancellationToken)
+    public Task ProduceAsync(IEnumerable<EventData> eventData, SendEventOptions options, CancellationToken cancellationToken)
     {
         return _producerClient.SendAsync(eventData, options, cancellationToken);
     }
 
-    public Task Produce(EventDataBatch eventDataBatch, CancellationToken cancellationToken)
+    public Task ProduceAsync(EventDataBatch eventDataBatch, CancellationToken cancellationToken)
     {
         return _producerClient.SendAsync(eventDataBatch, cancellationToken);
     }
 
-    public ValueTask<EventDataBatch> CreateBatch(CreateBatchOptions options, CancellationToken cancellationToken)
+    public ValueTask<EventDataBatch> CreateBatchAsync(CreateBatchOptions options, CancellationToken cancellationToken)
     {
         return _producerClient.CreateBatchAsync(options, cancellationToken);
     }

@@ -1,296 +1,55 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus;
 
-/// <summary>
-/// A message scheduler is able to schedule a message for delivery.
-/// </summary>
+/// <summary>Schedules application messages for future delivery.</summary>
 public interface IMessageScheduler
 {
-    /// <summary>
-    /// Clock used for relative scheduling operations.
-    /// </summary>
-    TimeProvider TimeProvider { get; }
-
-    /// <summary>
-    /// Send a message
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
-    /// <param name="message">The message</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, T message,
+    /// <summary>Schedules a message for delivery to a destination.</summary>
+    /// <param name="destination">The destination used by the operation.</param>
+    /// <param name="dueAt">The due at used by the operation.</param>
+    /// <param name="message">The message processed by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destination, DateTimeOffset dueAt, T message,
         CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>
-    /// Send a message
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
-    /// <param name="message">The message</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, T message, IPipe<SendContext<T>> pipe,
+    /// <summary>Schedules a configured message for delivery to a destination.</summary>
+    /// <param name="destination">The destination used by the operation.</param>
+    /// <param name="dueAt">The due at used by the operation.</param>
+    /// <param name="message">The message processed by the operation.</param>
+    /// <param name="options">The options used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destination, DateTimeOffset dueAt, T message, ScheduleOptions options,
+        CancellationToken cancellationToken = default)
+        where T : class
+    {
+        ArgumentNullException.ThrowIfNull(options);
+
+        return this is Advanced.IAdvancedMessageScheduler advanced
+            ? advanced.ScheduleSendAsync(destination, dueAt, message, new ScheduleOptionsPipe<T>(options), cancellationToken)
+            : throw new NotSupportedException($"The message scheduler '{GetType().FullName}' does not support schedule options.");
+    }
+
+    /// <summary>Schedules a message for publication.</summary>
+    /// <param name="dueAt">The due at used by the operation.</param>
+    /// <param name="message">The message processed by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, T message,
         CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>
-    /// Send a message
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
-    /// <param name="message">The message</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, T message, IPipe<SendContext> pipe,
-        CancellationToken cancellationToken = default)
-        where T : class;
+    /// <summary>Cancels a previously scheduled send.</summary>
+    /// <param name="scheduled">The scheduled used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task CancelScheduledSendAsync(ScheduledMessage scheduled, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(scheduled);
 
-    /// <summary>
-    /// Sends an object as a message, using the type of the message instance.
-    /// </summary>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
-    /// <param name="message">The message object</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledMessage> ScheduleSend(Uri destinationAddress, DateTime scheduledTime, object message,
-        CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Sends an object as a message, using the message type specified. If the object cannot be cast
-    /// to the specified message type, an exception will be thrown.
-    /// </summary>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
-    /// <param name="message">The message object</param>
-    /// <param name="messageType">The type of the message (use message.GetType() if desired)</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledMessage> ScheduleSend(Uri destinationAddress, DateTime scheduledTime, object message, Type messageType,
-        CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Sends an object as a message.
-    /// </summary>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
-    /// <param name="message">The message object</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledMessage> ScheduleSend(Uri destinationAddress, DateTime scheduledTime, object message, IPipe<SendContext> pipe,
-        CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Sends an object as a message, using the message type specified. If the object cannot be cast
-    /// to the specified message type, an exception will be thrown.
-    /// </summary>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
-    /// <param name="message">The message object</param>
-    /// <param name="messageType">The type of the message (use message.GetType() if desired)</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledMessage> ScheduleSend(Uri destinationAddress, DateTime scheduledTime, object message, Type messageType, IPipe<SendContext> pipe,
-        CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Sends an interface message, initializing the properties of the interface using the anonymous
-    /// object specified
-    /// </summary>
-    /// <typeparam name="T">The interface type to send</typeparam>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
-    /// <param name="values">The property values to initialize on the interface</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, object values,
-        CancellationToken cancellationToken = default)
-        where T : class;
-
-    /// <summary>
-    /// Sends an interface message, initializing the properties of the interface using the anonymous
-    /// object specified
-    /// </summary>
-    /// <typeparam name="T">The interface type to send</typeparam>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
-    /// <param name="values">The property values to initialize on the interface</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, object values, IPipe<SendContext<T>> pipe,
-        CancellationToken cancellationToken = default)
-        where T : class;
-
-    /// <summary>
-    /// Sends an interface message, initializing the properties of the interface using the anonymous
-    /// object specified
-    /// </summary>
-    /// <typeparam name="T">The interface type to send</typeparam>
-    /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
-    /// <param name="values">The property values to initialize on the interface</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, object values, IPipe<SendContext> pipe,
-        CancellationToken cancellationToken = default)
-        where T : class;
-
-    /// <summary>
-    /// Cancel a scheduled message by TokenId
-    /// </summary>
-    /// <param name="destinationAddress">The destination address of the scheduled message</param>
-    /// <param name="tokenId">The tokenId of the scheduled message</param>
-    /// <param name="cancellationToken"></param>
-    Task CancelScheduledSend(Uri destinationAddress, Guid tokenId, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Send a message
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
-    /// <param name="message">The message</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledMessage<T>> SchedulePublish<T>(DateTime scheduledTime, T message, CancellationToken cancellationToken = default)
-        where T : class;
-
-    /// <summary>
-    /// Send a message
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
-    /// <param name="message">The message</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledMessage<T>> SchedulePublish<T>(DateTime scheduledTime, T message, IPipe<SendContext<T>> pipe,
-        CancellationToken cancellationToken = default)
-        where T : class;
-
-    /// <summary>
-    /// Send a message
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
-    /// <param name="message">The message</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledMessage<T>> SchedulePublish<T>(DateTime scheduledTime, T message, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
-        where T : class;
-
-    /// <summary>
-    /// Sends an object as a message, using the type of the message instance.
-    /// </summary>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
-    /// <param name="message">The message object</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledMessage> SchedulePublish(DateTime scheduledTime, object message, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Sends an object as a message, using the message type specified. If the object cannot be cast
-    /// to the specified message type, an exception will be thrown.
-    /// </summary>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
-    /// <param name="message">The message object</param>
-    /// <param name="messageType">The type of the message (use message.GetType() if desired)</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledMessage> SchedulePublish(DateTime scheduledTime, object message, Type messageType, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Sends an object as a message.
-    /// </summary>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
-    /// <param name="message">The message object</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledMessage> SchedulePublish(DateTime scheduledTime, object message, IPipe<SendContext> pipe, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Sends an object as a message, using the message type specified. If the object cannot be cast
-    /// to the specified message type, an exception will be thrown.
-    /// </summary>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
-    /// <param name="message">The message object</param>
-    /// <param name="messageType">The type of the message (use message.GetType() if desired)</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledMessage> SchedulePublish(DateTime scheduledTime, object message, Type messageType, IPipe<SendContext> pipe,
-        CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Sends an interface message, initializing the properties of the interface using the anonymous
-    /// object specified
-    /// </summary>
-    /// <typeparam name="T">The interface type to send</typeparam>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
-    /// <param name="values">The property values to initialize on the interface</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledMessage<T>> SchedulePublish<T>(DateTime scheduledTime, object values, CancellationToken cancellationToken = default)
-        where T : class;
-
-    /// <summary>
-    /// Sends an interface message, initializing the properties of the interface using the anonymous
-    /// object specified
-    /// </summary>
-    /// <typeparam name="T">The interface type to send</typeparam>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
-    /// <param name="values">The property values to initialize on the interface</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledMessage<T>> SchedulePublish<T>(DateTime scheduledTime, object values, IPipe<SendContext<T>> pipe,
-        CancellationToken cancellationToken = default)
-        where T : class;
-
-    /// <summary>
-    /// Sends an interface message, initializing the properties of the interface using the anonymous
-    /// object specified
-    /// </summary>
-    /// <typeparam name="T">The interface type to send</typeparam>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
-    /// <param name="values">The property values to initialize on the interface</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledMessage<T>> SchedulePublish<T>(DateTime scheduledTime, object values, IPipe<SendContext> pipe,
-        CancellationToken cancellationToken = default)
-        where T : class;
-
-    /// <summary>
-    /// Cancel a scheduled publish, using the tokenId. The message type <typeparamref name="T" /> is used to determine
-    /// the destinationAddress.
-    /// </summary>
-    /// <param name="tokenId">The tokenId of the scheduled message</param>
-    /// <param name="cancellationToken"></param>
-    Task CancelScheduledPublish<T>(Guid tokenId, CancellationToken cancellationToken = default)
-        where T : class;
-
-    /// <summary>
-    /// Cancel a scheduled publish, using the tokenId. The <paramref name="messageType" /> is used to determine
-    /// the destinationAddress.
-    /// </summary>
-    /// <param name="messageType"></param>
-    /// <param name="tokenId">The tokenId of the scheduled message</param>
-    /// <param name="cancellationToken"></param>
-    Task CancelScheduledPublish(Type messageType, Guid tokenId, CancellationToken cancellationToken = default);
+        return this is Advanced.IAdvancedMessageScheduler advanced
+            ? advanced.CancelScheduledSendAsync(scheduled.Destination, scheduled.TokenId, cancellationToken)
+            : throw new NotSupportedException($"The message scheduler '{GetType().FullName}' does not support cancellation.");
+    }
 }

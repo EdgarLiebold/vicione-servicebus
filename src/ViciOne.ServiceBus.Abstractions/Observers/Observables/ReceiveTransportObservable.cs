@@ -7,18 +7,18 @@ public class ReceiveTransportObservable :
     Connectable<IReceiveTransportObserver>,
     IReceiveTransportObserver
 {
-    public Task Ready(ReceiveTransportReady ready)
+    public Task ReadyAsync(ReceiveTransportReady ready)
     {
-        return ForEachAsync(x => x.Ready(ready));
+        return ForEachAsync(x => x.ReadyAsync(ready));
     }
 
-    public Task Completed(ReceiveTransportCompleted completed)
+    public Task CompletedAsync(ReceiveTransportCompleted completed)
     {
-        return ForEachAsync(x => x.Completed(completed));
+        return ForEachAsync(x => x.CompletedAsync(completed));
     }
 
-    public Task Faulted(ReceiveTransportFaulted faulted)
+    public Task FaultedAsync(ReceiveTransportFaulted faulted)
     {
-        return ForEachAsync(x => x.Faulted(faulted));
+        return ForEachAsync(x => x.FaultedAsync(faulted));
     }
 }

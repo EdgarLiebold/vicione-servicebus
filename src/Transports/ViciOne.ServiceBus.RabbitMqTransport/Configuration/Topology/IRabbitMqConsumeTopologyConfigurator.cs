@@ -19,7 +19,7 @@ public interface IRabbitMqConsumeTopologyConfigurator :
     /// </summary>
     /// <param name="exchangeName"></param>
     /// <param name="configure"></param>
-    void Bind(string exchangeName, Action<IRabbitMqExchangeToExchangeBindingConfigurator> configure = null);
+    void Bind(string exchangeName, Action<IRabbitMqExchangeToExchangeBindingConfigurator>? configure = null);
 
     /// <summary>
     /// Bind an exchange to a queue, both of which are declared if they do not exist. Useful
@@ -28,5 +28,5 @@ public interface IRabbitMqConsumeTopologyConfigurator :
     /// <param name="exchangeName">The exchange name to bind</param>
     /// <param name="queueName">The queue name to declare/bind to the exchange</param>
     /// <param name="configure">The configuration callback</param>
-    void BindQueue(string exchangeName, string queueName, Action<IRabbitMqQueueBindingConfigurator> configure = null);
+    void BindQueue(string exchangeName, string queueName, Action<IRabbitMqQueueBindingConfigurator>? configure = null);
 }

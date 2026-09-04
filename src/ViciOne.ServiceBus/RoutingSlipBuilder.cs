@@ -24,7 +24,7 @@ public class RoutingSlipBuilder :
     readonly List<ActivityException> _activityExceptions;
     readonly List<ActivityLog> _activityLogs;
     readonly List<CompensateLog> _compensateLogs;
-    readonly DateTime _createTimestamp;
+    readonly DateTimeOffset _createTimestamp;
     readonly List<Activity> _itinerary;
     readonly List<Activity> _sourceItinerary;
     readonly List<Subscription> _subscriptions;
@@ -33,7 +33,7 @@ public class RoutingSlipBuilder :
     public RoutingSlipBuilder(Guid trackingNumber, TimeProvider? timeProvider = null)
     {
         TrackingNumber = trackingNumber;
-        _createTimestamp = (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime;
+        _createTimestamp = (timeProvider ?? TimeProvider.System).GetUtcNow();
 
         _itinerary = new List<Activity>();
         _sourceItinerary = new List<Activity>();
@@ -170,7 +170,7 @@ public class RoutingSlipBuilder :
     /// </summary>
     /// <param name="key"></param>
     /// <param name="value"></param>
-    public void AddVariable(string key, object value)
+    public void AddVariable(string key, object? value)
     {
         if (key == null)
             throw new ArgumentNullException(nameof(key));
@@ -256,9 +256,10 @@ public class RoutingSlipBuilder :
     /// <param name="events"></param>
     /// <param name="callback"></param>
     /// <returns></returns>
-    public Task AddSubscription(Uri address, RoutingSlipEvents events, Func<ISendEndpoint, Task> callback)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public Task AddSubscriptionAsync(Uri address, RoutingSlipEvents events, Func<ISendEndpoint, Task> callback, CancellationToken cancellationToken = default)
     {
-        return callback(new RoutingSlipBuilderSendEndpoint(this, address, events, null));
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return callback(new RoutingSlipBuilderSendEndpoint(this, address, events, null));
     }
 
     /// <summary>
@@ -269,9 +270,10 @@ public class RoutingSlipBuilder :
     /// <param name="contents"></param>
     /// <param name="callback"></param>
     /// <returns></returns>
-    public Task AddSubscription(Uri address, RoutingSlipEvents events, RoutingSlipEventContents contents, Func<ISendEndpoint, Task> callback)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public Task AddSubscriptionAsync(Uri address, RoutingSlipEvents events, RoutingSlipEventContents contents, Func<ISendEndpoint, Task> callback, CancellationToken cancellationToken = default)
     {
-        return callback(new RoutingSlipBuilderSendEndpoint(this, address, events, null, contents));
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return callback(new RoutingSlipBuilderSendEndpoint(this, address, events, null, contents));
     }
 
     /// <summary>
@@ -283,10 +285,11 @@ public class RoutingSlipBuilder :
     /// <param name="contents"></param>
     /// <param name="callback"></param>
     /// <returns></returns>
-    public Task AddSubscription(Uri address, RoutingSlipEvents events, RoutingSlipEventContents contents, string activityName,
-        Func<ISendEndpoint, Task> callback)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public Task AddSubscriptionAsync(Uri address, RoutingSlipEvents events, RoutingSlipEventContents contents, string activityName,
+        Func<ISendEndpoint, Task> callback, CancellationToken cancellationToken = default)
     {
-        return callback(new RoutingSlipBuilderSendEndpoint(this, address, events, activityName, contents));
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return callback(new RoutingSlipBuilderSendEndpoint(this, address, events, activityName, contents));
     }
 
     /// <summary>
@@ -307,13 +310,13 @@ public class RoutingSlipBuilder :
     /// <param name="contents">The contents of the routing slip event</param>
     /// <param name="activityName"></param>
     /// <param name="message">The custom message to be sent</param>
-    void IRoutingSlipSendEndpointTarget.AddSubscription(Uri address, RoutingSlipEvents events, RoutingSlipEventContents contents, string activityName,
+    void IRoutingSlipSendEndpointTarget.AddSubscription(Uri address, RoutingSlipEvents events, RoutingSlipEventContents contents, string? activityName,
         MessageEnvelope message)
     {
         _subscriptions.Add(new RoutingSlipSubscription(address, events, contents, activityName, message));
     }
 
-    public void AddActivityLog(HostInfo host, string name, Guid activityTrackingNumber, DateTime timestamp, TimeSpan duration)
+    public void AddActivityLog(HostInfo host, string name, Guid activityTrackingNumber, DateTimeOffset timestamp, TimeSpan duration)
     {
         _activityLogs.Add(new RoutingSlipActivityLog(host, activityTrackingNumber, name, timestamp, duration));
     }
@@ -332,7 +335,7 @@ public class RoutingSlipBuilder :
     /// <param name="timestamp">The timestamp of the exception</param>
     /// <param name="elapsed">The time elapsed from the start of the activity to the exception</param>
     /// <param name="exception">The exception thrown by the activity</param>
-    public void AddActivityException(HostInfo host, string name, Guid activityTrackingNumber, DateTime timestamp, TimeSpan elapsed,
+    public void AddActivityException(HostInfo host, string name, Guid activityTrackingNumber, DateTimeOffset timestamp, TimeSpan elapsed,
         Exception exception)
     {
         if (name == null)
@@ -356,7 +359,7 @@ public class RoutingSlipBuilder :
     /// <param name="timestamp">The timestamp of the exception</param>
     /// <param name="elapsed">The time elapsed from the start of the activity to the exception</param>
     /// <param name="exceptionInfo"></param>
-    public void AddActivityException(HostInfo host, string name, Guid activityTrackingNumber, DateTime timestamp, TimeSpan elapsed,
+    public void AddActivityException(HostInfo host, string name, Guid activityTrackingNumber, DateTimeOffset timestamp, TimeSpan elapsed,
         ExceptionInfo exceptionInfo)
     {
         if (name == null)

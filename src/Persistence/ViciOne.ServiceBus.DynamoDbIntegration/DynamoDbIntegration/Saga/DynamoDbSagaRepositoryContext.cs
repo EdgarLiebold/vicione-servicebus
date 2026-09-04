@@ -34,20 +34,20 @@ public class DynamoDbSagaRepositoryContext<TSaga, TMessage> :
         _context.Dispose();
     }
 
-    public Task<SagaConsumeContext<TSaga, TMessage>> Add(TSaga instance)
+    public Task<SagaConsumeContext<TSaga, TMessage>> AddAsync(TSaga instance, CancellationToken cancellationToken = default)
     {
-        return _factory.CreateSagaConsumeContext(_context, _consumeContext, instance, SagaConsumeContextMode.Add);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.SagaConsumeContext<TSaga, TMessage>>(cancellationToken); return _factory.CreateSagaConsumeContextAsync(_context, _consumeContext, instance, SagaConsumeContextMode.Add);
     }
 
-    public async Task<SagaConsumeContext<TSaga, TMessage>> Insert(TSaga instance)
+    public async Task<SagaConsumeContext<TSaga, TMessage>?> InsertAsync(TSaga instance, CancellationToken cancellationToken = default)
     {
-        try
+        cancellationToken.ThrowIfCancellationRequested(); try
         {
-            await _context.Insert(instance, _consumeContext.CancellationToken).ConfigureAwait(false);
+            await _context.InsertAsync(instance, _consumeContext.CancellationToken).ConfigureAwait(false);
 
             _consumeContext.LogInsert<TSaga, TMessage>(instance.CorrelationId);
 
-            return await _factory.CreateSagaConsumeContext(_context, _consumeContext, instance, SagaConsumeContextMode.Insert).ConfigureAwait(false);
+            return await _factory.CreateSagaConsumeContextAsync(_context, _consumeContext, instance, SagaConsumeContextMode.Insert).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -57,44 +57,44 @@ public class DynamoDbSagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
-    public async Task<SagaConsumeContext<TSaga, TMessage>> Load(Guid correlationId)
+    public async Task<SagaConsumeContext<TSaga, TMessage>?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
-        var instance = await _context.Load(correlationId, _consumeContext.CancellationToken).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested(); var instance = await _context.LoadAsync(correlationId, _consumeContext.CancellationToken).ConfigureAwait(false);
         if (instance == null)
             return default;
 
-        return await _factory.CreateSagaConsumeContext(_context, _consumeContext, instance, SagaConsumeContextMode.Load).ConfigureAwait(false);
+        return await _factory.CreateSagaConsumeContextAsync(_context, _consumeContext, instance, SagaConsumeContextMode.Load).ConfigureAwait(false);
     }
 
-    public Task Save(SagaConsumeContext<TSaga> context)
+    public Task SaveAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        return _context.Add(context.Saga, context.CancellationToken);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return _context.AddAsync(context.Saga, context.CancellationToken);
     }
 
-    public Task Update(SagaConsumeContext<TSaga> context)
+    public Task UpdateAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        return _context.Update(context.Saga, context.CancellationToken);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return _context.UpdateAsync(context.Saga, context.CancellationToken);
     }
 
-    public Task Delete(SagaConsumeContext<TSaga> context)
+    public Task DeleteAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        return _context.Delete(context.Saga, context.CancellationToken);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return _context.DeleteAsync(context.Saga, context.CancellationToken);
     }
 
-    public Task Discard(SagaConsumeContext<TSaga> context)
+    public Task DiscardAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        return TaskResults.Completed;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return TaskResults.Completed;
     }
 
-    public Task Undo(SagaConsumeContext<TSaga> context)
+    public Task UndoAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        return TaskResults.Completed;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return TaskResults.Completed;
     }
 
-    public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContext<T>(ConsumeContext<T> consumeContext, TSaga instance, SagaConsumeContextMode mode)
+    public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContextAsync<T>(ConsumeContext<T> consumeContext, TSaga instance, SagaConsumeContextMode mode)
         where T : class
     {
-        return _factory.CreateSagaConsumeContext(_context, consumeContext, instance, mode);
+        return _factory.CreateSagaConsumeContextAsync(_context, consumeContext, instance, mode);
     }
 }
 
@@ -118,8 +118,8 @@ public class DynamoDbSagaRepositoryContext<TSaga> :
         _context.Dispose();
     }
 
-    public Task<TSaga> Load(Guid correlationId)
+    public Task<TSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
-        return _context.Load(correlationId, CancellationToken);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<TSaga?>(cancellationToken); return _context.LoadAsync(correlationId, CancellationToken);
     }
 }

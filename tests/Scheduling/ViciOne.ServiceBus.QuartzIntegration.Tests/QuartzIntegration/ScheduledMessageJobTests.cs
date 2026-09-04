@@ -9,7 +9,7 @@ public sealed class ScheduledMessageJobTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-JOB-CANCELLATION", "requested-context-cancellation-propagates")]
-    public async Task RequestedContextCancellation_PropagatesWithoutImmediateRefire()
+    public async Task RequestedContextCancellation_PropagatesWithoutImmediateRefireAsync()
     {
         using var contextCancellation = new CancellationTokenSource();
         contextCancellation.Cancel();
@@ -18,7 +18,7 @@ public sealed class ScheduledMessageJobTests
         var job = new ScheduledMessageJob(CreateBus(contextCancellation.Token, cancellation), TimeProvider.System);
 
         OperationCanceledException exception = await Assert.ThrowsAsync<OperationCanceledException>(() =>
-            job.Execute(context, contextCancellation.Token).AsTask());
+            job.ExecuteAsync(context, contextCancellation.Token).AsTask());
 
         Assert.Same(cancellation, exception);
         Assert.Equal(contextCancellation.Token, exception.CancellationToken);
@@ -26,7 +26,7 @@ public sealed class ScheduledMessageJobTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-JOB-CANCELLATION", "unrequested-dependency-cancellation-refires")]
-    public async Task UnrequestedDependencyCancellation_RemainsARetryableJobFailure()
+    public async Task UnrequestedDependencyCancellation_RemainsARetryableJobFailureAsync()
     {
         using var contextCancellation = new CancellationTokenSource();
         using var dependencyCancellation = new CancellationTokenSource();
@@ -35,7 +35,7 @@ public sealed class ScheduledMessageJobTests
         var job = new ScheduledMessageJob(CreateBus(contextCancellation.Token, cancellation), TimeProvider.System);
 
         JobExecutionException exception = await Assert.ThrowsAsync<JobExecutionException>(() =>
-            job.Execute(context, contextCancellation.Token).AsTask());
+            job.ExecuteAsync(context, contextCancellation.Token).AsTask());
 
         Assert.Same(cancellation, exception.InnerException);
         Assert.True(exception.RefireImmediately);
@@ -43,13 +43,15 @@ public sealed class ScheduledMessageJobTests
 
     private static IBus CreateBus(CancellationToken expectedSendToken, Exception sendException)
     {
-        ISendEndpoint endpoint = DispatchProxy.Create<ISendEndpoint, SendEndpointProxy>();
+        TestSendEndpoint endpoint = DispatchProxy.Create<TestSendEndpoint, SendEndpointProxy>();
         ((SendEndpointProxy)(object)endpoint).Configure(expectedSendToken, sendException);
 
         IBus bus = DispatchProxy.Create<IBus, BusProxy>();
         ((BusProxy)(object)bus).Endpoint = endpoint;
         return bus;
     }
+
+    private interface TestSendEndpoint : ISendEndpoint, Advanced.IAdvancedSendEndpoint;
 
     private static IJobExecutionContext CreateContext(CancellationToken cancellationToken, int refireCount)
     {
@@ -72,7 +74,7 @@ public sealed class ScheduledMessageJobTests
 
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
         {
-            if (targetMethod?.Name == nameof(ISendEndpointProvider.GetSendEndpoint))
+            if (targetMethod?.Name == nameof(ISendEndpointProvider.GetSendEndpointAsync))
                 return Task.FromResult(Endpoint ?? throw new InvalidOperationException("The endpoint was not configured."));
 
             throw new NotSupportedException(targetMethod?.Name);
@@ -92,7 +94,7 @@ public sealed class ScheduledMessageJobTests
 
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
         {
-            if (targetMethod?.Name != nameof(ISendEndpoint.Send) || targetMethod.ReturnType != typeof(Task))
+            if (targetMethod?.Name != nameof(ISendEndpoint.SendAsync) || targetMethod.ReturnType != typeof(Task))
                 throw new NotSupportedException(targetMethod?.Name);
 
             if (args is null || args.Length == 0 || args[^1] is not CancellationToken actualToken || actualToken != _expectedToken)

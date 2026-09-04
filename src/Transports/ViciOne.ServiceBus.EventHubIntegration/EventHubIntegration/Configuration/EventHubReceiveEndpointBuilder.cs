@@ -14,15 +14,15 @@ public class EventHubReceiveEndpointBuilder :
     readonly Func<EventProcessorClient> _clientFactory;
     readonly IReceiveEndpointConfiguration _configuration;
     readonly IEventHubHostConfiguration _hostConfiguration;
-    readonly Func<PartitionClosingEventArgs, Task> _partitionClosingHandler;
-    readonly Func<PartitionInitializingEventArgs, Task> _partitionInitializingHandler;
+    readonly Func<PartitionClosingEventArgs, Task>? _partitionClosingHandler;
+    readonly Func<PartitionInitializingEventArgs, Task>? _partitionInitializingHandler;
     readonly ReceiveSettings _receiveSettings;
 
     public EventHubReceiveEndpointBuilder(IEventHubHostConfiguration hostConfiguration, IBusInstance busInstance,
         IReceiveEndpointConfiguration configuration, ReceiveSettings receiveSettings,
         Func<EventProcessorClient> clientFactory,
-        Func<PartitionClosingEventArgs, Task> partitionClosingHandler,
-        Func<PartitionInitializingEventArgs, Task> partitionInitializingHandler)
+        Func<PartitionClosingEventArgs, Task>? partitionClosingHandler,
+        Func<PartitionInitializingEventArgs, Task>? partitionInitializingHandler)
         : base(configuration)
     {
         _hostConfiguration = hostConfiguration;

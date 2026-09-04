@@ -11,7 +11,7 @@ public sealed class ActiveMqLifecycleTests
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [RequirementCoverage("OBL-R0-BRK-0463", "restart-reacquires-connection-without-message-loss")]
-    public async Task Restart_ReacquiresConnectionWithoutMessageLoss(string flavor)
+    public async Task Restart_ReacquiresConnectionWithoutMessageLossAsync(string flavor)
     {
         const int messageCount = 12;
         using ActiveMqBroker fixture = ActiveMqBroker.Create(flavor, "restart-retention");
@@ -55,9 +55,8 @@ public sealed class ActiveMqLifecycleTests
             publisherStarted = true;
             await receiver.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             receiverStarted = true;
-            ISendEndpoint input = await publisher.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await input.Send(new RetainedMessage(expected[0]), cancellationToken)
+            ISendEndpoint input = await publisher.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await input.SendAsync(new RetainedMessage(expected[0]), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             await firstEntered.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
 
@@ -67,7 +66,7 @@ public sealed class ActiveMqLifecycleTests
             receiverStarted = false;
             Assert.Equal([expected[0]], delivered.Keys);
 
-            await Task.WhenAll(expected[1..].Select(flowId => input.Send(new RetainedMessage(flowId), cancellationToken)))
+            await Task.WhenAll(expected[1..].Select(flowId => input.SendAsync(new RetainedMessage(flowId), cancellationToken)))
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.Single(delivered);
 
@@ -96,7 +95,7 @@ public sealed class ActiveMqLifecycleTests
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [RequirementCoverage("OBL-R0-BRK-0464", "start-stop-start-is-idempotent-and-preserves-request-routing")]
-    public async Task StartStopStart_IsIdempotentAndLeavesNoRunResources(string flavor)
+    public async Task StartStopStart_IsIdempotentAndLeavesNoRunResourcesAsync(string flavor)
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(flavor, "start-stop");
         string queueName = fixture.Name("service");
@@ -115,10 +114,10 @@ public sealed class ActiveMqLifecycleTests
 
         try
         {
-            Guid first = await ExecuteCycle();
+            Guid first = await ExecuteCycleAsync();
             await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
             started = false;
-            Guid second = await ExecuteCycle();
+            Guid second = await ExecuteCycleAsync();
 
             Assert.NotEqual(first, second);
             Assert.Equal([first, second], handled.ToArray());
@@ -129,7 +128,7 @@ public sealed class ActiveMqLifecycleTests
                 await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
         }
 
-        async Task<Guid> ExecuteCycle()
+        async Task<Guid> ExecuteCycleAsync()
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
@@ -137,7 +136,7 @@ public sealed class ActiveMqLifecycleTests
             IRequestClient<CycleRequest> client = bus.CreateRequestClient<CycleRequest>(
                 new Uri($"queue:{queueName}"),
                 RequestTimeout.After(ms: checked((int)fixture.OperationTimeout.TotalMilliseconds)));
-            Response<CycleResponse> response = await client.GetResponse<CycleResponse>(
+            Response<CycleResponse> response = await client.GetResponseAsync<CycleResponse>(
                     new CycleRequest(flowId),
                     cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
@@ -160,7 +159,7 @@ public sealed class ActiveMqRecoveryTests
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [RequirementCoverage("OBL-R0-BRK-0446", "send-endpoint-cache-turnover-preserves-delivery-across-protocols")]
-    public async Task SendEndpointCacheTurnover_PreservesDeliveryAcrossProtocols(string flavor)
+    public async Task SendEndpointCacheTurnover_PreservesDeliveryAcrossProtocolsAsync(string flavor)
     {
         const int cacheCapacity = 1000;
         const int churnCount = cacheCapacity + 4;
@@ -188,22 +187,19 @@ public sealed class ActiveMqRecoveryTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint target = await bus.GetSendEndpoint(new Uri($"queue:{targetQueue}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await target.Send(new TurnoverMessage(before), cancellationToken)
+            ISendEndpoint target = await bus.GetSendEndpointAsync(new Uri($"queue:{targetQueue}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await target.SendAsync(new TurnoverMessage(before), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             for (int index = 0; index < churnCount; index++)
             {
-                ISendEndpoint churn = await bus.GetSendEndpoint(new Uri($"queue:{fixture.Name($"churn-{index}")}"))
-                    .WaitAsync(fixture.OperationTimeout, cancellationToken);
-                await churn.Send(new ChurnMessage(index), cancellationToken)
+                ISendEndpoint churn = await bus.GetSendEndpointAsync(new Uri($"queue:{fixture.Name($"churn-{index}")}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+                await churn.SendAsync(new ChurnMessage(index), cancellationToken)
                     .WaitAsync(fixture.OperationTimeout, cancellationToken);
             }
 
-            ISendEndpoint reacquired = await bus.GetSendEndpoint(new Uri($"queue:{targetQueue}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await reacquired.Send(new TurnoverMessage(after), cancellationToken)
+            ISendEndpoint reacquired = await bus.GetSendEndpointAsync(new Uri($"queue:{targetQueue}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await reacquired.SendAsync(new TurnoverMessage(after), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             Assert.Equal([before, after], await delivered.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));

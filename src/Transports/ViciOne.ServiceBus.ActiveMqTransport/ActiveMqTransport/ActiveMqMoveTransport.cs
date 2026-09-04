@@ -18,17 +18,17 @@ public class ActiveMqMoveTransport<TSettings>
         _destination = destination;
     }
 
-    protected async Task Move(ReceiveContext context, Action<IMessage, SendHeaders> preSend)
+    protected async Task MoveAsync(ReceiveContext context, Action<IMessage, SendHeaders> preSend)
     {
-        if (!context.TryGetPayload(out SessionContext sessionContext))
+        if (!context.TryGetPayload(out SessionContext? sessionContext))
             throw new ArgumentException("The ReceiveContext must contain a SessionContext", nameof(context));
 
-        if (!context.TryGetPayload(out ActiveMqMessageContext messageContext))
+        if (!context.TryGetPayload(out ActiveMqMessageContext? messageContext))
             throw new ArgumentException("The ActiveMqMessageContext was not present", nameof(context));
 
-        OneTimeContext<ConfigureTopologyContext<TSettings>> oneTimeContext = await _topologyFilter.Configure(sessionContext).ConfigureAwait(false);
+        OneTimeContext<ConfigureTopologyContext<TSettings>> oneTimeContext = await _topologyFilter.ConfigureAsync(sessionContext).ConfigureAwait(false);
 
-        var queue = await sessionContext.GetQueue(_destination).ConfigureAwait(false);
+        var queue = await sessionContext.GetQueueAsync(_destination).ConfigureAwait(false);
 
         var message = messageContext.TransportMessage switch
         {

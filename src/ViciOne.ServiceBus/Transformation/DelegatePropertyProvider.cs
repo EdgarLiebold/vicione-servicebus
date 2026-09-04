@@ -27,26 +27,28 @@ public class DelegatePropertyProvider<TInput, TProperty> :
         _valueProvider = valueProvider;
     }
 
-    public Task<TProperty> GetProperty<T>(InitializeContext<T, TInput> context)
+    public Task<TProperty?> GetPropertyAsync<T>(InitializeContext<T, TInput> context, CancellationToken cancellationToken = default)
         where T : class
     {
-        if (!context.TryGetPayload(out TransformContext<TInput> transformContext))
-            return TaskResults.Default<TProperty>();
+        if (!context.TryGetPayload(out TransformContext<TInput>? transformContext))
+            return TaskResults.DefaultAsync<TProperty>(cancellationToken: cancellationToken);
 
         if (!context.HasInput)
-            return TaskResults.Default<TProperty>();
+            return TaskResults.DefaultAsync<TProperty>(cancellationToken: cancellationToken);
 
-        Task<TProperty> inputTask = _inputProvider.GetProperty(context);
+        Task<TProperty?> inputTask = _inputProvider.GetPropertyAsync(context, cancellationToken: cancellationToken);
         if (inputTask.IsCompleted)
-        {
-            var propertyContext = new MessageTransformPropertyContext<TProperty, TInput>(transformContext, inputTask.Result);
+            return GetValueAsync(inputTask.Result);
 
-            return _valueProvider(propertyContext);
-        }
-
-        async Task<TProperty> GetPropertyAsync()
+        async Task<TProperty?> GetPropertyAsync()
         {
             var inputValue = await inputTask.ConfigureAwait(false);
+
+            return await GetValueAsync(inputValue).ConfigureAwait(false);
+        }
+
+        async Task<TProperty?> GetValueAsync(TProperty? inputValue)
+        {
             var propertyContext = new MessageTransformPropertyContext<TProperty, TInput>(transformContext, inputValue);
 
             return await _valueProvider(propertyContext).ConfigureAwait(false);

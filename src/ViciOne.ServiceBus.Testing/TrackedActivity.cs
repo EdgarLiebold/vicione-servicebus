@@ -66,7 +66,7 @@ class TrackedActivity :
             _timer.Restart(_idleTimeout);
     }
 
-    public async Task WaitForCompletion()
+    public async Task WaitForCompletionAsync()
     {
         ActionCompleted();
         await _completed.Task.ConfigureAwait(false);
@@ -74,7 +74,7 @@ class TrackedActivity :
 
     public async ValueTask DisposeAsync()
     {
-        await WaitForCompletion().ConfigureAwait(false);
+        await WaitForCompletionAsync().ConfigureAwait(false);
 
         _testActivity?.Stop();
 

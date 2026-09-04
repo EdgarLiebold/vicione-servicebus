@@ -47,7 +47,7 @@ public class DefaultMessageNameFormatter :
         return GetMessageName(sb, type, null);
     }
 
-    string GetMessageName(StringBuilder sb, Type type, string scope)
+    string GetMessageName(StringBuilder sb, Type type, string? scope)
     {
         if (type.IsGenericParameter)
             return "";
@@ -61,7 +61,8 @@ public class DefaultMessageNameFormatter :
 
         if (type.IsNested)
         {
-            GetMessageName(sb, type.DeclaringType, ns);
+            GetMessageName(sb, type.DeclaringType
+                ?? throw new InvalidOperationException($"Nested type '{type}' does not expose a declaring type."), ns);
             sb.Append(_nestedTypeSeparator);
         }
 

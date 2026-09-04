@@ -10,28 +10,28 @@ public sealed class TaskExtensionsTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-OR-CANCELED", "completed-and-noncancelable")]
-    public async Task OrCanceled_ReturnsTheOriginalTaskWhenCancellationCannotWin()
+    public async Task OrCanceled_ReturnsTheOriginalTaskWhenCancellationCannotWinAsync()
     {
         Task completed = Task.CompletedTask;
         Task<int> completedValue = Task.FromResult(42);
         var pending = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        Assert.Same(completed, completed.OrCanceled(new CancellationToken(canceled: true)));
-        Assert.Same(completedValue, completedValue.OrCanceled(new CancellationToken(canceled: true)));
-        Assert.Same(pending.Task, pending.Task.OrCanceled(CancellationToken.None));
-        Assert.Equal(42, await completedValue.OrCanceled(CancellationToken.None));
+        Assert.Same(completed, completed.OrCanceledAsync(new CancellationToken(canceled: true)));
+        Assert.Same(completedValue, completedValue.OrCanceledAsync(new CancellationToken(canceled: true)));
+        Assert.Same(pending.Task, pending.Task.OrCanceledAsync(CancellationToken.None));
+        Assert.Equal(42, await completedValue.OrCanceledAsync(CancellationToken.None));
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-OR-CANCELED", "cancellation-wins")]
-    public async Task OrCanceled_CompletesAsCanceledWithTheExactTokenWhenCancellationWins()
+    public async Task OrCanceled_CompletesAsCanceledWithTheExactTokenWhenCancellationWinsAsync()
     {
         var source = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var genericSource = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
         using var cancellation = new CancellationTokenSource();
 
-        Task canceledTask = source.Task.OrCanceled(cancellation.Token);
-        Task<int> canceledGenericTask = genericSource.Task.OrCanceled(cancellation.Token);
+        Task canceledTask = source.Task.OrCanceledAsync(cancellation.Token);
+        Task<int> canceledGenericTask = genericSource.Task.OrCanceledAsync(cancellation.Token);
         cancellation.Cancel();
 
         OperationCanceledException first = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => canceledTask);
@@ -45,14 +45,14 @@ public sealed class TaskExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-OR-CANCELED", "source-outcome-wins")]
-    public async Task OrCanceled_PreservesTheSourceResultAndExactFailureWhenTheSourceWins()
+    public async Task OrCanceled_PreservesTheSourceResultAndExactFailureWhenTheSourceWinsAsync()
     {
         var expected = new SourceTaskException("source failed");
         using var cancellation = new CancellationTokenSource();
 
-        int result = await Task.FromResult(27).OrCanceled(cancellation.Token);
+        int result = await Task.FromResult(27).OrCanceledAsync(cancellation.Token);
         SourceTaskException actual = await Assert.ThrowsAsync<SourceTaskException>(() =>
-            Task.FromException(expected).OrCanceled(cancellation.Token));
+            Task.FromException(expected).OrCanceledAsync(cancellation.Token));
 
         Assert.Equal(27, result);
         Assert.Same(expected, actual);
@@ -106,11 +106,11 @@ public sealed class TaskExtensionsTests
 
         Assert.Throws<ArgumentNullException>(() =>
         {
-            _ = task!.OrCanceled(CancellationToken.None);
+            _ = task!.OrCanceledAsync(CancellationToken.None);
         });
         Assert.Throws<ArgumentNullException>(() =>
         {
-            _ = genericTask!.OrCanceled(CancellationToken.None);
+            _ = genericTask!.OrCanceledAsync(CancellationToken.None);
         });
     }
 
@@ -120,7 +120,7 @@ public sealed class TaskExtensionsTests
         var source = new TaskCompletionSource();
         using var cancellation = new CancellationTokenSource();
         Task abandoned = source.Task;
-        Task canceled = abandoned.OrCanceled(cancellation.Token);
+        Task canceled = abandoned.OrCanceledAsync(cancellation.Token);
         cancellation.Cancel();
         Assert.ThrowsAny<OperationCanceledException>(() => canceled.GetAwaiter().GetResult());
         source.SetException(new SourceTaskException(observedMarker));

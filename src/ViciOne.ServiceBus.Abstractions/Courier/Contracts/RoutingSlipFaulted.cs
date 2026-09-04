@@ -16,7 +16,7 @@ public interface RoutingSlipFaulted
     /// <summary>
     /// The date/time when the routing slip faulted
     /// </summary>
-    DateTime Timestamp { get; }
+    DateTimeOffset Timestamp { get; }
 
     /// <summary>
     /// The time from when the routing slip was created until the fault occurred

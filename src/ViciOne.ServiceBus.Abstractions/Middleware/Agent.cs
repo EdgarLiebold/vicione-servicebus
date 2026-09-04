@@ -75,16 +75,18 @@ public class Agent :
     public CancellationToken Stopped => _stopped.Value.Token;
 
     /// <inheritdoc />
-    public async Task Stop(StopContext context)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="context">The context for the operation.</param>
+    public async Task StopAsync(StopContext context, CancellationToken cancellationToken = default)
     {
-        if (IsStopping)
+        cancellationToken.ThrowIfCancellationRequested(); if (IsStopping)
             return;
 
         IsStopping = true;
         if (_stopping.IsValueCreated)
             _stopping.Value.Cancel();
 
-        await StopAgent(context).ConfigureAwait(false);
+        await StopAgentAsync(context).ConfigureAwait(false);
 
         IsStopped = true;
         if (_stopped.IsValueCreated)
@@ -96,7 +98,7 @@ public class Agent :
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    protected virtual Task StopAgent(StopContext context)
+    protected virtual Task StopAgentAsync(StopContext context)
     {
         _completed.TrySetResult(true);
 

@@ -27,14 +27,14 @@ public class SendTransformContext<TMessage> :
     public Guid? CorrelationId => _context.CorrelationId;
     public Guid? ConversationId => _context.ConversationId;
     public Guid? InitiatorId => _context.InitiatorId;
-    public DateTime? ExpirationTime => _context.TimeToLive.HasValue
+    public DateTimeOffset? ExpirationTime => _context.TimeToLive.HasValue
         ? _context.GetTimeProvider().GetUtcNow().UtcDateTime + _context.TimeToLive.Value
         : null;
-    public Uri SourceAddress => _context.SourceAddress;
-    public Uri DestinationAddress => _context.DestinationAddress;
-    public Uri ResponseAddress => _context.ResponseAddress;
-    public Uri FaultAddress => _context.FaultAddress;
-    public DateTime? SentTime => default;
+    public Uri? SourceAddress => _context.SourceAddress;
+    public Uri? DestinationAddress => _context.DestinationAddress;
+    public Uri? ResponseAddress => _context.ResponseAddress;
+    public Uri? FaultAddress => _context.FaultAddress;
+    public DateTimeOffset? SentTime => default;
     public Headers Headers => _context.Headers;
     public HostInfo Host => HostMetadataCache.Host;
 

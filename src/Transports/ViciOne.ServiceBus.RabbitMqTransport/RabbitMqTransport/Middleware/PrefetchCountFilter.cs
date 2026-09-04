@@ -21,16 +21,16 @@ public class PrefetchCountFilter :
         scope.Add("prefetchCount", _prefetchCount);
     }
 
-    public async Task Send(ChannelContext context, IPipe<ChannelContext> next)
+    public async Task SendAsync(ChannelContext context, IPipe<ChannelContext> next)
     {
-        await context.BasicQos(0, _prefetchCount, false, context.CancellationToken).ConfigureAwait(false);
+        await context.BasicQosAsync(0, _prefetchCount, false, context.CancellationToken).ConfigureAwait(false);
 
-        await next.Send(context).ConfigureAwait(false);
+        await next.SendAsync(context).ConfigureAwait(false);
     }
 
-    public Task SetPrefetchCount(ushort prefetchCount)
+    public Task SetPrefetchCountAsync(ushort prefetchCount, CancellationToken cancellationToken = default)
     {
-        _prefetchCount = prefetchCount;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); _prefetchCount = prefetchCount;
 
         return Task.CompletedTask;
     }

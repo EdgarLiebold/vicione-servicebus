@@ -56,9 +56,9 @@ public class ServiceBusConnectionContext :
         return _client.CreateSender(entityPath);
     }
 
-    public async Task<QueueProperties> CreateQueue(CreateQueueOptions createQueueOptions, CancellationToken cancellationToken)
+    public async Task<QueueProperties> CreateQueueAsync(CreateQueueOptions createQueueOptions, CancellationToken cancellationToken)
     {
-        QueueProperties queueProperties = null;
+        QueueProperties? queueProperties = null;
         try
         {
             queueProperties = await GetQueueAsync(createQueueOptions.Name, cancellationToken).ConfigureAwait(false);
@@ -73,7 +73,7 @@ public class ServiceBusConnectionContext :
             {
                 TransportLogMessages.CreateQueue(createQueueOptions.Name);
 
-                queueProperties = await CreateQueueAsync(createQueueOptions, cancellationToken).ConfigureAwait(false);
+                queueProperties = await CreateQueueCoreAsync(createQueueOptions, cancellationToken).ConfigureAwait(false);
             }
             catch (ServiceBusException sbe) when (sbe.Reason == ServiceBusFailureReason.MessagingEntityAlreadyExists)
             {
@@ -96,9 +96,9 @@ public class ServiceBusConnectionContext :
         return queueProperties;
     }
 
-    public async Task<TopicProperties> CreateTopic(CreateTopicOptions createTopicOptions, CancellationToken cancellationToken)
+    public async Task<TopicProperties> CreateTopicAsync(CreateTopicOptions createTopicOptions, CancellationToken cancellationToken)
     {
-        TopicProperties topicProperties = null;
+        TopicProperties? topicProperties = null;
         try
         {
             topicProperties = await GetTopicAsync(createTopicOptions.Name, cancellationToken).ConfigureAwait(false);
@@ -113,7 +113,7 @@ public class ServiceBusConnectionContext :
             {
                 TransportLogMessages.CreateTopic(createTopicOptions.Name);
 
-                topicProperties = await CreateTopicAsync(createTopicOptions, cancellationToken).ConfigureAwait(false);
+                topicProperties = await CreateTopicCoreAsync(createTopicOptions, cancellationToken).ConfigureAwait(false);
             }
             catch (ServiceBusException e) when (e.Reason == ServiceBusFailureReason.MessagingEntityAlreadyExists)
             {
@@ -133,17 +133,17 @@ public class ServiceBusConnectionContext :
         return topicProperties;
     }
 
-    public async Task<SubscriptionProperties> CreateTopicSubscription(CreateSubscriptionOptions createSubscriptionOptions, CreateRuleOptions rule,
-        RuleFilter filter, CancellationToken cancellationToken)
+    public async Task<SubscriptionProperties> CreateTopicSubscriptionAsync(CreateSubscriptionOptions createSubscriptionOptions, CreateRuleOptions? rule,
+        RuleFilter? filter, CancellationToken cancellationToken)
     {
         var create = true;
-        SubscriptionProperties subscriptionProperties = null;
+        SubscriptionProperties? subscriptionProperties = null;
         try
         {
             subscriptionProperties = await GetSubscriptionAsync(createSubscriptionOptions.TopicName, createSubscriptionOptions.SubscriptionName, cancellationToken)
                 .ConfigureAwait(false);
 
-            string NormalizeForwardTo(string forwardTo)
+            string NormalizeForwardTo(string? forwardTo)
             {
                 return string.IsNullOrEmpty(forwardTo)
                     ? string.Empty
@@ -245,13 +245,19 @@ public class ServiceBusConnectionContext :
             }
         }
 
+        if (subscriptionProperties == null)
+        {
+            throw new InvalidOperationException(
+                $"Azure Service Bus did not return subscription '{createSubscriptionOptions.SubscriptionName}' on topic '{createSubscriptionOptions.TopicName}'.");
+        }
+
         LogContext.Debug?.Log("Subscription {Subscription} ({Topic} -> {ForwardTo})", subscriptionProperties.SubscriptionName,
             subscriptionProperties.TopicName, subscriptionProperties.ForwardTo);
 
         return subscriptionProperties;
     }
 
-    public async Task DeleteTopicSubscription(CreateSubscriptionOptions subscriptionOptions, CancellationToken cancellationToken)
+    public async Task DeleteTopicSubscriptionAsync(CreateSubscriptionOptions subscriptionOptions, CancellationToken cancellationToken)
     {
         try
         {
@@ -311,7 +317,7 @@ public class ServiceBusConnectionContext :
         return await _administrationClient.GetQueueAsync(path, cancellationToken).ConfigureAwait(false);
     }
 
-    async Task<QueueProperties> CreateQueueAsync(CreateQueueOptions createQueueOptions, CancellationToken cancellationToken)
+    async Task<QueueProperties> CreateQueueCoreAsync(CreateQueueOptions createQueueOptions, CancellationToken cancellationToken)
     {
         return await _administrationClient.CreateQueueAsync(createQueueOptions, cancellationToken).ConfigureAwait(false);
     }
@@ -321,7 +327,7 @@ public class ServiceBusConnectionContext :
         return await _administrationClient.GetTopicAsync(path, cancellationToken).ConfigureAwait(false);
     }
 
-    async Task<TopicProperties> CreateTopicAsync(CreateTopicOptions createTopicOptions, CancellationToken cancellationToken)
+    async Task<TopicProperties> CreateTopicCoreAsync(CreateTopicOptions createTopicOptions, CancellationToken cancellationToken)
     {
         return await _administrationClient.CreateTopicAsync(createTopicOptions, cancellationToken).ConfigureAwait(false);
     }

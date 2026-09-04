@@ -20,38 +20,38 @@ public sealed class TransactionFilterTestDriver
 
     public TransactionLifecycleSnapshot? Lifecycle => _factory.Context?.Snapshot;
 
-    public Task Execute(Func<TransactionContext, Task> downstream)
+    public Task ExecuteAsync(Func<TransactionContext, Task> downstream)
     {
         ArgumentNullException.ThrowIfNull(downstream);
 
         var context = new DriverContext();
-        return _filter.Send(
+        return _filter.SendAsync(
             context,
             Pipe.ExecuteAsync<DriverContext>(current => downstream(current.GetPayload<TransactionContext>())));
     }
 
-    public Task ExecuteNested(Func<TransactionContext, Task> downstream)
+    public Task ExecuteNestedAsync(Func<TransactionContext, Task> downstream)
     {
         ArgumentNullException.ThrowIfNull(downstream);
 
         var context = new DriverContext();
-        return _filter.Send(
+        return _filter.SendAsync(
             context,
             Pipe.ExecuteAsync<DriverContext>(outerContext =>
-                _filter.Send(
+                _filter.SendAsync(
                     outerContext,
                     Pipe.ExecuteAsync<DriverContext>(innerContext =>
                         downstream(innerContext.GetPayload<TransactionContext>())))));
     }
 
-    public Task ExecuteWithExisting(TransactionContext existing, Func<TransactionContext, Task> downstream)
+    public Task ExecuteWithExistingAsync(TransactionContext existing, Func<TransactionContext, Task> downstream)
     {
         ArgumentNullException.ThrowIfNull(existing);
         ArgumentNullException.ThrowIfNull(downstream);
 
         var context = new DriverContext();
         context.GetOrAddPayload(() => existing);
-        return _filter.Send(
+        return _filter.SendAsync(
             context,
             Pipe.ExecuteAsync<DriverContext>(current => downstream(current.GetPayload<TransactionContext>())));
     }
@@ -59,13 +59,13 @@ public sealed class TransactionFilterTestDriver
     public static object CreateWithNullFactory() =>
         new TransactionFilter<DriverContext>(IsolationLevel.ReadCommitted, TimeSpan.FromSeconds(5), null!);
 
-    public static Task ExecuteWithNullFactoryResult()
+    public static Task ExecuteWithNullFactoryResultAsync()
     {
         var filter = new TransactionFilter<DriverContext>(
             IsolationLevel.ReadCommitted,
             TimeSpan.FromSeconds(5),
             new NullTransactionContextFactory());
-        return filter.Send(new DriverContext(), Pipe.Empty<DriverContext>());
+        return filter.SendAsync(new DriverContext(), Pipe.Empty<DriverContext>());
     }
 
     private sealed class DriverContext : BasePipeContext
@@ -114,8 +114,9 @@ public sealed class TransactionFilterTestDriver
             Volatile.Read(ref _disposeCount),
             RollbackException);
 
-        public Task Commit()
+        public Task CommitAsync(CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             Interlocked.Increment(ref _commitCount);
             Volatile.Write(ref _active, 0);
             return Task.CompletedTask;

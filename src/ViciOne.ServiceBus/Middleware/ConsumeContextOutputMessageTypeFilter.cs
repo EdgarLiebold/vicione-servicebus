@@ -32,11 +32,11 @@ public class ConsumeContextOutputMessageTypeFilter<TMessage> :
         _output.Probe(scope);
     }
 
-    public Task Send(ConsumeContext context, IPipe<ConsumeContext> next)
+    public Task SendAsync(ConsumeContext context, IPipe<ConsumeContext> next)
     {
-        return context.TryGetMessage(out ConsumeContext<TMessage> pipeContext)
-            ? SendToOutput(next, pipeContext)
-            : next.Send(context);
+        return context.TryGetMessage(out ConsumeContext<TMessage>? pipeContext)
+            ? SendToOutputAsync(next, pipeContext)
+            : next.SendAsync(context);
     }
 
     public ConnectHandle ConnectConsumeMessageObserver(IConsumeMessageObserver<TMessage> observer)
@@ -54,36 +54,38 @@ public class ConsumeContextOutputMessageTypeFilter<TMessage> :
         return _output.ConnectPipe(key, pipe);
     }
 
-    async Task SendToOutput(IPipe<ConsumeContext> next, ConsumeContext<TMessage> pipeContext)
+    async Task SendToOutputAsync(IPipe<ConsumeContext> next, ConsumeContext<TMessage> pipeContext)
     {
         if (_observers.Count > 0)
         {
-            var preConsumeTask = _observers.PreConsume(pipeContext);
+            var preConsumeTask = _observers.PreConsumeAsync(pipeContext);
             if (preConsumeTask.Status != TaskStatus.RanToCompletion)
                 await preConsumeTask.ConfigureAwait(false);
         }
 
         if (_consumeObservers.Count > 0)
         {
-            var preConsumeTask = _consumeObservers.PreConsume(pipeContext);
+            var preConsumeTask = _consumeObservers.PreConsumeAsync(pipeContext);
             if (preConsumeTask.Status != TaskStatus.RanToCompletion)
                 await preConsumeTask.ConfigureAwait(false);
         }
 
         try
         {
-            await _output.Send(pipeContext, next).ConfigureAwait(false);
+            var typedNext = Pipe.Execute<ConsumeContext<TMessage>>(messageContext => next.SendAsync(messageContext.Advanced()));
+
+            await _output.SendAsync(pipeContext, typedNext).ConfigureAwait(false);
 
             if (_observers.Count > 0)
             {
-                var postConsumeTask = _observers.PostConsume(pipeContext);
+                var postConsumeTask = _observers.PostConsumeAsync(pipeContext);
                 if (postConsumeTask.Status != TaskStatus.RanToCompletion)
                     await postConsumeTask.ConfigureAwait(false);
             }
 
             if (_consumeObservers.Count > 0)
             {
-                var postConsumeTask = _consumeObservers.PostConsume(pipeContext);
+                var postConsumeTask = _consumeObservers.PostConsumeAsync(pipeContext);
                 if (postConsumeTask.Status != TaskStatus.RanToCompletion)
                     await postConsumeTask.ConfigureAwait(false);
             }
@@ -92,14 +94,14 @@ public class ConsumeContextOutputMessageTypeFilter<TMessage> :
         {
             if (_observers.Count > 0)
             {
-                var consumeFaultTask = _observers.ConsumeFault(pipeContext, ex);
+                var consumeFaultTask = _observers.ConsumeFaultAsync(pipeContext, ex);
                 if (consumeFaultTask.Status != TaskStatus.RanToCompletion)
                     await consumeFaultTask.ConfigureAwait(false);
             }
 
             if (_consumeObservers.Count > 0)
             {
-                var consumeFaultTask = _consumeObservers.ConsumeFault(pipeContext, ex);
+                var consumeFaultTask = _consumeObservers.ConsumeFaultAsync(pipeContext, ex);
                 if (consumeFaultTask.Status != TaskStatus.RanToCompletion)
                     await consumeFaultTask.ConfigureAwait(false);
             }

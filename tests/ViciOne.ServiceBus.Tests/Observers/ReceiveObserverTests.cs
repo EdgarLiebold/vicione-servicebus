@@ -11,7 +11,7 @@ public sealed class ReceiveObserverTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-RECEIVE-OBSERVER", "handler-and-consumer-success")]
-    public async Task SuccessfulHandlerAndConsumer_ReportExactReceiveAndConsumeBoundaries()
+    public async Task SuccessfulHandlerAndConsumer_ReportExactReceiveAndConsumeBoundariesAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -19,7 +19,7 @@ public sealed class ReceiveObserverTests
         harness.Handler<HandledMessage>();
         harness.Consumer<ObservedConsumer>();
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             var observer = new RecordingReceiveObserver(expectedPostReceiveCount: 2);
@@ -27,9 +27,9 @@ public sealed class ReceiveObserverTests
             var handled = new HandledMessage(NewId.NextGuid());
             var consumed = new ConsumedMessage(NewId.NextGuid());
 
-            await harness.InputQueueSendEndpoint.Send(handled, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(handled, cancellationToken);
             await observer.FirstPostReceive.WaitAsync(timeout, cancellationToken);
-            await harness.InputQueueSendEndpoint.Send(consumed, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(consumed, cancellationToken);
             await observer.AllExpectedPostReceives.WaitAsync(timeout, cancellationToken);
 
             ReceiveObservation[] events = observer.Events;
@@ -46,13 +46,13 @@ public sealed class ReceiveObserverTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RECEIVE-OBSERVER", "consumer-fault-is-handled-receive")]
-    public async Task ConsumerFailure_ReportsConsumeFaultThenCompletesTheHandledReceive()
+    public async Task ConsumerFailure_ReportsConsumeFaultThenCompletesTheHandledReceiveAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -60,14 +60,14 @@ public sealed class ReceiveObserverTests
         using var harness = CreateHarness(timeout);
         harness.Handler<FaultingMessage>(_ => Task.FromException(expected));
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             var observer = new RecordingReceiveObserver(expectedPostReceiveCount: 1);
             using ConnectHandle observerHandle = harness.Bus.ConnectReceiveObserver(observer);
             var message = new FaultingMessage(NewId.NextGuid());
 
-            await harness.InputQueueSendEndpoint.Send(message, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(message, cancellationToken);
             await observer.FirstConsumeFault.WaitAsync(timeout, cancellationToken);
             await observer.FirstPostReceive.WaitAsync(timeout, cancellationToken);
 
@@ -88,13 +88,13 @@ public sealed class ReceiveObserverTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RECEIVE-OBSERVER", "post-consume-pipeline-receive-fault")]
-    public async Task FailureAfterSuccessfulConsumption_ReportsReceiveFaultThenCompletesTheHandledDelivery()
+    public async Task FailureAfterSuccessfulConsumption_ReportsReceiveFaultThenCompletesTheHandledDeliveryAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -107,14 +107,14 @@ public sealed class ReceiveObserverTests
             configurator.Handler<PostPipelineMessage>(_ => Task.CompletedTask);
         };
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             var observer = new RecordingReceiveObserver(expectedPostReceiveCount: 1);
             using ConnectHandle observerHandle = harness.Bus.ConnectReceiveObserver(observer);
             var message = new PostPipelineMessage(NewId.NextGuid());
 
-            await harness.InputQueueSendEndpoint.Send(message, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(message, cancellationToken);
             await observer.FirstReceiveFault.WaitAsync(timeout, cancellationToken);
             await observer.FirstPostReceive.WaitAsync(timeout, cancellationToken);
 
@@ -137,7 +137,7 @@ public sealed class ReceiveObserverTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
@@ -200,13 +200,13 @@ public sealed class ReceiveObserverTests
 
         public Task FirstReceiveFault => _firstReceiveFault.Task;
 
-        public Task PreReceive(ReceiveContext context)
+        public Task PreReceiveAsync(ReceiveContext context)
         {
             _events.Enqueue(new ReceiveObservation("PreReceive", context, null, null, null, null, null, null));
             return Task.CompletedTask;
         }
 
-        public Task PostReceive(ReceiveContext context)
+        public Task PostReceiveAsync(ReceiveContext context)
         {
             _events.Enqueue(new ReceiveObservation("PostReceive", context, null, null, null, null, null, null));
             _firstPostReceive.TrySetResult();
@@ -216,22 +216,22 @@ public sealed class ReceiveObserverTests
             return Task.CompletedTask;
         }
 
-        public Task PostConsume<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
+        public Task PostConsumeAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
             where T : class
         {
-            _events.Enqueue(new ReceiveObservation("PostConsume", null, context, context.Message, typeof(T), duration, consumerType, null));
+            _events.Enqueue(new ReceiveObservation("PostConsume", null, context.Advanced(), context.Message, typeof(T), duration, consumerType, null));
             return Task.CompletedTask;
         }
 
-        public Task ConsumeFault<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
+        public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
             where T : class
         {
-            _events.Enqueue(new ReceiveObservation("ConsumeFault", null, context, context.Message, typeof(T), duration, consumerType, exception));
+            _events.Enqueue(new ReceiveObservation("ConsumeFault", null, context.Advanced(), context.Message, typeof(T), duration, consumerType, exception));
             _firstConsumeFault.TrySetResult();
             return Task.CompletedTask;
         }
 
-        public Task ReceiveFault(ReceiveContext context, Exception exception)
+        public Task ReceiveFaultAsync(ReceiveContext context, Exception exception)
         {
             _events.Enqueue(new ReceiveObservation("ReceiveFault", context, null, null, null, null, null, exception));
             _firstReceiveFault.TrySetResult();
@@ -241,9 +241,9 @@ public sealed class ReceiveObserverTests
 
     private sealed class PostConsumeFailureFilter(Exception failure) : IFilter<ConsumeContext>
     {
-        public async Task Send(ConsumeContext context, IPipe<ConsumeContext> next)
+        public async Task SendAsync(ConsumeContext context, IPipe<ConsumeContext> next)
         {
-            await next.Send(context);
+            await next.SendAsync(context);
             throw failure;
         }
 
@@ -255,7 +255,7 @@ public sealed class ReceiveObserverTests
 
     private sealed class ObservedConsumer : IConsumer<ConsumedMessage>
     {
-        public Task Consume(ConsumeContext<ConsumedMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<ConsumedMessage> context) => Task.CompletedTask;
     }
 
     private sealed record ReceiveObservation(

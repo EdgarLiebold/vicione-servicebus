@@ -12,7 +12,7 @@ public interface IRabbitMqMessageConsumeTopologyConfigurator<TMessage> :
     /// Adds the exchange bindings for this message type
     /// </summary>
     /// <param name="configure">Configure the binding and the exchange</param>
-    void Bind(Action<IRabbitMqExchangeBindingConfigurator> configure = null);
+    void Bind(Action<IRabbitMqExchangeBindingConfigurator>? configure = null);
 }
 
 

@@ -10,13 +10,13 @@ public sealed class StateMachineDefinitionTests
     [InlineData(StateMachineConstructionStyle.Declarative)]
     [InlineData(StateMachineConstructionStyle.Dynamic)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-DEFINITION", "exact-state-event-and-next-event-surface")]
-    public async Task Definition_InitializesAndEnumeratesTheExactStateEventAndReachableEventSurface(
+    public async Task Definition_InitializesAndEnumeratesTheExactStateEventAndReachableEventSurfaceAsync(
         StateMachineConstructionStyle style)
     {
         DefinitionScenario scenario = CreateDefinitionScenario(style);
         var instance = new DefinitionInstance();
 
-        await StateMachineTestExecution.Raise(scenario.Machine, instance, scenario.Start);
+        await StateMachineTestExecution.RaiseAsync(scenario.Machine, instance, scenario.Start);
 
         Assert.Equal(typeof(DefinitionInstance), ((StateMachine)scenario.Machine).InstanceType);
         Assert.Equal(
@@ -49,18 +49,18 @@ public sealed class StateMachineDefinitionTests
     [InlineData(StateMachineConstructionStyle.Declarative)]
     [InlineData(StateMachineConstructionStyle.Dynamic)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-DEFINITION", "independent-instance-state-properties")]
-    public async Task TwoMachines_KeepIndependentStatePropertiesOnTheSameSaga(
+    public async Task TwoMachines_KeepIndependentStatePropertiesOnTheSameSagaAsync(
         StateMachineConstructionStyle style)
     {
         IndependentStateScenario scenario = CreateIndependentStateScenario(style);
         var instance = new IndependentStateInstance();
 
-        await StateMachineTestExecution.Raise(scenario.TopMachine, instance, scenario.TopStart);
+        await StateMachineTestExecution.RaiseAsync(scenario.TopMachine, instance, scenario.TopStart);
 
         Assert.Same(scenario.TopRunning, instance.TopState);
         Assert.Null(instance.BottomState);
 
-        await StateMachineTestExecution.Raise(scenario.BottomMachine, instance, scenario.BottomStart);
+        await StateMachineTestExecution.RaiseAsync(scenario.BottomMachine, instance, scenario.BottomStart);
 
         Assert.Same(scenario.TopRunning, instance.TopState);
         Assert.Same(scenario.BottomRunning, instance.BottomState);

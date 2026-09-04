@@ -14,7 +14,7 @@ public sealed class ActiveMqKillSwitchTests
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [RequirementCoverage("OBL-R0-BRK-0433", "repeated-consumer-failure-degrades-recovers-and-continues-delivery")]
-    public async Task RepeatedConsumerFailure_TransitionsToDegradedAndRecovers(string flavor)
+    public async Task RepeatedConsumerFailure_TransitionsToDegradedAndRecoversAsync(string flavor)
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(flavor, "kill-switch");
         string queueName = fixture.Name("input");
@@ -62,9 +62,8 @@ public sealed class ActiveMqKillSwitchTests
                 BusHealthStatus.Healthy,
                 (await bus.WaitForHealthStatusAsync(BusHealthStatus.Healthy, fixture.OperationTimeout, cancellationToken)).Status);
 
-            ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await Task.WhenAll(failures.Select(flowId => input.Send(new FailingMessage(flowId), cancellationToken)))
+            ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await Task.WhenAll(failures.Select(flowId => input.SendAsync(new FailingMessage(flowId), cancellationToken)))
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             Assert.Equal(
@@ -75,7 +74,7 @@ public sealed class ActiveMqKillSwitchTests
                 (await bus.WaitForHealthStatusAsync(BusHealthStatus.Healthy, fixture.OperationTimeout, cancellationToken)).Status);
             await allFailuresObserved.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
 
-            await Task.WhenAll(recoveries.Select(flowId => input.Send(new HealthyMessage(flowId), cancellationToken)))
+            await Task.WhenAll(recoveries.Select(flowId => input.SendAsync(new HealthyMessage(flowId), cancellationToken)))
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             await allRecoveriesObserved.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
 

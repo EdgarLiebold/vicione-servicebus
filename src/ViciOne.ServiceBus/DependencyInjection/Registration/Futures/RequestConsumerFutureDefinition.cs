@@ -11,7 +11,7 @@ public class RequestConsumerFutureDefinition<TFuture, TConsumer, TRequest, TResp
     where TFault : class
     where TConsumer : class, IConsumer<TRequest>
 {
-    readonly IFutureRequestDefinition<TRequest> _requestDefinition;
+    readonly IFutureRequestDefinition<TRequest> _requestDefinition = null!;
 
     public RequestConsumerFutureDefinition(IConsumerDefinition<TConsumer> consumerDefinition)
     {

@@ -17,7 +17,7 @@ public sealed class RetryFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RETRY-OBSERVERS", "exhausted-lifecycle-and-exact-failure")]
-    public async Task ExhaustedRetry_EmitsTheExactObserverLifecycleAndRethrowsTheTerminalFailure()
+    public async Task ExhaustedRetry_EmitsTheExactObserverLifecycleAndRethrowsTheTerminalFailureAsync()
     {
         var observer = new RecordingRetryObserver();
         var expected = new RetryFailureException("terminal");
@@ -37,7 +37,7 @@ public sealed class RetryFilterTests
         });
 
         RetryFailureException actual = await Assert.ThrowsAsync<RetryFailureException>(() =>
-            pipe.Send(new TestPipeContext()));
+            pipe.SendAsync(new TestPipeContext()));
 
         Assert.Same(expected, actual);
         Assert.Equal(5, attempts);
@@ -55,7 +55,7 @@ public sealed class RetryFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RETRY-OBSERVERS", "successful-retry-lifecycle")]
-    public async Task SuccessfulRetry_EmitsCompletionOnceAndNeverEmitsTerminalFault()
+    public async Task SuccessfulRetry_EmitsCompletionOnceAndNeverEmitsTerminalFaultAsync()
     {
         var observer = new RecordingRetryObserver();
         var attempts = 0;
@@ -73,7 +73,7 @@ public sealed class RetryFilterTests
             });
         });
 
-        await pipe.Send(new TestPipeContext());
+        await pipe.SendAsync(new TestPipeContext());
 
         Assert.Equal(2, attempts);
         Assert.Equal(["create", "fault:0", "before:0", "complete:0"], observer.Events);
@@ -82,7 +82,7 @@ public sealed class RetryFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RETRY-OBSERVERS", "no-retry-terminal-lifecycle")]
-    public async Task NoRetry_ReportsOneTerminalFaultWithoutRetryEvents()
+    public async Task NoRetry_ReportsOneTerminalFaultWithoutRetryEventsAsync()
     {
         var observer = new RecordingRetryObserver();
         var expected = new RetryFailureException("not retried");
@@ -102,7 +102,7 @@ public sealed class RetryFilterTests
         });
 
         RetryFailureException actual = await Assert.ThrowsAsync<RetryFailureException>(() =>
-            pipe.Send(new TestPipeContext()));
+            pipe.SendAsync(new TestPipeContext()));
 
         Assert.Same(expected, actual);
         Assert.Equal(1, attempts);
@@ -112,7 +112,7 @@ public sealed class RetryFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RETRY-OBSERVERS", "nested-owner-observer-receives-complete-lifecycle")]
-    public async Task NestedOwningRetryObserver_ReceivesItsCompleteLifecycle()
+    public async Task NestedOwningRetryObserver_ReceivesItsCompleteLifecycleAsync()
     {
         var observer = new RecordingRetryObserver();
         var attempts = 0;
@@ -131,7 +131,7 @@ public sealed class RetryFilterTests
             });
         });
 
-        await Assert.ThrowsAsync<RetryFailureException>(() => pipe.Send(new TestPipeContext()));
+        await Assert.ThrowsAsync<RetryFailureException>(() => pipe.SendAsync(new TestPipeContext()));
 
         Assert.Equal(5, attempts);
         Assert.Equal(
@@ -147,7 +147,7 @@ public sealed class RetryFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RETRY-OBSERVERS", "outer-observer-receives-nested-terminal-context")]
-    public async Task OuterObserver_ReceivesTheTerminalContextOwnedByTheNestedRetry()
+    public async Task OuterObserver_ReceivesTheTerminalContextOwnedByTheNestedRetryAsync()
     {
         var observer = new RecordingRetryObserver();
         var attempts = 0;
@@ -166,7 +166,7 @@ public sealed class RetryFilterTests
             });
         });
 
-        await Assert.ThrowsAsync<RetryFailureException>(() => pipe.Send(new TestPipeContext()));
+        await Assert.ThrowsAsync<RetryFailureException>(() => pipe.SendAsync(new TestPipeContext()));
 
         Assert.Equal(5, attempts);
         Assert.Equal(["create", "terminal:4"], observer.Events);
@@ -177,7 +177,7 @@ public sealed class RetryFilterTests
     [InlineData(true, 1)]
     [InlineData(false, 5)]
     [RequirementCoverage("REQ-VSB-RETRY-COMPOSITION", "same-exception-policies-do-not-multiply")]
-    public async Task NestedRetryPolicies_DoNotMultiplyTheDownstreamRetryBudget(
+    public async Task NestedRetryPolicies_DoNotMultiplyTheDownstreamRetryBudgetAsync(
         bool retryingPolicyFirst,
         int expectedAttempts)
     {
@@ -202,14 +202,14 @@ public sealed class RetryFilterTests
             });
         });
 
-        await Assert.ThrowsAsync<RetryFailureException>(() => pipe.Send(new TestPipeContext()));
+        await Assert.ThrowsAsync<RetryFailureException>(() => pipe.SendAsync(new TestPipeContext()));
 
         Assert.Equal(expectedAttempts, attempts);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RETRY-COMPOSITION", "distinct-exceptions-have-independent-budgets")]
-    public async Task DistinctNestedPolicies_KeepIndependentBudgetsWithoutRecursiveMultiplication()
+    public async Task DistinctNestedPolicies_KeepIndependentBudgetsWithoutRecursiveMultiplicationAsync()
     {
         var attempts = 0;
         IPipe<TestPipeContext> pipe = Pipe.New<TestPipeContext>(configuration =>
@@ -233,7 +233,7 @@ public sealed class RetryFilterTests
             });
         });
 
-        await Assert.ThrowsAsync<EvenAttemptException>(() => pipe.Send(new TestPipeContext()));
+        await Assert.ThrowsAsync<EvenAttemptException>(() => pipe.SendAsync(new TestPipeContext()));
 
         Assert.Equal(22, attempts);
     }
@@ -243,7 +243,7 @@ public sealed class RetryFilterTests
     [InlineData(DispatchRetryLayout.OuterRetryThenNone, 1)]
     [InlineData(DispatchRetryLayout.OuterRetryInnerNone, 1)]
     [RequirementCoverage("REQ-VSB-RETRY-DISPATCH", "typed-dispatch-retains-single-owner")]
-    public async Task RetryAcrossTypedDispatch_PreservesExactlyOneOwningBudget(
+    public async Task RetryAcrossTypedDispatch_PreservesExactlyOneOwningBudgetAsync(
         DispatchRetryLayout layout,
         int expectedAttempts)
     {
@@ -276,14 +276,14 @@ public sealed class RetryFilterTests
             });
         });
 
-        await Assert.ThrowsAsync<RetryFailureException>(() => pipe.SetConcurrencyLimit(32));
+        await Assert.ThrowsAsync<RetryFailureException>(() => pipe.SetConcurrencyLimitAsync(32, cancellationToken: TestContext.Current.CancellationToken));
 
         Assert.Equal(expectedAttempts, attempts);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RETRY-DISPATCH", "replacement-context-retains-single-owner")]
-    public async Task ReplacementPolicyContext_PreservesTypedDispatchWithoutMultiplyingRetryBudgets()
+    public async Task ReplacementPolicyContext_PreservesTypedDispatchWithoutMultiplyingRetryBudgetsAsync()
     {
         var attempts = new List<int>();
         IPipe<CommandContext> pipe = Pipe.New<CommandContext>(configuration =>
@@ -306,7 +306,7 @@ public sealed class RetryFilterTests
             });
         });
 
-        await Assert.ThrowsAsync<RetryFailureException>(() => pipe.SetConcurrencyLimit(32));
+        await Assert.ThrowsAsync<RetryFailureException>(() => pipe.SetConcurrencyLimitAsync(32, cancellationToken: TestContext.Current.CancellationToken));
 
         Assert.Equal([0], attempts);
     }
@@ -315,7 +315,7 @@ public sealed class RetryFilterTests
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("REQ-VSB-RETRY-FILTERING", "ignored-direct-and-inner-exception")]
-    public async Task IgnoredException_IsNotRetriedWhenDirectOrWrapped(bool wrapped)
+    public async Task IgnoredException_IsNotRetriedWhenDirectOrWrappedAsync(bool wrapped)
     {
         var attempts = 0;
         Exception expected = wrapped
@@ -337,9 +337,9 @@ public sealed class RetryFilterTests
 
         Exception actual;
         if (wrapped)
-            actual = await Assert.ThrowsAsync<WrappedRetryFailureException>(() => pipe.Send(new TestPipeContext()));
+            actual = await Assert.ThrowsAsync<WrappedRetryFailureException>(() => pipe.SendAsync(new TestPipeContext()));
         else
-            actual = await Assert.ThrowsAsync<RetryFailureException>(() => pipe.Send(new TestPipeContext()));
+            actual = await Assert.ThrowsAsync<RetryFailureException>(() => pipe.SendAsync(new TestPipeContext()));
 
         Assert.Same(expected, actual);
         Assert.Equal(1, attempts);
@@ -347,7 +347,7 @@ public sealed class RetryFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RETRY-ITERATION", "large-budget-does-not-grow-stack")]
-    public async Task LargeRetryBudget_IsExecutedIterativelyWithoutStackGrowth()
+    public async Task LargeRetryBudget_IsExecutedIterativelyWithoutStackGrowthAsync()
     {
         const int retryCount = 20_000;
         var attempts = 0;
@@ -361,14 +361,14 @@ public sealed class RetryFilterTests
             });
         });
 
-        await Assert.ThrowsAsync<RetryFailureException>(() => pipe.Send(new TestPipeContext()));
+        await Assert.ThrowsAsync<RetryFailureException>(() => pipe.SendAsync(new TestPipeContext()));
 
         Assert.Equal(retryCount + 1, attempts);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RETRY-TIME", "context-time-provider-controls-delay")]
-    public async Task RetryDelay_AdvancesOnlyOnTheContextTimeProvider()
+    public async Task RetryDelay_AdvancesOnlyOnTheContextTimeProviderAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
         TimeSpan interval = TimeSpan.FromHours(1);
@@ -385,8 +385,8 @@ public sealed class RetryFilterTests
         var context = new TestPipeContext();
         context.SetTimeProvider(timeProvider);
 
-        Task send = pipe.Send(context);
-        await timeProvider.WaitForTimerCount(1)
+        Task send = pipe.SendAsync(context);
+        await timeProvider.WaitForTimerCountAsync(1)
             .WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
         Assert.False(send.IsCompleted);
         Assert.Equal(1, attempts);
@@ -403,7 +403,7 @@ public sealed class RetryFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RETRY-TIME", "source-cancellation-during-delay-is-exact")]
-    public async Task SourceCancellationDuringDelay_PropagatesTheExactTokenWithoutAnotherAttempt()
+    public async Task SourceCancellationDuringDelay_PropagatesTheExactTokenWithoutAnotherAttemptAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
         using var cancellation = new CancellationTokenSource();
@@ -419,8 +419,8 @@ public sealed class RetryFilterTests
         });
         var context = new TestPipeContext(cancellation.Token);
         context.SetTimeProvider(timeProvider);
-        Task send = pipe.Send(context);
-        await timeProvider.WaitForTimerCount(1)
+        Task send = pipe.SendAsync(context);
+        await timeProvider.WaitForTimerCountAsync(1)
             .WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
 
         cancellation.Cancel();
@@ -434,7 +434,7 @@ public sealed class RetryFilterTests
     [InlineData(false, 2)]
     [InlineData(true, 3)]
     [RequirementCoverage("REQ-VSB-RETRY-CANCELLATION", "unrequested-token-is-a-dependency-failure")]
-    public async Task UnrequestedOperationCanceledException_IsRetriedAsADependencyFailure(
+    public async Task UnrequestedOperationCanceledException_IsRetriedAsADependencyFailureAsync(
         bool cancellationOccursDuringRetry,
         int expectedAttempts)
     {
@@ -457,7 +457,7 @@ public sealed class RetryFilterTests
             });
         });
 
-        await pipe.Send(new TestPipeContext(cancellation.Token)).WaitAsync(timeout, testCancellationToken);
+        await pipe.SendAsync(new TestPipeContext(cancellation.Token)).WaitAsync(timeout, testCancellationToken);
 
         Assert.False(cancellation.IsCancellationRequested);
         Assert.Equal(expectedAttempts, attempts);
@@ -465,7 +465,7 @@ public sealed class RetryFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RETRY-CANCELLATION", "unrequested-retry-context-token-is-a-dependency-failure")]
-    public async Task UnrequestedRetryContextCancellationToken_IsRetriedAsADependencyFailure()
+    public async Task UnrequestedRetryContextCancellationToken_IsRetriedAsADependencyFailureAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken testCancellationToken = TestContext.Current.CancellationToken;
@@ -485,7 +485,7 @@ public sealed class RetryFilterTests
                     dependencyCancellation.Token);
         });
 
-        await filter.Send(new TestPipeContext(), next).WaitAsync(timeout, testCancellationToken);
+        await filter.SendAsync(new TestPipeContext(), next).WaitAsync(timeout, testCancellationToken);
 
         Assert.False(dependencyCancellation.IsCancellationRequested);
         Assert.Equal(3, attempts);
@@ -493,7 +493,7 @@ public sealed class RetryFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RETRY-CONTRACT", "policy-cancellation-never-reports-success")]
-    public async Task PolicyCancellationBeforeTheRetryAttempt_IsNeverReportedAsSuccess()
+    public async Task PolicyCancellationBeforeTheRetryAttempt_IsNeverReportedAsSuccessAsync()
     {
         using var cancellation = new CancellationTokenSource();
         cancellation.Cancel();
@@ -510,7 +510,7 @@ public sealed class RetryFilterTests
         });
 
         OperationCanceledException actual = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
-            pipe.Send(new TestPipeContext()));
+            pipe.SendAsync(new TestPipeContext()));
 
         Assert.Equal(cancellation.Token, actual.CancellationToken);
         Assert.Equal(1, attempts);
@@ -518,7 +518,7 @@ public sealed class RetryFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RETRY-POLICY", "policy-context-disposed-on-terminal-fault")]
-    public async Task PolicyContext_IsDisposedExactlyOnceAfterTerminalFailure()
+    public async Task PolicyContext_IsDisposedExactlyOnceAfterTerminalFailureAsync()
     {
         var disposals = 0;
         var attempts = 0;
@@ -533,7 +533,7 @@ public sealed class RetryFilterTests
             });
         });
 
-        await Assert.ThrowsAsync<RetryFailureException>(() => pipe.Send(new TestPipeContext()));
+        await Assert.ThrowsAsync<RetryFailureException>(() => pipe.SendAsync(new TestPipeContext()));
 
         Assert.Equal(2, attempts);
         Assert.Equal(1, disposals);
@@ -550,51 +550,51 @@ public sealed class RetryFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RETRY-CONTRACT", "null-send-arguments-rejected")]
-    public async Task Send_RejectsANullContextAndNullNextPipe()
+    public async Task Send_RejectsANullContextAndNullNextPipeAsync()
     {
         IFilter<TestPipeContext> filter = new RetryFilter<TestPipeContext>(Retry.None, new RetryObservable());
 
         await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            filter.Send(null!, Pipe.Empty<TestPipeContext>()));
+            filter.SendAsync(null!, Pipe.Empty<TestPipeContext>()));
         await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            filter.Send(new TestPipeContext(), null!));
+            filter.SendAsync(new TestPipeContext(), null!));
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RETRY-CONTRACT", "null-policy-context-rejected")]
-    public async Task Send_RejectsANullPolicyContext()
+    public async Task Send_RejectsANullPolicyContextAsync()
     {
         IFilter<TestPipeContext> filter =
             new RetryFilter<TestPipeContext>(new NullPolicyContextPolicy(), new RetryObservable());
 
         InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            filter.Send(new TestPipeContext(), Pipe.Empty<TestPipeContext>()));
+            filter.SendAsync(new TestPipeContext(), Pipe.Empty<TestPipeContext>()));
 
         Assert.Equal("The retry policy returned a null policy context.", actual.Message);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RETRY-CONTRACT", "null-replacement-context-rejected")]
-    public async Task Send_RejectsAPolicyContextWithoutAPipeContext()
+    public async Task Send_RejectsAPolicyContextWithoutAPipeContextAsync()
     {
         IFilter<TestPipeContext> filter =
             new RetryFilter<TestPipeContext>(new NullPipeContextPolicy(), new RetryObservable());
 
         InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            filter.Send(new TestPipeContext(), Pipe.Empty<TestPipeContext>()));
+            filter.SendAsync(new TestPipeContext(), Pipe.Empty<TestPipeContext>()));
 
         Assert.Equal("The retry policy returned a policy context without a pipe context.", actual.Message);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RETRY-CONTRACT", "null-retry-context-rejected")]
-    public async Task Send_RejectsANullRetryContext()
+    public async Task Send_RejectsANullRetryContextAsync()
     {
         IFilter<TestPipeContext> filter =
             new RetryFilter<TestPipeContext>(new NullRetryContextPolicy(), new RetryObservable());
 
         InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            filter.Send(new TestPipeContext(), Pipe.Execute<TestPipeContext>(_ =>
+            filter.SendAsync(new TestPipeContext(), Pipe.Execute<TestPipeContext>(_ =>
                 throw new RetryFailureException("failure"))));
 
         Assert.Equal("The retry policy returned a null retry context.", actual.Message);
@@ -616,28 +616,28 @@ public sealed class RetryFilterTests
 
         public RetryContext? TerminalContext { get; private set; }
 
-        public Task PostCreate<T>(RetryPolicyContext<T> context)
+        public Task PostCreateAsync<T>(RetryPolicyContext<T> context)
             where T : class, PipeContext
         {
             _events.Add("create");
             return Task.CompletedTask;
         }
 
-        public Task PostFault<T>(RetryContext<T> context)
+        public Task PostFaultAsync<T>(RetryContext<T> context)
             where T : class, PipeContext
         {
             _events.Add($"fault:{context.RetryCount}");
             return Task.CompletedTask;
         }
 
-        public Task PreRetry<T>(RetryContext<T> context)
+        public Task PreRetryAsync<T>(RetryContext<T> context)
             where T : class, PipeContext
         {
             _events.Add($"before:{context.RetryCount}");
             return Task.CompletedTask;
         }
 
-        public Task RetryFault<T>(RetryContext<T> context)
+        public Task RetryFaultAsync<T>(RetryContext<T> context)
             where T : class, PipeContext
         {
             _events.Add($"terminal:{context.RetryCount}");
@@ -646,7 +646,7 @@ public sealed class RetryFilterTests
             return Task.CompletedTask;
         }
 
-        public Task RetryComplete<T>(RetryContext<T> context)
+        public Task RetryCompleteAsync<T>(RetryContext<T> context)
             where T : class, PipeContext
         {
             _events.Add($"complete:{context.RetryCount}");
@@ -678,8 +678,7 @@ public sealed class RetryFilterTests
             return true;
         }
 
-        public Task RetryFaulted(Exception exception) => Task.CompletedTask;
-
+        public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
         public void Cancel()
         {
         }
@@ -723,8 +722,7 @@ public sealed class RetryFilterTests
             return true;
         }
 
-        public Task RetryFaulted(Exception exception) => Task.CompletedTask;
-
+        public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
         public void Cancel()
         {
         }
@@ -814,8 +812,7 @@ public sealed class RetryFilterTests
             return true;
         }
 
-        public Task RetryFaulted(Exception exception) => Task.CompletedTask;
-
+        public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
         public void Cancel()
         {
         }
@@ -847,8 +844,7 @@ public sealed class RetryFilterTests
             return false;
         }
 
-        public Task RetryFaulted(Exception exception) => Task.CompletedTask;
-
+        public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
         public void Cancel()
         {
         }
@@ -869,8 +865,7 @@ public sealed class RetryFilterTests
             return true;
         }
 
-        public Task RetryFaulted(Exception exception) => Task.CompletedTask;
-
+        public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
         public void Cancel()
         {
         }
@@ -912,7 +907,7 @@ public sealed class RetryFilterTests
             return canRetry;
         }
 
-        public Task RetryFaulted(Exception exception) => policyContext.RetryFaulted(exception);
+        public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default) => policyContext.RetryFaultedAsync(exception, cancellationToken: cancellationToken);
 
         public void Cancel() => policyContext.Cancel();
 
@@ -938,9 +933,9 @@ public sealed class RetryFilterTests
 
         public Type ContextType => retryContext.ContextType;
 
-        public Task RetryFaulted(Exception exception) => retryContext.RetryFaulted(exception);
+        public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default) => retryContext.RetryFaultedAsync(exception, cancellationToken: cancellationToken);
 
-        public Task PreRetry() => retryContext.PreRetry();
+        public Task PreRetryAsync(CancellationToken cancellationToken = default) => retryContext.PreRetryAsync(cancellationToken: cancellationToken);
 
         public bool CanRetry(Exception exception, out RetryContext<T> nextRetryContext)
         {
@@ -956,7 +951,7 @@ public sealed class RetryFilterTests
     {
         public T Command => context.Command;
 
-        public DateTime Timestamp => context.Timestamp;
+        public DateTimeOffset Timestamp => context.Timestamp;
 
         public CancellationToken CancellationToken => context.CancellationToken;
 

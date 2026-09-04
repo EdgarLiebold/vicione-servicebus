@@ -34,43 +34,43 @@ public class CatchFaultActivity<TSaga, TException> :
         _behavior.Probe(scope.CreateScope("behavior"));
     }
 
-    public Task Execute(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
-        return next.Execute(context);
+        return next.ExecuteAsync(context);
     }
 
-    public Task Execute<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+    public Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
-        return next.Execute(context);
+        return next.ExecuteAsync(context);
     }
 
-    public async Task Faulted<T>(BehaviorExceptionContext<TSaga, T> context, IBehavior<TSaga> next)
+    public async Task FaultedAsync<T>(BehaviorExceptionContext<TSaga, T> context, IBehavior<TSaga> next)
         where T : Exception
     {
         if (context is BehaviorExceptionContext<TSaga, TException> exceptionContext)
         {
-            await _behavior.Faulted(exceptionContext).ConfigureAwait(false);
+            await _behavior.FaultedAsync(exceptionContext).ConfigureAwait(false);
 
             // if the compensate returns, we should go forward normally
-            await next.Execute(context).ConfigureAwait(false);
+            await next.ExecuteAsync(context).ConfigureAwait(false);
         }
         else
-            await next.Faulted(context).ConfigureAwait(false);
+            await next.FaultedAsync(context).ConfigureAwait(false);
     }
 
-    public async Task Faulted<TMessage, T>(BehaviorExceptionContext<TSaga, TMessage, T> context, IBehavior<TSaga, TMessage> next)
+    public async Task FaultedAsync<TMessage, T>(BehaviorExceptionContext<TSaga, TMessage, T> context, IBehavior<TSaga, TMessage> next)
         where TMessage : class
         where T : Exception
     {
         if (context is BehaviorExceptionContext<TSaga, TMessage, TException> exceptionContext)
         {
-            await _behavior.Faulted(exceptionContext).ConfigureAwait(false);
+            await _behavior.FaultedAsync(exceptionContext).ConfigureAwait(false);
 
             // if the compensation returns, we should go forward normally
-            await next.Execute(context).ConfigureAwait(false);
+            await next.ExecuteAsync(context).ConfigureAwait(false);
         }
         else
-            await next.Faulted(context).ConfigureAwait(false);
+            await next.FaultedAsync(context).ConfigureAwait(false);
     }
 }

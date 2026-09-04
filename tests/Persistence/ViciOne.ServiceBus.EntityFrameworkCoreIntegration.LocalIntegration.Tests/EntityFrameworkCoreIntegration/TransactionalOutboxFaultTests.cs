@@ -13,7 +13,7 @@ public sealed class TransactionalOutboxFaultTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-TRANSACTION", "database-constraint-fault-does-not-poison-endpoint")]
-    public async Task DuplicateKeyFailure_PublishesTheTypedDatabaseFaultAndTheEndpointRecovers()
+    public async Task DuplicateKeyFailure_PublishesTheTypedDatabaseFaultAndTheEndpointRecoversAsync()
     {
         await using TransactionalOutboxFixture fixture = await TransactionalOutboxFixture.CreateAsync();
         Guid duplicatedEntityId = Guid.NewGuid();
@@ -21,7 +21,7 @@ public sealed class TransactionalOutboxFaultTests
         var duplicate = new PersistEntityCommand(Guid.NewGuid(), duplicatedEntityId);
         var recovery = new PersistEntityCommand(Guid.NewGuid(), Guid.NewGuid());
 
-        await fixture.Harness.Bus.Publish(first, fixture.CancellationToken);
+        await fixture.Harness.Bus.PublishAsync(first, fixture.CancellationToken);
         PersistedEntityEvent firstCommitted = await fixture.Deliveries.ReadPersistedAsync(
             fixture.OperationTimeout,
             fixture.CancellationToken);
@@ -30,13 +30,13 @@ public sealed class TransactionalOutboxFaultTests
             .SelectAsync<Fault<PersistEntityCommand>>(
                 context => context.Context.Message.Message.CommandId == duplicate.CommandId,
                 fixture.CancellationToken)
-            .First();
-        await fixture.Harness.Bus.Publish(duplicate, fixture.CancellationToken);
+            .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
+        await fixture.Harness.Bus.PublishAsync(duplicate, fixture.CancellationToken);
         IPublishedMessage<Fault<PersistEntityCommand>> fault = await faultTask.WaitAsync(
             fixture.OperationTimeout,
             fixture.CancellationToken);
 
-        await fixture.Harness.Bus.Publish(recovery, fixture.CancellationToken);
+        await fixture.Harness.Bus.PublishAsync(recovery, fixture.CancellationToken);
         PersistedEntityEvent recoveryCommitted = await fixture.Deliveries.ReadPersistedAsync(
             fixture.OperationTimeout,
             fixture.CancellationToken);
@@ -71,12 +71,12 @@ public sealed class TransactionalOutboxFaultTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-TRANSACTION", "failed-attempt-rolls-back-before-single-successful-retry")]
-    public async Task FirstAttemptFailure_RollsBackItsOutboxAndTheRetryPublishesEachEffectOnce()
+    public async Task FirstAttemptFailure_RollsBackItsOutboxAndTheRetryPublishesEachEffectOnceAsync()
     {
         await using TransactionalOutboxFixture fixture = await TransactionalOutboxFixture.CreateAsync();
         var command = new RetryOutboxCommand(Guid.NewGuid());
 
-        await fixture.Harness.Bus.Publish(command, fixture.CancellationToken);
+        await fixture.Harness.Bus.PublishAsync(command, fixture.CancellationToken);
         RetryCommittedEvent first = await fixture.Deliveries.ReadRetryAsync(
             fixture.OperationTimeout,
             fixture.CancellationToken);
@@ -127,10 +127,10 @@ public sealed class TransactionalOutboxFaultTests
 
     public sealed class PersistEntityConsumer(TransactionalOutboxDbContext dbContext) : IConsumer<PersistEntityCommand>
     {
-        public async Task Consume(ConsumeContext<PersistEntityCommand> context)
+        public async Task ConsumeAsync(ConsumeContext<PersistEntityCommand> context)
         {
             dbContext.PersistedEntities.Add(new PersistedEntity { Id = context.Message.EntityId });
-            await context.Publish(
+            await context.Advanced().PublishAsync(
                 new PersistedEntityEvent(context.Message.CommandId, context.Message.EntityId),
                 context.CancellationToken);
         }
@@ -138,11 +138,11 @@ public sealed class TransactionalOutboxFaultTests
 
     public sealed class RetryOutboxConsumer(RetryAttemptProbe attempts) : IConsumer<RetryOutboxCommand>
     {
-        public async Task Consume(ConsumeContext<RetryOutboxCommand> context)
+        public async Task ConsumeAsync(ConsumeContext<RetryOutboxCommand> context)
         {
             int attempt = attempts.Increment(context.Message.CommandId);
-            await context.Publish(new RetryCommittedEvent(context.Message.CommandId, 1), context.CancellationToken);
-            await context.Publish(new RetryCommittedEvent(context.Message.CommandId, 2), context.CancellationToken);
+            await context.Advanced().PublishAsync(new RetryCommittedEvent(context.Message.CommandId, 1), context.CancellationToken);
+            await context.Advanced().PublishAsync(new RetryCommittedEvent(context.Message.CommandId, 2), context.CancellationToken);
 
             if (attempt == 1)
                 throw new ExpectedFirstAttemptFailure();
@@ -151,7 +151,7 @@ public sealed class TransactionalOutboxFaultTests
 
     public sealed class PersistedEntityEventConsumer(TransactionalDeliveryProbe deliveries) : IConsumer<PersistedEntityEvent>
     {
-        public Task Consume(ConsumeContext<PersistedEntityEvent> context)
+        public Task ConsumeAsync(ConsumeContext<PersistedEntityEvent> context)
         {
             deliveries.Record(context.Message);
             return Task.CompletedTask;
@@ -160,7 +160,7 @@ public sealed class TransactionalOutboxFaultTests
 
     public sealed class RetryCommittedEventConsumer(TransactionalDeliveryProbe deliveries) : IConsumer<RetryCommittedEvent>
     {
-        public Task Consume(ConsumeContext<RetryCommittedEvent> context)
+        public Task ConsumeAsync(ConsumeContext<RetryCommittedEvent> context)
         {
             deliveries.Record(context.Message);
             return Task.CompletedTask;
@@ -345,7 +345,7 @@ public sealed class TransactionalOutboxFaultTests
                     ValidateOnBuild = true,
                     ValidateScopes = true,
                 });
-                ITestHarness harness = await provider.StartTestHarness().WaitAsync(operationTimeout, cancellationToken);
+                ITestHarness harness = await provider.StartTestHarnessAsync().WaitAsync(operationTimeout, cancellationToken);
                 return new TransactionalOutboxFixture(
                     database,
                     provider,
@@ -366,7 +366,7 @@ public sealed class TransactionalOutboxFaultTests
 
         public async ValueTask DisposeAsync()
         {
-            await Harness.Stop(CancellationToken.None).WaitAsync(OperationTimeout, CancellationToken.None);
+            await Harness.StopAsync(CancellationToken.None).WaitAsync(OperationTimeout, CancellationToken.None);
             await Services.DisposeAsync();
             await _database.DisposeAsync();
         }

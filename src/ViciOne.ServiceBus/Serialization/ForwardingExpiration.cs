@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.Serialization;
 
 internal static class ForwardingExpiration
 {
-    public static bool MarkIfExpired(SendContext context, DateTime? inheritedExpirationTime, TimeProvider timeProvider)
+    public static bool MarkIfExpired(SendContext context, DateTimeOffset? inheritedExpirationTime, TimeProvider timeProvider)
     {
         ArgumentNullException.ThrowIfNull(timeProvider);
 
@@ -13,7 +13,7 @@ internal static class ForwardingExpiration
         bool hasExpiredTimeToLive = timeToLive.HasValue && timeToLive.Value <= TimeSpan.Zero;
         bool hasExpiredInheritedTime = !timeToLive.HasValue
             && inheritedExpirationTime.HasValue
-            && inheritedExpirationTime.Value.ToUniversalTime() <= timeProvider.GetUtcNow().UtcDateTime;
+            && inheritedExpirationTime.Value.ToUniversalTime() <= timeProvider.GetUtcNow();
 
         if (!hasExpiredTimeToLive && !hasExpiredInheritedTime)
             return false;
@@ -27,7 +27,7 @@ internal static class ForwardingExpiration
     public static bool TryDiscard<T>(SendContext<T> context)
         where T : class
     {
-        if (!context.TryGetPayload(out ExpiredForwarding expiration))
+        if (!context.TryGetPayload(out ExpiredForwarding? expiration))
             return false;
 
         context.LogExpiredForward(expiration.InheritedExpirationTime, expiration.TimeToLive);
@@ -37,5 +37,5 @@ internal static class ForwardingExpiration
 
 
 internal sealed record ExpiredForwarding(
-    DateTime? InheritedExpirationTime,
+    DateTimeOffset? InheritedExpirationTime,
     TimeSpan? TimeToLive);

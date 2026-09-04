@@ -12,8 +12,8 @@ public interface IConnectionContextSupervisor :
 {
     Uri NormalizeAddress(Uri address);
 
-    Task<ISendTransport> CreateSendTransport(ActiveMqReceiveEndpointContext context, ISessionContextSupervisor sessionContextSupervisor, Uri address);
+    Task<ISendTransport> CreateSendTransportAsync(ActiveMqReceiveEndpointContext context, ISessionContextSupervisor sessionContextSupervisor, Uri address, CancellationToken cancellationToken = default);
 
-    Task<ISendTransport> CreatePublishTransport<T>(ActiveMqReceiveEndpointContext context, ISessionContextSupervisor sessionContextSupervisor)
+    Task<ISendTransport> CreatePublishTransportAsync<T>(ActiveMqReceiveEndpointContext context, ISessionContextSupervisor sessionContextSupervisor, CancellationToken cancellationToken = default)
         where T : class;
 }

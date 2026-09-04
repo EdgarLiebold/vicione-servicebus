@@ -15,8 +15,8 @@ public sealed class RiderCollectionTestDriver
 
     public int Start() => _collection.StartRiders().Length;
 
-    public Task Stop(CancellationToken cancellationToken = default) =>
-        _collection.StopRiders(cancellationToken);
+    public Task StopAsync(CancellationToken cancellationToken = default) =>
+        _collection.StopRidersAsync(cancellationToken);
 
     public int[] StartedGenerations => _rider.StartedGenerations;
     public int[] StoppedGenerations => _rider.StoppedGenerations;
@@ -33,7 +33,7 @@ public sealed class RiderCollectionTestDriver
 
         public RiderHandle Start(CancellationToken cancellationToken = default)
         {
-            int generation = Interlocked.Increment(ref _generation);
+            cancellationToken.ThrowIfCancellationRequested(); int generation = Interlocked.Increment(ref _generation);
             _started.Enqueue(generation);
             return new TrackingHandle(generation, _stopped);
         }

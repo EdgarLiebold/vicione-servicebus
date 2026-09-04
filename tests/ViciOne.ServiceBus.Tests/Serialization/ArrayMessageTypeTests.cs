@@ -9,7 +9,7 @@ public sealed class ArrayMessageTypeTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-ARRAY-MESSAGE-PUBLICATION", "single-array-message")]
-    public async Task PublicOneDimensionalArray_IsDeliveredAsOneOrderedMessage()
+    public async Task PublicOneDimensionalArray_IsDeliveredAsOneOrderedMessageAsync()
     {
         TimeSpan operationTimeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -31,7 +31,7 @@ public sealed class ArrayMessageTypeTests
 
         try
         {
-            await harness.Start(cancellationToken);
+            await harness.StartAsync(cancellationToken);
             ArrayMessageItem[] message =
             [
                 new(1, "first"),
@@ -39,7 +39,7 @@ public sealed class ArrayMessageTypeTests
                 new(3, "third"),
             ];
 
-            await harness.Bus.Publish(message, cancellationToken);
+            await harness.Bus.PublishAsync(message, cancellationToken);
 
             ConsumeContext<ArrayMessageItem[]> context = await receivedMessage.Task.WaitAsync(
                 harness.TestTimeout,
@@ -51,11 +51,11 @@ public sealed class ArrayMessageTypeTests
                 item => Assert.Equal(new ArrayMessageItem(1, "first"), item),
                 item => Assert.Equal(new ArrayMessageItem(2, "second"), item),
                 item => Assert.Equal(new ArrayMessageItem(3, "third"), item));
-            Assert.True(await harness.Consumed.Any<ArrayMessageItem[]>(cancellationToken));
+            Assert.True(await harness.Consumed.AnyAsync<ArrayMessageItem[]>(cancellationToken));
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 }

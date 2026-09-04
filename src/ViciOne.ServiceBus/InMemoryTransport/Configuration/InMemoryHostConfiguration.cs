@@ -16,7 +16,7 @@ public class InMemoryHostConfiguration :
     Uri _hostAddress;
     int _queueCapacity = 1024;
 
-    public InMemoryHostConfiguration(IInMemoryBusConfiguration busConfiguration, Uri baseAddress, IInMemoryTopologyConfiguration topologyConfiguration)
+    public InMemoryHostConfiguration(IInMemoryBusConfiguration busConfiguration, Uri? baseAddress, IInMemoryTopologyConfiguration topologyConfiguration)
         : base(busConfiguration)
     {
         _busConfiguration = busConfiguration;
@@ -62,7 +62,7 @@ public class InMemoryHostConfiguration :
     }
 
     public IInMemoryReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
-        Action<IInMemoryReceiveEndpointConfigurator> configure)
+        Action<IInMemoryReceiveEndpointConfigurator>? configure)
     {
         var endpointConfiguration = _busConfiguration.CreateEndpointConfiguration();
 
@@ -70,7 +70,7 @@ public class InMemoryHostConfiguration :
     }
 
     public IInMemoryReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
-        IInMemoryEndpointConfiguration endpointConfiguration, Action<IInMemoryReceiveEndpointConfigurator> configure)
+        IInMemoryEndpointConfiguration endpointConfiguration, Action<IInMemoryReceiveEndpointConfigurator>? configure)
     {
         if (endpointConfiguration == null)
             throw new ArgumentNullException(nameof(endpointConfiguration));
@@ -87,8 +87,8 @@ public class InMemoryHostConfiguration :
         return configuration;
     }
 
-    public override void ReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
-        Action<IInMemoryReceiveEndpointConfigurator> configureEndpoint = null)
+    public override void ReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
+        Action<IInMemoryReceiveEndpointConfigurator>? configureEndpoint = null)
     {
         var queueName = definition.GetEndpointName(endpointNameFormatter ?? DefaultEndpointNameFormatter.Instance);
 
@@ -104,7 +104,7 @@ public class InMemoryHostConfiguration :
         CreateReceiveEndpointConfiguration(queueName, configureEndpoint);
     }
 
-    public override IReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName, Action<IReceiveEndpointConfigurator> configure)
+    public override IReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName, Action<IReceiveEndpointConfigurator>? configure)
     {
         return CreateReceiveEndpointConfiguration(queueName, configure);
     }

@@ -12,5 +12,5 @@ public interface IStateObserver<TSaga>
     /// <param name="currentState">The current state (after the change)</param>
     /// <param name="previousState">The previous state (before the change)</param>
     /// <returns></returns>
-    Task StateChanged(BehaviorContext<TSaga> context, State currentState, State previousState);
+    Task StateChangedAsync(BehaviorContext<TSaga> context, State currentState, State? previousState);
 }

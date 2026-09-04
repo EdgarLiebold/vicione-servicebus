@@ -16,13 +16,13 @@ public static class ReceiveEndpointLoggingExtensions
     static readonly LogMessage<Uri, Guid?, string, string, TimeSpan> _logConsumeCanceled = LogContext.Define<Uri, Guid?, string, string, TimeSpan>(
         LogLevel.Information, "R-CANCEL {InputAddress} {MessageId} {MessageType} {ConsumerType}({Duration})");
 
-    static readonly LogMessage<Uri, string, string, string> _logMoved = LogContext.DefineMessage<Uri, string, string, string>(LogLevel.Information,
+    static readonly LogMessage<Uri, string?, string, string> _logMoved = LogContext.DefineMessage<Uri, string?, string, string>(LogLevel.Information,
         "MOVE {InputAddress} {MessageId} {DestinationAddress} {Reason}");
 
-    static readonly LogMessage<Uri, string, TimeSpan> _logReceiveFault = LogContext.Define<Uri, string, TimeSpan>(LogLevel.Error,
+    static readonly LogMessage<Uri, string?, TimeSpan> _logReceiveFault = LogContext.Define<Uri, string?, TimeSpan>(LogLevel.Error,
         "R-FAULT {InputAddress} {MessageId} {Duration}");
 
-    static readonly LogMessage<Uri, string, object> _logReceiveDupe = LogContext.Define<Uri, string, object>(LogLevel.Warning,
+    static readonly LogMessage<Uri, string?, object> _logReceiveDupe = LogContext.Define<Uri, string?, object>(LogLevel.Warning,
         "R-DUPE {InputAddress} {MessageId} {TransportMessageId}");
 
     static readonly LogMessage<Uri, Guid?, string> _logSent = LogContext.DefineMessage<Uri, Guid?, string>(LogLevel.Debug,
@@ -31,20 +31,21 @@ public static class ReceiveEndpointLoggingExtensions
     static readonly LogMessage<Uri, Guid?, string> _logSendFault = LogContext.Define<Uri, Guid?, string>(LogLevel.Error,
         "S-FAULT {DestinationAddress} {MessageId} {MessageType}");
 
-    static readonly LogMessage<Uri, Guid?, string, DateTime?, TimeSpan?> _logExpiredForward =
-        LogContext.DefineMessage<Uri, Guid?, string, DateTime?, TimeSpan?>(LogLevel.Information,
+    static readonly LogMessage<Uri, Guid?, string, DateTimeOffset?, TimeSpan?> _logExpiredForward =
+        LogContext.DefineMessage<Uri, Guid?, string, DateTimeOffset?, TimeSpan?>(LogLevel.Information,
             "FORWARD-EXPIRED {DestinationAddress} {MessageId} {MessageType} {ExpirationTime} {TimeToLive}");
 
-    static readonly LogMessage<Uri, string> _logSkipped = LogContext.DefineMessage<Uri, string>(LogLevel.Debug,
+    static readonly LogMessage<Uri, string?> _logSkipped = LogContext.DefineMessage<Uri, string?>(LogLevel.Debug,
         "SKIP {InputAddress} {MessageId}");
 
     static readonly LogMessage<Uri, Guid?, string> _logRetry = LogContext.Define<Uri, Guid?, string>(LogLevel.Warning,
         "R-RETRY {InputAddress} {MessageId} {MessageType}");
 
-    static readonly LogMessage<Uri, string> _logFault = LogContext.Define<Uri, string>(LogLevel.Error,
+    static readonly LogMessage<Uri, string?> _logFault = LogContext.Define<Uri, string?>(LogLevel.Error,
         "T-FAULT {InputAddress} {MessageId}");
 
-    static readonly LogMessage<Uri, Guid?, string, DateTime, Guid?> _logScheduled = LogContext.DefineMessage<Uri, Guid?, string, DateTime, Guid?>(
+    static readonly LogMessage<Uri, Guid?, string, DateTimeOffset, Guid?> _logScheduled =
+        LogContext.DefineMessage<Uri, Guid?, string, DateTimeOffset, Guid?>(
         LogLevel.Debug, "SCHED {DestinationAddress} {MessageId} {MessageType} {DeliveryTime:G} {Token}");
 
     static readonly LogMessage<Uri, long, int> _logConsumerCompleted = LogContext.DefineMessage<Uri, long, int>(
@@ -86,21 +87,21 @@ public static class ReceiveEndpointLoggingExtensions
     public static void LogConsumed<T>(this ConsumeContext<T> context, TimeSpan duration, string consumerType)
         where T : class
     {
-        _logConsumed(context.ReceiveContext.InputAddress, context.MessageId, TypeCache<T>.ShortName, consumerType, duration);
+        _logConsumed(context.Advanced().ReceiveContext.InputAddress, context.MessageId, TypeCache<T>.ShortName, consumerType, duration);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void LogFaulted<T>(this ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
         where T : class
     {
-        _logConsumeFault(context.ReceiveContext.InputAddress, context.MessageId, TypeCache<T>.ShortName, consumerType, duration, exception);
+        _logConsumeFault(context.Advanced().ReceiveContext.InputAddress, context.MessageId, TypeCache<T>.ShortName, consumerType, duration, exception);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void LogCanceled<T>(this ConsumeContext<T> context, TimeSpan duration, string consumerType)
         where T : class
     {
-        _logConsumeCanceled(context.ReceiveContext.InputAddress, context.MessageId, TypeCache<T>.ShortName, consumerType, duration);
+        _logConsumeCanceled(context.Advanced().ReceiveContext.InputAddress, context.MessageId, TypeCache<T>.ShortName, consumerType, duration);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -127,14 +128,14 @@ public static class ReceiveEndpointLoggingExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void LogRetry(this ConsumeContext context, Exception exception)
     {
-        _logRetry(context.ReceiveContext.InputAddress, context.MessageId, TypeCache.GetShortName(context.GetType()), exception);
+        _logRetry(context.Advanced().ReceiveContext.InputAddress, context.MessageId, TypeCache.GetShortName(context.GetType()), exception);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void LogRetry<TContext>(this TContext context, Exception exception)
         where TContext : class, ConsumeContext
     {
-        _logRetry(context.ReceiveContext.InputAddress, context.MessageId, TypeCache<TContext>.ShortName, exception);
+        _logRetry(context.Advanced().ReceiveContext.InputAddress, context.MessageId, TypeCache<TContext>.ShortName, exception);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -152,7 +153,7 @@ public static class ReceiveEndpointLoggingExtensions
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static void LogExpiredForward<T>(this SendContext<T> context, DateTime? expirationTime, TimeSpan? timeToLive)
+    internal static void LogExpiredForward<T>(this SendContext<T> context, DateTimeOffset? expirationTime, TimeSpan? timeToLive)
         where T : class
     {
         _logExpiredForward(context.DestinationAddress, context.MessageId, TypeCache<T>.ShortName, expirationTime, timeToLive);
@@ -171,13 +172,13 @@ public static class ReceiveEndpointLoggingExtensions
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void LogScheduled<T>(this SendContext<T> context, DateTime deliveryTime)
+    public static void LogScheduled<T>(this SendContext<T> context, DateTimeOffset deliveryTime)
         where T : class
     {
         _logScheduled(context.DestinationAddress, context.MessageId, TypeCache<T>.ShortName, deliveryTime, context.ScheduledMessageId);
     }
 
-    static string GetMessageId(ReceiveContext context)
+    static string? GetMessageId(ReceiveContext context)
     {
         try
         {

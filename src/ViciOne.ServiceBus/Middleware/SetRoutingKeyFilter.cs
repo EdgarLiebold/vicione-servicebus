@@ -14,14 +14,14 @@ public class SetRoutingKeyFilter<TMessage> :
         _routingKeyFormatter = routingKeyFormatter;
     }
 
-    public Task Send(SendContext<TMessage> context, IPipe<SendContext<TMessage>> next)
+    public Task SendAsync(SendContext<TMessage> context, IPipe<SendContext<TMessage>> next)
     {
         var routingKey = _routingKeyFormatter.FormatRoutingKey(context);
 
-        if (context.TryGetPayload(out RoutingKeySendContext routingKeySendContext))
+        if (context.TryGetPayload(out RoutingKeySendContext? routingKeySendContext))
             routingKeySendContext.RoutingKey = routingKey;
 
-        return next.Send(context);
+        return next.SendAsync(context);
     }
 
     public void Probe(ProbeContext context)

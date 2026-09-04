@@ -20,20 +20,20 @@ public abstract class SendContextPipeAdapter<TMessage> :
         _pipe?.Probe(context);
     }
 
-    Task IPipe<SendContext<TMessage>>.Send(SendContext<TMessage> context)
+    Task IPipe<SendContext<TMessage>>.SendAsync(SendContext<TMessage> context)
     {
         Send(context);
 
-        return _pipe.IsNotEmpty() ? _pipe!.Send(context) : Task.CompletedTask;
+        return _pipe.IsNotEmpty() ? _pipe!.SendAsync(context) : Task.CompletedTask;
     }
 
-    Task ISendContextPipe.Send<T>(SendContext<T> context)
+    Task ISendContextPipe.SendAsync<T>(SendContext<T> context, CancellationToken cancellationToken)
         where T : class
     {
         Send(context);
 
         return _pipe is ISendContextPipe sendContextPipe
-            ? sendContextPipe.Send(context)
+            ? sendContextPipe.SendAsync(context, cancellationToken: cancellationToken)
             : Task.CompletedTask;
     }
 

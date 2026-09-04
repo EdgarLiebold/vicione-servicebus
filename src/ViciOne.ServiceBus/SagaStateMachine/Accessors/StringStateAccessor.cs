@@ -34,16 +34,16 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             _write = WritePropertyCache<TInstance>.GetProperty<string>(_propertyInfo);
         }
 
-        Task<State<TInstance>> IStateAccessor<TInstance>.Get(BehaviorContext<TInstance> context)
+        Task<State<TInstance>?> IStateAccessor<TInstance>.GetAsync(BehaviorContext<TInstance> context, CancellationToken cancellationToken)
         {
             var stateName = _read.Get(context.Saga);
             if (string.IsNullOrWhiteSpace(stateName))
-                return Task.FromResult<State<TInstance>>(null);
+                return Task.FromResult<State<TInstance>?>(null);
 
-            return Task.FromResult(_machine.GetState(stateName));
+            return Task.FromResult<State<TInstance>?>(_machine.GetState(stateName));
         }
 
-        Task IStateAccessor<TInstance>.Set(BehaviorContext<TInstance> context, State<TInstance> state)
+        Task IStateAccessor<TInstance>.SetAsync(BehaviorContext<TInstance> context, State<TInstance> state, CancellationToken cancellationToken)
         {
             if (state == null)
                 throw new ArgumentNullException(nameof(state));
@@ -54,11 +54,11 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
             _write.Set(context.Saga, state.Name);
 
-            State<TInstance> previousState = null;
+            State<TInstance>? previousState = null;
             if (!string.IsNullOrWhiteSpace(previous))
                 previousState = _machine.GetState(previous);
 
-            return _observer.StateChanged(context, state, previousState);
+            return _observer.StateChangedAsync(context, state, previousState);
         }
 
         public Expression<Func<TInstance, bool>> GetStateExpression(params State[] states)
@@ -68,7 +68,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
             var parameterExpression = Expression.Parameter(typeof(TInstance), "instance");
 
-            var statePropertyExpression = Expression.Property(parameterExpression, _propertyInfo.GetMethod);
+            var getMethod = _propertyInfo.GetMethod
+                ?? throw new InvalidOperationException($"The state property '{_propertyInfo.Name}' does not have a getter.");
+            var statePropertyExpression = Expression.Property(parameterExpression, getMethod);
 
             var stateExpression = states.Select(state => Expression.Equal(statePropertyExpression, Expression.Constant(state.Name)))
                 .Aggregate((left, right) => Expression.Or(left, right));

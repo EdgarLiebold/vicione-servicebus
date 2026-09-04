@@ -7,11 +7,14 @@ namespace ViciOne.ServiceBus.Initializers;
 public static class TaskInitializerExtensions
 {
     /// <summary>Awaits the source and projects its value, or returns no value for a null source.</summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="source">The source used by the operation.</param>
+    /// <param name="selector">The selector used by the operation.</param>
     public static async Task<TResult?> SelectAsync<TSource, TResult>(
         this Task<TSource> source,
-        Func<TSource, TResult?> selector)
+        Func<TSource, TResult?> selector, CancellationToken cancellationToken = default)
     {
-        ValidateProjectionArguments(source, selector);
+        cancellationToken.ThrowIfCancellationRequested(); ValidateProjectionArguments(source, selector);
 
         return await ProjectAsync(source, selector).ConfigureAwait(false);
     }
@@ -20,27 +23,35 @@ public static class TaskInitializerExtensions
     /// Awaits the source and projects its value, using <paramref name="fallback"/> when either the
     /// source or the selected value is null.
     /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="source">The source used by the operation.</param>
+    /// <param name="selector">The selector used by the operation.</param>
+    /// <param name="fallback">The fallback used by the operation.</param>
     public static async Task<TResult> SelectOrFallbackAsync<TSource, TResult>(
         this Task<TSource> source,
         Func<TSource, TResult?> selector,
-        TResult fallback)
+        TResult fallback, CancellationToken cancellationToken = default)
         where TResult : class
     {
-        ValidateProjectionArguments(source, selector);
+        cancellationToken.ThrowIfCancellationRequested(); ValidateProjectionArguments(source, selector);
         ArgumentNullException.ThrowIfNull(fallback);
 
         TResult? result = await ProjectAsync(source, selector).ConfigureAwait(false);
         return result is null ? fallback : result;
     }
 
-    /// <inheritdoc cref="SelectOrFallbackAsync{TSource,TResult}(Task{TSource},Func{TSource,TResult},TResult)"/>
+    /// <inheritdoc cref="SelectOrFallbackAsync{TSource,TResult}(Task{TSource},Func{TSource,TResult},TResult,CancellationToken)"/>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="source">The source used by the operation.</param>
+    /// <param name="selector">The selector used by the operation.</param>
+    /// <param name="fallback">The fallback used by the operation.</param>
     public static async Task<TResult> SelectOrFallbackAsync<TSource, TResult>(
         this Task<TSource> source,
         Func<TSource, TResult?> selector,
-        TResult fallback)
+        TResult fallback, CancellationToken cancellationToken = default)
         where TResult : struct
     {
-        ValidateProjectionArguments(source, selector);
+        cancellationToken.ThrowIfCancellationRequested(); ValidateProjectionArguments(source, selector);
 
         TResult? result = await ProjectAsync(source, selector).ConfigureAwait(false);
         return result ?? fallback;
@@ -50,13 +61,17 @@ public static class TaskInitializerExtensions
     /// Awaits the source and projects its value, invoking <paramref name="fallbackFactory"/> only
     /// when either the source or the selected value is null.
     /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="source">The source used by the operation.</param>
+    /// <param name="selector">The selector used by the operation.</param>
+    /// <param name="fallbackFactory">The fallback factory used by the operation.</param>
     public static async Task<TResult> SelectOrFallbackAsync<TSource, TResult>(
         this Task<TSource> source,
         Func<TSource, TResult?> selector,
-        Func<TResult> fallbackFactory)
+        Func<TResult> fallbackFactory, CancellationToken cancellationToken = default)
         where TResult : class
     {
-        ValidateProjectionArguments(source, selector);
+        cancellationToken.ThrowIfCancellationRequested(); ValidateProjectionArguments(source, selector);
         ArgumentNullException.ThrowIfNull(fallbackFactory);
 
         TResult? result = await ProjectAsync(source, selector).ConfigureAwait(false);
@@ -67,14 +82,18 @@ public static class TaskInitializerExtensions
             ?? throw new InvalidOperationException("The fallbackFactory must return a value.");
     }
 
-    /// <inheritdoc cref="SelectOrFallbackAsync{TSource,TResult}(Task{TSource},Func{TSource,TResult},Func{TResult})"/>
+    /// <inheritdoc cref="SelectOrFallbackAsync{TSource,TResult}(Task{TSource},Func{TSource,TResult},Func{TResult},CancellationToken)"/>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="source">The source used by the operation.</param>
+    /// <param name="selector">The selector used by the operation.</param>
+    /// <param name="fallbackFactory">The fallback factory used by the operation.</param>
     public static async Task<TResult> SelectOrFallbackAsync<TSource, TResult>(
         this Task<TSource> source,
         Func<TSource, TResult?> selector,
-        Func<TResult> fallbackFactory)
+        Func<TResult> fallbackFactory, CancellationToken cancellationToken = default)
         where TResult : struct
     {
-        ValidateProjectionArguments(source, selector);
+        cancellationToken.ThrowIfCancellationRequested(); ValidateProjectionArguments(source, selector);
         ArgumentNullException.ThrowIfNull(fallbackFactory);
 
         TResult? result = await ProjectAsync(source, selector).ConfigureAwait(false);
@@ -85,13 +104,17 @@ public static class TaskInitializerExtensions
     /// Awaits the source and projects its value, invoking and awaiting
     /// <paramref name="fallbackFactory"/> only when either the source or the selected value is null.
     /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="source">The source used by the operation.</param>
+    /// <param name="selector">The selector used by the operation.</param>
+    /// <param name="fallbackFactory">The fallback factory used by the operation.</param>
     public static async Task<TResult> SelectOrFallbackAsync<TSource, TResult>(
         this Task<TSource> source,
         Func<TSource, TResult?> selector,
-        Func<Task<TResult>> fallbackFactory)
+        Func<Task<TResult>> fallbackFactory, CancellationToken cancellationToken = default)
         where TResult : class
     {
-        ValidateProjectionArguments(source, selector);
+        cancellationToken.ThrowIfCancellationRequested(); ValidateProjectionArguments(source, selector);
         ArgumentNullException.ThrowIfNull(fallbackFactory);
 
         TResult? result = await ProjectAsync(source, selector).ConfigureAwait(false);
@@ -105,14 +128,18 @@ public static class TaskInitializerExtensions
             ?? throw new InvalidOperationException("The fallbackFactory task must produce a value.");
     }
 
-    /// <inheritdoc cref="SelectOrFallbackAsync{TSource,TResult}(Task{TSource},Func{TSource,TResult},Func{Task{TResult}})"/>
+    /// <inheritdoc cref="SelectOrFallbackAsync{TSource,TResult}(Task{TSource},Func{TSource,TResult},Func{Task{TResult}},CancellationToken)"/>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="source">The source used by the operation.</param>
+    /// <param name="selector">The selector used by the operation.</param>
+    /// <param name="fallbackFactory">The fallback factory used by the operation.</param>
     public static async Task<TResult> SelectOrFallbackAsync<TSource, TResult>(
         this Task<TSource> source,
         Func<TSource, TResult?> selector,
-        Func<Task<TResult>> fallbackFactory)
+        Func<Task<TResult>> fallbackFactory, CancellationToken cancellationToken = default)
         where TResult : struct
     {
-        ValidateProjectionArguments(source, selector);
+        cancellationToken.ThrowIfCancellationRequested(); ValidateProjectionArguments(source, selector);
         ArgumentNullException.ThrowIfNull(fallbackFactory);
 
         TResult? result = await ProjectAsync(source, selector).ConfigureAwait(false);

@@ -15,7 +15,7 @@ public class RabbitMqExchangeConfigurator :
         Durable = durable;
         AutoDelete = autoDelete;
 
-        ExchangeArguments = new Dictionary<string, object>();
+        ExchangeArguments = new Dictionary<string, object?>();
     }
 
     public RabbitMqExchangeConfigurator(Exchange source)
@@ -25,17 +25,17 @@ public class RabbitMqExchangeConfigurator :
         Durable = source.Durable;
         AutoDelete = source.AutoDelete;
 
-        ExchangeArguments = new Dictionary<string, object>(source.ExchangeArguments);
+        ExchangeArguments = new Dictionary<string, object?>(source.ExchangeArguments);
     }
 
     public string ExchangeName { get; set; }
 
-    public IDictionary<string, object> ExchangeArguments { get; }
+    public IDictionary<string, object?> ExchangeArguments { get; }
     public string ExchangeType { get; set; }
     public bool Durable { get; set; }
     public bool AutoDelete { get; set; }
 
-    public void SetExchangeArgument(string key, object value)
+    public void SetExchangeArgument(string key, object? value)
     {
         if (value != null)
             ExchangeArguments[key] = value;
@@ -53,7 +53,8 @@ public class RabbitMqExchangeConfigurator :
     public virtual RabbitMqEndpointAddress GetEndpointAddress(Uri hostAddress)
     {
         return new RabbitMqEndpointAddress(hostAddress, ExchangeName, ExchangeType, Durable, AutoDelete,
-            delayedType: ExchangeArguments.TryGetValue("x-delayed-type", out var argument) ? (string)argument : default,
-            alternateExchange: ExchangeArguments.TryGetValue(RabbitMQ.Client.Headers.AlternateExchange, out argument) ? (string)argument : default);
+            delayedType: ExchangeArguments.TryGetValue("x-delayed-type", out var argument) && argument is string delayedType ? delayedType : default,
+            alternateExchange: ExchangeArguments.TryGetValue(RabbitMQ.Client.Headers.AlternateExchange, out argument)
+                && argument is string alternateExchange ? alternateExchange : default);
     }
 }

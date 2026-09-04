@@ -10,7 +10,7 @@ public sealed class EventHubProducerDeliveryTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0143", "ten-item-produce-preserves-shared-envelope-and-exact-cardinality")]
-    public async Task BatchProduce_DeliversEveryItemOnceWithTheSharedEnvelope()
+    public async Task BatchProduce_DeliversEveryItemOnceWithTheSharedEnvelopeAsync()
     {
         const string eventHubName = "batch-eh";
         await using EventHubLocalFixture fixture = EventHubLocalFixture.Create("batch-produce");
@@ -54,13 +54,12 @@ public sealed class EventHubProducerDeliveryTests
             await using AsyncServiceScope scope = provider.CreateAsyncScope();
             IEventHubProducer producer = await scope.ServiceProvider
                 .GetRequiredService<IEventHubProducerProvider>()
-                .GetProducer(eventHubName)
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+                .GetProducerAsync(eventHubName, cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             BatchEnvelopeMessage[] messages = Enumerable.Range(0, 10)
                 .Select(index => new BatchEnvelopeMessage(index, $"item-{index}"))
                 .ToArray();
 
-            await producer.Produce<IEnvelopeMessage>(
+            await producer.ProduceAsync<IEnvelopeMessage>(
                     messages,
                     Pipe.Execute<SendContext>(context =>
                     {
@@ -96,7 +95,7 @@ public sealed class EventHubProducerDeliveryTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0154", "single-produce-round-trips-full-envelope-structured-header-and-addresses")]
-    public async Task SingleProduce_RoundTripsTheCompleteEnvelopeAndStructuredHeader()
+    public async Task SingleProduce_RoundTripsTheCompleteEnvelopeAndStructuredHeaderAsync()
     {
         const string eventHubName = "envelope-eh";
         await using EventHubLocalFixture fixture = EventHubLocalFixture.Create("envelope");
@@ -139,10 +138,9 @@ public sealed class EventHubProducerDeliveryTests
             await using AsyncServiceScope scope = provider.CreateAsyncScope();
             IEventHubProducer producer = await scope.ServiceProvider
                 .GetRequiredService<IEventHubProducerProvider>()
-                .GetProducer(eventHubName)
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+                .GetProducerAsync(eventHubName, cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
 
-            await producer.Produce<IEnvelopeMessage>(
+            await producer.ProduceAsync<IEnvelopeMessage>(
                     new EnvelopeMessage(marker, 41, "complete"),
                     Pipe.Execute<SendContext>(context =>
                     {
@@ -178,7 +176,7 @@ public sealed class EventHubProducerDeliveryTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0155", "bus-send-observer-sees-rider-pre-and-post-around-provider-send")]
-    public async Task BusSendObserver_SeesRiderProduceBeforeAndAfterTheProviderSend()
+    public async Task BusSendObserver_SeesRiderProduceBeforeAndAfterTheProviderSendAsync()
     {
         const string eventHubName = "envelope-eh";
         await using EventHubLocalFixture fixture = EventHubLocalFixture.Create("observer");
@@ -219,10 +217,9 @@ public sealed class EventHubProducerDeliveryTests
             await using AsyncServiceScope scope = provider.CreateAsyncScope();
             IEventHubProducer producer = await scope.ServiceProvider
                 .GetRequiredService<IEventHubProducerProvider>()
-                .GetProducer(eventHubName)
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+                .GetProducerAsync(eventHubName, cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
 
-            await producer.Produce<IEnvelopeMessage>(
+            await producer.ProduceAsync<IEnvelopeMessage>(
                     new EnvelopeMessage(marker, 1, "observer"),
                     Pipe.Execute<SendContext>(context => context.MessageId = messageId),
                     cancellationToken)
@@ -285,7 +282,7 @@ public sealed class EventHubProducerDeliveryTests
         ConcurrentQueue<EnvelopeObservation> observations,
         TaskCompletionSource allReceived) : IConsumer<IEnvelopeMessage>
     {
-        public Task Consume(ConsumeContext<IEnvelopeMessage> context)
+        public Task ConsumeAsync(ConsumeContext<IEnvelopeMessage> context)
         {
             observations.Enqueue(new EnvelopeObservation(
                 context.Message.Index,
@@ -303,7 +300,7 @@ public sealed class EventHubProducerDeliveryTests
     private sealed class SingleEnvelopeConsumer(ExpectedEnvelope expected) :
         IConsumer<IEnvelopeMessage>
     {
-        public Task Consume(ConsumeContext<IEnvelopeMessage> context)
+        public Task ConsumeAsync(ConsumeContext<IEnvelopeMessage> context)
         {
             if (context.Message.Marker == expected.Marker)
                 expected.Received.TrySetResult(context);
@@ -313,7 +310,7 @@ public sealed class EventHubProducerDeliveryTests
 
     private sealed class ObserverMessageConsumer(TaskCompletionSource<Guid> consumed) : IConsumer<IEnvelopeMessage>
     {
-        public Task Consume(ConsumeContext<IEnvelopeMessage> context)
+        public Task ConsumeAsync(ConsumeContext<IEnvelopeMessage> context)
         {
             consumed.TrySetResult(context.Message.Marker);
             return Task.CompletedTask;
@@ -325,19 +322,19 @@ public sealed class EventHubProducerDeliveryTests
         private readonly object _lock = new();
         private readonly List<SendObservation> _observations = [];
 
-        public Task PreSend<T>(SendContext<T> context) where T : class
+        public Task PreSendAsync<T>(SendContext<T> context) where T : class
         {
             Record("pre", context);
             return Task.CompletedTask;
         }
 
-        public Task PostSend<T>(SendContext<T> context) where T : class
+        public Task PostSendAsync<T>(SendContext<T> context) where T : class
         {
             Record("post", context);
             return Task.CompletedTask;
         }
 
-        public Task SendFault<T>(SendContext<T> context, Exception exception) where T : class =>
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception) where T : class =>
             Task.FromException(new InvalidOperationException("The successful observer test reached SendFault.", exception));
 
         public SendObservation[] Snapshot()

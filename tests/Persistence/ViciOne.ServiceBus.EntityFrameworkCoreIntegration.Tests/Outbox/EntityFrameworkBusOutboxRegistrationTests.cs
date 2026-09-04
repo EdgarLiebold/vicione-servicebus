@@ -15,7 +15,7 @@ public sealed class EntityFrameworkBusOutboxRegistrationTests
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-REGISTRATION", "default-dbcontext-selection-is-order-independent")]
-    public async Task MultipleDbContexts_SelectTheExplicitDefaultIndependentOfRegistrationOrder(bool reverse)
+    public async Task MultipleDbContexts_SelectTheExplicitDefaultIndependentOfRegistrationOrderAsync(bool reverse)
     {
         await using var connection = new SqliteConnection("Data Source=:memory:");
         await connection.OpenAsync(TestContext.Current.CancellationToken);
@@ -29,7 +29,7 @@ public sealed class EntityFrameworkBusOutboxRegistrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-REGISTRATION", "ambiguous-dbcontext-selection-fails-closed")]
-    public async Task MultipleDbContexts_WithoutADefaultFailAtScopedResolution()
+    public async Task MultipleDbContexts_WithoutADefaultFailAtScopedResolutionAsync()
     {
         await using var connection = new SqliteConnection("Data Source=:memory:");
         await connection.OpenAsync(TestContext.Current.CancellationToken);
@@ -73,7 +73,7 @@ public sealed class EntityFrameworkBusOutboxRegistrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-REGISTRATION", "same-dbcontext-is-isolated-by-bus")]
-    public async Task TwoBusesSharingOneDbContext_PersistDistinctBusOwnedOutboxes()
+    public async Task TwoBusesSharingOneDbContext_PersistDistinctBusOwnedOutboxesAsync()
     {
         await using var connection = new SqliteConnection("Data Source=:memory:");
         await connection.OpenAsync(TestContext.Current.CancellationToken);
@@ -113,8 +113,8 @@ public sealed class EntityFrameworkBusOutboxRegistrationTests
         SharedDbContext dbContext = scope.ServiceProvider.GetRequiredService<SharedDbContext>();
         await dbContext.Database.EnsureCreatedAsync(TestContext.Current.CancellationToken);
 
-        await primary.AddSend(CreateSendContext(Guid.NewGuid(), 1));
-        await secondary.AddSend(CreateSendContext(Guid.NewGuid(), 2));
+        await primary.AddSendAsync(CreateSendContext(Guid.NewGuid(), 1), TestContext.Current.CancellationToken);
+        await secondary.AddSendAsync(CreateSendContext(Guid.NewGuid(), 2), TestContext.Current.CancellationToken);
         Assert.Equal(2, dbContext.Set<OutboxState>().Local.Select(x => x.BusKey).Distinct(StringComparer.Ordinal).Count());
 
         await primary.CommitAsync(TestContext.Current.CancellationToken);
@@ -139,7 +139,7 @@ public sealed class EntityFrameworkBusOutboxRegistrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PERSISTENCE-IDENTITY", "typed-bus-outbox-and-durable-sender-persist-one-shared-identity")]
-    public async Task TypedBusOutboxAndDurableSender_PersistTheSameConfiguredBusIdentity()
+    public async Task TypedBusOutboxAndDurableSender_PersistTheSameConfiguredBusIdentityAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         string path = Path.Combine(Path.GetTempPath(), $"vicione-persistence-identity-{Guid.NewGuid():N}.db");
@@ -181,7 +181,7 @@ public sealed class EntityFrameworkBusOutboxRegistrationTests
 
             var outbox = (EntityFrameworkScopedBusContext<ISecondaryBus, CombinedPersistenceDbContext>)scope.ServiceProvider
                 .GetRequiredService<IEntityFrameworkTransactionalOutbox<ISecondaryBus, CombinedPersistenceDbContext>>();
-            await outbox.AddSend(CreateSendContext(Guid.NewGuid(), 7));
+            await outbox.AddSendAsync(CreateSendContext(Guid.NewGuid(), 7), TestContext.Current.CancellationToken);
             await outbox.CommitAsync(cancellationToken);
 
             IDurableSender<ISecondaryBus> durableSender = scope.ServiceProvider.GetRequiredService<IDurableSender<ISecondaryBus>>();
@@ -215,7 +215,7 @@ public sealed class EntityFrameworkBusOutboxRegistrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-REGISTRATION", "untyped-scope-disposal-fails-before-dbcontext-disposal")]
-    public async Task UntypedScopedResolution_DisposeWithoutCommitFailsWithTheTransactionalInvariant()
+    public async Task UntypedScopedResolution_DisposeWithoutCommitFailsWithTheTransactionalInvariantAsync()
     {
         await using var connection = new SqliteConnection("Data Source=:memory:");
         await connection.OpenAsync(TestContext.Current.CancellationToken);
@@ -231,7 +231,7 @@ public sealed class EntityFrameworkBusOutboxRegistrationTests
         IServiceScope scope = provider.CreateScope();
         var context = (EntityFrameworkScopedBusContext<IBus, FirstDbContext>)scope.ServiceProvider
             .GetRequiredService<IScopedBusContextProvider<IBus>>().Context;
-        await context.AddSend(CreateSendContext(Guid.NewGuid(), 1));
+        await context.AddSendAsync(CreateSendContext(Guid.NewGuid(), 1), TestContext.Current.CancellationToken);
 
         InvalidOperationException failure = Assert.Throws<InvalidOperationException>(scope.Dispose);
 

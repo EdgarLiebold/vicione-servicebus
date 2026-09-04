@@ -14,7 +14,7 @@ public class BuildRoutingSlipExecutor<TInput> :
         _buildItinerary = buildItinerary;
     }
 
-    public async Task Execute(BehaviorContext<FutureState, TInput> context)
+    public async Task ExecuteAsync(BehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default)
     {
         var trackingNumber = NewId.NextGuid();
 
@@ -28,7 +28,7 @@ public class BuildRoutingSlipExecutor<TInput> :
 
         var routingSlip = builder.Build();
 
-        await context.Execute(routingSlip).ConfigureAwait(false);
+        await context.ExecuteAsync(routingSlip, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (TrackRoutingSlip)
             context.Saga.Pending.Add(trackingNumber);

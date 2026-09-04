@@ -9,7 +9,7 @@ public interface IPublishEndpointBrokerTopologyBuilder :
     /// <summary>
     /// The exchange to which the message is published
     /// </summary>
-    ExchangeHandle Exchange { get; set; }
+    ExchangeHandle? Exchange { get; set; }
 
     IPublishEndpointBrokerTopologyBuilder CreateImplementedBuilder();
 }

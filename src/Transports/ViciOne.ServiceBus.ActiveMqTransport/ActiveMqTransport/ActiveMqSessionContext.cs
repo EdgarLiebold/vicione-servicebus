@@ -37,18 +37,18 @@ public class ActiveMqSessionContext :
     {
         var failures = new ActiveMqCleanupFailures();
 
-        await failures.Capture(
-                () => _messageProducerCache.Stop(CancellationToken.None),
+        await failures.CaptureAsync(
+                () => _messageProducerCache.StopAsync(CancellationToken.None),
                 exception => LogWarning(exception, "Stop message producers faulted: {Host}"))
             .ConfigureAwait(false);
-        await failures.Capture(
+        await failures.CaptureAsync(
                 () => _session.CloseAsync(),
                 exception => LogWarning(exception, "Close session faulted: {Host}"))
             .ConfigureAwait(false);
         failures.Capture(
             () => _session.Dispose(),
             exception => LogWarning(exception, "Dispose session faulted: {Host}"));
-        await failures.Capture(
+        await failures.CaptureAsync(
                 () => _executor.DisposeAsync(),
                 exception => LogWarning(exception, "Dispose session executor faulted: {Host}"))
             .ConfigureAwait(false);
@@ -74,57 +74,58 @@ public class ActiveMqSessionContext :
 
     public ConnectionContext ConnectionContext { get; }
 
-    public Task<ITopic> GetTopic(Topic topic)
+    public Task<ITopic> GetTopicAsync(Topic topic, CancellationToken cancellationToken = default)
     {
-        return _executor.ExecuteAsync(() =>
-        {
-            var topicName = topic.EntityName.Split('?')[0];
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::Apache.NMS.ITopic>(cancellationToken); return _executor.ExecuteAsync(() =>
+                {
+                    var topicName = topic.EntityName.Split('?')[0];
 
-            if (!topic.Durable && topic.AutoDelete
-                && topic.EntityName.StartsWith(ConnectionContext.Topology.PublishTopology.VirtualTopicPrefix, StringComparison.InvariantCulture))
-                return ConnectionContext.GetTemporaryTopic(_session, topicName);
+                    if (!topic.Durable && topic.AutoDelete
+                        && topic.EntityName.StartsWith(ConnectionContext.Topology.PublishTopology.VirtualTopicPrefix, StringComparison.InvariantCulture))
+                        return ConnectionContext.GetTemporaryTopic(_session, topicName);
 
-            return SessionUtil.GetTopic(_session, topicName);
-        }, CancellationToken);
+                    return SessionUtil.GetTopic(_session, topicName);
+                }, CancellationToken);
     }
 
-    public Task EnsureTopicExists(Topic topic)
+    public Task EnsureTopicExistsAsync(Topic topic, CancellationToken cancellationToken = default)
     {
-        return _executor.ExecuteAsync(() =>
-        {
-            // Resolution and the short lived producer belong together and belong here: both touch
-            // the session, which is not thread safe, and this runs while the endpoint is starting.
-            var topicName = topic.EntityName.Split('?')[0];
-            ITopic destination = SessionUtil.GetTopic(_session, topicName);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return _executor.ExecuteAsync(() =>
+                {
+                    // Resolution and the short lived producer belong together and belong here: both touch
+                    // the session, which is not thread safe, and this runs while the endpoint is starting.
+                    var topicName = topic.EntityName.Split('?')[0];
+                    ITopic destination = SessionUtil.GetTopic(_session, topicName);
 
-            IMessageProducer producer = _session.CreateProducer(destination);
-            try
-            {
-                producer.Close();
-            }
-            finally
-            {
-                // A producer whose close threw is still a producer this session holds.
-                producer.Dispose();
-            }
-        }, CancellationToken);
+                    IMessageProducer producer = _session.CreateProducer(destination);
+                    try
+                    {
+                        producer.Close();
+                    }
+                    finally
+                    {
+                        // A producer whose close threw is still a producer this session holds.
+                        producer.Dispose();
+                    }
+                }, CancellationToken);
     }
 
-    public Task<IQueue> GetQueue(Queue queue)
+    public Task<IQueue> GetQueueAsync(Queue queue, CancellationToken cancellationToken = default)
     {
-        return _executor.ExecuteAsync(() =>
-        {
-            if (!queue.Durable && queue.AutoDelete && !ConnectionContext.IsVirtualTopicConsumer(queue.EntityName))
-                return ConnectionContext.GetTemporaryQueue(_session, queue.EntityName);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::Apache.NMS.IQueue>(cancellationToken); return _executor.ExecuteAsync(() =>
+                {
+                    if (!queue.Durable && queue.AutoDelete && !ConnectionContext.IsVirtualTopicConsumer(queue.EntityName))
+                        return ConnectionContext.GetTemporaryQueue(_session, queue.EntityName);
 
-            return SessionUtil.GetQueue(_session, queue.EntityName);
-        }, CancellationToken);
+                    return SessionUtil.GetQueue(_session, queue.EntityName);
+                }, CancellationToken);
     }
 
-    public Task<IDestination> GetDestination(string destinationName, DestinationType destinationType)
+    public Task<IDestination> GetDestinationAsync(string destinationName, DestinationType destinationType, CancellationToken cancellationToken = default)
     {
-        if (ConnectionContext.TryGetTemporaryEntity(destinationName, out var destination)
-            && DestinationTypeMatches(destination, destinationType))
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::Apache.NMS.IDestination>(cancellationToken); if (ConnectionContext.TryGetTemporaryEntity(destinationName, out var destination)
+                    && destination != null
+                    && DestinationTypeMatches(destination, destinationType))
             return Task.FromResult(destination);
 
         return _executor.ExecuteAsync(() => SessionUtil.GetDestination(_session, destinationName, destinationType), CancellationToken);
@@ -146,38 +147,38 @@ public class ActiveMqSessionContext :
         };
     }
 
-    public Task<IMessageConsumer> CreateMessageConsumer(IDestination destination, string selector, bool noLocal, string consumerName = null,
-        bool shared = false, bool durable = true)
+    public Task<IMessageConsumer> CreateMessageConsumerAsync(IDestination destination, string? selector, bool noLocal, string? consumerName = null,
+        bool shared = false, bool durable = true, CancellationToken cancellationToken = default)
     {
-        return _executor.ExecuteAsync(() =>
-        {
-            if (destination.IsTopic && !string.IsNullOrEmpty(consumerName))
-            {
-                if (shared)
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::Apache.NMS.IMessageConsumer>(cancellationToken); return _executor.ExecuteAsync(() =>
                 {
-                    if (_session is not NmsSession)
-                        throw new NotSupportedException("Shared consumers are supported only on ActiveMQ Artemis broker and with AMQP communication.");
+                    if (destination.IsTopic && !string.IsNullOrEmpty(consumerName))
+                    {
+                        if (shared)
+                        {
+                            if (_session is not NmsSession)
+                                throw new NotSupportedException("Shared consumers are supported only on ActiveMQ Artemis broker and with AMQP communication.");
 
-                    return durable
-                        ? _session.CreateSharedDurableConsumerAsync((ITopic)destination, consumerName, selector)
-                        : _session.CreateSharedConsumerAsync((ITopic)destination, consumerName, selector);
-                }
+                            return durable
+                                ? _session.CreateSharedDurableConsumerAsync((ITopic)destination, consumerName, selector)
+                                : _session.CreateSharedConsumerAsync((ITopic)destination, consumerName, selector);
+                        }
 
-                if (durable)
-                    return _session.CreateDurableConsumerAsync((ITopic)destination, consumerName, selector);
-            }
+                        if (durable)
+                            return _session.CreateDurableConsumerAsync((ITopic)destination, consumerName, selector);
+                    }
 
-            return _session.CreateConsumerAsync(destination, selector, noLocal);
-        }, CancellationToken);
+                    return _session.CreateConsumerAsync(destination, selector, noLocal);
+                }, CancellationToken);
     }
 
     public async Task SendAsync(IDestination destination, IMessage message, CancellationToken cancellationToken)
     {
-        var producer = await _messageProducerCache.GetMessageProducer(destination,
-            x => _executor.ExecuteAsync(() => _session.CreateProducerAsync(x), cancellationToken)).ConfigureAwait(false);
+        var producer = await _messageProducerCache.GetMessageProducerAsync(destination,
+            x => _executor.ExecuteAsync(() => _session.CreateProducerAsync(x), cancellationToken), cancellationToken: cancellationToken).ConfigureAwait(false);
 
         await _executor.ExecuteAsync(() => producer.SendAsync(message, message.NMSDeliveryMode, message.NMSPriority, message.NMSTimeToLive)
-            .OrCanceled(cancellationToken), cancellationToken).ConfigureAwait(false);
+            .OrCanceledAsync(cancellationToken), cancellationToken).ConfigureAwait(false);
     }
 
     public IBytesMessage CreateBytesMessage(byte[] content)
@@ -195,9 +196,9 @@ public class ActiveMqSessionContext :
         return _session.CreateMessage();
     }
 
-    public Task DeleteTopic(string topicName)
+    public Task DeleteTopicAsync(string topicName, CancellationToken cancellationToken = default)
     {
-        TransportLogMessages.DeleteTopic(topicName);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); TransportLogMessages.DeleteTopic(topicName);
 
         return _executor.ExecuteAsync(() =>
         {
@@ -206,9 +207,9 @@ public class ActiveMqSessionContext :
         }, CancellationToken.None);
     }
 
-    public Task DeleteQueue(string queueName)
+    public Task DeleteQueueAsync(string queueName, CancellationToken cancellationToken = default)
     {
-        TransportLogMessages.DeleteQueue(queueName);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); TransportLogMessages.DeleteQueue(queueName);
 
         return _executor.ExecuteAsync(() =>
             {
@@ -218,7 +219,7 @@ public class ActiveMqSessionContext :
             , CancellationToken.None);
     }
 
-    public IDestination GetTemporaryDestination(string name)
+    public IDestination? GetTemporaryDestination(string name)
     {
         return ConnectionContext.TryGetTemporaryEntity(name, out var destination) ? destination : null;
     }

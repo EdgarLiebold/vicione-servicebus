@@ -25,18 +25,18 @@ public class InMemorySagaRepository<TSaga> :
         _repository = new SagaRepository<TSaga>(repositoryContextFactory, repositoryContextFactory, repositoryContextFactory);
     }
 
-    public SagaInstance<TSaga> this[Guid id] => _sagas[id];
+    public SagaInstance<TSaga>? this[Guid id] => _sagas[id];
 
     public int Count => _sagas.Count;
 
-    public Task<TSaga> Load(Guid correlationId)
+    public Task<TSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
-        return _repository.Load(correlationId);
+        return _repository.LoadAsync(correlationId, cancellationToken: cancellationToken);
     }
 
-    public Task<IEnumerable<Guid>> Find(ISagaQuery<TSaga> query)
+    public Task<IEnumerable<Guid>> FindAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken = default)
     {
-        return _repository.Find(query);
+        return _repository.FindAsync(query, cancellationToken: cancellationToken);
     }
 
     void IProbeSite.Probe(ProbeContext context)
@@ -49,14 +49,14 @@ public class InMemorySagaRepository<TSaga> :
         });
     }
 
-    Task ISagaRepository<TSaga>.Send<T>(ConsumeContext<T> context, ISagaPolicy<TSaga, T> policy, IPipe<SagaConsumeContext<TSaga, T>> next)
+    Task ISagaRepository<TSaga>.SendAsync<T>(ConsumeContext<T> context, ISagaPolicy<TSaga, T> policy, IPipe<SagaConsumeContext<TSaga, T>> next)
     {
-        return _repository.Send(context, policy, next);
+        return _repository.SendAsync(context, policy, next);
     }
 
-    Task ISagaRepository<TSaga>.SendQuery<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, ISagaPolicy<TSaga, T> policy,
+    Task ISagaRepository<TSaga>.SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, ISagaPolicy<TSaga, T> policy,
         IPipe<SagaConsumeContext<TSaga, T>> next)
     {
-        return _repository.SendQuery(context, query, policy, next);
+        return _repository.SendQueryAsync(context, query, policy, next);
     }
 }

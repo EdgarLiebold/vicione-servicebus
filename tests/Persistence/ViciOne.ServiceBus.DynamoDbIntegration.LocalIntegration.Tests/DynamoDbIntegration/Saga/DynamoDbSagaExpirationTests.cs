@@ -10,7 +10,7 @@ public sealed class DynamoDbSagaExpirationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-DYNAMODB-SAGA-EXPIRATION", "each-write-uses-injected-clock-and-null-ttl-is-omitted")]
-    public async Task EachWrite_UsesInjectedClockAndPersistsNumericEpochSeconds()
+    public async Task EachWrite_UsesInjectedClockAndPersistsNumericEpochSecondsAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using DynamoDbTestTable fixture = await DynamoDbTestTable.CreateAsync("SagaExpiration", cancellationToken);
@@ -25,16 +25,16 @@ public sealed class DynamoDbSagaExpirationTests
 
         using (var writer = new DynamoDbDatabaseContext<ExpiringSaga>(fixture.CreateContext(), expiringOptions))
         {
-            await writer.Insert(new ExpiringSaga { CorrelationId = firstId }, cancellationToken);
+            await writer.InsertAsync(new ExpiringSaga { CorrelationId = firstId }, cancellationToken);
             timeProvider.UtcNow = timeProvider.UtcNow.AddMinutes(2);
-            await writer.Insert(new ExpiringSaga { CorrelationId = secondId }, cancellationToken);
+            await writer.InsertAsync(new ExpiringSaga { CorrelationId = secondId }, cancellationToken);
         }
 
         using (var writer = new DynamoDbDatabaseContext<ExpiringSaga>(
                    fixture.CreateContext(),
                    new DynamoDbSagaRepositoryOptions<ExpiringSaga>(fixture.TableName)))
         {
-            await writer.Insert(new ExpiringSaga { CorrelationId = nonExpiringId }, cancellationToken);
+            await writer.InsertAsync(new ExpiringSaga { CorrelationId = nonExpiringId }, cancellationToken);
         }
 
         Dictionary<string, AttributeValue>[] rows = await fixture.ScanAsync(cancellationToken);

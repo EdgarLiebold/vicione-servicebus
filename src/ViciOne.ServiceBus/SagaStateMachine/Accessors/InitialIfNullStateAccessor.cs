@@ -22,22 +22,22 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             _initialBehavior = new LastBehavior<TInstance>(initialActivity);
         }
 
-        async Task<State<TInstance>> IStateAccessor<TInstance>.Get(BehaviorContext<TInstance> context)
+        async Task<State<TInstance>?> IStateAccessor<TInstance>.GetAsync(BehaviorContext<TInstance> context, CancellationToken cancellationToken)
         {
-            State<TInstance> state = await _stateAccessor.Get(context).ConfigureAwait(false);
+            State<TInstance>? state = await _stateAccessor.GetAsync(context, cancellationToken: cancellationToken).ConfigureAwait(false);
             if (state == null)
             {
-                await _initialBehavior.Execute(context).ConfigureAwait(false);
+                await _initialBehavior.ExecuteAsync(context).ConfigureAwait(false);
 
-                state = await _stateAccessor.Get(context).ConfigureAwait(false);
+                state = await _stateAccessor.GetAsync(context, cancellationToken: cancellationToken).ConfigureAwait(false);
             }
 
             return state;
         }
 
-        Task IStateAccessor<TInstance>.Set(BehaviorContext<TInstance> context, State<TInstance> state)
+        Task IStateAccessor<TInstance>.SetAsync(BehaviorContext<TInstance> context, State<TInstance> state, CancellationToken cancellationToken)
         {
-            return _stateAccessor.Set(context, state);
+            return _stateAccessor.SetAsync(context, state, cancellationToken: cancellationToken);
         }
 
         public Expression<Func<TInstance, bool>> GetStateExpression(params State[] states)

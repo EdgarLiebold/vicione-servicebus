@@ -39,7 +39,7 @@ public sealed class TopicCache :
         await _durableTopics.DisposeAsync().ConfigureAwait(false);
     }
 
-    public async Task<TopicInfo> Get(Topology.Topic topic, CancellationToken cancellationToken)
+    public async Task<TopicInfo> GetAsync(Topology.Topic topic, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(topic);
         await EnsureTopicsLoadedAsync(cancellationToken).ConfigureAwait(false);
@@ -59,7 +59,7 @@ public sealed class TopicCache :
             (_, ownerToken) => CreateMissingTopicAsync(topic, ownerToken), cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<TopicInfo> GetByName(string entityName, CancellationToken cancellationToken)
+    public async Task<TopicInfo> GetByNameAsync(string entityName, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(entityName);
         await EnsureTopicsLoadedAsync(cancellationToken).ConfigureAwait(false);
@@ -70,12 +70,12 @@ public sealed class TopicCache :
         return await _ephemeralTopics.GetAsync(entityName, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<bool> RemoveByName(string entityName)
+    public async Task<bool> RemoveByNameAsync(string entityName, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(entityName);
 
         bool durableRemoved = await _durableTopics.RemoveAsync(entityName).ConfigureAwait(false);
-        bool ephemeralRemoved = await _ephemeralTopics.RemoveAsync(entityName).ConfigureAwait(false);
+        bool ephemeralRemoved = await _ephemeralTopics.RemoveAsync(entityName, cancellationToken: cancellationToken).ConfigureAwait(false);
         return durableRemoved || ephemeralRemoved;
     }
 
@@ -115,7 +115,7 @@ public sealed class TopicCache :
             Lazy<Task> loader = _loadExistingTopics;
             try
             {
-                await loader.Value.OrCanceled(cancellationToken).ConfigureAwait(false);
+                await loader.Value.OrCanceledAsync(cancellationToken).ConfigureAwait(false);
                 return;
             }
             catch when (loader.Value.IsFaulted || loader.Value.IsCanceled)

@@ -15,7 +15,7 @@ public static class DispatchConfigurationExtensions
     /// <param name="pipeContextProviderFactory"></param>
     /// <param name="configure"></param>
     public static void UseDispatch<T>(this IPipeConfigurator<T> configurator, IPipeContextConverterFactory<T> pipeContextProviderFactory,
-        Action<IDispatchConfigurator<T>> configure = null)
+        Action<IDispatchConfigurator<T>>? configure = null)
         where T : class, PipeContext
     {
         if (configurator == null)

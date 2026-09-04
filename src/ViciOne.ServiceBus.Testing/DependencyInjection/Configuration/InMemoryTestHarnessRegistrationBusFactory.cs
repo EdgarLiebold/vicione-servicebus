@@ -9,9 +9,9 @@ namespace ViciOne.ServiceBus.Configuration;
 public class InMemoryTestHarnessRegistrationBusFactory :
     IRegistrationBusFactory
 {
-    readonly string _virtualHost;
+    readonly string? _virtualHost;
 
-    public InMemoryTestHarnessRegistrationBusFactory(string virtualHost = null)
+    public InMemoryTestHarnessRegistrationBusFactory(string? virtualHost = null)
     {
         _virtualHost = virtualHost;
     }

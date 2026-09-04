@@ -10,9 +10,9 @@ public sealed class TransformPipelineTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-SEND-TRANSFORM", "publish-isolation")]
-    public async Task SendTransform_DoesNotChangeAPublishedMessage()
+    public async Task SendTransform_DoesNotChangeAPublishedMessageAsync()
     {
-        TransformMessage consumed = await RunBusTransform(
+        TransformMessage consumed = await RunBusTransformAsync(
             configureSend: true,
             dispatchSend: false);
 
@@ -22,9 +22,9 @@ public sealed class TransformPipelineTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SEND-TRANSFORM", "sent-message")]
-    public async Task SendTransform_ChangesTheSentMessage()
+    public async Task SendTransform_ChangesTheSentMessageAsync()
     {
-        TransformMessage consumed = await RunBusTransform(
+        TransformMessage consumed = await RunBusTransformAsync(
             configureSend: true,
             dispatchSend: true);
 
@@ -34,9 +34,9 @@ public sealed class TransformPipelineTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PUBLISH-TRANSFORM", "published-message")]
-    public async Task PublishTransform_ChangesThePublishedMessage()
+    public async Task PublishTransform_ChangesThePublishedMessageAsync()
     {
-        TransformMessage consumed = await RunBusTransform(
+        TransformMessage consumed = await RunBusTransformAsync(
             configureSend: false,
             dispatchSend: false);
 
@@ -46,9 +46,9 @@ public sealed class TransformPipelineTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PUBLISH-TRANSFORM", "send-isolation")]
-    public async Task PublishTransform_DoesNotChangeASentMessage()
+    public async Task PublishTransform_DoesNotChangeASentMessageAsync()
     {
-        TransformMessage consumed = await RunBusTransform(
+        TransformMessage consumed = await RunBusTransformAsync(
             configureSend: false,
             dispatchSend: true);
 
@@ -58,27 +58,27 @@ public sealed class TransformPipelineTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONSUME-TRANSFORM", "replace-original-message")]
-    public Task ConsumeTransform_WithReplace_ChangesTheOriginalMessageInstance() =>
-        AssertEndpointTransform(replace: true);
+    public Task ConsumeTransform_WithReplace_ChangesTheOriginalMessageInstanceAsync() =>
+        AssertEndpointTransformAsync(replace: true);
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONSUME-TRANSFORM", "create-new-message")]
-    public Task ConsumeTransform_WithoutReplace_CreatesANewMessageInstance() =>
-        AssertEndpointTransform(replace: false);
+    public Task ConsumeTransform_WithoutReplace_CreatesANewMessageInstanceAsync() =>
+        AssertEndpointTransformAsync(replace: false);
 
     [Fact]
     [RequirementCoverage("REQ-VSB-HANDLER-TRANSFORM", "replace-interface-message")]
-    public Task HandlerTransform_WithReplace_ChangesOnlyTheConfiguredInterfaceHandler() =>
-        AssertHandlerTransform(replace: true);
+    public Task HandlerTransform_WithReplace_ChangesOnlyTheConfiguredInterfaceHandlerAsync() =>
+        AssertHandlerTransformAsync(replace: true);
 
     [Fact]
     [RequirementCoverage("REQ-VSB-HANDLER-TRANSFORM", "copy-interface-message")]
-    public Task HandlerTransform_WithoutReplace_ChangesOnlyTheConfiguredInterfaceHandler() =>
-        AssertHandlerTransform(replace: false);
+    public Task HandlerTransform_WithoutReplace_ChangesOnlyTheConfiguredInterfaceHandlerAsync() =>
+        AssertHandlerTransformAsync(replace: false);
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONSUME-TRANSFORM-SPECIFICATION", "class-based-specification")]
-    public async Task ClassBasedTransform_ChangesEveryConfiguredProperty()
+    public async Task ClassBasedTransform_ChangesEveryConfiguredPropertyAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -94,10 +94,10 @@ public sealed class TransformPipelineTests
             });
         };
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.InputQueueSendEndpoint.SendAsync(
                     new TransformMessage { First = "Hello" },
                     cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
@@ -109,11 +109,11 @@ public sealed class TransformPipelineTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
-    private static async Task<TransformMessage> RunBusTransform(bool configureSend, bool dispatchSend)
+    private static async Task<TransformMessage> RunBusTransformAsync(bool configureSend, bool dispatchSend)
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -133,30 +133,30 @@ public sealed class TransformPipelineTests
                 bus.ConfigurePublish(publish => publish.UseTransform<TransformMessage>(Configure));
         };
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             var message = new TransformMessage { First = "Hello" };
             if (dispatchSend)
             {
-                await harness.InputQueueSendEndpoint.Send(message, cancellationToken)
+                await harness.InputQueueSendEndpoint.SendAsync(message, cancellationToken)
                     .WaitAsync(timeout, cancellationToken);
             }
             else
             {
-                await harness.Bus.Publish(message, cancellationToken)
+                await harness.Bus.PublishAsync(message, cancellationToken)
                     .WaitAsync(timeout, cancellationToken);
             }
 
-            return (await handler.Consumed.SelectAsync(cancellationToken).First()).Context.Message;
+            return (await handler.Consumed.SelectAsync(cancellationToken).FirstObservedAsync()).Context.Message;
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync().WaitAsync(timeout, CancellationToken.None);
         }
     }
 
-    private static async Task AssertEndpointTransform(bool replace)
+    private static async Task AssertEndpointTransformAsync(bool replace)
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -182,10 +182,10 @@ public sealed class TransformPipelineTests
             });
         };
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.InputQueueSendEndpoint.SendAsync(
                     new TransformMessage { First = "Hello" },
                     cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
@@ -202,11 +202,11 @@ public sealed class TransformPipelineTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync().WaitAsync(timeout, CancellationToken.None);
         }
     }
 
-    private static async Task AssertHandlerTransform(bool replace)
+    private static async Task AssertHandlerTransformAsync(bool replace)
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -228,7 +228,7 @@ public sealed class TransformPipelineTests
                 }));
         };
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         HostReceiveEndpointHandle? controlEndpoint = null;
         try
         {
@@ -240,7 +240,7 @@ public sealed class TransformPipelineTests
                     return Task.CompletedTask;
                 }));
             await controlEndpoint.Ready.WaitAsync(timeout, cancellationToken);
-            await harness.Bus.Publish<ITransformContract>(
+            await harness.Bus.PublishAsync<ITransformContract>(
                     new TransformMessage { First = "Hello" },
                     cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
@@ -260,7 +260,7 @@ public sealed class TransformPipelineTests
                 await controlEndpoint.StopAsync(CancellationToken.None)
                     .WaitAsync(timeout, CancellationToken.None);
             }
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync().WaitAsync(timeout, CancellationToken.None);
         }
     }
 

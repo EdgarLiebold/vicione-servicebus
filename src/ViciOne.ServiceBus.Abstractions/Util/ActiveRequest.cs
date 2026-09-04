@@ -33,11 +33,11 @@ public sealed class ActiveRequest :
     public CancellationToken CancellationToken { get; }
     public int ResultLimit { get; }
 
-    public Task Complete(int count, CancellationToken cancellationToken = default)
+    public Task CompleteAsync(int count, CancellationToken cancellationToken = default)
     {
         _completed = true;
 
-        return _algorithm.EndRequest(count, ResultLimit, cancellationToken);
+        return _algorithm.EndRequestAsync(count, ResultLimit, cancellationToken);
     }
 
     public void Dispose()

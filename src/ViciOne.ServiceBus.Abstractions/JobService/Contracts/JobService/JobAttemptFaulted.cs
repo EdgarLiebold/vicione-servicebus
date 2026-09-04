@@ -17,7 +17,7 @@ public interface JobAttemptFaulted
     /// </summary>
     TimeSpan? RetryDelay { get; }
 
-    DateTime Timestamp { get; }
+    DateTimeOffset Timestamp { get; }
 
     ExceptionInfo Exceptions { get; }
 }

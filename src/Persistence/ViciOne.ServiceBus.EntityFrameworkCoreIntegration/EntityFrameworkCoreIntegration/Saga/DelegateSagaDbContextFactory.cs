@@ -26,8 +26,8 @@ public class DelegateSagaDbContextFactory<TSaga> :
         return _dbContextFactory();
     }
 
-    public ValueTask ReleaseAsync(DbContext dbContext)
+    public ValueTask ReleaseAsync(DbContext dbContext, CancellationToken cancellationToken = default)
     {
-        return dbContext.DisposeAsync();
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken); return dbContext.DisposeAsync();
     }
 }

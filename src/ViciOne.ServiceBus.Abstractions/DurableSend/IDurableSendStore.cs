@@ -26,6 +26,10 @@ public interface IDurableSendStore<TBus>
     /// Atomically admits one immutable intent. Implementations that retain the message in memory must snapshot the
     /// payload/metadata bytes before returning successfully; caller-owned buffers are not store-owned lifetime.
     /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="message">The message processed by the operation.</param>
+    /// <param name="limits">The limits used by the operation.</param>
+    /// <param name="enqueuedAt">The enqueued at used by the operation.</param>
     Task<DurableSendAdmissionResult> AdmitAsync(
         SerializedDurableSend message,
         DurableSendStoreLimits limits,

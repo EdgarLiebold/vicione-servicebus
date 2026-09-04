@@ -19,7 +19,7 @@ public class MessageSessionSagaRepositoryContext<TSaga, TMessage> :
     public MessageSessionSagaRepositoryContext(ConsumeContext<TMessage> consumeContext, ISagaConsumeContextFactory<MessageSessionContext, TSaga> factory)
         : base(consumeContext)
     {
-        if (!consumeContext.TryGetPayload(out MessageSessionContext sessionContext))
+        if (!consumeContext.TryGetPayload(out MessageSessionContext? sessionContext))
         {
             throw new SagaException($"The session-based saga repository requires an active message session: {TypeCache<TSaga>.ShortName}",
                 typeof(TSaga), typeof(TMessage));
@@ -30,63 +30,63 @@ public class MessageSessionSagaRepositoryContext<TSaga, TMessage> :
         _factory = factory;
     }
 
-    public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContext<T>(ConsumeContext<T> consumeContext, TSaga instance,
+    public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContextAsync<T>(ConsumeContext<T> consumeContext, TSaga instance,
         SagaConsumeContextMode mode)
         where T : class
     {
-        return _factory.CreateSagaConsumeContext(_sessionContext, consumeContext, instance, mode);
+        return _factory.CreateSagaConsumeContextAsync(_sessionContext, consumeContext, instance, mode);
     }
 
-    public Task<SagaConsumeContext<TSaga, TMessage>> Add(TSaga instance)
+    public Task<SagaConsumeContext<TSaga, TMessage>> AddAsync(TSaga instance, CancellationToken cancellationToken = default)
     {
-        return _factory.CreateSagaConsumeContext(_sessionContext, _consumeContext, instance, SagaConsumeContextMode.Add);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.SagaConsumeContext<TSaga, TMessage>>(cancellationToken); return _factory.CreateSagaConsumeContextAsync(_sessionContext, _consumeContext, instance, SagaConsumeContextMode.Add);
     }
 
-    public Task<SagaConsumeContext<TSaga, TMessage>> Insert(TSaga instance)
+    public Task<SagaConsumeContext<TSaga, TMessage>?> InsertAsync(TSaga instance, CancellationToken cancellationToken = default)
     {
-        return Task.FromResult<SagaConsumeContext<TSaga, TMessage>>(default);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.SagaConsumeContext<TSaga, TMessage>?>(cancellationToken); return Task.FromResult<SagaConsumeContext<TSaga, TMessage>?>(default);
     }
 
-    public async Task<SagaConsumeContext<TSaga, TMessage>> Load(Guid correlationId)
+    public async Task<SagaConsumeContext<TSaga, TMessage>?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
-        var instance = await ReadSagaState(_sessionContext).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested(); var instance = await ReadSagaStateAsync(_sessionContext).ConfigureAwait(false);
         if (instance == null)
             return default;
 
-        return await _factory.CreateSagaConsumeContext(_sessionContext, _consumeContext, instance, SagaConsumeContextMode.Load).ConfigureAwait(false);
+        return await _factory.CreateSagaConsumeContextAsync(_sessionContext, _consumeContext, instance, SagaConsumeContextMode.Load).ConfigureAwait(false);
     }
 
-    public Task Save(SagaConsumeContext<TSaga> context)
+    public Task SaveAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        return WriteSagaState(_sessionContext, context.Saga);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return WriteSagaStateAsync(_sessionContext, context.Saga);
     }
 
-    public Task Update(SagaConsumeContext<TSaga> context)
+    public Task UpdateAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        return WriteSagaState(_sessionContext, context.Saga);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return WriteSagaStateAsync(_sessionContext, context.Saga);
     }
 
-    public async Task Delete(SagaConsumeContext<TSaga> context)
+    public async Task DeleteAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        await _sessionContext.SetStateAsync(null).ConfigureAwait(false);
+        await _sessionContext.SetStateAsync(null, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    public Task Discard(SagaConsumeContext<TSaga> context)
+    public Task DiscardAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        return Task.CompletedTask;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
     }
 
-    public Task Undo(SagaConsumeContext<TSaga> context)
+    public Task UndoAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        return Task.CompletedTask;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
     }
 
-    static Task WriteSagaState(MessageSessionContext context, TSaga saga)
+    static Task WriteSagaStateAsync(MessageSessionContext context, TSaga saga)
     {
         return context.SetStateAsync(BinaryData.FromObjectAsJson(saga, ServiceBusMetadataJson.Options));
     }
 
-    static async Task<TSaga> ReadSagaState(MessageSessionContext context)
+    static async Task<TSaga?> ReadSagaStateAsync(MessageSessionContext context)
     {
         var state = await context.GetStateAsync().ConfigureAwait(false);
 

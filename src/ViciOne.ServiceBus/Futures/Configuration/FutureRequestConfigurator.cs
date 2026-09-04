@@ -41,7 +41,7 @@ public class FutureRequestConfigurator<TCommand, TResult, TFault, TInput, TReque
     public Event<Fault<TRequest>> Faulted { get; }
 
     public FutureResponseHandle<TCommand, TResult, TFault, TRequest, TResponse>
-        OnResponseReceived<TResponse>(Action<IFutureResponseConfigurator<TResult, TResponse>> configure)
+        OnResponseReceived<TResponse>(Action<IFutureResponseConfigurator<TResult, TResponse>>? configure)
         where TResponse : class
     {
         var response = new FutureResponseConfigurator<TCommand, TResult, TFault, TRequest, TResponse>(_configurator, this);
@@ -53,7 +53,7 @@ public class FutureRequestConfigurator<TCommand, TResult, TFault, TInput, TReque
         if (response.PendingResponseIdProvider != null)
             _configurator.CompletePendingRequest(response.Completed, response.PendingResponseIdProvider);
         else
-            _configurator.SetResult(response.Completed, response.SetResult);
+            _configurator.SetResult(response.Completed, context => response.SetResultAsync(context, context.CancellationToken));
 
         return response;
     }
@@ -80,12 +80,12 @@ public class FutureRequestConfigurator<TCommand, TResult, TFault, TInput, TReque
 
     public void UsingRequestInitializer(InitializerValueProvider<TInput> valueProvider)
     {
-        Task<SendTuple<TRequest>> Factory(BehaviorContext<FutureState, TInput> context)
+        Task<SendTuple<TRequest>> FactoryAsync(BehaviorContext<FutureState, TInput> context)
         {
-            return MessageInitializerCache<TRequest>.InitializeMessage(context, valueProvider(context), new object[] { context.Message });
+            return MessageInitializerCache<TRequest>.InitializeMessageAsync(context, valueProvider(context), new object[] { context.Message });
         }
 
-        _request.Factory = MessageFactory<TRequest>.Create((Func<BehaviorContext<FutureState, TInput>, Task<SendTuple<TRequest>>>)Factory);
+        _request.Factory = MessageFactory<TRequest>.Create((Func<BehaviorContext<FutureState, TInput>, Task<SendTuple<TRequest>>>)FactoryAsync);
     }
 
     public void TrackPendingRequest(PendingFutureIdProvider<TRequest> provider)
@@ -110,29 +110,29 @@ public class FutureRequestConfigurator<TCommand, TResult, TFault, TInput, TReque
         return _request.Validate();
     }
 
-    public Task Send(BehaviorContext<FutureState, TInput> context)
+    public Task SendAsync(BehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default)
     {
         return context.Message != null
-            ? _request.SendRequest(context)
+            ? _request.SendRequestAsync(context, cancellationToken: cancellationToken)
             : Task.CompletedTask;
     }
 
-    public Task Send(BehaviorContext<FutureState, TCommand> context, TInput data)
+    public Task SendAsync(BehaviorContext<FutureState, TCommand> context, TInput data, CancellationToken cancellationToken = default)
     {
         return data != null
-            ? _request.SendRequest(context.CreateProxy(MessageEvent<TInput>.Instance, data))
+            ? _request.SendRequestAsync(context.CreateProxy(MessageEvent<TInput>.Instance, data), cancellationToken: cancellationToken)
             : Task.CompletedTask;
     }
 
-    public Task SendRange(BehaviorContext<FutureState, TCommand> context, IEnumerable<TInput> inputs)
+    public Task SendRangeAsync(BehaviorContext<FutureState, TCommand> context, IEnumerable<TInput> inputs, CancellationToken cancellationToken = default)
     {
         return inputs != null
-            ? Task.WhenAll(inputs.Select(input => Send(context, input)))
+            ? Task.WhenAll(inputs.Select(input => SendAsync(context, input, cancellationToken: cancellationToken)))
             : Task.CompletedTask;
     }
 
-    public Task SetFaulted(BehaviorContext<FutureState, Fault<TRequest>> context)
+    public Task SetFaultedAsync(BehaviorContext<FutureState, Fault<TRequest>> context, CancellationToken cancellationToken = default)
     {
-        return _fault.SetFaulted(context);
+        return _fault.SetFaultedAsync(context, cancellationToken: cancellationToken);
     }
 }

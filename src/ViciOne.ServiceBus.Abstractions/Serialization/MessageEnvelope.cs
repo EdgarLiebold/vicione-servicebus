@@ -16,8 +16,8 @@ public interface MessageEnvelope
     string? FaultAddress { get; }
     string[]? MessageType { get; }
     object? Message { get; }
-    DateTime? ExpirationTime { get; }
-    DateTime? SentTime { get; }
+    DateTimeOffset? ExpirationTime { get; }
+    DateTimeOffset? SentTime { get; }
     Dictionary<string, object?>? Headers { get; }
     HostInfo? Host { get; }
 }

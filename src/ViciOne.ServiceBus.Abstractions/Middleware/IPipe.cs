@@ -11,5 +11,5 @@ public interface IPipe<in TContext> :
     /// </summary>
     /// <param name="context">The pipe context of type T</param>
     /// <returns>A task which is completed once the pipe has processed the context</returns>
-    Task Send(TContext context);
+    Task SendAsync(TContext context);
 }

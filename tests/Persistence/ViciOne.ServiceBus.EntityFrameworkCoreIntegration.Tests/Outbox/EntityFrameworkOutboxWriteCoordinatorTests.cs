@@ -19,13 +19,13 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "commit-persists-business-and-intent")]
-    public async Task Commit_PersistsBusinessDataAndOutboxIntentThroughTheSameContext()
+    public async Task Commit_PersistsBusinessDataAndOutboxIntentThroughTheSameContextAsync()
     {
-        await using OutboxFixture fixture = await OutboxFixture.Create();
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync();
         using EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext();
         var business = new BusinessRecord(Guid.NewGuid(), "committed");
         fixture.DbContext.Add(business);
-        await context.AddSend(CreateSendContext(Guid.NewGuid(), 1));
+        await context.AddSendAsync(CreateSendContext(Guid.NewGuid(), 1), TestContext.Current.CancellationToken);
 
         await context.CommitAsync(TestContext.Current.CancellationToken);
         fixture.DbContext.ChangeTracker.Clear();
@@ -41,9 +41,9 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "commit-without-message-persists-business")]
-    public async Task Commit_WithoutAStagedMessageStillPersistsBusinessChanges()
+    public async Task Commit_WithoutAStagedMessageStillPersistsBusinessChangesAsync()
     {
-        await using OutboxFixture fixture = await OutboxFixture.Create();
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync();
         using EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext();
         var business = new BusinessRecord(Guid.NewGuid(), "business-only");
         fixture.DbContext.Add(business);
@@ -58,13 +58,13 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "abort-detaches-only-session-intent")]
-    public async Task Abort_DetachesOnlyTheSessionOutboxAndRetainsBusinessChanges()
+    public async Task Abort_DetachesOnlyTheSessionOutboxAndRetainsBusinessChangesAsync()
     {
-        await using OutboxFixture fixture = await OutboxFixture.Create();
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync();
         using EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext();
         var business = new BusinessRecord(Guid.NewGuid(), "retained");
         fixture.DbContext.Add(business);
-        await context.AddSend(CreateSendContext(Guid.NewGuid(), 1));
+        await context.AddSendAsync(CreateSendContext(Guid.NewGuid(), 1), TestContext.Current.CancellationToken);
 
         await context.AbortAsync(TestContext.Current.CancellationToken);
         await fixture.DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
@@ -78,13 +78,13 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "dispose-without-commit-fails-and-detaches")]
-    public async Task Dispose_WithoutCommitFailsLoudlyAfterDetachingOnlyTheOutbox()
+    public async Task Dispose_WithoutCommitFailsLoudlyAfterDetachingOnlyTheOutboxAsync()
     {
-        await using OutboxFixture fixture = await OutboxFixture.Create();
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync();
         EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext();
         var business = new BusinessRecord(Guid.NewGuid(), "survives-disposal");
         fixture.DbContext.Add(business);
-        await context.AddSend(CreateSendContext(Guid.NewGuid(), 1));
+        await context.AddSendAsync(CreateSendContext(Guid.NewGuid(), 1), TestContext.Current.CancellationToken);
 
         InvalidOperationException failure = Assert.Throws<InvalidOperationException>(context.Dispose);
         await fixture.DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
@@ -99,11 +99,11 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "externally-saved-session-is-signaled-once")]
-    public async Task Commit_AfterExternalSaveRecognizesThePersistedSessionAndSignalsExactlyOnce()
+    public async Task Commit_AfterExternalSaveRecognizesThePersistedSessionAndSignalsExactlyOnceAsync()
     {
-        await using OutboxFixture fixture = await OutboxFixture.Create();
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync();
         using EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext();
-        await context.AddSend(CreateSendContext(Guid.NewGuid(), 1));
+        await context.AddSendAsync(CreateSendContext(Guid.NewGuid(), 1), TestContext.Current.CancellationToken);
         await fixture.DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         await context.CommitAsync(TestContext.Current.CancellationToken);
@@ -116,16 +116,16 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-BUS-OUTBOX-WRITE", "concurrent-writes-share-one-state")]
-    public async Task ConcurrentWrites_CreateOneStateAndRetainEveryDistinctMessage()
+    public async Task ConcurrentWrites_CreateOneStateAndRetainEveryDistinctMessageAsync()
     {
-        await using OutboxFixture fixture = await OutboxFixture.Create();
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync();
         using EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext();
         var start = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         Guid[] messageIds = Enumerable.Range(0, 32).Select(_ => Guid.NewGuid()).ToArray();
         Task[] writes = messageIds.Select(async (messageId, index) =>
         {
             await start.Task;
-            await context.AddSend(CreateSendContext(messageId, index));
+            await context.AddSendAsync(CreateSendContext(messageId, index));
         }).ToArray();
 
         start.SetResult();
@@ -142,15 +142,15 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-BUS-OUTBOX-WRITE", "committed-batch-rolls-to-new-state")]
-    public async Task CommittedBatch_StartsANewStateAndNotifiesExactlyOncePerBatch()
+    public async Task CommittedBatch_StartsANewStateAndNotifiesExactlyOncePerBatchAsync()
     {
-        await using OutboxFixture fixture = await OutboxFixture.Create();
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync();
         EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext();
-        await context.AddSend(CreateSendContext(Guid.NewGuid(), 1));
+        await context.AddSendAsync(CreateSendContext(Guid.NewGuid(), 1), TestContext.Current.CancellationToken);
         await context.CommitAsync(TestContext.Current.CancellationToken);
         Guid firstOutboxId = Assert.Single(fixture.DbContext.Set<OutboxState>().Local).OutboxId;
 
-        await context.AddSend(CreateSendContext(Guid.NewGuid(), 2));
+        await context.AddSendAsync(CreateSendContext(Guid.NewGuid(), 2), TestContext.Current.CancellationToken);
         OutboxState[] states = fixture.DbContext.Set<OutboxState>().Local.ToArray();
 
         Assert.Equal(2, states.Length);
@@ -210,7 +210,7 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
 
         public RecordingNotification Notification { get; }
 
-        public static async Task<OutboxFixture> Create()
+        public static async Task<OutboxFixture> CreateAsync()
         {
             var connection = new SqliteConnection("Data Source=:memory:");
             await connection.OpenAsync(TestContext.Current.CancellationToken);
@@ -257,7 +257,6 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
 
         public void Delivered() => Interlocked.Increment(ref _deliveredCount);
 
-        public Task WaitForDelivery(CancellationToken cancellationToken) =>
-            throw new InvalidOperationException("The outbox write tests must not wait for delivery.");
+        public Task WaitForDeliveryAsync(CancellationToken cancellationToken) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); throw new InvalidOperationException("The outbox write tests must not wait for delivery."); }
     }
 }

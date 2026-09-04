@@ -13,24 +13,25 @@ public static class ConcurrencyLimitExtensions
     /// <param name="concurrencyLimit"></param>
     /// <param name="timeProvider">The clock used to timestamp the concurrency-limit command and enforce its timeout.</param>
     /// <returns></returns>
-    public static Task SetConcurrencyLimit(this IPipe<CommandContext> pipe, int concurrencyLimit, TimeProvider? timeProvider = null)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static Task SetConcurrencyLimitAsync(this IPipe<CommandContext> pipe, int concurrencyLimit, TimeProvider? timeProvider = null, CancellationToken cancellationToken = default)
     {
         timeProvider ??= TimeProvider.System;
 
-        return pipe.SendCommand<SetConcurrencyLimit>(new Limit(concurrencyLimit, timeProvider.GetUtcNow().UtcDateTime), timeProvider);
+        return pipe.SendCommandAsync<SetConcurrencyLimit>(new Limit(concurrencyLimit, timeProvider.GetUtcNow()), timeProvider, cancellationToken: cancellationToken);
     }
 
 
     class Limit :
         SetConcurrencyLimit
     {
-        public Limit(int concurrencyLimit, DateTime timestamp)
+        public Limit(int concurrencyLimit, DateTimeOffset timestamp)
         {
             ConcurrencyLimit = concurrencyLimit;
             Timestamp = timestamp;
         }
 
-        public DateTime? Timestamp { get; }
+        public DateTimeOffset? Timestamp { get; }
         public string? Id => null;
         public int ConcurrencyLimit { get; }
     }

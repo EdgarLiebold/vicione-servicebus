@@ -11,41 +11,43 @@ public sealed class DynamoDbSagaPersistenceTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-DYNAMODB-SAGA-PERSISTENCE", "correlated-message-loads-only-its-saga")]
-    public async Task CorrelatedMessage_LoadsOnlyItsSaga()
+    public async Task CorrelatedMessage_LoadsOnlyItsSagaAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using DynamoDbTestTable fixture = await DynamoDbTestTable.CreateAsync("SagaCorrelation", cancellationToken);
         await using ServiceProvider provider = CreateProvider(fixture);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(fixture.OperationTimeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
 
         try
         {
             Guid firstId = Guid.NewGuid();
             Guid secondId = Guid.NewGuid();
-            ISendEndpoint endpoint = await harness.GetSagaEndpoint<PersistentSaga>();
+            ISendEndpoint endpoint = await harness.GetSagaEndpointAsync<PersistentSaga>(TestContext.Current.CancellationToken);
 
-            await endpoint.Send(new StartPersistentSaga(firstId, "first"), cancellationToken);
-            await endpoint.Send(new StartPersistentSaga(secondId, "second"), cancellationToken);
+            await endpoint.SendAsync(new StartPersistentSaga(firstId, "first"), cancellationToken);
+            await endpoint.SendAsync(new StartPersistentSaga(secondId, "second"), cancellationToken);
             await harness.Published.SelectAsync<PersistentSagaStarted>(
                     observed => observed.Context.Message.CorrelationId == firstId,
                     cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             await harness.Published.SelectAsync<PersistentSagaStarted>(
                     observed => observed.Context.Message.CorrelationId == secondId,
                     cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
-            await endpoint.Send(new MovePersistentSaga(firstId), cancellationToken);
+            await endpoint.SendAsync(new MovePersistentSaga(firstId), cancellationToken);
             IPublishedMessage<PersistentSagaMoved> moved = await harness.Published
                 .SelectAsync<PersistentSagaMoved>(
                     observed => observed.Context.Message.CorrelationId == firstId,
                     cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             var repository = (ILoadSagaRepository<PersistentSaga>)DynamoDbSagaRepository<PersistentSaga>
                 .Create(fixture.CreateContext, fixture.TableName);
-            PersistentSaga first = await repository.Load(firstId);
-            PersistentSaga second = await repository.Load(secondId);
+            PersistentSaga first = Assert.IsType<PersistentSaga>(
+                await repository.LoadAsync(firstId, TestContext.Current.CancellationToken));
+            PersistentSaga second = Assert.IsType<PersistentSaga>(
+                await repository.LoadAsync(secondId, TestContext.Current.CancellationToken));
 
             Assert.Equal(firstId, moved.Context.Message.CorrelationId);
             Assert.True(first.Moved);
@@ -56,34 +58,35 @@ public sealed class DynamoDbSagaPersistenceTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-DYNAMODB-SAGA-PERSISTENCE", "initiating-message-creates-one-persisted-saga")]
-    public async Task InitiatingMessage_CreatesOnePersistedSaga()
+    public async Task InitiatingMessage_CreatesOnePersistedSagaAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using DynamoDbTestTable fixture = await DynamoDbTestTable.CreateAsync("SagaInitiation", cancellationToken);
         await using ServiceProvider provider = CreateProvider(fixture);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(fixture.OperationTimeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
 
         try
         {
             Guid sagaId = Guid.NewGuid();
-            ISendEndpoint endpoint = await harness.GetSagaEndpoint<PersistentSaga>();
-            await endpoint.Send(new StartPersistentSaga(sagaId, "created"), cancellationToken);
+            ISendEndpoint endpoint = await harness.GetSagaEndpointAsync<PersistentSaga>(TestContext.Current.CancellationToken);
+            await endpoint.SendAsync(new StartPersistentSaga(sagaId, "created"), cancellationToken);
             IPublishedMessage<PersistentSagaStarted> started = await harness.Published
                 .SelectAsync<PersistentSagaStarted>(
                     observed => observed.Context.Message.CorrelationId == sagaId,
                     cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             Dictionary<string, Amazon.DynamoDBv2.Model.AttributeValue>[] rows = await fixture.ScanAsync(cancellationToken);
             var repository = (ILoadSagaRepository<PersistentSaga>)DynamoDbSagaRepository<PersistentSaga>
                 .Create(fixture.CreateContext, fixture.TableName);
-            PersistentSaga persisted = await repository.Load(sagaId);
+            PersistentSaga persisted = Assert.IsType<PersistentSaga>(
+                await repository.LoadAsync(sagaId, TestContext.Current.CancellationToken));
 
             Dictionary<string, Amazon.DynamoDBv2.Model.AttributeValue> row = Assert.Single(rows);
             Assert.Equal(sagaId.ToString("D"), row["PK"].S);
@@ -95,7 +98,7 @@ public sealed class DynamoDbSagaPersistenceTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
         }
     }
 
@@ -133,16 +136,16 @@ public sealed class DynamoDbSagaPersistenceTests
 
         public bool Moved { get; set; }
 
-        public Task Consume(ConsumeContext<StartPersistentSaga> context)
+        public Task ConsumeAsync(ConsumeContext<StartPersistentSaga> context)
         {
             Name = context.Message.Name;
-            return context.Publish(new PersistentSagaStarted(CorrelationId), context.CancellationToken);
+            return context.Advanced().PublishAsync(new PersistentSagaStarted(CorrelationId), context.CancellationToken);
         }
 
-        public Task Consume(ConsumeContext<MovePersistentSaga> context)
+        public Task ConsumeAsync(ConsumeContext<MovePersistentSaga> context)
         {
             Moved = true;
-            return context.Publish(new PersistentSagaMoved(CorrelationId), context.CancellationToken);
+            return context.Advanced().PublishAsync(new PersistentSagaMoved(CorrelationId), context.CancellationToken);
         }
     }
 

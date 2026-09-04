@@ -33,10 +33,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     readonly StateObservable _stateObservers;
     IStateAccessor<TInstance> _accessor;
 
-    List<FieldInfo> _backingFields;
+    List<FieldInfo> _backingFields = null!;
     Func<BehaviorContext<TInstance>, Task<bool>> _isCompleted;
     string _name;
-    List<PropertyInfo> _stateMachineProperties;
+    List<PropertyInfo> _stateMachineProperties = null!;
     UnhandledEventCallback<TInstance> _unhandledEventCallback;
 
     protected ViciOneServiceBusStateMachine()
@@ -49,19 +49,19 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         _eventObservers = new EventObservable();
         _stateObservers = new StateObservable();
 
-        _initial = new StateMachineState((context, state) => UnhandledEvent(context, state), "Initial", _eventObservers);
+        _initial = new StateMachineState((context, state) => UnhandledEventAsync(context, state), "Initial", _eventObservers);
         _stateCache[_initial.Name] = _initial;
-        _final = new StateMachineState((context, state) => UnhandledEvent(context, state), "Final", _eventObservers);
+        _final = new StateMachineState((context, state) => UnhandledEventAsync(context, state), "Final", _eventObservers);
         _stateCache[_final.Name] = _final;
 
         _accessor = new DefaultInstanceStateAccessor(this, _stateCache[Initial.Name], _stateObservers);
 
-        _unhandledEventCallback = DefaultUnhandledEventCallback;
+        _unhandledEventCallback = DefaultUnhandledEventCallbackAsync;
 
         _name = GetType().Name;
 
         _eventCorrelations = new Dictionary<Event, EventCorrelation>();
-        _isCompleted = NotCompletedByDefault;
+        _isCompleted = NotCompletedByDefaultAsync;
 
         RegisterImplicit();
     }
@@ -96,7 +96,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         }
     }
 
-    Task<bool> SagaStateMachine<TInstance>.IsCompleted(BehaviorContext<TInstance> context)
+    Task<bool> SagaStateMachine<TInstance>.IsCompletedAsync(BehaviorContext<TInstance> context, CancellationToken cancellationToken)
     {
         return _isCompleted(context);
     }
@@ -108,35 +108,37 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
 
     State StateMachine.GetState(string name)
     {
-        if (_stateCache.TryGetValue(name, out State<TInstance> result))
+        if (_stateCache.TryGetValue(name, out State<TInstance>? result))
             return result;
 
         throw new UnknownStateException(_name, name);
     }
 
-    async Task StateMachine<TInstance>.RaiseEvent(BehaviorContext<TInstance> context)
+    async Task StateMachine<TInstance>.RaiseEventAsync(BehaviorContext<TInstance> context, CancellationToken cancellationToken)
     {
-        State<TInstance> state = await _accessor.Get(context).ConfigureAwait(false);
+        State<TInstance> state = await _accessor.GetAsync(context, cancellationToken: cancellationToken).ConfigureAwait(false)
+            ?? throw new SagaStateMachineException($"The state machine '{_name}' did not initialize its current state.");
 
-        if (!_stateCache.TryGetValue(state.Name, out State<TInstance> instanceState))
+        if (!_stateCache.TryGetValue(state.Name, out State<TInstance>? instanceState))
             throw new UnknownStateException(_name, state.Name);
 
-        await instanceState.Raise(context).ConfigureAwait(false);
+        await instanceState.RaiseAsync(context, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    async Task StateMachine<TInstance>.RaiseEvent<T>(BehaviorContext<TInstance, T> context)
+    async Task StateMachine<TInstance>.RaiseEventAsync<T>(BehaviorContext<TInstance, T> context, CancellationToken cancellationToken)
     {
-        State<TInstance> state = await _accessor.Get(context).ConfigureAwait(false);
+        State<TInstance> state = await _accessor.GetAsync(context, cancellationToken: cancellationToken).ConfigureAwait(false)
+            ?? throw new SagaStateMachineException($"The state machine '{_name}' did not initialize its current state.");
 
-        if (!_stateCache.TryGetValue(state.Name, out State<TInstance> instanceState))
+        if (!_stateCache.TryGetValue(state.Name, out State<TInstance>? instanceState))
             throw new UnknownStateException(_name, state.Name);
 
-        await instanceState.Raise(context).ConfigureAwait(false);
+        await instanceState.RaiseAsync(context, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
     public State<TInstance> GetState(string name)
     {
-        if (TryGetState(name, out State<TInstance> result))
+        if (TryGetState(name, out State<TInstance>? result))
             return result;
 
         throw new UnknownStateException(_name, name);
@@ -161,7 +163,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
 
     public IEnumerable<Event> NextEvents(State state)
     {
-        if (_stateCache.TryGetValue(state.Name, out State<TInstance> result))
+        if (_stateCache.TryGetValue(state.Name, out State<TInstance>? result))
             return result.Events;
 
         throw new UnknownStateException(_name, state.Name);
@@ -211,12 +213,12 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         return _stateObservers.Connect(stateObserver);
     }
 
-    bool TryGetState(string name, out State<TInstance> state)
+    bool TryGetState(string name, [NotNullWhen(true)] out State<TInstance>? state)
     {
         return _stateCache.TryGetValue(name, out state);
     }
 
-    Task DefaultUnhandledEventCallback(UnhandledEventContext<TInstance> context)
+    Task DefaultUnhandledEventCallbackAsync(UnhandledEventContext<TInstance> context)
     {
         throw new UnhandledEventException(_name, context.Event.Name, context.CurrentState.Name);
     }
@@ -301,12 +303,12 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     {
         _isCompleted = completed != null
             ? context => completed(context.Saga)
-            : NotCompletedByDefault;
+            : NotCompletedByDefaultAsync;
     }
 
     protected void SetCompleted(Func<BehaviorContext<TInstance>, Task<bool>> completed)
     {
-        _isCompleted = completed ?? NotCompletedByDefault;
+        _isCompleted = completed ?? NotCompletedByDefaultAsync;
     }
 
     /// <summary>
@@ -314,12 +316,12 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// </summary>
     protected void SetCompletedWhenFinalized()
     {
-        _isCompleted = IsFinalized;
+        _isCompleted = IsFinalizedAsync;
     }
 
-    async Task<bool> IsFinalized(BehaviorContext<TInstance> context)
+    async Task<bool> IsFinalizedAsync(BehaviorContext<TInstance> context)
     {
-        State<TInstance> currentState = await Accessor.Get(context).ConfigureAwait(false);
+        State<TInstance>? currentState = await Accessor.GetAsync(context).ConfigureAwait(false);
 
         return Final.Equals(currentState);
     }
@@ -362,7 +364,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
 
         var propertyInfo = propertyExpression.GetPropertyInfo();
 
-        var @event = (Event<T>)propertyInfo.GetValue(this);
+        var @event = propertyInfo.GetValue(this) as Event<T>
+            ?? throw new InvalidOperationException($"The event property '{propertyInfo.Name}' was not initialized.");
 
         _eventCorrelations.TryGetValue(@event, out var existingCorrelation);
 
@@ -391,10 +394,12 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         Event(propertyExpression, eventPropertyExpression);
 
         var propertyInfo = propertyExpression.GetPropertyInfo();
-        var property = (TProperty)propertyInfo.GetValue(this);
+        var property = propertyInfo.GetValue(this) as TProperty
+            ?? throw new InvalidOperationException($"The containing property '{propertyInfo.Name}' was not initialized.");
 
         var eventPropertyInfo = eventPropertyExpression.GetPropertyInfo();
-        var @event = (Event<T>)eventPropertyInfo.GetValue(property);
+        var @event = eventPropertyInfo.GetValue(property) as Event<T>
+            ?? throw new InvalidOperationException($"The event property '{eventPropertyInfo.Name}' was not initialized.");
 
         _eventCorrelations.TryGetValue(@event, out var existingCorrelation);
 
@@ -445,7 +450,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
 
         var propertyInfo = propertyExpression.GetPropertyInfo();
 
-        var @event = (Event)propertyInfo.GetValue(this);
+        var @event = propertyInfo.GetValue(this) as Event
+            ?? throw new InvalidOperationException($"The event property '{propertyInfo.Name}' was not initialized.");
 
         var registration = GetEventRegistration(@event, typeof(T));
 
@@ -705,10 +711,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
 
     protected internal State<TInstance> State(string name)
     {
-        if (TryGetState(name, out State<TInstance> foundState))
+        if (TryGetState(name, out State<TInstance>? foundState))
             return foundState;
 
-        var state = new StateMachineState((c, s) => UnhandledEvent(c, s), name, _eventObservers);
+        var state = new StateMachineState((c, s) => UnhandledEventAsync(c, s), name, _eventObservers);
         SetState(name, state);
 
         return state;
@@ -716,6 +722,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
 
     void DeclareState(PropertyInfo property)
     {
+        ArgumentNullException.ThrowIfNull(property);
         var name = property.Name;
 
         var propertyValue = property.GetValue(this);
@@ -725,7 +732,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         if (name.Equals(existingState?.Name))
             return;
 
-        var state = new StateMachineState((c, s) => UnhandledEvent(c, s), name, _eventObservers);
+        var state = new StateMachineState((c, s) => UnhandledEventAsync(c, s), name, _eventObservers);
 
         InitializeState(this, property, state);
 
@@ -754,14 +761,14 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         if (name.Equals(existingState?.Name))
             return;
 
-        var state = new StateMachineState((c, s) => UnhandledEvent(c, s), name, _eventObservers);
+        var state = new StateMachineState((c, s) => UnhandledEventAsync(c, s), name, _eventObservers);
 
         InitializeStateProperty(stateProperty, propertyValue, state);
 
         SetState(name, state);
     }
 
-    static StateMachineState GetStateProperty<TProperty>(PropertyInfo stateProperty, TProperty propertyValue)
+    static StateMachineState? GetStateProperty<TProperty>(PropertyInfo stateProperty, TProperty propertyValue)
         where TProperty : class
     {
         if (stateProperty.CanRead)
@@ -798,7 +805,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         if (name.Equals(existingState?.Name) && superState.Name.Equals(existingState?.SuperState?.Name))
             return;
 
-        var state = new StateMachineState((c, s) => UnhandledEvent(c, s), name, _eventObservers, superStateInstance);
+        var state = new StateMachineState((c, s) => UnhandledEventAsync(c, s), name, _eventObservers, superStateInstance);
 
         InitializeState(this, property, state);
 
@@ -813,12 +820,12 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         State<TInstance> superStateInstance = GetState(superState.Name);
 
         // If the state was already defined, don't define it again
-        if (TryGetState(name, out State<TInstance> existingState) &&
+        if (TryGetState(name, out State<TInstance>? existingState) &&
             name.Equals(existingState?.Name) &&
             superState.Name.Equals(existingState?.SuperState?.Name))
             return existingState;
 
-        var state = new StateMachineState((c, s) => UnhandledEvent(c, s), name, _eventObservers, superStateInstance);
+        var state = new StateMachineState((c, s) => UnhandledEventAsync(c, s), name, _eventObservers, superStateInstance);
 
         SetState(name, state);
         return state;
@@ -852,7 +859,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         if (name.Equals(existingState?.Name) && superState.Name.Equals(existingState?.SuperState?.Name))
             return;
 
-        var state = new StateMachineState((c, s) => UnhandledEvent(c, s), name, _eventObservers, superStateInstance);
+        var state = new StateMachineState((c, s) => UnhandledEventAsync(c, s), name, _eventObservers, superStateInstance);
 
         InitializeStateProperty(stateProperty, propertyValue, state);
 
@@ -1027,7 +1034,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// <param name="event">The fired event</param>
     /// <param name="filter">The filter applied to the event</param>
     /// <returns></returns>
-    protected internal EventActivityBinder<TInstance> When(Event @event, StateMachineCondition<TInstance> filter)
+    protected internal EventActivityBinder<TInstance> When(Event @event, StateMachineCondition<TInstance>? filter)
     {
         return new TriggerEventActivityBinder<TInstance>(this, @event, filter);
     }
@@ -1199,7 +1206,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// <param name="event">The fired event</param>
     /// <param name="filter">The filter applied to the event</param>
     /// <returns></returns>
-    protected internal EventActivityBinder<TInstance, TMessage> When<TMessage>(Event<TMessage> @event, StateMachineCondition<TInstance, TMessage> filter)
+    protected internal EventActivityBinder<TInstance, TMessage> When<TMessage>(Event<TMessage> @event, StateMachineCondition<TInstance, TMessage>? filter)
         where TMessage : class
     {
         return new DataEventActivityBinder<TInstance, TMessage>(this, @event, filter);
@@ -1258,7 +1265,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
         _unhandledEventCallback = callback;
     }
 
-    Task UnhandledEvent(BehaviorContext<TInstance> context, State state)
+    Task UnhandledEventAsync(BehaviorContext<TInstance> context, State state)
     {
         var unhandledEventContext = new UnhandledEventBehaviorContext(this, context, state);
 
@@ -1277,7 +1284,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// <param name="configureRequest">Allow the request settings to be specified inline</param>
     protected void Request<TRequest, TResponse>(Expression<Func<Request<TInstance, TRequest, TResponse>>> propertyExpression,
         Expression<Func<TInstance, Guid?>> requestIdExpression,
-        Action<IRequestConfigurator<TInstance, TRequest, TResponse>> configureRequest = default)
+        Action<IRequestConfigurator<TInstance, TRequest, TResponse>>? configureRequest = default)
         where TRequest : class
         where TResponse : class
     {
@@ -1299,7 +1306,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// <param name="propertyExpression">The request property on the state machine</param>
     /// <param name="configureRequest">Allow the request settings to be specified inline</param>
     protected void Request<TRequest, TResponse>(Expression<Func<Request<TInstance, TRequest, TResponse>>> propertyExpression,
-        Action<IRequestConfigurator<TInstance, TRequest, TResponse>> configureRequest = default)
+        Action<IRequestConfigurator<TInstance, TRequest, TResponse>>? configureRequest = default)
         where TRequest : class
         where TResponse : class
     {
@@ -1415,7 +1422,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// <param name="configureRequest">Allow the request settings to be specified inline</param>
     protected void Request<TRequest, TResponse, TResponse2>(Expression<Func<Request<TInstance, TRequest, TResponse, TResponse2>>> propertyExpression,
         Expression<Func<TInstance, Guid?>> requestIdExpression,
-        Action<IRequestConfigurator<TInstance, TRequest, TResponse, TResponse2>> configureRequest = default)
+        Action<IRequestConfigurator<TInstance, TRequest, TResponse, TResponse2>>? configureRequest = default)
         where TRequest : class
         where TResponse : class
         where TResponse2 : class
@@ -1439,7 +1446,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// <param name="propertyExpression">The request property on the state machine</param>
     /// <param name="configureRequest">Allow the request settings to be specified inline</param>
     protected void Request<TRequest, TResponse, TResponse2>(Expression<Func<Request<TInstance, TRequest, TResponse, TResponse2>>> propertyExpression,
-        Action<IRequestConfigurator<TInstance, TRequest, TResponse, TResponse2>> configureRequest = default)
+        Action<IRequestConfigurator<TInstance, TRequest, TResponse, TResponse2>>? configureRequest = default)
         where TRequest : class
         where TResponse : class
         where TResponse2 : class
@@ -1578,7 +1585,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     protected void Request<TRequest, TResponse, TResponse2, TResponse3>(
         Expression<Func<Request<TInstance, TRequest, TResponse, TResponse2, TResponse3>>> propertyExpression,
         Expression<Func<TInstance, Guid?>> requestIdExpression,
-        Action<IRequestConfigurator<TInstance, TRequest, TResponse, TResponse2, TResponse3>> configureRequest = default)
+        Action<IRequestConfigurator<TInstance, TRequest, TResponse, TResponse2, TResponse3>>? configureRequest = default)
         where TRequest : class
         where TResponse : class
         where TResponse2 : class
@@ -1605,7 +1612,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// <param name="configureRequest">Allow the request settings to be specified inline</param>
     protected void Request<TRequest, TResponse, TResponse2, TResponse3>(
         Expression<Func<Request<TInstance, TRequest, TResponse, TResponse2, TResponse3>>> propertyExpression,
-        Action<IRequestConfigurator<TInstance, TRequest, TResponse, TResponse2, TResponse3>> configureRequest = default)
+        Action<IRequestConfigurator<TInstance, TRequest, TResponse, TResponse2, TResponse3>>? configureRequest = default)
         where TRequest : class
         where TResponse : class
         where TResponse2 : class
@@ -1757,7 +1764,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
     /// <param name="configureSchedule">The callback to configure the schedule</param>
     protected void Schedule<TMessage>(Expression<Func<Schedule<TInstance, TMessage>>> propertyExpression,
         Expression<Func<TInstance, Guid?>> tokenIdExpression,
-        Action<IScheduleConfigurator<TInstance, TMessage>> configureSchedule = default)
+        Action<IScheduleConfigurator<TInstance, TMessage>>? configureSchedule = default)
         where TMessage : class
     {
         var configurator = new StateMachineScheduleConfigurator<TInstance, TMessage>();
@@ -1827,14 +1834,14 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
 
                     BehaviorContext<TInstance, TMessage> eventContext = context.CreateProxy(schedule.Received, context.Message);
 
-                    await ((StateMachine<TInstance>)this).RaiseEvent(eventContext).ConfigureAwait(false);
+                    await ((StateMachine<TInstance>)this).RaiseEventAsync(eventContext).ConfigureAwait(false);
 
                     if (schedule.GetTokenId(context.Saga) == tokenId)
                         schedule.SetTokenId(context.Saga, default);
                 }));
     }
 
-    static Task<bool> NotCompletedByDefault(BehaviorContext<TInstance> instance)
+    static Task<bool> NotCompletedByDefaultAsync(BehaviorContext<TInstance> instance)
     {
         return TaskResults.False;
     }
@@ -1946,8 +1953,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
                 {
                     var declarationType = typeof(DataEventRegistration<,>).MakeGenericType(typeof(TInstance), machineType,
                         propertyInfo.PropertyType.GetGenericArguments().First());
-                    var declaration = Activator.CreateInstance(declarationType, propertyInfo);
-                    events.Add((StateMachineRegistration)declaration);
+                    var declaration = Activator.CreateInstance(declarationType, propertyInfo) as StateMachineRegistration
+                        ?? throw new InvalidOperationException($"Could not create an event registration for '{propertyInfo.Name}'.");
+                    events.Add(declaration);
                 }
             }
             else
@@ -1955,14 +1963,16 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
                 if (propertyInfo.PropertyType == typeof(Event))
                 {
                     var declarationType = typeof(TriggerEventRegistration<>).MakeGenericType(typeof(TInstance), machineType);
-                    var declaration = Activator.CreateInstance(declarationType, propertyInfo);
-                    events.Add((StateMachineRegistration)declaration);
+                    var declaration = Activator.CreateInstance(declarationType, propertyInfo) as StateMachineRegistration
+                        ?? throw new InvalidOperationException($"Could not create an event registration for '{propertyInfo.Name}'.");
+                    events.Add(declaration);
                 }
                 else if (propertyInfo.PropertyType == typeof(State))
                 {
                     var declarationType = typeof(StateRegistration<>).MakeGenericType(typeof(TInstance), machineType);
-                    var declaration = Activator.CreateInstance(declarationType, propertyInfo);
-                    events.Add((StateMachineRegistration)declaration);
+                    var declaration = Activator.CreateInstance(declarationType, propertyInfo) as StateMachineRegistration
+                        ?? throw new InvalidOperationException($"Could not create a state registration for '{propertyInfo.Name}'.");
+                    events.Add(declaration);
                 }
             }
         }
@@ -1976,7 +1986,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
             .Where(x => x.CanRead && (x.CanWrite || TryGetBackingField(x, out _))).ToList();
     }
 
-    bool TryGetBackingField(PropertyInfo property, out FieldInfo backingField)
+    bool TryGetBackingField(PropertyInfo property, [NotNullWhen(true)] out FieldInfo? backingField)
     {
         _backingFields ??= GetBackingFields(GetType())
             .Where(field =>
@@ -2197,8 +2207,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
 
         public void RegisterCorrelation(ViciOneServiceBusStateMachine<TInstance> machine)
         {
-            if (GlobalTopology.Send.GetMessageTopology<TData>().TryGetConvention(out ICorrelationIdMessageSendTopologyConvention<TData> convention)
-                && convention.TryGetMessageCorrelationId(out IMessageCorrelationId<TData> messageCorrelationId))
+            if (GlobalTopology.Send.GetMessageTopology<TData>().TryGetConvention(out ICorrelationIdMessageSendTopologyConvention<TData>? convention)
+                && convention.TryGetMessageCorrelationId(out IMessageCorrelationId<TData>? messageCorrelationId))
             {
                 var builder = new StateMachineInterfaceType<TInstance, TData>.MessageCorrelationIdEventCorrelationBuilder(machine, _event,
                     messageCorrelationId);
@@ -2224,8 +2234,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance> :
 
         public void RegisterCorrelation(ViciOneServiceBusStateMachine<TInstance> machine)
         {
-            if (GlobalTopology.Send.GetMessageTopology<TData>().TryGetConvention(out ICorrelationIdMessageSendTopologyConvention<TData> convention)
-                && convention.TryGetMessageCorrelationId(out IMessageCorrelationId<TData> messageCorrelationId))
+            if (GlobalTopology.Send.GetMessageTopology<TData>().TryGetConvention(out ICorrelationIdMessageSendTopologyConvention<TData>? convention)
+                && convention.TryGetMessageCorrelationId(out IMessageCorrelationId<TData>? messageCorrelationId))
             {
                 var builder = new StateMachineInterfaceType<TInstance, TData>.MessageCorrelationIdFaultEventCorrelationBuilder(machine, _event,
                     messageCorrelationId);

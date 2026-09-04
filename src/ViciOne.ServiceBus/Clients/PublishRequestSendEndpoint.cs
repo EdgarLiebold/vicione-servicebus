@@ -14,8 +14,8 @@ public class PublishRequestSendEndpoint<TRequest> :
         _provider = provider;
     }
 
-    protected override async Task<ISendEndpoint> GetSendEndpoint()
+    protected override async Task<ISendEndpoint> GetSendEndpointAsync()
     {
-        return await _provider.GetPublishSendEndpoint<TRequest>().ConfigureAwait(false);
+        return await _provider.GetPublishSendEndpointAsync<TRequest>().ConfigureAwait(false);
     }
 }

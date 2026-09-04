@@ -26,7 +26,7 @@ public class RabbitMqConsumerFilter :
     {
     }
 
-    public async Task Send(ChannelContext context, IPipe<ChannelContext> next)
+    public async Task SendAsync(ChannelContext context, IPipe<ChannelContext> next)
     {
         var receiveSettings = context.GetPayload<ReceiveSettings>();
 
@@ -37,7 +37,7 @@ public class RabbitMqConsumerFilter :
 
         try
         {
-            _consumerTag = await context.BasicConsume(receiveSettings.QueueName, receiveSettings.NoAck, _context.ExclusiveConsumer,
+            _consumerTag = await context.BasicConsumeAsync(receiveSettings.QueueName, receiveSettings.NoAck, _context.ExclusiveConsumer,
                 receiveSettings.ConsumeArguments, consumer, _consumerTag, context.CancellationToken).ConfigureAwait(false);
         }
         catch (OperationCanceledException)
@@ -56,7 +56,7 @@ public class RabbitMqConsumerFilter :
 
         _context.AddConsumeAgent(consumer);
 
-        await _context.TransportObservers.NotifyReady(_context.InputAddress).ConfigureAwait(false);
+        await _context.TransportObservers.NotifyReadyAsync(_context.InputAddress).ConfigureAwait(false);
 
         try
         {
@@ -65,11 +65,11 @@ public class RabbitMqConsumerFilter :
         finally
         {
             RabbitMqDeliveryMetrics metrics = consumer;
-            await _context.TransportObservers.NotifyCompleted(_context.InputAddress, metrics).ConfigureAwait(false);
+            await _context.TransportObservers.NotifyCompletedAsync(_context.InputAddress, metrics).ConfigureAwait(false);
 
             _context.LogConsumerCompleted(metrics.DeliveryCount, metrics.ConcurrentDeliveryCount, metrics.ConsumerTag);
         }
 
-        await next.Send(context).ConfigureAwait(false);
+        await next.SendAsync(context).ConfigureAwait(false);
     }
 }

@@ -13,7 +13,7 @@ public class ReplyToSendEndpoint :
         _queueName = queueName;
     }
 
-    protected override IPipe<SendContext<T>> GetPipeProxy<T>(IPipe<SendContext<T>> pipe = default)
+    protected override IPipe<SendContext<T>> GetPipeProxy<T>(IPipe<SendContext<T>>? pipe = default)
     {
         return new ReplyToPipe<T>(_queueName, pipe);
     }
@@ -25,7 +25,7 @@ public class ReplyToSendEndpoint :
     {
         readonly string _queueName;
 
-        public ReplyToPipe(string queueName, IPipe<SendContext<TMessage>> pipe)
+        public ReplyToPipe(string queueName, IPipe<SendContext<TMessage>>? pipe)
             : base(pipe)
         {
             _queueName = queueName;

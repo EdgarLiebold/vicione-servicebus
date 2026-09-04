@@ -25,7 +25,7 @@ public class SendTransport<TContext> :
 
     public async ValueTask DisposeAsync()
     {
-        await this.Stop("Disposed").ConfigureAwait(false);
+        await this.StopAsync("Disposed").ConfigureAwait(false);
     }
 
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
@@ -33,15 +33,15 @@ public class SendTransport<TContext> :
         return _context.ConnectSendObserver(observer);
     }
 
-    public Task<SendContext<T>> CreateSendContext<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    public Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
         LogContext.SetCurrentIfNull(_context.LogContext);
 
-        return _context.CreateSendContext(message, pipe, cancellationToken);
+        return _context.CreateSendContextAsync(message, pipe, cancellationToken);
     }
 
-    public Task Send<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    public Task SendAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
         if (IsStopped)
@@ -51,14 +51,14 @@ public class SendTransport<TContext> :
 
         var sendPipe = new SendPipe<T>(_context, message, pipe, cancellationToken);
 
-        return _context.Send(sendPipe, cancellationToken);
+        return _context.SendAsync(sendPipe, cancellationToken);
     }
 
-    protected override Task StopSupervisor(StopSupervisorContext context)
+    protected override Task StopSupervisorAsync(StopSupervisorContext context)
     {
         TransportLogMessages.StoppingSendTransport(_context.EntityName);
 
-        return base.StopSupervisor(context);
+        return base.StopSupervisorAsync(context);
     }
 
 
@@ -79,9 +79,9 @@ public class SendTransport<TContext> :
             _cancellationToken = cancellationToken;
         }
 
-        public async Task Send(TContext context)
+        public async Task SendAsync(TContext context)
         {
-            SendContext<T> sendContext = await _sendTransportContext.CreateSendContext(context, _message, _pipe, _cancellationToken).ConfigureAwait(false);
+            SendContext<T> sendContext = await _sendTransportContext.CreateSendContextAsync(context, _message, _pipe, _cancellationToken).ConfigureAwait(false);
 
             ForwardingExpiration.MarkIfExpired(sendContext, null, sendContext.GetTimeProvider());
             if (ForwardingExpiration.TryDiscard(sendContext))
@@ -95,22 +95,22 @@ public class SendTransport<TContext> :
             try
             {
                 if (_sendTransportContext.SendObservers.Count > 0)
-                    await _sendTransportContext.SendObservers.PreSend(sendContext).ConfigureAwait(false);
+                    await _sendTransportContext.SendObservers.PreSendAsync(sendContext).ConfigureAwait(false);
 
-                await _sendTransportContext.Send(context, sendContext).ConfigureAwait(false);
+                await _sendTransportContext.SendAsync(context, sendContext).ConfigureAwait(false);
 
                 activity?.Update(sendContext);
                 sendContext.LogSent();
 
                 if (_sendTransportContext.SendObservers.Count > 0)
-                    await _sendTransportContext.SendObservers.PostSend(sendContext).ConfigureAwait(false);
+                    await _sendTransportContext.SendObservers.PostSendAsync(sendContext).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
                 sendContext.LogFaulted(ex);
 
                 if (_sendTransportContext.SendObservers.Count > 0)
-                    await _sendTransportContext.SendObservers.SendFault(sendContext, ex).ConfigureAwait(false);
+                    await _sendTransportContext.SendObservers.SendFaultAsync(sendContext, ex).ConfigureAwait(false);
 
                 activity?.AddExceptionEvent(ex);
                 instrument?.RecordException(ex);

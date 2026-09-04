@@ -9,7 +9,7 @@ public sealed class EndpointConventionIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-ENDPOINT-CONVENTION", "full-short-interface-base-and-concrete-override")]
-    public async Task ConventionMatrix_RoutesEachRuntimeContractToItsExactMappedEndpoint()
+    public async Task ConventionMatrix_RoutesEachRuntimeContractToItsExactMappedEndpointAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -28,10 +28,10 @@ public sealed class EndpointConventionIntegrationTests
 
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
         {
-            endpoint.Handler<FullAddressMessage>(context => Complete(full, context));
-            endpoint.Handler<ShortAddressMessage>(context => Complete(shortAddress, context));
-            endpoint.Handler<InterfaceConventionMessage>(context => Complete(interfaceMessage, context));
-            endpoint.Handler<DerivedConventionMessage>(context => Complete(baseMessage, context));
+            endpoint.Handler<FullAddressMessage>(context => CompleteAsync(full, context));
+            endpoint.Handler<ShortAddressMessage>(context => CompleteAsync(shortAddress, context));
+            endpoint.Handler<InterfaceConventionMessage>(context => CompleteAsync(interfaceMessage, context));
+            endpoint.Handler<DerivedConventionMessage>(context => CompleteAsync(baseMessage, context));
             endpoint.Handler<ConcreteOverrideMessage>(_ =>
             {
                 Interlocked.Increment(ref overrideAtInput);
@@ -47,10 +47,10 @@ public sealed class EndpointConventionIntegrationTests
             bus.Route<OverrideContract>(harness.InputQueueAddress);
             bus.Route<ConcreteOverrideMessage>(new Uri(harness.BaseAddress, secondQueue));
             bus.ReceiveEndpoint(secondQueue, endpoint =>
-                endpoint.Handler<ConcreteOverrideMessage>(context => Complete(overridden, context)));
+                endpoint.Handler<ConcreteOverrideMessage>(context => CompleteAsync(overridden, context)));
         };
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             var exactFull = new FullAddressMessage(NewId.NextGuid());
@@ -59,11 +59,11 @@ public sealed class EndpointConventionIntegrationTests
             var exactBase = new DerivedConventionMessage(NewId.NextGuid());
             var exactOverride = new ConcreteOverrideMessage(NewId.NextGuid());
 
-            await harness.Bus.Send(exactFull, cancellationToken);
-            await harness.Bus.Send(exactShort, cancellationToken);
-            await harness.Bus.Send(exactInterface, cancellationToken);
-            await harness.Bus.Send(exactBase, cancellationToken);
-            await harness.Bus.Send(exactOverride, cancellationToken);
+            await harness.Bus.SendAsync(exactFull, cancellationToken);
+            await harness.Bus.SendAsync(exactShort, cancellationToken);
+            await harness.Bus.SendAsync(exactInterface, cancellationToken);
+            await harness.Bus.SendAsync(exactBase, cancellationToken);
+            await harness.Bus.SendAsync(exactOverride, cancellationToken);
 
             ConsumeContext<FullAddressMessage> fullContext = await full.Task.WaitAsync(timeout, cancellationToken);
             ConsumeContext<ShortAddressMessage> shortContext = await shortAddress.Task.WaitAsync(timeout, cancellationToken);
@@ -76,15 +76,15 @@ public sealed class EndpointConventionIntegrationTests
             Assert.Equal(exactInterface.CorrelationId, interfaceContext.Message.CorrelationId);
             Assert.Equal(exactBase.CorrelationId, baseContext.Message.CorrelationId);
             Assert.Equal(exactOverride.CorrelationId, overrideContext.Message.CorrelationId);
-            Assert.Equal(harness.InputQueueAddress, fullContext.ReceiveContext.InputAddress);
-            Assert.Equal(harness.InputQueueAddress, shortContext.ReceiveContext.InputAddress);
-            Assert.Equal(harness.InputQueueAddress, interfaceContext.ReceiveContext.InputAddress);
-            Assert.Equal(harness.InputQueueAddress, baseContext.ReceiveContext.InputAddress);
-            Assert.Equal(new Uri(harness.BaseAddress, secondQueue), overrideContext.ReceiveContext.InputAddress);
+            Assert.Equal(harness.InputQueueAddress, fullContext.Advanced().ReceiveContext.InputAddress);
+            Assert.Equal(harness.InputQueueAddress, shortContext.Advanced().ReceiveContext.InputAddress);
+            Assert.Equal(harness.InputQueueAddress, interfaceContext.Advanced().ReceiveContext.InputAddress);
+            Assert.Equal(harness.InputQueueAddress, baseContext.Advanced().ReceiveContext.InputAddress);
+            Assert.Equal(new Uri(harness.BaseAddress, secondQueue), overrideContext.Advanced().ReceiveContext.InputAddress);
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Equal(0, Volatile.Read(ref overrideAtInput));
@@ -92,7 +92,7 @@ public sealed class EndpointConventionIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ENDPOINT-CONVENTION", "same-contract-routes-are-isolated-per-bus")]
-    public async Task TwoBuses_RouteTheSameContractWithoutCrossTalk()
+    public async Task TwoBuses_RouteTheSameContractWithoutCrossTalkAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -112,19 +112,19 @@ public sealed class EndpointConventionIntegrationTests
         first.OnConfigureInMemoryBus += bus => bus.Route<BusOwnedRouteMessage>(first.InputQueueAddress);
         second.OnConfigureInMemoryBus += bus => bus.Route<BusOwnedRouteMessage>(second.InputQueueAddress);
         first.OnConfigureInMemoryReceiveEndpoint += endpoint =>
-            endpoint.Handler<BusOwnedRouteMessage>(context => Complete(firstReceived, context));
+            endpoint.Handler<BusOwnedRouteMessage>(context => CompleteAsync(firstReceived, context));
         second.OnConfigureInMemoryReceiveEndpoint += endpoint =>
-            endpoint.Handler<BusOwnedRouteMessage>(context => Complete(secondReceived, context));
+            endpoint.Handler<BusOwnedRouteMessage>(context => CompleteAsync(secondReceived, context));
 
-        await first.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
-        await second.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await first.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await second.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             var firstMessage = new BusOwnedRouteMessage("first");
             var secondMessage = new BusOwnedRouteMessage("second");
 
-            await first.Bus.Send(firstMessage, cancellationToken);
-            await second.Bus.Send(secondMessage, cancellationToken);
+            await first.Bus.SendAsync(firstMessage, cancellationToken);
+            await second.Bus.SendAsync(secondMessage, cancellationToken);
 
             ConsumeContext<BusOwnedRouteMessage> firstContext =
                 await firstReceived.Task.WaitAsync(timeout, cancellationToken);
@@ -133,20 +133,20 @@ public sealed class EndpointConventionIntegrationTests
 
             Assert.Equal(firstMessage, firstContext.Message);
             Assert.Equal(secondMessage, secondContext.Message);
-            Assert.Equal(first.InputQueueAddress, firstContext.ReceiveContext.InputAddress);
-            Assert.Equal(second.InputQueueAddress, secondContext.ReceiveContext.InputAddress);
-            Assert.NotEqual(firstContext.ReceiveContext.InputAddress, secondContext.ReceiveContext.InputAddress);
+            Assert.Equal(first.InputQueueAddress, firstContext.Advanced().ReceiveContext.InputAddress);
+            Assert.Equal(second.InputQueueAddress, secondContext.Advanced().ReceiveContext.InputAddress);
+            Assert.NotEqual(firstContext.Advanced().ReceiveContext.InputAddress, secondContext.Advanced().ReceiveContext.InputAddress);
         }
         finally
         {
-            await second.Stop().WaitAsync(timeout, CancellationToken.None);
-            await first.Stop().WaitAsync(timeout, CancellationToken.None);
+            await second.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
+            await first.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ENDPOINT-CONVENTION", "ambiguous-inherited-routes-fail-deterministically")]
-    public async Task TwoInheritedRoutes_RejectAnAmbiguousConcreteMessage()
+    public async Task TwoInheritedRoutes_RejectAnAmbiguousConcreteMessageAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -161,11 +161,11 @@ public sealed class EndpointConventionIntegrationTests
             bus.Route<SecondRouteContract>(new Uri(harness.BaseAddress, "second"));
         };
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             ConfigurationException exception = await Assert.ThrowsAsync<ConfigurationException>(() =>
-                harness.Bus.Send(new AmbiguousRouteMessage(), cancellationToken));
+                harness.Bus.SendAsync(new AmbiguousRouteMessage(), cancellationToken));
 
             Assert.Contains(nameof(AmbiguousRouteMessage), exception.Message, StringComparison.Ordinal);
             Assert.Contains(nameof(FirstRouteContract), exception.Message, StringComparison.Ordinal);
@@ -173,13 +173,13 @@ public sealed class EndpointConventionIntegrationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ENDPOINT-CONVENTION", "fixed-route-duplicate-is-idempotent-and-conflict-fails")]
-    public async Task FixedRouteDuplicate_IsIdempotentButAConflictFailsDuringConfiguration()
+    public async Task FixedRouteDuplicate_IsIdempotentButAConflictFailsDuringConfigurationAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -201,20 +201,20 @@ public sealed class EndpointConventionIntegrationTests
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
             endpoint.Handler<DuplicateRouteMessage>(_ => Task.CompletedTask);
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
-            await harness.Bus.Send(new DuplicateRouteMessage(), cancellationToken);
+            await harness.Bus.SendAsync(new DuplicateRouteMessage(), cancellationToken);
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ENDPOINT-CONVENTION", "dynamic-route-is-lazy-and-duplicates-fail")]
-    public async Task DynamicRoute_IsLazyAndCannotBeRegisteredTwice()
+    public async Task DynamicRoute_IsLazyAndCannotBeRegisteredTwiceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -242,27 +242,27 @@ public sealed class EndpointConventionIntegrationTests
                 }));
         };
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
-            endpoint.Handler<DynamicRouteMessage>(context => Complete(received, context));
+            endpoint.Handler<DynamicRouteMessage>(context => CompleteAsync(received, context));
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             Assert.Equal(0, Volatile.Read(ref providerCalls));
 
-            await harness.Bus.Send(new DynamicRouteMessage(), cancellationToken);
+            await harness.Bus.SendAsync(new DynamicRouteMessage(), cancellationToken);
             await received.Task.WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(1, Volatile.Read(ref providerCalls));
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ENDPOINT-CONVENTION", "routes-freeze-when-the-bus-is-built")]
-    public async Task BuiltBus_RejectsLateRouteMutation()
+    public async Task BuiltBus_RejectsLateRouteMutationAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -278,7 +278,7 @@ public sealed class EndpointConventionIntegrationTests
             bus.Route<FrozenRouteMessage>(harness.InputQueueAddress);
         };
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             Assert.NotNull(captured);
@@ -288,11 +288,11 @@ public sealed class EndpointConventionIntegrationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
-    private static Task Complete<T>(TaskCompletionSource<ConsumeContext<T>> signal, ConsumeContext<T> context)
+    private static Task CompleteAsync<T>(TaskCompletionSource<ConsumeContext<T>> signal, ConsumeContext<T> context)
         where T : class
     {
         signal.TrySetResult(context);

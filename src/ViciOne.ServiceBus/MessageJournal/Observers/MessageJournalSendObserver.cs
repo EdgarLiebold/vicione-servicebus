@@ -13,10 +13,10 @@ internal sealed class MessageJournalSendObserver : ISendObserver
         _writer = writer;
     }
 
-    public Task PreSend<T>(SendContext<T> context)
+    public Task PreSendAsync<T>(SendContext<T> context)
         where T : class => Task.CompletedTask;
 
-    public Task PostSend<T>(SendContext<T> context)
+    public Task PostSendAsync<T>(SendContext<T> context)
         where T : class => _writer.ObserveAsync(
             MessageJournalOperation.Send,
             MessageJournalOutcome.Succeeded,
@@ -27,7 +27,7 @@ internal sealed class MessageJournalSendObserver : ISendObserver
                 MessageJournalOutcome.Succeeded,
                 exception: null));
 
-    public Task SendFault<T>(SendContext<T> context, Exception exception)
+    public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
         where T : class => _writer.ObserveAsync(
             MessageJournalOperation.Send,
             MessageJournalOutcome.Faulted,

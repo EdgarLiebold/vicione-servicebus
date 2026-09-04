@@ -15,7 +15,7 @@ public class ConfigureReceiveEndpointDelegate :
         _callback = callback;
     }
 
-    public void Configure(string name, IReceiveEndpointConfigurator configurator)
+    public void Configure(string? name, IReceiveEndpointConfigurator configurator)
     {
         _callback(name, configurator);
     }

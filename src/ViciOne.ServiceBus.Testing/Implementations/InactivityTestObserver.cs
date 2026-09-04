@@ -11,7 +11,7 @@ public abstract class InactivityTestObserver :
     IInactivityObservationSource
 {
     int _activityDetected;
-    RollingTimer _inactivityTimer;
+    RollingTimer? _inactivityTimer;
     TimeProvider _timeProvider = TimeProvider.System;
 
     protected InactivityTestObserver()
@@ -37,7 +37,7 @@ public abstract class InactivityTestObserver :
         return handle;
     }
 
-    public virtual bool IsInactive => _inactivityTimer.Triggered && _activityDetected == 0;
+    public virtual bool IsInactive => _inactivityTimer?.Triggered == true && _activityDetected == 0;
 
     protected void StartTimer(TimeSpan inactivityTimout)
     {
@@ -45,29 +45,29 @@ public abstract class InactivityTestObserver :
         _inactivityTimer.Start();
     }
 
-    public Task RestartTimer(bool activityDetected = true)
+    public Task RestartTimerAsync(bool activityDetected = true, CancellationToken cancellationToken = default)
     {
-        if (activityDetected)
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (activityDetected)
             Interlocked.CompareExchange(ref _activityDetected, 1, 0);
 
-        _inactivityTimer.Restart();
+        (_inactivityTimer ?? throw new InvalidOperationException("The inactivity timer has not been started.")).Restart();
 
         return Task.CompletedTask;
     }
 
-    protected Task NotifyInactive()
+    protected Task NotifyInactiveAsync()
     {
-        return ForEachAsync(x => x.NoActivity());
+        return ForEachAsync(x => x.NoActivityAsync());
     }
 
-    void OnActivityTimeout(object state)
+    void OnActivityTimeout(object? state)
     {
-        _inactivityTimer.Stop();
+        _inactivityTimer?.Stop();
         Interlocked.CompareExchange(ref _activityDetected, 0, 1);
 
         try
         {
-            NotifyInactive().ConfigureAwait(false).GetAwaiter().GetResult();
+            NotifyInactiveAsync().ConfigureAwait(false).GetAwaiter().GetResult();
         }
         catch (Exception exception)
         {

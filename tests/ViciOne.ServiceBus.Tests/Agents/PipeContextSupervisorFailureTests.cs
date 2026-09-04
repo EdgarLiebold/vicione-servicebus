@@ -9,14 +9,14 @@ public sealed class PipeContextSupervisorFailureTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-PIPE-CONTEXT-IDEMPOTENCY", "cleanup-failure-after-success")]
-    public async Task SuccessfulOperation_WhenEveryCleanupStepFails_RemainsSuccessfulAndRunsOnce()
+    public async Task SuccessfulOperation_WhenEveryCleanupStepFails_RemainsSuccessfulAndRunsOnceAsync()
     {
         var events = new List<string>();
         var factory = new RecordingFactory(events, faultThrows: true, stopThrows: true, disposeThrows: true);
         var supervisor = new PipeContextSupervisor<LifecycleContext>(factory);
         var pipe = new RecordingPipe(events);
 
-        await supervisor.Send(pipe, TestContext.Current.CancellationToken);
+        await supervisor.SendAsync(pipe, TestContext.Current.CancellationToken);
 
         Assert.Equal(1, pipe.SendCount);
         Assert.Equal(["pipe", "stop", "dispose"], events);
@@ -25,35 +25,35 @@ public sealed class PipeContextSupervisorFailureTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PIPE-CONTEXT-PRIMARY-FAILURE", "dispose-failure")]
-    public async Task OperationFailure_WhenDisposeFails_PreservesTheExactOperationFailure()
+    public async Task OperationFailure_WhenDisposeFails_PreservesTheExactOperationFailureAsync()
     {
-        await AssertPrimaryFailureWins(disposeThrows: true);
+        await AssertPrimaryFailureWinsAsync(disposeThrows: true);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PIPE-CONTEXT-PRIMARY-FAILURE", "stop-failure")]
-    public async Task OperationFailure_WhenStopFails_PreservesTheExactOperationFailure()
+    public async Task OperationFailure_WhenStopFails_PreservesTheExactOperationFailureAsync()
     {
-        await AssertPrimaryFailureWins(stopThrows: true);
+        await AssertPrimaryFailureWinsAsync(stopThrows: true);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PIPE-CONTEXT-PRIMARY-FAILURE", "fault-notification-failure")]
-    public async Task OperationFailure_WhenFaultNotificationFails_PreservesTheExactOperationFailure()
+    public async Task OperationFailure_WhenFaultNotificationFails_PreservesTheExactOperationFailureAsync()
     {
-        await AssertPrimaryFailureWins(faultThrows: true);
+        await AssertPrimaryFailureWinsAsync(faultThrows: true);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PIPE-CONTEXT-PRIMARY-FAILURE", "all-cleanup-failures")]
-    public async Task OperationFailure_WhenEveryCleanupStepFails_PreservesTheExactOperationFailure()
+    public async Task OperationFailure_WhenEveryCleanupStepFails_PreservesTheExactOperationFailureAsync()
     {
-        await AssertPrimaryFailureWins(faultThrows: true, stopThrows: true, disposeThrows: true);
+        await AssertPrimaryFailureWinsAsync(faultThrows: true, stopThrows: true, disposeThrows: true);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PIPE-CONTEXT-CLEANUP", "success-order-and-cancellation-token")]
-    public async Task SuccessfulOperation_StopsThenDisposesWithoutReportingAFault()
+    public async Task SuccessfulOperation_StopsThenDisposesWithoutReportingAFaultAsync()
     {
         var events = new List<string>();
         var factory = new RecordingFactory(events);
@@ -61,7 +61,7 @@ public sealed class PipeContextSupervisorFailureTests
         var pipe = new RecordingPipe(events);
         using var cancellationTokenSource = new CancellationTokenSource();
 
-        await supervisor.Send(pipe, cancellationTokenSource.Token);
+        await supervisor.SendAsync(pipe, cancellationTokenSource.Token);
 
         Assert.Equal(["pipe", "stop", "dispose"], events);
         Assert.Equal(cancellationTokenSource.Token, factory.ActiveContext.StopCancellationToken);
@@ -70,7 +70,7 @@ public sealed class PipeContextSupervisorFailureTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PIPE-CONTEXT-CLEANUP", "failure-order-and-exception-identity")]
-    public async Task OperationFailure_ReportsFaultThenStopsThenDisposes()
+    public async Task OperationFailure_ReportsFaultThenStopsThenDisposesAsync()
     {
         var events = new List<string>();
         var expected = new OperationFailureException();
@@ -79,7 +79,7 @@ public sealed class PipeContextSupervisorFailureTests
         var pipe = new RecordingPipe(events, expected);
 
         OperationFailureException actual = await Assert.ThrowsAsync<OperationFailureException>(
-            () => supervisor.Send(pipe, TestContext.Current.CancellationToken));
+            () => supervisor.SendAsync(pipe, TestContext.Current.CancellationToken));
 
         Assert.Same(expected, actual);
         Assert.Same(expected, factory.ActiveContext.ObservedFailure);
@@ -88,7 +88,7 @@ public sealed class PipeContextSupervisorFailureTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PIPE-CONTEXT-ACQUISITION", "context-task-failure")]
-    public async Task ContextAcquisitionFailure_IsReportedAndSkipsTheOperation()
+    public async Task ContextAcquisitionFailure_IsReportedAndSkipsTheOperationAsync()
     {
         var events = new List<string>();
         var expected = new OperationFailureException();
@@ -97,7 +97,7 @@ public sealed class PipeContextSupervisorFailureTests
         var pipe = new RecordingPipe(events);
 
         OperationFailureException actual = await Assert.ThrowsAsync<OperationFailureException>(
-            () => supervisor.Send(pipe, TestContext.Current.CancellationToken));
+            () => supervisor.SendAsync(pipe, TestContext.Current.CancellationToken));
 
         Assert.Same(expected, actual);
         Assert.Same(expected, factory.ActiveContext.ObservedFailure);
@@ -105,7 +105,7 @@ public sealed class PipeContextSupervisorFailureTests
         Assert.Equal(["fault", "stop", "dispose"], events);
     }
 
-    private static async Task AssertPrimaryFailureWins(
+    private static async Task AssertPrimaryFailureWinsAsync(
         bool faultThrows = false,
         bool stopThrows = false,
         bool disposeThrows = false)
@@ -117,7 +117,7 @@ public sealed class PipeContextSupervisorFailureTests
         var pipe = new RecordingPipe(events, expected);
 
         OperationFailureException actual = await Assert.ThrowsAsync<OperationFailureException>(
-            () => supervisor.Send(pipe, TestContext.Current.CancellationToken));
+            () => supervisor.SendAsync(pipe, TestContext.Current.CancellationToken));
 
         Assert.Same(expected, actual);
         Assert.Equal(["pipe", "fault", "stop", "dispose"], events);
@@ -156,7 +156,7 @@ public sealed class PipeContextSupervisorFailureTests
             PipeContextHandle<LifecycleContext> context,
             CancellationToken cancellationToken = default)
         {
-            ActiveContext = new RecordingActiveContext(context.Context, _events, _faultThrows, _stopThrows, _disposeThrows);
+            cancellationToken.ThrowIfCancellationRequested(); ActiveContext = new RecordingActiveContext(context.Context, _events, _faultThrows, _stopThrows, _disposeThrows);
             return ActiveContext;
         }
     }
@@ -184,9 +184,9 @@ public sealed class PipeContextSupervisorFailureTests
 
         public CancellationToken StopCancellationToken { get; private set; }
 
-        public Task Faulted(Exception exception)
+        public Task FaultedAsync(Exception exception, CancellationToken cancellationToken = default)
         {
-            events.Add("fault");
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); events.Add("fault");
             ObservedFailure = exception;
 
             return faultThrows
@@ -194,9 +194,9 @@ public sealed class PipeContextSupervisorFailureTests
                 : Task.CompletedTask;
         }
 
-        public Task Stop(StopContext context)
+        public Task StopAsync(StopContext context, CancellationToken cancellationToken = default)
         {
-            events.Add("stop");
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); events.Add("stop");
             StopCancellationToken = context.CancellationToken;
 
             return stopThrows
@@ -235,8 +235,7 @@ public sealed class PipeContextSupervisorFailureTests
 
         public CancellationToken Stopped => CancellationToken.None;
 
-        public Task Stop(StopContext context) => Task.CompletedTask;
-
+        public Task StopAsync(StopContext context, CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
 
@@ -244,7 +243,7 @@ public sealed class PipeContextSupervisorFailureTests
     {
         public int SendCount { get; private set; }
 
-        public Task Send(LifecycleContext context)
+        public Task SendAsync(LifecycleContext context)
         {
             events.Add("pipe");
             SendCount++;

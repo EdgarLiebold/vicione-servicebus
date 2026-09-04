@@ -16,20 +16,20 @@ public sealed class StateMachineStateStorageTests
     [InlineData(StateMachineConstructionStyle.Dynamic, StateStorageKind.String)]
     [InlineData(StateMachineConstructionStyle.Dynamic, StateStorageKind.Integer)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-STORAGE", "raw-string-int-storage-and-expression-matrix")]
-    public async Task StateStorage_RoundTripsTheExactRepresentationAndPredicateTruthTable(
+    public async Task StateStorage_RoundTripsTheExactRepresentationAndPredicateTruthTableAsync(
         StateMachineConstructionStyle style,
         StateStorageKind storageKind)
     {
         switch (storageKind)
         {
             case StateStorageKind.Raw:
-                await VerifyRawStorage(style);
+                await VerifyRawStorageAsync(style);
                 break;
             case StateStorageKind.String:
-                await VerifyStringStorage(style);
+                await VerifyStringStorageAsync(style);
                 break;
             case StateStorageKind.Integer:
-                await VerifyIntegerStorage(style);
+                await VerifyIntegerStorageAsync(style);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(storageKind), storageKind, "Unknown storage kind.");
@@ -40,13 +40,13 @@ public sealed class StateMachineStateStorageTests
     [InlineData(StateMachineConstructionStyle.Declarative)]
     [InlineData(StateMachineConstructionStyle.Dynamic)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-STORAGE", "json-state-name-round-trip")]
-    public async Task JsonRoundTrip_ResolvesTheStoredStateBackToTheOwningMachine(
+    public async Task JsonRoundTrip_ResolvesTheStoredStateBackToTheOwningMachineAsync(
         StateMachineConstructionStyle style)
     {
         JsonScenario scenario = CreateJsonScenario(style);
         var instance = new JsonStateInstance();
 
-        await StateMachineTestExecution.Raise(scenario.Machine, instance, scenario.Decide, new Decision(true));
+        await StateMachineTestExecution.RaiseAsync(scenario.Machine, instance, scenario.Decide, new Decision(true));
 
         var options = new JsonSerializerOptions
         {
@@ -59,42 +59,42 @@ public sealed class StateMachineStateStorageTests
         Assert.NotNull(restored);
         Assert.Equal(instance.CorrelationId, restored.CorrelationId);
         Assert.Same(scenario.True, restored.CurrentState);
-        Assert.Same(scenario.True, await StateMachineTestExecution.GetState(scenario.Machine, restored));
+        Assert.Same(scenario.True, await StateMachineTestExecution.GetStateAsync(scenario.Machine, restored));
     }
 
-    private static async Task VerifyRawStorage(StateMachineConstructionStyle style)
+    private static async Task VerifyRawStorageAsync(StateMachineConstructionStyle style)
     {
         RawScenario scenario = CreateRawScenario(style);
         var instance = new RawStateInstance();
 
-        await StateMachineTestExecution.Raise(scenario.Machine, instance, scenario.Start);
+        await StateMachineTestExecution.RaiseAsync(scenario.Machine, instance, scenario.Start);
 
         Assert.Same(scenario.Running, instance.CurrentState);
-        Assert.Same(scenario.Running, await StateMachineTestExecution.GetState(scenario.Machine, instance));
+        Assert.Same(scenario.Running, await StateMachineTestExecution.GetStateAsync(scenario.Machine, instance));
         AssertPredicateTruthTable(scenario.Machine, instance, scenario.Running);
     }
 
-    private static async Task VerifyStringStorage(StateMachineConstructionStyle style)
+    private static async Task VerifyStringStorageAsync(StateMachineConstructionStyle style)
     {
         StringScenario scenario = CreateStringScenario(style);
         var instance = new StringStateInstance();
 
-        await StateMachineTestExecution.Raise(scenario.Machine, instance, scenario.Start);
+        await StateMachineTestExecution.RaiseAsync(scenario.Machine, instance, scenario.Start);
 
         Assert.Equal("Running", instance.CurrentState);
-        Assert.Same(scenario.Running, await StateMachineTestExecution.GetState(scenario.Machine, instance));
+        Assert.Same(scenario.Running, await StateMachineTestExecution.GetStateAsync(scenario.Machine, instance));
         AssertPredicateTruthTable(scenario.Machine, instance, scenario.Running);
     }
 
-    private static async Task VerifyIntegerStorage(StateMachineConstructionStyle style)
+    private static async Task VerifyIntegerStorageAsync(StateMachineConstructionStyle style)
     {
         IntegerScenario scenario = CreateIntegerScenario(style);
         var instance = new IntegerStateInstance();
 
-        await StateMachineTestExecution.Raise(scenario.Machine, instance, scenario.Start);
+        await StateMachineTestExecution.RaiseAsync(scenario.Machine, instance, scenario.Start);
 
         Assert.Equal(3, instance.CurrentState);
-        Assert.Same(scenario.Running, await StateMachineTestExecution.GetState(scenario.Machine, instance));
+        Assert.Same(scenario.Running, await StateMachineTestExecution.GetStateAsync(scenario.Machine, instance));
         AssertPredicateTruthTable(scenario.Machine, instance, scenario.Running);
     }
 

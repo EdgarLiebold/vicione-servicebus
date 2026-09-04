@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus;
 
 public static class ForwardExtensions
 {
-    public static async Task Forward<T>(this ConsumeContext<T> context, Uri address)
+    public static async Task ForwardAsync<T>(this ConsumeContext<T> context, Uri address)
         where T : class
     {
         if (context == null)
@@ -15,12 +15,12 @@ public static class ForwardExtensions
         if (address == null)
             throw new ArgumentNullException(nameof(address));
 
-        var endpoint = await context.GetSendEndpoint(address).ConfigureAwait(false);
+        var endpoint = await context.Advanced().GetSendEndpointAsync(address).ConfigureAwait(false);
 
-        await Forward(context, endpoint).ConfigureAwait(false);
+        await ForwardAsync(context, endpoint).ConfigureAwait(false);
     }
 
-    public static async Task Forward<T>(this ConsumeContext<T> context, Uri address, IPipe<SendContext<T>> pipe)
+    public static async Task ForwardAsync<T>(this ConsumeContext<T> context, Uri address, IPipe<SendContext<T>> pipe)
         where T : class
     {
         if (context == null)
@@ -28,12 +28,12 @@ public static class ForwardExtensions
         if (address == null)
             throw new ArgumentNullException(nameof(address));
 
-        var endpoint = await context.GetSendEndpoint(address).ConfigureAwait(false);
+        var endpoint = await context.Advanced().GetSendEndpointAsync(address).ConfigureAwait(false);
 
-        await Forward(context, endpoint, pipe).ConfigureAwait(false);
+        await ForwardAsync(context, endpoint, pipe).ConfigureAwait(false);
     }
 
-    public static Task Forward<T>(this ConsumeContext<T> context, ISendEndpoint endpoint)
+    public static Task ForwardAsync<T>(this ConsumeContext<T> context, ISendEndpoint endpoint)
         where T : class
     {
         if (context == null)
@@ -43,10 +43,10 @@ public static class ForwardExtensions
 
         var messagePipe = new ForwardMessagePipe<T>(context);
 
-        return endpoint.Send(context.Message, messagePipe, context.CancellationToken);
+        return endpoint.SendAsync(context.Message, messagePipe, context.CancellationToken);
     }
 
-    public static Task Forward<T>(this ConsumeContext<T> context, ISendEndpoint endpoint, IPipe<SendContext<T>> pipe)
+    public static Task ForwardAsync<T>(this ConsumeContext<T> context, ISendEndpoint endpoint, IPipe<SendContext<T>> pipe)
         where T : class
     {
         if (context == null)
@@ -56,15 +56,17 @@ public static class ForwardExtensions
 
         var messagePipe = new ForwardMessagePipe<T>(context, pipe);
 
-        return endpoint.Send(context.Message, messagePipe, context.CancellationToken);
+        return endpoint.SendAsync(context.Message, messagePipe, context.CancellationToken);
     }
 
-    public static async Task Forward<T>(this ConsumeContext context, Uri address, T message)
+    public static async Task ForwardAsync<T>(this ConsumeContext context, Uri address, T message)
         where T : class
     {
-        var endpoint = await context.GetSendEndpoint(address).ConfigureAwait(false);
+        ArgumentNullException.ThrowIfNull(address);
 
-        await Forward(context, endpoint, message).ConfigureAwait(false);
+        var endpoint = await context.GetSendEndpointAsync(address).ConfigureAwait(false);
+
+        await ForwardAsync(context, endpoint, message).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -73,7 +75,7 @@ public static class ForwardExtensions
     /// <param name="context"></param>
     /// <param name="endpoint">The destination endpoint</param>
     /// <param name="message"></param>
-    public static Task Forward<T>(this ConsumeContext context, ISendEndpoint endpoint, T message)
+    public static Task ForwardAsync<T>(this ConsumeContext context, ISendEndpoint endpoint, T message)
         where T : class
     {
         void AddForwarderAddress(ConsumeContext consumeContext, SendContext sendContext)
@@ -88,6 +90,6 @@ public static class ForwardExtensions
             ForwardingExpiration.MarkIfExpired(sendContext, consumeContext.ExpirationTime, timeProvider);
         }
 
-        return endpoint.Send(message, new CopyContextPipe(context, AddForwarderAddress), context.CancellationToken);
+        return endpoint.SendAsync(message, new CopyContextPipe(context, AddForwarderAddress), context.CancellationToken);
     }
 }

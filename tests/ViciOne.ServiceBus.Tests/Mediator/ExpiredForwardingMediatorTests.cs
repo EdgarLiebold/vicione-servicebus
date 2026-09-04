@@ -8,7 +8,7 @@ public sealed class ExpiredForwardingMediatorTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-FORWARDING", "expired-forward-discarded-before-mediator")]
-    public async Task ExpiredMessage_IsDiscardedBeforeMediatorDispatch()
+    public async Task ExpiredMessage_IsDiscardedBeforeMediatorDispatchAsync()
     {
         TimeSpan operationTimeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -21,10 +21,10 @@ public sealed class ExpiredForwardingMediatorTests
         using ConnectHandle handlerHandle = mediator.ConnectHandler<ForwardMessage>(async context =>
         {
             if (Interlocked.Increment(ref deliveryCount) == 1)
-                await context.Forward(new Uri("loopback://mediator/forward")).ConfigureAwait(false);
+                await context.ForwardAsync(new Uri("loopback://mediator/forward")).ConfigureAwait(false);
         });
 
-        await mediator.Send(
+        await mediator.SendAsync(
                 new ForwardMessage { Value = "expired-mediator" },
                 context => context.TimeToLive = TimeSpan.FromSeconds(-30),
                 cancellationToken)
@@ -46,21 +46,21 @@ public sealed class ExpiredForwardingMediatorTests
         public int PreSendCount => Volatile.Read(ref _preSendCount);
         public int SendFaultCount => Volatile.Read(ref _sendFaultCount);
 
-        public Task PreSend<T>(SendContext<T> context)
+        public Task PreSendAsync<T>(SendContext<T> context)
             where T : class
         {
             Interlocked.Increment(ref _preSendCount);
             return Task.CompletedTask;
         }
 
-        public Task PostSend<T>(SendContext<T> context)
+        public Task PostSendAsync<T>(SendContext<T> context)
             where T : class
         {
             Interlocked.Increment(ref _postSendCount);
             return Task.CompletedTask;
         }
 
-        public Task SendFault<T>(SendContext<T> context, Exception exception)
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
             where T : class
         {
             Interlocked.Increment(ref _sendFaultCount);

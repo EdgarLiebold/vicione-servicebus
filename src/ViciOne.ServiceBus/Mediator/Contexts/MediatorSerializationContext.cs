@@ -17,7 +17,7 @@ public class MediatorSerializationContext<TMessage> :
         _message = message;
     }
 
-    public override bool TryGetMessage<T>(out T message)
+    public override bool TryGetMessage<T>([NotNullWhen(true)] out T? message)
         where T : class
     {
         if (_message is T msg)
@@ -30,7 +30,7 @@ public class MediatorSerializationContext<TMessage> :
         return false;
     }
 
-    public override bool TryGetMessage(Type messageType, out object message)
+    public override bool TryGetMessage(Type messageType, [NotNullWhen(true)] out object? message)
     {
         if (messageType.IsAssignableFrom(typeof(TMessage)))
         {
@@ -57,7 +57,7 @@ public class MediatorSerializationContext<TMessage> :
         throw new NotImplementedByDesignException();
     }
 
-    public override Dictionary<string, object> ToDictionary<T>(T message)
+    public override Dictionary<string, object> ToDictionary<T>(T? message)
         where T : class
     {
         return ConvertObject.ToDictionary(message);

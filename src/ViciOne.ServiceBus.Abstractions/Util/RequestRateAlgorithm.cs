@@ -127,7 +127,7 @@ public class RequestRateAlgorithm :
     /// </summary>
     /// <param name="requestCallback"></param>
     /// <param name="cancellationToken"></param>
-    public async Task<int> Run(RequestCallback requestCallback, CancellationToken cancellationToken = default)
+    public async Task<int> RunAsync(RequestCallback requestCallback, CancellationToken cancellationToken = default)
     {
         var requestCount = _requestCount;
 
@@ -136,7 +136,7 @@ public class RequestRateAlgorithm :
         try
         {
             for (var i = 0; i < requestCount; i++)
-                tasks.Add(RunRequest(requestCallback, cancellationToken));
+                tasks.Add(RunRequestAsync(requestCallback, cancellationToken));
         }
         catch (Exception)
         {
@@ -149,13 +149,13 @@ public class RequestRateAlgorithm :
         return counts.Sum();
     }
 
-    async Task<int> RunRequest(RequestCallback requestCallback, CancellationToken cancellationToken = default)
+    async Task<int> RunRequestAsync(RequestCallback requestCallback, CancellationToken cancellationToken = default)
     {
-        using var activeRequest = await BeginRequest(cancellationToken).ConfigureAwait(false);
+        using var activeRequest = await BeginRequestAsync(cancellationToken).ConfigureAwait(false);
 
         var count = await requestCallback(activeRequest.ResultLimit, activeRequest.CancellationToken).ConfigureAwait(false);
 
-        await activeRequest.Complete(count, CancellationToken.None).ConfigureAwait(false);
+        await activeRequest.CompleteAsync(count, CancellationToken.None).ConfigureAwait(false);
 
         return count;
     }
@@ -167,7 +167,7 @@ public class RequestRateAlgorithm :
     /// <param name="resultCallback"></param>
     /// <param name="cancellationToken"></param>
     /// <typeparam name="T"></typeparam>
-    public async Task<int> Run<T>(RequestCallback<T> requestCallback, ResultCallback<T> resultCallback, CancellationToken cancellationToken = default)
+    public async Task<int> RunAsync<T>(RequestCallback<T> requestCallback, ResultCallback<T> resultCallback, CancellationToken cancellationToken = default)
     {
         var requestCount = _requestCount;
 
@@ -176,7 +176,7 @@ public class RequestRateAlgorithm :
         try
         {
             for (var i = 0; i < requestCount; i++)
-                tasks.Add(RunRequest(requestCallback, resultCallback, cancellationToken));
+                tasks.Add(RunRequestAsync(requestCallback, resultCallback, cancellationToken));
         }
         catch (Exception)
         {
@@ -189,9 +189,9 @@ public class RequestRateAlgorithm :
         return counts.Sum();
     }
 
-    async Task<int> RunRequest<T>(RequestCallback<T> requestCallback, ResultCallback<T> resultCallback, CancellationToken cancellationToken = default)
+    async Task<int> RunRequestAsync<T>(RequestCallback<T> requestCallback, ResultCallback<T> resultCallback, CancellationToken cancellationToken = default)
     {
-        using var activeRequest = await BeginRequest(cancellationToken).ConfigureAwait(false);
+        using var activeRequest = await BeginRequestAsync(cancellationToken).ConfigureAwait(false);
 
         IEnumerable<T> results = await requestCallback(activeRequest.ResultLimit, activeRequest.CancellationToken).ConfigureAwait(false);
 
@@ -202,7 +202,7 @@ public class RequestRateAlgorithm :
             {
                 await _resultSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
 
-                async Task RunResultCallback()
+                async Task RunResultCallbackAsync()
                 {
                     try
                     {
@@ -215,7 +215,7 @@ public class RequestRateAlgorithm :
                     }
                 }
 
-                Add(Task.Run(() => RunResultCallback(), cancellationToken));
+                Add(Task.Run(() => RunResultCallbackAsync(), cancellationToken));
                 count++;
             }
         }
@@ -225,7 +225,7 @@ public class RequestRateAlgorithm :
                 throw;
         }
 
-        await activeRequest.Complete(count, CancellationToken.None).ConfigureAwait(false);
+        await activeRequest.CompleteAsync(count, CancellationToken.None).ConfigureAwait(false);
 
         return count;
     }
@@ -240,7 +240,7 @@ public class RequestRateAlgorithm :
     /// <param name="cancellationToken"></param>
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TKey"></typeparam>
-    public async Task<int> Run<T, TKey>(RequestCallback<T> requestCallback, ResultCallback<T> resultCallback, GroupCallback<T, TKey> groupCallback,
+    public async Task<int> RunAsync<T, TKey>(RequestCallback<T> requestCallback, ResultCallback<T> resultCallback, GroupCallback<T, TKey> groupCallback,
         OrderCallback<T> orderCallback, CancellationToken cancellationToken = default)
     {
         var requestCount = _requestCount;
@@ -250,7 +250,7 @@ public class RequestRateAlgorithm :
         try
         {
             for (var i = 0; i < requestCount; i++)
-                tasks.Add(Task.Run(() => RunRequest(requestCallback, cancellationToken), cancellationToken));
+                tasks.Add(Task.Run(() => RunRequestAsync(requestCallback, cancellationToken), cancellationToken));
         }
         catch (Exception)
         {
@@ -267,7 +267,7 @@ public class RequestRateAlgorithm :
         try
         {
             foreach (IGrouping<TKey, T> result in resultSets)
-                resultTasks.Add(Task.Run(() => RunResultSet(result, resultCallback, orderCallback, cancellationToken), cancellationToken));
+                resultTasks.Add(Task.Run(() => RunResultSetAsync(result, resultCallback, orderCallback, cancellationToken), cancellationToken));
         }
         catch (Exception)
         {
@@ -280,18 +280,18 @@ public class RequestRateAlgorithm :
         return counts.Sum();
     }
 
-    async Task<IReadOnlyList<T>> RunRequest<T>(RequestCallback<T> requestCallback, CancellationToken cancellationToken = default)
+    async Task<IReadOnlyList<T>> RunRequestAsync<T>(RequestCallback<T> requestCallback, CancellationToken cancellationToken = default)
     {
-        using var activeRequest = await BeginRequest(cancellationToken).ConfigureAwait(false);
+        using var activeRequest = await BeginRequestAsync(cancellationToken).ConfigureAwait(false);
 
         List<T> results = (await requestCallback(activeRequest.ResultLimit, activeRequest.CancellationToken).ConfigureAwait(false)).ToList();
 
-        await activeRequest.Complete(results.Count, CancellationToken.None).ConfigureAwait(false);
+        await activeRequest.CompleteAsync(results.Count, CancellationToken.None).ConfigureAwait(false);
 
         return results;
     }
 
-    async Task<int> RunResultSet<TKey, T>(IGrouping<TKey, T> results, ResultCallback<T> resultCallback, OrderCallback<T> orderCallback,
+    async Task<int> RunResultSetAsync<TKey, T>(IGrouping<TKey, T> results, ResultCallback<T> resultCallback, OrderCallback<T> orderCallback,
         CancellationToken cancellationToken = default)
     {
         var count = 0;
@@ -321,7 +321,7 @@ public class RequestRateAlgorithm :
         return count;
     }
 
-    public async Task<ActiveRequest> BeginRequest(CancellationToken cancellationToken = default)
+    public async Task<ActiveRequest> BeginRequestAsync(CancellationToken cancellationToken = default)
     {
         try
         {
@@ -368,7 +368,7 @@ public class RequestRateAlgorithm :
         }
     }
 
-    internal Task EndRequest(int count, int resultLimit, CancellationToken cancellationToken = default)
+    internal Task EndRequestAsync(int count, int resultLimit, CancellationToken cancellationToken = default)
     {
         Interlocked.Decrement(ref _activeRequestCount);
 
@@ -395,7 +395,7 @@ public class RequestRateAlgorithm :
             var previousValue = Interlocked.CompareExchange(ref _requestCount, requestCount, currentRequestCount);
 
             if (previousValue == currentRequestCount)
-                return ChangeRequestCount(requestCount, currentRequestCount, cancellationToken);
+                return ChangeRequestCountAsync(requestCount, currentRequestCount, cancellationToken);
         }
 
         return Task.CompletedTask;
@@ -418,7 +418,7 @@ public class RequestRateAlgorithm :
         _requestSemaphore.Release();
     }
 
-    public async Task ChangeRateLimit(int newRateLimit, CancellationToken cancellationToken = default)
+    public async Task ChangeRateLimitAsync(int newRateLimit, CancellationToken cancellationToken = default)
     {
         if (newRateLimit < 1)
             throw new ArgumentOutOfRangeException(nameof(newRateLimit), "The rate limit must be >= 1");
@@ -451,7 +451,7 @@ public class RequestRateAlgorithm :
         }
     }
 
-    async Task ChangeRequestCount(int newRequestCount, int currentRequestCount, CancellationToken cancellationToken = default)
+    async Task ChangeRequestCountAsync(int newRequestCount, int currentRequestCount, CancellationToken cancellationToken = default)
     {
         if (newRequestCount < 1 || newRequestCount > _requestLimit)
             throw new ArgumentOutOfRangeException(nameof(newRequestCount), $"The request count {newRequestCount} must be >= 1 and <= {_requestLimit}");

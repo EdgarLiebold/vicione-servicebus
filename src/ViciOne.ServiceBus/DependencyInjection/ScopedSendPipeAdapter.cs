@@ -9,7 +9,7 @@ public class ScopedSendPipeAdapter<TMessage> :
 {
     readonly IServiceProvider _provider;
 
-    public ScopedSendPipeAdapter(IServiceProvider provider, IPipe<SendContext<TMessage>> pipe)
+    public ScopedSendPipeAdapter(IServiceProvider provider, IPipe<SendContext<TMessage>>? pipe)
         : base(pipe)
     {
         _provider = provider;

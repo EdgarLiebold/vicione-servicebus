@@ -8,7 +8,7 @@ public sealed class RabbitMqTopologyRecoveryTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-TOPOLOGY-RECOVERY", "external-queue-deletion-redeclares-topology")]
-    public async Task ExternalQueueDeletion_InvalidatesCachedTopologyAndRedeclaresTheCompleteRoute()
+    public async Task ExternalQueueDeletion_InvalidatesCachedTopologyAndRedeclaresTheCompleteRouteAsync()
     {
         using RabbitMqBroker fixture = RabbitMqBroker.Create("topologyrecovery");
         string queue = fixture.Name("input");
@@ -51,27 +51,26 @@ public sealed class RabbitMqTopologyRecoveryTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queue}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await endpoint.Send(new RecoveryMessage("before"), cancellationToken)
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queue}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await endpoint.SendAsync(new RecoveryMessage("before"), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.Equal("before", await firstReceived.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
 
-            await fixture.DeleteQueue(queue, cancellationToken);
-            await fixture.WaitUntilQueueBindingExists(queue, queue, cancellationToken);
+            await fixture.DeleteQueueAsync(queue, cancellationToken);
+            await fixture.WaitUntilQueueBindingExistsAsync(queue, queue, cancellationToken);
 
-            RabbitMqBroker.QueueState recovered = await fixture.Queue(queue, cancellationToken);
-            IReadOnlyList<RabbitMqBroker.BindingState> bindings = await fixture.QueueBindings(queue, cancellationToken);
+            RabbitMqBroker.QueueState recovered = await fixture.QueueAsync(queue, cancellationToken);
+            IReadOnlyList<RabbitMqBroker.BindingState> bindings = await fixture.QueueBindingsAsync(queue, cancellationToken);
             Assert.True(recovered.Exists);
             Assert.True(recovered.Durable);
             Assert.Contains(bindings, binding => binding.Source == queue && binding.Destination == queue);
 
-            await endpoint.Send(new RecoveryMessage("after"), cancellationToken)
+            await endpoint.SendAsync(new RecoveryMessage("after"), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.Equal("after", await secondReceived.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
 
             Assert.Equal((1, 1), (firstEntries, secondEntries));
-            Assert.Equal(0, (await fixture.Queue(queue, cancellationToken)).Messages);
+            Assert.Equal(0, (await fixture.QueueAsync(queue, cancellationToken)).Messages);
         }
         finally
         {

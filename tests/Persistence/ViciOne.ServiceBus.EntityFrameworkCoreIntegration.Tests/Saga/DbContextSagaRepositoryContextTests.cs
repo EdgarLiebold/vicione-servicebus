@@ -14,7 +14,7 @@ public sealed class DbContextSagaRepositoryContextTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-SAGA-INSERT-RACE", "existing-correlation-confirms-lost-insert-race")]
-    public async Task Insert_ReturnsMissingOnlyWhenTheExactSagaNowExists()
+    public async Task Insert_ReturnsMissingOnlyWhenTheExactSagaNowExistsAsync()
     {
         await using var connection = new SqliteConnection("Data Source=:memory:");
         await connection.OpenAsync(TestContext.Current.CancellationToken);
@@ -31,8 +31,7 @@ public sealed class DbContextSagaRepositoryContextTests
 
         using var repository = CreateRepositoryContext(dbContext, new QueryingLockStrategy());
 
-        SagaConsumeContext<TestSaga, TestMessage>? inserted = await repository.Insert(
-            new TestSaga { CorrelationId = correlationId, Value = "loser" });
+        SagaConsumeContext<TestSaga, TestMessage>? inserted = await repository.InsertAsync(new TestSaga { CorrelationId = correlationId, Value = "loser" }, TestContext.Current.CancellationToken);
 
         Assert.Null(inserted);
         TestSaga stored = await dbContext.Sagas.AsNoTracking().SingleAsync(TestContext.Current.CancellationToken);
@@ -42,7 +41,7 @@ public sealed class DbContextSagaRepositoryContextTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-SAGA-INSERT-RACE", "unrelated-update-failure-preserves-identity")]
-    public async Task Insert_PropagatesAnUnrelatedDatabaseFailureUnchanged()
+    public async Task Insert_PropagatesAnUnrelatedDatabaseFailureUnchangedAsync()
     {
         var expected = new DbUpdateException("unrelated persistence failure");
         await using var dbContext = new FailingSagaDbContext(
@@ -51,14 +50,14 @@ public sealed class DbContextSagaRepositoryContextTests
         using var repository = CreateRepositoryContext(dbContext, new EmptyLockStrategy());
 
         DbUpdateException actual = await Assert.ThrowsAsync<DbUpdateException>(() =>
-            repository.Insert(new TestSaga { CorrelationId = Guid.NewGuid(), Value = "invalid" }));
+            repository.InsertAsync(new TestSaga { CorrelationId = Guid.NewGuid(), Value = "invalid" }, TestContext.Current.CancellationToken));
 
         Assert.Same(expected, actual);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-SAGA-INSERT-RACE", "classification-failure-preserves-original-identity")]
-    public async Task Insert_PreservesTheInsertFailureWhenConflictClassificationFails()
+    public async Task Insert_PreservesTheInsertFailureWhenConflictClassificationFailsAsync()
     {
         var expected = new DbUpdateException("original insert failure");
         await using var dbContext = new FailingSagaDbContext(
@@ -67,21 +66,21 @@ public sealed class DbContextSagaRepositoryContextTests
         using var repository = CreateRepositoryContext(dbContext, new ThrowingLockStrategy());
 
         DbUpdateException actual = await Assert.ThrowsAsync<DbUpdateException>(() =>
-            repository.Insert(new TestSaga { CorrelationId = Guid.NewGuid(), Value = "invalid" }));
+            repository.InsertAsync(new TestSaga { CorrelationId = Guid.NewGuid(), Value = "invalid" }, TestContext.Current.CancellationToken));
 
         Assert.Same(expected, actual);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-SAGA-INSERT-RACE", "unrelated-entry-cannot-be-misclassified-as-race")]
-    public async Task Insert_DoesNotSwallowAnUnrelatedEntryFailureWhenTheSagaIdentityExists()
+    public async Task Insert_DoesNotSwallowAnUnrelatedEntryFailureWhenTheSagaIdentityExistsAsync()
     {
         await using var dbContext = new UnrelatedEntryFailureDbContext(
             new DbContextOptionsBuilder<UnrelatedEntryFailureDbContext>().UseSqlite("Data Source=:memory:").Options);
         using var repository = CreateRepositoryContext(dbContext, new ExistingLockStrategy());
 
         DbUpdateException actual = await Assert.ThrowsAsync<DbUpdateException>(() =>
-            repository.Insert(new TestSaga { CorrelationId = Guid.NewGuid(), Value = "not-the-failed-entry" }));
+            repository.InsertAsync(new TestSaga { CorrelationId = Guid.NewGuid(), Value = "not-the-failed-entry" }, TestContext.Current.CancellationToken));
 
         Assert.Same(dbContext.ExpectedException, actual);
     }
@@ -91,7 +90,7 @@ public sealed class DbContextSagaRepositoryContextTests
     [InlineData(WriteOperation.Update)]
     [InlineData(WriteOperation.Delete)]
     [RequirementCoverage("REQ-VSB-EF-SAGA-CONCURRENCY", "write-conflicts-map-to-provider-neutral-concurrency")]
-    public async Task Write_MapsEfConcurrencyToTheProviderNeutralSagaFailure(WriteOperation operation)
+    public async Task Write_MapsEfConcurrencyToTheProviderNeutralSagaFailureAsync(WriteOperation operation)
     {
         var expected = new DbUpdateConcurrencyException("test-owned stale saga version");
         await using var dbContext = new FailingSagaDbContext(
@@ -99,10 +98,10 @@ public sealed class DbContextSagaRepositoryContextTests
             expected);
         using var repository = CreateRepositoryContext(dbContext, new EmptyLockStrategy());
         var saga = new TestSaga { CorrelationId = Guid.NewGuid(), Value = "stale" };
-        SagaConsumeContext<TestSaga, TestMessage> sagaContext = await repository.Add(saga);
+        SagaConsumeContext<TestSaga, TestMessage> sagaContext = await repository.AddAsync(saga, TestContext.Current.CancellationToken);
 
         ConcurrencyException actual = await Assert.ThrowsAsync<ConcurrencyException>(() =>
-            ExecuteWrite(repository, sagaContext, operation));
+            ExecuteWriteAsync(repository, sagaContext, operation));
 
         Assert.Same(expected, actual.InnerException);
         Assert.Equal(typeof(TestSaga), actual.SagaType);
@@ -114,32 +113,31 @@ public sealed class DbContextSagaRepositoryContextTests
     [InlineData(WriteOperation.Update)]
     [InlineData(WriteOperation.Delete)]
     [RequirementCoverage("REQ-VSB-EF-SAGA-CONCURRENCY", "other-write-failures-preserve-exact-identity")]
-    public async Task Write_PreservesOtherEfFailuresUnchanged(WriteOperation operation)
+    public async Task Write_PreservesOtherEfFailuresUnchangedAsync(WriteOperation operation)
     {
         var expected = new DbUpdateException("test-owned non-concurrency persistence failure");
         await using var dbContext = new FailingSagaDbContext(
             new DbContextOptionsBuilder<FailingSagaDbContext>().UseSqlite("Data Source=:memory:").Options,
             expected);
         using var repository = CreateRepositoryContext(dbContext, new EmptyLockStrategy());
-        SagaConsumeContext<TestSaga, TestMessage> sagaContext = await repository.Add(
-            new TestSaga { CorrelationId = Guid.NewGuid(), Value = "invalid" });
+        SagaConsumeContext<TestSaga, TestMessage> sagaContext = await repository.AddAsync(new TestSaga { CorrelationId = Guid.NewGuid(), Value = "invalid" }, TestContext.Current.CancellationToken);
 
         DbUpdateException actual = await Assert.ThrowsAsync<DbUpdateException>(() =>
-            ExecuteWrite(repository, sagaContext, operation));
+            ExecuteWriteAsync(repository, sagaContext, operation));
 
         Assert.Same(expected, actual);
     }
 
-    private static Task ExecuteWrite(
+    private static Task ExecuteWriteAsync(
         DbContextSagaRepositoryContext<TestSaga, TestMessage> repository,
         SagaConsumeContext<TestSaga, TestMessage> sagaContext,
         WriteOperation operation)
     {
         return operation switch
         {
-            WriteOperation.Save => repository.Save(sagaContext),
-            WriteOperation.Update => repository.Update(sagaContext),
-            WriteOperation.Delete => repository.Delete(sagaContext),
+            WriteOperation.Save => repository.SaveAsync(sagaContext),
+            WriteOperation.Update => repository.UpdateAsync(sagaContext),
+            WriteOperation.Delete => repository.DeleteAsync(sagaContext),
             _ => throw new ArgumentOutOfRangeException(nameof(operation)),
         };
     }
@@ -157,10 +155,12 @@ public sealed class DbContextSagaRepositoryContextTests
 
     private static ConsumeContext<TestMessage> CreateConsumeContext()
     {
-        ConsumeContext<TestMessage> context = DispatchProxy.Create<ConsumeContext<TestMessage>, ConsumeContextProxy>();
+        TestConsumeContext context = DispatchProxy.Create<TestConsumeContext, ConsumeContextProxy>();
         ((ConsumeContextProxy)(object)context).Configure(TestContext.Current.CancellationToken);
         return context;
     }
+
+    private interface TestConsumeContext : ConsumeContext<TestMessage>, ConsumeContext;
 
     public sealed class TestSaga : ISaga
     {
@@ -189,9 +189,7 @@ public sealed class DbContextSagaRepositoryContextTests
 
     private sealed class FailingSagaDbContext(DbContextOptions<FailingSagaDbContext> options, DbUpdateException exception) : DbContext(options)
     {
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) =>
-            Task.FromException<int>(exception);
-
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<int>(cancellationToken); return Task.FromException<int>(exception); }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<TestSaga>().HasKey(saga => saga.CorrelationId);
@@ -204,7 +202,7 @@ public sealed class DbContextSagaRepositoryContextTests
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            var unrelated = new UnrelatedEntity { Id = Guid.NewGuid() };
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<int>(cancellationToken); var unrelated = new UnrelatedEntity { Id = Guid.NewGuid() };
             EntityEntry unrelatedEntry = Entry(unrelated);
             unrelatedEntry.State = EntityState.Added;
             ExpectedException = new DbUpdateException("unrelated entry failure", [unrelatedEntry]);
@@ -226,7 +224,7 @@ public sealed class DbContextSagaRepositoryContextTests
 
     private sealed class QueryingLockStrategy : BaseLockStrategy
     {
-        public override Task<TestSaga?> Load(DbContext context, Guid correlationId, CancellationToken cancellationToken) =>
+        public override Task<TestSaga?> LoadAsync(DbContext context, Guid correlationId, CancellationToken cancellationToken = default) =>
             context.Set<TestSaga>().SingleOrDefaultAsync(saga => saga.CorrelationId == correlationId, cancellationToken);
     }
 
@@ -234,14 +232,12 @@ public sealed class DbContextSagaRepositoryContextTests
 
     private sealed class ThrowingLockStrategy : BaseLockStrategy
     {
-        public override Task<TestSaga?> Load(DbContext context, Guid correlationId, CancellationToken cancellationToken) =>
-            Task.FromException<TestSaga?>(new InvalidOperationException("classification failed"));
+        public override Task<TestSaga?> LoadAsync(DbContext context, Guid correlationId, CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Saga.DbContextSagaRepositoryContextTests.TestSaga?>(cancellationToken); return Task.FromException<TestSaga?>(new InvalidOperationException("classification failed")); }
     }
 
     private sealed class ExistingLockStrategy : BaseLockStrategy
     {
-        public override Task<TestSaga?> Load(DbContext context, Guid correlationId, CancellationToken cancellationToken) =>
-            Task.FromResult<TestSaga?>(new TestSaga { CorrelationId = correlationId, Value = "existing" });
+        public override Task<TestSaga?> LoadAsync(DbContext context, Guid correlationId, CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Saga.DbContextSagaRepositoryContextTests.TestSaga?>(cancellationToken); return Task.FromResult<TestSaga?>(new TestSaga { CorrelationId = correlationId, Value = "existing" }); }
     }
 
     private abstract class BaseLockStrategy : ISagaRepositoryLockStrategy<TestSaga>
@@ -251,13 +247,12 @@ public sealed class DbContextSagaRepositoryContextTests
 
         public IQueryable<TestSaga> ApplyQueryCustomization(IQueryable<TestSaga> query) => query;
 
-        public virtual Task<TestSaga?> Load(DbContext context, Guid correlationId, CancellationToken cancellationToken) =>
-            Task.FromResult<TestSaga?>(null);
-
-        public Task<SagaLockContext<TestSaga>> CreateLockContext(
+        public virtual Task<TestSaga?> LoadAsync(DbContext context, Guid correlationId, CancellationToken cancellationToken) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Saga.DbContextSagaRepositoryContextTests.TestSaga?>(cancellationToken); return Task.FromResult<TestSaga?>(null); }
+        public Task<SagaLockContext<TestSaga>> CreateLockContextAsync(
             DbContext context,
             ISagaQuery<TestSaga> query,
-            CancellationToken cancellationToken) => throw new NotSupportedException();
+            CancellationToken cancellationToken)
+        { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga.SagaLockContext<global::ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Saga.DbContextSagaRepositoryContextTests.TestSaga>>(cancellationToken); throw new NotSupportedException(); }
     }
 
     private class ConsumeContextProxy : DispatchProxy
@@ -311,9 +306,7 @@ public sealed class DbContextSagaRepositoryContextTests
 
     private sealed class NoopPublishEndpointProvider : IPublishEndpointProvider
     {
-        public Task<ISendEndpoint> GetPublishSendEndpoint<T>() where T : class =>
-            throw new NotSupportedException();
-
+        public Task<ISendEndpoint> GetPublishSendEndpointAsync<T>(CancellationToken cancellationToken = default) where T : class { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.ISendEndpoint>(cancellationToken); throw new NotSupportedException(); }
         public ConnectHandle ConnectPublishObserver(IPublishObserver observer) =>
             throw new NotSupportedException();
     }

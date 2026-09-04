@@ -42,7 +42,7 @@ public interface MessageContext
     /// <summary>
     /// The expiration time of the message if it is not intended to last forever.
     /// </summary>
-    DateTime? ExpirationTime { get; }
+    DateTimeOffset? ExpirationTime { get; }
 
     /// <summary>
     /// The address of the message producer that sent the message
@@ -67,7 +67,7 @@ public interface MessageContext
     /// <summary>
     /// When the message was originally sent
     /// </summary>
-    DateTime? SentTime { get; }
+    DateTimeOffset? SentTime { get; }
 
     /// <summary>
     /// Additional application-specific headers that are added to the message by the application

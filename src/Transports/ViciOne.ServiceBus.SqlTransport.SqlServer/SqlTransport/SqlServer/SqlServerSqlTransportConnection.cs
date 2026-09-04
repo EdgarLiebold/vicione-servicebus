@@ -21,14 +21,14 @@ public class SqlServerSqlTransportConnection :
         return default;
     }
 
-    public Task Open(CancellationToken cancellationToken = default)
+    public Task OpenAsync(CancellationToken cancellationToken = default)
     {
         return Connection.OpenAsync(cancellationToken);
     }
 
-    public Task Close()
+    public Task CloseAsync(CancellationToken cancellationToken = default)
     {
-        Connection.Close();
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); Connection.Close();
 
         return Task.CompletedTask;
     }

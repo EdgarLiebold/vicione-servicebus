@@ -11,17 +11,17 @@ public sealed class ActiveMqTemporaryReplyTests
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [RequirementCoverage("OBL-R0-BRK-0455", "envelope-request-uses-provider-temporary-reply-queue")]
-    public Task EnvelopeRequest_UsesProviderTemporaryReplyQueue(string flavor) =>
-        AssertTemporaryReplyQueue(flavor, rawSerializer: false);
+    public Task EnvelopeRequest_UsesProviderTemporaryReplyQueueAsync(string flavor) =>
+        AssertTemporaryReplyQueueAsync(flavor, rawSerializer: false);
 
     [Theory]
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [RequirementCoverage("OBL-R0-BRK-0456", "raw-request-uses-provider-temporary-reply-queue")]
-    public Task RawRequest_UsesProviderTemporaryReplyQueue(string flavor) =>
-        AssertTemporaryReplyQueue(flavor, rawSerializer: true);
+    public Task RawRequest_UsesProviderTemporaryReplyQueueAsync(string flavor) =>
+        AssertTemporaryReplyQueueAsync(flavor, rawSerializer: true);
 
-    private static async Task AssertTemporaryReplyQueue(string flavor, bool rawSerializer)
+    private static async Task AssertTemporaryReplyQueueAsync(string flavor, bool rawSerializer)
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(
             flavor,
@@ -38,7 +38,7 @@ public sealed class ActiveMqTemporaryReplyTests
 
             configurator.ReceiveEndpoint(queueName, endpoint => endpoint.Handler<ReplyRequest>(async context =>
             {
-                ActiveMqReceiveContext transport = context.ReceiveContext.GetPayload<ActiveMqReceiveContext>();
+                ActiveMqReceiveContext transport = context.Advanced().ReceiveContext.GetPayload<ActiveMqReceiveContext>();
                 IDestination replyTo = Assert.IsAssignableFrom<IDestination>(transport.TransportMessage.NMSReplyTo);
                 replyObserved.TrySetResult(new ReplyObservation(
                     replyTo.IsTemporary,
@@ -60,7 +60,7 @@ public sealed class ActiveMqTemporaryReplyTests
             IRequestClient<ReplyRequest> client = bus.CreateRequestClient<ReplyRequest>(
                 new Uri($"queue:{queueName}"),
                 RequestTimeout.After(ms: checked((int)fixture.OperationTimeout.TotalMilliseconds)));
-            Response<ReplyResponse> response = await client.GetResponse<ReplyResponse>(
+            Response<ReplyResponse> response = await client.GetResponseAsync<ReplyResponse>(
                     new ReplyRequest(correlationId),
                     cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);

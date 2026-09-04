@@ -5,6 +5,6 @@ namespace ViciOne.ServiceBus.EventHubIntegration;
 
 public interface ProcessorClientBuilderContext
 {
-    Task OnPartitionInitializing(PartitionInitializingEventArgs eventArgs);
-    Task OnPartitionClosing(PartitionClosingEventArgs eventArgs);
+    Task OnPartitionInitializingAsync(PartitionInitializingEventArgs eventArgs, CancellationToken cancellationToken = default);
+    Task OnPartitionClosingAsync(PartitionClosingEventArgs eventArgs, CancellationToken cancellationToken = default);
 }

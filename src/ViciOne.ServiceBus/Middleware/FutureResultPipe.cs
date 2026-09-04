@@ -16,11 +16,11 @@ public class FutureResultPipe<T> :
         _requestId = requestId;
     }
 
-    public Task Send(SendContext<T> context)
+    public Task SendAsync(SendContext<T> context)
     {
         context.RequestId = _requestId;
 
-        return _pipe.IsNotEmpty() ? _pipe.Send(context) : Task.CompletedTask;
+        return _pipe.IsNotEmpty() ? _pipe.SendAsync(context) : Task.CompletedTask;
     }
 
     public void Probe(ProbeContext context)

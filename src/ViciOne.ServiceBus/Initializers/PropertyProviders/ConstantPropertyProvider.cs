@@ -11,16 +11,16 @@ public class ConstantPropertyProvider<TInput, TProperty> :
     IPropertyProvider<TInput, TProperty>
     where TInput : class
 {
-    readonly Task<TProperty> _propertyValue;
+    readonly Task<TProperty?> _propertyValue;
 
-    public ConstantPropertyProvider(TProperty propertyValue)
+    public ConstantPropertyProvider(TProperty? propertyValue)
     {
-        _propertyValue = Task.FromResult(propertyValue);
+        _propertyValue = Task.FromResult<TProperty?>(propertyValue);
     }
 
-    public Task<TProperty> GetProperty<T>(InitializeContext<T, TInput> context)
+    public Task<TProperty?> GetPropertyAsync<T>(InitializeContext<T, TInput> context, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _propertyValue;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<TProperty?>(cancellationToken); return _propertyValue;
     }
 }

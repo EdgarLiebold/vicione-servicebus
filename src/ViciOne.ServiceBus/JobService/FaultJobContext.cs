@@ -14,7 +14,7 @@ public class FaultJobContext<TJob> :
     readonly ConsumeContext<FaultJob> _context;
 
     public FaultJobContext(ConsumeContext<FaultJob> context, TJob job)
-        : base(context)
+        : base(context.Advanced())
     {
         _context = context;
 
@@ -25,13 +25,13 @@ public class FaultJobContext<TJob> :
 
     public TJob Message => Job;
 
-    public Task NotifyConsumed(TimeSpan duration, string consumerType)
+    public Task NotifyConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
     {
-        return _context.NotifyConsumed(this, duration, consumerType);
+        return _context.Advanced().NotifyConsumedAsync(this, duration, consumerType, cancellationToken: cancellationToken);
     }
 
-    public Task NotifyFaulted(TimeSpan duration, string consumerType, Exception exception)
+    public Task NotifyFaultedAsync(TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
     {
-        return _context.NotifyFaulted(this, duration, consumerType, exception);
+        return _context.Advanced().NotifyFaultedAsync(this, duration, consumerType, exception, cancellationToken: cancellationToken);
     }
 }

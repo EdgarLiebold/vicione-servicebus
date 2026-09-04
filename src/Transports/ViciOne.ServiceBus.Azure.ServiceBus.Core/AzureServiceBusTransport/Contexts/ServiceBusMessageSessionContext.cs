@@ -17,22 +17,22 @@ public class ServiceBusMessageSessionContext :
         _cancellationToken = cancellationToken;
     }
 
-    public Task<BinaryData> GetStateAsync()
+    public Task<BinaryData?> GetStateAsync(CancellationToken cancellationToken = default)
     {
-        return _session.GetSessionStateAsync(_cancellationToken);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::System.BinaryData?>(cancellationToken); return _session.GetSessionStateAsync(_cancellationToken);
     }
 
-    public Task SetStateAsync(BinaryData state)
+    public Task SetStateAsync(BinaryData? state, CancellationToken cancellationToken = default)
     {
-        return _session.SetSessionStateAsync(state, _cancellationToken);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return _session.SetSessionStateAsync(state, _cancellationToken);
     }
 
-    public Task RenewLockAsync(ServiceBusReceivedMessage message)
+    public Task RenewLockAsync(ServiceBusReceivedMessage message, CancellationToken cancellationToken = default)
     {
-        return Task.CompletedTask;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
     }
 
-    public DateTime LockedUntilUtc => _session.Message.LockedUntil.UtcDateTime;
+    public DateTimeOffset LockedUntilUtc => _session.Message.LockedUntil.UtcDateTime;
 
     public string SessionId => _session.SessionId;
 }

@@ -22,10 +22,10 @@ public class EventHubReceiveEndpointConfigurator :
     readonly IHostSettings _hostSettings;
     readonly PipeConfigurator<ProcessorContext> _processorConfigurator;
     readonly IStorageSettings _storageSettings;
-    Action<EventProcessorClientOptions> _configureOptions;
-    string _containerName;
-    Func<PartitionClosingEventArgs, Task> _partitionClosingHandler;
-    Func<PartitionInitializingEventArgs, Task> _partitionInitializingHandler;
+    Action<EventProcessorClientOptions>? _configureOptions;
+    string? _containerName;
+    Func<PartitionClosingEventArgs, Task>? _partitionClosingHandler;
+    Func<PartitionInitializingEventArgs, Task>? _partitionInitializingHandler;
 
     public EventHubReceiveEndpointConfigurator(IEventHubHostConfiguration hostConfiguration, IBusInstance busInstance,
         IReceiveEndpointConfiguration endpointConfiguration, IHostSettings hostSettings, IStorageSettings storageSettings, string eventHubName,
@@ -63,7 +63,7 @@ public class EventHubReceiveEndpointConfigurator :
 
     public string ContainerName
     {
-        get => _containerName;
+        get => _containerName ?? EventHubName;
         set
         {
             _containerName = value ?? throw new ArgumentNullException(nameof(value));
@@ -139,17 +139,19 @@ public class EventHubReceiveEndpointConfigurator :
         var blobClientOptions = new BlobClientOptions();
         _storageSettings.Configure?.Invoke(blobClientOptions);
 
-        var containerName = _containerName ?? EventHubName;
+        var containerName = ContainerName;
         if (!string.IsNullOrWhiteSpace(_storageSettings.ConnectionString))
             return new BlobContainerClient(_storageSettings.ConnectionString, containerName, blobClientOptions);
 
-        var uri = new Uri(_storageSettings.ContainerUri, containerName);
+        Uri containerUri = _storageSettings.ContainerUri
+            ?? throw new ConfigurationException("The Event Hub checkpoint storage container URI is not configured.");
+        var uri = new Uri(containerUri, containerName);
         if (_storageSettings.TokenCredential != null)
             return new BlobContainerClient(uri, _storageSettings.TokenCredential, blobClientOptions);
 
         return _storageSettings.SharedKeyCredential != null
             ? new BlobContainerClient(uri, _storageSettings.SharedKeyCredential, blobClientOptions)
-            : new BlobContainerClient(_storageSettings.ContainerUri, blobClientOptions);
+            : new BlobContainerClient(containerUri, blobClientOptions);
     }
 
     EventProcessorClient CreateEventProcessorClient()
@@ -157,10 +159,17 @@ public class EventHubReceiveEndpointConfigurator :
         var options = new EventProcessorClientOptions();
         _configureOptions?.Invoke(options);
 
-        var client = !string.IsNullOrWhiteSpace(_hostSettings.ConnectionString)
-            ? new EventProcessorClient(_blobClient.Value, ConsumerGroup, _hostSettings.ConnectionString, EventHubName, options)
-            : new EventProcessorClient(_blobClient.Value, ConsumerGroup, _hostSettings.FullyQualifiedNamespace, EventHubName, _hostSettings.TokenCredential,
-                options);
+        EventProcessorClient client;
+        if (!string.IsNullOrWhiteSpace(_hostSettings.ConnectionString))
+            client = new EventProcessorClient(_blobClient.Value, ConsumerGroup, _hostSettings.ConnectionString, EventHubName, options);
+        else
+        {
+            string fullyQualifiedNamespace = _hostSettings.FullyQualifiedNamespace
+                ?? throw new ConfigurationException("The Event Hubs namespace is not configured.");
+            Azure.Core.TokenCredential credential = _hostSettings.TokenCredential
+                ?? throw new ConfigurationException("The Event Hubs token credential is not configured.");
+            client = new EventProcessorClient(_blobClient.Value, ConsumerGroup, fullyQualifiedNamespace, EventHubName, credential, options);
+        }
 
         return client;
     }

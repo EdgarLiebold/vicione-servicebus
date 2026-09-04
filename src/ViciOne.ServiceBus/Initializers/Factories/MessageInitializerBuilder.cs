@@ -12,9 +12,9 @@ public class MessageInitializerBuilder<TMessage, TInput> :
     readonly List<IHeaderInitializer<TMessage, TInput>> _headerInitializers;
     readonly IDictionary<string, IPropertyInitializer<TMessage, TInput>> _initializers;
     readonly HashSet<string> _inputPropertyUsed;
-    readonly IMessageFactory<TMessage> _messageFactory;
+    readonly IMessageFactory<TMessage>? _messageFactory;
 
-    public MessageInitializerBuilder(IMessageFactory<TMessage> messageFactory)
+    public MessageInitializerBuilder(IMessageFactory<TMessage>? messageFactory)
     {
         if (!MessageTypeCache<TMessage>.IsValidMessageType)
             throw new ArgumentException(MessageTypeCache<TMessage>.InvalidMessageTypeReason, nameof(TMessage));
@@ -74,9 +74,9 @@ public class MessageInitializerBuilder<TMessage, TInput> :
             _initializer = initializer;
         }
 
-        public Task Apply(InitializeContext<TMessage, TInput> context)
+        public Task ApplyAsync(InitializeContext<TMessage, TInput> context, CancellationToken cancellationToken = default)
         {
-            return _initializer.Apply(context);
+            return _initializer.ApplyAsync(context, cancellationToken: cancellationToken);
         }
     }
 
@@ -91,9 +91,9 @@ public class MessageInitializerBuilder<TMessage, TInput> :
             _initializer = initializer;
         }
 
-        public Task Apply(InitializeContext<TMessage, TInput> context, SendContext sendContext)
+        public Task ApplyAsync(InitializeContext<TMessage, TInput> context, SendContext sendContext, CancellationToken cancellationToken = default)
         {
-            return _initializer.Apply(context, sendContext);
+            return _initializer.ApplyAsync(context, sendContext, cancellationToken: cancellationToken);
         }
     }
 }

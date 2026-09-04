@@ -42,7 +42,7 @@ public interface SendContext :
 
     TimeSpan? TimeToLive { get; set; }
 
-    DateTime? SentTime { get; }
+    DateTimeOffset? SentTime { get; }
 
     ContentType? ContentType { get; set; }
 

@@ -17,7 +17,7 @@ public sealed class TimeoutFilterTests
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("REQ-VSB-TIMEOUT-FILTER", "virtual-deadline")]
-    public async Task ConfiguredDeadline_CancelsTheActivePipelineStageOnlyWhenContextTimeAdvances(
+    public async Task ConfiguredDeadline_CancelsTheActivePipelineStageOnlyWhenContextTimeAdvancesAsync(
         bool blockConsumeCompletion)
     {
         TimeSpan timeout = TimeSpan.FromMinutes(3);
@@ -38,7 +38,7 @@ public sealed class TimeoutFilterTests
             ? Task.CompletedTask
             : Task.Delay(System.Threading.Timeout.InfiniteTimeSpan, context.CancellationToken));
 
-        Task send = filter.Send(input, pipe);
+        Task send = filter.SendAsync(input, pipe);
 
         Assert.False(send.IsCompleted);
         timeProvider.Advance(timeout - TimeSpan.FromTicks(1));
@@ -58,7 +58,7 @@ public sealed class TimeoutFilterTests
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("REQ-VSB-TIMEOUT-FILTER", "caller-cancellation-identity")]
-    public async Task CallerCancellation_PreservesTheExactCallerTokenAndIsNotReportedAsATimeout(
+    public async Task CallerCancellation_PreservesTheExactCallerTokenAndIsNotReportedAsATimeoutAsync(
         bool introduceChildCancellationLayer)
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
@@ -79,7 +79,7 @@ public sealed class TimeoutFilterTests
             await Task.Delay(System.Threading.Timeout.InfiniteTimeSpan, child.Token);
         });
 
-        Task send = filter.Send(input, pipe);
+        Task send = filter.SendAsync(input, pipe);
         await entered.Task.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
         caller.Cancel();
 
@@ -92,7 +92,7 @@ public sealed class TimeoutFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TIMEOUT-FILTER", "independent-cancellation")]
-    public async Task IndependentCancellation_PropagatesWithoutBeingReclassified()
+    public async Task IndependentCancellation_PropagatesWithoutBeingReclassifiedAsync()
     {
         var timeProvider = new FakeTimeProvider(StartTime);
         using var independent = new CancellationTokenSource();
@@ -103,7 +103,7 @@ public sealed class TimeoutFilterTests
         var pipe = new DelegatePipe<ConsumeContext>(_ => Task.FromException(expected));
 
         OperationCanceledException actual = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
-            filter.Send(input, pipe));
+            filter.SendAsync(input, pipe));
 
         Assert.Same(expected, actual);
         Assert.Equal(independent.Token, actual.CancellationToken);
@@ -111,7 +111,7 @@ public sealed class TimeoutFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TIMEOUT-FILTER", "consume-completion-and-timer-lifetime")]
-    public async Task SuccessfulPipeline_WaitsForConsumeCompletionAndDisposesItsDeadline()
+    public async Task SuccessfulPipeline_WaitsForConsumeCompletionAndDisposesItsDeadlineAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
         var consumeCompleted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -125,7 +125,7 @@ public sealed class TimeoutFilterTests
             },
             TimeSpan.FromMinutes(1));
 
-        Task send = filter.Send(input, new DelegatePipe<ConsumeContext>(_ => Task.CompletedTask));
+        Task send = filter.SendAsync(input, new DelegatePipe<ConsumeContext>(_ => Task.CompletedTask));
 
         Assert.False(send.IsCompleted);
         Assert.Equal(1, timeProvider.ActiveTimerCount);
@@ -139,7 +139,7 @@ public sealed class TimeoutFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TIMEOUT-FILTER", "explicit-time-provider-override")]
-    public async Task ExplicitTimeProvider_OverridesTheProviderAttachedToTheContext()
+    public async Task ExplicitTimeProvider_OverridesTheProviderAttachedToTheContextAsync()
     {
         TimeSpan timeout = TimeSpan.FromMinutes(1);
         var contextProvider = new ObservableTimeProvider(StartTime);
@@ -152,7 +152,7 @@ public sealed class TimeoutFilterTests
         var pipe = new DelegatePipe<ConsumeContext>(context =>
             Task.Delay(System.Threading.Timeout.InfiniteTimeSpan, context.CancellationToken));
 
-        Task send = filter.Send(input, pipe);
+        Task send = filter.SendAsync(input, pipe);
         Assert.Equal(0, contextProvider.ActiveTimerCount);
         Assert.Equal(1, configuredProvider.ActiveTimerCount);
         contextProvider.Advance(TimeSpan.FromDays(1));
@@ -166,7 +166,7 @@ public sealed class TimeoutFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TIMEOUT-FILTER", "factory-contract")]
-    public async Task ContextFactoryReturningNull_FailsBeforeInvokingTheNextPipe()
+    public async Task ContextFactoryReturningNull_FailsBeforeInvokingTheNextPipeAsync()
     {
         var timeProvider = new FakeTimeProvider(StartTime);
         ConsumeContext input = CreateContext(CancellationToken.None, timeProvider, Task.CompletedTask);
@@ -179,7 +179,7 @@ public sealed class TimeoutFilterTests
         });
 
         InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            filter.Send(input, pipe));
+            filter.SendAsync(input, pipe));
 
         Assert.Equal("The timeout context factory returned null.", exception.Message);
         Assert.False(nextInvoked);
@@ -187,7 +187,7 @@ public sealed class TimeoutFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TIMEOUT-FILTER", "null-dependencies")]
-    public async Task PublicBoundary_RejectsNullDependenciesWithExactParameterNames()
+    public async Task PublicBoundary_RejectsNullDependenciesWithExactParameterNamesAsync()
     {
         var timeProvider = new FakeTimeProvider(StartTime);
         ConsumeContext context = CreateContext(CancellationToken.None, timeProvider, Task.CompletedTask);
@@ -201,9 +201,9 @@ public sealed class TimeoutFilterTests
                 TimeSpan.FromSeconds(1),
                 null!)).ParamName);
         Assert.Equal("context", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            filter.Send(null!, new DelegatePipe<ConsumeContext>(_ => Task.CompletedTask)))).ParamName);
+            filter.SendAsync(null!, new DelegatePipe<ConsumeContext>(_ => Task.CompletedTask)))).ParamName);
         Assert.Equal("next", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            filter.Send(context, null!))).ParamName);
+            filter.SendAsync(context, null!))).ParamName);
     }
 
     [Theory]
@@ -241,7 +241,7 @@ public sealed class TimeoutFilterTests
     private sealed class DelegatePipe<TContext>(Func<TContext, Task> callback) : IPipe<TContext>
         where TContext : class, PipeContext
     {
-        public Task Send(TContext context) => callback(context);
+        public Task SendAsync(TContext context) => callback(context);
 
         public void Probe(ProbeContext context) => context.CreateScope("delegate");
     }

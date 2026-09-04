@@ -12,19 +12,19 @@ public interface IReceiveTransportObserver
     /// </summary>
     /// <param name="ready"></param>
     /// <returns></returns>
-    Task Ready(ReceiveTransportReady ready);
+    Task ReadyAsync(ReceiveTransportReady ready);
 
     /// <summary>
     /// Called when the receive endpoint has completed
     /// </summary>
     /// <param name="completed"></param>
     /// <returns></returns>
-    Task Completed(ReceiveTransportCompleted completed);
+    Task CompletedAsync(ReceiveTransportCompleted completed);
 
     /// <summary>
     /// Called when the receive endpoint faults
     /// </summary>
     /// <param name="faulted"></param>
     /// <returns></returns>
-    Task Faulted(ReceiveTransportFaulted faulted);
+    Task FaultedAsync(ReceiveTransportFaulted faulted);
 }

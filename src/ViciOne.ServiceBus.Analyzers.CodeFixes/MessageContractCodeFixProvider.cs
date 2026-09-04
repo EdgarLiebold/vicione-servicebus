@@ -33,49 +33,58 @@ public class MessageContractCodeFixProvider :
     public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
     {
         var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
+        if (root == null)
+            return;
 
         var diagnostic = context.Diagnostics.First();
         var diagnosticSpan = diagnostic.Location.SourceSpan;
 
         // Find the type declaration identified by the diagnostic.
-        var anonymousObject = root.FindToken(diagnosticSpan.Start).Parent.AncestorsAndSelf().OfType<AnonymousObjectCreationExpressionSyntax>().First();
+        var anonymousObject = root.FindToken(diagnosticSpan.Start).Parent?.AncestorsAndSelf()
+            .OfType<AnonymousObjectCreationExpressionSyntax>().FirstOrDefault();
+        if (anonymousObject == null)
+            return;
 
-        if (!diagnostic.Properties.TryGetValue("messageContractType", out var fullType))
+        if (!diagnostic.Properties.TryGetValue("messageContractType", out var fullType)
+            || fullType == null
+            || string.IsNullOrWhiteSpace(fullType))
             return;
 
         // Register a code action that will invoke the fix.
         context.RegisterCodeFix(
             CodeAction.Create(
                 Title,
-                cancellationToken => AddMissingProperties(context.Document, anonymousObject, fullType, cancellationToken),
+                cancellationToken => AddMissingPropertiesAsync(context.Document, anonymousObject, fullType, cancellationToken),
                 Title),
             diagnostic);
     }
 
-    static async Task<Document> AddMissingProperties(Document document,
+    static async Task<Document> AddMissingPropertiesAsync(Document document,
         AnonymousObjectCreationExpressionSyntax anonymousObject,
         string fullType,
         CancellationToken cancellationToken)
     {
         var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
         var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+        if (root == null || semanticModel == null)
+            return document;
 
         var symbolDisplayFormat = new SymbolDisplayFormat(typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces);
 
         // Find the interface identified by the diagnostic
-        var symbols = root.DescendantNodes().OfType<InterfaceDeclarationSyntax>().Select(i => semanticModel.GetDeclaredSymbol(i)).ToList();
-        ITypeSymbol contractType = symbols.FirstOrDefault(i => i?.ToDisplayString(symbolDisplayFormat) == fullType);
+        var symbols = root.DescendantNodes().OfType<InterfaceDeclarationSyntax>().Select(i => semanticModel.GetDeclaredSymbol(i, cancellationToken: cancellationToken)).ToList();
+        ITypeSymbol? contractType = symbols.FirstOrDefault(i => i?.ToDisplayString(symbolDisplayFormat) == fullType);
 
         if (contractType != null)
         {
             var dictionary = new Dictionary<AnonymousObjectCreationExpressionSyntax, ITypeSymbol>();
 
-            await FindAnonymousTypesWithMessageContractsInTree(dictionary, anonymousObject, contractType, semanticModel).ConfigureAwait(false);
+            await FindAnonymousTypesWithMessageContractsInTreeAsync(dictionary, anonymousObject, contractType, semanticModel).ConfigureAwait(false);
 
             var newRoot = AddMissingProperties(root, dictionary);
 
             var formattedRoot = Formatter.Format(newRoot, Formatter.Annotation, document.Project.Solution.Workspace,
-                document.Project.Solution.Workspace.Options);
+                document.Project.Solution.Workspace.Options, cancellationToken: cancellationToken);
 
             return document.WithSyntaxRoot(formattedRoot);
         }
@@ -83,7 +92,7 @@ public class MessageContractCodeFixProvider :
         return document;
     }
 
-    static async Task FindAnonymousTypesWithMessageContractsInTree(IDictionary<AnonymousObjectCreationExpressionSyntax, ITypeSymbol> dictionary,
+    static async Task FindAnonymousTypesWithMessageContractsInTreeAsync(IDictionary<AnonymousObjectCreationExpressionSyntax, ITypeSymbol> dictionary,
         AnonymousObjectCreationExpressionSyntax anonymousObject, ITypeSymbol contractType, SemanticModel semanticModel)
     {
         List<IPropertySymbol> contractProperties = contractType.GetContractProperties();
@@ -96,14 +105,14 @@ public class MessageContractCodeFixProvider :
 
             if (contractProperty != null)
             {
-                await FindAnonymousTypesWithMessageContractsInTree(dictionary, initializer, contractProperty, semanticModel).ConfigureAwait(false);
+                await FindAnonymousTypesWithMessageContractsInTreeAsync(dictionary, initializer, contractProperty, semanticModel).ConfigureAwait(false);
             }
         }
 
         dictionary.Add(anonymousObject, contractType);
     }
 
-    private static async Task FindAnonymousTypesWithMessageContractsInTree(IDictionary<AnonymousObjectCreationExpressionSyntax, ITypeSymbol> dictionary,
+    private static async Task FindAnonymousTypesWithMessageContractsInTreeAsync(IDictionary<AnonymousObjectCreationExpressionSyntax, ITypeSymbol> dictionary,
         AnonymousObjectMemberDeclaratorSyntax initializer, IPropertySymbol contractProperty, SemanticModel semanticModel)
     {
         if (initializer.Expression is ImplicitArrayCreationExpressionSyntax implicitArrayCreationExpressionSyntax)
@@ -112,13 +121,13 @@ public class MessageContractCodeFixProvider :
                 || contractProperty.Type.IsList(out contractElementType)
                 || contractProperty.Type.IsArray(out contractElementType))
             {
-                await FindAnonymousTypesWithMessageContractsInTree(dictionary, implicitArrayCreationExpressionSyntax, contractElementType, semanticModel)
+                await FindAnonymousTypesWithMessageContractsInTreeAsync(dictionary, implicitArrayCreationExpressionSyntax, contractElementType, semanticModel)
                     .ConfigureAwait(false);
             }
         }
         else if (initializer.Expression is AnonymousObjectCreationExpressionSyntax anonymousObjectProperty)
         {
-            await FindAnonymousTypesWithMessageContractsInTree(dictionary, anonymousObjectProperty, contractProperty.Type, semanticModel)
+            await FindAnonymousTypesWithMessageContractsInTreeAsync(dictionary, anonymousObjectProperty, contractProperty.Type, semanticModel)
                 .ConfigureAwait(false);
         }
         else if (initializer.Expression is InvocationExpressionSyntax invocationExpressionSyntax
@@ -130,13 +139,13 @@ public class MessageContractCodeFixProvider :
                 contractProperty.Type.IsList(out contractElementType) ||
                 contractProperty.Type.IsArray(out contractElementType))
             {
-                await FindAnonymousTypesWithMessageContractsInTree(dictionary, methodReturnTypeArgument, contractElementType, semanticModel)
+                await FindAnonymousTypesWithMessageContractsInTreeAsync(dictionary, methodReturnTypeArgument, contractElementType, semanticModel)
                     .ConfigureAwait(false);
             }
         }
     }
 
-    private static async Task FindAnonymousTypesWithMessageContractsInTree(IDictionary<AnonymousObjectCreationExpressionSyntax, ITypeSymbol> dictionary,
+    private static async Task FindAnonymousTypesWithMessageContractsInTreeAsync(IDictionary<AnonymousObjectCreationExpressionSyntax, ITypeSymbol> dictionary,
         ImplicitArrayCreationExpressionSyntax implicitArrayCreationExpressionSyntax, ITypeSymbol contractElementType, SemanticModel semanticModel)
     {
         SeparatedSyntaxList<ExpressionSyntax> expressions = implicitArrayCreationExpressionSyntax.Initializer.Expressions;
@@ -144,19 +153,19 @@ public class MessageContractCodeFixProvider :
         {
             if (expression is AnonymousObjectCreationExpressionSyntax anonymousObjectArrayInitializer)
             {
-                await FindAnonymousTypesWithMessageContractsInTree(dictionary, anonymousObjectArrayInitializer,
+                await FindAnonymousTypesWithMessageContractsInTreeAsync(dictionary, anonymousObjectArrayInitializer,
                     contractElementType, semanticModel).ConfigureAwait(false);
             }
         }
     }
 
-    private static async Task FindAnonymousTypesWithMessageContractsInTree(IDictionary<AnonymousObjectCreationExpressionSyntax, ITypeSymbol> dictionary,
+    private static async Task FindAnonymousTypesWithMessageContractsInTreeAsync(IDictionary<AnonymousObjectCreationExpressionSyntax, ITypeSymbol> dictionary,
         ITypeSymbol methodReturnTypeArgument, ITypeSymbol contractElementType, SemanticModel semanticModel)
     {
         var syntax = await methodReturnTypeArgument.DeclaringSyntaxReferences[0].GetSyntaxAsync().ConfigureAwait(false);
         if (syntax is AnonymousObjectCreationExpressionSyntax anonymousObjectTypeArgument)
         {
-            await FindAnonymousTypesWithMessageContractsInTree(dictionary, anonymousObjectTypeArgument, contractElementType,
+            await FindAnonymousTypesWithMessageContractsInTreeAsync(dictionary, anonymousObjectTypeArgument, contractElementType,
                 semanticModel).ConfigureAwait(false);
         }
     }
@@ -182,6 +191,9 @@ public class MessageContractCodeFixProvider :
         foreach (KeyValuePair<AnonymousObjectCreationExpressionSyntax, ITypeSymbol> keyValuePair in dictionary)
         {
             var anonymousObject = newRoot.GetCurrentNode(keyValuePair.Key);
+            if (anonymousObject == null)
+                continue;
+
             var contractType = keyValuePair.Value;
             newRoot = AddMissingProperties(newRoot, anonymousObject, contractType);
         }

@@ -30,7 +30,7 @@ public class MessageReceiver :
         _receivers = new ConcurrentDictionary<string, Lazy<IServiceBusMessageReceiver>>();
     }
 
-    public Task Handle(string queueName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
+    public Task HandleAsync(string queueName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
     {
         var receiver = CreateMessageReceiver(queueName, cfg =>
         {
@@ -38,10 +38,10 @@ public class MessageReceiver :
             cfg.ConfigureSagas(_registration);
         });
 
-        return receiver.Handle(message, cancellationToken);
+        return receiver.HandleAsync(message, cancellationToken);
     }
 
-    public Task Handle(string topicPath, string subscriptionName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
+    public Task HandleAsync(string topicPath, string subscriptionName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
     {
         var receiver = CreateMessageReceiver(topicPath, subscriptionName, cfg =>
         {
@@ -49,10 +49,10 @@ public class MessageReceiver :
             cfg.ConfigureSagas(_registration);
         });
 
-        return receiver.Handle(message, cancellationToken);
+        return receiver.HandleAsync(message, cancellationToken);
     }
 
-    public Task HandleConsumer<TConsumer>(string queueName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
+    public Task HandleConsumerAsync<TConsumer>(string queueName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
         where TConsumer : class, IConsumer
     {
         var receiver = CreateMessageReceiver(queueName, cfg =>
@@ -60,10 +60,10 @@ public class MessageReceiver :
             cfg.ConfigureConsumer<TConsumer>(_registration);
         });
 
-        return receiver.Handle(message, cancellationToken);
+        return receiver.HandleAsync(message, cancellationToken);
     }
 
-    public Task HandleConsumer<TConsumer>(string topicPath, string subscriptionName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
+    public Task HandleConsumerAsync<TConsumer>(string topicPath, string subscriptionName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
         where TConsumer : class, IConsumer
     {
         var receiver = CreateMessageReceiver(topicPath, subscriptionName, cfg =>
@@ -71,10 +71,10 @@ public class MessageReceiver :
             cfg.ConfigureConsumer<TConsumer>(_registration);
         });
 
-        return receiver.Handle(message, cancellationToken);
+        return receiver.HandleAsync(message, cancellationToken);
     }
 
-    public Task HandleSaga<TSaga>(string queueName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
+    public Task HandleSagaAsync<TSaga>(string queueName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
         where TSaga : class, ISaga
     {
         var receiver = CreateMessageReceiver(queueName, cfg =>
@@ -82,10 +82,10 @@ public class MessageReceiver :
             cfg.ConfigureSaga<TSaga>(_registration);
         });
 
-        return receiver.Handle(message, cancellationToken);
+        return receiver.HandleAsync(message, cancellationToken);
     }
 
-    public Task HandleSaga<TSaga>(string topicPath, string subscriptionName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
+    public Task HandleSagaAsync<TSaga>(string topicPath, string subscriptionName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
         where TSaga : class, ISaga
     {
         var receiver = CreateMessageReceiver(topicPath, subscriptionName, cfg =>
@@ -93,10 +93,10 @@ public class MessageReceiver :
             cfg.ConfigureSaga<TSaga>(_registration);
         });
 
-        return receiver.Handle(message, cancellationToken);
+        return receiver.HandleAsync(message, cancellationToken);
     }
 
-    public Task HandleExecuteActivity<TActivity>(string queueName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
+    public Task HandleExecuteActivityAsync<TActivity>(string queueName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
         where TActivity : class
     {
         var receiver = CreateMessageReceiver(queueName, cfg =>
@@ -104,7 +104,7 @@ public class MessageReceiver :
             cfg.ConfigureExecuteActivity(_registration, typeof(TActivity));
         });
 
-        return receiver.Handle(message, cancellationToken);
+        return receiver.HandleAsync(message, cancellationToken);
     }
 
     public void Dispose()

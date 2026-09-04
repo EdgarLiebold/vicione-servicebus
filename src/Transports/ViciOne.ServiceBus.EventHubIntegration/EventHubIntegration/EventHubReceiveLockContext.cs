@@ -17,18 +17,18 @@ public class EventHubReceiveLockContext :
         _lockContext = lockContext;
     }
 
-    public Task Complete()
+    public Task CompleteAsync(CancellationToken cancellationToken = default)
     {
-        return _lockContext.Complete(_eventArgs);
+        return _lockContext.CompleteAsync(_eventArgs, cancellationToken: cancellationToken);
     }
 
-    public Task Faulted(Exception exception)
+    public Task FaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {
-        return _lockContext.Faulted(_eventArgs, exception);
+        return _lockContext.FaultedAsync(_eventArgs, exception, cancellationToken: cancellationToken);
     }
 
-    public Task ValidateLockStatus()
+    public Task ValidateLockStatusAsync(CancellationToken cancellationToken = default)
     {
-        return Task.CompletedTask;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
     }
 }

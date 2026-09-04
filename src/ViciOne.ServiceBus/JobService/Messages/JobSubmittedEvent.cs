@@ -10,7 +10,7 @@ public class JobSubmittedEvent :
 {
     public Guid JobId { get; set; }
     public Guid JobTypeId { get; set; }
-    public DateTime Timestamp { get; set; }
+    public DateTimeOffset Timestamp { get; set; }
     public TimeSpan JobTimeout { get; set; }
     public Dictionary<string, object> Job { get; set; } = null!;
     public Dictionary<string, object>? JobProperties { get; set; }

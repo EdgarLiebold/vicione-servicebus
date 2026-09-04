@@ -10,6 +10,7 @@ namespace ViciOne.ServiceBus.MessageData.Configuration;
 public class PutMessageDataObjectDictionaryTransformConfiguration<TInput, TProperty, TKey, TValue> :
     IMessageDataTransformConfiguration<TInput>
     where TInput : class
+    where TKey : notnull
     where TValue : class
 {
     readonly PropertyInfo _property;
@@ -25,7 +26,7 @@ public class PutMessageDataObjectDictionaryTransformConfiguration<TInput, TPrope
 
     public void Apply(ITransformConfigurator<TInput> configurator)
     {
-        if (_transformConfigurator.TryGetConverter(out IPropertyConverter<TValue, TValue> converter))
+        if (_transformConfigurator.TryGetConverter(out IPropertyConverter<TValue, TValue>? converter))
         {
             var inputPropertyProvider = new InputPropertyProvider<TInput, TProperty>(_property);
 

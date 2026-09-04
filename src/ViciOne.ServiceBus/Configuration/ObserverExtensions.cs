@@ -17,7 +17,7 @@ public static class ObserverExtensions
     /// <param name="configureCallback"></param>
     /// <returns>An instance subscription configurator.</returns>
     public static void Observer<T>(this IReceiveEndpointConfigurator configurator, IObserver<ConsumeContext<T>> observer,
-        Action<IObserverConfigurator<T>> configureCallback = null)
+        Action<IObserverConfigurator<T>>? configureCallback = null)
         where T : class
     {
         var observerConfigurator = new ObserverConfigurator<T>(observer);

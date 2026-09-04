@@ -11,7 +11,7 @@ public sealed class AmazonS3MessageDataRepositoryTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-S3-PERSISTENCE", "exact-bytes-round-trip-through-run-scoped-bucket")]
-    public async Task PutAndGet_RoundTripExactBytesThroughRunScopedBucket()
+    public async Task PutAndGet_RoundTripExactBytesThroughRunScopedBucketAsync()
     {
         await using AmazonS3TestBucket fixture = AmazonS3TestBucket.Create("roundtrip");
         var repository = new AmazonS3MessageDataRepository(
@@ -20,12 +20,12 @@ public sealed class AmazonS3MessageDataRepositoryTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         byte[] expected = [0, 1, 2, 127, 128, 254, 255, 42, 17];
 
-        await repository.EnsureReady(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+        await repository.EnsureReadyAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
         Uri address = await repository
-            .Put(new MemoryStream(expected, writable: false), cancellationToken: cancellationToken)
+            .PutAsync(new MemoryStream(expected, writable: false), cancellationToken: cancellationToken)
             .WaitAsync(fixture.OperationTimeout, cancellationToken);
         await using Stream stored = await repository
-            .Get(address, cancellationToken)
+            .GetAsync(address, cancellationToken)
             .WaitAsync(fixture.OperationTimeout, cancellationToken);
         using var actual = new MemoryStream();
         await stored.CopyToAsync(actual, cancellationToken);
@@ -37,7 +37,7 @@ public sealed class AmazonS3MessageDataRepositoryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-S3-STARTUP", "missing-bucket-created-before-ready")]
-    public async Task PreStart_CreatesMissingBucketAndReportsReadyOnlyAfterSuccess()
+    public async Task PreStart_CreatesMissingBucketAndReportsReadyOnlyAfterSuccessAsync()
     {
         await using AmazonS3TestBucket fixture = AmazonS3TestBucket.Create("startup");
         var repository = new AmazonS3MessageDataRepository(
@@ -49,7 +49,7 @@ public sealed class AmazonS3MessageDataRepositoryTests
             .DoesS3BucketExistV2Async(fixture.Client, fixture.BucketName)
             .WaitAsync(fixture.OperationTimeout, cancellationToken));
 
-        await repository.EnsureReady(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+        await repository.EnsureReadyAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
 
         Assert.True(await global::Amazon.S3.Util.AmazonS3Util
             .DoesS3BucketExistV2Async(fixture.Client, fixture.BucketName)
@@ -58,7 +58,7 @@ public sealed class AmazonS3MessageDataRepositoryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-S3-LIFECYCLE", "owned-rule-reconciled-without-foreign-rule-loss")]
-    public async Task PreStart_ReconcilesOnlyTheOwnedLifecycleRule()
+    public async Task PreStart_ReconcilesOnlyTheOwnedLifecycleRuleAsync()
     {
         await using AmazonS3TestBucket fixture = AmazonS3TestBucket.Create("lifecycle");
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -89,7 +89,7 @@ public sealed class AmazonS3MessageDataRepositoryTests
             fixture.Client,
             new AmazonS3MessageDataRepositoryOptions(fixture.BucketName, lifecycleExpirationDays: 14));
 
-        await repository.EnsureReady(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+        await repository.EnsureReadyAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
 
         GetLifecycleConfigurationResponse response = await fixture.Client
             .GetLifecycleConfigurationAsync(fixture.BucketName, cancellationToken)
@@ -114,26 +114,26 @@ public sealed class AmazonS3MessageDataRepositoryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-S3-CANCELLATION", "put-and-get-honor-caller-cancellation")]
-    public async Task PutAndGet_HonorCallerCancellation()
+    public async Task PutAndGet_HonorCallerCancellationAsync()
     {
         await using AmazonS3TestBucket fixture = AmazonS3TestBucket.Create("cancellation");
         var repository = new AmazonS3MessageDataRepository(
             fixture.Client,
             new AmazonS3MessageDataRepositoryOptions(fixture.BucketName));
         CancellationToken testCancellation = TestContext.Current.CancellationToken;
-        await repository.EnsureReady(testCancellation).WaitAsync(fixture.OperationTimeout, testCancellation);
+        await repository.EnsureReadyAsync(testCancellation).WaitAsync(fixture.OperationTimeout, testCancellation);
         Uri address = await repository
-            .Put(new MemoryStream([1, 2, 3], writable: false), cancellationToken: testCancellation)
+            .PutAsync(new MemoryStream([1, 2, 3], writable: false), cancellationToken: testCancellation)
             .WaitAsync(fixture.OperationTimeout, testCancellation);
         using var callerCancellation = new CancellationTokenSource();
         callerCancellation.Cancel();
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(
-            () => repository.Put(
+            () => repository.PutAsync(
                 new MemoryStream([4, 5, 6], writable: false),
                 cancellationToken: callerCancellation.Token));
         await Assert.ThrowsAnyAsync<OperationCanceledException>(
-            () => repository.Get(address, callerCancellation.Token));
+            () => repository.GetAsync(address, callerCancellation.Token));
     }
 
     private static LifecycleRule Rule(string id, int expirationDays, string prefix) =>

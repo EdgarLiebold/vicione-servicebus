@@ -14,10 +14,10 @@ public class ObjectConsumerFactory<TConsumer> :
         _delegate = new DelegateConsumerFactory<TConsumer>(() => (TConsumer)objectFactory(typeof(TConsumer)));
     }
 
-    public Task Send<TMessage>(ConsumeContext<TMessage> context, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)
+    public Task SendAsync<TMessage>(ConsumeContext<TMessage> context, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)
         where TMessage : class
     {
-        return _delegate.Send(context, next);
+        return _delegate.SendAsync(context, next);
     }
 
     void IProbeSite.Probe(ProbeContext context)

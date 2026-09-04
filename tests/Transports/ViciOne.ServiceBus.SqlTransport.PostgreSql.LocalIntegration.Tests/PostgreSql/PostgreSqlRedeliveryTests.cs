@@ -9,7 +9,7 @@ public sealed class PostgreSqlRedeliveryTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0102", "postgresql-native-owner")]
-    public async Task RedeliveryHeader_IsConsumedInternallyAndDoesNotLeakToPublishedMessage()
+    public async Task RedeliveryHeader_IsConsumedInternallyAndDoesNotLeakToPublishedMessageAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase fixture = await PostgreSqlTestDatabase.CreateAsync(
@@ -34,27 +34,27 @@ public sealed class PostgreSqlRedeliveryTests
                     redelivery.Interval(10, TimeSpan.FromSeconds(1)));
                 endpoint.Handler<InboundMessage>(async context =>
                 {
-                    int count = context.GetRedeliveryCount();
+                    int count = context.Advanced().GetRedeliveryCount();
                     attempts.Enqueue(count);
-                    bool found = context.ReceiveContext.TransportHeaders.TryGetHeader(
+                    bool found = context.Advanced().ReceiveContext.TransportHeaders.TryGetHeader(
                         MessageHeaders.RedeliveryCount,
                         out object? rawHeader);
                     rawHeaderObservations.Enqueue((found, rawHeader?.ToString()));
                     mappedDeliveryCounts.Enqueue(
-                        context.ReceiveContext.TransportHeaders.Get("DeliveryCount", default(int?)) ?? -1);
+                        context.Advanced().ReceiveContext.TransportHeaders.Get("DeliveryCount", default(int?)) ?? -1);
                     if (Interlocked.Increment(ref attemptNumber) == 2)
                     {
                         await using var connection = fixture.CreateConnection();
-                        await connection.OpenWithin(fixture.OperationTimeout, context.CancellationToken);
-                        persistedHeaders.TrySetResult(await connection.TransportHeadersForMessage(
+                        await connection.OpenWithinAsync(fixture.OperationTimeout, context.CancellationToken);
+                        persistedHeaders.TrySetResult(await connection.TransportHeadersForMessageAsync(
                             fixture.Schema,
                             context.MessageId!.Value,
                             context.CancellationToken));
-                        persistedAttempt.TrySetResult(await connection.DeliveryAttemptForMessage(
+                        persistedAttempt.TrySetResult(await connection.DeliveryAttemptForMessageAsync(
                             fixture.Schema,
                             context.MessageId.Value,
                             context.CancellationToken));
-                        await context.Publish(new OutboundMessage(context.Message.CorrelationId));
+                        await context.Advanced().PublishAsync(new OutboundMessage(context.Message.CorrelationId));
                         return;
                     }
 
@@ -77,13 +77,13 @@ public sealed class PostgreSqlRedeliveryTests
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
             Guid correlationId = Guid.NewGuid();
-            await bus.Publish(new InboundMessage(correlationId), cancellationToken)
+            await bus.PublishAsync(new InboundMessage(correlationId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             ConsumeContext<OutboundMessage> context = await outbound.Task
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             Assert.Equal(correlationId, context.Message.CorrelationId);
-            Assert.Null(context.GetHeader(MessageHeaders.RedeliveryCount, default(int?)));
+            Assert.Null(context.Advanced().GetHeader(MessageHeaders.RedeliveryCount, default(int?)));
             Assert.Contains(MessageHeaders.RedeliveryCount, await persistedHeaders.Task);
         }
         finally

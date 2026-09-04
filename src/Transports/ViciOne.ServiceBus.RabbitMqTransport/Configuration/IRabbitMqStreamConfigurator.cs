@@ -35,7 +35,7 @@ public interface IRabbitMqStreamConfigurator
     /// Begin consuming messages from the specified timestamp
     /// </summary>
     /// <param name="timestamp"></param>
-    void FromTimestamp(DateTime timestamp);
+    void FromTimestamp(DateTimeOffset timestamp);
 
     /// <summary>
     /// Begin consuming messages from the first message in the stream

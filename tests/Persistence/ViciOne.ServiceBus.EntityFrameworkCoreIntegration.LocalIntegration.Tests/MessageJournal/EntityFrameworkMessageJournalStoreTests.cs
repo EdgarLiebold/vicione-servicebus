@@ -15,7 +15,7 @@ public sealed class EntityFrameworkMessageJournalStoreTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-MESSAGE-JOURNAL-CONFIGURATION", "composition-persists-terminal-envelope")]
-    public async Task ConfigurationComposition_PersistsATerminalPublishEnvelope()
+    public async Task ConfigurationComposition_PersistsATerminalPublishEnvelopeAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase database = await PostgreSqlTestDatabase.CreateAsync("message-journal-configuration", cancellationToken);
@@ -32,7 +32,7 @@ public sealed class EntityFrameworkMessageJournalStoreTests
         await bus.StartAsync(cancellationToken);
         try
         {
-            await bus.Publish(new JournalProbe("ef-core"), cancellationToken);
+            await bus.PublishAsync(new JournalProbe("ef-core"), cancellationToken);
 
             await using MessageJournalDbContext context = CreateContext(database);
             MessageJournalRecord actual = Assert.Single(await context.Entries.AsNoTracking().ToListAsync(cancellationToken));
@@ -47,7 +47,7 @@ public sealed class EntityFrameworkMessageJournalStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-MESSAGE-JOURNAL-PERSISTENCE", "sanitized-entry-round-trip")]
-    public async Task Append_PreservesEverySanitizedFieldWithoutAnAmbientSerializer()
+    public async Task Append_PreservesEverySanitizedFieldWithoutAnAmbientSerializerAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase database = await PostgreSqlTestDatabase.CreateAsync("message-journal-persistence", cancellationToken);
@@ -77,7 +77,7 @@ public sealed class EntityFrameworkMessageJournalStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-MESSAGE-JOURNAL-BOUNDS", "count-and-retention-in-one-transaction")]
-    public async Task Append_AtomicallyRemovesExpiredAndOldestEntriesBeforeAddingTheNewEntry()
+    public async Task Append_AtomicallyRemovesExpiredAndOldestEntriesBeforeAddingTheNewEntryAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase database = await PostgreSqlTestDatabase.CreateAsync("message-journal-bounds", cancellationToken);
@@ -100,7 +100,7 @@ public sealed class EntityFrameworkMessageJournalStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-MESSAGE-JOURNAL-CONCURRENCY", "serializable-capacity-never-exceeded")]
-    public async Task ConcurrentAppends_NeverExceedTheDeclaredCapacity()
+    public async Task ConcurrentAppends_NeverExceedTheDeclaredCapacityAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase database = await PostgreSqlTestDatabase.CreateAsync("message-journal-concurrency", cancellationToken);
@@ -129,7 +129,7 @@ public sealed class EntityFrameworkMessageJournalStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-MESSAGE-JOURNAL-RETENTION", "minimum-timestamp-does-not-underflow")]
-    public async Task MaximumRetention_AcceptsTheEarliestRepresentableObservation()
+    public async Task MaximumRetention_AcceptsTheEarliestRepresentableObservationAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase database = await PostgreSqlTestDatabase.CreateAsync("message-journal-retention", cancellationToken);
@@ -198,13 +198,16 @@ public sealed class EntityFrameworkMessageJournalStoreTests
     {
         public ValueTask<MessageJournalProjection?> ProjectAsync(
             MessageJournalCapture capture,
-            CancellationToken cancellationToken) => ValueTask.FromResult<MessageJournalProjection?>(new MessageJournalProjection(
+            CancellationToken cancellationToken)
+        {
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled<global::ViciOne.ServiceBus.MessageJournal.MessageJournalProjection?>(cancellationToken); return ValueTask.FromResult<MessageJournalProjection?>(new MessageJournalProjection(
             MessageJournalDataClassification.Internal,
             capture.ContentType,
             capture.MessageTypes,
             capture.Metadata,
             capture.Headers,
             capture.Body));
+        }
     }
 
     private sealed record JournalProbe(string Source);

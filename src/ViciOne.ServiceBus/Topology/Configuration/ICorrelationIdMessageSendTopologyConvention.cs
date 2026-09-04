@@ -11,5 +11,5 @@ public interface ICorrelationIdMessageSendTopologyConvention<TMessage> :
     /// </summary>
     /// <param name="messageCorrelationId"></param>
     /// <returns></returns>
-    bool TryGetMessageCorrelationId(out IMessageCorrelationId<TMessage> messageCorrelationId);
+    bool TryGetMessageCorrelationId([NotNullWhen(true)] out IMessageCorrelationId<TMessage>? messageCorrelationId);
 }

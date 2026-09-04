@@ -21,22 +21,22 @@ public class SagaRepository<TSaga> :
     readonly ISagaRepositoryContextFactory<TSaga> _repositoryContextFactory;
 
     public SagaRepository(ISagaRepositoryContextFactory<TSaga> repositoryContextFactory,
-        IQuerySagaRepositoryContextFactory<TSaga> queryRepositoryContextFactory = null,
-        ILoadSagaRepositoryContextFactory<TSaga> loadSagaRepositoryContextFactory = null)
+        IQuerySagaRepositoryContextFactory<TSaga>? queryRepositoryContextFactory = null,
+        ILoadSagaRepositoryContextFactory<TSaga>? loadSagaRepositoryContextFactory = null)
     {
         _repositoryContextFactory = repositoryContextFactory;
         _querySagaRepository = new QuerySagaRepository<TSaga>(queryRepositoryContextFactory ?? NotImplementedSagaRepositoryContextFactory.Instance);
         _loadSagaRepository = new LoadSagaRepository<TSaga>(loadSagaRepositoryContextFactory ?? NotImplementedSagaRepositoryContextFactory.Instance);
     }
 
-    public Task<TSaga> Load(Guid correlationId)
+    public Task<TSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
-        return _loadSagaRepository.Load(correlationId);
+        return _loadSagaRepository.LoadAsync(correlationId, cancellationToken: cancellationToken);
     }
 
-    public Task<IEnumerable<Guid>> Find(ISagaQuery<TSaga> query)
+    public Task<IEnumerable<Guid>> FindAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken = default)
     {
-        return _querySagaRepository.Find(query);
+        return _querySagaRepository.FindAsync(query, cancellationToken: cancellationToken);
     }
 
     public void Probe(ProbeContext context)
@@ -48,20 +48,20 @@ public class SagaRepository<TSaga> :
         _loadSagaRepository.Probe(scope);
     }
 
-    public Task Send<T>(ConsumeContext<T> context, ISagaPolicy<TSaga, T> policy, IPipe<SagaConsumeContext<TSaga, T>> next)
+    public Task SendAsync<T>(ConsumeContext<T> context, ISagaPolicy<TSaga, T> policy, IPipe<SagaConsumeContext<TSaga, T>> next)
         where T : class
     {
         var correlationId = context.CorrelationId ??
             throw new SagaException("The CorrelationId was not specified", typeof(TSaga), typeof(T));
 
-        return _repositoryContextFactory.Send(context, new SendSagaPipe<TSaga, T>(policy, next, correlationId));
+        return _repositoryContextFactory.SendAsync(context, new SendSagaPipe<TSaga, T>(policy, next, correlationId));
     }
 
-    public Task SendQuery<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, ISagaPolicy<TSaga, T> policy,
+    public Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, ISagaPolicy<TSaga, T> policy,
         IPipe<SagaConsumeContext<TSaga, T>> next)
         where T : class
     {
-        return _repositoryContextFactory.SendQuery(context, query, new SendQuerySagaPipe<TSaga, T>(policy, next));
+        return _repositoryContextFactory.SendQueryAsync(context, query, new SendQuerySagaPipe<TSaga, T>(policy, next));
     }
 
 
@@ -81,20 +81,20 @@ public class SagaRepository<TSaga> :
         {
         }
 
-        public Task<T> Execute<T>(Func<LoadSagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken = default)
+        public Task<T?> ExecuteAsync<T>(Func<LoadSagaRepositoryContext<TSaga>, Task<T?>> asyncMethod, CancellationToken cancellationToken = default)
             where T : class
         {
-            throw new NotSupportedException(LoadErrorMessage);
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<T?>(cancellationToken); throw new NotSupportedException(LoadErrorMessage);
         }
 
         public void Probe(ProbeContext context)
         {
         }
 
-        public Task<T> Execute<T>(Func<QuerySagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken = default)
+        public Task<T> ExecuteAsync<T>(Func<QuerySagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken = default)
             where T : class
         {
-            throw new NotSupportedException(QueryErrorMessage);
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<T>(cancellationToken); throw new NotSupportedException(QueryErrorMessage);
         }
     }
 }

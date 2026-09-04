@@ -33,7 +33,7 @@ public class RabbitMqMessageConsumeTopology<TMessage> :
             specification.Apply(builder);
     }
 
-    public void Bind(Action<IRabbitMqExchangeBindingConfigurator> configure = null)
+    public void Bind(Action<IRabbitMqExchangeBindingConfigurator>? configure = null)
     {
         if (!IsBindableMessageType)
         {

@@ -12,9 +12,9 @@ public class GraphStateMachineVisitor<TSaga> :
     readonly Dictionary<Event, Vertex> _events;
     readonly StateMachine<TSaga> _machine;
     readonly Dictionary<State, Vertex> _states;
-    Edge _currentEdge;
-    Vertex _currentEvent;
-    Vertex _currentState;
+    Edge? _currentEdge;
+    Vertex? _currentEvent;
+    Vertex? _currentState;
 
     public GraphStateMachineVisitor(StateMachine<TSaga> machine)
     {
@@ -131,13 +131,13 @@ public class GraphStateMachineVisitor<TSaga> :
         {
             AddCurrentEdge();
 
-            var previousEvent = _currentEvent;
+            var previousEvent = CurrentEvent;
 
             var eventType = typeof(MessageEvent<>).MakeGenericType(compensateType);
-            var evt = (Event)Activator.CreateInstance(eventType, compensateType.Name);
+            var evt = (Event)(Activator.CreateInstance(eventType, compensateType.Name) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
             _currentEvent = GetEventVertex(evt);
 
-            _edges.Add(new Edge(previousEvent, _currentEvent, _currentEvent.Title));
+            _edges.Add(new Edge(previousEvent, CurrentEvent, CurrentEvent.Title));
 
             next(activity);
 
@@ -150,10 +150,10 @@ public class GraphStateMachineVisitor<TSaga> :
 
     void AddCurrentEdge()
     {
-        if (_currentEvent.IsComposite || _currentEdge != null)
+        if (CurrentEvent.IsComposite || _currentEdge != null)
             return;
 
-        _currentEdge = new Edge(_currentState, _currentEvent, _currentEvent.Title);
+        _currentEdge = new Edge(CurrentState, CurrentEvent, CurrentEvent.Title);
         _edges.Add(_currentEdge);
     }
 
@@ -163,7 +163,7 @@ public class GraphStateMachineVisitor<TSaga> :
 
         var targetState = GetStateVertex(transitionActivity.ToState);
 
-        _edges.Add(new Edge(_currentEvent, targetState, _currentEvent.Title));
+        _edges.Add(new Edge(CurrentEvent, targetState, CurrentEvent.Title));
     }
 
     void InspectCompositeEventActivity(CompositeEventActivity<TSaga> compositeActivity)
@@ -172,7 +172,7 @@ public class GraphStateMachineVisitor<TSaga> :
 
         var compositeEvent = GetEventVertex(compositeActivity.Event);
 
-        _edges.Add(new Edge(_currentEvent, compositeEvent, compositeEvent.Title));
+        _edges.Add(new Edge(CurrentEvent, compositeEvent, compositeEvent.Title));
     }
 
     Vertex GetStateVertex(State state)
@@ -196,6 +196,12 @@ public class GraphStateMachineVisitor<TSaga> :
 
         return vertex;
     }
+
+    Vertex CurrentEvent => _currentEvent
+        ?? throw new InvalidOperationException("A state-machine event must be visited before its activities.");
+
+    Vertex CurrentState => _currentState
+        ?? throw new InvalidOperationException("A state-machine state must be visited before its events.");
 
     static Vertex CreateStateVertex(State state)
     {

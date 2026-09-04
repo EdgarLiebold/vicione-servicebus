@@ -8,21 +8,21 @@ public class ConsumeObservable :
     Connectable<IConsumeObserver>,
     IConsumeObserver
 {
-    public Task PreConsume<T>(ConsumeContext<T> context)
+    public Task PreConsumeAsync<T>(ConsumeContext<T> context)
         where T : class
     {
-        return ForEachAsync(x => x.PreConsume(context));
+        return ForEachAsync(x => x.PreConsumeAsync(context));
     }
 
-    public Task PostConsume<T>(ConsumeContext<T> context)
+    public Task PostConsumeAsync<T>(ConsumeContext<T> context)
         where T : class
     {
-        return ForEachAsync(x => x.PostConsume(context));
+        return ForEachAsync(x => x.PostConsumeAsync(context));
     }
 
-    public Task ConsumeFault<T>(ConsumeContext<T> context, Exception exception)
+    public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, Exception exception)
         where T : class
     {
-        return ForEachAsync(x => x.ConsumeFault(context, exception));
+        return ForEachAsync(x => x.ConsumeFaultAsync(context, exception));
     }
 }

@@ -25,12 +25,12 @@ public class DataConverterActivity<TSaga, TMessage> :
         _activity.Probe(context);
     }
 
-    public Task Execute(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
         throw new SagaStateMachineException("This activity requires a body with the event, but no body was specified.");
     }
 
-    public Task Execute<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+    public Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
         if (context is not BehaviorContext<TSaga, TMessage> dataContext)
@@ -39,16 +39,16 @@ public class DataConverterActivity<TSaga, TMessage> :
         if (next is not IBehavior<TSaga, TMessage> dataNext)
             throw new SagaStateMachineException("The next behavior was not a valid type");
 
-        return _activity.Execute(dataContext, dataNext);
+        return _activity.ExecuteAsync(dataContext, dataNext);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
+    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception
     {
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 
-    public Task Faulted<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
+    public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
         where T : class
         where TException : Exception
     {
@@ -58,6 +58,6 @@ public class DataConverterActivity<TSaga, TMessage> :
         if (next is not IBehavior<TSaga, TMessage> dataNext)
             throw new SagaStateMachineException("The next behavior was not a valid type");
 
-        return _activity.Faulted(dataContext, dataNext);
+        return _activity.FaultedAsync(dataContext, dataNext);
     }
 }

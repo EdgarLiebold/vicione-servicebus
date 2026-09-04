@@ -6,27 +6,27 @@ internal static class SqlServerTransportInspection
 {
     internal sealed record ScheduledDelivery(DateTime EnqueueTimeUtc, DateTime DatabaseNowUtc);
 
-    public static async Task OpenWithin(
+    public static async Task OpenWithinAsync(
         this SqlConnection connection,
         TimeSpan timeout,
         CancellationToken cancellationToken) =>
         await connection.OpenAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
 
-    public static Task<long> Scalar(
+    public static Task<long> ScalarAsync(
         this SqlConnection connection,
         string text,
         CancellationToken cancellationToken,
         params (string Name, object Value)[] parameters) =>
-        ScalarCore(connection, text, cancellationToken, parameters);
+        ScalarCoreAsync(connection, text, cancellationToken, parameters);
 
-    public static Task<int> Execute(
+    public static Task<int> ExecuteAsync(
         this SqlConnection connection,
         string text,
         CancellationToken cancellationToken,
         params (string Name, object Value)[] parameters) =>
-        ExecuteCore(connection, text, cancellationToken, parameters);
+        ExecuteCoreAsync(connection, text, cancellationToken, parameters);
 
-    public static async Task<IReadOnlyList<string>> Strings(
+    public static async Task<IReadOnlyList<string>> StringsAsync(
         this SqlConnection connection,
         string text,
         CancellationToken cancellationToken,
@@ -40,53 +40,53 @@ internal static class SqlServerTransportInspection
         return values.OrderBy(value => value, StringComparer.Ordinal).ToArray();
     }
 
-    public static Task<IReadOnlyList<string>> SchemaTables(
+    public static Task<IReadOnlyList<string>> SchemaTablesAsync(
         this SqlConnection connection,
         string schema,
         CancellationToken cancellationToken) =>
-        connection.Strings(
+        connection.StringsAsync(
             "SELECT table_name FROM information_schema.tables WHERE table_schema = @schema AND table_type = 'BASE TABLE'",
             cancellationToken,
             ("schema", schema));
 
-    public static Task<IReadOnlyList<string>> SchemaIndices(
+    public static Task<IReadOnlyList<string>> SchemaIndicesAsync(
         this SqlConnection connection,
         string schema,
         CancellationToken cancellationToken) =>
-        connection.Strings(
+        connection.StringsAsync(
             "SELECT i.name FROM sys.indexes i JOIN sys.tables t ON t.object_id = i.object_id "
             + "JOIN sys.schemas s ON s.schema_id = t.schema_id WHERE s.name = @schema AND i.name IS NOT NULL",
             cancellationToken,
             ("schema", schema));
 
-    public static async Task<bool> DatabaseExists(
+    public static async Task<bool> DatabaseExistsAsync(
         this SqlConnection connection,
         string database,
         CancellationToken cancellationToken) =>
-        await connection.Scalar(
+        await connection.ScalarAsync(
             "SELECT COUNT(*) FROM sys.databases WHERE name = @database",
             cancellationToken,
             ("database", database)) > 0;
 
-    public static async Task<bool> QueueExists(
+    public static async Task<bool> QueueExistsAsync(
         this SqlConnection connection,
         string schema,
         string queue,
         int type,
         CancellationToken cancellationToken) =>
-        await connection.Scalar(
+        await connection.ScalarAsync(
             $"SELECT COUNT(*) FROM [{schema}].[Queue] WHERE Name = @queue AND Type = @type",
             cancellationToken,
             ("queue", queue),
             ("type", type)) > 0;
 
-    public static Task<long> DeliveryCount(
+    public static Task<long> DeliveryCountAsync(
         this SqlConnection connection,
         string schema,
         string queue,
         int queueType,
         CancellationToken cancellationToken) =>
-        connection.Scalar(
+        connection.ScalarAsync(
             $"SELECT COUNT(*) FROM [{schema}].[MessageDelivery] d "
             + $"JOIN [{schema}].[Queue] q ON q.Id = d.QueueId "
             + "WHERE q.Name = @queue AND q.Type = @type",
@@ -94,29 +94,29 @@ internal static class SqlServerTransportInspection
             ("queue", queue),
             ("type", queueType));
 
-    public static Task<long> MessageCount(
+    public static Task<long> MessageCountAsync(
         this SqlConnection connection,
         string schema,
         Guid messageId,
         CancellationToken cancellationToken) =>
-        connection.Scalar(
+        connection.ScalarAsync(
             $"SELECT COUNT(*) FROM [{schema}].[Message] WHERE MessageId = @messageId",
             cancellationToken,
             ("messageId", messageId));
 
-    public static Task<long> DeliveryCountForMessage(
+    public static Task<long> DeliveryCountForMessageAsync(
         this SqlConnection connection,
         string schema,
         Guid messageId,
         CancellationToken cancellationToken) =>
-        connection.Scalar(
+        connection.ScalarAsync(
             $"SELECT COUNT(*) FROM [{schema}].[MessageDelivery] d "
             + $"JOIN [{schema}].[Message] m ON m.TransportMessageId = d.TransportMessageId "
             + "WHERE m.MessageId = @messageId",
             cancellationToken,
             ("messageId", messageId));
 
-    public static async Task<string?> TransportHeadersForMessage(
+    public static async Task<string?> TransportHeadersForMessageAsync(
         this SqlConnection connection,
         string schema,
         Guid messageId,
@@ -131,19 +131,19 @@ internal static class SqlServerTransportInspection
         return value is null or DBNull ? null : Convert.ToString(value);
     }
 
-    public static Task<long> DeliveryAttemptForMessage(
+    public static Task<long> DeliveryAttemptForMessageAsync(
         this SqlConnection connection,
         string schema,
         Guid messageId,
         CancellationToken cancellationToken) =>
-        connection.Scalar(
+        connection.ScalarAsync(
             $"SELECT d.DeliveryCount FROM [{schema}].[MessageDelivery] d "
             + $"JOIN [{schema}].[Message] m ON m.TransportMessageId = d.TransportMessageId "
             + "WHERE m.MessageId = @messageId",
             cancellationToken,
             ("messageId", messageId));
 
-    public static async Task<ScheduledDelivery> ScheduledDeliveryForMessage(
+    public static async Task<ScheduledDelivery> ScheduledDeliveryForMessageAsync(
         this SqlConnection connection,
         string schema,
         Guid messageId,
@@ -165,7 +165,7 @@ internal static class SqlServerTransportInspection
         return result;
     }
 
-    private static async Task<long> ScalarCore(
+    private static async Task<long> ScalarCoreAsync(
         SqlConnection connection,
         string text,
         CancellationToken cancellationToken,
@@ -176,7 +176,7 @@ internal static class SqlServerTransportInspection
         return Convert.ToInt64(value);
     }
 
-    private static async Task<int> ExecuteCore(
+    private static async Task<int> ExecuteCoreAsync(
         SqlConnection connection,
         string text,
         CancellationToken cancellationToken,

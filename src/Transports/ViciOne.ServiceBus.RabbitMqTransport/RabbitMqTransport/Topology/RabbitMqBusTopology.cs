@@ -34,7 +34,7 @@ public class RabbitMqBusTopology :
         return _configuration.Send.GetMessageTopology<T>();
     }
 
-    public Uri GetDestinationAddress(string exchangeName, Action<IRabbitMqExchangeConfigurator> configure = null)
+    public Uri GetDestinationAddress(string exchangeName, Action<IRabbitMqExchangeConfigurator>? configure = null)
     {
         var hostAddress = _hostConfiguration.HostAddress;
         var address = new RabbitMqEndpointAddress(hostAddress, exchangeName);
@@ -46,7 +46,7 @@ public class RabbitMqBusTopology :
         return sendSettings.GetSendAddress(hostAddress);
     }
 
-    public Uri GetDestinationAddress(Type messageType, Action<IRabbitMqExchangeConfigurator> configure = null)
+    public Uri GetDestinationAddress(Type messageType, Action<IRabbitMqExchangeConfigurator>? configure = null)
     {
         var hostAddress = _hostConfiguration.HostAddress;
         var exchangeName = _messageNameFormatter.GetMessageName(messageType).ToString();

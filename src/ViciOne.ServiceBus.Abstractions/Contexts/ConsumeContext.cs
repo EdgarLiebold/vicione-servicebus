@@ -9,6 +9,7 @@ public interface ConsumeContext :
     PipeContext,
     MessageContext,
     IPublishEndpoint,
+    Advanced.IAdvancedPublishEndpoint,
     ISendEndpointProvider
 {
     /// <summary>
@@ -159,7 +160,7 @@ public interface ConsumeContext :
     /// </summary>
     /// <typeparam name="T">The type of the message to respond with.</typeparam>
     /// <param name="message">The message to send in response</param>
-    void Respond<T>(T message)
+    void DeferResponse<T>(T message)
         where T : class;
 
     /// <summary>
@@ -168,7 +169,8 @@ public interface ConsumeContext :
     /// <param name="context"></param>
     /// <param name="duration"></param>
     /// <param name="consumerType">The consumer type</param>
-    Task NotifyConsumed<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task NotifyConsumedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>
@@ -178,29 +180,66 @@ public interface ConsumeContext :
     /// <param name="duration"></param>
     /// <param name="consumerType">The message consumer type</param>
     /// <param name="exception">The exception that occurred</param>
-    Task NotifyFaulted<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task NotifyFaultedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
         where T : class;
 }
 
 
 public interface ConsumeContext<out T> :
-    ConsumeContext
+    PipeContext,
+    MessageContext
     where T : class
 {
+    /// <summary>Gets the consumed message.</summary>
     T Message { get; }
 
-    /// <summary>
-    /// Notify that the message has been consumed -- note that this is internal, and should not be called by a consumer
-    /// </summary>
-    /// <param name="duration"></param>
-    /// <param name="consumerType">The consumer type</param>
-    Task NotifyConsumed(TimeSpan duration, string consumerType);
+    /// <summary>Gets the application-facing outgoing-message operations bound to this consume scope.</summary>
+    IOutgoingMessages Outgoing
+    {
+        get
+        {
+            return new ConsumeContextOutgoingMessages(
+                this as ConsumeContext
+                    ?? throw new NotSupportedException($"The consume context '{GetType().FullName}' does not expose advanced operations."));
+        }
+    }
 
-    /// <summary>
-    /// Notify that a fault occurred during message consumption -- note that this is internal, and should not be called by a consumer
-    /// </summary>
-    /// <param name="duration"></param>
-    /// <param name="consumerType"></param>
-    /// <param name="exception"></param>
-    Task NotifyFaulted(TimeSpan duration, string consumerType, Exception exception);
+    /// <summary>Responds to the consumed message.</summary>
+    Task RespondAsync<TResponse>(TResponse response)
+        where TResponse : class
+    {
+        return (this as ConsumeContext
+                ?? throw new NotSupportedException($"The consume context '{GetType().FullName}' does not expose response operations."))
+            .RespondAsync(response);
+    }
+
+    /// <summary>Responds to the consumed message with application-level send options.</summary>
+    Task RespondAsync<TResponse>(TResponse response, SendOptions options)
+        where TResponse : class
+    {
+        ArgumentNullException.ThrowIfNull(options);
+
+        return (this as ConsumeContext
+                ?? throw new NotSupportedException($"The consume context '{GetType().FullName}' does not expose response operations."))
+            .RespondAsync(response, new Context.SendOptionsPipe<TResponse>(options));
+    }
+
+    /// <summary>Defers a response until the consumer has completed successfully.</summary>
+    void DeferResponse<TResponse>(TResponse response)
+        where TResponse : class
+    {
+        (this as ConsumeContext
+             ?? throw new NotSupportedException($"The consume context '{GetType().FullName}' does not expose deferred response operations."))
+            .DeferResponse(response);
+    }
+
+    /// <summary>Tries to expose another supported message type from the same envelope.</summary>
+    bool TryGetMessage<TOther>([NotNullWhen(true)] out ConsumeContext<TOther>? context)
+        where TOther : class
+    {
+        return (this as ConsumeContext
+                ?? throw new NotSupportedException($"The consume context '{GetType().FullName}' does not expose message conversion operations."))
+            .TryGetMessage(out context);
+    }
 }

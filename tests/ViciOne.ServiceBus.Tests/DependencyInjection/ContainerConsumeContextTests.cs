@@ -13,7 +13,7 @@ public sealed class ContainerConsumeContextTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-CONTEXT", "message-context-is-the-scoped-endpoint-provider")]
-    public async Task ScopedConsumer_ReceivesTheExactMessageOwnedEndpointContext()
+    public async Task ScopedConsumer_ReceivesTheExactMessageOwnedEndpointContextAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -30,12 +30,12 @@ public sealed class ContainerConsumeContextTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             var message = new ContextCommand(NewId.NextGuid());
-            await harness.Bus.Publish(message, cancellationToken);
+            await harness.Bus.PublishAsync(message, cancellationToken);
             ContextSnapshot snapshot = await observation.Captured.Task.WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(message.CorrelationId, snapshot.CorrelationId);
@@ -45,7 +45,7 @@ public sealed class ContainerConsumeContextTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -59,13 +59,13 @@ public sealed class ContainerConsumeContextTests
     [InlineData(OutboxShape.DirectWithRegistrationContext)]
     [InlineData(OutboxShape.DirectWithoutRegistrationContext)]
     [RequirementCoverage("REQ-VSB-CONTAINER-OUTBOX-CONTEXT", "dependency-batch-and-direct-injection-matrix")]
-    public async Task FaultedConsumer_UsesTheExactOutboxContextAndDiscardsEverySideEffect(OutboxShape shape)
+    public async Task FaultedConsumer_UsesTheExactOutboxContextAndDiscardsEverySideEffectAsync(OutboxShape shape)
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var observation = new ContextObservation();
         await using ServiceProvider provider = BuildOutboxProvider(shape, observation, timeout);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         bool started = true;
 
         try
@@ -76,16 +76,15 @@ public sealed class ContainerConsumeContextTests
                 ContextCommand[] batch = Enumerable.Range(0, 4)
                     .Select(index => index == 0 ? message : new ContextCommand(NewId.NextGuid()))
                     .ToArray();
-                await harness.Bus.PublishBatch(batch, cancellationToken);
+                await harness.Bus.PublishBatchAsync(batch, cancellationToken);
             }
             else
-                await harness.Bus.Publish(message, cancellationToken);
+                await harness.Bus.PublishAsync(message, cancellationToken);
 
             ContextSnapshot snapshot = await observation.Captured.Task.WaitAsync(timeout, cancellationToken);
             IPublishedMessage<Fault<ContextCommand>> terminalFault = await harness.Published
                 .SelectAsync<Fault<ContextCommand>>(cancellationToken)
-                .First()
-                .WaitAsync(timeout, cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
             Assert.Contains(
                 terminalFault.Context.Message.Exceptions,
                 exception => exception.ExceptionType == TypeCache<ExpectedContextFailure>.ShortName);
@@ -102,7 +101,7 @@ public sealed class ContainerConsumeContextTests
                 Assert.Equal(0, observation.UnitOfWorkUses);
             }
 
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
             started = false;
 
             Assert.Same(snapshot.ConsumeContext, snapshot.PublishEndpoint);
@@ -115,7 +114,7 @@ public sealed class ContainerConsumeContextTests
         finally
         {
             if (started)
-                await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+                await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -264,7 +263,7 @@ public sealed class ContainerConsumeContextTests
         ISendEndpointProvider sendEndpointProvider,
         ContextObservation observation) : IConsumer<ContextCommand>
     {
-        public Task Consume(ConsumeContext<ContextCommand> context)
+        public Task ConsumeAsync(ConsumeContext<ContextCommand> context)
         {
             observation.Captured.TrySetResult(new ContextSnapshot(
                 context.Message.CorrelationId,
@@ -283,19 +282,19 @@ public sealed class ContainerConsumeContextTests
         ScopedContextCapture capture,
         IPublishEndpoint publishEndpoint)
     {
-        public async Task Execute(Guid correlationId, int batchLength = 0)
+        public async Task ExecuteAsync(Guid correlationId, int batchLength = 0)
         {
             capture.Record(correlationId, batchLength);
-            await publishEndpoint.Publish(new DeferredSideEffect(correlationId));
+            await publishEndpoint.PublishAsync(new DeferredSideEffect(correlationId));
         }
     }
 
     public sealed class FaultingDependencyContextConsumer(OutboxPublishingDependency dependency) :
         IConsumer<ContextCommand>
     {
-        public async Task Consume(ConsumeContext<ContextCommand> context)
+        public async Task ConsumeAsync(ConsumeContext<ContextCommand> context)
         {
-            await dependency.Execute(context.Message.CorrelationId);
+            await dependency.ExecuteAsync(context.Message.CorrelationId);
             throw new ExpectedContextFailure();
         }
     }
@@ -306,7 +305,7 @@ public sealed class ContainerConsumeContextTests
         ISendEndpointProvider sendEndpointProvider,
         ContextObservation observation) : IConsumer<ContextCommand>
     {
-        public async Task Consume(ConsumeContext<ContextCommand> context)
+        public async Task ConsumeAsync(ConsumeContext<ContextCommand> context)
         {
             observation.Captured.TrySetResult(new ContextSnapshot(
                 context.Message.CorrelationId,
@@ -317,7 +316,7 @@ public sealed class ContainerConsumeContextTests
                 consumeContext.TryGetPayload(out InMemoryOutboxConsumeContext<ContextCommand>? _),
                 false,
                 0));
-            await publishEndpoint.Publish(new DeferredSideEffect(context.Message.CorrelationId));
+            await publishEndpoint.PublishAsync(new DeferredSideEffect(context.Message.CorrelationId));
             throw new ExpectedContextFailure();
         }
     }
@@ -325,17 +324,17 @@ public sealed class ContainerConsumeContextTests
     public sealed class FaultingBatchContextConsumer(OutboxPublishingDependency dependency) :
         IConsumer<Batch<ContextCommand>>
     {
-        public async Task Consume(ConsumeContext<Batch<ContextCommand>> context)
+        public async Task ConsumeAsync(ConsumeContext<Batch<ContextCommand>> context)
         {
             Guid correlationId = context.Message[0].Message.CorrelationId;
-            await dependency.Execute(correlationId, context.Message.Length);
+            await dependency.ExecuteAsync(correlationId, context.Message.Length);
             throw new ExpectedContextFailure();
         }
     }
 
     public sealed class SideEffectConsumer(ContextObservation observation) : IConsumer<DeferredSideEffect>
     {
-        public Task Consume(ConsumeContext<DeferredSideEffect> context)
+        public Task ConsumeAsync(ConsumeContext<DeferredSideEffect> context)
         {
             observation.SideEffectDelivered();
             return Task.CompletedTask;
@@ -366,12 +365,12 @@ public sealed class ContainerConsumeContextTests
     public sealed class OutboxUnitOfWorkFilter<TConsumer> : IFilter<ConsumerConsumeContext<TConsumer>>
         where TConsumer : class
     {
-        public Task Send(
+        public Task SendAsync(
             ConsumerConsumeContext<TConsumer> context,
             IPipe<ConsumerConsumeContext<TConsumer>> next)
         {
             context.GetPayload<IServiceProvider>().GetRequiredService<OutboxUnitOfWork>().Use();
-            return next.Send(context);
+            return next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("outboxUnitOfWork");

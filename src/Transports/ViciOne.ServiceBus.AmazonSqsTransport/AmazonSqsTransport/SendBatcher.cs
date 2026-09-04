@@ -33,7 +33,7 @@ public class SendBatcher :
                 .Sum(x => encoding.GetByteCount(x.Key) + encoding.GetByteCount(x.Value.StringValue))).GetValueOrDefault();
     }
 
-    protected override async Task SendBatch(IList<BatchEntry<SendMessageBatchRequestEntry>> batch)
+    protected override async Task SendBatchAsync(IList<BatchEntry<SendMessageBatchRequestEntry>> batch)
     {
         var batchRequest = new SendMessageBatchRequest(_queueUrl, batch.Select(x => x.Entry).ToList());
 

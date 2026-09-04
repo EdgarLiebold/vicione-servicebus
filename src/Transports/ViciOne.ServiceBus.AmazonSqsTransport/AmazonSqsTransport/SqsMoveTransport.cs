@@ -23,13 +23,13 @@ public class SqsMoveTransport<TSettings>
         _isFifo = AmazonSqsEndpointAddress.IsFifo(destination);
     }
 
-    protected async Task Move(ReceiveContext context, Action<SendMessageBatchRequestEntry, IDictionary<string, MessageAttributeValue>> preSend)
+    protected async Task MoveAsync(ReceiveContext context, Action<SendMessageBatchRequestEntry, IDictionary<string, MessageAttributeValue>> preSend)
     {
         if (!context.TryGetPayload(out ClientContext? clientContext))
             throw new ArgumentException("The ReceiveContext must contain a ClientContext (from Amazon SQS)", nameof(context));
 
         OneTimeContext<ConfigureTopologyContext<TSettings>> oneTimeContext =
-            await _topologyFilter.Configure(clientContext, context.CancellationToken).ConfigureAwait(false);
+            await _topologyFilter.ConfigureAsync(clientContext, context.CancellationToken).ConfigureAwait(false);
 
         var message = new SendMessageBatchRequestEntry("", context.Body.GetString()) { MessageAttributes = new Dictionary<string, MessageAttributeValue>() };
 
@@ -56,7 +56,7 @@ public class SqsMoveTransport<TSettings>
 
         try
         {
-            await clientContext.SendMessage(_destination, message, context.CancellationToken).ConfigureAwait(false);
+            await clientContext.SendMessageAsync(_destination, message, context.CancellationToken).ConfigureAwait(false);
         }
         catch (Exception)
         {

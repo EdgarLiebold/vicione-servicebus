@@ -28,7 +28,7 @@ public interface IRabbitMqExchangeConfigurator
     /// </summary>
     /// <param name="key">The argument key</param>
     /// <param name="value">The argument value</param>
-    void SetExchangeArgument(string key, object value);
+    void SetExchangeArgument(string key, object? value);
 
     /// <summary>
     /// Set the exchange argument to the TimeSpan (which is converted to milliseconds)

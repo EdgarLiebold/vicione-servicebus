@@ -17,8 +17,7 @@ public class AssemblyScanner :
 
     public int Count => _assemblies.Count;
 
-    public string Description { get; set; }
-
+    public string Description { get; set; } = null!;
     public void Assembly(Assembly assembly)
     {
         if (!_assemblies.Contains(assembly))
@@ -46,7 +45,7 @@ public class AssemblyScanner :
         _filter.Excludes += exclude;
     }
 
-    public void ExcludeNamespace(string nameSpace)
+    public void ExcludeNamespace(string? nameSpace)
     {
         Exclude(type => type.IsInNamespace(nameSpace));
     }
@@ -61,7 +60,7 @@ public class AssemblyScanner :
         _filter.Includes += predicate;
     }
 
-    public void IncludeNamespace(string nameSpace)
+    public void IncludeNamespace(string? nameSpace)
     {
         Include(type => type.IsInNamespace(nameSpace));
     }
@@ -169,7 +168,7 @@ public class AssemblyScanner :
     public bool Contains(string assemblyName)
     {
         return _assemblies
-            .Select(assembly => new AssemblyName(assembly.FullName))
+            .Select(assembly => assembly.GetName())
             .Any(aName => aName.Name == assemblyName);
     }
 
@@ -178,17 +177,17 @@ public class AssemblyScanner :
         return _assemblies.Any();
     }
 
-    static Assembly FindTheCallingAssembly()
+    static Assembly? FindTheCallingAssembly()
     {
         var trace = new StackTrace(false);
         var thisAssembly = System.Reflection.Assembly.GetExecutingAssembly();
         var viciOneServiceBusAssembly = typeof(IBus).Assembly;
 
-        Assembly callingAssembly = null;
+        Assembly? callingAssembly = null;
         for (var i = 0; i < trace.FrameCount; i++)
         {
             var frame = trace.GetFrame(i);
-            var declaringType = frame.GetMethod().DeclaringType;
+            var declaringType = frame?.GetMethod()?.DeclaringType;
             if (declaringType != null)
             {
                 var assembly = declaringType.Assembly;

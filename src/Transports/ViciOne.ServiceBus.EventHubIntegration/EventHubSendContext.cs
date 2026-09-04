@@ -4,7 +4,7 @@ public interface EventHubSendContext :
     SendContext,
     PartitionKeySendContext
 {
-    string PartitionId { get; set; }
+    string? PartitionId { get; set; }
 }
 
 

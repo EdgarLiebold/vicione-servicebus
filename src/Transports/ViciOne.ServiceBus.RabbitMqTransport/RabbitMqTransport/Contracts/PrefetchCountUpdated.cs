@@ -10,7 +10,7 @@ public interface PrefetchCountUpdated
     /// <summary>
     /// The time the prefetch count was updated
     /// </summary>
-    DateTime Timestamp { get; }
+    DateTimeOffset Timestamp { get; }
 
     /// <summary>
     /// The name of the queue that was updated

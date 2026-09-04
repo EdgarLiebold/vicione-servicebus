@@ -74,7 +74,7 @@ public class Supervisor :
     }
 
     /// <inheritdoc />
-    protected override Task StopAgent(StopContext context)
+    protected override Task StopAgentAsync(StopContext context)
     {
         IAgent[] agents;
         lock (_agents)
@@ -84,10 +84,10 @@ public class Supervisor :
                 : _agents.Values.Where(x => !x.Completed.IsCompleted).ToArray();
         }
 
-        return StopSupervisor(new Context(context, agents));
+        return StopSupervisorAsync(new Context(context, agents));
     }
 
-    protected virtual async Task StopSupervisor(StopSupervisorContext context)
+    protected virtual async Task StopSupervisorAsync(StopSupervisorContext context)
     {
         switch (context.Agents.Length)
         {
@@ -97,7 +97,7 @@ public class Supervisor :
             case 1:
                 SetCompleted(context.Agents[0].Completed);
 
-                await context.Agents[0].Stop(context).OrCanceled(context.CancellationToken).ConfigureAwait(false);
+                await context.Agents[0].StopAsync(context).OrCanceledAsync(context.CancellationToken).ConfigureAwait(false);
                 break;
             case > 1:
                 {
@@ -109,14 +109,14 @@ public class Supervisor :
 
                     var stopTasks = new Task[context.Agents.Length];
                     for (var i = 0; i < context.Agents.Length; i++)
-                        stopTasks[i] = context.Agents[i].Stop(context);
+                        stopTasks[i] = context.Agents[i].StopAsync(context);
 
-                    await Task.WhenAll(stopTasks).OrCanceled(context.CancellationToken).ConfigureAwait(false);
+                    await Task.WhenAll(stopTasks).OrCanceledAsync(context.CancellationToken).ConfigureAwait(false);
                     break;
                 }
         }
 
-        await Completed.OrCanceled(context.CancellationToken).ConfigureAwait(false);
+        await Completed.OrCanceledAsync(context.CancellationToken).ConfigureAwait(false);
     }
 
     void Remove(long id)

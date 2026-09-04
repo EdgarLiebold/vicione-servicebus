@@ -9,7 +9,7 @@ public sealed class StateMachineCompositeEventTests
     [InlineData(StateMachineConstructionStyle.Declarative)]
     [InlineData(StateMachineConstructionStyle.Dynamic)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-COMPOSITE", "constituent-status-truth-table")]
-    public async Task CompositeEvent_RequiresEveryConstituentAndTracksTheExactStatus(
+    public async Task CompositeEvent_RequiresEveryConstituentAndTracksTheExactStatusAsync(
         StateMachineConstructionStyle style)
     {
         CompositeScenario scenario = CreatePlainScenario(style);
@@ -17,91 +17,91 @@ public sealed class StateMachineCompositeEventTests
         var secondOnly = new CompositeInstance();
         var complete = new CompositeInstance();
 
-        await Start(scenario, firstOnly);
-        await StateMachineTestExecution.Raise(scenario.Machine, firstOnly, scenario.First);
-        await Start(scenario, secondOnly);
-        await StateMachineTestExecution.Raise(scenario.Machine, secondOnly, scenario.Second);
-        await Start(scenario, complete);
-        await StateMachineTestExecution.Raise(scenario.Machine, complete, scenario.First);
-        await StateMachineTestExecution.Raise(scenario.Machine, complete, scenario.Second);
+        await StartAsync(scenario, firstOnly);
+        await StateMachineTestExecution.RaiseAsync(scenario.Machine, firstOnly, scenario.First);
+        await StartAsync(scenario, secondOnly);
+        await StateMachineTestExecution.RaiseAsync(scenario.Machine, secondOnly, scenario.Second);
+        await StartAsync(scenario, complete);
+        await StateMachineTestExecution.RaiseAsync(scenario.Machine, complete, scenario.First);
+        await StateMachineTestExecution.RaiseAsync(scenario.Machine, complete, scenario.Second);
 
         Assert.Equal(1, firstOnly.Status.Bits);
         Assert.Equal(["first"], firstOnly.Markers);
         Assert.Equal(0, firstOnly.CompositeCount);
-        Assert.Same(scenario.Waiting, await StateMachineTestExecution.GetState(scenario.Machine, firstOnly));
+        Assert.Same(scenario.Waiting, await StateMachineTestExecution.GetStateAsync(scenario.Machine, firstOnly));
 
         Assert.Equal(2, secondOnly.Status.Bits);
         Assert.Equal(["second"], secondOnly.Markers);
         Assert.Equal(0, secondOnly.CompositeCount);
-        Assert.Same(scenario.Waiting, await StateMachineTestExecution.GetState(scenario.Machine, secondOnly));
+        Assert.Same(scenario.Waiting, await StateMachineTestExecution.GetStateAsync(scenario.Machine, secondOnly));
 
         Assert.Equal(3, complete.Status.Bits);
         Assert.Equal(["composite", "first", "second"], complete.Markers.Order().ToArray());
         Assert.Equal(1, complete.CompositeCount);
-        Assert.Same(scenario.Machine.Final, await StateMachineTestExecution.GetState(scenario.Machine, complete));
+        Assert.Same(scenario.Machine.Final, await StateMachineTestExecution.GetStateAsync(scenario.Machine, complete));
     }
 
     [Theory]
     [InlineData(StateMachineConstructionStyle.Declarative)]
     [InlineData(StateMachineConstructionStyle.Dynamic)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-COMPOSITE", "constituent-order-and-condition")]
-    public async Task CompositeEvent_RunsAfterConstituentActivitiesAndAppliesTheOrderCondition(
+    public async Task CompositeEvent_RunsAfterConstituentActivitiesAndAppliesTheOrderConditionAsync(
         StateMachineConstructionStyle style)
     {
         CompositeScenario scenario = CreateOrderedScenario(style);
         var secondFirst = new CompositeInstance();
         var firstFirst = new CompositeInstance();
 
-        await Start(scenario, secondFirst);
-        await StateMachineTestExecution.Raise(scenario.Machine, secondFirst, scenario.Second);
-        await StateMachineTestExecution.Raise(scenario.Machine, secondFirst, scenario.First);
+        await StartAsync(scenario, secondFirst);
+        await StateMachineTestExecution.RaiseAsync(scenario.Machine, secondFirst, scenario.Second);
+        await StateMachineTestExecution.RaiseAsync(scenario.Machine, secondFirst, scenario.First);
 
-        await Start(scenario, firstFirst);
-        await StateMachineTestExecution.Raise(scenario.Machine, firstFirst, scenario.First);
-        await StateMachineTestExecution.Raise(scenario.Machine, firstFirst, scenario.Second);
+        await StartAsync(scenario, firstFirst);
+        await StateMachineTestExecution.RaiseAsync(scenario.Machine, firstFirst, scenario.First);
+        await StateMachineTestExecution.RaiseAsync(scenario.Machine, firstFirst, scenario.Second);
 
         Assert.Equal(["second", "first", "composite"], secondFirst.Markers);
         Assert.True(secondFirst.SecondWasFirst);
         Assert.Equal(1, secondFirst.CompositeCount);
-        Assert.Same(scenario.Machine.Final, await StateMachineTestExecution.GetState(scenario.Machine, secondFirst));
+        Assert.Same(scenario.Machine.Final, await StateMachineTestExecution.GetStateAsync(scenario.Machine, secondFirst));
 
         Assert.Equal(["first", "second"], firstFirst.Markers);
         Assert.False(firstFirst.SecondWasFirst);
         Assert.Equal(0, firstFirst.CompositeCount);
         Assert.Equal(3, firstFirst.Status.Bits);
-        Assert.Same(scenario.Waiting, await StateMachineTestExecution.GetState(scenario.Machine, firstFirst));
+        Assert.Same(scenario.Waiting, await StateMachineTestExecution.GetStateAsync(scenario.Machine, firstFirst));
     }
 
     [Theory]
     [InlineData(CompositeEventOptions.RaiseOnce, 1)]
     [InlineData(CompositeEventOptions.None, 2)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-COMPOSITE", "duplicate-option-exact-count")]
-    public async Task CompositeEvent_DuplicateHandlingMatchesTheConfiguredOption(
+    public async Task CompositeEvent_DuplicateHandlingMatchesTheConfiguredOptionAsync(
         CompositeEventOptions options,
         int expectedCount)
     {
         DuplicateScenario scenario = CreateDuplicateScenario(options);
         var instance = new IntCompositeInstance();
 
-        await StateMachineTestExecution.Raise(scenario.Machine, instance, scenario.Start);
-        await StateMachineTestExecution.Raise(scenario.Machine, instance, scenario.First);
+        await StateMachineTestExecution.RaiseAsync(scenario.Machine, instance, scenario.Start);
+        await StateMachineTestExecution.RaiseAsync(scenario.Machine, instance, scenario.First);
 
         Assert.Equal(1, instance.CompositeStatus);
         Assert.Equal(0, instance.CompositeCount);
 
-        await StateMachineTestExecution.Raise(scenario.Machine, instance, scenario.Second);
-        await StateMachineTestExecution.Raise(scenario.Machine, instance, scenario.Second);
+        await StateMachineTestExecution.RaiseAsync(scenario.Machine, instance, scenario.Second);
+        await StateMachineTestExecution.RaiseAsync(scenario.Machine, instance, scenario.Second);
 
         Assert.Equal(3, instance.CompositeStatus);
         Assert.Equal(expectedCount, instance.CompositeCount);
-        Assert.Same(scenario.Waiting, await StateMachineTestExecution.GetState(scenario.Machine, instance));
+        Assert.Same(scenario.Waiting, await StateMachineTestExecution.GetStateAsync(scenario.Machine, instance));
     }
 
     [Theory]
     [InlineData(StateMachineConstructionStyle.Declarative)]
     [InlineData(StateMachineConstructionStyle.Dynamic)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-COMPOSITE", "assigned-int-struct-next-event-surface")]
-    public async Task AssignedComposite_ReportsTheExactIntStructAndNextEventSurface(
+    public async Task AssignedComposite_ReportsTheExactIntStructAndNextEventSurfaceAsync(
         StateMachineConstructionStyle style)
     {
         StructAssignedScenario structScenario = CreateStructAssignedScenario(style);
@@ -114,17 +114,17 @@ public sealed class StateMachineCompositeEventTests
         AssertEventSurface(intScenario.Machine, intScenario.Waiting, intScenario.Start,
             intScenario.First, intScenario.Second, intScenario.Third);
 
-        await StateMachineTestExecution.Raise(structScenario.Machine, structInstance, structScenario.Start);
-        await StateMachineTestExecution.Raise(structScenario.Machine, structInstance, structScenario.First);
+        await StateMachineTestExecution.RaiseAsync(structScenario.Machine, structInstance, structScenario.Start);
+        await StateMachineTestExecution.RaiseAsync(structScenario.Machine, structInstance, structScenario.First);
         Assert.Equal(0, structInstance.CompositeCount);
         Assert.Same(structScenario.Waiting, structInstance.CurrentState);
-        await StateMachineTestExecution.Raise(structScenario.Machine, structInstance, structScenario.Second);
+        await StateMachineTestExecution.RaiseAsync(structScenario.Machine, structInstance, structScenario.Second);
 
-        await StateMachineTestExecution.Raise(intScenario.Machine, intInstance, intScenario.Start);
+        await StateMachineTestExecution.RaiseAsync(intScenario.Machine, intInstance, intScenario.Start);
         Assert.Equal(3, intInstance.CurrentState);
-        await StateMachineTestExecution.Raise(intScenario.Machine, intInstance, intScenario.First);
+        await StateMachineTestExecution.RaiseAsync(intScenario.Machine, intInstance, intScenario.First);
         Assert.Equal(0, intInstance.CompositeCount);
-        await StateMachineTestExecution.Raise(intScenario.Machine, intInstance, intScenario.Second);
+        await StateMachineTestExecution.RaiseAsync(intScenario.Machine, intInstance, intScenario.Second);
 
         Assert.Equal(1, structInstance.CompositeCount);
         Assert.Same(structScenario.Machine.Final, structInstance.CurrentState);
@@ -143,29 +143,29 @@ public sealed class StateMachineCompositeEventTests
     [InlineData(StateMachineConstructionStyle.Dynamic, true)]
     [InlineData(StateMachineConstructionStyle.Dynamic, false)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-COMPOSITE", "cross-state-declaration-order")]
-    public async Task CompositeEvent_AcrossStatesWorksAtEitherDeclarationPoint(
+    public async Task CompositeEvent_AcrossStatesWorksAtEitherDeclarationPointAsync(
         StateMachineConstructionStyle style,
         bool declareBeforeBindings)
     {
         CrossStateScenario scenario = CreateCrossStateScenario(style, declareBeforeBindings);
         var instance = new CrossStateInstance();
 
-        await StateMachineTestExecution.Raise(scenario.Machine, instance, scenario.Start);
-        await StateMachineTestExecution.Raise(scenario.Machine, instance, scenario.First);
+        await StateMachineTestExecution.RaiseAsync(scenario.Machine, instance, scenario.Start);
+        await StateMachineTestExecution.RaiseAsync(scenario.Machine, instance, scenario.First);
 
-        Assert.Same(scenario.WaitingForSecond, await StateMachineTestExecution.GetState(scenario.Machine, instance));
+        Assert.Same(scenario.WaitingForSecond, await StateMachineTestExecution.GetStateAsync(scenario.Machine, instance));
         Assert.Equal(["first"], instance.Markers);
         Assert.Equal(0, instance.CompositeCount);
 
-        await StateMachineTestExecution.Raise(scenario.Machine, instance, scenario.Second);
+        await StateMachineTestExecution.RaiseAsync(scenario.Machine, instance, scenario.Second);
 
         Assert.Equal(["first", "composite"], instance.Markers);
         Assert.Equal(1, instance.CompositeCount);
-        Assert.Same(scenario.Machine.Final, await StateMachineTestExecution.GetState(scenario.Machine, instance));
+        Assert.Same(scenario.Machine.Final, await StateMachineTestExecution.GetStateAsync(scenario.Machine, instance));
     }
 
-    private static async Task Start(CompositeScenario scenario, CompositeInstance instance) =>
-        await StateMachineTestExecution.Raise(scenario.Machine, instance, scenario.Start);
+    private static async Task StartAsync(CompositeScenario scenario, CompositeInstance instance) =>
+        await StateMachineTestExecution.RaiseAsync(scenario.Machine, instance, scenario.Start);
 
     private static void AssertEventSurface<TInstance>(
         ViciOneServiceBusStateMachine<TInstance> machine,

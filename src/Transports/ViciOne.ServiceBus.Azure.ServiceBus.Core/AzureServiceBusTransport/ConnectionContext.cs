@@ -31,7 +31,7 @@ public interface ConnectionContext :
     /// <param name="createQueueOptions"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<QueueProperties> CreateQueue(CreateQueueOptions createQueueOptions, CancellationToken cancellationToken);
+    Task<QueueProperties> CreateQueueAsync(CreateQueueOptions createQueueOptions, CancellationToken cancellationToken);
 
     /// <summary>
     /// Create a topic in the root namespace
@@ -39,7 +39,7 @@ public interface ConnectionContext :
     /// <param name="createTopicOptions"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<TopicProperties> CreateTopic(CreateTopicOptions createTopicOptions, CancellationToken cancellationToken);
+    Task<TopicProperties> CreateTopicAsync(CreateTopicOptions createTopicOptions, CancellationToken cancellationToken);
 
     /// <summary>
     /// Create a topic subscription
@@ -49,7 +49,7 @@ public interface ConnectionContext :
     /// <param name="filter"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<SubscriptionProperties> CreateTopicSubscription(CreateSubscriptionOptions createSubscriptionOptions, CreateRuleOptions rule, RuleFilter filter,
+    Task<SubscriptionProperties> CreateTopicSubscriptionAsync(CreateSubscriptionOptions createSubscriptionOptions, CreateRuleOptions? rule, RuleFilter? filter,
         CancellationToken cancellationToken);
 
     /// <summary>
@@ -58,5 +58,5 @@ public interface ConnectionContext :
     /// <param name="subscriptionOptions"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task DeleteTopicSubscription(CreateSubscriptionOptions subscriptionOptions, CancellationToken cancellationToken);
+    Task DeleteTopicSubscriptionAsync(CreateSubscriptionOptions subscriptionOptions, CancellationToken cancellationToken);
 }

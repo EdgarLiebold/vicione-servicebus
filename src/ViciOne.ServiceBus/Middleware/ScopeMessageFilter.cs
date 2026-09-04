@@ -14,11 +14,11 @@ public class ScopeMessageFilter<T> :
         _scopeProvider = scopeProvider;
     }
 
-    public async Task Send(ConsumeContext<T> context, IPipe<ConsumeContext<T>> next)
+    public async Task SendAsync(ConsumeContext<T> context, IPipe<ConsumeContext<T>> next)
     {
-        await using IConsumeScopeContext<T> scope = await _scopeProvider.GetScope(context).ConfigureAwait(false);
+        await using IConsumeScopeContext<T> scope = await _scopeProvider.GetScopeAsync(context).ConfigureAwait(false);
 
-        await next.Send(scope.Context).ConfigureAwait(false);
+        await next.SendAsync(scope.Context).ConfigureAwait(false);
     }
 
     public void Probe(ProbeContext context)

@@ -38,25 +38,25 @@ public class ProcessorLockContext :
         return default;
     }
 
-    public Task Pending(ProcessEventArgs eventArgs)
+    public Task PendingAsync(ProcessEventArgs eventArgs, CancellationToken cancellationToken = default)
     {
         LogContext.SetCurrentIfNull(_context.LogContext);
 
-        return _data.TryGetValue(eventArgs.Partition.PartitionId, out var data) ? data.Pending(eventArgs) : Task.CompletedTask;
+        return _data.TryGetValue(eventArgs.Partition.PartitionId, out var data) ? data.PendingAsync(eventArgs, cancellationToken: cancellationToken) : Task.CompletedTask;
     }
 
-    public Task Faulted(ProcessEventArgs eventArgs, Exception exception)
+    public Task FaultedAsync(ProcessEventArgs eventArgs, Exception exception, CancellationToken cancellationToken = default)
     {
-        LogContext.SetCurrentIfNull(_context.LogContext);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); LogContext.SetCurrentIfNull(_context.LogContext);
 
         _pending.Faulted(eventArgs, exception);
 
         return Task.CompletedTask;
     }
 
-    public Task Complete(ProcessEventArgs eventArgs)
+    public Task CompleteAsync(ProcessEventArgs eventArgs, CancellationToken cancellationToken = default)
     {
-        LogContext.SetCurrentIfNull(_context.LogContext);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); LogContext.SetCurrentIfNull(_context.LogContext);
 
         _pending.Complete(eventArgs);
 
@@ -70,9 +70,9 @@ public class ProcessorLockContext :
         _pending.Canceled(eventArgs, cancellationToken);
     }
 
-    public Task OnPartitionInitializing(PartitionInitializingEventArgs eventArgs)
+    public Task OnPartitionInitializingAsync(PartitionInitializingEventArgs eventArgs, CancellationToken cancellationToken = default)
     {
-        LogContext.SetCurrentIfNull(_context.LogContext);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); LogContext.SetCurrentIfNull(_context.LogContext);
 
         if (_data.TryAdd(eventArgs.PartitionId, _ => new PartitionCheckpointData(_receiveSettings, _pending)))
             LogContext.Info?.Log("Partition: {PartitionId} was initialized", eventArgs.PartitionId);
@@ -80,10 +80,10 @@ public class ProcessorLockContext :
         return Task.CompletedTask;
     }
 
-    public Task OnPartitionClosing(PartitionClosingEventArgs eventArgs)
+    public Task OnPartitionClosingAsync(PartitionClosingEventArgs eventArgs, CancellationToken cancellationToken = default)
     {
         LogContext.SetCurrentIfNull(_context.LogContext);
 
-        return _data.TryRemove(eventArgs.PartitionId, out var data) ? data.Close(eventArgs) : Task.CompletedTask;
+        return _data.TryRemove(eventArgs.PartitionId, out var data) ? data.CloseAsync(eventArgs, cancellationToken: cancellationToken) : Task.CompletedTask;
     }
 }

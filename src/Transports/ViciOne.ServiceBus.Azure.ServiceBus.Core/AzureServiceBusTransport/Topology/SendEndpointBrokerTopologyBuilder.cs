@@ -4,5 +4,5 @@ public class SendEndpointBrokerTopologyBuilder :
     BrokerTopologyBuilder,
     ISendEndpointBrokerTopologyBuilder
 {
-    public QueueHandle Queue { get; set; }
+    public QueueHandle Queue { get; set; } = null!;
 }

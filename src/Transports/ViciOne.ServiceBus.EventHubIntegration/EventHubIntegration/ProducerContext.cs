@@ -11,7 +11,7 @@ public interface ProducerContext :
     PipeContext,
     IAsyncDisposable
 {
-    Task Produce(EventDataBatch eventDataBatch, CancellationToken cancellationToken);
-    Task Produce(IEnumerable<EventData> eventData, SendEventOptions options, CancellationToken cancellationToken);
-    ValueTask<EventDataBatch> CreateBatch(CreateBatchOptions options, CancellationToken cancellationToken);
+    Task ProduceAsync(EventDataBatch eventDataBatch, CancellationToken cancellationToken);
+    Task ProduceAsync(IEnumerable<EventData> eventData, SendEventOptions options, CancellationToken cancellationToken);
+    ValueTask<EventDataBatch> CreateBatchAsync(CreateBatchOptions options, CancellationToken cancellationToken);
 }

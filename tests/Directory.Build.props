@@ -31,6 +31,16 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <!-- Tests intentionally inspect infrastructure behavior; keep that opt-in explicit and
+       repository-wide after the application-facing consume context was reduced. -->
+  <ItemGroup Condition=" '$(MSBuildProjectName)' != 'ViciOne.ServiceBus.Tests.Infrastructure'
+                         and '$(MSBuildProjectName)' != 'ViciOne.ServiceBus.Roslyn.Tests.Infrastructure'
+                         and '$(MSBuildProjectName)' != 'ViciOne.ServiceBus.Tests.Infrastructure.Tests'
+                         and '$(MSBuildProjectName)' != 'ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests' ">
+    <Using Include="ViciOne.ServiceBus.Advanced" />
+    <Using Include="ViciOne.ServiceBus.Advanced.Initializers" />
+  </ItemGroup>
+
   <!-- The core test project keeps the product-facing project name while its artifacts use the
        UnitArchitecture role identity. This property must be set during Directory.Build.props
        evaluation, before the SDK fixes BaseIntermediateOutputPath. -->

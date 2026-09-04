@@ -24,7 +24,8 @@ public class PropertyInitializerInspector<TMessage, TInput, TProperty> :
         if (!WritePropertyCache<TMessage>.CanWrite(_propertyInfo.Name))
             return false;
 
-        if (convention.TryGetPropertyInitializer<TMessage, TInput, TProperty>(_propertyInfo, out IPropertyInitializer<TMessage, TInput> initializer))
+        if (convention.TryGetPropertyInitializer<TMessage, TInput, TProperty>(_propertyInfo,
+                out IPropertyInitializer<TMessage, TInput>? initializer))
         {
             builder.Add(_propertyInfo.Name, initializer);
 

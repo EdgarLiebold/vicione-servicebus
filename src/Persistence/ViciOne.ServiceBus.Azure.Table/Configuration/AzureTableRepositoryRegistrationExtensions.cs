@@ -13,7 +13,7 @@ public static class AzureTableRepositoryRegistrationExtensions
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
     public static ISagaRegistrationConfigurator<T> AzureTableRepository<T>(this ISagaRegistrationConfigurator<T> configurator,
-        Action<IAzureTableSagaRepositoryConfigurator<T>> configure = null)
+        Action<IAzureTableSagaRepositoryConfigurator<T>>? configure = null)
         where T : class, ISaga
     {
         ArgumentNullException.ThrowIfNull(configurator);

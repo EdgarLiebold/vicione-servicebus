@@ -27,7 +27,7 @@ public sealed class InMemoryOutboxFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-OUTBOX-FILTER", "missing-setter-leaves-foreign-scope-alone")]
-    public async Task MissingBusBoundSetter_LeavesForeignScopeUntouchedAndContinuesThePipeline()
+    public async Task MissingBusBoundSetter_LeavesForeignScopeUntouchedAndContinuesThePipelineAsync()
     {
         using ServiceProvider provider = new ServiceCollection().BuildServiceProvider();
         using IServiceScope scope = provider.CreateScope();
@@ -35,7 +35,7 @@ public sealed class InMemoryOutboxFilterTests
         context.AddOrUpdatePayload<IServiceScope>(() => scope, existing => existing);
         ConsumeContext<FilterMessage>? delivered = null;
 
-        await CreateFilter(null).Send(
+        await CreateFilter(null).SendAsync(
             context,
             Pipe(innerContext =>
             {
@@ -52,7 +52,7 @@ public sealed class InMemoryOutboxFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-OUTBOX-FILTER", "failed-consume-discards-pending-actions")]
-    public async Task FailedConsume_DiscardsPendingActionAndPropagatesTheOriginalException()
+    public async Task FailedConsume_DiscardsPendingActionAndPropagatesTheOriginalExceptionAsync()
     {
         ConsumeContext<FilterMessage> context = CreateContext();
         var events = new List<string>();
@@ -60,12 +60,12 @@ public sealed class InMemoryOutboxFilterTests
         OutboxContext? capturedOutbox = null;
 
         ExpectedFilterException actual = await Assert.ThrowsAsync<ExpectedFilterException>(() =>
-            CreateFilter(null).Send(
+            CreateFilter(null).SendAsync(
                 context,
                 Pipe(async innerContext =>
                 {
                     capturedOutbox = Assert.IsAssignableFrom<OutboxContext>(innerContext);
-                    await capturedOutbox.Add(() =>
+                    await capturedOutbox.AddAsync(() =>
                     {
                         events.Add("pending action ran");
                         return Task.CompletedTask;
@@ -78,24 +78,24 @@ public sealed class InMemoryOutboxFilterTests
         Assert.Equal(["consume failed"], events);
         Assert.NotNull(capturedOutbox);
 
-        await capturedOutbox.ExecutePendingActions(concurrentMessageDelivery: false);
+        await capturedOutbox.ExecutePendingActionsAsync(concurrentMessageDelivery: false, cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal(["consume failed"], events);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-OUTBOX-FILTER", "pending-actions-run-after-successful-consume")]
-    public async Task SuccessfulConsume_ExecutesPendingActionOnlyAfterThePipeCompletes()
+    public async Task SuccessfulConsume_ExecutesPendingActionOnlyAfterThePipeCompletesAsync()
     {
         ConsumeContext<FilterMessage> context = CreateContext();
         var events = new List<string>();
 
-        await CreateFilter(null).Send(
+        await CreateFilter(null).SendAsync(
             context,
             Pipe(async innerContext =>
             {
                 OutboxContext outbox = Assert.IsAssignableFrom<OutboxContext>(innerContext);
-                await outbox.Add(() =>
+                await outbox.AddAsync(() =>
                 {
                     events.Add("pending action ran");
                     return Task.CompletedTask;
@@ -108,7 +108,7 @@ public sealed class InMemoryOutboxFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-OUTBOX-FILTER", "scope-restored-after-success")]
-    public async Task SuccessfulConsume_RestoresScopedContextAfterPendingActions()
+    public async Task SuccessfulConsume_RestoresScopedContextAfterPendingActionsAsync()
     {
         using ServiceProvider provider = new ServiceCollection().BuildServiceProvider();
         using IServiceScope scope = provider.CreateScope();
@@ -117,12 +117,12 @@ public sealed class InMemoryOutboxFilterTests
         var events = new List<string>();
         var setter = new RecordingSetter(events);
 
-        await CreateFilter(setter).Send(
+        await CreateFilter(setter).SendAsync(
             context,
             Pipe(async innerContext =>
             {
                 OutboxContext outbox = Assert.IsAssignableFrom<OutboxContext>(innerContext);
-                await outbox.Add(() =>
+                await outbox.AddAsync(() =>
                 {
                     events.Add("pending action ran");
                     return Task.CompletedTask;
@@ -139,7 +139,7 @@ public sealed class InMemoryOutboxFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-OUTBOX-FILTER", "scope-restored-after-failure")]
-    public async Task FailedConsume_RestoresScopedContextAndPropagatesTheOriginalException()
+    public async Task FailedConsume_RestoresScopedContextAndPropagatesTheOriginalExceptionAsync()
     {
         using ServiceProvider provider = new ServiceCollection().BuildServiceProvider();
         using IServiceScope scope = provider.CreateScope();
@@ -150,7 +150,7 @@ public sealed class InMemoryOutboxFilterTests
         var expected = new ExpectedFilterException("consume failed");
 
         ExpectedFilterException actual = await Assert.ThrowsAsync<ExpectedFilterException>(() =>
-            CreateFilter(setter).Send(
+            CreateFilter(setter).SendAsync(
                 context,
                 Pipe(innerContext =>
                 {
@@ -185,7 +185,7 @@ public sealed class InMemoryOutboxFilterTests
     private sealed class DelegatePipe<TContext>(Func<TContext, Task> callback) : IPipe<TContext>
         where TContext : class, PipeContext
     {
-        public Task Send(TContext context) => callback(context);
+        public Task SendAsync(TContext context) => callback(context);
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("test");
     }

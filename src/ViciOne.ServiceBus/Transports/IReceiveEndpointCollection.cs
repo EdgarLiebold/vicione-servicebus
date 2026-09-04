@@ -37,7 +37,7 @@ public interface IReceiveEndpointCollection :
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task StopEndpoints(CancellationToken cancellationToken);
+    Task StopEndpointsAsync(CancellationToken cancellationToken);
 
     IEnumerable<EndpointHealthResult> CheckEndpointHealth();
 }

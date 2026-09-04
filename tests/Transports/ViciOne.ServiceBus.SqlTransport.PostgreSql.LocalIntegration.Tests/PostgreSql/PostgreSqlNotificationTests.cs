@@ -12,7 +12,7 @@ public sealed class PostgreSqlNotificationTests
     [InlineData(true)]
     [InlineData(false)]
     [RequirementCoverage("OBL-R0-SQL-0104", "postgresql-native-owner")]
-    public async Task WaitingReceiver_IsReleasedByNotificationOrItsConfiguredPollingInterval(bool notificationsEnabled)
+    public async Task WaitingReceiver_IsReleasedByNotificationOrItsConfiguredPollingIntervalAsync(bool notificationsEnabled)
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase fixture = await PostgreSqlTestDatabase.CreateAsync(
@@ -44,10 +44,10 @@ public sealed class PostgreSqlNotificationTests
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
             await using NpgsqlConnection inspection = fixture.CreateConnection();
-            await inspection.OpenWithin(fixture.OperationTimeout, cancellationToken);
-            long queueId = await QueueId(inspection, fixture.Schema, queueName, cancellationToken);
+            await inspection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
+            long queueId = await QueueIdAsync(inspection, fixture.Schema, queueName, cancellationToken);
             string channel = $"{NotifyChannel.SanitizeSchemaName(fixture.Schema)}_msg_{queueId}";
-            await WaitUntilReceiverListens(
+            await WaitUntilReceiverListensAsync(
                 inspection,
                 channel,
                 fixture.OperationTimeout,
@@ -59,13 +59,12 @@ public sealed class PostgreSqlNotificationTests
                     $"ALTER TABLE \"{fixture.Schema}\".message_delivery DISABLE TRIGGER message_delivery_notify_trigger",
                     inspection);
                 await disable.ExecuteNonQueryAsync(cancellationToken);
-                Assert.Equal("D", await TriggerState(inspection, fixture.Schema, cancellationToken));
+                Assert.Equal("D", await TriggerStateAsync(inspection, fixture.Schema, cancellationToken));
             }
 
             Guid id = Guid.NewGuid();
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await endpoint.Send(new NotificationMessage(id), cancellationToken)
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await endpoint.SendAsync(new NotificationMessage(id), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             Assert.Equal(id, await delivered.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
@@ -81,7 +80,7 @@ public sealed class PostgreSqlNotificationTests
         }
     }
 
-    private static async Task<long> QueueId(
+    private static async Task<long> QueueIdAsync(
         NpgsqlConnection connection,
         string schema,
         string queueName,
@@ -94,7 +93,7 @@ public sealed class PostgreSqlNotificationTests
         return Convert.ToInt64(await command.ExecuteScalarAsync(cancellationToken));
     }
 
-    private static async Task WaitUntilReceiverListens(
+    private static async Task WaitUntilReceiverListensAsync(
         NpgsqlConnection connection,
         string channel,
         TimeSpan timeout,
@@ -117,7 +116,7 @@ public sealed class PostgreSqlNotificationTests
         }
     }
 
-    private static async Task<string> TriggerState(
+    private static async Task<string> TriggerStateAsync(
         NpgsqlConnection connection,
         string schema,
         CancellationToken cancellationToken)

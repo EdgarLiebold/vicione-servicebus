@@ -121,13 +121,13 @@ public class MessageContractAnalyzer :
         {
             var anonymousType = context.SemanticModel.GetTypeInfo(anonymousObject).Type;
 
-            if (anonymousType.SpecialType == SpecialType.System_Object)
+            if (anonymousType == null || anonymousType.SpecialType == SpecialType.System_Object)
                 return;
 
             var symbolDisplayFormat =
                 new SymbolDisplayFormat(typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces);
-            ImmutableDictionary<string, string> immutableDictionary =
-                new Dictionary<string, string> { { "messageContractType", messageContractType.ToDisplayString(symbolDisplayFormat) } }
+            ImmutableDictionary<string, string?> immutableDictionary =
+                new Dictionary<string, string?> { { "messageContractType", messageContractType.ToDisplayString(symbolDisplayFormat) } }
                     .ToImmutableDictionary();
 
             var incompatibleProperties = new List<string>();

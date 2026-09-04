@@ -7,14 +7,14 @@ public class ExchangeEntity :
     Exchange,
     ExchangeHandle
 {
-    public ExchangeEntity(long id, string name, string type, bool durable, bool autoDelete, IDictionary<string, object> arguments)
+    public ExchangeEntity(long id, string name, string type, bool durable, bool autoDelete, IDictionary<string, object?> arguments)
     {
         Id = id;
         ExchangeName = name;
         ExchangeType = type;
         Durable = durable;
         AutoDelete = autoDelete;
-        ExchangeArguments = arguments ?? new Dictionary<string, object>();
+        ExchangeArguments = arguments ?? new Dictionary<string, object?>();
     }
 
     public static IEqualityComparer<ExchangeEntity> NameComparer { get; } = new NameEqualityComparer();
@@ -25,7 +25,7 @@ public class ExchangeEntity :
     public string ExchangeType { get; }
     public bool Durable { get; }
     public bool AutoDelete { get; }
-    public IDictionary<string, object> ExchangeArguments { get; }
+    public IDictionary<string, object?> ExchangeArguments { get; }
     public long Id { get; }
     public Exchange Exchange => this;
 
@@ -45,7 +45,7 @@ public class ExchangeEntity :
 
     sealed class NameEqualityComparer : IEqualityComparer<ExchangeEntity>
     {
-        public bool Equals(ExchangeEntity x, ExchangeEntity y)
+        public bool Equals(ExchangeEntity? x, ExchangeEntity? y)
         {
             if (ReferenceEquals(x, y))
                 return true;
@@ -68,7 +68,7 @@ public class ExchangeEntity :
     sealed class ExchangeEntityEqualityComparer :
         IEqualityComparer<ExchangeEntity>
     {
-        public bool Equals(ExchangeEntity x, ExchangeEntity y)
+        public bool Equals(ExchangeEntity? x, ExchangeEntity? y)
         {
             if (ReferenceEquals(x, y))
                 return true;
@@ -80,7 +80,8 @@ public class ExchangeEntity :
                 return false;
             return string.Equals(x.ExchangeName, y.ExchangeName) && string.Equals(x.ExchangeType, y.ExchangeType) && x.Durable == y.Durable
                 && x.AutoDelete == y.AutoDelete
-                && x.ExchangeArguments.All(a => y.ExchangeArguments.TryGetValue(a.Key, out var value) && a.Value.Equals(value));
+                && x.ExchangeArguments.Count == y.ExchangeArguments.Count
+                && x.ExchangeArguments.All(a => y.ExchangeArguments.TryGetValue(a.Key, out var value) && Equals(a.Value, value));
         }
 
         public int GetHashCode(ExchangeEntity obj)
@@ -91,10 +92,10 @@ public class ExchangeEntity :
                 hashCode = (hashCode * 397) ^ obj.ExchangeType.GetHashCode();
                 hashCode = (hashCode * 397) ^ obj.Durable.GetHashCode();
                 hashCode = (hashCode * 397) ^ obj.AutoDelete.GetHashCode();
-                foreach (KeyValuePair<string, object> keyValuePair in obj.ExchangeArguments)
+                foreach (KeyValuePair<string, object?> keyValuePair in obj.ExchangeArguments.OrderBy(x => x.Key, System.StringComparer.Ordinal))
                 {
                     hashCode = (hashCode * 397) ^ keyValuePair.Key.GetHashCode();
-                    hashCode = (hashCode * 397) ^ keyValuePair.Value.GetHashCode();
+                    hashCode = (hashCode * 397) ^ (keyValuePair.Value?.GetHashCode() ?? 0);
                 }
 
                 return hashCode;

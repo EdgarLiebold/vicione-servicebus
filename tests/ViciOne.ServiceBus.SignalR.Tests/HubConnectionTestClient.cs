@@ -151,13 +151,12 @@ internal sealed class HubConnectionTestClient : IAsyncDisposable, ITransferForma
     {
         public override ValueTask WriteAsync(
             HubMessage message,
-            CancellationToken cancellationToken = default) =>
-            ValueTask.FromException(new InvalidOperationException("Intentional SignalR write failure."));
-
+            CancellationToken cancellationToken = default)
+        { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken); return ValueTask.FromException(new InvalidOperationException("Intentional SignalR write failure.")); }
         public override ValueTask WriteAsync(
             SerializedHubMessage message,
-            CancellationToken cancellationToken = default) =>
-            ValueTask.FromException(new InvalidOperationException("Intentional SignalR write failure."));
+            CancellationToken cancellationToken = default)
+        { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken); return ValueTask.FromException(new InvalidOperationException("Intentional SignalR write failure.")); }
     }
 
     private sealed class TestInvocationBinder : IInvocationBinder

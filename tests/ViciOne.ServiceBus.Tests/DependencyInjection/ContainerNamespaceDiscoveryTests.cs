@@ -12,7 +12,7 @@ public sealed class ContainerNamespaceDiscoveryTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-DISCOVERY", "consumer-saga-machine-and-activities-run-on-discovered-endpoints")]
-    public async Task NamespaceDiscovery_ConfiguresAndExecutesEveryOwnedEndpointEndToEnd()
+    public async Task NamespaceDiscovery_ConfiguresAndExecutesEveryOwnedEndpointEndToEndAsync()
     {
         TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions().OperationTimeout!.Value;
@@ -36,7 +36,7 @@ public sealed class ContainerNamespaceDiscoveryTests
                 });
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
@@ -50,19 +50,18 @@ public sealed class ContainerNamespaceDiscoveryTests
                 "PingSecond",
                 new Uri("queue:PingSecond_execute"),
                 new ContainerDiscovery.PingArguments(routingCorrelationId));
-            await harness.Bus.Execute(builder.Build(), cancellationToken);
+            await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
             IPublishedMessage<RoutingSlipCompleted> slipCompleted = await harness.Published
                 .SelectAsync<RoutingSlipCompleted>(
                     message => message.Context.Message.TrackingNumber == routingCorrelationId,
                     cancellationToken)
-                .First()
-                .WaitAsync(timeout, cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
             Guid messageId = NewId.NextGuid();
             IRequestClient<ContainerDiscovery.DiscoveryPing> client =
                 harness.GetRequestClient<ContainerDiscovery.DiscoveryPing>();
             Response<ContainerDiscovery.DiscoveryPong> response = await client
-                .GetResponse<ContainerDiscovery.DiscoveryPong>(
+                .GetResponseAsync<ContainerDiscovery.DiscoveryPong>(
                     new ContainerDiscovery.DiscoveryPing(messageId),
                     cancellationToken);
             ISagaStateMachineTestHarness<ContainerDiscovery.DiscoveryPingStateMachine,
@@ -70,22 +69,25 @@ public sealed class ContainerNamespaceDiscoveryTests
                 .GetSagaStateMachineHarness<ContainerDiscovery.DiscoveryPingStateMachine,
                     ContainerDiscovery.DiscoveryPingState>();
             await machineHarness.Consumed.SelectAsync<ContainerDiscovery.PingReceived>(cancellationToken)
-                .First().WaitAsync(timeout, cancellationToken);
-            await harness.Bus.Publish(new ContainerDiscovery.PingAcknowledged(messageId), cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
+            await harness.Bus.PublishAsync(new ContainerDiscovery.PingAcknowledged(messageId), cancellationToken);
             IPublishedMessage<ContainerDiscovery.PingCompleted> pingCompleted = await harness.Published
                 .SelectAsync<ContainerDiscovery.PingCompleted>(
                     message => message.Context.Message.CorrelationId == messageId,
                     cancellationToken)
-                .First()
-                .WaitAsync(timeout, cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
             ISagaTestHarness<ContainerDiscovery.DiscoveryPingSaga> sagaHarness =
                 harness.GetSagaHarness<ContainerDiscovery.DiscoveryPingSaga>();
 
             Assert.Equal(routingCorrelationId, slipCompleted.Context.Message.TrackingNumber);
             Assert.Equal(messageId, response.Message.CorrelationId);
             Assert.Equal(messageId, pingCompleted.Context.Message.CorrelationId);
-            Assert.Equal(messageId, sagaHarness.Sagas.Contains(messageId).CorrelationId);
-            Assert.Equal(messageId, machineHarness.Sagas.Contains(messageId).CorrelationId);
+            var saga = sagaHarness.Sagas.Contains(messageId);
+            var machineSaga = machineHarness.Sagas.Contains(messageId);
+            Assert.NotNull(saga);
+            Assert.NotNull(machineSaga);
+            Assert.Equal(messageId, saga.CorrelationId);
+            Assert.Equal(messageId, machineSaga.CorrelationId);
             Assert.All(
                 new[]
                 {
@@ -101,7 +103,7 @@ public sealed class ContainerNamespaceDiscoveryTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 

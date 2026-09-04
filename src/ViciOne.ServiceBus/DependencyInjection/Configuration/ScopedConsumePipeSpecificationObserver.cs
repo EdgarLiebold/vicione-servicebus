@@ -75,7 +75,7 @@ public class ScopedConsumePipeSpecificationObserver :
 
         var scopedFilterType = typeof(ScopedConsumeFilter<,>).MakeGenericType(typeof(TMessage), filterType);
 
-        var filter = (IFilter<ConsumeContext<TMessage>>)Activator.CreateInstance(scopedFilterType, scopeProvider);
+        var filter = (IFilter<ConsumeContext<TMessage>>)(Activator.CreateInstance(scopedFilterType, scopeProvider) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
         var specification = new FilterPipeSpecification<ConsumeContext<TMessage>>(filter);
 

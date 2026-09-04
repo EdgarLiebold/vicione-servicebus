@@ -20,10 +20,10 @@ public class ScopeSessionContextFactory :
     {
         IAsyncPipeContextAgent<SessionContext> asyncContext = supervisor.AddAsyncContext<SessionContext>();
 
-        Task<SessionContext> context = CreateSession(asyncContext, supervisor.Stopped);
+        Task<SessionContext> context = CreateSessionAsync(asyncContext, supervisor.Stopped);
 
         var faultStopLock = new object();
-        Task faultStopTask = null;
+        Task? faultStopTask = null;
 
         void HandleConnectionException(Exception exception)
         {
@@ -34,17 +34,17 @@ public class ScopeSessionContextFactory :
             lock (faultStopLock)
             {
                 if (faultStopTask == null || faultStopTask.IsCompleted)
-                    faultStopTask = StopAfterConnectionException(exception);
+                    faultStopTask = StopAfterConnectionExceptionAsync(exception);
             }
         }
 
-        async Task StopAfterConnectionException(Exception exception)
+        async Task StopAfterConnectionExceptionAsync(Exception exception)
         {
             await Task.Yield();
 
             try
             {
-                await asyncContext.Stop($"Connection Exception: {exception}").ConfigureAwait(false);
+                await asyncContext.StopAsync($"Connection Exception: {exception}").ConfigureAwait(false);
             }
             catch (Exception stopException)
             {
@@ -70,23 +70,23 @@ public class ScopeSessionContextFactory :
     IActivePipeContextAgent<SessionContext> IPipeContextFactory<SessionContext>.CreateActiveContext(ISupervisor supervisor,
         PipeContextHandle<SessionContext> context, CancellationToken cancellationToken)
     {
-        return supervisor.AddActiveContext(context, CreateSharedSession(context.Context, cancellationToken));
+        return supervisor.AddActiveContext(context, CreateSharedSessionAsync(context.Context, cancellationToken));
     }
 
-    static async Task<SessionContext> CreateSharedSession(Task<SessionContext> context, CancellationToken cancellationToken)
+    static async Task<SessionContext> CreateSharedSessionAsync(Task<SessionContext> context, CancellationToken cancellationToken)
     {
         return context.IsCompletedSuccessfully()
             ? new SharedSessionContext(context.Result, cancellationToken)
-            : new SharedSessionContext(await context.OrCanceled(cancellationToken).ConfigureAwait(false), cancellationToken);
+            : new SharedSessionContext(await context.OrCanceledAsync(cancellationToken).ConfigureAwait(false), cancellationToken);
     }
 
-    Task<SessionContext> CreateSession(IAsyncPipeContextAgent<SessionContext> asyncContext, CancellationToken cancellationToken)
+    Task<SessionContext> CreateSessionAsync(IAsyncPipeContextAgent<SessionContext> asyncContext, CancellationToken cancellationToken)
     {
-        static Task<SessionContext> CreateSessionContext(SessionContext context, CancellationToken createCancellationToken)
+        static Task<SessionContext> CreateSessionContextAsync(SessionContext context, CancellationToken createCancellationToken)
         {
             return Task.FromResult<SessionContext>(new SharedSessionContext(context, createCancellationToken));
         }
 
-        return _supervisor.CreateAgent(asyncContext, CreateSessionContext, cancellationToken);
+        return _supervisor.CreateAgentAsync(asyncContext, CreateSessionContextAsync, cancellationToken);
     }
 }

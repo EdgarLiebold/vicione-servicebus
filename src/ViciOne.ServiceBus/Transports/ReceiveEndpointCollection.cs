@@ -97,15 +97,15 @@ public class ReceiveEndpointCollection :
         return _endpoints.Values.Select(x => x.HealthResult).ToList();
     }
 
-    public async Task StopEndpoints(CancellationToken cancellationToken)
+    public async Task StopEndpointsAsync(CancellationToken cancellationToken)
     {
         ReceiveEndpoint[] endpoints = _endpoints.Values.Where(x => (x.IsStarted() || x.IsPaused) && !x.IsBusEndpoint).ToArray();
 
-        await Task.WhenAll(endpoints.Select(x => x.Stop(cancellationToken))).ConfigureAwait(false);
+        await Task.WhenAll(endpoints.Select(x => x.StopAsync(cancellationToken))).ConfigureAwait(false);
 
         endpoints = _endpoints.Values.Where(x => (x.IsStarted() || x.IsPaused) && x.IsBusEndpoint).ToArray();
 
-        await Task.WhenAll(endpoints.Select(x => x.Stop(cancellationToken))).ConfigureAwait(false);
+        await Task.WhenAll(endpoints.Select(x => x.StopAsync(cancellationToken))).ConfigureAwait(false);
 
         _started = false;
     }
@@ -149,7 +149,7 @@ public class ReceiveEndpointCollection :
         readonly ReceiveEndpoint _endpoint;
         readonly Action _remove;
 
-        ReceiveEndpointHandle _endpointHandle;
+        ReceiveEndpointHandle _endpointHandle = null!;
 
         public Handle(ReceiveEndpoint endpoint, Action remove)
         {
@@ -165,7 +165,7 @@ public class ReceiveEndpointCollection :
         {
             _remove();
 
-            return _endpoint.Stop(true, cancellationToken);
+            return _endpoint.StopAsync(true, cancellationToken);
         }
 
         public void Start(CancellationToken cancellationToken)

@@ -12,7 +12,7 @@ public sealed class DiagnosticOutputTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-DIAGNOSTICS", "timeline-message-flow")]
-    public async Task Timeline_RendersTheProducedAndConsumedMessageFlowWithItsAddress()
+    public async Task Timeline_RendersTheProducedAndConsumedMessageFlowWithItsAddressAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -29,21 +29,21 @@ public sealed class DiagnosticOutputTests
         harness.Consumer(() => new FlowDConsumer());
         harness.Consumer(() => new FlowEConsumer());
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             var correlationId = Guid.Parse("2eac0a91-a19d-4a43-a502-5dc6fc9e3518");
 
-            await harness.Bus.Publish(new FlowA(correlationId), cancellationToken);
-            await harness.Bus.Publish(new FlowB(correlationId), cancellationToken);
+            await harness.Bus.PublishAsync(new FlowA(correlationId), cancellationToken);
+            await harness.Bus.PublishAsync(new FlowB(correlationId), cancellationToken);
 
             int leafCount = await harness.Consumed
                 .SelectAsync<FlowD>(cancellationToken)
                 .Take(ExpectedFlowDCount)
-                .Count();
+                .CountObservedAsync(TestContext.Current.CancellationToken);
             using var writer = new StringWriter();
 
-            await harness.OutputTimeline(writer, options => options.Now().IncludeAddress());
+            await harness.OutputTimelineAsync(writer, options => options.Now().IncludeAddress(), cancellationToken: TestContext.Current.CancellationToken);
 
             string output = writer.ToString();
             string[] lines = output.Split('\n');
@@ -68,13 +68,13 @@ public sealed class DiagnosticOutputTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-DIAGNOSTICS", "activity-tree-and-idempotent-disposal")]
-    public async Task ActivityListener_RendersTheTraceOnceAndDisposesIdempotently()
+    public async Task ActivityListener_RendersTheTraceOnceAndDisposesIdempotentlyAsync()
     {
         using var writer = new StringWriter();
         var listener = new TestActivityListener(writer, "root-operation", "Operation", includeDetails: true);
@@ -99,13 +99,13 @@ public sealed class DiagnosticOutputTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-DIAGNOSTICS", "required-output-destinations")]
-    public async Task DiagnosticWriters_RejectMissingOutputDestinationsPrecisely()
+    public async Task DiagnosticWriters_RejectMissingOutputDestinationsPreciselyAsync()
     {
         ArgumentNullException listener = Assert.Throws<ArgumentNullException>(() =>
             new TestActivityListener(null!, "operation", "Operation", includeDetails: false));
         using var harness = new InMemoryTestHarness();
         ArgumentNullException timeline = await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            TimelineExtensions.OutputTimeline(harness, null!));
+            TimelineExtensions.OutputTimelineAsync(harness, null!, cancellationToken: TestContext.Current.CancellationToken));
 
         Assert.Equal("writer", listener.ParamName);
         Assert.Equal("textWriter", timeline.ParamName);
@@ -119,41 +119,41 @@ public sealed class DiagnosticOutputTests
 
     private sealed class FlowAConsumer : IConsumer<FlowA>
     {
-        public async Task Consume(ConsumeContext<FlowA> context)
+        public async Task ConsumeAsync(ConsumeContext<FlowA> context)
         {
-            await context.Publish(new FlowB(context.Message.CorrelationId));
-            await context.Publish(new FlowB(context.Message.CorrelationId));
+            await context.Advanced().PublishAsync(new FlowB(context.Message.CorrelationId));
+            await context.Advanced().PublishAsync(new FlowB(context.Message.CorrelationId));
         }
     }
 
     private sealed class FlowBConsumer(Uri destinationAddress) : IConsumer<FlowB>
     {
-        public async Task Consume(ConsumeContext<FlowB> context)
+        public async Task ConsumeAsync(ConsumeContext<FlowB> context)
         {
-            await context.Publish(new FlowC(context.Message.CorrelationId));
-            ISendEndpoint endpoint = await context.GetSendEndpoint(destinationAddress);
-            await endpoint.Send(new FlowE(context.Message.CorrelationId), context.CancellationToken);
+            await context.Advanced().PublishAsync(new FlowC(context.Message.CorrelationId));
+            ISendEndpoint endpoint = await context.Advanced().GetSendEndpointAsync(destinationAddress);
+            await endpoint.SendAsync(new FlowE(context.Message.CorrelationId), context.CancellationToken);
         }
     }
 
     private sealed class FlowCConsumer : IConsumer<FlowC>
     {
-        public async Task Consume(ConsumeContext<FlowC> context)
+        public async Task ConsumeAsync(ConsumeContext<FlowC> context)
         {
-            await context.Publish(new FlowD(context.Message.CorrelationId));
-            await context.Publish(new FlowD(context.Message.CorrelationId));
+            await context.Advanced().PublishAsync(new FlowD(context.Message.CorrelationId));
+            await context.Advanced().PublishAsync(new FlowD(context.Message.CorrelationId));
         }
     }
 
     private sealed class FlowDConsumer : IConsumer<FlowD>
     {
-        public Task Consume(ConsumeContext<FlowD> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<FlowD> context) => Task.CompletedTask;
     }
 
     private sealed class FlowEConsumer : IConsumer<FlowE>
     {
-        public Task Consume(ConsumeContext<FlowE> context) =>
-            context.Publish(new FlowD(context.Message.CorrelationId));
+        public Task ConsumeAsync(ConsumeContext<FlowE> context) =>
+            context.Advanced().PublishAsync(new FlowD(context.Message.CorrelationId));
     }
 
     private sealed record FlowA(Guid CorrelationId) : CorrelatedBy<Guid>;

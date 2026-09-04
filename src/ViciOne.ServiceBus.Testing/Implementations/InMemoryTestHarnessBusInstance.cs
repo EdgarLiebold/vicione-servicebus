@@ -36,7 +36,7 @@ public class InMemoryTestHarnessBusInstance :
     }
 
     public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
-        Action<IBusRegistrationContext, IReceiveEndpointConfigurator> configure = null)
+        Action<IBusRegistrationContext, IReceiveEndpointConfigurator>? configure = null)
     {
         return BusControl.ConnectReceiveEndpoint(definition, endpointNameFormatter, configurator =>
         {
@@ -48,7 +48,7 @@ public class InMemoryTestHarnessBusInstance :
     }
 
     public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName,
-        Action<IBusRegistrationContext, IReceiveEndpointConfigurator> configure = null)
+        Action<IBusRegistrationContext, IReceiveEndpointConfigurator>? configure = null)
     {
         return BusControl.ConnectReceiveEndpoint(queueName, configurator =>
         {

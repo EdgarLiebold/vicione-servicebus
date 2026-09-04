@@ -9,7 +9,7 @@ public sealed class InstanceExtensionsTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-CONSUMER-INSTANCE-REGISTRATION", "object-delegate-and-runtime-factory")]
-    public async Task EndpointRegistration_UsesTheExactConfiguredInstanceForEveryFactoryShape()
+    public async Task EndpointRegistration_UsesTheExactConfiguredInstanceForEveryFactoryShapeAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -29,12 +29,12 @@ public sealed class InstanceExtensionsTests
             });
         };
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(new ObjectInstanceMessage(), cancellationToken);
-            await harness.InputQueueSendEndpoint.Send(new DelegateInstanceMessage(), cancellationToken);
-            await harness.InputQueueSendEndpoint.Send(new RuntimeFactoryMessage(), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new ObjectInstanceMessage(), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new DelegateInstanceMessage(), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new RuntimeFactoryMessage(), cancellationToken);
 
             ObjectInstanceConsumer observedObject = await objectInstance.Consumed.Task.WaitAsync(timeout, cancellationToken);
             DelegateInstanceConsumer observedDelegate = await delegateInstance.Consumed.Task.WaitAsync(timeout, cancellationToken);
@@ -50,7 +50,7 @@ public sealed class InstanceExtensionsTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
@@ -90,7 +90,7 @@ public sealed class InstanceExtensionsTests
 
         public int ConsumeCount { get; private set; }
 
-        public Task Consume(ConsumeContext<ObjectInstanceMessage> context)
+        public Task ConsumeAsync(ConsumeContext<ObjectInstanceMessage> context)
         {
             ConsumeCount++;
             Consumed.TrySetResult(this);
@@ -105,7 +105,7 @@ public sealed class InstanceExtensionsTests
 
         public int ConsumeCount { get; private set; }
 
-        public Task Consume(ConsumeContext<DelegateInstanceMessage> context)
+        public Task ConsumeAsync(ConsumeContext<DelegateInstanceMessage> context)
         {
             ConsumeCount++;
             Consumed.TrySetResult(this);
@@ -120,7 +120,7 @@ public sealed class InstanceExtensionsTests
 
         public int ConsumeCount { get; private set; }
 
-        public Task Consume(ConsumeContext<RuntimeFactoryMessage> context)
+        public Task ConsumeAsync(ConsumeContext<RuntimeFactoryMessage> context)
         {
             ConsumeCount++;
             Consumed.TrySetResult(this);

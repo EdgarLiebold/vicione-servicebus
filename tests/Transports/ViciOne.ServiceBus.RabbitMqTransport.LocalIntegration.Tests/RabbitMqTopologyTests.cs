@@ -9,7 +9,7 @@ public sealed class RabbitMqTopologyTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-TOPOLOGY", "alternate-dead-letter-priority-and-expiration-are-broker-owned")]
-    public async Task BrokerTopology_DeclaresAlternateDeadLetterPriorityAndExpirationContracts()
+    public async Task BrokerTopology_DeclaresAlternateDeadLetterPriorityAndExpirationContractsAsync()
     {
         using RabbitMqBroker fixture = RabbitMqBroker.Create("policies");
         string primary = fixture.Name("primary");
@@ -63,22 +63,22 @@ public sealed class RabbitMqTopologyTests
                 publishAddress.Query,
                 StringComparison.OrdinalIgnoreCase);
 
-            RabbitMqBroker.QueueState input = await fixture.Queue(inputQueue, cancellationToken);
+            RabbitMqBroker.QueueState input = await fixture.QueueAsync(inputQueue, cancellationToken);
             Assert.True(input.Exists);
             Assert.True(input.Durable);
             Assert.Equal("10", input.Arguments["x-max-priority"]);
             Assert.Equal("5400000", input.Arguments["x-expires"]);
             Assert.Equal(deadLetterQueue, input.Arguments["x-dead-letter-exchange"]);
-            Assert.Equal(0U, await fixture.QueueMessageCount(alternateQueue, cancellationToken));
-            Assert.Equal(0U, await fixture.QueueMessageCount(deadLetterQueue, cancellationToken));
-            await fixture.AssertExchangeExists(deadLetterQueue, cancellationToken);
+            Assert.Equal(0U, await fixture.QueueMessageCountAsync(alternateQueue, cancellationToken));
+            Assert.Equal(0U, await fixture.QueueMessageCountAsync(deadLetterQueue, cancellationToken));
+            await fixture.AssertExchangeExistsAsync(deadLetterQueue, cancellationToken);
 
-            await bus.Publish(new AlternateMessage(expected), cancellationToken)
+            await bus.PublishAsync(new AlternateMessage(expected), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.Equal(expected, await alternateReceived.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
 
-            RabbitMqBroker.ExchangeState primaryState = await fixture.Exchange(primary, cancellationToken);
-            RabbitMqBroker.ExchangeState alternateState = await fixture.Exchange(alternateExchange, cancellationToken);
+            RabbitMqBroker.ExchangeState primaryState = await fixture.ExchangeAsync(primary, cancellationToken);
+            RabbitMqBroker.ExchangeState alternateState = await fixture.ExchangeAsync(alternateExchange, cancellationToken);
             Assert.True(primaryState.Exists);
             Assert.Equal(alternateExchange, primaryState.Arguments["alternate-exchange"]);
             Assert.True(alternateState.Exists);
@@ -86,7 +86,7 @@ public sealed class RabbitMqTopologyTests
             await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
             started = false;
             Assert.Equal(1, entries);
-            Assert.Equal(0, (await fixture.Queue(alternateQueue, cancellationToken)).Messages);
+            Assert.Equal(0, (await fixture.QueueAsync(alternateQueue, cancellationToken)).Messages);
         }
         finally
         {
@@ -100,7 +100,7 @@ public sealed class RabbitMqTopologyTests
     [InlineData(ExchangeType.Direct, "route.alpha", "route.beta")]
     [InlineData(ExchangeType.Topic, "region.eu.alpha", "region.us.beta")]
     [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-ROUTING", "direct-and-topic-bindings-route-without-cross-delivery")]
-    public async Task RoutingKeys_DeclareExactProviderBindingsAndNeverCrossDeliver(
+    public async Task RoutingKeys_DeclareExactProviderBindingsAndNeverCrossDeliverAsync(
         string exchangeType,
         string firstKey,
         string secondKey)
@@ -132,17 +132,17 @@ public sealed class RabbitMqTopologyTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            RabbitMqBroker.ExchangeState state = await fixture.Exchange(exchange, cancellationToken);
+            RabbitMqBroker.ExchangeState state = await fixture.ExchangeAsync(exchange, cancellationToken);
             Assert.Equal(exchangeType, state.Type);
-            IReadOnlyList<RabbitMqBroker.BindingState> bindings = await fixture.Bindings(cancellationToken);
+            IReadOnlyList<RabbitMqBroker.BindingState> bindings = await fixture.BindingsAsync(cancellationToken);
             Assert.Contains(bindings, binding =>
                 binding.Source == exchange && binding.Destination == firstQueue && binding.RoutingKey == firstKey);
             Assert.Contains(bindings, binding =>
                 binding.Source == exchange && binding.Destination == secondQueue && binding.RoutingKey == secondKey);
 
-            await bus.Publish(new RoutingMessage(firstKey, "first"), cancellationToken)
+            await bus.PublishAsync(new RoutingMessage(firstKey, "first"), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await bus.Publish(new RoutingMessage(secondKey, "second"), cancellationToken)
+            await bus.PublishAsync(new RoutingMessage(secondKey, "second"), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             Assert.Equal("first", await firstReceived.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
@@ -151,8 +151,8 @@ public sealed class RabbitMqTopologyTests
             await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
             started = false;
             Assert.Equal((1, 1), (firstEntries, secondEntries));
-            Assert.Equal(0, (await fixture.Queue(firstQueue, cancellationToken)).Messages);
-            Assert.Equal(0, (await fixture.Queue(secondQueue, cancellationToken)).Messages);
+            Assert.Equal(0, (await fixture.QueueAsync(firstQueue, cancellationToken)).Messages);
+            Assert.Equal(0, (await fixture.QueueAsync(secondQueue, cancellationToken)).Messages);
         }
         finally
         {

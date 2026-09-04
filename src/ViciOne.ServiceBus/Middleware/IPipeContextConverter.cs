@@ -9,5 +9,5 @@ public interface IPipeContextConverter<in TInput, TOutput>
     where TInput : class, PipeContext
     where TOutput : class, PipeContext
 {
-    bool TryConvert(TInput input, out TOutput output);
+    bool TryConvert(TInput input, [NotNullWhen(true)] out TOutput? output);
 }

@@ -8,7 +8,7 @@ public sealed class AmazonSqsHandlerFlowTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SQS-HANDLER-FLOW", "send-consume-handler-send-and-handler-publish")]
-    public async Task SendAndPublish_InvokeOnlyTheirTypedHandlers()
+    public async Task SendAndPublish_InvokeOnlyTheirTypedHandlersAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("handlerflow");
         string queueName = fixture.Name("input");
@@ -34,12 +34,12 @@ public sealed class AmazonSqsHandlerFlowTests
 
                     Uri sourceAddress = context.SourceAddress
                         ?? throw new InvalidDataException("An Amazon SQS receive contract must carry its source queue address.");
-                    ISendEndpoint source = await context.GetSendEndpoint(sourceAddress);
-                    await source.Send(
+                    ISendEndpoint source = await context.Advanced().GetSendEndpointAsync(sourceAddress);
+                    await source.SendAsync(
                         new C(context.Message.FlowId),
                         sendContext => sendContext.MessageId = handlerSentCId,
                         context.CancellationToken);
-                    await context.Publish(
+                    await context.Advanced().PublishAsync(
                         new D(context.Message.FlowId),
                         publishContext => publishContext.MessageId = handlerPublishedDId,
                         context.CancellationToken);
@@ -64,12 +64,11 @@ public sealed class AmazonSqsHandlerFlowTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
 
-            await input.Send(new A(flowId), context => context.MessageId = sentAId, cancellationToken)
+            await input.SendAsync(new A(flowId), context => context.MessageId = sentAId, cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await bus.Publish(new B(flowId), context => context.MessageId = publishedBId, cancellationToken)
+            await bus.PublishAsync(new B(flowId), context => context.MessageId = publishedBId, cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             Observed<A> actualA = await receivedA.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
@@ -91,7 +90,7 @@ public sealed class AmazonSqsHandlerFlowTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SQS-HANDLER-FLOW", "exact-message-id-for-send-and-publish")]
-    public async Task Handlers_ReceiveExactSendAndPublishContracts()
+    public async Task Handlers_ReceiveExactSendAndPublishContractsAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("contracts");
         string queueName = fixture.Name("input");
@@ -126,12 +125,11 @@ public sealed class AmazonSqsHandlerFlowTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
 
-            await input.Send(new A(sentFlowId), context => context.MessageId = sentMessageId, cancellationToken)
+            await input.SendAsync(new A(sentFlowId), context => context.MessageId = sentMessageId, cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await bus.Publish(new A(publishedFlowId), context => context.MessageId = publishedMessageId, cancellationToken)
+            await bus.PublishAsync(new A(publishedFlowId), context => context.MessageId = publishedMessageId, cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             Observed<A> actualSent = await sent.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
@@ -159,10 +157,10 @@ public sealed class AmazonSqsHandlerFlowTests
     private sealed class SentMessageObserver<TMessage>(TaskCompletionSource<Observed<TMessage>> completion) : ISendObserver
         where TMessage : class
     {
-        public Task PreSend<T>(SendContext<T> context)
+        public Task PreSendAsync<T>(SendContext<T> context)
             where T : class => Task.CompletedTask;
 
-        public Task PostSend<T>(SendContext<T> context)
+        public Task PostSendAsync<T>(SendContext<T> context)
             where T : class
         {
             if (context.Message is TMessage message)
@@ -171,7 +169,7 @@ public sealed class AmazonSqsHandlerFlowTests
             return Task.CompletedTask;
         }
 
-        public Task SendFault<T>(SendContext<T> context, Exception exception)
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
             where T : class => Task.CompletedTask;
     }
 }

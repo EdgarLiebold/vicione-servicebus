@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ViciOne.ServiceBus.Serialization;
 
@@ -19,7 +20,7 @@ public class MessageIdMessageHeader :
         yield return new KeyValuePair<string, object>(nameof(MessageContext.MessageId), _messageId);
     }
 
-    public bool TryGetHeader(string key, out object value)
+    public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
     {
         if (key == null)
             throw new ArgumentNullException(nameof(key));
@@ -34,7 +35,8 @@ public class MessageIdMessageHeader :
         return false;
     }
 
-    T Headers.Get<T>(string key, T defaultValue)
+    T? Headers.Get<T>(string key, T? defaultValue)
+        where T : class
     {
         if (key.Equals(nameof(MessageContext.MessageId)))
             return _messageId as T;

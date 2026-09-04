@@ -11,31 +11,30 @@ public sealed class QuartzMissingSagaRedeliveryIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-MISSING-SAGA", "redelivery-finds-later-instance")]
-    public async Task MissingSaga_IsScheduledThroughQuartzAndDeliveredAfterTheInstanceExists()
+    public async Task MissingSaga_IsScheduledThroughQuartzAndDeliveredAfterTheInstanceExistsAsync()
     {
         TimeSpan timeout = OperationTimeout();
         string queueName = $"quartz-missing-saga-{NewId.NextGuid():N}";
         var inputAddress = new Uri($"loopback://localhost/{queueName}");
         var stateMachine = new ServiceStateMachine();
         var repository = new InMemorySagaRepository<ServiceInstance>();
-        await using QuartzTestBus fixture = await QuartzTestBus.Start(
+        await using QuartzTestBus fixture = await QuartzTestBus.StartAsync(
             timeout,
             configure: configurator => configurator.ReceiveEndpoint(queueName, endpoint =>
                 endpoint.StateMachineSaga(stateMachine, repository)));
         var scheduledCommands = new ConsumeCompletionObserver<ScheduleMessage>(_ => true);
         using ConnectHandle observer = fixture.Bus.ConnectConsumeObserver(scheduledCommands);
         IRequestClient<CheckServiceStatus> requestClient = fixture.Bus.CreateRequestClient<CheckServiceStatus>(inputAddress, timeout);
-        Task<Response<ServiceStatus, ServiceInstanceNotFound>> responseTask = requestClient.GetResponse<
+        Task<Response<ServiceStatus, ServiceInstanceNotFound>> responseTask = requestClient.Advanced().GetResponseAsync<
             ServiceStatus,
             ServiceInstanceNotFound>(
             new CheckServiceStatus("scheduler"),
-            TestContext.Current.CancellationToken);
+            cancellationToken: TestContext.Current.CancellationToken);
 
         await scheduledCommands.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
-        ISendEndpoint input = await fixture.Bus.GetSendEndpoint(inputAddress)
-            .WaitAsync(timeout, TestContext.Current.CancellationToken);
+        ISendEndpoint input = await fixture.Bus.GetSendEndpointAsync(inputAddress, TestContext.Current.CancellationToken).WaitAsync(timeout, TestContext.Current.CancellationToken);
         Guid serviceId = NewId.NextGuid();
-        await input.Send(new StartService("scheduler", serviceId), TestContext.Current.CancellationToken);
+        await input.SendAsync(new StartService("scheduler", serviceId), TestContext.Current.CancellationToken);
         await stateMachine.Started.WaitAsync(timeout, TestContext.Current.CancellationToken);
 
         Response<ServiceStatus, ServiceInstanceNotFound> response = await responseTask

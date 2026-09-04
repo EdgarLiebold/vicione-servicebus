@@ -19,11 +19,11 @@ internal sealed class RabbitMqQueueOperations : IRabbitMqQueueOperations
         _busInstance = busInstance;
     }
 
-    public Task<RabbitMqFaultRedriveResult> RedriveFaultedMessages(
+    public Task<RabbitMqFaultRedriveResult> RedriveFaultedMessagesAsync(
         RabbitMqFaultRedriveRequest request,
         CancellationToken cancellationToken = default)
     {
-        return RabbitMqFaultRedriveExecutor.Execute(_busInstance.Value, request, cancellationToken);
+        return RabbitMqFaultRedriveExecutor.ExecuteAsync(_busInstance.Value, request, cancellationToken);
     }
 }
 
@@ -38,18 +38,18 @@ internal sealed class RabbitMqQueueOperations<TBus> : IRabbitMqQueueOperations<T
         _busInstance = busInstance;
     }
 
-    public Task<RabbitMqFaultRedriveResult> RedriveFaultedMessages(
+    public Task<RabbitMqFaultRedriveResult> RedriveFaultedMessagesAsync(
         RabbitMqFaultRedriveRequest request,
         CancellationToken cancellationToken = default)
     {
-        return RabbitMqFaultRedriveExecutor.Execute(_busInstance.BusInstance, request, cancellationToken);
+        return RabbitMqFaultRedriveExecutor.ExecuteAsync(_busInstance.BusInstance, request, cancellationToken);
     }
 }
 
 
 internal static class RabbitMqFaultRedriveExecutor
 {
-    public static async Task<RabbitMqFaultRedriveResult> Execute(
+    public static async Task<RabbitMqFaultRedriveResult> ExecuteAsync(
         IBusInstance busInstance,
         RabbitMqFaultRedriveRequest request,
         CancellationToken cancellationToken)
@@ -68,15 +68,15 @@ internal static class RabbitMqFaultRedriveExecutor
             hostConfiguration.Topology.SendTopology.ErrorQueueNameFormatter);
 
         RabbitMqFaultRedriveResult? result = null;
-        await hostConfiguration.ConnectionContextSupervisor.Send(Pipe.ExecuteAsync<ConnectionContext>(async connectionContext =>
+        await hostConfiguration.ConnectionContextSupervisor.SendAsync(Pipe.ExecuteAsync<ConnectionContext>(async connectionContext =>
         {
-            result = await Execute(connectionContext, request, sourceQueueName, cancellationToken).ConfigureAwait(false);
+            result = await ExecuteAsync(connectionContext, request, sourceQueueName, cancellationToken).ConfigureAwait(false);
         }), cancellationToken).ConfigureAwait(false);
 
         return result ?? throw new InvalidOperationException("RabbitMQ fault redrive completed without producing a result.");
     }
 
-    static async Task<RabbitMqFaultRedriveResult> Execute(
+    static async Task<RabbitMqFaultRedriveResult> ExecuteAsync(
         ConnectionContext connectionContext,
         RabbitMqFaultRedriveRequest request,
         string sourceQueueName,
@@ -87,10 +87,10 @@ internal static class RabbitMqFaultRedriveExecutor
         channel.ContinuationTimeout = connectionContext.ContinuationTimeout;
 
         var adapter = new RabbitMqFaultRedriveChannel(channel);
-        await adapter.VerifyQueue(sourceQueueName, cancellationToken).ConfigureAwait(false);
-        await adapter.VerifyQueue(request.EndpointQueueName, cancellationToken).ConfigureAwait(false);
+        await adapter.VerifyQueueAsync(sourceQueueName, cancellationToken).ConfigureAwait(false);
+        await adapter.VerifyQueueAsync(request.EndpointQueueName, cancellationToken).ConfigureAwait(false);
 
-        return await RabbitMqFaultRedriveLoop.Execute(adapter, request, sourceQueueName, cancellationToken).ConfigureAwait(false);
+        return await RabbitMqFaultRedriveLoop.ExecuteAsync(adapter, request, sourceQueueName, cancellationToken).ConfigureAwait(false);
     }
 
     internal static CreateChannelOptions CreateOperationsChannelOptions() => new(
@@ -116,7 +116,7 @@ internal static class RabbitMqFaultRedriveExecutor
 
 internal static class RabbitMqFaultRedriveLoop
 {
-    public static async Task<RabbitMqFaultRedriveResult> Execute(
+    public static async Task<RabbitMqFaultRedriveResult> ExecuteAsync(
         IRabbitMqFaultRedriveChannel channel,
         RabbitMqFaultRedriveRequest request,
         string sourceQueueName,
@@ -136,7 +136,7 @@ internal static class RabbitMqFaultRedriveLoop
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            RabbitMqFaultRedriveDelivery? message = await channel.Get(sourceQueueName, cancellationToken).ConfigureAwait(false);
+            RabbitMqFaultRedriveDelivery? message = await channel.GetAsync(sourceQueueName, cancellationToken).ConfigureAwait(false);
             if (message == null)
             {
                 sourceExhausted = true;
@@ -148,13 +148,13 @@ internal static class RabbitMqFaultRedriveLoop
                 continue;
 
             matched++;
-            await channel.Publish(
+            await channel.PublishAsync(
                 request.EndpointQueueName,
                 message.RoutingKey,
                 message.Properties,
                 message.Body,
                 cancellationToken).ConfigureAwait(false);
-            await channel.Acknowledge(message.DeliveryTag, cancellationToken).ConfigureAwait(false);
+            await channel.AcknowledgeAsync(message.DeliveryTag, cancellationToken).ConfigureAwait(false);
             redriven++;
         }
 
@@ -237,16 +237,16 @@ internal static class RabbitMqFaultRedriveLoop
 
 internal interface IRabbitMqFaultRedriveChannel
 {
-    Task<RabbitMqFaultRedriveDelivery?> Get(string queueName, CancellationToken cancellationToken);
+    Task<RabbitMqFaultRedriveDelivery?> GetAsync(string queueName, CancellationToken cancellationToken);
 
-    Task Publish(
+    Task PublishAsync(
         string exchangeName,
         string routingKey,
         BasicProperties properties,
         ReadOnlyMemory<byte> body,
         CancellationToken cancellationToken);
 
-    Task Acknowledge(ulong deliveryTag, CancellationToken cancellationToken);
+    Task AcknowledgeAsync(ulong deliveryTag, CancellationToken cancellationToken);
 }
 
 
@@ -266,12 +266,12 @@ sealed class RabbitMqFaultRedriveChannel : IRabbitMqFaultRedriveChannel
         _channel = channel;
     }
 
-    public async Task VerifyQueue(string queueName, CancellationToken cancellationToken)
+    public async Task VerifyQueueAsync(string queueName, CancellationToken cancellationToken)
     {
         await _channel.QueueDeclarePassiveAsync(queueName, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<RabbitMqFaultRedriveDelivery?> Get(string queueName, CancellationToken cancellationToken)
+    public async Task<RabbitMqFaultRedriveDelivery?> GetAsync(string queueName, CancellationToken cancellationToken)
     {
         BasicGetResult? message = await _channel.BasicGetAsync(queueName, autoAck: false, cancellationToken).ConfigureAwait(false);
         return message == null
@@ -283,7 +283,7 @@ sealed class RabbitMqFaultRedriveChannel : IRabbitMqFaultRedriveChannel
                 message.Body);
     }
 
-    public async Task Publish(
+    public async Task PublishAsync(
         string exchangeName,
         string routingKey,
         BasicProperties properties,
@@ -299,7 +299,7 @@ sealed class RabbitMqFaultRedriveChannel : IRabbitMqFaultRedriveChannel
             cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task Acknowledge(ulong deliveryTag, CancellationToken cancellationToken)
+    public async Task AcknowledgeAsync(ulong deliveryTag, CancellationToken cancellationToken)
     {
         await _channel.BasicAckAsync(deliveryTag, multiple: false, cancellationToken).ConfigureAwait(false);
     }

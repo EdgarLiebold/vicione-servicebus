@@ -10,7 +10,7 @@ public sealed class ResourceCacheObserverAndDisposalTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-OBSERVER", "add-fanout-completes-before-rethrow")]
-    public async Task AddedObserverFailure_IsIsolatedAfterAtomicCommitAndDoesNotSkipLaterObservers()
+    public async Task AddedObserverFailure_IsIsolatedAfterAtomicCommitAndDoesNotSkipLaterObserversAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
@@ -30,7 +30,7 @@ public sealed class ResourceCacheObserverAndDisposalTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-OBSERVER", "remove-fanout-and-disposal-complete")]
-    public async Task RemovedObserverFailure_DoesNotSkipLaterObserversOrResourceDisposal()
+    public async Task RemovedObserverFailure_DoesNotSkipLaterObserversOrResourceDisposalAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
@@ -50,7 +50,7 @@ public sealed class ResourceCacheObserverAndDisposalTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-OBSERVER", "clear-fanout-completes-before-rethrow")]
-    public async Task ClearedObserverFailure_DoesNotSkipLaterObserversOrLeaveIndexedState()
+    public async Task ClearedObserverFailure_DoesNotSkipLaterObserversOrLeaveIndexedStateAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
@@ -69,7 +69,7 @@ public sealed class ResourceCacheObserverAndDisposalTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-DISPOSAL", "clear-and-rollover-are-asynchronous")]
-    public async Task ClearAsync_AwaitsAsynchronousDisposalWithoutBlockingTheCallingThread()
+    public async Task ClearAsync_AwaitsAsynchronousDisposalWithoutBlockingTheCallingThreadAsync()
     {
         await using var cache = CreateCache();
         var disposal = new AsyncDisposalProbe("one");
@@ -87,7 +87,7 @@ public sealed class ResourceCacheObserverAndDisposalTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-CAPACITY", "observer-failure-does-not-strand-cleanup")]
-    public async Task AddedObserverFailure_DoesNotStrandCapacityEviction()
+    public async Task AddedObserverFailure_DoesNotStrandCapacityEvictionAsync()
     {
         await using var cache = CreateCache(capacity: 1);
         IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
@@ -105,7 +105,7 @@ public sealed class ResourceCacheObserverAndDisposalTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-CAPACITY", "removal-observer-failure-does-not-strand-cleanup")]
-    public async Task RemovedObserverFailure_DoesNotStrandCapacityEvictionOrDisposal()
+    public async Task RemovedObserverFailure_DoesNotStrandCapacityEvictionOrDisposalAsync()
     {
         await using var cache = CreateCache(capacity: 1);
         var first = new Resource("one");
@@ -121,7 +121,7 @@ public sealed class ResourceCacheObserverAndDisposalTests
     }
 
     [Fact]
-    public async Task GetOrAddAsync_DoesNotCompleteUntilTheAddedObserverHasFinished()
+    public async Task GetOrAddAsync_DoesNotCompleteUntilTheAddedObserverHasFinishedAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
@@ -141,7 +141,7 @@ public sealed class ResourceCacheObserverAndDisposalTests
     }
 
     [Fact]
-    public async Task ObserverCallbacks_AreSerializedAcrossConcurrentCommits()
+    public async Task ObserverCallbacks_AreSerializedAcrossConcurrentCommitsAsync()
     {
         await using var cache = CreateCache();
         var observer = new ConcurrencyObserver(expectedCalls: 16);
@@ -158,7 +158,7 @@ public sealed class ResourceCacheObserverAndDisposalTests
     }
 
     [Fact]
-    public async Task ObserverReentry_IsRejectedBeforeItCanMutateTheCache()
+    public async Task ObserverReentry_IsRejectedBeforeItCanMutateTheCacheAsync()
     {
         await using var cache = CreateCache();
         InvalidOperationException? observed = null;
@@ -176,7 +176,7 @@ public sealed class ResourceCacheObserverAndDisposalTests
     }
 
     [Fact]
-    public async Task Disconnect_StopsFutureNotificationsWithoutChangingCommittedState()
+    public async Task Disconnect_StopsFutureNotificationsWithoutChangingCommittedStateAsync()
     {
         await using var cache = CreateCache();
         var observer = new RecordingObserver();
@@ -192,7 +192,7 @@ public sealed class ResourceCacheObserverAndDisposalTests
     }
 
     [Fact]
-    public async Task Eviction_AwaitsAsynchronousDisposalAndReleasesTheResourceExactlyOnce()
+    public async Task Eviction_AwaitsAsynchronousDisposalAndReleasesTheResourceExactlyOnceAsync()
     {
         await using var cache = CreateCache(capacity: 1);
         var disposal = new AsyncDisposalProbe("one");
@@ -209,7 +209,7 @@ public sealed class ResourceCacheObserverAndDisposalTests
     }
 
     [Fact]
-    public async Task DisposeAsync_ReleasesEveryOwnedResourceExactlyOnceAndRejectsFurtherOperations()
+    public async Task DisposeAsync_ReleasesEveryOwnedResourceExactlyOnceAndRejectsFurtherOperationsAsync()
     {
         var cache = CreateCache();
         var first = new Resource("one");
@@ -227,7 +227,7 @@ public sealed class ResourceCacheObserverAndDisposalTests
     }
 
     [Fact]
-    public async Task DisposalFailure_DoesNotPreventRemainingResourcesFromBeingReleased()
+    public async Task DisposalFailure_DoesNotPreventRemainingResourcesFromBeingReleasedAsync()
     {
         var cache = CreateCache();
         var faulting = new FaultingDisposableResource("faulting");
@@ -300,19 +300,19 @@ public sealed class ResourceCacheObserverAndDisposalTests
 
         public ValueTask ResourceAddedAsync(Resource value, CancellationToken cancellationToken)
         {
-            _events.Add($"add:{value.Id}");
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken); _events.Add($"add:{value.Id}");
             return default;
         }
 
         public ValueTask ResourceRemovedAsync(Resource value, CancellationToken cancellationToken)
         {
-            _events.Add($"remove:{value.Id}");
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken); _events.Add($"remove:{value.Id}");
             return default;
         }
 
         public ValueTask CacheClearedAsync(CancellationToken cancellationToken)
         {
-            _events.Add("clear");
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken); _events.Add("clear");
             return default;
         }
     }
@@ -345,10 +345,8 @@ public sealed class ResourceCacheObserverAndDisposalTests
             await _releaseAdded.Task.WaitAsync(cancellationToken);
         }
 
-        public ValueTask ResourceRemovedAsync(Resource value, CancellationToken cancellationToken) => default;
-
-        public ValueTask CacheClearedAsync(CancellationToken cancellationToken) => default;
-
+        public ValueTask ResourceRemovedAsync(Resource value, CancellationToken cancellationToken) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken); return default; }
+        public ValueTask CacheClearedAsync(CancellationToken cancellationToken) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken); return default; }
         public void ReleaseAdded() => _releaseAdded.TrySetResult();
     }
 
@@ -365,7 +363,7 @@ public sealed class ResourceCacheObserverAndDisposalTests
 
         public async ValueTask ResourceAddedAsync(Resource value, CancellationToken cancellationToken)
         {
-            int concurrent = Interlocked.Increment(ref _concurrency);
+            cancellationToken.ThrowIfCancellationRequested(); int concurrent = Interlocked.Increment(ref _concurrency);
             UpdateMaximum(concurrent);
             await Task.Yield();
             if (Interlocked.Increment(ref _callCount) == expectedCalls)
@@ -373,10 +371,8 @@ public sealed class ResourceCacheObserverAndDisposalTests
             Interlocked.Decrement(ref _concurrency);
         }
 
-        public ValueTask ResourceRemovedAsync(Resource value, CancellationToken cancellationToken) => default;
-
-        public ValueTask CacheClearedAsync(CancellationToken cancellationToken) => default;
-
+        public ValueTask ResourceRemovedAsync(Resource value, CancellationToken cancellationToken) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken); return default; }
+        public ValueTask CacheClearedAsync(CancellationToken cancellationToken) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken); return default; }
         private void UpdateMaximum(int candidate)
         {
             int observed;

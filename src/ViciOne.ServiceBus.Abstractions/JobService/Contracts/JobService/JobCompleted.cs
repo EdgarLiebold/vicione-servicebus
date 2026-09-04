@@ -13,7 +13,7 @@ public interface JobCompleted
     /// </summary>
     Guid JobId { get; }
 
-    DateTime Timestamp { get; }
+    DateTimeOffset Timestamp { get; }
 
     TimeSpan Duration { get; }
 
@@ -47,7 +47,7 @@ public interface JobCompleted<out T>
 {
     Guid JobId { get; }
 
-    DateTime Timestamp { get; }
+    DateTimeOffset Timestamp { get; }
 
     TimeSpan Duration { get; }
 

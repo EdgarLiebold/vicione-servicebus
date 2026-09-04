@@ -70,18 +70,18 @@ public class PostgresDbConnectionContext :
         return new PostgresClientContext(this, cancellationToken);
     }
 
-    async Task<ISqlTransportConnection> ConnectionContext.CreateConnection(CancellationToken cancellationToken)
+    async Task<ISqlTransportConnection> ConnectionContext.CreateConnectionAsync(CancellationToken cancellationToken)
     {
-        return await CreateConnection(cancellationToken).ConfigureAwait(false);
+        return await CreateConnectionAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    public Task<T> Query<T>(Func<IDbConnection, IDbTransaction, Task<T>> callback, CancellationToken cancellationToken)
+    public Task<T> QueryAsync<T>(Func<IDbConnection, IDbTransaction, Task<T>> callback, CancellationToken cancellationToken)
     {
         return _executor.ExecuteAsync(() =>
         {
-            return _retryPolicy.Retry(async () =>
+            return _retryPolicy.RetryAsync(async () =>
             {
-                await using var connection = await CreateConnection(cancellationToken).ConfigureAwait(false);
+                await using var connection = await CreateConnectionAsync(cancellationToken).ConfigureAwait(false);
 
                 await using var transaction = await connection.Connection.BeginTransactionAsync(_hostSettings.IsolationLevel, cancellationToken)
                     .ConfigureAwait(false);
@@ -95,7 +95,7 @@ public class PostgresDbConnectionContext :
         }, cancellationToken);
     }
 
-    public Task DelayUntilMessageReady(long queueId, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken)
+    public Task DelayUntilMessageReadyAsync(long queueId, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(timeProvider);
         var queueToken = _agent.GetCancellationTokenForQueue(queueId);
@@ -123,11 +123,11 @@ public class PostgresDbConnectionContext :
         TransportLogMessages.DisconnectedHost(_hostConfiguration.HostAddress.ToString());
     }
 
-    async Task<IPostgresSqlTransportConnection> CreateConnection(CancellationToken cancellationToken)
+    async Task<IPostgresSqlTransportConnection> CreateConnectionAsync(CancellationToken cancellationToken)
     {
         var connection = new PostgresSqlTransportConnection(_dataSource.CreateConnection());
 
-        await connection.Open(cancellationToken).ConfigureAwait(false);
+        await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
 
         return connection;
     }
@@ -151,7 +151,7 @@ public class PostgresDbConnectionContext :
             _notificationTokens = new ConcurrentDictionary<long, CancellationTokenSource>();
             _listenTokenSource = new CancellationTokenSource();
 
-            var runTask = Task.Run(() => ListenForNotifications(), Stopping);
+            var runTask = Task.Run(() => ListenForNotificationsAsync(), Stopping);
 
             SetReady(runTask);
 
@@ -186,7 +186,7 @@ public class PostgresDbConnectionContext :
             }
         }
 
-        async Task ListenForNotifications()
+        async Task ListenForNotificationsAsync()
         {
             LogContext.SetCurrentIfNull(_logContext);
 
@@ -194,9 +194,9 @@ public class PostgresDbConnectionContext :
             {
                 try
                 {
-                    await _hostConfiguration.Retry(async () =>
+                    await _hostConfiguration.RetryAsync(async () =>
                     {
-                        await using var connection = await _context.CreateConnection(Stopping);
+                        await using var connection = await _context.CreateConnectionAsync(Stopping);
 
                         var queueIds = new HashSet<long>(_notificationTokens.Keys);
                         var sanitizedSchemaName = NotifyChannel.SanitizeSchemaName(_context.Schema);
@@ -278,14 +278,14 @@ public class PostgresDbConnectionContext :
             _hostConfiguration = hostConfiguration;
             _logContext = hostConfiguration.LogContext;
 
-            var runTask = Task.Run(() => PerformMaintenance(), Stopping);
+            var runTask = Task.Run(() => PerformMaintenanceAsync(), Stopping);
 
             SetReady(runTask);
 
             SetCompleted(runTask);
         }
 
-        async Task PerformMaintenance()
+        async Task PerformMaintenanceAsync()
         {
             LogContext.SetCurrentIfNull(_logContext);
 
@@ -317,12 +317,12 @@ public class PostgresDbConnectionContext :
 
                         try
                         {
-                            await _context.Query(
+                            await _context.QueryAsync(
                                 (x, t) => x.ExecuteScalarAsync<long?>(processMetricsSql,
                                     new { row_limit = _hostConfiguration.Settings.MaintenanceBatchSize }, t), timeoutToken.Token);
 
                             if (lastCleanup == null)
-                                await _context.Query((x, t) => x.ExecuteScalarAsync<long?>(purgeTopologySql, t), timeoutToken.Token);
+                                await _context.QueryAsync((x, t) => x.ExecuteScalarAsync<long?>(purgeTopologySql, t), timeoutToken.Token);
                         }
                         catch (ObjectDisposedException)
                         {
@@ -335,9 +335,9 @@ public class PostgresDbConnectionContext :
                         }
                     }
 
-                    await _hostConfiguration.Retry(async () =>
+                    await _hostConfiguration.RetryAsync(async () =>
                     {
-                        await _context.Query((x, t) => x.ExecuteScalarAsync<long?>(processMetricsSql, new
+                        await _context.QueryAsync((x, t) => x.ExecuteScalarAsync<long?>(processMetricsSql, new
                         {
                             row_limit = _hostConfiguration.Settings.MaintenanceBatchSize,
                         }, t), Stopping);
@@ -346,13 +346,13 @@ public class PostgresDbConnectionContext :
 
                         if (lastCleanup == null || lastCleanup < utcNow - cleanupInterval)
                         {
-                            await _context.Query((x, t) => x.ExecuteScalarAsync<long?>(purgeTopologySql, t), Stopping);
+                            await _context.QueryAsync((x, t) => x.ExecuteScalarAsync<long?>(purgeTopologySql, t), Stopping);
 
                             lastCleanup = utcNow;
                             cleanupInterval = _hostConfiguration.Settings.QueueCleanupInterval
                                 + TimeSpan.FromSeconds(random.Next(0, (int)(_hostConfiguration.Settings.QueueCleanupInterval.TotalSeconds / 10)));
 
-                            await _context.Query((x, t) => x.ExecuteScalarAsync<long?>(removeOrphanedMessagesSql,
+                            await _context.QueryAsync((x, t) => x.ExecuteScalarAsync<long?>(removeOrphanedMessagesSql,
                                 new { row_limit = _hostConfiguration.Settings.MaintenanceBatchSize }, t), Stopping);
                         }
                     }, Stopping, Stopping);

@@ -17,23 +17,23 @@ public sealed class SqlProvisioningCredentialTests
     [InlineData("postgresql")]
     [InlineData("sqlserver")]
     [RequirementCoverage("OBL-R0-SQL-0129", "sql-native-security-owner")]
-    public async Task ProvisionedAccountAcceptsQuotedPasswordWithoutPublishingItInStatementText(string provider)
+    public async Task ProvisionedAccountAcceptsQuotedPasswordWithoutPublishingItInStatementTextAsync(string provider)
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         switch (provider)
         {
             case "postgresql":
-                await VerifyPostgreSql(cancellationToken);
+                await VerifyPostgreSqlAsync(cancellationToken);
                 break;
             case "sqlserver":
-                await VerifySqlServer(cancellationToken);
+                await VerifySqlServerAsync(cancellationToken);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(provider), provider, null);
         }
     }
 
-    private static async Task VerifySqlServer(CancellationToken cancellationToken)
+    private static async Task VerifySqlServerAsync(CancellationToken cancellationToken)
     {
         ViciOneTestOptions testOptions = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedLocalOptions(LocalTestResource.SqlServer);
@@ -57,9 +57,9 @@ public sealed class SqlProvisioningCredentialTests
         bool databaseCreated = false;
         try
         {
-            await migrator.CreateDatabase(options, cancellationToken);
+            await migrator.CreateDatabaseAsync(options, cancellationToken);
             databaseCreated = true;
-            await migrator.CreateSchemaIfNotExist(options, cancellationToken);
+            await migrator.CreateSchemaIfNotExistAsync(options, cancellationToken);
 
             var accountBuilder = new SqlConnectionStringBuilder
             {
@@ -78,13 +78,13 @@ public sealed class SqlProvisioningCredentialTests
 
             await using SqlConnection admin = SqlServerAdminConnection(provider, "master");
             await admin.OpenAsync(cancellationToken);
-            Assert.Equal(0, await SqlServerCachedPasswordCount(admin, cancellationToken));
+            Assert.Equal(0, await SqlServerCachedPasswordCountAsync(admin, cancellationToken));
         }
         finally
         {
             using var cleanup = new CancellationTokenSource(testOptions.OperationTimeout!.Value);
             if (databaseCreated)
-                await migrator.DeleteDatabase(options, cleanup.Token);
+                await migrator.DeleteDatabaseAsync(options, cleanup.Token);
             await using SqlConnection admin = SqlServerAdminConnection(provider, "master");
             await admin.OpenAsync(cleanup.Token);
             await using var drop = new SqlCommand(
@@ -96,7 +96,7 @@ public sealed class SqlProvisioningCredentialTests
         }
     }
 
-    private static async Task VerifyPostgreSql(CancellationToken cancellationToken)
+    private static async Task VerifyPostgreSqlAsync(CancellationToken cancellationToken)
     {
         ViciOneTestOptions testOptions = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedLocalOptions(LocalTestResource.PostgreSql);
@@ -121,9 +121,9 @@ public sealed class SqlProvisioningCredentialTests
         bool databaseCreated = false;
         try
         {
-            await migrator.CreateDatabase(options, cancellationToken);
+            await migrator.CreateDatabaseAsync(options, cancellationToken);
             databaseCreated = true;
-            await migrator.CreateSchemaIfNotExist(options, cancellationToken);
+            await migrator.CreateSchemaIfNotExistAsync(options, cancellationToken);
 
             var accountBuilder = new NpgsqlConnectionStringBuilder
             {
@@ -152,7 +152,7 @@ public sealed class SqlProvisioningCredentialTests
         {
             using var cleanup = new CancellationTokenSource(testOptions.OperationTimeout!.Value);
             if (databaseCreated)
-                await migrator.DeleteDatabase(options, cleanup.Token);
+                await migrator.DeleteDatabaseAsync(options, cleanup.Token);
             await using NpgsqlConnection admin = PostgreSqlAdminConnection(provider);
             await admin.OpenAsync(cleanup.Token);
             await using var drop = new NpgsqlCommand(
@@ -175,7 +175,7 @@ public sealed class SqlProvisioningCredentialTests
         return new SqlConnection(builder.ConnectionString);
     }
 
-    private static async Task<int> SqlServerCachedPasswordCount(
+    private static async Task<int> SqlServerCachedPasswordCountAsync(
         SqlConnection connection,
         CancellationToken cancellationToken)
     {

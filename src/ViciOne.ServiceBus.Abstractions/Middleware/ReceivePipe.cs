@@ -18,9 +18,9 @@ public class ReceivePipe :
 
     public Task Connected => _consumePipe.Connected;
 
-    Task IPipe<ReceiveContext>.Send(ReceiveContext context)
+    Task IPipe<ReceiveContext>.SendAsync(ReceiveContext context)
     {
-        return _receivePipe.Send(context);
+        return _receivePipe.SendAsync(context);
     }
 
     void IProbeSite.Probe(ProbeContext context)

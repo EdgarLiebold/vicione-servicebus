@@ -43,7 +43,8 @@ public class TransportInMemoryReceiveEndpointContext :
         var builder = new MessageFabricConsumeTopologyBuilder<InMemoryTransportContext, InMemoryTransportMessage>(_hostConfiguration.TransportProvider,
             MessageFabric);
 
-        var name = _configuration.InputAddress.GetEndpointName();
+        var name = _configuration.InputAddress.GetEndpointName()
+            ?? throw new ConfigurationException("The in-memory input address must contain an endpoint name.");
 
         builder.Exchange = name;
         builder.ExchangeDeclare(name, ExchangeType.FanOut);

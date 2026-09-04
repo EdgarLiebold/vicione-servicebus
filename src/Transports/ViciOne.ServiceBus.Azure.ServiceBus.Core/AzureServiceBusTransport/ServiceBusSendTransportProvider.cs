@@ -21,8 +21,8 @@ public class ServiceBusSendTransportProvider :
         return _connectionContextSupervisor.NormalizeAddress(address);
     }
 
-    Task<ISendTransport> ISendTransportProvider.GetSendTransport(Uri address)
+    Task<ISendTransport> ISendTransportProvider.GetSendTransportAsync(Uri address, CancellationToken cancellationToken)
     {
-        return _connectionContextSupervisor.CreateSendTransport(_context, address);
+        return _connectionContextSupervisor.CreateSendTransportAsync(_context, address, cancellationToken: cancellationToken);
     }
 }

@@ -14,19 +14,19 @@ public sealed class MediatorRequestTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MEDIATOR-REQUEST", "two-request-contracts-one-consumer")]
-    public async Task SendRequest_ServesTwoTypedRequestContractsWithExactResponses()
+    public async Task SendRequest_ServesTwoTypedRequestContractsWithExactResponsesAsync()
     {
         await using ServiceProvider provider = new ServiceCollection()
             .AddMediator(configurator => configurator.AddConsumer<UserRequestConsumer>())
             .BuildServiceProvider(validateScopes: true);
         IMediator mediator = provider.GetRequiredService<IMediator>();
 
-        User byUsername = await mediator.SendRequest(
+        User byUsername = await mediator.SendRequestAsync(
             new UserFromUsername("phatboyg"),
-            TestContext.Current.CancellationToken);
-        User byEmail = await mediator.SendRequest(
+            cancellationToken: TestContext.Current.CancellationToken);
+        User byEmail = await mediator.SendRequestAsync(
             new UserFromEmail("phatboyg@gmail.com"),
-            TestContext.Current.CancellationToken);
+            cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal(new User(123, "phatboyg", "phatboyg@compuserve.net"), byUsername);
         Assert.Equal(new User(123, "phatboyg", "phatboyg@gmail.com"), byEmail);
@@ -34,7 +34,7 @@ public sealed class MediatorRequestTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MEDIATOR-REQUEST", "consumer-exception-unwrapped")]
-    public async Task SendRequest_UnwrapsTheOriginalConsumerExceptionExactly()
+    public async Task SendRequest_UnwrapsTheOriginalConsumerExceptionExactlyAsync()
     {
         await using ServiceProvider provider = new ServiceCollection()
             .AddMediator(configurator => configurator.AddConsumer<UserRequestConsumer>())
@@ -42,16 +42,16 @@ public sealed class MediatorRequestTests
         IMediator mediator = provider.GetRequiredService<IMediator>();
 
         UserNotFoundException exception = await Assert.ThrowsAsync<UserNotFoundException>(() =>
-            mediator.SendRequest(
+            mediator.SendRequestAsync(
                 new UserFromUsername("missing"),
-                TestContext.Current.CancellationToken));
+                cancellationToken: TestContext.Current.CancellationToken));
 
         Assert.Equal("User not found: missing", exception.Message);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MEDIATOR-REQUEST", "virtual-deadline")]
-    public async Task MissingMediatorResponse_ExpiresOnlyWhenTheInjectedTimeProviderAdvances()
+    public async Task MissingMediatorResponse_ExpiresOnlyWhenTheInjectedTimeProviderAdvancesAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
         IMediator mediator = Bus.Factory.CreateMediator(
@@ -65,9 +65,9 @@ public sealed class MediatorRequestTests
             message,
             TestContext.Current.CancellationToken);
         var concreteRequest = Assert.IsType<ViciOne.ServiceBus.Clients.ClientRequestHandle<PendingRequest>>(request);
-        Task<Response<PendingResponse>> response = request.GetResponse<PendingResponse>();
+        Task<Response<PendingResponse>> response = request.GetResponseAsync<PendingResponse>(cancellationToken: TestContext.Current.CancellationToken);
 
-        await timeProvider.WaitForTimerCount(1).WaitAsync(
+        await timeProvider.WaitForTimerCountAsync(1).WaitAsync(
             VirtualTimeSafetyTimeout,
             TestContext.Current.CancellationToken);
         Assert.Same(message, await request.Message.WaitAsync(
@@ -88,7 +88,7 @@ public sealed class MediatorRequestTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MEDIATOR-REQUEST", "dependency-injection-time-provider")]
-    public async Task DependencyInjectionMediator_UsesTheRegisteredTimeProviderForRequestDeadlines()
+    public async Task DependencyInjectionMediator_UsesTheRegisteredTimeProviderForRequestDeadlinesAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
         await using ServiceProvider provider = new ServiceCollection()
@@ -105,9 +105,9 @@ public sealed class MediatorRequestTests
         using RequestHandle<PendingRequest> request = client.Create(
             message,
             TestContext.Current.CancellationToken);
-        Task<Response<PendingResponse>> response = request.GetResponse<PendingResponse>();
+        Task<Response<PendingResponse>> response = request.GetResponseAsync<PendingResponse>(cancellationToken: TestContext.Current.CancellationToken);
 
-        await timeProvider.WaitForTimerCount(1).WaitAsync(
+        await timeProvider.WaitForTimerCountAsync(1).WaitAsync(
             VirtualTimeSafetyTimeout,
             TestContext.Current.CancellationToken);
         Assert.Same(message, await request.Message.WaitAsync(
@@ -128,7 +128,7 @@ public sealed class MediatorRequestTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MEDIATOR-REQUEST", "missing-handler-owned-task-failures")]
-    public async Task MissingMediatorHandler_FaultsEveryPublicRequestTaskWithItsOwnedFailure()
+    public async Task MissingMediatorHandler_FaultsEveryPublicRequestTaskWithItsOwnedFailureAsync()
     {
         IMediator mediator = Bus.Factory.CreateMediator(_ => { });
         await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
@@ -136,7 +136,7 @@ public sealed class MediatorRequestTests
         using RequestHandle<PendingRequest> request = client.Create(
             new PendingRequest("missing-handler"),
             TestContext.Current.CancellationToken);
-        Task<Response<PendingResponse>> response = request.GetResponse<PendingResponse>();
+        Task<Response<PendingResponse>> response = request.GetResponseAsync<PendingResponse>(cancellationToken: TestContext.Current.CancellationToken);
 
         RequestException responseException =
             await Assert.ThrowsAsync<RequestException>(() => response);
@@ -166,13 +166,13 @@ public sealed class MediatorRequestTests
         IConsumer<UserFromEmail>,
         IConsumer<UserFromUsername>
     {
-        public Task Consume(ConsumeContext<UserFromEmail> context) =>
+        public Task ConsumeAsync(ConsumeContext<UserFromEmail> context) =>
             context.RespondAsync(new User(
                 123,
                 context.Message.Email.Split('@')[0],
                 context.Message.Email));
 
-        public Task Consume(ConsumeContext<UserFromUsername> context)
+        public Task ConsumeAsync(ConsumeContext<UserFromUsername> context)
         {
             if (context.Message.Username == "missing")
                 throw new UserNotFoundException("User not found: missing");
@@ -186,7 +186,7 @@ public sealed class MediatorRequestTests
 
     private sealed class PendingRequestConsumer : IConsumer<PendingRequest>
     {
-        public Task Consume(ConsumeContext<PendingRequest> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<PendingRequest> context) => Task.CompletedTask;
     }
 
     private sealed class UserNotFoundException(string message) : Exception(message);

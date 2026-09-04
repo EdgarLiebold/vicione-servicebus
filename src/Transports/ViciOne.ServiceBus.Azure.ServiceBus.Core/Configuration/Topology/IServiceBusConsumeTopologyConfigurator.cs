@@ -18,5 +18,5 @@ public interface IServiceBusConsumeTopologyConfigurator :
     /// <param name="topicName">The topic name</param>
     /// <param name="subscriptionName">The name for the subscription</param>
     /// <param name="callback">Configure the exchange and binding</param>
-    void Subscribe(string topicName, string subscriptionName, Action<IServiceBusSubscriptionConfigurator> callback = null);
+    void Subscribe(string topicName, string subscriptionName, Action<IServiceBusSubscriptionConfigurator>? callback = null);
 }

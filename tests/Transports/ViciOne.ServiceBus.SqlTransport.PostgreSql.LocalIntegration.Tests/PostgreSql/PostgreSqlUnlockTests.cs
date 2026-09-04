@@ -12,7 +12,7 @@ public sealed class PostgreSqlUnlockTests
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("OBL-R0-SQL-0111", "postgresql-native-owner")]
-    public async Task FaultUnlock_UsesConfiguredOrZeroDelayAndPersistsAllFaultHeaders(bool configureDelay)
+    public async Task FaultUnlock_UsesConfiguredOrZeroDelayAndPersistsAllFaultHeadersAsync(bool configureDelay)
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase fixture = await PostgreSqlTestDatabase.CreateAsync(
@@ -20,7 +20,7 @@ public sealed class PostgreSqlUnlockTests
             cancellationToken);
         string queueName = fixture.Name("fault-input");
         TimeSpan expectedDelay = configureDelay ? TimeSpan.FromSeconds(90) : TimeSpan.Zero;
-        await CreateUnlockAudit(fixture, cancellationToken);
+        await CreateUnlockAuditAsync(fixture, cancellationToken);
 
         var observer = new FaultingReceiveObserver();
         IBusControl bus = SqlBusFactory.Create(configurator =>
@@ -40,9 +40,8 @@ public sealed class PostgreSqlUnlockTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await endpoint.Send(message, context => context.MessageId = message.Id, cancellationToken)
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await endpoint.SendAsync(message, context => context.MessageId = message.Id, cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             await observer.Faulted.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
         }
@@ -53,8 +52,8 @@ public sealed class PostgreSqlUnlockTests
         }
 
         await using NpgsqlConnection connection = fixture.CreateConnection();
-        await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
-        UnlockAudit audit = await ReadUnlockAudit(connection, fixture.Schema, message.Id, cancellationToken);
+        await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
+        UnlockAudit audit = await ReadUnlockAuditAsync(connection, fixture.Schema, message.Id, cancellationToken);
         Assert.Null(audit.LockId);
         Assert.Null(audit.ConsumerId);
         TimeSpan observedDelay = audit.EnqueueTimeUtc - audit.RecordedAtUtc;
@@ -75,22 +74,22 @@ public sealed class PostgreSqlUnlockTests
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("OBL-R0-SQL-0120", "postgresql-native-owner")]
-    public async Task UnlockProcedure_ClearsBothLockOwnersWithAndWithoutDelay(bool useDelay)
+    public async Task UnlockProcedure_ClearsBothLockOwnersWithAndWithoutDelayAsync(bool useDelay)
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase fixture = await PostgreSqlTestDatabase.CreateAsync(
             useDelay ? "unlock-delay" : "unlock-now",
             cancellationToken);
         string queueName = fixture.Name("unlock-input");
-        await DeclareQueue(fixture, queueName, cancellationToken);
+        await DeclareQueueAsync(fixture, queueName, cancellationToken);
         var message = new UnlockMessage(Guid.NewGuid());
-        await Send(fixture, queueName, message, cancellationToken);
+        await SendAsync(fixture, queueName, message, cancellationToken);
 
         await using NpgsqlConnection connection = fixture.CreateConnection();
-        await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
+        await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
         var lockId = Guid.NewGuid();
         var consumerId = Guid.NewGuid();
-        long deliveryId = await LockDelivery(
+        long deliveryId = await LockDeliveryAsync(
             connection,
             fixture.Schema,
             message.Id,
@@ -110,7 +109,7 @@ public sealed class PostgreSqlUnlockTests
             Assert.Equal(deliveryId, Convert.ToInt64(await command.ExecuteScalarAsync(cancellationToken)));
         }
 
-        UnlockState state = await ReadUnlockState(connection, fixture.Schema, message.Id, cancellationToken);
+        UnlockState state = await ReadUnlockStateAsync(connection, fixture.Schema, message.Id, cancellationToken);
         Assert.Null(state.LockId);
         Assert.Null(state.ConsumerId);
         Assert.InRange(
@@ -121,7 +120,7 @@ public sealed class PostgreSqlUnlockTests
         Assert.Equal("unlock", headers.RootElement.GetProperty("probe").GetString());
     }
 
-    private static async Task CreateUnlockAudit(PostgreSqlTestDatabase fixture, CancellationToken cancellationToken)
+    private static async Task CreateUnlockAuditAsync(PostgreSqlTestDatabase fixture, CancellationToken cancellationToken)
     {
         string sql = $$"""
             CREATE TABLE "{{fixture.Schema}}".unlock_audit
@@ -154,12 +153,12 @@ public sealed class PostgreSqlUnlockTests
                 FOR EACH ROW EXECUTE FUNCTION "{{fixture.Schema}}".capture_unlock();
             """;
         await using NpgsqlConnection connection = fixture.CreateConnection();
-        await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
+        await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
         await using var command = new NpgsqlCommand(sql, connection);
         await command.ExecuteNonQueryAsync(cancellationToken);
     }
 
-    private static async Task<UnlockAudit> ReadUnlockAudit(
+    private static async Task<UnlockAudit> ReadUnlockAuditAsync(
         NpgsqlConnection connection,
         string schema,
         Guid messageId,
@@ -181,7 +180,7 @@ public sealed class PostgreSqlUnlockTests
         return result;
     }
 
-    private static async Task<long> LockDelivery(
+    private static async Task<long> LockDeliveryAsync(
         NpgsqlConnection connection,
         string schema,
         Guid messageId,
@@ -201,7 +200,7 @@ public sealed class PostgreSqlUnlockTests
         return Convert.ToInt64(await command.ExecuteScalarAsync(cancellationToken));
     }
 
-    private static async Task<UnlockState> ReadUnlockState(
+    private static async Task<UnlockState> ReadUnlockStateAsync(
         NpgsqlConnection connection,
         string schema,
         Guid messageId,
@@ -224,7 +223,7 @@ public sealed class PostgreSqlUnlockTests
         return result;
     }
 
-    private static async Task DeclareQueue(
+    private static async Task DeclareQueueAsync(
         PostgreSqlTestDatabase fixture,
         string queueName,
         CancellationToken cancellationToken)
@@ -242,7 +241,7 @@ public sealed class PostgreSqlUnlockTests
         await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
     }
 
-    private static async Task Send(
+    private static async Task SendAsync(
         PostgreSqlTestDatabase fixture,
         string queueName,
         UnlockMessage message,
@@ -254,9 +253,9 @@ public sealed class PostgreSqlUnlockTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), cancellationToken: cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await endpoint.Send(message, context => context.MessageId = message.Id, cancellationToken)
+            await endpoint.SendAsync(message, context => context.MessageId = message.Id, cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
         }
         finally
@@ -287,22 +286,22 @@ public sealed class PostgreSqlUnlockTests
         public TaskCompletionSource Faulted { get; } =
             new(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        public Task PreReceive(ReceiveContext context)
+        public Task PreReceiveAsync(ReceiveContext context)
         {
             if (Interlocked.Increment(ref _preReceiveCount) == 1)
                 throw new DeliberateUnlockException("fault-unlock-probe");
             return Task.CompletedTask;
         }
 
-        public Task PostReceive(ReceiveContext context) => Task.CompletedTask;
+        public Task PostReceiveAsync(ReceiveContext context) => Task.CompletedTask;
 
-        public Task PostConsume<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
+        public Task PostConsumeAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
             where T : class => Task.CompletedTask;
 
-        public Task ConsumeFault<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
+        public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
             where T : class => Task.CompletedTask;
 
-        public Task ReceiveFault(ReceiveContext context, Exception exception)
+        public Task ReceiveFaultAsync(ReceiveContext context, Exception exception)
         {
             Faulted.TrySetResult();
             return Task.CompletedTask;

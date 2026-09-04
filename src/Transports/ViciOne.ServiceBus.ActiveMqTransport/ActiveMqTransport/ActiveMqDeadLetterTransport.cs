@@ -15,13 +15,13 @@ public class ActiveMqDeadLetterTransport :
     {
     }
 
-    public Task Send(ReceiveContext context, string reason)
+    public Task SendAsync(ReceiveContext context, string reason, CancellationToken cancellationToken = default)
     {
-        void PreSend(IMessage message, SendHeaders headers)
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); void PreSend(IMessage message, SendHeaders headers)
         {
             headers.Set(MessageHeaders.Reason, reason ?? "Unspecified");
         }
 
-        return Move(context, PreSend);
+        return MoveAsync(context, PreSend);
     }
 }

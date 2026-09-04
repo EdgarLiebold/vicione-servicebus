@@ -34,8 +34,11 @@ public class MessageRetryConsumerConfigurationObserver<TConsumer> :
     {
         if (typeof(TMessage).TryGetSingleClosedGenericArguments(typeof(Batch<>), out Type[] types))
         {
-            typeof(MessageRetryConsumerConfigurationObserver<TConsumer>)
+            var method = typeof(MessageRetryConsumerConfigurationObserver<TConsumer>)
                 .GetMethod(nameof(BatchConsumerConfigured))
+                ?? throw new InvalidOperationException($"The {nameof(BatchConsumerConfigured)} method was not found.");
+
+            method
                 .MakeGenericMethod(types[0])
                 .Invoke(this, new object[] { configurator });
         }
@@ -65,7 +68,7 @@ public class MessageRetryConsumerConfigurationObserver<TConsumer> :
         consumerSpecification.AddPipeSpecification(specification);
     }
 
-    static RetryConsumeContext<TMessage> Factory<TMessage>(ConsumeContext<TMessage> context, IRetryPolicy retryPolicy, RetryContext retryContext)
+    static RetryConsumeContext<TMessage> Factory<TMessage>(ConsumeContext<TMessage> context, IRetryPolicy retryPolicy, RetryContext? retryContext)
         where TMessage : class
     {
         return new RetryConsumeContext<TMessage>(context, retryPolicy, retryContext);

@@ -35,7 +35,7 @@ public sealed class QueueCache :
         await _durableQueues.DisposeAsync().ConfigureAwait(false);
     }
 
-    public async Task<QueueInfo> Get(Queue queue, CancellationToken cancellationToken)
+    public async Task<QueueInfo> GetAsync(Queue queue, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(queue);
 
@@ -55,7 +55,7 @@ public sealed class QueueCache :
             (_, ownerToken) => ResolveQueueAsync(queue, ownerToken), cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<QueueInfo> GetByName(string entityName, CancellationToken cancellationToken)
+    public async Task<QueueInfo> GetByNameAsync(string entityName, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(entityName);
 
@@ -66,12 +66,12 @@ public sealed class QueueCache :
             (name, ownerToken) => GetExistingQueueAsync(name, ownerToken), cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<bool> RemoveByName(string entityName)
+    public async Task<bool> RemoveByNameAsync(string entityName, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(entityName);
 
         bool durableRemoved = await _durableQueues.RemoveAsync(entityName).ConfigureAwait(false);
-        bool ephemeralRemoved = await _ephemeralQueues.RemoveAsync(entityName).ConfigureAwait(false);
+        bool ephemeralRemoved = await _ephemeralQueues.RemoveAsync(entityName, cancellationToken: cancellationToken).ConfigureAwait(false);
         return durableRemoved || ephemeralRemoved;
     }
 

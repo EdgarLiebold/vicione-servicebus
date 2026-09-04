@@ -16,14 +16,15 @@ public class RabbitMqSendTopology :
     public IExchangeTypeSelector ExchangeTypeSelector { get; }
     public IEntityNameValidator EntityNameValidator { get; }
 
-    public Action<IRabbitMqQueueBindingConfigurator> ConfigureErrorSettings { get; set; }
-    public Action<IRabbitMqQueueBindingConfigurator> ConfigureDeadLetterSettings { get; set; }
+    public Action<IRabbitMqQueueBindingConfigurator>? ConfigureErrorSettings { get; set; }
+    public Action<IRabbitMqQueueBindingConfigurator>? ConfigureDeadLetterSettings { get; set; }
 
     IRabbitMqMessageSendTopologyConfigurator<T> IRabbitMqSendTopology.GetMessageTopology<T>()
     {
         IMessageSendTopologyConfigurator<T> configurator = base.GetMessageTopology<T>();
 
-        return configurator as IRabbitMqMessageSendTopologyConfigurator<T>;
+        return configurator as IRabbitMqMessageSendTopologyConfigurator<T>
+            ?? throw new InvalidOperationException($"The message topology for '{typeof(T)}' is not a RabbitMQ send topology.");
     }
 
     public SendSettings GetSendSettings(RabbitMqEndpointAddress address)

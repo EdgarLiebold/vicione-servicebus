@@ -17,7 +17,7 @@ public class SqlTransportMessage
     public long MessageDeliveryId { get; set; }
     public Guid? ConsumerId { get; set; }
     public Guid? LockId { get; set; }
-    public DateTime EnqueueTime { get; set; }
+    public DateTimeOffset EnqueueTime { get; set; }
     public int DeliveryCount { get; set; }
 
     public string? PartitionKey { get; set; }
@@ -39,14 +39,14 @@ public class SqlTransportMessage
     public Guid? ConversationId { get; set; }
     public Guid? InitiatorId { get; set; }
 
-    public DateTime? ExpirationTime { get; set; }
+    public DateTimeOffset? ExpirationTime { get; set; }
 
     public Uri? SourceAddress { get; set; }
     public Uri? DestinationAddress { get; set; }
     public Uri? ResponseAddress { get; set; }
     public Uri? FaultAddress { get; set; }
 
-    public DateTime? SentTime { get; set; }
+    public DateTimeOffset? SentTime { get; set; }
 
     public SendHeaders GetHeaders()
     {

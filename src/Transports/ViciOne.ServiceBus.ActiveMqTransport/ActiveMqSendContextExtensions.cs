@@ -12,7 +12,7 @@ public static class ActiveMqSendContextExtensions
     /// <param name="priority"></param>
     public static void SetPriority(this SendContext context, MsgPriority priority)
     {
-        if (!context.TryGetPayload(out ActiveMqSendContext sendContext))
+        if (!context.TryGetPayload(out ActiveMqSendContext? sendContext))
             throw new ArgumentException("The ActiveMqSendContext was not available");
 
         sendContext.Priority = priority;
@@ -25,7 +25,7 @@ public static class ActiveMqSendContextExtensions
     /// <param name="priority"></param>
     public static bool TrySetPriority(this SendContext context, MsgPriority priority)
     {
-        if (!context.TryGetPayload(out ActiveMqSendContext sendContext))
+        if (!context.TryGetPayload(out ActiveMqSendContext? sendContext))
             return false;
 
         sendContext.Priority = priority;

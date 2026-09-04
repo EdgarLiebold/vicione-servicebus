@@ -28,18 +28,18 @@ public class MessageLatencyBenchmark
         _payload = _settings.PayloadSize > 0 ? new string('*', _settings.PayloadSize) : null;
     }
 
-    public async Task Run()
+    public async Task RunAsync()
     {
         _capture = new MessageMetricCapture(_settings.MessageCount);
 
         IReportConsumerMetric report = _capture;
 
-        await _transport.Start(ConfigureReceiveEndpoint, report);
+        await _transport.StartAsync(ConfigureReceiveEndpoint, report);
         try
         {
             Console.WriteLine("Running Message Latency Benchmark");
 
-            await RunBenchmark();
+            await RunBenchmarkAsync();
 
             Console.WriteLine("Message Count: {0}", _settings.MessageCount);
             Console.WriteLine("Clients: {0}", _settings.Clients);
@@ -72,7 +72,7 @@ public class MessageLatencyBenchmark
         }
     }
 
-    async Task RunBenchmark()
+    async Task RunBenchmarkAsync()
     {
         await Task.Yield();
 
@@ -84,7 +84,7 @@ public class MessageLatencyBenchmark
 
         for (var i = 0; i < _settings.Clients; i++)
         {
-            stripes[i] = Task.Run(() => RunStripe((int)messageCount));
+            stripes[i] = Task.Run(() => RunStripeAsync((int)messageCount));
         }
 
         await Task.WhenAll(stripes).ConfigureAwait(false);
@@ -93,7 +93,7 @@ public class MessageLatencyBenchmark
         _consumeDuration = await _capture.ConsumeCompleted.ConfigureAwait(false);
     }
 
-    async Task RunStripe(int messageCount)
+    async Task RunStripeAsync(int messageCount)
     {
         await Task.Yield();
 
@@ -102,7 +102,7 @@ public class MessageLatencyBenchmark
         for (long i = 0; i < messageCount; i++)
         {
             var messageId = ids[i].ToGuid();
-            await _capture.Sent(messageId, () => _transport.Send(new LatencyTestMessage(messageId, _payload)))
+            await _capture.SentAsync(messageId, () => _transport.SendAsync(new LatencyTestMessage(messageId, _payload)))
                 .ConfigureAwait(false);
         }
     }

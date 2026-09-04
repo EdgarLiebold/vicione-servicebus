@@ -8,60 +8,60 @@ namespace ViciOne.ServiceBus.RetryPolicies;
 
 public static class PipeRetryExtensions
 {
-    public static Task Retry(this IRetryPolicy retryPolicy, Func<Task> retryMethod, CancellationToken cancellationToken = default)
+    public static Task RetryAsync(this IRetryPolicy retryPolicy, Func<Task> retryMethod, CancellationToken cancellationToken = default)
     {
-        return Retry(retryPolicy, retryMethod, true, TimeProvider.System, cancellationToken);
+        return RetryAsync(retryPolicy, retryMethod, true, TimeProvider.System, cancellationToken);
     }
 
-    public static Task Retry(this IRetryPolicy retryPolicy, Func<Task> retryMethod, TimeProvider timeProvider,
+    public static Task RetryAsync(this IRetryPolicy retryPolicy, Func<Task> retryMethod, TimeProvider timeProvider,
         CancellationToken cancellationToken = default)
     {
-        return Retry(retryPolicy, retryMethod, true, timeProvider, cancellationToken);
+        return RetryAsync(retryPolicy, retryMethod, true, timeProvider, cancellationToken);
     }
 
-    public static async Task Retry(this IRetryPolicy retryPolicy, Func<Task> retryMethod, bool log, CancellationToken cancellationToken = default)
+    public static async Task RetryAsync(this IRetryPolicy retryPolicy, Func<Task> retryMethod, bool log, CancellationToken cancellationToken = default)
     {
-        await Retry(retryPolicy, retryMethod, log, TimeProvider.System, cancellationToken).ConfigureAwait(false);
+        await RetryAsync(retryPolicy, retryMethod, log, TimeProvider.System, cancellationToken).ConfigureAwait(false);
     }
 
-    public static async Task Retry(this IRetryPolicy retryPolicy, Func<Task> retryMethod, bool log, TimeProvider timeProvider,
+    public static async Task RetryAsync(this IRetryPolicy retryPolicy, Func<Task> retryMethod, bool log, TimeProvider timeProvider,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(retryMethod);
 
-        await Execute(retryPolicy, async () =>
+        await ExecuteAsync(retryPolicy, async () =>
         {
             await retryMethod().ConfigureAwait(false);
             return true;
         }, log, timeProvider, cancellationToken).ConfigureAwait(false);
     }
 
-    public static Task<T> Retry<T>(this IRetryPolicy retryPolicy, Func<Task<T>> retryMethod, CancellationToken cancellationToken = default)
+    public static Task<T> RetryAsync<T>(this IRetryPolicy retryPolicy, Func<Task<T>> retryMethod, CancellationToken cancellationToken = default)
     {
-        return Retry(retryPolicy, retryMethod, true, TimeProvider.System, cancellationToken);
+        return RetryAsync(retryPolicy, retryMethod, true, TimeProvider.System, cancellationToken);
     }
 
-    public static Task<T> Retry<T>(this IRetryPolicy retryPolicy, Func<Task<T>> retryMethod, TimeProvider timeProvider,
+    public static Task<T> RetryAsync<T>(this IRetryPolicy retryPolicy, Func<Task<T>> retryMethod, TimeProvider timeProvider,
         CancellationToken cancellationToken = default)
     {
-        return Retry(retryPolicy, retryMethod, true, timeProvider, cancellationToken);
+        return RetryAsync(retryPolicy, retryMethod, true, timeProvider, cancellationToken);
     }
 
-    public static async Task<T> Retry<T>(this IRetryPolicy retryPolicy, Func<Task<T>> retryMethod, bool log,
+    public static async Task<T> RetryAsync<T>(this IRetryPolicy retryPolicy, Func<Task<T>> retryMethod, bool log,
         CancellationToken cancellationToken = default)
     {
-        return await Retry(retryPolicy, retryMethod, log, TimeProvider.System, cancellationToken).ConfigureAwait(false);
+        return await RetryAsync(retryPolicy, retryMethod, log, TimeProvider.System, cancellationToken).ConfigureAwait(false);
     }
 
-    public static async Task<T> Retry<T>(this IRetryPolicy retryPolicy, Func<Task<T>> retryMethod, bool log, TimeProvider timeProvider,
+    public static async Task<T> RetryAsync<T>(this IRetryPolicy retryPolicy, Func<Task<T>> retryMethod, bool log, TimeProvider timeProvider,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(retryMethod);
 
-        return await Execute(retryPolicy, retryMethod, log, timeProvider, cancellationToken).ConfigureAwait(false);
+        return await ExecuteAsync(retryPolicy, retryMethod, log, timeProvider, cancellationToken).ConfigureAwait(false);
     }
 
-    static async Task<TResult> Execute<TResult>(IRetryPolicy retryPolicy, Func<Task<TResult>> retryMethod, bool log,
+    static async Task<TResult> ExecuteAsync<TResult>(IRetryPolicy retryPolicy, Func<Task<TResult>> retryMethod, bool log,
         TimeProvider timeProvider, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(retryPolicy);
@@ -76,7 +76,7 @@ public static class PipeRetryExtensions
         if (policyContext.Context == null)
             throw new InvalidOperationException("The retry policy returned a policy context without a pipe context.");
 
-        RetryContext<InlinePipeContext> retryContext = null;
+        RetryContext<InlinePipeContext>? retryContext = null;
         while (true)
         {
             try
@@ -95,7 +95,7 @@ public static class PipeRetryExtensions
                             .ConfigureAwait(false);
                     }
 
-                    Task preRetryTask = retryContext.PreRetry()
+                    Task preRetryTask = retryContext.PreRetryAsync(cancellationToken: cancellationToken)
                         ?? throw new InvalidOperationException("The retry context returned a null pre-retry task.");
                     if (preRetryTask.Status != TaskStatus.RanToCompletion)
                         await preRetryTask.ConfigureAwait(false);
@@ -124,7 +124,7 @@ public static class PipeRetryExtensions
                 {
                     if (retryPolicy.IsHandled(exception))
                     {
-                        Task retryFaultedTask = nextRetryContext.RetryFaulted(exception)
+                        Task retryFaultedTask = nextRetryContext.RetryFaultedAsync(exception, cancellationToken: cancellationToken)
                             ?? throw new InvalidOperationException("The retry context returned a null fault task.");
                         if (retryFaultedTask.Status != TaskStatus.RanToCompletion)
                             await retryFaultedTask.ConfigureAwait(false);

@@ -37,7 +37,7 @@ public class BatchConsumerMessageConnector<TConsumer, TMessage> :
             x.UseFilter(new ConsumerMessageFilter<TConsumer, Batch<TMessage>>(consumerFactory, batchConsumerPipe));
         });
 
-        IBatchCollector<TMessage> collector = null;
+        IBatchCollector<TMessage>? collector = null;
         if (options.GroupKeyProvider == null)
             collector = new BatchCollector<TMessage>(options, batchMessagePipe);
         else
@@ -45,8 +45,8 @@ public class BatchConsumerMessageConnector<TConsumer, TMessage> :
             if (options.GroupKeyProvider.GetType().TryGetSingleClosedGenericArguments(typeof(IGroupKeyProvider<,>), out Type[] types))
             {
                 var collectorType = typeof(BatchCollector<,>).MakeGenericType(typeof(TMessage), types[1]);
-                collector = (IBatchCollector<TMessage>)Activator.CreateInstance(collectorType,
-                    options, batchMessagePipe, options.GroupKeyProvider);
+                collector = (IBatchCollector<TMessage>)(Activator.CreateInstance(collectorType,
+                    options, batchMessagePipe, options.GroupKeyProvider) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
             }
             else
                 throw new ConfigurationException("The GroupKeyProvider does not implement IGroupKeyProvider<TMessage,TKey>");
@@ -79,7 +79,7 @@ public class BatchConsumerMessageConnector<TConsumer, TMessage> :
     {
         readonly BatchConsumerFactory<TMessage> _factory;
         readonly ConnectHandle _handle;
-        Task _disposeTask;
+        Task _disposeTask = null!;
         int _disconnected;
 
         public BatchConnectHandle(ConnectHandle handle, BatchConsumerFactory<TMessage> factory)
@@ -99,10 +99,10 @@ public class BatchConsumerMessageConnector<TConsumer, TMessage> :
                 return;
 
             _handle.Disconnect();
-            _disposeTask = DisposeConsumerFactory();
+            _disposeTask = DisposeConsumerFactoryAsync();
         }
 
-        async Task DisposeConsumerFactory()
+        async Task DisposeConsumerFactoryAsync()
         {
             try
             {

@@ -11,7 +11,7 @@ public static class EntityFrameworkSagaRepository<TSaga>
     where TSaga : class, ISaga
 {
     public static ISagaRepository<TSaga> CreateOptimistic(ISagaDbContextFactory<TSaga> dbContextFactory,
-        Func<IQueryable<TSaga>, IQueryable<TSaga>> queryCustomization = null, bool isTransactionEnabled = true)
+        Func<IQueryable<TSaga>, IQueryable<TSaga>>? queryCustomization = null, bool isTransactionEnabled = true)
     {
         ArgumentNullException.ThrowIfNull(dbContextFactory);
 
@@ -22,7 +22,7 @@ public static class EntityFrameworkSagaRepository<TSaga>
     }
 
     public static ISagaRepository<TSaga> CreateOptimistic(Func<DbContext> dbContextFactory,
-        Func<IQueryable<TSaga>, IQueryable<TSaga>> queryCustomization = null, bool isTransactionEnabled = true)
+        Func<IQueryable<TSaga>, IQueryable<TSaga>>? queryCustomization = null, bool isTransactionEnabled = true)
     {
         ArgumentNullException.ThrowIfNull(dbContextFactory);
 
@@ -31,7 +31,7 @@ public static class EntityFrameworkSagaRepository<TSaga>
 
     public static ISagaRepository<TSaga> CreatePessimistic(ISagaDbContextFactory<TSaga> dbContextFactory,
         ILockStatementProvider lockStatementProvider,
-        Func<IQueryable<TSaga>, IQueryable<TSaga>> queryCustomization = null)
+        Func<IQueryable<TSaga>, IQueryable<TSaga>>? queryCustomization = null)
     {
         ArgumentNullException.ThrowIfNull(dbContextFactory);
         ArgumentNullException.ThrowIfNull(lockStatementProvider);
@@ -43,7 +43,7 @@ public static class EntityFrameworkSagaRepository<TSaga>
     }
 
     public static ISagaRepository<TSaga> CreatePessimistic(Func<DbContext> dbContextFactory, ILockStatementProvider lockStatementProvider,
-        Func<IQueryable<TSaga>, IQueryable<TSaga>> queryCustomization = null)
+        Func<IQueryable<TSaga>, IQueryable<TSaga>>? queryCustomization = null)
     {
         ArgumentNullException.ThrowIfNull(dbContextFactory);
         ArgumentNullException.ThrowIfNull(lockStatementProvider);

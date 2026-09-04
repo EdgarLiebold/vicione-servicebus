@@ -11,7 +11,7 @@ public sealed class ContextFilterTests
     [InlineData(true, 1)]
     [InlineData(false, 0)]
     [RequirementCoverage("REQ-VSB-CONTEXT-FILTER", "matching-context-only")]
-    public async Task Filter_ForwardsOnlyAnAcceptedContext(bool accepted, int expectedInvocations)
+    public async Task Filter_ForwardsOnlyAnAcceptedContextAsync(bool accepted, int expectedInvocations)
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -20,7 +20,7 @@ public sealed class ContextFilterTests
         var filter = new ContextFilter<FilterContext>(_ => Task.FromResult(accepted));
         IPipe<FilterContext> next = Pipe.Execute<FilterContext>(observed.Add);
 
-        await filter.Send(context, next).WaitAsync(timeout, cancellationToken);
+        await filter.SendAsync(context, next).WaitAsync(timeout, cancellationToken);
 
         Assert.Equal(expectedInvocations, observed.Count);
         if (accepted)
@@ -31,7 +31,7 @@ public sealed class ContextFilterTests
     [InlineData(true, 1)]
     [InlineData(false, 0)]
     [RequirementCoverage("REQ-VSB-CONTEXT-FILTER", "asynchronous-decision-is-awaited")]
-    public async Task Filter_WaitsForTheAsynchronousDecisionBeforeApplyingIt(
+    public async Task Filter_WaitsForTheAsynchronousDecisionBeforeApplyingItAsync(
         bool accepted,
         int expectedInvocations)
     {
@@ -45,7 +45,7 @@ public sealed class ContextFilterTests
             Interlocked.Increment(ref invocations);
         });
 
-        Task send = filter.Send(context, next);
+        Task send = filter.SendAsync(context, next);
         Assert.False(send.IsCompleted);
         Assert.Equal(0, Volatile.Read(ref invocations));
 
@@ -57,7 +57,7 @@ public sealed class ContextFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTEXT-FILTER", "invalid-public-boundaries")]
-    public async Task Filter_RejectsNullCollaboratorsAndANullDecisionTask()
+    public async Task Filter_RejectsNullCollaboratorsAndANullDecisionTaskAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -66,14 +66,14 @@ public sealed class ContextFilterTests
 
         var valid = new ContextFilter<FilterContext>(_ => Task.FromResult(true));
         Assert.Equal("context", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            valid.Send(null!, Pipe.Empty<FilterContext>()).WaitAsync(timeout, cancellationToken))).ParamName);
+            valid.SendAsync(null!, Pipe.Empty<FilterContext>()).WaitAsync(timeout, cancellationToken))).ParamName);
         Assert.Equal("next", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            valid.Send(new FilterContext("value"), null!).WaitAsync(timeout, cancellationToken))).ParamName);
+            valid.SendAsync(new FilterContext("value"), null!).WaitAsync(timeout, cancellationToken))).ParamName);
         Assert.Equal("context", Assert.Throws<ArgumentNullException>(() => valid.Probe(null!)).ParamName);
 
         var nullTask = new ContextFilter<FilterContext>(_ => null!);
         InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            nullTask.Send(new FilterContext("value"), Pipe.Empty<FilterContext>())
+            nullTask.SendAsync(new FilterContext("value"), Pipe.Empty<FilterContext>())
                 .WaitAsync(timeout, cancellationToken));
         Assert.Equal("The context filter returned a null decision task.", actual.Message);
     }

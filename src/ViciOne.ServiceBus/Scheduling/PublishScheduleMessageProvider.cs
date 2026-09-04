@@ -14,14 +14,14 @@ public class PublishScheduleMessageProvider :
         _publishEndpoint = publishEndpoint;
     }
 
-    protected override Task ScheduleSend(ScheduleMessage message, IPipe<SendContext<ScheduleMessage>> pipe, CancellationToken cancellationToken)
+    protected override Task ScheduleSendAsync(ScheduleMessage message, IPipe<SendContext<ScheduleMessage>> pipe, CancellationToken cancellationToken = default)
     {
-        return _publishEndpoint.Publish(message, pipe, cancellationToken);
+        return _publishEndpoint.PublishAsync(message, pipe, cancellationToken);
     }
 
-    protected override Task CancelScheduledSend(Guid tokenId, Uri destinationAddress, CancellationToken cancellationToken)
+    protected override Task CancelScheduledSendAsync(Guid tokenId, Uri? destinationAddress, CancellationToken cancellationToken = default)
     {
-        return _publishEndpoint.Publish<CancelScheduledMessage>(new
+        return _publishEndpoint.PublishAsync<CancelScheduledMessage>(new
         {
             InVar.Timestamp,
             TokenId = tokenId

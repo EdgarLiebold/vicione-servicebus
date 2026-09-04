@@ -14,7 +14,7 @@ internal class TimeoutConsumeContext<TMessage> :
     readonly TimeSpan _timeout;
 
     public TimeoutConsumeContext(ConsumeContext<TMessage> context, CancellationToken cancellationToken, TimeSpan timeout)
-        : base(context)
+        : base(context.Advanced())
     {
         if (timeout <= TimeSpan.Zero)
             throw new ArgumentOutOfRangeException(nameof(timeout), timeout, "The timeout must be greater than zero.");
@@ -28,7 +28,7 @@ internal class TimeoutConsumeContext<TMessage> :
 
     public TMessage Message => _context.Message;
 
-    public override async Task NotifyFaulted<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
+    public override async Task NotifyFaultedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
     {
         Exception reportedException = exception;
 
@@ -48,21 +48,21 @@ internal class TimeoutConsumeContext<TMessage> :
                             timeoutException);
                     }
 
-                    await GenerateFault(_context, reportedException).ConfigureAwait(false);
+                    await GenerateFaultAsync(_context, reportedException).ConfigureAwait(false);
                 }
                 break;
         }
 
-        await ReceiveContext.NotifyFaulted(context, duration, consumerType, reportedException).ConfigureAwait(false);
+        await ReceiveContext.NotifyFaultedAsync(context, duration, consumerType, reportedException, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    public virtual Task NotifyConsumed(TimeSpan duration, string consumerType)
+    public virtual Task NotifyConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
     {
-        return NotifyConsumed(this, duration, consumerType);
+        return NotifyConsumedAsync(this, duration, consumerType, cancellationToken: cancellationToken);
     }
 
-    public virtual Task NotifyFaulted(TimeSpan duration, string consumerType, Exception exception)
+    public virtual Task NotifyFaultedAsync(TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
     {
-        return NotifyFaulted(this, duration, consumerType, exception);
+        return NotifyFaultedAsync(this, duration, consumerType, exception, cancellationToken: cancellationToken);
     }
 }

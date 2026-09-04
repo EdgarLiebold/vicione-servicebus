@@ -77,7 +77,8 @@ public interface ReceiveEndpointContext :
     /// <summary>
     /// Reset the receive endpoint, which should clear any caches, etc.
     /// </summary>
-    ValueTask ResetAsync();
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    ValueTask ResetAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Add an consume-side agent, which should be stopped during shutdown

@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.Scheduling;
 public abstract class BaseScheduleMessageProvider :
     IScheduleMessageProvider
 {
-    public async Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, T message,
+    public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, T message,
         IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
@@ -20,27 +20,27 @@ public abstract class BaseScheduleMessageProvider :
 
         scheduleMessagePipe.ScheduledMessageId = tokenId;
 
-        ScheduleMessage command = new ScheduleMessageCommand<T>(scheduledTime, destinationAddress, message, tokenId);
+        ScheduleMessage command = new ScheduleMessageCommand<T>(dueAt, destinationAddress, message, tokenId);
 
-        await ScheduleSend(command, scheduleMessagePipe, cancellationToken).ConfigureAwait(false);
+        await ScheduleSendAsync(command, scheduleMessagePipe, cancellationToken).ConfigureAwait(false);
 
-        return new ScheduledMessageHandle<T>(scheduleMessagePipe.ScheduledMessageId ?? command.TokenId, command.ScheduledTime,
+        return new ScheduledMessageHandle<T>(scheduleMessagePipe.ScheduledMessageId ?? command.TokenId, command.DueAt,
             command.Destination, message);
     }
 
-    public Task CancelScheduledSend(Guid tokenId, CancellationToken cancellationToken)
+    public Task CancelScheduledSendAsync(Guid tokenId, CancellationToken cancellationToken)
     {
-        return CancelScheduledSend(tokenId, null, cancellationToken);
+        return CancelScheduledSendAsync(tokenId, null, cancellationToken);
     }
 
-    public Task CancelScheduledSend(Uri destinationAddress, Guid tokenId, CancellationToken cancellationToken)
+    public Task CancelScheduledSendAsync(Uri destinationAddress, Guid tokenId, CancellationToken cancellationToken)
     {
-        return CancelScheduledSend(tokenId, destinationAddress, cancellationToken);
+        return CancelScheduledSendAsync(tokenId, destinationAddress, cancellationToken);
     }
 
-    protected abstract Task ScheduleSend(ScheduleMessage message, IPipe<SendContext<ScheduleMessage>> pipe, CancellationToken cancellationToken);
+    protected abstract Task ScheduleSendAsync(ScheduleMessage message, IPipe<SendContext<ScheduleMessage>> pipe, CancellationToken cancellationToken);
 
-    protected abstract Task CancelScheduledSend(Guid tokenId, Uri destinationAddress, CancellationToken cancellationToken);
+    protected abstract Task CancelScheduledSendAsync(Guid tokenId, Uri? destinationAddress, CancellationToken cancellationToken);
 }
 
 
@@ -55,7 +55,7 @@ class ScheduleMessageContextPipe<T> :
 {
     readonly T _payload;
     readonly IPipe<SendContext<T>> _pipe;
-    SendContext _context;
+    SendContext _context = null!;
 
     Guid? _scheduledMessageId;
 
@@ -71,7 +71,7 @@ class ScheduleMessageContextPipe<T> :
         set => _scheduledMessageId = value;
     }
 
-    public async Task Send(SendContext<ScheduleMessage> context)
+    public async Task SendAsync(SendContext<ScheduleMessage> context)
     {
         _context = context;
 
@@ -81,7 +81,7 @@ class ScheduleMessageContextPipe<T> :
         {
             SendContext<T> proxy = context.CreateProxy(_payload);
 
-            await _pipe.Send(proxy).ConfigureAwait(false);
+            await _pipe.SendAsync(proxy).ConfigureAwait(false);
         }
     }
 

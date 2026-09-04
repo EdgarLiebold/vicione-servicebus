@@ -13,7 +13,7 @@ public class QueueSubscriptionEntity :
     readonly TopicEntity _topic;
 
     public QueueSubscriptionEntity(long id, long subscriptionId, TopicEntity topic, QueueEntity queue, CreateSubscriptionOptions createSubscriptionOptions,
-        CreateRuleOptions rule = null, RuleFilter filter = null)
+        CreateRuleOptions? rule = null, RuleFilter? filter = null)
     {
         Id = id;
 
@@ -47,7 +47,7 @@ public class QueueSubscriptionEntity :
     sealed class QueueSubscriptionEntityEqualityComparer :
         IEqualityComparer<QueueSubscriptionEntity>
     {
-        public bool Equals(QueueSubscriptionEntity x, QueueSubscriptionEntity y)
+        public bool Equals(QueueSubscriptionEntity? x, QueueSubscriptionEntity? y)
         {
             if (ReferenceEquals(x, y))
                 return true;
@@ -83,7 +83,7 @@ public class QueueSubscriptionEntity :
     sealed class NameEqualityComparer :
         IEqualityComparer<QueueSubscriptionEntity>
     {
-        public bool Equals(QueueSubscriptionEntity x, QueueSubscriptionEntity y)
+        public bool Equals(QueueSubscriptionEntity? x, QueueSubscriptionEntity? y)
         {
             if (ReferenceEquals(x, y))
                 return true;

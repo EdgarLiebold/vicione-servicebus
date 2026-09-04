@@ -17,13 +17,13 @@ public class ScopedCompensateFilter<TActivity, TArguments, TFilter> :
         _scopeProvider = scopeProvider;
     }
 
-    public async Task Send(CompensateContext<TArguments> context, IPipe<CompensateContext<TArguments>> next)
+    public async Task SendAsync(CompensateContext<TArguments> context, IPipe<CompensateContext<TArguments>> next)
     {
-        await using ICompensateScopeContext<TArguments> scope = await _scopeProvider.GetScope(context).ConfigureAwait(false);
+        await using ICompensateScopeContext<TArguments> scope = await _scopeProvider.GetScopeAsync(context).ConfigureAwait(false);
 
         var filter = scope.GetService<TFilter>();
 
-        await filter.Send(scope.Context, next).ConfigureAwait(false);
+        await filter.SendAsync(scope.Context, next).ConfigureAwait(false);
     }
 
     public void Probe(ProbeContext context)

@@ -14,7 +14,7 @@ public static class SagaExtensions
     /// <param name="configure"></param>
     /// <returns></returns>
     public static void Saga<T>(this IReceiveEndpointConfigurator configurator, ISagaRepository<T> sagaRepository,
-        Action<ISagaConfigurator<T>> configure = null)
+        Action<ISagaConfigurator<T>>? configure = null)
         where T : class, ISaga
     {
         if (configurator == null)

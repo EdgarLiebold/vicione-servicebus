@@ -12,14 +12,14 @@ public sealed class SagaPollingTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-SAGA-POLLING", "virtual-time-timeout")]
-    public async Task MissingSaga_TimesOutOnTheConfiguredClockWithoutWallClockDelay()
+    public async Task MissingSaga_TimesOutOnTheConfiguredClockWithoutWallClockDelayAsync()
     {
         TimeSpan timeout = TimeSpan.FromMinutes(1);
         var timeProvider = new ObservableTimeProvider(StartTime);
         var repository = new LoadSagaRepository(_ => null);
 
-        Task<Guid?> observation = repository.ShouldContainSaga(NewId.NextGuid(), timeout, timeProvider);
-        await timeProvider.WaitForTimerCount(1).WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
+        Task<Guid?> observation = repository.ShouldContainSagaAsync(NewId.NextGuid(), timeout, timeProvider, cancellationToken: TestContext.Current.CancellationToken);
+        await timeProvider.WaitForTimerCountAsync(1).WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
         timeProvider.Advance(timeout);
 
         Assert.Null(await observation.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken));
@@ -28,14 +28,14 @@ public sealed class SagaPollingTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-SAGA-POLLING", "eventual-match")]
-    public async Task SagaAppearingAfterAPoll_IsReturnedOnTheNextVirtualInterval()
+    public async Task SagaAppearingAfterAPoll_IsReturnedOnTheNextVirtualIntervalAsync()
     {
         Guid sagaId = NewId.NextGuid();
         var timeProvider = new ObservableTimeProvider(StartTime);
         var repository = new LoadSagaRepository(call => call == 1 ? null : new PollingSaga(sagaId));
 
-        Task<Guid?> observation = repository.ShouldContainSaga(sagaId, TimeSpan.FromMinutes(1), timeProvider);
-        await timeProvider.WaitForTimerCount(1).WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
+        Task<Guid?> observation = repository.ShouldContainSagaAsync(sagaId, TimeSpan.FromMinutes(1), timeProvider, cancellationToken: TestContext.Current.CancellationToken);
+        await timeProvider.WaitForTimerCountAsync(1).WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
         timeProvider.Advance(TimeSpan.FromMilliseconds(10));
 
         Assert.Equal(sagaId, await observation.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken));
@@ -44,12 +44,12 @@ public sealed class SagaPollingTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-SAGA-POLLING", "unsupported-repository-capability")]
-    public async Task RepositoryWithoutLoadOrQueryCapability_IsRejectedPrecisely()
+    public async Task RepositoryWithoutLoadOrQueryCapability_IsRejectedPreciselyAsync()
     {
         var repository = new DispatchOnlySagaRepository();
 
         ArgumentException exception = await Assert.ThrowsAsync<ArgumentException>(() =>
-            repository.ShouldContainSaga(NewId.NextGuid(), TimeSpan.FromSeconds(1)));
+            repository.ShouldContainSagaAsync(NewId.NextGuid(), TimeSpan.FromSeconds(1), cancellationToken: TestContext.Current.CancellationToken));
 
         Assert.Equal("repository", exception.ParamName);
         Assert.Contains("loading or querying sagas", exception.Message, StringComparison.Ordinal);
@@ -68,10 +68,10 @@ public sealed class SagaPollingTests
     {
         public int LoadCount { get; private set; }
 
-        public Task<PollingSaga> Load(Guid correlationId)
+        public Task<PollingSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
         {
-            PollingSaga? saga = load(++LoadCount);
-            return Task.FromResult(saga!);
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Tests.Testing.SagaPollingTests.PollingSaga?>(cancellationToken); PollingSaga? saga = load(++LoadCount);
+            return Task.FromResult(saga);
         }
 
         public void Probe(ProbeContext context)
@@ -81,13 +81,13 @@ public sealed class SagaPollingTests
 
     private sealed class DispatchOnlySagaRepository : ISagaRepository<PollingSaga>
     {
-        public Task Send<T>(
+        public Task SendAsync<T>(
             ConsumeContext<T> context,
             ISagaPolicy<PollingSaga, T> policy,
             IPipe<SagaConsumeContext<PollingSaga, T>> next)
             where T : class => Task.CompletedTask;
 
-        public Task SendQuery<T>(
+        public Task SendQueryAsync<T>(
             ConsumeContext<T> context,
             ISagaQuery<PollingSaga> query,
             ISagaPolicy<PollingSaga, T> policy,

@@ -30,38 +30,38 @@ public class RetryBusObserver :
         Dispose();
     }
 
-    public Task PreStart(IBus bus)
+    public Task PreStartAsync(IBus bus)
     {
         return Task.CompletedTask;
     }
 
-    public Task PostStart(IBus bus, Task<BusReady> busReady)
+    public Task PostStartAsync(IBus bus, Task<BusReady> busReady)
     {
         return Task.CompletedTask;
     }
 
-    public Task StartFaulted(IBus bus, Exception exception)
+    public Task StartFaultedAsync(IBus bus, Exception exception)
     {
         Dispose();
 
         return Task.CompletedTask;
     }
 
-    public Task PreStop(IBus bus)
+    public Task PreStopAsync(IBus bus)
     {
         Cancel();
 
         return Task.CompletedTask;
     }
 
-    public Task PostStop(IBus bus)
+    public Task PostStopAsync(IBus bus)
     {
         Dispose();
 
         return Task.CompletedTask;
     }
 
-    public Task StopFaulted(IBus bus, Exception exception)
+    public Task StopFaultedAsync(IBus bus, Exception exception)
     {
         Dispose();
 

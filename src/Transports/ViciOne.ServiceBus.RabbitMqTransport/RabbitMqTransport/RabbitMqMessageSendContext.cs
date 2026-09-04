@@ -23,7 +23,7 @@ public class RabbitMqMessageSendContext<T> :
     }
 
     public string Exchange { get; private set; }
-    public string RoutingKey { get; set; }
+    public string? RoutingKey { get; set; }
     public BasicProperties BasicProperties { get; }
     public bool AwaitAck { get; set; }
 
@@ -31,8 +31,8 @@ public class RabbitMqMessageSendContext<T> :
     {
         base.ReadPropertiesFrom(properties);
 
-        Exchange = ReadString(properties, RabbitMqTransportPropertyNames.Exchange, Exchange);
-        RoutingKey = ReadString(properties, RabbitMqTransportPropertyNames.RoutingKey, "");
+        Exchange = ReadString(properties, RabbitMqTransportPropertyNames.Exchange, Exchange) ?? Exchange;
+        RoutingKey = ReadString(properties, RabbitMqTransportPropertyNames.RoutingKey, "") ?? "";
 
         BasicProperties.AppId = ReadString(properties, RabbitMqTransportPropertyNames.AppId);
         BasicProperties.Priority = ReadByte(properties, RabbitMqTransportPropertyNames.Priority);

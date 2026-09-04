@@ -32,7 +32,17 @@ public class ScheduledMessageJob :
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
     }
 
-    public async ValueTask Execute(IJobExecutionContext context, CancellationToken cancellationToken = default)
+    ValueTask IJob.Execute(IJobExecutionContext context, CancellationToken cancellationToken)
+    {
+        return ExecuteAsync(context, cancellationToken);
+    }
+
+    /// <summary>
+    /// Executes the scheduled message job.
+    /// </summary>
+    /// <param name="context">The context for the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public async ValueTask ExecuteAsync(IJobExecutionContext context, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
         IBus bus = _bus ?? GetSchedulerContextValue<IBus>(context, BusContextKey);
@@ -58,9 +68,9 @@ public class ScheduledMessageJob :
                 supportedMessageTypes,
                 timeProvider);
 
-            var endpoint = await bus.GetSendEndpoint(destinationAddress).ConfigureAwait(false);
+            var endpoint = await bus.GetSendEndpointAsync(destinationAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-            await endpoint.Send(new SerializedMessageBody(), pipe, cancellationToken).ConfigureAwait(false);
+            await endpoint.SendAsync(new SerializedMessageBody(), pipe, cancellationToken).ConfigureAwait(false);
 
             LogContext.Debug?.Log("Schedule Executed: {Key} {Schedule}", context.Trigger.Key, context.Trigger.NextFireTimeUtc);
         }
@@ -107,7 +117,7 @@ public class ScheduledMessageJob :
             _timeProvider = timeProvider;
         }
 
-        public Task Send(SendContext context)
+        public Task SendAsync(SendContext context)
         {
             var deserializer = context.Serialization.GetMessageDeserializer(_contentType);
 

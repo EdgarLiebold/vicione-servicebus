@@ -38,7 +38,7 @@ public class PendingTaskCollection
         task.ContinueWith(x => Remove(id), TaskContinuationOptions.OnlyOnRanToCompletion | TaskContinuationOptions.ExecuteSynchronously);
     }
 
-    public async Task Completed(CancellationToken cancellationToken = default)
+    public async Task CompletedAsync(CancellationToken cancellationToken = default)
     {
         Task[] tasks;
         do
@@ -57,7 +57,7 @@ public class PendingTaskCollection
             var whenAll = Task.WhenAll(tasks);
 
             if (cancellationToken.CanBeCanceled)
-                whenAll = whenAll.OrCanceled(cancellationToken);
+                whenAll = whenAll.OrCanceledAsync(cancellationToken);
 
             await whenAll.ConfigureAwait(false);
         }

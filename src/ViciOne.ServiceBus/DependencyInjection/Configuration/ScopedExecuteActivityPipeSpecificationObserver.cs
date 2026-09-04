@@ -43,7 +43,7 @@ public class ScopedExecuteActivityPipeSpecificationObserver :
 
         var scopedFilterType = typeof(ScopedExecuteFilter<,,>).MakeGenericType(typeof(TActivity), typeof(TArguments), filterType);
 
-        var filter = (IFilter<ExecuteContext<TArguments>>)Activator.CreateInstance(scopedFilterType, scopeProvider);
+        var filter = (IFilter<ExecuteContext<TArguments>>)(Activator.CreateInstance(scopedFilterType, scopeProvider) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
         var specification = new FilterPipeSpecification<ExecuteContext<TArguments>>(filter);
 

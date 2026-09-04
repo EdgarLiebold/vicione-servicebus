@@ -11,13 +11,13 @@ public sealed class CommandAndEventTimeProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-COMMAND-EVENT-CLOCK", "command-context-owner")]
-    public async Task SentCommand_CarriesTheConfiguredClockAndItsExactUtcTimestamp()
+    public async Task SentCommand_CarriesTheConfiguredClockAndItsExactUtcTimestampAsync()
     {
         var clock = new FakeTimeProvider(ObservationTime);
         var pipe = new CapturePipe<CommandContext>();
         var command = new RuntimeCommand("limit");
 
-        await pipe.SendCommand(command, clock);
+        await pipe.SendCommandAsync(command, clock, cancellationToken: TestContext.Current.CancellationToken);
 
         CommandContext<RuntimeCommand> context = Assert.IsAssignableFrom<CommandContext<RuntimeCommand>>(pipe.Context);
         Assert.Same(command, context.Command);
@@ -27,13 +27,13 @@ public sealed class CommandAndEventTimeProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-COMMAND-EVENT-CLOCK", "event-context-owner")]
-    public async Task PublishedEvent_CarriesTheConfiguredClockAndItsExactUtcTimestamp()
+    public async Task PublishedEvent_CarriesTheConfiguredClockAndItsExactUtcTimestampAsync()
     {
         var clock = new FakeTimeProvider(ObservationTime);
         var pipe = new CapturePipe<EventContext>();
         var message = new RuntimeEvent("opened");
 
-        await pipe.PublishEvent(message, clock);
+        await pipe.PublishEventAsync(message, clock, cancellationToken: TestContext.Current.CancellationToken);
 
         EventContext<RuntimeEvent> context = Assert.IsAssignableFrom<EventContext<RuntimeEvent>>(pipe.Context);
         Assert.Same(message, context.Event);
@@ -43,12 +43,12 @@ public sealed class CommandAndEventTimeProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-COMMAND-EVENT-CLOCK", "concurrency-limit-command-owner")]
-    public async Task ConcurrencyLimitCommand_UsesOneClockForEnvelopeAndPayloadTimestamps()
+    public async Task ConcurrencyLimitCommand_UsesOneClockForEnvelopeAndPayloadTimestampsAsync()
     {
         var clock = new FakeTimeProvider(ObservationTime);
         var pipe = new CapturePipe<CommandContext>();
 
-        await pipe.SetConcurrencyLimit(7, clock);
+        await pipe.SetConcurrencyLimitAsync(7, clock, cancellationToken: TestContext.Current.CancellationToken);
 
         CommandContext<SetConcurrencyLimit> context = Assert.IsAssignableFrom<CommandContext<SetConcurrencyLimit>>(pipe.Context);
         Assert.Equal(ObservationTime.UtcDateTime, context.Timestamp);
@@ -70,7 +70,7 @@ public sealed class CommandAndEventTimeProviderTests
         {
         }
 
-        public Task Send(TContext context)
+        public Task SendAsync(TContext context)
         {
             Context = context;
             return Task.CompletedTask;

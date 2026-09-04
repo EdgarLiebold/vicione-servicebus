@@ -21,7 +21,7 @@ public class ConnectionException :
         IsTransient = isTransient;
     }
 
-    public ConnectionException(string message, Exception innerException, bool isTransient = true)
+    public ConnectionException(string message, Exception? innerException, bool isTransient = true)
         : base(message, innerException)
     {
         IsTransient = isTransient;

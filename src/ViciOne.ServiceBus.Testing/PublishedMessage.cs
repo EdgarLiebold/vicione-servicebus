@@ -23,14 +23,14 @@ public class PublishedMessage<T> :
 
         ElementId = _context.MessageId;
 
-        var now = timeProvider.GetUtcNow().UtcDateTime;
+        DateTimeOffset now = timeProvider.GetUtcNow();
         StartTime = context.SentTime ?? now;
         ElapsedTime = now - StartTime;
     }
 
     public Guid? ElementId { get; }
     SendContext IPublishedMessage.Context => _context;
-    public DateTime StartTime { get; }
+    public DateTimeOffset StartTime { get; }
     public TimeSpan ElapsedTime { get; }
     public Exception? Exception { get; }
     public Type MessageType => typeof(T);

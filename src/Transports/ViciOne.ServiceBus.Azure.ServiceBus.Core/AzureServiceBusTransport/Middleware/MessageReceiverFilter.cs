@@ -26,7 +26,7 @@ public class MessageReceiverFilter :
         Context.ReceivePipe.Probe(scope);
     }
 
-    async Task IFilter<ClientContext>.Send(ClientContext context, IPipe<ClientContext> next)
+    async Task IFilter<ClientContext>.SendAsync(ClientContext context, IPipe<ClientContext> next)
     {
         if (context.IsClosedOrClosing)
             return;
@@ -39,7 +39,7 @@ public class MessageReceiverFilter :
 
         Context.AddConsumeAgent(receiver);
 
-        await _transportObserver.NotifyReady(Context.InputAddress).ConfigureAwait(false);
+        await _transportObserver.NotifyReadyAsync(Context.InputAddress).ConfigureAwait(false);
 
         try
         {
@@ -49,12 +49,12 @@ public class MessageReceiverFilter :
         {
             DeliveryMetrics metrics = receiver;
 
-            await _transportObserver.NotifyCompleted(Context.InputAddress, metrics).ConfigureAwait(false);
+            await _transportObserver.NotifyCompletedAsync(Context.InputAddress, metrics).ConfigureAwait(false);
 
             Context.LogConsumerCompleted(metrics.DeliveryCount, metrics.ConcurrentDeliveryCount);
         }
 
-        await next.Send(context).ConfigureAwait(false);
+        await next.SendAsync(context).ConfigureAwait(false);
     }
 
     protected virtual IReceiver CreateMessageReceiver(ClientContext context)

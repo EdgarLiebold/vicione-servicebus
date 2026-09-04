@@ -31,7 +31,7 @@ public class DependencyInjectionQuerySagaRepository<TSaga> :
             context.Add("provider", "dependencyInjection");
         }
 
-        public async Task<T> Execute<T>(Func<QuerySagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken)
+        public async Task<T> ExecuteAsync<T>(Func<QuerySagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken)
             where T : class
         {
             var serviceScope = _serviceProvider.CreateScope();
@@ -40,7 +40,7 @@ public class DependencyInjectionQuerySagaRepository<TSaga> :
             {
                 var factory = serviceScope.ServiceProvider.GetRequiredService<IQuerySagaRepositoryContextFactory<TSaga>>();
 
-                return await factory.Execute(asyncMethod, cancellationToken).ConfigureAwait(false);
+                return await factory.ExecuteAsync(asyncMethod, cancellationToken).ConfigureAwait(false);
             }
             finally
             {

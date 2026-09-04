@@ -13,11 +13,11 @@ public class ServiceBusSendContextFilter<T> :
         _filter = filter;
     }
 
-    public Task Send(SendContext<T> context, IPipe<SendContext<T>> next)
+    public Task SendAsync(SendContext<T> context, IPipe<SendContext<T>> next)
     {
-        return context.TryGetPayload(out ServiceBusSendContext<T> serviceBusSendContext)
-            ? _filter.Send(serviceBusSendContext, next)
-            : next.Send(context);
+        return context.TryGetPayload(out ServiceBusSendContext<T>? serviceBusSendContext)
+            ? _filter.SendAsync(serviceBusSendContext, next)
+            : next.SendAsync(context);
     }
 
     public void Probe(ProbeContext context)

@@ -16,14 +16,14 @@ public sealed class EntityFrameworkSagaRepositoryFactoryTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-SAGA-FACTORY", "optimistic-default-is-transactional")]
-    public async Task CreateOptimistic_DefaultExecutesTheLoadInsideATransaction()
+    public async Task CreateOptimistic_DefaultExecutesTheLoadInsideATransactionAsync()
     {
-        await using FactoryDatabase database = await FactoryDatabase.Create();
+        await using FactoryDatabase database = await FactoryDatabase.CreateAsync();
         database.Observer.Reset();
         ISagaRepository<FactorySaga> repository = EntityFrameworkSagaRepository<FactorySaga>
             .CreateOptimistic(database.CreateContext);
 
-        FactorySaga loaded = await ((ILoadSagaRepository<FactorySaga>)repository).Load(database.VisibleSagaId);
+        FactorySaga? loaded = await ((ILoadSagaRepository<FactorySaga>)repository).LoadAsync(database.VisibleSagaId, TestContext.Current.CancellationToken);
 
         Assert.NotNull(loaded);
         Assert.Equal(database.VisibleSagaId, loaded.CorrelationId);
@@ -34,17 +34,17 @@ public sealed class EntityFrameworkSagaRepositoryFactoryTests
     [InlineData(true, 1)]
     [InlineData(false, 0)]
     [RequirementCoverage("REQ-VSB-EF-SAGA-FACTORY", "optimistic-explicit-transaction-option-governs-execution")]
-    public async Task CreateOptimistic_ExplicitTransactionOptionGovernsExecution(
+    public async Task CreateOptimistic_ExplicitTransactionOptionGovernsExecutionAsync(
         bool transactionEnabled,
         int expectedStartedTransactions)
     {
-        await using FactoryDatabase database = await FactoryDatabase.Create();
+        await using FactoryDatabase database = await FactoryDatabase.CreateAsync();
         database.Observer.Reset();
         ISagaRepository<FactorySaga> repository = EntityFrameworkSagaRepository<FactorySaga>.CreateOptimistic(
             database.CreateContext,
             isTransactionEnabled: transactionEnabled);
 
-        FactorySaga loaded = await ((ILoadSagaRepository<FactorySaga>)repository).Load(database.VisibleSagaId);
+        FactorySaga? loaded = await ((ILoadSagaRepository<FactorySaga>)repository).LoadAsync(database.VisibleSagaId, TestContext.Current.CancellationToken);
 
         Assert.NotNull(loaded);
         Assert.Equal(database.VisibleSagaId, loaded.CorrelationId);
@@ -53,19 +53,19 @@ public sealed class EntityFrameworkSagaRepositoryFactoryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-SAGA-FACTORY", "optimistic-options-govern-execution")]
-    public async Task CreateOptimistic_AppliesTransactionAndQueryOptionsToExecution()
+    public async Task CreateOptimistic_AppliesTransactionAndQueryOptionsToExecutionAsync()
     {
-        await using FactoryDatabase database = await FactoryDatabase.Create();
+        await using FactoryDatabase database = await FactoryDatabase.CreateAsync();
         database.Observer.Reset();
         ISagaRepository<FactorySaga> repository = EntityFrameworkSagaRepository<FactorySaga>.CreateOptimistic(
             database.CreateContext,
             query => query.Where(saga => saga.IsVisible),
             isTransactionEnabled: false);
 
-        FactorySaga visible = await ((ILoadSagaRepository<FactorySaga>)repository).Load(database.VisibleSagaId);
-        FactorySaga hidden = await ((ILoadSagaRepository<FactorySaga>)repository).Load(database.HiddenSagaId);
+        FactorySaga? visible = await ((ILoadSagaRepository<FactorySaga>)repository).LoadAsync(database.VisibleSagaId, TestContext.Current.CancellationToken);
+        FactorySaga? hidden = await ((ILoadSagaRepository<FactorySaga>)repository).LoadAsync(database.HiddenSagaId, TestContext.Current.CancellationToken);
         Guid[] queryResults = (await ((IQuerySagaRepository<FactorySaga>)repository)
-            .Find(new SagaQuery<FactorySaga>(_ => true)))
+            .FindAsync(new SagaQuery<FactorySaga>(_ => true), TestContext.Current.CancellationToken))
             .ToArray();
 
         Assert.NotNull(visible);
@@ -76,9 +76,9 @@ public sealed class EntityFrameworkSagaRepositoryFactoryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-SAGA-FACTORY", "pessimistic-provider-governs-execution")]
-    public async Task CreatePessimistic_UsesTheSuppliedProviderInsideATransaction()
+    public async Task CreatePessimistic_UsesTheSuppliedProviderInsideATransactionAsync()
     {
-        await using FactoryDatabase database = await FactoryDatabase.Create();
+        await using FactoryDatabase database = await FactoryDatabase.CreateAsync();
         var statementProvider = new RecordingLockStatementProvider();
         database.Observer.Reset();
         ISagaRepository<FactorySaga> repository = EntityFrameworkSagaRepository<FactorySaga>.CreatePessimistic(
@@ -86,7 +86,7 @@ public sealed class EntityFrameworkSagaRepositoryFactoryTests
             statementProvider,
             query => query.Where(saga => saga.IsVisible));
 
-        FactorySaga loaded = await ((ILoadSagaRepository<FactorySaga>)repository).Load(database.VisibleSagaId);
+        FactorySaga? loaded = await ((ILoadSagaRepository<FactorySaga>)repository).LoadAsync(database.VisibleSagaId, TestContext.Current.CancellationToken);
 
         Assert.NotNull(loaded);
         Assert.Equal(database.VisibleSagaId, loaded.CorrelationId);
@@ -96,18 +96,18 @@ public sealed class EntityFrameworkSagaRepositoryFactoryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-EXECUTION-STRATEGY", "custom-interface-implementation-governs-load-and-query")]
-    public async Task CustomExecutionStrategy_GovernsEveryDirectRepositoryOperation()
+    public async Task CustomExecutionStrategy_GovernsEveryDirectRepositoryOperationAsync()
     {
         var executionStrategy = new ExecutionStrategyProbe();
-        await using FactoryDatabase database = await FactoryDatabase.Create(executionStrategy);
+        await using FactoryDatabase database = await FactoryDatabase.CreateAsync(executionStrategy);
         executionStrategy.Reset();
         ISagaRepository<FactorySaga> repository = EntityFrameworkSagaRepository<FactorySaga>
             .CreateOptimistic(database.CreateContext, isTransactionEnabled: false);
 
-        FactorySaga loaded = await ((ILoadSagaRepository<FactorySaga>)repository).Load(database.VisibleSagaId);
+        FactorySaga? loaded = await ((ILoadSagaRepository<FactorySaga>)repository).LoadAsync(database.VisibleSagaId, TestContext.Current.CancellationToken);
         int executionsAfterLoad = executionStrategy.ExecutionCount;
         Guid[] queryResults = (await ((IQuerySagaRepository<FactorySaga>)repository)
-            .Find(new SagaQuery<FactorySaga>(_ => true)))
+            .FindAsync(new SagaQuery<FactorySaga>(_ => true), TestContext.Current.CancellationToken))
             .ToArray();
 
         Assert.NotNull(loaded);
@@ -119,10 +119,10 @@ public sealed class EntityFrameworkSagaRepositoryFactoryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-EXECUTION-STRATEGY", "outer-transaction-query-avoids-additional-retry-boundary")]
-    public async Task SendQuery_WithAnOuterTransaction_UsesOnlyTheProviderQueryExecution()
+    public async Task SendQuery_WithAnOuterTransaction_UsesOnlyTheProviderQueryExecutionAsync()
     {
         var executionStrategy = new ExecutionStrategyProbe();
-        await using FactoryDatabase database = await FactoryDatabase.Create(executionStrategy);
+        await using FactoryDatabase database = await FactoryDatabase.CreateAsync(executionStrategy);
         executionStrategy.Reset();
         var contextFactory = new EntityFrameworkSagaRepositoryContextFactory<FactorySaga>(
             new DelegateSagaDbContextFactory<FactorySaga>(database.CreateContext),
@@ -137,7 +137,7 @@ public sealed class EntityFrameworkSagaRepositoryFactoryTests
             new TransactionPayload(Guid.Parse("9c49617d-5341-465f-b624-3807677f7b99")));
         int delivered = 0;
 
-        await contextFactory.SendQuery(
+        await contextFactory.SendQueryAsync(
             context,
             new SagaQuery<FactorySaga>(_ => true),
             Pipe.Execute<SagaRepositoryQueryContext<FactorySaga, FactoryMessage>>(queryContext =>
@@ -152,10 +152,12 @@ public sealed class EntityFrameworkSagaRepositoryFactoryTests
 
     private static ConsumeContext<FactoryMessage> CreateConsumeContext(FactoryMessage message, DbTransactionContext transaction)
     {
-        ConsumeContext<FactoryMessage> context = DispatchProxy.Create<ConsumeContext<FactoryMessage>, ConsumeContextProxy>();
+        FactoryConsumeContext context = DispatchProxy.Create<FactoryConsumeContext, ConsumeContextProxy>();
         ((ConsumeContextProxy)(object)context).Configure(message, transaction, TestContext.Current.CancellationToken);
         return context;
     }
+
+    private interface FactoryConsumeContext : ConsumeContext<FactoryMessage>, ConsumeContext;
 
     public sealed class FactorySaga : ISaga
     {
@@ -200,7 +202,7 @@ public sealed class EntityFrameworkSagaRepositoryFactoryTests
         public TransactionObserver Observer { get; }
         public Guid VisibleSagaId { get; }
 
-        public static async Task<FactoryDatabase> Create(ExecutionStrategyProbe? executionStrategy = null)
+        public static async Task<FactoryDatabase> CreateAsync(ExecutionStrategyProbe? executionStrategy = null)
         {
             var connection = new SqliteConnection("Data Source=:memory:");
             await connection.OpenAsync(TestContext.Current.CancellationToken);
@@ -253,7 +255,7 @@ public sealed class EntityFrameworkSagaRepositoryFactoryTests
         public override ValueTask<DbTransaction> TransactionStartedAsync(DbConnection connection, TransactionEndEventData eventData,
             DbTransaction result, CancellationToken cancellationToken = default)
         {
-            Interlocked.Increment(ref _startedCount);
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled<global::System.Data.Common.DbTransaction>(cancellationToken); Interlocked.Increment(ref _startedCount);
             return ValueTask.FromResult(result);
         }
     }
@@ -382,9 +384,9 @@ public sealed class EntityFrameworkSagaRepositoryFactoryTests
 
     private sealed class NoopPublishEndpointProvider : IPublishEndpointProvider
     {
-        public Task<ISendEndpoint> GetPublishSendEndpoint<T>()
-            where T : class => throw new NotSupportedException();
-
+        public Task<ISendEndpoint> GetPublishSendEndpointAsync<T>(CancellationToken cancellationToken = default)
+            where T : class
+        { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.ISendEndpoint>(cancellationToken); throw new NotSupportedException(); }
         public ConnectHandle ConnectPublishObserver(IPublishObserver observer) => throw new NotSupportedException();
     }
 }

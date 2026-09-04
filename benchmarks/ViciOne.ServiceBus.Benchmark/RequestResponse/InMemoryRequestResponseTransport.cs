@@ -40,7 +40,7 @@ public class InMemoryRequestResponseTransport :
         _clientFactory = _busControl.CreateReplyToClientFactory();
     }
 
-    public async Task<IRequestClient<T>> GetRequestClient<T>(TimeSpan settingsRequestTimeout)
+    public async Task<IRequestClient<T>> GetRequestClientAsync<T>(TimeSpan settingsRequestTimeout)
         where T : class
     {
         return _clientFactory.CreateRequestClient<T>(_targetEndpointAddress, settingsRequestTimeout);

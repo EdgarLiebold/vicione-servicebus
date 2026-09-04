@@ -13,7 +13,7 @@ public class ExecuteActivityRegistration<TActivity, TArguments> :
 {
     readonly List<Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>> _configureActions;
     readonly IContainerSelector _selector;
-    IExecuteActivityDefinition<TActivity, TArguments> _definition;
+    IExecuteActivityDefinition<TActivity, TArguments> _definition = null!;
 
     public ExecuteActivityRegistration(IContainerSelector selector)
     {
@@ -26,7 +26,7 @@ public class ExecuteActivityRegistration<TActivity, TArguments> :
 
     public bool IncludeInConfigureEndpoints { get; set; }
 
-    void IExecuteActivityRegistration.AddConfigureAction<T, TArgs>(Action<IRegistrationContext, IExecuteActivityConfigurator<T, TArgs>> configure)
+    void IExecuteActivityRegistration.AddConfigureAction<T, TArgs>(Action<IRegistrationContext, IExecuteActivityConfigurator<T, TArgs>>? configure)
     {
         if (configure is Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>> action)
             _configureActions.Add(action);
@@ -67,7 +67,7 @@ public class ExecuteActivityRegistration<TActivity, TArguments> :
         _definition = _selector.GetDefinition<IExecuteActivityDefinition<TActivity, TArguments>>(provider)
             ?? new DefaultExecuteActivityDefinition<TActivity, TArguments>();
 
-        IEndpointDefinition<IExecuteActivity<TArguments>> executeEndpointDefinition =
+        IEndpointDefinition<IExecuteActivity<TArguments>>? executeEndpointDefinition =
             _selector.GetEndpointDefinition<IExecuteActivity<TArguments>>(provider);
         if (executeEndpointDefinition != null)
             _definition.ExecuteEndpointDefinition = executeEndpointDefinition;

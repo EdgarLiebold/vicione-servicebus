@@ -12,7 +12,7 @@ public sealed class AzureTableSagaConcurrencyTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-SAGA-CONCURRENCY", "etag-conflict-reloads-and-retries-without-lost-update")]
-    public async Task ConcurrentUpdates_ReloadAfterAnEtagConflictWithoutLosingEitherUpdate()
+    public async Task ConcurrentUpdates_ReloadAfterAnEtagConflictWithoutLosingEitherUpdateAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
@@ -29,39 +29,40 @@ public sealed class AzureTableSagaConcurrencyTests
                     .AzureTableRepository(repository => repository.TableClientFactory(() => fixture.Table));
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Guid sagaId = Guid.NewGuid();
             Guid firstCommandId = Guid.NewGuid();
             Guid secondCommandId = Guid.NewGuid();
-            ISendEndpoint endpoint = await harness.GetSagaEndpoint<ConcurrentState>();
-            await endpoint.Send(new BeginConcurrentSaga(sagaId), cancellationToken);
+            ISendEndpoint endpoint = await harness.GetSagaEndpointAsync<ConcurrentState>(TestContext.Current.CancellationToken);
+            await endpoint.SendAsync(new BeginConcurrentSaga(sagaId), cancellationToken);
             await harness.Published
                 .SelectAsync<ConcurrentSagaStarted>(
                     observed => observed.Context.Message.CorrelationId == sagaId,
                     cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             await Task.WhenAll(
-                endpoint.Send(new IncrementConcurrentSaga(sagaId, firstCommandId), cancellationToken),
-                endpoint.Send(new IncrementConcurrentSaga(sagaId, secondCommandId), cancellationToken));
+                endpoint.SendAsync(new IncrementConcurrentSaga(sagaId, firstCommandId), cancellationToken),
+                endpoint.SendAsync(new IncrementConcurrentSaga(sagaId, secondCommandId), cancellationToken));
             await handler.BothInitialAttemptsEntered.WaitAsync(timeout, cancellationToken);
             IPublishedMessage<ConcurrentSagaIncremented> first = await harness.Published
                 .SelectAsync<ConcurrentSagaIncremented>(
                     observed => observed.Context.Message.CommandId == firstCommandId,
                     cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             IPublishedMessage<ConcurrentSagaIncremented> second = await harness.Published
                 .SelectAsync<ConcurrentSagaIncremented>(
                     observed => observed.Context.Message.CommandId == secondCommandId,
                     cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             var repository = (ILoadSagaRepository<ConcurrentState>)AzureTableSagaRepository<ConcurrentState>
                 .Create(() => fixture.Table);
-            ConcurrentState persisted = await repository.Load(sagaId);
+            ConcurrentState persisted = Assert.IsType<ConcurrentState>(
+                await repository.LoadAsync(sagaId, TestContext.Current.CancellationToken));
             using var completed = new CancellationTokenSource();
             completed.Cancel();
             ConcurrentSagaIncremented[] published = harness.Published
@@ -81,7 +82,7 @@ public sealed class AzureTableSagaConcurrencyTests
         finally
         {
             handler.Release();
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 

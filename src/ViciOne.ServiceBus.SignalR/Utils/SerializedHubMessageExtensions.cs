@@ -13,7 +13,7 @@ public static class SerializedHubMessageExtensions
         return new SerializedHubMessage(protocolMessages.Select(message => new SerializedMessage(message.Key, message.Value)).ToList());
     }
 
-    public static IReadOnlyDictionary<string, byte[]> ToProtocolDictionary(this IEnumerable<IHubProtocol> protocols, string methodName, object[] args)
+    public static IReadOnlyDictionary<string, byte[]> ToProtocolDictionary(this IEnumerable<IHubProtocol> protocols, string methodName, object?[] args)
     {
         var serializedMessageHub = new SerializedHubMessage(new InvocationMessage(methodName, args));
 

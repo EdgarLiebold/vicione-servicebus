@@ -14,31 +14,31 @@ public class FaultedContainerFactoryActivity<TSaga, TException, TActivity> :
         visitor.Visit(this);
     }
 
-    public Task Execute(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
-        return next.Execute(context);
+        return next.ExecuteAsync(context);
     }
 
-    public Task Execute<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+    public Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
-        return next.Execute(context);
+        return next.ExecuteAsync(context);
     }
 
-    public Task Faulted<TOtherException>(BehaviorExceptionContext<TSaga, TOtherException> context, IBehavior<TSaga> next)
+    public Task FaultedAsync<TOtherException>(BehaviorExceptionContext<TSaga, TOtherException> context, IBehavior<TSaga> next)
         where TOtherException : Exception
     {
         if (context is BehaviorExceptionContext<TSaga, TException> exceptionContext)
         {
             var activity = context.GetServiceOrCreateInstance<TActivity>();
 
-            return activity.Faulted(exceptionContext, next);
+            return activity.FaultedAsync(exceptionContext, next);
         }
 
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 
-    public Task Faulted<T, TOtherException>(BehaviorExceptionContext<TSaga, T, TOtherException> context, IBehavior<TSaga, T> next)
+    public Task FaultedAsync<T, TOtherException>(BehaviorExceptionContext<TSaga, T, TOtherException> context, IBehavior<TSaga, T> next)
         where T : class
         where TOtherException : Exception
     {
@@ -46,10 +46,10 @@ public class FaultedContainerFactoryActivity<TSaga, TException, TActivity> :
         {
             var activity = context.GetServiceOrCreateInstance<TActivity>();
 
-            return activity.Faulted(exceptionContext, next);
+            return activity.FaultedAsync(exceptionContext, next);
         }
 
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 
     public void Probe(ProbeContext context)
@@ -71,22 +71,22 @@ public class FaultedContainerFactoryActivity<TSaga, TMessage, TException, TActiv
         context.CreateScope("containerActivityFactory");
     }
 
-    public Task Execute(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
+    public Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
-        return next.Execute(context);
+        return next.ExecuteAsync(context);
     }
 
-    public Task Faulted<T>(BehaviorExceptionContext<TSaga, TMessage, T> context, IBehavior<TSaga, TMessage> next)
+    public Task FaultedAsync<T>(BehaviorExceptionContext<TSaga, TMessage, T> context, IBehavior<TSaga, TMessage> next)
         where T : Exception
     {
         if (context is BehaviorExceptionContext<TSaga, TMessage, TException> exceptionContext)
         {
             var activity = context.GetServiceOrCreateInstance<TActivity>();
 
-            return activity.Faulted(exceptionContext, next);
+            return activity.FaultedAsync(exceptionContext, next);
         }
 
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 
     public void Accept(StateMachineVisitor visitor)

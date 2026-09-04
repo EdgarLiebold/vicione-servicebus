@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.Configuration;
 
 public static class ConsumerFactoryConfiguratorExtensions
 {
-    public static IEnumerable<ValidationResult> ValidateConsumer<TConsumer>(this ISpecification configurator)
+    public static IEnumerable<ValidationResult> ValidateConsumer<TConsumer>(this ISpecification? configurator)
         where TConsumer : class
     {
         if (!typeof(TConsumer).ImplementsInterface<IConsumer>())

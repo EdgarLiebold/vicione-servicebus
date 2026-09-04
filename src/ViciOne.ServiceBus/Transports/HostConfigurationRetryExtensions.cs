@@ -8,14 +8,14 @@ namespace ViciOne.ServiceBus.Transports;
 
 public static class HostConfigurationRetryExtensions
 {
-    public static async Task Retry(this IHostConfiguration hostConfiguration, Func<Task> factory, CancellationToken cancellationToken,
-        CancellationToken stoppingToken)
+    public static async Task RetryAsync(this IHostConfiguration hostConfiguration, Func<Task> factory, CancellationToken stoppingToken,
+        CancellationToken cancellationToken = default)
     {
-        await Retry(hostConfiguration, factory, TimeProvider.System, cancellationToken, stoppingToken).ConfigureAwait(false);
+        await RetryAsync(hostConfiguration, factory, TimeProvider.System, stoppingToken, cancellationToken).ConfigureAwait(false);
     }
 
-    public static async Task Retry(this IHostConfiguration hostConfiguration, Func<Task> factory, TimeProvider timeProvider,
-        CancellationToken cancellationToken, CancellationToken stoppingToken)
+    public static async Task RetryAsync(this IHostConfiguration hostConfiguration, Func<Task> factory, TimeProvider timeProvider,
+        CancellationToken stoppingToken, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(hostConfiguration);
         ArgumentNullException.ThrowIfNull(factory);
@@ -24,7 +24,7 @@ public static class HostConfigurationRetryExtensions
         var description = hostConfiguration.HostAddress;
         IRetryPolicy retryPolicy = hostConfiguration.SendTransportRetryPolicy
             ?? throw new InvalidOperationException("The host configuration returned a null send transport retry policy.");
-        Exception lastFailure = null;
+        Exception? lastFailure = null;
 
         using var linkedSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, stoppingToken);
 
@@ -35,7 +35,7 @@ public static class HostConfigurationRetryExtensions
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            await retryPolicy.Retry(async () =>
+            await retryPolicy.RetryAsync(async () =>
             {
                 if (stoppingToken.IsCancellationRequested)
                     throw CreateStoppingException(description, lastFailure);
@@ -66,7 +66,7 @@ public static class HostConfigurationRetryExtensions
         }
     }
 
-    static ConnectionException CreateStoppingException(Uri description, Exception lastFailure)
+    static ConnectionException CreateStoppingException(Uri description, Exception? lastFailure)
     {
         return new ConnectionException($"The transport is stopping and cannot be used: {description}", lastFailure);
     }

@@ -17,7 +17,7 @@ public sealed class QuartzChainedSchedulingIntegrationTests
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("REQ-VSB-QUARTZ-CHAINED-DELIVERY", "trace-and-interface-dispatch")]
-    public async Task ScheduledHandler_CanScheduleAnotherMessageWithoutLosingItsTraceOrInterfaceContract(bool useRawJson)
+    public async Task ScheduledHandler_CanScheduleAnotherMessageWithoutLosingItsTraceOrInterfaceContractAsync(bool useRawJson)
     {
         TimeSpan timeout = OperationTimeout();
         var firstTrace = new TaskCompletionSource<ActivityContext>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -26,7 +26,7 @@ public sealed class QuartzChainedSchedulingIntegrationTests
         var interfaceDelivery = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
         using ActivityListener listener = CreateActivityListener();
 
-        await using QuartzTestBus fixture = await QuartzTestBus.Start(
+        await using QuartzTestBus fixture = await QuartzTestBus.StartAsync(
             timeout,
             configure: configurator =>
             {
@@ -38,7 +38,7 @@ public sealed class QuartzChainedSchedulingIntegrationTests
                     endpoint.Handler<InitialPayload>(async context =>
                     {
                         firstTrace.TrySetResult(RequiredCurrentActivity());
-                        await context.ScheduleSend(
+                        await context.Advanced().ScheduleSendAsync(
                             Destination,
                             TimeSpan.Zero,
                             new ChainedPayload("second"),
@@ -59,9 +59,9 @@ public sealed class QuartzChainedSchedulingIntegrationTests
             });
         var scheduler = CreateMessageScheduler(fixture);
 
-        await scheduler.ScheduleSend(
+        await scheduler.ScheduleSendAsync(
             Destination,
-            TimeProvider.System.GetUtcNow().UtcDateTime,
+            TimeProvider.System.GetUtcNow(),
             new InitialPayload("first"),
             TestContext.Current.CancellationToken);
 
@@ -79,16 +79,16 @@ public sealed class QuartzChainedSchedulingIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-EXPIRATION", "chained-delivery-preserves-time-to-live-within-scheduling-precision")]
-    public async Task ChainedSchedule_PreservesTheConfiguredTimeToLiveWithinSchedulingPrecision()
+    public async Task ChainedSchedule_PreservesTheConfiguredTimeToLiveWithinSchedulingPrecisionAsync()
     {
         TimeSpan timeout = OperationTimeout();
         TimeSpan timeToLive = TimeSpan.FromHours(1);
         var delivered = new TaskCompletionSource<ExpirationObservation>(TaskCreationOptions.RunContinuationsAsynchronously);
-        await using QuartzTestBus fixture = await QuartzTestBus.Start(
+        await using QuartzTestBus fixture = await QuartzTestBus.StartAsync(
             timeout,
             configure: configurator => configurator.ReceiveEndpoint("quartz-chained-destination", endpoint =>
             {
-                endpoint.Handler<InitialPayload>(context => context.ScheduleSend(
+                endpoint.Handler<InitialPayload>(context => context.Advanced().ScheduleSendAsync(
                     Destination,
                     TimeSpan.Zero,
                     new ChainedPayload("expiring"),
@@ -102,15 +102,15 @@ public sealed class QuartzChainedSchedulingIntegrationTests
             }));
         var scheduler = CreateMessageScheduler(fixture);
 
-        await scheduler.ScheduleSend(
+        await scheduler.ScheduleSendAsync(
             Destination,
-            TimeProvider.System.GetUtcNow().UtcDateTime,
+            TimeProvider.System.GetUtcNow(),
             new InitialPayload("first"),
             TestContext.Current.CancellationToken);
 
         ExpirationObservation received = await delivered.Task.WaitAsync(timeout, TestContext.Current.CancellationToken);
-        DateTime sentTime = Assert.IsType<DateTime>(received.SentTime);
-        DateTime expirationTime = Assert.IsType<DateTime>(received.ExpirationTime);
+        DateTimeOffset sentTime = Assert.IsType<DateTimeOffset>(received.SentTime);
+        DateTimeOffset expirationTime = Assert.IsType<DateTimeOffset>(received.ExpirationTime);
         TimeSpan preservedTimeToLive = expirationTime - sentTime;
 
         Assert.InRange(preservedTimeToLive, timeToLive - TimeSpan.FromSeconds(5), timeToLive + TimeSpan.FromSeconds(5));
@@ -151,5 +151,5 @@ public sealed class QuartzChainedSchedulingIntegrationTests
 
     public sealed record ChainedPayload(string Value) : IChainedPayload;
 
-    private sealed record ExpirationObservation(DateTime? SentTime, DateTime? ExpirationTime);
+    private sealed record ExpirationObservation(DateTimeOffset? SentTime, DateTimeOffset? ExpirationTime);
 }

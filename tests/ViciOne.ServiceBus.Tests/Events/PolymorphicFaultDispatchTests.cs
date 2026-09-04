@@ -15,23 +15,23 @@ public sealed class PolymorphicFaultDispatchTests
     [InlineData(PolymorphicShape.DirectInterfaceWithExcludedBase)]
     [InlineData(PolymorphicShape.DirectInterfaceWithIncludedBase)]
     [RequirementCoverage("REQ-VSB-POLYMORPHIC-FAULT-DISPATCH", "five-base-and-interface-shapes")]
-    public Task EverySupportedPolymorphicShape_PublishesTypedAndInterfaceFaults(PolymorphicShape shape) =>
+    public Task EverySupportedPolymorphicShape_PublishesTypedAndInterfaceFaultsAsync(PolymorphicShape shape) =>
         shape switch
         {
             PolymorphicShape.ExcludedBaseImplementsInterface =>
-                Run<MessageWithoutDirectInterfaceAndExcludedBaseWithInterface>(),
+                RunAsync<MessageWithoutDirectInterfaceAndExcludedBaseWithInterface>(),
             PolymorphicShape.IncludedBaseImplementsInterface =>
-                Run<MessageWithoutDirectInterfaceAndIncludedBaseWithInterface>(),
+                RunAsync<MessageWithoutDirectInterfaceAndIncludedBaseWithInterface>(),
             PolymorphicShape.DirectInterfaceWithoutBase =>
-                Run<MessageWithDirectInterfaceAndNoBase>(),
+                RunAsync<MessageWithDirectInterfaceAndNoBase>(),
             PolymorphicShape.DirectInterfaceWithExcludedBase =>
-                Run<MessageWithDirectInterfaceAndExcludedBase>(),
+                RunAsync<MessageWithDirectInterfaceAndExcludedBase>(),
             PolymorphicShape.DirectInterfaceWithIncludedBase =>
-                Run<MessageWithDirectInterfaceAndIncludedBase>(),
+                RunAsync<MessageWithDirectInterfaceAndIncludedBase>(),
             _ => throw new ArgumentOutOfRangeException(nameof(shape), shape, "Unknown polymorphic shape."),
         };
 
-    private static async Task Run<T>()
+    private static async Task RunAsync<T>()
         where T : class, IPolymorphicMessage, new()
     {
         TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
@@ -51,7 +51,7 @@ public sealed class PolymorphicFaultDispatchTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync().WaitAsync(timeout, cancellationToken);
         bool started = true;
 
         try
@@ -62,16 +62,16 @@ public sealed class PolymorphicFaultDispatchTests
                 harness.GetConsumerHarness<FaultMessageConsumer<IPolymorphicMessage>>();
             Task<IReceivedMessage<T>> failedConsumeTask = harness.Consumed
                 .SelectAsync<T>(cancellationToken)
-                .First();
+                .FirstObservedAsync();
             Task<IPublishedMessage<Fault<T>>> typedPublishTask = harness.Published
                 .SelectAsync<Fault<T>>(cancellationToken)
-                .First();
+                .FirstObservedAsync();
             Task<IPublishedMessage<Fault<IPolymorphicMessage>>> interfacePublishTask = harness.Published
                 .SelectAsync<Fault<IPolymorphicMessage>>(cancellationToken)
-                .First();
+                .FirstObservedAsync();
             var message = new T();
 
-            await harness.Bus.Publish(message, cancellationToken);
+            await harness.Bus.PublishAsync(message, cancellationToken);
 
             IReceivedMessage<T> failedConsume = await failedConsumeTask.WaitAsync(timeout, cancellationToken);
             IPublishedMessage<Fault<T>> typedPublished = await typedPublishTask.WaitAsync(timeout, cancellationToken);
@@ -79,13 +79,13 @@ public sealed class PolymorphicFaultDispatchTests
                 await interfacePublishTask.WaitAsync(timeout, cancellationToken);
             IReceivedMessage<Fault<T>> typedConsumed = await typedConsumer.Consumed
                 .SelectAsync<Fault<T>>(cancellationToken)
-                .First()
+                .FirstObservedAsync()
                 .WaitAsync(timeout, cancellationToken);
             IReceivedMessage<Fault<IPolymorphicMessage>> interfaceConsumed = await interfaceConsumer.Consumed
                 .SelectAsync<Fault<IPolymorphicMessage>>(cancellationToken)
-                .First()
+                .FirstObservedAsync()
                 .WaitAsync(timeout, cancellationToken);
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
             started = false;
 
             using var completed = new CancellationTokenSource();
@@ -108,7 +108,7 @@ public sealed class PolymorphicFaultDispatchTests
         finally
         {
             if (started)
-                await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+                await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -164,14 +164,14 @@ public sealed class PolymorphicFaultDispatchTests
     public sealed class AlwaysFailConsumer<T> : IConsumer<T>
         where T : class
     {
-        public Task Consume(ConsumeContext<T> context) =>
+        public Task ConsumeAsync(ConsumeContext<T> context) =>
             Task.FromException(new PolymorphicFailureException());
     }
 
     public sealed class FaultMessageConsumer<T> : IConsumer<Fault<T>>
         where T : class
     {
-        public Task Consume(ConsumeContext<Fault<T>> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<Fault<T>> context) => Task.CompletedTask;
     }
 
     private sealed class PolymorphicFailureException : Exception;

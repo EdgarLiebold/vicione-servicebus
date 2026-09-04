@@ -9,7 +9,7 @@ public sealed class ConsumeContextEndpointExtensionsTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-POLYMORPHIC-FAULT-PUBLICATION", "derived-interface-to-base-fault")]
-    public async Task ThrownDerivedInterfaceMessage_PublishesAConsumableBaseFault()
+    public async Task ThrownDerivedInterfaceMessage_PublishesAConsumableBaseFaultAsync()
     {
         TimeSpan operationTimeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -26,7 +26,7 @@ public sealed class ConsumeContextEndpointExtensionsTests
 
         try
         {
-            await harness.Start(cancellationToken);
+            await harness.StartAsync(cancellationToken);
             var receivedBaseFault = new TaskCompletionSource<ConsumeContext<Fault<MemberUpdateCommand>>>(
                 TaskCreationOptions.RunContinuationsAsynchronously);
             HostReceiveEndpointHandle faultEndpoint = harness.Bus.ConnectReceiveEndpoint(configurator =>
@@ -39,7 +39,7 @@ public sealed class ConsumeContextEndpointExtensionsTests
 
             try
             {
-                await harness.InputQueueSendEndpoint.Send<UpdateMemberAddressCommand>(
+                await harness.InputQueueSendEndpoint.SendAsync<UpdateMemberAddressCommand>(
                     new
                     {
                         MemberName = "Frank",
@@ -68,7 +68,7 @@ public sealed class ConsumeContextEndpointExtensionsTests
                         MessageUrn.ForTypeString<UpdateMemberAddressCommand>(),
                     }.Order(StringComparer.Ordinal),
                     context.Message.FaultMessageTypes.Order(StringComparer.Ordinal));
-                Assert.True(await harness.Published.Any<Fault<UpdateMemberAddressCommand>>(cancellationToken));
+                Assert.True(await harness.Published.AnyAsync<Fault<UpdateMemberAddressCommand>>(cancellationToken));
             }
             finally
             {
@@ -77,13 +77,13 @@ public sealed class ConsumeContextEndpointExtensionsTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-FAULT-NOTIFICATION", "derived-context-from-base-context")]
-    public async Task DerivedContextObtainedFromBaseContext_PublishesOneCompleteFault()
+    public async Task DerivedContextObtainedFromBaseContext_PublishesOneCompleteFaultAsync()
     {
         TimeSpan operationTimeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -103,7 +103,7 @@ public sealed class ConsumeContextEndpointExtensionsTests
                     throw new InvalidOperationException("The derived consume context was not available.");
 
                 derivedContextObserved.TrySetResult(derivedContext);
-                return derivedContext.NotifyFaulted(
+                return derivedContext.NotifyFaultedAsync(
                     TimeSpan.Zero,
                     TypeCache<ConsumeContextEndpointExtensionsTests>.ShortName,
                     new ExpectedDerivedFaultException());
@@ -114,7 +114,7 @@ public sealed class ConsumeContextEndpointExtensionsTests
 
         try
         {
-            await harness.Start(cancellationToken);
+            await harness.StartAsync(cancellationToken);
             started = true;
             var receivedBaseFault = new TaskCompletionSource<ConsumeContext<Fault<BaseFaultCommand>>>(
                 TaskCreationOptions.RunContinuationsAsynchronously);
@@ -127,7 +127,7 @@ public sealed class ConsumeContextEndpointExtensionsTests
             await faultEndpoint.Ready.WaitAsync(operationTimeout, cancellationToken);
 
             Guid commandId = Guid.Parse("856dd4c5-58c8-4530-8afc-58b7f35d274b");
-            await harness.InputQueueSendEndpoint.Send<DerivedFaultCommand>(
+            await harness.InputQueueSendEndpoint.SendAsync<DerivedFaultCommand>(
                 new { CommandId = commandId, Value = "fault me" },
                 cancellationToken);
 
@@ -142,7 +142,7 @@ public sealed class ConsumeContextEndpointExtensionsTests
 
             await faultEndpoint.StopAsync(CancellationToken.None);
             faultEndpoint = null;
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
             started = false;
 
             using var completed = new CancellationTokenSource();
@@ -165,17 +165,17 @@ public sealed class ConsumeContextEndpointExtensionsTests
                 exception => exception.ExceptionType == TypeCache<ExpectedDerivedFaultException>.ShortName);
             Assert.Contains(
                 MessageUrn.ForTypeString<Fault<BaseFaultCommand>>(),
-                baseFault.SupportedMessageTypes);
+                baseFault.Advanced().SupportedMessageTypes);
             Assert.Contains(
                 MessageUrn.ForTypeString<Fault<DerivedFaultCommand>>(),
-                baseFault.SupportedMessageTypes);
+                baseFault.Advanced().SupportedMessageTypes);
         }
         finally
         {
             if (faultEndpoint is not null)
                 await faultEndpoint.StopAsync(CancellationToken.None);
             if (started)
-                await harness.Stop();
+                await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 

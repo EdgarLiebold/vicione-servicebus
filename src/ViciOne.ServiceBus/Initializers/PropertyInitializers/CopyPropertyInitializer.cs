@@ -29,9 +29,9 @@ public class CopyPropertyInitializer<TMessage, TInput, TProperty> :
         _messageProperty = WritePropertyCache<TMessage>.GetProperty<TProperty>(messagePropertyInfo);
     }
 
-    public Task Apply(InitializeContext<TMessage, TInput> context)
+    public Task ApplyAsync(InitializeContext<TMessage, TInput> context, CancellationToken cancellationToken = default)
     {
-        if (context.HasInput)
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (context.HasInput)
             _messageProperty.Set(context.Message, _inputProperty.Get(context.Input));
 
         return Task.CompletedTask;

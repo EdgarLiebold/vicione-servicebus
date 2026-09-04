@@ -11,7 +11,7 @@ public static class TransactionConfiguratorExtensions
     /// <typeparam name="T">The pipe context type</typeparam>
     /// <param name="configurator">The pipe configurator</param>
     /// <param name="configure">Configure the transaction pipe</param>
-    public static void UseTransaction<T>(this IPipeConfigurator<T> configurator, Action<ITransactionConfigurator> configure = null)
+    public static void UseTransaction<T>(this IPipeConfigurator<T> configurator, Action<ITransactionConfigurator>? configure = null)
         where T : class, PipeContext
     {
         ArgumentNullException.ThrowIfNull(configurator);

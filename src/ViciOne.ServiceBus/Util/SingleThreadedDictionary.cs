@@ -6,12 +6,13 @@ namespace ViciOne.ServiceBus.Util;
 
 public class SingleThreadedDictionary<TKey, TValue> :
     IReadOnlyDictionary<TKey, TValue>
+    where TKey : notnull
 {
     readonly IEqualityComparer<TKey> _comparer;
     readonly object _lock;
     IDictionary<TKey, TValue> _dictionary;
 
-    public SingleThreadedDictionary(IEqualityComparer<TKey> comparer = default)
+    public SingleThreadedDictionary(IEqualityComparer<TKey>? comparer = default)
     {
         _comparer = comparer ?? EqualityComparer<TKey>.Default;
 
@@ -37,7 +38,7 @@ public class SingleThreadedDictionary<TKey, TValue> :
         return _dictionary.ContainsKey(key);
     }
 
-    public bool TryGetValue(TKey key, out TValue value)
+    public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
     {
         return _dictionary.TryGetValue(key, out value);
     }
@@ -71,7 +72,7 @@ public class SingleThreadedDictionary<TKey, TValue> :
         }
     }
 
-    public bool TryRemove(TKey key, out TValue value)
+    public bool TryRemove(TKey key, [MaybeNullWhen(false)] out TValue value)
     {
         lock (_lock)
         {

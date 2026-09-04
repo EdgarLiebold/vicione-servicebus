@@ -7,7 +7,7 @@ public sealed class AsyncPropertyProviderTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-PROPERTY-PROVIDER-ASYNC-SOURCE", "scalar")]
-    public async Task TaskValuedScalar_IsAwaitedBeforeExposure()
+    public async Task TaskValuedScalar_IsAwaitedBeforeExposureAsync()
     {
         var input = new TaskScalarInput(Task.FromResult(27));
         var reader = PropertyProviderTestContext.For(input);
@@ -19,7 +19,7 @@ public sealed class AsyncPropertyProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PROPERTY-PROVIDER-ASYNC-SOURCE", "array-elements")]
-    public async Task ArrayOfTasks_AwaitsEveryElementAndDefaultsNullElements()
+    public async Task ArrayOfTasks_AwaitsEveryElementAndDefaultsNullElementsAsync()
     {
         var input = new TaskElementArrayInput(
             [Task.FromResult(1), Task.FromResult(2), null, Task.FromResult(3)]);
@@ -32,7 +32,7 @@ public sealed class AsyncPropertyProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PROPERTY-PROVIDER-ASYNC-SOURCE", "sequence-result-shapes")]
-    public async Task TaskValuedSequence_SupportsExactConvertedAndListResultShapes()
+    public async Task TaskValuedSequence_SupportsExactConvertedAndListResultShapesAsync()
     {
         var input = new TaskSequenceInput(Task.FromResult(new[] { 1, 2, 3 }));
         var reader = PropertyProviderTestContext.For(input);

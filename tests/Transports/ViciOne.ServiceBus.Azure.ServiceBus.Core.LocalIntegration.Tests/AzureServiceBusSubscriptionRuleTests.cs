@@ -10,7 +10,7 @@ public sealed class AzureServiceBusSubscriptionRuleTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-SUBSCRIPTION-RULE", "sql-filter-delivers-only-the-matching-integer-header")]
-    public async Task SqlFilter_DeliversOnlyTheMatchingIntegerHeaderAndDrainsTheSubscription()
+    public async Task SqlFilter_DeliversOnlyTheMatchingIntegerHeaderAndDrainsTheSubscriptionAsync()
     {
         AzureServiceBusLocalFixture fixture = AzureServiceBusLocalFixture.Create("sql-filter");
         ServiceBusAdministrationClient admin = fixture.CreateAdministrationClient();
@@ -50,10 +50,10 @@ public sealed class AzureServiceBusSubscriptionRuleTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            await bus.Publish(new FilteredMessage(NewId.NextGuid(), "rejected"),
+            await bus.PublishAsync(new FilteredMessage(NewId.NextGuid(), "rejected"),
                     context => context.Headers.Set("ClientId", 69), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await bus.Publish(new FilteredMessage(selectedId, "selected"),
+            await bus.PublishAsync(new FilteredMessage(selectedId, "selected"),
                     context => context.Headers.Set("ClientId", 27), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
@@ -79,7 +79,7 @@ public sealed class AzureServiceBusSubscriptionRuleTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-SUBSCRIPTION-RULE", "existing-rule-updates-filter-and-action-in-place")]
-    public async Task ExistingRule_UpdatesFilterAndActionInPlaceWithoutAddingAnotherRule()
+    public async Task ExistingRule_UpdatesFilterAndActionInPlaceWithoutAddingAnotherRuleAsync()
     {
         AzureServiceBusLocalFixture fixture = AzureServiceBusLocalFixture.Create("rule-update");
         ServiceBusAdministrationClient admin = fixture.CreateAdministrationClient();
@@ -95,18 +95,18 @@ public sealed class AzureServiceBusSubscriptionRuleTests
             {
                 DefaultMessageTimeToLive = EmulatorEntityTimeToLive,
             }, cancellationToken);
-            await StartAndStop("0 = 1", "SET A = 1");
-            await AssertRule("0 = 1", "SET A = 1");
+            await StartAndStopAsync("0 = 1", "SET A = 1");
+            await AssertRuleAsync("0 = 1", "SET A = 1");
 
-            await StartAndStop("1 = 1", "SET A = 2");
-            await AssertRule("1 = 1", "SET A = 2");
+            await StartAndStopAsync("1 = 1", "SET A = 2");
+            await AssertRuleAsync("1 = 1", "SET A = 2");
         }
         finally
         {
             await fixture.CleanupAsync(admin);
         }
 
-        async Task StartAndStop(string filter, string action)
+        async Task StartAndStopAsync(string filter, string action)
         {
             await using ServiceBusClient client = fixture.CreateClient();
             IBusControl bus = Bus.Factory.CreateUsingAzureServiceBus(configuration =>
@@ -144,7 +144,7 @@ public sealed class AzureServiceBusSubscriptionRuleTests
             }
         }
 
-        async Task AssertRule(string filter, string action)
+        async Task AssertRuleAsync(string filter, string action)
         {
             var rules = new List<RuleProperties>();
             await foreach (RuleProperties current in admin.GetRulesAsync(topic, subscription, cancellationToken))

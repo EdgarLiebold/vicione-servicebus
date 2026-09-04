@@ -17,11 +17,11 @@ public class AsyncPipeContextFilter<TContext> :
         _agent = agent;
     }
 
-    public async Task Send(TContext context, IPipe<TContext> next)
+    public async Task SendAsync(TContext context, IPipe<TContext> next)
     {
-        await _agent.Created(context).ConfigureAwait(false);
+        await _agent.CreatedAsync(context).ConfigureAwait(false);
 
-        await next.Send(context).ConfigureAwait(false);
+        await next.SendAsync(context).ConfigureAwait(false);
 
         await _agent.Completed.ConfigureAwait(false);
     }

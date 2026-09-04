@@ -46,19 +46,22 @@ public interface ClientContext :
     /// Starts the message/session receivers
     /// </summary>
     /// <returns></returns>
-    Task StartAsync();
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task StartAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Shutdown the message/session receivers
     /// </summary>
     /// <returns></returns>
-    Task ShutdownAsync();
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task ShutdownAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Close down the message handler on the received
     /// </summary>
     /// <returns></returns>
-    Task CloseAsync();
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task CloseAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Notify that an exception has occurred on the client which is not transient and requires a recycle
@@ -66,5 +69,6 @@ public interface ClientContext :
     /// <param name="exception"></param>
     /// <param name="entityPath"></param>
     /// <returns></returns>
-    Task NotifyFaulted(Exception exception, string entityPath);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task NotifyFaultedAsync(Exception exception, string entityPath, CancellationToken cancellationToken = default);
 }

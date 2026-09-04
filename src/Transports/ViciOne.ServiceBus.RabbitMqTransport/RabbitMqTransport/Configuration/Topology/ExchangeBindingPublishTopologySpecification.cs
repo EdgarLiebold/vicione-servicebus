@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using ViciOne.ServiceBus.RabbitMqTransport.Topology;
 
@@ -24,6 +25,9 @@ public class ExchangeBindingPublishTopologySpecification :
     {
         var exchangeHandle = builder.ExchangeDeclare(ExchangeName, ExchangeType, Durable, AutoDelete, ExchangeArguments);
 
-        builder.ExchangeBind(builder.Exchange, exchangeHandle, RoutingKey, BindingArguments);
+        var sourceExchange = builder.Exchange
+            ?? throw new InvalidOperationException("A source exchange must be declared before applying an exchange binding.");
+
+        builder.ExchangeBind(sourceExchange, exchangeHandle, RoutingKey, BindingArguments);
     }
 }

@@ -12,7 +12,7 @@ public class RoutingSlipActivityException :
     {
     }
 
-    public RoutingSlipActivityException(string activityName, HostInfo host, Guid executionId, DateTime timestamp, TimeSpan elapsed,
+    public RoutingSlipActivityException(string activityName, HostInfo host, Guid executionId, DateTimeOffset timestamp, TimeSpan elapsed,
         ExceptionInfo exceptionInfo)
     {
         ExecutionId = executionId;
@@ -40,7 +40,7 @@ public class RoutingSlipActivityException :
     }
 
     public Guid ExecutionId { get; set; }
-    public DateTime Timestamp { get; set; }
+    public DateTimeOffset Timestamp { get; set; }
     public TimeSpan Elapsed { get; set; }
     public string Name { get; set; } = null!;
     public HostInfo Host { get; set; } = null!;

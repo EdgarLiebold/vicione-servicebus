@@ -7,14 +7,15 @@ public class ActiveMqSendTopology :
     SendTopology,
     IActiveMqSendTopologyConfigurator
 {
-    public Action<IActiveMqQueueConfigurator> ConfigureErrorSettings { get; set; }
-    public Action<IActiveMqQueueConfigurator> ConfigureDeadLetterSettings { get; set; }
+    public Action<IActiveMqQueueConfigurator>? ConfigureErrorSettings { get; set; }
+    public Action<IActiveMqQueueConfigurator>? ConfigureDeadLetterSettings { get; set; }
 
     IActiveMqMessageSendTopologyConfigurator<T> IActiveMqSendTopology.GetMessageTopology<T>()
     {
         IMessageSendTopologyConfigurator<T> configurator = base.GetMessageTopology<T>();
 
-        return configurator as IActiveMqMessageSendTopologyConfigurator<T>;
+        return configurator as IActiveMqMessageSendTopologyConfigurator<T>
+            ?? throw new InvalidOperationException($"The send topology for {typeof(T).FullName} is not an ActiveMQ topology.");
     }
 
     public SendSettings GetSendSettings(ActiveMqEndpointAddress address)

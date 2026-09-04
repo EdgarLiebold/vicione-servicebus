@@ -52,7 +52,7 @@ public static class DependencyInjectionActivityRegistrationExtensions
     }
 
     public static IActivityRegistration RegisterActivity<TActivity, TArguments, TLog>(this IServiceCollection collection, IContainerRegistrar registrar,
-        Type activityDefinitionType)
+        Type? activityDefinitionType)
         where TActivity : class, IActivity<TArguments, TLog>
         where TArguments : class
         where TLog : class
@@ -67,14 +67,14 @@ public static class DependencyInjectionActivityRegistrationExtensions
                 nameof(activityDefinitionType));
         }
 
-        var register = (IActivityRegistrar)Activator.CreateInstance(typeof(ActivityDefinitionRegistrar<,,,>)
-            .MakeGenericType(typeof(TActivity), typeof(TArguments), typeof(TLog), activityDefinitionType));
+        var register = (IActivityRegistrar)(Activator.CreateInstance(typeof(ActivityDefinitionRegistrar<,,,>)
+            .MakeGenericType(typeof(TActivity), typeof(TArguments), typeof(TLog), activityDefinitionType)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
         return register.Register(collection, registrar);
     }
 
     public static IActivityRegistration RegisterActivity(this IServiceCollection collection, IContainerRegistrar registrar, Type activityType,
-        Type activityDefinitionType = null)
+        Type? activityDefinitionType = null)
     {
         if (!activityType.TryGetSingleClosedGenericArguments(typeof(IActivity<,>), out Type[] argumentTypes))
         {
@@ -91,15 +91,15 @@ public static class DependencyInjectionActivityRegistrationExtensions
                     nameof(activityDefinitionType));
             }
 
-            var activityRegistrar = (IActivityRegistrar)Activator.CreateInstance(typeof(ActivityDefinitionRegistrar<,,,>)
-                .MakeGenericType(activityType, argumentTypes[0], argumentTypes[1], activityDefinitionType));
+            var activityRegistrar = (IActivityRegistrar)(Activator.CreateInstance(typeof(ActivityDefinitionRegistrar<,,,>)
+                .MakeGenericType(activityType, argumentTypes[0], argumentTypes[1], activityDefinitionType)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
             return activityRegistrar.Register(collection, registrar);
         }
 
 
-        var register = (IActivityRegistrar)Activator.CreateInstance(typeof(ActivityRegistrar<,,>)
-            .MakeGenericType(activityType, argumentTypes[0], argumentTypes[1]));
+        var register = (IActivityRegistrar)(Activator.CreateInstance(typeof(ActivityRegistrar<,,>)
+            .MakeGenericType(activityType, argumentTypes[0], argumentTypes[1])) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
         return register.Register(collection, registrar);
     }

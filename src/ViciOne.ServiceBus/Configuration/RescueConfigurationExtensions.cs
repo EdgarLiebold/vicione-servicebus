@@ -13,7 +13,7 @@ public static class RescueConfigurationExtensions
     /// <param name="rescuePipe"></param>
     /// <param name="configure"></param>
     public static void UseRescue(this IPipeConfigurator<ReceiveContext> configurator, IPipe<ExceptionReceiveContext> rescuePipe,
-        Action<IExceptionConfigurator> configure = null)
+        Action<IExceptionConfigurator>? configure = null)
     {
         if (configurator == null)
             throw new ArgumentNullException(nameof(configurator));
@@ -32,7 +32,7 @@ public static class RescueConfigurationExtensions
     /// <param name="rescuePipe"></param>
     /// <param name="configure"></param>
     public static void UseRescue(this IPipeConfigurator<ConsumeContext> configurator, IPipe<ExceptionConsumeContext> rescuePipe,
-        Action<IExceptionConfigurator> configure = null)
+        Action<IExceptionConfigurator>? configure = null)
     {
         if (configurator == null)
             throw new ArgumentNullException(nameof(configurator));
@@ -51,7 +51,7 @@ public static class RescueConfigurationExtensions
     /// <param name="rescuePipe"></param>
     /// <param name="configure"></param>
     public static void UseRescue<T>(this IPipeConfigurator<ConsumeContext<T>> configurator, IPipe<ExceptionConsumeContext<T>> rescuePipe,
-        Action<IExceptionConfigurator> configure = null)
+        Action<IExceptionConfigurator>? configure = null)
         where T : class
     {
         if (configurator == null)
@@ -71,7 +71,7 @@ public static class RescueConfigurationExtensions
     /// <param name="rescuePipe"></param>
     /// <param name="configure"></param>
     public static void UseRescue<T>(this IPipeConfigurator<ConsumerConsumeContext<T>> configurator, IPipe<ExceptionConsumerConsumeContext<T>> rescuePipe,
-        Action<IExceptionConfigurator> configure = null)
+        Action<IExceptionConfigurator>? configure = null)
         where T : class
     {
         if (configurator == null)
@@ -91,7 +91,7 @@ public static class RescueConfigurationExtensions
     /// <param name="rescuePipe"></param>
     /// <param name="configure"></param>
     public static void UseRescue<T>(this IPipeConfigurator<SagaConsumeContext<T>> configurator, IPipe<ExceptionSagaConsumeContext<T>> rescuePipe,
-        Action<IExceptionConfigurator> configure = null)
+        Action<IExceptionConfigurator>? configure = null)
         where T : class, ISaga
     {
         if (configurator == null)
@@ -114,7 +114,7 @@ public static class RescueConfigurationExtensions
     /// <param name="rescueContextFactory">Factory method to convert the pipe context to the rescue pipe context</param>
     /// <param name="configure"></param>
     public static void UseRescue<TContext, TRescue>(this IPipeConfigurator<TContext> configurator, IPipe<TRescue> rescuePipe,
-        RescueContextFactory<TContext, TRescue> rescueContextFactory, Action<IRescueConfigurator<TContext, TRescue>> configure = null)
+        RescueContextFactory<TContext, TRescue> rescueContextFactory, Action<IRescueConfigurator<TContext, TRescue>>? configure = null)
         where TContext : class, PipeContext
         where TRescue : class, TContext
     {
@@ -135,7 +135,7 @@ public static class RescueConfigurationExtensions
     /// <param name="rescueContextFactory"></param>
     /// <param name="configure"></param>
     public static void UseRescue<TContext, TRescue>(this IPipeConfigurator<TContext> configurator,
-        RescueContextFactory<TContext, TRescue> rescueContextFactory, Action<IRescueConfigurator<TContext, TRescue>> configure = null)
+        RescueContextFactory<TContext, TRescue> rescueContextFactory, Action<IRescueConfigurator<TContext, TRescue>>? configure = null)
         where TContext : class, PipeContext
         where TRescue : class, TContext
     {

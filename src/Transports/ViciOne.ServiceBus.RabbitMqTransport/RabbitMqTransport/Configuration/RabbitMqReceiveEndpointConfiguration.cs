@@ -39,7 +39,7 @@ public class RabbitMqReceiveEndpointConfiguration :
 
         if (settings.QueueName == RabbitMqExchangeNames.ReplyTo)
         {
-            settings.ExchangeName = null;
+            settings.ExchangeName = "";
             settings.BindQueue = true;
             settings.NoAck = true;
         }
@@ -175,7 +175,7 @@ public class RabbitMqReceiveEndpointConfiguration :
         set => _settings.ExclusiveConsumer = value;
     }
 
-    public void Stream(Action<IRabbitMqStreamConfigurator> callback = null)
+    public void Stream(Action<IRabbitMqStreamConfigurator>? callback = null)
     {
         _settings.QueueArguments[RabbitMQ.Client.Headers.XQueueType] = "stream";
 
@@ -184,7 +184,7 @@ public class RabbitMqReceiveEndpointConfiguration :
         callback?.Invoke(configurator);
     }
 
-    public void Stream(string consumerTag, Action<IRabbitMqStreamConfigurator> callback = null)
+    public void Stream(string consumerTag, Action<IRabbitMqStreamConfigurator>? callback = null)
     {
         if (string.IsNullOrWhiteSpace(consumerTag))
             throw new ArgumentNullException(nameof(consumerTag));
@@ -219,7 +219,7 @@ public class RabbitMqReceiveEndpointConfiguration :
         set => SetQueueArgument(RabbitMQ.Client.Headers.XDeadLetterExchange, value);
     }
 
-    public void SetQueueArgument(string key, object value)
+    public void SetQueueArgument(string key, object? value)
     {
         _settings.SetQueueArgument(key, value);
     }
@@ -229,7 +229,7 @@ public class RabbitMqReceiveEndpointConfiguration :
         _settings.SetQueueArgument(key, value);
     }
 
-    public void SetExchangeArgument(string key, object value)
+    public void SetExchangeArgument(string key, object? value)
     {
         _settings.SetExchangeArgument(key, value);
     }
@@ -264,7 +264,7 @@ public class RabbitMqReceiveEndpointConfiguration :
         SetDeliveryAcknowledgementTimeout(value);
     }
 
-    public void Bind(string exchangeName, Action<IRabbitMqExchangeToExchangeBindingConfigurator> callback)
+    public void Bind(string exchangeName, Action<IRabbitMqExchangeToExchangeBindingConfigurator>? callback)
     {
         if (exchangeName == null)
             throw new ArgumentNullException(nameof(exchangeName));
@@ -272,15 +272,15 @@ public class RabbitMqReceiveEndpointConfiguration :
         _endpointConfiguration.Topology.Consume.Bind(exchangeName, callback);
     }
 
-    public void Bind<T>(Action<IRabbitMqExchangeBindingConfigurator> callback)
+    public void Bind<T>(Action<IRabbitMqExchangeBindingConfigurator>? callback)
         where T : class
     {
         _endpointConfiguration.Topology.Consume.GetMessageTopology<T>().Bind(callback);
     }
 
-    public void BindDeadLetterQueue(string exchangeName, string queueName, Action<IRabbitMqQueueBindingConfigurator> configure)
+    public void BindDeadLetterQueue(string exchangeName, string? queueName, Action<IRabbitMqQueueBindingConfigurator>? configure)
     {
-        _endpointConfiguration.Topology.Consume.BindQueue(exchangeName, queueName, configure);
+        _endpointConfiguration.Topology.Consume.BindQueue(exchangeName, queueName ?? exchangeName, configure);
 
         DeadLetterExchange = exchangeName;
     }

@@ -11,8 +11,8 @@ public sealed class ResponseTests
     private static readonly Guid CorrelationId = Guid.Parse("b0b831dc-a034-4fac-a3f9-aef416094c86");
     private static readonly Guid ConversationId = Guid.Parse("62372c76-f793-4d24-a608-abd4f084bdca");
     private static readonly Guid InitiatorId = Guid.Parse("f11442d6-b7b6-4e29-9518-3be2f294ed2b");
-    private static readonly DateTime ExpirationTime = new(2035, 6, 7, 8, 9, 10, DateTimeKind.Utc);
-    private static readonly DateTime SentTime = new(2035, 6, 7, 8, 4, 10, DateTimeKind.Utc);
+    private static readonly DateTimeOffset ExpirationTime = new(2035, 6, 7, 8, 9, 10, TimeSpan.Zero);
+    private static readonly DateTimeOffset SentTime = new(2035, 6, 7, 8, 4, 10, TimeSpan.Zero);
     private static readonly Uri SourceAddress = new("loopback://localhost/source");
     private static readonly Uri DestinationAddress = new("loopback://localhost/destination");
     private static readonly Uri ResponseAddress = new("loopback://localhost/response");
@@ -21,9 +21,9 @@ public sealed class ResponseTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RESPONSE-WRAPPER", "two-response-second-branch")]
-    public async Task TwoResponseWrapper_DelegatesContextAndPreservesBothBranchTasks()
+    public async Task TwoResponseWrapper_DelegatesContextAndPreservesBothBranchTasksAsync()
     {
-        Task<Response<FirstResponse>> first = Canceled<FirstResponse>();
+        Task<Response<FirstResponse>> first = CanceledAsync<FirstResponse>();
         var secondResponse = new StubResponse<SecondResponse>(
             new SecondResponse("second"),
             MessageId,
@@ -55,16 +55,16 @@ public sealed class ResponseTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RESPONSE-WRAPPER", "three-response-middle-branch")]
-    public async Task ThreeResponseWrapper_SelectsOnlyTheCompletedMiddleBranch()
+    public async Task ThreeResponseWrapper_SelectsOnlyTheCompletedMiddleBranchAsync()
     {
-        Task<Response<FirstResponse>> first = Canceled<FirstResponse>();
+        Task<Response<FirstResponse>> first = CanceledAsync<FirstResponse>();
         var secondResponse = new StubResponse<SecondResponse>(
             new SecondResponse("middle"),
             MessageId,
             RequestId,
             CorrelationId);
         Task<Response<SecondResponse>> second = Task.FromResult<Response<SecondResponse>>(secondResponse);
-        Task<Response<ThirdResponse>> third = Canceled<ThirdResponse>();
+        Task<Response<ThirdResponse>> third = CanceledAsync<ThirdResponse>();
         Response<FirstResponse, SecondResponse, ThirdResponse> response = (first, second, third);
 
         Assert.False(response.Is(out Response<FirstResponse>? firstResult));
@@ -119,9 +119,9 @@ public sealed class ResponseTests
     [RequirementCoverage("REQ-VSB-RESPONSE-WRAPPER", "no-completed-branch-rejected")]
     public void ResponseWrapperWithoutACompletedBranch_IsRejected()
     {
-        Task<Response<FirstResponse>> first = Canceled<FirstResponse>();
-        Task<Response<SecondResponse>> second = Canceled<SecondResponse>();
-        Task<Response<ThirdResponse>> third = Canceled<ThirdResponse>();
+        Task<Response<FirstResponse>> first = CanceledAsync<FirstResponse>();
+        Task<Response<SecondResponse>> second = CanceledAsync<SecondResponse>();
+        Task<Response<ThirdResponse>> third = CanceledAsync<ThirdResponse>();
 
         ArgumentException two = Assert.Throws<ArgumentException>(() =>
             new Response<FirstResponse, SecondResponse>(first, second));
@@ -136,9 +136,9 @@ public sealed class ResponseTests
     [RequirementCoverage("REQ-VSB-RESPONSE-WRAPPER", "required-response-tasks")]
     public void MissingResponseTasks_AreRejectedAtThePublicConstructorBoundary()
     {
-        Task<Response<FirstResponse>> first = Canceled<FirstResponse>();
-        Task<Response<SecondResponse>> second = Canceled<SecondResponse>();
-        Task<Response<ThirdResponse>> third = Canceled<ThirdResponse>();
+        Task<Response<FirstResponse>> first = CanceledAsync<FirstResponse>();
+        Task<Response<SecondResponse>> second = CanceledAsync<SecondResponse>();
+        Task<Response<ThirdResponse>> third = CanceledAsync<ThirdResponse>();
 
         Assert.Equal("response1", Assert.Throws<ArgumentNullException>(() =>
             new Response<FirstResponse, SecondResponse>(null!, second)).ParamName);
@@ -170,7 +170,7 @@ public sealed class ResponseTests
         Assert.Same(expected.Message, actual.Message);
     }
 
-    private static Task<Response<T>> Canceled<T>()
+    private static Task<Response<T>> CanceledAsync<T>()
         where T : class => Task.FromCanceled<Response<T>>(new CancellationToken(true));
 
     private sealed record FirstResponse(string Value);
@@ -196,7 +196,7 @@ public sealed class ResponseTests
 
         public Guid? InitiatorId => ResponseTests.InitiatorId;
 
-        public DateTime? ExpirationTime => ResponseTests.ExpirationTime;
+        public DateTimeOffset? ExpirationTime => ResponseTests.ExpirationTime;
 
         public Uri? SourceAddress => ResponseTests.SourceAddress;
 
@@ -206,7 +206,7 @@ public sealed class ResponseTests
 
         public Uri? FaultAddress => ResponseTests.FaultAddress;
 
-        public DateTime? SentTime => ResponseTests.SentTime;
+        public DateTimeOffset? SentTime => ResponseTests.SentTime;
 
         public Headers Headers => EmptyHeaders.Instance;
 

@@ -10,7 +10,7 @@ public sealed class ContainerEndpointRoutingTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-ENDPOINT-NAMING", "complete-registration-precedence-matrix")]
-    public async Task ConsumerRegistrationPrecedence_ProducesEveryExactSourceAddress()
+    public async Task ConsumerRegistrationPrecedence_ProducesEveryExactSourceAddressAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -30,38 +30,38 @@ public sealed class ContainerEndpointRoutingTests
                     .Endpoint(endpoint => endpoint.Name = "by_endpoint_override");
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
-            await harness.Bus.Publish(new PlainCommand(NewId.NextGuid()), cancellationToken);
-            await harness.Bus.Publish(new DefinitionNameCommand(NewId.NextGuid()), cancellationToken);
-            await harness.Bus.Publish(new InlineEndpointCommand(NewId.NextGuid()), cancellationToken);
-            await harness.Bus.Publish(new DefinitionEndpointCommand(NewId.NextGuid()), cancellationToken);
-            await harness.Bus.Publish(new OverrideDefinitionNameCommand(NewId.NextGuid()), cancellationToken);
-            await harness.Bus.Publish(new OverrideDefinitionEndpointCommand(NewId.NextGuid()), cancellationToken);
+            await harness.Bus.PublishAsync(new PlainCommand(NewId.NextGuid()), cancellationToken);
+            await harness.Bus.PublishAsync(new DefinitionNameCommand(NewId.NextGuid()), cancellationToken);
+            await harness.Bus.PublishAsync(new InlineEndpointCommand(NewId.NextGuid()), cancellationToken);
+            await harness.Bus.PublishAsync(new DefinitionEndpointCommand(NewId.NextGuid()), cancellationToken);
+            await harness.Bus.PublishAsync(new OverrideDefinitionNameCommand(NewId.NextGuid()), cancellationToken);
+            await harness.Bus.PublishAsync(new OverrideDefinitionEndpointCommand(NewId.NextGuid()), cancellationToken);
 
-            await AssertSource<PlainEvent, PlainConsumer>(harness, null, timeout, cancellationToken);
-            await AssertSource<DefinitionNameEvent, DefinitionNameConsumer>(
+            await AssertSourceAsync<PlainEvent, PlainConsumer>(harness, null, timeout, cancellationToken);
+            await AssertSourceAsync<DefinitionNameEvent, DefinitionNameConsumer>(
                 harness, "by_definition", timeout, cancellationToken);
-            await AssertSource<InlineEndpointEvent, InlineEndpointConsumer>(
+            await AssertSourceAsync<InlineEndpointEvent, InlineEndpointConsumer>(
                 harness, "by-endpoint", timeout, cancellationToken);
-            await AssertSource<DefinitionEndpointEvent, DefinitionEndpointConsumer>(
+            await AssertSourceAsync<DefinitionEndpointEvent, DefinitionEndpointConsumer>(
                 harness, "by_endpoint_definition", timeout, cancellationToken);
-            await AssertSource<OverrideDefinitionNameEvent, OverrideDefinitionNameConsumer>(
+            await AssertSourceAsync<OverrideDefinitionNameEvent, OverrideDefinitionNameConsumer>(
                 harness, "by_endpoint_name", timeout, cancellationToken);
-            await AssertSource<OverrideDefinitionEndpointEvent, OverrideDefinitionEndpointConsumer>(
+            await AssertSourceAsync<OverrideDefinitionEndpointEvent, OverrideDefinitionEndpointConsumer>(
                 harness, "by_endpoint_override", timeout, cancellationToken);
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-ENDPOINT-NAMING", "custom-and-shared-endpoint-overrides")]
-    public async Task InlineAndDefinitionEndpointNames_RouteAllAndOnlyTheirOwnedContracts()
+    public async Task InlineAndDefinitionEndpointNames_RouteAllAndOnlyTheirOwnedContractsAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -76,28 +76,26 @@ public sealed class ContainerEndpointRoutingTests
                 configuration.AddConsumer<SharedSecondConsumer, SharedDefinition>();
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
-            ISendEndpoint custom = await harness.Bus.GetSendEndpoint(new Uri("queue:custom-endpoint-name"))
-                .WaitAsync(timeout, cancellationToken);
-            ISendEndpoint shared = await harness.Bus.GetSendEndpoint(new Uri("queue:shared-container-endpoint"))
-                .WaitAsync(timeout, cancellationToken);
+            ISendEndpoint custom = await harness.Bus.GetSendEndpointAsync(new Uri("queue:custom-endpoint-name"), TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
+            ISendEndpoint shared = await harness.Bus.GetSendEndpointAsync(new Uri("queue:shared-container-endpoint"), TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
             var customRequest = new CustomEndpointRequest(NewId.NextGuid());
             var firstRequest = new SharedFirstRequest(NewId.NextGuid());
             var secondRequest = new SharedSecondRequest(NewId.NextGuid());
 
-            await custom.Send(customRequest, cancellationToken);
-            await shared.Send(firstRequest, cancellationToken);
-            await shared.Send(secondRequest, cancellationToken);
+            await custom.SendAsync(customRequest, cancellationToken);
+            await shared.SendAsync(firstRequest, cancellationToken);
+            await shared.SendAsync(secondRequest, cancellationToken);
 
             IPublishedMessage<CustomEndpointResult> customResult = await harness.Published
-                .SelectAsync<CustomEndpointResult>(cancellationToken).First().WaitAsync(timeout, cancellationToken);
+                .SelectAsync<CustomEndpointResult>(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
             IPublishedMessage<SharedFirstResult> firstResult = await harness.Published
-                .SelectAsync<SharedFirstResult>(cancellationToken).First().WaitAsync(timeout, cancellationToken);
+                .SelectAsync<SharedFirstResult>(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
             IPublishedMessage<SharedSecondResult> secondResult = await harness.Published
-                .SelectAsync<SharedSecondResult>(cancellationToken).First().WaitAsync(timeout, cancellationToken);
+                .SelectAsync<SharedSecondResult>(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(customRequest.CorrelationId, customResult.Context.Message.CorrelationId);
             Assert.Equal(firstRequest.CorrelationId, firstResult.Context.Message.CorrelationId);
@@ -108,13 +106,13 @@ public sealed class ContainerEndpointRoutingTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SERVICE-INSTANCE-ENDPOINTS", "kebab-consumer-and-nested-request-round-trip")]
-    public async Task ServiceInstance_KeepsKebabEndpointAndCompletesTheNestedRequest()
+    public async Task ServiceInstance_KeepsKebabEndpointAndCompletesTheNestedRequestAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -132,17 +130,17 @@ public sealed class ContainerEndpointRoutingTests
                 configuration.UsingInMemory((context, bus) => bus.ConfigureServiceInstanceEndpoints(context));
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Guid orderId = NewId.NextGuid();
             await using AsyncServiceScope scope = provider.CreateAsyncScope();
             IRequestClient<SubmitOrder> client = scope.ServiceProvider.GetRequiredService<IRequestClient<SubmitOrder>>();
-            Response<OrderAccepted> response = await client.GetResponse<OrderAccepted>(
+            Response<OrderAccepted> response = await client.Advanced().GetResponseAsync<OrderAccepted>(
                 new SubmitOrder(orderId),
-                cancellationToken,
-                timeout);
+                timeout: timeout,
+                cancellationToken: cancellationToken);
 
             Assert.Equal(orderId, response.Message.OrderId);
             Assert.Equal(orderId, await authorization.Task.WaitAsync(timeout, cancellationToken));
@@ -152,13 +150,13 @@ public sealed class ContainerEndpointRoutingTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-RESOLUTION-FAULT", "missing-constructor-dependency-is-a-published-fault")]
-    public async Task MissingConsumerDependency_IsCapturedAsOneEndpointFault()
+    public async Task MissingConsumerDependency_IsCapturedAsOneEndpointFaultAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -169,19 +167,18 @@ public sealed class ContainerEndpointRoutingTests
                 configuration.AddConsumer<MissingDependencyConsumer>();
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         bool started = true;
 
         try
         {
             var command = new MissingDependencyCommand(NewId.NextGuid());
-            await harness.Bus.Publish(command, cancellationToken);
+            await harness.Bus.PublishAsync(command, cancellationToken);
             IPublishedMessage<Fault<MissingDependencyCommand>> fault = await harness.Published
                 .SelectAsync<Fault<MissingDependencyCommand>>(cancellationToken)
-                .First()
-                .WaitAsync(timeout, cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
             started = false;
 
             Assert.Equal(command.CorrelationId, fault.Context.Message.Message.CorrelationId);
@@ -192,11 +189,11 @@ public sealed class ContainerEndpointRoutingTests
         finally
         {
             if (started)
-                await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+                await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
-    private static async Task AssertSource<TEvent, TConsumer>(
+    private static async Task AssertSourceAsync<TEvent, TConsumer>(
         ITestHarness harness,
         string? endpointName,
         TimeSpan timeout,
@@ -205,7 +202,7 @@ public sealed class ContainerEndpointRoutingTests
         where TConsumer : class, IConsumer
     {
         IPublishedMessage<TEvent> published = await harness.Published.SelectAsync<TEvent>(cancellationToken)
-            .First()
+            .FirstObservedAsync(cancellationToken: cancellationToken)
             .WaitAsync(timeout, cancellationToken);
         string expected = endpointName ?? DefaultEndpointNameFormatter.Instance.Consumer<TConsumer>();
         Assert.Equal(expected, published.Context.SourceAddress!.AbsolutePath.Trim('/'));
@@ -242,7 +239,7 @@ public sealed class ContainerEndpointRoutingTests
         where TCommand : class, CorrelatedBy<Guid>
         where TEvent : class, CorrelatedBy<Guid>
     {
-        public Task Consume(ConsumeContext<TCommand> context) => context.Publish(
+        public Task ConsumeAsync(ConsumeContext<TCommand> context) => context.Advanced().PublishAsync(
             Activator.CreateInstance(typeof(TEvent), context.Message.CorrelationId)!,
             context.CancellationToken);
     }
@@ -304,9 +301,9 @@ public sealed class ContainerEndpointRoutingTests
 
     public sealed class SubmitOrderConsumer(IRequestClient<AuthorizeOrder> authorizeClient) : IConsumer<SubmitOrder>
     {
-        public async Task Consume(ConsumeContext<SubmitOrder> context)
+        public async Task ConsumeAsync(ConsumeContext<SubmitOrder> context)
         {
-            Response<OrderAuthorized> authorized = await authorizeClient.GetResponse<OrderAuthorized>(
+            Response<OrderAuthorized> authorized = await authorizeClient.GetResponseAsync<OrderAuthorized>(
                 new AuthorizeOrder(context.Message.OrderId),
                 context.CancellationToken);
             await context.RespondAsync(new OrderAccepted(authorized.Message.OrderId));
@@ -315,7 +312,7 @@ public sealed class ContainerEndpointRoutingTests
 
     public sealed class AuthorizeOrderConsumer(TaskCompletionSource<Guid> authorization) : IConsumer<AuthorizeOrder>
     {
-        public Task Consume(ConsumeContext<AuthorizeOrder> context)
+        public Task ConsumeAsync(ConsumeContext<AuthorizeOrder> context)
         {
             authorization.TrySetResult(context.Message.OrderId);
             return context.RespondAsync(new OrderAuthorized(context.Message.OrderId));
@@ -327,7 +324,7 @@ public sealed class ContainerEndpointRoutingTests
 
     public sealed class MissingDependencyConsumer(IMissingDependency dependency) : IConsumer<MissingDependencyCommand>
     {
-        public Task Consume(ConsumeContext<MissingDependencyCommand> context)
+        public Task ConsumeAsync(ConsumeContext<MissingDependencyCommand> context)
         {
             GC.KeepAlive(dependency);
             return Task.CompletedTask;

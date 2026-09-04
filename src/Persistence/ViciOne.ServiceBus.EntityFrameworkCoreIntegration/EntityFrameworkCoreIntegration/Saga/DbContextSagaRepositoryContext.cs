@@ -41,21 +41,21 @@ public class DbContextSagaRepositoryContext<TSaga, TMessage> :
         _inUse.Dispose();
     }
 
-    public Task<SagaConsumeContext<TSaga, TMessage>> Add(TSaga instance)
+    public Task<SagaConsumeContext<TSaga, TMessage>> AddAsync(TSaga instance, CancellationToken cancellationToken = default)
     {
-        return _factory.CreateSagaConsumeContext(_dbContext, _consumeContext, instance, SagaConsumeContextMode.Add);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.SagaConsumeContext<TSaga, TMessage>>(cancellationToken); return _factory.CreateSagaConsumeContextAsync(_dbContext, _consumeContext, instance, SagaConsumeContextMode.Add);
     }
 
-    public async Task<SagaConsumeContext<TSaga, TMessage>> Insert(TSaga instance)
+    public async Task<SagaConsumeContext<TSaga, TMessage>?> InsertAsync(TSaga instance, CancellationToken cancellationToken = default)
     {
-        EntityEntry<TSaga> entry = await _dbContext.Set<TSaga>().AddAsync(instance, CancellationToken).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested(); EntityEntry<TSaga> entry = await _dbContext.Set<TSaga>().AddAsync(instance, CancellationToken).ConfigureAwait(false);
         try
         {
             await _dbContext.SaveChangesAsync(CancellationToken).ConfigureAwait(false);
 
             _consumeContext.LogInsert<TSaga, TMessage>(instance.CorrelationId);
 
-            return await _factory.CreateSagaConsumeContext(_dbContext, _consumeContext, instance, SagaConsumeContextMode.Insert).ConfigureAwait(false);
+            return await _factory.CreateSagaConsumeContextAsync(_dbContext, _consumeContext, instance, SagaConsumeContextMode.Insert).ConfigureAwait(false);
         }
         catch (DbUpdateException exception)
         {
@@ -69,10 +69,10 @@ public class DbContextSagaRepositoryContext<TSaga, TMessage> :
 
             entry.State = EntityState.Detached;
 
-            TSaga existing;
+            TSaga? existing;
             try
             {
-                existing = await _lockStrategy.Load(_dbContext, instance.CorrelationId, CancellationToken).ConfigureAwait(false);
+                existing = await _lockStrategy.LoadAsync(_dbContext, instance.CorrelationId, CancellationToken).ConfigureAwait(false);
             }
             catch (Exception)
             {
@@ -89,21 +89,21 @@ public class DbContextSagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
-    public async Task<SagaConsumeContext<TSaga, TMessage>> Load(Guid correlationId)
+    public async Task<SagaConsumeContext<TSaga, TMessage>?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
-        var instance = await _lockStrategy.Load(_dbContext, correlationId, CancellationToken).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested(); var instance = await _lockStrategy.LoadAsync(_dbContext, correlationId, CancellationToken).ConfigureAwait(false);
         if (instance == null)
             return default;
 
-        return await _factory.CreateSagaConsumeContext(_dbContext, _consumeContext, instance, SagaConsumeContextMode.Load).ConfigureAwait(false);
+        return await _factory.CreateSagaConsumeContextAsync(_dbContext, _consumeContext, instance, SagaConsumeContextMode.Load).ConfigureAwait(false);
     }
 
-    public async Task Save(SagaConsumeContext<TSaga> context)
+    public async Task SaveAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
         await _inUse.WaitAsync(context.CancellationToken).ConfigureAwait(false);
         try
         {
-            await _dbContext.Set<TSaga>().AddAsync(context.Saga).ConfigureAwait(false);
+            await _dbContext.Set<TSaga>().AddAsync(context.Saga, cancellationToken: cancellationToken).ConfigureAwait(false);
 
             await _dbContext.SaveChangesAsync(CancellationToken).ConfigureAwait(false);
         }
@@ -117,9 +117,9 @@ public class DbContextSagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
-    public async Task Update(SagaConsumeContext<TSaga> context)
+    public async Task UpdateAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        await _inUse.WaitAsync(context.CancellationToken).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested(); await _inUse.WaitAsync(context.CancellationToken).ConfigureAwait(false);
         try
         {
             await _dbContext.SaveChangesAsync(CancellationToken).ConfigureAwait(false);
@@ -134,9 +134,9 @@ public class DbContextSagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
-    public async Task Delete(SagaConsumeContext<TSaga> context)
+    public async Task DeleteAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        await _inUse.WaitAsync(context.CancellationToken).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested(); await _inUse.WaitAsync(context.CancellationToken).ConfigureAwait(false);
         try
         {
             _dbContext.Set<TSaga>().Remove(context.Saga);
@@ -153,14 +153,14 @@ public class DbContextSagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
-    public Task Discard(SagaConsumeContext<TSaga> context)
+    public Task DiscardAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        return Task.CompletedTask;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
     }
 
-    public async Task Undo(SagaConsumeContext<TSaga> context)
+    public async Task UndoAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        await _inUse.WaitAsync(context.CancellationToken).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested(); await _inUse.WaitAsync(context.CancellationToken).ConfigureAwait(false);
         try
         {
             var entity = _dbContext.ChangeTracker.Entries<TSaga>().FirstOrDefault(x => x.Entity.CorrelationId == context.Saga.CorrelationId);
@@ -173,10 +173,10 @@ public class DbContextSagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
-    public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContext<T>(ConsumeContext<T> consumeContext, TSaga instance, SagaConsumeContextMode mode)
+    public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContextAsync<T>(ConsumeContext<T> consumeContext, TSaga instance, SagaConsumeContextMode mode)
         where T : class
     {
-        return _factory.CreateSagaConsumeContext(_dbContext, consumeContext, instance, mode);
+        return _factory.CreateSagaConsumeContextAsync(_dbContext, consumeContext, instance, mode);
     }
 }
 
@@ -198,12 +198,12 @@ public class DbContextSagaRepositoryContext<TSaga> :
         _lockStrategy = lockStrategy ?? throw new ArgumentNullException(nameof(lockStrategy));
     }
 
-    public async Task<TSaga> Load(Guid correlationId)
+    public Task<TSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
-        return (await _lockStrategy.Load(_dbContext, correlationId, CancellationToken).ConfigureAwait(false))!;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<TSaga?>(cancellationToken); return _lockStrategy.LoadAsync(_dbContext, correlationId, CancellationToken);
     }
 
-    public async Task<SagaRepositoryQueryContext<TSaga>> Query(ISagaQuery<TSaga> query, CancellationToken cancellationToken)
+    public async Task<SagaRepositoryQueryContext<TSaga>> QueryAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(query);
 

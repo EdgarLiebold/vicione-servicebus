@@ -7,8 +7,8 @@ namespace ViciOne.ServiceBus.Middleware;
 
 public class InMemoryOutboxFilter<TContext, TResult> :
     IFilter<TContext>
-    where TContext : class, ConsumeContext
-    where TResult : TContext, OutboxContext
+    where TContext : class, PipeContext
+    where TResult : TContext, OutboxContext, ConsumeContext
 {
     readonly bool _concurrentMessageDelivery;
     readonly Func<TContext, TResult> _contextFactory;
@@ -17,34 +17,34 @@ public class InMemoryOutboxFilter<TContext, TResult> :
     /// is no bus-bound scoped context to rebind and this stays absent; the filter then leaves the
     /// consume context exactly as it found it instead of reaching into some other provider for one.
     /// </summary>
-    readonly ISetScopedConsumeContext _setter;
+    readonly ISetScopedConsumeContext? _setter;
 
-    public InMemoryOutboxFilter(ISetScopedConsumeContext setter, Func<TContext, TResult> contextFactory, bool concurrentMessageDelivery)
+    public InMemoryOutboxFilter(ISetScopedConsumeContext? setter, Func<TContext, TResult> contextFactory, bool concurrentMessageDelivery)
     {
         _setter = setter;
         _contextFactory = contextFactory;
         _concurrentMessageDelivery = concurrentMessageDelivery;
     }
 
-    public async Task Send(TContext context, IPipe<TContext> next)
+    public async Task SendAsync(TContext context, IPipe<TContext> next)
     {
         var outboxContext = _contextFactory(context);
 
-        IDisposable pop = null;
-        if (_setter != null && context.TryGetPayload(out IServiceScope scope))
+        IDisposable? pop = null;
+        if (_setter != null && context.TryGetPayload(out IServiceScope? scope))
             pop = _setter.PushContext(scope, outboxContext);
 
         try
         {
-            await next.Send(outboxContext).ConfigureAwait(false);
+            await next.SendAsync(outboxContext).ConfigureAwait(false);
 
-            await outboxContext.ExecutePendingActions(_concurrentMessageDelivery).ConfigureAwait(false);
+            await outboxContext.ExecutePendingActionsAsync(_concurrentMessageDelivery).ConfigureAwait(false);
 
             await outboxContext.ConsumeCompleted.ConfigureAwait(false);
         }
         catch (Exception)
         {
-            await outboxContext.DiscardPendingActions().ConfigureAwait(false);
+            await outboxContext.DiscardPendingActionsAsync().ConfigureAwait(false);
 
             throw;
         }

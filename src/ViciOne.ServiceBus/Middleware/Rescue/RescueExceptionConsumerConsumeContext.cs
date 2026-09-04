@@ -10,7 +10,7 @@ public class RescueExceptionConsumerConsumeContext<TConsumer> :
     where TConsumer : class
 {
     readonly ConsumerConsumeContext<TConsumer> _context;
-    ExceptionInfo _exceptionInfo;
+    ExceptionInfo _exceptionInfo = null!;
 
     public RescueExceptionConsumerConsumeContext(ConsumerConsumeContext<TConsumer> context, Exception exception)
         : base(context)

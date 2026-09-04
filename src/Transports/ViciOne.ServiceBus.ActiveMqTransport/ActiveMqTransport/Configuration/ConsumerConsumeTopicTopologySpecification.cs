@@ -26,7 +26,7 @@ public class ConsumerConsumeTopicTopologySpecification :
     /// <summary>
     /// The consumer name, if specified
     /// </summary>
-    public string ConsumerName { get; set; } = null;
+    public string? ConsumerName { get; set; }
 
     public IEnumerable<ValidationResult> Validate()
     {

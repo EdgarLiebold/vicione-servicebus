@@ -26,7 +26,8 @@ public class InMemoryConsumeTopology :
     {
         IMessageConsumeTopologyConfigurator<T> configurator = base.GetMessageTopology<T>();
 
-        return configurator as IInMemoryMessageConsumeTopology<T>;
+        return configurator as IInMemoryMessageConsumeTopology<T>
+            ?? throw new InvalidOperationException($"The consume topology for {TypeCache<T>.ShortName} is not an in-memory topology.");
     }
 
     public void AddSpecification(IInMemoryConsumeTopologySpecification specification)
@@ -37,7 +38,7 @@ public class InMemoryConsumeTopology :
         _specifications.Add(specification);
     }
 
-    public void Bind(string exchangeName, ExchangeType exchangeType = ExchangeType.FanOut, string routingKey = default)
+    public void Bind(string exchangeName, ExchangeType exchangeType = ExchangeType.FanOut, string? routingKey = default)
     {
         var specification = new ExchangeBindingConsumeTopologySpecification(exchangeName, exchangeType, routingKey);
 
@@ -46,7 +47,8 @@ public class InMemoryConsumeTopology :
 
     IInMemoryMessageConsumeTopologyConfigurator<T> IInMemoryConsumeTopologyConfigurator.GetMessageTopology<T>()
     {
-        return GetMessageTopology<T>() as IInMemoryMessageConsumeTopologyConfigurator<T>;
+        return GetMessageTopology<T>() as IInMemoryMessageConsumeTopologyConfigurator<T>
+            ?? throw new InvalidOperationException($"The consume topology for {TypeCache<T>.ShortName} is not configurable.");
     }
 
     public void Apply(IMessageFabricConsumeTopologyBuilder builder)

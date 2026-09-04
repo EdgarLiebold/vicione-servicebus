@@ -15,7 +15,7 @@ public interface IReceivedMessage :
 {
     ConsumeContext Context { get; }
 
-    DateTime StartTime { get; }
+    DateTimeOffset StartTime { get; }
     TimeSpan ElapsedTime { get; }
 
     Exception? Exception { get; }

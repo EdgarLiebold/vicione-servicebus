@@ -7,16 +7,17 @@ public class SetSerializerMessageSendTopologyConvention<TMessage> :
     ISetSerializerMessageSendTopologyConvention<TMessage>
     where TMessage : class
 {
-    ContentType _contentType;
+    ContentType? _contentType;
 
-    bool IMessageSendTopologyConvention.TryGetMessageSendTopologyConvention<T>(out IMessageSendTopologyConvention<T> convention)
+    bool IMessageSendTopologyConvention.TryGetMessageSendTopologyConvention<T>([NotNullWhen(true)] out IMessageSendTopologyConvention<T>? convention)
     {
         convention = this as IMessageSendTopologyConvention<T>;
 
         return convention != null;
     }
 
-    bool IMessageSendTopologyConvention<TMessage>.TryGetMessageSendTopology(out IMessageSendTopology<TMessage> messageSendTopology)
+    bool IMessageSendTopologyConvention<TMessage>.TryGetMessageSendTopology(
+        [NotNullWhen(true)] out IMessageSendTopology<TMessage>? messageSendTopology)
     {
         if (_contentType != null)
         {

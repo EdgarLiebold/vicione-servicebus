@@ -92,13 +92,13 @@ public sealed class MessageSequenceLedgerTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DIAGNOSTICS-LEDGER", "duplicate-after-wait")]
-    public async Task DuplicateAfterWaitChangesLaterSnapshot()
+    public async Task DuplicateAfterWaitChangesLaterSnapshotAsync()
     {
         var ledger = new MessageSequenceLedger(2);
         ledger.Observed(0);
         ledger.Observed(1);
 
-        Assert.True(await ledger.WaitForAllExpected(TimeSpan.FromDays(1), CancellationToken.None));
+        Assert.True(await ledger.WaitForAllExpectedAsync(TimeSpan.FromDays(1), CancellationToken.None));
         Assert.True(ledger.Read().IsExact);
 
         ledger.Observed(1);
@@ -108,13 +108,13 @@ public sealed class MessageSequenceLedgerTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DIAGNOSTICS-LEDGER", "budget-expiry")]
-    public async Task BudgetExpiryReportsTimeout()
+    public async Task BudgetExpiryReportsTimeoutAsync()
     {
         var time = new FakeTimeProvider();
         var ledger = new MessageSequenceLedger(2);
         ledger.Observed(0);
 
-        Task<bool> waiting = ledger.WaitForAllExpected(TimeSpan.FromMinutes(1), CancellationToken.None, time);
+        Task<bool> waiting = ledger.WaitForAllExpectedAsync(TimeSpan.FromMinutes(1), CancellationToken.None, time);
         time.Advance(TimeSpan.FromMinutes(1));
         await Task.Yield();
 
@@ -124,13 +124,13 @@ public sealed class MessageSequenceLedgerTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DIAGNOSTICS-LEDGER", "caller-cancellation")]
-    public async Task CallerCancellationIsPropagated()
+    public async Task CallerCancellationIsPropagatedAsync()
     {
         var ledger = new MessageSequenceLedger(2);
         using var cancellation = new CancellationTokenSource();
         ledger.Observed(0);
 
-        Task<bool> waiting = ledger.WaitForAllExpected(TimeSpan.FromDays(1), cancellation.Token);
+        Task<bool> waiting = ledger.WaitForAllExpectedAsync(TimeSpan.FromDays(1), cancellation.Token);
         cancellation.Cancel();
 
         OperationCanceledException exception =
@@ -140,7 +140,7 @@ public sealed class MessageSequenceLedgerTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DIAGNOSTICS-LEDGER", "concurrent-observation")]
-    public async Task ConcurrentObservationReadsExactAfterCompletion()
+    public async Task ConcurrentObservationReadsExactAfterCompletionAsync()
     {
         const int expected = 5000;
         var ledger = new MessageSequenceLedger(expected);

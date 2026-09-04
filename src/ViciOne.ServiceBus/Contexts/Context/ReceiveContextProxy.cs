@@ -22,7 +22,7 @@ public abstract class ReceiveContextProxy :
         return _context.HasPayloadType(contextType);
     }
 
-    public virtual bool TryGetPayload<TPayload>(out TPayload payload)
+    public virtual bool TryGetPayload<TPayload>([NotNullWhen(true)] out TPayload? payload)
         where TPayload : class
     {
         return _context.TryGetPayload(out payload);
@@ -51,21 +51,21 @@ public abstract class ReceiveContextProxy :
     public bool IsDelivered => _context.IsDelivered;
     public bool IsFaulted => _context.IsFaulted;
 
-    public virtual Task NotifyConsumed<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
+    public virtual Task NotifyConsumedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _context.NotifyConsumed(context, duration, consumerType);
+        return _context.NotifyConsumedAsync(context, duration, consumerType, cancellationToken: cancellationToken);
     }
 
-    public virtual Task NotifyFaulted<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
+    public virtual Task NotifyFaultedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _context.NotifyFaulted(context, duration, consumerType, exception);
+        return _context.NotifyFaultedAsync(context, duration, consumerType, exception, cancellationToken: cancellationToken);
     }
 
-    public Task NotifyFaulted(Exception exception)
+    public Task NotifyFaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {
-        return _context.NotifyFaulted(exception);
+        return _context.NotifyFaultedAsync(exception, cancellationToken: cancellationToken);
     }
 
     public virtual void AddReceiveTask(Task task)

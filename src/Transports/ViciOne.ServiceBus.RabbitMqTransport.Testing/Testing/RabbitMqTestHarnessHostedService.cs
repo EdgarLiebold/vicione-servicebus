@@ -33,22 +33,22 @@ public class RabbitMqTestHarnessHostedService :
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        if (_testOptions.CreateVirtualHostIfNotExists)
-            await EnsureVirtualHostExists();
+        cancellationToken.ThrowIfCancellationRequested(); if (_testOptions.CreateVirtualHostIfNotExists)
+            await EnsureVirtualHostExistsAsync();
 
         if (_testOptions.CleanVirtualHost)
-            await CleanVirtualHost();
+            await CleanVirtualHostAsync();
 
-        if (_testOptions.ConfigureVirtualHostCallback != null)
-            await ConfigureVirtualHost();
+        if (_testOptions.ConfigureVirtualHostCallback is { } configureVirtualHost)
+            await ConfigureVirtualHostAsync(configureVirtualHost);
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        return Task.CompletedTask;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
     }
 
-    async Task EnsureVirtualHostExists()
+    async Task EnsureVirtualHostExistsAsync()
     {
         var name = _transportOptions.VHost;
 
@@ -67,7 +67,7 @@ public class RabbitMqTestHarnessHostedService :
             _logger.LogInformation("Created virtual host: {VirtualHost}", name);
     }
 
-    async Task CleanVirtualHost()
+    async Task CleanVirtualHostAsync()
     {
         var virtualHost = _transportOptions.VHost;
 
@@ -98,14 +98,14 @@ public class RabbitMqTestHarnessHostedService :
             var exchangeCount = 0;
             var queueCount = 0;
 
-            IList<string> exchanges = await GetVirtualHostEntities("exchanges");
+            IList<string> exchanges = await GetVirtualHostEntitiesAsync("exchanges");
             foreach (var exchange in exchanges)
             {
                 await channel.ExchangeDeleteAsync(exchange);
                 exchangeCount++;
             }
 
-            IList<string> queues = await GetVirtualHostEntities("queues");
+            IList<string> queues = await GetVirtualHostEntitiesAsync("queues");
             foreach (var queue in queues)
             {
                 await channel.QueueDeleteAsync(queue);
@@ -186,7 +186,7 @@ public class RabbitMqTestHarnessHostedService :
         return text.Substring(0, length);
     }
 
-    async Task ConfigureVirtualHost()
+    async Task ConfigureVirtualHostAsync(Func<IChannel, Task> configureVirtualHost)
     {
         var virtualHost = _transportOptions.VHost;
 
@@ -204,7 +204,7 @@ public class RabbitMqTestHarnessHostedService :
         {
             await using var channel = await connection.CreateChannelAsync();
 
-            await _testOptions.ConfigureVirtualHostCallback(channel);
+            await configureVirtualHost(channel);
 
             await channel.CloseAsync();
 
@@ -238,7 +238,7 @@ public class RabbitMqTestHarnessHostedService :
         }
     }
 
-    async Task<IList<string>> GetVirtualHostEntities(string element)
+    async Task<IList<string>> GetVirtualHostEntitiesAsync(string element)
     {
         using var client = GetHttpClient();
 
@@ -250,7 +250,7 @@ public class RabbitMqTestHarnessHostedService :
 
         var entities = rootElement.EnumerateArray().Select(x => x.GetProperty("name").GetString()).ToArray();
 
-        return entities.Where(x => !string.IsNullOrWhiteSpace(x) && !x.StartsWith("amq.")).ToList();
+        return entities.OfType<string>().Where(x => !string.IsNullOrWhiteSpace(x) && !x.StartsWith("amq.")).ToList();
     }
 
     HttpClient GetHttpClient()

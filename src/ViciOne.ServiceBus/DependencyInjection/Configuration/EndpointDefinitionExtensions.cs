@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.Configuration;
 
 public static class EndpointDefinitionExtensions
 {
-    public static IEndpointDefinition Combine(
+    public static IEndpointDefinition? Combine(
         this IEnumerable<IEndpointDefinition> definitions,
         IRegistrationContext context,
         string endpointName)

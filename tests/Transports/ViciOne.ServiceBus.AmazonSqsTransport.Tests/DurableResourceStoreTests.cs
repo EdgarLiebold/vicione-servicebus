@@ -12,7 +12,7 @@ public sealed class DurableResourceStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SQS-LIFECYCLE", "durable-store-single-flight-and-caller-cancellation-isolation")]
-    public async Task ConcurrentWaiters_ShareOneFactoryAndCallerCancellationDoesNotOwnCreation()
+    public async Task ConcurrentWaiters_ShareOneFactoryAndCallerCancellationDoesNotOwnCreationAsync()
     {
         await using var store = new DurableResourceStore<string, TrackedResource>(TestContext.Current.CancellationToken);
         using var callerCancellation = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
@@ -50,7 +50,7 @@ public sealed class DurableResourceStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SQS-LIFECYCLE", "durable-store-faulted-creation-is-retryable")]
-    public async Task FaultedFactory_IsEvictedAndTheNextAttemptCanRecover()
+    public async Task FaultedFactory_IsEvictedAndTheNextAttemptCanRecoverAsync()
     {
         await using var store = new DurableResourceStore<string, TrackedResource>(TestContext.Current.CancellationToken);
         var expectedFailure = new InvalidOperationException("first attempt failed");
@@ -83,7 +83,7 @@ public sealed class DurableResourceStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SQS-LIFECYCLE", "durable-store-pending-removal-releases-late-value")]
-    public async Task RemoveAsync_WaitsForPendingOwnershipAndDisposesALateValueExactlyOnce()
+    public async Task RemoveAsync_WaitsForPendingOwnershipAndDisposesALateValueExactlyOnceAsync()
     {
         await using var store = new DurableResourceStore<string, TrackedResource>(TestContext.Current.CancellationToken);
         var started = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -120,7 +120,7 @@ public sealed class DurableResourceStoreTests
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("REQ-VSB-AWS-SQS-LIFECYCLE", "durable-store-cancellation-callbacks-run-outside-state-lock")]
-    public async Task OwnershipCancellationCallbacks_CanReadStoreStateWithoutLockInversion(bool disposeStore)
+    public async Task OwnershipCancellationCallbacks_CanReadStoreStateWithoutLockInversionAsync(bool disposeStore)
     {
         await using var store = new DurableResourceStore<string, TrackedResource>(TestContext.Current.CancellationToken);
         var stable = new TrackedResource();
@@ -170,7 +170,7 @@ public sealed class DurableResourceStoreTests
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("REQ-VSB-AWS-SQS-LIFECYCLE", "durable-store-cancellation-callback-fault-is-contained")]
-    public async Task ThrowingOwnershipCancellationCallback_DoesNotAbortRelease(bool disposeStore)
+    public async Task ThrowingOwnershipCancellationCallback_DoesNotAbortReleaseAsync(bool disposeStore)
     {
         await using var store = new DurableResourceStore<string, TrackedResource>(TestContext.Current.CancellationToken);
         var pendingStarted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -206,7 +206,7 @@ public sealed class DurableResourceStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SQS-LIFECYCLE", "durable-store-retains-values-until-explicit-release")]
-    public async Task CompletedResources_RemainOwnedUntilRemovalOrStoreDisposal()
+    public async Task CompletedResources_RemainOwnedUntilRemovalOrStoreDisposalAsync()
     {
         var store = new DurableResourceStore<string, TrackedResource>(TestContext.Current.CancellationToken);
         TrackedResource[] resources = Enumerable.Range(0, 32).Select(_ => new TrackedResource()).ToArray();
@@ -231,7 +231,7 @@ public sealed class DurableResourceStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SQS-LIFECYCLE", "durable-store-disposal-cancels-pending-and-is-idempotent")]
-    public async Task DisposeAsync_CancelsPendingCreationAndReleasesCommittedResourcesExactlyOnce()
+    public async Task DisposeAsync_CancelsPendingCreationAndReleasesCommittedResourcesExactlyOnceAsync()
     {
         var store = new DurableResourceStore<string, TrackedResource>(TestContext.Current.CancellationToken);
         var committed = new TrackedResource();
@@ -266,7 +266,7 @@ public sealed class DurableResourceStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SQS-LIFECYCLE", "durable-store-concurrent-disposal-shares-one-completion")]
-    public async Task ConcurrentDisposeAsync_WaitsForTheSamePendingOwnershipAndReleasesTheLateResourceOnce()
+    public async Task ConcurrentDisposeAsync_WaitsForTheSamePendingOwnershipAndReleasesTheLateResourceOnceAsync()
     {
         var store = new DurableResourceStore<string, TrackedResource>(TestContext.Current.CancellationToken);
         var pendingStarted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -301,7 +301,7 @@ public sealed class DurableResourceStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SQS-LIFECYCLE", "durable-store-disposal-fault-is-contained")]
-    public async Task DisposalFault_DoesNotPreventRemainingResourcesFromBeingReleased()
+    public async Task DisposalFault_DoesNotPreventRemainingResourcesFromBeingReleasedAsync()
     {
         var store = new DurableResourceStore<string, TrackedResource>(TestContext.Current.CancellationToken);
         var faulting = new TrackedResource(new InvalidOperationException("dispose failed"));

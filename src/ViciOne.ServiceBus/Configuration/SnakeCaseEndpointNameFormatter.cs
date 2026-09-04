@@ -60,7 +60,7 @@ public class SnakeCaseEndpointNameFormatter :
     /// <param name="separator">Specify a separator other than _ to separate words</param>
     /// <param name="prefix">Prefix to start the name, should match the casing of the formatter (such as Dev or PreProd)</param>
     /// <param name="includeNamespace">If true, the namespace is included in the name</param>
-    public SnakeCaseEndpointNameFormatter(char separator, string prefix, bool includeNamespace)
+    public SnakeCaseEndpointNameFormatter(char separator, string? prefix, bool includeNamespace)
         : base(prefix, includeNamespace)
     {
         _separator = separator;

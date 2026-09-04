@@ -19,7 +19,7 @@ public sealed class AzureTableMessageJournalStoreTests
     [InlineData(MessageJournalOperation.Send)]
     [InlineData(MessageJournalOperation.Consume)]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-MESSAGE-JOURNAL-PERSISTENCE", "send-and-consume-terminal-operations-round-trip")]
-    public async Task Append_PreservesSendAndConsumeTerminalOperations(MessageJournalOperation operation)
+    public async Task Append_PreservesSendAndConsumeTerminalOperationsAsync(MessageJournalOperation operation)
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using AzureTableTestTable fixture = await AzureTableTestTable.CreateAsync("JournalOperation", cancellationToken);
@@ -46,7 +46,7 @@ public sealed class AzureTableMessageJournalStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-MESSAGE-JOURNAL-CONFIGURATION", "table-client-composition-persists-terminal-envelope")]
-    public async Task TableClientComposition_PersistsATerminalPublishEnvelope()
+    public async Task TableClientComposition_PersistsATerminalPublishEnvelopeAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using AzureTableTestTable fixture = await AzureTableTestTable.CreateAsync("Journal", cancellationToken);
@@ -60,7 +60,7 @@ public sealed class AzureTableMessageJournalStoreTests
         await bus.StartAsync(cancellationToken);
         try
         {
-            await bus.Publish(new JournalProbe("table-client"), cancellationToken);
+            await bus.PublishAsync(new JournalProbe("table-client"), cancellationToken);
 
             MessageJournalRecord actual = Assert.Single(await ReadEntriesAsync(fixture.Table, cancellationToken));
             Assert.Equal(MessageJournalOperation.Publish.ToString(), actual.Operation);
@@ -75,7 +75,7 @@ public sealed class AzureTableMessageJournalStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-MESSAGE-JOURNAL-CONFIGURATION", "service-client-composition-persists-terminal-envelope")]
-    public async Task TableServiceClientComposition_PersistsATerminalPublishEnvelope()
+    public async Task TableServiceClientComposition_PersistsATerminalPublishEnvelopeAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using AzureTableTestTable fixture = await AzureTableTestTable.CreateAsync("Journal", cancellationToken);
@@ -90,7 +90,7 @@ public sealed class AzureTableMessageJournalStoreTests
         await bus.StartAsync(cancellationToken);
         try
         {
-            await bus.Publish(new JournalProbe("service-client"), cancellationToken);
+            await bus.PublishAsync(new JournalProbe("service-client"), cancellationToken);
 
             MessageJournalRecord actual = Assert.Single(await ReadEntriesAsync(fixture.Table, cancellationToken));
             Assert.Equal(MessageJournalOperation.Publish.ToString(), actual.Operation);
@@ -105,7 +105,7 @@ public sealed class AzureTableMessageJournalStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-MESSAGE-JOURNAL-PERSISTENCE", "sanitized-entry-round-trip-and-collision-free-identity")]
-    public async Task Append_PreservesSanitizedFieldsAndSeparatesEntriesAtTheSameTimestamp()
+    public async Task Append_PreservesSanitizedFieldsAndSeparatesEntriesAtTheSameTimestampAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using AzureTableTestTable fixture = await AzureTableTestTable.CreateAsync("Journal", cancellationToken);
@@ -141,7 +141,7 @@ public sealed class AzureTableMessageJournalStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-MESSAGE-JOURNAL-BOUNDS", "lowered-capacity-self-heals-atomically")]
-    public async Task Append_AtomicallyAppliesRetentionAndALoweredCapacity()
+    public async Task Append_AtomicallyAppliesRetentionAndALoweredCapacityAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using AzureTableTestTable fixture = await AzureTableTestTable.CreateAsync("Journal", cancellationToken);
@@ -168,7 +168,7 @@ public sealed class AzureTableMessageJournalStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-MESSAGE-JOURNAL-CONCURRENCY", "etag-lease-capacity-never-exceeded")]
-    public async Task ConcurrentAppends_NeverExceedTheDeclaredCapacity()
+    public async Task ConcurrentAppends_NeverExceedTheDeclaredCapacityAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         const int writerCount = 8;
@@ -189,7 +189,7 @@ public sealed class AzureTableMessageJournalStoreTests
                 cancellationToken))
             .ToArray();
         Exception? barrierFailure = await Record.ExceptionAsync(() =>
-            barrier.WaitUntilAllBatchSubmitsArrive(cancellationToken));
+            barrier.WaitUntilAllBatchSubmitsArriveAsync(cancellationToken));
         barrier.Release();
         Exception?[]? outcomes = null;
         Exception? completionFailure = await Record.ExceptionAsync(async () =>
@@ -214,7 +214,7 @@ public sealed class AzureTableMessageJournalStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-MESSAGE-JOURNAL-RETENTION", "minimum-timestamp-does-not-underflow")]
-    public async Task MaximumRetention_AcceptsTheEarliestRepresentableObservation()
+    public async Task MaximumRetention_AcceptsTheEarliestRepresentableObservationAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using AzureTableTestTable fixture = await AzureTableTestTable.CreateAsync("Journal", cancellationToken);
@@ -230,7 +230,7 @@ public sealed class AzureTableMessageJournalStoreTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-MESSAGE-JOURNAL-OWNERSHIP", "foreign-rows-are-never-read-or-pruned")]
-    public async Task Append_NeverTreatsForeignPartitionRowsAsJournalEntries()
+    public async Task Append_NeverTreatsForeignPartitionRowsAsJournalEntriesAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using AzureTableTestTable fixture = await AzureTableTestTable.CreateAsync("Journal", cancellationToken);
@@ -326,13 +326,16 @@ public sealed class AzureTableMessageJournalStoreTests
     {
         public ValueTask<MessageJournalProjection?> ProjectAsync(
             MessageJournalCapture capture,
-            CancellationToken cancellationToken) => ValueTask.FromResult<MessageJournalProjection?>(new MessageJournalProjection(
+            CancellationToken cancellationToken)
+        {
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled<global::ViciOne.ServiceBus.MessageJournal.MessageJournalProjection?>(cancellationToken); return ValueTask.FromResult<MessageJournalProjection?>(new MessageJournalProjection(
             MessageJournalDataClassification.Internal,
             capture.ContentType,
             capture.MessageTypes,
             capture.Metadata,
             capture.Headers,
             capture.Body));
+        }
     }
 
     private sealed record JournalProbe(string Source);
@@ -374,7 +377,7 @@ public sealed class AzureTableMessageJournalStoreTests
             await ProcessNextAsync(message, pipeline).ConfigureAwait(false);
         }
 
-        public async Task WaitUntilAllBatchSubmitsArrive(CancellationToken cancellationToken) =>
+        public async Task WaitUntilAllBatchSubmitsArriveAsync(CancellationToken cancellationToken) =>
             await _allArrived.Task
                 .WaitAsync(operationTimeout, cancellationToken)
                 .ConfigureAwait(false);

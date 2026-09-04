@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
 public static class ConsumeContextSchedulerExtensions
 {
@@ -13,16 +13,16 @@ public static class ConsumeContextSchedulerExtensions
     /// <param name="context">The consume context</param>
     /// <param name="message">The message</param>
     /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> ScheduleSend<T>(this ConsumeContext context, Uri destinationAddress, DateTime scheduledTime, T message,
+    public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this ConsumeContext context, Uri destinationAddress, DateTimeOffset dueAt, T message,
         CancellationToken cancellationToken = default)
         where T : class
     {
         var scheduler = context.GetPayload<MessageSchedulerContext>();
 
-        return scheduler.ScheduleSend(destinationAddress, scheduledTime, message, cancellationToken);
+        return scheduler.ScheduleSendAsync(destinationAddress, dueAt, message, cancellationToken);
     }
 
     /// <summary>
@@ -32,17 +32,17 @@ public static class ConsumeContextSchedulerExtensions
     /// <param name="context">The consume context</param>
     /// <param name="message">The message</param>
     /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> ScheduleSend<T>(this ConsumeContext context, Uri destinationAddress, DateTime scheduledTime, T message,
+    public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this ConsumeContext context, Uri destinationAddress, DateTimeOffset dueAt, T message,
         IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
         var scheduler = context.GetPayload<MessageSchedulerContext>();
 
-        return scheduler.ScheduleSend(destinationAddress, scheduledTime, message, pipe, cancellationToken);
+        return scheduler.ScheduleSendAsync(destinationAddress, dueAt, message, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -52,17 +52,17 @@ public static class ConsumeContextSchedulerExtensions
     /// <param name="context">The consume context</param>
     /// <param name="message">The message</param>
     /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> ScheduleSend<T>(this ConsumeContext context, Uri destinationAddress, DateTime scheduledTime, T message,
+    public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this ConsumeContext context, Uri destinationAddress, DateTimeOffset dueAt, T message,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
         var scheduler = context.GetPayload<MessageSchedulerContext>();
 
-        return scheduler.ScheduleSend(destinationAddress, scheduledTime, message, pipe, cancellationToken);
+        return scheduler.ScheduleSendAsync(destinationAddress, dueAt, message, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -71,15 +71,15 @@ public static class ConsumeContextSchedulerExtensions
     /// <param name="context">The consume context</param>
     /// <param name="message">The message object</param>
     /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> ScheduleSend(this ConsumeContext context, Uri destinationAddress, DateTime scheduledTime, object message,
+    public static Task<ScheduledMessage> ScheduleSendAsync(this ConsumeContext context, Uri destinationAddress, DateTimeOffset dueAt, object message,
         CancellationToken cancellationToken = default)
     {
         var scheduler = context.GetPayload<MessageSchedulerContext>();
 
-        return scheduler.ScheduleSend(destinationAddress, scheduledTime, message, cancellationToken);
+        return scheduler.ScheduleSendAsync(destinationAddress, dueAt, message, cancellationToken);
     }
 
     /// <summary>
@@ -89,16 +89,16 @@ public static class ConsumeContextSchedulerExtensions
     /// <param name="context">The consume context</param>
     /// <param name="message">The message object</param>
     /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
     /// <param name="messageType">The type of the message (use message.GetType() if desired)</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> ScheduleSend(this ConsumeContext context, Uri destinationAddress, DateTime scheduledTime, object message,
+    public static Task<ScheduledMessage> ScheduleSendAsync(this ConsumeContext context, Uri destinationAddress, DateTimeOffset dueAt, object message,
         Type messageType, CancellationToken cancellationToken = default)
     {
         var scheduler = context.GetPayload<MessageSchedulerContext>();
 
-        return scheduler.ScheduleSend(destinationAddress, scheduledTime, message, messageType, cancellationToken);
+        return scheduler.ScheduleSendAsync(destinationAddress, dueAt, message, messageType, cancellationToken);
     }
 
     /// <summary>
@@ -107,16 +107,16 @@ public static class ConsumeContextSchedulerExtensions
     /// <param name="context">The consume context</param>
     /// <param name="message">The message object</param>
     /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> ScheduleSend(this ConsumeContext context, Uri destinationAddress, DateTime scheduledTime, object message,
+    public static Task<ScheduledMessage> ScheduleSendAsync(this ConsumeContext context, Uri destinationAddress, DateTimeOffset dueAt, object message,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
         var scheduler = context.GetPayload<MessageSchedulerContext>();
 
-        return scheduler.ScheduleSend(destinationAddress, scheduledTime, message, pipe, cancellationToken);
+        return scheduler.ScheduleSendAsync(destinationAddress, dueAt, message, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -126,17 +126,17 @@ public static class ConsumeContextSchedulerExtensions
     /// <param name="context">The consume context</param>
     /// <param name="message">The message object</param>
     /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
     /// <param name="messageType">The type of the message (use message.GetType() if desired)</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> ScheduleSend(this ConsumeContext context, Uri destinationAddress, DateTime scheduledTime, object message,
+    public static Task<ScheduledMessage> ScheduleSendAsync(this ConsumeContext context, Uri destinationAddress, DateTimeOffset dueAt, object message,
         Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
         var scheduler = context.GetPayload<MessageSchedulerContext>();
 
-        return scheduler.ScheduleSend(destinationAddress, scheduledTime, message, messageType, pipe, cancellationToken);
+        return scheduler.ScheduleSendAsync(destinationAddress, dueAt, message, messageType, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -147,16 +147,16 @@ public static class ConsumeContextSchedulerExtensions
     /// <param name="context">The consume context</param>
     /// <param name="values">The property values to initialize on the interface</param>
     /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> ScheduleSend<T>(this ConsumeContext context, Uri destinationAddress, DateTime scheduledTime, object values,
+    public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this ConsumeContext context, Uri destinationAddress, DateTimeOffset dueAt, object values,
         CancellationToken cancellationToken = default)
         where T : class
     {
         var scheduler = context.GetPayload<MessageSchedulerContext>();
 
-        return scheduler.ScheduleSend<T>(destinationAddress, scheduledTime, values, cancellationToken);
+        return scheduler.ScheduleSendAsync<T>(destinationAddress, dueAt, values, cancellationToken);
     }
 
     /// <summary>
@@ -167,17 +167,17 @@ public static class ConsumeContextSchedulerExtensions
     /// <param name="context">The consume context</param>
     /// <param name="values">The property values to initialize on the interface</param>
     /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> ScheduleSend<T>(this ConsumeContext context, Uri destinationAddress, DateTime scheduledTime, object values,
+    public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this ConsumeContext context, Uri destinationAddress, DateTimeOffset dueAt, object values,
         IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
         var scheduler = context.GetPayload<MessageSchedulerContext>();
 
-        return scheduler.ScheduleSend(destinationAddress, scheduledTime, values, pipe, cancellationToken);
+        return scheduler.ScheduleSendAsync(destinationAddress, dueAt, values, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -188,17 +188,17 @@ public static class ConsumeContextSchedulerExtensions
     /// <param name="context">The consume context</param>
     /// <param name="values">The property values to initialize on the interface</param>
     /// <param name="destinationAddress">The destination address where the schedule message should be sent</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> ScheduleSend<T>(this ConsumeContext context, Uri destinationAddress, DateTime scheduledTime, object values,
+    public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this ConsumeContext context, Uri destinationAddress, DateTimeOffset dueAt, object values,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
         var scheduler = context.GetPayload<MessageSchedulerContext>();
 
-        return scheduler.ScheduleSend<T>(destinationAddress, scheduledTime, values, pipe, cancellationToken);
+        return scheduler.ScheduleSendAsync<T>(destinationAddress, dueAt, values, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -211,13 +211,13 @@ public static class ConsumeContextSchedulerExtensions
     /// <param name="delay">The time at which the message should be delivered to the queue</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> ScheduleSend<T>(this ConsumeContext context, Uri destinationAddress, TimeSpan delay, T message,
+    public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this ConsumeContext context, Uri destinationAddress, TimeSpan delay, T message,
         CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = context.GetTimeProvider().GetUtcNow().UtcDateTime + delay;
+        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
 
-        return ScheduleSend(context, destinationAddress, scheduledTime, message, cancellationToken);
+        return ScheduleSendAsync(context, destinationAddress, dueAt, message, cancellationToken);
     }
 
     /// <summary>
@@ -231,13 +231,13 @@ public static class ConsumeContextSchedulerExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> ScheduleSend<T>(this ConsumeContext context, Uri destinationAddress, TimeSpan delay, T message,
+    public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this ConsumeContext context, Uri destinationAddress, TimeSpan delay, T message,
         IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = context.GetTimeProvider().GetUtcNow().UtcDateTime + delay;
+        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
 
-        return ScheduleSend(context, destinationAddress, scheduledTime, message, pipe, cancellationToken);
+        return ScheduleSendAsync(context, destinationAddress, dueAt, message, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -251,13 +251,13 @@ public static class ConsumeContextSchedulerExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> ScheduleSend<T>(this ConsumeContext context, Uri destinationAddress, TimeSpan delay, T message,
+    public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this ConsumeContext context, Uri destinationAddress, TimeSpan delay, T message,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = context.GetTimeProvider().GetUtcNow().UtcDateTime + delay;
+        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
 
-        return ScheduleSend(context, destinationAddress, scheduledTime, message, pipe, cancellationToken);
+        return ScheduleSendAsync(context, destinationAddress, dueAt, message, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -269,12 +269,12 @@ public static class ConsumeContextSchedulerExtensions
     /// <param name="delay">The time at which the message should be delivered to the queue</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> ScheduleSend(this ConsumeContext context, Uri destinationAddress, TimeSpan delay, object message,
+    public static Task<ScheduledMessage> ScheduleSendAsync(this ConsumeContext context, Uri destinationAddress, TimeSpan delay, object message,
         CancellationToken cancellationToken = default)
     {
-        var scheduledTime = context.GetTimeProvider().GetUtcNow().UtcDateTime + delay;
+        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
 
-        return ScheduleSend(context, destinationAddress, scheduledTime, message, cancellationToken);
+        return ScheduleSendAsync(context, destinationAddress, dueAt, message, cancellationToken);
     }
 
     /// <summary>
@@ -288,12 +288,12 @@ public static class ConsumeContextSchedulerExtensions
     /// <param name="messageType">The type of the message (use message.GetType() if desired)</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> ScheduleSend(this ConsumeContext context, Uri destinationAddress, TimeSpan delay, object message,
+    public static Task<ScheduledMessage> ScheduleSendAsync(this ConsumeContext context, Uri destinationAddress, TimeSpan delay, object message,
         Type messageType, CancellationToken cancellationToken = default)
     {
-        var scheduledTime = context.GetTimeProvider().GetUtcNow().UtcDateTime + delay;
+        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
 
-        return ScheduleSend(context, destinationAddress, scheduledTime, message, messageType, cancellationToken);
+        return ScheduleSendAsync(context, destinationAddress, dueAt, message, messageType, cancellationToken);
     }
 
     /// <summary>
@@ -306,12 +306,12 @@ public static class ConsumeContextSchedulerExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> ScheduleSend(this ConsumeContext context, Uri destinationAddress, TimeSpan delay, object message,
+    public static Task<ScheduledMessage> ScheduleSendAsync(this ConsumeContext context, Uri destinationAddress, TimeSpan delay, object message,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
-        var scheduledTime = context.GetTimeProvider().GetUtcNow().UtcDateTime + delay;
+        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
 
-        return ScheduleSend(context, destinationAddress, scheduledTime, message, pipe, cancellationToken);
+        return ScheduleSendAsync(context, destinationAddress, dueAt, message, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -325,13 +325,13 @@ public static class ConsumeContextSchedulerExtensions
     /// <param name="delay">The time at which the message should be delivered to the queue</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> ScheduleSend<T>(this ConsumeContext context, Uri destinationAddress, TimeSpan delay, object values,
+    public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this ConsumeContext context, Uri destinationAddress, TimeSpan delay, object values,
         CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = context.GetTimeProvider().GetUtcNow().UtcDateTime + delay;
+        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
 
-        return ScheduleSend<T>(context, destinationAddress, scheduledTime, values, cancellationToken);
+        return ScheduleSendAsync<T>(context, destinationAddress, dueAt, values, cancellationToken);
     }
 
     /// <summary>
@@ -346,12 +346,12 @@ public static class ConsumeContextSchedulerExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> ScheduleSend(this ConsumeContext context, Uri destinationAddress, TimeSpan delay, object message,
+    public static Task<ScheduledMessage> ScheduleSendAsync(this ConsumeContext context, Uri destinationAddress, TimeSpan delay, object message,
         Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
-        var scheduledTime = context.GetTimeProvider().GetUtcNow().UtcDateTime + delay;
+        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
 
-        return ScheduleSend(context, destinationAddress, scheduledTime, message, messageType, pipe, cancellationToken);
+        return ScheduleSendAsync(context, destinationAddress, dueAt, message, messageType, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -366,13 +366,13 @@ public static class ConsumeContextSchedulerExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> ScheduleSend<T>(this ConsumeContext context, Uri destinationAddress, TimeSpan delay, object values,
+    public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this ConsumeContext context, Uri destinationAddress, TimeSpan delay, object values,
         IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = context.GetTimeProvider().GetUtcNow().UtcDateTime + delay;
+        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
 
-        return ScheduleSend(context, destinationAddress, scheduledTime, values, pipe, cancellationToken);
+        return ScheduleSendAsync(context, destinationAddress, dueAt, values, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -387,12 +387,12 @@ public static class ConsumeContextSchedulerExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> ScheduleSend<T>(this ConsumeContext context, Uri destinationAddress, TimeSpan delay, object values,
+    public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this ConsumeContext context, Uri destinationAddress, TimeSpan delay, object values,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = context.GetTimeProvider().GetUtcNow().UtcDateTime + delay;
+        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
 
-        return ScheduleSend<T>(context, destinationAddress, scheduledTime, values, pipe, cancellationToken);
+        return ScheduleSendAsync<T>(context, destinationAddress, dueAt, values, pipe, cancellationToken);
     }
 }

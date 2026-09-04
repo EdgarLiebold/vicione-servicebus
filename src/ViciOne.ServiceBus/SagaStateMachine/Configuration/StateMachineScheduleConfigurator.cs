@@ -8,7 +8,7 @@ public class StateMachineScheduleConfigurator<TInstance, TMessage> :
     where TInstance : class, SagaStateMachineInstance
     where TMessage : class
 {
-    Action<IEventCorrelationConfigurator<TInstance, TMessage>> _received;
+    Action<IEventCorrelationConfigurator<TInstance, TMessage>> _received = null!;
 
     public StateMachineScheduleConfigurator()
     {
@@ -22,8 +22,7 @@ public class StateMachineScheduleConfigurator<TInstance, TMessage> :
         set { DelayProvider = _ => value; }
     }
 
-    public ScheduleDelayProvider<TInstance> DelayProvider { get; set; }
-
+    public ScheduleDelayProvider<TInstance> DelayProvider { get; set; } = null!;
     Action<IEventCorrelationConfigurator<TInstance, TMessage>> IScheduleConfigurator<TInstance, TMessage>.Received
     {
         set => _received = value;

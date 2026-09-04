@@ -23,12 +23,12 @@ class ServiceBusMessageLatencyTransport :
         _split = hostSettings.Split;
     }
 
-    public Task Send(LatencyTestMessage message)
+    public Task SendAsync(LatencyTestMessage message)
     {
-        return _targetEndpoint.Send(message);
+        return _targetEndpoint.SendAsync(message);
     }
 
-    public async Task Start(Action<IReceiveEndpointConfigurator> callback, IReportConsumerMetric reportConsumerMetric)
+    public async Task StartAsync(Action<IReceiveEndpointConfigurator> callback, IReportConsumerMetric reportConsumerMetric)
     {
         _busControl = Bus.Factory.CreateUsingAzureServiceBus(x =>
         {
@@ -60,10 +60,10 @@ class ServiceBusMessageLatencyTransport :
 
             await _outboundBus.StartAsync();
 
-            _targetEndpoint = await _outboundBus.GetSendEndpoint(_targetAddress);
+            _targetEndpoint = await _outboundBus.GetSendEndpointAsync(_targetAddress);
         }
         else
-            _targetEndpoint = await _busControl.GetSendEndpoint(_targetAddress);
+            _targetEndpoint = await _busControl.GetSendEndpointAsync(_targetAddress);
     }
 
     public async ValueTask DisposeAsync()

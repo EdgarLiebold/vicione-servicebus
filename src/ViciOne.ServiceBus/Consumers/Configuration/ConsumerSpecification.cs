@@ -65,7 +65,7 @@ public class ConsumerSpecification<TConsumer> :
     {
         foreach (IConsumerMessageSpecification<TConsumer> messageSpecification in _messageTypes.Values)
         {
-            if (messageSpecification.TryGetMessageSpecification(out IConsumerMessageSpecification<TConsumer, T> result))
+            if (messageSpecification.TryGetMessageSpecification(out IConsumerMessageSpecification<TConsumer, T>? result))
                 return result;
         }
 

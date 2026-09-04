@@ -24,7 +24,8 @@ public interface IReceiveEndpointDispatcher :
     /// <param name="cancellationToken"></param>
     /// <param name="payloads">One or more payloads to add to the receive context</param>
     /// <returns></returns>
-    Task Dispatch(byte[] body, IReadOnlyDictionary<string, object> headers, CancellationToken cancellationToken, params object[] payloads);
+    Task DispatchAsync(byte[] body, IReadOnlyDictionary<string, object> headers, object[] payloads,
+        CancellationToken cancellationToken = default);
 
     // TODO convert this to use the MessageBody type for nicer integration, also MessageContext
 }

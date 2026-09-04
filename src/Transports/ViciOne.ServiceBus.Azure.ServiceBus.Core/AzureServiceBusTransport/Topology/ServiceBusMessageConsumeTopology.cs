@@ -29,7 +29,7 @@ public class ServiceBusMessageConsumeTopology<TMessage> :
             specification.Apply(builder);
     }
 
-    public void Subscribe(string subscriptionName, Action<IServiceBusSubscriptionConfigurator> configure = null)
+    public void Subscribe(string subscriptionName, Action<IServiceBusSubscriptionConfigurator>? configure = null)
     {
         if (string.IsNullOrWhiteSpace(subscriptionName))
             throw new ArgumentException("Value cannot be null or whitespace.", nameof(subscriptionName));

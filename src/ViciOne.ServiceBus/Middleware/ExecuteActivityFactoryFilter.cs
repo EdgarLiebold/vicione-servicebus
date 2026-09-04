@@ -16,11 +16,11 @@ public class ExecuteActivityFactoryFilter<TActivity, TArguments> :
         _pipe = pipe;
     }
 
-    public async Task Send(ExecuteContext<TArguments> context, IPipe<ExecuteContext<TArguments>> next)
+    public async Task SendAsync(ExecuteContext<TArguments> context, IPipe<ExecuteContext<TArguments>> next)
     {
-        await _factory.Execute(context, _pipe).ConfigureAwait(false);
+        await _factory.ExecuteAsync(context, _pipe).ConfigureAwait(false);
 
-        await next.Send(context).ConfigureAwait(false);
+        await next.SendAsync(context).ConfigureAwait(false);
     }
 
     public void Probe(ProbeContext context)

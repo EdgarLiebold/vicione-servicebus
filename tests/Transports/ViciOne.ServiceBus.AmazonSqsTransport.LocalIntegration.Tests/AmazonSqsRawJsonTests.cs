@@ -13,7 +13,7 @@ public sealed class AmazonSqsRawJsonTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0232", "raw-json-preserves-payload-header-and-transport-metadata")]
-    public async Task RawJsonHeader_ReachesTheTransportConsumer()
+    public async Task RawJsonHeader_ReachesTheTransportConsumerAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("rawjson");
         string queueName = fixture.Name("input");
@@ -33,7 +33,7 @@ public sealed class AmazonSqsRawJsonTests
                 endpoint.Handler<IRawCommand>(context =>
                 {
                     consumed.TrySetResult(new RawObservation(
-                        context.ReceiveContext.ContentType,
+                        context.Advanced().ReceiveContext.ContentType,
                         context.Message.CommandId,
                         context.Message.ItemNumber,
                         context.Headers.Get<string>(HeaderName),
@@ -42,7 +42,7 @@ public sealed class AmazonSqsRawJsonTests
                         context.ConversationId,
                         context.SentTime,
                         context.DestinationAddress,
-                        context.SupportedMessageTypes.ToArray()));
+                        context.Advanced().SupportedMessageTypes.ToArray()));
                     return Task.CompletedTask;
                 });
             });
@@ -54,10 +54,9 @@ public sealed class AmazonSqsRawJsonTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
 
-            await input.Send(
+            await input.SendAsync(
                     new RawCommandBody { CommandId = commandId, ItemNumber = "27" },
                     context =>
                     {
@@ -77,7 +76,7 @@ public sealed class AmazonSqsRawJsonTests
             Assert.Equal(HeaderValue, actual.HeaderValue);
             Assert.Equal((messageId, correlationId, conversationId),
                 (actual.MessageId, actual.CorrelationId, actual.ConversationId));
-            Assert.Equal(messageId.ToNewId().Timestamp, actual.SentTime);
+            Assert.Equal(messageId.ToNewId().Timestamp, Assert.IsType<DateTimeOffset>(actual.SentTime));
             Assert.Equal(
                 new Uri($"amazonsqs://{fixture.Region}/{fixture.Prefix}/{queueName}?durable=false&autodelete=true"),
                 actual.DestinationAddress);
@@ -92,15 +91,15 @@ public sealed class AmazonSqsRawJsonTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0233", "forwarded-raw-json-drops-user-headers-when-copy-disabled")]
-    public Task ForwardedRawJson_DropsTransportHeadersWhenCopyDisabled() =>
-        AssertForwardedRawJsonHeader(RawSerializerOptions.AnyMessageType | RawSerializerOptions.AddTransportHeaders, null);
+    public Task ForwardedRawJson_DropsTransportHeadersWhenCopyDisabledAsync() =>
+        AssertForwardedRawJsonHeaderAsync(RawSerializerOptions.AnyMessageType | RawSerializerOptions.AddTransportHeaders, null);
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0234", "forwarded-raw-json-preserves-user-headers-when-copy-enabled")]
-    public Task ForwardedRawJson_PreservesTransportHeadersWhenCopyEnabled() =>
-        AssertForwardedRawJsonHeader(RawSerializerOptions.All, HeaderValue);
+    public Task ForwardedRawJson_PreservesTransportHeadersWhenCopyEnabledAsync() =>
+        AssertForwardedRawJsonHeaderAsync(RawSerializerOptions.All, HeaderValue);
 
-    private static async Task AssertForwardedRawJsonHeader(RawSerializerOptions options, string? expectedHeader)
+    private static async Task AssertForwardedRawJsonHeaderAsync(RawSerializerOptions options, string? expectedHeader)
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("rawforward");
         string inputQueue = fixture.Name("input");
@@ -121,10 +120,10 @@ public sealed class AmazonSqsRawJsonTests
                     try
                     {
                         rawConsumed.TrySetResult(new ForwardObservation(
-                            context.ReceiveContext.ContentType,
+                            context.Advanced().ReceiveContext.ContentType,
                             context.Message.CommandId,
                             context.Headers.Get<string>(HeaderName)));
-                        await context.Publish(new RawForwarded(context.Message.CommandId), context.CancellationToken);
+                        await context.Advanced().PublishAsync(new RawForwarded(context.Message.CommandId), context.CancellationToken);
                     }
                     catch (Exception exception)
                     {
@@ -141,7 +140,7 @@ public sealed class AmazonSqsRawJsonTests
                 endpoint.Handler<RawForwarded>(context =>
                 {
                     forwarded.TrySetResult(new ForwardObservation(
-                        context.ReceiveContext.ContentType,
+                        context.Advanced().ReceiveContext.ContentType,
                         context.Message.CorrelationId,
                         context.Headers.Get<string>(HeaderName)));
                     return Task.CompletedTask;
@@ -155,10 +154,10 @@ public sealed class AmazonSqsRawJsonTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{inputQueue}"))
+            ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{inputQueue}"))
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
-            await input.Send(
+            await input.SendAsync(
                     new RawCommandBody { CommandId = commandId, ItemNumber = "27" },
                     context =>
                     {
@@ -208,7 +207,7 @@ public sealed class AmazonSqsRawJsonTests
         Guid? MessageId,
         Guid? CorrelationId,
         Guid? ConversationId,
-        DateTime? SentTime,
+        DateTimeOffset? SentTime,
         Uri? DestinationAddress,
         string[] SupportedMessageTypes);
 

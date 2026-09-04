@@ -35,8 +35,7 @@ public class HostExecuteContext<TArguments> :
         return new HostExecuteActivityContext<TActivity, TArguments>(activity, this);
     }
 
-    public ExecutionResult Result { get; set; }
-
+    public ExecutionResult Result { get; set; } = null!;
     public ExecutionResult Completed()
     {
         return new CompletedExecutionResult<TArguments>(this, Publisher, _activity, RoutingSlip, _compensationAddress);

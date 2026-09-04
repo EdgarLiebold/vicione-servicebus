@@ -9,7 +9,7 @@ public class PauseScheduledRecurringMessageCommand :
     {
     }
 
-    public PauseScheduledRecurringMessageCommand(string scheduleId, string scheduleGroup, DateTime timestamp)
+    public PauseScheduledRecurringMessageCommand(string scheduleId, string scheduleGroup, DateTimeOffset timestamp)
     {
         Timestamp = timestamp;
 
@@ -17,7 +17,7 @@ public class PauseScheduledRecurringMessageCommand :
         ScheduleGroup = scheduleGroup;
     }
 
-    public DateTime Timestamp { get; set; }
-    public string ScheduleId { get; set; }
-    public string ScheduleGroup { get; set; }
+    public DateTimeOffset Timestamp { get; set; }
+    public string ScheduleId { get; set; } = null!;
+    public string ScheduleGroup { get; set; } = null!;
 }

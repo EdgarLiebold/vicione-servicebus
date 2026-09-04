@@ -2,6 +2,9 @@ namespace ViciOne.ServiceBus.Samples.DeveloperJourneys;
 
 public static class Journey03Publish
 {
-    public static Task Publish(IPublishEndpoint publisher, OrderSubmitted message, CancellationToken cancellationToken) =>
-        publisher.Publish(message, cancellationToken);
+    public static Task PublishAsync(
+        IPublishEndpoint publisher,
+        OrderSubmitted message,
+        CancellationToken cancellationToken = default) =>
+        publisher.PublishAsync(message, cancellationToken);
 }

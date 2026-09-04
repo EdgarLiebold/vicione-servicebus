@@ -10,7 +10,7 @@ public class DateTimeOffsetTypeConverter :
     ITypeConverter<DateTimeOffset, string>,
     ITypeConverter<DateTimeOffset, object>
 {
-    public bool TryConvert(object input, out DateTimeOffset result)
+    public bool TryConvert(object? input, out DateTimeOffset result)
     {
         switch (input)
         {
@@ -31,7 +31,7 @@ public class DateTimeOffsetTypeConverter :
         }
     }
 
-    public bool TryConvert(string input, out DateTimeOffset result)
+    public bool TryConvert(string? input, out DateTimeOffset result)
     {
         return DateTimeOffset.TryParse(input, out result);
     }
@@ -40,7 +40,7 @@ public class DateTimeOffsetTypeConverter :
     {
         if (input >= DateTimeConstants.Epoch)
         {
-            var timeSpan = input.UtcDateTime - DateTimeConstants.Epoch;
+            var timeSpan = input - DateTimeConstants.Epoch;
             if (timeSpan.TotalMilliseconds <= int.MaxValue)
             {
                 result = (int)timeSpan.TotalMilliseconds;
@@ -56,7 +56,7 @@ public class DateTimeOffsetTypeConverter :
     {
         if (input >= DateTimeConstants.Epoch)
         {
-            var timeSpan = input.UtcDateTime - DateTimeConstants.Epoch;
+            var timeSpan = input - DateTimeConstants.Epoch;
             if (timeSpan.TotalMilliseconds <= long.MaxValue)
             {
                 result = (long)timeSpan.TotalMilliseconds;

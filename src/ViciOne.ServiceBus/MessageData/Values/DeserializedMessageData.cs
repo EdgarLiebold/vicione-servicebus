@@ -22,7 +22,7 @@ public class DeserializedMessageData<T> :
     public Uri Address { get; }
     public bool HasValue { get; }
 
-    public Task<T> Value
+    public Task<T?> Value
     {
         get
         {

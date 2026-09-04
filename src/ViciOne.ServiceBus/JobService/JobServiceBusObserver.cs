@@ -21,42 +21,42 @@ public class JobServiceBusObserver :
     {
     }
 
-    public Task PreStart(IBus bus)
+    public Task PreStartAsync(IBus bus)
     {
         return Task.CompletedTask;
     }
 
-    public async Task PostStart(IBus bus, Task<BusReady> busReady)
+    public async Task PostStartAsync(IBus bus, Task<BusReady> busReady)
     {
         await busReady.ConfigureAwait(false);
 
         LogContext.Debug?.Log("Job Service starting: {InstanceAddress}", _jobService.InstanceAddress);
 
-        await _jobService.BusStarted(bus).ConfigureAwait(false);
+        await _jobService.BusStartedAsync(bus).ConfigureAwait(false);
 
         LogContext.Info?.Log("Job Service started: {InstanceAddress}", _jobService.InstanceAddress);
     }
 
-    public Task StartFaulted(IBus bus, Exception exception)
+    public Task StartFaultedAsync(IBus bus, Exception exception)
     {
         return Task.CompletedTask;
     }
 
-    public async Task PreStop(IBus bus)
+    public async Task PreStopAsync(IBus bus)
     {
         LogContext.Debug?.Log("Job Service shutting down: {InstanceAddress}", _jobService.InstanceAddress);
 
-        await _jobService.Stop(bus).ConfigureAwait(false);
+        await _jobService.StopAsync(bus).ConfigureAwait(false);
 
         LogContext.Info?.Log("Job Service shut down: {InstanceAddress}", _jobService.InstanceAddress);
     }
 
-    public Task PostStop(IBus bus)
+    public Task PostStopAsync(IBus bus)
     {
         return Task.CompletedTask;
     }
 
-    public Task StopFaulted(IBus bus, Exception exception)
+    public Task StopFaultedAsync(IBus bus, Exception exception)
     {
         return Task.CompletedTask;
     }

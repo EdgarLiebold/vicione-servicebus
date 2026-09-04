@@ -72,7 +72,8 @@ public class ReceiveEndpointDispatcher :
 
     public Uri InputAddress => _context.InputAddress;
 
-    public async Task Dispatch(byte[] body, IReadOnlyDictionary<string, object> headers, CancellationToken cancellationToken, params object[] payloads)
+    public async Task DispatchAsync(byte[] body, IReadOnlyDictionary<string, object> headers, object[] payloads,
+        CancellationToken cancellationToken = default)
     {
         var context = new ReceiveEndpointDispatcherReceiveContext(_context, body, headers, payloads);
 
@@ -82,7 +83,7 @@ public class ReceiveEndpointDispatcher :
 
         try
         {
-            await _dispatcher.Dispatch(context, NoLockReceiveContext.Instance).ConfigureAwait(false);
+            await _dispatcher.DispatchAsync(context, NoLockReceiveContext.Instance, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
         finally
         {
@@ -108,7 +109,7 @@ public class ReceiveEndpointDispatcher<T> :
     {
         IReceiveEndpointDispatcher CreateDispatcher(Type dispatcherType)
         {
-            var dispatcherFactory = (ITypeReceiveEndpointDispatcherFactory)Activator.CreateInstance(dispatcherType);
+            var dispatcherFactory = (ITypeReceiveEndpointDispatcherFactory)(Activator.CreateInstance(dispatcherType) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
             return dispatcherFactory.Create(factory, formatter);
         }
@@ -171,8 +172,9 @@ public class ReceiveEndpointDispatcher<T> :
 
     public Uri InputAddress => _dispatcher.InputAddress;
 
-    public Task Dispatch(byte[] body, IReadOnlyDictionary<string, object> headers, CancellationToken cancellationToken, params object[] payloads)
+    public Task DispatchAsync(byte[] body, IReadOnlyDictionary<string, object> headers, object[] payloads,
+        CancellationToken cancellationToken = default)
     {
-        return _dispatcher.Dispatch(body, headers, cancellationToken, payloads);
+        return _dispatcher.DispatchAsync(body, headers, payloads, cancellationToken);
     }
 }

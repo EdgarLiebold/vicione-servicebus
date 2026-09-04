@@ -20,7 +20,7 @@ public class ServiceBusMessageReceiver :
         _dispatcher = context.CreateReceivePipeDispatcher();
     }
 
-    public async Task Handle(ServiceBusReceivedMessage message, CancellationToken cancellationToken)
+    public async Task HandleAsync(ServiceBusReceivedMessage message, CancellationToken cancellationToken)
     {
         var context = new ServiceBusReceiveContext(message, _context);
 
@@ -30,7 +30,7 @@ public class ServiceBusMessageReceiver :
 
         try
         {
-            await _dispatcher.Dispatch(context, NoLockReceiveContext.Instance).ConfigureAwait(false);
+            await _dispatcher.DispatchAsync(context, NoLockReceiveContext.Instance, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
         catch (ServiceBusException ex) when (ex.Reason == ServiceBusFailureReason.SessionLockLost)
         {

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Testing.Implementations;
 
@@ -27,23 +28,23 @@ public class TestSagaRepositoryDecorator<TSaga> :
         _sagaRepository.Probe(context);
     }
 
-    Task ISagaRepository<TSaga>.Send<T>(ConsumeContext<T> context, ISagaPolicy<TSaga, T> policy, IPipe<SagaConsumeContext<TSaga, T>> next)
+    Task ISagaRepository<TSaga>.SendAsync<T>(ConsumeContext<T> context, ISagaPolicy<TSaga, T> policy, IPipe<SagaConsumeContext<TSaga, T>> next)
     {
         var preInserted = new PreInsertedSagaTracker();
         var interceptPipe = new InterceptPipe<T>(_sagas, _received, _created, preInserted, next);
         var interceptPolicy = new InterceptPolicy<T>(_created, preInserted, policy);
 
-        return _sagaRepository.Send(context, interceptPolicy, interceptPipe);
+        return _sagaRepository.SendAsync(context, interceptPolicy, interceptPipe);
     }
 
-    Task ISagaRepository<TSaga>.SendQuery<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, ISagaPolicy<TSaga, T> policy,
+    Task ISagaRepository<TSaga>.SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, ISagaPolicy<TSaga, T> policy,
         IPipe<SagaConsumeContext<TSaga, T>> next)
     {
         var preInserted = new PreInsertedSagaTracker();
         var interceptPipe = new InterceptPipe<T>(_sagas, _received, _created, preInserted, next);
         var interceptPolicy = new InterceptPolicy<T>(_created, preInserted, policy);
 
-        return _sagaRepository.SendQuery(context, query, interceptPolicy, interceptPipe);
+        return _sagaRepository.SendQueryAsync(context, query, interceptPolicy, interceptPipe);
     }
 
 
@@ -72,7 +73,7 @@ public class TestSagaRepositoryDecorator<TSaga> :
             _pipe.Probe(context);
         }
 
-        public async Task Send(SagaConsumeContext<TSaga, TMessage> context)
+        public async Task SendAsync(SagaConsumeContext<TSaga, TMessage> context)
         {
             // InsertOnInitial creates and inserts the saga before the policy's Existing branch
             // invokes this pipe. The older Missing branch is therefore never reached. Record the
@@ -85,7 +86,7 @@ public class TestSagaRepositoryDecorator<TSaga> :
 
             try
             {
-                await _pipe.Send(context).ConfigureAwait(false);
+                await _pipe.SendAsync(context).ConfigureAwait(false);
 
                 _received.Add(context);
             }
@@ -115,23 +116,23 @@ public class TestSagaRepositoryDecorator<TSaga> :
 
         public bool IsReadOnly => _policy.IsReadOnly;
 
-        public bool PreInsertInstance(ConsumeContext<TMessage> context, out TSaga instance)
+        public bool PreInsertInstance(ConsumeContext<TMessage> context, [NotNullWhen(true)] out TSaga? instance)
         {
             _preInserted.Value = _policy.PreInsertInstance(context, out instance);
 
             return _preInserted.Value;
         }
 
-        public Task Existing(SagaConsumeContext<TSaga, TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
+        public Task ExistingAsync(SagaConsumeContext<TSaga, TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
         {
-            return _policy.Existing(context, next);
+            return _policy.ExistingAsync(context, next);
         }
 
-        public Task Missing(ConsumeContext<TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
+        public Task MissingAsync(ConsumeContext<TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
         {
             var interceptPipe = new InterceptPolicyPipe(_created, next);
 
-            return _policy.Missing(context, interceptPipe);
+            return _policy.MissingAsync(context, interceptPipe);
         }
 
 
@@ -152,11 +153,11 @@ public class TestSagaRepositoryDecorator<TSaga> :
                 _pipe.Probe(context);
             }
 
-            public Task Send(SagaConsumeContext<TSaga, TMessage> context)
+            public Task SendAsync(SagaConsumeContext<TSaga, TMessage> context)
             {
                 _created.Add(context);
 
-                return _pipe.Send(context);
+                return _pipe.SendAsync(context);
             }
         }
     }

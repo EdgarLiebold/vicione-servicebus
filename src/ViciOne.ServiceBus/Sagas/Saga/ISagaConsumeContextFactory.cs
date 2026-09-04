@@ -20,7 +20,7 @@ public interface ISagaConsumeContextFactory<in TContext, TSaga>
     /// <param name="mode">The creation mode of the saga instance</param>
     /// <typeparam name="T">The message type</typeparam>
     /// <returns></returns>
-    Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContext<T>(TContext context, ConsumeContext<T> consumeContext, TSaga instance,
+    Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContextAsync<T>(TContext context, ConsumeContext<T> consumeContext, TSaga instance,
         SagaConsumeContextMode mode)
         where T : class;
 }
@@ -41,6 +41,6 @@ public interface ISagaConsumeContextFactory<TSaga>
     /// <param name="mode">The creation mode of the saga instance</param>
     /// <typeparam name="T">The message type</typeparam>
     /// <returns></returns>
-    Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContext<T>(ConsumeContext<T> consumeContext, TSaga instance, SagaConsumeContextMode mode)
+    Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContextAsync<T>(ConsumeContext<T> consumeContext, TSaga instance, SagaConsumeContextMode mode)
         where T : class;
 }

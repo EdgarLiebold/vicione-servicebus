@@ -11,14 +11,14 @@ public sealed class SendObserverTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-SEND-OBSERVER", "bus-endpoint-success-and-disconnect")]
-    public async Task BusAndEndpointObservers_SeeTheSameSuccessfulSendAndDisconnectIndependently()
+    public async Task BusAndEndpointObservers_SeeTheSameSuccessfulSendAndDisconnectIndependentlyAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout);
         HandlerTestHarness<ObservedSend> handler = harness.Handler<ObservedSend>();
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             var busObserver = new RecordingSendObserver();
@@ -27,10 +27,10 @@ public sealed class SendObserverTests
             using ConnectHandle endpointHandle = harness.InputQueueSendEndpoint.ConnectSendObserver(endpointObserver);
             var first = new ObservedSend(NewId.NextGuid(), "first");
 
-            await harness.InputQueueSendEndpoint.Send(first, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(first, cancellationToken);
             IReceivedMessage<ObservedSend> firstConsumed = await handler.Consumed
                 .SelectAsync(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             Assert.Equal(first, firstConsumed.Context.Message);
             AssertSuccessfulSend(busObserver.Events, endpointObserver.Events, first, harness.InputQueueAddress);
@@ -39,10 +39,10 @@ public sealed class SendObserverTests
             endpointHandle.Dispose();
             var second = new ObservedSend(NewId.NextGuid(), "second");
 
-            await harness.InputQueueSendEndpoint.Send(second, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(second, cancellationToken);
             IReceivedMessage<ObservedSend> secondConsumed = await handler.Consumed
                 .SelectAsync(observation => observation.Context.Message.CorrelationId == second.CorrelationId, cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             Assert.Equal(second, secondConsumed.Context.Message);
             Assert.Equal(["Pre", "Post", "Pre", "Post"], busObserver.Events.Select(observation => observation.Stage));
@@ -52,20 +52,20 @@ public sealed class SendObserverTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SEND-OBSERVER", "bus-endpoint-fault-without-post")]
-    public async Task BusAndEndpointObservers_SeeTheExactSendFailureWithoutPostSend()
+    public async Task BusAndEndpointObservers_SeeTheExactSendFailureWithoutPostSendAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout);
         harness.Handler<ObservedSend>();
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             var busObserver = new RecordingSendObserver();
@@ -75,7 +75,7 @@ public sealed class SendObserverTests
             var message = new ObservedSend(NewId.NextGuid(), "cannot-serialize");
 
             SerializationException failure = await Assert.ThrowsAsync<SerializationException>(() =>
-                harness.InputQueueSendEndpoint.Send(
+                harness.InputQueueSendEndpoint.SendAsync(
                     message,
                     context => context.Serializer = null!,
                     cancellationToken));
@@ -87,13 +87,13 @@ public sealed class SendObserverTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SEND-OBSERVER", "response-success-and-fault-boundaries")]
-    public async Task BusObserver_DistinguishesTheOriginalSendFromAFaultedResponseSend()
+    public async Task BusObserver_DistinguishesTheOriginalSendFromAFaultedResponseSendAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -103,7 +103,7 @@ public sealed class SendObserverTests
         {
             try
             {
-                await context.RespondAsync(
+                await context.Advanced().RespondAsync(
                     new ResponseMessage(context.Message.CorrelationId),
                     sendContext => sendContext.Serializer = null!);
             }
@@ -113,14 +113,14 @@ public sealed class SendObserverTests
             }
         });
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             var observer = new RecordingSendObserver();
             using ConnectHandle observerHandle = harness.Bus.ConnectSendObserver(observer);
             var request = new ResponseRequest(NewId.NextGuid());
 
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.InputQueueSendEndpoint.SendAsync(
                 request,
                 context => context.ResponseAddress = harness.BusAddress,
                 cancellationToken);
@@ -158,7 +158,7 @@ public sealed class SendObserverTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
@@ -220,21 +220,21 @@ public sealed class SendObserverTests
 
         public Task Faulted => _faulted.Task;
 
-        public Task PreSend<T>(SendContext<T> context)
+        public Task PreSendAsync<T>(SendContext<T> context)
             where T : class
         {
             _events.Enqueue(new SendObservation("Pre", typeof(T), context.Message, context, null));
             return Task.CompletedTask;
         }
 
-        public Task PostSend<T>(SendContext<T> context)
+        public Task PostSendAsync<T>(SendContext<T> context)
             where T : class
         {
             _events.Enqueue(new SendObservation("Post", typeof(T), context.Message, context, null));
             return Task.CompletedTask;
         }
 
-        public Task SendFault<T>(SendContext<T> context, Exception exception)
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
             where T : class
         {
             _events.Enqueue(new SendObservation("Fault", typeof(T), context.Message, context, exception));

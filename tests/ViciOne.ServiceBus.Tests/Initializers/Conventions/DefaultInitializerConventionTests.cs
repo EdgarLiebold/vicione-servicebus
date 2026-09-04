@@ -10,7 +10,7 @@ public sealed class DefaultInitializerConventionTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-INITIALIZER-HEADERS", "publish-context")]
-    public async Task PublishInitializer_MapsStandardAndCustomHeaderProperties()
+    public async Task PublishInitializer_MapsStandardAndCustomHeaderPropertiesAsync()
     {
         TimeSpan operationTimeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -35,10 +35,10 @@ public sealed class DefaultInitializerConventionTests
 
         try
         {
-            await harness.Start(cancellationToken);
+            await harness.StartAsync(cancellationToken);
             using ConnectHandle observerHandle = harness.Bus.ConnectPublishObserver(observer);
 
-            await harness.Bus.Publish<HeaderInitializedMessage>(
+            await harness.Bus.PublishAsync<HeaderInitializedMessage>(
                 new
                 {
                     __ResponseAddress = responseAddress,
@@ -72,7 +72,7 @@ public sealed class DefaultInitializerConventionTests
             Assert.NotNull(context.ExpirationTime);
             Assert.True(context.Headers.TryGetHeader("Custom-Header-Value", out object? receivedStringHeader));
             Assert.Equal("Frankie Say Relax", receivedStringHeader);
-            Assert.True(context.TryGetHeader<int>("Custom-Header-Value2", out int? receivedIntegerHeader));
+            Assert.True(context.Advanced().TryGetHeader<int>("Custom-Header-Value2", out int? receivedIntegerHeader));
             Assert.Equal(27, receivedIntegerHeader);
             Assert.True(context.Headers.TryGetHeader("Preserved_Separator", out object? receivedPreservedSeparatorHeader));
             Assert.Equal("underscore", receivedPreservedSeparatorHeader);
@@ -80,7 +80,7 @@ public sealed class DefaultInitializerConventionTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
@@ -107,7 +107,7 @@ public sealed class DefaultInitializerConventionTests
 
         public Task<HeaderSnapshot> Observed => _observed.Task;
 
-        public Task PrePublish<T>(PublishContext<T> context)
+        public Task PrePublishAsync<T>(PublishContext<T> context)
             where T : class
         {
             if (context.Message is HeaderInitializedMessage)
@@ -132,10 +132,10 @@ public sealed class DefaultInitializerConventionTests
             return Task.CompletedTask;
         }
 
-        public Task PostPublish<T>(PublishContext<T> context)
+        public Task PostPublishAsync<T>(PublishContext<T> context)
             where T : class => Task.CompletedTask;
 
-        public Task PublishFault<T>(PublishContext<T> context, Exception exception)
+        public Task PublishFaultAsync<T>(PublishContext<T> context, Exception exception)
             where T : class => Task.CompletedTask;
     }
 

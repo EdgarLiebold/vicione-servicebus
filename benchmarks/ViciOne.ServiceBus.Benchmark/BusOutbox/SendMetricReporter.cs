@@ -17,7 +17,7 @@ namespace ViciOneServiceBusBenchmark.BusOutbox;
 /// </summary>
 public static class SendMetricReporter
 {
-    public static Task Report(IReportConsumerMetric metric, Guid? messageId)
+    public static Task ReportAsync(IReportConsumerMetric metric, Guid? messageId)
     {
         if (metric == null)
             throw new ArgumentNullException(nameof(metric));
@@ -25,6 +25,6 @@ public static class SendMetricReporter
         if (messageId == null)
             throw new InvalidOperationException("The bus outbox send observer saw a message without an id.");
 
-        return metric.PostSend(messageId.Value);
+        return metric.PostSendAsync(messageId.Value);
     }
 }

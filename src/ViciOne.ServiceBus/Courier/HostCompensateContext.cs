@@ -23,12 +23,9 @@ public class HostCompensateContext<TLog> :
 
         _compensateLog = RoutingSlip.CompensateLogs.Last();
 
-        _activityLog = RoutingSlip.ActivityLogs.SingleOrDefault(x => x.ExecutionId == _compensateLog.ExecutionId);
-        if (_activityLog == null)
-        {
-            throw new RoutingSlipException("The compensation log did not have a matching activity log entry: "
+        _activityLog = RoutingSlip.ActivityLogs.SingleOrDefault(x => x.ExecutionId == _compensateLog.ExecutionId)
+            ?? throw new RoutingSlipException("The compensation log did not have a matching activity log entry: "
                 + _compensateLog.ExecutionId);
-        }
 
         Log = RoutingSlip.GetCompensateLogData<TLog>();
     }
@@ -42,8 +39,7 @@ public class HostCompensateContext<TLog> :
         return new HostCompensateActivityContext<TActivity, TLog>(activity, this);
     }
 
-    public CompensationResult Result { get; set; }
-
+    public CompensationResult Result { get; set; } = null!;
     CompensationResult CompensateContext.Compensated()
     {
         return new CompensatedCompensationResult<TLog>(this, Publisher, _compensateLog, RoutingSlip);

@@ -142,7 +142,7 @@ public class RegistrationContext :
         _configuredTypes.Add(typeof(T));
     }
 
-    public object GetService(Type serviceType)
+    public object? GetService(Type serviceType)
     {
         if (serviceType == typeof(IContainerSelector))
             return Selector;

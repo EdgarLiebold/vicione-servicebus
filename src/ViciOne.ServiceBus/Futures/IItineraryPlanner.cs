@@ -10,5 +10,5 @@ namespace ViciOne.ServiceBus;
 public interface IItineraryPlanner<in TInput>
     where TInput : class
 {
-    Task PlanItinerary(BehaviorContext<FutureState, TInput> value, IItineraryBuilder builder);
+    Task PlanItineraryAsync(BehaviorContext<FutureState, TInput> value, IItineraryBuilder builder, CancellationToken cancellationToken = default);
 }

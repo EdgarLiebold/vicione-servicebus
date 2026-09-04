@@ -6,5 +6,5 @@ namespace ViciOne.ServiceBus.Metadata;
 
 public interface IMessageDataConverter<T>
 {
-    Task<T> Convert(Stream stream, CancellationToken cancellationToken);
+    Task<T?> ConvertAsync(Stream stream, CancellationToken cancellationToken);
 }

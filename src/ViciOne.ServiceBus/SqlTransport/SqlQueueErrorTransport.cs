@@ -13,9 +13,9 @@ public class SqlQueueErrorTransport :
     {
     }
 
-    public Task Send(ExceptionReceiveContext context)
+    public Task SendAsync(ExceptionReceiveContext context, CancellationToken cancellationToken = default)
     {
-        void PreSend(SqlTransportMessage message, SendHeaders headers)
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); void PreSend(SqlTransportMessage message, SendHeaders headers)
         {
             headers.CopyFrom(context.ExceptionHeaders);
 
@@ -23,6 +23,6 @@ public class SqlQueueErrorTransport :
                 message.ExpirationTime = context.GetTimeProvider().GetUtcNow().UtcDateTime + Defaults.ErrorQueueTimeToLive;
         }
 
-        return Move(context, PreSend);
+        return MoveAsync(context, PreSend);
     }
 }

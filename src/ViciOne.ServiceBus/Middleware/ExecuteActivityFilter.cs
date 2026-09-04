@@ -27,23 +27,23 @@ public class ExecuteActivityFilter<TActivity, TArguments> :
         context.CreateFilterScope("execute");
     }
 
-    public async Task Send(ExecuteActivityContext<TActivity, TArguments> context, IPipe<ExecuteActivityContext<TActivity, TArguments>> next)
+    public async Task SendAsync(ExecuteActivityContext<TActivity, TArguments> context, IPipe<ExecuteActivityContext<TActivity, TArguments>> next)
     {
         try
         {
             if (_observers.Count > 0)
-                await _observers.PreExecute(context).ConfigureAwait(false);
+                await _observers.PreExecuteAsync(context).ConfigureAwait(false);
 
-            var result = context.Result = await context.Activity.Execute(context).ConfigureAwait(false)
+            var result = context.Result = await context.Activity.ExecuteAsync(context).ConfigureAwait(false)
                 ?? context.Faulted(new ActivityExecutionException("The activity execute did not return a result"));
 
             if (result.IsFaulted(out var exception))
                 exception.Rethrow();
 
-            await next.Send(context).ConfigureAwait(false);
+            await next.SendAsync(context).ConfigureAwait(false);
 
             if (_observers.Count > 0)
-                await _observers.PostExecute(context).ConfigureAwait(false);
+                await _observers.PostExecuteAsync(context).ConfigureAwait(false);
         }
         catch (Exception exception)
         {
@@ -51,7 +51,7 @@ public class ExecuteActivityFilter<TActivity, TArguments> :
                 context.Result = context.Faulted(exception);
 
             if (_observers.Count > 0)
-                await _observers.ExecuteFault(context, exception).ConfigureAwait(false);
+                await _observers.ExecuteFaultAsync(context, exception).ConfigureAwait(false);
 
             throw;
         }

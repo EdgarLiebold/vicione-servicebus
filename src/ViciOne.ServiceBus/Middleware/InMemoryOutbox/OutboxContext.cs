@@ -18,7 +18,8 @@ public interface OutboxContext
     /// Adds a method to be invoked once the outbox is ready to be sent
     /// </summary>
     /// <param name="method"></param>
-    Task Add(Func<Task> method);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task AddAsync(Func<Task> method, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Captures the current pending-operation boundary so an owning transactional attempt can
@@ -31,17 +32,21 @@ public interface OutboxContext
     /// </summary>
     /// <param name="concurrentMessageDelivery"></param>
     /// <returns></returns>
-    Task ExecutePendingActions(bool concurrentMessageDelivery);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task ExecutePendingActionsAsync(bool concurrentMessageDelivery, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Discard any pending outbox operations, and cancel any scheduled messages
     /// </summary>
     /// <returns></returns>
-    Task DiscardPendingActions();
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task DiscardPendingActionsAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Discards operations added after <paramref name="checkpoint" /> while preserving pending
     /// work owned by an earlier successful stage of the same consume pipeline.
     /// </summary>
-    Task DiscardPendingActions(OutboxCheckpoint checkpoint);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="checkpoint">The checkpoint used by the operation.</param>
+    Task DiscardPendingActionsAsync(OutboxCheckpoint checkpoint, CancellationToken cancellationToken = default);
 }

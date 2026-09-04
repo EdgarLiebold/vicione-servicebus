@@ -9,5 +9,5 @@ public class ActiveMqQueueBindingConfigurator :
     {
     }
 
-    public string Selector { get; set; }
+    public string? Selector { get; set; }
 }

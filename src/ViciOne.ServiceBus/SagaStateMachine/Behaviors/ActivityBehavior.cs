@@ -31,44 +31,44 @@ public class ActivityBehavior<TSaga> :
         _next.Probe(context);
     }
 
-    public async Task Execute(BehaviorContext<TSaga> context)
+    public async Task ExecuteAsync(BehaviorContext<TSaga> context)
     {
         try
         {
-            await _activity.Execute(context, _next).ConfigureAwait(false);
+            await _activity.ExecuteAsync(context, _next).ConfigureAwait(false);
         }
         catch (Exception exception)
         {
-            await ExceptionTypeCache.Faulted(_next, context, exception).ConfigureAwait(false);
+            await ExceptionTypeCache.FaultedAsync(_next, context, exception).ConfigureAwait(false);
         }
     }
 
-    public async Task Execute<T>(BehaviorContext<TSaga, T> context)
+    public async Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context)
         where T : class
     {
         var behavior = new DataBehavior<TSaga, T>(_next);
         try
         {
-            await _activity.Execute(context, behavior).ConfigureAwait(false);
+            await _activity.ExecuteAsync(context, behavior).ConfigureAwait(false);
         }
         catch (Exception exception)
         {
-            await ExceptionTypeCache.Faulted(behavior, context, exception).ConfigureAwait(false);
+            await ExceptionTypeCache.FaultedAsync(behavior, context, exception).ConfigureAwait(false);
         }
     }
 
-    public Task Faulted<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context)
+    public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context)
         where T : class
         where TException : Exception
     {
         var behavior = new DataBehavior<TSaga, T>(_next);
 
-        return _activity.Faulted(context, behavior);
+        return _activity.FaultedAsync(context, behavior);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TException> context)
+    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context)
         where TException : Exception
     {
-        return _activity.Faulted(context, _next);
+        return _activity.FaultedAsync(context, _next);
     }
 }

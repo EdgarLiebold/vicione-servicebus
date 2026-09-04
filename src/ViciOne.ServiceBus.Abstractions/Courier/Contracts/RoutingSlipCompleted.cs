@@ -16,7 +16,7 @@ public interface RoutingSlipCompleted
     /// <summary>
     /// The date/time when the routing slip completed
     /// </summary>
-    DateTime Timestamp { get; }
+    DateTimeOffset Timestamp { get; }
 
     /// <summary>
     /// The time from when the routing slip was created until the completion

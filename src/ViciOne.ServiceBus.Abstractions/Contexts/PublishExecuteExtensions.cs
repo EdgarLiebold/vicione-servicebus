@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
 public static class PublishExecuteExtensions
 {
@@ -15,11 +15,11 @@ public static class PublishExecuteExtensions
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken">To cancel the send from happening</param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task Publish<T>(this IPublishEndpoint endpoint, T message, Action<PublishContext<T>> callback,
+    public static Task PublishAsync<T>(this IPublishEndpoint endpoint, T message, Action<PublishContext<T>> callback,
         CancellationToken cancellationToken = default)
         where T : class
     {
-        return endpoint.Publish(message, callback.ToPipe(), cancellationToken);
+        return endpoint.PublishAsync(message, callback.ToPipe(), cancellationToken);
     }
 
     /// <summary>
@@ -31,11 +31,11 @@ public static class PublishExecuteExtensions
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken">To cancel the send from happening</param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task Publish<T>(this IPublishEndpoint endpoint, T message, Func<PublishContext<T>, Task> callback,
+    public static Task PublishAsync<T>(this IPublishEndpoint endpoint, T message, Func<PublishContext<T>, Task> callback,
         CancellationToken cancellationToken = default)
         where T : class
     {
-        return endpoint.Publish(message, callback.ToPipe(), cancellationToken);
+        return endpoint.PublishAsync(message, callback.ToPipe(), cancellationToken);
     }
 
     /// <summary>
@@ -46,10 +46,10 @@ public static class PublishExecuteExtensions
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken">To cancel the send from happening</param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task Publish(this IPublishEndpoint endpoint, object message, Action<PublishContext> callback,
+    public static Task PublishAsync(this IPublishEndpoint endpoint, object message, Action<PublishContext> callback,
         CancellationToken cancellationToken = default)
     {
-        return endpoint.Publish(message, callback.ToPipe(), cancellationToken);
+        return endpoint.PublishAsync(message, callback.ToPipe(), cancellationToken);
     }
 
     /// <summary>
@@ -60,10 +60,10 @@ public static class PublishExecuteExtensions
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken">To cancel the send from happening</param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task Publish(this IPublishEndpoint endpoint, object message, Func<PublishContext, Task> callback,
+    public static Task PublishAsync(this IPublishEndpoint endpoint, object message, Func<PublishContext, Task> callback,
         CancellationToken cancellationToken = default)
     {
-        return endpoint.Publish(message, callback.ToPipe(), cancellationToken);
+        return endpoint.PublishAsync(message, callback.ToPipe(), cancellationToken);
     }
 
     /// <summary>
@@ -75,10 +75,10 @@ public static class PublishExecuteExtensions
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken">To cancel the send from happening</param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task Publish(this IPublishEndpoint endpoint, object message, Type messageType, Action<PublishContext> callback,
+    public static Task PublishAsync(this IPublishEndpoint endpoint, object message, Type messageType, Action<PublishContext> callback,
         CancellationToken cancellationToken = default)
     {
-        return endpoint.Publish(message, messageType, callback.ToPipe(), cancellationToken);
+        return endpoint.PublishAsync(message, messageType, callback.ToPipe(), cancellationToken);
     }
 
     /// <summary>
@@ -90,10 +90,10 @@ public static class PublishExecuteExtensions
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken">To cancel the send from happening</param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task Publish(this IPublishEndpoint endpoint, object message, Type messageType, Func<PublishContext, Task> callback,
+    public static Task PublishAsync(this IPublishEndpoint endpoint, object message, Type messageType, Func<PublishContext, Task> callback,
         CancellationToken cancellationToken = default)
     {
-        return endpoint.Publish(message, messageType, callback.ToPipe(), cancellationToken);
+        return endpoint.PublishAsync(message, messageType, callback.ToPipe(), cancellationToken);
     }
 
     /// <summary>
@@ -105,11 +105,11 @@ public static class PublishExecuteExtensions
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken">To cancel the send from happening</param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task Publish<T>(this IPublishEndpoint endpoint, object values, Action<PublishContext<T>> callback,
+    public static Task PublishAsync<T>(this IPublishEndpoint endpoint, object values, Action<PublishContext<T>> callback,
         CancellationToken cancellationToken = default)
         where T : class
     {
-        return endpoint.Publish(values, callback.ToPipe(), cancellationToken);
+        return endpoint.PublishAsync(values, callback.ToPipe(), cancellationToken);
     }
 
     /// <summary>
@@ -121,11 +121,11 @@ public static class PublishExecuteExtensions
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken">To cancel the send from happening</param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task Publish<T>(this IPublishEndpoint endpoint, object values, Func<PublishContext<T>, Task> callback,
+    public static Task PublishAsync<T>(this IPublishEndpoint endpoint, object values, Func<PublishContext<T>, Task> callback,
         CancellationToken cancellationToken = default)
         where T : class
     {
-        return endpoint.Publish(values, callback.ToPipe(), cancellationToken);
+        return endpoint.PublishAsync(values, callback.ToPipe(), cancellationToken);
     }
 
     public static IPipe<PublishContext<T>> ToPipe<T>(this Action<PublishContext<T>> callback)
@@ -162,7 +162,7 @@ public static class PublishExecuteExtensions
             _callback = callback;
         }
 
-        public Task Send(PublishContext<T> context)
+        public Task SendAsync(PublishContext<T> context)
         {
             _callback(context);
 
@@ -187,7 +187,7 @@ public static class PublishExecuteExtensions
             _callback = callback;
         }
 
-        public Task Send(PublishContext<T> context)
+        public Task SendAsync(PublishContext<T> context)
         {
             return _callback(context);
         }
@@ -209,7 +209,7 @@ public static class PublishExecuteExtensions
             _callback = callback;
         }
 
-        public Task Send(PublishContext context)
+        public Task SendAsync(PublishContext context)
         {
             _callback(context);
 
@@ -233,7 +233,7 @@ public static class PublishExecuteExtensions
             _callback = callback;
         }
 
-        public Task Send(PublishContext context)
+        public Task SendAsync(PublishContext context)
         {
             return _callback(context);
         }

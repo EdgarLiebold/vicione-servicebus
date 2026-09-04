@@ -27,23 +27,23 @@ public class CompensateActivityFilter<TActivity, TLog> :
         context.CreateFilterScope("compensate");
     }
 
-    public async Task Send(CompensateActivityContext<TActivity, TLog> context, IPipe<CompensateActivityContext<TActivity, TLog>> next)
+    public async Task SendAsync(CompensateActivityContext<TActivity, TLog> context, IPipe<CompensateActivityContext<TActivity, TLog>> next)
     {
         try
         {
             if (_observers.Count > 0)
-                await _observers.PreCompensate(context).ConfigureAwait(false);
+                await _observers.PreCompensateAsync(context).ConfigureAwait(false);
 
-            var result = context.Result = await context.Activity.Compensate(context).ConfigureAwait(false)
+            var result = context.Result = await context.Activity.CompensateAsync(context).ConfigureAwait(false)
                 ?? context.Failed(new ActivityCompensationException("The activity compensation did not return a result"));
 
             if (result.IsFailed(out var exception))
                 exception.Rethrow();
 
-            await next.Send(context).ConfigureAwait(false);
+            await next.SendAsync(context).ConfigureAwait(false);
 
             if (_observers.Count > 0)
-                await _observers.PostCompensate(context).ConfigureAwait(false);
+                await _observers.PostCompensateAsync(context).ConfigureAwait(false);
         }
         catch (Exception exception)
         {
@@ -51,7 +51,7 @@ public class CompensateActivityFilter<TActivity, TLog> :
                 context.Result = context.Failed(exception);
 
             if (_observers.Count > 0)
-                await _observers.CompensateFail(context, exception).ConfigureAwait(false);
+                await _observers.CompensateFailAsync(context, exception).ConfigureAwait(false);
 
             throw;
         }

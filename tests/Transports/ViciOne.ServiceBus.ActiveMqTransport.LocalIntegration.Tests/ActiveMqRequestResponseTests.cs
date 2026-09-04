@@ -14,7 +14,7 @@ public sealed class ActiveMqRequestResponseTests
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [InlineData(ActiveMqBroker.ArtemisFlavor)]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-REQUESTS", "concurrent-default-and-explicit-paths-correlate-exactly")]
-    public async Task ConcurrentRequests_ReturnExactResponsesAcrossConfigurationPaths(string flavor)
+    public async Task ConcurrentRequests_ReturnExactResponsesAcrossConfigurationPathsAsync(string flavor)
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(flavor, "requests");
         string queueName = fixture.Name("service");
@@ -51,17 +51,17 @@ public sealed class ActiveMqRequestResponseTests
                 new Uri($"queue:{queueName}"),
                 RequestTimeout.After(ms: checked((int)fixture.OperationTimeout.TotalMilliseconds)));
 
-            Response<ResponseMessage>[] defaultResponses = await AwaitResponses(
+            Response<ResponseMessage>[] defaultResponses = await AwaitResponsesAsync(
                 defaultRequests,
-                request => bus.Request<RequestMessage, ResponseMessage>(request, cancellationToken),
+                request => bus.RequestAsync<RequestMessage, ResponseMessage>(request, cancellationToken: cancellationToken),
                 handled,
                 fixture.OperationTimeout,
                 cancellationToken);
             AssertExact(defaultRequests, defaultResponses);
 
-            Response<ResponseMessage>[] explicitResponses = await AwaitResponses(
+            Response<ResponseMessage>[] explicitResponses = await AwaitResponsesAsync(
                 explicitRequests,
-                request => explicitClient.GetResponse<ResponseMessage>(request, cancellationToken),
+                request => explicitClient.GetResponseAsync<ResponseMessage>(request, cancellationToken),
                 handled,
                 fixture.OperationTimeout,
                 cancellationToken);
@@ -80,7 +80,7 @@ public sealed class ActiveMqRequestResponseTests
             .Select(sequence => new RequestMessage(path, sequence, Guid.NewGuid()))
             .ToArray();
 
-    private static async Task<Response<ResponseMessage>[]> AwaitResponses(
+    private static async Task<Response<ResponseMessage>[]> AwaitResponsesAsync(
         RequestMessage[] requests,
         Func<RequestMessage, Task<Response<ResponseMessage>>> request,
         ConcurrentDictionary<(string Path, int Sequence, Guid CorrelationId), byte> handled,

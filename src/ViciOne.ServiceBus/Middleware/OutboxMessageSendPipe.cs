@@ -23,7 +23,7 @@ public class OutboxMessageSendPipe :
         _destinationAddress = destinationAddress;
     }
 
-    public Task Send(SendContext context)
+    public Task SendAsync(SendContext context)
     {
         var contentType = new ContentType(_message.ContentType);
 

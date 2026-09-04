@@ -157,6 +157,8 @@ public sealed class ResourceCache<TValue> :
     /// Adds a fully created resource. If capacity is full, the least recently relevant committed resource is evicted.
     /// When all capacity is currently occupied by in-flight creations, this call backpressures until one completes.
     /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="value">The value used by the operation.</param>
     public async ValueTask AddAsync(TValue value, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(value);
@@ -189,7 +191,7 @@ public sealed class ResourceCache<TValue> :
                     else if (TryEvictCapacityCandidate_NoLock(removed))
                         committed = CommitValue_NoLock(value, prepared, now);
                     else
-                        waitForPending = GetPendingCompletion_NoLock();
+                        waitForPending = GetPendingCompletion_NoLockAsync();
                 }
             }
 
@@ -469,7 +471,7 @@ public sealed class ResourceCache<TValue> :
                 {
                     // Every capacity slot is currently an in-flight creation. Do not exceed the hard bound;
                     // wait for any owner to finish and then retry the lookup/reservation atomically.
-                    waitForPendingCapacity = GetPendingCompletion_NoLock();
+                    waitForPendingCapacity = GetPendingCompletion_NoLockAsync();
                 }
             }
 
@@ -750,7 +752,7 @@ public sealed class ResourceCache<TValue> :
             : entry.LastUsedTimestamp;
     }
 
-    Task GetPendingCompletion_NoLock()
+    Task GetPendingCompletion_NoLockAsync()
     {
         Task[] pending = _pendingCreations.Select(x => x.OwnershipReleased.Task).ToArray();
         if (pending.Length == 0)

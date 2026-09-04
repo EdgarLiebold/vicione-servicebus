@@ -13,7 +13,7 @@ public interface ExceptionReceiveContext :
     /// <summary>
     /// The time at which the exception was thrown
     /// </summary>
-    DateTime ExceptionTimestamp { get; }
+    DateTimeOffset ExceptionTimestamp { get; }
 
     /// <summary>
     /// The exception info, suitable for inclusion in a fault message

@@ -26,7 +26,7 @@ public class ByteTypeConverter :
         return true;
     }
 
-    public bool TryConvert(object input, out byte result)
+    public bool TryConvert(object? input, out byte result)
     {
         if (input != null)
         {
@@ -50,7 +50,7 @@ public class ByteTypeConverter :
         return true;
     }
 
-    public bool TryConvert(string input, out byte result)
+    public bool TryConvert(string? input, out byte result)
     {
         return byte.TryParse(input, out result);
     }

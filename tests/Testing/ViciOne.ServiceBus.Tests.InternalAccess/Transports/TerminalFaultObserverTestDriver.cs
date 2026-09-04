@@ -8,6 +8,6 @@ public sealed class TerminalFaultObserverTestDriver
 
     public void Attach(CancellationTokenSource waiter) => _observer.Attach(waiter);
 
-    public Task Faulted(ReceiveEndpointFaulted faulted) =>
-        ((IReceiveEndpointObserver)_observer).Faulted(faulted);
+    public Task FaultedAsync(ReceiveEndpointFaulted faulted) =>
+        ((IReceiveEndpointObserver)_observer).FaultedAsync(faulted);
 }

@@ -15,7 +15,7 @@ public class SqlQueueMoveTransport
         _queueType = queueType;
     }
 
-    protected async Task Move(ReceiveContext context, Action<SqlTransportMessage, SendHeaders> preSend)
+    protected async Task MoveAsync(ReceiveContext context, Action<SqlTransportMessage, SendHeaders> preSend)
     {
         if (!context.TryGetPayload(out SqlMessageContext? messageContext))
             throw new ArgumentException("The ReceiveContext must contain a DbMessageContext", nameof(context));
@@ -32,7 +32,7 @@ public class SqlQueueMoveTransport
 
         preSend(message, transportHeaders);
 
-        await clientContext.MoveMessage(messageContext.LockId.Value, messageContext.DeliveryMessageId, _queueName, _queueType,
+        await clientContext.MoveMessageAsync(messageContext.LockId.Value, messageContext.DeliveryMessageId, _queueName, _queueType,
             message.ExpirationTime, transportHeaders);
     }
 }

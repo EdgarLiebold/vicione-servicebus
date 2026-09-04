@@ -11,7 +11,7 @@ public sealed class StateMachinePolicyIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-CONFIGURATION", "saga-message-and-saga-message-pipe-scopes")]
-    public async Task SagaConfiguration_InvokesAllThreeScopesOnceWithTheSameSagaAndMessage()
+    public async Task SagaConfiguration_InvokesAllThreeScopesOnceWithTheSameSagaAndMessageAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -31,14 +31,14 @@ public sealed class StateMachinePolicyIntegrationTests
                     message.UseExecute(context => recorder.RecordPair(context.Saga, context.Message)));
             });
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             var start = new ConfigurationScopeStart(NewId.NextGuid());
-            await harness.InputQueueSendEndpoint.Send(start, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(start, cancellationToken);
             Assert.Equal(
                 start.CorrelationId,
-                await repository.ShouldContainSagaInState(start.CorrelationId, machine, machine.Running, timeout));
+                await repository.ShouldContainSagaInStateAsync(start.CorrelationId, machine, machine.Running, timeout, cancellationToken: TestContext.Current.CancellationToken));
 
             Assert.Equal(1, recorder.SagaCount);
             Assert.Equal(1, recorder.MessageCount);
@@ -50,7 +50,7 @@ public sealed class StateMachinePolicyIntegrationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Single(harness.Consumed.Select<ConfigurationScopeStart>(SnapshotOnlyToken()));
@@ -58,7 +58,7 @@ public sealed class StateMachinePolicyIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-MISSING", "retry-before-create-then-normal-order-matrix")]
-    public async Task MissingStatus_RetriesAfterTheFirstAttemptAndSucceedsOnceTheInstanceExists()
+    public async Task MissingStatus_RetriesAfterTheFirstAttemptAndSucceedsOnceTheInstanceExistsAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -77,18 +77,18 @@ public sealed class StateMachinePolicyIntegrationTests
             endpoint.StateMachineSaga(machine, repository);
         };
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             IRequestClient<RetryStatusRequest> client = harness.CreateRequestClient<RetryStatusRequest>();
             Guid delayedId = NewId.NextGuid();
-            Task<Response<RetryStatusResponse>> delayed = client.GetResponse<RetryStatusResponse>(
+            Task<Response<RetryStatusResponse>> delayed = client.GetResponseAsync<RetryStatusResponse>(
                 new RetryStatusRequest("delayed"),
                 cancellationToken);
 
             await retryObserver.FirstRetry.Task.WaitAsync(timeout, cancellationToken);
-            await harness.InputQueueSendEndpoint.Send(new RetryStatusStart("delayed", delayedId), cancellationToken);
-            Assert.Equal(delayedId, await repository.ShouldContainSagaInState(delayedId, machine, machine.Running, timeout));
+            await harness.InputQueueSendEndpoint.SendAsync(new RetryStatusStart("delayed", delayedId), cancellationToken);
+            Assert.Equal(delayedId, await repository.ShouldContainSagaInStateAsync(delayedId, machine, machine.Running, timeout, cancellationToken: TestContext.Current.CancellationToken));
             retryObserver.Release.TrySetResult();
 
             Response<RetryStatusResponse> delayedResponse = await delayed.WaitAsync(timeout, cancellationToken);
@@ -98,9 +98,9 @@ public sealed class StateMachinePolicyIntegrationTests
             foreach (string serviceName in new[] { "normal-a", "normal-b" })
             {
                 Guid id = NewId.NextGuid();
-                await harness.InputQueueSendEndpoint.Send(new RetryStatusStart(serviceName, id), cancellationToken);
-                Assert.Equal(id, await repository.ShouldContainSagaInState(id, machine, machine.Running, timeout));
-                Response<RetryStatusResponse> response = await client.GetResponse<RetryStatusResponse>(
+                await harness.InputQueueSendEndpoint.SendAsync(new RetryStatusStart(serviceName, id), cancellationToken);
+                Assert.Equal(id, await repository.ShouldContainSagaInStateAsync(id, machine, machine.Running, timeout, cancellationToken: TestContext.Current.CancellationToken));
+                Response<RetryStatusResponse> response = await client.GetResponseAsync<RetryStatusResponse>(
                     new RetryStatusRequest(serviceName),
                     cancellationToken);
                 Assert.Equal(new RetryStatusResponse(id, serviceName, "Running"), response.Message);
@@ -111,7 +111,7 @@ public sealed class StateMachinePolicyIntegrationTests
         finally
         {
             retryObserver.Release.TrySetResult();
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Equal(3, harness.Sent.Select<RetryStatusResponse>(SnapshotOnlyToken()).Count());
@@ -120,7 +120,7 @@ public sealed class StateMachinePolicyIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-IGNORE", "repeated-event-is-consumed-without-fault-or-state-change")]
-    public async Task IgnoredRepeatedEvent_IsConsumedWithoutFaultAndLeavesTheInstanceUnchanged()
+    public async Task IgnoredRepeatedEvent_IsConsumedWithoutFaultAndLeavesTheInstanceUnchangedAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -129,28 +129,28 @@ public sealed class StateMachinePolicyIntegrationTests
         ISagaStateMachineTestHarness<IgnoreMachine, IgnoreState> sagaHarness =
             harness.StateMachineSaga<IgnoreState, IgnoreMachine>(machine);
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             Guid correlationId = NewId.NextGuid();
-            await harness.Bus.Publish(new IgnoreStart(correlationId), cancellationToken);
-            Assert.Equal(correlationId, await sagaHarness.Exists(correlationId, machine.Running, timeout));
+            await harness.Bus.PublishAsync(new IgnoreStart(correlationId), cancellationToken);
+            Assert.Equal(correlationId, await sagaHarness.ExistsAsync(correlationId, machine.Running, timeout, TestContext.Current.CancellationToken));
 
             Task<IReceivedMessage<IgnoreStart>> second = sagaHarness.Consumed
                 .SelectAsync<IgnoreStart>(cancellationToken)
                 .Skip(1)
-                .First();
-            await harness.Bus.Publish(new IgnoreStart(correlationId), cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
+            await harness.Bus.PublishAsync(new IgnoreStart(correlationId), cancellationToken);
             Assert.Null((await second.WaitAsync(timeout, cancellationToken)).Exception);
-            Assert.Equal(correlationId, await sagaHarness.Exists(correlationId, machine.Running, timeout));
+            Assert.Equal(correlationId, await sagaHarness.ExistsAsync(correlationId, machine.Running, timeout, TestContext.Current.CancellationToken));
 
-            IgnoreState instance = sagaHarness.Sagas.Contains(correlationId);
+            IgnoreState? instance = sagaHarness.Sagas.Contains(correlationId);
             Assert.NotNull(instance);
             Assert.Equal(1, instance.StartCount);
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Equal(2, sagaHarness.Consumed.Select<IgnoreStart>(SnapshotOnlyToken()).Count());
@@ -159,7 +159,7 @@ public sealed class StateMachinePolicyIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-RETRY", "ignored-exception-produces-one-attempt-and-one-fault")]
-    public async Task RetryIgnoredException_ExecutesOncePublishesOneFaultAndKeepsThePriorState()
+    public async Task RetryIgnoredException_ExecutesOncePublishesOneFaultAndKeepsThePriorStateAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -176,30 +176,30 @@ public sealed class StateMachinePolicyIntegrationTests
         ISagaStateMachineTestHarness<RetryIgnoreMachine, RetryIgnoreState> sagaHarness =
             harness.StateMachineSaga<RetryIgnoreState, RetryIgnoreMachine>(machine);
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             Guid correlationId = NewId.NextGuid();
-            await harness.InputQueueSendEndpoint.Send(new RetryInitialize(correlationId), cancellationToken);
-            Assert.Equal(correlationId, await sagaHarness.Exists(correlationId, machine.Waiting, timeout));
+            await harness.InputQueueSendEndpoint.SendAsync(new RetryInitialize(correlationId), cancellationToken);
+            Assert.Equal(correlationId, await sagaHarness.ExistsAsync(correlationId, machine.Waiting, timeout, TestContext.Current.CancellationToken));
             Task<IPublishedMessage<Fault<RetryIgnoredStart>>> fault = harness.Published
                 .SelectAsync<Fault<RetryIgnoredStart>>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
-            await harness.InputQueueSendEndpoint.Send(new RetryIgnoredStart(correlationId), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new RetryIgnoredStart(correlationId), cancellationToken);
             Fault<RetryIgnoredStart> published = (await fault.WaitAsync(timeout, cancellationToken)).Context.Message;
 
             Assert.Equal(correlationId, published.Message.CorrelationId);
             Assert.Equal(1, attempts.Count(correlationId));
             Assert.Equal(0, retryObserver.RetryCount);
-            Assert.Equal(correlationId, await sagaHarness.Exists(correlationId, machine.Waiting, timeout));
+            Assert.Equal(correlationId, await sagaHarness.ExistsAsync(correlationId, machine.Waiting, timeout, TestContext.Current.CancellationToken));
             ExceptionInfo exception = Assert.Single(published.Exceptions);
             Assert.Equal(TypeCache<ExpectedIgnoredFailure>.ShortName, exception.ExceptionType);
             Assert.Null(exception.InnerException);
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Single(harness.Published.Select<Fault<RetryIgnoredStart>>(SnapshotOnlyToken()));
@@ -207,7 +207,7 @@ public sealed class StateMachinePolicyIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-CATCH", "container-activities-catch-finalize-and-remove")]
-    public async Task ContainerActivities_ExecuteTheFailureAndCatchStagesThenFinalizeAndRemove()
+    public async Task ContainerActivities_ExecuteTheFailureAndCatchStagesThenFinalizeAndRemoveAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -227,7 +227,7 @@ public sealed class StateMachinePolicyIntegrationTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         ISagaStateMachineTestHarness<ContainerCatchMachine, ContainerCatchState> sagaHarness =
             harness.GetSagaStateMachineHarness<ContainerCatchMachine, ContainerCatchState>();
         ILoadSagaRepository<ContainerCatchState> repository = provider.GetRequiredService<ILoadSagaRepository<ContainerCatchState>>();
@@ -237,18 +237,18 @@ public sealed class StateMachinePolicyIntegrationTests
             Guid correlationId = NewId.NextGuid();
             Task<IReceivedMessage<ContainerCatchStart>> consumed = sagaHarness.Consumed
                 .SelectAsync<ContainerCatchStart>(cancellationToken)
-                .First();
-            await harness.Bus.Publish(new ContainerCatchStart(correlationId), cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
+            await harness.Bus.PublishAsync(new ContainerCatchStart(correlationId), cancellationToken);
 
             Assert.Null((await consumed.WaitAsync(timeout, cancellationToken)).Exception);
-            Assert.Null(await repository.Load(correlationId));
+            Assert.Null(await repository.LoadAsync(correlationId, TestContext.Current.CancellationToken));
             Assert.Equal(1, recorder.FailureCount);
             Assert.Equal(1, recorder.CatchCount);
             Assert.Equal(correlationId, recorder.CorrelationId);
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Single(sagaHarness.Consumed.Select<ContainerCatchStart>(SnapshotOnlyToken()));
@@ -383,11 +383,11 @@ public sealed class StateMachinePolicyIntegrationTests
 
         public int RetryCount => Volatile.Read(ref _retryCount);
 
-        public Task PostCreate<T>(RetryPolicyContext<T> context) where T : class, PipeContext => Task.CompletedTask;
+        public Task PostCreateAsync<T>(RetryPolicyContext<T> context) where T : class, PipeContext => Task.CompletedTask;
 
-        public Task PostFault<T>(RetryContext<T> context) where T : class, PipeContext => Task.CompletedTask;
+        public Task PostFaultAsync<T>(RetryContext<T> context) where T : class, PipeContext => Task.CompletedTask;
 
-        public async Task PreRetry<T>(RetryContext<T> context) where T : class, PipeContext
+        public async Task PreRetryAsync<T>(RetryContext<T> context) where T : class, PipeContext
         {
             int count = Interlocked.Increment(ref _retryCount);
             if (count == 1)
@@ -397,9 +397,9 @@ public sealed class StateMachinePolicyIntegrationTests
             }
         }
 
-        public Task RetryFault<T>(RetryContext<T> context) where T : class, PipeContext => Task.CompletedTask;
+        public Task RetryFaultAsync<T>(RetryContext<T> context) where T : class, PipeContext => Task.CompletedTask;
 
-        public Task RetryComplete<T>(RetryContext<T> context) where T : class, PipeContext => Task.CompletedTask;
+        public Task RetryCompleteAsync<T>(RetryContext<T> context) where T : class, PipeContext => Task.CompletedTask;
     }
 
     public sealed record IgnoreStart(Guid CorrelationId) : CorrelatedBy<Guid>;
@@ -478,19 +478,19 @@ public sealed class StateMachinePolicyIntegrationTests
 
         public int RetryCount => Volatile.Read(ref _retryCount);
 
-        public Task PostCreate<T>(RetryPolicyContext<T> context) where T : class, PipeContext => Task.CompletedTask;
+        public Task PostCreateAsync<T>(RetryPolicyContext<T> context) where T : class, PipeContext => Task.CompletedTask;
 
-        public Task PostFault<T>(RetryContext<T> context) where T : class, PipeContext => Task.CompletedTask;
+        public Task PostFaultAsync<T>(RetryContext<T> context) where T : class, PipeContext => Task.CompletedTask;
 
-        public Task PreRetry<T>(RetryContext<T> context) where T : class, PipeContext
+        public Task PreRetryAsync<T>(RetryContext<T> context) where T : class, PipeContext
         {
             Interlocked.Increment(ref _retryCount);
             return Task.CompletedTask;
         }
 
-        public Task RetryFault<T>(RetryContext<T> context) where T : class, PipeContext => Task.CompletedTask;
+        public Task RetryFaultAsync<T>(RetryContext<T> context) where T : class, PipeContext => Task.CompletedTask;
 
-        public Task RetryComplete<T>(RetryContext<T> context) where T : class, PipeContext => Task.CompletedTask;
+        public Task RetryCompleteAsync<T>(RetryContext<T> context) where T : class, PipeContext => Task.CompletedTask;
     }
 
     public sealed class ExpectedIgnoredFailure : Exception;
@@ -552,7 +552,7 @@ public sealed class StateMachinePolicyIntegrationTests
 
         public void Accept(StateMachineVisitor visitor) => visitor.Visit(this);
 
-        public Task Execute(
+        public Task ExecuteAsync(
             BehaviorContext<ContainerCatchState, ContainerCatchStart> context,
             IBehavior<ContainerCatchState, ContainerCatchStart> next)
         {
@@ -560,10 +560,10 @@ public sealed class StateMachinePolicyIntegrationTests
             throw new ExpectedContainerFailure();
         }
 
-        public Task Faulted<TException>(
+        public Task FaultedAsync<TException>(
             BehaviorExceptionContext<ContainerCatchState, ContainerCatchStart, TException> context,
             IBehavior<ContainerCatchState, ContainerCatchStart> next)
-            where TException : Exception => next.Faulted(context);
+            where TException : Exception => next.FaultedAsync(context);
     }
 
     public sealed class ContainerCatchActivity(ContainerActivityRecorder recorder) :
@@ -573,17 +573,17 @@ public sealed class StateMachinePolicyIntegrationTests
 
         public void Accept(StateMachineVisitor visitor) => visitor.Visit(this);
 
-        public Task Execute(
+        public Task ExecuteAsync(
             BehaviorContext<ContainerCatchState, ContainerCatchStart> context,
-            IBehavior<ContainerCatchState, ContainerCatchStart> next) => next.Execute(context);
+            IBehavior<ContainerCatchState, ContainerCatchStart> next) => next.ExecuteAsync(context);
 
-        public Task Faulted<TException>(
+        public Task FaultedAsync<TException>(
             BehaviorExceptionContext<ContainerCatchState, ContainerCatchStart, TException> context,
             IBehavior<ContainerCatchState, ContainerCatchStart> next)
             where TException : Exception
         {
             recorder.RecordCatch(context.Saga.CorrelationId);
-            return next.Faulted(context);
+            return next.FaultedAsync(context);
         }
     }
 

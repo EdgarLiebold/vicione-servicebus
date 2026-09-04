@@ -3,7 +3,7 @@
 
   <PropertyGroup>
     <!-- Nullable warnings are completed in work package B; annotations remain active in the interim. -->
-    <Nullable>annotations</Nullable>
+    <Nullable>enable</Nullable>
     <!-- Documentation is completed in work package C; until then CS1591 stays a warning here. -->
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <TargetFramework>netstandard2.0</TargetFramework>

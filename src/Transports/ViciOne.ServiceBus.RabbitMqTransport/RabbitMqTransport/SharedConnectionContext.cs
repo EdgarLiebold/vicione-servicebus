@@ -33,17 +33,17 @@ public class SharedConnectionContext :
     public IRabbitMqBusTopology Topology => _context.Topology;
     public RabbitMqTopologyEntityCache TopologyEntityCache => _context.TopologyEntityCache;
 
-    public async Task<IChannel> CreateChannel(ushort? concurrentMessageLimit, CancellationToken cancellationToken)
+    public async Task<IChannel> CreateChannelAsync(ushort? concurrentMessageLimit, CancellationToken cancellationToken)
     {
         using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
 
-        return await _context.CreateChannel(concurrentMessageLimit, tokenSource.Token).ConfigureAwait(false);
+        return await _context.CreateChannelAsync(concurrentMessageLimit, tokenSource.Token).ConfigureAwait(false);
     }
 
-    public async Task<ChannelContext> CreateChannelContext(IAgent agent, ushort? concurrentMessageLimit, CancellationToken cancellationToken)
+    public async Task<ChannelContext> CreateChannelContextAsync(IAgent agent, ushort? concurrentMessageLimit, CancellationToken cancellationToken)
     {
         using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
 
-        return await _context.CreateChannelContext(agent, concurrentMessageLimit, tokenSource.Token).ConfigureAwait(false);
+        return await _context.CreateChannelContextAsync(agent, concurrentMessageLimit, tokenSource.Token).ConfigureAwait(false);
     }
 }

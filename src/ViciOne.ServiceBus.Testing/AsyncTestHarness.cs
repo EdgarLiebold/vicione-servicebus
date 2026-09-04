@@ -14,7 +14,7 @@ public abstract class AsyncTestHarness :
     readonly CancellationTokenSource _harnessLifetime;
     readonly object _scopeLock;
     CancellationToken _cancellationToken;
-    CancellationTokenSource _cancellationTokenSource;
+    CancellationTokenSource? _cancellationTokenSource;
     int _maximumSavedContexts;
     bool _disposed;
 
@@ -153,7 +153,7 @@ public abstract class AsyncTestHarness :
     /// </summary>
     public void Cancel()
     {
-        CancellationTokenSource source;
+        CancellationTokenSource? source;
         lock (_scopeLock)
             source = _cancellationTokenSource;
 

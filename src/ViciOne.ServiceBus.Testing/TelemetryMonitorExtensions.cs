@@ -16,16 +16,17 @@ public static class TelemetryMonitorExtensions
     /// <param name="callback"></param>
     /// <param name="timeout"></param>
     /// <param name="idleTimeout"></param>
-    public static async Task Wait(this IPublishEndpoint publishEndpoint, Func<IPublishEndpoint, Task>? callback, TimeSpan? timeout = null,
-        TimeSpan? idleTimeout = null)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static async Task WaitAsync(this IPublishEndpoint publishEndpoint, Func<IPublishEndpoint, Task>? callback, TimeSpan? timeout = null,
+        TimeSpan? idleTimeout = null, CancellationToken cancellationToken = default)
     {
-        await Wait(publishEndpoint, callback, timeout, idleTimeout, TimeProvider.System).ConfigureAwait(false);
+        await WaitAsync(publishEndpoint, callback, timeout, idleTimeout, TimeProvider.System, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    public static async Task Wait(this IPublishEndpoint publishEndpoint, Func<IPublishEndpoint, Task>? callback, TimeSpan? timeout,
-        TimeSpan? idleTimeout, TimeProvider timeProvider)
+    public static async Task WaitAsync(this IPublishEndpoint publishEndpoint, Func<IPublishEndpoint, Task>? callback, TimeSpan? timeout,
+        TimeSpan? idleTimeout, TimeProvider timeProvider, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(publishEndpoint);
+        cancellationToken.ThrowIfCancellationRequested(); ArgumentNullException.ThrowIfNull(publishEndpoint);
         ArgumentNullException.ThrowIfNull(timeProvider);
         var methodName = GetTestMethodInfo();
 
@@ -51,16 +52,17 @@ public static class TelemetryMonitorExtensions
     /// <param name="callback"></param>
     /// <param name="timeout"></param>
     /// <param name="idleTimeout"></param>
-    public static async Task Wait(this ISendEndpoint sendEndpoint, Func<ISendEndpoint, Task>? callback, TimeSpan? timeout = null,
-        TimeSpan? idleTimeout = null)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static async Task WaitAsync(this ISendEndpoint sendEndpoint, Func<ISendEndpoint, Task>? callback, TimeSpan? timeout = null,
+        TimeSpan? idleTimeout = null, CancellationToken cancellationToken = default)
     {
-        await Wait(sendEndpoint, callback, timeout, idleTimeout, TimeProvider.System).ConfigureAwait(false);
+        await WaitAsync(sendEndpoint, callback, timeout, idleTimeout, TimeProvider.System, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    public static async Task Wait(this ISendEndpoint sendEndpoint, Func<ISendEndpoint, Task>? callback, TimeSpan? timeout,
-        TimeSpan? idleTimeout, TimeProvider timeProvider)
+    public static async Task WaitAsync(this ISendEndpoint sendEndpoint, Func<ISendEndpoint, Task>? callback, TimeSpan? timeout,
+        TimeSpan? idleTimeout, TimeProvider timeProvider, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(sendEndpoint);
+        cancellationToken.ThrowIfCancellationRequested(); ArgumentNullException.ThrowIfNull(sendEndpoint);
         ArgumentNullException.ThrowIfNull(timeProvider);
         var methodName = GetTestMethodInfo();
 
@@ -86,20 +88,21 @@ public static class TelemetryMonitorExtensions
     /// <param name="callback"></param>
     /// <param name="timeout"></param>
     /// <param name="idleTimeout"></param>
-    public static async Task<Response<T1>> Wait<T, T1>(this IRequestClient<T> client, Func<IRequestClient<T>, Task<Response<T1>>> callback,
-        TimeSpan? timeout = null, TimeSpan? idleTimeout = null)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static async Task<Response<T1>> WaitAsync<T, T1>(this IRequestClient<T> client, Func<IRequestClient<T>, Task<Response<T1>>> callback,
+        TimeSpan? timeout = null, TimeSpan? idleTimeout = null, CancellationToken cancellationToken = default)
         where T : class
         where T1 : class
     {
-        return await Wait(client, callback, timeout, idleTimeout, TimeProvider.System).ConfigureAwait(false);
+        return await WaitAsync(client, callback, timeout, idleTimeout, TimeProvider.System, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    public static async Task<Response<T1>> Wait<T, T1>(this IRequestClient<T> client, Func<IRequestClient<T>, Task<Response<T1>>> callback,
-        TimeSpan? timeout, TimeSpan? idleTimeout, TimeProvider timeProvider)
+    public static async Task<Response<T1>> WaitAsync<T, T1>(this IRequestClient<T> client, Func<IRequestClient<T>, Task<Response<T1>>> callback,
+        TimeSpan? timeout, TimeSpan? idleTimeout, TimeProvider timeProvider, CancellationToken cancellationToken = default)
         where T : class
         where T1 : class
     {
-        ArgumentNullException.ThrowIfNull(client);
+        cancellationToken.ThrowIfCancellationRequested(); ArgumentNullException.ThrowIfNull(client);
         if (callback == null)
             throw new ArgumentNullException(nameof(callback));
         ArgumentNullException.ThrowIfNull(timeProvider);
@@ -127,22 +130,23 @@ public static class TelemetryMonitorExtensions
     /// <param name="callback"></param>
     /// <param name="timeout"></param>
     /// <param name="idleTimeout"></param>
-    public static async Task<Response<T1, T2>> Wait<T, T1, T2>(this IRequestClient<T> client, Func<IRequestClient<T>, Task<Response<T1, T2>>> callback,
-        TimeSpan? timeout = null, TimeSpan? idleTimeout = null)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static async Task<Response<T1, T2>> WaitAsync<T, T1, T2>(this IRequestClient<T> client, Func<IRequestClient<T>, Task<Response<T1, T2>>> callback,
+        TimeSpan? timeout = null, TimeSpan? idleTimeout = null, CancellationToken cancellationToken = default)
         where T : class
         where T1 : class
         where T2 : class
     {
-        return await Wait(client, callback, timeout, idleTimeout, TimeProvider.System).ConfigureAwait(false);
+        return await WaitAsync(client, callback, timeout, idleTimeout, TimeProvider.System, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    public static async Task<Response<T1, T2>> Wait<T, T1, T2>(this IRequestClient<T> client, Func<IRequestClient<T>, Task<Response<T1, T2>>> callback,
-        TimeSpan? timeout, TimeSpan? idleTimeout, TimeProvider timeProvider)
+    public static async Task<Response<T1, T2>> WaitAsync<T, T1, T2>(this IRequestClient<T> client, Func<IRequestClient<T>, Task<Response<T1, T2>>> callback,
+        TimeSpan? timeout, TimeSpan? idleTimeout, TimeProvider timeProvider, CancellationToken cancellationToken = default)
         where T : class
         where T1 : class
         where T2 : class
     {
-        ArgumentNullException.ThrowIfNull(client);
+        cancellationToken.ThrowIfCancellationRequested(); ArgumentNullException.ThrowIfNull(client);
         if (callback == null)
             throw new ArgumentNullException(nameof(callback));
         ArgumentNullException.ThrowIfNull(timeProvider);
@@ -170,24 +174,25 @@ public static class TelemetryMonitorExtensions
     /// <param name="callback"></param>
     /// <param name="timeout"></param>
     /// <param name="idleTimeout"></param>
-    public static async Task<Response<T1, T2, T3>> Wait<T, T1, T2, T3>(this IRequestClient<T> client,
-        Func<IRequestClient<T>, Task<Response<T1, T2, T3>>> callback, TimeSpan? timeout = null, TimeSpan? idleTimeout = null)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static async Task<Response<T1, T2, T3>> WaitAsync<T, T1, T2, T3>(this IRequestClient<T> client,
+        Func<IRequestClient<T>, Task<Response<T1, T2, T3>>> callback, TimeSpan? timeout = null, TimeSpan? idleTimeout = null, CancellationToken cancellationToken = default)
         where T : class
         where T1 : class
         where T2 : class
         where T3 : class
     {
-        return await Wait(client, callback, timeout, idleTimeout, TimeProvider.System).ConfigureAwait(false);
+        return await WaitAsync(client, callback, timeout, idleTimeout, TimeProvider.System, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    public static async Task<Response<T1, T2, T3>> Wait<T, T1, T2, T3>(this IRequestClient<T> client,
-        Func<IRequestClient<T>, Task<Response<T1, T2, T3>>> callback, TimeSpan? timeout, TimeSpan? idleTimeout, TimeProvider timeProvider)
+    public static async Task<Response<T1, T2, T3>> WaitAsync<T, T1, T2, T3>(this IRequestClient<T> client,
+        Func<IRequestClient<T>, Task<Response<T1, T2, T3>>> callback, TimeSpan? timeout, TimeSpan? idleTimeout, TimeProvider timeProvider, CancellationToken cancellationToken = default)
         where T : class
         where T1 : class
         where T2 : class
         where T3 : class
     {
-        ArgumentNullException.ThrowIfNull(client);
+        cancellationToken.ThrowIfCancellationRequested(); ArgumentNullException.ThrowIfNull(client);
         if (callback == null)
             throw new ArgumentNullException(nameof(callback));
         ArgumentNullException.ThrowIfNull(timeProvider);

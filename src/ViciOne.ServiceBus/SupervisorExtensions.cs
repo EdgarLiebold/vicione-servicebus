@@ -122,15 +122,19 @@ public static class SupervisorExtensions
 
     /// <summary>
     /// Starts asynchronous agent creation for a caller that owns the supplied async context rather
-    /// than the mirror task returned by <see cref="CreateAgent{T,TAgent}"/>. The mirror outcome is
+    /// than the mirror task returned by <see cref="CreateAgentAsync{T,TAgent}"/>. The mirror outcome is
     /// observed here; creation cancellation and failure are transferred to <paramref name="asyncContext"/>.
     /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="supervisor">The supervisor used by the operation.</param>
+    /// <param name="agentFactory">The agent factory used by the operation.</param>
+    /// <param name="asyncContext">The async context used by the operation.</param>
     public static void StartAgent<T, TAgent>(this ISupervisor<T> supervisor, IAsyncPipeContextAgent<TAgent> asyncContext,
         Func<T, CancellationToken, Task<TAgent>> agentFactory, CancellationToken cancellationToken)
         where T : class, PipeContext
         where TAgent : class, PipeContext
     {
-        Task<TAgent> creationTask = supervisor.CreateAgent(asyncContext, agentFactory, cancellationToken);
+        Task<TAgent> creationTask = supervisor.CreateAgentAsync(asyncContext, agentFactory, cancellationToken);
 
         creationTask.GetAwaiter().OnCompleted(() =>
         {
@@ -146,18 +150,18 @@ public static class SupervisorExtensions
         });
     }
 
-    public static async Task<TAgent> CreateAgent<T, TAgent>(this ISupervisor<T> supervisor, IAsyncPipeContextAgent<TAgent> asyncContext,
+    public static async Task<TAgent> CreateAgentAsync<T, TAgent>(this ISupervisor<T> supervisor, IAsyncPipeContextAgent<TAgent> asyncContext,
         Func<T, CancellationToken, Task<TAgent>> agentFactory, CancellationToken cancellationToken)
         where T : class, PipeContext
         where TAgent : class, PipeContext
     {
         var createAgentPipe = new CreateAgentPipe<T, TAgent>(asyncContext, agentFactory, cancellationToken);
 
-        var supervisorTask = supervisor.Send(createAgentPipe, cancellationToken);
+        var supervisorTask = supervisor.SendAsync(createAgentPipe, cancellationToken);
 
         await Task.WhenAny(supervisorTask, asyncContext.Context).ConfigureAwait(false);
 
-        async Task HandleSupervisorTask()
+        async Task HandleSupervisorTaskAsync()
         {
             try
             {
@@ -165,17 +169,17 @@ public static class SupervisorExtensions
             }
             catch (OperationCanceledException)
             {
-                await asyncContext.CreateCanceled().ConfigureAwait(false);
+                await asyncContext.CreateCanceledAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             catch (Exception exception)
             {
-                await asyncContext.CreateFaulted(exception).ConfigureAwait(false);
+                await asyncContext.CreateFaultedAsync(exception, cancellationToken: cancellationToken).ConfigureAwait(false);
             }
         }
 
         // The bridge catches every supervisor outcome and transfers it to asyncContext. It may
         // outlive context creation because supervisor.Send remains active until the agent stops.
-        _ = HandleSupervisorTask();
+        _ = HandleSupervisorTaskAsync();
 
         return await asyncContext.Context.ConfigureAwait(false);
     }
@@ -198,23 +202,23 @@ public static class SupervisorExtensions
             _cancellationToken = cancellationToken;
         }
 
-        public async Task Send(T context)
+        public async Task SendAsync(T context)
         {
             try
             {
                 var agent = await _agentFactory(context, _cancellationToken).ConfigureAwait(false);
 
-                await _asyncContext.Created(agent).ConfigureAwait(false);
+                await _asyncContext.CreatedAsync(agent).ConfigureAwait(false);
 
                 await _asyncContext.Completed.ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
-                await _asyncContext.CreateCanceled().ConfigureAwait(false);
+                await _asyncContext.CreateCanceledAsync().ConfigureAwait(false);
             }
             catch (Exception exception)
             {
-                await _asyncContext.CreateFaulted(exception).ConfigureAwait(false);
+                await _asyncContext.CreateFaultedAsync(exception).ConfigureAwait(false);
             }
         }
 

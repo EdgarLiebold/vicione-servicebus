@@ -16,7 +16,7 @@ public interface IServiceBusHost :
     /// <param name="subscriptionName">The subscription name for this endpoint</param>
     /// <param name="configure">Configuration callback for the endpoint</param>
     /// <returns></returns>
-    HostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(string subscriptionName, Action<IServiceBusSubscriptionEndpointConfigurator> configure = null)
+    HostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(string subscriptionName, Action<IServiceBusSubscriptionEndpointConfigurator>? configure = null)
         where T : class;
 
     /// <summary>
@@ -27,5 +27,5 @@ public interface IServiceBusHost :
     /// <param name="configure">Configuration callback for the endpoint</param>
     /// <returns></returns>
     HostReceiveEndpointHandle ConnectSubscriptionEndpoint(string subscriptionName, string topicName,
-        Action<IServiceBusSubscriptionEndpointConfigurator> configure = null);
+        Action<IServiceBusSubscriptionEndpointConfigurator>? configure = null);
 }

@@ -32,11 +32,12 @@ public class RabbitMqBrokerTopology :
                 exchange.Durable,
                 exchange.AutoDelete
             });
-            foreach (KeyValuePair<string, object> argument in exchange.ExchangeArguments)
+            foreach (KeyValuePair<string, object?> argument in exchange.ExchangeArguments)
             {
                 var argumentScope = exchangeScope.CreateScope("argument");
                 argumentScope.Add("key", argument.Key);
-                argumentScope.Add("value", argument.Value);
+                if (argument.Value != null)
+                    argumentScope.Add("value", argument.Value);
             }
         }
 
@@ -50,11 +51,12 @@ public class RabbitMqBrokerTopology :
                 queue.AutoDelete,
                 queue.Exclusive
             });
-            foreach (KeyValuePair<string, object> argument in queue.QueueArguments)
+            foreach (KeyValuePair<string, object?> argument in queue.QueueArguments)
             {
                 var argumentScope = exchangeScope.CreateScope("argument");
                 argumentScope.Add("key", argument.Key);
-                argumentScope.Add("value", argument.Value);
+                if (argument.Value != null)
+                    argumentScope.Add("value", argument.Value);
             }
         }
 
@@ -67,11 +69,12 @@ public class RabbitMqBrokerTopology :
                 Destination = binding.Destination.ExchangeName,
                 binding.RoutingKey
             });
-            foreach (KeyValuePair<string, object> argument in binding.Arguments)
+            foreach (KeyValuePair<string, object?> argument in binding.Arguments)
             {
                 var argumentScope = exchangeScope.CreateScope("argument");
                 argumentScope.Add("key", argument.Key);
-                argumentScope.Add("value", argument.Value);
+                if (argument.Value != null)
+                    argumentScope.Add("value", argument.Value);
             }
         }
 
@@ -84,11 +87,12 @@ public class RabbitMqBrokerTopology :
                 Destination = binding.Destination.QueueName,
                 binding.RoutingKey
             });
-            foreach (KeyValuePair<string, object> argument in binding.Arguments)
+            foreach (KeyValuePair<string, object?> argument in binding.Arguments)
             {
                 var argumentScope = exchangeScope.CreateScope("argument");
                 argumentScope.Add("key", argument.Key);
-                argumentScope.Add("value", argument.Value);
+                if (argument.Value != null)
+                    argumentScope.Add("value", argument.Value);
             }
         }
     }

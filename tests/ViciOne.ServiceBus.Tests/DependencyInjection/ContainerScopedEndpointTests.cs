@@ -12,13 +12,13 @@ public sealed class ContainerScopedEndpointTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-ROOT-ENDPOINTS", "publish-and-send-proxies-work-from-root-provider")]
-    public async Task RootProviderEndpoints_PublishAndSendThroughTheStartedBus()
+    public async Task RootProviderEndpoints_PublishAndSendThroughTheStartedBusAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var observation = new BusScopeObservation(expected: 2);
         await using ServiceProvider provider = BuildBusProvider(observation, timeout, validateScopes: false);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
@@ -26,11 +26,10 @@ public sealed class ContainerScopedEndpointTests
             var sent = new RootSent(NewId.NextGuid());
             IPublishEndpoint publishEndpoint = provider.GetRequiredService<IPublishEndpoint>();
             ISendEndpointProvider sendEndpointProvider = provider.GetRequiredService<ISendEndpointProvider>();
-            ISendEndpoint endpoint = await sendEndpointProvider.GetSendEndpoint(
-                new Uri($"queue:{DefaultEndpointNameFormatter.Instance.Consumer<BusScopeConsumer>()}"));
+            ISendEndpoint endpoint = await sendEndpointProvider.GetSendEndpointAsync(new Uri($"queue:{DefaultEndpointNameFormatter.Instance.Consumer<BusScopeConsumer>()}"), TestContext.Current.CancellationToken);
 
-            await publishEndpoint.Publish(published, cancellationToken);
-            await endpoint.Send(sent, cancellationToken);
+            await publishEndpoint.PublishAsync(published, cancellationToken);
+            await endpoint.SendAsync(sent, cancellationToken);
             BusScopeCapture[] captures = await observation.Completed.Task.WaitAsync(timeout, cancellationToken);
 
             Assert.Contains(captures, capture => capture.CorrelationId == published.CorrelationId);
@@ -39,19 +38,19 @@ public sealed class ContainerScopedEndpointTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-SCOPED-BUS-ENDPOINTS", "publish-send-request-and-filter-scope-matrix")]
-    public async Task ScopedBusEndpoints_CarryTheExactCallerScopeThroughEveryOutboundShape()
+    public async Task ScopedBusEndpoints_CarryTheExactCallerScopeThroughEveryOutboundShapeAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var observation = new BusScopeObservation(expected: 4);
         await using ServiceProvider provider = BuildBusProvider(observation, timeout, validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
@@ -66,19 +65,18 @@ public sealed class ContainerScopedEndpointTests
             var sent = new ScopedSent(NewId.NextGuid());
             var request = new BusScopeRequest(NewId.NextGuid());
             var explicitRequest = new ExplicitBusScopeRequest(NewId.NextGuid());
-            ISendEndpoint endpoint = await sender.GetSendEndpoint(
-                new Uri($"queue:{DefaultEndpointNameFormatter.Instance.Consumer<BusScopeConsumer>()}"));
+            ISendEndpoint endpoint = await sender.GetSendEndpointAsync(new Uri($"queue:{DefaultEndpointNameFormatter.Instance.Consumer<BusScopeConsumer>()}"), TestContext.Current.CancellationToken);
 
-            await publisher.Publish(published, cancellationToken);
-            await endpoint.Send(sent, cancellationToken);
-            Response<BusScopeResponse> response = await client.GetResponse<BusScopeResponse>(
+            await publisher.PublishAsync(published, cancellationToken);
+            await endpoint.SendAsync(sent, cancellationToken);
+            Response<BusScopeResponse> response = await client.Advanced().GetResponseAsync<BusScopeResponse>(
                 request,
-                cancellationToken,
-                timeout);
-            Response<BusScopeResponse> explicitResponse = await explicitClient.GetResponse<BusScopeResponse>(
+                timeout: timeout,
+                cancellationToken: cancellationToken);
+            Response<BusScopeResponse> explicitResponse = await explicitClient.Advanced().GetResponseAsync<BusScopeResponse>(
                 explicitRequest,
-                cancellationToken,
-                timeout);
+                timeout: timeout,
+                cancellationToken: cancellationToken);
             BusScopeCapture[] captures = await observation.Completed.Task.WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(request.CorrelationId, response.Message.CorrelationId);
@@ -95,13 +93,13 @@ public sealed class ContainerScopedEndpointTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-SCOPED-MEDIATOR", "send-publish-request-and-filter-scope-matrix")]
-    public async Task ScopedMediator_CarriesTheExactCallerScopeThroughEveryOutboundShape()
+    public async Task ScopedMediator_CarriesTheExactCallerScopeThroughEveryOutboundShapeAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -114,12 +112,12 @@ public sealed class ContainerScopedEndpointTests
         var published = new MediatorPublished(NewId.NextGuid());
         var request = new MediatorScopeRequest(NewId.NextGuid());
 
-        await mediator.Send(sent, cancellationToken).WaitAsync(timeout, cancellationToken);
-        await mediator.Publish(published, cancellationToken).WaitAsync(timeout, cancellationToken);
+        await mediator.SendAsync(sent, cancellationToken).WaitAsync(timeout, cancellationToken);
+        await mediator.PublishAsync(published, cancellationToken).WaitAsync(timeout, cancellationToken);
         IRequestClient<MediatorScopeRequest> client = mediator.CreateRequestClient<MediatorScopeRequest>();
-        Response<MediatorScopeResponse> response = await client.GetResponse<MediatorScopeResponse>(
+        Response<MediatorScopeResponse> response = await client.Advanced().GetResponseAsync<MediatorScopeResponse>(
             request,
-            cancellationToken).WaitAsync(timeout, cancellationToken);
+            cancellationToken: cancellationToken).WaitAsync(timeout, cancellationToken);
         MediatorScopeCapture[] captures = await observation.Completed.Task.WaitAsync(timeout, cancellationToken);
 
         Assert.Equal(request.CorrelationId, response.Message.CorrelationId);
@@ -132,7 +130,7 @@ public sealed class ContainerScopedEndpointTests
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("REQ-VSB-CONTAINER-SCOPED-MEDIATOR", "nested-send-and-publish-preserve-both-scoped-dependencies")]
-    public async Task NestedScopedMediatorDispatch_PreservesBothDependencies(bool publish)
+    public async Task NestedScopedMediatorDispatch_PreservesBothDependenciesAsync(bool publish)
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -153,7 +151,7 @@ public sealed class ContainerScopedEndpointTests
         IScopedMediator mediator = scope.ServiceProvider.GetRequiredService<IScopedMediator>();
         var message = new CascadeMessage(NewId.NextGuid(), publish);
 
-        await mediator.Send(message, cancellationToken).WaitAsync(timeout, cancellationToken);
+        await mediator.SendAsync(message, cancellationToken).WaitAsync(timeout, cancellationToken);
         CascadeResult result = await observation.Completed.Task.WaitAsync(timeout, cancellationToken);
 
         Assert.Equal(message.CorrelationId, result.CorrelationId);
@@ -267,13 +265,13 @@ public sealed class ContainerScopedEndpointTests
     public sealed class BusPublishScopeFilter<T>(ScopeMarker marker, BusScopeObservation observation) :
         IFilter<PublishContext<T>> where T : class
     {
-        public Task Send(PublishContext<T> context, IPipe<PublishContext<T>> next)
+        public Task SendAsync(PublishContext<T> context, IPipe<PublishContext<T>> next)
         {
             if (context.Message is ScopedPublished message)
                 Record(message.CorrelationId, BusScopeOperation.Publish, context, marker, observation);
             else if (context.Message is BusScopeRequest request)
                 Record(request.CorrelationId, BusScopeOperation.Request, context, marker, observation);
-            return next.Send(context);
+            return next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("busPublishScope");
@@ -282,7 +280,7 @@ public sealed class ContainerScopedEndpointTests
     public sealed class BusSendScopeFilter<T>(ScopeMarker marker, BusScopeObservation observation) :
         IFilter<SendContext<T>> where T : class
     {
-        public Task Send(SendContext<T> context, IPipe<SendContext<T>> next)
+        public Task SendAsync(SendContext<T> context, IPipe<SendContext<T>> next)
         {
             if (context.Message is ScopedSent sent)
                 Record(sent.CorrelationId, BusScopeOperation.Send, context, marker, observation);
@@ -290,7 +288,7 @@ public sealed class ContainerScopedEndpointTests
                 Record(request.CorrelationId, BusScopeOperation.Request, context, marker, observation);
             else if (context.Message is ExplicitBusScopeRequest explicitRequest)
                 Record(explicitRequest.CorrelationId, BusScopeOperation.ExplicitRequest, context, marker, observation);
-            return next.Send(context);
+            return next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("busSendScope");
@@ -320,26 +318,26 @@ public sealed class ContainerScopedEndpointTests
 
         public BusScopeConsumer(BusScopeObservation observation) => _observation = observation;
 
-        public Task Consume(ConsumeContext<RootPublished> context)
+        public Task ConsumeAsync(ConsumeContext<RootPublished> context)
         {
             _observation.Record(new BusScopeCapture(
                 context.Message.CorrelationId, BusScopeOperation.Root, null, null, null));
             return Task.CompletedTask;
         }
 
-        public Task Consume(ConsumeContext<RootSent> context)
+        public Task ConsumeAsync(ConsumeContext<RootSent> context)
         {
             _observation.Record(new BusScopeCapture(
                 context.Message.CorrelationId, BusScopeOperation.Root, null, null, null));
             return Task.CompletedTask;
         }
 
-        public Task Consume(ConsumeContext<ScopedPublished> context) => Task.CompletedTask;
-        public Task Consume(ConsumeContext<ScopedSent> context) => Task.CompletedTask;
-        public Task Consume(ConsumeContext<BusScopeRequest> context) =>
+        public Task ConsumeAsync(ConsumeContext<ScopedPublished> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<ScopedSent> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<BusScopeRequest> context) =>
             context.RespondAsync(new BusScopeResponse(context.Message.CorrelationId));
 
-        public Task Consume(ConsumeContext<ExplicitBusScopeRequest> context) =>
+        public Task ConsumeAsync(ConsumeContext<ExplicitBusScopeRequest> context) =>
             context.RespondAsync(new BusScopeResponse(context.Message.CorrelationId));
     }
 
@@ -390,11 +388,11 @@ public sealed class ContainerScopedEndpointTests
     public sealed class MediatorPublishScopeFilter<T>(ScopeMarker marker, MediatorScopeObservation observation) :
         IFilter<PublishContext<T>> where T : class
     {
-        public Task Send(PublishContext<T> context, IPipe<PublishContext<T>> next)
+        public Task SendAsync(PublishContext<T> context, IPipe<PublishContext<T>> next)
         {
             if (context.Message is MediatorPublished message)
                 observation.RecordFilter(message.CorrelationId, MediatorScopeOperation.Publish, marker);
-            return next.Send(context);
+            return next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("mediatorPublishScope");
@@ -403,13 +401,13 @@ public sealed class ContainerScopedEndpointTests
     public sealed class MediatorSendScopeFilter<T>(ScopeMarker marker, MediatorScopeObservation observation) :
         IFilter<SendContext<T>> where T : class
     {
-        public Task Send(SendContext<T> context, IPipe<SendContext<T>> next)
+        public Task SendAsync(SendContext<T> context, IPipe<SendContext<T>> next)
         {
             if (context.Message is MediatorSent sent)
                 observation.RecordFilter(sent.CorrelationId, MediatorScopeOperation.Send, marker);
             else if (context.Message is MediatorScopeRequest request)
                 observation.RecordFilter(request.CorrelationId, MediatorScopeOperation.Request, marker);
-            return next.Send(context);
+            return next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("mediatorSendScope");
@@ -418,19 +416,19 @@ public sealed class ContainerScopedEndpointTests
     public sealed class MediatorScopeConsumer(ScopeMarker marker, MediatorScopeObservation observation) :
         IConsumer<MediatorSent>, IConsumer<MediatorPublished>, IConsumer<MediatorScopeRequest>
     {
-        public Task Consume(ConsumeContext<MediatorSent> context)
+        public Task ConsumeAsync(ConsumeContext<MediatorSent> context)
         {
             observation.RecordConsumer(context.Message.CorrelationId, marker);
             return Task.CompletedTask;
         }
 
-        public Task Consume(ConsumeContext<MediatorPublished> context)
+        public Task ConsumeAsync(ConsumeContext<MediatorPublished> context)
         {
             observation.RecordConsumer(context.Message.CorrelationId, marker);
             return Task.CompletedTask;
         }
 
-        public Task Consume(ConsumeContext<MediatorScopeRequest> context)
+        public Task ConsumeAsync(ConsumeContext<MediatorScopeRequest> context)
         {
             observation.RecordConsumer(context.Message.CorrelationId, marker);
             return context.RespondAsync(new MediatorScopeResponse(context.Message.CorrelationId));
@@ -478,14 +476,14 @@ public sealed class ContainerScopedEndpointTests
         SecondaryScopeMarker secondary,
         CascadeObservation observation) : IConsumer<CascadeMessage>
     {
-        public async Task Consume(ConsumeContext<CascadeMessage> context)
+        public async Task ConsumeAsync(ConsumeContext<CascadeMessage> context)
         {
             observation.Parent(context.Message.CorrelationId, marker, secondary);
             var leaf = new CascadeLeaf(context.Message.CorrelationId);
             if (context.Message.Publish)
-                await mediator.Publish(leaf, context.CancellationToken);
+                await mediator.PublishAsync(leaf, context.CancellationToken);
             else
-                await mediator.Send(leaf, context.CancellationToken);
+                await mediator.SendAsync(leaf, context.CancellationToken);
         }
     }
 
@@ -494,7 +492,7 @@ public sealed class ContainerScopedEndpointTests
         SecondaryScopeMarker secondary,
         CascadeObservation observation) : IConsumer<CascadeLeaf>
     {
-        public Task Consume(ConsumeContext<CascadeLeaf> context)
+        public Task ConsumeAsync(ConsumeContext<CascadeLeaf> context)
         {
             observation.Leaf(context.Message.CorrelationId, marker, secondary);
             return Task.CompletedTask;

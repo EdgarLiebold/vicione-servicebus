@@ -22,16 +22,16 @@ public class ConsumerJobHandle<T> :
     public Guid JobId => _context.JobId;
     public Task JobTask { get; }
 
-    public async Task Cancel(string? reason)
+    public async Task CancelAsync(string? reason, CancellationToken cancellationToken = default)
     {
-        if (_context.CancellationToken.IsCancellationRequested)
+        cancellationToken.ThrowIfCancellationRequested(); if (_context.CancellationToken.IsCancellationRequested)
             return;
 
         _context.Cancel(reason);
 
         try
         {
-            await JobTask.OrTimeout(_jobCancellationTimeout, _context.GetTimeProvider()).ConfigureAwait(false);
+            await JobTask.OrTimeoutAsync(_jobCancellationTimeout, _context.GetTimeProvider()).ConfigureAwait(false);
         }
         catch (OperationCanceledException)
         {

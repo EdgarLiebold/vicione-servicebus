@@ -58,7 +58,7 @@ public class BatchConsumerMessageSpecification<TConsumer, TMessage> :
 
     public Type MessageType => typeof(TMessage);
 
-    public bool TryGetMessageSpecification<TC, T>(out IConsumerMessageSpecification<TC, T> specification)
+    public bool TryGetMessageSpecification<TC, T>([NotNullWhen(true)] out IConsumerMessageSpecification<TC, T>? specification)
         where T : class
         where TC : class
     {

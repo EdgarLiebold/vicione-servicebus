@@ -33,5 +33,5 @@ public interface IReceiveEndpoint :
     /// </summary>
     /// <param name="cancellationToken">Cancel the stop operation in progress</param>
     /// <returns>An awaitable task that is completed once everything is stopped</returns>
-    Task Stop(CancellationToken cancellationToken = default);
+    Task StopAsync(CancellationToken cancellationToken = default);
 }

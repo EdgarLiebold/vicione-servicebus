@@ -9,7 +9,7 @@ public sealed class StateMachineLifecycleIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-LIFECYCLE", "correlated-topology-and-property-convention-matrix")]
-    public async Task CorrelationConventionMatrix_CreatesRunsAndFinalizesEveryInstanceExactly()
+    public async Task CorrelationConventionMatrix_CreatesRunsAndFinalizesEveryInstanceExactlyAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -18,28 +18,28 @@ public sealed class StateMachineLifecycleIntegrationTests
         ISagaStateMachineTestHarness<ConventionMachine, ConventionState> sagaHarness =
             harness.StateMachineSaga<ConventionState, ConventionMachine>(machine);
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             Guid correlatedId = NewId.NextGuid();
             Guid mappedId = NewId.NextGuid();
             Guid conventionalId = NewId.NextGuid();
 
-            await harness.InputQueueSendEndpoint.Send(new CorrelatedStart(correlatedId), cancellationToken);
-            await harness.InputQueueSendEndpoint.Send(new MappedStart(mappedId), cancellationToken);
-            await harness.InputQueueSendEndpoint.Send(new ConventionalStart(conventionalId), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new CorrelatedStart(correlatedId), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new MappedStart(mappedId), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new ConventionalStart(conventionalId), cancellationToken);
 
-            Assert.Equal(correlatedId, await sagaHarness.Exists(correlatedId, machine.Running, timeout));
-            Assert.Equal(mappedId, await sagaHarness.Exists(mappedId, machine.Running, timeout));
-            Assert.Equal(conventionalId, await sagaHarness.Exists(conventionalId, machine.Running, timeout));
+            Assert.Equal(correlatedId, await sagaHarness.ExistsAsync(correlatedId, machine.Running, timeout, TestContext.Current.CancellationToken));
+            Assert.Equal(mappedId, await sagaHarness.ExistsAsync(mappedId, machine.Running, timeout, TestContext.Current.CancellationToken));
+            Assert.Equal(conventionalId, await sagaHarness.ExistsAsync(conventionalId, machine.Running, timeout, TestContext.Current.CancellationToken));
 
-            await harness.InputQueueSendEndpoint.Send(new CorrelatedStop(correlatedId), cancellationToken);
-            await harness.InputQueueSendEndpoint.Send(new MappedStop(mappedId), cancellationToken);
-            await harness.InputQueueSendEndpoint.Send(new ConventionalStop(conventionalId), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new CorrelatedStop(correlatedId), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new MappedStop(mappedId), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new ConventionalStop(conventionalId), cancellationToken);
 
-            Assert.Equal(correlatedId, await sagaHarness.Exists(correlatedId, machine.Final, timeout));
-            Assert.Equal(mappedId, await sagaHarness.Exists(mappedId, machine.Final, timeout));
-            Assert.Equal(conventionalId, await sagaHarness.Exists(conventionalId, machine.Final, timeout));
+            Assert.Equal(correlatedId, await sagaHarness.ExistsAsync(correlatedId, machine.Final, timeout, TestContext.Current.CancellationToken));
+            Assert.Equal(mappedId, await sagaHarness.ExistsAsync(mappedId, machine.Final, timeout, TestContext.Current.CancellationToken));
+            Assert.Equal(conventionalId, await sagaHarness.ExistsAsync(conventionalId, machine.Final, timeout, TestContext.Current.CancellationToken));
 
             AssertInstance(sagaHarness.Sagas.Contains(correlatedId), CorrelationPath.Correlated, machine.Final.Name);
             AssertInstance(sagaHarness.Sagas.Contains(mappedId), CorrelationPath.MessageTopology, machine.Final.Name);
@@ -47,7 +47,7 @@ public sealed class StateMachineLifecycleIntegrationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Single(harness.Consumed.Select<CorrelatedStart>(SnapshotOnlyToken()));
@@ -60,7 +60,7 @@ public sealed class StateMachineLifecycleIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-CORRELATION", "business-key-select-id-insert-and-factory")]
-    public async Task BusinessKeyCorrelation_UsesTheFactoryAndFindsTheSameInstanceThroughFinal()
+    public async Task BusinessKeyCorrelation_UsesTheFactoryAndFindsTheSameInstanceThroughFinalAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -69,17 +69,14 @@ public sealed class StateMachineLifecycleIntegrationTests
         ISagaStateMachineTestHarness<BusinessKeyMachine, BusinessKeyState> sagaHarness =
             harness.StateMachineSaga<BusinessKeyState, BusinessKeyMachine>(machine);
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             Guid transactionId = NewId.NextGuid();
 
-            await harness.Bus.Publish(new BeginTransaction(transactionId), cancellationToken);
-            IList<Guid> active = await sagaHarness.Exists(
-                instance => instance.TransactionId == transactionId,
-                machine.Active,
-                timeout);
-            BusinessKeyState instance = sagaHarness.Sagas.Contains(Assert.Single(active));
+            await harness.Bus.PublishAsync(new BeginTransaction(transactionId), cancellationToken);
+            IList<Guid> active = await sagaHarness.ExistsAsync(instance => instance.TransactionId == transactionId, machine.Active, timeout, TestContext.Current.CancellationToken);
+            BusinessKeyState? instance = sagaHarness.Sagas.Contains(Assert.Single(active));
 
             Assert.NotNull(instance);
             Assert.Equal(transactionId, instance.CorrelationId);
@@ -87,11 +84,8 @@ public sealed class StateMachineLifecycleIntegrationTests
             Assert.Equal("factory", instance.CreatedBy);
             Assert.Equal(1, instance.BeginCount);
 
-            await harness.Bus.Publish(new CommitTransaction(transactionId), cancellationToken);
-            IList<Guid> final = await sagaHarness.Exists(
-                candidate => candidate.TransactionId == transactionId,
-                machine.Final,
-                timeout);
+            await harness.Bus.PublishAsync(new CommitTransaction(transactionId), cancellationToken);
+            IList<Guid> final = await sagaHarness.ExistsAsync(candidate => candidate.TransactionId == transactionId, machine.Final, timeout, TestContext.Current.CancellationToken);
 
             Assert.Equal(active, final);
             Assert.Equal(machine.Final.Name, instance.CurrentState);
@@ -99,13 +93,13 @@ public sealed class StateMachineLifecycleIntegrationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-LIFECYCLE", "running-final-and-initial-response-removal")]
-    public async Task CompletedInstance_IsRemovedAfterBothRunningAndInitialFinalizationPaths()
+    public async Task CompletedInstance_IsRemovedAfterBothRunningAndInitialFinalizationPathsAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -115,43 +109,44 @@ public sealed class StateMachineLifecycleIntegrationTests
         ISagaStateMachineTestHarness<RemovingMachine, RemovingState> sagaHarness =
             harness.StateMachineSaga<RemovingState, RemovingMachine>(machine, repository);
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             Guid runningId = NewId.NextGuid();
-            await harness.InputQueueSendEndpoint.Send(new RemovalStart(runningId), cancellationToken);
-            Assert.Equal(runningId, await sagaHarness.Exists(runningId, machine.Running, timeout));
-            Assert.Equal(1, sagaHarness.Sagas.Contains(runningId).StartCount);
+            await harness.InputQueueSendEndpoint.SendAsync(new RemovalStart(runningId), cancellationToken);
+            Assert.Equal(runningId, await sagaHarness.ExistsAsync(runningId, machine.Running, timeout, TestContext.Current.CancellationToken));
+            Assert.Equal(1, Assert.IsType<RemovingState>(sagaHarness.Sagas.Contains(runningId)).StartCount);
 
             Task<IReceivedMessage<RemovalStop>> stop = harness.Consumed
                 .SelectAsync<RemovalStop>(cancellationToken)
-                .First();
-            await harness.InputQueueSendEndpoint.Send(new RemovalStop(runningId), cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new RemovalStop(runningId), cancellationToken);
             Assert.Null((await stop.WaitAsync(timeout, cancellationToken)).Exception);
-            Assert.Null(await repository.Load(runningId));
+            Assert.Null(await repository.LoadAsync(runningId, TestContext.Current.CancellationToken));
 
             Guid immediateId = NewId.NextGuid();
             Task<IReceivedMessage<ImmediateRemovalRequest>> immediate = harness.Consumed
                 .SelectAsync<ImmediateRemovalRequest>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             IRequestClient<ImmediateRemovalRequest> client = harness.CreateRequestClient<ImmediateRemovalRequest>();
-            Response<ImmediateRemovalResponse> response = await client.GetResponse<ImmediateRemovalResponse>(
+            Response<ImmediateRemovalResponse> response = await client.GetResponseAsync<ImmediateRemovalResponse>(
                 new ImmediateRemovalRequest(immediateId),
                 cancellationToken);
 
             Assert.Equal(immediateId, response.Message.CorrelationId);
             Assert.Equal("removed-from-initial", response.Message.Result);
             Assert.Null((await immediate.WaitAsync(timeout, cancellationToken)).Exception);
-            Assert.Null(await repository.Load(immediateId));
+            Assert.Null(await repository.LoadAsync(immediateId, TestContext.Current.CancellationToken));
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
-    private static void AssertInstance(ConventionState instance, CorrelationPath path, string expectedState)
+    private static void AssertInstance(ConventionState? instance, CorrelationPath path, string expectedState)
     {
+        Assert.NotNull(instance);
         Assert.NotNull(instance);
         Assert.Equal(path, instance.Path);
         Assert.Equal(expectedState, instance.CurrentState);

@@ -22,10 +22,10 @@ public class PayloadFilter<TContext, TPayload> :
 
     [DebuggerNonUserCode]
     [DebuggerStepThrough]
-    public Task Send(TContext context, IPipe<TContext> next)
+    public Task SendAsync(TContext context, IPipe<TContext> next)
     {
         context.GetOrAddPayload(() => _payload);
 
-        return next.Send(context);
+        return next.SendAsync(context);
     }
 }

@@ -11,7 +11,7 @@ public class RetryConsumeContext :
     readonly ConsumeContext _context;
     readonly PendingFaultCollection _pendingFaults;
 
-    public RetryConsumeContext(ConsumeContext context, IRetryPolicy retryPolicy, RetryContext retryContext)
+    public RetryConsumeContext(ConsumeContext context, IRetryPolicy retryPolicy, RetryContext? retryContext)
         : base(context)
     {
         RetryPolicy = retryPolicy;
@@ -43,12 +43,12 @@ public class RetryConsumeContext :
         throw new InvalidOperationException("This is only supported by a derived type");
     }
 
-    public Task NotifyPendingFaults()
+    public Task NotifyPendingFaultsAsync(CancellationToken cancellationToken = default)
     {
-        return _pendingFaults.Notify(_context);
+        return _pendingFaults.NotifyAsync(_context, cancellationToken: cancellationToken);
     }
 
-    public override Task NotifyFaulted<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
+    public override Task NotifyFaultedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
     {
         if (RetryPolicy.IsHandled(exception))
         {
@@ -57,7 +57,7 @@ public class RetryConsumeContext :
             return Task.CompletedTask;
         }
 
-        return _context.NotifyFaulted(context, duration, consumerType, exception);
+        return _context.NotifyFaultedAsync(context, duration, consumerType, exception, cancellationToken: cancellationToken);
     }
 
     public RetryConsumeContext CreateNext(RetryContext retryContext)
@@ -74,22 +74,22 @@ public class RetryConsumeContext<T> :
 {
     readonly ConsumeContext<T> _context;
 
-    public RetryConsumeContext(ConsumeContext<T> context, IRetryPolicy retryPolicy, RetryContext retryContext)
-        : base(context, retryPolicy, retryContext)
+    public RetryConsumeContext(ConsumeContext<T> context, IRetryPolicy retryPolicy, RetryContext? retryContext)
+        : base(context.Advanced(), retryPolicy, retryContext)
     {
         _context = context;
     }
 
     T ConsumeContext<T>.Message => _context.Message;
 
-    public Task NotifyConsumed(TimeSpan duration, string consumerType)
+    public Task NotifyConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
     {
-        return NotifyConsumed(_context, duration, consumerType);
+        return NotifyConsumedAsync(_context, duration, consumerType, cancellationToken: cancellationToken);
     }
 
-    public Task NotifyFaulted(TimeSpan duration, string consumerType, Exception exception)
+    public Task NotifyFaultedAsync(TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
     {
-        return NotifyFaulted(_context, duration, consumerType, exception);
+        return NotifyFaultedAsync(_context, duration, consumerType, exception, cancellationToken: cancellationToken);
     }
 
     public override TContext CreateNext<TContext>(RetryContext retryContext)

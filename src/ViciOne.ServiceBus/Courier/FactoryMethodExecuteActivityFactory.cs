@@ -15,16 +15,16 @@ public class FactoryMethodExecuteActivityFactory<TActivity, TArguments> :
         _executeFactory = executeFactory;
     }
 
-    public async Task Execute(ExecuteContext<TArguments> context, IPipe<ExecuteActivityContext<TActivity, TArguments>> next)
+    public async Task ExecuteAsync(ExecuteContext<TArguments> context, IPipe<ExecuteActivityContext<TActivity, TArguments>> next, CancellationToken cancellationToken = default)
     {
-        TActivity activity = null;
+        cancellationToken.ThrowIfCancellationRequested(); TActivity? activity = null;
         try
         {
             activity = _executeFactory(context.Arguments);
 
             ExecuteActivityContext<TActivity, TArguments> activityContext = context.CreateActivityContext(activity);
 
-            await next.Send(activityContext).ConfigureAwait(false);
+            await next.SendAsync(activityContext).ConfigureAwait(false);
         }
         finally
         {

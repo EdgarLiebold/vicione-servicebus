@@ -8,7 +8,7 @@ public sealed class BindPipeSpecificationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-PIPE-CONTEXT-BINDING", "source-context-and-order")]
-    public async Task SourceContext_IsBoundBeforeTheFollowingPipeSegment()
+    public async Task SourceContext_IsBoundBeforeTheFollowingPipeSegmentAsync()
     {
         var trace = new List<string>();
         var input = new InputContext("Input");
@@ -39,7 +39,7 @@ public sealed class BindPipeSpecificationTests
             });
         });
 
-        await pipe.Send(input);
+        await pipe.SendAsync(input);
 
         Assert.Same(input, contextPipeInput);
         Assert.Same(input, followingInput);
@@ -68,12 +68,12 @@ public sealed class BindPipeSpecificationTests
 
         public Thing? CreatedContext { get; private set; }
 
-        public Task Send(InputContext context, IPipe<Thing> pipe)
+        public Task SendAsync(InputContext context, IPipe<Thing> pipe, CancellationToken cancellationToken = default)
         {
-            ReceivedInput = context;
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); ReceivedInput = context;
             CreatedContext = new Thing { Value = value };
 
-            return pipe.Send(CreatedContext);
+            return pipe.SendAsync(CreatedContext);
         }
 
         public void Probe(ProbeContext context)

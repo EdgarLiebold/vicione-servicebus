@@ -19,11 +19,11 @@ public class AsyncPipeContextPipe<TContext> :
         _pipe = pipe;
     }
 
-    public async Task Send(TContext context)
+    public async Task SendAsync(TContext context)
     {
-        await _pipe.Send(context).ConfigureAwait(false);
+        await _pipe.SendAsync(context).ConfigureAwait(false);
 
-        await _agent.Created(context).ConfigureAwait(false);
+        await _agent.CreatedAsync(context).ConfigureAwait(false);
 
         await _agent.Completed.ConfigureAwait(false);
     }

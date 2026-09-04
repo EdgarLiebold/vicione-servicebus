@@ -15,7 +15,7 @@ public abstract class InMemoryOutboxCourierContextProxy :
         _courierContext = courierContext;
     }
 
-    DateTime CourierContext.Timestamp => _courierContext.Timestamp;
+    DateTimeOffset CourierContext.Timestamp => _courierContext.Timestamp;
     TimeSpan CourierContext.Elapsed => _courierContext.Elapsed;
     Guid CourierContext.TrackingNumber => _courierContext.TrackingNumber;
     Guid CourierContext.ExecutionId => _courierContext.ExecutionId;

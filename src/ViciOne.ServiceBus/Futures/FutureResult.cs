@@ -11,7 +11,7 @@ public class FutureResult<TCommand, TResult, TInput> :
     where TResult : class
     where TInput : class
 {
-    ContextMessageFactory<BehaviorContext<FutureState, TInput>, TResult> _factory;
+    ContextMessageFactory<BehaviorContext<FutureState, TInput>, TResult> _factory = null!;
 
     public ContextMessageFactory<BehaviorContext<FutureState, TInput>, TResult> Factory
     {
@@ -24,12 +24,12 @@ public class FutureResult<TCommand, TResult, TInput> :
             yield return this.Failure("Response", "Factory", "Init or Create must be configured");
     }
 
-    public async Task SetResult(BehaviorContext<FutureState, TInput> context)
+    public async Task SetResultAsync(BehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default)
     {
         context.SetCompleted(context.Saga.CorrelationId);
 
-        var result = await context.SendMessageToSubscriptions(_factory,
-            context.Saga.HasSubscriptions() ? context.Saga.Subscriptions.ToArray() : []);
+        var result = await context.SendMessageToSubscriptionsAsync(_factory,
+            context.Saga.HasSubscriptions() ? context.Saga.Subscriptions.ToArray() : [], cancellationToken: cancellationToken);
 
         context.SetResult(context.Saga.CorrelationId, result);
     }
@@ -41,7 +41,7 @@ public class FutureResult<TCommand, TResult> :
     where TCommand : class
     where TResult : class
 {
-    ContextMessageFactory<BehaviorContext<FutureState>, TResult> _factory;
+    ContextMessageFactory<BehaviorContext<FutureState>, TResult> _factory = null!;
 
     public ContextMessageFactory<BehaviorContext<FutureState>, TResult> Factory
     {
@@ -54,12 +54,12 @@ public class FutureResult<TCommand, TResult> :
             yield return this.Failure("Response", "Factory", "Init or Create must be configured");
     }
 
-    public async Task SetResult(BehaviorContext<FutureState> context)
+    public async Task SetResultAsync(BehaviorContext<FutureState> context, CancellationToken cancellationToken = default)
     {
         context.SetCompleted(context.Saga.CorrelationId);
 
-        var result = await context.SendMessageToSubscriptions(_factory,
-            context.Saga.HasSubscriptions() ? context.Saga.Subscriptions.ToArray() : []);
+        var result = await context.SendMessageToSubscriptionsAsync(_factory,
+            context.Saga.HasSubscriptions() ? context.Saga.Subscriptions.ToArray() : [], cancellationToken: cancellationToken);
 
         context.SetResult(context.Saga.CorrelationId, result);
     }

@@ -33,6 +33,7 @@ public class SqlLockStatementProvider :
 
         _formatter = formatter;
         _modelMappings = new ConditionalWeakTable<IModel, ConcurrentDictionary<LockStatementCacheKey, SchemaTableColumnTrio>>();
+        DefaultSchema = string.Empty;
     }
 
     string DefaultSchema { get; }

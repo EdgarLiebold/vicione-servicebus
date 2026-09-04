@@ -46,7 +46,7 @@ public static class ActiveMqHostConfigurationExtensions
     /// <param name="configurator"></param>
     /// <param name="configure"></param>
     public static void ReceiveEndpoint(this IActiveMqBusFactoryConfigurator configurator,
-        Action<IActiveMqReceiveEndpointConfigurator> configure = null)
+        Action<IActiveMqReceiveEndpointConfigurator>? configure = null)
     {
         configurator.ReceiveEndpoint(new TemporaryEndpointDefinition(), DefaultEndpointNameFormatter.Instance, configure);
     }
@@ -58,7 +58,7 @@ public static class ActiveMqHostConfigurationExtensions
     /// <param name="definition"></param>
     /// <param name="configure"></param>
     public static void ReceiveEndpoint(this IActiveMqBusFactoryConfigurator configurator, IEndpointDefinition definition,
-        Action<IActiveMqReceiveEndpointConfigurator> configure = null)
+        Action<IActiveMqReceiveEndpointConfigurator>? configure = null)
     {
         configurator.ReceiveEndpoint(definition, DefaultEndpointNameFormatter.Instance, configure);
     }

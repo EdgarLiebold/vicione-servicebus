@@ -13,7 +13,7 @@ public static class DynamoDbSagaRepositoryRegistrationExtensions
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
     public static ISagaRegistrationConfigurator<T> DynamoDbRepository<T>(this ISagaRegistrationConfigurator<T> configurator,
-        Action<IDynamoDbSagaRepositoryConfigurator<T>> configure = null)
+        Action<IDynamoDbSagaRepositoryConfigurator<T>>? configure = null)
         where T : class, ISagaVersion
     {
         ArgumentNullException.ThrowIfNull(configurator);

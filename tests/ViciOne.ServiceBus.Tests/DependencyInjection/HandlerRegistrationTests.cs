@@ -20,7 +20,7 @@ public sealed class HandlerRegistrationTests
     [InlineData(MessageHandlerShape.MessageAndThreeDependencies)]
     [InlineData(MessageHandlerShape.ContextAndThreeDependencies)]
     [RequirementCoverage("REQ-VSB-DI-HANDLER", "message-and-context-overload-matrix")]
-    public async Task MessageHandlers_InvokeTheExactOverloadWithAllScopedDependencies(
+    public async Task MessageHandlers_InvokeTheExactOverloadWithAllScopedDependenciesAsync(
         MessageHandlerShape shape)
     {
         TimeSpan timeout = OperationTimeout();
@@ -29,11 +29,11 @@ public sealed class HandlerRegistrationTests
         var probe = new HandlerProbe(messageId);
         await using ServiceProvider provider = CreateServices(probe, configuration =>
             RegisterMessageHandler(configuration, shape, probe));
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
-            await harness.Bus.Publish(new HandlerMessage(messageId), cancellationToken);
+            await harness.Bus.PublishAsync(new HandlerMessage(messageId), cancellationToken);
             HandlerInvocation invocation = await probe.Completed.WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(messageId, invocation.MessageId);
@@ -43,7 +43,7 @@ public sealed class HandlerRegistrationTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
         IReceivedMessage<HandlerMessage> consumed = Assert.Single(
@@ -64,7 +64,7 @@ public sealed class HandlerRegistrationTests
     [InlineData(RequestHandlerShape.ContextAndThreeDependencies)]
     [InlineData(RequestHandlerShape.MessageWithCustomEndpoint)]
     [RequirementCoverage("REQ-VSB-DI-HANDLER", "request-response-and-custom-endpoint-overload-matrix")]
-    public async Task RequestHandlers_ReturnTheExactResponseFromTheConfiguredEndpoint(
+    public async Task RequestHandlers_ReturnTheExactResponseFromTheConfiguredEndpointAsync(
         RequestHandlerShape shape)
     {
         TimeSpan timeout = OperationTimeout();
@@ -73,7 +73,7 @@ public sealed class HandlerRegistrationTests
         var probe = new HandlerProbe(messageId);
         await using ServiceProvider provider = CreateServices(probe, configuration =>
             RegisterRequestHandler(configuration, shape, probe));
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         HandlerResponse response;
         Uri? sourceAddress;
@@ -81,7 +81,7 @@ public sealed class HandlerRegistrationTests
         try
         {
             IRequestClient<HandlerRequest> client = harness.GetRequestClient<HandlerRequest>();
-            Response<HandlerResponse> result = await client.GetResponse<HandlerResponse>(
+            Response<HandlerResponse> result = await client.GetResponseAsync<HandlerResponse>(
                 new HandlerRequest(messageId),
                 cancellationToken);
             HandlerInvocation invocation = await probe.Completed.WaitAsync(timeout, cancellationToken);
@@ -97,7 +97,7 @@ public sealed class HandlerRegistrationTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Equal(new HandlerResponse(messageId, shape.ToString()), response);
@@ -144,35 +144,37 @@ public sealed class HandlerRegistrationTests
         {
             case MessageHandlerShape.Message:
                 configuration.AddHandler<HandlerMessage>(message =>
-                    probe.Record(shape, message.MessageId));
+                    probe.RecordAsync(shape, message.MessageId));
                 break;
             case MessageHandlerShape.Context:
-                configuration.AddHandler<HandlerMessage>(context =>
-                    probe.Record(shape, context.Message.MessageId, context));
+                configuration.AddHandler<HandlerMessage>((ConsumeContext<HandlerMessage> context) =>
+                    probe.RecordAsync(shape, context.Message.MessageId, context.Advanced()));
                 break;
             case MessageHandlerShape.MessageAndOneDependency:
                 configuration.AddHandler<HandlerMessage, ScopedDependency1>((message, first) =>
-                    probe.Record(shape, message.MessageId, dependencies: [first.Id]));
+                    probe.RecordAsync(shape, message.MessageId, dependencies: [first.Id]));
                 break;
             case MessageHandlerShape.ContextAndOneDependency:
-                configuration.AddHandler<HandlerMessage, ScopedDependency1>((context, first) =>
-                    probe.Record(shape, context.Message.MessageId, context, first.Id));
+                configuration.AddHandler<HandlerMessage, ScopedDependency1>((ConsumeContext<HandlerMessage> context, ScopedDependency1 first) =>
+                    probe.RecordAsync(shape, context.Message.MessageId, context.Advanced(), first.Id));
                 break;
             case MessageHandlerShape.MessageAndTwoDependencies:
                 configuration.AddHandler<HandlerMessage, ScopedDependency1, ScopedDependency2>((message, first, second) =>
-                    probe.Record(shape, message.MessageId, dependencies: [first.Id, second.Id]));
+                    probe.RecordAsync(shape, message.MessageId, dependencies: [first.Id, second.Id]));
                 break;
             case MessageHandlerShape.ContextAndTwoDependencies:
-                configuration.AddHandler<HandlerMessage, ScopedDependency1, ScopedDependency2>((context, first, second) =>
-                    probe.Record(shape, context.Message.MessageId, context, first.Id, second.Id));
+                configuration.AddHandler<HandlerMessage, ScopedDependency1, ScopedDependency2>(
+                    (ConsumeContext<HandlerMessage> context, ScopedDependency1 first, ScopedDependency2 second) =>
+                        probe.RecordAsync(shape, context.Message.MessageId, context.Advanced(), first.Id, second.Id));
                 break;
             case MessageHandlerShape.MessageAndThreeDependencies:
                 configuration.AddHandler<HandlerMessage, ScopedDependency1, ScopedDependency2, ScopedDependency3>((message, first, second, third) =>
-                    probe.Record(shape, message.MessageId, dependencies: [first.Id, second.Id, third.Id]));
+                    probe.RecordAsync(shape, message.MessageId, dependencies: [first.Id, second.Id, third.Id]));
                 break;
             case MessageHandlerShape.ContextAndThreeDependencies:
-                configuration.AddHandler<HandlerMessage, ScopedDependency1, ScopedDependency2, ScopedDependency3>((context, first, second, third) =>
-                    probe.Record(shape, context.Message.MessageId, context, first.Id, second.Id, third.Id));
+                configuration.AddHandler<HandlerMessage, ScopedDependency1, ScopedDependency2, ScopedDependency3>(
+                    (ConsumeContext<HandlerMessage> context, ScopedDependency1 first, ScopedDependency2 second, ScopedDependency3 third) =>
+                        probe.RecordAsync(shape, context.Message.MessageId, context.Advanced(), first.Id, second.Id, third.Id));
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(shape), shape, null);
@@ -188,39 +190,42 @@ public sealed class HandlerRegistrationTests
         {
             case RequestHandlerShape.Message:
                 configuration.AddHandler<HandlerRequest, HandlerResponse>(request =>
-                    probe.Respond(shape, request.MessageId));
+                    probe.RespondAsync(shape, request.MessageId));
                 break;
             case RequestHandlerShape.Context:
-                configuration.AddHandler<HandlerRequest, HandlerResponse>(context =>
-                    probe.Respond(shape, context.Message.MessageId, context));
+                configuration.AddHandler<HandlerRequest, HandlerResponse>((ConsumeContext<HandlerRequest> context) =>
+                    probe.RespondAsync(shape, context.Message.MessageId, context.Advanced()));
                 break;
             case RequestHandlerShape.MessageAndOneDependency:
                 configuration.AddHandler<HandlerRequest, ScopedDependency1, HandlerResponse>((request, first) =>
-                    probe.Respond(shape, request.MessageId, dependencies: [first.Id]));
+                    probe.RespondAsync(shape, request.MessageId, dependencies: [first.Id]));
                 break;
             case RequestHandlerShape.ContextAndOneDependency:
-                configuration.AddHandler<HandlerRequest, ScopedDependency1, HandlerResponse>((context, first) =>
-                    probe.Respond(shape, context.Message.MessageId, context, first.Id));
+                configuration.AddHandler<HandlerRequest, ScopedDependency1, HandlerResponse>(
+                    (ConsumeContext<HandlerRequest> context, ScopedDependency1 first) =>
+                        probe.RespondAsync(shape, context.Message.MessageId, context.Advanced(), first.Id));
                 break;
             case RequestHandlerShape.MessageAndTwoDependencies:
                 configuration.AddHandler<HandlerRequest, ScopedDependency1, ScopedDependency2, HandlerResponse>((request, first, second) =>
-                    probe.Respond(shape, request.MessageId, dependencies: [first.Id, second.Id]));
+                    probe.RespondAsync(shape, request.MessageId, dependencies: [first.Id, second.Id]));
                 break;
             case RequestHandlerShape.ContextAndTwoDependencies:
-                configuration.AddHandler<HandlerRequest, ScopedDependency1, ScopedDependency2, HandlerResponse>((context, first, second) =>
-                    probe.Respond(shape, context.Message.MessageId, context, first.Id, second.Id));
+                configuration.AddHandler<HandlerRequest, ScopedDependency1, ScopedDependency2, HandlerResponse>(
+                    (ConsumeContext<HandlerRequest> context, ScopedDependency1 first, ScopedDependency2 second) =>
+                        probe.RespondAsync(shape, context.Message.MessageId, context.Advanced(), first.Id, second.Id));
                 break;
             case RequestHandlerShape.MessageAndThreeDependencies:
                 configuration.AddHandler<HandlerRequest, ScopedDependency1, ScopedDependency2, ScopedDependency3, HandlerResponse>((request, first, second, third) =>
-                    probe.Respond(shape, request.MessageId, dependencies: [first.Id, second.Id, third.Id]));
+                    probe.RespondAsync(shape, request.MessageId, dependencies: [first.Id, second.Id, third.Id]));
                 break;
             case RequestHandlerShape.ContextAndThreeDependencies:
-                configuration.AddHandler<HandlerRequest, ScopedDependency1, ScopedDependency2, ScopedDependency3, HandlerResponse>((context, first, second, third) =>
-                    probe.Respond(shape, context.Message.MessageId, context, first.Id, second.Id, third.Id));
+                configuration.AddHandler<HandlerRequest, ScopedDependency1, ScopedDependency2, ScopedDependency3, HandlerResponse>(
+                    (ConsumeContext<HandlerRequest> context, ScopedDependency1 first, ScopedDependency2 second, ScopedDependency3 third) =>
+                        probe.RespondAsync(shape, context.Message.MessageId, context.Advanced(), first.Id, second.Id, third.Id));
                 break;
             case RequestHandlerShape.MessageWithCustomEndpoint:
                 configuration.AddHandler<HandlerRequest, HandlerResponse>(request =>
-                        probe.Respond(shape, request.MessageId))
+                        probe.RespondAsync(shape, request.MessageId))
                     .Endpoint(endpoint => endpoint.Name = "native-handler-custom");
                 break;
             default:
@@ -310,7 +315,7 @@ public sealed class HandlerRegistrationTests
 
         public Task<HandlerInvocation> Completed => _completed.Task;
 
-        public Task Record<TShape>(
+        public Task RecordAsync<TShape>(
             TShape shape,
             Guid messageId,
             ConsumeContext? context = null,
@@ -321,7 +326,7 @@ public sealed class HandlerRegistrationTests
             return Task.CompletedTask;
         }
 
-        public Task<HandlerResponse> Respond<TShape>(
+        public Task<HandlerResponse> RespondAsync<TShape>(
             TShape shape,
             Guid messageId,
             ConsumeContext? context = null,

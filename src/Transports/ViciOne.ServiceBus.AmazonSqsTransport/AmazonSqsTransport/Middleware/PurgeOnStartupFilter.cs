@@ -22,20 +22,20 @@ public class PurgeOnStartupFilter :
         context.CreateFilterScope("purgeOnStartup");
     }
 
-    async Task IFilter<ClientContext>.Send(ClientContext context, IPipe<ClientContext> next)
+    async Task IFilter<ClientContext>.SendAsync(ClientContext context, IPipe<ClientContext> next)
     {
-        await PurgeIfRequested(context).ConfigureAwait(false);
+        await PurgeIfRequestedAsync(context).ConfigureAwait(false);
 
-        await next.Send(context).ConfigureAwait(false);
+        await next.SendAsync(context).ConfigureAwait(false);
     }
 
-    internal async Task PurgeIfRequested(ClientContext context)
+    internal async Task PurgeIfRequestedAsync(ClientContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
 
         Task purgeTask;
         lock (_lock)
-            purgeTask = _purgeTask ??= Purge(context);
+            purgeTask = _purgeTask ??= PurgeAsync(context);
 
         try
         {
@@ -53,9 +53,9 @@ public class PurgeOnStartupFilter :
         }
     }
 
-    async Task Purge(ClientContext context)
+    async Task PurgeAsync(ClientContext context)
     {
-        await context.PurgeQueue(_queueName, context.CancellationToken).ConfigureAwait(false);
+        await context.PurgeQueueAsync(_queueName, context.CancellationToken).ConfigureAwait(false);
 
         LogContext.Debug?.Log("Purged queue {QueueName}", _queueName);
     }

@@ -34,7 +34,7 @@ public class DecimalTypeConverter :
         return true;
     }
 
-    public bool TryConvert(object input, out decimal result)
+    public bool TryConvert(object? input, out decimal result)
     {
         if (input != null)
         {
@@ -58,7 +58,7 @@ public class DecimalTypeConverter :
         return true;
     }
 
-    public bool TryConvert(string input, out decimal result)
+    public bool TryConvert(string? input, out decimal result)
     {
         return decimal.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out result);
     }

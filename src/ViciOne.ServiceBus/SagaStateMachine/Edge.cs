@@ -23,7 +23,7 @@ public class Edge :
 
     public string DebuggerDisplay => ToString();
 
-    public bool Equals(Edge other)
+    public bool Equals(Edge? other)
     {
         if (ReferenceEquals(null, other))
             return false;
@@ -32,7 +32,7 @@ public class Edge :
         return Equals(To, other.To) && Equals(From, other.From) && string.Equals(Title, other.Title);
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (ReferenceEquals(null, obj))
             return false;

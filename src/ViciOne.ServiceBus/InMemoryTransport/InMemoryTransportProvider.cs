@@ -27,9 +27,9 @@ public sealed class InMemoryTransportProvider :
 
     public IMessageFabric<InMemoryTransportContext, InMemoryTransportMessage> MessageFabric => _messageFabric;
 
-    public async Task<ISendTransport> CreateSendTransport(ReceiveEndpointContext receiveEndpointContext, Uri address)
+    public async Task<ISendTransport> CreateSendTransportAsync(ReceiveEndpointContext receiveEndpointContext, Uri address, CancellationToken cancellationToken = default)
     {
-        LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
+        cancellationToken.ThrowIfCancellationRequested(); LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
 
         var endpointAddress = new InMemoryEndpointAddress(_hostConfiguration.HostAddress, address);
 
@@ -47,14 +47,14 @@ public sealed class InMemoryTransportProvider :
         return new InMemoryEndpointAddress(_hostConfiguration.HostAddress, address);
     }
 
-    public Task<ISendTransport> CreatePublishTransport<T>(ReceiveEndpointContext receiveEndpointContext, Uri publishAddress)
+    public Task<ISendTransport> CreatePublishTransportAsync<T>(ReceiveEndpointContext receiveEndpointContext, Uri publishAddress, CancellationToken cancellationToken = default)
         where T : class
     {
         IInMemoryMessagePublishTopologyConfigurator<T> publishTopology = _topologyConfiguration.Publish.GetMessageTopology<T>();
 
         ApplyTopologyToMessageFabric(publishTopology);
 
-        return CreateSendTransport(receiveEndpointContext, publishAddress);
+        return CreateSendTransportAsync(receiveEndpointContext, publishAddress, cancellationToken: cancellationToken);
     }
 
     public void Probe(ProbeContext context)
@@ -62,11 +62,11 @@ public sealed class InMemoryTransportProvider :
         _messageFabric.Probe(context);
     }
 
-    protected override async Task StopAgent(StopContext context)
+    protected override async Task StopAgentAsync(StopContext context)
     {
-        await base.StopAgent(context).ConfigureAwait(false);
+        await base.StopAgentAsync(context).ConfigureAwait(false);
 
-        await _messageFabric.Stop(context).ConfigureAwait(false);
+        await _messageFabric.StopAsync(context).ConfigureAwait(false);
     }
 
     void ApplyTopologyToMessageFabric<T>(IInMemoryMessagePublishTopology<T> publishTopology)

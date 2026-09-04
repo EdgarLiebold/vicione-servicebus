@@ -49,7 +49,7 @@ public class EntityPropertyConverter<TEntity, TProperty> :
         if (propertyValue is null)
             return;
 
-        if (_fromEntity.TryConvert(propertyValue, out var entityProperty))
+        if (_fromEntity.TryConvert(propertyValue, out var entityProperty) && entityProperty != null)
         {
             entityProperties.Add(_name, entityProperty);
             return;

@@ -28,9 +28,9 @@ public class EventHubProducerProvider :
         return _cache.DisposeAsync();
     }
 
-    public Task<IEventHubProducer> GetProducer(Uri address)
+    public Task<IEventHubProducer> GetProducerAsync(Uri address, CancellationToken cancellationToken = default)
     {
-        return _cache.GetProducer(address, CreateProducer);
+        return _cache.GetProducerAsync(address, CreateProducerAsync, cancellationToken: cancellationToken);
     }
 
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
@@ -38,7 +38,7 @@ public class EventHubProducerProvider :
         return _sendObservable.Connect(observer);
     }
 
-    Task<IEventHubProducer> CreateProducer(Uri address)
+    Task<IEventHubProducer> CreateProducerAsync(Uri address)
     {
         var topicAddress = NormalizeAddress(_busInstance.HostConfiguration.HostAddress, address);
         var transportContext = _hostConfiguration.CreateSendTransportContext(topicAddress.EventHubName, _busInstance);

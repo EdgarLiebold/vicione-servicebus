@@ -10,7 +10,7 @@ public sealed class ResourceCacheConcurrencyTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-ENDPOINT-CACHE-SINGLE-FLIGHT", "concurrent-get-or-add")]
-    public async Task ConcurrentGetOrAdd_ExecutesOnlyTheWinningFactory()
+    public async Task ConcurrentGetOrAdd_ExecutesOnlyTheWinningFactoryAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, CacheValue> index = cache.AddIndex("id", value => value.Id);
@@ -58,7 +58,7 @@ public sealed class ResourceCacheConcurrencyTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-NODE-VALUE-FACTORY", "pending-value-identity")]
-    public async Task PendingPlainReadAndFactoryWaiter_ReceiveTheSameCommittedInstance()
+    public async Task PendingPlainReadAndFactoryWaiter_ReceiveTheSameCommittedInstanceAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, CacheValue> index = cache.AddIndex("id", value => value.Id);
@@ -90,7 +90,7 @@ public sealed class ResourceCacheConcurrencyTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-NODE-VALUE-FACTORY", "lone-fault")]
-    public async Task FaultedFactory_PropagatesTheExactFailureToEveryCurrentWaiter()
+    public async Task FaultedFactory_PropagatesTheExactFailureToEveryCurrentWaiterAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, CacheValue> index = cache.AddIndex("id", value => value.Id);
@@ -122,7 +122,7 @@ public sealed class ResourceCacheConcurrencyTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-INDEX-FACTORY", "fault-removal")]
-    public async Task FaultedFactory_RemovesItsReservationAndLeavesNoIndexedValue()
+    public async Task FaultedFactory_RemovesItsReservationAndLeavesNoIndexedValueAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, CacheValue> index = cache.AddIndex("id", value => value.Id);
@@ -144,7 +144,7 @@ public sealed class ResourceCacheConcurrencyTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-NODE-VALUE-FACTORY", "fault-fallback")]
-    public async Task FailedCreation_DoesNotPoisonTheNextHealthyCreation()
+    public async Task FailedCreation_DoesNotPoisonTheNextHealthyCreationAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, CacheValue> index = cache.AddIndex("id", value => value.Id);
@@ -166,7 +166,7 @@ public sealed class ResourceCacheConcurrencyTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-INDEX-FACTORY", "pending-fallback")]
-    public async Task WaiterOnFailedPendingCreation_CanRetryWithAHealthyFactory()
+    public async Task WaiterOnFailedPendingCreation_CanRetryWithAHealthyFactoryAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, CacheValue> index = cache.AddIndex("id", value => value.Id);
@@ -195,7 +195,7 @@ public sealed class ResourceCacheConcurrencyTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ENDPOINT-CACHE-FAULT-RECOVERY", "faulted-entry-removed")]
-    public async Task FactoryFailure_LeavesTheKeyMissingAndTheCacheEmpty()
+    public async Task FactoryFailure_LeavesTheKeyMissingAndTheCacheEmptyAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, CacheValue> index = cache.AddIndex("id", value => value.Id);
@@ -211,7 +211,7 @@ public sealed class ResourceCacheConcurrencyTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ENDPOINT-CACHE-FAULT-RECOVERY", "pending-fallback")]
-    public async Task FailedPendingGeneration_IsReplacedByOneSharedHealthyGeneration()
+    public async Task FailedPendingGeneration_IsReplacedByOneSharedHealthyGenerationAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, CacheValue> index = cache.AddIndex("id", value => value.Id);
@@ -239,7 +239,7 @@ public sealed class ResourceCacheConcurrencyTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ENDPOINT-CACHE-FAULT-RECOVERY", "consecutive-faults")]
-    public async Task ConsecutiveFailures_DoNotPoisonALaterHealthyCreation()
+    public async Task ConsecutiveFailures_DoNotPoisonALaterHealthyCreationAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, CacheValue> index = cache.AddIndex("id", value => value.Id);
@@ -260,7 +260,7 @@ public sealed class ResourceCacheConcurrencyTests
     }
 
     [Fact]
-    public async Task CallerCancellation_CancelsOnlyThatWaiterAndNotSharedCreation()
+    public async Task CallerCancellation_CancelsOnlyThatWaiterAndNotSharedCreationAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, CacheValue> index = cache.AddIndex("id", value => value.Id);
@@ -295,7 +295,7 @@ public sealed class ResourceCacheConcurrencyTests
     }
 
     [Fact]
-    public async Task CapacityOwnedByPendingCreation_BackpressuresAnotherKeyWithoutExceedingTheBound()
+    public async Task CapacityOwnedByPendingCreation_BackpressuresAnotherKeyWithoutExceedingTheBoundAsync()
     {
         await using var cache = CreateCache(capacity: 1);
         IResourceCacheIndex<string, CacheValue> index = cache.AddIndex("id", value => value.Id);
@@ -332,7 +332,7 @@ public sealed class ResourceCacheConcurrencyTests
     }
 
     [Fact]
-    public async Task ClearAsync_CancelsPendingOwnershipAndAllowsImmediateKeyReuse()
+    public async Task ClearAsync_CancelsPendingOwnershipAndAllowsImmediateKeyReuseAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, CacheValue> index = cache.AddIndex("id", value => value.Id);
@@ -356,7 +356,7 @@ public sealed class ResourceCacheConcurrencyTests
     }
 
     [Fact]
-    public async Task IndexAddedDuringCreation_IsPopulatedBeforeTheResourceBecomesObservable()
+    public async Task IndexAddedDuringCreation_IsPopulatedBeforeTheResourceBecomesObservableAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, CacheValue> idIndex = cache.AddIndex("id", value => value.Id);

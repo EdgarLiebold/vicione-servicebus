@@ -20,12 +20,12 @@ public class InMemoryOutboxMessageRepository
         _timeProvider = timeProvider ?? TimeProvider.System;
     }
 
-    public Task MarkInUse(CancellationToken cancellationToken)
+    public Task MarkInUseAsync(CancellationToken cancellationToken)
     {
         return _inUse.WaitAsync(cancellationToken);
     }
 
-    public async Task<InMemoryInboxMessage> Lock(Guid messageId, Guid consumerId, CancellationToken cancellationToken)
+    public async Task<InMemoryInboxMessage> LockAsync(Guid messageId, Guid consumerId, CancellationToken cancellationToken)
     {
         var key = new InMemoryInboxMessageKey(messageId, consumerId);
 
@@ -35,7 +35,7 @@ public class InMemoryOutboxMessageRepository
             ReceiveCount = 0
         });
 
-        await existing.MarkInUse(cancellationToken).ConfigureAwait(false);
+        await existing.MarkInUseAsync(cancellationToken).ConfigureAwait(false);
 
         return existing;
     }

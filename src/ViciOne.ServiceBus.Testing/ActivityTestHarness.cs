@@ -10,6 +10,8 @@ public class ActivityTestHarness<TActivity, TArguments, TLog>
     readonly IActivityFactory<TActivity, TArguments, TLog> _activityFactory;
     readonly Action<ICompensateActivityConfigurator<TActivity, TLog>> _configureCompensate;
     readonly Action<IExecuteActivityConfigurator<TActivity, TArguments>> _configureExecute;
+    Uri? _compensateAddress;
+    Uri? _executeAddress;
 
     public ActivityTestHarness(BusTestHarness testHarness, IActivityFactory<TActivity, TArguments, TLog> activityFactory,
         Action<IExecuteActivityConfigurator<TActivity, TArguments>> configureExecute,
@@ -29,12 +31,12 @@ public class ActivityTestHarness<TActivity, TArguments, TLog>
 
     public string ExecuteQueueName { get; private set; }
     public string CompensateQueueName { get; private set; }
-    public Uri CompensateAddress { get; private set; }
+    public Uri CompensateAddress => _compensateAddress ?? throw new InvalidOperationException("The activity test harness has not been configured.");
     public string Name { get; private set; }
-    public Uri ExecuteAddress { get; private set; }
+    public Uri ExecuteAddress => _executeAddress ?? throw new InvalidOperationException("The activity test harness has not been configured.");
 
-    public event Action<IReceiveEndpointConfigurator> OnConfigureExecuteReceiveEndpoint;
-    public event Action<IReceiveEndpointConfigurator> OnConfigureCompensateReceiveEndpoint;
+    public event Action<IReceiveEndpointConfigurator>? OnConfigureExecuteReceiveEndpoint;
+    public event Action<IReceiveEndpointConfigurator>? OnConfigureCompensateReceiveEndpoint;
 
     void ConfigureBus(IBusFactoryConfigurator configurator)
     {
@@ -44,7 +46,7 @@ public class ActivityTestHarness<TActivity, TArguments, TLog>
 
             x.CompensateActivityHost(_activityFactory, _configureCompensate);
 
-            CompensateAddress = x.InputAddress;
+            _compensateAddress = x.InputAddress;
         });
 
         configurator.ReceiveEndpoint(ExecuteQueueName, x =>
@@ -53,7 +55,7 @@ public class ActivityTestHarness<TActivity, TArguments, TLog>
 
             x.ExecuteActivityHost(CompensateAddress, _activityFactory, _configureExecute);
 
-            ExecuteAddress = x.InputAddress;
+            _executeAddress = x.InputAddress;
         });
     }
 

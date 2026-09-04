@@ -11,7 +11,7 @@ public sealed class ActiveMqQuartzSchedulingTests
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [RequirementCoverage("OBL-R0-BRK-0459", "quartz-scheduled-publish-reaches-consumer-exactly-once")]
-    public async Task QuartzScheduledPublish_ReachesConsumerExactlyOnce(string flavor)
+    public async Task QuartzScheduledPublish_ReachesConsumerExactlyOnceAsync(string flavor)
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(flavor, "quartz-publish");
         string inputQueue = fixture.Name("input");
@@ -37,7 +37,7 @@ public sealed class ActiveMqQuartzSchedulingTests
                 {
                     try
                     {
-                        ScheduledMessage<QuartzDelivery> result = await context.SchedulePublish(
+                        ScheduledMessage<QuartzDelivery> result = await context.Advanced().SchedulePublishAsync(
                             TimeSpan.FromSeconds(1),
                             new QuartzDelivery(context.Message.FlowId),
                             context.CancellationToken);
@@ -66,9 +66,8 @@ public sealed class ActiveMqQuartzSchedulingTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{inputQueue}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await input.Send(new QuartzTrigger(flowId), cancellationToken)
+            ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{inputQueue}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await input.SendAsync(new QuartzTrigger(flowId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             ScheduledMessage<QuartzDelivery> schedule = await scheduled.Task
@@ -93,13 +92,13 @@ public sealed class ActiveMqQuartzSchedulingTests
             Assert.Equal(3, receives.CompletedCount);
             Assert.Equal(
                 new ActiveMqBroker.BrokerQueueStatistics(1, 1, 0, 0, 0),
-                await fixture.GetQueueStatistics(inputQueue, cancellationToken));
+                await fixture.GetQueueStatisticsAsync(inputQueue, cancellationToken));
             Assert.Equal(
                 new ActiveMqBroker.BrokerQueueStatistics(1, 1, 0, 0, 0),
-                await fixture.GetQueueStatistics(schedulerQueue, cancellationToken));
+                await fixture.GetQueueStatisticsAsync(schedulerQueue, cancellationToken));
             Assert.Equal(
                 new ActiveMqBroker.BrokerQueueStatistics(1, 1, 0, 0, 0),
-                await fixture.GetQueueStatistics(deliveryQueue, cancellationToken));
+                await fixture.GetQueueStatisticsAsync(deliveryQueue, cancellationToken));
         }
         finally
         {

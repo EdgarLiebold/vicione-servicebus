@@ -13,7 +13,7 @@ public sealed class MultiTestConsumerBehaviorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-MULTI-CONSUMER", "typed-and-aggregate-observations")]
-    public async Task MultipleContracts_AreRecordedInTheirTypedAndAggregateLists()
+    public async Task MultipleContracts_AreRecordedInTheirTypedAndAggregateListsAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -28,24 +28,24 @@ public sealed class MultiTestConsumerBehaviorTests
         ReceivedMessageList<SecondMessage> secondMessages = consumer.Consume<SecondMessage>();
         harness.OnConfigureInMemoryReceiveEndpoint += consumer.Configure;
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             var firstCorrelationId = NewId.NextGuid();
             var repeatedCorrelationId = NewId.NextGuid();
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.InputQueueSendEndpoint.SendAsync(
                 new FirstMessage(firstCorrelationId, "first"),
                 cancellationToken);
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.InputQueueSendEndpoint.SendAsync(
                 new FirstMessage(repeatedCorrelationId, "repeated"),
                 cancellationToken);
-            await harness.InputQueueSendEndpoint.Send(new SecondMessage("second"), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new SecondMessage("second"), cancellationToken);
 
             IReceivedMessage<FirstMessage>[] first = firstMessages
                 .Select(cancellationToken)
                 .Take(2)
                 .ToArray();
-            IReceivedMessage<SecondMessage> second = await secondMessages.SelectAsync(cancellationToken).First();
+            IReceivedMessage<SecondMessage> second = await secondMessages.SelectAsync(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             IReceivedMessage[] aggregate = consumer.Received.Select(_ => true, cancellationToken).Take(3).ToArray();
 
             Assert.Equal(
@@ -62,13 +62,13 @@ public sealed class MultiTestConsumerBehaviorTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-MULTI-CONSUMER", "intentional-fault-is-visible-to-pipeline")]
-    public async Task FaultContract_RecordsTheMessageAndFaultsTheReceivePipeline()
+    public async Task FaultContract_RecordsTheMessageAndFaultsTheReceivePipelineAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -81,17 +81,17 @@ public sealed class MultiTestConsumerBehaviorTests
         ReceivedMessageList<FaultMessage> faultMessages = consumer.Fault<FaultMessage>();
         harness.OnConfigureInMemoryReceiveEndpoint += consumer.Configure;
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(new FaultMessage("fault"), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new FaultMessage("fault"), cancellationToken);
 
             IReceivedMessage<FaultMessage> consumerObservation = await faultMessages
                 .SelectAsync(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             IReceivedMessage<FaultMessage> pipelineObservation = await harness.Consumed
                 .SelectAsync<FaultMessage>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             Assert.Equal("fault", consumerObservation.Context.Message.Value);
             Assert.Null(consumerObservation.Exception);
@@ -100,7 +100,7 @@ public sealed class MultiTestConsumerBehaviorTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 

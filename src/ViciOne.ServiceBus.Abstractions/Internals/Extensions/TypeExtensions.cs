@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -170,7 +171,7 @@ internal static class TypeExtensions
     /// <param name="type">The type</param>
     /// <param name="underlyingType">The underlying type of the nullable</param>
     /// <returns>True if the type can be null</returns>
-    public static bool IsNullable(this Type type, out Type? underlyingType)
+    public static bool IsNullable(this Type type, [NotNullWhen(true)] out Type? underlyingType)
     {
         var isNullable = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
 
@@ -253,7 +254,7 @@ internal static class TypeExtensions
     /// <param name="type"></param>
     /// <param name="nameSpace"></param>
     /// <returns></returns>
-    public static bool IsInNamespace(this Type type, string nameSpace)
+    public static bool IsInNamespace(this Type type, string? nameSpace)
     {
         var subNameSpace = nameSpace + ".";
         return type.Namespace != null && (type.Namespace.Equals(nameSpace) || type.Namespace.StartsWith(subNameSpace));

@@ -19,19 +19,19 @@ public class RabbitMqHost :
 
     public new IRabbitMqBusTopology Topology { get; }
 
-    public override HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
-        Action<IReceiveEndpointConfigurator> configureEndpoint = null)
+    public override HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
+        Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
         return ConnectReceiveEndpoint(definition, endpointNameFormatter, configureEndpoint);
     }
 
-    public override HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator> configureEndpoint = null)
+    public override HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
         return ConnectReceiveEndpoint(queueName, configureEndpoint);
     }
 
-    public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter = null,
-        Action<IRabbitMqReceiveEndpointConfigurator> configureEndpoint = null)
+    public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter = null,
+        Action<IRabbitMqReceiveEndpointConfigurator>? configureEndpoint = null)
     {
         var queueName = definition.GetEndpointName(endpointNameFormatter ?? DefaultEndpointNameFormatter.Instance);
 
@@ -42,7 +42,7 @@ public class RabbitMqHost :
         });
     }
 
-    public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IRabbitMqReceiveEndpointConfigurator> configure = null)
+    public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IRabbitMqReceiveEndpointConfigurator>? configure = null)
     {
         LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
 

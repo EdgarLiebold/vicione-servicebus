@@ -11,9 +11,9 @@ namespace ViciOne.ServiceBus.Util;
 public class TypeSet
 {
     readonly IEnumerable<AssemblyScanTypeInfo> _allTypes;
-    readonly Func<Type, bool> _filter;
+    readonly Func<Type, bool>? _filter = null!;
 
-    public TypeSet(IEnumerable<AssemblyScanTypeInfo> allTypes, Func<Type, bool> filter = null)
+    public TypeSet(IEnumerable<AssemblyScanTypeInfo> allTypes, Func<Type, bool>? filter = null)
     {
         _allTypes = allTypes;
         _filter = filter;

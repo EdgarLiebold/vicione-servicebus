@@ -18,13 +18,13 @@ public class ConsumeConcurrencyLimitFilter<TMessage> :
         _limiter = limiter;
     }
 
-    public async Task Send(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
+    public async Task SendAsync(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
     {
-        await _limiter.Wait(context.CancellationToken).ConfigureAwait(false);
+        await _limiter.WaitAsync(context.CancellationToken).ConfigureAwait(false);
 
         try
         {
-            await next.Send(context).ConfigureAwait(false);
+            await next.SendAsync(context).ConfigureAwait(false);
         }
         finally
         {

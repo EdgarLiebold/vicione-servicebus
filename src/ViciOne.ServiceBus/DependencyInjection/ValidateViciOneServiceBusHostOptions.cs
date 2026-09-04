@@ -9,7 +9,7 @@ namespace ViciOne.ServiceBus.DependencyInjection;
 public class ValidateViciOneServiceBusHostOptions :
     IValidateOptions<ViciOneServiceBusHostOptions>
 {
-    public ValidateOptionsResult Validate(string name, ViciOneServiceBusHostOptions options)
+    public ValidateOptionsResult Validate(string? name, ViciOneServiceBusHostOptions options)
     {
         ArgumentNullException.ThrowIfNull(options);
 

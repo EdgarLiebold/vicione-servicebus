@@ -18,9 +18,9 @@ public class AmazonSqsPublishTransportProvider :
         _clientContextSupervisor = context.ClientContextSupervisor;
     }
 
-    public Task<ISendTransport> GetPublishTransport<T>(Uri? publishAddress)
+    public Task<ISendTransport> GetPublishTransportAsync<T>(Uri? publishAddress, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _connectionContextSupervisor.CreatePublishTransport<T>(_context, _clientContextSupervisor);
+        return _connectionContextSupervisor.CreatePublishTransportAsync<T>(_context, _clientContextSupervisor, cancellationToken: cancellationToken);
     }
 }

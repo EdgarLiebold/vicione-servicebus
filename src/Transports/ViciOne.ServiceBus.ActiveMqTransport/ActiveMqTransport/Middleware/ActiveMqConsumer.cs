@@ -55,7 +55,7 @@ public sealed class ActiveMqConsumer :
 
             try
             {
-                await Dispatch(message.NMSMessageId, context, new ActiveMqReceiveLockContext(message)).ConfigureAwait(false);
+                await DispatchAsync(message.NMSMessageId, context, new ActiveMqReceiveLockContext(message)).ConfigureAwait(false);
             }
             catch (Exception exception)
             {
@@ -68,13 +68,13 @@ public sealed class ActiveMqConsumer :
         }, Stopping);
     }
 
-    protected override async Task ActiveAndActualAgentsCompleted(StopContext context)
+    protected override async Task ActiveAndActualAgentsCompletedAsync(StopContext context)
     {
         _messageConsumer.Stop();
         _messageConsumer.Listener -= HandleMessage;
         _messageConsumer.Start();
 
-        await base.ActiveAndActualAgentsCompleted(context).ConfigureAwait(false);
+        await base.ActiveAndActualAgentsCompletedAsync(context).ConfigureAwait(false);
 
         try
         {

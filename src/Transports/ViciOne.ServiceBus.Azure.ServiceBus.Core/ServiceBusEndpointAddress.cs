@@ -34,9 +34,13 @@ public readonly struct ServiceBusEndpointAddress
 
     public ServiceBusEndpointAddress(Uri hostAddress, Uri address, AddressType type = AddressType.Queue)
     {
-        Scheme = default;
-        Host = default;
-        Scope = default;
+        ArgumentNullException.ThrowIfNull(hostAddress);
+        ArgumentNullException.ThrowIfNull(address);
+
+        Scheme = null!;
+        Host = null!;
+        Scope = null!;
+        Name = null!;
 
         AutoDelete = default;
         Type = type;
@@ -85,6 +89,10 @@ public readonly struct ServiceBusEndpointAddress
 
     public ServiceBusEndpointAddress(Uri hostAddress, string name, TimeSpan? autoDelete = default, AddressType type = AddressType.Queue)
     {
+        ArgumentNullException.ThrowIfNull(hostAddress);
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("The Azure Service Bus entity name must not be empty.", nameof(name));
+
         ParseLeft(hostAddress, out Scheme, out Host, out Scope);
 
         Name = name;

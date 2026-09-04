@@ -25,17 +25,17 @@ public class DynamoDbDatabaseContext<TSaga> :
         _options = options ?? throw new ArgumentNullException(nameof(options));
     }
 
-    public Task Add(TSaga instance, CancellationToken cancellationToken)
+    public Task AddAsync(TSaga instance, CancellationToken cancellationToken)
     {
-        return Save(instance, cancellationToken);
+        return SaveAsync(instance, cancellationToken);
     }
 
-    public Task Insert(TSaga instance, CancellationToken cancellationToken)
+    public Task InsertAsync(TSaga instance, CancellationToken cancellationToken)
     {
-        return Save(instance, cancellationToken);
+        return SaveAsync(instance, cancellationToken);
     }
 
-    public async Task<TSaga> Load(Guid correlationId, CancellationToken cancellationToken)
+    public async Task<TSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken)
     {
         var value = await _database.LoadAsync<DynamoDbSaga>(_options.FormatSagaKey(correlationId), DynamoDbSaga.DefaultEntityType,
             _options.CreateLoadConfig(), cancellationToken).ConfigureAwait(false);
@@ -43,7 +43,7 @@ public class DynamoDbDatabaseContext<TSaga> :
         if (value == null)
             return null;
 
-        TSaga instance = JsonSerializer.Deserialize<TSaga>(value.Properties, ServiceBusMetadataJson.Options);
+        TSaga? instance = JsonSerializer.Deserialize<TSaga>(value.Properties, ServiceBusMetadataJson.Options);
         if (instance == null)
             throw new SerializationException($"The DynamoDB saga payload for {typeof(TSaga).Name} was null.");
 
@@ -59,7 +59,7 @@ public class DynamoDbDatabaseContext<TSaga> :
         return instance;
     }
 
-    public async Task Update(TSaga instance, CancellationToken cancellationToken)
+    public async Task UpdateAsync(TSaga instance, CancellationToken cancellationToken)
     {
         var expectedVersion = instance.Version;
 
@@ -88,7 +88,7 @@ public class DynamoDbDatabaseContext<TSaga> :
         }
     }
 
-    public async Task Delete(TSaga instance, CancellationToken cancellationToken)
+    public async Task DeleteAsync(TSaga instance, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(instance);
 
@@ -136,7 +136,7 @@ public class DynamoDbDatabaseContext<TSaga> :
             : (long?)null;
     }
 
-    async Task Save(TSaga instance, CancellationToken cancellationToken)
+    async Task SaveAsync(TSaga instance, CancellationToken cancellationToken)
     {
         try
         {

@@ -21,14 +21,14 @@ public abstract class ConnectionContextFactory :
     public IActivePipeContextAgent<ConnectionContext> CreateActiveContext(ISupervisor supervisor,
         PipeContextHandle<ConnectionContext> context, CancellationToken cancellationToken)
     {
-        return supervisor.AddActiveContext(context, CreateSharedConnection(context.Context, cancellationToken));
+        return supervisor.AddActiveContext(context, CreateSharedConnectionAsync(context.Context, cancellationToken));
     }
 
-    static async Task<ConnectionContext> CreateSharedConnection(Task<ConnectionContext> context, CancellationToken cancellationToken)
+    static async Task<ConnectionContext> CreateSharedConnectionAsync(Task<ConnectionContext> context, CancellationToken cancellationToken)
     {
         return context.Status == TaskStatus.RanToCompletion
             ? new SharedConnectionContext(context.Result, cancellationToken)
-            : new SharedConnectionContext(await context.OrCanceled(cancellationToken).ConfigureAwait(false), cancellationToken);
+            : new SharedConnectionContext(await context.OrCanceledAsync(cancellationToken).ConfigureAwait(false), cancellationToken);
     }
 
     protected abstract ConnectionContext CreateConnection(ITransportSupervisor<ConnectionContext> supervisor);

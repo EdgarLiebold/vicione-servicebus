@@ -13,17 +13,17 @@ public interface Consumer
     /// <summary>
     /// The virtual topic consumer
     /// </summary>
-    Queue Destination { get; }
+    Queue? Destination { get; }
 
     /// <summary>
     /// A routing key for the exchange binding
     /// </summary>
-    string Selector { get; }
+    string? Selector { get; }
 
     /// <summary>
     /// The consumer name
     /// </summary>
-    string ConsumerName { get; }
+    string? ConsumerName { get; }
 
     /// <summary>
     /// True if the consumer is shared.

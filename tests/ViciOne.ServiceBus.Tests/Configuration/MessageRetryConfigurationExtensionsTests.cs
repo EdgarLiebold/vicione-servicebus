@@ -10,7 +10,7 @@ public sealed class MessageRetryConfigurationExtensionsTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-RETRY", "endpoint-policy-owns-failure")]
-    public async Task EndpointRetry_OwnsTheFailureWithoutMultiplyingTheOuterBusBudget()
+    public async Task EndpointRetry_OwnsTheFailureWithoutMultiplyingTheOuterBusBudgetAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -34,15 +34,15 @@ public sealed class MessageRetryConfigurationExtensionsTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Task<IPublishedMessage<Fault<ObservedRetryMessage>>> faultTask = harness.Published
                 .SelectAsync<Fault<ObservedRetryMessage>>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
-            await harness.Bus.Publish(new ObservedRetryMessage(), cancellationToken);
+            await harness.Bus.PublishAsync(new ObservedRetryMessage(), cancellationToken);
             await faultTask.WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(4, observation.Count);
@@ -51,13 +51,13 @@ public sealed class MessageRetryConfigurationExtensionsTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-RETRY", "consume-context-succeeds-with-exact-attempt-sequence")]
-    public async Task ConsumerRetry_SucceedsOnTheThirdAttemptAndExposesEveryAttemptNumber()
+    public async Task ConsumerRetry_SucceedsOnTheThirdAttemptAndExposesEveryAttemptNumberAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -75,11 +75,11 @@ public sealed class MessageRetryConfigurationExtensionsTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
-            await harness.Bus.Publish(new RetryUntilThirdAttemptMessage(), cancellationToken)
+            await harness.Bus.PublishAsync(new RetryUntilThirdAttemptMessage(), cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
             await observation.Completed.Task.WaitAsync(timeout, cancellationToken);
 
@@ -88,7 +88,7 @@ public sealed class MessageRetryConfigurationExtensionsTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -96,7 +96,7 @@ public sealed class MessageRetryConfigurationExtensionsTests
     [InlineData(3)]
     [InlineData(5)]
     [RequirementCoverage("REQ-VSB-MESSAGE-RETRY", "consumer-scoped-policy-budget")]
-    public async Task ConsumerScopedRetry_AppliesOnlyTheConfiguredConsumerBudget(int retryLimit)
+    public async Task ConsumerScopedRetry_AppliesOnlyTheConfiguredConsumerBudgetAsync(int retryLimit)
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -114,15 +114,15 @@ public sealed class MessageRetryConfigurationExtensionsTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Task<IPublishedMessage<Fault<ObservedRetryMessage>>> faultTask = harness.Published
                 .SelectAsync<Fault<ObservedRetryMessage>>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
-            await harness.Bus.Publish(new ObservedRetryMessage(), cancellationToken);
+            await harness.Bus.PublishAsync(new ObservedRetryMessage(), cancellationToken);
             await faultTask.WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(retryLimit + 1, observation.Count);
@@ -131,13 +131,13 @@ public sealed class MessageRetryConfigurationExtensionsTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-RETRY", "derived-message-base-and-interface-dispatch")]
-    public async Task BusRetry_PreservesDerivedMessageDispatchThroughBaseAndInterfacePipelines()
+    public async Task BusRetry_PreservesDerivedMessageDispatchThroughBaseAndInterfacePipelinesAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -159,13 +159,13 @@ public sealed class MessageRetryConfigurationExtensionsTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Guid correlationId = Guid.Parse("7d2d63fc-b3ba-462b-9dbb-97483394f61b");
 
-            await harness.Bus.Publish(new DerivedRetryMessage(correlationId), cancellationToken);
+            await harness.Bus.PublishAsync(new DerivedRetryMessage(correlationId), cancellationToken);
             await Task.WhenAll(observation.BaseCompleted.Task, observation.InterfaceCompleted.Task)
                 .WaitAsync(timeout, cancellationToken);
 
@@ -178,13 +178,13 @@ public sealed class MessageRetryConfigurationExtensionsTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-RETRY", "disjoint-policies-keep-independent-ownership")]
-    public async Task DisjointBusPolicies_AllowOnlyThePolicyHandlingTheFailureToConsumeItsBudget()
+    public async Task DisjointBusPolicies_AllowOnlyThePolicyHandlingTheFailureToConsumeItsBudgetAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -215,15 +215,15 @@ public sealed class MessageRetryConfigurationExtensionsTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Task<IPublishedMessage<Fault<ObservedRetryMessage>>> faultTask = harness.Published
                 .SelectAsync<Fault<ObservedRetryMessage>>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
-            await harness.Bus.Publish(new ObservedRetryMessage(), cancellationToken);
+            await harness.Bus.PublishAsync(new ObservedRetryMessage(), cancellationToken);
             await faultTask.WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(6, observation.Count);
@@ -232,13 +232,13 @@ public sealed class MessageRetryConfigurationExtensionsTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-RETRY", "bus-stop-cancels-pending-retry")]
-    public async Task StoppingTheBus_CancelsAPendingRetryWithoutStartingAnotherAttempt()
+    public async Task StoppingTheBus_CancelsAPendingRetryWithoutStartingAnotherAttemptAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -260,15 +260,15 @@ public sealed class MessageRetryConfigurationExtensionsTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         var stopped = false;
 
         try
         {
-            await harness.Bus.Publish(new ObservedRetryMessage(), cancellationToken);
+            await harness.Bus.PublishAsync(new ObservedRetryMessage(), cancellationToken);
             await observation.FirstAttempt.Task.WaitAsync(timeout, cancellationToken);
 
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
             stopped = true;
 
             Assert.Equal(1, observation.Count);
@@ -277,7 +277,7 @@ public sealed class MessageRetryConfigurationExtensionsTests
         finally
         {
             if (!stopped)
-                await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+                await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -285,7 +285,7 @@ public sealed class MessageRetryConfigurationExtensionsTests
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("REQ-VSB-MESSAGE-RETRY", "none-and-default-run-once")]
-    public async Task DefaultAndExplicitNone_ExecuteTheConsumerExactlyOnce(bool configureNone)
+    public async Task DefaultAndExplicitNone_ExecuteTheConsumerExactlyOnceAsync(bool configureNone)
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -307,15 +307,15 @@ public sealed class MessageRetryConfigurationExtensionsTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Task<IPublishedMessage<Fault<ObservedRetryMessage>>> faultTask = harness.Published
                 .SelectAsync<Fault<ObservedRetryMessage>>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
-            await harness.Bus.Publish(new ObservedRetryMessage(), cancellationToken);
+            await harness.Bus.PublishAsync(new ObservedRetryMessage(), cancellationToken);
             await faultTask.WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(1, observation.Count);
@@ -324,7 +324,7 @@ public sealed class MessageRetryConfigurationExtensionsTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -360,9 +360,9 @@ public sealed class MessageRetryConfigurationExtensionsTests
 
     private sealed class ObservedRetryConsumer(RetryObservation observation) : IConsumer<ObservedRetryMessage>
     {
-        public Task Consume(ConsumeContext<ObservedRetryMessage> context)
+        public Task ConsumeAsync(ConsumeContext<ObservedRetryMessage> context)
         {
-            int count = observation.Record(context.GetRetryAttempt(), context.GetRetryCount());
+            int count = observation.Record(context.Advanced().GetRetryAttempt(), context.Advanced().GetRetryCount());
             if (observation.AlwaysFail || count == 1)
                 throw new ExpectedRetryException("retry requested");
 
@@ -373,9 +373,9 @@ public sealed class MessageRetryConfigurationExtensionsTests
     private sealed class RetryUntilThirdAttemptConsumer(SuccessfulRetryObservation observation)
         : IConsumer<RetryUntilThirdAttemptMessage>
     {
-        public Task Consume(ConsumeContext<RetryUntilThirdAttemptMessage> context)
+        public Task ConsumeAsync(ConsumeContext<RetryUntilThirdAttemptMessage> context)
         {
-            if (observation.Record(context.GetRetryAttempt(), context.GetRetryCount()) < 3)
+            if (observation.Record(context.Advanced().GetRetryAttempt(), context.Advanced().GetRetryCount()) < 3)
                 throw new ExpectedRetryException("retry until the third attempt");
 
             observation.Completed.TrySetResult(true);
@@ -493,18 +493,18 @@ public sealed class MessageRetryConfigurationExtensionsTests
         IConsumer<PolymorphicRetryBase>,
         IConsumer<IPolymorphicRetryContract>
     {
-        public Task Consume(ConsumeContext<PolymorphicRetryBase> context)
+        public Task ConsumeAsync(ConsumeContext<PolymorphicRetryBase> context)
         {
-            if (observation.RecordBase(context.Message.CorrelationId, context.GetRetryAttempt()) == 1)
+            if (observation.RecordBase(context.Message.CorrelationId, context.Advanced().GetRetryAttempt()) == 1)
                 throw new ExpectedRetryException("retry base contract");
 
             observation.BaseCompleted.TrySetResult(true);
             return Task.CompletedTask;
         }
 
-        public Task Consume(ConsumeContext<IPolymorphicRetryContract> context)
+        public Task ConsumeAsync(ConsumeContext<IPolymorphicRetryContract> context)
         {
-            if (observation.RecordInterface(context.Message.CorrelationId, context.GetRetryAttempt()) == 1)
+            if (observation.RecordInterface(context.Message.CorrelationId, context.Advanced().GetRetryAttempt()) == 1)
                 throw new ExpectedRetryException("retry interface contract");
 
             observation.InterfaceCompleted.TrySetResult(true);

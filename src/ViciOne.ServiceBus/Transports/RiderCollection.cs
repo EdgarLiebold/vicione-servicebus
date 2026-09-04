@@ -69,10 +69,10 @@ public class RiderCollection :
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException($"The {nameof(name)} must not be null or empty", nameof(name));
 
-        IRiderControl rider;
+        IRiderControl? rider;
         lock (_mutateLock)
         {
-            if (!_riders.TryGetValue(name, out rider))
+            if (!_riders.TryGetValue(name, out rider) || rider == null)
                 throw new ConfigurationException($"A rider with the key was not found: {name}");
 
             if (_handles.ContainsKey(name))
@@ -91,7 +91,7 @@ public class RiderCollection :
     {
         try
         {
-            static async Task<RiderReady> Ready(RiderHandle r, string n)
+            static async Task<RiderReady> ReadyAsync(RiderHandle r, string n)
             {
                 await r.Ready.ConfigureAwait(false);
 
@@ -100,7 +100,7 @@ public class RiderCollection :
 
             var riderHandle = rider.Start(cancellationToken);
 
-            var handle = new Handle(riderHandle, rider, Ready(riderHandle, name), () => Remove(name));
+            var handle = new Handle(riderHandle, rider, ReadyAsync(riderHandle, name), () => Remove(name));
 
             lock (_mutateLock)
                 _handles.Add(name, handle);
@@ -128,14 +128,14 @@ public class RiderCollection :
         }
     }
 
-    protected override async Task StopAgent(StopContext context)
+    protected override async Task StopAgentAsync(StopContext context)
     {
-        await StopRiders(context.CancellationToken).ConfigureAwait(false);
+        await StopRidersAsync(context.CancellationToken).ConfigureAwait(false);
 
-        await base.StopAgent(context).ConfigureAwait(false);
+        await base.StopAgentAsync(context).ConfigureAwait(false);
     }
 
-    internal async Task StopRiders(CancellationToken cancellationToken)
+    internal async Task StopRidersAsync(CancellationToken cancellationToken)
     {
         KeyValuePair<string, Handle>[] handles;
         lock (_mutateLock)

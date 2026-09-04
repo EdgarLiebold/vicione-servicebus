@@ -8,9 +8,9 @@ public class RegistrationCache<T> :
     IRegistrationCache<T>
 {
     readonly IDictionary<Type, T> _dictionary;
-    readonly Func<Type, T> _missingRegistrationFactory;
+    readonly Func<Type, T>? _missingRegistrationFactory = null!;
 
-    public RegistrationCache(Func<Type, T> missingRegistrationFactory = default)
+    public RegistrationCache(Func<Type, T>? missingRegistrationFactory = default)
     {
         _missingRegistrationFactory = missingRegistrationFactory;
         _dictionary = new Dictionary<Type, T>();
@@ -18,7 +18,7 @@ public class RegistrationCache<T> :
 
     public IEnumerable<T> Values => _dictionary.Values;
 
-    public T GetOrAdd(Type type, Func<Type, T> missingRegistrationFactory = default)
+    public T GetOrAdd(Type type, Func<Type, T>? missingRegistrationFactory = default)
     {
         lock (_dictionary)
         {

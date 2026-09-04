@@ -16,9 +16,9 @@ public class EmptyMessageData<T> :
 
     public bool HasValue => false;
 
-    public Task<T> Value => NoValue();
+    public Task<T?> Value => NoValueAsync();
 
-    static Task<T> NoValue()
+    static Task<T?> NoValueAsync()
     {
         throw new MessageDataException("The message data is empty");
     }

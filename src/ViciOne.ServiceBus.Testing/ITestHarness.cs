@@ -59,7 +59,8 @@ public interface ITestHarness :
     /// </summary>
     /// <typeparam name="T">The consumer type</typeparam>
     /// <returns></returns>
-    Task<ISendEndpoint> GetConsumerEndpoint<T>()
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<ISendEndpoint> GetConsumerEndpointAsync<T>(CancellationToken cancellationToken = default)
         where T : class, IConsumer;
 
     /// <summary>
@@ -67,7 +68,8 @@ public interface ITestHarness :
     /// </summary>
     /// <typeparam name="T">The message type</typeparam>
     /// <returns></returns>
-    Task<ISendEndpoint> GetHandlerEndpoint<T>()
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<ISendEndpoint> GetHandlerEndpointAsync<T>(CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>
@@ -91,7 +93,8 @@ public interface ITestHarness :
     /// </summary>
     /// <typeparam name="T">The saga type</typeparam>
     /// <returns></returns>
-    Task<ISendEndpoint> GetSagaEndpoint<T>()
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<ISendEndpoint> GetSagaEndpointAsync<T>(CancellationToken cancellationToken = default)
         where T : class, ISaga;
 
     /// <summary>
@@ -108,7 +111,8 @@ public interface ITestHarness :
     /// <typeparam name="T">The activity type</typeparam>
     /// <typeparam name="TArguments">The argument type</typeparam>
     /// <returns></returns>
-    Task<ISendEndpoint> GetExecuteActivityEndpoint<T, TArguments>()
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<ISendEndpoint> GetExecuteActivityEndpointAsync<T, TArguments>(CancellationToken cancellationToken = default)
         where T : class, IExecuteActivity<TArguments>
         where TArguments : class;
 
@@ -122,5 +126,5 @@ public interface ITestHarness :
         where T : class, IExecuteActivity<TArguments>
         where TArguments : class;
 
-    Task Start();
+    Task StartAsync(CancellationToken cancellationToken = default);
 }

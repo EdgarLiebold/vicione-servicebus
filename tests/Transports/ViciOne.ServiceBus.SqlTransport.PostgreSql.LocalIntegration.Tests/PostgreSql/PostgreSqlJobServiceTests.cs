@@ -14,19 +14,18 @@ public sealed class PostgreSqlJobServiceTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0070", "postgresql-native-owner")]
-    public async Task CancelJob_CancelsTheRunningConsumerAndPublishesTheReason()
+    public async Task CancelJob_CancelsTheRunningConsumerAndPublishesTheReasonAsync()
     {
         var consumer = new BlockingJobConsumer(completeOnRetry: false);
-        await using JobServiceFixture fixture = await JobServiceFixture.Start("job-cancel", consumer);
+        await using JobServiceFixture fixture = await JobServiceFixture.StartAsync("job-cancel", consumer);
         Guid jobId = NewId.NextGuid();
 
-        Guid accepted = await fixture.Submit(jobId, new PostgreSqlJob("cancel"));
-        JobExecutionSnapshot attempt = await consumer.NextAttempt(fixture);
-        await fixture.Harness.Bus.CancelJob(jobId, "operator-requested")
-            .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
-        JobCancellationSnapshot cancellation = await consumer.NextCancellation(fixture);
-        JobCanceled canceled = await fixture.Published<JobCanceled>(message => message.JobId == jobId);
-        JobSlotReleased released = await fixture.Sent<JobSlotReleased>(message => message.JobId == jobId);
+        Guid accepted = await fixture.SubmitAsync(jobId, new PostgreSqlJob("cancel"));
+        JobExecutionSnapshot attempt = await consumer.NextAttemptAsync(fixture);
+        await fixture.Harness.Bus.CancelJobAsync(jobId, "operator-requested", cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
+        JobCancellationSnapshot cancellation = await consumer.NextCancellationAsync(fixture);
+        JobCanceled canceled = await fixture.PublishedAsync<JobCanceled>(message => message.JobId == jobId);
+        JobSlotReleased released = await fixture.SentAsync<JobSlotReleased>(message => message.JobId == jobId);
 
         Assert.Equal(jobId, accepted);
         Assert.Equal(new JobExecutionSnapshot(jobId, attempt.AttemptId, 0, "cancel"), attempt);
@@ -38,20 +37,19 @@ public sealed class PostgreSqlJobServiceTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0072", "postgresql-native-owner")]
-    public async Task CancelJob_UpdatesStartedStatusToCanceledWithReason()
+    public async Task CancelJob_UpdatesStartedStatusToCanceledWithReasonAsync()
     {
         var consumer = new BlockingJobConsumer(completeOnRetry: false);
-        await using JobServiceFixture fixture = await JobServiceFixture.Start("job-status", consumer);
+        await using JobServiceFixture fixture = await JobServiceFixture.StartAsync("job-status", consumer);
         Guid jobId = NewId.NextGuid();
 
-        await fixture.Submit(jobId, new PostgreSqlJob("status"));
-        JobExecutionSnapshot attempt = await consumer.NextAttempt(fixture);
-        JobState started = await fixture.GetState(jobId);
-        await fixture.Harness.Bus.CancelJob(jobId, "status-canceled")
-            .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
-        await consumer.NextCancellation(fixture);
-        await fixture.Published<JobCanceled>(message => message.JobId == jobId);
-        JobState canceled = await fixture.GetState(jobId);
+        await fixture.SubmitAsync(jobId, new PostgreSqlJob("status"));
+        JobExecutionSnapshot attempt = await consumer.NextAttemptAsync(fixture);
+        JobState started = await fixture.GetStateAsync(jobId);
+        await fixture.Harness.Bus.CancelJobAsync(jobId, "status-canceled", cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
+        await consumer.NextCancellationAsync(fixture);
+        await fixture.PublishedAsync<JobCanceled>(message => message.JobId == jobId);
+        JobState canceled = await fixture.GetStateAsync(jobId);
 
         Assert.Equal("Started", started.CurrentState);
         Assert.Equal(0, started.LastRetryAttempt);
@@ -68,24 +66,22 @@ public sealed class PostgreSqlJobServiceTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0074", "postgresql-native-owner")]
-    public async Task RetryJob_AfterCancellationUsesANewAttemptAndCompletes()
+    public async Task RetryJob_AfterCancellationUsesANewAttemptAndCompletesAsync()
     {
         var consumer = new BlockingJobConsumer(completeOnRetry: true);
-        await using JobServiceFixture fixture = await JobServiceFixture.Start("job-retry", consumer);
+        await using JobServiceFixture fixture = await JobServiceFixture.StartAsync("job-retry", consumer);
         Guid jobId = NewId.NextGuid();
 
-        await fixture.Submit(jobId, new PostgreSqlJob("retry"));
-        JobExecutionSnapshot first = await consumer.NextAttempt(fixture);
-        await fixture.Harness.Bus.CancelJob(jobId, "retry-requested")
-            .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
-        await consumer.NextCancellation(fixture);
-        await fixture.Published<JobCanceled>(message => message.JobId == jobId);
+        await fixture.SubmitAsync(jobId, new PostgreSqlJob("retry"));
+        JobExecutionSnapshot first = await consumer.NextAttemptAsync(fixture);
+        await fixture.Harness.Bus.CancelJobAsync(jobId, "retry-requested", cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
+        await consumer.NextCancellationAsync(fixture);
+        await fixture.PublishedAsync<JobCanceled>(message => message.JobId == jobId);
 
-        await fixture.Harness.Bus.RetryJob(jobId)
-            .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
-        JobExecutionSnapshot second = await consumer.NextAttempt(fixture);
-        JobCompleted completed = await fixture.Published<JobCompleted>(message => message.JobId == jobId);
-        JobCompleted<PostgreSqlJob> typedCompleted = await fixture.Published<JobCompleted<PostgreSqlJob>>(
+        await fixture.Harness.Bus.RetryJobAsync(jobId, cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
+        JobExecutionSnapshot second = await consumer.NextAttemptAsync(fixture);
+        JobCompleted completed = await fixture.PublishedAsync<JobCompleted>(message => message.JobId == jobId);
+        JobCompleted<PostgreSqlJob> typedCompleted = await fixture.PublishedAsync<JobCompleted<PostgreSqlJob>>(
             message => message.JobId == jobId);
 
         Assert.Equal(0, first.RetryAttempt);
@@ -98,10 +94,10 @@ public sealed class PostgreSqlJobServiceTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0076", "postgresql-native-owner")]
-    public async Task CancelJob_WhileWaitingPublishesTheWaitAndCanceledTransitions()
+    public async Task CancelJob_WhileWaitingPublishesTheWaitAndCanceledTransitionsAsync()
     {
         var consumer = new BlockingJobConsumer(completeOnRetry: false);
-        await using JobServiceFixture fixture = await JobServiceFixture.Start(
+        await using JobServiceFixture fixture = await JobServiceFixture.StartAsync(
             "job-waiting",
             consumer,
             options => options.SetConcurrentJobLimit(1),
@@ -109,18 +105,17 @@ public sealed class PostgreSqlJobServiceTests
         Guid runningJobId = NewId.NextGuid();
         Guid waitingJobId = NewId.NextGuid();
 
-        await fixture.Submit(runningJobId, new PostgreSqlJob("running"));
-        JobExecutionSnapshot running = await consumer.NextAttempt(fixture);
-        await fixture.Submit(waitingJobId, new PostgreSqlJob("waiting"));
-        JobSlotWaitElapsed waited = await fixture.Sent<JobSlotWaitElapsed>(message => message.JobId == waitingJobId);
-        JobState waitingBeforeCancel = await fixture.GetState(waitingJobId);
+        await fixture.SubmitAsync(runningJobId, new PostgreSqlJob("running"));
+        JobExecutionSnapshot running = await consumer.NextAttemptAsync(fixture);
+        await fixture.SubmitAsync(waitingJobId, new PostgreSqlJob("waiting"));
+        JobSlotWaitElapsed waited = await fixture.SentAsync<JobSlotWaitElapsed>(message => message.JobId == waitingJobId);
+        JobState waitingBeforeCancel = await fixture.GetStateAsync(waitingJobId);
         Assert.Equal("WaitingForSlot", waitingBeforeCancel.CurrentState);
         Assert.Null(waitingBeforeCancel.Started);
 
-        await fixture.Harness.Bus.CancelJob(waitingJobId, "waiting-canceled")
-            .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
-        JobCanceled waitingCanceled = await fixture.Published<JobCanceled>(message => message.JobId == waitingJobId);
-        JobState waitingState = await fixture.GetState(waitingJobId);
+        await fixture.Harness.Bus.CancelJobAsync(waitingJobId, "waiting-canceled", cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
+        JobCanceled waitingCanceled = await fixture.PublishedAsync<JobCanceled>(message => message.JobId == waitingJobId);
+        JobState waitingState = await fixture.GetStateAsync(waitingJobId);
 
         Assert.Equal(runningJobId, running.JobId);
         Assert.Equal(waitingJobId, waited.JobId);
@@ -129,26 +124,25 @@ public sealed class PostgreSqlJobServiceTests
         Assert.Equal("Canceled", waitingState.CurrentState);
         Assert.Null(waitingState.Started);
 
-        await fixture.Harness.Bus.CancelJob(runningJobId, "fixture-cleanup")
-            .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
-        await consumer.NextCancellation(fixture);
-        await fixture.Published<JobCanceled>(message => message.JobId == runningJobId);
+        await fixture.Harness.Bus.CancelJobAsync(runningJobId, "fixture-cleanup", cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
+        await consumer.NextCancellationAsync(fixture);
+        await fixture.PublishedAsync<JobCanceled>(message => message.JobId == runningJobId);
     }
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0078", "postgresql-native-owner")]
-    public async Task SubmitJob_CompletesTheAcceptedLifecycle()
+    public async Task SubmitJob_CompletesTheAcceptedLifecycleAsync()
     {
         var consumer = new CompletingJobConsumer();
-        await using JobServiceFixture fixture = await JobServiceFixture.Start("job-complete", consumer);
+        await using JobServiceFixture fixture = await JobServiceFixture.StartAsync("job-complete", consumer);
         Guid jobId = NewId.NextGuid();
 
-        Guid accepted = await fixture.Submit(jobId, new PostgreSqlJob("complete"));
-        JobExecutionSnapshot execution = await consumer.NextAttempt(fixture);
-        JobSubmitted submitted = await fixture.Published<JobSubmitted>(message => message.JobId == jobId);
-        JobStarted started = await fixture.Published<JobStarted>(message => message.JobId == jobId);
-        JobCompleted completed = await fixture.Published<JobCompleted>(message => message.JobId == jobId);
-        JobState state = await fixture.GetState(jobId);
+        Guid accepted = await fixture.SubmitAsync(jobId, new PostgreSqlJob("complete"));
+        JobExecutionSnapshot execution = await consumer.NextAttemptAsync(fixture);
+        JobSubmitted submitted = await fixture.PublishedAsync<JobSubmitted>(message => message.JobId == jobId);
+        JobStarted started = await fixture.PublishedAsync<JobStarted>(message => message.JobId == jobId);
+        JobCompleted completed = await fixture.PublishedAsync<JobCompleted>(message => message.JobId == jobId);
+        JobState state = await fixture.GetStateAsync(jobId);
 
         Assert.Equal(jobId, accepted);
         Assert.Equal(jobId, submitted.JobId);
@@ -164,17 +158,17 @@ public sealed class PostgreSqlJobServiceTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0080", "postgresql-native-owner")]
-    public async Task PublishJob_GeneratesOneNonEmptyIdentityAcrossTheLifecycle()
+    public async Task PublishJob_GeneratesOneNonEmptyIdentityAcrossTheLifecycleAsync()
     {
         var consumer = new CompletingJobConsumer();
-        await using JobServiceFixture fixture = await JobServiceFixture.Start("job-generated-id", consumer);
+        await using JobServiceFixture fixture = await JobServiceFixture.StartAsync("job-generated-id", consumer);
 
-        await fixture.Harness.Bus.Publish(new PostgreSqlJob("generated"), fixture.CancellationToken)
+        await fixture.Harness.Bus.PublishAsync(new PostgreSqlJob("generated"), fixture.CancellationToken)
             .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
-        JobExecutionSnapshot execution = await consumer.NextAttempt(fixture);
-        JobSubmitted submitted = await fixture.Published<JobSubmitted>(message => message.JobId == execution.JobId);
-        JobCompleted completed = await fixture.Published<JobCompleted>(message => message.JobId == execution.JobId);
-        JobCompleted<PostgreSqlJob> typedCompleted = await fixture.Published<JobCompleted<PostgreSqlJob>>(
+        JobExecutionSnapshot execution = await consumer.NextAttemptAsync(fixture);
+        JobSubmitted submitted = await fixture.PublishedAsync<JobSubmitted>(message => message.JobId == execution.JobId);
+        JobCompleted completed = await fixture.PublishedAsync<JobCompleted>(message => message.JobId == execution.JobId);
+        JobCompleted<PostgreSqlJob> typedCompleted = await fixture.PublishedAsync<JobCompleted<PostgreSqlJob>>(
             message => message.JobId == execution.JobId);
 
         Assert.NotEqual(Guid.Empty, execution.JobId);
@@ -186,13 +180,13 @@ public sealed class PostgreSqlJobServiceTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0082", "postgresql-native-owner")]
-    public async Task GetJobState_ForUnknownIdentityReturnsNotFound()
+    public async Task GetJobState_ForUnknownIdentityReturnsNotFoundAsync()
     {
         var consumer = new CompletingJobConsumer();
-        await using JobServiceFixture fixture = await JobServiceFixture.Start("job-not-found", consumer);
+        await using JobServiceFixture fixture = await JobServiceFixture.StartAsync("job-not-found", consumer);
         Guid missingJobId = NewId.NextGuid();
 
-        JobState state = await fixture.GetState(missingJobId);
+        JobState state = await fixture.GetStateAsync(missingJobId);
 
         Assert.Equal(missingJobId, state.JobId);
         Assert.Equal("NotFound", state.CurrentState);
@@ -208,10 +202,10 @@ public sealed class PostgreSqlJobServiceTests
     {
         private readonly Channel<JobExecutionSnapshot> _attempts = Channel.CreateUnbounded<JobExecutionSnapshot>();
 
-        public Task Run(JobContext<PostgreSqlJob> context) =>
+        public Task RunAsync(JobContext<PostgreSqlJob> context) =>
             _attempts.Writer.WriteAsync(Snapshot(context), context.CancellationToken).AsTask();
 
-        public Task<JobExecutionSnapshot> NextAttempt(JobServiceFixture fixture) =>
+        public Task<JobExecutionSnapshot> NextAttemptAsync(JobServiceFixture fixture) =>
             _attempts.Reader.ReadAsync(fixture.CancellationToken).AsTask()
                 .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
     }
@@ -222,7 +216,7 @@ public sealed class PostgreSqlJobServiceTests
         private readonly Channel<JobCancellationSnapshot> _cancellations = Channel.CreateUnbounded<JobCancellationSnapshot>();
         private readonly TaskCompletionSource _never = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        public async Task Run(JobContext<PostgreSqlJob> context)
+        public async Task RunAsync(JobContext<PostgreSqlJob> context)
         {
             JobExecutionSnapshot attempt = Snapshot(context);
             await _attempts.Writer.WriteAsync(attempt, context.CancellationToken);
@@ -244,11 +238,11 @@ public sealed class PostgreSqlJobServiceTests
             }
         }
 
-        public Task<JobExecutionSnapshot> NextAttempt(JobServiceFixture fixture) =>
+        public Task<JobExecutionSnapshot> NextAttemptAsync(JobServiceFixture fixture) =>
             _attempts.Reader.ReadAsync(fixture.CancellationToken).AsTask()
                 .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
 
-        public Task<JobCancellationSnapshot> NextCancellation(JobServiceFixture fixture) =>
+        public Task<JobCancellationSnapshot> NextCancellationAsync(JobServiceFixture fixture) =>
             _cancellations.Reader.ReadAsync(fixture.CancellationToken).AsTask()
                 .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
     }
@@ -278,7 +272,7 @@ public sealed class PostgreSqlJobServiceTests
         public ITestHarness Harness { get; }
         public TimeSpan OperationTimeout => _database.OperationTimeout;
 
-        public static async Task<JobServiceFixture> Start<TConsumer>(
+        public static async Task<JobServiceFixture> StartAsync<TConsumer>(
             string purpose,
             TConsumer consumer,
             Action<JobOptions<PostgreSqlJob>>? configureJob = null,
@@ -335,7 +329,7 @@ public sealed class PostgreSqlJobServiceTests
                 });
                 try
                 {
-                    ITestHarness harness = await provider.StartTestHarness()
+                    ITestHarness harness = await provider.StartTestHarnessAsync()
                         .WaitAsync(database.OperationTimeout, cancellationToken);
                     return new JobServiceFixture(database, provider, harness);
                 }
@@ -352,44 +346,44 @@ public sealed class PostgreSqlJobServiceTests
             }
         }
 
-        public Task<Guid> Submit(Guid jobId, PostgreSqlJob job)
+        public Task<Guid> SubmitAsync(Guid jobId, PostgreSqlJob job)
         {
             IRequestClient<SubmitJob<PostgreSqlJob>> client = Harness.GetRequestClient<SubmitJob<PostgreSqlJob>>();
-            return client.SubmitJob(jobId, job, cancellationToken: CancellationToken)
+            return client.SubmitJobAsync(jobId, job, cancellationToken: CancellationToken)
                 .WaitAsync(OperationTimeout, CancellationToken);
         }
 
-        public async Task<TMessage> Published<TMessage>(Func<TMessage, bool> predicate)
+        public async Task<TMessage> PublishedAsync<TMessage>(Func<TMessage, bool> predicate)
             where TMessage : class
         {
             IPublishedMessage<TMessage> published = await Harness.Published
                 .SelectAsync<TMessage>(message => predicate(message.Context.Message), CancellationToken)
-                .First()
+                .FirstObservedAsync()
                 .WaitAsync(OperationTimeout, CancellationToken);
             return published.Context.Message;
         }
 
-        public async Task<TMessage> Sent<TMessage>(Func<TMessage, bool> predicate)
+        public async Task<TMessage> SentAsync<TMessage>(Func<TMessage, bool> predicate)
             where TMessage : class
         {
             ISentMessage<TMessage> sent = await Harness.Sent
                 .SelectAsync<TMessage>(message => predicate(message.Context.Message), CancellationToken)
-                .First()
+                .FirstObservedAsync()
                 .WaitAsync(OperationTimeout, CancellationToken);
             return sent.Context.Message;
         }
 
-        public Task<JobState> GetState(Guid jobId)
+        public Task<JobState> GetStateAsync(Guid jobId)
         {
             IRequestClient<GetJobState> client = Harness.GetRequestClient<GetJobState>();
-            return client.GetJobState(jobId).WaitAsync(OperationTimeout, CancellationToken);
+            return client.GetJobStateAsync(jobId).WaitAsync(OperationTimeout, CancellationToken);
         }
 
         public async ValueTask DisposeAsync()
         {
             try
             {
-                await Harness.Stop(CancellationToken.None)
+                await Harness.StopAsync(CancellationToken.None)
                     .WaitAsync(OperationTimeout, CancellationToken.None);
             }
             finally

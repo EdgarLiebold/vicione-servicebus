@@ -22,7 +22,7 @@ internal sealed class ConsumerConcurrencyFilter<TMessage> :
         _policy = policy ?? throw new ArgumentNullException(nameof(policy));
     }
 
-    public Task Send(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
+    public Task SendAsync(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(next);
@@ -30,7 +30,7 @@ internal sealed class ConsumerConcurrencyFilter<TMessage> :
         return _gate.ExecuteAsync(
                 context.Message,
                 (context, next),
-                static (state, _) => new ValueTask(state.next.Send(state.context)),
+                static (state, _) => new ValueTask(state.next.SendAsync(state.context)),
                 context.CancellationToken)
             .AsTask();
     }

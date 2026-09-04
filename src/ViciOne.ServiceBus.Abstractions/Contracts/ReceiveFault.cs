@@ -9,5 +9,5 @@ public interface ReceiveFault :
     /// <summary>
     /// The specified content type of the message by the transport
     /// </summary>
-    string ContentType { get; }
+    string? ContentType { get; }
 }

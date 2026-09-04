@@ -124,7 +124,7 @@ public sealed class MessageContractCatalogBuilder
                 : throw new MessageContractException(
                     $"Message contract identity '{identity}' is not registered in this ServiceBus runtime.");
 
-        public bool TryGetMessageType(MessageContractIdentity identity, out Type? messageType)
+        public bool TryGetMessageType(MessageContractIdentity identity, [NotNullWhen(true)] out Type? messageType)
             => byIdentity.TryGetValue(identity, out messageType);
     }
 }

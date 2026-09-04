@@ -19,8 +19,8 @@ public class EventHubReceiveEndpointContext :
     public EventHubReceiveEndpointContext(IEventHubHostConfiguration hostConfiguration, IBusInstance busInstance,
         IReceiveEndpointConfiguration endpointConfiguration,
         Func<EventProcessorClient> clientFactory,
-        Func<PartitionClosingEventArgs, Task> partitionClosingHandler,
-        Func<PartitionInitializingEventArgs, Task> partitionInitializingHandler)
+        Func<PartitionClosingEventArgs, Task>? partitionClosingHandler,
+        Func<PartitionInitializingEventArgs, Task>? partitionInitializingHandler)
         : base(busInstance.HostConfiguration, endpointConfiguration)
     {
         _busInstance = busInstance;

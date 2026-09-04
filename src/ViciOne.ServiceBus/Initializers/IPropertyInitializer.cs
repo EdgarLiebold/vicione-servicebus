@@ -11,7 +11,7 @@ public interface IPropertyInitializer<in TMessage, in TInput>
     where TMessage : class
     where TInput : class
 {
-    Task Apply(InitializeContext<TMessage, TInput> context);
+    Task ApplyAsync(InitializeContext<TMessage, TInput> context, CancellationToken cancellationToken = default);
 }
 
 
@@ -27,5 +27,6 @@ public interface IPropertyInitializer<in TMessage>
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    Task Apply(InitializeContext<TMessage> context);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task ApplyAsync(InitializeContext<TMessage> context, CancellationToken cancellationToken = default);
 }

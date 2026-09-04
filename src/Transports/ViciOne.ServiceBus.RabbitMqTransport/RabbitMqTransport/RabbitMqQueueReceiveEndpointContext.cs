@@ -59,7 +59,8 @@ public class RabbitMqQueueReceiveEndpointContext :
     public override void Probe(ProbeContext context)
     {
         context.Add("type", "RabbitMQ");
-        context.Add("concurrentMessageLimit", ConcurrentMessageLimit);
+        if (ConcurrentMessageLimit.HasValue)
+            context.Add("concurrentMessageLimit", ConcurrentMessageLimit.Value);
         context.Set(_configuration.Settings);
 
         var topologyScope = context.CreateScope("topology");

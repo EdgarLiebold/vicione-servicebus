@@ -24,7 +24,7 @@ public static class DependencyInjectionFilterExtensions
     /// <param name="context">Configuration registration context</param>
     /// <param name="configureMessageTypeFilter">Message type to which apply the filter</param>
     public static void UseConsumeFilter(this IConsumePipeConfigurator configurator, Type filterType, IRegistrationContext context,
-        Action<IMessageTypeFilterConfigurator> configureMessageTypeFilter)
+        Action<IMessageTypeFilterConfigurator>? configureMessageTypeFilter)
     {
         if (configurator == null)
             throw new ArgumentNullException(nameof(configurator));
@@ -87,7 +87,7 @@ public static class DependencyInjectionFilterExtensions
     /// <param name="context">Configuration registration context</param>
     /// <param name="configureMessageTypeFilter">Message type to which apply the filter</param>
     public static void UseSendFilter(this ISendPipelineConfigurator configurator, Type filterType, IRegistrationContext context,
-        Action<IMessageTypeFilterConfigurator> configureMessageTypeFilter)
+        Action<IMessageTypeFilterConfigurator>? configureMessageTypeFilter)
     {
         if (configurator == null)
             throw new ArgumentNullException(nameof(configurator));
@@ -146,7 +146,7 @@ public static class DependencyInjectionFilterExtensions
     /// <param name="context">Configuration registration context</param>
     /// <param name="configureMessageTypeFilter">Message type to which apply the filter</param>
     public static void UsePublishFilter(this IPublishPipelineConfigurator configurator, Type filterType, IRegistrationContext context,
-        Action<IMessageTypeFilterConfigurator> configureMessageTypeFilter)
+        Action<IMessageTypeFilterConfigurator>? configureMessageTypeFilter)
     {
         if (configurator == null)
             throw new ArgumentNullException(nameof(configurator));
@@ -205,7 +205,7 @@ public static class DependencyInjectionFilterExtensions
     /// <param name="context">Configuration registration context</param>
     /// <param name="configureMessageTypeFilter">Message type to which apply the filter</param>
     public static void UseExecuteActivityFilter(this IConsumePipeConfigurator configurator, Type filterType, IRegistrationContext context,
-        Action<IMessageTypeFilterConfigurator> configureMessageTypeFilter)
+        Action<IMessageTypeFilterConfigurator>? configureMessageTypeFilter)
     {
         if (configurator == null)
             throw new ArgumentNullException(nameof(configurator));
@@ -264,7 +264,7 @@ public static class DependencyInjectionFilterExtensions
     /// <param name="context">Configuration registration context</param>
     /// <param name="configureMessageTypeFilter">Message type to which apply the filter</param>
     public static void UseCompensateActivityFilter(this IConsumePipeConfigurator configurator, Type filterType, IRegistrationContext context,
-        Action<IMessageTypeFilterConfigurator> configureMessageTypeFilter)
+        Action<IMessageTypeFilterConfigurator>? configureMessageTypeFilter)
     {
         if (configurator == null)
             throw new ArgumentNullException(nameof(configurator));

@@ -34,19 +34,19 @@ public sealed class StateMachineConfigurationContractTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-DEFINITION", "inherited-state-and-event-surface-executes")]
-    public async Task DerivedMachine_InitializesAndExecutesInheritedAndDeclaredStateMembers()
+    public async Task DerivedMachine_InitializesAndExecutesInheritedAndDeclaredStateMembersAsync()
     {
         var machine = new DerivedMachine();
         var instance = new InheritedState();
 
-        await StateMachineTestExecution.Raise(machine, instance, machine.BaseStarted, new BaseStart("base"));
+        await StateMachineTestExecution.RaiseAsync(machine, instance, machine.BaseStarted, new BaseStart("base"));
 
         Assert.Equal("base", instance.Value);
         Assert.Same(machine.BaseRunning, instance.CurrentState);
         Assert.Contains(machine.BaseRunning, machine.States);
         Assert.Contains(machine.BaseStarted, machine.Events);
 
-        await StateMachineTestExecution.Raise(machine, instance, machine.DerivedStopped, new DerivedStop("derived"));
+        await StateMachineTestExecution.RaiseAsync(machine, instance, machine.DerivedStopped, new DerivedStop("derived"));
 
         Assert.Equal("base:derived", instance.Value);
         Assert.Same(machine.Final, instance.CurrentState);
@@ -72,7 +72,7 @@ public sealed class StateMachineConfigurationContractTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-CORRELATION", "fault-event-conventions-configure-without-overrides")]
-    public async Task FaultEvents_ForCorrelatedAndUncorrelatedMessagesConfigureWithoutOverrides()
+    public async Task FaultEvents_ForCorrelatedAndUncorrelatedMessagesConfigureWithoutOverridesAsync()
     {
         var machine = new FaultConventionMachine();
         var repository = new InMemorySagaRepository<FaultConventionState>();
@@ -96,7 +96,7 @@ public sealed class StateMachineConfigurationContractTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-CONFIGURATION", "observer-reports-machine-saga-and-message-contracts")]
-    public async Task StateMachineConfigurationObserver_ReportsTheExactMachineSagaAndMessageContracts()
+    public async Task StateMachineConfigurationObserver_ReportsTheExactMachineSagaAndMessageContractsAsync()
     {
         var observer = new StateMachineConfigurationRecorder();
         var machine = new ObservedMachine();
@@ -125,18 +125,18 @@ public sealed class StateMachineConfigurationContractTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-COMPOSITE", "include-initial-completes-in-initial-state")]
-    public async Task IncludeInitialComposite_FiresOnceWhileTheInstanceRemainsInInitial()
+    public async Task IncludeInitialComposite_FiresOnceWhileTheInstanceRemainsInInitialAsync()
     {
         var machine = new InitialCompositeMachine();
         var instance = new InitialCompositeState();
 
-        await StateMachineTestExecution.Raise(machine, instance, machine.First);
+        await StateMachineTestExecution.RaiseAsync(machine, instance, machine.First);
 
         Assert.Equal(1, instance.Status);
         Assert.Equal(0, instance.CompositeCount);
         Assert.Same(machine.Initial, instance.CurrentState);
 
-        await StateMachineTestExecution.Raise(machine, instance, machine.Second);
+        await StateMachineTestExecution.RaiseAsync(machine, instance, machine.Second);
 
         Assert.Equal(3, instance.Status);
         Assert.Equal(1, instance.CompositeCount);

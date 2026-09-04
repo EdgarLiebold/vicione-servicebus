@@ -27,23 +27,23 @@ public class ScopeClientContextFactory :
     IActivePipeContextAgent<ClientContext> IPipeContextFactory<ClientContext>.CreateActiveContext(ISupervisor supervisor,
         PipeContextHandle<ClientContext> context, CancellationToken cancellationToken)
     {
-        return supervisor.AddActiveContext(context, CreateSharedModel(context.Context, cancellationToken));
+        return supervisor.AddActiveContext(context, CreateSharedModelAsync(context.Context, cancellationToken));
     }
 
-    static async Task<ClientContext> CreateSharedModel(Task<ClientContext> context, CancellationToken cancellationToken)
+    static async Task<ClientContext> CreateSharedModelAsync(Task<ClientContext> context, CancellationToken cancellationToken)
     {
         return context.IsCompletedSuccessfully()
             ? new SharedClientContext(context.Result, cancellationToken)
-            : new SharedClientContext(await context.OrCanceled(cancellationToken).ConfigureAwait(false), cancellationToken);
+            : new SharedClientContext(await context.OrCanceledAsync(cancellationToken).ConfigureAwait(false), cancellationToken);
     }
 
     void CreateClientContext(IAsyncPipeContextAgent<ClientContext> asyncContext, CancellationToken cancellationToken)
     {
-        static Task<ClientContext> Create(ClientContext context, CancellationToken createCancellationToken)
+        static Task<ClientContext> CreateAsync(ClientContext context, CancellationToken createCancellationToken)
         {
             return Task.FromResult<ClientContext>(new SharedClientContext(context, createCancellationToken));
         }
 
-        _supervisor.StartAgent(asyncContext, Create, cancellationToken);
+        _supervisor.StartAgent(asyncContext, CreateAsync, cancellationToken);
     }
 }

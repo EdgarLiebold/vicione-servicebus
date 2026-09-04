@@ -13,7 +13,7 @@ public sealed class RoutingSlipArgumentIntegrationTests
     [InlineData(ArgumentShape.Null, "variable")]
     [InlineData(ArgumentShape.Default, "variable")]
     [RequirementCoverage("REQ-VSB-COURIER-ARGUMENTS", "argument-precedence-and-variable-fallback")]
-    public async Task ArgumentResolution_UsesExplicitValuesAndFallsBackForMissingNullOrDefault(
+    public async Task ArgumentResolution_UsesExplicitValuesAndFallsBackForMissingNullOrDefaultAsync(
         ArgumentShape shape,
         string expectedValue)
     {
@@ -28,7 +28,7 @@ public sealed class RoutingSlipArgumentIntegrationTests
         using var activityCompleted = new CourierMessageRecorder<RoutingSlipActivityCompleted>(1);
         completed.Configure(harness);
         activityCompleted.Configure(harness);
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
@@ -38,12 +38,12 @@ public sealed class RoutingSlipArgumentIntegrationTests
             builder.AddVariable(nameof(ResolveArguments.Value), "variable");
             builder.AddVariable(nameof(ResolveArguments.GuidValue), trackingNumber);
 
-            await harness.Bus.Execute(builder.Build(), cancellationToken);
+            await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
             await Task.WhenAll(
-                completed.Wait(timeout, cancellationToken),
-                activityCompleted.Wait(timeout, cancellationToken),
+                completed.WaitAsync(timeout, cancellationToken),
+                activityCompleted.WaitAsync(timeout, cancellationToken),
                 observed.Task.WaitAsync(timeout, cancellationToken));
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
             ResolvedArguments actual = await observed.Task;
 
             Assert.Equal(expectedValue, actual.Value);
@@ -56,7 +56,7 @@ public sealed class RoutingSlipArgumentIntegrationTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
@@ -84,7 +84,7 @@ public sealed class RoutingSlipArgumentIntegrationTests
     public sealed class ResolveArgumentsActivity(TaskCompletionSource<ResolvedArguments> observed) :
         IExecuteActivity<ResolveArguments>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<ResolveArguments> context)
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<ResolveArguments> context)
         {
             observed.TrySetResult(new ResolvedArguments(context.Arguments.Value, context.Arguments.GuidValue));
             return Task.FromResult(context.Completed());

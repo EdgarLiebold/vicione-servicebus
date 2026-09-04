@@ -19,7 +19,7 @@ public sealed class TaskBlockingTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-BLOCKING", "later-completion")]
-    public async Task Wait_BlocksUntilAnotherThreadCompletesTheTask()
+    public async Task Wait_BlocksUntilAnotherThreadCompletesTheTaskAsync()
     {
         var pending = NewCompletionSource<int>();
         var callerStarted = NewCompletionSource();
@@ -99,7 +99,7 @@ public sealed class TaskBlockingTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-BLOCKING", "cancellation-after-entry")]
-    public async Task Wait_StopsAPendingWaitWhenItsTokenIsCanceledAfterEntry()
+    public async Task Wait_StopsAPendingWaitWhenItsTokenIsCanceledAfterEntryAsync()
     {
         var pending = NewCompletionSource();
         var waitEntered = NewCompletionSource();
@@ -142,7 +142,7 @@ public sealed class TaskBlockingTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-BLOCKING", "noncapturing-context-and-preservation")]
-    public async Task Wait_CompletesWithoutTouchingAnUnneededCallerContext()
+    public async Task Wait_CompletesWithoutTouchingAnUnneededCallerContextAsync()
     {
         var context = new PumpedSynchronizationContext();
         var release = NewCompletionSource();
@@ -203,7 +203,7 @@ public sealed class TaskBlockingTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-BLOCKING", "captured-context-requires-pump")]
-    public async Task Wait_RequiresAnExternalPumpWhenWorkCapturedTheCallerContext()
+    public async Task Wait_RequiresAnExternalPumpWhenWorkCapturedTheCallerContextAsync()
     {
         var context = new PumpedSynchronizationContext();
         var release = NewCompletionSource<int>();
@@ -218,13 +218,13 @@ public sealed class TaskBlockingTests
             SynchronizationContext.SetSynchronizationContext(context);
             try
             {
-                async Task<int> ContinueOnCallerContext()
+                async Task<int> ContinueOnCallerContextAsync()
                 {
                     contextCaptured.TrySetResult();
                     return await release.Task + 1;
                 }
 
-                Task<int> work = ContinueOnCallerContext();
+                Task<int> work = ContinueOnCallerContextAsync();
                 returned.TrySetResult(TaskBlocking.Wait(() =>
                 {
                     waitEntered.TrySetResult();

@@ -15,30 +15,30 @@ public class MessageSchedulerConverterCache
 
     IMessageSchedulerConverter this[Type type] => _types.GetOrAdd(type, CreateTypeConverter).Value;
 
-    public static Task<ScheduledMessage> ScheduleSend(IMessageScheduler scheduler, Uri destinationAddress, DateTime scheduledTime, object message,
+    public static Task<ScheduledMessage> ScheduleSendAsync(IMessageScheduler scheduler, Uri destinationAddress, DateTimeOffset dueAt, object message,
         Type messageType, CancellationToken cancellationToken)
     {
-        return Cached.Converters.Value[messageType].ScheduleSend(scheduler, destinationAddress, scheduledTime, message, cancellationToken);
+        return Cached.Converters.Value[messageType].ScheduleSendAsync(scheduler, destinationAddress, dueAt, message, cancellationToken);
     }
 
-    public static Task<ScheduledMessage> ScheduleSend(IMessageScheduler scheduler, Uri destinationAddress, DateTime scheduledTime, object message,
+    public static Task<ScheduledMessage> ScheduleSendAsync(IMessageScheduler scheduler, Uri destinationAddress, DateTimeOffset dueAt, object message,
         Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
-        return Cached.Converters.Value[messageType].ScheduleSend(scheduler, destinationAddress, scheduledTime, message, pipe, cancellationToken);
+        return Cached.Converters.Value[messageType].ScheduleSendAsync(scheduler, destinationAddress, dueAt, message, pipe, cancellationToken);
     }
 
-    public static Task<ScheduledRecurringMessage> ScheduleRecurringSend(IRecurringMessageScheduler scheduler, Uri destinationAddress,
+    public static Task<ScheduledRecurringMessage> ScheduleRecurringSendAsync(IRecurringMessageScheduler scheduler, Uri destinationAddress,
         RecurringSchedule schedule, object message,
         Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
-        return Cached.Converters.Value[messageType].ScheduleRecurringSend(scheduler, destinationAddress, schedule, message, pipe, cancellationToken);
+        return Cached.Converters.Value[messageType].ScheduleRecurringSendAsync(scheduler, destinationAddress, schedule, message, pipe, cancellationToken);
     }
 
-    public static Task<ScheduledRecurringMessage> ScheduleRecurringSend(IRecurringMessageScheduler scheduler, Uri destinationAddress,
+    public static Task<ScheduledRecurringMessage> ScheduleRecurringSendAsync(IRecurringMessageScheduler scheduler, Uri destinationAddress,
         RecurringSchedule schedule, object message,
         Type messageType, CancellationToken cancellationToken)
     {
-        return Cached.Converters.Value[messageType].ScheduleRecurringSend(scheduler, destinationAddress, schedule, message, cancellationToken);
+        return Cached.Converters.Value[messageType].ScheduleRecurringSendAsync(scheduler, destinationAddress, schedule, message, cancellationToken);
     }
 
     static Lazy<IMessageSchedulerConverter> CreateTypeConverter(Type type)
@@ -50,7 +50,7 @@ public class MessageSchedulerConverterCache
     {
         var converterType = typeof(MessageSchedulerConverter<>).MakeGenericType(type);
 
-        return (IMessageSchedulerConverter)Activator.CreateInstance(converterType);
+        return (IMessageSchedulerConverter)(Activator.CreateInstance(converterType) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
     }
 
 
@@ -59,18 +59,18 @@ public class MessageSchedulerConverterCache
     /// </summary>
     interface IMessageSchedulerConverter
     {
-        Task<ScheduledMessage> ScheduleSend(IMessageScheduler scheduler, Uri destinationAddress, DateTime scheduledTime, object message,
+        Task<ScheduledMessage> ScheduleSendAsync(IMessageScheduler scheduler, Uri destinationAddress, DateTimeOffset dueAt, object message,
             CancellationToken cancellationToken);
 
-        Task<ScheduledMessage> ScheduleSend(IMessageScheduler scheduler, Uri destinationAddress, DateTime scheduledTime, object message,
+        Task<ScheduledMessage> ScheduleSendAsync(IMessageScheduler scheduler, Uri destinationAddress, DateTimeOffset dueAt, object message,
             IPipe<SendContext> pipe,
             CancellationToken cancellationToken);
 
-        Task<ScheduledRecurringMessage> ScheduleRecurringSend(IRecurringMessageScheduler scheduler, Uri destinationAddress, RecurringSchedule schedule,
+        Task<ScheduledRecurringMessage> ScheduleRecurringSendAsync(IRecurringMessageScheduler scheduler, Uri destinationAddress, RecurringSchedule schedule,
             object message, IPipe<SendContext> pipe,
             CancellationToken cancellationToken);
 
-        Task<ScheduledRecurringMessage> ScheduleRecurringSend(IRecurringMessageScheduler scheduler, Uri destinationAddress,
+        Task<ScheduledRecurringMessage> ScheduleRecurringSendAsync(IRecurringMessageScheduler scheduler, Uri destinationAddress,
             RecurringSchedule schedule, object message, CancellationToken cancellationToken);
     }
 
@@ -84,7 +84,7 @@ public class MessageSchedulerConverterCache
         IMessageSchedulerConverter
         where T : class
     {
-        public async Task<ScheduledMessage> ScheduleSend(IMessageScheduler scheduler, Uri destinationAddress, DateTime scheduledTime, object message,
+        public async Task<ScheduledMessage> ScheduleSendAsync(IMessageScheduler scheduler, Uri destinationAddress, DateTimeOffset dueAt, object message,
             CancellationToken cancellationToken = default)
         {
             if (scheduler == null)
@@ -93,12 +93,12 @@ public class MessageSchedulerConverterCache
                 throw new ArgumentNullException(nameof(message));
 
             if (message is T msg)
-                return await scheduler.ScheduleSend(destinationAddress, scheduledTime, msg, cancellationToken).ConfigureAwait(false);
+                return await scheduler.ScheduleSendAsync(destinationAddress, dueAt, msg, cancellationToken).ConfigureAwait(false);
 
             throw new ArgumentException("Unexpected message type: " + TypeCache.GetShortName(message.GetType()));
         }
 
-        public async Task<ScheduledMessage> ScheduleSend(IMessageScheduler scheduler, Uri destinationAddress, DateTime scheduledTime, object message,
+        public async Task<ScheduledMessage> ScheduleSendAsync(IMessageScheduler scheduler, Uri destinationAddress, DateTimeOffset dueAt, object message,
             IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         {
             if (scheduler == null)
@@ -109,12 +109,12 @@ public class MessageSchedulerConverterCache
                 throw new ArgumentNullException(nameof(pipe));
 
             if (message is T msg)
-                return await scheduler.ScheduleSend(destinationAddress, scheduledTime, msg, pipe, cancellationToken).ConfigureAwait(false);
+                return await scheduler.Advanced().ScheduleSendAsync(destinationAddress, dueAt, msg, pipe, cancellationToken).ConfigureAwait(false);
 
             throw new ArgumentException("Unexpected message type: " + TypeCache.GetShortName(message.GetType()));
         }
 
-        public async Task<ScheduledRecurringMessage> ScheduleRecurringSend(IRecurringMessageScheduler scheduler, Uri destinationAddress,
+        public async Task<ScheduledRecurringMessage> ScheduleRecurringSendAsync(IRecurringMessageScheduler scheduler, Uri destinationAddress,
             RecurringSchedule schedule, object message, CancellationToken cancellationToken)
         {
             if (scheduler == null)
@@ -125,12 +125,12 @@ public class MessageSchedulerConverterCache
                 throw new ArgumentNullException(nameof(message));
 
             if (message is T msg)
-                return await scheduler.ScheduleRecurringSend(destinationAddress, schedule, msg, cancellationToken).ConfigureAwait(false);
+                return await scheduler.ScheduleRecurringSendAsync(destinationAddress, schedule, msg, cancellationToken).ConfigureAwait(false);
 
             throw new ArgumentException("Unexpected message type: " + TypeCache.GetShortName(message.GetType()));
         }
 
-        public async Task<ScheduledRecurringMessage> ScheduleRecurringSend(IRecurringMessageScheduler scheduler, Uri destinationAddress,
+        public async Task<ScheduledRecurringMessage> ScheduleRecurringSendAsync(IRecurringMessageScheduler scheduler, Uri destinationAddress,
             RecurringSchedule schedule, object message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
         {
             if (scheduler == null)
@@ -143,7 +143,7 @@ public class MessageSchedulerConverterCache
                 throw new ArgumentNullException(nameof(pipe));
 
             if (message is T msg)
-                return await scheduler.ScheduleRecurringSend(destinationAddress, schedule, msg, pipe, cancellationToken).ConfigureAwait(false);
+                return await scheduler.ScheduleRecurringSendAsync(destinationAddress, schedule, msg, pipe, cancellationToken).ConfigureAwait(false);
 
             throw new ArgumentException("Unexpected message type: " + TypeCache.GetShortName(message.GetType()));
         }

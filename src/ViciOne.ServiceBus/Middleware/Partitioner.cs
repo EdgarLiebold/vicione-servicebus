@@ -48,14 +48,14 @@ public class Partitioner :
             await partition.DisposeAsync().ConfigureAwait(false);
     }
 
-    Task Send<T>(byte[] key, T context, IPipe<T> next)
+    Task SendAsync<T>(byte[] key, T context, IPipe<T> next)
         where T : class, PipeContext
     {
         var hash = key.Length > 0 ? _hashGenerator.Hash(key) : 0;
 
         var partitionId = hash % _partitionCount;
 
-        return _partitions[partitionId].Send(context, next);
+        return _partitions[partitionId].SendAsync(context, next);
     }
 
 
@@ -72,13 +72,13 @@ public class Partitioner :
             _keyProvider = keyProvider ?? throw new ArgumentNullException(nameof(keyProvider));
         }
 
-        public Task Send(TContext context, IPipe<TContext> next)
+        public Task SendAsync(TContext context, IPipe<TContext> next, CancellationToken cancellationToken = default)
         {
-            var key = _keyProvider(context);
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); var key = _keyProvider(context);
             if (key == null)
                 throw new InvalidOperationException("The partition key provider returned null.");
 
-            return _partitioner.Send(key, context, next);
+            return _partitioner.SendAsync(key, context, next);
         }
 
         public void Probe(ProbeContext context)

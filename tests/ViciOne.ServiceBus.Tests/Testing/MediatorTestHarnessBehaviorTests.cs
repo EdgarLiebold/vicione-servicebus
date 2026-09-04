@@ -13,7 +13,7 @@ public sealed class MediatorTestHarnessBehaviorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-MEDIATOR", "request-response-and-observations")]
-    public async Task RequestResponse_RecordsTheExactRequestAndResponseOnTheConfiguredClock()
+    public async Task RequestResponse_RecordsTheExactRequestAndResponseOnTheConfiguredClockAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -26,18 +26,18 @@ public sealed class MediatorTestHarnessBehaviorTests
         harness.OnConfigureMediator += configurator => configurator.Handler<MediatorRequest>(context =>
             context.RespondAsync(new MediatorResponse($"response:{context.Message.Value}")));
 
-        await harness.Start();
+        await harness.StartAsync(TestContext.Current.CancellationToken);
         IRequestClient<MediatorRequest> client = harness.CreateRequestClient<MediatorRequest>();
-        Response<MediatorResponse> response = await client.GetResponse<MediatorResponse>(
+        Response<MediatorResponse> response = await client.GetResponseAsync<MediatorResponse>(
             new MediatorRequest("expected"),
             cancellationToken);
 
         IReceivedMessage<MediatorRequest> consumed = await harness.Consumed
             .SelectAsync<MediatorRequest>(cancellationToken)
-            .First();
+            .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
         ISentMessage<MediatorResponse> sent = await harness.Sent
             .SelectAsync<MediatorResponse>(cancellationToken)
-            .First();
+            .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Same(timeProvider, harness.TimeProvider);
         Assert.Equal("expected", consumed.Context.Message.Value);
@@ -49,7 +49,7 @@ public sealed class MediatorTestHarnessBehaviorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-MEDIATOR", "exact-failure-propagation")]
-    public async Task HandlerFailure_IsPropagatedAndRecordedWithoutWrapping()
+    public async Task HandlerFailure_IsPropagatedAndRecordedWithoutWrappingAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -61,13 +61,13 @@ public sealed class MediatorTestHarnessBehaviorTests
         };
         harness.OnConfigureMediator += configurator => configurator.Handler<MediatorFailureMessage>(_ => Task.FromException(expected));
 
-        await harness.Start();
+        await harness.StartAsync(TestContext.Current.CancellationToken);
 
         InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            harness.Mediator.Send(new MediatorFailureMessage(), cancellationToken));
+            harness.Mediator.SendAsync(new MediatorFailureMessage(), cancellationToken));
         IReceivedMessage<MediatorFailureMessage> observed = await harness.Consumed
             .SelectAsync<MediatorFailureMessage>(cancellationToken)
-            .First();
+            .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Same(expected, actual);
         Assert.Same(expected, observed.Exception);

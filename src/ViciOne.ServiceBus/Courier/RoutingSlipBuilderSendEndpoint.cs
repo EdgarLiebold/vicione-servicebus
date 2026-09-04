@@ -10,16 +10,17 @@ using ViciOne.ServiceBus.Serialization;
 namespace ViciOne.ServiceBus.Courier;
 
 public class RoutingSlipBuilderSendEndpoint :
-    ISendEndpoint
+    ISendEndpoint,
+    Advanced.IAdvancedSendEndpoint
 {
-    readonly string _activityName;
+    readonly string? _activityName = null!;
     readonly IRoutingSlipSendEndpointTarget _builder;
     readonly Uri _destinationAddress;
     readonly RoutingSlipEvents _events;
     readonly RoutingSlipEventContents _include;
     readonly SendObservable _observers;
 
-    public RoutingSlipBuilderSendEndpoint(IRoutingSlipSendEndpointTarget builder, Uri destinationAddress, RoutingSlipEvents events, string activityName,
+    public RoutingSlipBuilderSendEndpoint(IRoutingSlipSendEndpointTarget builder, Uri destinationAddress, RoutingSlipEvents events, string? activityName,
         RoutingSlipEventContents include = RoutingSlipEventContents.All)
     {
         _observers = new SendObservable();
@@ -30,16 +31,16 @@ public class RoutingSlipBuilderSendEndpoint :
         _destinationAddress = destinationAddress;
     }
 
-    public Task Send<T>(T message, CancellationToken cancellationToken)
+    public Task SendAsync<T>(T message, CancellationToken cancellationToken)
         where T : class
     {
         if (message == null)
             throw new ArgumentNullException(nameof(message));
 
-        return Send(message, Pipe.Empty<SendContext<T>>(), cancellationToken);
+        return SendAsync(message, Pipe.Empty<SendContext<T>>(), cancellationToken);
     }
 
-    public async Task Send<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    public async Task SendAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
         if (message == null)
@@ -49,12 +50,12 @@ public class RoutingSlipBuilderSendEndpoint :
 
         var context = new RoutingSlipSendContext<T>(message, cancellationToken, _destinationAddress);
 
-        await pipe.Send(context).ConfigureAwait(false);
+        await pipe.SendAsync(context).ConfigureAwait(false);
 
         _builder.AddSubscription(_destinationAddress, _events, _include, _activityName, context.GetMessageEnvelope());
     }
 
-    public Task Send<T>(T message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
+    public Task SendAsync<T>(T message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
         where T : class
     {
         if (message == null)
@@ -62,30 +63,30 @@ public class RoutingSlipBuilderSendEndpoint :
         if (pipe == null)
             throw new ArgumentNullException(nameof(pipe));
 
-        return Send(message, (IPipe<SendContext<T>>)pipe, cancellationToken);
+        return SendAsync(message, (IPipe<SendContext<T>>)pipe, cancellationToken);
     }
 
-    public Task Send(object message, CancellationToken cancellationToken)
+    public Task SendAsync(object message, CancellationToken cancellationToken)
     {
         if (message == null)
             throw new ArgumentNullException(nameof(message));
 
         var messageType = message.GetType();
 
-        return SendEndpointConverterCache.Send(this, message, messageType, cancellationToken);
+        return SendEndpointConverterCache.SendAsync(this, message, messageType, cancellationToken);
     }
 
-    public Task Send(object message, Type messageType, CancellationToken cancellationToken)
+    public Task SendAsync(object message, Type messageType, CancellationToken cancellationToken)
     {
         if (message == null)
             throw new ArgumentNullException(nameof(message));
         if (messageType == null)
             throw new ArgumentNullException(nameof(messageType));
 
-        return SendEndpointConverterCache.Send(this, message, messageType, cancellationToken);
+        return SendEndpointConverterCache.SendAsync(this, message, messageType, cancellationToken);
     }
 
-    public Task Send(object message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
+    public Task SendAsync(object message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
         if (message == null)
             throw new ArgumentNullException(nameof(message));
@@ -94,10 +95,10 @@ public class RoutingSlipBuilderSendEndpoint :
 
         var messageType = message.GetType();
 
-        return SendEndpointConverterCache.Send(this, message, messageType, pipe, cancellationToken);
+        return SendEndpointConverterCache.SendAsync(this, message, messageType, pipe, cancellationToken);
     }
 
-    public Task Send(object message, Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken)
+    public Task SendAsync(object message, Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
         if (message == null)
             throw new ArgumentNullException(nameof(message));
@@ -107,34 +108,34 @@ public class RoutingSlipBuilderSendEndpoint :
         if (pipe == null)
             throw new ArgumentNullException(nameof(pipe));
 
-        return SendEndpointConverterCache.Send(this, message, messageType, pipe, cancellationToken);
+        return SendEndpointConverterCache.SendAsync(this, message, messageType, pipe, cancellationToken);
     }
 
-    public async Task Send<T>(object values, CancellationToken cancellationToken)
+    public async Task SendAsync<T>(object values, CancellationToken cancellationToken)
         where T : class
     {
         if (values == null)
             throw new ArgumentNullException(nameof(values));
 
         (var message, IPipe<SendContext<T>> sendPipe) =
-            await MessageInitializerCache<T>.InitializeMessage(values, cancellationToken).ConfigureAwait(false);
+            await MessageInitializerCache<T>.InitializeMessageAsync(values, cancellationToken).ConfigureAwait(false);
 
-        await Send(message, sendPipe, cancellationToken).ConfigureAwait(false);
+        await SendAsync(message, sendPipe, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task Send<T>(object values, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    public async Task SendAsync<T>(object values, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
         if (values == null)
             throw new ArgumentNullException(nameof(values));
 
         (var message, IPipe<SendContext<T>> sendPipe) =
-            await MessageInitializerCache<T>.InitializeMessage(values, pipe, cancellationToken).ConfigureAwait(false);
+            await MessageInitializerCache<T>.InitializeMessageAsync(values, pipe, cancellationToken).ConfigureAwait(false);
 
-        await Send(message, sendPipe, cancellationToken).ConfigureAwait(false);
+        await SendAsync(message, sendPipe, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task Send<T>(object values, IPipe<SendContext> pipe, CancellationToken cancellationToken)
+    public async Task SendAsync<T>(object values, IPipe<SendContext> pipe, CancellationToken cancellationToken)
         where T : class
     {
         if (values == null)
@@ -143,9 +144,9 @@ public class RoutingSlipBuilderSendEndpoint :
             throw new ArgumentNullException(nameof(pipe));
 
         (var message, IPipe<SendContext<T>> sendPipe) =
-            await MessageInitializerCache<T>.InitializeMessage(values, pipe, cancellationToken).ConfigureAwait(false);
+            await MessageInitializerCache<T>.InitializeMessageAsync(values, pipe, cancellationToken).ConfigureAwait(false);
 
-        await Send(message, sendPipe, cancellationToken).ConfigureAwait(false);
+        await SendAsync(message, sendPipe, cancellationToken).ConfigureAwait(false);
     }
 
     public ConnectHandle ConnectSendObserver(ISendObserver observer)

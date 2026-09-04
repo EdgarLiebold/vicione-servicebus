@@ -9,6 +9,6 @@ namespace ViciOne.ServiceBus.Middleware;
 public interface OutboxSendContext :
     IServiceProvider
 {
-    Task AddSend<T>(SendContext<T> context)
+    Task AddSendAsync<T>(SendContext<T> context, CancellationToken cancellationToken = default)
         where T : class;
 }

@@ -12,7 +12,7 @@ public class LatestPipeSpecification<T> :
     ILatestConfigurator<T>
     where T : class, PipeContext
 {
-    LatestFilterCreated<T> _created;
+    LatestFilterCreated<T> _created = null!;
 
     LatestFilterCreated<T> ILatestConfigurator<T>.Created
     {

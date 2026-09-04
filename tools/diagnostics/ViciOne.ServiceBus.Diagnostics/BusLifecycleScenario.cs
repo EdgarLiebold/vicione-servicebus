@@ -16,9 +16,9 @@ namespace ViciOne.ServiceBus.Diagnostics;
 /// </summary>
 static class BusLifecycleScenario
 {
-    public static async Task<object> Run(int cycles, int sampleEvery, CancellationToken cancellationToken)
+    public static async Task<object> RunAsync(int cycles, int sampleEvery, CancellationToken cancellationToken)
     {
-        await RunScopedBroker.CreateVirtualHost("test", cancellationToken);
+        await RunScopedBroker.CreateVirtualHostAsync("test", cancellationToken);
 
         using var process = Process.GetCurrentProcess();
         var samples = new List<object>();
@@ -37,7 +37,7 @@ static class BusLifecycleScenario
 
             try
             {
-                await harness.Start();
+                await harness.StartAsync(cancellationToken: cancellationToken);
                 started = true;
                 startElapsed.Stop();
 
@@ -45,9 +45,9 @@ static class BusLifecycleScenario
                 // endpoint and come back out of it. A send that is merely accepted proves nothing.
                 var roundTrip = Stopwatch.StartNew();
 
-                Task<ConsumeContext<DiagnosticPing>> handled = harness.SubscribeHandler<DiagnosticPing>();
+                Task<ConsumeContext<DiagnosticPing>> handled = harness.SubscribeHandlerAsync<DiagnosticPing>(cancellationToken: cancellationToken);
 
-                await harness.BusSendEndpoint.Send(new DiagnosticPing());
+                await harness.BusSendEndpoint.SendAsync(new DiagnosticPing(), cancellationToken: cancellationToken);
 
                 await handled.WaitAsync(TimeSpan.FromSeconds(30), cancellationToken);
 
@@ -59,7 +59,7 @@ static class BusLifecycleScenario
                 // diagnostic starts measuring its own leak.
                 var stopElapsed = Stopwatch.StartNew();
                 if (started)
-                    await harness.Stop();
+                    await harness.StopAsync(cancellationToken: cancellationToken);
 
                 harness.Dispose();
                 stopMilliseconds = stopElapsed.ElapsedMilliseconds;

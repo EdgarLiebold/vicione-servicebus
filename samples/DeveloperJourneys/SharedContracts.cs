@@ -1,7 +1,7 @@
-namespace ViciOne.ServiceBus.Samples.DeveloperJourneys;
-
 using Microsoft.EntityFrameworkCore;
 using ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
+
+namespace ViciOne.ServiceBus.Samples.DeveloperJourneys;
 
 public sealed record SubmitOrder(Guid OrderId, Guid CustomerId, string Description);
 
@@ -28,11 +28,11 @@ public sealed class JourneyDbContext(DbContextOptions<JourneyDbContext> options)
 
 public sealed class SubmitOrderConsumer : IConsumer<SubmitOrder>
 {
-    public Task Consume(ConsumeContext<SubmitOrder> context) => Task.CompletedTask;
+    public Task ConsumeAsync(ConsumeContext<SubmitOrder> context) => Task.CompletedTask;
 }
 
 public sealed class GetOrderConsumer : IConsumer<GetOrder>
 {
-    public Task Consume(ConsumeContext<GetOrder> context) =>
+    public Task ConsumeAsync(ConsumeContext<GetOrder> context) =>
         context.RespondAsync(new OrderStatus(context.Message.OrderId, "accepted"));
 }

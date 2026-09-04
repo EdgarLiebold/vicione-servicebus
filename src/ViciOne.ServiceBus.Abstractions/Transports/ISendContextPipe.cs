@@ -4,6 +4,6 @@ namespace ViciOne.ServiceBus.Transports;
 
 public interface ISendContextPipe
 {
-    Task Send<T>(SendContext<T> context)
+    Task SendAsync<T>(SendContext<T> context, CancellationToken cancellationToken = default)
         where T : class;
 }

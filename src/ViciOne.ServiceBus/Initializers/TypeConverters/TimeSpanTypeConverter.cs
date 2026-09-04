@@ -47,7 +47,7 @@ public class TimeSpanTypeConverter :
         return true;
     }
 
-    public bool TryConvert(object input, out TimeSpan result)
+    public bool TryConvert(object? input, out TimeSpan result)
     {
         switch (input)
         {
@@ -76,7 +76,7 @@ public class TimeSpanTypeConverter :
         return true;
     }
 
-    public bool TryConvert(string input, out TimeSpan result)
+    public bool TryConvert(string? input, out TimeSpan result)
     {
         return TimeSpan.TryParse(input, out result);
     }

@@ -11,7 +11,7 @@ public interface IExecuteActivity<in TArguments> :
     /// </summary>
     /// <param name="context">The execution context</param>
     /// <returns>An execution result, created from the execution passed to the activity</returns>
-    Task<ExecutionResult> Execute(ExecuteContext<TArguments> context);
+    Task<ExecutionResult> ExecuteAsync(ExecuteContext<TArguments> context);
 }
 
 

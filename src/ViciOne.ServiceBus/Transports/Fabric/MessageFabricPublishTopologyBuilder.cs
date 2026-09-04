@@ -16,7 +16,7 @@ public class MessageFabricPublishTopologyBuilder<TContext, T> :
         _messageFabric = messageFabric;
     }
 
-    public string ExchangeName { get; set; }
+    public string ExchangeName { get; set; } = null!;
     public ExchangeType ExchangeType { get; set; }
 
     public IMessageFabricPublishTopologyBuilder CreateImplementedBuilder()
@@ -49,7 +49,7 @@ public class MessageFabricPublishTopologyBuilder<TContext, T> :
         IMessageFabricPublishTopologyBuilder
     {
         readonly IMessageFabricPublishTopologyBuilder _builder;
-        string _exchangeName;
+        string _exchangeName = null!;
 
         public ImplementedBuilder(IMessageFabricPublishTopologyBuilder builder)
         {

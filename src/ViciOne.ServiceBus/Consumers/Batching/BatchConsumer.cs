@@ -23,9 +23,9 @@ public class BatchConsumer<TMessage> :
     readonly BatchOptions _options;
     readonly ITimer _timer;
     readonly TimeProvider _timeProvider;
-    Activity _currentActivity;
+    Activity _currentActivity = null!;
     DateTime _lastMessage;
-    ILogContext _logContext;
+    ILogContext? _logContext = null!;
 
     public BatchConsumer(BatchOptions options, TaskExecutor executor, TaskExecutor dispatcher, IPipe<ConsumeContext<Batch<TMessage>>> consumerPipe,
         TimeProvider timeProvider)
@@ -44,7 +44,7 @@ public class BatchConsumer<TMessage> :
 
     public bool IsCompleted { get; private set; }
 
-    public async Task Consume(ConsumeContext<TMessage> context)
+    public async Task ConsumeAsync(ConsumeContext<TMessage> context)
     {
         try
         {
@@ -57,14 +57,14 @@ public class BatchConsumer<TMessage> :
         catch
         {
             // if this message was marked as successfully delivered, do not fault it
-            if (context.ReceiveContext.IsDelivered)
+            if (context.Advanced().ReceiveContext.IsDelivered)
                 return;
 
             throw;
         }
     }
 
-    void TimeLimitExpired(object state)
+    void TimeLimitExpired(object? state)
     {
         _executor.EnqueueBlocking(() =>
         {
@@ -78,11 +78,11 @@ public class BatchConsumer<TMessage> :
 
             List<ConsumeContext<TMessage>> messages = GetMessageBatchInOrder();
 
-            return _dispatcher.EnqueueAsync(() => Deliver(messages[messages.Count - 1], messages, BatchCompletionMode.Time));
+            return _dispatcher.EnqueueAsync(() => DeliverAsync(messages[messages.Count - 1].Advanced(), messages, BatchCompletionMode.Time));
         });
     }
 
-    public Task Add(ConsumeContext<TMessage> context, Activity currentActivity)
+    public Task AddAsync(ConsumeContext<TMessage> context, Activity? currentActivity, CancellationToken cancellationToken = default)
     {
         _logContext ??= LogContext.Current;
         if (currentActivity != null)
@@ -90,10 +90,10 @@ public class BatchConsumer<TMessage> :
 
         var messageId = context.MessageId ?? NewId.NextGuid();
 
-        ulong? sequenceNumber = context.ReceiveContext.TryGetPayload<ITransportSequenceNumber>(out var payload)
+        ulong? sequenceNumber = context.Advanced().ReceiveContext.TryGetPayload<ITransportSequenceNumber>(out var payload)
             ? payload.SequenceNumber
             : null;
-        ulong sentTimeAsSequenceFallback() => (ulong)(context.SentTime ?? context.ReceiveContext.GetSentTime()
+        ulong sentTimeAsSequenceFallback() => (ulong)(context.SentTime ?? context.Advanced().ReceiveContext.GetSentTime()
             ?? _timeProvider.GetUtcNow().UtcDateTime).Ticks;
 
         var batchEntry = new BatchEntry(
@@ -111,7 +111,7 @@ public class BatchConsumer<TMessage> :
 
         _lastMessage = _timeProvider.GetUtcNow().UtcDateTime;
 
-        if (IsReadyToDeliver(context))
+        if (IsReadyToDeliver(context.Advanced()))
         {
             IsCompleted = true;
 
@@ -119,7 +119,7 @@ public class BatchConsumer<TMessage> :
 
             return messageList.Count == 0
                 ? Task.CompletedTask
-                : _dispatcher.EnqueueAsync(() => Deliver(context, messageList, BatchCompletionMode.Size));
+                : _dispatcher.EnqueueAsync(() => DeliverAsync(context.Advanced(), messageList, BatchCompletionMode.Size), cancellationToken: cancellationToken);
         }
 
         return Task.CompletedTask;
@@ -158,17 +158,18 @@ public class BatchConsumer<TMessage> :
         return _messages.Count == _options.MessageLimit;
     }
 
-    public Task ForceComplete()
+    public Task ForceCompleteAsync(CancellationToken cancellationToken = default)
     {
         IsCompleted = true;
 
         List<ConsumeContext<TMessage>> consumeContexts = GetMessageBatchInOrder();
         return consumeContexts.Count == 0
             ? Task.CompletedTask
-            : _dispatcher.EnqueueAsync(() => Deliver(consumeContexts[consumeContexts.Count - 1], consumeContexts, BatchCompletionMode.Forced));
+            : _dispatcher.EnqueueAsync(() => DeliverAsync(consumeContexts[consumeContexts.Count - 1].Advanced(), consumeContexts,
+                BatchCompletionMode.Forced), cancellationToken: cancellationToken);
     }
 
-    async Task Deliver(ConsumeContext context, IReadOnlyList<ConsumeContext<TMessage>> messages, BatchCompletionMode batchCompletionMode)
+    async Task DeliverAsync(ConsumeContext context, IReadOnlyList<ConsumeContext<TMessage>> messages, BatchCompletionMode batchCompletionMode)
     {
         _timer.Dispose();
 
@@ -185,7 +186,7 @@ public class BatchConsumer<TMessage> :
 
         try
         {
-            await _consumerPipe.Send(batchConsumeContext).ConfigureAwait(false);
+            await _consumerPipe.SendAsync(batchConsumeContext).ConfigureAwait(false);
 
             _completed.TrySetResult(_timeProvider.GetUtcNow().UtcDateTime);
         }
@@ -195,7 +196,7 @@ public class BatchConsumer<TMessage> :
         }
         catch (Exception exception)
         {
-            if (batchConsumeContext.TryGetPayload(out RetryContext<ConsumeContext<Batch<TMessage>>> retryContext))
+            if (batchConsumeContext.TryGetPayload(out RetryContext<ConsumeContext<Batch<TMessage>>>? retryContext))
             {
                 for (var i = 0; i < messages.Count; i++)
                     messages[i].GetOrAddPayload(() => retryContext);

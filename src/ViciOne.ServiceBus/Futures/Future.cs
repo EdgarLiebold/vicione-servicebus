@@ -53,16 +53,16 @@ public abstract class Future<TCommand, TResult, TFault> :
 
         During(Completed,
             When(CommandReceived)
-                .RespondAsync(x => GetResult(x)),
+                .RespondAsync(x => GetResultAsync(x)),
             When(ResultRequested)
-                .RespondAsync(x => GetResult(x))
+                .RespondAsync(x => GetResultAsync(x))
         );
 
         During(Faulted,
             When(CommandReceived)
-                .RespondAsync(x => GetFault(x)),
+                .RespondAsync(x => GetFaultAsync(x)),
             When(ResultRequested)
-                .RespondAsync(x => GetFault(x))
+                .RespondAsync(x => GetFaultAsync(x))
         );
 
         WhenAnyFaulted(x => x.SetFaultedUsingInitializer(context =>
@@ -71,7 +71,7 @@ public abstract class Future<TCommand, TResult, TFault> :
 
             // use supported message types to deserialize results...
 
-            List<Fault> faults = context.Saga.Faults.Select(fault => context.ToObject<Fault>(fault.Value)).ToList();
+            List<Fault> faults = context.Saga.Faults.Select(fault => context.ToObject<Fault>(fault.Value)).OfType<Fault>().ToList();
 
             var faulted = faults.First();
 
@@ -93,22 +93,20 @@ public abstract class Future<TCommand, TResult, TFault> :
     // States
     // ReSharper disable MemberCanBePrivate.Global
     // ReSharper disable UnusedAutoPropertyAccessor.Global
-    public State WaitingForCompletion { get; protected set; }
-    public State Completed { get; protected set; }
-    public State Faulted { get; protected set; }
+    public State WaitingForCompletion { get; protected set; } = null!;
+    public State Completed { get; protected set; } = null!;
+    public State Faulted { get; protected set; } = null!;
 
     // ReSharper disable once MemberCanBeProtected.Global
     /// <summary>
     /// Initiates and correlates the command to the future. Subsequent commands received while waiting for completion
     /// are added as subscribers.
     /// </summary>
-    public Event<TCommand> CommandReceived { get; protected set; }
-
+    public Event<TCommand> CommandReceived { get; protected set; } = null!;
     /// <summary>
     /// Used by a Future Reference to get the future's result once completed or fault once faulted.
     /// </summary>
-    public Event<Get<TCommand>> ResultRequested { get; protected set; }
-
+    public Event<Get<TCommand>> ResultRequested { get; protected set; } = null!;
     /// <summary>
     /// Configure the initiating command, including correlation, etc.
     /// </summary>
@@ -127,14 +125,14 @@ public abstract class Future<TCommand, TResult, TFault> :
     /// <param name="configure"></param>
     /// <typeparam name="TRequest">The request type to send</typeparam>
     protected FutureRequestHandle<TCommand, TResult, TFault, TRequest>
-        SendRequest<TRequest>(Action<IFutureRequestConfigurator<TFault, TCommand, TRequest>> configure = default)
+        SendRequest<TRequest>(Action<IFutureRequestConfigurator<TFault, TCommand, TRequest>>? configure = default)
         where TRequest : class
     {
         FutureRequestConfigurator<TCommand, TResult, TFault, TCommand, TRequest> request = CreateFutureRequest(configure);
 
         Initially(
             When(CommandReceived)
-                .ThenAsync(context => request.Send(context))
+                .ThenAsync(context => request.SendAsync(context))
         );
 
         return request;
@@ -148,7 +146,7 @@ public abstract class Future<TCommand, TResult, TFault> :
     /// <typeparam name="TRequest">The request type to send</typeparam>
     /// <typeparam name="TInput">The input type</typeparam>
     protected FutureRequestHandle<TCommand, TResult, TFault, TRequest> SendRequest<TInput, TRequest>(Func<TCommand, TInput> inputSelector,
-        Action<IFutureRequestConfigurator<TFault, TInput, TRequest>> configure = default)
+        Action<IFutureRequestConfigurator<TFault, TInput, TRequest>>? configure = default)
         where TInput : class
         where TRequest : class
     {
@@ -156,7 +154,7 @@ public abstract class Future<TCommand, TResult, TFault> :
 
         Initially(
             When(CommandReceived)
-                .ThenAsync(context => request.Send(context, inputSelector(context.Message)))
+                .ThenAsync(context => request.SendAsync(context, inputSelector(context.Message)))
         );
 
         return request;
@@ -178,7 +176,7 @@ public abstract class Future<TCommand, TResult, TFault> :
 
         Initially(
             When(CommandReceived)
-                .ThenAsync(context => request.SendRange(context, inputSelector(context.Message)))
+                .ThenAsync(context => request.SendRangeAsync(context, inputSelector(context.Message)))
         );
 
         return request;
@@ -194,14 +192,14 @@ public abstract class Future<TCommand, TResult, TFault> :
 
         Initially(
             When(CommandReceived)
-                .ThenAsync(context => routingSlip.Execute(context))
+                .ThenAsync(context => routingSlip.ExecuteAsync(context))
         );
 
         return routingSlip;
     }
 
     FutureRequestConfigurator<TCommand, TResult, TFault, TInput, TRequest> CreateFutureRequest<TInput, TRequest>(
-        Action<IFutureRequestConfigurator<TFault, TInput, TRequest>> configure)
+        Action<IFutureRequestConfigurator<TFault, TInput, TRequest>>? configure)
         where TInput : class
         where TRequest : class
     {
@@ -221,7 +219,7 @@ public abstract class Future<TCommand, TResult, TFault> :
         if (request.PendingRequestIdProvider != null)
             FaultPendingRequest(requestFaulted, request.PendingRequestIdProvider);
         else
-            SetFaulted(requestFaulted, request.SetFaulted);
+            SetFaulted(requestFaulted, context => request.SetFaultedAsync(context, context.CancellationToken));
 
         return request;
     }
@@ -232,17 +230,17 @@ public abstract class Future<TCommand, TResult, TFault> :
     {
         Event<RoutingSlipCompleted> routingSlipCompleted = Event<RoutingSlipCompleted>(FormatEventName<RoutingSlipCompleted>(), x =>
         {
-            x.CorrelateById(m => FutureIdOrFault(m, m.Message.Variables));
+            x.CorrelateById(m => FutureIdOrFault(m.Advanced(), m.Message.Variables));
             x.OnMissingInstance(m => m
-                .Execute(context => throw new FutureNotFoundException(GetType(), FutureIdOrDefault(context, context.Message.Variables))));
+                .Execute(context => throw new FutureNotFoundException(GetType(), FutureIdOrDefault(context.Advanced(), context.Message.Variables))));
             x.ConfigureConsumeTopology = false;
         });
 
         Event<RoutingSlipFaulted> routingSlipFaulted = Event<RoutingSlipFaulted>(FormatEventName<RoutingSlipFaulted>(), x =>
         {
-            x.CorrelateById(m => FutureIdOrFault(m, m.Message.Variables));
+            x.CorrelateById(m => FutureIdOrFault(m.Advanced(), m.Message.Variables));
             x.OnMissingInstance(m => m
-                .Execute(context => throw new FutureNotFoundException(GetType(), FutureIdOrDefault(context, context.Message.Variables))));
+                .Execute(context => throw new FutureNotFoundException(GetType(), FutureIdOrDefault(context.Advanced(), context.Message.Variables))));
             x.ConfigureConsumeTopology = false;
         });
 
@@ -257,15 +255,15 @@ public abstract class Future<TCommand, TResult, TFault> :
         else
         {
             if (routingSlip.HasFault(out FutureFault<TCommand, TFault, RoutingSlipFaulted> fault))
-                SetFaulted(routingSlipFaulted, fault.SetFaulted);
+                SetFaulted(routingSlipFaulted, context => fault.SetFaultedAsync(context, context.CancellationToken));
             else
-                SetFaulted(routingSlipFaulted, _fault.SetFaulted);
+                SetFaulted(routingSlipFaulted, context => _fault.SetFaultedAsync(context, context.CancellationToken));
         }
 
         if (routingSlip.CompletedIdProvider != null)
             CompletePending(routingSlipCompleted, routingSlip.CompletedIdProvider);
         else if (routingSlip.HasResult(out FutureResult<TCommand, TResult, RoutingSlipCompleted> result))
-            SetResult(routingSlipCompleted, result.SetResult);
+            SetResult(routingSlipCompleted, context => result.SetResultAsync(context, context.CancellationToken));
 
         return routingSlip;
     }
@@ -308,11 +306,11 @@ public abstract class Future<TCommand, TResult, TFault> :
                 .SetResult(x => pendingIdProvider(x.Message), x => x.Message)
                 .IfElse(context => context.Saga.Completed.HasValue,
                     completed => completed
-                        .ThenAsync(context => _result.SetResult(context))
+                        .ThenAsync(context => _result.SetResultAsync(context))
                         .TransitionTo(Completed),
                     notCompleted => notCompleted.If(context => context.Saga.Faulted.HasValue,
                         faulted => faulted
-                            .ThenAsync(context => _fault.SetFaulted(context))
+                            .ThenAsync(context => _fault.SetFaultedAsync(context))
                             .TransitionTo(Faulted)))
         );
     }
@@ -325,7 +323,7 @@ public abstract class Future<TCommand, TResult, TFault> :
                 .SetFault(x => pendingIdProvider(x.Message.Message), x => x.Message)
                 .If(context => context.Saga.Faulted.HasValue,
                     faulted => faulted
-                        .ThenAsync(context => _fault.SetFaulted(context))
+                        .ThenAsync(context => _fault.SetFaultedAsync(context))
                         .TransitionTo(Faulted))
         );
     }
@@ -337,7 +335,7 @@ public abstract class Future<TCommand, TResult, TFault> :
                 .SetFault(x => x.Message)
                 .If(context => context.Saga.Faulted.HasValue,
                     faulted => faulted
-                        .ThenAsync(context => _fault.SetFaulted(context))
+                        .ThenAsync(context => _fault.SetFaultedAsync(context))
                         .TransitionTo(Faulted))
         );
     }
@@ -428,17 +426,17 @@ public abstract class Future<TCommand, TResult, TFault> :
         configure?.Invoke(configurator);
     }
 
-    static Task<TResult> GetResult(BehaviorContext<FutureState> context)
+    static Task<TResult> GetResultAsync(BehaviorContext<FutureState> context)
     {
-        if (context.TryGetResult(context.Saga.CorrelationId, out TResult completed))
+        if (context.TryGetResult(context.Saga.CorrelationId, out TResult? completed))
             return Task.FromResult(completed);
 
         throw new InvalidOperationException("Completed result not available");
     }
 
-    static Task<TFault> GetFault(BehaviorContext<FutureState> context)
+    static Task<TFault> GetFaultAsync(BehaviorContext<FutureState> context)
     {
-        if (context.TryGetFault(context.Saga.CorrelationId, out TFault faulted))
+        if (context.TryGetFault(context.Saga.CorrelationId, out TFault? faulted))
             return Task.FromResult(faulted);
 
         throw new InvalidOperationException("Faulted result not available");

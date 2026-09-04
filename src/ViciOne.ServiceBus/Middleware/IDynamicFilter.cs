@@ -15,5 +15,6 @@ public interface IDynamicFilter<TInput, in TKey> :
     IKeyPipeConnector<TKey>,
     IFilterObserverConnector
     where TInput : class, PipeContext
+    where TKey : notnull
 {
 }

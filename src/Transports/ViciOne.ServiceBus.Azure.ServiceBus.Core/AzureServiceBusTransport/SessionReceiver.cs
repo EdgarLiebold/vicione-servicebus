@@ -20,12 +20,12 @@ public class SessionReceiver :
 
     public override void Start()
     {
-        _clientContext.OnSessionAsync(OnSession, ExceptionHandler);
+        _clientContext.OnSessionAsync(OnSessionAsync, ExceptionHandlerAsync);
 
         SetReady(_clientContext.StartAsync());
     }
 
-    async Task OnSession(ProcessSessionMessageEventArgs messageSession, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
+    async Task OnSessionAsync(ProcessSessionMessageEventArgs messageSession, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
     {
         if (IsStopping)
             return;
@@ -34,7 +34,7 @@ public class SessionReceiver :
         MessageSessionContext sessionContext = new ServiceBusMessageSessionContext(messageSession, Stopped);
         var context = new ServiceBusReceiveContext(message, _context, lockContext, _clientContext, sessionContext);
 
-        CancellationTokenSource cancellationTokenSource = null;
+        CancellationTokenSource? cancellationTokenSource = null;
         CancellationTokenRegistration timeoutRegistration = default;
         CancellationTokenRegistration registration = default;
         if (cancellationToken.CanBeCanceled)
@@ -55,7 +55,7 @@ public class SessionReceiver :
 
         try
         {
-            await Dispatch(message, context, lockContext).ConfigureAwait(false);
+            await DispatchAsync(message, context, lockContext).ConfigureAwait(false);
         }
         catch (Exception)
         {

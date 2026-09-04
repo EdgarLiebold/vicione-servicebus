@@ -12,15 +12,15 @@ public sealed class SqlServerSchedulingTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0087", "sqlserver-native-owner")]
-    public Task DelayedSend_PersistsFutureEnqueueTimeAndDeliversExactlyOnce() =>
-        AssertDelayedDelivery(publish: false);
+    public Task DelayedSend_PersistsFutureEnqueueTimeAndDeliversExactlyOnceAsync() =>
+        AssertDelayedDeliveryAsync(publish: false);
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0089", "sqlserver-native-owner")]
-    public Task DelayedPublish_PersistsFutureEnqueueTimeAndDeliversExactlyOnce() =>
-        AssertDelayedDelivery(publish: true);
+    public Task DelayedPublish_PersistsFutureEnqueueTimeAndDeliversExactlyOnceAsync() =>
+        AssertDelayedDeliveryAsync(publish: true);
 
-    private static async Task AssertDelayedDelivery(bool publish)
+    private static async Task AssertDelayedDeliveryAsync(bool publish)
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using SqlServerTestDatabase fixture = await SqlServerTestDatabase.CreateAsync(
@@ -54,7 +54,7 @@ public sealed class SqlServerSchedulingTests
             var message = new ScheduledMessage(Guid.NewGuid());
             if (publish)
             {
-                await bus.Publish(
+                await bus.PublishAsync(
                         message,
                         context =>
                         {
@@ -66,9 +66,9 @@ public sealed class SqlServerSchedulingTests
             }
             else
             {
-                ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
+                ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"))
                     .WaitAsync(fixture.OperationTimeout, cancellationToken);
-                await endpoint.Send(
+                await endpoint.SendAsync(
                         message,
                         context =>
                         {
@@ -80,9 +80,9 @@ public sealed class SqlServerSchedulingTests
             }
 
             await using SqlConnection connection = fixture.CreateConnection();
-            await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
+            await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
             SqlServerTransportInspection.ScheduledDelivery scheduled =
-                await connection.ScheduledDeliveryForMessage(fixture.Schema, messageId, cancellationToken);
+                await connection.ScheduledDeliveryForMessageAsync(fixture.Schema, messageId, cancellationToken);
 
             Assert.True(scheduled.EnqueueTimeUtc - scheduled.DatabaseNowUtc >= MinimumStoredDelay);
             ConsumeContext<ScheduledMessage> context = await delivered.Task

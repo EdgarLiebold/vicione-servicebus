@@ -35,7 +35,7 @@ public class AzureTableSagaRepositoryContextFactory<TSaga> :
     {
     }
 
-    public Task<T> Execute<T>(Func<LoadSagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken = default)
+    public Task<T?> ExecuteAsync<T>(Func<LoadSagaRepositoryContext<TSaga>, Task<T?>> asyncMethod, CancellationToken cancellationToken = default)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(asyncMethod);
@@ -54,7 +54,7 @@ public class AzureTableSagaRepositoryContextFactory<TSaga> :
         context.Add("persistence", "azuretable");
     }
 
-    public async Task Send<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
+    public async Task SendAsync<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -66,10 +66,10 @@ public class AzureTableSagaRepositoryContextFactory<TSaga> :
 
         var repositoryContext = new AzureTableSagaRepositoryContext<TSaga, T>(databaseContext, context, _factory);
 
-        await next.Send(repositoryContext).ConfigureAwait(false);
+        await next.SendAsync(repositoryContext).ConfigureAwait(false);
     }
 
-    public async Task SendQuery<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
+    public async Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
         where T : class
     {
         throw new NotImplementedByDesignException("Azure Table repository does not support queries");

@@ -17,5 +17,5 @@ public interface MessageData<T> :
     /// <summary>
     /// The property value, which may be loaded asynchronously from the message data repository.
     /// </summary>
-    Task<T> Value { get; }
+    Task<T?> Value { get; }
 }

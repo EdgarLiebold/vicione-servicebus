@@ -10,10 +10,10 @@ public class ConsumeContextScope :
     ConsumeContextProxy
 {
     readonly ConsumeContext _context;
-    IPayloadCache _payloadCache;
+    IPayloadCache? _payloadCache;
 
     public ConsumeContextScope(ConsumeContext context)
-        : base(context)
+        : base(context.Advanced())
     {
         _context = context;
     }
@@ -32,13 +32,7 @@ public class ConsumeContextScope :
     {
         get
         {
-            if (_payloadCache != null)
-                return _payloadCache;
-
-            while (Volatile.Read(ref _payloadCache) == null)
-                Interlocked.CompareExchange(ref _payloadCache, new ListPayloadCache(), null);
-
-            return _payloadCache;
+            return LazyInitializer.EnsureInitialized(ref _payloadCache, static () => new ListPayloadCache());
         }
     }
 
@@ -47,7 +41,7 @@ public class ConsumeContextScope :
         return payloadType.IsInstanceOfType(this) || PayloadCache.HasPayloadType(payloadType) || _context.HasPayloadType(payloadType);
     }
 
-    public override bool TryGetPayload<T>([NotNullWhen(true)] out T payload)
+    public override bool TryGetPayload<T>([NotNullWhen(true)] out T? payload)
         where T : class
     {
         if (this is T context)
@@ -104,26 +98,26 @@ public class ConsumeContextScope<TMessage> :
     readonly ConsumeContext<TMessage> _context;
 
     public ConsumeContextScope(ConsumeContext<TMessage> context)
-        : base(context)
+        : base(context.Advanced())
     {
         _context = context;
     }
 
     public ConsumeContextScope(ConsumeContext<TMessage> context, params object[] payloads)
-        : base(context, payloads)
+        : base(context.Advanced(), payloads)
     {
         _context = context;
     }
 
     public TMessage Message => _context.Message;
 
-    public virtual Task NotifyConsumed(TimeSpan duration, string consumerType)
+    public virtual Task NotifyConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
     {
-        return NotifyConsumed(this, duration, consumerType);
+        return NotifyConsumedAsync(this, duration, consumerType, cancellationToken: cancellationToken);
     }
 
-    public virtual Task NotifyFaulted(TimeSpan duration, string consumerType, Exception exception)
+    public virtual Task NotifyFaultedAsync(TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
     {
-        return NotifyFaulted(this, duration, consumerType, exception);
+        return NotifyFaultedAsync(this, duration, consumerType, exception, cancellationToken: cancellationToken);
     }
 }

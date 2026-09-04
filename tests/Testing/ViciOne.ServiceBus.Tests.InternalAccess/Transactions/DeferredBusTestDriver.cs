@@ -20,8 +20,8 @@ public sealed class BufferedBusTestDriver
 
     public IBufferedBus Bus => _bus;
 
-    public Task Enqueue(Func<CancellationToken, Task> action, CancellationToken cancellationToken = default) =>
-        _bus.Add(action, cancellationToken);
+    public Task EnqueueAsync(Func<CancellationToken, Task> action, CancellationToken cancellationToken = default) =>
+        _bus.AddAsync(action, cancellationToken);
 }
 
 
@@ -43,8 +43,8 @@ public sealed class AmbientTransactionBusTestDriver
 
     public int PendingTransactionCount => _bus.PendingTransactionCount;
 
-    public Task Enqueue(Func<CancellationToken, Task> action, CancellationToken cancellationToken = default) =>
-        _bus.Add(action, cancellationToken);
+    public Task EnqueueAsync(Func<CancellationToken, Task> action, CancellationToken cancellationToken = default) =>
+        _bus.AddAsync(action, cancellationToken);
 }
 
 
@@ -52,7 +52,7 @@ public sealed class AmbientTransactionNotificationTestDriver
 {
     private readonly AmbientTransactionNotification _notification = new();
 
-    public Task Enqueue(Func<CancellationToken, Task> action)
+    public Task EnqueueAsync(Func<CancellationToken, Task> action)
     {
         _notification.Add(action);
         return Task.CompletedTask;

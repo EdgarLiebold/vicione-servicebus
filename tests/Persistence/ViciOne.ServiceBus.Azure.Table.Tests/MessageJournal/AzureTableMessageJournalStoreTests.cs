@@ -13,7 +13,7 @@ public sealed class AzureTableMessageJournalStoreTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-MESSAGE-JOURNAL-BOUNDS", "atomic-repair-is-one-ordered-transaction")]
-    public async Task Append_SubmitsLeasePruningAndEntryAsOneOrderedTransaction()
+    public async Task Append_SubmitsLeasePruningAndEntryAsOneOrderedTransactionAsync()
     {
         const string partitionKey = "journal";
         var now = new DateTimeOffset(2030, 1, 12, 12, 0, 0, TimeSpan.Zero);
@@ -117,29 +117,29 @@ public sealed class AzureTableMessageJournalStoreTests
             string partitionKey,
             string rowKey,
             IEnumerable<string>? select = null,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult(global::Azure.Response.FromValue((T)(object)lease, _response));
-
+            CancellationToken cancellationToken = default)
+        { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::Azure.Response<T>>(cancellationToken); return Task.FromResult(global::Azure.Response.FromValue((T)(object)lease, _response)); }
         public override AsyncPageable<T> QueryAsync<T>(
             string? filter = null,
             int? maxPerPage = null,
             IEnumerable<string>? select = null,
-            CancellationToken cancellationToken = default) =>
-            AsyncPageable<T>.FromPages(
+            CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested(); return AsyncPageable<T>.FromPages(
                 [Page<T>.FromValues(records.Cast<T>().ToArray(), continuationToken: null, _response)]);
-
+        }
         public override Task<global::Azure.Response<IReadOnlyList<global::Azure.Response>>> SubmitTransactionAsync(
             IEnumerable<TableTransactionAction> transactionActions,
             CancellationToken cancellationToken = default)
         {
-            SubmitCallCount++;
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::Azure.Response<global::System.Collections.Generic.IReadOnlyList<global::Azure.Response>>>(cancellationToken); SubmitCallCount++;
             SubmittedActions = transactionActions.ToArray();
             return Task.FromResult(global::Azure.Response.FromValue<IReadOnlyList<global::Azure.Response>>([], _response));
         }
 
         public override Task<global::Azure.Response> AddEntityAsync<T>(T entity, CancellationToken cancellationToken = default)
         {
-            IndividualWriteCallCount++;
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::Azure.Response>(cancellationToken); IndividualWriteCallCount++;
             throw new InvalidOperationException("Journal append must not split the transaction into individual writes.");
         }
 
@@ -149,7 +149,7 @@ public sealed class AzureTableMessageJournalStoreTests
             TableUpdateMode mode = TableUpdateMode.Merge,
             CancellationToken cancellationToken = default)
         {
-            IndividualWriteCallCount++;
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::Azure.Response>(cancellationToken); IndividualWriteCallCount++;
             throw new InvalidOperationException("Journal append must not split the transaction into individual writes.");
         }
 
@@ -159,7 +159,7 @@ public sealed class AzureTableMessageJournalStoreTests
             ETag ifMatch = default,
             CancellationToken cancellationToken = default)
         {
-            IndividualWriteCallCount++;
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::Azure.Response>(cancellationToken); IndividualWriteCallCount++;
             throw new InvalidOperationException("Journal append must not split the transaction into individual writes.");
         }
     }

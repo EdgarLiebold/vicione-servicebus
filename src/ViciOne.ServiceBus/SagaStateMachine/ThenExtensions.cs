@@ -72,6 +72,8 @@ public static class ThenExtensions
         where TSaga : class, SagaStateMachineInstance
         where TData : class
     {
+        ArgumentNullException.ThrowIfNull(action);
+
         return binder.Add(new ActionActivity<TSaga, TData>(action));
     }
 
@@ -123,6 +125,8 @@ public static class ThenExtensions
         where TSaga : class, SagaStateMachineInstance
         where TData : class
     {
+        ArgumentNullException.ThrowIfNull(action);
+
         return binder.Add(new AsyncActivity<TSaga, TData>(action));
     }
 

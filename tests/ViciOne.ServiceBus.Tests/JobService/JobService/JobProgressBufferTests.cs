@@ -14,7 +14,7 @@ public sealed class JobProgressBufferTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-JOB-PROGRESS-TIME", "provided-clock-controls-flush-deadline")]
-    public async Task FlushDeadline_UsesTheProvidedTimeProviderAndPublishesTheLatestProgress()
+    public async Task FlushDeadline_UsesTheProvidedTimeProviderAndPublishesTheLatestProgressAsync()
     {
         TimeSpan operationTimeout = OperationTimeout();
         TimeSpan flushWindow = TimeSpan.FromMinutes(1);
@@ -31,10 +31,10 @@ public sealed class JobProgressBufferTests
 
         try
         {
-            await buffer.Update(
+            await buffer.UpdateAsync(
                 new JobProgressBuffer.ProgressUpdate(jobId, attemptId, 42, 100),
                 TestContext.Current.CancellationToken);
-            await timeProvider.WaitForTimerCount(1)
+            await timeProvider.WaitForTimerCountAsync(1)
                 .WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
 
             Assert.Equal(flushWindow, timeProvider.LastDueTime);
@@ -55,7 +55,7 @@ public sealed class JobProgressBufferTests
         }
         finally
         {
-            await buffer.Flush().WaitAsync(operationTimeout, CancellationToken.None);
+            await buffer.FlushAsync(TestContext.Current.CancellationToken).WaitAsync(operationTimeout, CancellationToken.None);
         }
 
         Assert.Equal(0, timeProvider.ActiveTimerCount);
@@ -88,17 +88,13 @@ public sealed class JobProgressBufferTests
 
         public Task<SetJobProgress> Progress => _progress.Task;
 
-        public Task NotifyCanceled() => Task.CompletedTask;
-
-        public Task NotifyStarted() => Task.CompletedTask;
-
-        public Task NotifyCompleted() => Task.CompletedTask;
-
-        public Task NotifyFaulted(Exception exception, TimeSpan? delay = null) => Task.CompletedTask;
-
-        public Task NotifyJobProgress(SetJobProgress progress)
+        public Task NotifyCanceledAsync(CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
+        public Task NotifyStartedAsync(CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
+        public Task NotifyCompletedAsync(CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
+        public Task NotifyFaultedAsync(Exception exception, TimeSpan? delay = null, CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
+        public Task NotifyJobProgressAsync(SetJobProgress progress, CancellationToken cancellationToken = default)
         {
-            _progress.TrySetResult(progress);
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); _progress.TrySetResult(progress);
             return Task.CompletedTask;
         }
     }

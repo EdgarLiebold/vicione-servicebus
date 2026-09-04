@@ -23,7 +23,7 @@ public class NewOrExistingSagaPolicy<TSaga, TMessage> :
 
     public bool IsReadOnly => false;
 
-    public bool PreInsertInstance(ConsumeContext<TMessage> context, out TSaga instance)
+    public bool PreInsertInstance(ConsumeContext<TMessage> context, [NotNullWhen(true)] out TSaga? instance)
     {
         if (_insertOnInitial)
         {
@@ -35,13 +35,13 @@ public class NewOrExistingSagaPolicy<TSaga, TMessage> :
         return false;
     }
 
-    Task ISagaPolicy<TSaga, TMessage>.Existing(SagaConsumeContext<TSaga, TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
+    Task ISagaPolicy<TSaga, TMessage>.ExistingAsync(SagaConsumeContext<TSaga, TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
     {
-        return next.Send(context);
+        return next.SendAsync(context);
     }
 
-    Task ISagaPolicy<TSaga, TMessage>.Missing(ConsumeContext<TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
+    Task ISagaPolicy<TSaga, TMessage>.MissingAsync(ConsumeContext<TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
     {
-        return _sagaFactory.Send(context, next);
+        return _sagaFactory.SendAsync(context, next);
     }
 }

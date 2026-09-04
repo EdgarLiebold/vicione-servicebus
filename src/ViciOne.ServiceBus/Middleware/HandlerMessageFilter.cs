@@ -32,9 +32,10 @@ public class HandlerMessageFilter<TMessage> :
     }
 
     [DebuggerNonUserCode]
-    async Task IFilter<ConsumeContext<TMessage>>.Send(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
+    async Task IFilter<ConsumeContext<TMessage>>.SendAsync(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
     {
-        var timer = Stopwatch.StartNew();
+        TimeProvider timeProvider = context.GetTimeProvider();
+        long startedAt = timeProvider.GetTimestamp();
         StartedActivity? activity = LogContext.Current?.StartHandlerActivity(context);
         var instrument = LogContext.Current?.StartHandlerInstrument(context);
 
@@ -42,16 +43,16 @@ public class HandlerMessageFilter<TMessage> :
         {
             await _handler(context).ConfigureAwait(false);
 
-            await context.NotifyConsumed(timer.Elapsed, TypeCache<MessageHandler<TMessage>>.ShortName).ConfigureAwait(false);
+            await context.NotifyConsumedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<MessageHandler<TMessage>>.ShortName).ConfigureAwait(false);
 
             Interlocked.Increment(ref _completed);
 
-            await next.Send(context).ConfigureAwait(false);
+            await next.SendAsync(context).ConfigureAwait(false);
         }
         catch (Exception exception) when ((exception is OperationCanceledException || exception.GetBaseException() is OperationCanceledException)
                                           && !context.CancellationToken.IsCancellationRequested)
         {
-            await context.NotifyFaulted(timer.Elapsed, TypeCache<MessageHandler<TMessage>>.ShortName, exception).ConfigureAwait(false);
+            await context.NotifyFaultedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<MessageHandler<TMessage>>.ShortName, exception).ConfigureAwait(false);
 
             activity?.AddExceptionEvent(exception);
 
@@ -61,7 +62,7 @@ public class HandlerMessageFilter<TMessage> :
         }
         catch (Exception ex)
         {
-            await context.NotifyFaulted(timer.Elapsed, TypeCache<MessageHandler<TMessage>>.ShortName, ex).ConfigureAwait(false);
+            await context.NotifyFaultedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<MessageHandler<TMessage>>.ShortName, ex).ConfigureAwait(false);
 
             activity?.AddExceptionEvent(ex);
             instrument?.RecordException(ex);

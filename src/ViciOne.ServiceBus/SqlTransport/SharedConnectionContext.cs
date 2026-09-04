@@ -31,18 +31,18 @@ public class SharedConnectionContext :
         return _context.CreateClientContext(cancellationToken);
     }
 
-    public Task<ISqlTransportConnection> CreateConnection(CancellationToken cancellationToken)
+    public Task<ISqlTransportConnection> CreateConnectionAsync(CancellationToken cancellationToken)
     {
-        return _context.CreateConnection(cancellationToken);
+        return _context.CreateConnectionAsync(cancellationToken);
     }
 
-    public Task DelayUntilMessageReady(long queueId, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken)
+    public Task DelayUntilMessageReadyAsync(long queueId, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken)
     {
-        return _context.DelayUntilMessageReady(queueId, timeout, timeProvider, cancellationToken);
+        return _context.DelayUntilMessageReadyAsync(queueId, timeout, timeProvider, cancellationToken);
     }
 
-    public Task<T> Query<T>(Func<IDbConnection, IDbTransaction, Task<T>> callback, CancellationToken cancellationToken)
+    public Task<T> QueryAsync<T>(Func<IDbConnection, IDbTransaction, Task<T>> callback, CancellationToken cancellationToken)
     {
-        return _context.Query(callback, cancellationToken);
+        return _context.QueryAsync(callback, cancellationToken);
     }
 }

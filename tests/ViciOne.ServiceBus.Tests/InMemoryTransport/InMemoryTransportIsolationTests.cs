@@ -11,7 +11,7 @@ public sealed class InMemoryTransportIsolationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-TRANSPORT-ISOLATION", "cross-host-relay-preserves-source-and-prevents-loop")]
-    public async Task DistinctVirtualHosts_RequireOneExplicitRelayAndPreserveTheOriginalSource()
+    public async Task DistinctVirtualHosts_RequireOneExplicitRelayAndPreserveTheOriginalSourceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -36,9 +36,9 @@ public sealed class InMemoryTransportIsolationTests
 
         try
         {
-            await internalHarness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+            await internalHarness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
             internalStarted = true;
-            await externalHarness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+            await externalHarness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
             externalStarted = true;
 
             Uri externalBusAddress = externalHarness.BusAddress;
@@ -46,15 +46,15 @@ public sealed class InMemoryTransportIsolationTests
             var message = new IsolationMessage(Guid.Parse("3111f42a-648a-49da-ad71-c63a9494eb80"));
             Task<IReceivedMessage<IsolationMessage>> externalRelayObserved = externalRelay.Consumed
                 .SelectAsync<IsolationMessage>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             Task<IReceivedMessage<IsolationMessage>> internalRelayObserved = internalRelay.Consumed
                 .SelectAsync<IsolationMessage>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             Task<IReceivedMessage<IsolationMessage>> realConsumerObserved = realConsumer.Consumed
                 .SelectAsync<IsolationMessage>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
-            await externalHarness.Bus.Publish(
+            await externalHarness.Bus.PublishAsync(
                     message,
                     context => context.MessageId = messageId,
                     cancellationToken)
@@ -66,9 +66,9 @@ public sealed class InMemoryTransportIsolationTests
                     realConsumerObserved)
                 .WaitAsync(timeout, cancellationToken);
 
-            await externalHarness.Stop().WaitAsync(timeout, cancellationToken);
+            await externalHarness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
             externalStarted = false;
-            await internalHarness.Stop().WaitAsync(timeout, cancellationToken);
+            await internalHarness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
             internalStarted = false;
 
             Assert.Equal(messageId, observations[0].Context.MessageId);
@@ -77,9 +77,9 @@ public sealed class InMemoryTransportIsolationTests
             Assert.Equal(externalBusAddress, observations[0].Context.SourceAddress);
             Assert.Equal(externalBusAddress, observations[1].Context.SourceAddress);
             Assert.Equal(externalBusAddress, observations[2].Context.SourceAddress);
-            Assert.Equal(externalHarness.InputQueueAddress, observations[0].Context.ReceiveContext.InputAddress);
-            Assert.Equal(internalHarness.InputQueueAddress, observations[1].Context.ReceiveContext.InputAddress);
-            Assert.Equal(internalHarness.InputQueueAddress, observations[2].Context.ReceiveContext.InputAddress);
+            Assert.Equal(externalHarness.InputQueueAddress, observations[0].Context.Advanced().ReceiveContext.InputAddress);
+            Assert.Equal(internalHarness.InputQueueAddress, observations[1].Context.Advanced().ReceiveContext.InputAddress);
+            Assert.Equal(internalHarness.InputQueueAddress, observations[2].Context.Advanced().ReceiveContext.InputAddress);
 
             RelayDecision externalDecision = Assert.Single(externalRelayDecisions);
             Assert.True(externalDecision.Forwarded);
@@ -105,9 +105,9 @@ public sealed class InMemoryTransportIsolationTests
         finally
         {
             if (externalStarted)
-                await externalHarness.Stop();
+                await externalHarness.StopAsync(TestContext.Current.CancellationToken);
             if (internalStarted)
-                await internalHarness.Stop();
+                await internalHarness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
@@ -142,12 +142,12 @@ public sealed class InMemoryTransportIsolationTests
         IPublishEndpoint otherHost,
         ConcurrentQueue<RelayDecision> decisions) : IConsumer<IsolationMessage>
     {
-        public Task Consume(ConsumeContext<IsolationMessage> context)
+        public Task ConsumeAsync(ConsumeContext<IsolationMessage> context)
         {
             Uri sourceAddress = context.SourceAddress
                 ?? throw new InvalidOperationException("The relayed message must carry a source address.");
             string sourceVirtualHost = GetVirtualHost(sourceAddress);
-            string inputVirtualHost = GetVirtualHost(context.ReceiveContext.InputAddress);
+            string inputVirtualHost = GetVirtualHost(context.Advanced().ReceiveContext.InputAddress);
             bool forward = sourceVirtualHost == inputVirtualHost;
             decisions.Enqueue(new RelayDecision(
                 context.MessageId,
@@ -158,16 +158,16 @@ public sealed class InMemoryTransportIsolationTests
             if (!forward)
                 return Task.CompletedTask;
 
-            return otherHost.Publish(
+            return otherHost.PublishAsync(
                 context.Message,
-                new CopyContextPipe(context),
+                new CopyContextPipe(context.Advanced()),
                 context.CancellationToken);
         }
     }
 
     private sealed class RealConsumer(ConcurrentQueue<Delivery> deliveries) : IConsumer<IsolationMessage>
     {
-        public Task Consume(ConsumeContext<IsolationMessage> context)
+        public Task ConsumeAsync(ConsumeContext<IsolationMessage> context)
         {
             Uri sourceAddress = context.SourceAddress
                 ?? throw new InvalidOperationException("The delivered message must carry its original source address.");
@@ -175,7 +175,7 @@ public sealed class InMemoryTransportIsolationTests
                 context.MessageId,
                 context.Message.Token,
                 sourceAddress,
-                context.ReceiveContext.InputAddress));
+                context.Advanced().ReceiveContext.InputAddress));
 
             return Task.CompletedTask;
         }

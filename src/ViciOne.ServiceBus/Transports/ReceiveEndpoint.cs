@@ -33,7 +33,7 @@ public class ReceiveEndpoint :
     readonly TaskCompletionSource<ReceiveEndpointReady> _started;
     readonly StartObserver _startObserver;
     readonly IReceiveTransport _transport;
-    EndpointHandle _handle;
+    EndpointHandle? _handle;
     bool _paused;
 
     public ReceiveEndpoint(IReceiveTransport transport, ReceiveEndpointContext context)
@@ -55,8 +55,7 @@ public class ReceiveEndpoint :
 
     public State CurrentState { get; set; }
 
-    public string Message { get; set; }
-
+    public string Message { get; set; } = null!;
     public EndpointHealthResult HealthResult { get; set; }
 
     public bool IsBusEndpoint => _context.IsBusEndpoint;
@@ -66,8 +65,7 @@ public class ReceiveEndpoint :
     IMessageRouteTable IMessageRouteProvider.MessageRoutes => _context.MessageRoutes;
 
     public Task<ReceiveEndpointReady> Started => _started.Task;
-    public ConnectHandle ObserverHandle { get; set; }
-    Logging.ILogContext IRestartableReceiveEndpoint.LogContext => _context.LogContext;
+    public ConnectHandle ObserverHandle { get; set; } = null!; Logging.ILogContext IRestartableReceiveEndpoint.LogContext => _context.LogContext;
 
     public ReceiveEndpointHandle Start(CancellationToken cancellationToken)
     {
@@ -119,9 +117,9 @@ public class ReceiveEndpoint :
         return _handle;
     }
 
-    public Task Stop(CancellationToken cancellationToken)
+    public Task StopAsync(CancellationToken cancellationToken)
     {
-        return Stop(false, cancellationToken);
+        return StopAsync(false, cancellationToken);
     }
 
     internal bool IsPaused => Volatile.Read(ref _paused);
@@ -166,15 +164,15 @@ public class ReceiveEndpoint :
         return _context.ConnectSendObserver(observer);
     }
 
-    public Task<ISendEndpoint> GetSendEndpoint(Uri address)
+    public Task<ISendEndpoint> GetSendEndpointAsync(Uri address, CancellationToken cancellationToken = default)
     {
-        return _context.SendEndpointProvider.GetSendEndpoint(address);
+        return _context.SendEndpointProvider.GetSendEndpointAsync(address, cancellationToken: cancellationToken);
     }
 
-    public Task<ISendEndpoint> GetPublishSendEndpoint<T>()
+    public Task<ISendEndpoint> GetPublishSendEndpointAsync<T>(CancellationToken cancellationToken = default)
         where T : class
     {
-        return _context.PublishEndpointProvider.GetPublishSendEndpoint<T>();
+        return _context.PublishEndpointProvider.GetPublishSendEndpointAsync<T>(cancellationToken: cancellationToken);
     }
 
     public ConnectHandle ConnectReceiveObserver(IReceiveObserver observer)
@@ -198,7 +196,7 @@ public class ReceiveEndpoint :
         return State.Started.Equals(CurrentState) || State.Ready.Equals(CurrentState) || State.Faulted.Equals(CurrentState);
     }
 
-    public async Task Stop(bool removed, CancellationToken cancellationToken)
+    public async Task StopAsync(bool removed, CancellationToken cancellationToken)
     {
         await _lifecycleGate.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
@@ -206,16 +204,16 @@ public class ReceiveEndpoint :
             LogContext.SetCurrentIfNull(_context.LogContext);
 
             if (_handle != null)
-                await StopTransport(removed, cancellationToken).ConfigureAwait(false);
+                await StopTransportAsync(removed, cancellationToken).ConfigureAwait(false);
             else if (_paused)
             {
                 // A policy pause has no active transport handle, but a later external stop is still a
                 // terminal lifecycle event. Publishing it lets the policy cancel a pending restart.
-                await _context.EndpointObservers.Stopping(new ReceiveEndpointStoppingEvent(_context.InputAddress, this, removed)).ConfigureAwait(false);
+                await _context.EndpointObservers.StoppingAsync(new ReceiveEndpointStoppingEvent(_context.InputAddress, this, removed)).ConfigureAwait(false);
             }
 
             _paused = false;
-            await _context.ResetAsync().ConfigureAwait(false);
+            await _context.ResetAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
         finally
         {
@@ -223,7 +221,7 @@ public class ReceiveEndpoint :
         }
     }
 
-    async Task IRestartableReceiveEndpoint.Pause(CancellationToken cancellationToken)
+    async Task IRestartableReceiveEndpoint.PauseAsync(CancellationToken cancellationToken)
     {
         await _lifecycleGate.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
@@ -235,8 +233,8 @@ public class ReceiveEndpoint :
 
             // Mark the endpoint before stopping the transport so a concurrent host stop cannot omit it.
             _paused = true;
-            await StopTransport(false, cancellationToken).ConfigureAwait(false);
-            await _context.ResetAsync().ConfigureAwait(false);
+            await StopTransportAsync(false, cancellationToken).ConfigureAwait(false);
+            await _context.ResetAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
         finally
         {
@@ -244,7 +242,7 @@ public class ReceiveEndpoint :
         }
     }
 
-    async Task<ReceiveEndpointHandle> IRestartableReceiveEndpoint.Restart(CancellationToken cancellationToken)
+    async Task<ReceiveEndpointHandle> IRestartableReceiveEndpoint.RestartAsync(CancellationToken cancellationToken)
     {
         await _lifecycleGate.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
@@ -257,13 +255,15 @@ public class ReceiveEndpoint :
         }
     }
 
-    async Task StopTransport(bool removed, CancellationToken cancellationToken)
+    async Task StopTransportAsync(bool removed, CancellationToken cancellationToken)
     {
-        await _context.DependentsCompleted.OrCanceled(cancellationToken).ConfigureAwait(false);
+        var handle = _handle ?? throw new InvalidOperationException("The receive endpoint is not running.");
 
-        await _context.EndpointObservers.Stopping(new ReceiveEndpointStoppingEvent(_context.InputAddress, this, removed)).ConfigureAwait(false);
+        await _context.DependentsCompleted.OrCanceledAsync(cancellationToken).ConfigureAwait(false);
 
-        await _handle.TransportHandle.Stop(cancellationToken).ConfigureAwait(false);
+        await _context.EndpointObservers.StoppingAsync(new ReceiveEndpointStoppingEvent(_context.InputAddress, this, removed)).ConfigureAwait(false);
+
+        await handle.TransportHandle.StopAsync(cancellationToken).ConfigureAwait(false);
 
         _handle = null;
     }
@@ -281,23 +281,23 @@ public class ReceiveEndpoint :
             _observer = observer;
         }
 
-        public Task Ready(ReceiveTransportReady ready)
+        public Task ReadyAsync(ReceiveTransportReady ready)
         {
             var endpointReadyEvent = new ReceiveEndpointReadyEvent(ready.InputAddress, _endpoint, ready.IsStarted);
             if (ready.IsStarted)
                 _endpoint._started.TrySetResult(endpointReadyEvent);
 
-            return _observer.Ready(endpointReadyEvent);
+            return _observer.ReadyAsync(endpointReadyEvent);
         }
 
-        public Task Completed(ReceiveTransportCompleted completed)
+        public Task CompletedAsync(ReceiveTransportCompleted completed)
         {
-            return _observer.Completed(new ReceiveEndpointCompletedEvent(completed, _endpoint));
+            return _observer.CompletedAsync(new ReceiveEndpointCompletedEvent(completed, _endpoint));
         }
 
-        public Task Faulted(ReceiveTransportFaulted faulted)
+        public Task FaultedAsync(ReceiveTransportFaulted faulted)
         {
-            return _observer.Faulted(new ReceiveEndpointFaultedEvent(faulted, _endpoint));
+            return _observer.FaultedAsync(new ReceiveEndpointFaultedEvent(faulted, _endpoint));
         }
     }
 
@@ -312,24 +312,24 @@ public class ReceiveEndpoint :
             _handles = new Connectable<EndpointHandle>();
         }
 
-        Task IReceiveEndpointObserver.Ready(ReceiveEndpointReady ready)
+        Task IReceiveEndpointObserver.ReadyAsync(ReceiveEndpointReady ready)
         {
-            return _handles.ForEachAsync(x => x.SetReady(ready));
+            return _handles.ForEachAsync(x => x.SetReadyAsync(ready));
         }
 
-        public Task Stopping(ReceiveEndpointStopping stopping)
+        public Task StoppingAsync(ReceiveEndpointStopping stopping)
         {
             return Task.CompletedTask;
         }
 
-        Task IReceiveEndpointObserver.Completed(ReceiveEndpointCompleted completed)
+        Task IReceiveEndpointObserver.CompletedAsync(ReceiveEndpointCompleted completed)
         {
             return Task.CompletedTask;
         }
 
-        Task IReceiveEndpointObserver.Faulted(ReceiveEndpointFaulted faulted)
+        Task IReceiveEndpointObserver.FaultedAsync(ReceiveEndpointFaulted faulted)
         {
-            return _handles.ForEachAsync(x => x.SetFaulted(faulted));
+            return _handles.ForEachAsync(x => x.SetFaultedAsync(faulted));
         }
 
         public ConnectHandle ConnectEndpointHandle(EndpointHandle handle)
@@ -344,7 +344,7 @@ public class ReceiveEndpoint :
     {
         readonly CancellationToken _cancellationToken;
         readonly ReceiveEndpoint _endpoint;
-        readonly ConnectHandle _handle;
+        readonly ConnectHandle _handle = null!;
         readonly TaskCompletionSource<ReceiveEndpointReady> _ready;
         readonly IReceiveTransport _transport;
         CancellationTokenRegistration _registration;
@@ -362,13 +362,12 @@ public class ReceiveEndpoint :
                 _registration = cancellationToken.UnsafeRegister(static state => ((EndpointHandle)state!).CancelReady(), this);
         }
 
-        public ReceiveTransportHandle TransportHandle { get; private set; }
-
+        public ReceiveTransportHandle TransportHandle { get; private set; } = null!;
         public Task<ReceiveEndpointReady> Ready => _ready.Task;
 
-        Task ReceiveEndpointHandle.Stop(CancellationToken cancellationToken)
+        Task ReceiveEndpointHandle.StopAsync(CancellationToken cancellationToken)
         {
-            return _endpoint.Stop(cancellationToken);
+            return _endpoint.StopAsync(cancellationToken);
         }
 
         public void Start()
@@ -388,7 +387,7 @@ public class ReceiveEndpoint :
             }
         }
 
-        public Task SetReady(ReceiveEndpointReady ready)
+        public Task SetReadyAsync(ReceiveEndpointReady ready)
         {
             _handle.Disconnect();
             _registration.Dispose();
@@ -398,7 +397,7 @@ public class ReceiveEndpoint :
             return Task.CompletedTask;
         }
 
-        public Task SetFaulted(ReceiveEndpointFaulted faulted)
+        public Task SetFaultedAsync(ReceiveEndpointFaulted faulted)
         {
             if (!faulted.IsTerminal)
                 return Task.CompletedTask;

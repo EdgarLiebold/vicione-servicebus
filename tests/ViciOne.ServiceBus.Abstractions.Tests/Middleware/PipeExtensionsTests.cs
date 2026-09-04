@@ -24,23 +24,23 @@ public sealed class PipeExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ONE-TIME-SETUP", "concurrent-single-flight")]
-    public async Task OneTimeSetup_ExecutesOnceForEveryConcurrentCaller()
+    public async Task OneTimeSetup_ExecutesOnceForEveryConcurrentCallerAsync()
     {
         var context = new TestPipeContext();
         var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var callbackCount = 0;
 
-        Task<OneTimeContext<SetupMarker>> first = context.OneTimeSetup<SetupMarker>(async () =>
+        Task<OneTimeContext<SetupMarker>> first = context.OneTimeSetupAsync<SetupMarker>(async () =>
         {
             Interlocked.Increment(ref callbackCount);
             entered.SetResult();
             await release.Task;
-        });
+        }, cancellationToken: TestContext.Current.CancellationToken);
         await entered.Task;
 
         Task<OneTimeContext<SetupMarker>>[] remaining = Enumerable.Range(0, 31)
-            .Select(_ => context.OneTimeSetup<SetupMarker>(() =>
+            .Select(_ => context.OneTimeSetupAsync<SetupMarker>(() =>
             {
                 Interlocked.Increment(ref callbackCount);
                 return Task.CompletedTask;
@@ -56,29 +56,29 @@ public sealed class PipeExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ONE-TIME-SETUP", "failure-is-retryable")]
-    public async Task OneTimeSetup_AfterAnIsolatedFailureAllowsAHealthyRetry()
+    public async Task OneTimeSetup_AfterAnIsolatedFailureAllowsAHealthyRetryAsync()
     {
         var context = new TestPipeContext();
         var expected = new SetupException("first attempt");
         var callbackCount = 0;
 
         SetupException actual = await Assert.ThrowsAsync<SetupException>(() =>
-            context.OneTimeSetup<SetupMarker>(() =>
+            context.OneTimeSetupAsync<SetupMarker>(() =>
             {
                 Interlocked.Increment(ref callbackCount);
                 return Task.FromException(expected);
-            }));
+            }, cancellationToken: TestContext.Current.CancellationToken));
 
-        OneTimeContext<SetupMarker> result = await context.OneTimeSetup<SetupMarker>(() =>
+        OneTimeContext<SetupMarker> result = await context.OneTimeSetupAsync<SetupMarker>(() =>
         {
             Interlocked.Increment(ref callbackCount);
             return Task.CompletedTask;
-        });
-        OneTimeContext<SetupMarker> cached = await context.OneTimeSetup<SetupMarker>(() =>
+        }, cancellationToken: TestContext.Current.CancellationToken);
+        OneTimeContext<SetupMarker> cached = await context.OneTimeSetupAsync<SetupMarker>(() =>
         {
             Interlocked.Increment(ref callbackCount);
             return Task.CompletedTask;
-        });
+        }, cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Same(expected, actual);
         Assert.NotNull(result);
@@ -88,7 +88,7 @@ public sealed class PipeExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ONE-TIME-SETUP", "concurrent-failure-shared-and-later-retry")]
-    public async Task OneTimeSetup_ConcurrentCallersShareTheFailedAttemptAndOnlyALaterCallerRetries()
+    public async Task OneTimeSetup_ConcurrentCallersShareTheFailedAttemptAndOnlyALaterCallerRetriesAsync()
     {
         var context = new TestPipeContext();
         var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -96,29 +96,29 @@ public sealed class PipeExtensionsTests
         var expected = new SetupException("leader failed");
         var callbackCount = 0;
 
-        Task<OneTimeContext<SetupMarker>> leader = context.OneTimeSetup<SetupMarker>(async () =>
+        Task<OneTimeContext<SetupMarker>> leader = context.OneTimeSetupAsync<SetupMarker>(async () =>
         {
             Interlocked.Increment(ref callbackCount);
             entered.SetResult();
             await release.Task;
             throw expected;
-        });
+        }, cancellationToken: TestContext.Current.CancellationToken);
         await entered.Task;
 
-        Task<OneTimeContext<SetupMarker>> concurrent = context.OneTimeSetup<SetupMarker>(() =>
+        Task<OneTimeContext<SetupMarker>> concurrent = context.OneTimeSetupAsync<SetupMarker>(() =>
         {
             Interlocked.Increment(ref callbackCount);
             return Task.FromException(new SetupException("a concurrent callback must not run"));
-        });
+        }, cancellationToken: TestContext.Current.CancellationToken);
         release.SetResult();
 
         SetupException leaderFailure = await Assert.ThrowsAsync<SetupException>(() => leader);
         SetupException concurrentFailure = await Assert.ThrowsAsync<SetupException>(() => concurrent);
-        OneTimeContext<SetupMarker> retry = await context.OneTimeSetup<SetupMarker>(() =>
+        OneTimeContext<SetupMarker> retry = await context.OneTimeSetupAsync<SetupMarker>(() =>
         {
             Interlocked.Increment(ref callbackCount);
             return Task.CompletedTask;
-        });
+        }, cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Same(expected, leaderFailure);
         Assert.Same(expected, concurrentFailure);
@@ -128,25 +128,25 @@ public sealed class PipeExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ONE-TIME-SETUP", "eviction-lifecycle")]
-    public async Task OneTimeSetup_EvictionRerunsSetupAndRejectsEvictionWhileRunning()
+    public async Task OneTimeSetup_EvictionRerunsSetupAndRejectsEvictionWhileRunningAsync()
     {
         var context = new TestPipeContext();
         var callbackCount = 0;
-        OneTimeContext<SetupMarker> control = await context.OneTimeSetup<SetupMarker>(() =>
+        OneTimeContext<SetupMarker> control = await context.OneTimeSetupAsync<SetupMarker>(() =>
         {
             Interlocked.Increment(ref callbackCount);
             return Task.CompletedTask;
-        });
+        }, cancellationToken: TestContext.Current.CancellationToken);
         control.Evict();
 
         var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-        Task<OneTimeContext<SetupMarker>> rerun = context.OneTimeSetup<SetupMarker>(async () =>
+        Task<OneTimeContext<SetupMarker>> rerun = context.OneTimeSetupAsync<SetupMarker>(async () =>
         {
             Interlocked.Increment(ref callbackCount);
             entered.SetResult();
             await release.Task;
-        });
+        }, cancellationToken: TestContext.Current.CancellationToken);
         await entered.Task;
 
         InvalidOperationException exception = Assert.Throws<InvalidOperationException>(control.Evict);
@@ -159,17 +159,17 @@ public sealed class PipeExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ONE-TIME-SETUP", "cancellation-and-invalid-callback")]
-    public async Task OneTimeSetup_PreservesCancellationAndRejectsANullCallbackTaskWithoutPoisoningTheContext()
+    public async Task OneTimeSetup_PreservesCancellationAndRejectsANullCallbackTaskWithoutPoisoningTheContextAsync()
     {
         var context = new TestPipeContext();
         using var cancellation = new CancellationTokenSource();
         cancellation.Cancel();
 
         OperationCanceledException canceled = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
-            context.OneTimeSetup<SetupMarker>(() => Task.FromCanceled(cancellation.Token)));
+            context.OneTimeSetupAsync<SetupMarker>(() => Task.FromCanceled(cancellation.Token), cancellationToken: TestContext.Current.CancellationToken));
         InvalidOperationException invalid = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            context.OneTimeSetup<SetupMarker>(() => null!));
-        OneTimeContext<SetupMarker> result = await context.OneTimeSetup<SetupMarker>(() => Task.CompletedTask);
+            context.OneTimeSetupAsync<SetupMarker>(() => null!, cancellationToken: TestContext.Current.CancellationToken));
+        OneTimeContext<SetupMarker> result = await context.OneTimeSetupAsync<SetupMarker>(() => Task.CompletedTask, cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal(cancellation.Token, canceled.CancellationToken);
         Assert.Equal("The one-time setup callback returned null.", invalid.Message);

@@ -10,7 +10,7 @@ public sealed class ConsumeContextPayloadPropagationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-SEND-CONTEXT-PAYLOAD", "root-and-message-send-filters")]
-    public async Task SendFilters_DistinguishExternalSendFromConsumeOwnedSendAndSeeItsPayload()
+    public async Task SendFilters_DistinguishExternalSendFromConsumeOwnedSendAndSeeItsPayloadAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -37,16 +37,16 @@ public sealed class ConsumeContextPayloadPropagationTests
             endpoint.Handler<InboundSend>(async context =>
             {
                 inbound.TrySetResult(context);
-                await context.Send(new OutboundSend(context.Message.CorrelationId), context.CancellationToken);
+                await context.Advanced().SendAsync(new OutboundSend(context.Message.CorrelationId), context.CancellationToken);
             });
-            endpoint.Handler<OutboundSend>(context => Complete(outbound, context));
+            endpoint.Handler<OutboundSend>(context => CompleteAsync(outbound, context));
         };
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             var message = new InboundSend(NewId.NextGuid());
-            await harness.InputQueueSendEndpoint.Send(message, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(message, cancellationToken);
 
             ConsumeContext<InboundSend> inboundContext = await inbound.Task.WaitAsync(timeout, cancellationToken);
             ConsumeContext<OutboundSend> outboundContext = await outbound.Task.WaitAsync(timeout, cancellationToken);
@@ -60,13 +60,13 @@ public sealed class ConsumeContextPayloadPropagationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PUBLISH-CONTEXT-PAYLOAD", "root-and-message-publish-filters")]
-    public async Task PublishFilters_SeeTheConsumeContextAndItsCustomPayload()
+    public async Task PublishFilters_SeeTheConsumeContextAndItsCustomPayloadAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -89,16 +89,16 @@ public sealed class ConsumeContextPayloadPropagationTests
             endpoint.Handler<InboundPublish>(async context =>
             {
                 inbound.TrySetResult(context);
-                await context.Publish(new OutboundPublish(context.Message.CorrelationId), context.CancellationToken);
+                await context.Advanced().PublishAsync(new OutboundPublish(context.Message.CorrelationId), context.CancellationToken);
             });
-            endpoint.Handler<OutboundPublish>(context => Complete(outbound, context));
+            endpoint.Handler<OutboundPublish>(context => CompleteAsync(outbound, context));
         };
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             var message = new InboundPublish(NewId.NextGuid());
-            await harness.Bus.Publish(message, cancellationToken);
+            await harness.Bus.PublishAsync(message, cancellationToken);
 
             ConsumeContext<InboundPublish> inboundContext = await inbound.Task.WaitAsync(timeout, cancellationToken);
             ConsumeContext<OutboundPublish> outboundContext = await outbound.Task.WaitAsync(timeout, cancellationToken);
@@ -112,7 +112,7 @@ public sealed class ConsumeContextPayloadPropagationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -126,7 +126,7 @@ public sealed class ConsumeContextPayloadPropagationTests
             : "consume:missing";
     }
 
-    private static Task Complete<T>(TaskCompletionSource<ConsumeContext<T>> signal, ConsumeContext<T> context)
+    private static Task CompleteAsync<T>(TaskCompletionSource<ConsumeContext<T>> signal, ConsumeContext<T> context)
         where T : class
     {
         signal.TrySetResult(context);
@@ -169,10 +169,10 @@ public sealed class ConsumeContextPayloadPropagationTests
     private sealed class SendPayloadFilter<T> : IFilter<SendContext<T>>
         where T : class
     {
-        public async Task Send(SendContext<T> context, IPipe<SendContext<T>> next)
+        public async Task SendAsync(SendContext<T> context, IPipe<SendContext<T>> next)
         {
             context.Headers.Set("message-payload", Describe(context));
-            await next.Send(context);
+            await next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateScope("consume-context-payload");
@@ -197,10 +197,10 @@ public sealed class ConsumeContextPayloadPropagationTests
     private sealed class PublishPayloadFilter<T> : IFilter<PublishContext<T>>
         where T : class
     {
-        public async Task Send(PublishContext<T> context, IPipe<PublishContext<T>> next)
+        public async Task SendAsync(PublishContext<T> context, IPipe<PublishContext<T>> next)
         {
             context.Headers.Set("message-payload", Describe(context));
-            await next.Send(context);
+            await next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateScope("consume-context-payload");

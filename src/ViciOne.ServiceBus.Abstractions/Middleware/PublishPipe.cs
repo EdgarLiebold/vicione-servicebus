@@ -29,17 +29,17 @@ public class PublishPipe :
 
     [DebuggerNonUserCode]
     [DebuggerStepThrough]
-    public Task Send<T>(PublishContext<T> context)
+    public Task SendAsync<T>(PublishContext<T> context, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _outputPipes.GetOrAdd(typeof(T), x => new MessagePipe<T>(_specification.GetMessageSpecification<T>())).Send(context);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return _outputPipes.GetOrAdd(typeof(T), x => new MessagePipe<T>(_specification.GetMessageSpecification<T>())).SendAsync(context);
     }
 
 
     interface IMessagePipe :
         IProbeSite
     {
-        Task Send<T>(PublishContext<T> context)
+        Task SendAsync<T>(PublishContext<T> context)
             where T : class;
     }
 
@@ -58,10 +58,10 @@ public class PublishPipe :
             _specification = specification;
         }
 
-        public Task Send<T>(PublishContext<T> context)
+        public Task SendAsync<T>(PublishContext<T> context)
             where T : class
         {
-            return _output.Value.Send((PublishContext<TMessage>)context);
+            return _output.Value.SendAsync((PublishContext<TMessage>)context);
         }
 
         public void Probe(ProbeContext context)

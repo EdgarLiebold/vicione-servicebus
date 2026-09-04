@@ -9,37 +9,37 @@ public sealed class InMemoryTestHarnessBehaviorTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-CONSUMER", "send-consume-respond-observations")]
-    public async Task ConsumerHarness_ObservesTheCompleteSendConsumeAndPublishPath()
+    public async Task ConsumerHarness_ObservesTheCompleteSendConsumeAndPublishPathAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout);
         ConsumerTestHarness<ReplyingConsumer> consumer = harness.Consumer<ReplyingConsumer>();
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(new RequestMessage("request"), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new RequestMessage("request"), cancellationToken);
 
-            Assert.True(await harness.Sent.Any<RequestMessage>(cancellationToken));
-            Assert.True(await harness.Consumed.Any<RequestMessage>(cancellationToken));
-            Assert.True(await consumer.Consumed.Any<RequestMessage>(cancellationToken));
+            Assert.True(await harness.Sent.AnyAsync<RequestMessage>(cancellationToken));
+            Assert.True(await harness.Consumed.AnyAsync<RequestMessage>(cancellationToken));
+            Assert.True(await consumer.Consumed.AnyAsync<RequestMessage>(cancellationToken));
 
             IPublishedMessage<ReplyMessage> response = await harness.Published
                 .SelectAsync<ReplyMessage>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             Assert.Equal("reply:request", response.Context.Message.Value);
             Assert.Null(response.Exception);
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-CONSUMER", "in-flight-completion-without-wall-clock-delay")]
-    public async Task ConsumerHarness_DoesNotReportCompletionBeforeTheConsumerCompletes()
+    public async Task ConsumerHarness_DoesNotReportCompletionBeforeTheConsumerCompletesAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -48,100 +48,100 @@ public sealed class InMemoryTestHarnessBehaviorTests
         using var harness = CreateHarness(timeout);
         ConsumerTestHarness<GatedConsumer> consumer = harness.Consumer(() => new GatedConsumer(entered, release));
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(new GatedMessage(), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new GatedMessage(), cancellationToken);
             await entered.Task.WaitAsync(timeout, cancellationToken);
 
-            Task<bool> observation = consumer.Consumed.Any<GatedMessage>(cancellationToken);
+            Task<bool> observation = consumer.Consumed.AnyAsync<GatedMessage>(cancellationToken);
             Assert.False(observation.IsCompleted);
 
             release.TrySetResult(true);
 
             Assert.True(await observation.WaitAsync(timeout, cancellationToken));
-            Assert.True(await harness.Sent.Any<GatedMessage>(cancellationToken));
-            Assert.True(await harness.Consumed.Any<GatedMessage>(cancellationToken));
+            Assert.True(await harness.Sent.AnyAsync<GatedMessage>(cancellationToken));
+            Assert.True(await harness.Consumed.AnyAsync<GatedMessage>(cancellationToken));
             IPublishedMessage<GatedResponse> response = await harness.Published
                 .SelectAsync<GatedResponse>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             Assert.Equal("completed", response.Context.Message.Value);
             Assert.Null(response.Exception);
         }
         finally
         {
             release.TrySetResult(true);
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-CONSUMER", "multiple-message-contracts-and-addressed-responses")]
-    public async Task MultiContractConsumer_RecordsBothContractsAndTheirAddressedResponses()
+    public async Task MultiContractConsumer_RecordsBothContractsAndTheirAddressedResponsesAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout);
         ConsumerTestHarness<MultiContractConsumer> consumer = harness.Consumer<MultiContractConsumer>();
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.InputQueueSendEndpoint.SendAsync(
                 new FirstRequest(),
                 context => context.ResponseAddress = harness.BusAddress,
                 cancellationToken);
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.InputQueueSendEndpoint.SendAsync(
                 new SecondRequest(),
                 context => context.ResponseAddress = harness.BusAddress,
                 cancellationToken);
 
-            Assert.True(await consumer.Consumed.Any<FirstRequest>(cancellationToken));
-            Assert.True(await consumer.Consumed.Any<SecondRequest>(cancellationToken));
-            Assert.True(await harness.Sent.Any<FirstRequest>(cancellationToken));
-            Assert.True(await harness.Consumed.Any<FirstRequest>(cancellationToken));
+            Assert.True(await consumer.Consumed.AnyAsync<FirstRequest>(cancellationToken));
+            Assert.True(await consumer.Consumed.AnyAsync<SecondRequest>(cancellationToken));
+            Assert.True(await harness.Sent.AnyAsync<FirstRequest>(cancellationToken));
+            Assert.True(await harness.Consumed.AnyAsync<FirstRequest>(cancellationToken));
 
-            ISentMessage<FirstResponse> first = await harness.Sent.SelectAsync<FirstResponse>(cancellationToken).First();
-            ISentMessage<SecondResponse> second = await harness.Sent.SelectAsync<SecondResponse>(cancellationToken).First();
+            ISentMessage<FirstResponse> first = await harness.Sent.SelectAsync<FirstResponse>(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
+            ISentMessage<SecondResponse> second = await harness.Sent.SelectAsync<SecondResponse>(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             Assert.Equal(harness.BusAddress, first.Context.DestinationAddress);
             Assert.Equal(harness.BusAddress, second.Context.DestinationAddress);
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-CONSUMER", "interface-contract-projection")]
-    public async Task InterfaceConsumer_PreservesConcreteAndInterfaceObservations()
+    public async Task InterfaceConsumer_PreservesConcreteAndInterfaceObservationsAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout);
         ConsumerTestHarness<InterfaceConsumer> consumer = harness.Consumer<InterfaceConsumer>();
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(new ConcreteRequest("value"), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new ConcreteRequest("value"), cancellationToken);
 
-            Assert.True(await harness.Sent.Any<ConcreteRequest>(cancellationToken));
-            Assert.True(await harness.Sent.Any<IRequestContract>(cancellationToken));
-            Assert.True(await harness.Consumed.Any<IRequestContract>(cancellationToken));
-            Assert.True(await consumer.Consumed.Any<IRequestContract>(cancellationToken));
-            Assert.True(await harness.Published.Any<ConcreteReply>(cancellationToken));
-            Assert.True(await harness.Published.Any<IReplyContract>(cancellationToken));
+            Assert.True(await harness.Sent.AnyAsync<ConcreteRequest>(cancellationToken));
+            Assert.True(await harness.Sent.AnyAsync<IRequestContract>(cancellationToken));
+            Assert.True(await harness.Consumed.AnyAsync<IRequestContract>(cancellationToken));
+            Assert.True(await consumer.Consumed.AnyAsync<IRequestContract>(cancellationToken));
+            Assert.True(await harness.Published.AnyAsync<ConcreteReply>(cancellationToken));
+            Assert.True(await harness.Published.AnyAsync<IReplyContract>(cancellationToken));
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-HANDLER", "response-destination-and-observation")]
-    public async Task HandlerHarness_RecordsTheHandledMessageAndExactResponseDestination()
+    public async Task HandlerHarness_RecordsTheHandledMessageAndExactResponseDestinationAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -149,16 +149,16 @@ public sealed class InMemoryTestHarnessBehaviorTests
         HandlerTestHarness<HandlerRequest> handler = harness.Handler<HandlerRequest>(context =>
             context.RespondAsync(new HandlerResponse(context.Message.Value + 1)));
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.InputQueueSendEndpoint.SendAsync(
                 new HandlerRequest(41),
                 context => context.ResponseAddress = harness.BusAddress,
                 cancellationToken);
 
-            IReceivedMessage<HandlerRequest> handled = await handler.Consumed.SelectAsync(cancellationToken).First();
-            ISentMessage<HandlerResponse> response = await harness.Sent.SelectAsync<HandlerResponse>(cancellationToken).First();
+            IReceivedMessage<HandlerRequest> handled = await handler.Consumed.SelectAsync(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
+            ISentMessage<HandlerResponse> response = await harness.Sent.SelectAsync<HandlerResponse>(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             Assert.Equal(41, handled.Context.Message.Value);
             Assert.Null(handled.Exception);
@@ -167,13 +167,13 @@ public sealed class InMemoryTestHarnessBehaviorTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-HANDLER", "failure-recorded-and-propagated")]
-    public async Task HandlerHarness_RecordsAndPropagatesTheExactHandlerFailure()
+    public async Task HandlerHarness_RecordsAndPropagatesTheExactHandlerFailureAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -181,89 +181,89 @@ public sealed class InMemoryTestHarnessBehaviorTests
         using var harness = CreateHarness(timeout);
         HandlerTestHarness<FailingHandlerMessage> handler = harness.Handler<FailingHandlerMessage>(_ => Task.FromException(expected));
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(new FailingHandlerMessage(), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new FailingHandlerMessage(), cancellationToken);
 
-            IReceivedMessage<FailingHandlerMessage> handled = await handler.Consumed.SelectAsync(cancellationToken).First();
+            IReceivedMessage<FailingHandlerMessage> handled = await handler.Consumed.SelectAsync(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             IReceivedMessage<FailingHandlerMessage> pipeline = await harness.Consumed
                 .SelectAsync<FailingHandlerMessage>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             Assert.Same(expected, handled.Exception);
             Assert.Same(expected, pipeline.Exception);
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-HANDLER", "default-handler-send-observation")]
-    public async Task DefaultHandlerHarness_ObservesASentMessageWithoutApplicationBehavior()
+    public async Task DefaultHandlerHarness_ObservesASentMessageWithoutApplicationBehaviorAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout);
         HandlerTestHarness<PassiveHandlerMessage> handler = harness.Handler<PassiveHandlerMessage>();
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(new PassiveHandlerMessage("sent"), cancellationToken);
-            await harness.InputQueueSendEndpoint.Send(new UnconsumedPassiveMessage("also-sent"), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new PassiveHandlerMessage("sent"), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new UnconsumedPassiveMessage("also-sent"), cancellationToken);
 
             IReceivedMessage<PassiveHandlerMessage> handled = await handler.Consumed
                 .SelectAsync(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             Assert.Equal("sent", handled.Context.Message.Value);
             Assert.Null(handled.Exception);
-            Assert.True(await harness.Sent.Any<PassiveHandlerMessage>(cancellationToken));
-            Assert.True(await harness.Sent.Any<UnconsumedPassiveMessage>(cancellationToken));
-            Assert.True(await harness.Consumed.Any<PassiveHandlerMessage>(cancellationToken));
+            Assert.True(await harness.Sent.AnyAsync<PassiveHandlerMessage>(cancellationToken));
+            Assert.True(await harness.Sent.AnyAsync<UnconsumedPassiveMessage>(cancellationToken));
+            Assert.True(await harness.Consumed.AnyAsync<PassiveHandlerMessage>(cancellationToken));
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-HANDLER", "default-handler-publish-interface-projection")]
-    public async Task DefaultHandlerHarness_ObservesPublishedConcreteAndInterfaceContracts()
+    public async Task DefaultHandlerHarness_ObservesPublishedConcreteAndInterfaceContractsAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout);
         HandlerTestHarness<IPassiveHandlerContract> handler = harness.Handler<IPassiveHandlerContract>();
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            await harness.Bus.Publish(new ConcretePassiveHandlerMessage("published"), cancellationToken);
+            await harness.Bus.PublishAsync(new ConcretePassiveHandlerMessage("published"), cancellationToken);
 
             IReceivedMessage<IPassiveHandlerContract> handled = await handler.Consumed
                 .SelectAsync(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             Assert.Equal("published", handled.Context.Message.Value);
             Assert.Null(handled.Exception);
-            Assert.True(await harness.Published.Any<ConcretePassiveHandlerMessage>(cancellationToken));
-            Assert.True(await harness.Published.Any<IPassiveHandlerContract>(cancellationToken));
-            Assert.True(await harness.Consumed.Any<IPassiveHandlerContract>(cancellationToken));
+            Assert.True(await harness.Published.AnyAsync<ConcretePassiveHandlerMessage>(cancellationToken));
+            Assert.True(await harness.Published.AnyAsync<IPassiveHandlerContract>(cancellationToken));
+            Assert.True(await harness.Consumed.AnyAsync<IPassiveHandlerContract>(cancellationToken));
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-CONSUMER", "failure-recorded-and-propagated")]
-    public async Task ConsumerHarness_RecordsAndPropagatesTheExactConsumerFailure()
+    public async Task ConsumerHarness_RecordsAndPropagatesTheExactConsumerFailureAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -271,30 +271,30 @@ public sealed class InMemoryTestHarnessBehaviorTests
         using var harness = CreateHarness(timeout);
         ConsumerTestHarness<FailingConsumer> consumer = harness.Consumer(() => new FailingConsumer(expected));
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(new FailingConsumerMessage(), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new FailingConsumerMessage(), cancellationToken);
 
             IReceivedMessage<FailingConsumerMessage> consumerObservation = await consumer.Consumed
                 .SelectAsync<FailingConsumerMessage>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             IReceivedMessage<FailingConsumerMessage> pipelineObservation = await harness.Consumed
                 .SelectAsync<FailingConsumerMessage>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             Assert.Same(expected, consumerObservation.Exception);
             Assert.Same(expected, pipelineObservation.Exception);
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-CONSUMER", "named-endpoint-configuration")]
-    public async Task NamedConsumerHarness_ConsumesOnlyFromItsDedicatedEndpoint()
+    public async Task NamedConsumerHarness_ConsumesOnlyFromItsDedicatedEndpointAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -302,23 +302,23 @@ public sealed class InMemoryTestHarnessBehaviorTests
         using var harness = CreateHarness(timeout);
         ConsumerTestHarness<NamedConsumer> consumer = harness.Consumer<NamedConsumer>(queueName);
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            ISendEndpoint endpoint = await harness.GetSendEndpoint(new Uri(harness.BaseAddress, queueName));
-            await endpoint.Send(new NamedConsumerMessage("expected"), cancellationToken);
+            ISendEndpoint endpoint = await harness.GetSendEndpointAsync(new Uri(harness.BaseAddress, queueName), TestContext.Current.CancellationToken);
+            await endpoint.SendAsync(new NamedConsumerMessage("expected"), cancellationToken);
 
             IReceivedMessage<NamedConsumerMessage> received = await consumer.Consumed
                 .SelectAsync<NamedConsumerMessage>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             Assert.Equal("expected", received.Context.Message.Value);
-            Assert.Equal(new Uri(harness.BaseAddress, queueName), received.Context.ReceiveContext.InputAddress);
+            Assert.Equal(new Uri(harness.BaseAddress, queueName), received.Context.Advanced().ReceiveContext.InputAddress);
             Assert.Null(received.Exception);
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
@@ -339,7 +339,7 @@ public sealed class InMemoryTestHarnessBehaviorTests
 
     private sealed class ReplyingConsumer : IConsumer<RequestMessage>
     {
-        public Task Consume(ConsumeContext<RequestMessage> context) =>
+        public Task ConsumeAsync(ConsumeContext<RequestMessage> context) =>
             context.RespondAsync(new ReplyMessage($"reply:{context.Message.Value}"));
     }
 
@@ -349,7 +349,7 @@ public sealed class InMemoryTestHarnessBehaviorTests
         TaskCompletionSource<bool> entered,
         TaskCompletionSource<bool> release) : IConsumer<GatedMessage>
     {
-        public async Task Consume(ConsumeContext<GatedMessage> context)
+        public async Task ConsumeAsync(ConsumeContext<GatedMessage> context)
         {
             entered.TrySetResult(true);
             await release.Task.WaitAsync(context.CancellationToken);
@@ -371,9 +371,9 @@ public sealed class InMemoryTestHarnessBehaviorTests
         IConsumer<FirstRequest>,
         IConsumer<SecondRequest>
     {
-        public Task Consume(ConsumeContext<FirstRequest> context) => context.RespondAsync(new FirstResponse());
+        public Task ConsumeAsync(ConsumeContext<FirstRequest> context) => context.RespondAsync(new FirstResponse());
 
-        public Task Consume(ConsumeContext<SecondRequest> context) => context.RespondAsync(new SecondResponse());
+        public Task ConsumeAsync(ConsumeContext<SecondRequest> context) => context.RespondAsync(new SecondResponse());
     }
 
     public interface IRequestContract
@@ -392,7 +392,7 @@ public sealed class InMemoryTestHarnessBehaviorTests
 
     private sealed class InterfaceConsumer : IConsumer<IRequestContract>
     {
-        public Task Consume(ConsumeContext<IRequestContract> context) =>
+        public Task ConsumeAsync(ConsumeContext<IRequestContract> context) =>
             context.RespondAsync(new ConcreteReply(context.Message.Value));
     }
 
@@ -417,13 +417,13 @@ public sealed class InMemoryTestHarnessBehaviorTests
 
     private sealed class FailingConsumer(Exception exception) : IConsumer<FailingConsumerMessage>
     {
-        public Task Consume(ConsumeContext<FailingConsumerMessage> context) => Task.FromException(exception);
+        public Task ConsumeAsync(ConsumeContext<FailingConsumerMessage> context) => Task.FromException(exception);
     }
 
     private sealed record NamedConsumerMessage(string Value);
 
     private sealed class NamedConsumer : IConsumer<NamedConsumerMessage>
     {
-        public Task Consume(ConsumeContext<NamedConsumerMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<NamedConsumerMessage> context) => Task.CompletedTask;
     }
 }

@@ -17,7 +17,7 @@ public class GetMessageData<T> :
     readonly CancellationToken _cancellationToken;
     readonly IMessageDataConverter<T> _converter;
     readonly IMessageDataRepository _repository;
-    readonly Lazy<Task<T>> _value;
+    readonly Lazy<Task<T?>> _value;
 
     public GetMessageData(Uri address, IMessageDataRepository repository, IMessageDataConverter<T> converter, CancellationToken cancellationToken)
     {
@@ -27,25 +27,25 @@ public class GetMessageData<T> :
 
         _cancellationToken = cancellationToken;
 
-        _value = new Lazy<Task<T>>(GetValue);
+        _value = new Lazy<Task<T?>>(GetValueAsync);
     }
 
     public Uri Address { get; }
 
     public bool HasValue => true;
 
-    public Task<T> Value => _value.Value;
+    public Task<T?> Value => _value.Value;
 
-    async Task<T> GetValue()
+    async Task<T?> GetValueAsync()
     {
         // To prevent the stream message data convertor from having to copy the stream, the stream
         // is not disposed if the converter is a StreamMessageDataConverter
 
-        Stream valueStream = null;
+        Stream? valueStream = null;
         try
         {
-            valueStream = await _repository.Get(Address, _cancellationToken).ConfigureAwait(false);
-            return await _converter.Convert(valueStream, _cancellationToken).ConfigureAwait(false);
+            valueStream = await _repository.GetAsync(Address, _cancellationToken).ConfigureAwait(false);
+            return await _converter.ConvertAsync(valueStream, _cancellationToken).ConfigureAwait(false);
         }
         finally
         {

@@ -5,9 +5,9 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters;
 public class ToObjectPropertyConverter<TInput> :
     IPropertyConverter<object, TInput>
 {
-    public Task<object> Convert<T>(InitializeContext<T> context, TInput input)
+    public Task<object?> ConvertAsync<T>(InitializeContext<T> context, TInput? input, CancellationToken cancellationToken = default)
         where T : class
     {
-        return Task.FromResult<object>(input);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<object?>(cancellationToken); return Task.FromResult<object?>(input);
     }
 }

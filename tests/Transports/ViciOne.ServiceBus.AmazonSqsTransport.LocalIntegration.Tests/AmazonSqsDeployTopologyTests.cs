@@ -9,7 +9,7 @@ public sealed class AmazonSqsDeployTopologyTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0230", "explicit-types-create-only-included-topics-at-startup")]
-    public async Task ExplicitTypes_CreateOnlyIncludedTopicsAtStartup()
+    public async Task ExplicitTypes_CreateOnlyIncludedTopicsAtStartupAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("deploy-explicit");
         IBusControl bus = Bus.Factory.CreateUsingAmazonSqs(configurator =>
@@ -20,7 +20,7 @@ public sealed class AmazonSqsDeployTopologyTests
             configurator.Publish<PackageShipped>();
         });
 
-        await AssertDeployedTopics(
+        await AssertDeployedTopicsAsync(
             fixture,
             bus,
             [typeof(OrderSubmitted), typeof(PackageShipped)]);
@@ -28,7 +28,7 @@ public sealed class AmazonSqsDeployTopologyTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0231", "namespace-scan-creates-only-included-topics-at-startup")]
-    public async Task NamespaceScan_CreatesOnlyIncludedTopicsAtStartup()
+    public async Task NamespaceScan_CreatesOnlyIncludedTopicsAtStartupAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("deploy-namespace");
         IBusControl bus = Bus.Factory.CreateUsingAmazonSqs(configurator =>
@@ -38,13 +38,13 @@ public sealed class AmazonSqsDeployTopologyTests
             configurator.AddPublishMessageTypesFromNamespaceContaining<OrderSubmitted>();
         });
 
-        await AssertDeployedTopics(
+        await AssertDeployedTopicsAsync(
             fixture,
             bus,
             [typeof(CustomerEvent), typeof(OrderSubmitted), typeof(OrderEvent), typeof(PackageShipped)]);
     }
 
-    private static async Task AssertDeployedTopics(
+    private static async Task AssertDeployedTopicsAsync(
         AmazonSqsLocalStack fixture,
         IBusControl bus,
         Type[] includedTypes)
@@ -61,7 +61,7 @@ public sealed class AmazonSqsDeployTopologyTests
                 .Select(type => $"{fixture.Prefix}_{formatter.GetMessageName(type)}")
                 .Order(StringComparer.Ordinal)
                 .ToArray();
-            string[] actual = await fixture.ListOwnedTopicNames(cancellationToken);
+            string[] actual = await fixture.ListOwnedTopicNamesAsync(cancellationToken);
             Assert.Equal(expected, actual);
             Assert.DoesNotContain(
                 $"{fixture.Prefix}_{formatter.GetMessageName(typeof(PackageEvent))}",

@@ -17,5 +17,6 @@ public class ConsumePipeConfiguration :
 
     public IConsumePipeSpecification Specification { get; }
 
-    public IConsumePipeConfigurator Configurator => Specification as IConsumePipeConfigurator;
+    public IConsumePipeConfigurator Configurator => Specification as IConsumePipeConfigurator
+        ?? throw new InvalidOperationException("The consume pipe specification does not expose a configurator.");
 }

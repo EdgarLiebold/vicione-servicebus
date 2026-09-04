@@ -15,7 +15,7 @@ public sealed class AmazonSqsFifoTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0208", "fifo-topic-and-queue-deliver-one-grouped-publish")]
-    public async Task FifoTopicAndQueue_PreserveExactGroupOrder()
+    public async Task FifoTopicAndQueue_PreserveExactGroupOrderAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("fifopublish");
         using AmazonSQSClient sqs = fixture.CreateSqsClient();
@@ -50,7 +50,7 @@ public sealed class AmazonSqsFifoTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            await bus.Publish(
+            await bus.PublishAsync(
                     new FifoPublishedMessage(correlationId),
                     context => context.SetGroupId(groupId),
                     cancellationToken)
@@ -59,8 +59,8 @@ public sealed class AmazonSqsFifoTests
             Assert.Equal(
                 new ObservedFifoMessage(correlationId, groupId),
                 await received.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
-            Assert.Equal([queueName], await ListOwnedQueueNames(sqs, fixture.Prefix, fixture.OperationTimeout, cancellationToken));
-            string actualTopic = Assert.Single(await ListOwnedTopicNames(sns, fixture.Prefix, fixture.OperationTimeout, cancellationToken));
+            Assert.Equal([queueName], await ListOwnedQueueNamesAsync(sqs, fixture.Prefix, fixture.OperationTimeout, cancellationToken));
+            string actualTopic = Assert.Single(await ListOwnedTopicNamesAsync(sns, fixture.Prefix, fixture.OperationTimeout, cancellationToken));
             Assert.EndsWith(topicName, actualTopic, StringComparison.Ordinal);
         }
         finally
@@ -72,7 +72,7 @@ public sealed class AmazonSqsFifoTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SQS-FIFO-PUBLISH", "missing-group-id-is-rejected-by-provider")]
-    public async Task FifoPublishWithoutGroupId_IsRejected()
+    public async Task FifoPublishWithoutGroupId_IsRejectedAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("fifonogroup");
         string topicName = fixture.Name("orderedtopic", fifo: true);
@@ -92,7 +92,7 @@ public sealed class AmazonSqsFifoTests
             started = true;
 
             await Assert.ThrowsAsync<InvalidParameterException>(() =>
-                bus.Publish(new FifoPublishedMessage(Guid.NewGuid()), cancellationToken));
+                bus.PublishAsync(new FifoPublishedMessage(Guid.NewGuid()), cancellationToken));
         }
         finally
         {
@@ -103,7 +103,7 @@ public sealed class AmazonSqsFifoTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0209", "global-formatters-create-working-fifo-topology")]
-    public async Task EntityFormatter_ProducesValidFifoTopicAndQueueNames()
+    public async Task EntityFormatter_ProducesValidFifoTopicAndQueueNamesAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("fifoformatters");
         using AmazonSQSClient sqs = fixture.CreateSqsClient();
@@ -139,7 +139,7 @@ public sealed class AmazonSqsFifoTests
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
             Guid expected = Guid.NewGuid();
-            await bus.Publish(
+            await bus.PublishAsync(
                     new FormatterMessage(expected),
                     context => context.SetGroupId(expected.ToString("N")),
                     cancellationToken)
@@ -158,10 +158,10 @@ public sealed class AmazonSqsFifoTests
                 },
                 name => Assert.EndsWith(".fifo", name, StringComparison.Ordinal));
             Assert.All(
-                await ListOwnedQueueNames(sqs, fixture.Prefix, fixture.OperationTimeout, cancellationToken),
+                await ListOwnedQueueNamesAsync(sqs, fixture.Prefix, fixture.OperationTimeout, cancellationToken),
                 name => Assert.EndsWith(".fifo", name, StringComparison.Ordinal));
             Assert.All(
-                await ListOwnedTopicNames(sns, fixture.Prefix, fixture.OperationTimeout, cancellationToken),
+                await ListOwnedTopicNamesAsync(sns, fixture.Prefix, fixture.OperationTimeout, cancellationToken),
                 name => Assert.EndsWith(".fifo", name, StringComparison.Ordinal));
         }
         finally
@@ -173,7 +173,7 @@ public sealed class AmazonSqsFifoTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0210", "one-message-group-is-delivered-in-exact-sequence")]
-    public async Task OneGroup_IsDeliveredInStrictSequence()
+    public async Task OneGroup_IsDeliveredInStrictSequenceAsync()
     {
         const int messageCount = 20;
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("fifoonegroup");
@@ -207,11 +207,10 @@ public sealed class AmazonSqsFifoTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             for (int index = 0; index < messageCount; index++)
             {
-                await endpoint.Send(
+                await endpoint.SendAsync(
                         new OrderedMessage(groupId, index),
                         context => context.SetGroupId(groupId),
                         cancellationToken)
@@ -230,7 +229,7 @@ public sealed class AmazonSqsFifoTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0211", "groups-remain-ordered-and-one-blocked-group-does-not-block-another")]
-    public async Task MultipleGroups_AreEachOrderedAndCanProgressIndependently()
+    public async Task MultipleGroups_AreEachOrderedAndCanProgressIndependentlyAsync()
     {
         const int messagesPerGroup = 10;
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("fifogroups");
@@ -285,18 +284,17 @@ public sealed class AmazonSqsFifoTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await SendOrdered(endpoint, blockedGroup, 0, fixture.OperationTimeout, cancellationToken);
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await SendOrderedAsync(endpoint, blockedGroup, 0, fixture.OperationTimeout, cancellationToken);
             await blockedEntered.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             for (int index = 0; index < messagesPerGroup; index++)
-                await SendOrdered(endpoint, progressingGroup, index, fixture.OperationTimeout, cancellationToken);
+                await SendOrderedAsync(endpoint, progressingGroup, index, fixture.OperationTimeout, cancellationToken);
             await progressingComplete.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.Empty(blockedReceived);
 
             for (int index = 1; index < messagesPerGroup; index++)
-                await SendOrdered(endpoint, blockedGroup, index, fixture.OperationTimeout, cancellationToken);
+                await SendOrderedAsync(endpoint, blockedGroup, index, fixture.OperationTimeout, cancellationToken);
             releaseBlocked.TrySetResult();
             await allReceived.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
 
@@ -313,7 +311,7 @@ public sealed class AmazonSqsFifoTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0270", "disabled-ordering-dispatches-one-group-concurrently")]
-    public async Task DisableOrdering_AllowsIndependentSameGroupDispatch()
+    public async Task DisableOrdering_AllowsIndependentSameGroupDispatchAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("fifounordered");
         string queueName = fixture.Name("input", fifo: true);
@@ -326,11 +324,10 @@ public sealed class AmazonSqsFifoTests
         {
             await sender.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             senderStarted = true;
-            ISendEndpoint input = await sender.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            ISendEndpoint input = await sender.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             for (int index = 0; index < 2; index++)
             {
-                await input.Send(
+                await input.SendAsync(
                         new OrderedMessage(groupId, index),
                         context =>
                         {
@@ -403,13 +400,13 @@ public sealed class AmazonSqsFifoTests
         }
     }
 
-    private static Task SendOrdered(
+    private static Task SendOrderedAsync(
         ISendEndpoint endpoint,
         string groupId,
         int index,
         TimeSpan timeout,
         CancellationToken cancellationToken) =>
-        endpoint.Send(
+        endpoint.SendAsync(
                 new OrderedMessage(groupId, index),
                 context => context.SetGroupId(groupId),
                 cancellationToken)
@@ -442,7 +439,7 @@ public sealed class AmazonSqsFifoTests
                 : null;
     }
 
-    private static async Task<string[]> ListOwnedQueueNames(
+    private static async Task<string[]> ListOwnedQueueNamesAsync(
         IAmazonSQS sqs,
         string prefix,
         TimeSpan timeout,
@@ -457,7 +454,7 @@ public sealed class AmazonSqsFifoTests
             .ToArray();
     }
 
-    private static async Task<string[]> ListOwnedTopicNames(
+    private static async Task<string[]> ListOwnedTopicNamesAsync(
         IAmazonSimpleNotificationService sns,
         string prefix,
         TimeSpan timeout,
@@ -481,7 +478,7 @@ public sealed class AmazonSqsFifoTests
 
     public sealed class FormatterMessageConsumer(TaskCompletionSource<Guid> received) : IConsumer<FormatterMessage>
     {
-        public Task Consume(ConsumeContext<FormatterMessage> context)
+        public Task ConsumeAsync(ConsumeContext<FormatterMessage> context)
         {
             received.TrySetResult(context.Message.CorrelationId);
             return Task.CompletedTask;
@@ -495,13 +492,13 @@ public sealed class AmazonSqsFifoTests
 
     public sealed class FormatterExecuteActivity : IExecuteActivity<FormatterArguments>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<FormatterArguments> context) =>
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<FormatterArguments> context) =>
             Task.FromResult(context.Completed());
     }
 
     public sealed class FormatterCompensateActivity : ICompensateActivity<FormatterLog>
     {
-        public Task<CompensationResult> Compensate(CompensateContext<FormatterLog> context) =>
+        public Task<CompensationResult> CompensateAsync(CompensateContext<FormatterLog> context) =>
             Task.FromResult(context.Compensated());
     }
 

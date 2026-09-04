@@ -9,7 +9,7 @@ public sealed class ActiveMqJolokiaTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-RUN-SCOPED-ADMIN", "nondefault-jolokia-endpoint-deletes-only-the-owned-entity")]
-    public async Task RunScopedAdminEndpoint_CleansExactlyThisBroker()
+    public async Task RunScopedAdminEndpoint_CleansExactlyThisBrokerAsync()
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(ActiveMqBroker.OpenWireFlavor, "admin-cleanup");
         string target = fixture.Name("target");
@@ -23,23 +23,23 @@ public sealed class ActiveMqJolokiaTests
             using IMessageConsumer targetConsumer = session.CreateConsumer(session.GetQueue(target));
             using IMessageConsumer sentinelConsumer = session.CreateConsumer(session.GetQueue(sentinel));
 
-            Assert.True(await fixture.ClassicQueueExists(target, cancellationToken));
-            Assert.True(await fixture.ClassicQueueExists(sentinel, cancellationToken));
+            Assert.True(await fixture.ClassicQueueExistsAsync(target, cancellationToken));
+            Assert.True(await fixture.ClassicQueueExistsAsync(sentinel, cancellationToken));
         }
 
         try
         {
-            await fixture.DeleteClassicQueue(target, cancellationToken);
+            await fixture.DeleteClassicQueueAsync(target, cancellationToken);
 
-            Assert.False(await fixture.ClassicQueueExists(target, cancellationToken));
-            Assert.True(await fixture.ClassicQueueExists(sentinel, cancellationToken));
+            Assert.False(await fixture.ClassicQueueExistsAsync(target, cancellationToken));
+            Assert.True(await fixture.ClassicQueueExistsAsync(sentinel, cancellationToken));
         }
         finally
         {
-            if (await fixture.ClassicQueueExists(target, CancellationToken.None))
-                await fixture.DeleteClassicQueue(target, CancellationToken.None);
-            if (await fixture.ClassicQueueExists(sentinel, CancellationToken.None))
-                await fixture.DeleteClassicQueue(sentinel, CancellationToken.None);
+            if (await fixture.ClassicQueueExistsAsync(target, CancellationToken.None))
+                await fixture.DeleteClassicQueueAsync(target, CancellationToken.None);
+            if (await fixture.ClassicQueueExistsAsync(sentinel, CancellationToken.None))
+                await fixture.DeleteClassicQueueAsync(sentinel, CancellationToken.None);
         }
     }
 }

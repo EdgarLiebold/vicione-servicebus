@@ -17,7 +17,7 @@ class OneTimeSetupMethod
 
     public Task<bool> Value => _value.Task;
 
-    public Task SetupPayload()
+    public Task SetupPayloadAsync()
     {
         try
         {

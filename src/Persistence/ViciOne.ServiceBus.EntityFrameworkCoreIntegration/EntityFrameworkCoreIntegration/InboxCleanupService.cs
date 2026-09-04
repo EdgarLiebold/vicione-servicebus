@@ -59,7 +59,7 @@ public sealed class InboxCleanupService<TDbContext> : BackgroundService
                 else
                     removed = 0;
 
-                removed = await _retryPolicy.Retry(() => CleanUpInboxState(stoppingToken), stoppingToken).ConfigureAwait(false);
+                removed = await _retryPolicy.RetryAsync(() => CleanUpInboxStateAsync(stoppingToken), stoppingToken).ConfigureAwait(false);
             }
             catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
             {
@@ -72,7 +72,7 @@ public sealed class InboxCleanupService<TDbContext> : BackgroundService
         }
     }
 
-    async Task<int> CleanUpInboxState(CancellationToken cancellationToken)
+    async Task<int> CleanUpInboxStateAsync(CancellationToken cancellationToken)
     {
         await using var scope = _provider.CreateAsyncScope();
         await using var dbContext = scope.ServiceProvider.GetRequiredService<TDbContext>();
@@ -83,14 +83,14 @@ public sealed class InboxCleanupService<TDbContext> : BackgroundService
         _cleanupLockStatement ??= _lockStatementProvider.GetInboxCleanupLockStatement(dbContext);
         var strategy = dbContext.Database.CreateExecutionStrategy();
 
-        return await EntityFrameworkExecutionStrategy.ExecuteAsync(dbContext, strategy, ExecuteAttempt, queryToken.Token).ConfigureAwait(false);
+        return await EntityFrameworkExecutionStrategy.ExecuteAsync(dbContext, strategy, ExecuteAttemptAsync, queryToken.Token).ConfigureAwait(false);
 
-        async Task<int> ExecuteAttempt()
+        async Task<int> ExecuteAttemptAsync()
         {
             await using var transaction = await dbContext.Database.BeginTransactionAsync(_isolationLevel, queryToken.Token).ConfigureAwait(false);
             try
             {
-                if (!await AcquireCleanupLock(dbContext, transaction, _cleanupLockStatement, queryToken.Token).ConfigureAwait(false))
+                if (!await AcquireCleanupLockAsync(dbContext, transaction, _cleanupLockStatement, queryToken.Token).ConfigureAwait(false))
                 {
                     await transaction.RollbackAsync(queryToken.Token).ConfigureAwait(false);
                     return 0;
@@ -127,7 +127,7 @@ public sealed class InboxCleanupService<TDbContext> : BackgroundService
         }
     }
 
-    static async Task<bool> AcquireCleanupLock(TDbContext dbContext, IDbContextTransaction transaction, string statement,
+    static async Task<bool> AcquireCleanupLockAsync(TDbContext dbContext, IDbContextTransaction transaction, string statement,
         CancellationToken cancellationToken)
     {
         var connection = dbContext.Database.GetDbConnection();

@@ -24,9 +24,9 @@ public class LastPipe<TContext> :
     }
 
     [DebuggerStepThrough]
-    public Task Send(TContext context)
+    public Task SendAsync(TContext context)
     {
-        return _filter.Send(context, Cache.LastPipe);
+        return _filter.SendAsync(context, Cache.LastPipe);
     }
 
 
@@ -43,7 +43,7 @@ public class LastPipe<TContext> :
         {
         }
 
-        public Task Send(TContext context)
+        public Task SendAsync(TContext context)
         {
             return Task.CompletedTask;
         }

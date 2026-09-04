@@ -14,14 +14,14 @@ public class JobServiceConfigurator<TReceiveEndpointConfigurator> :
     readonly IReceiveConfigurator<TReceiveEndpointConfigurator> _busConfigurator;
     readonly JobServiceOptions _options;
     bool _endpointsConfigured;
-    ISagaRepository<JobAttemptSaga> _jobAttemptRepository;
-    IReceiveEndpointConfigurator _jobAttemptSagaEndpointConfigurator;
-    ISagaRepository<JobSaga> _jobRepository;
-    IReceiveEndpointConfigurator _jobSagaEndpointConfigurator;
-    ISagaRepository<JobTypeSaga> _jobTypeRepository;
-    IReceiveEndpointConfigurator _jobTypeSagaEndpointConfigurator;
+    ISagaRepository<JobAttemptSaga> _jobAttemptRepository = null!;
+    IReceiveEndpointConfigurator _jobAttemptSagaEndpointConfigurator = null!;
+    ISagaRepository<JobSaga> _jobRepository = null!;
+    IReceiveEndpointConfigurator _jobSagaEndpointConfigurator = null!;
+    ISagaRepository<JobTypeSaga> _jobTypeRepository = null!;
+    IReceiveEndpointConfigurator _jobTypeSagaEndpointConfigurator = null!;
 
-    public JobServiceConfigurator(IServiceInstanceConfigurator<TReceiveEndpointConfigurator> instanceConfigurator, JobServiceOptions options = null)
+    public JobServiceConfigurator(IServiceInstanceConfigurator<TReceiveEndpointConfigurator> instanceConfigurator, JobServiceOptions? options = null)
     {
         _busConfigurator = instanceConfigurator.BusConfigurator;
 
@@ -143,7 +143,7 @@ public class JobServiceConfigurator<TReceiveEndpointConfigurator> :
         _options.OnConfigureEndpoint = callback;
     }
 
-    public void ConfigureJobServiceEndpoints(IRegistrationContext context = null)
+    public void ConfigureJobServiceEndpoints(IRegistrationContext? context = null)
     {
         if (_endpointsConfigured)
             return;

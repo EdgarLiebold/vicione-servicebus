@@ -13,7 +13,7 @@ public class DynamoDbSagaRepositoryConfigurator<TSaga> :
     ISpecification
     where TSaga : class, ISagaVersion
 {
-    Func<IServiceProvider, IDynamoDBContext> _contextFactory;
+    Func<IServiceProvider, IDynamoDBContext>? _contextFactory;
 
     public DynamoDbSagaRepositoryConfigurator()
     {
@@ -24,7 +24,7 @@ public class DynamoDbSagaRepositoryConfigurator<TSaga> :
         Conversion = DynamoDBEntryConversion.V2;
     }
 
-    public string TableName { get; set; }
+    public string TableName { get; set; } = null!;
     public TimeSpan? Expiration { get; set; }
     public TimeProvider TimeProvider { get; set; }
     public bool ConsistentRead { get; set; }

@@ -16,19 +16,19 @@ public static class TestingServiceProviderExtensions
         return provider.GetRequiredService<ITestHarness>();
     }
 
-    public static async Task<ITestHarness> StartTestHarness(this IServiceProvider provider)
+    public static async Task<ITestHarness> StartTestHarnessAsync(this IServiceProvider provider, CancellationToken cancellationToken = default)
     {
         var testHarness = provider.GetRequiredService<ITestHarness>();
 
-        await testHarness.Start().ConfigureAwait(false);
+        await testHarness.StartAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 
         return testHarness;
     }
 
-    public static async Task<Task<ConsumeContext<T>>> ConnectPublishHandler<T>(this ITestHarness harness, Func<ConsumeContext<T>, bool> filter)
+    public static async Task<Task<ConsumeContext<T>>> ConnectPublishHandlerAsync<T>(this ITestHarness harness, Func<ConsumeContext<T>, bool> filter, CancellationToken cancellationToken = default)
         where T : class
     {
-        ArgumentNullException.ThrowIfNull(harness);
+        cancellationToken.ThrowIfCancellationRequested(); ArgumentNullException.ThrowIfNull(harness);
         ArgumentNullException.ThrowIfNull(filter);
 
         TaskCompletionSource<ConsumeContext<T>> source = harness.GetTask<ConsumeContext<T>>();
@@ -59,7 +59,7 @@ public static class TestingServiceProviderExtensions
     /// </summary>
     /// <param name="harness"></param>
     /// <param name="cancellationToken"></param>
-    public static async Task Stop(this ITestHarness harness, CancellationToken cancellationToken = default)
+    public static async Task StopAsync(this ITestHarness harness, CancellationToken cancellationToken = default)
     {
         IHostedService[] services = harness.Provider.GetServices<IHostedService>().ToArray();
 
@@ -67,7 +67,7 @@ public static class TestingServiceProviderExtensions
             await service.StopAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    public static async Task RestartHostedServices(this ITestHarness harness, CancellationToken cancellationToken = default)
+    public static async Task RestartHostedServicesAsync(this ITestHarness harness, CancellationToken cancellationToken = default)
     {
         IHostedService[] services = harness.Provider.GetServices<IHostedService>().ToArray();
 
@@ -109,7 +109,7 @@ public static class TestingServiceProviderExtensions
     /// <param name="callback"></param>
     /// <param name="cancellationToken"></param>
     /// <typeparam name="T"></typeparam>
-    public static async Task AddOrUpdateSagaInstance<T>(this ITestHarness harness, Guid? correlationId = default, Action<T>? callback = null,
+    public static async Task AddOrUpdateSagaInstanceAsync<T>(this ITestHarness harness, Guid? correlationId = default, Action<T>? callback = null,
         CancellationToken cancellationToken = default)
         where T : class, ISaga, new()
     {
@@ -119,13 +119,13 @@ public static class TestingServiceProviderExtensions
         if (dictionary == null)
             throw new ArgumentException("In-memory saga repository not found", nameof(T));
 
-        await dictionary.MarkInUse(cancellationToken).ConfigureAwait(false);
+        await dictionary.MarkInUseAsync(cancellationToken).ConfigureAwait(false);
         try
         {
-            SagaInstance<T> existingSaga = dictionary[correlationId.Value];
+            SagaInstance<T>? existingSaga = dictionary[correlationId.Value];
             if (existingSaga != null)
             {
-                await existingSaga.MarkInUse(cancellationToken).ConfigureAwait(false);
+                await existingSaga.MarkInUseAsync(cancellationToken).ConfigureAwait(false);
 
                 existingSaga.Remove();
                 dictionary.Remove(existingSaga);
@@ -151,20 +151,20 @@ public static class TestingServiceProviderExtensions
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
-    public static async Task<bool> TryRemoveSagaInstance<T>(this ITestHarness harness, Guid correlationId, CancellationToken cancellationToken = default)
+    public static async Task<bool> TryRemoveSagaInstanceAsync<T>(this ITestHarness harness, Guid correlationId, CancellationToken cancellationToken = default)
         where T : class, ISaga
     {
         var dictionary = harness.Provider.GetService<IndexedSagaDictionary<T>>();
         if (dictionary == null)
             throw new ArgumentException("In-memory saga repository not found", nameof(T));
 
-        await dictionary.MarkInUse(cancellationToken).ConfigureAwait(false);
+        await dictionary.MarkInUseAsync(cancellationToken).ConfigureAwait(false);
         try
         {
-            SagaInstance<T> existingSaga = dictionary[correlationId];
+            SagaInstance<T>? existingSaga = dictionary[correlationId];
             if (existingSaga != null)
             {
-                await existingSaga.MarkInUse(cancellationToken).ConfigureAwait(false);
+                await existingSaga.MarkInUseAsync(cancellationToken).ConfigureAwait(false);
 
                 existingSaga.Remove();
                 dictionary.Remove(existingSaga);

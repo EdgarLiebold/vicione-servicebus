@@ -11,13 +11,11 @@ public class ScheduleMessageCommand<T> :
     {
     }
 
-    public ScheduleMessageCommand(DateTime scheduledTime, Uri destination, T payload, Guid tokenId)
+    public ScheduleMessageCommand(DateTimeOffset dueAt, Uri destination, T payload, Guid tokenId)
     {
         TokenId = tokenId;
 
-        ScheduledTime = scheduledTime.Kind == DateTimeKind.Local
-            ? scheduledTime.ToUniversalTime()
-            : scheduledTime;
+        DueAt = dueAt.ToUniversalTime();
 
         Destination = destination;
         Payload = payload;
@@ -26,10 +24,10 @@ public class ScheduleMessageCommand<T> :
     }
 
     public Guid TokenId { get; set; }
-    public DateTime ScheduledTime { get; set; }
-    public string[] PayloadType { get; set; }
-    public Uri Destination { get; set; }
-    public object Payload { get; set; }
+    public DateTimeOffset DueAt { get; set; }
+    public string[] PayloadType { get; set; } = null!;
+    public Uri Destination { get; set; } = null!;
+    public object Payload { get; set; } = null!;
 }
 
 
@@ -38,8 +36,8 @@ public class ScheduleMessageCommand :
     ScheduleMessage
 {
     public Guid TokenId { get; set; }
-    public DateTime ScheduledTime { get; set; }
-    public string[] PayloadType { get; set; }
-    public Uri Destination { get; set; }
-    public object Payload { get; set; }
+    public DateTimeOffset DueAt { get; set; }
+    public string[] PayloadType { get; set; } = null!;
+    public Uri Destination { get; set; } = null!;
+    public object Payload { get; set; } = null!;
 }

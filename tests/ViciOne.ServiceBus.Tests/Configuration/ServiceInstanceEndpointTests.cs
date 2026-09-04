@@ -15,11 +15,11 @@ public sealed class ServiceInstanceEndpointTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SERVICE-INSTANCE-ENDPOINTS", "instance-isolation-with-shared-consumer-endpoint")]
-    public async Task ServiceInstances_AddDistinctInstanceEndpointsAndRetainTheSharedConsumerEndpoint()
+    public async Task ServiceInstances_AddDistinctInstanceEndpointsAndRetainTheSharedConsumerEndpointAsync()
     {
-        string[] plain = await EndpointNames(useServiceInstance: false);
-        string[] first = await EndpointNames(useServiceInstance: true);
-        string[] second = await EndpointNames(useServiceInstance: true);
+        string[] plain = await EndpointNamesAsync(useServiceInstance: false);
+        string[] first = await EndpointNamesAsync(useServiceInstance: true);
+        string[] second = await EndpointNamesAsync(useServiceInstance: true);
         string firstInstance = Assert.Single(first, IsInstance);
         string secondInstance = Assert.Single(second, IsInstance);
         string sharedEndpoint = nameof(ServiceInstanceMessage).Replace("Message", string.Empty, StringComparison.Ordinal);
@@ -35,7 +35,7 @@ public sealed class ServiceInstanceEndpointTests
     private static bool IsInstance(string name) =>
         name.StartsWith(InstancePrefix, StringComparison.Ordinal);
 
-    private static async Task<string[]> EndpointNames(bool useServiceInstance)
+    private static async Task<string[]> EndpointNamesAsync(bool useServiceInstance)
     {
         TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -82,6 +82,6 @@ public sealed class ServiceInstanceEndpointTests
 
     private sealed class ServiceInstanceConsumer : IConsumer<ServiceInstanceMessage>
     {
-        public Task Consume(ConsumeContext<ServiceInstanceMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<ServiceInstanceMessage> context) => Task.CompletedTask;
     }
 }

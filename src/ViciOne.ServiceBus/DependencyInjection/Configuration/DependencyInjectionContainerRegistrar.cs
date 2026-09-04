@@ -173,7 +173,7 @@ public class DependencyInjectionContainerRegistrar :
             _typed = typed;
         }
 
-        public void Configure(string name, IReceiveEndpointConfigurator configurator)
+        public void Configure(string? name, IReceiveEndpointConfigurator configurator)
         {
             for (var i = 0; i < _global.Length; i++)
                 _global[i].Configure(name, configurator);

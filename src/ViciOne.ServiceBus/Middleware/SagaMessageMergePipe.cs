@@ -34,13 +34,13 @@ public class SagaMessageMergePipe<TSaga, TMessage> :
         _output.Probe(scope);
     }
 
-    public Task Send(ConsumeContext<TMessage> context)
+    public Task SendAsync(ConsumeContext<TMessage> context)
     {
         if (ReferenceEquals(context, _context))
-            return _output.Send(_context);
+            return _output.SendAsync(_context);
 
         return context is SagaConsumeContext<TSaga, TMessage> consumerContext
-            ? _output.Send(consumerContext)
-            : _output.Send(new SagaConsumeContextProxy<TSaga, TMessage>(context, _context));
+            ? _output.SendAsync(consumerContext)
+            : _output.SendAsync(new SagaConsumeContextProxy<TSaga, TMessage>(context, _context));
     }
 }

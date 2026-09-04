@@ -40,17 +40,17 @@ internal static class MessageJournalCaptureFactory
         where T : class
     {
         var metadata = CreateMessageMetadata(context, exception);
-        Add(metadata, MessageJournalMetadataKeys.InputAddress, context.ReceiveContext.InputAddress);
+        Add(metadata, MessageJournalMetadataKeys.InputAddress, context.Advanced().ReceiveContext.InputAddress);
         Add(metadata, MessageJournalMetadataKeys.ExpiresAt, context.ExpirationTime);
 
         return new MessageJournalCapture(
             MessageJournalOperation.Consume,
             outcome,
-            context.ReceiveContext.ContentType?.ToString(),
-            context.SupportedMessageTypes,
+            context.Advanced().ReceiveContext.ContentType?.ToString(),
+            context.Advanced().SupportedMessageTypes,
             metadata,
             SnapshotHeaders(context.Headers),
-            context.ReceiveContext.Body.GetBytes());
+            context.Advanced().ReceiveContext.Body.GetBytes());
     }
 
     private static Dictionary<string, string> CreateMessageMetadata(MessageContext context, Exception? exception)
@@ -127,18 +127,11 @@ internal static class MessageJournalCaptureFactory
             metadata[key] = value.Value.ToString("c", CultureInfo.InvariantCulture);
     }
 
-    private static void Add(Dictionary<string, string> metadata, string key, DateTime? value)
+    private static void Add(Dictionary<string, string> metadata, string key, DateTimeOffset? value)
     {
         if (!value.HasValue)
             return;
 
-        DateTime timestamp = value.Value.Kind switch
-        {
-            DateTimeKind.Utc => value.Value,
-            DateTimeKind.Local => value.Value.ToUniversalTime(),
-            _ => DateTime.SpecifyKind(value.Value, DateTimeKind.Utc),
-        };
-
-        metadata[key] = timestamp.ToString("O", CultureInfo.InvariantCulture);
+        metadata[key] = value.Value.ToUniversalTime().ToString("O", CultureInfo.InvariantCulture);
     }
 }

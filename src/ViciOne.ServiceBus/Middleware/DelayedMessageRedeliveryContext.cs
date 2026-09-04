@@ -18,21 +18,21 @@ public class DelayedMessageRedeliveryContext<TMessage> :
         _options = options;
     }
 
-    public async Task ScheduleRedelivery(TimeSpan delay, Action<ConsumeContext, SendContext>? callback)
+    public async Task ScheduleRedeliveryAsync(TimeSpan delay, Action<ConsumeContext, SendContext>? callback, CancellationToken cancellationToken = default)
     {
         IPipe<SendContext<TMessage>> pipe = Pipe.Execute<SendContext<TMessage>>(sendContext =>
         {
-            sendContext.ApplyRedeliveryOptions(_context, _options);
+            sendContext.ApplyRedeliveryOptions(_context.Advanced(), _options);
 
-            callback?.Invoke(_context, sendContext);
+            callback?.Invoke(_context.Advanced(), sendContext);
         });
 
         IPipe<SendContext<TMessage>> delaySendPipe = new DelaySendPipe<TMessage>(pipe, delay);
 
-        var endpoint = await _context.GetSendEndpoint(_context.ReceiveContext.InputAddress).ConfigureAwait(false);
+        var endpoint = await _context.Advanced().GetSendEndpointAsync(_context.Advanced().ReceiveContext.InputAddress, cancellationToken).ConfigureAwait(false);
 
         var messagePipe = new ForwardMessagePipe<TMessage>(_context, delaySendPipe);
 
-        await endpoint.Send(_context.Message, messagePipe, _context.CancellationToken).ConfigureAwait(false);
+        await endpoint.SendAsync(_context.Message, messagePipe, _context.CancellationToken).ConfigureAwait(false);
     }
 }

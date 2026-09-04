@@ -7,23 +7,23 @@ public class ReceiveEndpointObservable :
     Connectable<IReceiveEndpointObserver>,
     IReceiveEndpointObserver
 {
-    public Task Ready(ReceiveEndpointReady ready)
+    public Task ReadyAsync(ReceiveEndpointReady ready)
     {
-        return ForEachAsync(x => x.Ready(ready));
+        return ForEachAsync(x => x.ReadyAsync(ready));
     }
 
-    public Task Stopping(ReceiveEndpointStopping stopping)
+    public Task StoppingAsync(ReceiveEndpointStopping stopping)
     {
-        return ForEachAsync(x => x.Stopping(stopping));
+        return ForEachAsync(x => x.StoppingAsync(stopping));
     }
 
-    public Task Completed(ReceiveEndpointCompleted completed)
+    public Task CompletedAsync(ReceiveEndpointCompleted completed)
     {
-        return ForEachAsync(x => x.Completed(completed));
+        return ForEachAsync(x => x.CompletedAsync(completed));
     }
 
-    public Task Faulted(ReceiveEndpointFaulted faulted)
+    public Task FaultedAsync(ReceiveEndpointFaulted faulted)
     {
-        return ForEachAsync(x => x.Faulted(faulted));
+        return ForEachAsync(x => x.FaultedAsync(faulted));
     }
 }

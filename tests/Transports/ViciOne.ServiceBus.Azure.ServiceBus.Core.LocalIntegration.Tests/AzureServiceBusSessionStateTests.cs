@@ -11,7 +11,7 @@ public sealed class AzureServiceBusSessionStateTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-SESSION-FLOW", "session-identity-flows-through-receive-publish-and-send")]
-    public async Task SessionIdentity_FlowsThroughReceivePublishAndSendExactlyOnce()
+    public async Task SessionIdentity_FlowsThroughReceivePublishAndSendExactlyOnceAsync()
     {
         AzureServiceBusLocalFixture fixture = AzureServiceBusLocalFixture.Create("session-flow");
         ServiceBusAdministrationClient admin = fixture.CreateAdministrationClient();
@@ -43,8 +43,8 @@ public sealed class AzureServiceBusSessionStateTests
                 {
                     Interlocked.Increment(ref startCount);
                     receivedStart.TrySetResult(context);
-                    await context.Publish(new SessionPublished(context.Message.CorrelationId), context.CancellationToken);
-                    await context.Send(new Uri($"queue:{queue}"), new SessionSent(context.Message.CorrelationId));
+                    await context.Advanced().PublishAsync(new SessionPublished(context.Message.CorrelationId), context.CancellationToken);
+                    await context.Advanced().SendAsync(new Uri($"queue:{queue}"), new SessionSent(context.Message.CorrelationId));
                 });
                 endpoint.Handler<SessionPublished>(context =>
                 {
@@ -67,10 +67,9 @@ public sealed class AzureServiceBusSessionStateTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queue}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queue}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             Guid correlationId = NewId.NextGuid();
-            await endpoint.Send(
+            await endpoint.SendAsync(
                     new SessionStart(correlationId),
                     context => ((ServiceBusSendContext<SessionStart>)context).SessionId = sessionId,
                     cancellationToken)
@@ -83,9 +82,9 @@ public sealed class AzureServiceBusSessionStateTests
             Assert.Equal(sessionId, start.GetPayload<ServiceBusMessageContext>().SessionId);
             Assert.Equal(sessionId, published.GetPayload<ServiceBusMessageContext>().SessionId);
             Assert.Equal(sessionId, sent.GetPayload<ServiceBusMessageContext>().SessionId);
-            Assert.False(start.ReceiveContext.Redelivered);
-            Assert.False(published.ReceiveContext.Redelivered);
-            Assert.False(sent.ReceiveContext.Redelivered);
+            Assert.False(start.Advanced().ReceiveContext.Redelivered);
+            Assert.False(published.Advanced().ReceiveContext.Redelivered);
+            Assert.False(sent.Advanced().ReceiveContext.Redelivered);
             Assert.Equal(correlationId, published.Message.CorrelationId);
             Assert.Equal(correlationId, sent.Message.CorrelationId);
 
@@ -106,7 +105,7 @@ public sealed class AzureServiceBusSessionStateTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-SESSION-SAGA", "session-state-repository-loads-the-same-saga-on-the-next-message")]
-    public async Task MessageSessionSagaRepository_LoadsTheCommittedStateOnTheNextMessage()
+    public async Task MessageSessionSagaRepository_LoadsTheCommittedStateOnTheNextMessageAsync()
     {
         AzureServiceBusLocalFixture fixture = AzureServiceBusLocalFixture.Create("session-saga");
         ServiceBusAdministrationClient admin = fixture.CreateAdministrationClient();
@@ -162,10 +161,9 @@ public sealed class AzureServiceBusSessionStateTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{sagaQueue}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{sagaQueue}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
 
-            await endpoint.Send(
+            await endpoint.SendAsync(
                     new CreateSessionSaga(correlationId, "created-state"),
                     context => ((ServiceBusSendContext<CreateSessionSaga>)context).SessionId = sessionId,
                     cancellationToken)
@@ -173,7 +171,7 @@ public sealed class AzureServiceBusSessionStateTests
             SagaCreated first = (await created.Task.WaitAsync(fixture.OperationTimeout, cancellationToken)).Message;
             Assert.Equal(new SagaCreated(correlationId, "created-state", 1), first);
 
-            await endpoint.Send(
+            await endpoint.SendAsync(
                     new AdvanceSessionSaga(correlationId, "next-state"),
                     context => ((ServiceBusSendContext<AdvanceSessionSaga>)context).SessionId = sessionId,
                     cancellationToken)
@@ -224,20 +222,20 @@ public sealed class AzureServiceBusSessionStateTests
 
         public int Revision { get; set; }
 
-        public Task Consume(ConsumeContext<CreateSessionSaga> context)
+        public Task ConsumeAsync(ConsumeContext<CreateSessionSaga> context)
         {
             OriginalValue = context.Message.Value;
             Revision = 1;
-            return context.Publish(new SagaCreated(CorrelationId, OriginalValue, Revision), context.CancellationToken);
+            return context.Advanced().PublishAsync(new SagaCreated(CorrelationId, OriginalValue, Revision), context.CancellationToken);
         }
 
-        public Task Consume(ConsumeContext<AdvanceSessionSaga> context)
+        public Task ConsumeAsync(ConsumeContext<AdvanceSessionSaga> context)
         {
             if (OriginalValue.Length == 0 || Revision != 1)
                 throw new InvalidOperationException("The session repository did not load the state committed by the first delivery.");
 
             Revision++;
-            return context.Publish(
+            return context.Advanced().PublishAsync(
                 new SagaAdvanced(CorrelationId, OriginalValue, context.Message.Value, Revision),
                 context.CancellationToken);
         }

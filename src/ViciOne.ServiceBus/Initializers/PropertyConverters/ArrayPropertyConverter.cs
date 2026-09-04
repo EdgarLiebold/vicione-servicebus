@@ -8,17 +8,17 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters;
 public class ArrayPropertyConverter<TElement> :
     IPropertyConverter<TElement[], IEnumerable<TElement>>
 {
-    public Task<TElement[]> Convert<TMessage>(InitializeContext<TMessage> context, IEnumerable<TElement> input)
+    public Task<TElement[]?> ConvertAsync<TMessage>(InitializeContext<TMessage> context, IEnumerable<TElement>? input, CancellationToken cancellationToken = default)
         where TMessage : class
     {
         switch (input)
         {
             case null:
-                return TaskResults.Default<TElement[]>();
+                return TaskResults.DefaultAsync<TElement[]>(cancellationToken: cancellationToken);
             case TElement[] array:
-                return Task.FromResult(array);
+                return Task.FromResult<TElement[]?>(array);
             default:
-                return Task.FromResult(input.ToArray());
+                return Task.FromResult<TElement[]?>(input.ToArray());
         }
     }
 }
@@ -35,14 +35,14 @@ public class ArrayPropertyConverter<TElement, TInputElement> :
         _converter = converter;
     }
 
-    public Task<TElement[]> Convert<TMessage>(InitializeContext<TMessage> context, IEnumerable<TInputElement> input)
+    public Task<TElement[]?> ConvertAsync<TMessage>(InitializeContext<TMessage> context, IEnumerable<TInputElement>? input, CancellationToken cancellationToken = default)
         where TMessage : class
     {
-        Task<TElement[]> resultTask = ConvertSync(context, input);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<TElement[]?>(cancellationToken); Task<TElement[]?> resultTask = ConvertSyncAsync(context, input);
         if (resultTask.IsCompleted)
-            return Task.FromResult(resultTask.Result);
+            return Task.FromResult<TElement[]?>(resultTask.Result);
 
-        async Task<TElement[]> ConvertAsync()
+        async Task<TElement[]?> ConvertAsync()
         {
             return await resultTask.ConfigureAwait(false);
         }
@@ -50,18 +50,18 @@ public class ArrayPropertyConverter<TElement, TInputElement> :
         return ConvertAsync();
     }
 
-    Task<TElement[]> ConvertSync<TMessage>(InitializeContext<TMessage> context, IEnumerable<TInputElement> input)
+    Task<TElement[]?> ConvertSyncAsync<TMessage>(InitializeContext<TMessage> context, IEnumerable<TInputElement>? input)
         where TMessage : class
     {
         if (input == null)
-            return TaskResults.Default<TElement[]>();
+            return TaskResults.DefaultAsync<TElement[]>();
 
         var capacity = 0;
         if (input is ICollection<TElement> collection)
         {
             capacity = collection.Count;
             if (capacity == 0)
-                return Task.FromResult(_emptyArray);
+                return Task.FromResult<TElement[]?>(_emptyArray);
         }
 
         var results = new List<TElement>(capacity);
@@ -69,26 +69,26 @@ public class ArrayPropertyConverter<TElement, TInputElement> :
         var disposeEnumerator = true;
         try
         {
-            async Task<TElement[]> ConvertAsync(IEnumerator<TInputElement> asyncEnumerator, Task<TElement> elementTask)
+            async Task<TElement[]?> ConvertAsync(IEnumerator<TInputElement> asyncEnumerator, Task<TElement?> elementTask)
             {
                 try
                 {
                     var element = await elementTask.ConfigureAwait(false);
 
-                    results.Add(element);
+                    results.Add(element!);
 
                     while (asyncEnumerator.MoveNext())
                     {
                         var current = asyncEnumerator.Current;
 
-                        elementTask = _converter.Convert(context, current);
+                        elementTask = _converter.ConvertAsync(context, current);
                         if (elementTask.IsCompleted)
-                            results.Add(elementTask.Result);
+                            results.Add(elementTask.Result!);
                         else
                         {
                             element = await elementTask.ConfigureAwait(false);
 
-                            results.Add(element);
+                            results.Add(element!);
                         }
                     }
 
@@ -104,9 +104,9 @@ public class ArrayPropertyConverter<TElement, TInputElement> :
             {
                 var current = enumerator.Current;
 
-                Task<TElement> elementTask = _converter.Convert(context, current);
+                Task<TElement?> elementTask = _converter.ConvertAsync(context, current);
                 if (elementTask.IsCompleted)
-                    results.Add(elementTask.Result);
+                    results.Add(elementTask.Result!);
                 else
                 {
                     disposeEnumerator = false;
@@ -120,6 +120,6 @@ public class ArrayPropertyConverter<TElement, TInputElement> :
                 enumerator.Dispose();
         }
 
-        return Task.FromResult(results.ToArray());
+        return Task.FromResult<TElement[]?>(results.ToArray());
     }
 }

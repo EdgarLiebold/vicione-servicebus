@@ -47,7 +47,7 @@ public static class DependencyInjectionConsumerRegistrationExtensions
         return RegisterConsumer<T>(collection, new DependencyInjectionContainerRegistrar(collection), consumerDefinitionType);
     }
 
-    public static IConsumerRegistration RegisterConsumer<T>(this IServiceCollection collection, IContainerRegistrar registrar, Type consumerDefinitionType)
+    public static IConsumerRegistration RegisterConsumer<T>(this IServiceCollection collection, IContainerRegistrar registrar, Type? consumerDefinitionType)
         where T : class, IConsumer
     {
         if (consumerDefinitionType == null)
@@ -62,14 +62,14 @@ public static class DependencyInjectionConsumerRegistrationExtensions
                 nameof(consumerDefinitionType));
         }
 
-        var register = (IConsumerRegistrar)Activator.CreateInstance(
-            typeof(ConsumerDefinitionRegistrar<,>).MakeGenericType(typeof(T), consumerDefinitionType));
+        var register = (IConsumerRegistrar)(Activator.CreateInstance(
+            typeof(ConsumerDefinitionRegistrar<,>).MakeGenericType(typeof(T), consumerDefinitionType)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
         return register.Register(collection, registrar);
     }
 
     public static IConsumerRegistration RegisterConsumer(this IServiceCollection collection, IContainerRegistrar registrar, Type consumerType,
-        Type consumerDefinitionType = null)
+        Type? consumerDefinitionType = null)
     {
         if (RegistrationMetadata.IsSaga(consumerType))
             throw new ArgumentException($"{TypeCache.GetShortName(consumerType)} is a saga, and cannot be registered as a consumer", nameof(consumerType));
@@ -83,13 +83,13 @@ public static class DependencyInjectionConsumerRegistrationExtensions
                     nameof(consumerDefinitionType));
             }
 
-            var consumerRegistrar = (IConsumerRegistrar)Activator.CreateInstance(
-                typeof(ConsumerDefinitionRegistrar<,>).MakeGenericType(consumerType, consumerDefinitionType));
+            var consumerRegistrar = (IConsumerRegistrar)(Activator.CreateInstance(
+                typeof(ConsumerDefinitionRegistrar<,>).MakeGenericType(consumerType, consumerDefinitionType)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
             return consumerRegistrar.Register(collection, registrar);
         }
 
-        var register = (IConsumerRegistrar)Activator.CreateInstance(typeof(ConsumerRegistrar<>).MakeGenericType(consumerType));
+        var register = (IConsumerRegistrar)(Activator.CreateInstance(typeof(ConsumerRegistrar<>).MakeGenericType(consumerType)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
         return register.Register(collection, registrar);
     }

@@ -10,7 +10,7 @@ namespace ViciOne.ServiceBus.Testing.Implementations;
 public abstract class BaseSagaTestHarness<TSaga>
     where TSaga : class, ISaga
 {
-    protected BaseSagaTestHarness(IQuerySagaRepository<TSaga> querySagaRepository, ILoadSagaRepository<TSaga> loadSagaRepository, TimeSpan testTimeout,
+    protected BaseSagaTestHarness(IQuerySagaRepository<TSaga>? querySagaRepository, ILoadSagaRepository<TSaga>? loadSagaRepository, TimeSpan testTimeout,
         TimeProvider timeProvider)
     {
         QuerySagaRepository = querySagaRepository;
@@ -23,8 +23,8 @@ public abstract class BaseSagaTestHarness<TSaga>
     protected TimeSpan TestTimeout { get; }
     protected TimeProvider TimeProvider { get; }
 
-    protected IQuerySagaRepository<TSaga> QuerySagaRepository { get; }
-    protected ILoadSagaRepository<TSaga> LoadSagaRepository { get; }
+    protected IQuerySagaRepository<TSaga>? QuerySagaRepository { get; }
+    protected ILoadSagaRepository<TSaga>? LoadSagaRepository { get; }
 
     /// <summary>
     /// Waits until a saga exists with the specified correlationId
@@ -32,13 +32,14 @@ public abstract class BaseSagaTestHarness<TSaga>
     /// <param name="correlationId"></param>
     /// <param name="timeout"></param>
     /// <returns></returns>
-    public async Task<Guid?> Exists(Guid correlationId, TimeSpan? timeout = default)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public async Task<Guid?> ExistsAsync(Guid correlationId, TimeSpan? timeout = default, CancellationToken cancellationToken = default)
     {
         if (LoadSagaRepository == null)
             throw new InvalidOperationException("The repository does not support Load operations");
 
         return await PollAsync(
-            async () => (await LoadSagaRepository.Load(correlationId).ConfigureAwait(false))?.CorrelationId,
+            async () => (await LoadSagaRepository.LoadAsync(correlationId, cancellationToken: cancellationToken).ConfigureAwait(false))?.CorrelationId,
             sagaId => sagaId.HasValue,
             default(Guid?),
             timeout).ConfigureAwait(false);
@@ -50,7 +51,8 @@ public abstract class BaseSagaTestHarness<TSaga>
     /// <param name="filter"></param>
     /// <param name="timeout"></param>
     /// <returns></returns>
-    public async Task<IList<Guid>> Match(Expression<Func<TSaga, bool>> filter, TimeSpan? timeout = default)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public async Task<IList<Guid>> MatchAsync(Expression<Func<TSaga, bool>> filter, TimeSpan? timeout = default, CancellationToken cancellationToken = default)
     {
         if (QuerySagaRepository == null)
             throw new InvalidOperationException("The repository does not support Query operations");
@@ -58,7 +60,7 @@ public abstract class BaseSagaTestHarness<TSaga>
         var query = new SagaQuery<TSaga>(filter);
 
         return await PollAsync(
-            async () => (IList<Guid>)(await QuerySagaRepository.Find(query).ConfigureAwait(false)).ToList(),
+            async () => (IList<Guid>)(await QuerySagaRepository.FindAsync(query, cancellationToken: cancellationToken).ConfigureAwait(false)).ToList(),
             sagas => sagas.Count > 0,
             new List<Guid>(),
             timeout).ConfigureAwait(false);
@@ -70,15 +72,16 @@ public abstract class BaseSagaTestHarness<TSaga>
     /// <param name="correlationId"></param>
     /// <param name="timeout"></param>
     /// <returns></returns>
-    public async Task<Guid?> NotExists(Guid correlationId, TimeSpan? timeout = default)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public async Task<Guid?> NotExistsAsync(Guid correlationId, TimeSpan? timeout = default, CancellationToken cancellationToken = default)
     {
         if (LoadSagaRepository == null)
             throw new InvalidOperationException("The repository does not support Load operations");
 
-        TSaga saga = await PollAsync(
-            () => LoadSagaRepository.Load(correlationId),
+        TSaga? saga = await PollAsync<TSaga?>(
+            () => LoadSagaRepository.LoadAsync(correlationId, cancellationToken: cancellationToken),
             instance => instance == null,
-            default(TSaga),
+            default,
             timeout).ConfigureAwait(false);
 
         return saga?.CorrelationId;

@@ -62,7 +62,7 @@ public sealed class EntityFrameworkDurableSendDurabilityTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-DURABLE-COMMIT", "real-sqlite-preflight-and-connection-ownership")]
-    public async Task SqlitePreflight_QueriesARealSessionAndRestoresItsConnectionState()
+    public async Task SqlitePreflight_QueriesARealSessionAndRestoresItsConnectionStateAsync()
     {
         string path = Path.Combine(Path.GetTempPath(), $"vicione-durable-{Guid.NewGuid():N}.db");
         string connectionString = $"Data Source={path}";
@@ -96,7 +96,7 @@ public sealed class EntityFrameworkDurableSendDurabilityTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-DURABLE-COMMIT", "volatile-and-unidentified-providers-fail-closed")]
-    public async Task ProviderPreflight_FailsClosedForVolatileSqliteAndMissingProviderIdentity()
+    public async Task ProviderPreflight_FailsClosedForVolatileSqliteAndMissingProviderIdentityAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using var connection = new SqliteConnection("Data Source=:memory:");

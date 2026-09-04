@@ -12,7 +12,7 @@ public sealed class BusControlHealthExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-HEALTH-WAIT", "immediate-complete-result")]
-    public async Task ExpectedStatusOnFirstObservation_ReturnsTheCompleteExactResultWithoutWaiting()
+    public async Task ExpectedStatusOnFirstObservation_ReturnsTheCompleteExactResultWithoutWaitingAsync()
     {
         var expected = CreateResult(BusHealthStatus.Healthy, "all endpoints ready");
         (IBusControl bus, BusControlProxy proxy) = CreateBus(() => expected);
@@ -31,7 +31,7 @@ public sealed class BusControlHealthExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-HEALTH-WAIT", "virtual-poll-boundary")]
-    public async Task StatusChange_IsObservedOnlyAtTheExactVirtualPollBoundary()
+    public async Task StatusChange_IsObservedOnlyAtTheExactVirtualPollBoundaryAsync()
     {
         var expected = CreateResult(BusHealthStatus.Healthy, "ready after poll");
         var initial = CreateResult(BusHealthStatus.Unhealthy, "starting");
@@ -62,7 +62,7 @@ public sealed class BusControlHealthExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-HEALTH-WAIT", "final-deadline-observation")]
-    public async Task ExpectedStatusReachedAtTheExactDeadline_WinsOverTimeout()
+    public async Task ExpectedStatusReachedAtTheExactDeadline_WinsOverTimeoutAsync()
     {
         var initial = CreateResult(BusHealthStatus.Degraded, "recovering");
         var expected = CreateResult(BusHealthStatus.Healthy, "recovered");
@@ -84,7 +84,7 @@ public sealed class BusControlHealthExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-HEALTH-WAIT", "post-deadline-state-is-too-late")]
-    public async Task ExpectedStatusReachedOnlyAfterTheDeadline_DoesNotTurnTheExpiredWaitIntoSuccess()
+    public async Task ExpectedStatusReachedOnlyAfterTheDeadline_DoesNotTurnTheExpiredWaitIntoSuccessAsync()
     {
         var initial = CreateResult(BusHealthStatus.Degraded, "recovering");
         var tooLate = CreateResult(BusHealthStatus.Healthy, "recovered too late");
@@ -109,7 +109,7 @@ public sealed class BusControlHealthExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-HEALTH-WAIT", "typed-timeout-diagnostics")]
-    public async Task Timeout_ThrowsTypedFailureWithTheCompleteLastObservation()
+    public async Task Timeout_ThrowsTypedFailureWithTheCompleteLastObservationAsync()
     {
         var last = CreateResult(BusHealthStatus.Degraded, "endpoint alpha stopped");
         (IBusControl bus, BusControlProxy proxy) = CreateBus(() => last);
@@ -136,7 +136,7 @@ public sealed class BusControlHealthExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-HEALTH-WAIT", "zero-timeout-final-result")]
-    public async Task ZeroTimeout_ObservesOnceAndThenReportsTheUnexpectedResult()
+    public async Task ZeroTimeout_ObservesOnceAndThenReportsTheUnexpectedResultAsync()
     {
         var last = CreateResult(BusHealthStatus.Unhealthy, "not started");
         (IBusControl bus, BusControlProxy proxy) = CreateBus(() => last);
@@ -156,7 +156,7 @@ public sealed class BusControlHealthExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-HEALTH-WAIT", "exact-cancellation-token")]
-    public async Task PendingWait_CancelsWithTheExactCallerToken()
+    public async Task PendingWait_CancelsWithTheExactCallerTokenAsync()
     {
         (IBusControl bus, BusControlProxy proxy) = CreateBus(() =>
             CreateResult(BusHealthStatus.Unhealthy, "still starting"));
@@ -180,7 +180,7 @@ public sealed class BusControlHealthExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-HEALTH-WAIT", "pre-cancellation-no-observation")]
-    public async Task AlreadyCanceledWait_DoesNotObserveMutableBusState()
+    public async Task AlreadyCanceledWait_DoesNotObserveMutableBusStateAsync()
     {
         (IBusControl bus, BusControlProxy proxy) = CreateBus(() =>
             CreateResult(BusHealthStatus.Healthy, "would have succeeded"));
@@ -200,7 +200,7 @@ public sealed class BusControlHealthExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-HEALTH-WAIT", "collection-concurrency-and-order")]
-    public async Task CollectionWait_StartsEveryBusAndReturnsCompleteResultsInInputOrder()
+    public async Task CollectionWait_StartsEveryBusAndReturnsCompleteResultsInInputOrderAsync()
     {
         var firstInitial = CreateResult(BusHealthStatus.Unhealthy, "first starting");
         var firstExpected = CreateResult(BusHealthStatus.Healthy, "first ready");
@@ -230,7 +230,7 @@ public sealed class BusControlHealthExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-HEALTH-WAIT", "collection-single-enumeration")]
-    public async Task CollectionWait_EnumeratesTheInputExactlyOnce()
+    public async Task CollectionWait_EnumeratesTheInputExactlyOnceAsync()
     {
         var expected = CreateResult(BusHealthStatus.Healthy, "ready");
         (IBusControl bus, _) = CreateBus(() => expected);
@@ -254,7 +254,7 @@ public sealed class BusControlHealthExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-HEALTH-WAIT", "empty-collection")]
-    public async Task EmptyCollection_CompletesWithAnEmptyResult()
+    public async Task EmptyCollection_CompletesWithAnEmptyResultAsync()
     {
         BusHealthResult[] results = await Array.Empty<IBusControl>().WaitForHealthStatusAsync(
             BusHealthStatus.Healthy,
@@ -267,7 +267,7 @@ public sealed class BusControlHealthExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-HEALTH-WAIT", "collection-pre-cancellation-no-observation")]
-    public async Task AlreadyCanceledCollectionWait_DoesNotObserveAnyBus()
+    public async Task AlreadyCanceledCollectionWait_DoesNotObserveAnyBusAsync()
     {
         (IBusControl first, BusControlProxy firstProxy) = CreateBus(() =>
             CreateResult(BusHealthStatus.Healthy, "first would have succeeded"));
@@ -290,7 +290,7 @@ public sealed class BusControlHealthExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-HEALTH-WAIT", "single-null-bus")]
-    public async Task NullBus_IsRejected()
+    public async Task NullBus_IsRejectedAsync()
     {
         IBusControl? missingBus = null;
 
@@ -304,7 +304,7 @@ public sealed class BusControlHealthExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-HEALTH-WAIT", "single-null-time-provider")]
-    public async Task NullTimeProvider_IsRejectedBeforePolling()
+    public async Task NullTimeProvider_IsRejectedBeforePollingAsync()
     {
         (IBusControl bus, BusControlProxy proxy) = CreateBus(() =>
             CreateResult(BusHealthStatus.Healthy, "ready"));
@@ -320,7 +320,7 @@ public sealed class BusControlHealthExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-HEALTH-WAIT", "single-invalid-status")]
-    public async Task UndefinedExpectedStatus_IsRejectedBeforePolling()
+    public async Task UndefinedExpectedStatus_IsRejectedBeforePollingAsync()
     {
         (IBusControl bus, BusControlProxy proxy) = CreateBus(() =>
             CreateResult(BusHealthStatus.Healthy, "ready"));
@@ -336,7 +336,7 @@ public sealed class BusControlHealthExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-HEALTH-WAIT", "single-invalid-timeout")]
-    public async Task InvalidTimeout_IsRejectedBeforePolling()
+    public async Task InvalidTimeout_IsRejectedBeforePollingAsync()
     {
         (IBusControl bus, BusControlProxy proxy) = CreateBus(() =>
             CreateResult(BusHealthStatus.Healthy, "ready"));
@@ -441,7 +441,7 @@ public sealed class BusControlHealthExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-HEALTH-WAIT", "system-time-convenience")]
-    public async Task SystemTimeConvenienceOverloads_ReturnCompleteImmediateResults()
+    public async Task SystemTimeConvenienceOverloads_ReturnCompleteImmediateResultsAsync()
     {
         var expected = CreateResult(BusHealthStatus.Healthy, "ready");
         (IBusControl first, _) = CreateBus(() => expected);

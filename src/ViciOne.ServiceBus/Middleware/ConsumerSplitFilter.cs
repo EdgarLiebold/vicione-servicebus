@@ -30,10 +30,10 @@ public class ConsumerSplitFilter<TConsumer, TMessage> :
     }
 
     [DebuggerNonUserCode]
-    public Task Send(ConsumerConsumeContext<TConsumer, TMessage> context, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)
+    public Task SendAsync(ConsumerConsumeContext<TConsumer, TMessage> context, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)
     {
         var mergePipe = new ConsumerMergePipe<TConsumer, TMessage>(next);
 
-        return _next.Send(context, mergePipe);
+        return _next.SendAsync(context, mergePipe);
     }
 }

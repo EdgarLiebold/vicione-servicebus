@@ -13,7 +13,7 @@ public interface IServiceBusMessageEntityConfigurator :
     /// <summary>
     /// The base path for the message entity
     /// </summary>
-    string BasePath { get; set; }
+    string? BasePath { get; set; }
 
     /// <summary>
     /// The full path of the message entity

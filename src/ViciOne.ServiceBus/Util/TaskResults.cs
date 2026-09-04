@@ -13,16 +13,24 @@ public static class TaskResults
     public static Task<bool> False => Cached.False;
     public static Task<bool> True => Cached.True;
 
-    public static Task<T?> Default<T>() => Cached<T>.Default;
-
-    public static Task<T> Faulted<T>(Exception exception)
+    public static Task<T?> DefaultAsync<T>(CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(exception);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<T?>(cancellationToken);
+        return Cached<T>.Default;
+    }
+    public static Task<T> FaultedAsync<T>(Exception exception, CancellationToken cancellationToken = default)
+    {
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<T>(cancellationToken); ArgumentNullException.ThrowIfNull(exception);
         return Task.FromException<T>(exception);
     }
 
-    public static Task<T> Canceled<T>() => Cached<T>.Canceled;
-
+    public static Task<T> CanceledAsync<T>(CancellationToken cancellationToken = default)
+    {
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<T>(cancellationToken);
+        return Cached<T>.Canceled;
+    }
 
     static class Cached
     {

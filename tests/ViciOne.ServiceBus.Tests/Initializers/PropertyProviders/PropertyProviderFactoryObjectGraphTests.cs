@@ -8,7 +8,7 @@ public sealed class PropertyProviderFactoryObjectGraphTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-PROPERTY-PROVIDER-OBJECT-GRAPH", "single-nested-and-array-contracts")]
-    public async Task AnonymousSources_InitializeSingleNestedAndArrayContracts()
+    public async Task AnonymousSources_InitializeSingleNestedAndArrayContractsAsync()
     {
         var singleInput = new { Message = new { Text = "Hello" } };
         var nestedInput = new
@@ -46,7 +46,7 @@ public sealed class PropertyProviderFactoryObjectGraphTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PROPERTY-PROVIDER-EXCEPTION", "exception-info")]
-    public async Task ExceptionSource_ProducesObservableExceptionInformation()
+    public async Task ExceptionSource_ProducesObservableExceptionInformationAsync()
     {
         var input = new ExceptionInput(new InvalidOperationException("Expected failure"));
 

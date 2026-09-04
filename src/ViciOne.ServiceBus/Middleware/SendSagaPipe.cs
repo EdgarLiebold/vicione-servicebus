@@ -25,34 +25,34 @@ public class SendSagaPipe<TSaga, T> :
     {
     }
 
-    public async Task Send(SagaRepositoryContext<TSaga, T> context)
+    public async Task SendAsync(SagaRepositoryContext<TSaga, T> context)
     {
-        SagaConsumeContext<TSaga, T> sagaConsumeContext = null;
+        SagaConsumeContext<TSaga, T>? sagaConsumeContext = null;
 
         if (_policy.PreInsertInstance(context, out var instance))
-            sagaConsumeContext = await context.Insert(instance).ConfigureAwait(false);
+            sagaConsumeContext = await context.InsertAsync(instance).ConfigureAwait(false);
 
-        sagaConsumeContext ??= await context.Load(_correlationId).ConfigureAwait(false);
+        sagaConsumeContext ??= await context.LoadAsync(_correlationId).ConfigureAwait(false);
         if (sagaConsumeContext != null)
         {
             try
             {
                 sagaConsumeContext.LogUsed();
 
-                await _policy.Existing(sagaConsumeContext, _next).ConfigureAwait(false);
+                await _policy.ExistingAsync(sagaConsumeContext, _next).ConfigureAwait(false);
 
                 if (_policy.IsReadOnly)
-                    await context.Undo(sagaConsumeContext).ConfigureAwait(false);
+                    await context.UndoAsync(sagaConsumeContext).ConfigureAwait(false);
                 else
                 {
                     if (sagaConsumeContext.IsCompleted)
                     {
-                        await context.Delete(sagaConsumeContext).ConfigureAwait(false);
+                        await context.DeleteAsync(sagaConsumeContext).ConfigureAwait(false);
 
                         sagaConsumeContext.LogRemoved();
                     }
                     else
-                        await context.Update(sagaConsumeContext).ConfigureAwait(false);
+                        await context.UpdateAsync(sagaConsumeContext).ConfigureAwait(false);
                 }
             }
             finally
@@ -69,6 +69,6 @@ public class SendSagaPipe<TSaga, T> :
             }
         }
         else
-            await _policy.Missing(context, new MissingSagaPipe<TSaga, T>(context, _next)).ConfigureAwait(false);
+            await _policy.MissingAsync(context, new MissingSagaPipe<TSaga, T>(context, _next)).ConfigureAwait(false);
     }
 }

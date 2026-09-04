@@ -28,9 +28,9 @@ public class SetStringHeaderInitializer<TMessage, TInput> :
         _inputProperty = ReadPropertyCache<TInput>.GetProperty<string>(propertyInfo);
     }
 
-    public Task Apply(InitializeContext<TMessage, TInput> context, SendContext sendContext)
+    public Task ApplyAsync(InitializeContext<TMessage, TInput> context, SendContext sendContext, CancellationToken cancellationToken = default)
     {
-        var inputPropertyValue = _inputProperty.Get(context.Input);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); var inputPropertyValue = _inputProperty.Get(context.Input);
 
         sendContext.Headers.Set(_headerName, inputPropertyValue);
 

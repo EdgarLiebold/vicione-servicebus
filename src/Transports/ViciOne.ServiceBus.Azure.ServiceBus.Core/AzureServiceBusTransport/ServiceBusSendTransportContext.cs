@@ -33,9 +33,10 @@ public class ServiceBusSendTransportContext :
     public override string EntityName { get; }
     public override string ActivitySystem => "servicebus";
 
-    public Task Send(IPipe<SendEndpointContext> pipe, CancellationToken cancellationToken = default)
+    public Task SendAsync(IPipe<SendEndpointContext> pipe, CancellationToken cancellationToken = default)
     {
-        return _hostConfiguration.Retry(() => _supervisor.Send(pipe, cancellationToken), cancellationToken, _supervisor.SendStopping);
+        return _hostConfiguration.RetryAsync(() => _supervisor.SendAsync(pipe, cancellationToken),
+            stoppingToken: _supervisor.SendStopping, cancellationToken: cancellationToken);
     }
 
     public void Probe(ProbeContext context)
@@ -43,11 +44,11 @@ public class ServiceBusSendTransportContext :
         _supervisor.Probe(context);
     }
 
-    public override async Task<SendContext<T>> CreateSendContext<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    public override async Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
     {
         var sendContext = new AzureServiceBusSendContext<T>(message, cancellationToken);
 
-        await pipe.Send(sendContext).ConfigureAwait(false);
+        await pipe.SendAsync(sendContext).ConfigureAwait(false);
 
         CopyIncomingIdentifiersIfPresent(sendContext);
 
@@ -59,18 +60,18 @@ public class ServiceBusSendTransportContext :
         return [_supervisor];
     }
 
-    public Task<SendContext<T>> CreateSendContext<T>(SendEndpointContext context, T message, IPipe<SendContext<T>> pipe,
+    public Task<SendContext<T>> CreateSendContextAsync<T>(SendEndpointContext context, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
-        return CreateSendContext(message, pipe, cancellationToken);
+        return CreateSendContextAsync(message, pipe, cancellationToken);
     }
 
-    public async Task Send<T>(SendEndpointContext sendEndpointContext, SendContext<T> sendContext)
+    public async Task SendAsync<T>(SendEndpointContext sendEndpointContext, SendContext<T> sendContext, CancellationToken cancellationToken = default)
         where T : class
     {
-        AzureServiceBusSendContext<T> context = sendContext as AzureServiceBusSendContext<T>
-            ?? throw new ArgumentException("Invalid SendContext<T> type", nameof(sendContext));
+        cancellationToken.ThrowIfCancellationRequested(); AzureServiceBusSendContext<T> context = sendContext as AzureServiceBusSendContext<T>
+                    ?? throw new ArgumentException("Invalid SendContext<T> type", nameof(sendContext));
 
         if (Activity.Current?.IsAllDataRequested ?? false)
         {
@@ -84,32 +85,33 @@ public class ServiceBusSendTransportContext :
 
         if (IsCancelScheduledSend(context, out var tokenId, out var sequenceNumber))
         {
-            await CancelScheduledSend(sendEndpointContext, tokenId, sequenceNumber, sendContext.CancellationToken).ConfigureAwait(false);
+            await CancelScheduledSendAsync(sendEndpointContext, tokenId, sequenceNumber, sendContext.CancellationToken).ConfigureAwait(false);
 
             return;
         }
 
         if (context.ScheduledEnqueueTimeUtc.HasValue)
         {
-            var scheduled = await ScheduleSend(sendEndpointContext, context).ConfigureAwait(false);
+            var scheduled = await ScheduleSendAsync(sendEndpointContext, context).ConfigureAwait(false);
             if (scheduled)
                 return;
         }
 
         var message = CreateMessage(context);
 
-        await sendEndpointContext.Send(message, context.CancellationToken).ConfigureAwait(false);
+        await sendEndpointContext.SendAsync(message, context.CancellationToken).ConfigureAwait(false);
     }
 
-    static async Task<bool> ScheduleSend<T>(SendEndpointContext clientContext, AzureServiceBusSendContext<T> context)
+    static async Task<bool> ScheduleSendAsync<T>(SendEndpointContext clientContext, AzureServiceBusSendContext<T> context)
         where T : class
     {
-        var now = context.GetTimeProvider().GetUtcNow().UtcDateTime;
+        DateTimeOffset now = context.GetTimeProvider().GetUtcNow();
 
-        var enqueueTimeUtc = context.ScheduledEnqueueTimeUtc.Value;
+        DateTimeOffset enqueueTimeUtc = context.ScheduledEnqueueTimeUtc
+            ?? throw new InvalidOperationException("A scheduled enqueue time is required for a scheduled send.");
         if (enqueueTimeUtc < now)
         {
-            ViciOne.ServiceBus.LogContext.Debug?.Log("The scheduled time was in the past, sending: {ScheduledTime}", context.ScheduledEnqueueTimeUtc);
+            ViciOne.ServiceBus.LogContext.Debug?.Log("The scheduled time was in the past, sending: {DueAt}", context.ScheduledEnqueueTimeUtc);
 
             return false;
         }
@@ -120,11 +122,11 @@ public class ServiceBusSendTransportContext :
 
             var message = CreateMessage(context);
 
-            var sequenceNumber = await clientContext.ScheduleSend(message, enqueueTimeUtc, context.CancellationToken).ConfigureAwait(false);
+            var sequenceNumber = await clientContext.ScheduleSendAsync(message, enqueueTimeUtc.UtcDateTime, context.CancellationToken).ConfigureAwait(false);
 
             context.SetScheduledMessageId(sequenceNumber);
 
-            context.LogScheduled(enqueueTimeUtc);
+            context.LogScheduled(enqueueTimeUtc.UtcDateTime);
 
             return true;
         }
@@ -136,11 +138,11 @@ public class ServiceBusSendTransportContext :
         }
     }
 
-    async Task CancelScheduledSend(SendEndpointContext clientContext, Guid tokenId, long sequenceNumber, CancellationToken cancellationToken)
+    async Task CancelScheduledSendAsync(SendEndpointContext clientContext, Guid tokenId, long sequenceNumber, CancellationToken cancellationToken)
     {
         try
         {
-            await clientContext.CancelScheduledSend(sequenceNumber, cancellationToken).ConfigureAwait(false);
+            await clientContext.CancelScheduledSendAsync(sequenceNumber, cancellationToken).ConfigureAwait(false);
 
             ViciOne.ServiceBus.LogContext.Debug?.Log("CANCEL {DestinationAddress} {TokenId}", EntityName, tokenId);
         }
@@ -174,7 +176,11 @@ public class ServiceBusSendTransportContext :
     static ServiceBusMessage CreateMessage<T>(AzureServiceBusSendContext<T> context)
         where T : class
     {
-        var message = new ServiceBusMessage(context.Body.GetBytes()) { ContentType = context.ContentType.ToString() };
+        var message = new ServiceBusMessage(context.Body.GetBytes())
+        {
+            ContentType = (context.ContentType
+                ?? throw new InvalidOperationException("A content type is required before an Azure Service Bus message can be sent.")).ToString()
+        };
 
         Adapter.Set(message.ApplicationProperties, context.Headers);
 

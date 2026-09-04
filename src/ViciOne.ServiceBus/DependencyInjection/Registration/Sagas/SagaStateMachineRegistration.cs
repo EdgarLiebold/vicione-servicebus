@@ -20,7 +20,7 @@ public class SagaStateMachineRegistration<TStateMachine, TInstance> :
 {
     readonly IContainerSelector _selector;
     readonly List<Action<IRegistrationContext, ISagaConfigurator<TInstance>>> _configureActions;
-    ISagaDefinition<TInstance> _definition;
+    ISagaDefinition<TInstance> _definition = null!;
 
     public SagaStateMachineRegistration(IContainerSelector selector)
     {
@@ -33,7 +33,7 @@ public class SagaStateMachineRegistration<TStateMachine, TInstance> :
 
     public bool IncludeInConfigureEndpoints { get; set; }
 
-    public void AddConfigureAction<T>(Action<IRegistrationContext, ISagaConfigurator<T>> configure)
+    public void AddConfigureAction<T>(Action<IRegistrationContext, ISagaConfigurator<T>>? configure)
         where T : class, ISaga
     {
         if (configure is Action<IRegistrationContext, ISagaConfigurator<TInstance>> action)
@@ -84,7 +84,7 @@ public class SagaStateMachineRegistration<TStateMachine, TInstance> :
 
         _definition = _selector.GetDefinition<ISagaDefinition<TInstance>>(provider) ?? new DefaultSagaDefinition<TInstance>();
 
-        IEndpointDefinition<TInstance> endpointDefinition = _selector.GetEndpointDefinition<TInstance>(provider);
+        IEndpointDefinition<TInstance>? endpointDefinition = _selector.GetEndpointDefinition<TInstance>(provider);
         if (endpointDefinition != null)
             _definition.EndpointDefinition = endpointDefinition;
 

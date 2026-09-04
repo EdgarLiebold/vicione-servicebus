@@ -14,55 +14,55 @@ public class ContextMessageFactory<TContext, T>
         _messageFactory = messageFactory;
     }
 
-    public Task<SendTuple<T>> GetMessage(TContext context)
+    public Task<SendTuple<T>> GetMessageAsync(TContext context, CancellationToken cancellationToken = default)
     {
-        Task<SendTuple<T>> result = _messageFactory(context);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.SendTuple<T>>(cancellationToken); Task<SendTuple<T>> result = _messageFactory(context);
         if (result.Status == TaskStatus.RanToCompletion)
             return result;
 
-        async Task<SendTuple<T>> GetResult()
+        async Task<SendTuple<T>> GetResultAsync()
         {
             return await result.ConfigureAwait(false);
         }
 
-        return GetResult();
+        return GetResultAsync();
     }
 
-    public Task Use(TContext context, Func<TContext, SendTuple<T>, Task> callback)
+    public Task UseAsync(TContext context, Func<TContext, SendTuple<T>, Task> callback, CancellationToken cancellationToken = default)
     {
-        Task<SendTuple<T>> msgTask = GetMessage(context);
+        Task<SendTuple<T>> msgTask = GetMessageAsync(context, cancellationToken: cancellationToken);
         if (msgTask.Status == TaskStatus.RanToCompletion)
             return callback(context, msgTask.GetAwaiter().GetResult());
 
-        async Task GetResult()
+        async Task GetResultAsync()
         {
             SendTuple<T> send = await msgTask.ConfigureAwait(false);
 
             await callback(context, send).ConfigureAwait(false);
         }
 
-        return GetResult();
+        return GetResultAsync();
     }
 
-    public Task<TResult> Use<TResult>(TContext context, Func<TContext, SendTuple<T>, Task<TResult>> callback)
+    public Task<TResult> UseAsync<TResult>(TContext context, Func<TContext, SendTuple<T>, Task<TResult>> callback, CancellationToken cancellationToken = default)
     {
-        Task<SendTuple<T>> msgTask = GetMessage(context);
+        Task<SendTuple<T>> msgTask = GetMessageAsync(context, cancellationToken: cancellationToken);
         if (msgTask.Status == TaskStatus.RanToCompletion)
             return callback(context, msgTask.GetAwaiter().GetResult());
 
-        async Task<TResult> GetResult()
+        async Task<TResult> GetResultAsync()
         {
             SendTuple<T> send = await msgTask.ConfigureAwait(false);
 
             return await callback(context, send).ConfigureAwait(false);
         }
 
-        return GetResult();
+        return GetResultAsync();
     }
 
     public static implicit operator ContextMessageFactory<TContext, T>(TaskMessageFactory<T> factory)
     {
-        Task<SendTuple<T>> message = factory.GetMessage();
+        Task<SendTuple<T>> message = factory.GetMessageAsync();
 
         return new ContextMessageFactory<TContext, T>(_ => message);
     }

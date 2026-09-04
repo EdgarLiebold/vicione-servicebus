@@ -12,23 +12,22 @@ public sealed class TestingServiceProviderExtensionsTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-TESTING-SERVICE-PROVIDER", "filtered-publish-handler")]
-    public async Task ConnectPublishHandler_ReturnsOnlyTheExactMatchingPublishedContext()
+    public async Task ConnectPublishHandler_ReturnsOnlyTheExactMatchingPublishedContextAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using ServiceProvider provider = new ServiceCollection()
             .AddViciOneServiceBusTestHarness(configuration => configuration.SetTestTimeouts(timeout, timeout))
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Guid expectedId = NewId.NextGuid();
-            Task<ConsumeContext<PublishedMessage>> selected = await harness.ConnectPublishHandler<PublishedMessage>(
-                context => context.Message.CorrelationId == expectedId);
+            Task<ConsumeContext<PublishedMessage>> selected = await harness.ConnectPublishHandlerAsync<PublishedMessage>(context => context.Message.CorrelationId == expectedId, cancellationToken: TestContext.Current.CancellationToken);
 
-            await harness.Bus.Publish(new PublishedMessage(NewId.NextGuid(), "rejected"), cancellationToken);
-            await harness.Bus.Publish(new PublishedMessage(expectedId, "expected"), cancellationToken);
+            await harness.Bus.PublishAsync(new PublishedMessage(NewId.NextGuid(), "rejected"), cancellationToken);
+            await harness.Bus.PublishAsync(new PublishedMessage(expectedId, "expected"), cancellationToken);
 
             ConsumeContext<PublishedMessage> context = await selected.WaitAsync(timeout, cancellationToken);
             Assert.Equal(expectedId, context.Message.CorrelationId);
@@ -37,13 +36,13 @@ public sealed class TestingServiceProviderExtensionsTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TESTING-SERVICE-PROVIDER", "harness-bound-task-registrations")]
-    public async Task RegisteredTaskCompletionSources_PreserveIdentityOrderAndIndependentCompletion()
+    public async Task RegisteredTaskCompletionSources_PreserveIdentityOrderAndIndependentCompletionAsync()
     {
         await using ServiceProvider provider = new ServiceCollection()
             .AddViciOneServiceBusTestHarness(configuration =>
@@ -55,7 +54,7 @@ public sealed class TestingServiceProviderExtensionsTests
 
         TaskCompletionSource<string>[] sources = provider.GetServices<TaskCompletionSource<string>>().ToArray();
         Task<string>[] tasks = provider.GetTasks<string>();
-        Task<string> required = provider.GetTask<string>();
+        Task<string> required = provider.GetTaskAsync<string>(cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal(2, sources.Length);
         Assert.Equal(2, tasks.Length);
@@ -75,7 +74,7 @@ public sealed class TestingServiceProviderExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TESTING-SERVICE-PROVIDER", "publish-handler-ready-timeout")]
-    public async Task ConnectPublishHandler_TimesOutOnTheHarnessClockWhenTheEndpointCannotBecomeReady()
+    public async Task ConnectPublishHandler_TimesOutOnTheHarnessClockWhenTheEndpointCannotBecomeReadyAsync()
     {
         var timeProvider = new FakeTimeProvider(new DateTimeOffset(2030, 1, 2, 3, 4, 5, TimeSpan.Zero));
         var endpointHandle = new PendingEndpointHandle();
@@ -85,7 +84,7 @@ public sealed class TestingServiceProviderExtensionsTests
         ((PendingHarnessProxy)(object)harness).Configure(bus, timeProvider, TimeSpan.FromSeconds(1));
 
         Task<Task<ConsumeContext<PublishedMessage>>> connection =
-            harness.ConnectPublishHandler<PublishedMessage>(_ => true);
+            harness.ConnectPublishHandlerAsync<PublishedMessage>(_ => true, cancellationToken: TestContext.Current.CancellationToken);
         Assert.False(connection.IsCompleted);
 
         timeProvider.Advance(TimeSpan.FromSeconds(1));
@@ -98,10 +97,10 @@ public sealed class TestingServiceProviderExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TESTING-SERVICE-PROVIDER", "publish-handler-required-dependencies")]
-    public async Task ConnectPublishHandler_RejectsMissingRequiredDependenciesBeforeEndpointCreation()
+    public async Task ConnectPublishHandler_RejectsMissingRequiredDependenciesBeforeEndpointCreationAsync()
     {
         ArgumentNullException missingHarness = await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            TestingServiceProviderExtensions.ConnectPublishHandler<PublishedMessage>(null!, _ => true));
+            TestingServiceProviderExtensions.ConnectPublishHandlerAsync<PublishedMessage>(null!, _ => true, TestContext.Current.CancellationToken));
         Assert.Equal("harness", missingHarness.ParamName);
 
         await using ServiceProvider provider = new ServiceCollection()
@@ -110,7 +109,7 @@ public sealed class TestingServiceProviderExtensionsTests
         ITestHarness harness = provider.GetTestHarness();
 
         ArgumentNullException missingFilter = await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            harness.ConnectPublishHandler<PublishedMessage>(null!));
+            harness.ConnectPublishHandlerAsync<PublishedMessage>(null!, cancellationToken: TestContext.Current.CancellationToken));
         Assert.Equal("filter", missingFilter.ParamName);
     }
 
@@ -129,7 +128,7 @@ public sealed class TestingServiceProviderExtensionsTests
 
         public Task<ReceiveEndpointReady> Ready => _ready.Task;
 
-        public Task StopAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task StopAsync(CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
     }
 
     private class PendingBusProxy : DispatchProxy

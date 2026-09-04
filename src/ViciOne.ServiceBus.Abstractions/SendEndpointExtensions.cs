@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Context;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Initializers;
 
 public static class SendEndpointExtensions
 {
@@ -17,9 +17,9 @@ public static class SendEndpointExtensions
     /// </param>
     /// <param name="cancellationToken"></param>
     /// <param name="publishEndpoint"></param>
-    public static Task Send(this ISendEndpoint publishEndpoint, Type messageType, object values, CancellationToken cancellationToken = default)
+    public static Task SendAsync(this ISendEndpoint publishEndpoint, Type messageType, object values, CancellationToken cancellationToken = default)
     {
-        return SendEndpointConverterCache.SendInitializer(publishEndpoint, messageType, values, cancellationToken);
+        return SendEndpointConverterCache.SendInitializerAsync(publishEndpoint, messageType, values, cancellationToken);
     }
 
     /// <summary>
@@ -33,9 +33,9 @@ public static class SendEndpointExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <param name="publishEndpoint"></param>
-    public static Task Send(this ISendEndpoint publishEndpoint, Type messageType, object values, IPipe<SendContext> pipe,
+    public static Task SendAsync(this ISendEndpoint publishEndpoint, Type messageType, object values, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
     {
-        return SendEndpointConverterCache.SendInitializer(publishEndpoint, messageType, values, pipe, cancellationToken);
+        return SendEndpointConverterCache.SendInitializerAsync(publishEndpoint, messageType, values, pipe, cancellationToken);
     }
 }

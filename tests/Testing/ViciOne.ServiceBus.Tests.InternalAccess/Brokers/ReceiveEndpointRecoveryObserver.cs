@@ -36,7 +36,7 @@ public sealed class ReceiveEndpointRecoveryObserver(string endpointName) : IRece
         }
     }
 
-    public Task Ready(ReceiveEndpointReady ready)
+    public Task ReadyAsync(ReceiveEndpointReady ready)
     {
         if (!IsTarget(ready.InputAddress))
             return Task.CompletedTask;
@@ -50,11 +50,11 @@ public sealed class ReceiveEndpointRecoveryObserver(string endpointName) : IRece
         return Task.CompletedTask;
     }
 
-    public Task Stopping(ReceiveEndpointStopping stopping) => Task.CompletedTask;
+    public Task StoppingAsync(ReceiveEndpointStopping stopping) => Task.CompletedTask;
 
-    public Task Completed(ReceiveEndpointCompleted completed) => Task.CompletedTask;
+    public Task CompletedAsync(ReceiveEndpointCompleted completed) => Task.CompletedTask;
 
-    public Task Faulted(ReceiveEndpointFaulted faulted)
+    public Task FaultedAsync(ReceiveEndpointFaulted faulted)
     {
         if (!IsTarget(faulted.InputAddress))
             return Task.CompletedTask;

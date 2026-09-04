@@ -293,7 +293,7 @@ public sealed class TimeoutConfigurationSurfaceTests
 
     private sealed class ConfigurationConsumer : IConsumer<ConfigurationMessage>
     {
-        public Task Consume(ConsumeContext<ConfigurationMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<ConfigurationMessage> context) => Task.CompletedTask;
     }
 
     private sealed class ConfigurationSaga : ISaga
@@ -307,10 +307,10 @@ public sealed class TimeoutConfigurationSurfaceTests
 
     private sealed class ConfigurationActivity : IActivity<ConfigurationArguments, ConfigurationLog>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<ConfigurationArguments> context) =>
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<ConfigurationArguments> context) =>
             throw new NotSupportedException();
 
-        public Task<CompensationResult> Compensate(CompensateContext<ConfigurationLog> context) =>
+        public Task<CompensationResult> CompensateAsync(CompensateContext<ConfigurationLog> context) =>
             throw new NotSupportedException();
     }
 }

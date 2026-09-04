@@ -11,7 +11,7 @@ public sealed class BusHealthLifecycleTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-HEALTH", "configured-endpoint-transitions-unhealthy-to-healthy")]
-    public async Task ConfiguredEndpoint_IsUnhealthyBeforeStartAndHealthyAfterStart()
+    public async Task ConfiguredEndpoint_IsUnhealthyBeforeStartAndHealthyAfterStartAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -22,7 +22,7 @@ public sealed class BusHealthLifecycleTests
         HealthReport beforeStart = await healthChecks.CheckHealthAsync(cancellationToken);
         Assert.Equal(HealthStatus.Unhealthy, beforeStart.Status);
 
-        await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             BusHealthResult started = await provider.GetRequiredService<IBusControl>()
@@ -32,18 +32,18 @@ public sealed class BusHealthLifecycleTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-HEALTH", "stopped-connected-endpoint-degrades-running-bus")]
-    public async Task StoppingAConnectedEndpoint_DegradesTheOtherwiseRunningBus()
+    public async Task StoppingAConnectedEndpoint_DegradesTheOtherwiseRunningBusAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using ServiceProvider provider = BuildSingleBus();
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         IBusControl bus = provider.GetRequiredService<IBusControl>();
 
         try
@@ -53,7 +53,7 @@ public sealed class BusHealthLifecycleTests
             Assert.Equal(BusHealthStatus.Healthy,
                 (await bus.WaitForHealthStatusAsync(BusHealthStatus.Healthy, timeout, cancellationToken)).Status);
 
-            await handle.ReceiveEndpoint.Stop(cancellationToken).WaitAsync(timeout, cancellationToken);
+            await handle.ReceiveEndpoint.StopAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
             BusHealthResult degraded = await bus.WaitForHealthStatusAsync(
                 BusHealthStatus.Degraded,
                 timeout,
@@ -66,18 +66,18 @@ public sealed class BusHealthLifecycleTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-HEALTH", "stopped-bus-restarts-to-healthy")]
-    public async Task StoppedBus_RestartsAndReturnsToHealthy()
+    public async Task StoppedBus_RestartsAndReturnsToHealthyAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using ServiceProvider provider = BuildSingleBus();
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         IBusControl bus = provider.GetRequiredService<IBusControl>();
 
         try
@@ -100,13 +100,13 @@ public sealed class BusHealthLifecycleTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-HEALTH", "multiple-bus-instances-compose-one-healthy-report")]
-    public async Task MultipleBusInstances_ComposeAHealthyReportOnlyAfterBothAreReady()
+    public async Task MultipleBusInstances_ComposeAHealthyReportOnlyAfterBothAreReadyAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -130,7 +130,7 @@ public sealed class BusHealthLifecycleTests
             HealthStatus.Unhealthy,
             (await provider.GetRequiredService<HealthCheckService>().CheckHealthAsync(cancellationToken)).Status);
 
-        await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             IBus primary = provider.GetRequiredService<IBus>();
@@ -145,7 +145,7 @@ public sealed class BusHealthLifecycleTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 

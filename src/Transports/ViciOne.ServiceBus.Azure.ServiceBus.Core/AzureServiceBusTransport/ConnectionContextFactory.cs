@@ -22,7 +22,7 @@ public class ConnectionContextFactory :
 
     IPipeContextAgent<ConnectionContext> IPipeContextFactory<ConnectionContext>.CreateContext(ISupervisor supervisor)
     {
-        Task<ConnectionContext> context = Task.Run(() => CreateConnection(supervisor), supervisor.Stopped);
+        Task<ConnectionContext> context = Task.Run(() => CreateConnectionAsync(supervisor), supervisor.Stopped);
 
         IPipeContextAgent<ConnectionContext> contextHandle = supervisor.AddContext(context);
 
@@ -32,17 +32,17 @@ public class ConnectionContextFactory :
     IActivePipeContextAgent<ConnectionContext> IPipeContextFactory<ConnectionContext>.CreateActiveContext(ISupervisor supervisor,
         PipeContextHandle<ConnectionContext> context, CancellationToken cancellationToken)
     {
-        return supervisor.AddActiveContext(context, CreateSharedConnection(context.Context, cancellationToken));
+        return supervisor.AddActiveContext(context, CreateSharedConnectionAsync(context.Context, cancellationToken));
     }
 
-    async Task<ConnectionContext> CreateSharedConnection(Task<ConnectionContext> context, CancellationToken cancellationToken)
+    async Task<ConnectionContext> CreateSharedConnectionAsync(Task<ConnectionContext> context, CancellationToken cancellationToken)
     {
         return context.IsCompletedSuccessfully()
             ? new SharedConnectionContext(context.Result, cancellationToken)
-            : new SharedConnectionContext(await context.OrCanceled(cancellationToken).ConfigureAwait(false), cancellationToken);
+            : new SharedConnectionContext(await context.OrCanceledAsync(cancellationToken).ConfigureAwait(false), cancellationToken);
     }
 
-    async Task<ConnectionContext> CreateConnection(ISupervisor supervisor)
+    async Task<ConnectionContext> CreateConnectionAsync(ISupervisor supervisor)
     {
         var endpoint = new UriBuilder(_hostConfiguration.HostAddress) { Path = "" }.Uri.Host;
 

@@ -32,5 +32,6 @@ public class FaultHandlerConnectHandle :
 
     public void TrySetCanceled(CancellationToken cancellationToken)
     {
+        _ = cancellationToken;
     }
 }

@@ -6,7 +6,7 @@ namespace ViciOne.ServiceBus.Transports;
 public interface ISendTransport :
     ISendObserverConnector
 {
-    Task<SendContext<T>> CreateSendContext<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class;
 
     /// <summary>
@@ -20,6 +20,6 @@ public interface ISendTransport :
     /// <param name="pipe">The pipe invoked when sending a message, to do extra stuff</param>
     /// <param name="cancellationToken">Cancel the send operation (if possible)</param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task Send<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    Task SendAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class;
 }

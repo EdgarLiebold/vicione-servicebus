@@ -9,7 +9,7 @@ namespace ViciOne.ServiceBus.Tests.Caching;
 public sealed class ResourceCacheLifecycleTests
 {
     [Fact]
-    public async Task AbsoluteExpiration_IgnoresCacheHitsAndResourceUsage()
+    public async Task AbsoluteExpiration_IgnoresCacheHitsAndResourceUsageAsync()
     {
         var time = new FakeTimeProvider(DateTimeOffset.UnixEpoch);
         await using var cache = CreateCache(
@@ -31,7 +31,7 @@ public sealed class ResourceCacheLifecycleTests
     }
 
     [Fact]
-    public async Task NullFactoryResult_FaultsTheGenerationAndAllowsAHealthyRetry()
+    public async Task NullFactoryResult_FaultsTheGenerationAndAllowsAHealthyRetryAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, TrackedResource> index = cache.AddIndex("id", value => value.Id);
@@ -47,7 +47,7 @@ public sealed class ResourceCacheLifecycleTests
     }
 
     [Fact]
-    public async Task SecondaryIndexCollision_DisposesOnlyTheRejectedFactoryResource()
+    public async Task SecondaryIndexCollision_DisposesOnlyTheRejectedFactoryResourceAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, TrackedResource> idIndex = cache.AddIndex("id", value => value.Id);
@@ -70,7 +70,7 @@ public sealed class ResourceCacheLifecycleTests
     }
 
     [Fact]
-    public async Task ProjectedKeyMismatch_DisposesTheUncommittedFactoryResourceExactlyOnce()
+    public async Task ProjectedKeyMismatch_DisposesTheUncommittedFactoryResourceExactlyOnceAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, TrackedResource> index = cache.AddIndex("id", value => value.Id);
@@ -85,7 +85,7 @@ public sealed class ResourceCacheLifecycleTests
     }
 
     [Fact]
-    public async Task ExpiredResources_AreReleasedEvenWhenTheIncomingAddIsRejectedByAnotherIndex()
+    public async Task ExpiredResources_AreReleasedEvenWhenTheIncomingAddIsRejectedByAnotherIndexAsync()
     {
         var time = new FakeTimeProvider(DateTimeOffset.UnixEpoch);
         await using var cache = CreateCache(timeProvider: time, maxAge: TimeSpan.FromMinutes(1));
@@ -110,7 +110,7 @@ public sealed class ResourceCacheLifecycleTests
     }
 
     [Fact]
-    public async Task DisposeAsync_CancelsPendingFactoryAndWaitsForOwnershipRelease()
+    public async Task DisposeAsync_CancelsPendingFactoryAndWaitsForOwnershipReleaseAsync()
     {
         var cache = CreateCache();
         IResourceCacheIndex<string, TrackedResource> index = cache.AddIndex("id", value => value.Id);
@@ -141,7 +141,7 @@ public sealed class ResourceCacheLifecycleTests
     }
 
     [Fact]
-    public async Task ClearAsync_DisposesAFactoryResultProducedAfterInvalidation()
+    public async Task ClearAsync_DisposesAFactoryResultProducedAfterInvalidationAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, TrackedResource> index = cache.AddIndex("id", value => value.Id);
@@ -167,7 +167,7 @@ public sealed class ResourceCacheLifecycleTests
     }
 
     [Fact]
-    public async Task ResourceImplementingBothDisposalContracts_UsesOnlyAsyncDisposal()
+    public async Task ResourceImplementingBothDisposalContracts_UsesOnlyAsyncDisposalAsync()
     {
         var cache = CreateCache();
         var value = new TrackedResource("one");
@@ -180,7 +180,7 @@ public sealed class ResourceCacheLifecycleTests
     }
 
     [Fact]
-    public async Task AddProjectionFailure_DoesNotTransferOwnershipToTheCache()
+    public async Task AddProjectionFailure_DoesNotTransferOwnershipToTheCacheAsync()
     {
         await using var cache = CreateCache();
         cache.AddIndex<string>("id", value => throw new ProjectionException(value.Id));
@@ -195,7 +195,7 @@ public sealed class ResourceCacheLifecycleTests
     }
 
     [Fact]
-    public async Task KeySelectorReturningNull_FaultsWithoutPublishingPartialState()
+    public async Task KeySelectorReturningNull_FaultsWithoutPublishingPartialStateAsync()
     {
         await using var cache = CreateCache();
         cache.AddIndex<string>("nullable", _ => null!);

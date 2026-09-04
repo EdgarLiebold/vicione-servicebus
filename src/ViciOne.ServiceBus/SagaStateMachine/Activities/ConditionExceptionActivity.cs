@@ -34,33 +34,33 @@ public class ConditionExceptionActivity<TSaga, TConditionException> :
         visitor.Visit(this, x => _elseBehavior.Accept(visitor));
     }
 
-    public Task Execute(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
-        return next.Execute(context);
+        return next.ExecuteAsync(context);
     }
 
-    public Task Execute<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+    public Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
-        return next.Execute(context);
+        return next.ExecuteAsync(context);
     }
 
-    public async Task Faulted<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
+    public async Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception
     {
         var behaviorContext = context as BehaviorExceptionContext<TSaga, TConditionException>;
         if (behaviorContext != null)
         {
             if (await _condition(behaviorContext).ConfigureAwait(false))
-                await _thenBehavior.Faulted(context).ConfigureAwait(false);
+                await _thenBehavior.FaultedAsync(context).ConfigureAwait(false);
             else
-                await _elseBehavior.Faulted(context).ConfigureAwait(false);
+                await _elseBehavior.FaultedAsync(context).ConfigureAwait(false);
         }
 
-        await next.Faulted(context).ConfigureAwait(false);
+        await next.FaultedAsync(context).ConfigureAwait(false);
     }
 
-    public async Task Faulted<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
+    public async Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
         where T : class
         where TException : Exception
     {
@@ -68,12 +68,12 @@ public class ConditionExceptionActivity<TSaga, TConditionException> :
         if (behaviorContext != null)
         {
             if (await _condition(behaviorContext).ConfigureAwait(false))
-                await _thenBehavior.Faulted(context).ConfigureAwait(false);
+                await _thenBehavior.FaultedAsync(context).ConfigureAwait(false);
             else
-                await _elseBehavior.Faulted(context).ConfigureAwait(false);
+                await _elseBehavior.FaultedAsync(context).ConfigureAwait(false);
         }
 
-        await next.Faulted(context).ConfigureAwait(false);
+        await next.FaultedAsync(context).ConfigureAwait(false);
     }
 }
 
@@ -110,24 +110,24 @@ public class ConditionExceptionActivity<TSaga, TMessage, TConditionException> :
         visitor.Visit(this, x => _elseBehavior.Accept(visitor));
     }
 
-    public Task Execute(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
         throw new SagaStateMachineException("This activity requires a body with the event, but no body was specified.");
     }
 
-    public Task Execute<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+    public Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
-        return next.Execute(context);
+        return next.ExecuteAsync(context);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
+    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception
     {
         throw new SagaStateMachineException("This activity requires a body with the event, but no body was specified.");
     }
 
-    public async Task Faulted<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
+    public async Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
         where T : class
         where TException : Exception
     {
@@ -135,11 +135,11 @@ public class ConditionExceptionActivity<TSaga, TMessage, TConditionException> :
         if (behaviorContext != null)
         {
             if (await _condition(behaviorContext).ConfigureAwait(false))
-                await _thenBehavior.Faulted(context).ConfigureAwait(false);
+                await _thenBehavior.FaultedAsync(context).ConfigureAwait(false);
             else
-                await _elseBehavior.Faulted(context).ConfigureAwait(false);
+                await _elseBehavior.FaultedAsync(context).ConfigureAwait(false);
         }
 
-        await next.Faulted(context).ConfigureAwait(false);
+        await next.FaultedAsync(context).ConfigureAwait(false);
     }
 }

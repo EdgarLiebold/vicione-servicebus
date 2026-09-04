@@ -25,9 +25,9 @@ public class RequestStartedActivity<TSaga, TMessage> :
         visitor.Visit(this);
     }
 
-    public async Task Execute(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
+    public async Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
-        await context.Publish<RequestStarted>(new
+        await context.PublishAsync<RequestStarted>(new
         {
             context.Saga.CorrelationId,
             context.RequestId,
@@ -38,12 +38,12 @@ public class RequestStartedActivity<TSaga, TMessage> :
             Payload = context.Message
         }, context.CancellationToken).ConfigureAwait(false);
 
-        await next.Execute(context).ConfigureAwait(false);
+        await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
+    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
         where TException : Exception
     {
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 }

@@ -24,7 +24,7 @@ public class RiderRegistrationContext :
         return _selector.GetRegistrations<T>(_registration);
     }
 
-    public object GetService(Type serviceType)
+    public object? GetService(Type serviceType)
     {
         return _registration.GetService(serviceType);
     }
@@ -34,7 +34,7 @@ public class RiderRegistrationContext :
         _registration.ConfigureConsumer(consumerType, configurator);
     }
 
-    public void ConfigureConsumer<T>(IReceiveEndpointConfigurator configurator, Action<IConsumerConfigurator<T>> configure = null)
+    public void ConfigureConsumer<T>(IReceiveEndpointConfigurator configurator, Action<IConsumerConfigurator<T>>? configure = null)
         where T : class, IConsumer
     {
         _registration.ConfigureConsumer(configurator, configure);
@@ -50,7 +50,7 @@ public class RiderRegistrationContext :
         _registration.ConfigureSaga(sagaType, configurator);
     }
 
-    public void ConfigureSaga<T>(IReceiveEndpointConfigurator configurator, Action<ISagaConfigurator<T>> configure = null)
+    public void ConfigureSaga<T>(IReceiveEndpointConfigurator configurator, Action<ISagaConfigurator<T>>? configure = null)
         where T : class, ISaga
     {
         _registration.ConfigureSaga(configurator, configure);

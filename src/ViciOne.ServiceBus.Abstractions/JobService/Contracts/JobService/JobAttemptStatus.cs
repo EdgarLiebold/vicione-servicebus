@@ -14,7 +14,7 @@ public interface JobAttemptStatus
     /// </summary>
     Guid AttemptId { get; }
 
-    DateTime Timestamp { get; }
+    DateTimeOffset Timestamp { get; }
 
     JobStatus Status { get; }
 }

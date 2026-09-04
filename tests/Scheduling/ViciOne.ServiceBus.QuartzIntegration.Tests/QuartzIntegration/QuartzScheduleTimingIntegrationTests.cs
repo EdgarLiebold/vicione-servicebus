@@ -11,19 +11,19 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration;
 public sealed class QuartzScheduleTimingIntegrationTests
 {
     private static readonly Uri Destination = new("loopback://localhost/quartz-timing-destination");
-    private static readonly DateTime FarFuture = new(2100, 2, 3, 4, 5, 6, DateTimeKind.Utc);
+    private static readonly DateTimeOffset FarFuture = new(2100, 2, 3, 4, 5, 6, TimeSpan.Zero);
 
     [Theory]
     [InlineData(-3600)]
     [InlineData(0)]
     [InlineData(1)]
     [RequirementCoverage("REQ-VSB-QUARTZ-DUE-TIME", "past-now-and-future-delivery")]
-    public async Task DueSchedule_IsDeliveredWithoutManualSchedulerIntervention(int offsetSeconds)
+    public async Task DueSchedule_IsDeliveredWithoutManualSchedulerInterventionAsync(int offsetSeconds)
     {
         TimeSpan timeout = OperationTimeout();
         var delivered = new TaskCompletionSource<string>(
             TaskCreationOptions.RunContinuationsAsynchronously);
-        await using QuartzTestBus fixture = await QuartzTestBus.Start(
+        await using QuartzTestBus fixture = await QuartzTestBus.StartAsync(
             timeout,
             configure: configurator => configurator.ReceiveEndpoint("quartz-timing-destination", endpoint =>
                 endpoint.Handler<TimingPayload>(context =>
@@ -32,9 +32,9 @@ public sealed class QuartzScheduleTimingIntegrationTests
                     return Task.CompletedTask;
                 })));
         var scheduler = CreateMessageScheduler(fixture);
-        DateTime dueTime = TimeProvider.System.GetUtcNow().AddSeconds(offsetSeconds).UtcDateTime;
+        DateTimeOffset dueTime = TimeProvider.System.GetUtcNow().AddSeconds(offsetSeconds);
 
-        await scheduler.ScheduleSend(
+        await scheduler.ScheduleSendAsync(
             Destination,
             dueTime,
             new TimingPayload($"offset-{offsetSeconds}"),
@@ -47,12 +47,12 @@ public sealed class QuartzScheduleTimingIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-METADATA", "complete-envelope-roundtrip")]
-    public async Task ScheduledDelivery_RestoresTheCompleteMessageContext()
+    public async Task ScheduledDelivery_RestoresTheCompleteMessageContextAsync()
     {
         TimeSpan timeout = OperationTimeout();
         var delivered = new TaskCompletionSource<TimingMetadataObservation>(
             TaskCreationOptions.RunContinuationsAsynchronously);
-        await using QuartzTestBus fixture = await QuartzTestBus.Start(
+        await using QuartzTestBus fixture = await QuartzTestBus.StartAsync(
             timeout,
             configure: configurator => configurator.ReceiveEndpoint("quartz-timing-destination", endpoint =>
                 endpoint.Handler<TimingPayload>(context =>
@@ -79,9 +79,9 @@ public sealed class QuartzScheduleTimingIntegrationTests
         var responseAddress = new Uri("loopback://localhost/quartz-response");
         var faultAddress = new Uri("loopback://localhost/quartz-fault");
 
-        await scheduler.ScheduleSend(
+        await scheduler.ScheduleSendAsync(
             Destination,
-            TimeProvider.System.GetUtcNow().AddHours(-1).UtcDateTime,
+            TimeProvider.System.GetUtcNow().AddHours(-1),
             new TimingPayload("metadata"),
             Pipe.Execute<SendContext<TimingPayload>>(context =>
             {
@@ -113,11 +113,11 @@ public sealed class QuartzScheduleTimingIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-CANCEL", "future-trigger-is-removed-before-delivery")]
-    public async Task CancelingAFutureSchedule_RemovesTheTriggerBeforeItCanDeliver()
+    public async Task CancelingAFutureSchedule_RemovesTheTriggerBeforeItCanDeliverAsync()
     {
         TimeSpan timeout = OperationTimeout();
         var delivered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-        await using QuartzTestBus fixture = await QuartzTestBus.Start(
+        await using QuartzTestBus fixture = await QuartzTestBus.StartAsync(
             timeout,
             configure: configurator => configurator.ReceiveEndpoint("quartz-timing-destination", endpoint =>
                 endpoint.Handler<TimingPayload>(_ =>
@@ -131,7 +131,7 @@ public sealed class QuartzScheduleTimingIntegrationTests
         using ConnectHandle scheduledObserver = fixture.Bus.ConnectConsumeObserver(scheduledCommand);
         using ConnectHandle canceledObserver = fixture.Bus.ConnectConsumeObserver(canceledCommand);
 
-        ScheduledMessage<TimingPayload> scheduled = await scheduler.ScheduleSend(
+        ScheduledMessage<TimingPayload> scheduled = await scheduler.ScheduleSendAsync(
             Destination,
             FarFuture,
             new TimingPayload("must-not-deliver"),
@@ -140,7 +140,7 @@ public sealed class QuartzScheduleTimingIntegrationTests
         TriggerKey triggerKey = new(scheduled.TokenId.ToString("N"));
         Assert.NotNull(await fixture.Scheduler.GetTrigger(triggerKey, TestContext.Current.CancellationToken));
 
-        await scheduler.CancelScheduledSend(Destination, scheduled.TokenId, TestContext.Current.CancellationToken);
+        await scheduler.CancelScheduledSendAsync(Destination, scheduled.TokenId, TestContext.Current.CancellationToken);
         await canceledCommand.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
 
         Assert.Null(await fixture.Scheduler.GetTrigger(triggerKey, TestContext.Current.CancellationToken));
@@ -165,6 +165,6 @@ public sealed class QuartzScheduleTimingIntegrationTests
         Uri? ResponseAddress,
         Uri? FaultAddress,
         Uri? SourceAddress,
-        DateTime? ExpirationTime,
+        DateTimeOffset? ExpirationTime,
         string? Tenant);
 }

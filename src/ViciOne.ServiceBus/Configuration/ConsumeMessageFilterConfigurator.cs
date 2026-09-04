@@ -66,12 +66,12 @@ public class ConsumeMessageFilterConfigurator :
     static bool Match<T>(ConsumeContext context)
         where T : class
     {
-        return context.TryGetMessage(out ConsumeContext<T> _);
+        return context.TryGetMessage(out ConsumeContext<T>? _);
     }
 
     static bool Match<T>(ConsumeContext context, Func<T, bool> filter)
         where T : class
     {
-        return context.TryGetMessage(out ConsumeContext<T> consumeContext) && filter(consumeContext.Message);
+        return context.TryGetMessage(out ConsumeContext<T>? consumeContext) && filter(consumeContext.Message);
     }
 }

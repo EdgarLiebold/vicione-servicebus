@@ -12,7 +12,7 @@ public sealed class ReliableInMemoryIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-RELIABLE-INBOX", "concurrent-duplicate-message-id-executes-body-once")]
-    public async Task InboxLock_AllowsExactlyOneOfThreeConcurrentDeliveriesToPublishTheHundredEvents()
+    public async Task InboxLock_AllowsExactlyOneOfThreeConcurrentDeliveriesToPublishTheHundredEventsAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -27,13 +27,13 @@ public sealed class ReliableInMemoryIntegrationTests
                 configuration.AddConsumer<InboxEventConsumer>();
             })
             .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         Guid messageId = NewId.NextGuid();
 
         try
         {
             Task[] deliveries = Enumerable.Range(0, 3)
-                .Select(_ => harness.Bus.Publish(
+                .Select(_ => harness.Bus.PublishAsync(
                     new InboxCommand(),
                     context => context.MessageId = messageId,
                     cancellationToken))
@@ -43,7 +43,7 @@ public sealed class ReliableInMemoryIntegrationTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Equal(1, observation.ConsumerExecutions);
@@ -57,7 +57,7 @@ public sealed class ReliableInMemoryIntegrationTests
     [InlineData(false, 1)]
     [InlineData(true, 2)]
     [RequirementCoverage("REQ-VSB-RELIABLE-CONSUMER", "outbox-exactly-once-across-success-and-first-attempt-retry")]
-    public async Task ConsumerOutbox_PublishesBothScopedEventsExactlyOnceWithTheirRoutingKeys(
+    public async Task ConsumerOutbox_PublishesBothScopedEventsExactlyOnceWithTheirRoutingKeysAsync(
         bool failFirstAttempt,
         int expectedAttempts)
     {
@@ -75,12 +75,12 @@ public sealed class ReliableInMemoryIntegrationTests
                 configuration.AddConsumer<ReliableEventConsumer>();
             })
             .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         Guid messageId = NewId.NextGuid();
 
         try
         {
-            await harness.Bus.Publish(
+            await harness.Bus.PublishAsync(
                 new ReliableCommand(messageId, failFirstAttempt),
                 context => context.MessageId = messageId,
                 cancellationToken);
@@ -88,7 +88,7 @@ public sealed class ReliableInMemoryIntegrationTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Equal(expectedAttempts, observation.ConsumerAttempts);
@@ -109,7 +109,7 @@ public sealed class ReliableInMemoryIntegrationTests
     [InlineData(ReliableSagaFailure.FirstConsumeAttempt, 2)]
     [InlineData(ReliableSagaFailure.FirstDeliveryAttempt, 1)]
     [RequirementCoverage("REQ-VSB-RELIABLE-SAGA", "success-consume-retry-and-delivery-redelivery-reach-verified")]
-    public async Task SagaOutbox_ReachesVerifiedWithOneCommittedStateMessage(
+    public async Task SagaOutbox_ReachesVerifiedWithOneCommittedStateMessageAsync(
         ReliableSagaFailure failure,
         int expectedCreateAttempts)
     {
@@ -127,7 +127,7 @@ public sealed class ReliableInMemoryIntegrationTests
         });
         await using ServiceProvider provider = services.BuildServiceProvider(
             new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         ISagaStateMachineTestHarness<ReliableMachine, ReliableState> sagaHarness =
             harness.GetSagaStateMachineHarness<ReliableMachine, ReliableState>();
         Guid correlationId = NewId.NextGuid();
@@ -138,18 +138,15 @@ public sealed class ReliableInMemoryIntegrationTests
 
         try
         {
-            await harness.Bus.Publish(
+            await harness.Bus.PublishAsync(
                 new CreateReliableState(correlationId, failure),
                 context => context.MessageId = messageId,
                 cancellationToken);
-            Assert.Equal(correlationId, await sagaHarness.Exists(
-                correlationId,
-                state => state.Verified,
-                timeout));
+            Assert.Equal(correlationId, await sagaHarness.ExistsAsync(correlationId, state => state.Verified, timeout, TestContext.Current.CancellationToken));
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Equal(expectedCreateAttempts, observation.SagaCreateAttempts);
@@ -223,10 +220,10 @@ public sealed class ReliableInMemoryIntegrationTests
 
     public sealed class InboxConsumer(InboxObservation observation) : IConsumer<InboxCommand>
     {
-        public Task Consume(ConsumeContext<InboxCommand> context)
+        public Task ConsumeAsync(ConsumeContext<InboxCommand> context)
         {
             observation.ConsumerExecuted();
-            return Task.WhenAll(Enumerable.Range(0, 100).Select(index => context.Publish(
+            return Task.WhenAll(Enumerable.Range(0, 100).Select(index => context.Advanced().PublishAsync(
                 new InboxEvent(context.MessageId!.Value, $"{index:0000}"),
                 context.CancellationToken)));
         }
@@ -234,7 +231,7 @@ public sealed class ReliableInMemoryIntegrationTests
 
     public sealed class InboxEventConsumer(InboxObservation observation) : IConsumer<InboxEvent>
     {
-        public Task Consume(ConsumeContext<InboxEvent> context)
+        public Task ConsumeAsync(ConsumeContext<InboxEvent> context)
         {
             observation.EventReceived(context.Message.Text);
             return Task.CompletedTask;
@@ -259,12 +256,12 @@ public sealed class ReliableInMemoryIntegrationTests
 
     public interface IReliablePublisher
     {
-        Task PublishSecond(Guid messageId, CancellationToken cancellationToken);
+        Task PublishSecondAsync(Guid messageId, CancellationToken cancellationToken);
     }
 
     public sealed class ReliablePublisher(IPublishEndpoint publishEndpoint) : IReliablePublisher
     {
-        public Task PublishSecond(Guid messageId, CancellationToken cancellationToken) => publishEndpoint.Publish(
+        public Task PublishSecondAsync(Guid messageId, CancellationToken cancellationToken) => publishEndpoint.PublishAsync(
             new ReliableEvent(messageId, "Second"),
             context => context.SetRoutingKey("beta"),
             cancellationToken);
@@ -274,13 +271,13 @@ public sealed class ReliableInMemoryIntegrationTests
         ReliableObservation observation,
         IReliablePublisher publisher) : IConsumer<ReliableCommand>
     {
-        public async Task Consume(ConsumeContext<ReliableCommand> context)
+        public async Task ConsumeAsync(ConsumeContext<ReliableCommand> context)
         {
             int attempt = observation.ConsumerAttempt();
-            await context.Publish(
+            await context.Advanced().PublishAsync(
                 new ReliableEvent(context.Message.MessageId, "First"),
                 publish => publish.SetRoutingKey("alpha"));
-            await publisher.PublishSecond(context.Message.MessageId, context.CancellationToken);
+            await publisher.PublishSecondAsync(context.Message.MessageId, context.CancellationToken);
             if (context.Message.FailFirstAttempt && attempt == 1)
                 throw new ExpectedReliableException("first consumer attempt");
         }
@@ -288,9 +285,9 @@ public sealed class ReliableInMemoryIntegrationTests
 
     public sealed class ReliableEventConsumer(ReliableObservation observation) : IConsumer<ReliableEvent>
     {
-        public Task Consume(ConsumeContext<ReliableEvent> context)
+        public Task ConsumeAsync(ConsumeContext<ReliableEvent> context)
         {
-            observation.EventReceived(context.Message.Text, context.RoutingKey() ?? string.Empty);
+            observation.EventReceived(context.Message.Text, context.Advanced().RoutingKey() ?? string.Empty);
             return Task.CompletedTask;
         }
     }
@@ -374,7 +371,7 @@ public sealed class ReliableInMemoryIntegrationTests
 
     private sealed class FailFirstReliableStateVerifiedSendObserver(ReliableObservation observation) : ISendObserver
     {
-        public Task PreSend<T>(SendContext<T> context)
+        public Task PreSendAsync<T>(SendContext<T> context)
             where T : class
         {
             if (context.SupportedMessageTypes.Contains(
@@ -386,10 +383,10 @@ public sealed class ReliableInMemoryIntegrationTests
             return Task.CompletedTask;
         }
 
-        public Task PostSend<T>(SendContext<T> context)
+        public Task PostSendAsync<T>(SendContext<T> context)
             where T : class => Task.CompletedTask;
 
-        public Task SendFault<T>(SendContext<T> context, Exception exception)
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
             where T : class => Task.CompletedTask;
     }
 

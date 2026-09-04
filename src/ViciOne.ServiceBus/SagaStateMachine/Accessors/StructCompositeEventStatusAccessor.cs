@@ -13,6 +13,7 @@ public class StructCompositeEventStatusAccessor<TSaga> :
 
     public StructCompositeEventStatusAccessor(PropertyInfo propertyInfo)
     {
+        ArgumentNullException.ThrowIfNull(propertyInfo);
         _read = ReadPropertyCache<TSaga>.GetProperty<CompositeEventStatus>(propertyInfo);
         _write = WritePropertyCache<TSaga>.GetProperty<CompositeEventStatus>(propertyInfo);
         _name = propertyInfo.Name;

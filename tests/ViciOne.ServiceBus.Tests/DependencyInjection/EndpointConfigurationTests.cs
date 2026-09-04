@@ -23,7 +23,7 @@ public sealed class EndpointConfigurationTests
     [InlineData(ConfigurationShape.RegistrationSetsConcurrency, 120, 100)]
     [InlineData(ConfigurationShape.EmptyDefinitionInheritsBus, BusPrefetchCount, null)]
     [RequirementCoverage("REQ-VSB-DI-ENDPOINT-CONFIGURATION", "prefetch-and-concurrency-precedence-matrix")]
-    public async Task ProbeReportsTheExactEffectivePrefetchAndConcurrencyValues(
+    public async Task ProbeReportsTheExactEffectivePrefetchAndConcurrencyValuesAsync(
         ConfigurationShape shape,
         int expectedPrefetchCount,
         int? expectedConcurrentMessageLimit)
@@ -31,7 +31,7 @@ public sealed class EndpointConfigurationTests
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using ServiceProvider provider = CreateProvider(shape);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
@@ -45,13 +45,13 @@ public sealed class EndpointConfigurationTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DI-ENDPOINT-CONFIGURATION", "validated-container-scopes-start-and-stop")]
-    public async Task EndpointRegistrationBuildsStartsAndStopsWithScopeValidationEnabled()
+    public async Task EndpointRegistrationBuildsStartsAndStopsWithScopeValidationEnabledAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -72,9 +72,9 @@ public sealed class EndpointConfigurationTests
                 ValidateScopes = true,
             });
 
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         Assert.Same(provider.GetRequiredService<IBus>(), harness.Bus);
-        await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
 
         BusHealthResult health = provider.GetRequiredService<IBusControl>().CheckHealth();
         Assert.Equal(BusHealthStatus.Unhealthy, health.Status);
@@ -82,7 +82,7 @@ public sealed class EndpointConfigurationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-V5-ENDPOINT-QOS-RUNTIME", "shared-consumer-owned-qos-fails-before-materialization")]
-    public async Task SharedEndpointWithConsumerOwnedQos_FailsBeforeEndpointConfigurationRuns()
+    public async Task SharedEndpointWithConsumerOwnedQos_FailsBeforeEndpointConfigurationRunsAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -99,7 +99,7 @@ public sealed class EndpointConfigurationTests
             .BuildServiceProvider();
 
         EndpointQosConfigurationException exception = await Assert.ThrowsAsync<EndpointQosConfigurationException>(async () =>
-            await provider.StartTestHarness().WaitAsync(timeout, cancellationToken));
+            await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken));
 
         Assert.Contains(SharedEndpointName, exception.Message, StringComparison.Ordinal);
         Assert.Contains("shared by 2 consumers", exception.Message, StringComparison.Ordinal);
@@ -239,7 +239,7 @@ public sealed class EndpointConfigurationTests
 
     public sealed class EndpointConsumer : IConsumer<EndpointMessage>
     {
-        public Task Consume(ConsumeContext<EndpointMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<EndpointMessage> context) => Task.CompletedTask;
     }
 
     private sealed class ConcurrentDefinition : ConsumerDefinition<EndpointConsumer>
@@ -271,12 +271,12 @@ public sealed class EndpointConfigurationTests
 
     private sealed class FirstSharedConsumer : IConsumer<SharedMessage>
     {
-        public Task Consume(ConsumeContext<SharedMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<SharedMessage> context) => Task.CompletedTask;
     }
 
     private sealed class SecondSharedConsumer : IConsumer<SharedMessage>
     {
-        public Task Consume(ConsumeContext<SharedMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<SharedMessage> context) => Task.CompletedTask;
     }
 
     private sealed class FirstSharedDefinition : ConsumerDefinition<FirstSharedConsumer>

@@ -14,30 +14,32 @@ public abstract class RoutingSlipResponseProxy<TRequest, TResponse, TFault> :
     where TResponse : class
     where TFault : class
 {
-    protected virtual IRetryPolicy RetryPolicy => null;
+    protected virtual IRetryPolicy? RetryPolicy => null;
 
-    public virtual async Task Consume(ConsumeContext<RoutingSlipCompleted> context)
+    public virtual async Task ConsumeAsync(ConsumeContext<RoutingSlipCompleted> context)
     {
-        var requestInfo = new RoutingSlipRequestInfo<TRequest>(context.SerializerContext, context.Message.Variables);
+        var requestInfo = new RoutingSlipRequestInfo<TRequest>(context.Advanced().SerializerContext, context.Message.Variables);
 
-        var endpoint = await context.GetResponseEndpoint<TResponse>(requestInfo.ResponseAddress, requestInfo.RequestId).ConfigureAwait(false);
+        var endpoint = await context.Advanced().GetResponseEndpointAsync<TResponse>(requestInfo.ResponseAddress, requestInfo.RequestId).ConfigureAwait(false);
 
-        var response = await CreateResponseMessage(context, requestInfo.Request).ConfigureAwait(false);
+        var response = await CreateResponseMessageAsync(context, requestInfo.Request).ConfigureAwait(false);
 
-        await endpoint.Send(response).ConfigureAwait(false);
+        await endpoint.SendAsync(response).ConfigureAwait(false);
     }
 
-    public virtual async Task Consume(ConsumeContext<RoutingSlipFaulted> context)
+    public virtual async Task ConsumeAsync(ConsumeContext<RoutingSlipFaulted> context)
     {
-        var requestInfo = new RoutingSlipRequestInfo<TRequest>(context.SerializerContext, context.Message.Variables);
+        var requestInfo = new RoutingSlipRequestInfo<TRequest>(context.Advanced().SerializerContext, context.Message.Variables);
 
-        if (CanRetry(requestInfo, context, out TimeSpan? delay))
+        if (CanRetry(requestInfo, context, out var delay))
         {
             var retryAttempt = requestInfo.RetryAttempt ?? 0;
+            var requestAddress = requestInfo.RequestAddress
+                ?? throw new InvalidOperationException("The routing slip request address is required for a retry.");
 
             var schedulerContext = context.GetPayload<MessageSchedulerContext>();
 
-            await schedulerContext.ScheduleSend(requestInfo.RequestAddress, delay.Value, requestInfo.Request, x =>
+            await schedulerContext.ScheduleSendAsync(requestAddress, delay, requestInfo.Request, x =>
             {
                 x.RequestId = requestInfo.RequestId;
                 x.ResponseAddress = requestInfo.ResponseAddress;
@@ -49,19 +51,19 @@ public abstract class RoutingSlipResponseProxy<TRequest, TResponse, TFault> :
             return;
         }
 
-        var endpoint = await context.GetFaultEndpoint<TRequest>(requestInfo.FaultAddress ?? requestInfo.ResponseAddress, requestInfo.RequestId)
+        var endpoint = await context.Advanced().GetFaultEndpointAsync<TRequest>(requestInfo.FaultAddress ?? requestInfo.ResponseAddress, requestInfo.RequestId)
             .ConfigureAwait(false);
 
-        var response = await CreateFaultedResponseMessage(context, requestInfo.Request, requestInfo.RequestId);
+        var response = await CreateFaultedResponseMessageAsync(context, requestInfo.Request, requestInfo.RequestId);
 
-        await endpoint.Send(response, x =>
+        await endpoint.SendAsync(response, x =>
         {
             if (requestInfo.RetryAttempt > 0)
                 x.Headers.Set(MessageHeaders.FaultRetryCount, requestInfo.RetryAttempt.Value);
         }).ConfigureAwait(false);
     }
 
-    bool CanRetry(RoutingSlipRequestInfo<TRequest> requestInfo, ConsumeContext<RoutingSlipFaulted> context, out TimeSpan? delay)
+    bool CanRetry(RoutingSlipRequestInfo<TRequest> requestInfo, ConsumeContext<RoutingSlipFaulted> context, out TimeSpan delay)
     {
         delay = default;
 
@@ -87,9 +89,9 @@ public abstract class RoutingSlipResponseProxy<TRequest, TResponse, TFault> :
         return true;
     }
 
-    protected abstract Task<TResponse> CreateResponseMessage(ConsumeContext<RoutingSlipCompleted> context, TRequest request);
+    protected abstract Task<TResponse> CreateResponseMessageAsync(ConsumeContext<RoutingSlipCompleted> context, TRequest request);
 
-    protected abstract Task<TFault> CreateFaultedResponseMessage(ConsumeContext<RoutingSlipFaulted> context, TRequest request, Guid requestId);
+    protected abstract Task<TFault> CreateFaultedResponseMessageAsync(ConsumeContext<RoutingSlipFaulted> context, TRequest request, Guid requestId);
 }
 
 
@@ -98,11 +100,12 @@ public abstract class RoutingSlipResponseProxy<TRequest, TResponse> :
     where TRequest : class
     where TResponse : class
 {
-    protected override Task<Fault<TRequest>> CreateFaultedResponseMessage(ConsumeContext<RoutingSlipFaulted> context, TRequest request, Guid requestId)
+    protected override Task<Fault<TRequest>> CreateFaultedResponseMessageAsync(ConsumeContext<RoutingSlipFaulted> context, TRequest request, Guid requestId)
     {
         IEnumerable<ExceptionInfo> exceptions = context.Message.ActivityExceptions.Select(x => x.ExceptionInfo);
 
-        Fault<TRequest> response = new FaultEvent<TRequest>(request, requestId, context.Host, exceptions, MessageTypeCache<TRequest>.MessageTypeNames);
+        Fault<TRequest> response = new FaultEvent<TRequest>(request, requestId, context.Host, exceptions, MessageTypeCache<TRequest>.MessageTypeNames,
+            context.GetTimeProvider());
 
         return Task.FromResult(response);
     }

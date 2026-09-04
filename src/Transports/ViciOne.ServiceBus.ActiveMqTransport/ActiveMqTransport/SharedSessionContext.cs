@@ -24,30 +24,30 @@ public class SharedSessionContext :
     public ISession Session => _context.Session;
     public ConnectionContext ConnectionContext => _context.ConnectionContext;
 
-    public Task<ITopic> GetTopic(Topic topic)
+    public Task<ITopic> GetTopicAsync(Topic topic, CancellationToken cancellationToken = default)
     {
-        return _context.GetTopic(topic);
+        return _context.GetTopicAsync(topic, cancellationToken: cancellationToken);
     }
 
-    public Task EnsureTopicExists(Topic topic)
+    public Task EnsureTopicExistsAsync(Topic topic, CancellationToken cancellationToken = default)
     {
-        return _context.EnsureTopicExists(topic);
+        return _context.EnsureTopicExistsAsync(topic, cancellationToken: cancellationToken);
     }
 
-    public Task<IQueue> GetQueue(Queue queue)
+    public Task<IQueue> GetQueueAsync(Queue queue, CancellationToken cancellationToken = default)
     {
-        return _context.GetQueue(queue);
+        return _context.GetQueueAsync(queue, cancellationToken: cancellationToken);
     }
 
-    public Task<IDestination> GetDestination(string destinationName, DestinationType destinationType)
+    public Task<IDestination> GetDestinationAsync(string destinationName, DestinationType destinationType, CancellationToken cancellationToken = default)
     {
-        return _context.GetDestination(destinationName, destinationType);
+        return _context.GetDestinationAsync(destinationName, destinationType, cancellationToken: cancellationToken);
     }
 
-    public Task<IMessageConsumer> CreateMessageConsumer(IDestination destination, string selector, bool noLocal, string consumerName = null,
-        bool shared = false, bool durable = true)
+    public Task<IMessageConsumer> CreateMessageConsumerAsync(IDestination destination, string? selector, bool noLocal, string? consumerName = null,
+        bool shared = false, bool durable = true, CancellationToken cancellationToken = default)
     {
-        return _context.CreateMessageConsumer(destination, selector, noLocal, consumerName, shared, durable);
+        return _context.CreateMessageConsumerAsync(destination, selector, noLocal, consumerName, shared, durable, cancellationToken: cancellationToken);
     }
 
     public Task SendAsync(IDestination destination, IMessage message, CancellationToken cancellationToken)
@@ -60,17 +60,17 @@ public class SharedSessionContext :
         return _context.CreateBytesMessage(content);
     }
 
-    public Task DeleteTopic(string topicName)
+    public Task DeleteTopicAsync(string topicName, CancellationToken cancellationToken = default)
     {
-        return _context.DeleteTopic(topicName);
+        return _context.DeleteTopicAsync(topicName, cancellationToken: cancellationToken);
     }
 
-    public Task DeleteQueue(string queueName)
+    public Task DeleteQueueAsync(string queueName, CancellationToken cancellationToken = default)
     {
-        return _context.DeleteQueue(queueName);
+        return _context.DeleteQueueAsync(queueName, cancellationToken: cancellationToken);
     }
 
-    public IDestination GetTemporaryDestination(string name)
+    public IDestination? GetTemporaryDestination(string name)
     {
         return _context.GetTemporaryDestination(name);
     }

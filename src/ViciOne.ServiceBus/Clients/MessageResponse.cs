@@ -25,21 +25,21 @@ public class MessageResponse<TResult> :
     Guid? MessageContext.CorrelationId => _context.CorrelationId;
     Guid? MessageContext.ConversationId => _context.ConversationId;
     Guid? MessageContext.InitiatorId => _context.InitiatorId;
-    DateTime? MessageContext.ExpirationTime => _context.ExpirationTime;
-    Uri MessageContext.SourceAddress => _context.SourceAddress;
-    Uri MessageContext.DestinationAddress => _context.DestinationAddress;
-    Uri MessageContext.ResponseAddress => _context.ResponseAddress;
-    Uri MessageContext.FaultAddress => _context.FaultAddress;
-    DateTime? MessageContext.SentTime => _context.SentTime;
+    DateTimeOffset? MessageContext.ExpirationTime => _context.ExpirationTime;
+    Uri? MessageContext.SourceAddress => _context.SourceAddress;
+    Uri? MessageContext.DestinationAddress => _context.DestinationAddress;
+    Uri? MessageContext.ResponseAddress => _context.ResponseAddress;
+    Uri? MessageContext.FaultAddress => _context.FaultAddress;
+    DateTimeOffset? MessageContext.SentTime => _context.SentTime;
     Headers MessageContext.Headers => _context.Headers;
     HostInfo MessageContext.Host => _context.Host;
 
     public TResult Message { get; }
     object Response.Message => Message;
 
-    public T DeserializeObject<T>(Dictionary<string, object> dictionary)
+    public T? DeserializeObject<T>(Dictionary<string, object> dictionary)
         where T : class
     {
-        return _context.SerializerContext.DeserializeObject<T>(dictionary);
+        return _context.Advanced().SerializerContext.DeserializeObject<T>(dictionary);
     }
 }

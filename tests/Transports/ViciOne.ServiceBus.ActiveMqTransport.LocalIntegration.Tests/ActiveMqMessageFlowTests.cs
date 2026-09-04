@@ -13,7 +13,7 @@ public sealed class ActiveMqMessageFlowTests
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-MESSAGE-FLOW", "send-publish-count-and-unconsumed-topic-are-exact")]
-    public async Task NativeFixture_SendPublishAndNoConsumerRoutesAreExact(string flavor)
+    public async Task NativeFixture_SendPublishAndNoConsumerRoutesAreExactAsync(string flavor)
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(flavor, "messageflow");
         string queueName = fixture.Name("input");
@@ -57,23 +57,22 @@ public sealed class ActiveMqMessageFlowTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
 
-            await input.Send(new SentMessage(sentId), cancellationToken)
+            await input.SendAsync(new SentMessage(sentId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             Task[] publications = expectedPublished
-                .Select(id => bus.Publish(new PublishedMessage(id), cancellationToken))
+                .Select(id => bus.PublishAsync(new PublishedMessage(id), cancellationToken))
                 .ToArray();
             await Task.WhenAll(publications).WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await bus.Publish(new UnconsumedMessage(Guid.NewGuid()), cancellationToken)
+            await bus.PublishAsync(new UnconsumedMessage(Guid.NewGuid()), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             Assert.Equal(sentId, await sent.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
             Assert.True(await allPublished.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
             Assert.Equal(expectedPublished.Order(), published.Keys.Order());
 
-            ActiveMqBroker.ClassicTopicStatistics unconsumed = await fixture.GetClassicTopicStatistics(
+            ActiveMqBroker.ClassicTopicStatistics unconsumed = await fixture.GetClassicTopicStatisticsAsync(
                 $"VirtualTopic.{unconsumedEntity}",
                 cancellationToken);
             Assert.Equal(1, unconsumed.EnqueueCount);

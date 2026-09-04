@@ -956,7 +956,7 @@ internal static partial class ExpressionCompiler
     {
         public readonly LambdaExpression LambdaExpression;
         public ClosureInfo ClosureInfo;
-        public object Lambda;
+        public object Lambda=null!;
         public int LambdaVarIndex;
 
         public NestedLambdaInfo(LambdaExpression lambdaExpression)

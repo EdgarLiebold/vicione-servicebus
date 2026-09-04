@@ -62,7 +62,7 @@ internal static class AnalyzerSymbolFacts
 
         foreach (INamedTypeSymbol contract in containingType.AllInterfaces.Where(contract => IsConsumerInterface(compilation, contract)))
         {
-            foreach (IMethodSymbol member in contract.GetMembers("Consume").OfType<IMethodSymbol>())
+            foreach (IMethodSymbol member in contract.GetMembers("ConsumeAsync").OfType<IMethodSymbol>())
             {
                 ISymbol? implementation = containingType.FindImplementationForInterfaceMember(member);
                 if (implementation is IMethodSymbol method

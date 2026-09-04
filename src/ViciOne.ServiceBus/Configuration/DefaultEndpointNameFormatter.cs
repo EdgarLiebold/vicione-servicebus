@@ -35,7 +35,7 @@ public class DefaultEndpointNameFormatter :
     /// </summary>
     /// <param name="prefix">Prefix to start the name, should match the casing of the formatter (such as Dev or PreProd)</param>
     /// <param name="includeNamespace">If true, the namespace is included in the name</param>
-    public DefaultEndpointNameFormatter(string prefix, bool includeNamespace)
+    public DefaultEndpointNameFormatter(string? prefix, bool includeNamespace)
     {
         Prefix = prefix;
         IncludeNamespace = includeNamespace;
@@ -77,13 +77,11 @@ public class DefaultEndpointNameFormatter :
     /// <summary>
     /// Gets the Prefix to start the name.
     /// </summary>
-    protected string Prefix { get; }
-
+    protected string? Prefix { get; }
     /// <summary>
     /// Gets the join separator between the words
     /// </summary>
-    protected string JoinSeparator { get; }
-
+    protected string JoinSeparator { get; } = null!;
     public static IEndpointNameFormatter Instance { get; } = new DefaultEndpointNameFormatter();
 
     public string Separator { get; protected set; } = "";
@@ -141,10 +139,10 @@ public class DefaultEndpointNameFormatter :
 
         var host = HostMetadataCache.Host;
 
-        var machineName = _nonAlpha.Replace(host.MachineName, "");
+        var machineName = _nonAlpha.Replace(host.MachineName ?? "", "");
         var machineNameLength = machineName.Length;
 
-        var processName = _nonAlpha.Replace(host.ProcessName, "");
+        var processName = _nonAlpha.Replace(host.ProcessName ?? "", "");
         var processNameLength = processName.Length;
 
         var tagLength = tag.Length;

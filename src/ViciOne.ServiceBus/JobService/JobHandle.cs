@@ -18,5 +18,7 @@ public interface JobHandle :
     /// Cancel the job task
     /// </summary>
     /// <returns></returns>
-    Task Cancel(string? reason);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="reason">The reason used by the operation.</param>
+    Task CancelAsync(string? reason, CancellationToken cancellationToken = default);
 }

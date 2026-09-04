@@ -12,7 +12,7 @@ public sealed class MultiBusScopeIsolationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-MULTIBUS-SCOPE", "bound-scope-providers-and-setters-are-distinct")]
-    public async Task EachBusOwnsDistinctBoundScopeProviderAndSetterInstances()
+    public async Task EachBusOwnsDistinctBoundScopeProviderAndSetterInstancesAsync()
     {
         await using ServiceProvider provider = Build(new Reports());
         await using AsyncServiceScope scope = provider.CreateAsyncScope();
@@ -38,7 +38,7 @@ public sealed class MultiBusScopeIsolationTests
     [InlineData(BusDirection.Alpha)]
     [InlineData(BusDirection.Beta)]
     [RequirementCoverage("REQ-VSB-MULTIBUS-SCOPE", "consume-context-never-leaks-between-bound-buses")]
-    public async Task ActiveConsumeContext_IsVisibleOnlyThroughItsOwningBus(BusDirection direction)
+    public async Task ActiveConsumeContext_IsVisibleOnlyThroughItsOwningBusAsync(BusDirection direction)
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -54,13 +54,13 @@ public sealed class MultiBusScopeIsolationTests
             Observation observation;
             if (direction == BusDirection.Alpha)
             {
-                await alpha.Publish(new AlphaMessage("alpha-marker"), cancellationToken);
+                await alpha.PublishAsync(new AlphaMessage("alpha-marker"), cancellationToken);
                 observation = await reports.Alpha.Task.WaitAsync(timeout, cancellationToken);
                 Assert.Equal("alpha-marker", observation.Own);
             }
             else
             {
-                await beta.Publish(new BetaMessage("beta-marker"), cancellationToken);
+                await beta.PublishAsync(new BetaMessage("beta-marker"), cancellationToken);
                 observation = await reports.Beta.Task.WaitAsync(timeout, cancellationToken);
                 Assert.Equal("beta-marker", observation.Own);
             }
@@ -153,7 +153,7 @@ public sealed class MultiBusScopeIsolationTests
         Bind<IBusBeta, IScopedConsumeContextProvider> other,
         Reports reports) : IConsumer<AlphaMessage>
     {
-        public Task Consume(ConsumeContext<AlphaMessage> context)
+        public Task ConsumeAsync(ConsumeContext<AlphaMessage> context)
         {
             reports.Alpha.TrySetResult(new Observation(
                 Read<AlphaMessage>(own.Value),
@@ -167,7 +167,7 @@ public sealed class MultiBusScopeIsolationTests
         Bind<IBusAlpha, IScopedConsumeContextProvider> other,
         Reports reports) : IConsumer<BetaMessage>
     {
-        public Task Consume(ConsumeContext<BetaMessage> context)
+        public Task ConsumeAsync(ConsumeContext<BetaMessage> context)
         {
             reports.Beta.TrySetResult(new Observation(
                 Read<BetaMessage>(own.Value),

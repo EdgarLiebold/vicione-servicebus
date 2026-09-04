@@ -23,7 +23,7 @@ public class ResponseHandlerConnectHandle<TResponse> :
         _completed = completed;
         _requestTask = requestTask;
 
-        Task = GetTask();
+        Task = GetTaskAsync();
     }
 
     public void Dispose()
@@ -50,7 +50,7 @@ public class ResponseHandlerConnectHandle<TResponse> :
 
     public Task<Response<TResponse>> Task { get; }
 
-    async Task<Response<TResponse>> GetTask()
+    async Task<Response<TResponse>> GetTaskAsync()
     {
         await _requestTask.ConfigureAwait(false);
 

@@ -14,5 +14,6 @@ public interface HostHandle
     /// Close the Host, shutting it down for good.
     /// </summary>
     /// <returns></returns>
-    Task Stop(CancellationToken cancellationToken = default);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task StopAsync(CancellationToken cancellationToken = default);
 }

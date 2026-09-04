@@ -46,7 +46,7 @@ public class MessageConsumeTopology<TMessage> :
 
         for (var index = 0; index < _conventions.Count; index++)
         {
-            if (_conventions[index].TryGetMessageConsumeTopology(out IMessageConsumeTopology<TMessage> topology))
+            if (_conventions[index].TryGetMessageConsumeTopology(out IMessageConsumeTopology<TMessage>? topology))
                 topology.Apply(builder);
         }
 
@@ -100,7 +100,7 @@ public class MessageConsumeTopology<TMessage> :
 
     public bool TryAddConvention(IConsumeTopologyConvention convention)
     {
-        return convention.TryGetMessageConsumeTopologyConvention(out IMessageConsumeTopologyConvention<TMessage> messageConsumeTopologyConvention)
+        return convention.TryGetMessageConsumeTopologyConvention(out IMessageConsumeTopologyConvention<TMessage>? messageConsumeTopologyConvention)
             && TryAddConvention(messageConsumeTopologyConvention);
     }
 

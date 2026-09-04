@@ -13,7 +13,7 @@ public class TransportBusInstance<TEndpointConfigurator> :
     public TransportBusInstance(IBusControl busControl, IHost<TEndpointConfigurator> host, IHostConfiguration hostConfiguration, IBusRegistrationContext
         busRegistrationContext)
     {
-        _host = host;
+        _host = host ?? throw new ArgumentNullException(nameof(host));
         RegistrationContext = busRegistrationContext;
 
         BusControl = busControl;
@@ -44,7 +44,7 @@ public class TransportBusInstance<TEndpointConfigurator> :
     }
 
     public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
-        Action<IBusRegistrationContext, IReceiveEndpointConfigurator> configure = null)
+        Action<IBusRegistrationContext, IReceiveEndpointConfigurator>? configure = null)
     {
         return _host.ConnectReceiveEndpoint(definition, endpointNameFormatter, configurator =>
         {
@@ -56,7 +56,7 @@ public class TransportBusInstance<TEndpointConfigurator> :
     }
 
     public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName,
-        Action<IBusRegistrationContext, IReceiveEndpointConfigurator> configure = null)
+        Action<IBusRegistrationContext, IReceiveEndpointConfigurator>? configure = null)
     {
         return _host.ConnectReceiveEndpoint(queueName, configurator =>
         {
@@ -67,7 +67,7 @@ public class TransportBusInstance<TEndpointConfigurator> :
     }
 
     public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
-        Action<IBusRegistrationContext, TEndpointConfigurator> configure = null)
+        Action<IBusRegistrationContext, TEndpointConfigurator>? configure = null)
     {
         return _host.ConnectReceiveEndpoint(definition, endpointNameFormatter, configurator =>
         {
@@ -77,7 +77,7 @@ public class TransportBusInstance<TEndpointConfigurator> :
         });
     }
 
-    public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IBusRegistrationContext, TEndpointConfigurator> configure = null)
+    public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IBusRegistrationContext, TEndpointConfigurator>? configure = null)
     {
         return _host.ConnectReceiveEndpoint(queueName, configurator =>
         {

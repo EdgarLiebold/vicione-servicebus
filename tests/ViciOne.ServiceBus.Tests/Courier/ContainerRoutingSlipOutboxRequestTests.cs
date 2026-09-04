@@ -11,7 +11,7 @@ public sealed class ContainerRoutingSlipOutboxRequestTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-COURIER-OUTBOX", "activity-request-completes-with-outbox-on-every-endpoint")]
-    public async Task ExecuteActivityRequest_CompletesWhileEveryConfiguredEndpointOwnsAnOutbox()
+    public async Task ExecuteActivityRequest_CompletesWhileEveryConfiguredEndpointOwnsAnOutboxAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -30,7 +30,7 @@ public sealed class ContainerRoutingSlipOutboxRequestTests
                     endpoint.UseInMemoryOutbox(context));
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
@@ -42,15 +42,13 @@ public sealed class ContainerRoutingSlipOutboxRequestTests
                 new Uri("queue:container-requesting-activity_execute"),
                 new RequestingArguments("Hello"));
 
-            await harness.Bus.Execute(builder.Build(), cancellationToken);
+            await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
             ISentMessage<RoutingSlipActivityCompleted> activityCompleted = await harness.Sent
                 .SelectAsync<RoutingSlipActivityCompleted>(cancellationToken)
-                .First()
-                .WaitAsync(timeout, cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
             ISentMessage<RoutingSlipCompleted> completed = await harness.Sent
                 .SelectAsync<RoutingSlipCompleted>(cancellationToken)
-                .First()
-                .WaitAsync(timeout, cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
             ActivityRequestSnapshot snapshot = await observation.Completed.Task.WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(trackingNumber, activityCompleted.Context.Message.TrackingNumber);
@@ -59,7 +57,7 @@ public sealed class ContainerRoutingSlipOutboxRequestTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Single(harness.Sent.Select<RoutingSlipActivityCompleted>(SnapshotOnlyToken()));
@@ -131,9 +129,9 @@ public sealed class ContainerRoutingSlipOutboxRequestTests
         IRequestClient<ActivityRequest> client,
         ActivityRequestObservation observation) : IExecuteActivity<RequestingArguments>
     {
-        public async Task<ExecutionResult> Execute(ExecuteContext<RequestingArguments> context)
+        public async Task<ExecutionResult> ExecuteAsync(ExecuteContext<RequestingArguments> context)
         {
-            Response<ActivityResponse> response = await client.GetResponse<ActivityResponse>(
+            Response<ActivityResponse> response = await client.GetResponseAsync<ActivityResponse>(
                 new ActivityRequest(context.Arguments.Value),
                 context.CancellationToken);
             observation.RecordActivity(response.Message.Value);
@@ -143,7 +141,7 @@ public sealed class ContainerRoutingSlipOutboxRequestTests
 
     public sealed class ActivityRequestConsumer(ActivityRequestObservation observation) : IConsumer<ActivityRequest>
     {
-        public async Task Consume(ConsumeContext<ActivityRequest> context)
+        public async Task ConsumeAsync(ConsumeContext<ActivityRequest> context)
         {
             observation.RecordConsumer(context.Message.Value);
             await context.RespondAsync(new ActivityResponse($"Hello, {context.Message.Value}"));

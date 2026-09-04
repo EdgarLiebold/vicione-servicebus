@@ -86,7 +86,7 @@ public class MessageConsumePipeSpecification<TMessage> :
 
     static ConsumeContext FilterContext(ConsumeContext<TMessage> context)
     {
-        return context;
+        return context.Advanced();
     }
 
     static ConsumeContext<TMessage> MergeContext(ConsumeContext<TMessage> input, ConsumeContext context)

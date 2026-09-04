@@ -10,7 +10,7 @@ public sealed class ContainerStateMachineScopeTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-STATE-MACHINE", "activity-consume-and-three-saga-pipe-scope-layers")]
-    public async Task ContainerStateMachine_UsesOneScopedOwnerAndExposesTheExpectedThreePipeLayers()
+    public async Task ContainerStateMachine_UsesOneScopedOwnerAndExposesTheExpectedThreePipeLayersAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -47,21 +47,19 @@ public sealed class ContainerStateMachineScopeTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Guid correlationId = NewId.NextGuid();
             ISendEndpoint endpoint = await harness.Bus
-                .GetSendEndpoint(new Uri("queue:container-state-machine-scope"))
-                .WaitAsync(timeout, cancellationToken);
+                .GetSendEndpointAsync(new Uri("queue:container-state-machine-scope"), TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
             var start = new ContainerScopeStart(correlationId, "scope-key");
 
-            await endpoint.Send(start, cancellationToken);
+            await endpoint.SendAsync(start, cancellationToken);
             IPublishedMessage<ContainerScopeStarted> started = await harness.Published
                 .SelectAsync<ContainerScopeStarted>(cancellationToken)
-                .First()
-                .WaitAsync(timeout, cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
             StateMachineScopeSnapshot snapshot = await observation.Completed.Task
                 .WaitAsync(timeout, cancellationToken);
 
@@ -76,17 +74,16 @@ public sealed class ContainerStateMachineScopeTests
             Assert.Equal(1, snapshot.SagaLayerCount);
             Assert.Equal(1, snapshot.SagaMessageLayerCount);
 
-            await endpoint.Send(new ContainerScopeUpdate("scope-key"), cancellationToken);
+            await endpoint.SendAsync(new ContainerScopeUpdate("scope-key"), cancellationToken);
             IPublishedMessage<ContainerScopeUpdated> updated = await harness.Published
                 .SelectAsync<ContainerScopeUpdated>(cancellationToken)
-                .First()
-                .WaitAsync(timeout, cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(new ContainerScopeUpdated(correlationId, "scope-key"), updated.Context.Message);
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Single(harness.Published.Select<ContainerScopeStarted>(SnapshotOnlyToken()));
@@ -251,12 +248,12 @@ public sealed class ContainerStateMachineScopeTests
         StateMachineScopeObservation observation) : IFilter<ConsumeContext<T>>
         where T : class
     {
-        public async Task Send(ConsumeContext<T> context, IPipe<ConsumeContext<T>> next)
+        public async Task SendAsync(ConsumeContext<T> context, IPipe<ConsumeContext<T>> next)
         {
             if (context.Message is ContainerScopeStart)
                 observation.RecordConsume(marker);
 
-            await next.Send(context);
+            await next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("containerStateMachineConsumeScope");
@@ -267,21 +264,21 @@ public sealed class ContainerStateMachineScopeTests
         StateMachineScopeObservation observation) :
         IStateMachineActivity<ContainerScopeState, ContainerScopeStart>
     {
-        public async Task Execute(
+        public async Task ExecuteAsync(
             BehaviorContext<ContainerScopeState, ContainerScopeStart> context,
             IBehavior<ContainerScopeState, ContainerScopeStart> next)
         {
             observation.RecordActivity(marker);
-            await context.Publish(
+            await context.PublishAsync(
                 new ContainerScopeStarted(context.Saga.CorrelationId, context.Saga.Key),
                 context.CancellationToken);
-            await next.Execute(context);
+            await next.ExecuteAsync(context);
         }
 
-        public Task Faulted<TException>(
+        public Task FaultedAsync<TException>(
             BehaviorExceptionContext<ContainerScopeState, ContainerScopeStart, TException> context,
             IBehavior<ContainerScopeState, ContainerScopeStart> next)
-            where TException : Exception => next.Faulted(context);
+            where TException : Exception => next.FaultedAsync(context);
 
         public void Probe(ProbeContext context) => context.CreateScope("publishContainerScopeStarted");
 
@@ -291,12 +288,12 @@ public sealed class ContainerStateMachineScopeTests
     private sealed class MessageLayerFilter(StateMachineScopeObservation observation) :
         IFilter<ConsumeContext<ContainerScopeStart>>
     {
-        public Task Send(
+        public Task SendAsync(
             ConsumeContext<ContainerScopeStart> context,
             IPipe<ConsumeContext<ContainerScopeStart>> next)
         {
             observation.RecordMessageLayer(context.TryGetPayload(out IServiceProvider? _));
-            return next.Send(context);
+            return next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("messageLayer");
@@ -305,13 +302,13 @@ public sealed class ContainerStateMachineScopeTests
     private sealed class SagaLayerFilter(StateMachineScopeObservation observation) :
         IFilter<SagaConsumeContext<ContainerScopeState>>
     {
-        public Task Send(
+        public Task SendAsync(
             SagaConsumeContext<ContainerScopeState> context,
             IPipe<SagaConsumeContext<ContainerScopeState>> next)
         {
             Assert.True(context.TryGetPayload(out IServiceProvider? serviceProvider));
             observation.RecordSagaLayer(serviceProvider!.GetRequiredService<ScopeMarker>());
-            return next.Send(context);
+            return next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("sagaLayer");
@@ -320,13 +317,13 @@ public sealed class ContainerStateMachineScopeTests
     private sealed class SagaMessageLayerFilter(StateMachineScopeObservation observation) :
         IFilter<SagaConsumeContext<ContainerScopeState, ContainerScopeStart>>
     {
-        public Task Send(
+        public Task SendAsync(
             SagaConsumeContext<ContainerScopeState, ContainerScopeStart> context,
             IPipe<SagaConsumeContext<ContainerScopeState, ContainerScopeStart>> next)
         {
             Assert.True(context.TryGetPayload(out IServiceProvider? serviceProvider));
             observation.RecordSagaMessageLayer(serviceProvider!.GetRequiredService<ScopeMarker>());
-            return next.Send(context);
+            return next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("sagaMessageLayer");

@@ -12,11 +12,13 @@ public interface IBusControl :
     /// <returns>
     /// The BusHandle for the started bus. This is no longer needed, as calling Stop on the IBusControl will stop the bus equally well.
     /// </returns>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     Task<BusHandle> StartAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Stops the bus if it has been started. If the bus hasn't been started, the method returns without any warning.
     /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     Task StopAsync(CancellationToken cancellationToken = default);
 
     /// <summary>

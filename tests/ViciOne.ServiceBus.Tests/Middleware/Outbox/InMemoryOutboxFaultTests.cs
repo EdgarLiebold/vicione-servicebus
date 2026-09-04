@@ -9,7 +9,7 @@ public sealed class InMemoryOutboxFaultTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-OUTBOX-FAULT", "discard-response-before-fault")]
-    public async Task HandlerFault_DiscardsItsDeferredResponseBeforePublishingTheRequestFault()
+    public async Task HandlerFault_DiscardsItsDeferredResponseBeforePublishingTheRequestFaultAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -33,14 +33,14 @@ public sealed class InMemoryOutboxFaultTests
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+            await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
             Guid correlationId = NewId.NextGuid();
             IRequestClient<OutboxRequest> client = harness.Bus.CreateRequestClient<OutboxRequest>(
                 harness.InputQueueAddress,
                 timeout);
 
             RequestFaultException fault = await Assert.ThrowsAsync<RequestFaultException>(() =>
-                client.GetResponse<OutboxResponse>(
+                client.GetResponseAsync<OutboxResponse>(
                     new OutboxRequest(correlationId),
                     cancellationToken));
             ConsumeContext<OutboxRequest> consumed = await handlerEntered.Task.WaitAsync(
@@ -59,7 +59,7 @@ public sealed class InMemoryOutboxFaultTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 

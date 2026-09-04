@@ -10,7 +10,7 @@ public class CaseInsensitiveDictionaryStringObjectJsonConverter<T> :
     JsonConverter<T>
     where T : class, IEnumerable<KeyValuePair<string, object>>
 {
-    public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         switch (reader.TokenType)
         {
@@ -140,7 +140,7 @@ public class CaseInsensitiveDictionaryStringObjectJsonConverter<T> :
 
             var value = ReadPropertyValue(ref reader, options);
             if (value != null || !ignoreNull)
-                dictionary[propertyName] = value;
+                dictionary[propertyName] = value!;
         }
 
         return dictionary;
@@ -160,11 +160,11 @@ public class CaseInsensitiveDictionaryStringObjectJsonConverter<T> :
             if (reader.TokenType == JsonTokenType.StartObject)
             {
                 Dictionary<string, object> elementDictionary = ReadObject(ref reader, options);
-                if (elementDictionary.TryGetValue("Key", out string key) && !string.IsNullOrWhiteSpace(key)
+                if (elementDictionary.TryGetValue("Key", out var keyValue) && keyValue is string key && !string.IsNullOrWhiteSpace(key)
                     && elementDictionary.TryGetValue("Value", out var value))
                 {
                     if (value != null || !ignoreNull)
-                        dictionary[key] = value;
+                        dictionary[key] = value!;
                 }
             }
             else
@@ -174,7 +174,7 @@ public class CaseInsensitiveDictionaryStringObjectJsonConverter<T> :
         return dictionary;
     }
 
-    static object ReadPropertyValue(ref Utf8JsonReader reader, JsonSerializerOptions options)
+    static object? ReadPropertyValue(ref Utf8JsonReader reader, JsonSerializerOptions options)
     {
         switch (reader.TokenType)
         {
@@ -202,7 +202,7 @@ public class CaseInsensitiveDictionaryStringObjectJsonConverter<T> :
             case JsonTokenType.StartArray:
                 var list = new List<object>();
                 while (reader.Read() && reader.TokenType != JsonTokenType.EndArray)
-                    list.Add(ReadPropertyValue(ref reader, options));
+                    list.Add(ReadPropertyValue(ref reader, options)!);
                 return list;
 
             default:

@@ -46,7 +46,8 @@ public sealed class JobAttemptStateMachine :
 
         Schedule(() => StatusCheckRequested, instance => instance.StatusCheckTokenId, x =>
         {
-            x.DelayProvider = context => context.GetPayload<JobSagaSettings>().StatusCheckInterval;
+            x.DelayProvider = context => (context.GetPayload<JobSagaSettings>()
+                ?? throw new InvalidOperationException("The job saga settings payload is required.")).StatusCheckInterval;
             x.Received = r =>
             {
                 r.CorrelateById(context => context.Message.AttemptId);
@@ -74,7 +75,8 @@ public sealed class JobAttemptStateMachine :
                 .Then(context =>
                 {
                     context.Saga.Faulted = context.Message.Timestamp;
-                    context.Saga.InstanceAddress ??= context.SourceAddress;
+                    context.Saga.InstanceAddress ??= context.SourceAddress
+                        ?? throw new InvalidOperationException("A source address is required when a job attempt start faults.");
                 })
                 .SendJobAttemptFaulted()
                 .TransitionTo(Faulted));
@@ -117,7 +119,8 @@ public sealed class JobAttemptStateMachine :
                 .Then(context =>
                 {
                     context.Saga.Faulted = context.Message.Timestamp;
-                    context.Saga.InstanceAddress ??= context.SourceAddress;
+                    context.Saga.InstanceAddress ??= context.SourceAddress
+                        ?? throw new InvalidOperationException("A source address is required when a job attempt faults.");
                 })
                 .Unschedule(StatusCheckRequested)
                 .TransitionTo(Faulted));
@@ -178,25 +181,22 @@ public sealed class JobAttemptStateMachine :
     //
     // ReSharper disable UnassignedGetOnlyAutoProperty
     // ReSharper disable MemberCanBePrivate.Global
-    public State Starting { get; }
-    public State Running { get; }
-    public State CheckingStatus { get; }
-    public State Suspect { get; }
-    public State Faulted { get; }
+    public State Starting { get; } = null!;
+    public State Running { get; } = null!;
+    public State CheckingStatus { get; } = null!;
+    public State Suspect { get; } = null!;
+    public State Faulted { get; } = null!;
 
-    public Event<StartJobAttempt> StartJobAttempt { get; }
-    public Event<Fault<StartJob>> StartJobFaulted { get; }
-    public Event<FinalizeJobAttempt> FinalizeJobAttempt { get; }
-    public Event<CancelJobAttempt> CancelJobAttempt { get; }
-
-    public Event<JobAttemptStarted> AttemptStarted { get; }
-    public Event<JobAttemptFaulted> AttemptFaulted { get; }
-    public Event<JobAttemptCompleted> AttemptCompleted { get; }
-    public Event<JobAttemptCanceled> AttemptCanceled { get; }
-
-    public Event<JobAttemptStatus> AttemptStatus { get; }
-
-    public Schedule<JobAttemptSaga, JobStatusCheckRequested> StatusCheckRequested { get; }
+    public Event<StartJobAttempt> StartJobAttempt { get; } = null!;
+    public Event<Fault<StartJob>> StartJobFaulted { get; } = null!;
+    public Event<FinalizeJobAttempt> FinalizeJobAttempt { get; } = null!;
+    public Event<CancelJobAttempt> CancelJobAttempt { get; } = null!;
+    public Event<JobAttemptStarted> AttemptStarted { get; } = null!;
+    public Event<JobAttemptFaulted> AttemptFaulted { get; } = null!;
+    public Event<JobAttemptCompleted> AttemptCompleted { get; } = null!;
+    public Event<JobAttemptCanceled> AttemptCanceled { get; } = null!;
+    public Event<JobAttemptStatus> AttemptStatus { get; } = null!;
+    public Schedule<JobAttemptSaga, JobStatusCheckRequested> StatusCheckRequested { get; } = null!;
 }
 
 
@@ -287,7 +287,8 @@ static class JobAttemptStateMachineBehaviorExtensions
                 AttemptId = context.Saga.CorrelationId,
                 RetryAttempt = context.Saga.RetryAttempt,
                 Timestamp = context.Message.Timestamp,
-                Exceptions = context.Message.Exceptions?.FirstOrDefault()
+                Exceptions = context.Message.Exceptions.FirstOrDefault()
+                    ?? throw new InvalidOperationException("A job start fault must include exception details.")
             });
     }
 

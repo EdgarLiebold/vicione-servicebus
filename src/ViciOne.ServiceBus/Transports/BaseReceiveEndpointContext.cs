@@ -132,9 +132,9 @@ public abstract class BaseReceiveEndpointContext :
         return new ReceivePipeDispatcher(_receivePipe.Value, _receiveObservers, _hostConfiguration, InputAddress);
     }
 
-    public async ValueTask ResetAsync()
+    public async ValueTask ResetAsync(CancellationToken cancellationToken = default)
     {
-        ISendEndpointProvider? sendEndpointProvider = _sendEndpointProvider.IsValueCreated ? _sendEndpointProvider.Value : null;
+        cancellationToken.ThrowIfCancellationRequested(); ISendEndpointProvider? sendEndpointProvider = _sendEndpointProvider.IsValueCreated ? _sendEndpointProvider.Value : null;
         IPublishEndpointProvider? publishEndpointProvider = _publishEndpointProvider.IsValueCreated ? _publishEndpointProvider.Value : null;
 
         if (sendEndpointProvider is not null)

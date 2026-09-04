@@ -10,7 +10,7 @@ public interface IFilterObserver
     /// </summary>
     /// <param name="context">The consume context</param>
     /// <returns></returns>
-    Task PreSend<T>(T context)
+    Task PreSendAsync<T>(T context)
         where T : class, PipeContext;
 
     /// <summary>
@@ -19,7 +19,7 @@ public interface IFilterObserver
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    Task PostSend<T>(T context)
+    Task PostSendAsync<T>(T context)
         where T : class, PipeContext;
 
     /// <summary>
@@ -28,7 +28,7 @@ public interface IFilterObserver
     /// <param name="context"></param>
     /// <param name="exception"></param>
     /// <returns></returns>
-    Task SendFault<T>(T context, Exception exception)
+    Task SendFaultAsync<T>(T context, Exception exception)
         where T : class, PipeContext;
 }
 
@@ -41,7 +41,7 @@ public interface IFilterObserver<in TContext>
     /// </summary>
     /// <param name="context">The consume context</param>
     /// <returns></returns>
-    Task PreSend(TContext context);
+    Task PreSendAsync(TContext context);
 
     /// <summary>
     /// Called after the message has been dispatched to all consumers - note that in the case of an exception
@@ -49,7 +49,7 @@ public interface IFilterObserver<in TContext>
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    Task PostSend(TContext context);
+    Task PostSendAsync(TContext context);
 
     /// <summary>
     /// Called after the message has been dispatched to all consumers when one or more exceptions have occurred
@@ -57,5 +57,5 @@ public interface IFilterObserver<in TContext>
     /// <param name="context"></param>
     /// <param name="exception"></param>
     /// <returns></returns>
-    Task SendFault(TContext context, Exception exception);
+    Task SendFaultAsync(TContext context, Exception exception);
 }

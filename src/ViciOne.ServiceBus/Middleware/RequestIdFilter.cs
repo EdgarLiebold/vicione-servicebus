@@ -31,13 +31,13 @@ public class RequestIdFilter<TMessage> :
             pipe.Probe(scope);
     }
 
-    public async Task Send(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
+    public async Task SendAsync(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
     {
         Guid? key = context.RequestId;
-        if (key.HasValue && _pipes.TryGetValue(key.Value, out IPipe<ConsumeContext<TMessage>> pipe))
-            await pipe.Send(context).ConfigureAwait(false);
+        if (key.HasValue && _pipes.TryGetValue(key.Value, out IPipe<ConsumeContext<TMessage>>? pipe))
+            await pipe.SendAsync(context).ConfigureAwait(false);
 
-        await next.Send(context).ConfigureAwait(false);
+        await next.SendAsync(context).ConfigureAwait(false);
     }
 
     public ConnectHandle ConnectPipe(Guid key, IPipe<ConsumeContext<TMessage>> pipe)
@@ -54,7 +54,7 @@ public class RequestIdFilter<TMessage> :
 
     void RemovePipe(Guid key)
     {
-        _pipes.TryRemove(key, out IPipe<ConsumeContext<TMessage>> _);
+        _pipes.TryRemove(key, out _);
     }
 
 

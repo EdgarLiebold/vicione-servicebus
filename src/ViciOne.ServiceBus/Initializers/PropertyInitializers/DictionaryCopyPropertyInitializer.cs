@@ -29,9 +29,9 @@ public class DictionaryCopyPropertyInitializer<TMessage, TInput, TProperty> :
         _messageProperty = WritePropertyCache<TMessage>.GetProperty<TProperty>(propertyInfo);
     }
 
-    public Task Apply(InitializeContext<TMessage, TInput> context)
+    public Task ApplyAsync(InitializeContext<TMessage, TInput> context, CancellationToken cancellationToken = default)
     {
-        if (context.HasInput && context.Input.TryGetValue(_key, out var value))
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (context.HasInput && context.Input.TryGetValue(_key, out var value))
             _messageProperty.Set(context.Message, value);
 
         return Task.CompletedTask;

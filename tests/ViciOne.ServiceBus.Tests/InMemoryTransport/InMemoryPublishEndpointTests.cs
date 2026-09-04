@@ -10,7 +10,7 @@ public sealed class InMemoryPublishEndpointTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-PUBLISH-OVERLOADS", "seven-declared-message-and-context-paths")]
-    public async Task EveryPublishOverload_DeliversItsDeclaredMessageAndContextExactlyOnce()
+    public async Task EveryPublishOverload_DeliversItsDeclaredMessageAndContextExactlyOnceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -22,8 +22,8 @@ public sealed class InMemoryPublishEndpointTests
         var recorder = new PublishRecorder(expectedCount: 7);
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
         {
-            endpoint.Handler<ConcretePublished>(recorder.RecordConcrete);
-            endpoint.Handler<DynamicPublished>(recorder.RecordDynamic);
+            endpoint.Handler<ConcretePublished>(recorder.RecordConcreteAsync);
+            endpoint.Handler<DynamicPublished>(recorder.RecordDynamicAsync);
         };
         Guid basePipeRequestId = Guid.Parse("8efbc787-5190-46da-b927-f5a8f992457c");
         Guid typedPipeRequestId = Guid.Parse("cf45d634-89ba-46b4-96ab-923b42dab3ad");
@@ -33,40 +33,40 @@ public sealed class InMemoryPublishEndpointTests
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+            await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
             started = true;
 
-            await harness.Bus.Publish(new ConcretePublished(1), cancellationToken);
+            await harness.Bus.PublishAsync(new ConcretePublished(1), cancellationToken);
 
             object boxed = new ConcretePublished(2);
-            await harness.Bus.Publish(boxed, cancellationToken);
+            await harness.Bus.Advanced().PublishAsync(boxed, boxed.GetType(), cancellationToken);
 
-            await harness.Bus.Publish(
+            await harness.Bus.PublishAsync(
                 new ConcretePublished(3),
                 Pipe.New<PublishContext>(pipe =>
                     pipe.UseExecute(context => context.RequestId = basePipeRequestId)),
                 cancellationToken);
 
-            await harness.Bus.Publish(
+            await harness.Bus.PublishAsync(
                 new ConcretePublished(4),
                 Pipe.New<PublishContext<ConcretePublished>>(pipe =>
                     pipe.UseExecute(context => context.RequestId = typedPipeRequestId)),
                 cancellationToken);
 
             object boxedWithContext = new ConcretePublished(5);
-            await harness.Bus.Publish(
+            await harness.Bus.PublishAsync(
                 boxedWithContext,
                 context => { context.RequestId = objectCallbackRequestId; },
                 cancellationToken);
 
-            await harness.Bus.Publish<DynamicPublished>(new { Sequence = 6 }, cancellationToken);
-            await harness.Bus.Publish<DynamicPublished>(
+            await harness.Bus.PublishAsync<DynamicPublished>(new { Sequence = 6 }, cancellationToken);
+            await harness.Bus.PublishAsync<DynamicPublished>(
                 new { Sequence = 7 },
                 context => { context.RequestId = dynamicCallbackRequestId; },
                 cancellationToken);
 
             await recorder.Completed.WaitAsync(timeout, cancellationToken);
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
             started = false;
 
             PublishObservation[] observations = recorder.Observations;
@@ -87,7 +87,7 @@ public sealed class InMemoryPublishEndpointTests
         finally
         {
             if (started)
-                await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+                await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -115,13 +115,13 @@ public sealed class InMemoryPublishEndpointTests
 
         public PublishObservation[] Observations => _observations.ToArray();
 
-        public Task RecordConcrete(ConsumeContext<ConcretePublished> context) =>
-            Record(new PublishObservation(context.Message.Sequence, context.RequestId, "concrete"));
+        public Task RecordConcreteAsync(ConsumeContext<ConcretePublished> context) =>
+            RecordAsync(new PublishObservation(context.Message.Sequence, context.RequestId, "concrete"));
 
-        public Task RecordDynamic(ConsumeContext<DynamicPublished> context) =>
-            Record(new PublishObservation(context.Message.Sequence, context.RequestId, "dynamic"));
+        public Task RecordDynamicAsync(ConsumeContext<DynamicPublished> context) =>
+            RecordAsync(new PublishObservation(context.Message.Sequence, context.RequestId, "dynamic"));
 
-        private Task Record(PublishObservation observation)
+        private Task RecordAsync(PublishObservation observation)
         {
             _observations.Enqueue(observation);
             if (Interlocked.Increment(ref _count) == expectedCount)

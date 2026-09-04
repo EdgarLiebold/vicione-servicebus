@@ -15,7 +15,7 @@ public sealed class MessageJournalWriterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-SANITIZATION", "raw-data-never-reaches-store")]
-    public async Task Policy_IsTheOnlyBoundaryBetweenRawCaptureAndStoredEntry()
+    public async Task Policy_IsTheOnlyBoundaryBetweenRawCaptureAndStoredEntryAsync()
     {
         byte[] rawBody = "raw-secret"u8.ToArray();
         var rawMetadata = new Dictionary<string, string>(StringComparer.Ordinal) { ["secret"] = "raw-secret" };
@@ -59,7 +59,7 @@ public sealed class MessageJournalWriterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-FILTER", "null-projection-excludes-observation")]
-    public async Task NullProjection_FiltersTheObservationWithoutCallingTheStore()
+    public async Task NullProjection_FiltersTheObservationWithoutCallingTheStoreAsync()
     {
         var store = new RecordingStore();
         var driver = CreateDriver(store, new DelegatePolicy(static (_, _) =>
@@ -77,7 +77,7 @@ public sealed class MessageJournalWriterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-BOUNDS", "oversized-entry-fails-closed")]
-    public async Task OversizedSanitizedEntry_IsRejectedBeforePersistence()
+    public async Task OversizedSanitizedEntry_IsRejectedBeforePersistenceAsync()
     {
         var store = new RecordingStore(maximumEntryBytes: 128);
         var driver = CreateDriver(store, PassThroughPolicy());
@@ -94,7 +94,7 @@ public sealed class MessageJournalWriterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-FAILURE-ISOLATION", "capture-policy-and-store-failures-are-contained")]
-    public async Task CapturePolicyAndStoreFailures_NeverEscapeTheJournalBoundary()
+    public async Task CapturePolicyAndStoreFailures_NeverEscapeTheJournalBoundaryAsync()
     {
         var expectedCaptureFailure = new ExpectedJournalException("capture");
         var captureDriver = CreateDriver(new RecordingStore(), PassThroughPolicy());
@@ -125,7 +125,7 @@ public sealed class MessageJournalWriterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-FAILURE-ISOLATION", "caller-cancellation-is-contained")]
-    public async Task CallerCancellation_IsObservedWithoutEscapingOrPersisting()
+    public async Task CallerCancellation_IsObservedWithoutEscapingOrPersistingAsync()
     {
         var store = new RecordingStore();
         var driver = CreateDriver(store, PassThroughPolicy());
@@ -140,7 +140,7 @@ public sealed class MessageJournalWriterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-FAILURE-ISOLATION", "provider-timeout-uses-configured-clock")]
-    public async Task ProviderTimeout_UsesTheConfiguredClockAndDoesNotWaitOnWallTime()
+    public async Task ProviderTimeout_UsesTheConfiguredClockAndDoesNotWaitOnWallTimeAsync()
     {
         var timeProvider = new FakeTimeProvider(ObservationTime);
         var store = new BlockingStore();
@@ -162,7 +162,7 @@ public sealed class MessageJournalWriterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-SNAPSHOT", "entry-identity-time-and-content-are-stable")]
-    public async Task StoredEntry_HasStableVersionSevenIdentityTimeAndDetachedContent()
+    public async Task StoredEntry_HasStableVersionSevenIdentityTimeAndDetachedContentAsync()
     {
         var timeProvider = new FakeTimeProvider(ObservationTime);
         var store = new RecordingStore();
@@ -187,7 +187,7 @@ public sealed class MessageJournalWriterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-SNAPSHOT", "no-body-stage-exposes-mutable-backing-storage")]
-    public async Task CaptureProjectionAndEntry_DoNotExposeMutableBodyBackingStorage()
+    public async Task CaptureProjectionAndEntry_DoNotExposeMutableBodyBackingStorageAsync()
     {
         var projection = new MessageJournalProjection(
             MessageJournalDataClassification.Internal,
@@ -220,7 +220,7 @@ public sealed class MessageJournalWriterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-BOUNDS", "escaped-json-content-counted-before-persistence")]
-    public async Task EscapedJsonContent_IsCountedBeforeTheStoreLimitIsApplied()
+    public async Task EscapedJsonContent_IsCountedBeforeTheStoreLimitIsAppliedAsync()
     {
         var store = new RecordingStore(maximumEntryBytes: 400);
         var policy = new DelegatePolicy(static (_, _) =>
@@ -244,7 +244,7 @@ public sealed class MessageJournalWriterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-FAILURE-ISOLATION", "clock-failure-is-contained")]
-    public async Task ThrowingTimeProvider_CannotEscapeTheJournalBoundary()
+    public async Task ThrowingTimeProvider_CannotEscapeTheJournalBoundaryAsync()
     {
         var store = new RecordingStore();
         var driver = CreateDriver(store, PassThroughPolicy(), new ThrowingTimestampTimeProvider());
@@ -334,7 +334,7 @@ public sealed class MessageJournalWriterTests
 
         public bool CancellationObserved => Volatile.Read(ref _cancellationObserved) == 1;
 
-        public override async ValueTask AppendAsync(MessageJournalEntry entry, CancellationToken cancellationToken)
+        public override async ValueTask AppendAsync(MessageJournalEntry entry, CancellationToken cancellationToken = default)
         {
             _entered.TrySetResult();
             try

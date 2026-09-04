@@ -12,11 +12,11 @@ public static class AgentExtensions
     /// <param name="agent"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public static Task Stop(this IAgent agent, CancellationToken cancellationToken = default)
+    public static Task StopAsync(this IAgent agent, CancellationToken cancellationToken = default)
     {
         var stopContext = new DefaultStopContext(cancellationToken);
 
-        return agent.Stop(stopContext);
+        return agent.StopAsync(stopContext, cancellationToken: cancellationToken);
     }
 
     /// <summary>
@@ -26,11 +26,11 @@ public static class AgentExtensions
     /// <param name="reason">The reason for stopping the agent</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public static Task Stop(this IAgent agent, string reason, CancellationToken cancellationToken = default)
+    public static Task StopAsync(this IAgent agent, string reason, CancellationToken cancellationToken = default)
     {
         var stopContext = new DefaultStopContext(cancellationToken) { Reason = reason };
 
-        return agent.Stop(stopContext);
+        return agent.StopAsync(stopContext, cancellationToken: cancellationToken);
     }
 
 

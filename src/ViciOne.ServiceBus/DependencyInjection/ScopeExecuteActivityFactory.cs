@@ -19,11 +19,11 @@ public class ScopeExecuteActivityFactory<TActivity, TArguments> :
         _scopeProvider = scopeProvider;
     }
 
-    public async Task Execute(ExecuteContext<TArguments> context, IPipe<ExecuteActivityContext<TActivity, TArguments>> next)
+    public async Task ExecuteAsync(ExecuteContext<TArguments> context, IPipe<ExecuteActivityContext<TActivity, TArguments>> next, CancellationToken cancellationToken = default)
     {
-        await using IExecuteActivityScopeContext<TActivity, TArguments> scope = await _scopeProvider.GetActivityScope(context).ConfigureAwait(false);
+        await using IExecuteActivityScopeContext<TActivity, TArguments> scope = await _scopeProvider.GetActivityScopeAsync(context, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        await next.Send(scope.Context).ConfigureAwait(false);
+        await next.SendAsync(scope.Context).ConfigureAwait(false);
     }
 
     public void Probe(ProbeContext context)

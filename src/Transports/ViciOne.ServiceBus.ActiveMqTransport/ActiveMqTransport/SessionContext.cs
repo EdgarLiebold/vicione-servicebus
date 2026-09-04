@@ -12,9 +12,9 @@ public interface SessionContext :
 
     ConnectionContext ConnectionContext { get; }
 
-    Task<ITopic> GetTopic(Topic topic);
+    Task<ITopic> GetTopicAsync(Topic topic, CancellationToken cancellationToken = default);
 
-    Task<IQueue> GetQueue(Queue queue);
+    Task<IQueue> GetQueueAsync(Queue queue, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Makes the broker hold this topic, so that a deployed publish topology exists on the broker
@@ -30,17 +30,19 @@ public interface SessionContext :
     /// cannot see the consequences of.
     /// </para>
     /// </summary>
-    Task EnsureTopicExists(Topic topic);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="topic">The topic used by the operation.</param>
+    Task EnsureTopicExistsAsync(Topic topic, CancellationToken cancellationToken = default);
 
-    Task<IDestination> GetDestination(string destinationName, DestinationType destinationType);
+    Task<IDestination> GetDestinationAsync(string destinationName, DestinationType destinationType, CancellationToken cancellationToken = default);
 
-    Task<IMessageConsumer> CreateMessageConsumer(
+    Task<IMessageConsumer> CreateMessageConsumerAsync(
         IDestination destination,
-        string selector,
+        string? selector,
         bool noLocal,
-        string consumerName = null,
+        string? consumerName = null,
         bool shared = false,
-        bool durable = true);
+        bool durable = true, CancellationToken cancellationToken = default);
 
     Task SendAsync(IDestination destination, IMessage message, CancellationToken cancellationToken);
 
@@ -50,9 +52,9 @@ public interface SessionContext :
 
     IMessage CreateMessage();
 
-    Task DeleteTopic(string topicName);
+    Task DeleteTopicAsync(string topicName, CancellationToken cancellationToken = default);
 
-    Task DeleteQueue(string queueName);
+    Task DeleteQueueAsync(string queueName, CancellationToken cancellationToken = default);
 
-    IDestination GetTemporaryDestination(string name);
+    IDestination? GetTemporaryDestination(string name);
 }

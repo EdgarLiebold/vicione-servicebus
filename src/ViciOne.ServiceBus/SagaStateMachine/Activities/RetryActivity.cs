@@ -30,39 +30,39 @@ public class RetryActivity<TInstance> :
         visitor.Visit(this, x => _retryBehavior.Accept(visitor));
     }
 
-    public async Task Execute(BehaviorContext<TInstance> context, IBehavior<TInstance> next)
+    public async Task ExecuteAsync(BehaviorContext<TInstance> context, IBehavior<TInstance> next)
     {
-        await _retryPolicy.Retry(() => ExecuteRetryBehavior(context), context.CancellationToken);
+        await _retryPolicy.RetryAsync(() => ExecuteRetryBehaviorAsync(context), context.CancellationToken);
 
-        await next.Execute(context).ConfigureAwait(false);
+        await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    public async Task Execute<T>(BehaviorContext<TInstance, T> context, IBehavior<TInstance, T> next)
+    public async Task ExecuteAsync<T>(BehaviorContext<TInstance, T> context, IBehavior<TInstance, T> next)
         where T : class
     {
-        await _retryPolicy.Retry(() => ExecuteRetryBehavior(context), context.CancellationToken);
+        await _retryPolicy.RetryAsync(() => ExecuteRetryBehaviorAsync(context), context.CancellationToken);
 
-        await next.Execute(context).ConfigureAwait(false);
+        await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<TInstance, TException> context, IBehavior<TInstance> next)
+    public Task FaultedAsync<TException>(BehaviorExceptionContext<TInstance, TException> context, IBehavior<TInstance> next)
         where TException : Exception
     {
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 
-    public Task Faulted<T, TException>(BehaviorExceptionContext<TInstance, T, TException> context, IBehavior<TInstance, T> next)
+    public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TInstance, T, TException> context, IBehavior<TInstance, T> next)
         where T : class
         where TException : Exception
     {
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 
-    async Task ExecuteRetryBehavior(BehaviorContext<TInstance> context)
+    async Task ExecuteRetryBehaviorAsync(BehaviorContext<TInstance> context)
     {
         try
         {
-            await _retryBehavior.Execute(context).ConfigureAwait(false);
+            await _retryBehavior.ExecuteAsync(context).ConfigureAwait(false);
         }
         catch (EventExecutionException exception) when (exception.InnerException != null)
         {
@@ -71,12 +71,12 @@ public class RetryActivity<TInstance> :
         }
     }
 
-    async Task ExecuteRetryBehavior<T>(BehaviorContext<TInstance, T> context)
+    async Task ExecuteRetryBehaviorAsync<T>(BehaviorContext<TInstance, T> context)
         where T : class
     {
         try
         {
-            await _retryBehavior.Execute(context).ConfigureAwait(false);
+            await _retryBehavior.ExecuteAsync(context).ConfigureAwait(false);
         }
         catch (EventExecutionException exception) when (exception.InnerException != null)
         {
@@ -113,38 +113,38 @@ public class RetryActivity<TInstance, TMessage> :
         visitor.Visit(this, x => _retryBehavior.Accept(visitor));
     }
 
-    public Task Execute(BehaviorContext<TInstance> context, IBehavior<TInstance> next)
+    public Task ExecuteAsync(BehaviorContext<TInstance> context, IBehavior<TInstance> next)
     {
         throw new SagaStateMachineException("This activity requires a body with the event, but no body was specified.");
     }
 
-    public async Task Execute<T>(BehaviorContext<TInstance, T> context, IBehavior<TInstance, T> next)
+    public async Task ExecuteAsync<T>(BehaviorContext<TInstance, T> context, IBehavior<TInstance, T> next)
         where T : class
     {
         if (context is BehaviorContext<TInstance, TMessage> behaviorContext)
-            await _retryPolicy.Retry(() => ExecuteRetryBehavior(behaviorContext), context.CancellationToken);
+            await _retryPolicy.RetryAsync(() => ExecuteRetryBehaviorAsync(behaviorContext), context.CancellationToken);
 
-        await next.Execute(context).ConfigureAwait(false);
+        await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<TInstance, TException> context, IBehavior<TInstance> next)
+    public Task FaultedAsync<TException>(BehaviorExceptionContext<TInstance, TException> context, IBehavior<TInstance> next)
         where TException : Exception
     {
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 
-    public Task Faulted<T, TException>(BehaviorExceptionContext<TInstance, T, TException> context, IBehavior<TInstance, T> next)
+    public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TInstance, T, TException> context, IBehavior<TInstance, T> next)
         where T : class
         where TException : Exception
     {
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 
-    async Task ExecuteRetryBehavior(BehaviorContext<TInstance, TMessage> context)
+    async Task ExecuteRetryBehaviorAsync(BehaviorContext<TInstance, TMessage> context)
     {
         try
         {
-            await _retryBehavior.Execute(context).ConfigureAwait(false);
+            await _retryBehavior.ExecuteAsync(context).ConfigureAwait(false);
         }
         catch (EventExecutionException exception) when (exception.InnerException != null)
         {

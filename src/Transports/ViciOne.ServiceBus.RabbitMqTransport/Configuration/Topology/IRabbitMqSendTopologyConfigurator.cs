@@ -6,6 +6,6 @@ public interface IRabbitMqSendTopologyConfigurator :
     ISendTopologyConfigurator,
     IRabbitMqSendTopology
 {
-    Action<IRabbitMqQueueBindingConfigurator> ConfigureErrorSettings { set; }
-    Action<IRabbitMqQueueBindingConfigurator> ConfigureDeadLetterSettings { set; }
+    Action<IRabbitMqQueueBindingConfigurator>? ConfigureErrorSettings { set; }
+    Action<IRabbitMqQueueBindingConfigurator>? ConfigureDeadLetterSettings { set; }
 }

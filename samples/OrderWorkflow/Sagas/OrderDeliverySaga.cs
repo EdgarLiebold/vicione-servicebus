@@ -9,7 +9,7 @@ public sealed class OrderDeliverySaga :
     public Guid CorrelationId { get; set; }
     public DateTime SubmitTimestamp { get; set; }
 
-    public Task Consume(ConsumeContext<OrderSubmitted> context)
+    public Task ConsumeAsync(ConsumeContext<OrderSubmitted> context)
     {
         SubmitTimestamp = context.Message.Timestamp;
         return Task.CompletedTask;

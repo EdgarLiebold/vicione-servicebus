@@ -26,13 +26,12 @@ abstract class BaseExecutionResult<TArguments> :
 
     protected Activity Activity { get; }
 
-    protected IDictionary<string, object> Variables { get; private set; }
-
+    protected IDictionary<string, object> Variables { get; private set; } = null!;
     public TimeSpan? Delay { get; set; }
 
-    public abstract Task Evaluate();
+    public abstract Task EvaluateAsync(CancellationToken cancellationToken = default);
 
-    public virtual bool IsFaulted(out Exception exception)
+    public virtual bool IsFaulted([NotNullWhen(true)] out Exception? exception)
     {
         exception = null;
         return false;

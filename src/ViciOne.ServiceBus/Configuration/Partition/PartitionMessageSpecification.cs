@@ -9,7 +9,7 @@ public class PartitionMessageSpecification<T> :
     where T : class
 {
     readonly IPartitioner _partitioner;
-    PartitionKeyProvider<ConsumeContext<T>> _keyProvider;
+    PartitionKeyProvider<ConsumeContext<T>> _keyProvider = null!;
 
     public PartitionMessageSpecification(IPartitioner partitioner)
     {
@@ -26,8 +26,8 @@ public class PartitionMessageSpecification<T> :
 
     public IEnumerable<ValidationResult> Validate()
     {
-        if (GlobalTopology.Send.GetMessageTopology<T>().TryGetConvention(out ICorrelationIdMessageSendTopologyConvention<T> convention)
-            && convention.TryGetMessageCorrelationId(out IMessageCorrelationId<T> messageCorrelationId))
+        if (GlobalTopology.Send.GetMessageTopology<T>().TryGetConvention(out ICorrelationIdMessageSendTopologyConvention<T>? convention)
+            && convention.TryGetMessageCorrelationId(out IMessageCorrelationId<T>? messageCorrelationId))
         {
             _keyProvider = context => messageCorrelationId.TryGetCorrelationId(context.Message, out var correlationId)
                 ? correlationId.ToByteArray()

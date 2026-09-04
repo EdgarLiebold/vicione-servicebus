@@ -4,6 +4,6 @@ namespace ViciOne.ServiceBus.Initializers;
 
 public interface IInitializerVariable<T>
 {
-    Task<T> GetValue<TMessage>(InitializeContext<TMessage> context)
+    Task<T> GetValueAsync<TMessage>(InitializeContext<TMessage> context, CancellationToken cancellationToken = default)
         where TMessage : class;
 }

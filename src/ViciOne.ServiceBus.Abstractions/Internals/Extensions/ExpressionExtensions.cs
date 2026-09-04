@@ -34,14 +34,16 @@ internal static class ExpressionExtensions
         return expression.GetMemberExpression().Member.Name;
     }
 
-    public static PropertyInfo? GetPropertyInfo<T, TMember>(this Expression<Func<T, TMember>> expression)
+    public static PropertyInfo GetPropertyInfo<T, TMember>(this Expression<Func<T, TMember>> expression)
     {
-        return expression.GetMemberExpression().Member as PropertyInfo;
+        return expression.GetMemberExpression().Member as PropertyInfo
+            ?? throw new ArgumentException("Expression must reference a property.", nameof(expression));
     }
 
-    public static PropertyInfo? GetPropertyInfo<T>(this Expression<Func<T>> expression)
+    public static PropertyInfo GetPropertyInfo<T>(this Expression<Func<T>> expression)
     {
-        return expression.GetMemberExpression().Member as PropertyInfo;
+        return expression.GetMemberExpression().Member as PropertyInfo
+            ?? throw new ArgumentException("Expression must reference a property.", nameof(expression));
     }
 
     public static MemberInfo GetMemberInfo<T>(this Expression<Action<T>> expression)

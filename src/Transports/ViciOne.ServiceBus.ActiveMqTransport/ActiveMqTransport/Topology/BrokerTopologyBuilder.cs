@@ -41,7 +41,7 @@ public abstract class BrokerTopologyBuilder
         return Queues.GetOrAdd(queue);
     }
 
-    public ConsumerHandle BindConsumer(TopicHandle topic, QueueHandle queue, string selector, string consumerName = null, bool shared = false)
+    public ConsumerHandle BindConsumer(TopicHandle topic, QueueHandle? queue, string? selector, string? consumerName = null, bool shared = false)
     {
         var id = GetNextId();
 

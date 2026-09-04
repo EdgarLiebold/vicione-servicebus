@@ -53,54 +53,54 @@ sealed class ActiveTestObservationScope :
         _consumeHandle.Dispose();
     }
 
-    public Task PreConsume<T>(ConsumeContext<T> context)
+    public Task PreConsumeAsync<T>(ConsumeContext<T> context)
         where T : class
         => Task.CompletedTask;
 
-    public Task PostConsume<T>(ConsumeContext<T> context)
+    public Task PostConsumeAsync<T>(ConsumeContext<T> context)
         where T : class
     {
         AddConsumed(new ReceivedMessage<T>(context, null, _timeProvider));
         return Task.CompletedTask;
     }
 
-    public Task ConsumeFault<T>(ConsumeContext<T> context, Exception exception)
+    public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, Exception exception)
         where T : class
     {
         AddConsumed(new ReceivedMessage<T>(context, exception, _timeProvider));
         return Task.CompletedTask;
     }
 
-    public Task PrePublish<T>(PublishContext<T> context)
+    public Task PrePublishAsync<T>(PublishContext<T> context)
         where T : class
         => Task.CompletedTask;
 
-    public Task PostPublish<T>(PublishContext<T> context)
+    public Task PostPublishAsync<T>(PublishContext<T> context)
         where T : class
     {
         AddPublished(new PublishedMessage<T>(context, null, _timeProvider));
         return Task.CompletedTask;
     }
 
-    public Task PublishFault<T>(PublishContext<T> context, Exception exception)
+    public Task PublishFaultAsync<T>(PublishContext<T> context, Exception exception)
         where T : class
     {
         AddPublished(new PublishedMessage<T>(context, exception, _timeProvider));
         return Task.CompletedTask;
     }
 
-    public Task PreSend<T>(SendContext<T> context)
+    public Task PreSendAsync<T>(SendContext<T> context)
         where T : class
         => Task.CompletedTask;
 
-    public Task PostSend<T>(SendContext<T> context)
+    public Task PostSendAsync<T>(SendContext<T> context)
         where T : class
     {
         AddSent(new SentMessage<T>(context, null, _timeProvider));
         return Task.CompletedTask;
     }
 
-    public Task SendFault<T>(SendContext<T> context, Exception exception)
+    public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
         where T : class
     {
         AddSent(new SentMessage<T>(context, exception, _timeProvider));

@@ -59,24 +59,25 @@ public sealed class BackgroundWorkOwnershipTests
         string consumerAgent = Source("src/ViciOne.ServiceBus/Transports/ConsumerAgent.cs");
         Assert.DoesNotContain("Task.Run(", consumerAgent, StringComparison.Ordinal);
         Assert.DoesNotContain(".ContinueWith(", consumerAgent, StringComparison.Ordinal);
-        Assert.Contains("_consumeTaskObserver = ObserveConsumeTask(consumeTask);", consumerAgent, StringComparison.Ordinal);
+        Assert.Contains("_consumeTaskObserver = ObserveConsumeTaskAsync(consumeTask);", consumerAgent, StringComparison.Ordinal);
 
         string jobService = Source("src/ViciOne.ServiceBus/JobService/JobService.cs");
         Assert.DoesNotContain(".ContinueWith(", jobService, StringComparison.Ordinal);
-        Assert.Contains("_jobCompletions.Add(CompleteJob(jobHandle));", jobService, StringComparison.Ordinal);
+        Assert.Contains("_jobCompletions.Add(CompleteJobAsync(jobHandle));", jobService, StringComparison.Ordinal);
 
         string batchConnector = Source("src/ViciOne.ServiceBus/Consumers/Configuration/BatchConsumerMessageConnector.cs");
         Assert.DoesNotContain("Task.Run(", batchConnector, StringComparison.Ordinal);
-        Assert.Contains("_disposeTask = DisposeConsumerFactory();", batchConnector, StringComparison.Ordinal);
+        Assert.Contains("_disposeTask = DisposeConsumerFactoryAsync();", batchConnector, StringComparison.Ordinal);
 
         string gauge = Source("src/ViciOne.ServiceBus/Transports/Fabric/Gauge.cs");
         Assert.DoesNotContain("Task.Run(", gauge, StringComparison.Ordinal);
-        Assert.Contains("public Task Remove()", gauge, StringComparison.Ordinal);
+        Assert.Contains("public Task RemoveAsync(CancellationToken cancellationToken = default)", gauge, StringComparison.Ordinal);
 
         string activeMqConsumer = Source(
             "src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ActiveMqTransport/Middleware/ActiveMqConsumerFilter.cs");
         Assert.DoesNotContain(".ContinueWith(", activeMqConsumer, StringComparison.Ordinal);
-        Assert.Contains("Task connectionStopTask", activeMqConsumer, StringComparison.Ordinal);
+        Assert.Contains("Task? connectionStopTask", activeMqConsumer, StringComparison.Ordinal);
+        Assert.Contains("connectionStopTask = StopAfterConnectionExceptionAsync(exception);", activeMqConsumer, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -92,15 +93,15 @@ public sealed class BackgroundWorkOwnershipTests
         foreach (string relativePath in activeMqOwners.Skip(1))
         {
             string source = Source(relativePath);
-            Assert.Contains("Task faultStopTask", source, StringComparison.Ordinal);
-            Assert.Contains("faultStopTask = StopAfterConnectionException(exception);", source, StringComparison.Ordinal);
+            Assert.Contains("Task? faultStopTask", source, StringComparison.Ordinal);
+            Assert.Contains("faultStopTask = StopAfterConnectionExceptionAsync(exception);", source, StringComparison.Ordinal);
             Assert.Contains("await context", source, StringComparison.OrdinalIgnoreCase);
         }
 
         string activeMqConnection = Source(activeMqOwners[0]);
-        Assert.Contains("Task faultStopTask", activeMqConnection, StringComparison.Ordinal);
+        Assert.Contains("Task? faultStopTask", activeMqConnection, StringComparison.Ordinal);
         Assert.Contains("faultStopTask = stopCompletion.Task;", activeMqConnection, StringComparison.Ordinal);
-        Assert.Contains("_ = StopAfterConnectionException(exception, stopCompletion);", activeMqConnection, StringComparison.Ordinal);
+        Assert.Contains("_ = StopAfterConnectionExceptionAsync(exception, stopCompletion);", activeMqConnection, StringComparison.Ordinal);
         Assert.Contains("await contextHandle.Stop", activeMqConnection, StringComparison.Ordinal);
         Assert.DoesNotContain("Task.Yield", activeMqConnection, StringComparison.Ordinal);
 
@@ -112,8 +113,8 @@ public sealed class BackgroundWorkOwnershipTests
         foreach (string relativePath in azureOwners)
         {
             string source = Source(relativePath);
-            Assert.Contains("Task _faultStopTask", source, StringComparison.Ordinal);
-            Assert.Contains("_faultStopTask = StopAfterCallback(entityPath);", source, StringComparison.Ordinal);
+            Assert.Contains("Task? _faultStopTask", source, StringComparison.Ordinal);
+            Assert.Contains("_faultStopTask = StopAfterCallbackAsync(entityPath);", source, StringComparison.Ordinal);
             Assert.Contains("await _agent.Stop", source, StringComparison.Ordinal);
         }
 
@@ -121,11 +122,11 @@ public sealed class BackgroundWorkOwnershipTests
         [
             (
                 "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/RabbitMqTransport/ChannelContextFactory.cs",
-                "return asyncContext.Stop(args.ReplyText);"
+                "return asyncContext.StopAsync(args.ReplyText);"
             ),
             (
                 "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/RabbitMqTransport/ConnectionContextFactory.cs",
-                "return contextHandle.Stop(args.ReplyText);"
+                "return contextHandle.StopAsync(args.ReplyText);"
             ),
         ];
         foreach ((string relativePath, string returnedStop) in rabbitCallbackOwners)
@@ -138,12 +139,12 @@ public sealed class BackgroundWorkOwnershipTests
 
         string rabbitChannel = Source(
             "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/RabbitMqTransport/RabbitMqChannelContext.cs");
-        Assert.Contains("Task _faultStopTask", rabbitChannel, StringComparison.Ordinal);
-        Assert.Contains("_faultStopTask = StopAfterCallback(inputAddress);", rabbitChannel, StringComparison.Ordinal);
+        Assert.Contains("Task? _faultStopTask", rabbitChannel, StringComparison.Ordinal);
+        Assert.Contains("_faultStopTask = StopAfterCallbackAsync(inputAddress);", rabbitChannel, StringComparison.Ordinal);
         Assert.Contains("await _agent.Stop", rabbitChannel, StringComparison.Ordinal);
 
         string rabbit = Source("src/Transports/ViciOne.ServiceBus.RabbitMqTransport/RabbitMqTransport/TransportLifetime.cs");
-        Assert.Contains("_scheduleSubjectDisposal(DisposeSubject);", rabbit, StringComparison.Ordinal);
+        Assert.Contains("_scheduleSubjectDisposal(DisposeSubjectAsync);", rabbit, StringComparison.Ordinal);
         Assert.Contains("var failure = await _disposed.Task.ConfigureAwait(false);", rabbit, StringComparison.Ordinal);
         Assert.Contains("_disposed.TrySetResult(failure);", rabbit, StringComparison.Ordinal);
         Assert.Contains("ExceptionDispatchInfo.Capture(failure).Throw();", rabbit, StringComparison.Ordinal);

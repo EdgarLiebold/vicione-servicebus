@@ -9,7 +9,7 @@ public sealed class AmazonSqsErrorTransportTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SQS-ERROR-TRANSPORT", "complete-sanitized-fault-envelope-moves-once")]
-    public async Task SerializationFault_MovesOneCompleteSanitizedEnvelope()
+    public async Task SerializationFault_MovesOneCompleteSanitizedEnvelopeAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("errortransport");
         string inputQueue = fixture.Name("input");
@@ -41,13 +41,13 @@ public sealed class AmazonSqsErrorTransportTests
                         context.DestinationAddress,
                         context.ResponseAddress,
                         context.FaultAddress,
-                        context.ReceiveContext.TransportHeaders.Get(MessageHeaders.FaultMessage, (string?)null),
-                        context.ReceiveContext.TransportHeaders.Get(MessageHeaders.Reason, (string?)null),
-                        context.ReceiveContext.TransportHeaders.Get(MessageHeaders.FaultInputAddress, (Uri?)null),
-                        context.ReceiveContext.TransportHeaders.Get("Frank", (string?)null),
-                        context.ReceiveContext.TransportHeaders.Get("Estelle", (string?)null),
-                        context.ReceiveContext.TransportHeaders.Get(MessageHeaders.FaultExceptionType, (string?)null),
-                        context.ReceiveContext.TransportHeaders.Get(MessageHeaders.Host.MachineName, (string?)null)));
+                        context.Advanced().ReceiveContext.TransportHeaders.Get(MessageHeaders.FaultMessage, (string?)null),
+                        context.Advanced().ReceiveContext.TransportHeaders.Get(MessageHeaders.Reason, (string?)null),
+                        context.Advanced().ReceiveContext.TransportHeaders.Get(MessageHeaders.FaultInputAddress, (Uri?)null),
+                        context.Advanced().ReceiveContext.TransportHeaders.Get("Frank", (string?)null),
+                        context.Advanced().ReceiveContext.TransportHeaders.Get("Estelle", (string?)null),
+                        context.Advanced().ReceiveContext.TransportHeaders.Get(MessageHeaders.FaultExceptionType, (string?)null),
+                        context.Advanced().ReceiveContext.TransportHeaders.Get(MessageHeaders.Host.MachineName, (string?)null)));
                     return Task.CompletedTask;
                 });
             });
@@ -60,10 +60,9 @@ public sealed class AmazonSqsErrorTransportTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{inputQueue}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{inputQueue}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
 
-            await input.Send(
+            await input.SendAsync(
                     new FaultingMessage(correlationId),
                     context =>
                     {

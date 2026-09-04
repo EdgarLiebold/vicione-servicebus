@@ -24,10 +24,10 @@ public class ScheduleMessageRedeliveryFilter<TMessage> :
     }
 
     [DebuggerNonUserCode]
-    public Task Send(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
+    public Task SendAsync(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
     {
         context.GetOrAddPayload<MessageRedeliveryContext>(() => new ScheduleMessageRedeliveryContext<TMessage>(context, _options));
 
-        return next.Send(context);
+        return next.SendAsync(context);
     }
 }

@@ -35,7 +35,10 @@ public static class ActiveMqConfigureEndpointCallbackExtensions
         configurator.AddConfigureEndpointsCallback((context, name, cfg) =>
         {
             if (cfg is IActiveMqReceiveEndpointConfigurator sb)
-                callback(context, name, sb);
+            {
+                callback(context, name
+                    ?? throw new InvalidOperationException("A configured ActiveMQ endpoint must have a name."), sb);
+            }
         });
     }
 }

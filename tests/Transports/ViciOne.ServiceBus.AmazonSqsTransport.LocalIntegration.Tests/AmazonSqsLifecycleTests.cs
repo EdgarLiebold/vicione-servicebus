@@ -8,7 +8,7 @@ public sealed class AmazonSqsLifecycleTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0245", "start-stop-start-delivers-one-response-per-lifecycle")]
-    public async Task Bus_StartStopStart_ReacquiresCleanResources()
+    public async Task Bus_StartStopStart_ReacquiresCleanResourcesAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("restart");
         string queueName = fixture.Name("service");
@@ -32,10 +32,10 @@ public sealed class AmazonSqsLifecycleTests
 
         try
         {
-            LifecycleResponse first = await StartAndRequest(1);
+            LifecycleResponse first = await StartAndRequestAsync(1);
             await bus.StopAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = false;
-            LifecycleResponse second = await StartAndRequest(2);
+            LifecycleResponse second = await StartAndRequestAsync(2);
 
             Assert.Equal((1, 1), (first.Id, first.ConsumerAttempt));
             Assert.Equal((2, 2), (second.Id, second.ConsumerAttempt));
@@ -47,14 +47,14 @@ public sealed class AmazonSqsLifecycleTests
                 await bus.StopAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
         }
 
-        async Task<LifecycleResponse> StartAndRequest(int id)
+        async Task<LifecycleResponse> StartAndRequestAsync(int id)
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
             IRequestClient<LifecycleRequest> client = bus.CreateRequestClient<LifecycleRequest>(
                 new Uri($"queue:{queueName}"),
                 RequestTimeout.After(ms: checked((int)fixture.OperationTimeout.TotalMilliseconds)));
-            Response<LifecycleResponse> response = await client.GetResponse<LifecycleResponse>(
+            Response<LifecycleResponse> response = await client.GetResponseAsync<LifecycleResponse>(
                     new LifecycleRequest(id), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             return response.Message;

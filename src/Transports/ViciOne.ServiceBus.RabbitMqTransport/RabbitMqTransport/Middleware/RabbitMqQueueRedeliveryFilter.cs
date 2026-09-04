@@ -24,9 +24,9 @@ public sealed class RabbitMqQueueRedeliveryFilter<TMessage> : IFilter<ConsumeCon
     }
 
     [DebuggerNonUserCode]
-    public Task Send(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
+    public Task SendAsync(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
     {
         context.GetOrAddPayload<MessageRedeliveryContext>(() => new RabbitMqQueueRedeliveryContext<TMessage>(context, _options, _plan));
-        return next.Send(context);
+        return next.SendAsync(context);
     }
 }

@@ -27,8 +27,8 @@ public class ContainerSagaDbContextFactory<TContext, TSaga> :
         return _dbContext;
     }
 
-    public ValueTask ReleaseAsync(DbContext dbContext)
+    public ValueTask ReleaseAsync(DbContext dbContext, CancellationToken cancellationToken = default)
     {
-        return default;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken); return default;
     }
 }

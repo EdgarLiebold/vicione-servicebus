@@ -9,7 +9,7 @@ public sealed class InMemoryReceiveEndpointConcurrencyTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-ENDPOINT-CONCURRENCY", "one-hundred-simultaneous-deliveries")]
-    public async Task ConfiguredEndpointConcurrency_AdmitsAllOneHundredDeliveriesBeforeAnyCompletes()
+    public async Task ConfiguredEndpointConcurrency_AdmitsAllOneHundredDeliveriesBeforeAnyCompletesAsync()
     {
         const int concurrencyLimit = 100;
         TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
@@ -48,9 +48,9 @@ public sealed class InMemoryReceiveEndpointConcurrencyTests
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+            await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
             Task[] sends = Enumerable.Range(0, concurrencyLimit)
-                .Select(index => harness.InputQueueSendEndpoint.Send(
+                .Select(index => harness.InputQueueSendEndpoint.SendAsync(
                     new ConcurrentDelivery(index),
                     cancellationToken))
                 .ToArray();
@@ -81,13 +81,13 @@ public sealed class InMemoryReceiveEndpointConcurrencyTests
         finally
         {
             release.TrySetResult();
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-ENDPOINT-CONCURRENCY", "delivery-beyond-limit-waits")]
-    public async Task ConfiguredEndpointConcurrency_QueuesTheNextDeliveryUntilASlotIsReleased()
+    public async Task ConfiguredEndpointConcurrency_QueuesTheNextDeliveryUntilASlotIsReleasedAsync()
     {
         const int concurrencyLimit = 3;
         TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
@@ -131,9 +131,9 @@ public sealed class InMemoryReceiveEndpointConcurrencyTests
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+            await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
             Task[] sends = Enumerable.Range(0, concurrencyLimit + 1)
-                .Select(index => harness.InputQueueSendEndpoint.Send(
+                .Select(index => harness.InputQueueSendEndpoint.SendAsync(
                     new ConcurrentDelivery(index),
                     cancellationToken))
                 .ToArray();
@@ -157,7 +157,7 @@ public sealed class InMemoryReceiveEndpointConcurrencyTests
         finally
         {
             release.TrySetResult();
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 

@@ -27,11 +27,11 @@ public interface ReceiveSettings :
     /// <summary>
     /// Arguments passed to QueueDeclare
     /// </summary>
-    IDictionary<string, object> QueueArguments { get; }
+    IDictionary<string, object?> QueueArguments { get; }
 
     string RoutingKey { get; }
 
-    IDictionary<string, object> BindingArguments { get; }
+    IDictionary<string, object?> BindingArguments { get; }
 
     /// <summary>
     /// If True, and a queue name is specified, if the queue exists and has messages, they are purged at startup
@@ -42,7 +42,7 @@ public interface ReceiveSettings :
     /// <summary>
     /// Arguments passed to the basicConsume
     /// </summary>
-    IDictionary<string, object> ConsumeArguments { get; }
+    IDictionary<string, object?> ConsumeArguments { get; }
 
     /// <summary>
     /// Should the consumer have exclusive access to the queue

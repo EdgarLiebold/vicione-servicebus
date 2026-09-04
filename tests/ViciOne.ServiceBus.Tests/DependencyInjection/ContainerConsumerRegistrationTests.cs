@@ -13,7 +13,7 @@ public sealed class ContainerConsumerRegistrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-CONSUMER-LIFETIME", "dependency-used-before-exact-scope-disposal")]
-    public async Task ScopedDependency_IsUsedBeforeAndDisposedAfterTheConsumer()
+    public async Task ScopedDependency_IsUsedBeforeAndDisposedAfterTheConsumerAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -31,12 +31,12 @@ public sealed class ContainerConsumerRegistrationTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             var message = new RegistrationMessage(NewId.NextGuid(), "one");
-            await harness.Bus.Publish(message, cancellationToken);
+            await harness.Bus.PublishAsync(message, cancellationToken);
             LifecycleResult result = await observation.Completed.Task.WaitAsync(timeout, cancellationToken);
             await observation.Disposed.Task.WaitAsync(timeout, cancellationToken);
 
@@ -48,13 +48,13 @@ public sealed class ContainerConsumerRegistrationTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-CONSUMER-LIFETIME", "endpoint-service-scope-shared-by-two-consumers")]
-    public async Task EndpointServiceScope_IsSharedByBothConsumersThenDisposedExactlyOnce()
+    public async Task EndpointServiceScope_IsSharedByBothConsumersThenDisposedExactlyOnceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -82,14 +82,13 @@ public sealed class ContainerConsumerRegistrationTests
             ValidateOnBuild = true,
             ValidateScopes = true,
         });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             var message = new RegistrationMessage(NewId.NextGuid(), "shared");
-            ISendEndpoint endpoint = await harness.Bus.GetSendEndpoint(new Uri("queue:shared-service-scope"))
-                .WaitAsync(timeout, cancellationToken);
-            await endpoint.Send(message, cancellationToken);
+            ISendEndpoint endpoint = await harness.Bus.GetSendEndpointAsync(new Uri("queue:shared-service-scope"), TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
+            await endpoint.SendAsync(message, cancellationToken);
             LifecycleResult result = await observation.Completed.Task.WaitAsync(timeout, cancellationToken);
             await observation.Disposed.Task.WaitAsync(timeout, cancellationToken);
 
@@ -102,13 +101,13 @@ public sealed class ContainerConsumerRegistrationTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-CONSUMER-REGISTRATION", "direct-service-collection-registration")]
-    public async Task DirectContainerConsumerRegistration_IsResolvedByConfigureConsumer()
+    public async Task DirectContainerConsumerRegistration_IsResolvedByConfigureConsumerAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -124,26 +123,25 @@ public sealed class ContainerConsumerRegistrationTests
             ValidateOnBuild = true,
             ValidateScopes = true,
         });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             var expected = new RegistrationMessage(NewId.NextGuid(), "direct");
-            ISendEndpoint endpoint = await harness.Bus.GetSendEndpoint(new Uri("queue:direct-container-consumer"))
-                .WaitAsync(timeout, cancellationToken);
-            await endpoint.Send(expected, cancellationToken);
+            ISendEndpoint endpoint = await harness.Bus.GetSendEndpointAsync(new Uri("queue:direct-container-consumer"), TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
+            await endpoint.SendAsync(expected, cancellationToken);
 
             Assert.Equal(expected, await delivered.Task.WaitAsync(timeout, cancellationToken));
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-ENDPOINT-CONFIGURATION", "global-configurator-disables-fault-publication")]
-    public async Task GlobalEndpointConfigurator_DisablesFaultPublicationOnEveryConfiguredEndpoint()
+    public async Task GlobalEndpointConfigurator_DisablesFaultPublicationOnEveryConfiguredEndpointAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -161,25 +159,23 @@ public sealed class ContainerConsumerRegistrationTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         bool started = true;
 
         try
         {
             var faulting = new GlobalFaultMessage(NewId.NextGuid());
             var control = new GlobalControlMessage(NewId.NextGuid());
-            await harness.Bus.Publish(faulting, cancellationToken);
-            await harness.Bus.Publish(control, cancellationToken);
+            await harness.Bus.PublishAsync(faulting, cancellationToken);
+            await harness.Bus.PublishAsync(control, cancellationToken);
             IReceivedMessage<GlobalFaultMessage> failed = await harness.Consumed
                 .SelectAsync<GlobalFaultMessage>(cancellationToken)
-                .First()
-                .WaitAsync(timeout, cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
             IReceivedMessage<GlobalControlMessage> consumed = await harness.Consumed
                 .SelectAsync<GlobalControlMessage>(cancellationToken)
-                .First()
-                .WaitAsync(timeout, cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
             started = false;
 
             Assert.IsType<ExpectedGlobalFailure>(failed.Exception);
@@ -194,13 +190,13 @@ public sealed class ContainerConsumerRegistrationTests
         finally
         {
             if (started)
-                await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+                await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-FILTER-SCOPE", "consume-send-and-next-consume-scope-boundaries")]
-    public async Task ConsumeAndSendFilters_ShareOnlyTheOwningDeliveryScope()
+    public async Task ConsumeAndSendFilters_ShareOnlyTheOwningDeliveryScopeAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -225,12 +221,12 @@ public sealed class ContainerConsumerRegistrationTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             var message = new ScopeAMessage(NewId.NextGuid());
-            await harness.Bus.Publish(message, cancellationToken);
+            await harness.Bus.PublishAsync(message, cancellationToken);
             FilterScopeResult result = await observation.Completed.Task.WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(message.CorrelationId, result.CorrelationId);
@@ -241,13 +237,13 @@ public sealed class ContainerConsumerRegistrationTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-FILTER-LAYERS", "raw-message-outside-and-consumer-layers-inside-one-scope")]
-    public async Task ConsumerFilterLayers_ExposeTheExactContainerScopeBoundary()
+    public async Task ConsumerFilterLayers_ExposeTheExactContainerScopeBoundaryAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -275,14 +271,13 @@ public sealed class ContainerConsumerRegistrationTests
             ValidateOnBuild = true,
             ValidateScopes = true,
         });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             var expected = new LayerScopeMessage(NewId.NextGuid());
-            ISendEndpoint endpoint = await harness.Bus.GetSendEndpoint(new Uri("queue:container-filter-layers"))
-                .WaitAsync(timeout, cancellationToken);
-            await endpoint.Send(expected, cancellationToken);
+            ISendEndpoint endpoint = await harness.Bus.GetSendEndpointAsync(new Uri("queue:container-filter-layers"), TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
+            await endpoint.SendAsync(expected, cancellationToken);
             LayerScopeResult result = await observation.Completed.Task.WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(expected.CorrelationId, result.CorrelationId);
@@ -293,7 +288,7 @@ public sealed class ContainerConsumerRegistrationTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -378,7 +373,7 @@ public sealed class ContainerConsumerRegistrationTests
         LifecycleDependency dependency,
         LifecycleObservation observation) : IConsumer<RegistrationMessage>
     {
-        public Task Consume(ConsumeContext<RegistrationMessage> context)
+        public Task ConsumeAsync(ConsumeContext<RegistrationMessage> context)
         {
             dependency.Use();
             observation.Record(context.Message, dependency);
@@ -390,7 +385,7 @@ public sealed class ContainerConsumerRegistrationTests
         LifecycleDependency dependency,
         LifecycleObservation observation) : IConsumer<RegistrationMessage>
     {
-        public Task Consume(ConsumeContext<RegistrationMessage> context)
+        public Task ConsumeAsync(ConsumeContext<RegistrationMessage> context)
         {
             dependency.Use();
             observation.Record(context.Message, dependency);
@@ -401,7 +396,7 @@ public sealed class ContainerConsumerRegistrationTests
     public sealed class DirectlyRegisteredConsumer(
         TaskCompletionSource<RegistrationMessage> delivered) : IConsumer<RegistrationMessage>
     {
-        public Task Consume(ConsumeContext<RegistrationMessage> context)
+        public Task ConsumeAsync(ConsumeContext<RegistrationMessage> context)
         {
             delivered.TrySetResult(context.Message);
             return Task.CompletedTask;
@@ -418,22 +413,22 @@ public sealed class ContainerConsumerRegistrationTests
 
         public string[] EndpointNames => _endpointNames.Order(StringComparer.Ordinal).ToArray();
 
-        public void Configure(string name, IReceiveEndpointConfigurator configurator)
+        public void Configure(string? name, IReceiveEndpointConfigurator configurator)
         {
-            _endpointNames.Enqueue(name);
+            _endpointNames.Enqueue(name ?? "<unnamed>");
             configurator.PublishFaults = false;
         }
     }
 
     public sealed class GloballyFaultingConsumer : IConsumer<GlobalFaultMessage>
     {
-        public Task Consume(ConsumeContext<GlobalFaultMessage> context) =>
+        public Task ConsumeAsync(ConsumeContext<GlobalFaultMessage> context) =>
             Task.FromException(new ExpectedGlobalFailure());
     }
 
     public sealed class GlobalControlConsumer : IConsumer<GlobalControlMessage>
     {
-        public Task Consume(ConsumeContext<GlobalControlMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<GlobalControlMessage> context) => Task.CompletedTask;
     }
 
     public sealed class ExpectedGlobalFailure : Exception;
@@ -532,13 +527,13 @@ public sealed class ContainerConsumerRegistrationTests
         FilterScopeObservation observation) : IFilter<ConsumeContext<T>>
         where T : class
     {
-        public Task Send(ConsumeContext<T> context, IPipe<ConsumeContext<T>> next)
+        public Task SendAsync(ConsumeContext<T> context, IPipe<ConsumeContext<T>> next)
         {
             if (context.Message is ScopeAMessage)
                 observation.RecordAConsume(marker);
             else if (context.Message is ScopeBMessage)
                 observation.RecordBConsume(marker);
-            return next.Send(context);
+            return next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("scopeConsume");
@@ -549,11 +544,11 @@ public sealed class ContainerConsumerRegistrationTests
         FilterScopeObservation observation) : IFilter<SendContext<T>>
         where T : class
     {
-        public Task Send(SendContext<T> context, IPipe<SendContext<T>> next)
+        public Task SendAsync(SendContext<T> context, IPipe<SendContext<T>> next)
         {
             if (context.Message is ScopeBMessage)
                 observation.RecordBSend(marker);
-            return next.Send(context);
+            return next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("scopeSend");
@@ -563,10 +558,10 @@ public sealed class ContainerConsumerRegistrationTests
         FilterScopeMarker marker,
         FilterScopeObservation observation) : IConsumer<ScopeAMessage>
     {
-        public async Task Consume(ConsumeContext<ScopeAMessage> context)
+        public async Task ConsumeAsync(ConsumeContext<ScopeAMessage> context)
         {
             observation.RecordAConsumer(context.Message.CorrelationId, marker);
-            await context.Send(new Uri($"queue:{DefaultEndpointNameFormatter.Instance.Consumer<ScopeBConsumer>()}"),
+            await context.Advanced().SendAsync(new Uri($"queue:{DefaultEndpointNameFormatter.Instance.Consumer<ScopeBConsumer>()}"),
                 new ScopeBMessage(context.Message.CorrelationId));
         }
     }
@@ -575,7 +570,7 @@ public sealed class ContainerConsumerRegistrationTests
         FilterScopeMarker marker,
         FilterScopeObservation observation) : IConsumer<ScopeBMessage>
     {
-        public Task Consume(ConsumeContext<ScopeBMessage> context)
+        public Task ConsumeAsync(ConsumeContext<ScopeBMessage> context)
         {
             observation.RecordBConsumer(marker);
             return Task.CompletedTask;
@@ -671,12 +666,12 @@ public sealed class ContainerConsumerRegistrationTests
     public sealed class RawMessageLayerFilter(LayerScopeObservation observation) :
         IFilter<ConsumeContext<LayerScopeMessage>>
     {
-        public Task Send(
+        public Task SendAsync(
             ConsumeContext<LayerScopeMessage> context,
             IPipe<ConsumeContext<LayerScopeMessage>> next)
         {
             observation.RecordRaw(context.TryGetPayload(out IServiceProvider? _));
-            return next.Send(context);
+            return next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("rawMessageLayer");
@@ -685,7 +680,7 @@ public sealed class ContainerConsumerRegistrationTests
     public sealed class ConsumerLayerFilter(LayerScopeObservation observation) :
         IFilter<ConsumerConsumeContext<LayerScopeConsumer>>
     {
-        public Task Send(
+        public Task SendAsync(
             ConsumerConsumeContext<LayerScopeConsumer> context,
             IPipe<ConsumerConsumeContext<LayerScopeConsumer>> next)
         {
@@ -693,7 +688,7 @@ public sealed class ContainerConsumerRegistrationTests
             observation.RecordConsumer(
                 scope,
                 scope.ServiceProvider.GetRequiredService<LayerScopeMarker>());
-            return next.Send(context);
+            return next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("consumerLayer");
@@ -702,12 +697,12 @@ public sealed class ContainerConsumerRegistrationTests
     public sealed class ConsumerMessageLayerFilter(LayerScopeObservation observation) :
         IFilter<ConsumerConsumeContext<LayerScopeConsumer, LayerScopeMessage>>
     {
-        public Task Send(
+        public Task SendAsync(
             ConsumerConsumeContext<LayerScopeConsumer, LayerScopeMessage> context,
             IPipe<ConsumerConsumeContext<LayerScopeConsumer, LayerScopeMessage>> next)
         {
             observation.RecordConsumerMessage(context.GetPayload<IServiceScope>());
-            return next.Send(context);
+            return next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("consumerMessageLayer");
@@ -718,7 +713,7 @@ public sealed class ContainerConsumerRegistrationTests
         LayerScopeMarker marker,
         LayerScopeObservation observation) : IConsumer<LayerScopeMessage>
     {
-        public Task Consume(ConsumeContext<LayerScopeMessage> context)
+        public Task ConsumeAsync(ConsumeContext<LayerScopeMessage> context)
         {
             observation.RecordInstance(context.Message.CorrelationId, scope, marker);
             return Task.CompletedTask;

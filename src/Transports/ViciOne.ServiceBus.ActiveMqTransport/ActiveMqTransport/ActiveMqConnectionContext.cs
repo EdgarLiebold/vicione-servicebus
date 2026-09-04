@@ -52,7 +52,7 @@ public class ActiveMqConnectionContext :
     public Uri HostAddress { get; }
     public IActiveMqBusTopology Topology { get; }
 
-    public async Task<ISession> CreateSession(CancellationToken cancellationToken)
+    public async Task<ISession> CreateSessionAsync(CancellationToken cancellationToken)
     {
         using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
 
@@ -75,7 +75,7 @@ public class ActiveMqConnectionContext :
         return (ITopic)_temporaryEntities.GetOrAdd(topicName, _ => (ITopic)SessionUtil.GetDestination(session, topicName, DestinationType.TemporaryTopic));
     }
 
-    public bool TryGetTemporaryEntity(string name, out IDestination destination)
+    public bool TryGetTemporaryEntity(string name, out IDestination? destination)
     {
         return _temporaryEntities.TryGetValue(name, out destination);
     }
@@ -106,14 +106,14 @@ public class ActiveMqConnectionContext :
         TransportLogMessages.DisconnectHost(Description);
         var failures = new ActiveMqCleanupFailures();
 
-        await failures.Capture(
+        await failures.CaptureAsync(
                 () => _connection.CloseAsync(),
                 exception => LogWarning(exception, "Close Connection Faulted: {Host}", Description))
             .ConfigureAwait(false);
         failures.Capture(
             () => _connection.Dispose(),
             exception => LogWarning(exception, "Dispose Connection Faulted: {Host}", Description));
-        await failures.Capture(
+        await failures.CaptureAsync(
                 () => _executor.DisposeAsync(),
                 exception => LogWarning(exception, "Dispose Connection Executor Faulted: {Host}", Description))
             .ConfigureAwait(false);
@@ -140,7 +140,7 @@ internal sealed class ActiveMqCleanupFailures
 {
     readonly List<Exception> _failures = new List<Exception>();
 
-    public async ValueTask Capture(Func<Task> stage, Action<Exception> onFailure)
+    public async ValueTask CaptureAsync(Func<Task> stage, Action<Exception> onFailure)
     {
         try
         {
@@ -153,7 +153,7 @@ internal sealed class ActiveMqCleanupFailures
         }
     }
 
-    public async ValueTask Capture(Func<ValueTask> stage, Action<Exception> onFailure)
+    public async ValueTask CaptureAsync(Func<ValueTask> stage, Action<Exception> onFailure)
     {
         try
         {

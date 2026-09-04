@@ -4,7 +4,7 @@
     <!-- Documentation is completed in work package C; until then CS1591 stays a warning here. -->
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <!-- Nullable warnings are completed in work package B; annotations remain active in the interim. -->
-    <Nullable>annotations</Nullable>
+    <Nullable>enable</Nullable>
     <!-- The framework of this project is the consumer surface of the package: an analyzer package
          carries no lib/ folder, so the framework group of its nuspec decides which projects may
          reference it. Directory.Build.targets grants that exception by path; see docs/build.md for

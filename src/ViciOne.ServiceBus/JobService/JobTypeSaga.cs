@@ -37,7 +37,7 @@ public class JobTypeSaga :
     /// <summary>
     /// If an <see cref="OverrideJobLimit" /> is specified, the time when the override job limit expires
     /// </summary>
-    public DateTime? OverrideLimitExpiration { get; set; }
+    public DateTimeOffset? OverrideLimitExpiration { get; set; }
 
     /// <summary>
     /// The last known active jobs
@@ -52,10 +52,8 @@ public class JobTypeSaga :
     /// <summary>
     /// Job properties passed by the <see cref="JobOptions{TJob}" /> configuration
     /// </summary>
-    public Dictionary<string, object> Properties { get; set; }
-
-    public byte[] RowVersion { get; set; }
-
+    public Dictionary<string, object> Properties { get; set; } = null!;
+    public byte[] RowVersion { get; set; } = null!;
     public int? GlobalConcurrentJobLimit { get; set; }
 
     public int Version { get; set; }
@@ -63,13 +61,11 @@ public class JobTypeSaga :
     /// <summary>
     /// The name of the job type
     /// </summary>
-    public string Name { get; set; }
-
+    public string Name { get; set; } = null!;
     int JobTypeInfo.ConcurrentJobLimit => OverrideJobLimit ?? ConcurrentJobLimit;
     IReadOnlyList<ActiveJob> JobTypeInfo.ActiveJobs => ActiveJobs;
     IReadOnlyDictionary<Uri, JobTypeInstance> JobTypeInfo.Instances => Instances;
     IReadOnlyDictionary<string, object> JobTypeInfo.Properties => Properties ?? [];
-
     /// <summary>
     /// The MD5 hash of the job type
     /// </summary>

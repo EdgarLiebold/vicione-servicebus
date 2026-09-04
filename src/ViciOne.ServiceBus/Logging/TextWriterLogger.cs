@@ -9,11 +9,13 @@ public class TextWriterLogger :
 {
     readonly TextWriterLoggerFactory _factory;
     readonly LogLevel _logLevel;
+    readonly TimeProvider _timeProvider;
 
-    public TextWriterLogger(TextWriterLoggerFactory factory, LogLevel logLevel)
+    public TextWriterLogger(TextWriterLoggerFactory factory, LogLevel logLevel, TimeProvider? timeProvider = null)
     {
         _factory = factory;
         _logLevel = logLevel;
+        _timeProvider = timeProvider ?? TimeProvider.System;
     }
 
     public IDisposable BeginScope<TState>(TState state)
@@ -35,7 +37,7 @@ public class TextWriterLogger :
         if (string.IsNullOrEmpty(message))
             return;
 
-        message = $"{DateTime.Now:HH:mm:ss.fff}-{logLevel.ToString()[0]} {message}";
+        message = $"{_timeProvider.GetLocalNow():HH:mm:ss.fff}-{logLevel.ToString()[0]} {message}";
 
         if (exception != null)
             message += Environment.NewLine + Environment.NewLine + exception;

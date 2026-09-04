@@ -44,7 +44,7 @@ public sealed class TaskExecutor :
 
         // Async worker methods start immediately and naturally yield at the first incomplete await.
         // Task.Run would only add an unnecessary ThreadPool scheduling hop.
-        Task[] workers = Enumerable.Range(0, concurrencyLimit).Select(_ => RunWorker()).ToArray();
+        Task[] workers = Enumerable.Range(0, concurrencyLimit).Select(_ => RunWorkerAsync()).ToArray();
         _workers = workers.Length == 1 ? workers[0] : Task.WhenAll(workers);
     }
 
@@ -73,7 +73,7 @@ public sealed class TaskExecutor :
         ArgumentNullException.ThrowIfNull(method);
 
         var item = new CompletionWorkItem(method, cancellationToken);
-        await EnqueueCore(item, cancellationToken).ConfigureAwait(false);
+        await EnqueueCoreAsync(item, cancellationToken).ConfigureAwait(false);
         await item.Completed.ConfigureAwait(false);
     }
 
@@ -95,7 +95,7 @@ public sealed class TaskExecutor :
         ArgumentNullException.ThrowIfNull(method);
 
         var item = new CompletionWorkItem<T>(method, cancellationToken);
-        await EnqueueCore(item, cancellationToken).ConfigureAwait(false);
+        await EnqueueCoreAsync(item, cancellationToken).ConfigureAwait(false);
         return await item.Completed.ConfigureAwait(false);
     }
 
@@ -109,6 +109,8 @@ public sealed class TaskExecutor :
     /// Enqueues work and completes once the bounded queue accepted it. Work failures are owned and
     /// logged by the executor because no caller awaits the work result.
     /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="method">The method used by the operation.</param>
     public Task EnqueueAsync(Action method, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(method);
@@ -124,10 +126,12 @@ public sealed class TaskExecutor :
     /// Enqueues work and completes once the bounded queue accepted it. Work failures are owned and
     /// logged by the executor because no caller awaits the work result.
     /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="method">The method used by the operation.</param>
     public async Task EnqueueAsync(Func<Task> method, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(method);
-        await EnqueueCore(new QueuedWorkItem(method, cancellationToken), cancellationToken).ConfigureAwait(false);
+        await EnqueueCoreAsync(new QueuedWorkItem(method, cancellationToken), cancellationToken).ConfigureAwait(false);
     }
 
     public Task EnqueueValueTaskAsync(Func<ValueTask> method, CancellationToken cancellationToken = default)
@@ -141,6 +145,8 @@ public sealed class TaskExecutor :
     /// Apache.NMS message listeners). This blocks only until the bounded queue accepts the work; it
     /// never polls and it does not wait for message processing to finish.
     /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="method">The method used by the operation.</param>
     public void EnqueueBlocking(Func<Task> method, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(method);
@@ -161,7 +167,7 @@ public sealed class TaskExecutor :
         }
     }
 
-    async ValueTask EnqueueCore(IWorkItem item, CancellationToken cancellationToken)
+    async ValueTask EnqueueCoreAsync(IWorkItem item, CancellationToken cancellationToken)
     {
         ThrowIfNotAcceptingWork();
 
@@ -175,7 +181,7 @@ public sealed class TaskExecutor :
         }
     }
 
-    async Task RunWorker()
+    async Task RunWorkerAsync()
     {
         await foreach (IWorkItem item in _channel.Reader.ReadAllAsync().ConfigureAwait(false))
             await item.ExecuteAsync().ConfigureAwait(false);

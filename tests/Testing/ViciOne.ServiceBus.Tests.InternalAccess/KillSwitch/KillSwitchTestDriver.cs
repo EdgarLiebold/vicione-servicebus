@@ -52,41 +52,41 @@ public sealed class KillSwitchTestDriver
         }
     }
 
-    public async Task ObserveSuccess()
+    public async Task ObserveSuccessAsync()
     {
-        await _killSwitch.PreConsume<object>(null!).ConfigureAwait(false);
-        await _killSwitch.PostConsume<object>(null!).ConfigureAwait(false);
+        await _killSwitch.PreConsumeAsync<object>(null!).ConfigureAwait(false);
+        await _killSwitch.PostConsumeAsync<object>(null!).ConfigureAwait(false);
     }
 
-    public async Task ObserveFailure(Exception exception)
+    public async Task ObserveFailureAsync(Exception exception)
     {
-        await _killSwitch.PreConsume<object>(null!).ConfigureAwait(false);
-        await _killSwitch.ConsumeFault<object>(null!, exception).ConfigureAwait(false);
+        await _killSwitch.PreConsumeAsync<object>(null!).ConfigureAwait(false);
+        await _killSwitch.ConsumeFaultAsync<object>(null!, exception).ConfigureAwait(false);
     }
 
-    public Task ObserveAttempt() => _killSwitch.PreConsume<object>(null!);
+    public Task ObserveAttemptAsync() => _killSwitch.PreConsumeAsync<object>(null!);
 
-    public Task ObserveMatchingFailure(Exception exception) => _killSwitch.ConsumeFault<object>(null!, exception);
+    public Task ObserveMatchingFailureAsync(Exception exception) => _killSwitch.ConsumeFaultAsync<object>(null!, exception);
 
-    public async Task ObserveConsumerAndRoutingSlipCallbacks(Exception executeException)
+    public async Task ObserveConsumerAndRoutingSlipCallbacksAsync(Exception executeException)
     {
-        await _killSwitch.PreConsume<object>(null!).ConfigureAwait(false);
-        await _killSwitch.PostConsume<object>(null!).ConfigureAwait(false);
-        await _killSwitch.PreExecute<TestExecuteActivity, ActivityArguments>(null!).ConfigureAwait(false);
-        await _killSwitch.ExecuteFault<TestExecuteActivity, ActivityArguments>(null!, executeException).ConfigureAwait(false);
-        await _killSwitch.PreCompensate<TestCompensateActivity, ActivityLog>(null!).ConfigureAwait(false);
-        await _killSwitch.PostCompensate<TestCompensateActivity, ActivityLog>(null!).ConfigureAwait(false);
+        await _killSwitch.PreConsumeAsync<object>(null!).ConfigureAwait(false);
+        await _killSwitch.PostConsumeAsync<object>(null!).ConfigureAwait(false);
+        await _killSwitch.PreExecuteAsync<TestExecuteActivity, ActivityArguments>(null!).ConfigureAwait(false);
+        await _killSwitch.ExecuteFaultAsync<TestExecuteActivity, ActivityArguments>(null!, executeException).ConfigureAwait(false);
+        await _killSwitch.PreCompensateAsync<TestCompensateActivity, ActivityLog>(null!).ConfigureAwait(false);
+        await _killSwitch.PostCompensateAsync<TestCompensateActivity, ActivityLog>(null!).ConfigureAwait(false);
     }
 
-    public Task StopEndpoint() => _killSwitch.Stopping(null!);
+    public Task StopEndpointAsync() => _killSwitch.StoppingAsync(null!);
 
-    public Task Rearm()
+    public Task RearmAsync()
     {
         _killSwitch.Attach(_endpoint);
         return Task.CompletedTask;
     }
 
-    public Task AttachDifferentEndpoint()
+    public Task AttachDifferentEndpointAsync()
     {
         _killSwitch.Attach(new FakeEndpoint(_endpoint.LogContext));
         return Task.CompletedTask;
@@ -96,11 +96,11 @@ public sealed class KillSwitchTestDriver
 
     public void EnqueueStartFailure(Exception exception) => _endpoint.EnqueueStartFailure(exception);
 
-    public Task WaitForPauseCount(int count, TimeSpan timeout, CancellationToken cancellationToken) =>
-        _endpoint.WaitForPauseCount(count, timeout, cancellationToken);
+    public Task WaitForPauseCountAsync(int count, TimeSpan timeout, CancellationToken cancellationToken) =>
+        _endpoint.WaitForPauseCountAsync(count, timeout, cancellationToken);
 
-    public Task WaitForStartCount(int count, TimeSpan timeout, CancellationToken cancellationToken) =>
-        _endpoint.WaitForStartCount(count, timeout, cancellationToken);
+    public Task WaitForStartCountAsync(int count, TimeSpan timeout, CancellationToken cancellationToken) =>
+        _endpoint.WaitForStartCountAsync(count, timeout, cancellationToken);
 
     private sealed class FakeEndpoint(ILogContext logContext) : IKillSwitchEndpoint
     {
@@ -134,7 +134,7 @@ public sealed class KillSwitchTestDriver
 
         public void ConnectConsumeObserver(IConsumeObserver observer) => Interlocked.Increment(ref _connectCount);
 
-        public Task Pause(CancellationToken cancellationToken)
+        public Task PauseAsync(CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             Exception? failure;
@@ -153,7 +153,7 @@ public sealed class KillSwitchTestDriver
             return failure is null ? Task.CompletedTask : Task.FromException(failure);
         }
 
-        public Task<ReceiveEndpointHandle> Restart(CancellationToken cancellationToken)
+        public Task<ReceiveEndpointHandle> RestartAsync(CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             Exception? failure;
@@ -187,11 +187,11 @@ public sealed class KillSwitchTestDriver
                 _startFailures.Enqueue(exception);
         }
 
-        public Task WaitForPauseCount(int count, TimeSpan timeout, CancellationToken cancellationToken) =>
-            WaitForCount(PauseState, count, timeout, cancellationToken);
+        public Task WaitForPauseCountAsync(int count, TimeSpan timeout, CancellationToken cancellationToken) =>
+            WaitForCountAsync(PauseState, count, timeout, cancellationToken);
 
-        public Task WaitForStartCount(int count, TimeSpan timeout, CancellationToken cancellationToken) =>
-            WaitForCount(StartState, count, timeout, cancellationToken);
+        public Task WaitForStartCountAsync(int count, TimeSpan timeout, CancellationToken cancellationToken) =>
+            WaitForCountAsync(StartState, count, timeout, cancellationToken);
 
         private (int Count, Task Changed) PauseState()
         {
@@ -205,7 +205,7 @@ public sealed class KillSwitchTestDriver
                 return (_startCount, _startChanged.Task);
         }
 
-        private static async Task WaitForCount(
+        private static async Task WaitForCountAsync(
             Func<(int Count, Task Changed)> snapshot,
             int expected,
             TimeSpan timeout,
@@ -232,7 +232,7 @@ public sealed class KillSwitchTestDriver
     {
         public Task<ReceiveEndpointReady> Ready { get; } = Task.FromResult<ReceiveEndpointReady>(new ReadyEvent());
 
-        public Task Stop(CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task StopAsync(CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
     }
 
     private sealed class ReadyEvent : ReceiveEndpointReady
@@ -247,12 +247,12 @@ public sealed class KillSwitchTestDriver
 
     private sealed class TestExecuteActivity : IExecuteActivity<ActivityArguments>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<ActivityArguments> context) => throw new NotSupportedException();
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<ActivityArguments> context) => throw new NotSupportedException();
     }
 
     private sealed class TestCompensateActivity : ICompensateActivity<ActivityLog>
     {
-        public Task<CompensationResult> Compensate(CompensateContext<ActivityLog> context) => throw new NotSupportedException();
+        public Task<CompensationResult> CompensateAsync(CompensateContext<ActivityLog> context) => throw new NotSupportedException();
     }
 
     private static TaskCompletionSource<bool> NewSignal() =>

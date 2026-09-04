@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.DependencyInjection;
@@ -25,26 +24,27 @@ public class OutboxMessagePipe<TMessage> :
         _next = next;
     }
 
-    public async Task Send(OutboxConsumeContext<TMessage> context)
+    public async Task SendAsync(OutboxConsumeContext<TMessage> context)
     {
         using var pop = _scopeContext.PushConsumeContext(context);
 
-        var timer = Stopwatch.StartNew();
+        TimeProvider timeProvider = context.GetTimeProvider();
+        long startedAt = timeProvider.GetTimestamp();
 
         if (!context.IsMessageConsumed)
         {
-            await _next.Send(context).ConfigureAwait(false);
+            await _next.SendAsync(context).ConfigureAwait(false);
 
             await context.ConsumeCompleted.ConfigureAwait(false);
 
             try
             {
-                await context.SetConsumed().ConfigureAwait(false);
+                await context.SetConsumedAsync().ConfigureAwait(false);
             }
             catch (Exception exception)
             {
                 if (!context.ReceiveContext.IsFaulted)
-                    await context.NotifyFaulted(timer.Elapsed, TypeCache<TMessage>.ShortName, exception).ConfigureAwait(false);
+                    await context.NotifyFaultedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<TMessage>.ShortName, exception).ConfigureAwait(false);
 
                 throw;
             }
@@ -54,19 +54,19 @@ public class OutboxMessagePipe<TMessage> :
 
         if (!context.IsOutboxDelivered)
         {
-            await DeliverOutboxMessages(context).ConfigureAwait(false);
+            await DeliverOutboxMessagesAsync(context).ConfigureAwait(false);
 
             await context.ConsumeCompleted.ConfigureAwait(false);
 
             return;
         }
 
-        await context.RemoveOutboxMessages().ConfigureAwait(false);
+        await context.RemoveOutboxMessagesAsync().ConfigureAwait(false);
 
         LogContext.Debug?.Log("Outbox Completed: {MessageId} ({ReceiveCount})", context.MessageId, context.ReceiveCount);
 
         if (context.ReceiveContext is { IsDelivered: false, IsFaulted: false })
-            await context.NotifyConsumed(context, timer.Elapsed, _options.ConsumerType).ConfigureAwait(false);
+            await context.NotifyConsumedAsync(context, timeProvider.GetElapsedTime(startedAt), _options.ConsumerType).ConfigureAwait(false);
 
         context.ContinueProcessing = false;
     }
@@ -78,9 +78,9 @@ public class OutboxMessagePipe<TMessage> :
         _next.Probe(scope);
     }
 
-    async Task DeliverOutboxMessages(OutboxConsumeContext context)
+    async Task DeliverOutboxMessagesAsync(OutboxConsumeContext context)
     {
-        List<OutboxMessageContext> messages = await context.LoadOutboxMessages().ConfigureAwait(false);
+        List<OutboxMessageContext> messages = await context.LoadOutboxMessagesAsync().ConfigureAwait(false);
 
         var messageLimit = _options.MessageDeliveryLimit;
         var messageCount = 0;
@@ -104,13 +104,13 @@ public class OutboxMessagePipe<TMessage> :
 
                 var pipe = new OutboxMessageSendPipe(message, message.DestinationAddress);
 
-                var endpoint = await context.CapturedContext.GetSendEndpoint(message.DestinationAddress).ConfigureAwait(false);
+                var endpoint = await context.CapturedContext.GetSendEndpointAsync(message.DestinationAddress).ConfigureAwait(false);
 
                 StartedActivity? activity = LogContext.Current?.StartOutboxDeliverActivity(message);
                 MetricOperation? instrument = LogContext.Current?.StartOutboxDeliveryInstrument();
                 try
                 {
-                    await endpoint.Send(new SerializedMessageBody(), pipe, token.Token).ConfigureAwait(false);
+                    await endpoint.SendAsync(new SerializedMessageBody(), pipe, token.Token).ConfigureAwait(false);
                 }
                 catch (Exception exception)
                 {
@@ -128,13 +128,13 @@ public class OutboxMessagePipe<TMessage> :
                 LogContext.Debug?.Log("Outbox Sent: {InboxMessageId} {SequenceNumber} {MessageId}", context.MessageId, message.SequenceNumber,
                     message.MessageId);
 
-                await context.NotifyOutboxMessageDelivered(message).ConfigureAwait(false);
+                await context.NotifyOutboxMessageDeliveredAsync(message).ConfigureAwait(false);
 
                 messageCount++;
             }
         }
 
         if (messageIndex == messages.Count && messages.Count < messageLimit)
-            await context.SetDelivered().ConfigureAwait(false);
+            await context.SetDeliveredAsync().ConfigureAwait(false);
     }
 }

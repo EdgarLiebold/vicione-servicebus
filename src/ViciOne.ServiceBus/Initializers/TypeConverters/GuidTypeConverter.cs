@@ -15,7 +15,7 @@ public class GuidTypeConverter :
         return true;
     }
 
-    public bool TryConvert(object input, out Guid result)
+    public bool TryConvert(object? input, out Guid result)
     {
         switch (input)
         {
@@ -36,7 +36,7 @@ public class GuidTypeConverter :
         }
     }
 
-    public bool TryConvert(string input, out Guid result)
+    public bool TryConvert(string? input, out Guid result)
     {
         return Guid.TryParse(input, out result);
     }

@@ -10,9 +10,9 @@ public class JobServiceOptions :
     IOptions,
     ISpecification
 {
-    string _jobAttemptSagaEndpointName;
-    string _jobSagaEndpointName;
-    string _jobTypeSagaEndpointName;
+    string _jobAttemptSagaEndpointName = null!;
+    string _jobSagaEndpointName = null!;
+    string _jobTypeSagaEndpointName = null!;
 
     public JobServiceOptions()
     {
@@ -58,8 +58,7 @@ public class JobServiceOptions :
     /// <summary>
     /// The job service for the endpoint
     /// </summary>
-    public IJobService JobService { get; set; }
-
+    public IJobService JobService { get; set; } = null!;
     /// <summary>
     /// How often a job instance should send a heartbeat
     /// </summary>
@@ -71,10 +70,8 @@ public class JobServiceOptions :
     /// </summary>
     public int? SagaPartitionCount { get; set; }
 
-    public IReceiveEndpointConfigurator InstanceEndpointConfigurator { get; set; }
-
-    public Action<IReceiveEndpointConfigurator> OnConfigureEndpoint { get; set; }
-
+    public IReceiveEndpointConfigurator InstanceEndpointConfigurator { get; set; } = null!;
+    public Action<IReceiveEndpointConfigurator> OnConfigureEndpoint { get; set; } = null!;
     public int? ConcurrentMessageLimit => SagaPartitionCount;
 
     IEnumerable<ValidationResult> ISpecification.Validate()
@@ -95,18 +92,15 @@ public class JobServiceOptions :
     /// <summary>
     /// The endpoint for the JobAttemptStateMachine
     /// </summary>
-    public Uri JobSagaEndpointAddress { get; set; }
-
+    public Uri JobSagaEndpointAddress { get; set; } = null!;
     /// <summary>
     /// The endpoint for the JobAttemptStateMachine
     /// </summary>
-    public Uri JobTypeSagaEndpointAddress { get; set; }
-
+    public Uri JobTypeSagaEndpointAddress { get; set; } = null!;
     /// <summary>
     /// The endpoint for the JobAttemptStateMachine
     /// </summary>
-    public Uri JobAttemptSagaEndpointAddress { get; set; }
-
+    public Uri JobAttemptSagaEndpointAddress { get; set; } = null!;
     /// <summary>
     /// The time to wait for a job slot when one is unavailable
     /// </summary>
@@ -141,5 +135,5 @@ public class JobServiceOptions :
     /// Optional resolver for platform-specific or application-defined time zone identifiers.
     /// The resolver is owned by this job-service configuration instance.
     /// </summary>
-    public Func<string, TimeZoneInfo> TimeZoneResolver { get; set; }
+    public Func<string, TimeZoneInfo> TimeZoneResolver { get; set; } = null!;
 }

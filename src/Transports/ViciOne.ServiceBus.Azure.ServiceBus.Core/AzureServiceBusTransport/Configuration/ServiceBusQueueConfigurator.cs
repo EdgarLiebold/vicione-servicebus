@@ -21,9 +21,9 @@ public class ServiceBusQueueConfigurator :
 
     public bool? EnableDeadLetteringOnFilterEvaluationExceptions { get; set; }
 
-    public string ForwardDeadLetteredMessagesTo { get; set; }
+    public string? ForwardDeadLetteredMessagesTo { get; set; }
 
-    public string ForwardTo { get; set; }
+    public string? ForwardTo { get; set; }
 
     public TimeSpan? LockDuration { get; set; }
 

@@ -13,9 +13,9 @@ public class ScopeInitializeContext :
 
     public virtual int Depth => 0;
 
-    public virtual InitializeContext Parent => null;
+    public virtual InitializeContext? Parent => null;
 
-    public virtual bool TryGetParent<T>(out InitializeContext<T> parentContext)
+    public virtual bool TryGetParent<T>([NotNullWhen(true)] out InitializeContext<T>? parentContext)
         where T : class
     {
         parentContext = default;

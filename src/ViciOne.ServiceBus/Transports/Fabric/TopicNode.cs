@@ -64,10 +64,10 @@ public class TopicNode<T> :
         return GetChild(word).Add(sink, pattern, separator + 1);
     }
 
-    public async Task Deliver(DeliveryContext<T> context, string? routingKey)
+    public async Task DeliverAsync(DeliveryContext<T> context, string? routingKey, CancellationToken cancellationToken = default)
     {
-        if (_children.TryGetValue("#", out TopicNode<T> hashNode))
-            await hashNode.Deliver(context, default).ConfigureAwait(false);
+        if (_children.TryGetValue("#", out TopicNode<T>? hashNode))
+            await hashNode.DeliverAsync(context, default, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (string.IsNullOrWhiteSpace(routingKey))
         {
@@ -76,21 +76,21 @@ public class TopicNode<T> :
                 if (context.WasAlreadyDelivered(sink))
                     return;
 
-                await sink.Deliver(context).ConfigureAwait(false);
+                await sink.DeliverAsync(context, cancellationToken: cancellationToken).ConfigureAwait(false);
 
                 context.Delivered(sink);
-            }).ConfigureAwait(false);
+            }, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
         else
         {
             var separator = routingKey.IndexOf('.');
             if (separator < 0)
             {
-                if (_children.TryGetValue("*", out TopicNode<T> starNode))
-                    await starNode.Deliver(context, default).ConfigureAwait(false);
+                if (_children.TryGetValue("*", out TopicNode<T>? starNode))
+                    await starNode.DeliverAsync(context, default, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-                if (_children.TryGetValue(routingKey, out TopicNode<T> childNode))
-                    await childNode.Deliver(context, default).ConfigureAwait(false);
+                if (_children.TryGetValue(routingKey, out TopicNode<T>? childNode))
+                    await childNode.DeliverAsync(context, default, cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             else
             {
@@ -98,11 +98,11 @@ public class TopicNode<T> :
 
                 var remaining = routingKey.Substring(separator + 1);
 
-                if (_children.TryGetValue("*", out TopicNode<T> starNode))
-                    await starNode.Deliver(context, remaining).ConfigureAwait(false);
+                if (_children.TryGetValue("*", out TopicNode<T>? starNode))
+                    await starNode.DeliverAsync(context, remaining, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-                if (_children.TryGetValue(word, out TopicNode<T> childNode))
-                    await childNode.Deliver(context, remaining).ConfigureAwait(false);
+                if (_children.TryGetValue(word, out TopicNode<T>? childNode))
+                    await childNode.DeliverAsync(context, remaining, cancellationToken: cancellationToken).ConfigureAwait(false);
             }
         }
     }

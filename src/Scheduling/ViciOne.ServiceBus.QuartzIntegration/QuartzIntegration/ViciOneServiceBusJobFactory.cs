@@ -26,7 +26,23 @@ public class ViciOneServiceBusJobFactory :
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
     }
 
-    public ValueTask<JobScope> CreateJob(TriggerFiredBundle bundle, IScheduler scheduler, CancellationToken cancellationToken = default)
+    ValueTask<JobScope> IJobFactory.CreateJob(TriggerFiredBundle bundle, IScheduler scheduler, CancellationToken cancellationToken)
+    {
+        return CreateJobAsync(bundle, scheduler, cancellationToken);
+    }
+
+    ValueTask IJobFactory.ReturnJob(JobScope scope, CancellationToken cancellationToken)
+    {
+        return ReturnJobAsync(scope, cancellationToken);
+    }
+
+    /// <summary>
+    /// Creates the job scope used to execute a scheduled message.
+    /// </summary>
+    /// <param name="bundle">The bundle used by the operation.</param>
+    /// <param name="scheduler">The scheduler used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public ValueTask<JobScope> CreateJobAsync(TriggerFiredBundle bundle, IScheduler scheduler, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(bundle);
         ArgumentNullException.ThrowIfNull(scheduler);
@@ -39,7 +55,12 @@ public class ViciOneServiceBusJobFactory :
         return ValueTask.FromResult(new JobScope(job, state: null));
     }
 
-    public async ValueTask ReturnJob(JobScope scope, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Releases a job scope after execution.
+    /// </summary>
+    /// <param name="scope">The scope used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public async ValueTask ReturnJobAsync(JobScope scope, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 

@@ -12,17 +12,18 @@ namespace ViciOne.ServiceBus.Transports;
 public abstract class ConsumerAgent<TKey> :
     Agent,
     DeliveryMetrics
+    where TKey : notnull
 {
     readonly ReceiveEndpointContext _context;
     readonly TaskCompletionSource<bool> _deliveryComplete;
     readonly IReceivePipeDispatcher _dispatcher;
     readonly object _lock = new object();
     readonly ConcurrentDictionary<TKey, PendingReceiveLockContext> _pending;
-    Task _consumeTask;
-    Task _consumeTaskObserver;
-    TaskCompletionSource<bool> _consumeTaskSource;
+    Task _consumeTask = null!;
+    Task _consumeTaskObserver = null!;
+    TaskCompletionSource<bool> _consumeTaskSource = null!;
 
-    protected ConsumerAgent(ReceiveEndpointContext context, IEqualityComparer<TKey> equalityComparer = default)
+    protected ConsumerAgent(ReceiveEndpointContext context, IEqualityComparer<TKey>? equalityComparer = default)
     {
         _context = context;
         _deliveryComplete = TaskCompletionSources.Create<bool>();
@@ -30,7 +31,7 @@ public abstract class ConsumerAgent<TKey> :
         _pending = new ConcurrentDictionary<TKey, PendingReceiveLockContext>(equalityComparer ?? EqualityComparer<TKey>.Default);
 
         _dispatcher = context.CreateReceivePipeDispatcher();
-        _dispatcher.ZeroActivity += HandleDeliveryComplete;
+        _dispatcher.ZeroActivity += HandleDeliveryCompleteAsync;
     }
 
     protected bool IsIdle => ActiveDispatchCount == 0;
@@ -43,7 +44,7 @@ public abstract class ConsumerAgent<TKey> :
 
     public int ConcurrentDeliveryCount => _dispatcher.MaxConcurrentDispatchCount;
 
-    Task HandleDeliveryComplete()
+    Task HandleDeliveryCompleteAsync()
     {
         if (IsStopping)
             _deliveryComplete.TrySetResult(true);
@@ -83,10 +84,10 @@ public abstract class ConsumerAgent<TKey> :
 
     void SetConsumeTask(Task consumeTask)
     {
-        _consumeTaskObserver = ObserveConsumeTask(consumeTask);
+        _consumeTaskObserver = ObserveConsumeTaskAsync(consumeTask);
     }
 
-    async Task ObserveConsumeTask(Task consumeTask)
+    async Task ObserveConsumeTaskAsync(Task consumeTask)
     {
         try
         {
@@ -111,7 +112,7 @@ public abstract class ConsumerAgent<TKey> :
                 ? new CancellationTokenSource(_context.StopTimeout.Value)
                 : new CancellationTokenSource();
 
-            await this.Stop("Consume Loop Exited", tokenSource.Token).ConfigureAwait(false);
+            await this.StopAsync("Consume Loop Exited", tokenSource.Token).ConfigureAwait(false);
         }
         catch (Exception exception)
         {
@@ -119,13 +120,13 @@ public abstract class ConsumerAgent<TKey> :
         }
     }
 
-    protected override Task StopAgent(StopContext context)
+    protected override Task StopAgentAsync(StopContext context)
     {
         LogContext.Debug?.Log("Consumer Stopping: {InputAddress} ({Reason})", _context.InputAddress, context.Reason);
 
         TrySetConsumeCompleted();
 
-        SetCompleted(ActiveAndActualAgentsCompleted(context));
+        SetCompleted(ActiveAndActualAgentsCompletedAsync(context));
 
         return Completed;
     }
@@ -164,11 +165,11 @@ public abstract class ConsumerAgent<TKey> :
         _consumeTaskSource.TrySetException(exception);
     }
 
-    protected virtual async Task ActiveAndActualAgentsCompleted(StopContext context)
+    protected virtual async Task ActiveAndActualAgentsCompletedAsync(StopContext context)
     {
         if (!IsIdle)
         {
-            CancellationTokenSource cancellationTokenSource = null;
+            CancellationTokenSource? cancellationTokenSource = null;
             CancellationTokenRegistration? registration = null;
 
             if (_context.ConsumerStopTimeout != null)
@@ -179,7 +180,7 @@ public abstract class ConsumerAgent<TKey> :
 
             try
             {
-                await _deliveryComplete.Task.OrCanceled(context.CancellationToken).ConfigureAwait(false);
+                await _deliveryComplete.Task.OrCanceledAsync(context.CancellationToken).ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
@@ -199,7 +200,7 @@ public abstract class ConsumerAgent<TKey> :
 
         try
         {
-            await _consumeTask.OrCanceled(context.CancellationToken).ConfigureAwait(false);
+            await _consumeTask.OrCanceledAsync(context.CancellationToken).ConfigureAwait(false);
         }
         catch (OperationCanceledException)
         {
@@ -215,7 +216,7 @@ public abstract class ConsumerAgent<TKey> :
         return true;
     }
 
-    protected Task Dispatch<TContext>(TKey key, TContext context, ReceiveLockContext receiveLockContext)
+    protected Task DispatchAsync<TContext>(TKey key, TContext context, ReceiveLockContext receiveLockContext)
         where TContext : BaseReceiveContext
     {
         var added = false;
@@ -241,12 +242,12 @@ public abstract class ConsumerAgent<TKey> :
             }
         }
 
-        var dispatchTask = _dispatcher.Dispatch(context, lockContext);
+        var dispatchTask = _dispatcher.DispatchAsync(context, lockContext);
 
-        return added ? TrackDispatch(dispatchTask, key) : dispatchTask;
+        return added ? TrackDispatchAsync(dispatchTask, key) : dispatchTask;
     }
 
-    async Task TrackDispatch(Task dispatchTask, TKey key)
+    async Task TrackDispatchAsync(Task dispatchTask, TKey key)
     {
         try
         {

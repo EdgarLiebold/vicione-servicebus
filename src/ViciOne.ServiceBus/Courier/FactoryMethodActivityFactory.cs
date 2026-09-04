@@ -19,14 +19,14 @@ public class FactoryMethodActivityFactory<TActivity, TArguments, TLog> :
         _compensateFactory = new FactoryMethodCompensateActivityFactory<TActivity, TLog>(compensateFactory);
     }
 
-    public Task Execute(ExecuteContext<TArguments> context, IPipe<ExecuteActivityContext<TActivity, TArguments>> next)
+    public Task ExecuteAsync(ExecuteContext<TArguments> context, IPipe<ExecuteActivityContext<TActivity, TArguments>> next, CancellationToken cancellationToken = default)
     {
-        return _executeFactory.Execute(context, next);
+        return _executeFactory.ExecuteAsync(context, next, cancellationToken: cancellationToken);
     }
 
-    public Task Compensate(CompensateContext<TLog> context, IPipe<CompensateActivityContext<TActivity, TLog>> next)
+    public Task CompensateAsync(CompensateContext<TLog> context, IPipe<CompensateActivityContext<TActivity, TLog>> next, CancellationToken cancellationToken = default)
     {
-        return _compensateFactory.Compensate(context, next);
+        return _compensateFactory.CompensateAsync(context, next, cancellationToken: cancellationToken);
     }
 
     public void Probe(ProbeContext context)

@@ -8,12 +8,13 @@ public interface IBatchCollector<TMessage> :
     IProbeSite
     where TMessage : class
 {
-    Task<BatchConsumer<TMessage>> Collect(ConsumeContext<TMessage> context);
+    Task<BatchConsumer<TMessage>> CollectAsync(ConsumeContext<TMessage> context, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Complete the consumer, since it's already completed, to clear the dictionary if it matches
     /// </summary>
     /// <param name="context"></param>
     /// <param name="consumer"></param>
-    Task Complete(ConsumeContext<TMessage> context, BatchConsumer<TMessage> consumer);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task CompleteAsync(ConsumeContext<TMessage> context, BatchConsumer<TMessage> consumer, CancellationToken cancellationToken = default);
 }

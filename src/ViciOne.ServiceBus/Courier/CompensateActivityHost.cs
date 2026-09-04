@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Courier.Contracts;
 using ViciOne.ServiceBus.Logging;
@@ -18,9 +17,10 @@ public class CompensateActivityHost<TActivity, TLog> :
         _compensatePipe = compensatePipe;
     }
 
-    public async Task Send(ConsumeContext<RoutingSlip> context, IPipe<ConsumeContext<RoutingSlip>> next)
+    public async Task SendAsync(ConsumeContext<RoutingSlip> context, IPipe<ConsumeContext<RoutingSlip>> next)
     {
-        var timer = Stopwatch.StartNew();
+        TimeProvider timeProvider = context.GetTimeProvider();
+        long startedAt = timeProvider.GetTimestamp();
 
         StartedActivity? activity = LogContext.Current?.StartCompensateActivity<TActivity, TLog>(context);
         var instrument = LogContext.Current?.StartActivityCompensateInstrument<TActivity, TLog>(context);
@@ -30,36 +30,36 @@ public class CompensateActivityHost<TActivity, TLog> :
             CompensateContext<TLog> compensateContext = new HostCompensateContext<TLog>(context);
 
             LogContext.Debug?.Log("Compensate Activity: {TrackingNumber} ({Activity}, {Host})", compensateContext.TrackingNumber,
-                TypeCache<TActivity>.ShortName, context.ReceiveContext.InputAddress);
+                TypeCache<TActivity>.ShortName, context.Advanced().ReceiveContext.InputAddress);
 
             try
             {
-                await _compensatePipe.Send(compensateContext).ConfigureAwait(false);
+                await _compensatePipe.SendAsync(compensateContext).ConfigureAwait(false);
 
                 var result = compensateContext.Result
                     ?? compensateContext.Failed(new ActivityCompensationException("The activity compensation did not return a result"));
 
-                await result.Evaluate().ConfigureAwait(false);
+                await result.EvaluateAsync().ConfigureAwait(false);
             }
             catch (Exception exception)
             {
-                await context.NotifyFaulted(timer.Elapsed, TypeCache<TActivity>.ShortName, exception).ConfigureAwait(false);
+                await context.NotifyFaultedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<TActivity>.ShortName, exception).ConfigureAwait(false);
 
                 activity?.AddExceptionEvent(exception);
 
                 instrument?.RecordException(exception);
 
-                await compensateContext.Failed(exception).Evaluate().ConfigureAwait(false);
+                await compensateContext.Failed(exception).EvaluateAsync().ConfigureAwait(false);
             }
 
-            await context.NotifyConsumed(timer.Elapsed, TypeCache<TActivity>.ShortName).ConfigureAwait(false);
+            await context.NotifyConsumedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<TActivity>.ShortName).ConfigureAwait(false);
 
-            await next.Send(context).ConfigureAwait(false);
+            await next.SendAsync(context).ConfigureAwait(false);
         }
         catch (Exception exception) when ((exception is OperationCanceledException || exception.GetBaseException() is OperationCanceledException)
                                           && !context.CancellationToken.IsCancellationRequested)
         {
-            await context.NotifyFaulted(timer.Elapsed, TypeCache<TActivity>.ShortName, exception).ConfigureAwait(false);
+            await context.NotifyFaultedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<TActivity>.ShortName, exception).ConfigureAwait(false);
 
             activity?.AddExceptionEvent(exception);
 
@@ -69,7 +69,7 @@ public class CompensateActivityHost<TActivity, TLog> :
         }
         catch (Exception exception)
         {
-            await context.NotifyFaulted(timer.Elapsed, TypeCache<TActivity>.ShortName, exception).ConfigureAwait(false);
+            await context.NotifyFaultedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<TActivity>.ShortName, exception).ConfigureAwait(false);
 
             activity?.AddExceptionEvent(exception);
 

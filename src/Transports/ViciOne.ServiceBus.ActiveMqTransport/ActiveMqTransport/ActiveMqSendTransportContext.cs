@@ -34,9 +34,10 @@ public class ActiveMqSendTransportContext :
     public override string EntityName { get; }
     public override string ActivitySystem => "activemq";
 
-    public Task Send(IPipe<SessionContext> pipe, CancellationToken cancellationToken = default)
+    public Task SendAsync(IPipe<SessionContext> pipe, CancellationToken cancellationToken = default)
     {
-        return _hostConfiguration.Retry(() => _supervisor.Send(pipe, cancellationToken), cancellationToken, _supervisor.SendStopping);
+        return _hostConfiguration.RetryAsync(() => _supervisor.SendAsync(pipe, cancellationToken),
+            stoppingToken: _supervisor.SendStopping, cancellationToken: cancellationToken);
     }
 
     public void Probe(ProbeContext context)
@@ -44,11 +45,11 @@ public class ActiveMqSendTransportContext :
         _supervisor.Probe(context);
     }
 
-    public override async Task<SendContext<T>> CreateSendContext<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    public override async Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
     {
         var sendContext = new TransportActiveMqSendContext<T>(message, cancellationToken);
 
-        await pipe.Send(sendContext).ConfigureAwait(false);
+        await pipe.SendAsync(sendContext).ConfigureAwait(false);
 
         return sendContext;
     }
@@ -58,14 +59,14 @@ public class ActiveMqSendTransportContext :
         return new IAgent[] { _supervisor };
     }
 
-    public Task<SendContext<T>> CreateSendContext<T>(SessionContext sessionContext, T message, IPipe<SendContext<T>> pipe,
+    public Task<SendContext<T>> CreateSendContextAsync<T>(SessionContext sessionContext, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
-        return CreateSendContext(message, pipe, cancellationToken);
+        return CreateSendContextAsync(message, pipe, cancellationToken);
     }
 
-    public async Task Send<T>(SessionContext sessionContext, SendContext<T> sendContext)
+    public async Task SendAsync<T>(SessionContext sessionContext, SendContext<T> sendContext, CancellationToken cancellationToken = default)
         where T : class
     {
         TransportActiveMqSendContext<T> context = sendContext as TransportActiveMqSendContext<T>
@@ -73,19 +74,20 @@ public class ActiveMqSendTransportContext :
 
         sendContext.CancellationToken.ThrowIfCancellationRequested();
 
-        await _configureTopologyPipe.Send(sessionContext).ConfigureAwait(false);
+        await _configureTopologyPipe.SendAsync(sessionContext).ConfigureAwait(false);
 
         sendContext.CancellationToken.ThrowIfCancellationRequested();
 
-        var destination = context.ReplyDestination ?? await sessionContext.GetDestination(EntityName, _destinationType).ConfigureAwait(false);
+        var destination = context.ReplyDestination ?? await sessionContext.GetDestinationAsync(EntityName, _destinationType, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         var transportMessage = sessionContext.CreateBytesMessage(context.Body.GetBytes());
 
-        await SetResponseTo(transportMessage, context, sessionContext);
+        await SetResponseToAsync(transportMessage, context, sessionContext);
 
         transportMessage.Properties.SetHeaders(context.Headers);
 
-        transportMessage.Properties[MessageHeaders.ContentType] = context.ContentType.ToString();
+        transportMessage.Properties[MessageHeaders.ContentType] = (context.ContentType
+            ?? throw new InvalidOperationException("A content type is required before an ActiveMQ message can be sent.")).ToString();
 
         if (context.MessageId.HasValue)
         {
@@ -149,16 +151,18 @@ public class ActiveMqSendTransportContext :
             transportMessage.Properties["AMQ_SCHEDULED_DELAY"] = checked((long)context.Delay.Value.TotalMilliseconds);
     }
 
-    static async Task SetResponseTo(IMessage transportMessage, SendContext context, SessionContext sessionContext)
+    static async Task SetResponseToAsync(IMessage transportMessage, SendContext context, SessionContext sessionContext)
     {
         if (context.ResponseAddress == null)
             return;
 
         var endpointName = context.ResponseAddress.GetEndpointName();
+        if (string.IsNullOrWhiteSpace(endpointName))
+            throw new InvalidOperationException("The response address must contain an endpoint name.");
 
         transportMessage.NMSReplyTo = sessionContext.GetTemporaryDestination(endpointName)
             ?? (context.ResponseAddress.TryGetValueFromQueryString("temporary", out _)
-                ? await sessionContext.GetDestination(endpointName, DestinationType.TemporaryQueue)
-                : await sessionContext.GetDestination(endpointName, DestinationType.Queue));
+                ? await sessionContext.GetDestinationAsync(endpointName, DestinationType.TemporaryQueue)
+                : await sessionContext.GetDestinationAsync(endpointName, DestinationType.Queue));
     }
 }

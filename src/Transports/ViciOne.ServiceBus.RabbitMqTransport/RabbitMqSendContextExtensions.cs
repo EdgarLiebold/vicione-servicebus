@@ -18,7 +18,7 @@ public static class RabbitMqSendContextExtensions
         if (value == null)
             return;
 
-        basicProperties.Headers ??= new Dictionary<string, object>();
+        basicProperties.Headers ??= new Dictionary<string, object?>();
 
         basicProperties.Headers[key] = value switch
         {
@@ -35,7 +35,7 @@ public static class RabbitMqSendContextExtensions
     /// <param name="priority"></param>
     public static void SetPriority(this SendContext context, byte priority)
     {
-        if (!context.TryGetPayload(out RabbitMqSendContext sendContext))
+        if (!context.TryGetPayload(out RabbitMqSendContext? sendContext))
             throw new ArgumentException("The RabbitMqSendContext was not available");
 
         sendContext.BasicProperties.Priority = priority;
@@ -48,7 +48,7 @@ public static class RabbitMqSendContextExtensions
     /// <param name="priority"></param>
     public static bool TrySetPriority(this SendContext context, byte priority)
     {
-        if (!context.TryGetPayload(out RabbitMqSendContext sendContext))
+        if (!context.TryGetPayload(out RabbitMqSendContext? sendContext))
             return false;
 
         sendContext.BasicProperties.Priority = priority;
@@ -63,7 +63,7 @@ public static class RabbitMqSendContextExtensions
     /// <param name="awaitAck"></param>
     public static void SetAwaitAck(this SendContext context, bool awaitAck)
     {
-        if (!context.TryGetPayload(out RabbitMqSendContext sendContext))
+        if (!context.TryGetPayload(out RabbitMqSendContext? sendContext))
             throw new ArgumentException("The RabbitMqSendContext was not available");
 
         sendContext.AwaitAck = awaitAck;
@@ -77,7 +77,7 @@ public static class RabbitMqSendContextExtensions
     /// <param name="awaitAck"></param>
     public static bool TrySetAwaitAck(this SendContext context, bool awaitAck)
     {
-        if (!context.TryGetPayload(out RabbitMqSendContext sendContext))
+        if (!context.TryGetPayload(out RabbitMqSendContext? sendContext))
             return false;
 
         sendContext.AwaitAck = awaitAck;
@@ -91,7 +91,7 @@ public static class RabbitMqSendContextExtensions
     /// <param name="value"></param>
     public static void SetStreamFilterValue(this SendContext context, string value)
     {
-        if (!context.TryGetPayload(out RabbitMqSendContext sendContext))
+        if (!context.TryGetPayload(out RabbitMqSendContext? sendContext))
             throw new ArgumentException("The RabbitMqSendContext was not available");
 
         sendContext.Headers.Set(StreamFilterValueHeaderName, value);
@@ -104,7 +104,7 @@ public static class RabbitMqSendContextExtensions
     /// <param name="value"></param>
     public static bool TrySetStreamFilterValue(this SendContext context, string value)
     {
-        if (!context.TryGetPayload(out RabbitMqSendContext sendContext))
+        if (!context.TryGetPayload(out RabbitMqSendContext? sendContext))
             return false;
 
         sendContext.Headers.Set(StreamFilterValueHeaderName, value);

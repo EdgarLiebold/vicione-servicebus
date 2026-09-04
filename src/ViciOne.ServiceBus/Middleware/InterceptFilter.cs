@@ -17,11 +17,11 @@ public class InterceptFilter<TContext> :
         _pipe = pipe;
     }
 
-    async Task IFilter<TContext>.Send(TContext context, IPipe<TContext> next)
+    async Task IFilter<TContext>.SendAsync(TContext context, IPipe<TContext> next)
     {
-        await _pipe.Send(context).ConfigureAwait(false);
+        await _pipe.SendAsync(context).ConfigureAwait(false);
 
-        await next.Send(context).ConfigureAwait(false);
+        await next.SendAsync(context).ConfigureAwait(false);
     }
 
     void IProbeSite.Probe(ProbeContext context)

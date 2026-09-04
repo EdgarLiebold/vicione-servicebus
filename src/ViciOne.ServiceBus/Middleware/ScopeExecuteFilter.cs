@@ -15,11 +15,11 @@ public class ScopeExecuteFilter<TActivity, TArguments> :
         _scopeProvider = scopeProvider;
     }
 
-    public async Task Send(ExecuteContext<TArguments> context, IPipe<ExecuteContext<TArguments>> next)
+    public async Task SendAsync(ExecuteContext<TArguments> context, IPipe<ExecuteContext<TArguments>> next)
     {
-        await using IExecuteScopeContext<TArguments> scope = await _scopeProvider.GetScope(context).ConfigureAwait(false);
+        await using IExecuteScopeContext<TArguments> scope = await _scopeProvider.GetScopeAsync(context).ConfigureAwait(false);
 
-        await next.Send(scope.Context).ConfigureAwait(false);
+        await next.SendAsync(scope.Context).ConfigureAwait(false);
     }
 
     public void Probe(ProbeContext context)

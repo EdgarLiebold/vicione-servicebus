@@ -12,7 +12,7 @@ public class RetryPipeSpecification<TContext> :
     where TContext : class, PipeContext
 {
     readonly RetryObservable _observers;
-    RetryPolicyFactory _policyFactory;
+    RetryPolicyFactory _policyFactory = null!;
 
     public RetryPipeSpecification()
     {

@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Initializers.Variables;
@@ -8,28 +9,30 @@ namespace ViciOne.ServiceBus.Initializers.Variables;
 /// used within the same initialize message context
 /// </summary>
 public class TimestampVariable :
-    IInitializerVariable<DateTime>
+    IInitializerVariable<DateTimeOffset>
 {
-    readonly DateTime _timestamp;
+    readonly DateTimeOffset _timestamp;
 
     public TimestampVariable()
     {
-        _timestamp = TimeProvider.System.GetUtcNow().UtcDateTime;
+        _timestamp = TimeProvider.System.GetUtcNow();
     }
 
-    public TimestampVariable(DateTime timestamp)
+    public TimestampVariable(DateTimeOffset timestamp)
     {
         _timestamp = timestamp;
     }
 
-    Task<DateTime> IInitializerVariable<DateTime>.GetValue<TMessage>(InitializeContext<TMessage> context)
+    Task<DateTimeOffset> IInitializerVariable<DateTimeOffset>.GetValueAsync<TMessage>(InitializeContext<TMessage> context,
+        CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         var timestampContext = context.GetOrAddPayload<TimestampContext>(() => new Context(_timestamp));
 
         return Task.FromResult(timestampContext.Timestamp);
     }
 
-    public static implicit operator DateTime(TimestampVariable variable)
+    public static implicit operator DateTimeOffset(TimestampVariable variable)
     {
         return variable._timestamp;
     }
@@ -37,18 +40,18 @@ public class TimestampVariable :
 
     interface TimestampContext
     {
-        DateTime Timestamp { get; }
+        DateTimeOffset Timestamp { get; }
     }
 
 
     class Context :
         TimestampContext
     {
-        public Context(DateTime timestamp)
+        public Context(DateTimeOffset timestamp)
         {
             Timestamp = timestamp;
         }
 
-        public DateTime Timestamp { get; }
+        public DateTimeOffset Timestamp { get; }
     }
 }

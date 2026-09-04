@@ -25,7 +25,7 @@ public interface JobStarted
     /// <summary>
     /// The time the job was started
     /// </summary>
-    DateTime Timestamp { get; }
+    DateTimeOffset Timestamp { get; }
 }
 
 
@@ -53,5 +53,5 @@ public interface JobStarted<T>
     /// <summary>
     /// The time the job was started
     /// </summary>
-    DateTime Timestamp { get; }
+    DateTimeOffset Timestamp { get; }
 }

@@ -9,57 +9,57 @@ public sealed class TaskInitializerExtensionsTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-INITIALIZER-PROJECTION", "reference")]
-    public async Task SelectAsync_ProjectsAReferenceValue()
+    public async Task SelectAsync_ProjectsAReferenceValueAsync()
     {
         Task<Subject> source = Task.FromResult(new Subject { Name = "Frank" });
 
-        string? result = await source.SelectAsync(subject => subject.Name);
+        string? result = await source.SelectAsync(subject => subject.Name, cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal("Frank", result);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-INITIALIZER-PROJECTION", "value")]
-    public async Task SelectAsync_ProjectsAValueType()
+    public async Task SelectAsync_ProjectsAValueTypeAsync()
     {
         Task<Subject> source = Task.FromResult(new Subject { Id = 27 });
 
-        int result = await source.SelectAsync(subject => subject.Id);
+        int result = await source.SelectAsync(subject => subject.Id, cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal(27, result);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-INITIALIZER-PROJECTION", "nullable-value")]
-    public async Task SelectAsync_ProjectsAPresentNullableValue()
+    public async Task SelectAsync_ProjectsAPresentNullableValueAsync()
     {
         Task<Subject> source = Task.FromResult(new Subject { MemberId = 27 });
 
-        int? result = await source.SelectAsync(subject => subject.MemberId);
+        int? result = await source.SelectAsync(subject => subject.MemberId, cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal(27, result);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-INITIALIZER-PROJECTION", "nullable-empty")]
-    public async Task SelectAsync_PreservesAnEmptyNullableValue()
+    public async Task SelectAsync_PreservesAnEmptyNullableValueAsync()
     {
         Task<Subject> source = Task.FromResult(new Subject());
 
-        int? result = await source.SelectAsync(subject => subject.MemberId);
+        int? result = await source.SelectAsync(subject => subject.MemberId, cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Null(result);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-INITIALIZER-FALLBACK-VALUE", "reference")]
-    public async Task SelectOrFallbackAsync_UsesAReferenceFallbackForAMissingSelection()
+    public async Task SelectOrFallbackAsync_UsesAReferenceFallbackForAMissingSelectionAsync()
     {
         Task<Subject> missing = Task.FromResult(new Subject());
         Task<Subject> present = Task.FromResult(new Subject { Name = "Jane" });
 
-        string fallback = await missing.SelectOrFallbackAsync(subject => subject.Name, "Frank");
-        string selected = await present.SelectOrFallbackAsync(subject => subject.Name, "Frank");
+        string fallback = await missing.SelectOrFallbackAsync(subject => subject.Name, "Frank", cancellationToken: TestContext.Current.CancellationToken);
+        string selected = await present.SelectOrFallbackAsync(subject => subject.Name, "Frank", cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal("Frank", fallback);
         Assert.Equal("Jane", selected);
@@ -67,13 +67,13 @@ public sealed class TaskInitializerExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-INITIALIZER-FALLBACK-VALUE", "nullable-value")]
-    public async Task SelectOrFallbackAsync_UsesAValueFallbackForAnEmptyNullableSelection()
+    public async Task SelectOrFallbackAsync_UsesAValueFallbackForAnEmptyNullableSelectionAsync()
     {
         Task<Subject> missing = Task.FromResult(new Subject());
         Task<Subject> present = Task.FromResult(new Subject { MemberId = 19 });
 
-        int fallback = await missing.SelectOrFallbackAsync(subject => subject.MemberId, 27);
-        int selected = await present.SelectOrFallbackAsync(subject => subject.MemberId, 27);
+        int fallback = await missing.SelectOrFallbackAsync(subject => subject.MemberId, 27, cancellationToken: TestContext.Current.CancellationToken);
+        int selected = await present.SelectOrFallbackAsync(subject => subject.MemberId, 27, cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal(27, fallback);
         Assert.Equal(19, selected);
@@ -81,18 +81,16 @@ public sealed class TaskInitializerExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-INITIALIZER-FALLBACK-FACTORY", "reference")]
-    public async Task SelectOrFallbackAsync_InvokesAReferenceFallbackFactoryWhenNeeded()
+    public async Task SelectOrFallbackAsync_InvokesAReferenceFallbackFactoryWhenNeededAsync()
     {
         Task<Subject> source = Task.FromResult(new Subject());
         var invocations = 0;
 
-        string result = await source.SelectOrFallbackAsync(
-            subject => subject.Name,
-            () =>
+        string result = await source.SelectOrFallbackAsync(subject => subject.Name, () =>
             {
                 invocations++;
                 return "Frank";
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal("Frank", result);
         Assert.Equal(1, invocations);
@@ -100,18 +98,16 @@ public sealed class TaskInitializerExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-INITIALIZER-FALLBACK-FACTORY", "nullable-value")]
-    public async Task SelectOrFallbackAsync_InvokesAValueFallbackFactoryWhenNeeded()
+    public async Task SelectOrFallbackAsync_InvokesAValueFallbackFactoryWhenNeededAsync()
     {
         Task<Subject> source = Task.FromResult(new Subject());
         var invocations = 0;
 
-        int result = await source.SelectOrFallbackAsync(
-            subject => subject.MemberId,
-            () =>
+        int result = await source.SelectOrFallbackAsync(subject => subject.MemberId, () =>
             {
                 invocations++;
                 return 27;
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal(27, result);
         Assert.Equal(1, invocations);
@@ -119,19 +115,17 @@ public sealed class TaskInitializerExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-INITIALIZER-ASYNC-FALLBACK", "reference")]
-    public async Task SelectOrFallbackAsync_AwaitsAReferenceFallbackTask()
+    public async Task SelectOrFallbackAsync_AwaitsAReferenceFallbackTaskAsync()
     {
         Task<Subject> source = Task.FromResult(new Subject());
         var fallbackStarted = NewCompletionSource();
         var releaseFallback = NewCompletionSource<string>();
 
-        Task<string> result = source.SelectOrFallbackAsync(
-            subject => subject.Name,
-            () =>
+        Task<string> result = source.SelectOrFallbackAsync(subject => subject.Name, () =>
             {
                 fallbackStarted.TrySetResult();
                 return releaseFallback.Task;
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
         await fallbackStarted.Task.WaitAsync(OperationTimeout, TestCancellationToken);
         try
@@ -148,19 +142,17 @@ public sealed class TaskInitializerExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-INITIALIZER-ASYNC-FALLBACK", "nullable-value")]
-    public async Task SelectOrFallbackAsync_AwaitsAValueFallbackTask()
+    public async Task SelectOrFallbackAsync_AwaitsAValueFallbackTaskAsync()
     {
         Task<Subject> source = Task.FromResult(new Subject());
         var fallbackStarted = NewCompletionSource();
         var releaseFallback = NewCompletionSource<int>();
 
-        Task<int> result = source.SelectOrFallbackAsync(
-            subject => subject.MemberId,
-            () =>
+        Task<int> result = source.SelectOrFallbackAsync(subject => subject.MemberId, () =>
             {
                 fallbackStarted.TrySetResult();
                 return releaseFallback.Task;
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
         await fallbackStarted.Task.WaitAsync(OperationTimeout, TestCancellationToken);
         try
@@ -177,7 +169,7 @@ public sealed class TaskInitializerExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-INITIALIZER-FALLBACK", "lazy")]
-    public async Task SelectOrFallbackAsync_DoesNotInvokeFactoriesForAPresentSelection()
+    public async Task SelectOrFallbackAsync_DoesNotInvokeFactoriesForAPresentSelectionAsync()
     {
         Task<Subject> source = Task.FromResult(new Subject { MemberId = 19, Name = "Jane" });
         var referenceSynchronousInvocations = 0;
@@ -185,34 +177,26 @@ public sealed class TaskInitializerExtensionsTests
         var valueSynchronousInvocations = 0;
         var valueAsynchronousInvocations = 0;
 
-        string referenceSynchronous = await source.SelectOrFallbackAsync(
-            subject => subject.Name,
-            () =>
+        string referenceSynchronous = await source.SelectOrFallbackAsync(subject => subject.Name, () =>
             {
                 referenceSynchronousInvocations++;
                 return "fallback";
-            });
-        string referenceAsynchronous = await source.SelectOrFallbackAsync(
-            subject => subject.Name,
-            () =>
+            }, cancellationToken: TestContext.Current.CancellationToken);
+        string referenceAsynchronous = await source.SelectOrFallbackAsync(subject => subject.Name, () =>
             {
                 referenceAsynchronousInvocations++;
                 return Task.FromResult("fallback");
-            });
-        int valueSynchronous = await source.SelectOrFallbackAsync(
-            subject => subject.MemberId,
-            () =>
+            }, cancellationToken: TestContext.Current.CancellationToken);
+        int valueSynchronous = await source.SelectOrFallbackAsync(subject => subject.MemberId, () =>
             {
                 valueSynchronousInvocations++;
                 return 27;
-            });
-        int valueAsynchronous = await source.SelectOrFallbackAsync(
-            subject => subject.MemberId,
-            () =>
+            }, cancellationToken: TestContext.Current.CancellationToken);
+        int valueAsynchronous = await source.SelectOrFallbackAsync(subject => subject.MemberId, () =>
             {
                 valueAsynchronousInvocations++;
                 return Task.FromResult(27);
-            });
+            }, cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal("Jane", referenceSynchronous);
         Assert.Equal("Jane", referenceAsynchronous);
@@ -226,7 +210,7 @@ public sealed class TaskInitializerExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-INITIALIZER-SOURCE", "null-value")]
-    public async Task NullSourceValue_BypassesTheSelectorAndUsesTheDeclaredFallback()
+    public async Task NullSourceValue_BypassesTheSelectorAndUsesTheDeclaredFallbackAsync()
     {
         Task<Subject?> source = Task.FromResult<Subject?>(null);
         var selectorInvocations = 0;
@@ -235,14 +219,12 @@ public sealed class TaskInitializerExtensionsTests
         {
             selectorInvocations++;
             return subject?.Name;
-        });
-        string fallback = await source.SelectOrFallbackAsync(
-            subject =>
+        }, cancellationToken: TestContext.Current.CancellationToken);
+        string fallback = await source.SelectOrFallbackAsync(subject =>
             {
                 selectorInvocations++;
                 return subject?.Name;
-            },
-            "Frank");
+            }, "Frank", cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Null(projected);
         Assert.Equal("Frank", fallback);
@@ -251,7 +233,7 @@ public sealed class TaskInitializerExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-INITIALIZER-SOURCE", "fault-and-cancellation")]
-    public async Task SourceTaskState_IsPropagatedWithoutWrappingOrTokenSubstitution()
+    public async Task SourceTaskState_IsPropagatedWithoutWrappingOrTokenSubstitutionAsync()
     {
         var expected = new ExpectedInitializerException("expected fault");
         Task<Subject> faulted = Task.FromException<Subject>(expected);
@@ -260,10 +242,10 @@ public sealed class TaskInitializerExtensionsTests
         Task<Subject> canceled = Task.FromCanceled<Subject>(cancellation.Token);
 
         ExpectedInitializerException actual = await Assert.ThrowsAsync<ExpectedInitializerException>(() =>
-            faulted.SelectAsync(subject => subject.Name));
+            faulted.SelectAsync(subject => subject.Name, cancellationToken: TestContext.Current.CancellationToken));
         OperationCanceledException canceledException =
             await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
-                canceled.SelectAsync(subject => subject.Name));
+                canceled.SelectAsync(subject => subject.Name, cancellationToken: TestContext.Current.CancellationToken));
 
         Assert.Same(expected, actual);
         Assert.Equal(cancellation.Token, canceledException.CancellationToken);
@@ -271,7 +253,7 @@ public sealed class TaskInitializerExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-INITIALIZER-DELEGATE-STATE", "fault-and-cancellation")]
-    public async Task SelectorAndFallbackState_IsPropagatedWithoutWrappingOrTokenSubstitution()
+    public async Task SelectorAndFallbackState_IsPropagatedWithoutWrappingOrTokenSubstitutionAsync()
     {
         Task<Subject> source = Task.FromResult(new Subject());
         var selectorException = new ExpectedInitializerException("selector fault");
@@ -282,22 +264,16 @@ public sealed class TaskInitializerExtensionsTests
 
         ExpectedInitializerException actualSelectorException =
             await Assert.ThrowsAsync<ExpectedInitializerException>(() =>
-                source.SelectAsync<Subject, string>(_ => throw selectorException));
+                source.SelectAsync<Subject, string>(_ => throw selectorException, cancellationToken: TestContext.Current.CancellationToken));
         ExpectedInitializerException actualSynchronousFallbackException =
             await Assert.ThrowsAsync<ExpectedInitializerException>(() =>
-                source.SelectOrFallbackAsync(
-                    subject => subject.Name,
-                    (Func<string>)(() => throw synchronousFallbackException)));
+                source.SelectOrFallbackAsync(subject => subject.Name, (Func<string>)(() => throw synchronousFallbackException), cancellationToken: TestContext.Current.CancellationToken));
         ExpectedInitializerException actualAsynchronousFallbackException =
             await Assert.ThrowsAsync<ExpectedInitializerException>(() =>
-                source.SelectOrFallbackAsync(
-                    subject => subject.Name,
-                    () => Task.FromException<string>(asynchronousFallbackException)));
+                source.SelectOrFallbackAsync(subject => subject.Name, () => Task.FromException<string>(asynchronousFallbackException), cancellationToken: TestContext.Current.CancellationToken));
         OperationCanceledException actualCancellation =
             await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
-                source.SelectOrFallbackAsync(
-                    subject => subject.Name,
-                    () => Task.FromCanceled<string>(cancellation.Token)));
+                source.SelectOrFallbackAsync(subject => subject.Name, () => Task.FromCanceled<string>(cancellation.Token), cancellationToken: TestContext.Current.CancellationToken));
 
         Assert.Same(selectorException, actualSelectorException);
         Assert.Same(synchronousFallbackException, actualSynchronousFallbackException);
@@ -307,32 +283,32 @@ public sealed class TaskInitializerExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-INITIALIZER-VALIDATION", "invalid-inputs")]
-    public async Task PublicMethods_RejectInvalidInputsAtTheirBoundary()
+    public async Task PublicMethods_RejectInvalidInputsAtTheirBoundaryAsync()
     {
         Task<Subject> source = Task.FromResult(new Subject());
 
         ArgumentNullException nullSource = await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            TaskInitializerExtensions.SelectAsync<Subject, string>(null!, subject => subject.Name));
+            TaskInitializerExtensions.SelectAsync<Subject, string>(null!, subject => subject.Name, TestContext.Current.CancellationToken));
         ArgumentNullException nullSelector = await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            source.SelectAsync<Subject, string>(null!));
+            source.SelectAsync<Subject, string>(null!, cancellationToken: TestContext.Current.CancellationToken));
         ArgumentNullException nullFallback = await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            source.SelectOrFallbackAsync(subject => subject.Name, (string)null!));
+            source.SelectOrFallbackAsync(subject => subject.Name, (string)null!, cancellationToken: TestContext.Current.CancellationToken));
         ArgumentNullException nullSyncFactory = await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            source.SelectOrFallbackAsync(subject => subject.Name, (Func<string>)null!));
+            source.SelectOrFallbackAsync(subject => subject.Name, (Func<string>)null!, cancellationToken: TestContext.Current.CancellationToken));
         ArgumentNullException nullValueSyncFactory = await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            source.SelectOrFallbackAsync(subject => subject.MemberId, (Func<int>)null!));
+            source.SelectOrFallbackAsync(subject => subject.MemberId, (Func<int>)null!, cancellationToken: TestContext.Current.CancellationToken));
         ArgumentNullException nullAsyncFactory = await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            source.SelectOrFallbackAsync(subject => subject.Name, (Func<Task<string>>)null!));
+            source.SelectOrFallbackAsync(subject => subject.Name, (Func<Task<string>>)null!, cancellationToken: TestContext.Current.CancellationToken));
         ArgumentNullException nullValueAsyncFactory = await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            source.SelectOrFallbackAsync(subject => subject.MemberId, (Func<Task<int>>)null!));
+            source.SelectOrFallbackAsync(subject => subject.MemberId, (Func<Task<int>>)null!, cancellationToken: TestContext.Current.CancellationToken));
         InvalidOperationException nullFallbackValue = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            source.SelectOrFallbackAsync(subject => subject.Name, () => (string)null!));
+            source.SelectOrFallbackAsync(subject => subject.Name, () => (string)null!, cancellationToken: TestContext.Current.CancellationToken));
         InvalidOperationException nullFallbackTask = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            source.SelectOrFallbackAsync(subject => subject.Name, () => (Task<string>)null!));
+            source.SelectOrFallbackAsync(subject => subject.Name, () => (Task<string>)null!, cancellationToken: TestContext.Current.CancellationToken));
         InvalidOperationException nullValueFallbackTask = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            source.SelectOrFallbackAsync(subject => subject.MemberId, () => (Task<int>)null!));
+            source.SelectOrFallbackAsync(subject => subject.MemberId, () => (Task<int>)null!, cancellationToken: TestContext.Current.CancellationToken));
         InvalidOperationException nullFallbackTaskResult = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            source.SelectOrFallbackAsync(subject => subject.Name, () => Task.FromResult<string>(null!)));
+            source.SelectOrFallbackAsync(subject => subject.Name, () => Task.FromResult<string>(null!), cancellationToken: TestContext.Current.CancellationToken));
 
         Assert.Equal("source", nullSource.ParamName);
         Assert.Equal("selector", nullSelector.ParamName);

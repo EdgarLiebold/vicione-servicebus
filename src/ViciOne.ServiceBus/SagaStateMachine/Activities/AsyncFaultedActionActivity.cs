@@ -25,28 +25,28 @@ public class AsyncFaultedActionActivity<TSaga, TException> :
         context.CreateScope("then-async-faulted");
     }
 
-    public Task Execute(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
-        return next.Execute(context);
+        return next.ExecuteAsync(context);
     }
 
-    public Task Execute<TData>(BehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
+    public Task ExecuteAsync<TData>(BehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
         where TData : class
     {
-        return next.Execute(context);
+        return next.ExecuteAsync(context);
     }
 
-    public async Task Faulted<T>(BehaviorExceptionContext<TSaga, T> context, IBehavior<TSaga> next)
+    public async Task FaultedAsync<T>(BehaviorExceptionContext<TSaga, T> context, IBehavior<TSaga> next)
         where T : Exception
     {
         var exceptionContext = context as BehaviorExceptionContext<TSaga, TException>;
         if (exceptionContext != null)
             await _asyncAction(exceptionContext);
 
-        await next.Faulted(context);
+        await next.FaultedAsync(context);
     }
 
-    public async Task Faulted<TData, T>(BehaviorExceptionContext<TSaga, TData, T> context, IBehavior<TSaga, TData> next)
+    public async Task FaultedAsync<TData, T>(BehaviorExceptionContext<TSaga, TData, T> context, IBehavior<TSaga, TData> next)
         where TData : class
         where T : Exception
     {
@@ -54,7 +54,7 @@ public class AsyncFaultedActionActivity<TSaga, TException> :
         if (exceptionContext != null)
             await _asyncAction(exceptionContext);
 
-        await next.Faulted(context);
+        await next.FaultedAsync(context);
     }
 }
 
@@ -82,18 +82,18 @@ public class AsyncFaultedActionActivity<TSaga, TMessage, TException> :
         context.CreateScope("then-async-faulted");
     }
 
-    public Task Execute(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
+    public Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
-        return next.Execute(context);
+        return next.ExecuteAsync(context);
     }
 
-    public async Task Faulted<T>(BehaviorExceptionContext<TSaga, TMessage, T> context, IBehavior<TSaga, TMessage> next)
+    public async Task FaultedAsync<T>(BehaviorExceptionContext<TSaga, TMessage, T> context, IBehavior<TSaga, TMessage> next)
         where T : Exception
     {
         var exceptionContext = context as BehaviorExceptionContext<TSaga, TMessage, TException>;
         if (exceptionContext != null)
             await _asyncAction(exceptionContext);
 
-        await next.Faulted(context);
+        await next.FaultedAsync(context);
     }
 }

@@ -55,10 +55,9 @@ public class RabbitMqStreamConfigurator :
         _settings.ConsumeArguments[RabbitMQ.Client.Headers.XStreamOffset] = offset;
     }
 
-    public void FromTimestamp(DateTime timestamp)
+    public void FromTimestamp(DateTimeOffset timestamp)
     {
-        if (timestamp.Kind == DateTimeKind.Local)
-            timestamp = timestamp.ToUniversalTime();
+        timestamp = timestamp.ToUniversalTime();
 
         _settings.ConsumeArguments.SetAmqpTimestamp(RabbitMQ.Client.Headers.XStreamOffset, timestamp);
     }

@@ -19,7 +19,7 @@ public class PipeContextSupervisor<TContext> :
     readonly ISupervisor _activeSupervisor;
     readonly IPipeContextFactory<TContext> _contextFactory;
     readonly object _contextLock = new object();
-    PipeContextHandle<TContext> _context;
+    PipeContextHandle<TContext>? _context;
 
     /// <summary>
     /// Create the cache
@@ -41,7 +41,7 @@ public class PipeContextSupervisor<TContext> :
         }
     }
 
-    public async Task Send(IPipe<TContext> pipe, CancellationToken cancellationToken)
+    public async Task SendAsync(IPipe<TContext> pipe, CancellationToken cancellationToken)
     {
         IActivePipeContextAgent<TContext> activeContext = CreateActiveContext(cancellationToken);
 
@@ -51,7 +51,7 @@ public class PipeContextSupervisor<TContext> :
                 ? activeContext.Context.Result
                 : await activeContext.Context.ConfigureAwait(false);
 
-            await pipe.Send(context).ConfigureAwait(false);
+            await pipe.SendAsync(context).ConfigureAwait(false);
         }
         catch (Exception exception)
         {
@@ -59,7 +59,7 @@ public class PipeContextSupervisor<TContext> :
             // that determines whether the caller may safely retry.
             try
             {
-                await activeContext.Faulted(exception).ConfigureAwait(false);
+                await activeContext.FaultedAsync(exception, cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             catch (Exception faultException)
             {
@@ -75,7 +75,7 @@ public class PipeContextSupervisor<TContext> :
             // successful send could trigger a duplicate; replacing a real failure would hide its cause.
             try
             {
-                await activeContext.Stop(cancellationToken).ConfigureAwait(false);
+                await activeContext.StopAsync(cancellationToken).ConfigureAwait(false);
             }
             catch (Exception stopException)
             {
@@ -105,18 +105,18 @@ public class PipeContextSupervisor<TContext> :
         });
     }
 
-    protected override async Task StopSupervisor(StopSupervisorContext context)
+    protected override async Task StopSupervisorAsync(StopSupervisorContext context)
     {
-        SetCompleted(ActiveAndActualAgentsCompleted(context));
+        SetCompleted(ActiveAndActualAgentsCompletedAsync(context));
 
-        await _activeSupervisor.Stop(context).ConfigureAwait(false);
+        await _activeSupervisor.StopAsync(context).ConfigureAwait(false);
 
-        await Task.WhenAll(context.Agents.Select(x => x.Stop(context))).OrCanceled(context.CancellationToken).ConfigureAwait(false);
+        await Task.WhenAll(context.Agents.Select(x => x.StopAsync(context))).OrCanceledAsync(context.CancellationToken).ConfigureAwait(false);
 
-        await Completed.OrCanceled(context.CancellationToken).ConfigureAwait(false);
+        await Completed.OrCanceledAsync(context.CancellationToken).ConfigureAwait(false);
     }
 
-    async Task ActiveAndActualAgentsCompleted(StopSupervisorContext context)
+    async Task ActiveAndActualAgentsCompletedAsync(StopSupervisorContext context)
     {
         await _activeSupervisor.Completed.ConfigureAwait(false);
 

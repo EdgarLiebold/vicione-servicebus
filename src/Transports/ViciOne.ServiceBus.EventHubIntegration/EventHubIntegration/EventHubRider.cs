@@ -16,7 +16,7 @@ public class EventHubRider :
     readonly IRiderRegistrationContext _context;
     readonly IReceiveEndpointCollection _endpoints;
     readonly IEventHubHostConfiguration _hostConfiguration;
-    Lazy<IEventHubProducerProvider> _producerProvider;
+    Lazy<IEventHubProducerProvider> _producerProvider = null!;
 
     public EventHubRider(IEventHubHostConfiguration hostConfiguration, IBusInstance busInstance, IReceiveEndpointCollection endpoints,
         IRiderRegistrationContext context)
@@ -29,7 +29,7 @@ public class EventHubRider :
         InitializeProducerProvider();
     }
 
-    public IEventHubProducerProvider GetProducerProvider(ConsumeContext consumeContext = default)
+    public IEventHubProducerProvider GetProducerProvider(ConsumeContext? consumeContext = default)
     {
         return consumeContext == null
             ? _producerProvider.Value
@@ -96,11 +96,11 @@ public class EventHubRider :
             SetCompleted(_supervisor.Completed);
         }
 
-        protected override async Task StopAgent(StopContext context)
+        protected override async Task StopAgentAsync(StopContext context)
         {
-            await _endpoints.StopEndpoints(context.CancellationToken).ConfigureAwait(false);
-            await _supervisor.Stop(context).ConfigureAwait(false);
-            await base.StopAgent(context).ConfigureAwait(false);
+            await _endpoints.StopEndpointsAsync(context.CancellationToken).ConfigureAwait(false);
+            await _supervisor.StopAsync(context).ConfigureAwait(false);
+            await base.StopAgentAsync(context).ConfigureAwait(false);
 
             await _onStop().ConfigureAwait(false);
         }
@@ -119,14 +119,14 @@ public class EventHubRider :
             _agent = agent;
         }
 
-        public Task Ready => ReadyOrNot(_endpoints.Select(x => x.Ready));
+        public Task Ready => ReadyOrNotAsync(_endpoints.Select(x => x.Ready));
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            return _agent.Stop("EvenHub stopped", cancellationToken);
+            return _agent.StopAsync("EvenHub stopped", cancellationToken);
         }
 
-        async Task ReadyOrNot(IEnumerable<Task<ReceiveEndpointReady>> endpoints)
+        async Task ReadyOrNotAsync(IEnumerable<Task<ReceiveEndpointReady>> endpoints)
         {
             Task<ReceiveEndpointReady>[] readyTasks = endpoints as Task<ReceiveEndpointReady>[] ?? endpoints.ToArray();
             foreach (Task<ReceiveEndpointReady> ready in readyTasks)

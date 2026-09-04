@@ -16,5 +16,5 @@ public abstract class ServiceBusEntityConfigurator :
 
     public bool? EnableBatchedOperations { get; set; }
 
-    public string UserMetadata { get; set; }
+    public string? UserMetadata { get; set; }
 }

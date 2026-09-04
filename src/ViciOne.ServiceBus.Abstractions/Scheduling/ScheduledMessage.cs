@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus;
 public interface ScheduledMessage
 {
     Guid TokenId { get; }
-    DateTime ScheduledTime { get; }
+    DateTimeOffset DueAt { get; }
     Uri Destination { get; }
 }
 

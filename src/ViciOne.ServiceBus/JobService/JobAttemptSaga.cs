@@ -13,17 +13,14 @@ public class JobAttemptSaga :
 
     public Guid JobId { get; set; }
     public int RetryAttempt { get; set; }
-    public Uri ServiceAddress { get; set; }
-
-    public Uri InstanceAddress { get; set; }
-
-    public DateTime? Started { get; set; }
-    public DateTime? Faulted { get; set; }
+    public Uri ServiceAddress { get; set; } = null!;
+    public Uri InstanceAddress { get; set; } = null!;
+    public DateTimeOffset? Started { get; set; }
+    public DateTimeOffset? Faulted { get; set; }
 
     public Guid? StatusCheckTokenId { get; set; }
 
-    public byte[] RowVersion { get; set; }
-
+    public byte[] RowVersion { get; set; } = null!;
     public int Version { get; set; }
 
     // AttemptId

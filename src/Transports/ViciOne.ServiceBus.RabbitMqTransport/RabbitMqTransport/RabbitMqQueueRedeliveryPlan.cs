@@ -22,7 +22,7 @@ public sealed class RabbitMqQueueRedeliveryPlan
     const string DeadLetterRoutingKeyArgument = "x-dead-letter-routing-key";
 
     readonly IReadOnlyDictionary<long, string> _routingKeys;
-    readonly IReadOnlyDictionary<string, object> _sourceQueueArguments;
+    readonly IReadOnlyDictionary<string, object?> _sourceQueueArguments;
 
     public RabbitMqQueueRedeliveryPlan(RabbitMqReceiveSettings settings, IEnumerable<TimeSpan> intervals)
     {
@@ -39,7 +39,7 @@ public sealed class RabbitMqQueueRedeliveryPlan
         QueueName = settings.QueueName;
         Durable = settings.Durable;
         AutoDelete = settings.AutoDelete;
-        _sourceQueueArguments = new Dictionary<string, object>(settings.QueueArguments, StringComparer.Ordinal);
+        _sourceQueueArguments = new Dictionary<string, object?>(settings.QueueArguments, StringComparer.Ordinal);
 
         if (_sourceQueueArguments.TryGetValue(QueueTypeArgument, out var queueType)
             && string.Equals(Convert.ToString(queueType, CultureInfo.InvariantCulture), "stream", StringComparison.OrdinalIgnoreCase))
@@ -81,7 +81,7 @@ public sealed class RabbitMqQueueRedeliveryPlan
         return routingKey;
     }
 
-    public async Task Configure(ChannelContext context, CancellationToken cancellationToken)
+    public async Task ConfigureAsync(ChannelContext context, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(context);
 
@@ -89,11 +89,11 @@ public sealed class RabbitMqQueueRedeliveryPlan
         var exchange = new RedeliveryExchange(DelayExchangeName, Durable, AutoDelete);
         var returnExchange = new RedeliveryExchange(ReturnExchangeName, Durable, AutoDelete);
 
-        await cache.DeclareExchange(exchange,
-            token => context.ExchangeDeclare(exchange.ExchangeName, ExchangeType.Direct, exchange.Durable, exchange.AutoDelete,
+        await cache.DeclareExchangeAsync(exchange,
+            token => context.ExchangeDeclareAsync(exchange.ExchangeName, ExchangeType.Direct, exchange.Durable, exchange.AutoDelete,
                 exchange.ExchangeArguments, token), cancellationToken).ConfigureAwait(false);
-        await cache.DeclareExchange(returnExchange,
-            token => context.ExchangeDeclare(returnExchange.ExchangeName, ExchangeType.Direct, returnExchange.Durable, returnExchange.AutoDelete,
+        await cache.DeclareExchangeAsync(returnExchange,
+            token => context.ExchangeDeclareAsync(returnExchange.ExchangeName, ExchangeType.Direct, returnExchange.Durable, returnExchange.AutoDelete,
                 returnExchange.ExchangeArguments, token), cancellationToken).ConfigureAwait(false);
 
         var sourceQueue = new RedeliveryQueue(
@@ -101,32 +101,32 @@ public sealed class RabbitMqQueueRedeliveryPlan
             Durable,
             false,
             AutoDelete,
-            new Dictionary<string, object>(_sourceQueueArguments, StringComparer.Ordinal));
+            new Dictionary<string, object?>(_sourceQueueArguments, StringComparer.Ordinal));
         var returnBinding = new ReturnBinding(returnExchange, sourceQueue, QueueName);
-        await cache.Bind(returnBinding,
-            token => context.QueueBind(QueueName, ReturnExchangeName, QueueName, returnBinding.Arguments, token), cancellationToken)
+        await cache.BindAsync(returnBinding,
+            token => context.QueueBindAsync(QueueName, ReturnExchangeName, QueueName, returnBinding.Arguments, token), cancellationToken)
             .ConfigureAwait(false);
 
         foreach (var pair in _routingKeys)
         {
             var queueName = $"{QueueName}.redelivery.{pair.Key}";
             var queue = new RedeliveryQueue(queueName, Durable, false, AutoDelete, CreateDelayQueueArguments(pair.Key));
-            await cache.DeclareQueue(queue, async token =>
+            await cache.DeclareQueueAsync(queue, async token =>
             {
-                await context.QueueDeclare(queue.QueueName, queue.Durable, queue.Exclusive, queue.AutoDelete, queue.QueueArguments, token)
+                await context.QueueDeclareAsync(queue.QueueName, queue.Durable, queue.Exclusive, queue.AutoDelete, queue.QueueArguments, token)
                     .ConfigureAwait(false);
             }, cancellationToken).ConfigureAwait(false);
 
             var binding = new ReturnBinding(exchange, queue, pair.Value);
-            await cache.Bind(binding,
-                token => context.QueueBind(queue.QueueName, DelayExchangeName, pair.Value, binding.Arguments, token), cancellationToken)
+            await cache.BindAsync(binding,
+                token => context.QueueBindAsync(queue.QueueName, DelayExchangeName, pair.Value, binding.Arguments, token), cancellationToken)
                 .ConfigureAwait(false);
         }
     }
 
-    Dictionary<string, object> CreateDelayQueueArguments(long milliseconds)
+    Dictionary<string, object?> CreateDelayQueueArguments(long milliseconds)
     {
-        var arguments = new Dictionary<string, object>(StringComparer.Ordinal)
+        var arguments = new Dictionary<string, object?>(StringComparer.Ordinal)
         {
             [MessageTtlArgument] = checked((int)milliseconds),
             [DeadLetterExchangeArgument] = ReturnExchangeName,
@@ -165,7 +165,7 @@ public sealed class RabbitMqQueueRedeliveryPlan
     sealed record RedeliveryExchange(string ExchangeName, bool Durable, bool AutoDelete) : Exchange
     {
         public string ExchangeType => RabbitMQ.Client.ExchangeType.Direct;
-        public IDictionary<string, object> ExchangeArguments { get; } = new Dictionary<string, object>();
+        public IDictionary<string, object?> ExchangeArguments { get; } = new Dictionary<string, object?>();
     }
 
 
@@ -174,11 +174,11 @@ public sealed class RabbitMqQueueRedeliveryPlan
         bool Durable,
         bool Exclusive,
         bool AutoDelete,
-        IDictionary<string, object> QueueArguments) : Queue;
+        IDictionary<string, object?> QueueArguments) : Queue;
 
 
     sealed record ReturnBinding(Exchange Source, Queue Destination, string RoutingKey) : ExchangeToQueueBinding
     {
-        public IDictionary<string, object> Arguments { get; } = new Dictionary<string, object>();
+        public IDictionary<string, object?> Arguments { get; } = new Dictionary<string, object?>();
     }
 }

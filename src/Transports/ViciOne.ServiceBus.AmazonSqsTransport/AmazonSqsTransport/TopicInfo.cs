@@ -39,9 +39,9 @@ public class TopicInfo :
             await _batchPublisher.Value.DisposeAsync().ConfigureAwait(false);
     }
 
-    public Task Publish(PublishBatchRequestEntry entry, CancellationToken cancellationToken)
+    public Task PublishAsync(PublishBatchRequestEntry entry, CancellationToken cancellationToken)
     {
         Used?.Invoke();
-        return _batchPublisher.Value.Execute(entry, cancellationToken);
+        return _batchPublisher.Value.ExecuteAsync(entry, cancellationToken);
     }
 }

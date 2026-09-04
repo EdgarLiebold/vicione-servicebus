@@ -13,5 +13,6 @@ public interface IDeadLetterTransport
     /// <param name="context"></param>
     /// <param name="reason"></param>
     /// <returns></returns>
-    Task Send(ReceiveContext context, string reason);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task SendAsync(ReceiveContext context, string reason, CancellationToken cancellationToken = default);
 }

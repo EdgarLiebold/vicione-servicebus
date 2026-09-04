@@ -16,11 +16,11 @@ public class CompensateActivityFactoryFilter<TActivity, TLog> :
         _pipe = pipe;
     }
 
-    public async Task Send(CompensateContext<TLog> context, IPipe<CompensateContext<TLog>> next)
+    public async Task SendAsync(CompensateContext<TLog> context, IPipe<CompensateContext<TLog>> next)
     {
-        await _factory.Compensate(context, _pipe).ConfigureAwait(false);
+        await _factory.CompensateAsync(context, _pipe).ConfigureAwait(false);
 
-        await next.Send(context).ConfigureAwait(false);
+        await next.SendAsync(context).ConfigureAwait(false);
     }
 
     public void Probe(ProbeContext context)

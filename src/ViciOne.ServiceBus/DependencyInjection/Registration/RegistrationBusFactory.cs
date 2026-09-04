@@ -44,7 +44,8 @@ public class RegistrationBusFactory :
         public IBus Bus => BusControl;
         public IBusControl BusControl { get; }
 
-        public IHostConfiguration HostConfiguration => default;
+        public IHostConfiguration HostConfiguration => throw new ConfigurationException(
+            "Host configuration is unavailable for the default registration bus instance.");
 
         public void Connect<TRider>(IRiderControl riderControl)
             where TRider : IRider
@@ -59,7 +60,7 @@ public class RegistrationBusFactory :
         }
 
         public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
-            Action<IBusRegistrationContext, IReceiveEndpointConfigurator> configure = null)
+            Action<IBusRegistrationContext, IReceiveEndpointConfigurator>? configure = null)
         {
             return BusControl.ConnectReceiveEndpoint(definition, endpointNameFormatter, configurator =>
             {
@@ -71,7 +72,7 @@ public class RegistrationBusFactory :
         }
 
         public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName,
-            Action<IBusRegistrationContext, IReceiveEndpointConfigurator> configure = null)
+            Action<IBusRegistrationContext, IReceiveEndpointConfigurator>? configure = null)
         {
             return BusControl.ConnectReceiveEndpoint(queueName, configurator =>
             {

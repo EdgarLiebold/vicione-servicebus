@@ -16,6 +16,8 @@ public interface IDurableSendDispatcher<TBus>
     /// <see cref="DurableSendDispatchContext.ConsumerCompletion"/> as process-local pipeline context and return
     /// <see cref="DurableSendCompletionMode.ConsumerCompletion"/>. The completion capability MUST NOT be serialized.
     /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="context">The context for the operation.</param>
     Task<DurableSendDispatchResult> DispatchAsync(
         DurableSendDispatchContext context,
         CancellationToken cancellationToken = default);

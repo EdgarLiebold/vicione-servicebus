@@ -34,25 +34,26 @@ public class InstanceMessageFilter<TConsumer, TMessage> :
     }
 
     [DebuggerNonUserCode]
-    async Task IFilter<ConsumeContext<TMessage>>.Send(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
+    async Task IFilter<ConsumeContext<TMessage>>.SendAsync(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
     {
-        var timer = Stopwatch.StartNew();
+        TimeProvider timeProvider = context.GetTimeProvider();
+        long startedAt = timeProvider.GetTimestamp();
 
         StartedActivity? activity = LogContext.Current?.StartConsumerActivity<TConsumer, TMessage>(context);
         var instrument = LogContext.Current?.StartConsumeInstrument<TConsumer, TMessage>(context);
 
         try
         {
-            await _instancePipe.Send(new ConsumerConsumeContextScope<TConsumer, TMessage>(context, _instance)).ConfigureAwait(false);
+            await _instancePipe.SendAsync(new ConsumerConsumeContextScope<TConsumer, TMessage>(context, _instance)).ConfigureAwait(false);
 
-            await context.NotifyConsumed(timer.Elapsed, TypeCache<TConsumer>.ShortName).ConfigureAwait(false);
+            await context.NotifyConsumedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<TConsumer>.ShortName).ConfigureAwait(false);
 
-            await next.Send(context).ConfigureAwait(false);
+            await next.SendAsync(context).ConfigureAwait(false);
         }
         catch (Exception exception) when ((exception is OperationCanceledException || exception.GetBaseException() is OperationCanceledException)
                                           && !context.CancellationToken.IsCancellationRequested)
         {
-            await context.NotifyFaulted(timer.Elapsed, TypeCache<TConsumer>.ShortName, exception).ConfigureAwait(false);
+            await context.NotifyFaultedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<TConsumer>.ShortName, exception).ConfigureAwait(false);
 
             activity?.AddExceptionEvent(exception);
             instrument?.RecordException(exception);
@@ -61,7 +62,7 @@ public class InstanceMessageFilter<TConsumer, TMessage> :
         }
         catch (Exception exception)
         {
-            await context.NotifyFaulted(timer.Elapsed, TypeCache<TConsumer>.ShortName, exception).ConfigureAwait(false);
+            await context.NotifyFaultedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<TConsumer>.ShortName, exception).ConfigureAwait(false);
 
             activity?.AddExceptionEvent(exception);
             instrument?.RecordException(exception);

@@ -54,7 +54,7 @@ public class EnumTypeConverter<T> :
         return false;
     }
 
-    public bool TryConvert(object input, out T result)
+    public bool TryConvert(object? input, out T result)
     {
         if (input is string text)
             return TryConvert(text, out result);
@@ -65,7 +65,7 @@ public class EnumTypeConverter<T> :
 
             if (Enum.IsDefined(typeof(T), value))
             {
-                result = (T)Enum.Parse(typeof(T), Enum.GetName(typeof(T), value));
+                result = (T)Enum.ToObject(typeof(T), value);
                 return true;
             }
         }
@@ -100,7 +100,7 @@ public class EnumTypeConverter<T> :
         return false;
     }
 
-    public bool TryConvert(string input, out T result)
+    public bool TryConvert(string? input, out T result)
     {
         return Enum.TryParse(input, true, out result);
     }

@@ -19,7 +19,7 @@ public sealed class CircuitBreakerFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CIRCUIT-BREAKER-TRIP", "inclusive-throughput-and-ratio-boundary")]
-    public async Task ExactMinimumThroughputAndFailureRatio_OpenTheCircuitInclusively()
+    public async Task ExactMinimumThroughputAndFailureRatio_OpenTheCircuitInclusivelyAsync()
     {
         var time = new ObservableTimeProvider(StartTime);
         var outcomes = new Queue<Exception?>(
@@ -41,11 +41,11 @@ public sealed class CircuitBreakerFilterTests
             await Task.CompletedTask;
         }, options => options.SetMinimumThroughput(4).SetFailureRatio(0.50));
 
-        await pipe.Send(new TestPipeContext());
-        await pipe.Send(new TestPipeContext());
-        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.Send(new TestPipeContext()));
-        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.Send(new TestPipeContext()));
-        await Assert.ThrowsAsync<CircuitBreakerOpenException>(() => pipe.Send(new TestPipeContext()));
+        await pipe.SendAsync(new TestPipeContext());
+        await pipe.SendAsync(new TestPipeContext());
+        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.SendAsync(new TestPipeContext()));
+        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.SendAsync(new TestPipeContext()));
+        await Assert.ThrowsAsync<CircuitBreakerOpenException>(() => pipe.SendAsync(new TestPipeContext()));
 
         Assert.Equal(4, protectedCallCount);
         Assert.Equal(0, time.TimerCount);
@@ -53,7 +53,7 @@ public sealed class CircuitBreakerFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CIRCUIT-BREAKER-TRIP", "below-minimum-throughput-stays-closed")]
-    public async Task MatchingFailuresBelowMinimumThroughput_KeepTheCircuitClosed()
+    public async Task MatchingFailuresBelowMinimumThroughput_KeepTheCircuitClosedAsync()
     {
         var time = new ObservableTimeProvider(StartTime);
         var fail = true;
@@ -66,17 +66,17 @@ public sealed class CircuitBreakerFilterTests
                 : Task.CompletedTask;
         }, options => options.SetMinimumThroughput(3).SetFailureRatio(1));
 
-        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.Send(new TestPipeContext()));
-        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.Send(new TestPipeContext()));
+        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.SendAsync(new TestPipeContext()));
+        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.SendAsync(new TestPipeContext()));
         fail = false;
-        await pipe.Send(new TestPipeContext());
+        await pipe.SendAsync(new TestPipeContext());
 
         Assert.Equal(3, protectedCallCount);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CIRCUIT-BREAKER-TRIP", "below-failure-ratio-stays-closed")]
-    public async Task MatchingFailuresBelowFailureRatio_KeepTheCircuitClosed()
+    public async Task MatchingFailuresBelowFailureRatio_KeepTheCircuitClosedAsync()
     {
         var time = new ObservableTimeProvider(StartTime);
         var outcomes = new Queue<Exception?>(
@@ -93,16 +93,16 @@ public sealed class CircuitBreakerFilterTests
             return outcome is null ? Task.CompletedTask : Task.FromException(outcome);
         }, options => options.SetMinimumThroughput(2).SetFailureRatio(0.75));
 
-        await pipe.Send(new TestPipeContext());
-        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.Send(new TestPipeContext()));
-        await pipe.Send(new TestPipeContext());
+        await pipe.SendAsync(new TestPipeContext());
+        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.SendAsync(new TestPipeContext()));
+        await pipe.SendAsync(new TestPipeContext());
 
         Assert.Equal(3, protectedCallCount);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CIRCUIT-BREAKER-TRIP", "lazy-sampling-window-boundary")]
-    public async Task FirstAdmissionAtSamplingBoundary_StartsAFreshWindowWithoutATimer()
+    public async Task FirstAdmissionAtSamplingBoundary_StartsAFreshWindowWithoutATimerAsync()
     {
         var time = new ObservableTimeProvider(StartTime);
         var protectedCallCount = 0;
@@ -115,11 +115,11 @@ public sealed class CircuitBreakerFilterTests
             .SetFailureRatio(1)
             .SetSamplingDuration(TimeSpan.FromMinutes(1)));
 
-        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.Send(new TestPipeContext()));
+        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.SendAsync(new TestPipeContext()));
         time.Advance(TimeSpan.FromMinutes(1));
-        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.Send(new TestPipeContext()));
-        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.Send(new TestPipeContext()));
-        await Assert.ThrowsAsync<CircuitBreakerOpenException>(() => pipe.Send(new TestPipeContext()));
+        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.SendAsync(new TestPipeContext()));
+        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.SendAsync(new TestPipeContext()));
+        await Assert.ThrowsAsync<CircuitBreakerOpenException>(() => pipe.SendAsync(new TestPipeContext()));
 
         Assert.Equal(3, protectedCallCount);
         Assert.Equal(0, time.TimerCount);
@@ -127,7 +127,7 @@ public sealed class CircuitBreakerFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CIRCUIT-BREAKER-OPEN", "distinct-rejection-and-exact-retry-delay")]
-    public async Task OpenCircuit_RejectsBeforeTheProtectedPipeWithADistinctFailure()
+    public async Task OpenCircuit_RejectsBeforeTheProtectedPipeWithADistinctFailureAsync()
     {
         var time = new ObservableTimeProvider(StartTime);
         var expected = new ExpectedFailureException("resource unavailable");
@@ -138,9 +138,9 @@ public sealed class CircuitBreakerFilterTests
             throw expected;
         });
 
-        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.Send(new TestPipeContext()));
+        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.SendAsync(new TestPipeContext()));
         CircuitBreakerOpenException rejection = await Assert.ThrowsAsync<CircuitBreakerOpenException>(
-            () => pipe.Send(new TestPipeContext()));
+            () => pipe.SendAsync(new TestPipeContext()));
 
         Assert.Equal(1, protectedCallCount);
         Assert.Same(expected, rejection.InnerException);
@@ -149,18 +149,18 @@ public sealed class CircuitBreakerFilterTests
 
         time.Advance(TimeSpan.FromSeconds(1) - TimeSpan.FromTicks(1));
         CircuitBreakerOpenException boundaryRejection = await Assert.ThrowsAsync<CircuitBreakerOpenException>(
-            () => pipe.Send(new TestPipeContext()));
+            () => pipe.SendAsync(new TestPipeContext()));
         Assert.Equal(TimeSpan.FromTicks(1), boundaryRejection.RetryAfter);
         Assert.Equal(1, protectedCallCount);
 
         time.Advance(TimeSpan.FromTicks(1));
-        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.Send(new TestPipeContext()));
+        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.SendAsync(new TestPipeContext()));
         Assert.Equal(2, protectedCallCount);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CIRCUIT-BREAKER-HALF-OPEN", "exactly-one-concurrent-probe")]
-    public async Task HalfOpen_AdmitsExactlyOneProbeAndRejectsEveryConcurrentCompetitor()
+    public async Task HalfOpen_AdmitsExactlyOneProbeAndRejectsEveryConcurrentCompetitorAsync()
     {
         const int contenderCount = 33;
         using var time = new ContendedTimeProvider(StartTime, OperationTimeout, TestCancellationToken);
@@ -185,7 +185,7 @@ public sealed class CircuitBreakerFilterTests
             await releaseProbe.Task.WaitAsync(OperationTimeout, TestCancellationToken);
         });
 
-        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.Send(new TestPipeContext()));
+        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.SendAsync(new TestPipeContext()));
         fail = false;
         time.Advance(TimeSpan.FromSeconds(1));
         time.ArmContention(contenderCount);
@@ -195,7 +195,7 @@ public sealed class CircuitBreakerFilterTests
                 {
                     try
                     {
-                        await pipe.Send(new TestPipeContext());
+                        await pipe.SendAsync(new TestPipeContext());
                         return null;
                     }
                     catch (Exception exception)
@@ -239,14 +239,14 @@ public sealed class CircuitBreakerFilterTests
             Assert.True(rejection.ProbeInProgress);
             Assert.Equal(TimeSpan.Zero, rejection.RetryAfter);
         });
-        await pipe.Send(new TestPipeContext());
+        await pipe.SendAsync(new TestPipeContext());
 
         Assert.Equal(3, protectedCallCount);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CIRCUIT-BREAKER-HALF-OPEN", "classified-failure-escalates-and-success-resets")]
-    public async Task ClassifiedProbeFailure_EscalatesTheBreakDurationAndSuccessResetsIt()
+    public async Task ClassifiedProbeFailure_EscalatesTheBreakDurationAndSuccessResetsItAsync()
     {
         var time = new ObservableTimeProvider(StartTime);
         var outcome = ProbeOutcome.Fail;
@@ -256,27 +256,27 @@ public sealed class CircuitBreakerFilterTests
             _ => Task.CompletedTask,
         }, options => options.SetBreakDurations(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(3)));
 
-        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.Send(new TestPipeContext()));
+        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.SendAsync(new TestPipeContext()));
         time.Advance(TimeSpan.FromSeconds(1));
-        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.Send(new TestPipeContext()));
+        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.SendAsync(new TestPipeContext()));
         CircuitBreakerOpenException escalated = await Assert.ThrowsAsync<CircuitBreakerOpenException>(
-            () => pipe.Send(new TestPipeContext()));
+            () => pipe.SendAsync(new TestPipeContext()));
         Assert.Equal(TimeSpan.FromSeconds(3), escalated.RetryAfter);
 
         outcome = ProbeOutcome.Succeed;
         time.Advance(TimeSpan.FromSeconds(3));
-        await pipe.Send(new TestPipeContext());
+        await pipe.SendAsync(new TestPipeContext());
 
         outcome = ProbeOutcome.Fail;
-        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.Send(new TestPipeContext()));
+        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.SendAsync(new TestPipeContext()));
         CircuitBreakerOpenException reset = await Assert.ThrowsAsync<CircuitBreakerOpenException>(
-            () => pipe.Send(new TestPipeContext()));
+            () => pipe.SendAsync(new TestPipeContext()));
         Assert.Equal(TimeSpan.FromSeconds(1), reset.RetryAfter);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CIRCUIT-BREAKER-HALF-OPEN", "caller-cancellation-releases-probe")]
-    public async Task CallerCancellation_ReleasesTheProbeWithoutClosingOrReopening()
+    public async Task CallerCancellation_ReleasesTheProbeWithoutClosingOrReopeningAsync()
     {
         var time = new ObservableTimeProvider(StartTime);
         var recoveryEntered = NewSignal();
@@ -301,22 +301,22 @@ public sealed class CircuitBreakerFilterTests
             }
         });
 
-        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.Send(new TestPipeContext()));
+        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.SendAsync(new TestPipeContext()));
         time.Advance(TimeSpan.FromSeconds(1));
         using var cancellation = new CancellationTokenSource();
         cancellation.Cancel();
         outcome = ProbeOutcome.Cancel;
         OperationCanceledException canceled = await Assert.ThrowsAsync<OperationCanceledException>(
-            () => pipe.Send(new TestPipeContext(cancellation.Token)));
+            () => pipe.SendAsync(new TestPipeContext(cancellation.Token)));
         Assert.Equal(CancellationToken.None, canceled.CancellationToken);
 
         outcome = ProbeOutcome.HoldRecovery;
-        Task recovery = pipe.Send(new TestPipeContext());
+        Task recovery = pipe.SendAsync(new TestPipeContext());
         try
         {
             await recoveryEntered.Task.WaitAsync(OperationTimeout, TestCancellationToken);
             CircuitBreakerOpenException competitor = await Assert.ThrowsAsync<CircuitBreakerOpenException>(
-                () => pipe.Send(new TestPipeContext()));
+                () => pipe.SendAsync(new TestPipeContext()));
             Assert.True(competitor.ProbeInProgress);
             Assert.Equal(1, recoveryCallCount);
         }
@@ -327,26 +327,26 @@ public sealed class CircuitBreakerFilterTests
         }
 
         outcome = ProbeOutcome.Succeed;
-        await pipe.Send(new TestPipeContext());
+        await pipe.SendAsync(new TestPipeContext());
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CIRCUIT-BREAKER-HALF-OPEN", "dependency-cancellation-reopens")]
-    public async Task DependencyCancellation_IsAClassifiedProbeFailureAndReopensTheCircuit()
+    public async Task DependencyCancellation_IsAClassifiedProbeFailureAndReopensTheCircuitAsync()
     {
         var time = new ObservableTimeProvider(StartTime);
         Exception outcome = new ExpectedFailureException("initial trip");
         IPipe<TestPipeContext> pipe = CreatePipe(time, _ => Task.FromException(outcome));
 
-        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.Send(new TestPipeContext()));
+        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.SendAsync(new TestPipeContext()));
         time.Advance(TimeSpan.FromSeconds(1));
         using var dependencyCancellation = new CancellationTokenSource();
         dependencyCancellation.Cancel();
         outcome = new OperationCanceledException("dependency timeout", dependencyCancellation.Token);
-        await Assert.ThrowsAsync<OperationCanceledException>(() => pipe.Send(new TestPipeContext()));
+        await Assert.ThrowsAsync<OperationCanceledException>(() => pipe.SendAsync(new TestPipeContext()));
 
         CircuitBreakerOpenException rejection = await Assert.ThrowsAsync<CircuitBreakerOpenException>(
-            () => pipe.Send(new TestPipeContext()));
+            () => pipe.SendAsync(new TestPipeContext()));
         Assert.Same(outcome, rejection.InnerException);
         Assert.Equal(TimeSpan.FromSeconds(1), rejection.RetryAfter);
         Assert.False(rejection.ProbeInProgress);
@@ -354,30 +354,30 @@ public sealed class CircuitBreakerFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CIRCUIT-BREAKER-HALF-OPEN", "matching-but-not-canceled-caller-token-reopens")]
-    public async Task MatchingButNotCanceledContextToken_IsAClassifiedDependencyFailure()
+    public async Task MatchingButNotCanceledContextToken_IsAClassifiedDependencyFailureAsync()
     {
         var time = new ObservableTimeProvider(StartTime);
         using var callerCancellation = new CancellationTokenSource();
         Exception outcome = new ExpectedFailureException("initial trip");
         IPipe<TestPipeContext> pipe = CreatePipe(time, _ => Task.FromException(outcome));
 
-        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.Send(new TestPipeContext()));
+        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.SendAsync(new TestPipeContext()));
         time.Advance(TimeSpan.FromSeconds(1));
         outcome = new OperationCanceledException("dependency used the context token", callerCancellation.Token);
         OperationCanceledException observed = await Assert.ThrowsAsync<OperationCanceledException>(
-            () => pipe.Send(new TestPipeContext(callerCancellation.Token)));
+            () => pipe.SendAsync(new TestPipeContext(callerCancellation.Token)));
 
         Assert.False(callerCancellation.IsCancellationRequested);
         Assert.Same(outcome, observed);
         CircuitBreakerOpenException rejection = await Assert.ThrowsAsync<CircuitBreakerOpenException>(
-            () => pipe.Send(new TestPipeContext()));
+            () => pipe.SendAsync(new TestPipeContext()));
         Assert.Same(outcome, rejection.InnerException);
         Assert.False(rejection.ProbeInProgress);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CIRCUIT-BREAKER-HALF-OPEN", "unclassified-failure-releases-probe")]
-    public async Task FailureOutsideTheConfiguredFilter_ReleasesTheProbeWithoutClaimingRecovery()
+    public async Task FailureOutsideTheConfiguredFilter_ReleasesTheProbeWithoutClaimingRecoveryAsync()
     {
         var time = new ObservableTimeProvider(StartTime);
         var recoveryEntered = NewSignal();
@@ -403,20 +403,20 @@ public sealed class CircuitBreakerFilterTests
             }
         }, options => options.SetExceptionFilter(filter => filter.Handle<ExpectedFailureException>()));
 
-        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.Send(new TestPipeContext()));
+        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.SendAsync(new TestPipeContext()));
         time.Advance(TimeSpan.FromSeconds(1));
         outcome = ProbeOutcome.Unclassified;
         UnclassifiedFailureException observed = await Assert.ThrowsAsync<UnclassifiedFailureException>(
-            () => pipe.Send(new TestPipeContext()));
+            () => pipe.SendAsync(new TestPipeContext()));
         Assert.Same(unclassified, observed);
 
         outcome = ProbeOutcome.HoldRecovery;
-        Task recovery = pipe.Send(new TestPipeContext());
+        Task recovery = pipe.SendAsync(new TestPipeContext());
         try
         {
             await recoveryEntered.Task.WaitAsync(OperationTimeout, TestCancellationToken);
             CircuitBreakerOpenException competitor = await Assert.ThrowsAsync<CircuitBreakerOpenException>(
-                () => pipe.Send(new TestPipeContext()));
+                () => pipe.SendAsync(new TestPipeContext()));
             Assert.True(competitor.ProbeInProgress);
             Assert.Equal(1, recoveryCallCount);
         }
@@ -427,12 +427,12 @@ public sealed class CircuitBreakerFilterTests
         }
 
         outcome = ProbeOutcome.Succeed;
-        await pipe.Send(new TestPipeContext());
+        await pipe.SendAsync(new TestPipeContext());
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CIRCUIT-BREAKER-HALF-OPEN", "classifier-failure-releases-probe")]
-    public async Task ExceptionClassifierFailure_ReleasesTheProbeAndPropagatesTheExactFailure()
+    public async Task ExceptionClassifierFailure_ReleasesTheProbeAndPropagatesTheExactFailureAsync()
     {
         var time = new ObservableTimeProvider(StartTime);
         var classifierCalls = 0;
@@ -454,15 +454,15 @@ public sealed class CircuitBreakerFilterTests
                 throw classifierFailure;
             })));
 
-        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.Send(new TestPipeContext()));
+        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.SendAsync(new TestPipeContext()));
         time.Advance(TimeSpan.FromSeconds(1));
         ClassifierFailureException observed = await Assert.ThrowsAsync<ClassifierFailureException>(
-            () => pipe.Send(new TestPipeContext()));
+            () => pipe.SendAsync(new TestPipeContext()));
         Assert.Same(classifierFailure, observed);
 
         succeed = true;
-        await pipe.Send(new TestPipeContext());
-        await pipe.Send(new TestPipeContext());
+        await pipe.SendAsync(new TestPipeContext());
+        await pipe.SendAsync(new TestPipeContext());
 
         Assert.Equal(4, protectedCalls);
         Assert.Equal(2, classifierCalls);
@@ -470,7 +470,7 @@ public sealed class CircuitBreakerFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MIDDLEWARE-COMPOSITION", "retry-breaker-concurrency-and-exclusive-recovery")]
-    public async Task RetryCircuitBreakerAndConcurrencyLimit_ComposeWithoutChangingTheirOwnership()
+    public async Task RetryCircuitBreakerAndConcurrencyLimit_ComposeWithoutChangingTheirOwnershipAsync()
     {
         var time = new ObservableTimeProvider(StartTime);
         var retryObserver = new CountingRetryObserver();
@@ -491,10 +491,10 @@ public sealed class CircuitBreakerFilterTests
             configuration.UseFilter(filter);
         });
 
-        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.Send(new TestPipeContext()));
-        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.Send(new TestPipeContext()));
+        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.SendAsync(new TestPipeContext()));
+        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.SendAsync(new TestPipeContext()));
         int attemptsAtOpen = filter.Attempts;
-        await Assert.ThrowsAsync<CircuitBreakerOpenException>(() => pipe.Send(new TestPipeContext()));
+        await Assert.ThrowsAsync<CircuitBreakerOpenException>(() => pipe.SendAsync(new TestPipeContext()));
 
         Assert.Equal(4, attemptsAtOpen);
         Assert.Equal(attemptsAtOpen, filter.Attempts);
@@ -503,11 +503,11 @@ public sealed class CircuitBreakerFilterTests
 
         filter.Throw = false;
         time.Advance(TimeSpan.FromSeconds(1));
-        await pipe.Send(new TestPipeContext());
+        await pipe.SendAsync(new TestPipeContext());
         int attemptsAfterRecovery = filter.Attempts;
         filter.HoldAtConcurrency(2);
         Task[] concurrent = Enumerable.Range(0, 3)
-            .Select(_ => pipe.Send(new TestPipeContext()))
+            .Select(_ => pipe.SendAsync(new TestPipeContext()))
             .ToArray();
         try
         {
@@ -531,7 +531,7 @@ public sealed class CircuitBreakerFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CIRCUIT-BREAKER-OBSERVABILITY", "otel-low-cardinality-signals")]
-    public async Task StateProbeAndRejection_EmitOnlyLowCardinalityOpenTelemetrySignals()
+    public async Task StateProbeAndRejection_EmitOnlyLowCardinalityOpenTelemetrySignalsAsync()
     {
         var measurements = new ConcurrentQueue<MeasurementRecord>();
         var activities = new ConcurrentQueue<ActivityRecord>();
@@ -574,18 +574,18 @@ public sealed class CircuitBreakerFilterTests
             await releaseRecovery.Task.WaitAsync(OperationTimeout, TestCancellationToken);
         });
 
-        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.Send(new TestPipeContext()));
+        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.SendAsync(new TestPipeContext()));
         CircuitBreakerOpenException openRejection = await Assert.ThrowsAsync<CircuitBreakerOpenException>(
-            () => pipe.Send(new TestPipeContext()));
+            () => pipe.SendAsync(new TestPipeContext()));
         Assert.False(openRejection.ProbeInProgress);
         fail = false;
         time.Advance(TimeSpan.FromSeconds(1));
-        Task recovery = pipe.Send(new TestPipeContext());
+        Task recovery = pipe.SendAsync(new TestPipeContext());
         try
         {
             await recoveryEntered.Task.WaitAsync(OperationTimeout, TestCancellationToken);
             CircuitBreakerOpenException probeRejection = await Assert.ThrowsAsync<CircuitBreakerOpenException>(
-                () => pipe.Send(new TestPipeContext()));
+                () => pipe.SendAsync(new TestPipeContext()));
             Assert.True(probeRejection.ProbeInProgress);
         }
         finally
@@ -626,7 +626,7 @@ public sealed class CircuitBreakerFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CIRCUIT-BREAKER-OBSERVABILITY", "observer-failure-cannot-change-product-semantics")]
-    public async Task ThrowingOpenTelemetryObservers_CannotChangeCircuitStateOrFailures()
+    public async Task ThrowingOpenTelemetryObservers_CannotChangeCircuitStateOrFailuresAsync()
     {
         using (var meterListener = new MeterListener())
         {
@@ -639,7 +639,7 @@ public sealed class CircuitBreakerFilterTests
             meterListener.SetMeasurementEventCallback<long>(static (_, _, _, _) => throw new TelemetryObserverException());
             meterListener.Start();
 
-            await AssertCircuitSemanticsSurviveTelemetryObserver();
+            await AssertCircuitSemanticsSurviveTelemetryObserverAsync();
         }
 
         using var activityListener = new ActivityListener
@@ -655,7 +655,7 @@ public sealed class CircuitBreakerFilterTests
         };
         ActivitySource.AddActivityListener(activityListener);
 
-        await AssertCircuitSemanticsSurviveTelemetryObserver();
+        await AssertCircuitSemanticsSurviveTelemetryObserverAsync();
     }
 
     private static IPipe<TestPipeContext> CreatePipe(
@@ -690,7 +690,7 @@ public sealed class CircuitBreakerFilterTests
     private static string DescribeSignal(string name, IEnumerable<KeyValuePair<string, object?>> tags) =>
         $"{name}|{string.Join(',', tags.OrderBy(tag => tag.Key, StringComparer.Ordinal).Select(tag => $"{tag.Key}={tag.Value}"))}";
 
-    private static async Task AssertCircuitSemanticsSurviveTelemetryObserver()
+    private static async Task AssertCircuitSemanticsSurviveTelemetryObserverAsync()
     {
         var time = new ObservableTimeProvider(StartTime);
         var expected = new ExpectedFailureException("resource unavailable");
@@ -698,16 +698,16 @@ public sealed class CircuitBreakerFilterTests
         IPipe<TestPipeContext> pipe = CreatePipe(time, _ => fail ? Task.FromException(expected) : Task.CompletedTask);
 
         ExpectedFailureException observed = await Assert.ThrowsAsync<ExpectedFailureException>(
-            () => pipe.Send(new TestPipeContext()));
+            () => pipe.SendAsync(new TestPipeContext()));
         Assert.Same(expected, observed);
         CircuitBreakerOpenException rejection = await Assert.ThrowsAsync<CircuitBreakerOpenException>(
-            () => pipe.Send(new TestPipeContext()));
+            () => pipe.SendAsync(new TestPipeContext()));
         Assert.Same(expected, rejection.InnerException);
 
         fail = false;
         time.Advance(TimeSpan.FromSeconds(1));
-        await pipe.Send(new TestPipeContext());
-        await pipe.Send(new TestPipeContext());
+        await pipe.SendAsync(new TestPipeContext());
+        await pipe.SendAsync(new TestPipeContext());
     }
 
     private static TaskCompletionSource NewSignal() =>
@@ -766,7 +766,7 @@ public sealed class CircuitBreakerFilterTests
 
         public void ReleaseHeldCalls() => _releaseHeldCalls.TrySetResult();
 
-        public async Task Send(TestPipeContext context, IPipe<TestPipeContext> next)
+        public async Task SendAsync(TestPipeContext context, IPipe<TestPipeContext> next)
         {
             Interlocked.Increment(ref _attempts);
             if (Throw)
@@ -789,7 +789,7 @@ public sealed class CircuitBreakerFilterTests
                 }
             }
 
-            await next.Send(context);
+            await next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context)
@@ -874,27 +874,27 @@ public sealed class CircuitBreakerFilterTests
 
         public int RetryFaultCount => Volatile.Read(ref _retryFaultCount);
 
-        public Task PostCreate<T>(RetryPolicyContext<T> context)
+        public Task PostCreateAsync<T>(RetryPolicyContext<T> context)
             where T : class, PipeContext => Task.CompletedTask;
 
-        public Task PostFault<T>(RetryContext<T> context)
+        public Task PostFaultAsync<T>(RetryContext<T> context)
             where T : class, PipeContext => Task.CompletedTask;
 
-        public Task PreRetry<T>(RetryContext<T> context)
+        public Task PreRetryAsync<T>(RetryContext<T> context)
             where T : class, PipeContext
         {
             Interlocked.Increment(ref _preRetryCount);
             return Task.CompletedTask;
         }
 
-        public Task RetryFault<T>(RetryContext<T> context)
+        public Task RetryFaultAsync<T>(RetryContext<T> context)
             where T : class, PipeContext
         {
             Interlocked.Increment(ref _retryFaultCount);
             return Task.CompletedTask;
         }
 
-        public Task RetryComplete<T>(RetryContext<T> context)
+        public Task RetryCompleteAsync<T>(RetryContext<T> context)
             where T : class, PipeContext => Task.CompletedTask;
     }
 

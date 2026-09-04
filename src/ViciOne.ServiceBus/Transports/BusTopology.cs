@@ -36,12 +36,12 @@ public abstract class BusTopology :
         return _topologyConfiguration.Message.GetMessageTopology<T>();
     }
 
-    public virtual bool TryGetPublishAddress(Type messageType, out Uri publishAddress)
+    public virtual bool TryGetPublishAddress(Type messageType, [NotNullWhen(true)] out Uri? publishAddress)
     {
         return _topologyConfiguration.Publish.TryGetPublishAddress(messageType, _hostConfiguration.HostAddress, out publishAddress);
     }
 
-    public virtual bool TryGetPublishAddress<T>(out Uri publishAddress)
+    public virtual bool TryGetPublishAddress<T>([NotNullWhen(true)] out Uri? publishAddress)
         where T : class
     {
         return _topologyConfiguration.Publish.GetMessageTopology<T>().TryGetPublishAddress(_hostConfiguration.HostAddress, out publishAddress);

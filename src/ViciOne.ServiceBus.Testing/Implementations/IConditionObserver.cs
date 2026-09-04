@@ -7,5 +7,5 @@ namespace ViciOne.ServiceBus.Testing.Implementations;
 /// </summary>
 public interface IConditionObserver
 {
-    Task ConditionUpdated();
+    Task ConditionUpdatedAsync(CancellationToken cancellationToken = default);
 }

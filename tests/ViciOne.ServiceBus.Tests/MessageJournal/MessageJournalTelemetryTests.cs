@@ -19,7 +19,7 @@ public sealed class MessageJournalTelemetryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-OBSERVABILITY", "exact-low-cardinality-otel-schema")]
-    public async Task StoredFilteredAndFailedWrites_EmitOnlyTheExactLowCardinalitySchema()
+    public async Task StoredFilteredAndFailedWrites_EmitOnlyTheExactLowCardinalitySchemaAsync()
     {
         var measurements = new ConcurrentQueue<MeasurementRecord>();
         var activities = new ConcurrentQueue<ActivityRecord>();
@@ -107,7 +107,7 @@ public sealed class MessageJournalTelemetryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-OBSERVABILITY", "throwing-listener-cannot-change-journal-semantics")]
-    public async Task ThrowingOpenTelemetryListeners_CannotChangeStorageOrEscapeTheWriter()
+    public async Task ThrowingOpenTelemetryListeners_CannotChangeStorageOrEscapeTheWriterAsync()
     {
         var store = new RecordingStore();
         using (var meterListener = new MeterListener())

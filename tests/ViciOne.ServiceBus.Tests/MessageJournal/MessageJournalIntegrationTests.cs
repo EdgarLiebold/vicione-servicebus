@@ -13,7 +13,7 @@ public sealed class MessageJournalIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-ACTIVATION", "default-off-has-no-observer-or-store-work")]
-    public async Task WithoutExplicitConnection_TheJournalPerformsNoWork()
+    public async Task WithoutExplicitConnection_TheJournalPerformsNoWorkAsync()
     {
         TimeSpan timeout = OperationTimeout;
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -21,13 +21,13 @@ public sealed class MessageJournalIntegrationTests
         HandlerTestHarness<JournalMessage> handler = harness.Handler<JournalMessage>();
         var store = new RecordingStore(expectedEntries: 1);
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             var message = new JournalMessage(NewId.NextGuid(), "not-journaled");
 
-            await harness.InputQueueSendEndpoint.Send(message, cancellationToken);
-            await handler.Consumed.SelectAsync(cancellationToken).First();
+            await harness.InputQueueSendEndpoint.SendAsync(message, cancellationToken);
+            await handler.Consumed.SelectAsync(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             Assert.Equal(0, store.AppendAttempts);
             Assert.Empty(store.Entries);
@@ -35,13 +35,13 @@ public sealed class MessageJournalIntegrationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-ACTIVATION", "explicit-outgoing-connection")]
-    public async Task ExplicitOutgoingConnection_RecordsSendAndPublishTerminalEnvelopesExactlyOnce()
+    public async Task ExplicitOutgoingConnection_RecordsSendAndPublishTerminalEnvelopesExactlyOnceAsync()
     {
         TimeSpan timeout = OperationTimeout;
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -49,7 +49,7 @@ public sealed class MessageJournalIntegrationTests
         harness.Handler<JournalMessage>();
         var store = new RecordingStore(expectedEntries: 2);
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             using ConnectHandle journal = harness.Bus.ConnectOutgoingMessageJournal(
@@ -59,8 +59,8 @@ public sealed class MessageJournalIntegrationTests
             var sent = new JournalMessage(NewId.NextGuid(), "sent-value");
             var published = new JournalMessage(NewId.NextGuid(), "published-value");
 
-            await harness.InputQueueSendEndpoint.Send(sent, cancellationToken);
-            await harness.Bus.Publish(published, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(sent, cancellationToken);
+            await harness.Bus.PublishAsync(published, cancellationToken);
             await store.ExpectedEntriesReached.WaitAsync(timeout, cancellationToken);
 
             MessageJournalEntry[] entries = store.Entries;
@@ -74,13 +74,13 @@ public sealed class MessageJournalIntegrationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-OUTCOME", "consume-success-and-fault-are-terminal")]
-    public async Task ConsumeJournal_RecordsTheExactTerminalSuccessAndFaultOutcomes()
+    public async Task ConsumeJournal_RecordsTheExactTerminalSuccessAndFaultOutcomesAsync()
     {
         TimeSpan timeout = OperationTimeout;
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -90,7 +90,7 @@ public sealed class MessageJournalIntegrationTests
         harness.Handler<FaultingMessage>(_ => Task.FromException(expectedFailure));
         var store = new RecordingStore(expectedEntries: 2);
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             using ConnectHandle journal = harness.Bus.ConnectConsumeMessageJournal(
@@ -100,11 +100,11 @@ public sealed class MessageJournalIntegrationTests
             var successful = new SuccessfulMessage(NewId.NextGuid());
             var faulting = new FaultingMessage(NewId.NextGuid());
 
-            await harness.InputQueueSendEndpoint.Send(successful, cancellationToken);
-            await harness.InputQueueSendEndpoint.Send(faulting, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(successful, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(faulting, cancellationToken);
             IPublishedMessage<Fault<FaultingMessage>> publishedFault = await harness.Published
                 .SelectAsync<Fault<FaultingMessage>>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             await store.ExpectedEntriesReached.WaitAsync(timeout, cancellationToken);
 
             MessageJournalEntry[] entries = store.Entries;
@@ -121,13 +121,13 @@ public sealed class MessageJournalIntegrationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-FAILURE-ISOLATION", "store-failure-does-not-change-delivery")]
-    public async Task StoreFailure_DoesNotChangeASuccessfulMessageDelivery()
+    public async Task StoreFailure_DoesNotChangeASuccessfulMessageDeliveryAsync()
     {
         TimeSpan timeout = OperationTimeout;
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -138,7 +138,7 @@ public sealed class MessageJournalIntegrationTests
             failure: new ExpectedStoreException(),
             expectedAttempts: 2);
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             using ConnectHandle journal = harness.Bus.ConnectMessageJournal(
@@ -147,10 +147,10 @@ public sealed class MessageJournalIntegrationTests
                 Options(timeout));
             var message = new JournalMessage(NewId.NextGuid(), "delivered");
 
-            await harness.InputQueueSendEndpoint.Send(message, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(message, cancellationToken);
             IReceivedMessage<JournalMessage> consumed = await handler.Consumed
                 .SelectAsync(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             await store.ExpectedAttemptsReached.WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(message, consumed.Context.Message);
@@ -159,13 +159,13 @@ public sealed class MessageJournalIntegrationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-OUTBOX", "deferred-message-uses-real-envelope-identity")]
-    public async Task InMemoryOutbox_RecordsTheDeferredMessageEnvelopeInsteadOfAnInternalWrapper()
+    public async Task InMemoryOutbox_RecordsTheDeferredMessageEnvelopeInsteadOfAnInternalWrapperAsync()
     {
         TimeSpan timeout = OperationTimeout;
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -174,7 +174,7 @@ public sealed class MessageJournalIntegrationTests
         {
             configurator.UseInMemoryOutbox();
             configurator.Handler<OutboxRequest>(context =>
-                context.Publish(new DeferredMessage(context.Message.CorrelationId, "deferred")));
+                context.Advanced().PublishAsync(new DeferredMessage(context.Message.CorrelationId, "deferred")));
             configurator.Handler<DeferredMessage>(_ => Task.CompletedTask);
         };
         var store = new RecordingStore(expectedEntries: 1);
@@ -187,7 +187,7 @@ public sealed class MessageJournalIntegrationTests
             return ValueTask.FromResult<MessageJournalProjection?>(Project(capture));
         });
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             using ConnectHandle journal = harness.Bus.ConnectOutgoingMessageJournal(
@@ -196,7 +196,7 @@ public sealed class MessageJournalIntegrationTests
                 Options(timeout));
             var request = new OutboxRequest(NewId.NextGuid());
 
-            await harness.InputQueueSendEndpoint.Send(request, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(request, cancellationToken);
             await store.ExpectedEntriesReached.WaitAsync(timeout, cancellationToken);
 
             MessageJournalEntry entry = Assert.Single(store.Entries);
@@ -208,13 +208,13 @@ public sealed class MessageJournalIntegrationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-JOURNAL-ACTIVATION", "disconnect-removes-all-journal-observers")]
-    public async Task ConnectionHandle_DisconnectsEverySelectedJournalObserver()
+    public async Task ConnectionHandle_DisconnectsEverySelectedJournalObserverAsync()
     {
         TimeSpan timeout = OperationTimeout;
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -222,21 +222,21 @@ public sealed class MessageJournalIntegrationTests
         harness.Handler<JournalMessage>();
         var store = new RecordingStore(expectedEntries: 1);
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             ConnectHandle journal = harness.Bus.ConnectOutgoingMessageJournal(
                 store,
                 PassThroughPolicy(),
                 Options(timeout));
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.InputQueueSendEndpoint.SendAsync(
                 new JournalMessage(NewId.NextGuid(), "before"),
                 cancellationToken);
             await store.ExpectedEntriesReached.WaitAsync(timeout, cancellationToken);
 
             journal.Dispose();
             journal.Dispose();
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.InputQueueSendEndpoint.SendAsync(
                 new JournalMessage(NewId.NextGuid(), "after"),
                 cancellationToken);
 
@@ -244,7 +244,7 @@ public sealed class MessageJournalIntegrationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 

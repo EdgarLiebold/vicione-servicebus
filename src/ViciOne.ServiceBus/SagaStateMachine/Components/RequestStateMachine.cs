@@ -12,9 +12,9 @@ namespace ViciOne.ServiceBus.Components;
 public class RequestStateMachine :
     ViciOneServiceBusStateMachine<RequestState>
 {
-    public RequestStateMachine(Action<IMissingInstanceRedeliveryConfigurator> configureMissingInstanceRedelivery = null)
+    public RequestStateMachine(Action<IMissingInstanceRedeliveryConfigurator>? configureMissingInstanceRedelivery = null)
     {
-        IRequestStateMachineMissingInstanceConfigurator missingInstanceConfigurator = configureMissingInstanceRedelivery == null
+        IRequestStateMachineMissingInstanceConfigurator? missingInstanceConfigurator = configureMissingInstanceRedelivery == null
             ? null
             : new RedeliverRequestStateMachineSpecification(configureMissingInstanceRedelivery);
 
@@ -60,12 +60,11 @@ public class RequestStateMachine :
     //
     // ReSharper disable UnassignedGetOnlyAutoProperty
     // ReSharper disable MemberCanBePrivate.Global
-    public State Pending { get; }
+    public State Pending { get; } = null!;
 
-    public Event<RequestStarted> Started { get; }
-    public Event<RequestCompleted> Completed { get; }
-    public Event<RequestFaulted> Faulted { get; }
-
+    public Event<RequestStarted> Started { get; } = null!;
+    public Event<RequestCompleted> Completed { get; } = null!;
+    public Event<RequestFaulted> Faulted { get; } = null!;
     static void InitializeInstance(BehaviorContext<RequestState, RequestStarted> context)
     {
         context.Saga.ConversationId = context.ConversationId;
@@ -74,7 +73,8 @@ public class RequestStateMachine :
         context.Saga.ExpirationTime = context.Message.ExpirationTime;
 
         context.Saga.SagaCorrelationId = context.Message.CorrelationId;
-        context.Saga.SagaAddress = context.SourceAddress;
+        context.Saga.SagaAddress = context.SourceAddress
+            ?? throw new InvalidOperationException("A source address is required when a saga request is started.");
     }
 
 }

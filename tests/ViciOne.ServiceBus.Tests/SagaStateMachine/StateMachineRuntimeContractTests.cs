@@ -9,7 +9,7 @@ public sealed class StateMachineRuntimeContractTests
     [InlineData(StateMachineConstructionStyle.Declarative)]
     [InlineData(StateMachineConstructionStyle.Dynamic)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-RUNTIME", "during-any-data-and-initial-exclusion")]
-    public async Task DuringAny_HandlesBothPayloadShapesAfterInitialAndRejectsInitialExactly(
+    public async Task DuringAny_HandlesBothPayloadShapesAfterInitialAndRejectsInitialExactlyAsync(
         StateMachineConstructionStyle style)
     {
         AnytimeScenario scenario = CreateAnytimeScenario(style);
@@ -17,17 +17,17 @@ public sealed class StateMachineRuntimeContractTests
         var dataInstance = new RuntimeInstance();
         var initialInstance = new RuntimeInstance();
 
-        await StateMachineTestExecution.Raise(scenario.Machine, signalInstance, scenario.Initialize);
-        await StateMachineTestExecution.Raise(scenario.Machine, signalInstance, scenario.Complete);
-        await StateMachineTestExecution.Raise(scenario.Machine, dataInstance, scenario.Initialize);
-        await StateMachineTestExecution.Raise(
+        await StateMachineTestExecution.RaiseAsync(scenario.Machine, signalInstance, scenario.Initialize);
+        await StateMachineTestExecution.RaiseAsync(scenario.Machine, signalInstance, scenario.Complete);
+        await StateMachineTestExecution.RaiseAsync(scenario.Machine, dataInstance, scenario.Initialize);
+        await StateMachineTestExecution.RaiseAsync(
             scenario.Machine,
             dataInstance,
             scenario.CompleteWithData,
             new RuntimeData("exact-payload"));
 
         UnhandledEventException exception = await Assert.ThrowsAsync<UnhandledEventException>(
-            () => StateMachineTestExecution.Raise(scenario.Machine, initialInstance, scenario.Complete));
+            () => StateMachineTestExecution.RaiseAsync(scenario.Machine, initialInstance, scenario.Complete));
 
         Assert.Same(scenario.Machine.Final, signalInstance.CurrentState);
         Assert.Equal(1, signalInstance.SignalCount);
@@ -46,13 +46,13 @@ public sealed class StateMachineRuntimeContractTests
     [InlineData(StateMachineConstructionStyle.Declarative)]
     [InlineData(StateMachineConstructionStyle.Dynamic)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-RUNTIME", "before-enter-any-after-leave-any-payload")]
-    public async Task AllStateHooks_ReceiveTheExactEnteredAndLeftStates(
+    public async Task AllStateHooks_ReceiveTheExactEnteredAndLeftStatesAsync(
         StateMachineConstructionStyle style)
     {
         TransitionHookScenario scenario = CreateTransitionHookScenario(style);
         var instance = new RuntimeInstance();
 
-        await StateMachineTestExecution.Raise(scenario.Machine, instance, scenario.Initialize);
+        await StateMachineTestExecution.RaiseAsync(scenario.Machine, instance, scenario.Initialize);
 
         Assert.Same(scenario.Running, instance.CurrentState);
         Assert.Same(scenario.Running, instance.LastEntered);
@@ -64,13 +64,13 @@ public sealed class StateMachineRuntimeContractTests
     [InlineData(StateMachineConstructionStyle.Declarative)]
     [InlineData(StateMachineConstructionStyle.Dynamic)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-RUNTIME", "nested-raise-same-instance")]
-    public async Task NestedRaise_ExecutesTheSecondEventOnTheSameInstanceExactlyOnce(
+    public async Task NestedRaise_ExecutesTheSecondEventOnTheSameInstanceExactlyOnceAsync(
         StateMachineConstructionStyle style)
     {
         NestedRaiseScenario scenario = CreateNestedRaiseScenario(style);
         var instance = new RuntimeInstance();
 
-        await StateMachineTestExecution.Raise(
+        await StateMachineTestExecution.RaiseAsync(
             scenario.Machine,
             instance,
             scenario.Decide,
@@ -86,7 +86,7 @@ public sealed class StateMachineRuntimeContractTests
     [InlineData(StateMachineConstructionStyle.Declarative)]
     [InlineData(StateMachineConstructionStyle.Dynamic)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-RUNTIME", "ignored-filtered-unhandled-global-policy-matrix")]
-    public async Task UnhandledPolicy_SeparatesIgnoredFilteredUnhandledAndGlobalIgnore(
+    public async Task UnhandledPolicy_SeparatesIgnoredFilteredUnhandledAndGlobalIgnoreAsync(
         StateMachineConstructionStyle style)
     {
         UnhandledScenario ignored = CreateUnhandledScenario(style, UnhandledPolicy.Ignore);
@@ -95,9 +95,9 @@ public sealed class StateMachineRuntimeContractTests
         UnhandledScenario global = CreateUnhandledScenario(style, UnhandledPolicy.GlobalIgnore);
 
         var ignoredInstance = new RuntimeInstance();
-        await StateMachineTestExecution.Raise(ignored.Machine, ignoredInstance, ignored.Start);
-        await StateMachineTestExecution.Raise(ignored.Machine, ignoredInstance, ignored.Start);
-        await StateMachineTestExecution.Raise(ignored.Machine, ignoredInstance, ignored.Charge, new ChargeData(12));
+        await StateMachineTestExecution.RaiseAsync(ignored.Machine, ignoredInstance, ignored.Start);
+        await StateMachineTestExecution.RaiseAsync(ignored.Machine, ignoredInstance, ignored.Start);
+        await StateMachineTestExecution.RaiseAsync(ignored.Machine, ignoredInstance, ignored.Charge, new ChargeData(12));
 
         Assert.Same(ignored.Running, ignoredInstance.CurrentState);
         Assert.Equal(0, ignoredInstance.Volts);
@@ -106,26 +106,26 @@ public sealed class StateMachineRuntimeContractTests
             ignored.Machine.NextEvents(ignored.Running).Select(@event => @event.Name).Order().ToArray());
 
         var filteredInstance = new RuntimeInstance();
-        await StateMachineTestExecution.Raise(filtered.Machine, filteredInstance, filtered.Start);
-        await StateMachineTestExecution.Raise(filtered.Machine, filteredInstance, filtered.Charge, new ChargeData(9));
+        await StateMachineTestExecution.RaiseAsync(filtered.Machine, filteredInstance, filtered.Start);
+        await StateMachineTestExecution.RaiseAsync(filtered.Machine, filteredInstance, filtered.Charge, new ChargeData(9));
         UnhandledEventException filteredFailure = await Assert.ThrowsAsync<UnhandledEventException>(
-            () => StateMachineTestExecution.Raise(filtered.Machine, filteredInstance, filtered.Charge, new ChargeData(12)));
+            () => StateMachineTestExecution.RaiseAsync(filtered.Machine, filteredInstance, filtered.Charge, new ChargeData(12)));
 
         Assert.Contains(filtered.Charge.Name, filteredFailure.Message, StringComparison.Ordinal);
         Assert.Same(filtered.Running, filteredInstance.CurrentState);
         Assert.Equal(0, filteredInstance.Volts);
 
         var strictInstance = new RuntimeInstance();
-        await StateMachineTestExecution.Raise(strict.Machine, strictInstance, strict.Start);
+        await StateMachineTestExecution.RaiseAsync(strict.Machine, strictInstance, strict.Start);
         UnhandledEventException strictFailure = await Assert.ThrowsAsync<UnhandledEventException>(
-            () => StateMachineTestExecution.Raise(strict.Machine, strictInstance, strict.Start));
+            () => StateMachineTestExecution.RaiseAsync(strict.Machine, strictInstance, strict.Start));
 
         Assert.Contains(strict.Start.Name, strictFailure.Message, StringComparison.Ordinal);
         Assert.Same(strict.Running, strictInstance.CurrentState);
 
         var globalInstance = new RuntimeInstance();
-        await StateMachineTestExecution.Raise(global.Machine, globalInstance, global.Start);
-        await StateMachineTestExecution.Raise(global.Machine, globalInstance, global.Start);
+        await StateMachineTestExecution.RaiseAsync(global.Machine, globalInstance, global.Start);
+        await StateMachineTestExecution.RaiseAsync(global.Machine, globalInstance, global.Start);
 
         Assert.Same(global.Running, globalInstance.CurrentState);
         Assert.Empty(globalInstance.Markers);
@@ -135,7 +135,7 @@ public sealed class StateMachineRuntimeContractTests
     [InlineData(StateMachineConstructionStyle.Declarative)]
     [InlineData(StateMachineConstructionStyle.Dynamic)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-RUNTIME", "direct-transition-state-sequence-and-enter-hook")]
-    public async Task DirectTransition_ReportsInitialThenTargetAndRunsTheEnterHook(
+    public async Task DirectTransition_ReportsInitialThenTargetAndRunsTheEnterHookAsync(
         StateMachineConstructionStyle style)
     {
         DirectTransitionScenario scenario = CreateDirectTransitionScenario(style);
@@ -143,7 +143,7 @@ public sealed class StateMachineRuntimeContractTests
         var observer = new StateRecorder();
 
         using (scenario.Machine.ConnectStateObserver(observer))
-            await StateMachineTestExecution.TransitionToState(scenario.Machine, instance, scenario.Running);
+            await StateMachineTestExecution.TransitionToStateAsync(scenario.Machine, instance, scenario.Running);
 
         Assert.Equal(
             new (string? Previous, string Current)[]
@@ -161,13 +161,13 @@ public sealed class StateMachineRuntimeContractTests
     [InlineData(StateMachineConstructionStyle.Declarative)]
     [InlineData(StateMachineConstructionStyle.Dynamic)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-RUNTIME", "enter-hook-observes-prior-mutation-and-transitions")]
-    public async Task EnterHook_ObservesTheCompletedTransitionActivityAndCanTransitionAgain(
+    public async Task EnterHook_ObservesTheCompletedTransitionActivityAndCanTransitionAgainAsync(
         StateMachineConstructionStyle style)
     {
         ChainedEnterScenario scenario = CreateChainedEnterScenario(style);
         var instance = new RuntimeInstance();
 
-        await StateMachineTestExecution.Raise(scenario.Machine, instance, scenario.Start);
+        await StateMachineTestExecution.RaiseAsync(scenario.Machine, instance, scenario.Start);
 
         Assert.Equal(1, instance.SignalCount);
         Assert.Equal(1, instance.OnEnterValue);
@@ -273,7 +273,7 @@ public sealed class StateMachineRuntimeContractTests
                     context.Saga.Markers.Add("outer:true");
                 })
                 .TransitionTo(@true)
-                .Then(context => context.Raise(nested)))
+                .Then(context => context.RaiseAsync(nested)))
             .When(decide, context => !context.Message.Value, behavior => behavior.TransitionTo(@false))
             .DuringAny()
             .When(nested, behavior => behavior.Then(context =>
@@ -310,7 +310,7 @@ public sealed class StateMachineRuntimeContractTests
                 .InstanceState(instance => instance.CurrentState!);
 
             if (policy == UnhandledPolicy.GlobalIgnore)
-                builder.OnUnhandledEvent(context => context.Ignore());
+                builder.OnUnhandledEvent(context => context.IgnoreAsync());
 
             builder.Initially().When(start, behavior => behavior.TransitionTo(running));
 
@@ -498,7 +498,7 @@ public sealed class StateMachineRuntimeContractTests
                         context.Saga.Markers.Add("outer:true");
                     })
                     .TransitionTo(True)
-                    .Then(context => context.Raise(Nested)),
+                    .Then(context => context.RaiseAsync(Nested)),
                 When(Decide, context => !context.Message.Value).TransitionTo(False));
             DuringAny(When(Nested).Then(context =>
             {
@@ -522,7 +522,7 @@ public sealed class StateMachineRuntimeContractTests
         {
             InstanceState(instance => instance.CurrentState!);
             if (policy == UnhandledPolicy.GlobalIgnore)
-                OnUnhandledEvent(context => context.Ignore());
+                OnUnhandledEvent(context => context.IgnoreAsync());
 
             Initially(When(Start).TransitionTo(Running));
 
@@ -581,7 +581,7 @@ public sealed class StateMachineRuntimeContractTests
     {
         public List<StateChange> Changes { get; } = [];
 
-        public Task StateChanged(BehaviorContext<RuntimeInstance> context, State currentState, State previousState)
+        public Task StateChangedAsync(BehaviorContext<RuntimeInstance> context, State currentState, State? previousState)
         {
             Changes.Add(new StateChange(context.Saga, previousState, currentState));
             return Task.CompletedTask;

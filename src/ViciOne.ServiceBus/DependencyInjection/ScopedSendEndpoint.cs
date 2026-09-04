@@ -14,7 +14,7 @@ public class ScopedSendEndpoint :
         _scope = scope;
     }
 
-    protected override IPipe<SendContext<T>> GetPipeProxy<T>(IPipe<SendContext<T>> pipe = default)
+    protected override IPipe<SendContext<T>> GetPipeProxy<T>(IPipe<SendContext<T>>? pipe = default)
     {
         return new ScopedSendPipeAdapter<T>(_scope, pipe);
     }

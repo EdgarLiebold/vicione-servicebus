@@ -10,7 +10,7 @@ public sealed class TransactionContextExtensionsTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-TRANSACTION-SCOPE", "explicit-async-flow-option")]
-    public async Task ExplicitAsyncFlowOption_PreservesTheAmbientTransactionAcrossAwait()
+    public async Task ExplicitAsyncFlowOption_PreservesTheAmbientTransactionAcrossAwaitAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -31,7 +31,7 @@ public sealed class TransactionContextExtensionsTests
             });
         });
 
-        await pipe.Send(new TestPipeContext()).WaitAsync(timeout, cancellationToken);
+        await pipe.SendAsync(new TestPipeContext()).WaitAsync(timeout, cancellationToken);
 
         Assert.NotNull(beforeAwait);
         Assert.Same(beforeAwait, afterAwait);
@@ -39,7 +39,7 @@ public sealed class TransactionContextExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TRANSACTION-SCOPE", "timeout-overload-enables-async-flow")]
-    public async Task TimeoutOverload_PreservesTheAmbientTransactionAcrossAwait()
+    public async Task TimeoutOverload_PreservesTheAmbientTransactionAcrossAwaitAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -58,7 +58,7 @@ public sealed class TransactionContextExtensionsTests
             });
         });
 
-        await pipe.Send(new TestPipeContext()).WaitAsync(timeout, cancellationToken);
+        await pipe.SendAsync(new TestPipeContext()).WaitAsync(timeout, cancellationToken);
 
         Assert.NotNull(beforeAwait);
         Assert.Same(beforeAwait, afterAwait);

@@ -11,12 +11,12 @@ public sealed class ConfigureRabbitMqQueueRedeliveryFilter : IFilter<ChannelCont
         _plan = plan;
     }
 
-    public async Task Send(ChannelContext context, IPipe<ChannelContext> next)
+    public async Task SendAsync(ChannelContext context, IPipe<ChannelContext> next)
     {
         try
         {
-            await _plan.Configure(context, context.CancellationToken).ConfigureAwait(false);
-            await next.Send(context).ConfigureAwait(false);
+            await _plan.ConfigureAsync(context, context.CancellationToken).ConfigureAwait(false);
+            await next.SendAsync(context).ConfigureAwait(false);
         }
         catch
         {

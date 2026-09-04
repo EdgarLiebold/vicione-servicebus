@@ -11,7 +11,7 @@ public sealed class RoutingSlipHostConfigurationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-HOST-CONFIGURATION", "all-execute-and-compensate-pipe-surfaces-run")]
-    public async Task ActivityHostConfiguration_ExecutesEveryConfiguredContextSurfaceWithExactData()
+    public async Task ActivityHostConfiguration_ExecutesEveryConfiguredContextSurfaceWithExactDataAsync()
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -46,7 +46,7 @@ public sealed class RoutingSlipHostConfigurationTests
         using var faulted = new CourierMessageRecorder<RoutingSlipFaulted>(1);
         compensated.Configure(harness);
         faulted.Configure(harness);
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
@@ -55,11 +55,11 @@ public sealed class RoutingSlipHostConfigurationTests
             builder.AddActivity(activity.Name, activity.ExecuteAddress, new CourierArguments("configured-value"));
             builder.AddActivity(failing.Name, failing.ExecuteAddress, new FaultingCourierArguments("terminal"));
 
-            await harness.Bus.Execute(builder.Build(), cancellationToken);
+            await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
             await Task.WhenAll(
-                compensated.Wait(timeout, cancellationToken),
-                faulted.Wait(timeout, cancellationToken));
-            await harness.Stop();
+                compensated.WaitAsync(timeout, cancellationToken),
+                faulted.WaitAsync(timeout, cancellationToken));
+            await harness.StopAsync(TestContext.Current.CancellationToken);
 
             Assert.Equal(6, observed.Count);
             Assert.Contains($"execute-host:{activity.Name}", observed);
@@ -73,13 +73,13 @@ public sealed class RoutingSlipHostConfigurationTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-PARTITION", "shared-partitioner-selects-arguments-and-compensation-log")]
-    public async Task SharedPartitioner_UsesTheActivityArgumentsAndCompensationLogSelectors()
+    public async Task SharedPartitioner_UsesTheActivityArgumentsAndCompensationLogSelectorsAsync()
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -107,7 +107,7 @@ public sealed class RoutingSlipHostConfigurationTests
         using var faulted = new CourierMessageRecorder<RoutingSlipFaulted>(1);
         compensated.Configure(harness);
         faulted.Configure(harness);
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
@@ -116,11 +116,11 @@ public sealed class RoutingSlipHostConfigurationTests
             builder.AddActivity(activity.Name, activity.ExecuteAddress, new CourierArguments("partition-key"));
             builder.AddActivity(failing.Name, failing.ExecuteAddress, new FaultingCourierArguments("terminal"));
 
-            await harness.Bus.Execute(builder.Build(), cancellationToken);
+            await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
             await Task.WhenAll(
-                compensated.Wait(timeout, cancellationToken),
-                faulted.Wait(timeout, cancellationToken));
-            await harness.Stop();
+                compensated.WaitAsync(timeout, cancellationToken),
+                faulted.WaitAsync(timeout, cancellationToken));
+            await harness.StopAsync(TestContext.Current.CancellationToken);
 
             Assert.Equal(["partition-key"], executeKeys);
             Assert.Equal(["partition-key"], compensateKeys);
@@ -129,7 +129,7 @@ public sealed class RoutingSlipHostConfigurationTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 

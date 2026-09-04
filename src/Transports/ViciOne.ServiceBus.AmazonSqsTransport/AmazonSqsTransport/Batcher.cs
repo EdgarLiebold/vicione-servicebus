@@ -29,10 +29,10 @@ public abstract class Batcher<TEntry> :
 
         _channel = Channel.CreateBounded<BatchEntry<TEntry>>(channelOptions);
         _executor = new TaskExecutor(2, _settings.BatchLimit);
-        _batchTask = WaitForBatch();
+        _batchTask = WaitForBatchAsync();
     }
 
-    public async Task Execute(TEntry entry, CancellationToken cancellationToken)
+    public async Task ExecuteAsync(TEntry entry, CancellationToken cancellationToken)
     {
         var batchEntry = new BatchEntry<TEntry>(entry);
 
@@ -50,12 +50,12 @@ public abstract class Batcher<TEntry> :
         await _executor.DisposeAsync().ConfigureAwait(false);
     }
 
-    async Task WaitForBatch()
+    async Task WaitForBatchAsync()
     {
         try
         {
             while (await _channel.Reader.WaitToReadAsync().ConfigureAwait(false))
-                await ReadBatch().ConfigureAwait(false);
+                await ReadBatchAsync().ConfigureAwait(false);
         }
         catch (ChannelClosedException)
         {
@@ -66,7 +66,7 @@ public abstract class Batcher<TEntry> :
         }
     }
 
-    async Task ReadBatch()
+    async Task ReadBatchAsync()
     {
         var batchToken = new CancellationTokenSource(_settings.Timeout);
         var batch = new List<BatchEntry<TEntry>>(_settings.MessageLimit);
@@ -99,7 +99,7 @@ public abstract class Batcher<TEntry> :
             {
             }
 
-            await _executor.EnqueueAsync(() => ExecuteBatch(batch), CancellationToken.None).ConfigureAwait(false);
+            await _executor.EnqueueAsync(() => ExecuteBatchAsync(batch), CancellationToken.None).ConfigureAwait(false);
         }
         catch (OperationCanceledException exception) when (exception.CancellationToken == batchToken.Token)
         {
@@ -117,7 +117,7 @@ public abstract class Batcher<TEntry> :
 
     protected abstract int CalculateEntryLength(TEntry entry, string entryId);
 
-    protected abstract Task SendBatch(IList<BatchEntry<TEntry>> batch);
+    protected abstract Task SendBatchAsync(IList<BatchEntry<TEntry>> batch);
 
     protected void ApplyResponse(
         IList<BatchEntry<TEntry>> batch,
@@ -164,11 +164,11 @@ public abstract class Batcher<TEntry> :
         return entryId;
     }
 
-    async Task ExecuteBatch(IList<BatchEntry<TEntry>> batch)
+    async Task ExecuteBatchAsync(IList<BatchEntry<TEntry>> batch)
     {
         try
         {
-            await SendBatch(batch).ConfigureAwait(false);
+            await SendBatchAsync(batch).ConfigureAwait(false);
         }
         catch (Exception exception)
         {

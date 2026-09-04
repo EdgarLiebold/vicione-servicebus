@@ -11,7 +11,7 @@ public class RescueExceptionSagaConsumeContext<TSaga> :
     where TSaga : class, ISaga
 {
     readonly SagaConsumeContext<TSaga> _context;
-    ExceptionInfo _exceptionInfo;
+    ExceptionInfo _exceptionInfo = null!;
 
     public RescueExceptionSagaConsumeContext(SagaConsumeContext<TSaga> context, Exception exception)
         : base(context)
@@ -22,9 +22,9 @@ public class RescueExceptionSagaConsumeContext<TSaga> :
 
     public TSaga Saga => _context.Saga;
 
-    public Task SetCompleted()
+    public Task SetCompletedAsync(CancellationToken cancellationToken = default)
     {
-        return _context.SetCompleted();
+        return _context.SetCompletedAsync(cancellationToken: cancellationToken);
     }
 
     public bool IsCompleted => _context.IsCompleted;

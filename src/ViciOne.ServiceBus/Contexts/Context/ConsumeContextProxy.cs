@@ -31,12 +31,12 @@ public abstract class ConsumeContextProxy :
     public override Guid? CorrelationId => _context.CorrelationId;
     public override Guid? ConversationId => _context.ConversationId;
     public override Guid? InitiatorId => _context.InitiatorId;
-    public override DateTime? ExpirationTime => _context.ExpirationTime;
-    public override Uri SourceAddress => _context.SourceAddress;
-    public override Uri DestinationAddress => _context.DestinationAddress;
-    public override Uri ResponseAddress => _context.ResponseAddress;
-    public override Uri FaultAddress => _context.FaultAddress;
-    public override DateTime? SentTime => _context.SentTime;
+    public override DateTimeOffset? ExpirationTime => _context.ExpirationTime;
+    public override Uri? SourceAddress => _context.SourceAddress;
+    public override Uri? DestinationAddress => _context.DestinationAddress;
+    public override Uri? ResponseAddress => _context.ResponseAddress;
+    public override Uri? FaultAddress => _context.FaultAddress;
+    public override DateTimeOffset? SentTime => _context.SentTime;
     public override Headers Headers => _context.Headers;
     public override HostInfo Host => _context.Host;
 
@@ -49,9 +49,9 @@ public abstract class ConsumeContextProxy :
         return _context.HasMessageType(messageType);
     }
 
-    public override bool TryGetMessage<T>(out ConsumeContext<T> consumeContext)
+    public override bool TryGetMessage<T>([NotNullWhen(true)] out ConsumeContext<T>? consumeContext)
     {
-        if (_context.TryGetMessage(out ConsumeContext<T> messageContext))
+        if (_context.TryGetMessage(out ConsumeContext<T>? messageContext))
         {
             consumeContext = new MessageConsumeContext<T>(this, messageContext.Message);
             return true;
@@ -82,7 +82,7 @@ public abstract class ConsumeContextProxy :
     /// <param name="payload"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public override bool TryGetPayload<T>([NotNullWhen(true)] out T payload)
+    public override bool TryGetPayload<T>([NotNullWhen(true)] out T? payload)
         where T : class
     {
         if (this is T context)
@@ -123,14 +123,14 @@ public abstract class ConsumeContextProxy :
         return _context.AddOrUpdatePayload(addFactory, updateFactory);
     }
 
-    public override Task NotifyConsumed<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
+    public override Task NotifyConsumedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
     {
-        return _context.NotifyConsumed(context, duration, consumerType);
+        return _context.NotifyConsumedAsync(context, duration, consumerType, cancellationToken: cancellationToken);
     }
 
-    public override Task NotifyFaulted<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
+    public override Task NotifyFaultedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
     {
-        return _context.NotifyFaulted(context, duration, consumerType, exception);
+        return _context.NotifyFaultedAsync(context, duration, consumerType, exception, cancellationToken: cancellationToken);
     }
 }
 
@@ -148,20 +148,20 @@ public class ConsumeContextProxy<TMessage> :
     readonly ConsumeContext<TMessage> _context;
 
     public ConsumeContextProxy(ConsumeContext<TMessage> context)
-        : base(context)
+        : base(context.Advanced())
     {
         _context = context;
     }
 
     public TMessage Message => _context.Message;
 
-    public virtual Task NotifyConsumed(TimeSpan duration, string consumerType)
+    public virtual Task NotifyConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
     {
-        return NotifyConsumed(this, duration, consumerType);
+        return NotifyConsumedAsync(this, duration, consumerType, cancellationToken: cancellationToken);
     }
 
-    public virtual Task NotifyFaulted(TimeSpan duration, string consumerType, Exception exception)
+    public virtual Task NotifyFaultedAsync(TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
     {
-        return NotifyFaulted(this, duration, consumerType, exception);
+        return NotifyFaultedAsync(this, duration, consumerType, exception, cancellationToken: cancellationToken);
     }
 }

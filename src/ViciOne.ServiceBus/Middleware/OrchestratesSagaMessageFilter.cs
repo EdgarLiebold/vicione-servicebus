@@ -20,15 +20,15 @@ public class OrchestratesSagaMessageFilter<TSaga, TMessage> :
         scope.Add("method", $"Consume({TypeCache<TMessage>.ShortName} message)");
     }
 
-    public async Task Send(SagaConsumeContext<TSaga, TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
+    public async Task SendAsync(SagaConsumeContext<TSaga, TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
     {
         StartedActivity? activity = LogContext.Current?.StartSagaActivity(context);
         var instrument = LogContext.Current?.StartSagaInstrument(context);
         try
         {
-            await context.Saga.Consume(context).ConfigureAwait(false);
+            await context.Saga.ConsumeAsync(context).ConfigureAwait(false);
 
-            await next.Send(context).ConfigureAwait(false);
+            await next.SendAsync(context).ConfigureAwait(false);
         }
         catch (Exception ex)
         {

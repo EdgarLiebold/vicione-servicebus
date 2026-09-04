@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
 public static class TimeSpanScheduleExtensions
 {
@@ -16,13 +16,13 @@ public static class TimeSpanScheduleExtensions
     /// <param name="delay">The time at which the message should be delivered to the queue</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> ScheduleSend<T>(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, T message,
+    public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, T message,
         CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.ScheduleSend(destinationAddress, scheduledTime, message, cancellationToken);
+        return scheduler.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, cancellationToken);
     }
 
     /// <summary>
@@ -36,13 +36,13 @@ public static class TimeSpanScheduleExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> ScheduleSend<T>(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, T message,
+    public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, T message,
         IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.ScheduleSend(destinationAddress, scheduledTime, message, pipe, cancellationToken);
+        return scheduler.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -56,13 +56,13 @@ public static class TimeSpanScheduleExtensions
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> ScheduleSend<T>(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, T message,
+    public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, T message,
         Action<SendContext<T>> callback, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.ScheduleSend(destinationAddress, scheduledTime, message, callback.ToPipe(), cancellationToken);
+        return scheduler.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, callback.ToPipe(), cancellationToken);
     }
 
     /// <summary>
@@ -76,13 +76,13 @@ public static class TimeSpanScheduleExtensions
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> ScheduleSend<T>(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, T message,
+    public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, T message,
         Func<SendContext<T>, Task> callback, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.ScheduleSend(destinationAddress, scheduledTime, message, callback.ToPipe(), cancellationToken);
+        return scheduler.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, callback.ToPipe(), cancellationToken);
     }
 
     /// <summary>
@@ -96,13 +96,13 @@ public static class TimeSpanScheduleExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> ScheduleSend<T>(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, T message,
+    public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, T message,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.ScheduleSend(destinationAddress, scheduledTime, message, pipe, cancellationToken);
+        return scheduler.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -116,13 +116,13 @@ public static class TimeSpanScheduleExtensions
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken">The cancellation token</param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> ScheduleSend<T>(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, T message,
+    public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, T message,
         Action<SendContext> callback, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.ScheduleSend(destinationAddress, scheduledTime, message, callback.ToPipe(), cancellationToken);
+        return scheduler.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, callback.ToPipe(), cancellationToken);
     }
 
     /// <summary>
@@ -136,13 +136,13 @@ public static class TimeSpanScheduleExtensions
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken">The cancellation token</param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> ScheduleSend<T>(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, T message,
+    public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, T message,
         Func<SendContext, Task> callback, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.ScheduleSend(destinationAddress, scheduledTime, message, callback.ToPipe(), cancellationToken);
+        return scheduler.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, callback.ToPipe(), cancellationToken);
     }
 
     /// <summary>
@@ -154,12 +154,12 @@ public static class TimeSpanScheduleExtensions
     /// <param name="delay">The time at which the message should be delivered to the queue</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> ScheduleSend(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object message,
+    public static Task<ScheduledMessage> ScheduleSendAsync(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object message,
         CancellationToken cancellationToken = default)
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.ScheduleSend(destinationAddress, scheduledTime, message, cancellationToken);
+        return scheduler.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, cancellationToken);
     }
 
     /// <summary>
@@ -173,12 +173,12 @@ public static class TimeSpanScheduleExtensions
     /// <param name="delay">The time at which the message should be delivered to the queue</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> ScheduleSend(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object message,
+    public static Task<ScheduledMessage> ScheduleSendAsync(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object message,
         Type messageType, CancellationToken cancellationToken = default)
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.ScheduleSend(destinationAddress, scheduledTime, message, messageType, cancellationToken);
+        return scheduler.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, messageType, cancellationToken);
     }
 
     /// <summary>
@@ -191,12 +191,12 @@ public static class TimeSpanScheduleExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> ScheduleSend(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object message,
+    public static Task<ScheduledMessage> ScheduleSendAsync(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object message,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.ScheduleSend(destinationAddress, scheduledTime, message, pipe, cancellationToken);
+        return scheduler.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -209,12 +209,12 @@ public static class TimeSpanScheduleExtensions
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken">The token used to cancel the operation</param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> ScheduleSend(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object message,
+    public static Task<ScheduledMessage> ScheduleSendAsync(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object message,
         Action<SendContext> callback, CancellationToken cancellationToken = default)
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.ScheduleSend(destinationAddress, scheduledTime, message, callback.ToPipe(), cancellationToken);
+        return scheduler.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, callback.ToPipe(), cancellationToken);
     }
 
     /// <summary>
@@ -227,12 +227,12 @@ public static class TimeSpanScheduleExtensions
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken">The token used to cancel the operation</param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> ScheduleSend(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object message,
+    public static Task<ScheduledMessage> ScheduleSendAsync(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object message,
         Func<SendContext, Task> callback, CancellationToken cancellationToken = default)
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.ScheduleSend(destinationAddress, scheduledTime, message, callback.ToPipe(), cancellationToken);
+        return scheduler.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, callback.ToPipe(), cancellationToken);
     }
 
     /// <summary>
@@ -247,12 +247,12 @@ public static class TimeSpanScheduleExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> ScheduleSend(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object message,
+    public static Task<ScheduledMessage> ScheduleSendAsync(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object message,
         Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.ScheduleSend(destinationAddress, scheduledTime, message, messageType, pipe, cancellationToken);
+        return scheduler.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, messageType, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -267,12 +267,12 @@ public static class TimeSpanScheduleExtensions
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> ScheduleSend(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object message,
+    public static Task<ScheduledMessage> ScheduleSendAsync(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object message,
         Type messageType, Action<SendContext> callback, CancellationToken cancellationToken = default)
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.ScheduleSend(destinationAddress, scheduledTime, message, messageType, callback.ToPipe(), cancellationToken);
+        return scheduler.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, messageType, callback.ToPipe(), cancellationToken);
     }
 
     /// <summary>
@@ -287,12 +287,12 @@ public static class TimeSpanScheduleExtensions
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> ScheduleSend(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object message,
+    public static Task<ScheduledMessage> ScheduleSendAsync(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object message,
         Type messageType, Func<SendContext, Task> callback, CancellationToken cancellationToken = default)
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.ScheduleSend(destinationAddress, scheduledTime, message, messageType, callback.ToPipe(), cancellationToken);
+        return scheduler.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, messageType, callback.ToPipe(), cancellationToken);
     }
 
     /// <summary>
@@ -306,13 +306,13 @@ public static class TimeSpanScheduleExtensions
     /// <param name="delay">The time at which the message should be delivered to the queue</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> ScheduleSend<T>(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object values,
+    public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object values,
         CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.ScheduleSend<T>(destinationAddress, scheduledTime, values, cancellationToken);
+        return scheduler.Advanced().ScheduleSendAsync<T>(destinationAddress, dueAt, values, cancellationToken);
     }
 
     /// <summary>
@@ -327,13 +327,13 @@ public static class TimeSpanScheduleExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> ScheduleSend<T>(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object values,
+    public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object values,
         IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.ScheduleSend(destinationAddress, scheduledTime, values, pipe, cancellationToken);
+        return scheduler.Advanced().ScheduleSendAsync(destinationAddress, dueAt, values, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -348,13 +348,13 @@ public static class TimeSpanScheduleExtensions
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> ScheduleSend<T>(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object values,
+    public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object values,
         Action<SendContext<T>> callback, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.ScheduleSend(destinationAddress, scheduledTime, values, callback.ToPipe(), cancellationToken);
+        return scheduler.Advanced().ScheduleSendAsync(destinationAddress, dueAt, values, callback.ToPipe(), cancellationToken);
     }
 
     /// <summary>
@@ -369,13 +369,13 @@ public static class TimeSpanScheduleExtensions
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> ScheduleSend<T>(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object values,
+    public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object values,
         Func<SendContext<T>, Task> callback, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.ScheduleSend(destinationAddress, scheduledTime, values, callback.ToPipe(), cancellationToken);
+        return scheduler.Advanced().ScheduleSendAsync(destinationAddress, dueAt, values, callback.ToPipe(), cancellationToken);
     }
 
     /// <summary>
@@ -390,13 +390,13 @@ public static class TimeSpanScheduleExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> ScheduleSend<T>(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object values,
+    public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object values,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.ScheduleSend<T>(destinationAddress, scheduledTime, values, pipe, cancellationToken);
+        return scheduler.Advanced().ScheduleSendAsync<T>(destinationAddress, dueAt, values, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -411,13 +411,13 @@ public static class TimeSpanScheduleExtensions
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> ScheduleSend<T>(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object values,
+    public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object values,
         Action<SendContext> callback, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.ScheduleSend<T>(destinationAddress, scheduledTime, values, callback.ToPipe(), cancellationToken);
+        return scheduler.Advanced().ScheduleSendAsync<T>(destinationAddress, dueAt, values, callback.ToPipe(), cancellationToken);
     }
 
     /// <summary>
@@ -432,12 +432,12 @@ public static class TimeSpanScheduleExtensions
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> ScheduleSend<T>(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object values,
+    public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this IMessageScheduler scheduler, Uri destinationAddress, TimeSpan delay, object values,
         Func<SendContext, Task> callback, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.ScheduleSend<T>(destinationAddress, scheduledTime, values, callback.ToPipe(), cancellationToken);
+        return scheduler.Advanced().ScheduleSendAsync<T>(destinationAddress, dueAt, values, callback.ToPipe(), cancellationToken);
     }
 }

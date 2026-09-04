@@ -8,18 +8,23 @@ namespace ViciOne.ServiceBus.Initializers.PropertyConverters;
 /// </summary>
 /// <typeparam name="TResult"></typeparam>
 public class TaskPropertyConverter<TResult> :
-    IPropertyConverter<TResult, Task<TResult>>,
-    IPropertyConverter<Task<TResult>, TResult>
+    IPropertyConverter<TResult, Task<TResult?>>,
+    IPropertyConverter<Task<TResult?>, TResult>
 {
-    public Task<Task<TResult>> Convert<TMessage>(InitializeContext<TMessage> context, TResult input)
+    public Task<Task<TResult?>?> ConvertAsync<TMessage>(InitializeContext<TMessage> context, TResult? input,
+        CancellationToken cancellationToken = default)
         where TMessage : class
     {
-        return Task.FromResult(Task.FromResult(input));
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::System.Threading.Tasks.Task<TResult?>?>(cancellationToken); return Task.FromResult<Task<TResult?>?>(Task.FromResult(input));
     }
 
-    Task<TResult> IPropertyConverter<TResult, Task<TResult>>.Convert<T>(InitializeContext<T> context, Task<TResult> input)
+    async Task<TResult?> IPropertyConverter<TResult, Task<TResult?>>.ConvertAsync<T>(InitializeContext<T> context, Task<TResult?>? input,
+        CancellationToken cancellationToken)
     {
-        return input;
+        if (input == null)
+            return default;
+
+        return await input.ConfigureAwait(false);
     }
 }
 
@@ -30,8 +35,8 @@ public class TaskPropertyConverter<TResult> :
 /// <typeparam name="TResult"></typeparam>
 /// <typeparam name="TInput"></typeparam>
 public class TaskPropertyConverter<TResult, TInput> :
-    IPropertyConverter<TResult, Task<TInput>>,
-    IPropertyConverter<Task<TResult>, TInput>
+    IPropertyConverter<TResult, Task<TInput?>>,
+    IPropertyConverter<Task<TResult?>, TInput>
 {
     readonly IPropertyConverter<TResult, TInput> _converter;
 
@@ -40,25 +45,26 @@ public class TaskPropertyConverter<TResult, TInput> :
         _converter = converter;
     }
 
-    public Task<Task<TResult>> Convert<T>(InitializeContext<T> context, TInput input)
+    public Task<Task<TResult?>?> ConvertAsync<T>(InitializeContext<T> context, TInput? input, CancellationToken cancellationToken = default)
         where T : class
     {
-        return Task.FromResult(_converter.Convert(context, input));
+        return Task.FromResult<Task<TResult?>?>(_converter.ConvertAsync(context, input, cancellationToken: cancellationToken));
     }
 
-    Task<TResult> IPropertyConverter<TResult, Task<TInput>>.Convert<T>(InitializeContext<T> context, Task<TInput> input)
+    Task<TResult?> IPropertyConverter<TResult, Task<TInput?>>.ConvertAsync<T>(InitializeContext<T> context, Task<TInput?>? input,
+        CancellationToken cancellationToken)
     {
         if (input == default)
-            return TaskResults.Default<TResult>();
+            return TaskResults.DefaultAsync<TResult>(cancellationToken: cancellationToken);
 
         if (input.Status == TaskStatus.RanToCompletion)
-            return _converter.Convert(context, input.Result);
+            return _converter.ConvertAsync(context, input.Result, cancellationToken: cancellationToken);
 
-        async Task<TResult> ConvertAsync()
+        async Task<TResult?> ConvertAsync()
         {
             var value = await input.ConfigureAwait(false);
 
-            Task<TResult> convertTask = _converter.Convert(context, value);
+            Task<TResult?> convertTask = _converter.ConvertAsync(context, value, cancellationToken: cancellationToken);
             if (convertTask.Status == TaskStatus.RanToCompletion)
                 return convertTask.Result;
 

@@ -12,7 +12,7 @@ public sealed class ReceiveEndpointDependencyTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-ENDPOINT-DEPENDENCY", "dependent-endpoint-waits-then-drains-exactly-once")]
-    public async Task DependentEndpoint_WaitsForReadinessThenConsumesTheQueuedMessageExactlyOnce()
+    public async Task DependentEndpoint_WaitsForReadinessThenConsumesTheQueuedMessageExactlyOnceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -34,15 +34,15 @@ public sealed class ReceiveEndpointDependencyTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Guid correlationId = NewId.NextGuid();
-            await harness.Bus.Publish(new DependentMessage(correlationId), cancellationToken);
+            await harness.Bus.PublishAsync(new DependentMessage(correlationId), cancellationToken);
             IPublishedMessage<DependentMessage> published = await harness.Published
                 .SelectAsync<DependentMessage>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             HealthReport blockedHealth = await provider.GetRequiredService<HealthCheckService>()
                 .CheckHealthAsync(cancellationToken);
 
@@ -52,7 +52,7 @@ public sealed class ReceiveEndpointDependencyTests
 
             dependency.Release();
             Guid consumed = await observation.Consumed.Task.WaitAsync(timeout, cancellationToken);
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
             using var terminal = new CancellationTokenSource();
             terminal.Cancel();
             IReceivedMessage<DependentMessage>[] messages = harness.Consumed
@@ -67,7 +67,7 @@ public sealed class ReceiveEndpointDependencyTests
         finally
         {
             dependency.Release();
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -95,7 +95,7 @@ public sealed class ReceiveEndpointDependencyTests
 
     public sealed class DependentConsumer(DependencyObservation observation) : IConsumer<DependentMessage>
     {
-        public Task Consume(ConsumeContext<DependentMessage> context)
+        public Task ConsumeAsync(ConsumeContext<DependentMessage> context)
         {
             observation.Consumed.TrySetResult(context.Message.CorrelationId);
             return Task.CompletedTask;

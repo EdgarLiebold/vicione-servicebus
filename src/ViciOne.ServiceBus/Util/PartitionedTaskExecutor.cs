@@ -42,7 +42,7 @@ public sealed class PartitionedTaskExecutor<T> :
     {
         lock (_lifecycleLock)
         {
-            _disposeTask ??= DisposePartitions(_partitions
+            _disposeTask ??= DisposePartitionsAsync(_partitions
                 .Where(partition => partition.IsValueCreated)
                 .Select(partition => partition.Value)
                 .ToArray());
@@ -82,7 +82,7 @@ public sealed class PartitionedTaskExecutor<T> :
         }
     }
 
-    static async Task DisposePartitions(TaskExecutor[] partitions)
+    static async Task DisposePartitionsAsync(TaskExecutor[] partitions)
     {
         foreach (TaskExecutor partition in partitions)
             await partition.DisposeAsync().ConfigureAwait(false);

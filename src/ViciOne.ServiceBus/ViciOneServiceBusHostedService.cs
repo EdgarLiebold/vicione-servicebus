@@ -12,7 +12,7 @@ public class ViciOneServiceBusHostedService :
 {
     readonly IBusDepot _depot;
     readonly IOptions<ViciOneServiceBusHostOptions> _options;
-    Task _startTask;
+    Task _startTask = null!;
     bool _stopped;
 
     public ViciOneServiceBusHostedService(IBusDepot depot, IOptions<ViciOneServiceBusHostOptions> options)
@@ -30,10 +30,10 @@ public class ViciOneServiceBusHostedService :
         {
             using var tokenSource = new CancellationTokenSource(_options.Value.StopTimeout.Value);
 
-            await _depot.Stop(tokenSource.Token).ConfigureAwait(false);
+            await _depot.StopAsync(tokenSource.Token).ConfigureAwait(false);
         }
         else
-            await _depot.Stop(CancellationToken.None).ConfigureAwait(false);
+            await _depot.StopAsync(CancellationToken.None).ConfigureAwait(false);
 
         _stopped = true;
     }
@@ -41,8 +41,8 @@ public class ViciOneServiceBusHostedService :
     public Task StartAsync(CancellationToken cancellationToken)
     {
         _startTask = _options.Value.StartTimeout.HasValue
-            ? _depot.Start(_options.Value.StartTimeout.Value, cancellationToken)
-            : _depot.Start(cancellationToken);
+            ? _depot.StartAsync(_options.Value.StartTimeout.Value, cancellationToken)
+            : _depot.StartAsync(cancellationToken);
 
         return _startTask.IsCompleted || _options.Value.WaitUntilStarted
             ? _startTask
@@ -56,8 +56,8 @@ public class ViciOneServiceBusHostedService :
             _stopped = true;
 
             await (_options.Value.StopTimeout.HasValue
-                ? _depot.Stop(_options.Value.StopTimeout.Value, cancellationToken)
-                : _depot.Stop(cancellationToken)).ConfigureAwait(false);
+                ? _depot.StopAsync(_options.Value.StopTimeout.Value, cancellationToken)
+                : _depot.StopAsync(cancellationToken)).ConfigureAwait(false);
         }
     }
 }

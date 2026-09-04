@@ -74,7 +74,7 @@ public class MessageRetryConfigurationObserver :
         configurator.Log(x => x.AddPipeSpecification(specification));
     }
 
-    static RetryConsumeContext<TMessage> Factory<TMessage>(ConsumeContext<TMessage> context, IRetryPolicy retryPolicy, RetryContext retryContext)
+    static RetryConsumeContext<TMessage> Factory<TMessage>(ConsumeContext<TMessage> context, IRetryPolicy retryPolicy, RetryContext? retryContext)
         where TMessage : class
     {
         return new RetryConsumeContext<TMessage>(context, retryPolicy, retryContext);

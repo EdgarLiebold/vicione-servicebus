@@ -6,9 +6,9 @@ namespace ViciOne.ServiceBus;
 
 public interface INotifyJobContext
 {
-    Task NotifyCanceled();
-    Task NotifyStarted();
-    Task NotifyCompleted();
-    Task NotifyFaulted(Exception exception, TimeSpan? delay = default);
-    Task NotifyJobProgress(SetJobProgress progress);
+    Task NotifyCanceledAsync(CancellationToken cancellationToken = default);
+    Task NotifyStartedAsync(CancellationToken cancellationToken = default);
+    Task NotifyCompletedAsync(CancellationToken cancellationToken = default);
+    Task NotifyFaultedAsync(Exception exception, TimeSpan? delay = default, CancellationToken cancellationToken = default);
+    Task NotifyJobProgressAsync(SetJobProgress progress, CancellationToken cancellationToken = default);
 }

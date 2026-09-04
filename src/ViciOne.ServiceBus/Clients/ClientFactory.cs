@@ -98,7 +98,7 @@ public class ClientFactory :
         return new RequestClient<T>(Context, Context.GetRequestEndpoint<T>(), timeout.Or(Context.DefaultTimeout));
     }
 
-    public IRequestClient<T> CreateRequestClient<T>(ConsumeContext consumeContext, RequestTimeout timeout)
+    public IRequestClient<T> CreateRequestClient<T>(ConsumeContext? consumeContext, RequestTimeout timeout)
         where T : class
     {
         if (Context.MessageRoutes.TryGetDestinationAddress<T>(out var destinationAddress))
@@ -115,7 +115,7 @@ public class ClientFactory :
         return new RequestClient<T>(Context, requestSendEndpoint, timeout.Or(Context.DefaultTimeout));
     }
 
-    public IRequestClient<T> CreateRequestClient<T>(ConsumeContext consumeContext, Uri destinationAddress, RequestTimeout timeout)
+    public IRequestClient<T> CreateRequestClient<T>(ConsumeContext? consumeContext, Uri destinationAddress, RequestTimeout timeout)
         where T : class
     {
         return new RequestClient<T>(Context, Context.GetRequestEndpoint<T>(destinationAddress, consumeContext), timeout.Or(Context.DefaultTimeout));

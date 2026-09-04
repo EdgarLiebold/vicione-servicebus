@@ -7,8 +7,8 @@ public class MemoryMessageBody :
     MessageBody
 {
     readonly ReadOnlyMemory<byte> _memory;
-    byte[] _bytes;
-    string _string;
+    byte[] _bytes = null!;
+    string _string = null!;
 
     public MemoryMessageBody(ReadOnlyMemory<byte> memory)
     {

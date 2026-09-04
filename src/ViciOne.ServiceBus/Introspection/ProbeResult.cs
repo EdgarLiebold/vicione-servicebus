@@ -21,7 +21,7 @@ public interface ProbeResult
     /// <summary>
     /// When the probe was initiated through the system
     /// </summary>
-    DateTime StartTimestamp { get; }
+    DateTimeOffset StartTimestamp { get; }
 
     /// <summary>
     /// How long the probe took to execute

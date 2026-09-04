@@ -18,7 +18,7 @@ public sealed class InMemoryScheduledPublishTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-SCHEDULED-PUBLISH", "manual-advance")]
-    public async Task ScheduledPublish_IsDeliveredAtTheExactAdvancedDeadline()
+    public async Task ScheduledPublish_IsDeliveredAtTheExactAdvancedDeadlineAsync()
     {
         TimeSpan operationTimeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -33,8 +33,7 @@ public sealed class InMemoryScheduledPublishTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness()
-            .WaitAsync(operationTimeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(operationTimeout, cancellationToken);
 
         try
         {
@@ -42,9 +41,9 @@ public sealed class InMemoryScheduledPublishTests
             IInMemoryDelayProvider delayProvider = harness.Scope.ServiceProvider.GetRequiredService<IInMemoryDelayProvider>();
             Task<IReceivedMessage<ScheduledMessage>> consumed = harness.Consumed
                 .SelectAsync<ScheduledMessage>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
-            await scheduler.SchedulePublish(
+            await scheduler.SchedulePublishAsync(
                     scheduleDelay,
                     new ScheduledMessage("scheduled"),
                     cancellationToken)
@@ -64,7 +63,7 @@ public sealed class InMemoryScheduledPublishTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None)
+            await harness.StopAsync(CancellationToken.None)
                 .WaitAsync(operationTimeout, CancellationToken.None);
         }
     }
@@ -73,7 +72,7 @@ public sealed class InMemoryScheduledPublishTests
     [RequirementCoverage("REQ-VSB-INMEMORY-SCHEDULED-PUBLISH", "inline-delay-registration")]
     public void DelayedDelivery_RegistersBeforeReturningWithoutAThreadPoolDispatch()
     {
-        MethodInfo deliver = typeof(MessageQueue<,>).GetMethod(nameof(MessageQueue<object, object>.Deliver))
+        MethodInfo deliver = typeof(MessageQueue<,>).GetMethod(nameof(MessageQueue<object, object>.DeliverAsync))
             ?? throw new InvalidOperationException("MessageQueue.Deliver was not found.");
         Type stateMachineDefinition = deliver.GetCustomAttribute<AsyncStateMachineAttribute>()?.StateMachineType
             ?? throw new InvalidOperationException("MessageQueue.Deliver is not an async state machine.");
@@ -88,7 +87,7 @@ public sealed class InMemoryScheduledPublishTests
         MethodBase[] calls = ReadCalledMethods(moveNext).ToArray();
 
         Assert.Contains(calls, method =>
-            method.Name == "DeliverWithDelay"
+            method.Name == "DeliverWithDelayAsync"
             && method.DeclaringType?.IsGenericType == true
             && method.DeclaringType.GetGenericTypeDefinition() == typeof(MessageQueue<,>));
         Assert.DoesNotContain(calls, method =>
@@ -162,6 +161,6 @@ public sealed class InMemoryScheduledPublishTests
 
     private sealed class ScheduledMessageConsumer : IConsumer<ScheduledMessage>
     {
-        public Task Consume(ConsumeContext<ScheduledMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<ScheduledMessage> context) => Task.CompletedTask;
     }
 }

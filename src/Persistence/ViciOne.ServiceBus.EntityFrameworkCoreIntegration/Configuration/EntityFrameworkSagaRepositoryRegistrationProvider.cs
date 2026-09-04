@@ -5,9 +5,9 @@ namespace ViciOne.ServiceBus.Configuration;
 public class EntityFrameworkSagaRepositoryRegistrationProvider :
     ISagaRepositoryRegistrationProvider
 {
-    readonly Action<IEntityFrameworkSagaRepositoryConfigurator> _configure;
+    readonly Action<IEntityFrameworkSagaRepositoryConfigurator>? _configure;
 
-    public EntityFrameworkSagaRepositoryRegistrationProvider(Action<IEntityFrameworkSagaRepositoryConfigurator> configure)
+    public EntityFrameworkSagaRepositoryRegistrationProvider(Action<IEntityFrameworkSagaRepositoryConfigurator>? configure)
     {
         _configure = configure;
     }

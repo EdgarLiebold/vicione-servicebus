@@ -29,10 +29,10 @@ public class SplitFilter<TInput, TSplit> :
     }
 
     [DebuggerNonUserCode]
-    public Task Send(TInput context, IPipe<TInput> next)
+    public Task SendAsync(TInput context, IPipe<TInput> next)
     {
         var mergePipe = new MergePipe<TInput, TSplit>(next, context, _contextProvider);
 
-        return _split.Send(_inputContextProvider(context), mergePipe);
+        return _split.SendAsync(_inputContextProvider(context), mergePipe);
     }
 }

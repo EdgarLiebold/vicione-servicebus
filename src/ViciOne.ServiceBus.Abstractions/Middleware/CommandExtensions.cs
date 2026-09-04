@@ -7,17 +7,17 @@ namespace ViciOne.ServiceBus;
 
 public static class CommandExtensions
 {
-    public static Task SendCommand<T>(this IPipe<CommandContext> pipe, T command, TimeProvider? timeProvider = null)
+    public static Task SendCommandAsync<T>(this IPipe<CommandContext> pipe, T command, TimeProvider? timeProvider = null, CancellationToken cancellationToken = default)
         where T : class
     {
-        if (pipe == null)
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (pipe == null)
             throw new ArgumentNullException(nameof(pipe));
         if (command == null)
             throw new ArgumentNullException(nameof(command));
 
         var context = new SendCommandContext<T>(command, timeProvider ?? TimeProvider.System);
 
-        return pipe.Send(context);
+        return pipe.SendAsync(context);
     }
 
 
@@ -29,11 +29,11 @@ public static class CommandExtensions
         public SendCommandContext(T command, TimeProvider timeProvider)
         {
             Command = command;
-            Timestamp = timeProvider.GetUtcNow().UtcDateTime;
+            Timestamp = timeProvider.GetUtcNow();
             this.SetTimeProvider(timeProvider);
         }
 
-        public DateTime Timestamp { get; }
+        public DateTimeOffset Timestamp { get; }
 
         public T Command { get; }
     }

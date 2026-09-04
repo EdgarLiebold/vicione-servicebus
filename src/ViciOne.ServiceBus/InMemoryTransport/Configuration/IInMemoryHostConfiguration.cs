@@ -23,8 +23,8 @@ public interface IInMemoryHostConfiguration :
     void ApplyEndpointDefinition(IInMemoryReceiveEndpointConfigurator configurator, IEndpointDefinition definition);
 
     IInMemoryReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
-        Action<IInMemoryReceiveEndpointConfigurator> configure = null);
+        Action<IInMemoryReceiveEndpointConfigurator>? configure = null);
 
     IInMemoryReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName, IInMemoryEndpointConfiguration endpointConfiguration,
-        Action<IInMemoryReceiveEndpointConfigurator> configure = null);
+        Action<IInMemoryReceiveEndpointConfigurator>? configure = null);
 }

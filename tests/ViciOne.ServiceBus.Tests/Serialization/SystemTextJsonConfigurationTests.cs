@@ -290,7 +290,7 @@ public sealed class SystemTextJsonRuntimeIsolationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-SYSTEM-TEXT-JSON-ISOLATION", "simultaneous-bus-runtime")]
-    public async Task SimultaneousBuses_KeepTheirOwnPayloadPoliciesForEverySend()
+    public async Task SimultaneousBuses_KeepTheirOwnPayloadPoliciesForEverySendAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -306,11 +306,11 @@ public sealed class SystemTextJsonRuntimeIsolationTests
 
         try
         {
-            await snakeBus.Publish(new RuntimeMessage { MessageId = 11 }, cancellationToken)
+            await snakeBus.PublishAsync(new RuntimeMessage { MessageId = 11 }, cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
-            await kebabBus.Publish(new RuntimeMessage { MessageId = 22 }, cancellationToken)
+            await kebabBus.PublishAsync(new RuntimeMessage { MessageId = 22 }, cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
-            await snakeBus.Publish(new RuntimeMessage { MessageId = 33 }, cancellationToken)
+            await snakeBus.PublishAsync(new RuntimeMessage { MessageId = 33 }, cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
         }
         finally
@@ -327,7 +327,7 @@ public sealed class SystemTextJsonRuntimeIsolationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SYSTEM-TEXT-JSON-ISOLATION", "endpoint-runtime-override")]
-    public async Task ReceiveEndpointOverride_AppliesOnlyToMessagesPublishedFromThatEndpoint()
+    public async Task ReceiveEndpointOverride_AppliesOnlyToMessagesPublishedFromThatEndpointAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -355,7 +355,7 @@ public sealed class SystemTextJsonRuntimeIsolationTests
             {
                 try
                 {
-                    await context.Publish(new EndpointResult { MessageId = 27 }, context.CancellationToken);
+                    await context.Advanced().PublishAsync(new EndpointResult { MessageId = 27 }, context.CancellationToken);
                     handled.TrySetResult();
                 }
                 catch (Exception exception)
@@ -368,7 +368,7 @@ public sealed class SystemTextJsonRuntimeIsolationTests
         var resultObserver = new SerializedBodyObserver<EndpointResult>();
         var busObserver = new SerializedBodyObserver<RuntimeMessage>();
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         using ConnectHandle resultHandle = harness.Bus.ConnectPublishObserver(resultObserver);
         using ConnectHandle busHandle = harness.Bus.ConnectPublishObserver(busObserver);
         JsonSerializerOptions endpointOptions = SystemTextJsonSerializerOptions.CreateDefault();
@@ -378,18 +378,18 @@ public sealed class SystemTextJsonRuntimeIsolationTests
 
         try
         {
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.InputQueueSendEndpoint.SendAsync(
                     new EndpointTrigger(),
                     context => context.Serializer = endpointSerializer,
                     cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
             await handled.Task.WaitAsync(timeout, cancellationToken);
-            await harness.Bus.Publish(new RuntimeMessage { MessageId = 33 }, cancellationToken)
+            await harness.Bus.PublishAsync(new RuntimeMessage { MessageId = 33 }, cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Equal(["message-id"], resultObserver.PayloadPropertyNames);
@@ -450,7 +450,7 @@ public sealed class SystemTextJsonRuntimeIsolationTests
             }
         }
 
-        public Task PrePublish<T>(PublishContext<T> context)
+        public Task PrePublishAsync<T>(PublishContext<T> context)
             where T : class
         {
             if (typeof(T) != typeof(TMessage))
@@ -468,10 +468,10 @@ public sealed class SystemTextJsonRuntimeIsolationTests
             return Task.CompletedTask;
         }
 
-        public Task PostPublish<T>(PublishContext<T> context)
+        public Task PostPublishAsync<T>(PublishContext<T> context)
             where T : class => Task.CompletedTask;
 
-        public Task PublishFault<T>(PublishContext<T> context, Exception exception)
+        public Task PublishFaultAsync<T>(PublishContext<T> context, Exception exception)
             where T : class => Task.CompletedTask;
     }
 }

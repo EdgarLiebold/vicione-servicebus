@@ -44,7 +44,7 @@ public sealed class ConnectableTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONNECTABLE", "stable-async-dispatch-snapshot")]
-    public async Task ForEachAsync_UsesOneStableSnapshotAndAwaitsEveryStartedCallback()
+    public async Task ForEachAsync_UsesOneStableSnapshotAndAwaitsEveryStartedCallbackAsync()
     {
         var first = new Connection("first");
         var second = new Connection("second");
@@ -64,7 +64,7 @@ public sealed class ConnectableTests
                 secondHandle.Disconnect();
 
             return ReferenceEquals(connection, first) ? release.Task : Task.CompletedTask;
-        });
+        }, TestContext.Current.CancellationToken);
 
         Assert.Equal(3, observed.Count);
         Assert.Contains(first, observed);
@@ -86,7 +86,7 @@ public sealed class ConnectableTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONNECTABLE", "complete-async-failure-observation")]
-    public async Task ForEachAsync_InvokesEveryConnectionAndReportsEveryFailureShape()
+    public async Task ForEachAsync_InvokesEveryConnectionAndReportsEveryFailureShapeAsync()
     {
         var synchronousFailure = new InvalidOperationException("synchronous");
         var asynchronousFailure = new ApplicationException("asynchronous");
@@ -113,7 +113,7 @@ public sealed class ConnectableTests
                     "null-task" => null!,
                     _ => Task.CompletedTask,
                 };
-            });
+            }, TestContext.Current.CancellationToken);
 
             await Assert.ThrowsAnyAsync<Exception>(() => dispatch);
 
@@ -159,14 +159,14 @@ public sealed class ConnectableTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONNECTABLE", "required-inputs")]
-    public async Task PublicOperations_RejectEveryMissingRequiredInputBeforeInspectingConnections()
+    public async Task PublicOperations_RejectEveryMissingRequiredInputBeforeInspectingConnectionsAsync()
     {
         var connectable = new Connectable<Connection>();
 
         Assert.Equal("connection", Assert.Throws<ArgumentNullException>(() => connectable.Connect(null!)).ParamName);
         Assert.Equal("callback", Assert.Throws<ArgumentNullException>(() => connectable.ForEach(null!)).ParamName);
         Assert.Equal("callback", Assert.Throws<ArgumentNullException>(() => connectable.All(null!)).ParamName);
-        ArgumentNullException asynchronous = await Assert.ThrowsAsync<ArgumentNullException>(() => connectable.ForEachAsync(null!));
+        ArgumentNullException asynchronous = await Assert.ThrowsAsync<ArgumentNullException>(() => connectable.ForEachAsync(null!, TestContext.Current.CancellationToken));
         Assert.Equal("callback", asynchronous.ParamName);
     }
 

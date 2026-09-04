@@ -25,9 +25,9 @@ public class ConditionExpression :
         _resource = resource ?? throw new ArgumentNullException(nameof(resource));
     }
 
-    public Task ConditionUpdated()
+    public Task ConditionUpdatedAsync(CancellationToken cancellationToken = default)
     {
-        if (TryCheckCondition(out var isMet) && isMet)
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (TryCheckCondition(out var isMet) && isMet)
             _resource.Signal();
         return Task.CompletedTask;
     }

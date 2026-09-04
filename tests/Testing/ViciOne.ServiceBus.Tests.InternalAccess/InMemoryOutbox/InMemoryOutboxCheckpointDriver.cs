@@ -13,7 +13,7 @@ public static class InMemoryOutboxCheckpointDriver
         return methods.CreateCheckpoint();
     }
 
-    public static async Task DiscardActionsCreatedByAttempt(
+    public static async Task DiscardActionsCreatedByAttemptAsync(
         InMemoryOutboxMessageSchedulerContext context,
         Func<Task> attempt)
     {
@@ -22,6 +22,6 @@ public static class InMemoryOutboxCheckpointDriver
 
         InMemoryOutboxMessageSchedulerContext.Checkpoint checkpoint = context.CreateCheckpoint();
         await attempt().ConfigureAwait(false);
-        await context.DiscardSince(checkpoint).ConfigureAwait(false);
+        await context.DiscardSinceAsync(checkpoint).ConfigureAwait(false);
     }
 }

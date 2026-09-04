@@ -30,7 +30,7 @@ public interface IMessageInitializer<TMessage>
     /// <param name="input"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<InitializeContext<TMessage>> Initialize(object input, CancellationToken cancellationToken);
+    Task<InitializeContext<TMessage>> InitializeAsync(object input, CancellationToken cancellationToken);
 
     /// <summary>
     /// Initialize the message, using the input
@@ -38,7 +38,8 @@ public interface IMessageInitializer<TMessage>
     /// <param name="context">An existing initialize message context</param>
     /// <param name="input"></param>
     /// <returns></returns>
-    Task<InitializeContext<TMessage>> Initialize(InitializeContext<TMessage> context, object input);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<InitializeContext<TMessage>> InitializeAsync(InitializeContext<TMessage> context, object input, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Initialize the message using the input and send it to the endpoint.
@@ -47,7 +48,8 @@ public interface IMessageInitializer<TMessage>
     /// <param name="input">The input object</param>
     /// <param name="pipe"></param>
     /// <returns></returns>
-    Task<SendTuple<TMessage>> InitializeMessage(PipeContext context, object input, IPipe<SendContext<TMessage>>? pipe = null);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<SendTuple<TMessage>> InitializeMessageAsync(PipeContext context, object input, IPipe<SendContext<TMessage>>? pipe = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Initialize the message using the input and send it to the endpoint.
@@ -57,7 +59,8 @@ public interface IMessageInitializer<TMessage>
     /// <param name="moreInputs">Additional objects used to initialize the message</param>
     /// <param name="pipe"></param>
     /// <returns></returns>
-    Task<SendTuple<TMessage>> InitializeMessage(PipeContext context, object input, object[] moreInputs, IPipe<SendContext<TMessage>>? pipe = null);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<SendTuple<TMessage>> InitializeMessageAsync(PipeContext context, object input, object?[] moreInputs, IPipe<SendContext<TMessage>>? pipe = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Initialize the message using the input and send it to the endpoint.
@@ -66,5 +69,5 @@ public interface IMessageInitializer<TMessage>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<SendTuple<TMessage>> InitializeMessage(object input, IPipe<SendContext<TMessage>> pipe, CancellationToken cancellationToken);
+    Task<SendTuple<TMessage>> InitializeMessageAsync(object input, IPipe<SendContext<TMessage>> pipe, CancellationToken cancellationToken);
 }

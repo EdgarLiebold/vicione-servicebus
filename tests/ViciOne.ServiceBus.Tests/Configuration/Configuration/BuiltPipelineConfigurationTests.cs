@@ -17,7 +17,7 @@ public sealed class BuiltPipelineConfigurationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUILT-PIPELINE", "complete-configured-filter-and-component-shape")]
-    public async Task StartedBusProbe_ContainsEveryConfiguredFilterComponentPersistenceAndLimit()
+    public async Task StartedBusProbe_ContainsEveryConfiguredFilterComponentPersistenceAndLimitAsync()
     {
         IBusControl bus = Bus.Factory.CreateUsingInMemory(configuration =>
         {
@@ -49,7 +49,7 @@ public sealed class BuiltPipelineConfigurationTests
                 endpoint.UseRateLimit(EndpointRateLimit);
             });
         });
-        JsonNode probe = await StartAndProbe(bus);
+        JsonNode probe = await StartAndProbeAsync(bus);
         IReadOnlyCollection<string> filters = FilterTypes(probe);
 
         Assert.Contains("transform", filters);
@@ -68,7 +68,7 @@ public sealed class BuiltPipelineConfigurationTests
         Assert.Contains(typeof(PipelineConsumer).FullName!, TextOf(probe, "consumer", "type"));
     }
 
-    private static async Task<JsonNode> StartAndProbe(IBusControl bus)
+    private static async Task<JsonNode> StartAndProbeAsync(IBusControl bus)
     {
         TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -160,7 +160,7 @@ public sealed class BuiltPipelineConfigurationTests
 
     private sealed class PipelineConsumer : IConsumer<PipelineMessage>
     {
-        public Task Consume(ConsumeContext<PipelineMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<PipelineMessage> context) => Task.CompletedTask;
     }
 
     private sealed class PipelineSaga : ISaga, InitiatedBy<PipelineMessage>
@@ -172,6 +172,6 @@ public sealed class BuiltPipelineConfigurationTests
 
         public Guid CorrelationId { get; set; }
 
-        public Task Consume(ConsumeContext<PipelineMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<PipelineMessage> context) => Task.CompletedTask;
     }
 }

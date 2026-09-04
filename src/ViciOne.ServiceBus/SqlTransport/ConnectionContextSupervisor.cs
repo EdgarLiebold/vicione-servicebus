@@ -28,10 +28,10 @@ public class ConnectionContextSupervisor :
         return new SqlEndpointAddress(_hostConfiguration.HostAddress, address);
     }
 
-    public Task<ISendTransport> CreatePublishTransport<T>(SqlReceiveEndpointContext context, Uri? publishAddress)
+    public Task<ISendTransport> CreatePublishTransportAsync<T>(SqlReceiveEndpointContext context, Uri? publishAddress, CancellationToken cancellationToken = default)
         where T : class
     {
-        LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Transports.ISendTransport>(cancellationToken); LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
 
         ISqlMessagePublishTopologyConfigurator<T> publishTopology = _topologyConfiguration.Publish.GetMessageTopology<T>();
 
@@ -43,13 +43,13 @@ public class ConnectionContextSupervisor :
 
         var supervisor = new ClientContextSupervisor(context.ClientContextSupervisor);
 
-        return CreateSendTransport(publishAddress!,
+        return CreateSendTransportAsync(publishAddress!,
             new TopicSendTransportContext(_hostConfiguration, context, supervisor, configureTopology, settings.EntityName));
     }
 
-    public Task<ISendTransport> CreateSendTransport(SqlReceiveEndpointContext context, Uri address)
+    public Task<ISendTransport> CreateSendTransportAsync(SqlReceiveEndpointContext context, Uri address, CancellationToken cancellationToken = default)
     {
-        LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Transports.ISendTransport>(cancellationToken); LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
 
         var endpointAddress = new SqlEndpointAddress(_hostConfiguration.HostAddress, address);
 
@@ -59,12 +59,12 @@ public class ConnectionContextSupervisor :
 
         var supervisor = new ClientContextSupervisor(context.ClientContextSupervisor);
 
-        return CreateSendTransport(endpointAddress, endpointAddress.Type == SqlEndpointAddress.AddressType.Queue
+        return CreateSendTransportAsync(endpointAddress, endpointAddress.Type == SqlEndpointAddress.AddressType.Queue
             ? new QueueSendTransportContext(_hostConfiguration, context, supervisor, configureTopology, settings.EntityName)
             : new TopicSendTransportContext(_hostConfiguration, context, supervisor, configureTopology, settings.EntityName));
     }
 
-    Task<ISendTransport> CreateSendTransport(Uri address, SendTransportContext<ClientContext> transportContext)
+    Task<ISendTransport> CreateSendTransportAsync(Uri address, SendTransportContext<ClientContext> transportContext)
     {
         TransportLogMessages.CreateSendTransport(address);
 

@@ -19,7 +19,7 @@ public sealed class StateMachineConditionTests
     [InlineData(StateMachineConstructionStyle.Dynamic, ConditionEvaluationStyle.Synchronous)]
     [InlineData(StateMachineConstructionStyle.Dynamic, ConditionEvaluationStyle.Asynchronous)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-CONDITION", "sync-async-complete-branch-matrix")]
-    public async Task Conditions_SelectExactlyOneBranchAndControlTheEnterTransition(
+    public async Task Conditions_SelectExactlyOneBranchAndControlTheEnterTransitionAsync(
         StateMachineConstructionStyle constructionStyle,
         ConditionEvaluationStyle evaluationStyle)
     {
@@ -29,10 +29,10 @@ public sealed class StateMachineConditionTests
         var falseBranch = new ConditionInstance();
         var trueBranch = new ConditionInstance();
 
-        await Raise(scenario.Machine, normal, scenario.Started, new StartSignal(false));
-        await Raise(scenario.Machine, initializeOnly, scenario.Started, new StartSignal(true));
-        await Raise(scenario.Machine, falseBranch, scenario.Explicit, new ExplicitSignal(false));
-        await Raise(scenario.Machine, trueBranch, scenario.Explicit, new ExplicitSignal(true));
+        await RaiseAsync(scenario.Machine, normal, scenario.Started, new StartSignal(false));
+        await RaiseAsync(scenario.Machine, initializeOnly, scenario.Started, new StartSignal(true));
+        await RaiseAsync(scenario.Machine, falseBranch, scenario.Explicit, new ExplicitSignal(false));
+        await RaiseAsync(scenario.Machine, trueBranch, scenario.Explicit, new ExplicitSignal(true));
 
         Assert.Same(scenario.Running, normal.CurrentState);
         Assert.Equal((Start: 1, Enter: 1, If: 0, Continue: 1), normal.StartSnapshot);
@@ -51,15 +51,15 @@ public sealed class StateMachineConditionTests
     [InlineData(StateMachineConstructionStyle.Declarative)]
     [InlineData(StateMachineConstructionStyle.Dynamic)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-CONDITION", "mutually-exclusive-event-filter-routes")]
-    public async Task EventFilters_EvaluateBothPredicatesAndSelectExactlyOneRoute(
+    public async Task EventFilters_EvaluateBothPredicatesAndSelectExactlyOneRouteAsync(
         StateMachineConstructionStyle style)
     {
         FilterScenario scenario = CreateFilterScenario(style);
         var trueInstance = new ConditionInstance();
         var falseInstance = new ConditionInstance();
 
-        await Raise(scenario.Machine, trueInstance, scenario.Event, new FilterSignal(true));
-        await Raise(scenario.Machine, falseInstance, scenario.Event, new FilterSignal(false));
+        await RaiseAsync(scenario.Machine, trueInstance, scenario.Event, new FilterSignal(true));
+        await RaiseAsync(scenario.Machine, falseInstance, scenario.Event, new FilterSignal(false));
 
         Assert.Same(scenario.True, trueInstance.CurrentState);
         Assert.Equal((TruePredicate: 1, FalsePredicate: 1, TrueRoute: 1, FalseRoute: 0), trueInstance.FilterSnapshot);
@@ -221,7 +221,7 @@ public sealed class StateMachineConditionTests
         return !context.Message.Condition;
     }
 
-    private static async Task Raise<T>(
+    private static async Task RaiseAsync<T>(
         StateMachine<ConditionInstance> machine,
         ConditionInstance instance,
         Event<T> @event,
@@ -230,12 +230,12 @@ public sealed class StateMachineConditionTests
     {
         ConsumeContext<T> consumeContext = InMemoryOutboxTestContextFactory.Create(message);
         var sagaInstance = new SagaInstance<ConditionInstance>(instance);
-        await sagaInstance.MarkInUse(consumeContext.CancellationToken);
+        await sagaInstance.MarkInUseAsync(consumeContext.CancellationToken);
         using var sagaContext = new InMemorySagaConsumeContext<ConditionInstance, T>(consumeContext, sagaInstance);
         BehaviorContext<ConditionInstance, T> behaviorContext =
             new ViciOneServiceBusStateMachine<ConditionInstance>.BehaviorContextProxy<T>(machine, sagaContext, sagaContext, @event);
 
-        await machine.RaiseEvent(behaviorContext);
+        await machine.RaiseEventAsync(behaviorContext);
     }
 
     public sealed record StartSignal(bool InitializeOnly);

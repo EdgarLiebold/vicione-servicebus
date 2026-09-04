@@ -42,7 +42,7 @@ public class ActivePipeContext<TContext> :
 
     Task<TContext> PipeContextHandle<TContext>.Context => _context;
 
-    async Task ActivePipeContextHandle<TContext>.Faulted(Exception exception)
+    async Task ActivePipeContextHandle<TContext>.FaultedAsync(Exception exception, CancellationToken cancellationToken)
     {
         // However, a fault we should dispose of the context
         await _contextHandle.DisposeAsync().ConfigureAwait(false);

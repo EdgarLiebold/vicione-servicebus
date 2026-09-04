@@ -8,7 +8,7 @@ public static class DynamoDbSagaRepository<TSaga>
     where TSaga : class, ISagaVersion
 {
     public static ISagaRepository<TSaga> Create(Func<IDynamoDBContext> dynamoDbFactory, string tableName, TimeSpan? expiration = null,
-        TimeProvider timeProvider = null)
+        TimeProvider? timeProvider = null)
     {
         ArgumentNullException.ThrowIfNull(dynamoDbFactory);
 

@@ -10,7 +10,7 @@ public sealed class StateMachineNestedRequestIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-NESTED-REQUEST", "completed-request-resumes-original-request")]
-    public async Task NestedRequestCompletion_ResumesTheOriginalRequestWithTheExactResponse()
+    public async Task NestedRequestCompletion_ResumesTheOriginalRequestWithTheExactResponseAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -20,13 +20,13 @@ public sealed class StateMachineNestedRequestIntegrationTests
         ISagaStateMachineTestHarness<CreateLinkMachine, CreateLinkState> sagaHarness =
             harness.StateMachineSaga<CreateLinkState, CreateLinkMachine>(machine);
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             IRequestClient<CreateShortLink> client = harness.Bus.CreateRequestClient<CreateShortLink>(
                 harness.InputQueueAddress,
                 timeout);
-            Response<ShortLinkCreated> response = await client.GetResponse<ShortLinkCreated>(
+            Response<ShortLinkCreated> response = await client.GetResponseAsync<ShortLinkCreated>(
                     new CreateShortLink(link),
                     cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
@@ -34,14 +34,11 @@ public sealed class StateMachineNestedRequestIntegrationTests
             Assert.Equal(link, response.Message.Link);
             Assert.Equal(link, response.Message.ShortLink);
             Assert.NotEqual(Guid.Empty, response.Message.CorrelationId);
-            Assert.Equal(response.Message.CorrelationId, await sagaHarness.Exists(
-                response.Message.CorrelationId,
-                machine.Valid,
-                timeout));
+            Assert.Equal(response.Message.CorrelationId, await sagaHarness.ExistsAsync(response.Message.CorrelationId, machine.Valid, timeout, TestContext.Current.CancellationToken));
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
         ISentMessage<RequestShortLink> nested = Assert.Single(
@@ -53,7 +50,7 @@ public sealed class StateMachineNestedRequestIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-NESTED-REQUEST", "faulted-request-faults-original-request")]
-    public async Task NestedRequestFault_PropagatesOneTypedFaultToTheOriginalRequester()
+    public async Task NestedRequestFault_PropagatesOneTypedFaultToTheOriginalRequesterAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -62,14 +59,14 @@ public sealed class StateMachineNestedRequestIntegrationTests
         var machine = new CreateLinkMachine(new Uri(harness.BaseAddress, "short-link-service"));
         harness.StateMachineSaga<CreateLinkState, CreateLinkMachine>(machine);
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             IRequestClient<CreateShortLink> client = harness.Bus.CreateRequestClient<CreateShortLink>(
                 harness.InputQueueAddress,
                 timeout);
             RequestFaultException exception = await Assert.ThrowsAsync<RequestFaultException>(() =>
-                client.GetResponse<ShortLinkCreated>(new CreateShortLink(link), cancellationToken));
+                client.GetResponseAsync<ShortLinkCreated>(new CreateShortLink(link), cancellationToken));
 
             Assert.Equal(TypeCache<CreateShortLink>.ShortName, exception.RequestType);
             Assert.Contains(link.AbsoluteUri, exception.Message, StringComparison.Ordinal);
@@ -83,7 +80,7 @@ public sealed class StateMachineNestedRequestIntegrationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
         ISentMessage<RequestShortLink> nested = Assert.Single(

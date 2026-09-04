@@ -13,7 +13,7 @@ public interface IConsumeObserver
     /// </summary>
     /// <param name="context">The consume context</param>
     /// <returns></returns>
-    Task PreConsume<T>(ConsumeContext<T> context)
+    Task PreConsumeAsync<T>(ConsumeContext<T> context)
         where T : class;
 
     /// <summary>
@@ -22,7 +22,7 @@ public interface IConsumeObserver
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    Task PostConsume<T>(ConsumeContext<T> context)
+    Task PostConsumeAsync<T>(ConsumeContext<T> context)
         where T : class;
 
     /// <summary>
@@ -31,6 +31,6 @@ public interface IConsumeObserver
     /// <param name="context"></param>
     /// <param name="exception"></param>
     /// <returns></returns>
-    Task ConsumeFault<T>(ConsumeContext<T> context, Exception exception)
+    Task ConsumeFaultAsync<T>(ConsumeContext<T> context, Exception exception)
         where T : class;
 }

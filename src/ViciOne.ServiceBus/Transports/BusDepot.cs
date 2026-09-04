@@ -19,7 +19,7 @@ public class BusDepot :
         _instances = instances.ToDictionary(x => x.InstanceType);
     }
 
-    public Task Start(CancellationToken cancellationToken)
+    public Task StartAsync(CancellationToken cancellationToken)
     {
         if (_instances.Count == 0)
             throw new ConfigurationException("No bus instances were found. Ensure that AddViciOneServiceBus() is used to configure the transport.");
@@ -29,7 +29,7 @@ public class BusDepot :
         return Task.WhenAll(_instances.Values.Select(x => x.BusControl.StartAsync(cancellationToken)));
     }
 
-    public Task Stop(CancellationToken cancellationToken)
+    public Task StopAsync(CancellationToken cancellationToken)
     {
         if (_instances.Count == 0)
             return Task.CompletedTask;

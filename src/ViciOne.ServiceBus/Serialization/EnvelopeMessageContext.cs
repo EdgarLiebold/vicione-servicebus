@@ -31,12 +31,12 @@ public class EnvelopeMessageContext :
     public Guid? CorrelationId => _correlationId ??= ConvertIdToGuid(_envelope.CorrelationId);
     public Guid? ConversationId => _conversationId ??= ConvertIdToGuid(_envelope.ConversationId);
     public Guid? InitiatorId => _initiatorId ??= ConvertIdToGuid(_envelope.InitiatorId);
-    public DateTime? ExpirationTime => _envelope.ExpirationTime;
+    public DateTimeOffset? ExpirationTime => _envelope.ExpirationTime;
     public Uri? SourceAddress => _sourceAddress ??= ConvertToUri(_envelope.SourceAddress);
     public Uri? DestinationAddress => _destinationAddress ??= ConvertToUri(_envelope.DestinationAddress);
     public Uri? ResponseAddress => _responseAddress ??= ConvertToUri(_envelope.ResponseAddress);
     public Uri? FaultAddress => _faultAddress ??= ConvertToUri(_envelope.FaultAddress);
-    public DateTime? SentTime => _envelope.SentTime;
+    public DateTimeOffset? SentTime => _envelope.SentTime;
     public Headers Headers => _headers ??= GetHeaders();
     public HostInfo Host => _envelope.Host ?? HostMetadataCache.Empty;
 

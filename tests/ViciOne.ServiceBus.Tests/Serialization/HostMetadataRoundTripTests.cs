@@ -10,7 +10,7 @@ public sealed class HostMetadataRoundTripTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-HOST-METADATA-TRANSPORT", "system-text-json-inmemory-roundtrip")]
-    public async Task PublishedMessage_CarriesEveryHostFieldAcrossTheSerializationBoundary()
+    public async Task PublishedMessage_CarriesEveryHostFieldAcrossTheSerializationBoundaryAsync()
     {
         TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -23,7 +23,7 @@ public sealed class HostMetadataRoundTripTests
         };
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+            await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
             var consumed = new TaskCompletionSource<ConsumeContext<HostMetadataMessage>>(
                 TaskCreationOptions.RunContinuationsAsynchronously);
             HostReceiveEndpointHandle endpoint = harness.Bus.ConnectReceiveEndpoint(configurator =>
@@ -36,7 +36,7 @@ public sealed class HostMetadataRoundTripTests
 
             try
             {
-                await harness.Bus.Publish(new HostMetadataMessage("roundtrip"), cancellationToken);
+                await harness.Bus.PublishAsync(new HostMetadataMessage("roundtrip"), cancellationToken);
                 HostInfo actual = (await consumed.Task.WaitAsync(timeout, cancellationToken)).Host;
                 HostInfo expected = HostMetadataCache.Host;
 
@@ -56,7 +56,7 @@ public sealed class HostMetadataRoundTripTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 

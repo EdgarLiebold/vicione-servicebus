@@ -48,7 +48,7 @@ public class ScopedCompensateActivityPipeSpecificationObserver :
 
         var scopedFilterType = typeof(ScopedCompensateFilter<,,>).MakeGenericType(typeof(TActivity), typeof(TLog), filterType);
 
-        var filter = (IFilter<CompensateContext<TLog>>)Activator.CreateInstance(scopedFilterType, scopeProvider);
+        var filter = (IFilter<CompensateContext<TLog>>)(Activator.CreateInstance(scopedFilterType, scopeProvider) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
         var specification = new FilterPipeSpecification<CompensateContext<TLog>>(filter);
 

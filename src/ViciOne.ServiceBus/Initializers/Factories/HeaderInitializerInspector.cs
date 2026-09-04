@@ -12,7 +12,7 @@ public class HeaderInitializerInspector<TMessage, TInput, TProperty> :
 
     public HeaderInitializerInspector(PropertyInfo propertyInfo)
     {
-        _propertyInfo = propertyInfo;
+        _propertyInfo = propertyInfo ?? throw new ArgumentNullException(nameof(propertyInfo));
     }
 
     public bool Apply(IMessageInitializerBuilder<TMessage, TInput> builder, IInitializerConvention convention)
@@ -20,7 +20,8 @@ public class HeaderInitializerInspector<TMessage, TInput, TProperty> :
         if (builder.IsInputPropertyUsed(_propertyInfo.Name))
             return false;
 
-        if (convention.TryGetHeaderInitializer<TMessage, TInput, TProperty>(_propertyInfo, out IHeaderInitializer<TMessage, TInput> initializer))
+        if (convention.TryGetHeaderInitializer<TMessage, TInput, TProperty>(_propertyInfo,
+                out IHeaderInitializer<TMessage, TInput>? initializer))
         {
             builder.Add(initializer);
 

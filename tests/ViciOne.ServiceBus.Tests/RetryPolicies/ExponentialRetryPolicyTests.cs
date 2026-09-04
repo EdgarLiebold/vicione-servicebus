@@ -59,7 +59,7 @@ public sealed class ExponentialRetryPolicyTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RETRY-POLICY", "exponential-limit-is-exact")]
-    public async Task RetryFilter_ExecutesExactlyTheConfiguredExponentialBudget()
+    public async Task RetryFilter_ExecutesExactlyTheConfiguredExponentialBudgetAsync()
     {
         const int retryLimit = 10;
         var attempts = 0;
@@ -74,7 +74,7 @@ public sealed class ExponentialRetryPolicyTests
             });
         });
 
-        await Assert.ThrowsAsync<RetryFailureException>(() => pipe.Send(new TestPipeContext()));
+        await Assert.ThrowsAsync<RetryFailureException>(() => pipe.SendAsync(new TestPipeContext()));
 
         Assert.Equal(retryLimit + 1, attempts);
     }

@@ -10,40 +10,52 @@ public sealed class TestHarnessObservationPolicyTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-RETENTION", "all-bounded-and-none-apply-to-nested-observers")]
-    public async Task ContextRetention_AllBoundedAndNoneApplyToBusAndHandlerHistories()
+    public async Task ContextRetention_AllBoundedAndNoneApplyToBusAndHandlerHistoriesAsync()
     {
-        await VerifyRetention(TestContextSaveMode.All, [1, 2, 3]);
-        await VerifyRetention(TestContextSaveMode.Bounded, [2, 3]);
-        await VerifyRetention(TestContextSaveMode.None, []);
+        await VerifyRetentionAsync(TestContextSaveMode.All, [1, 2, 3]);
+        await VerifyRetentionAsync(TestContextSaveMode.Bounded, [2, 3]);
+        await VerifyRetentionAsync(TestContextSaveMode.None, []);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-ACTIVE-OBSERVATION", "trace-isolated-and-retention-independent")]
-    public async Task ActiveScope_CapturesOnlyCausalTraceWhenHistoryIsDisabled()
+    public async Task ActiveScope_CapturesOnlyCausalTraceWhenHistoryIsDisabledAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout, TestContextSaveMode.None, 4);
         harness.TestInactivityTimeout = TimeSpan.FromMilliseconds(100);
-        harness.Handler<ActiveMessage>(context =>
-            context.Publish(new ActivePublished(context.Message.Value), context.CancellationToken));
+        var trackedCompleted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var unrelatedCompleted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        harness.Handler<ActiveMessage>(async context =>
+        {
+            await context.Advanced()
+                .PublishAsync(new ActivePublished(context.Message.Value), context.CancellationToken)
+                .ConfigureAwait(false);
+            TaskCompletionSource completion = context.Message.Value == "tracked"
+                ? trackedCompleted
+                : unrelatedCompleted;
+            completion.TrySetResult();
+        });
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            ActiveTestResult result = await harness.Act(async () =>
+            ActiveTestResult result = await harness.ActAsync(async () =>
             {
                 Task unrelated;
                 using (ExecutionContext.SuppressFlow())
                 {
                     unrelated = Task.Run(
-                        () => harness.InputQueueSendEndpoint.Send(new ActiveMessage("unrelated"), cancellationToken),
+                        () => harness.InputQueueSendEndpoint.SendAsync(new ActiveMessage("unrelated"), cancellationToken),
                         cancellationToken);
                 }
 
-                await harness.InputQueueSendEndpoint.Send(new ActiveMessage("tracked"), cancellationToken);
+                await harness.InputQueueSendEndpoint.SendAsync(new ActiveMessage("tracked"), cancellationToken);
                 await unrelated;
-            }, "trace-isolation");
+                await Task.WhenAll(trackedCompleted.Task, unrelatedCompleted.Task)
+                    .WaitAsync(timeout, cancellationToken);
+            }, "trace-isolation", cancellationToken: TestContext.Current.CancellationToken);
 
             Assert.Empty(harness.Consumed.Snapshot());
             Assert.Empty(harness.Published.Snapshot());
@@ -64,13 +76,13 @@ public sealed class TestHarnessObservationPolicyTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-ACTIVE-OBSERVATION", "action-failure-preserves-identity")]
-    public async Task ActiveScope_PropagatesTheExactActionFailure()
+    public async Task ActiveScope_PropagatesTheExactActionFailureAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -78,45 +90,45 @@ public sealed class TestHarnessObservationPolicyTests
         using var harness = CreateHarness(timeout, TestContextSaveMode.None, 1);
         harness.TestInactivityTimeout = TimeSpan.FromMilliseconds(100);
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(
-                () => harness.Act(() => Task.FromException(expected), "fault-propagation"));
+                () => harness.ActAsync(() => Task.FromException(expected), "fault-propagation", cancellationToken: TestContext.Current.CancellationToken));
 
             Assert.Same(expected, actual);
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
-    private static async Task VerifyRetention(TestContextSaveMode saveMode, int[] expectedValues)
+    private static async Task VerifyRetentionAsync(TestContextSaveMode saveMode, int[] expectedValues)
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout, saveMode, 2);
         HandlerTestHarness<RetentionMessage> handler = harness.Handler<RetentionMessage>(context =>
-            context.Publish(new RetentionPublished(context.Message.Value), context.CancellationToken));
+            context.Advanced().PublishAsync(new RetentionPublished(context.Message.Value), context.CancellationToken));
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             for (var value = 1; value <= 3; value++)
             {
                 int expected = value;
-                Task<bool> busConsumed = harness.Consumed.Any<RetentionMessage>(
+                Task<bool> busConsumed = harness.Consumed.AnyAsync<RetentionMessage>(
                     message => message.Context.Message.Value == expected,
                     cancellationToken);
-                Task<bool> handlerConsumed = handler.Consumed.Any(
+                Task<bool> handlerConsumed = handler.Consumed.AnyAsync(
                     message => message.Context.Message.Value == expected,
                     cancellationToken);
-                Task<bool> published = harness.Published.Any<RetentionPublished>(
+                Task<bool> published = harness.Published.AnyAsync<RetentionPublished>(
                     message => message.Context.Message.Value == expected,
                     cancellationToken);
 
-                await harness.InputQueueSendEndpoint.Send(new RetentionMessage(value), cancellationToken);
+                await harness.InputQueueSendEndpoint.SendAsync(new RetentionMessage(value), cancellationToken);
 
                 Assert.True(await busConsumed.WaitAsync(timeout, cancellationToken));
                 Assert.True(await handlerConsumed.WaitAsync(timeout, cancellationToken));
@@ -150,7 +162,7 @@ public sealed class TestHarnessObservationPolicyTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync();
         }
     }
 

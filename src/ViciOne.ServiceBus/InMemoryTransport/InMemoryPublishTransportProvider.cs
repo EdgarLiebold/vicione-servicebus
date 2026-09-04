@@ -17,9 +17,9 @@ public class InMemoryPublishTransportProvider :
         _context = context;
     }
 
-    public Task<ISendTransport> GetPublishTransport<T>(Uri? publishAddress)
+    public Task<ISendTransport> GetPublishTransportAsync<T>(Uri? publishAddress, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _transportProvider.CreatePublishTransport<T>(_context, publishAddress!);
+        return _transportProvider.CreatePublishTransportAsync<T>(_context, publishAddress!, cancellationToken: cancellationToken);
     }
 }

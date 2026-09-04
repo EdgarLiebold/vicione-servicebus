@@ -306,7 +306,7 @@ public static class Retry
         ISpecification
     {
         readonly RetryObservable _observers;
-        RetryPolicyFactory _policyFactory;
+        RetryPolicyFactory _policyFactory = null!;
 
         public RetryConfigurator()
         {

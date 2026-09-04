@@ -12,7 +12,7 @@ public sealed class ProviderFixtureRunnerTests
     [InlineData(0)]
     [InlineData(7)]
     [RequirementCoverage("REQ-TEST-203", "provider-runner-preserves-native-mtp-exit-code-and-cleans-fixture")]
-    public async Task CommandMode_PreservesChildExitCodeAndCleansTheFixture(int childExitCode)
+    public async Task CommandMode_PreservesChildExitCodeAndCleansTheFixtureAsync(int childExitCode)
     {
         await using RunnerFixture fixture = await RunnerFixture.CreateAsync();
 
@@ -32,7 +32,7 @@ public sealed class ProviderFixtureRunnerTests
 
     [Fact]
     [RequirementCoverage("REQ-TEST-203", "provider-runner-refuses-non-loopback-publication-before-child")]
-    public async Task CommandMode_RefusesANonLoopbackProviderEndpointBeforeRunningTheChild()
+    public async Task CommandMode_RefusesANonLoopbackProviderEndpointBeforeRunningTheChildAsync()
     {
         await using RunnerFixture fixture = await RunnerFixture.CreateAsync();
 
@@ -50,7 +50,7 @@ public sealed class ProviderFixtureRunnerTests
 
     [Fact]
     [RequirementCoverage("REQ-TEST-203", "provider-runner-makes-cleanup-failure-terminal")]
-    public async Task CommandMode_MakesCleanupFailureRedWhenTheChildPassed()
+    public async Task CommandMode_MakesCleanupFailureRedWhenTheChildPassedAsync()
     {
         await using RunnerFixture fixture = await RunnerFixture.CreateAsync();
 
@@ -66,7 +66,7 @@ public sealed class ProviderFixtureRunnerTests
 
     [Fact]
     [RequirementCoverage("REQ-TEST-203", "provider-runner-refuses-output-root-outside-owned-area")]
-    public async Task CommandMode_RefusesAHandedRunRootOutsideTheRepositoryOwnedArea()
+    public async Task CommandMode_RefusesAHandedRunRootOutsideTheRepositoryOwnedAreaAsync()
     {
         await using RunnerFixture fixture = await RunnerFixture.CreateAsync(runRootOutsideOwnedArea: true);
 

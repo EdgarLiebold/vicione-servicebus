@@ -31,7 +31,7 @@ public interface RequestStarted
     /// <summary>
     /// The expiration time for this request, which if completed after, the response is discarded
     /// </summary>
-    DateTime? ExpirationTime { get; }
+    DateTimeOffset? ExpirationTime { get; }
 
     /// <summary>
     /// The payload types supported by the payload

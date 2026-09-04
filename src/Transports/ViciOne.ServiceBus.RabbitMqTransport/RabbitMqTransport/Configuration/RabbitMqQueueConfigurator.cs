@@ -13,7 +13,7 @@ public class RabbitMqQueueConfigurator :
     protected RabbitMqQueueConfigurator(string queueName, string exchangeType, bool durable, bool autoDelete)
         : base(queueName, exchangeType, durable, autoDelete)
     {
-        QueueArguments = new Dictionary<string, object>();
+        QueueArguments = new Dictionary<string, object?>();
 
         QueueName = queueName;
     }
@@ -45,7 +45,7 @@ public class RabbitMqQueueConfigurator :
         }
     }
 
-    public void SetQueueArgument(string key, object value)
+    public void SetQueueArgument(string key, object? value)
     {
         if (key == null)
             throw new ArgumentNullException(nameof(key));
@@ -94,10 +94,10 @@ public class RabbitMqQueueConfigurator :
     }
 
     public string QueueName { get; set; }
-    public IDictionary<string, object> QueueArguments { get; }
+    public IDictionary<string, object?> QueueArguments { get; }
 
     public override RabbitMqEndpointAddress GetEndpointAddress(Uri hostAddress)
     {
-        return new RabbitMqEndpointAddress(hostAddress, ExchangeName ?? QueueName, ExchangeType, Durable, AutoDelete);
+        return new RabbitMqEndpointAddress(hostAddress, string.IsNullOrWhiteSpace(ExchangeName) ? QueueName : ExchangeName, ExchangeType, Durable, AutoDelete);
     }
 }

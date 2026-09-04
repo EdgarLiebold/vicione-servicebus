@@ -14,7 +14,7 @@ public sealed class TimeoutCancellationIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TIMEOUT-PIPELINE", "fault-and-short-circuit")]
-    public async Task PipelineTimeout_PublishesOneFaultAndDoesNotContinueTheHandler()
+    public async Task PipelineTimeout_PublishesOneFaultAndDoesNotContinueTheHandlerAsync()
     {
         TimeSpan operationTimeout = OperationTimeout();
         TimeSpan messageTimeout = TimeSpan.FromMinutes(2);
@@ -53,15 +53,15 @@ public sealed class TimeoutCancellationIntegrationTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(operationTimeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(operationTimeout, cancellationToken);
 
         try
         {
             Task<IPublishedMessage<Fault<TimeoutMessage>>> faultTask = harness.Published
                 .SelectAsync<Fault<TimeoutMessage>>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
-            await harness.Bus.Publish(new TimeoutMessage("virtual-time"), cancellationToken);
+            await harness.Bus.PublishAsync(new TimeoutMessage("virtual-time"), cancellationToken);
             await entered.Task.WaitAsync(operationTimeout, cancellationToken);
             timeProvider.Advance(messageTimeout - TimeSpan.FromTicks(1));
             Assert.False(faultTask.IsCompleted);
@@ -78,13 +78,13 @@ public sealed class TimeoutCancellationIntegrationTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(operationTimeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(operationTimeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TIMEOUT-CONFIGURATION", "compiled-snapshot")]
-    public async Task BuiltPipeline_IsUnaffectedByLaterConfiguratorMutation()
+    public async Task BuiltPipeline_IsUnaffectedByLaterConfiguratorMutationAsync()
     {
         TimeSpan operationTimeout = OperationTimeout();
         TimeSpan configuredTimeout = TimeSpan.FromMinutes(2);
@@ -118,7 +118,7 @@ public sealed class TimeoutCancellationIntegrationTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(operationTimeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(operationTimeout, cancellationToken);
 
         try
         {
@@ -127,9 +127,9 @@ public sealed class TimeoutCancellationIntegrationTests
             retainedConfigurator.TimeProvider = laterProvider;
             Task<IPublishedMessage<Fault<SnapshotMessage>>> faultTask = harness.Published
                 .SelectAsync<Fault<SnapshotMessage>>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
-            await harness.Bus.Publish(new SnapshotMessage("snapshot"), cancellationToken);
+            await harness.Bus.PublishAsync(new SnapshotMessage("snapshot"), cancellationToken);
             await entered.Task.WaitAsync(operationTimeout, cancellationToken);
             laterProvider.Advance(TimeSpan.FromDays(1));
             Assert.False(faultTask.IsCompleted);
@@ -143,13 +143,13 @@ public sealed class TimeoutCancellationIntegrationTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(operationTimeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(operationTimeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONSUME-CANCELLATION", "transport-stop-is-not-a-fault")]
-    public async Task TransportStop_CancelsTheHandlerWithoutPublishingAFault()
+    public async Task TransportStop_CancelsTheHandlerWithoutPublishingAFaultAsync()
     {
         TimeSpan operationTimeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -194,15 +194,15 @@ public sealed class TimeoutCancellationIntegrationTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(operationTimeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(operationTimeout, cancellationToken);
         var stopped = false;
 
         try
         {
-            await harness.Bus.Publish(new ShutdownMessage("stop"), cancellationToken);
+            await harness.Bus.PublishAsync(new ShutdownMessage("stop"), cancellationToken);
             await entered.Task.WaitAsync(operationTimeout, cancellationToken);
 
-            await harness.Stop(CancellationToken.None).WaitAsync(operationTimeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(operationTimeout, CancellationToken.None);
             stopped = true;
             await canceled.Task.WaitAsync(operationTimeout, cancellationToken);
 
@@ -211,13 +211,13 @@ public sealed class TimeoutCancellationIntegrationTests
         finally
         {
             if (!stopped)
-                await harness.Stop(CancellationToken.None).WaitAsync(operationTimeout, CancellationToken.None);
+                await harness.StopAsync(CancellationToken.None).WaitAsync(operationTimeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONSUME-CANCELLATION", "transport-stop-cancels-pending-retry-without-another-attempt")]
-    public async Task TransportStop_CancelsAPendingRetryWithoutAnotherAttemptOrFault()
+    public async Task TransportStop_CancelsAPendingRetryWithoutAnotherAttemptOrFaultAsync()
     {
         TimeSpan operationTimeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -242,15 +242,15 @@ public sealed class TimeoutCancellationIntegrationTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(operationTimeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(operationTimeout, cancellationToken);
         var stopped = false;
 
         try
         {
-            await harness.Bus.Publish(new RetryStopMessage("retry-stop"), cancellationToken);
+            await harness.Bus.PublishAsync(new RetryStopMessage("retry-stop"), cancellationToken);
             await observation.FirstAttempt.Task.WaitAsync(operationTimeout, cancellationToken);
 
-            await harness.Stop(CancellationToken.None).WaitAsync(operationTimeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(operationTimeout, CancellationToken.None);
             stopped = true;
             await observation.Canceled.Task.WaitAsync(operationTimeout, cancellationToken);
 
@@ -260,13 +260,13 @@ public sealed class TimeoutCancellationIntegrationTests
         finally
         {
             if (!stopped)
-                await harness.Stop(CancellationToken.None).WaitAsync(operationTimeout, CancellationToken.None);
+                await harness.StopAsync(CancellationToken.None).WaitAsync(operationTimeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONSUME-CANCELLATION", "independent-cancellation-is-a-fault")]
-    public async Task IndependentHandlerCancellation_PublishesTheExactFault()
+    public async Task IndependentHandlerCancellation_PublishesTheExactFaultAsync()
     {
         TimeSpan operationTimeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -284,15 +284,15 @@ public sealed class TimeoutCancellationIntegrationTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(operationTimeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(operationTimeout, cancellationToken);
 
         try
         {
             Task<IPublishedMessage<Fault<IndependentCancellationMessage>>> faultTask = harness.Published
                 .SelectAsync<Fault<IndependentCancellationMessage>>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
-            await harness.Bus.Publish(new IndependentCancellationMessage("independent"), cancellationToken);
+            await harness.Bus.PublishAsync(new IndependentCancellationMessage("independent"), cancellationToken);
             Fault<IndependentCancellationMessage> fault =
                 (await faultTask.WaitAsync(operationTimeout, cancellationToken)).Context.Message;
 
@@ -303,7 +303,7 @@ public sealed class TimeoutCancellationIntegrationTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(operationTimeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(operationTimeout, CancellationToken.None);
         }
     }
 
@@ -340,7 +340,7 @@ public sealed class TimeoutCancellationIntegrationTests
 
     public sealed class RetryStopConsumer(RetryStopObservation observation) : IConsumer<RetryStopMessage>
     {
-        public Task Consume(ConsumeContext<RetryStopMessage> context)
+        public Task ConsumeAsync(ConsumeContext<RetryStopMessage> context)
         {
             observation.RecordAttempt();
             context.CancellationToken.Register(() =>

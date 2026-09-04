@@ -10,16 +10,16 @@ public class FilterPipeSpecification<TContext> :
     IPipeSpecification<TContext>
     where TContext : class, PipeContext
 {
-    readonly IFilter<TContext> _filter;
+    readonly IFilter<TContext>? _filter;
 
-    public FilterPipeSpecification(IFilter<TContext> filter)
+    public FilterPipeSpecification(IFilter<TContext>? filter)
     {
         _filter = filter;
     }
 
     public void Apply(IPipeBuilder<TContext> builder)
     {
-        builder.AddFilter(_filter);
+        builder.AddFilter(_filter!);
     }
 
     public IEnumerable<ValidationResult> Validate()

@@ -11,7 +11,7 @@ public sealed class AsyncMethodAnalyzerTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-ASYNC-METHOD-ANALYZER", "publish-must-be-observed")]
-    public async Task PublishWithoutAwaitOrCapture_ReportsMessageLossRisk()
+    public async Task PublishWithoutAwaitOrCapture_ReportsMessageLossRiskAsync()
     {
         var source = ServiceBusAnalyzerFixture.Usings + ServiceBusAnalyzerFixture.SimpleMessageContracts + @"
 namespace ConsoleApplication1
@@ -22,13 +22,13 @@ namespace ConsoleApplication1
         {
             var bus = Bus.Factory.CreateUsingInMemory(cfg => { });
 
-            bus.Publish<OrderSubmitted>(new
+            bus.PublishAsync<OrderSubmitted>(new
             {
                 Id = NewId.NextGuid(),
                 CustomerId = ""427"",
             });
 
-            await bus.Publish<OrderSubmitted>(new
+            await bus.PublishAsync<OrderSubmitted>(new
             {
                 Id = NewId.NextGuid(),
                 CustomerId = ""427"",
@@ -38,16 +38,16 @@ namespace ConsoleApplication1
 }
 ";
 
-        await AssertSingleDiagnostic(
+        await AssertSingleDiagnosticAsync(
             source,
-            "Method IPublishEndpoint.Publish<OrderSubmitted>() is not awaited or captured and may result in message loss",
+            "Method IPublishEndpoint.PublishAsync<OrderSubmitted>() is not awaited or captured and may result in message loss",
             line: 31,
             column: 13);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASYNC-METHOD-ANALYZER", "send-must-be-observed")]
-    public async Task SendWithoutAwaitOrCapture_ReportsMessageLossRisk()
+    public async Task SendWithoutAwaitOrCapture_ReportsMessageLossRiskAsync()
     {
         var source = ServiceBusAnalyzerFixture.Usings + ServiceBusAnalyzerFixture.SimpleMessageContracts + @"
 namespace ConsoleApplication1
@@ -58,14 +58,14 @@ namespace ConsoleApplication1
         {
             var bus = Bus.Factory.CreateUsingInMemory(cfg => { });
 
-            var endpoint = await bus.GetSendEndpoint(new Uri(""loopback://localhost/input_queue""));
-            endpoint.Send<OrderSubmitted>(new
+            var endpoint = await bus.GetSendEndpointAsync(new Uri(""loopback://localhost/input_queue""));
+            endpoint.SendAsync<OrderSubmitted>(new
             {
                 Id = NewId.NextGuid(),
                 CustomerId = ""427"",
             });
 
-            await endpoint.Send<OrderSubmitted>(new
+            await endpoint.SendAsync<OrderSubmitted>(new
             {
                 Id = NewId.NextGuid(),
                 CustomerId = ""427"",
@@ -75,16 +75,16 @@ namespace ConsoleApplication1
 }
 ";
 
-        await AssertSingleDiagnostic(
+        await AssertSingleDiagnosticAsync(
             source,
-            "Method ISendEndpoint.Send<OrderSubmitted>() is not awaited or captured and may result in message loss",
+            "Method ISendEndpoint.SendAsync<OrderSubmitted>() is not awaited or captured and may result in message loss",
             line: 32,
             column: 13);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASYNC-METHOD-ANALYZER", "request-must-be-observed")]
-    public async Task GetResponseWithoutAwaitOrCapture_ReportsMessageLossRisk()
+    public async Task GetResponseWithoutAwaitOrCapture_ReportsMessageLossRiskAsync()
     {
         var source = ServiceBusAnalyzerFixture.Usings + ServiceBusAnalyzerFixture.SimpleMessageContracts + @"
 namespace ConsoleApplication1
@@ -96,13 +96,13 @@ namespace ConsoleApplication1
             var bus = Bus.Factory.CreateUsingInMemory(cfg => { });
 
             var client = bus.CreateRequestClient<SubmitOrder>();
-            client.GetResponse<OrderSubmitted>(new
+            client.Advanced().GetResponseAsync<OrderSubmitted>(new
             {
                 Id = NewId.NextGuid(),
                 CustomerId = ""427"",
             });
 
-            var response = await client.GetResponse<OrderSubmitted>(new
+            var response = await client.Advanced().GetResponseAsync<OrderSubmitted>(new
             {
                 Id = NewId.NextGuid(),
                 CustomerId = ""427"",
@@ -112,16 +112,16 @@ namespace ConsoleApplication1
 }
 ";
 
-        await AssertSingleDiagnostic(
+        await AssertSingleDiagnosticAsync(
             source,
-            "Method IRequestClient<SubmitOrder>.GetResponse<OrderSubmitted>() is not awaited or captured and may result in message loss",
+            "Method IAdvancedRequestClient<SubmitOrder>.GetResponseAsync<OrderSubmitted>() is not awaited or captured and may result in message loss",
             line: 32,
             column: 13);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASYNC-METHOD-ANALYZER", "response-must-be-observed")]
-    public async Task RespondWithoutAwaitOrCapture_ReportsMessageLossRisk()
+    public async Task RespondWithoutAwaitOrCapture_ReportsMessageLossRiskAsync()
     {
         var source = ServiceBusAnalyzerFixture.Usings + ServiceBusAnalyzerFixture.SimpleMessageContracts + @"
 namespace ConsoleApplication1
@@ -129,9 +129,9 @@ namespace ConsoleApplication1
     class Consumer :
         IConsumer<SubmitOrder>
     {
-        public async Task Consume(ConsumeContext<SubmitOrder> context)
+        public async Task ConsumeAsync(ConsumeContext<SubmitOrder> context)
         {
-            context.RespondAsync<OrderSubmitted>(context.Message);
+            context.Advanced().RespondAsync<OrderSubmitted>(context.Message);
         }
     }
 
@@ -142,7 +142,7 @@ namespace ConsoleApplication1
             var bus = Bus.Factory.CreateUsingInMemory(cfg => { });
 
             var client = bus.CreateRequestClient<SubmitOrder>();
-            var response = await client.GetResponse<OrderSubmitted>(new
+            var response = await client.Advanced().GetResponseAsync<OrderSubmitted>(new
             {
                 Id = NewId.NextGuid(),
                 CustomerId = ""427"",
@@ -152,7 +152,7 @@ namespace ConsoleApplication1
 }
 ";
 
-        await AssertSingleDiagnostic(
+        await AssertSingleDiagnosticAsync(
             source,
             "Method ConsumeContext.RespondAsync<OrderSubmitted>() is not awaited or captured and may result in message loss",
             line: 30,
@@ -161,7 +161,7 @@ namespace ConsoleApplication1
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASYNC-METHOD-ANALYZER", "non-task-create-is-excluded")]
-    public async Task RequestHandleCreation_DoesNotReportAsyncMessageLossRisk()
+    public async Task RequestHandleCreation_DoesNotReportAsyncMessageLossRiskAsync()
     {
         var source = ServiceBusAnalyzerFixture.Usings + ServiceBusAnalyzerFixture.SimpleMessageContracts + @"
 namespace ConsoleApplication1
@@ -192,7 +192,7 @@ namespace ConsoleApplication1
         Assert.Empty(actual);
     }
 
-    private static async Task AssertSingleDiagnostic(
+    private static async Task AssertSingleDiagnosticAsync(
         string source,
         string message,
         int line,

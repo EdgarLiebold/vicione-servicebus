@@ -19,7 +19,7 @@ public sealed class AmazonSqsTelemetryTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0227", "send-and-consume-emit-exact-correlated-activities-and-tags")]
-    public async Task SendAndConsume_EmitExactCorrelatedActivitiesAndTags()
+    public async Task SendAndConsume_EmitExactCorrelatedActivitiesAndTagsAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("telemetry");
         string queueName = fixture.Name("input");
@@ -66,7 +66,7 @@ public sealed class AmazonSqsTelemetryTests
             {
                 caller.AddBaggage(BaggageKey, BaggageValue);
                 callerContext = caller.Context;
-                await bus.Publish(
+                await bus.PublishAsync(
                         new TelemetryMessage(correlationId),
                         context =>
                         {

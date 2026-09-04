@@ -21,12 +21,12 @@ public class SharedChannelContextFactory :
     {
         IAsyncPipeContextAgent<ChannelContext> asyncContext = supervisor.AddAsyncContext<ChannelContext>();
 
-        Task<ChannelContext> context = CreateChannel(asyncContext, supervisor.Stopped);
+        Task<ChannelContext> context = CreateChannelAsync(asyncContext, supervisor.Stopped);
 
-        async Task HandleShutdown(object sender, ShutdownEventArgs args)
+        async Task HandleShutdownAsync(object sender, ShutdownEventArgs args)
         {
             if (args.Initiator != ShutdownInitiator.Application)
-                await asyncContext.Stop(args.ReplyText).ConfigureAwait(false);
+                await asyncContext.StopAsync(args.ReplyText).ConfigureAwait(false);
         }
 
         context.GetAwaiter().OnCompleted(() =>
@@ -35,10 +35,10 @@ public class SharedChannelContextFactory :
                 return;
 
             ChannelContext channelContext = context.Result;
-            channelContext.Channel.ChannelShutdownAsync += HandleShutdown;
+            channelContext.Channel.ChannelShutdownAsync += HandleShutdownAsync;
 
             asyncContext.Completed.GetAwaiter().OnCompleted(() =>
-                channelContext.Channel.ChannelShutdownAsync -= HandleShutdown);
+                channelContext.Channel.ChannelShutdownAsync -= HandleShutdownAsync);
         });
 
         return asyncContext;
@@ -47,23 +47,23 @@ public class SharedChannelContextFactory :
     public IActivePipeContextAgent<ChannelContext> CreateActiveContext(ISupervisor supervisor,
         PipeContextHandle<ChannelContext> context, CancellationToken cancellationToken)
     {
-        return supervisor.AddActiveContext(context, CreateSharedChannel(context.Context, cancellationToken));
+        return supervisor.AddActiveContext(context, CreateSharedChannelAsync(context.Context, cancellationToken));
     }
 
-    static async Task<ChannelContext> CreateSharedChannel(Task<ChannelContext> context, CancellationToken cancellationToken)
+    static async Task<ChannelContext> CreateSharedChannelAsync(Task<ChannelContext> context, CancellationToken cancellationToken)
     {
         return context.IsCompletedSuccessfully()
             ? new SharedChannelContext(context.Result, cancellationToken)
-            : new SharedChannelContext(await context.OrCanceled(cancellationToken).ConfigureAwait(false), cancellationToken);
+            : new SharedChannelContext(await context.OrCanceledAsync(cancellationToken).ConfigureAwait(false), cancellationToken);
     }
 
-    Task<ChannelContext> CreateChannel(IAsyncPipeContextAgent<ChannelContext> asyncContext, CancellationToken cancellationToken)
+    Task<ChannelContext> CreateChannelAsync(IAsyncPipeContextAgent<ChannelContext> asyncContext, CancellationToken cancellationToken)
     {
-        static Task<ChannelContext> CreateChannelContext(ChannelContext context, CancellationToken createCancellationToken)
+        static Task<ChannelContext> CreateChannelContextAsync(ChannelContext context, CancellationToken createCancellationToken)
         {
             return Task.FromResult<ChannelContext>(new SharedChannelContext(context, createCancellationToken));
         }
 
-        return _supervisor.CreateAgent(asyncContext, CreateChannelContext, cancellationToken);
+        return _supervisor.CreateAgentAsync(asyncContext, CreateChannelContextAsync, cancellationToken);
     }
 }

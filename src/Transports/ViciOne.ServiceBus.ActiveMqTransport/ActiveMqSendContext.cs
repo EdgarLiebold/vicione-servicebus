@@ -14,8 +14,8 @@ public interface ActiveMqSendContext :
     SendContext
 {
     MsgPriority? Priority { set; }
-    string GroupId { set; }
+    string? GroupId { set; }
     int? GroupSequence { set; }
 
-    IDestination ReplyDestination { get; set; }
+    IDestination? ReplyDestination { get; set; }
 }

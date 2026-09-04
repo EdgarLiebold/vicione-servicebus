@@ -11,5 +11,5 @@ public interface IJobConsumer<in TJob> :
     IConsumer
     where TJob : class
 {
-    Task Run(JobContext<TJob> context);
+    Task RunAsync(JobContext<TJob> context);
 }

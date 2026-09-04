@@ -26,7 +26,7 @@ public sealed class PostgreSqlReceiveConfigurationTests
     [Theory]
     [MemberData(nameof(SchemaNames))]
     [RequirementCoverage("OBL-R0-SQL-0106", "postgresql-native-owner")]
-    public async Task SchemaNamesOnBothSidesOfTheNotificationBoundary_DeliverExactlyOnce(string schema)
+    public async Task SchemaNamesOnBothSidesOfTheNotificationBoundary_DeliverExactlyOnceAsync(string schema)
     {
         Assert.True(schema.Length is 39 or > 40);
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -54,9 +54,8 @@ public sealed class PostgreSqlReceiveConfigurationTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await endpoint.Send(message, context => context.MessageId = message.Id, cancellationToken)
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await endpoint.SendAsync(message, context => context.MessageId = message.Id, cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             await delivered.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
         }
@@ -72,7 +71,7 @@ public sealed class PostgreSqlReceiveConfigurationTests
     [Theory]
     [MemberData(nameof(ReceiveModes))]
     [RequirementCoverage("OBL-R0-SQL-0107", "postgresql-native-owner")]
-    public async Task EveryReceiveMode_DeliversTheExactSetAndItsPartitionConcurrency(
+    public async Task EveryReceiveMode_DeliversTheExactSetAndItsPartitionConcurrencyAsync(
         SqlReceiveMode mode,
         int expectedConcurrent)
     {
@@ -82,8 +81,8 @@ public sealed class PostgreSqlReceiveConfigurationTests
             $"mode-{mode}",
             cancellationToken);
         string queueName = fixture.Name("mode-input");
-        await CreateQueue(fixture, queueName, cancellationToken);
-        await SendModeMessages(fixture, queueName, cancellationToken);
+        await CreateQueueAsync(fixture, queueName, cancellationToken);
+        await SendModeMessagesAsync(fixture, queueName, cancellationToken);
 
         var enteredExpectedConcurrency = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -137,17 +136,17 @@ public sealed class PostgreSqlReceiveConfigurationTests
             Assert.Equal([1, 2, 3], started);
         Assert.Equal(expectedConcurrent, maximumActive);
         await using NpgsqlConnection connection = fixture.CreateConnection();
-        await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
-        Assert.Equal(0, await connection.DeliveryCount(fixture.Schema, queueName, 1, cancellationToken));
+        await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
+        Assert.Equal(0, await connection.DeliveryCountAsync(fixture.Schema, queueName, 1, cancellationToken));
     }
 
-    private static async Task CreateQueue(
+    private static async Task CreateQueueAsync(
         PostgreSqlTestDatabase fixture,
         string queueName,
         CancellationToken cancellationToken)
     {
         await using NpgsqlConnection connection = fixture.CreateConnection();
-        await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
+        await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
         await using var command = new NpgsqlCommand(
             $"SELECT \"{fixture.Schema}\".create_queue_v2(@queueName, NULL, NULL)",
             connection);
@@ -155,7 +154,7 @@ public sealed class PostgreSqlReceiveConfigurationTests
         Assert.True(Convert.ToInt64(await command.ExecuteScalarAsync(cancellationToken)) > 0);
     }
 
-    private static async Task SendModeMessages(
+    private static async Task SendModeMessagesAsync(
         PostgreSqlTestDatabase fixture,
         string queueName,
         CancellationToken cancellationToken)
@@ -166,12 +165,12 @@ public sealed class PostgreSqlReceiveConfigurationTests
         {
             await sender.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint endpoint = await sender.GetSendEndpoint(new Uri($"queue:{queueName}"))
+            ISendEndpoint endpoint = await sender.GetSendEndpointAsync(new Uri($"queue:{queueName}"), cancellationToken: cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             for (int index = 1; index <= 3; index++)
             {
                 var message = new ModeMessage(Guid.NewGuid(), index);
-                await endpoint.Send(
+                await endpoint.SendAsync(
                         message,
                         context =>
                         {

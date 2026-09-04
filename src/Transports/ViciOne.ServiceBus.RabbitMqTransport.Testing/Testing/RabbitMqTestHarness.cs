@@ -18,8 +18,8 @@ namespace ViciOne.ServiceBus.Testing;
 public class RabbitMqTestHarness :
     BusTestHarness
 {
-    Uri _hostAddress;
-    Uri _inputQueueAddress;
+    Uri? _hostAddress;
+    Uri? _inputQueueAddress;
 
     /// <summary>
     /// Environment variable carrying the user of the run-scoped broker account.
@@ -74,7 +74,7 @@ public class RabbitMqTestHarness :
             : new Uri($"rabbitmq://{host}/test/");
     }
 
-    public RabbitMqTestHarness(string inputQueueName = null)
+    public RabbitMqTestHarness(string? inputQueueName = null)
     {
         // Environment-provided credentials support isolated broker accounts. Guest credentials
         // remain the fallback for caller-owned development brokers.
@@ -90,7 +90,7 @@ public class RabbitMqTestHarness :
 
     public Uri HostAddress
     {
-        get => _hostAddress;
+        get => _hostAddress ?? throw new InvalidOperationException("The RabbitMQ host address has not been configured.");
         set
         {
             _hostAddress = value;
@@ -102,15 +102,16 @@ public class RabbitMqTestHarness :
     public string Password { get; set; }
     public bool CleanVirtualHost { get; set; } = true;
     public override string InputQueueName { get; }
-    public string NodeHostName { get; set; }
+    public string? NodeHostName { get; set; }
     public IMessageNameFormatter NameFormatter { get; }
 
-    public override Uri InputQueueAddress => _inputQueueAddress;
+    public override Uri InputQueueAddress => _inputQueueAddress
+        ?? throw new InvalidOperationException("The RabbitMQ input queue address has not been configured.");
 
-    public event Action<IRabbitMqBusFactoryConfigurator> OnConfigureRabbitMqBus;
-    public event Action<IRabbitMqReceiveEndpointConfigurator> OnConfigureRabbitMqReceiveEndpoint;
-    public event Action<IRabbitMqHostConfigurator> OnConfigureRabbitMqHost;
-    public event Func<IChannel, Task> OnCleanupVirtualHost;
+    public event Action<IRabbitMqBusFactoryConfigurator>? OnConfigureRabbitMqBus;
+    public event Action<IRabbitMqReceiveEndpointConfigurator>? OnConfigureRabbitMqReceiveEndpoint;
+    public event Action<IRabbitMqHostConfigurator>? OnConfigureRabbitMqHost;
+    public event Func<IChannel, Task>? OnCleanupVirtualHost;
 
     protected virtual void ConfigureRabbitMqBus(IRabbitMqBusFactoryConfigurator configurator)
     {
@@ -127,7 +128,7 @@ public class RabbitMqTestHarness :
         OnConfigureRabbitMqHost?.Invoke(configurator);
     }
 
-    protected virtual Task CleanupVirtualHost(IChannel channel)
+    protected virtual Task CleanupVirtualHostAsync(IChannel channel)
     {
         return OnCleanupVirtualHost != null ? OnCleanupVirtualHost(channel) : Task.CompletedTask;
     }
@@ -149,27 +150,27 @@ public class RabbitMqTestHarness :
         return host.Settings;
     }
 
-    public override async Task Clean()
+    public override async Task CleanAsync(CancellationToken cancellationToken = default)
     {
         var settings = GetHostSettings();
 
         var connectionFactory = settings.GetConnectionFactory();
 
         await using var connection = settings.EndpointResolver != null
-            ? await connectionFactory.CreateConnectionAsync(settings.EndpointResolver, settings.Host)
-            : await connectionFactory.CreateConnectionAsync();
+            ? await connectionFactory.CreateConnectionAsync(settings.EndpointResolver, settings.Host, cancellationToken: cancellationToken)
+            : await connectionFactory.CreateConnectionAsync(cancellationToken: cancellationToken);
 
-        await using var channel = await connection.CreateChannelAsync();
+        await using var channel = await connection.CreateChannelAsync(cancellationToken: cancellationToken);
 
-        IList<string> exchanges = await GetVirtualHostEntities("exchanges").ConfigureAwait(false);
+        IList<string> exchanges = await GetVirtualHostEntitiesAsync("exchanges").ConfigureAwait(false);
         foreach (var exchange in exchanges)
-            await channel.ExchangeDeleteAsync(exchange);
+            await channel.ExchangeDeleteAsync(exchange, cancellationToken: cancellationToken);
 
-        IList<string> queues = await GetVirtualHostEntities("queues").ConfigureAwait(false);
+        IList<string> queues = await GetVirtualHostEntitiesAsync("queues").ConfigureAwait(false);
         foreach (var queue in queues)
-            await channel.QueueDeleteAsync(queue);
+            await channel.QueueDeleteAsync(queue, cancellationToken: cancellationToken);
 
-        await channel.CloseAsync();
+        await channel.CloseAsync(cancellationToken: cancellationToken);
 
         CleanVirtualHost = false;
     }
@@ -178,7 +179,7 @@ public class RabbitMqTestHarness :
     /// Drops the virtual host and creates it again, which is the only reset that is guaranteed to
     /// be complete.
     /// <para>
-    /// <see cref="Clean" /> enumerates exchanges and queues and deletes them one by one. That
+    /// <see cref="CleanAsync" /> enumerates exchanges and queues and deletes them one by one. That
     /// leaves behind anything a plugin keeps outside those two entity types — most notably the
     /// scheduled message store of the delayed message exchange. Recreating the virtual host
     /// removes that store with it, because the store belongs to the virtual host.
@@ -188,9 +189,10 @@ public class RabbitMqTestHarness :
     /// on it, so no separate permission call is needed.
     /// </para>
     /// </summary>
-    public async Task RecreateVirtualHost()
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public async Task RecreateVirtualHostAsync(CancellationToken cancellationToken = default)
     {
-        var virtualHost = HostAddress.AbsolutePath.Trim('/');
+        cancellationToken.ThrowIfCancellationRequested(); var virtualHost = HostAddress.AbsolutePath.Trim('/');
         if (string.IsNullOrWhiteSpace(virtualHost) || virtualHost == "/")
         {
             throw new InvalidOperationException(
@@ -231,7 +233,7 @@ public class RabbitMqTestHarness :
         CleanVirtualHost = false;
     }
 
-    async Task<IList<string>> GetVirtualHostEntities(string element)
+    async Task<IList<string>> GetVirtualHostEntitiesAsync(string element)
     {
         using var client = new HttpClient();
         var byteArray = Encoding.ASCII.GetBytes($"{Username}:{Password}");
@@ -245,10 +247,10 @@ public class RabbitMqTestHarness :
 
         var entities = rootElement.EnumerateArray().Select(x => x.GetProperty("name").GetString()).ToArray();
 
-        return entities.Where(x => !string.IsNullOrWhiteSpace(x) && !x.StartsWith("amq.")).ToList();
+        return entities.OfType<string>().Where(x => !string.IsNullOrWhiteSpace(x) && !x.StartsWith("amq.")).ToList();
     }
 
-    protected override async Task<IBusControl> CreateBus()
+    protected override async Task<IBusControl> CreateBusAsync()
     {
         var busControl = ViciOne.ServiceBus.Bus.Factory.CreateUsingRabbitMq(x =>
         {
@@ -272,7 +274,7 @@ public class RabbitMqTestHarness :
         });
 
         if (CleanVirtualHost)
-            await CleanUpVirtualHost();
+            await CleanUpVirtualHostAsync();
 
         return busControl;
     }
@@ -288,7 +290,7 @@ public class RabbitMqTestHarness :
         ConfigureRabbitMqHost(configurator);
     }
 
-    async Task CleanUpVirtualHost()
+    async Task CleanUpVirtualHostAsync()
     {
         try
         {
@@ -327,7 +329,7 @@ public class RabbitMqTestHarness :
                 await channel.ExchangeDeleteAsync(InputQueueName + "_delay");
             }
 
-            await CleanupVirtualHost(channel);
+            await CleanupVirtualHostAsync(channel);
 
             await channel.CloseAsync();
         }

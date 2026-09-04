@@ -80,7 +80,7 @@ public readonly struct NewId :
 
     static ITickProvider TickProvider => _tickProvider ??= new DateTimeTickProvider();
 
-    public DateTime Timestamp
+    public DateTimeOffset Timestamp
     {
         get
         {

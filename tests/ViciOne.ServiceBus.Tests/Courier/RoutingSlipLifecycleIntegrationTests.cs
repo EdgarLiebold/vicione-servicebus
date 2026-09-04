@@ -9,34 +9,34 @@ public sealed class RoutingSlipLifecycleIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-LIFECYCLE", "empty-itinerary-completes")]
-    public async Task EmptyItinerary_PublishesExactlyOneCompletion()
+    public async Task EmptyItinerary_PublishesExactlyOneCompletionAsync()
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-empty");
         using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
         completed.Configure(harness);
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
             Guid trackingNumber = NewId.NextGuid();
 
-            await harness.Bus.Execute(new RoutingSlipBuilder(trackingNumber).Build(), cancellationToken);
-            await completed.Wait(timeout, cancellationToken);
-            await harness.Stop();
+            await harness.Bus.ExecuteAsync(new RoutingSlipBuilder(trackingNumber).Build(), cancellationToken);
+            await completed.WaitAsync(timeout, cancellationToken);
+            await harness.StopAsync(TestContext.Current.CancellationToken);
 
             Assert.Equal(trackingNumber, Assert.Single(completed.Messages).Message.TrackingNumber);
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-LIFECYCLE", "single-activity-complete-event-shape")]
-    public async Task SingleActivity_PublishesOneCompleteActivityAndSlipEventWithExactData()
+    public async Task SingleActivity_PublishesOneCompleteActivityAndSlipEventWithExactDataAsync()
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -49,7 +49,7 @@ public sealed class RoutingSlipLifecycleIntegrationTests
         using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
         activityCompleted.Configure(harness);
         completed.Configure(harness);
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
@@ -58,11 +58,11 @@ public sealed class RoutingSlipLifecycleIntegrationTests
             builder.AddActivity(activity.Name, activity.ExecuteAddress, new CourierArguments("original"));
             builder.AddVariable("SlipVariable", "knife");
 
-            await harness.Bus.Execute(builder.Build(), cancellationToken);
+            await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
             await Task.WhenAll(
-                activityCompleted.Wait(timeout, cancellationToken),
-                completed.Wait(timeout, cancellationToken));
-            await harness.Stop();
+                activityCompleted.WaitAsync(timeout, cancellationToken),
+                completed.WaitAsync(timeout, cancellationToken));
+            await harness.StopAsync(TestContext.Current.CancellationToken);
 
             ConsumeContext<RoutingSlipActivityCompleted> activityEvent = Assert.Single(activityCompleted.Messages);
             ConsumeContext<RoutingSlipCompleted> completion = Assert.Single(completed.Messages);
@@ -77,13 +77,13 @@ public sealed class RoutingSlipLifecycleIntegrationTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-LIFECYCLE", "two-activity-variable-and-log-evolution")]
-    public async Task TwoActivities_PreserveEachLogAndApplyVariableUpdatesExactlyOnce()
+    public async Task TwoActivities_PreserveEachLogAndApplyVariableUpdatesExactlyOnceAsync()
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -100,7 +100,7 @@ public sealed class RoutingSlipLifecycleIntegrationTests
         using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
         activityCompleted.Configure(harness);
         completed.Configure(harness);
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
@@ -110,11 +110,11 @@ public sealed class RoutingSlipLifecycleIntegrationTests
             builder.AddActivity(second.Name, second.ExecuteAddress, new CourierArguments("second"));
             builder.AddVariable("SlipVariable", "knife");
 
-            await harness.Bus.Execute(builder.Build(), cancellationToken);
+            await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
             await Task.WhenAll(
-                activityCompleted.Wait(timeout, cancellationToken),
-                completed.Wait(timeout, cancellationToken));
-            await harness.Stop();
+                activityCompleted.WaitAsync(timeout, cancellationToken),
+                completed.WaitAsync(timeout, cancellationToken));
+            await harness.StopAsync(TestContext.Current.CancellationToken);
 
             Assert.Equal(2, activityCompleted.Count);
             ConsumeContext<RoutingSlipActivityCompleted> firstEvent = Assert.Single(
@@ -134,7 +134,7 @@ public sealed class RoutingSlipLifecycleIntegrationTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 }

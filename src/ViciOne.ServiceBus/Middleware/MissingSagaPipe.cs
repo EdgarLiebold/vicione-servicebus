@@ -29,24 +29,24 @@ public class MissingSagaPipe<TSaga, TMessage> :
         _next.Probe(context);
     }
 
-    public async Task Send(SagaConsumeContext<TSaga, TMessage> context)
+    public async Task SendAsync(SagaConsumeContext<TSaga, TMessage> context)
     {
-        SagaConsumeContext<TSaga, TMessage> sagaConsumeContext = await _repositoryContext.Add(context.Saga).ConfigureAwait(false);
+        SagaConsumeContext<TSaga, TMessage> sagaConsumeContext = await _repositoryContext.AddAsync(context.Saga).ConfigureAwait(false);
 
         sagaConsumeContext.LogAdded();
 
         try
         {
-            await _next.Send(sagaConsumeContext).ConfigureAwait(false);
+            await _next.SendAsync(sagaConsumeContext).ConfigureAwait(false);
 
             if (sagaConsumeContext.IsCompleted)
-                await _repositoryContext.Discard(sagaConsumeContext).ConfigureAwait(false);
+                await _repositoryContext.DiscardAsync(sagaConsumeContext).ConfigureAwait(false);
             else
-                await _repositoryContext.Save(sagaConsumeContext).ConfigureAwait(false);
+                await _repositoryContext.SaveAsync(sagaConsumeContext).ConfigureAwait(false);
         }
         catch (Exception)
         {
-            await _repositoryContext.Discard(sagaConsumeContext).ConfigureAwait(false);
+            await _repositoryContext.DiscardAsync(sagaConsumeContext).ConfigureAwait(false);
 
             throw;
         }

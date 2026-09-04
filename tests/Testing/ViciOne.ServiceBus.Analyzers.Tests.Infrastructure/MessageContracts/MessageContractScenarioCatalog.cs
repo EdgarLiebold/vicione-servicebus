@@ -593,7 +593,7 @@ public static class MessageContractScenarioCatalog
                 static Task PublishNotification<T>(object message) where T : class, INotification
                 {
                     var bus = Bus.Factory.CreateUsingInMemory(cfg => { });
-                    return bus.Publish<T>(message);
+                    return bus.PublishAsync<T>(message);
                 }
 
                 static Task Run() => PublishNotification<INotification>(
@@ -610,7 +610,7 @@ public static class MessageContractScenarioCatalog
 
             public class NotificationConsumer : IConsumer<INotification>
             {
-                public Task Consume(ConsumeContext<INotification> context)
+                public Task ConsumeAsync(ConsumeContext<INotification> context)
                 {
                     var message = {{MessageContractSourceFactory.Mark("new { }")}};
                     return context.PublishBack<INotified>(message);
@@ -619,8 +619,8 @@ public static class MessageContractScenarioCatalog
 
             public static class Extensions
             {
-                public static Task PublishBack<TMessage>(this ConsumeContext context, object message)
-                    where TMessage : class => context.Publish<TMessage>(message);
+                public static Task PublishBack<TMessage>(this ConsumeContext<INotification> context, object message)
+                    where TMessage : class => context.Advanced().PublishAsync<TMessage>(message);
             }
         }
         """;

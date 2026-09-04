@@ -22,12 +22,12 @@ public interface IReceivedMessageList :
     IAsyncEnumerable<IReceivedMessage<T>> SelectAsync<T>(FilterDelegate<IReceivedMessage<T>> filter, CancellationToken cancellationToken = default)
         where T : class;
 
-    Task<bool> Any(Action<ReceivedMessageFilter> apply = default, CancellationToken cancellationToken = default);
+    Task<bool> AnyAsync(Action<ReceivedMessageFilter>? apply = default, CancellationToken cancellationToken = default);
 
-    Task<bool> Any<T>(CancellationToken cancellationToken = default)
+    Task<bool> AnyAsync<T>(CancellationToken cancellationToken = default)
         where T : class;
 
-    Task<bool> Any<T>(FilterDelegate<IReceivedMessage<T>> filter, CancellationToken cancellationToken = default)
+    Task<bool> AnyAsync<T>(FilterDelegate<IReceivedMessage<T>> filter, CancellationToken cancellationToken = default)
         where T : class;
 }
 
@@ -40,5 +40,5 @@ public interface IReceivedMessageList<out T> :
 
     IAsyncEnumerable<IReceivedMessage<T>> SelectAsync(CancellationToken cancellationToken = default);
 
-    Task<bool> Any(CancellationToken cancellationToken = default);
+    Task<bool> AnyAsync(CancellationToken cancellationToken = default);
 }

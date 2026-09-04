@@ -36,7 +36,7 @@ public class RequestResponseBenchmark
         {
             Console.WriteLine("Running Request Response Benchmark");
 
-            TaskBlocking.Wait(RunBenchmark, cancellationToken);
+            TaskBlocking.Wait(RunBenchmarkAsync, cancellationToken);
 
             Console.WriteLine("Message Count: {0}", _settings.MessageCount);
             Console.WriteLine("Clients: {0}", _settings.Clients);
@@ -70,7 +70,7 @@ public class RequestResponseBenchmark
         }
     }
 
-    async Task RunBenchmark()
+    async Task RunBenchmarkAsync()
     {
         await Task.Yield();
 
@@ -79,9 +79,9 @@ public class RequestResponseBenchmark
         for (var i = 0; i < _settings.Clients; i++)
         {
             IRequestClient<RequestMessage> requestClient =
-                await _transport.GetRequestClient<RequestMessage>(_settings.RequestTimeout).ConfigureAwait(false);
+                await _transport.GetRequestClientAsync<RequestMessage>(_settings.RequestTimeout).ConfigureAwait(false);
 
-            stripes[i] = RunStripe(requestClient, _settings.MessageCount / _settings.Clients);
+            stripes[i] = RunStripeAsync(requestClient, _settings.MessageCount / _settings.Clients);
         }
 
         await Task.WhenAll(stripes).ConfigureAwait(false);
@@ -90,15 +90,15 @@ public class RequestResponseBenchmark
         _consumeDuration = await _capture.ConsumeCompleted.ConfigureAwait(false);
     }
 
-    async Task RunStripe(IRequestClient<RequestMessage> client, long messageCount)
+    async Task RunStripeAsync(IRequestClient<RequestMessage> client, long messageCount)
     {
         await Task.Yield();
 
         for (long i = 0; i < messageCount; i++)
         {
             var messageId = NewId.NextGuid();
-            await _capture.ResponseReceived(messageId,
-                    () => client.GetResponse<ResponseMessage>(new RequestMessage(messageId)))
+            await _capture.ResponseReceivedAsync(messageId,
+                    () => client.GetResponseAsync<ResponseMessage>(new RequestMessage(messageId)))
                 .ConfigureAwait(false);
         }
     }

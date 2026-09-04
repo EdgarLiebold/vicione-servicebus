@@ -9,7 +9,7 @@ public sealed class ConsumerAndSagaConcurrencyTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-CONSUMER-CONCURRENCY", "two-message-types-third-waits")]
-    public async Task ConsumerConcurrencyLimit_HoldsTheThirdAdmittedDeliveryUntilASlotIsReleased()
+    public async Task ConsumerConcurrencyLimit_HoldsTheThirdAdmittedDeliveryUntilASlotIsReleasedAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -30,14 +30,14 @@ public sealed class ConsumerAndSagaConcurrencyTests
                 consumerConfiguration.ConcurrencyPolicy = ConsumerConcurrencyPolicy.Parallel(2));
         };
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             Task[] sends =
             [
-                harness.InputQueueSendEndpoint.Send(new ConsumerMessageA(1), cancellationToken),
-                harness.InputQueueSendEndpoint.Send(new ConsumerMessageB(2), cancellationToken),
-                harness.InputQueueSendEndpoint.Send(new ConsumerMessageA(3), cancellationToken),
+                harness.InputQueueSendEndpoint.SendAsync(new ConsumerMessageA(1), cancellationToken),
+                harness.InputQueueSendEndpoint.SendAsync(new ConsumerMessageB(2), cancellationToken),
+                harness.InputQueueSendEndpoint.SendAsync(new ConsumerMessageA(3), cancellationToken),
             ];
 
             await Task.WhenAll(sends).WaitAsync(timeout, cancellationToken);
@@ -61,13 +61,13 @@ public sealed class ConsumerAndSagaConcurrencyTests
         finally
         {
             probe.Release.Release(3);
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-V5-CONSUMER-CONCURRENCY-RUNTIME", "typed-partition-hook-in-real-consume-pipeline")]
-    public async Task PartitionedConsumerConcurrency_SeparatesDifferentKeysAndExcludesTheSameKey()
+    public async Task PartitionedConsumerConcurrency_SeparatesDifferentKeysAndExcludesTheSameKeyAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -80,15 +80,15 @@ public sealed class ConsumerAndSagaConcurrencyTests
                 configuration.UsePartitionedConcurrency<PartitionedMessage, int>(4, static message => message.Key));
         };
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(new PartitionedMessage(1, 1), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new PartitionedMessage(1, 1), cancellationToken);
             await consumer.FirstEntered.Task.WaitAsync(timeout, cancellationToken);
 
             await Task.WhenAll(
-                harness.InputQueueSendEndpoint.Send(new PartitionedMessage(1, 2), cancellationToken),
-                harness.InputQueueSendEndpoint.Send(new PartitionedMessage(2, 3), cancellationToken))
+                harness.InputQueueSendEndpoint.SendAsync(new PartitionedMessage(1, 2), cancellationToken),
+                harness.InputQueueSendEndpoint.SendAsync(new PartitionedMessage(2, 3), cancellationToken))
                 .WaitAsync(timeout, cancellationToken);
 
             await consumer.DifferentKeyEntered.Task.WaitAsync(timeout, cancellationToken);
@@ -101,13 +101,13 @@ public sealed class ConsumerAndSagaConcurrencyTests
         finally
         {
             consumer.ReleaseFirst.TrySetResult();
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SAGA-CONCURRENCY", "two-message-types-third-waits")]
-    public async Task SagaConcurrencyLimit_HoldsTheThirdAdmittedDeliveryUntilASlotIsReleased()
+    public async Task SagaConcurrencyLimit_HoldsTheThirdAdmittedDeliveryUntilASlotIsReleasedAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -128,14 +128,14 @@ public sealed class ConsumerAndSagaConcurrencyTests
                 sagaConfiguration.ConcurrentMessageLimit = 2);
         };
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             Task[] publishes =
             [
-                harness.Bus.Publish(new SagaMessageA(NewId.NextGuid()), cancellationToken),
-                harness.Bus.Publish(new SagaMessageB(NewId.NextGuid()), cancellationToken),
-                harness.Bus.Publish(new SagaMessageA(NewId.NextGuid()), cancellationToken),
+                harness.Bus.PublishAsync(new SagaMessageA(NewId.NextGuid()), cancellationToken),
+                harness.Bus.PublishAsync(new SagaMessageB(NewId.NextGuid()), cancellationToken),
+                harness.Bus.PublishAsync(new SagaMessageA(NewId.NextGuid()), cancellationToken),
             ];
 
             await Task.WhenAll(publishes).WaitAsync(timeout, cancellationToken);
@@ -160,7 +160,7 @@ public sealed class ConsumerAndSagaConcurrencyTests
         {
             probe.Release.Release(3);
             LimitedSaga.Probe = null;
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -201,7 +201,7 @@ public sealed class ConsumerAndSagaConcurrencyTests
 
         public int Maximum => Volatile.Read(ref _maximum);
 
-        public async Task Consume(CancellationToken cancellationToken)
+        public async Task ConsumeAsync(CancellationToken cancellationToken)
         {
             int active = Interlocked.Increment(ref _active);
             UpdateMaximum(ref _maximum, active);
@@ -238,9 +238,9 @@ public sealed class ConsumerAndSagaConcurrencyTests
         IConsumer<ConsumerMessageA>,
         IConsumer<ConsumerMessageB>
     {
-        public Task Consume(ConsumeContext<ConsumerMessageA> context) => probe.Consume(context.CancellationToken);
+        public Task ConsumeAsync(ConsumeContext<ConsumerMessageA> context) => probe.ConsumeAsync(context.CancellationToken);
 
-        public Task Consume(ConsumeContext<ConsumerMessageB> context) => probe.Consume(context.CancellationToken);
+        public Task ConsumeAsync(ConsumeContext<ConsumerMessageB> context) => probe.ConsumeAsync(context.CancellationToken);
     }
 
     private sealed record ConsumerMessageA(int Index);
@@ -263,7 +263,7 @@ public sealed class ConsumerAndSagaConcurrencyTests
 
         public TaskCompletionSource AllCompleted { get; } = NewSignal();
 
-        public async Task Consume(ConsumeContext<PartitionedMessage> context)
+        public async Task ConsumeAsync(ConsumeContext<PartitionedMessage> context)
         {
             switch (context.Message.Sequence)
             {
@@ -293,13 +293,13 @@ public sealed class ConsumerAndSagaConcurrencyTests
 
         public Guid CorrelationId { get; set; }
 
-        public Task Consume(ConsumeContext<SagaMessageA> context) =>
+        public Task ConsumeAsync(ConsumeContext<SagaMessageA> context) =>
             (Probe ?? throw new InvalidOperationException("Saga probe is not configured."))
-            .Consume(context.CancellationToken);
+            .ConsumeAsync(context.CancellationToken);
 
-        public Task Consume(ConsumeContext<SagaMessageB> context) =>
+        public Task ConsumeAsync(ConsumeContext<SagaMessageB> context) =>
             (Probe ?? throw new InvalidOperationException("Saga probe is not configured."))
-            .Consume(context.CancellationToken);
+            .ConsumeAsync(context.CancellationToken);
     }
 
     private sealed record SagaMessageA(Guid CorrelationId) : CorrelatedBy<Guid>;

@@ -51,7 +51,7 @@ public class CancellationTokenOverloadMethodFixer :
                 var title = $"Forward the '{cancellationToken}' parameter to the methods";
                 var codeAction = CodeAction.Create(
                     title,
-                    ct => FixInvocation(context.Document, (InvocationExpressionSyntax)nodeToFix, parameterIndex, parameterName, cancellationToken, ct),
+                    ct => FixInvocationAsync(context.Document, (InvocationExpressionSyntax)nodeToFix, parameterIndex, parameterName, cancellationToken, ct),
                     title);
 
                 context.RegisterCodeFix(codeAction, context.Diagnostics);
@@ -59,7 +59,7 @@ public class CancellationTokenOverloadMethodFixer :
         }
     }
 
-    static async Task<Document> FixInvocation(Document document, InvocationExpressionSyntax nodeToFix, int index, string parameterName,
+    static async Task<Document> FixInvocationAsync(Document document, InvocationExpressionSyntax nodeToFix, int index, string parameterName,
         string cancellationTokenExpression, CancellationToken cancellationToken)
     {
         var editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);

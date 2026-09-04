@@ -10,7 +10,7 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-REVISION", "append-and-preserve-source-itinerary")]
-    public async Task Revision_AppendsAnActivityThenContinuesWithTheSourceItinerary()
+    public async Task Revision_AppendsAnActivityThenContinuesWithTheSourceItineraryAsync()
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -28,7 +28,7 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
         revised.Configure(harness);
         activityCompleted.Configure(harness);
         completed.Configure(harness);
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
@@ -37,12 +37,12 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
             builder.AddActivity(revising.Name, revising.ExecuteAddress, new RevisionArguments("revise"));
             builder.AddActivity("Source", recording.ExecuteAddress, new RevisionArguments("source"));
 
-            await harness.Bus.Execute(builder.Build(), cancellationToken);
+            await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
             await Task.WhenAll(
-                revised.Wait(timeout, cancellationToken),
-                activityCompleted.Wait(timeout, cancellationToken),
-                completed.Wait(timeout, cancellationToken));
-            await harness.Stop();
+                revised.WaitAsync(timeout, cancellationToken),
+                activityCompleted.WaitAsync(timeout, cancellationToken),
+                completed.WaitAsync(timeout, cancellationToken));
+            await harness.StopAsync(TestContext.Current.CancellationToken);
 
             Assert.Equal(["appended", "source"], executionOrder);
             ConsumeContext<RoutingSlipRevised> revision = Assert.Single(revised.Messages);
@@ -54,13 +54,13 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-REVISION", "discard-source-and-complete")]
-    public async Task Revision_CanDiscardTheEntireSourceItineraryAndCompleteImmediately()
+    public async Task Revision_CanDiscardTheEntireSourceItineraryAndCompleteImmediatelyAsync()
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -78,7 +78,7 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
         revised.Configure(harness);
         activityCompleted.Configure(harness);
         completed.Configure(harness);
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
@@ -87,12 +87,12 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
             builder.AddActivity(revising.Name, revising.ExecuteAddress, new RevisionArguments("discard"));
             builder.AddActivity("Discarded", recording.ExecuteAddress, new RevisionArguments("must-not-run"));
 
-            await harness.Bus.Execute(builder.Build(), cancellationToken);
+            await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
             await Task.WhenAll(
-                revised.Wait(timeout, cancellationToken),
-                activityCompleted.Wait(timeout, cancellationToken),
-                completed.Wait(timeout, cancellationToken));
-            await harness.Stop();
+                revised.WaitAsync(timeout, cancellationToken),
+                activityCompleted.WaitAsync(timeout, cancellationToken),
+                completed.WaitAsync(timeout, cancellationToken));
+            await harness.StopAsync(TestContext.Current.CancellationToken);
 
             Assert.Empty(executionOrder);
             ConsumeContext<RoutingSlipRevised> revision = Assert.Single(revised.Messages);
@@ -106,13 +106,13 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-SUBSCRIPTION", "activity-added-subscription")]
-    public async Task RevisionAddedSubscription_ReceivesTheAppendedActivityAndTerminalCompletion()
+    public async Task RevisionAddedSubscription_ReceivesTheAppendedActivityAndTerminalCompletionAsync()
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -132,7 +132,7 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
         revised.Configure(harness);
         activityCompleted.Configure(harness);
         completed.Configure(harness);
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
@@ -140,12 +140,12 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
             var builder = new RoutingSlipBuilder(trackingNumber);
             builder.AddActivity(revising.Name, revising.ExecuteAddress, new RevisionArguments("subscribe"));
 
-            await harness.Bus.Execute(builder.Build(), cancellationToken);
+            await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
             await Task.WhenAll(
-                revised.Wait(timeout, cancellationToken),
-                activityCompleted.Wait(timeout, cancellationToken),
-                completed.Wait(timeout, cancellationToken));
-            await harness.Stop();
+                revised.WaitAsync(timeout, cancellationToken),
+                activityCompleted.WaitAsync(timeout, cancellationToken),
+                completed.WaitAsync(timeout, cancellationToken));
+            await harness.StopAsync(TestContext.Current.CancellationToken);
 
             Assert.Equal(["subscribed"], executionOrder);
             ConsumeContext<RoutingSlipActivityCompleted> appended = Assert.Single(
@@ -158,13 +158,13 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-SUBSCRIPTION", "event-contents-none")]
-    public async Task SubscriptionWithNoContents_ExcludesVariablesAndActivityDataButKeepsIdentity()
+    public async Task SubscriptionWithNoContents_ExcludesVariablesAndActivityDataButKeepsIdentityAsync()
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -177,7 +177,7 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
         using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
         activityCompleted.Configure(harness);
         completed.Configure(harness);
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
@@ -190,11 +190,11 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
             builder.AddVariable("Variable", "knife");
             builder.AddActivity(activity.Name, activity.ExecuteAddress, new CourierArguments("original"));
 
-            await harness.Bus.Execute(builder.Build(), cancellationToken);
+            await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
             await Task.WhenAll(
-                activityCompleted.Wait(timeout, cancellationToken),
-                completed.Wait(timeout, cancellationToken));
-            await harness.Stop();
+                activityCompleted.WaitAsync(timeout, cancellationToken),
+                completed.WaitAsync(timeout, cancellationToken));
+            await harness.StopAsync(TestContext.Current.CancellationToken);
 
             ConsumeContext<RoutingSlipActivityCompleted> actual = Assert.Single(activityCompleted.Messages);
             Assert.Equal(trackingNumber, actual.Message.TrackingNumber);
@@ -204,7 +204,7 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
@@ -212,7 +212,7 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("REQ-VSB-COURIER-SUBSCRIPTION", "custom-completion-message-default-and-raw-json")]
-    public async Task CustomCompletionMessage_RoundTripsWithDefaultAndRawJson(bool useRawJson)
+    public async Task CustomCompletionMessage_RoundTripsWithDefaultAndRawJsonAsync(bool useRawJson)
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -225,28 +225,24 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
             CustomEventArguments>();
         using var customCompleted = new CourierMessageRecorder<RegistrationCompleted>(1);
         customCompleted.Configure(harness);
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
             Guid trackingNumber = NewId.NextGuid();
             var staleTimestamp = new DateTime(2001, 2, 3, 4, 5, 6, DateTimeKind.Utc);
             var builder = new RoutingSlipBuilder(trackingNumber);
-            await builder.AddSubscription(
-                harness.InputQueueAddress,
-                RoutingSlipEvents.Completed,
-                RoutingSlipEventContents.All,
-                endpoint => endpoint.Send<RegistrationCompleted>(new
-                {
-                    TrackingNumber = trackingNumber,
-                    Timestamp = staleTimestamp,
-                    Value = "Secret Value",
-                }, cancellationToken));
+            await builder.AddSubscriptionAsync(harness.InputQueueAddress, RoutingSlipEvents.Completed, RoutingSlipEventContents.All, endpoint => endpoint.SendAsync<RegistrationCompleted>(new
+            {
+                TrackingNumber = trackingNumber,
+                Timestamp = staleTimestamp,
+                Value = "Secret Value",
+            }, cancellationToken), TestContext.Current.CancellationToken);
             builder.AddActivity(activity.Name, activity.ExecuteAddress, new CustomEventArguments("payload"));
 
-            await harness.Bus.Execute(builder.Build(), cancellationToken);
-            await customCompleted.Wait(timeout, cancellationToken);
-            await harness.Stop();
+            await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
+            await customCompleted.WaitAsync(timeout, cancellationToken);
+            await harness.StopAsync(TestContext.Current.CancellationToken);
 
             ConsumeContext<RegistrationCompleted> actual = Assert.Single(customCompleted.Messages);
             Assert.Equal(trackingNumber, actual.Message.TrackingNumber);
@@ -257,7 +253,7 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
@@ -266,7 +262,7 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
     public sealed class RecordingRevisionActivity(ConcurrentQueue<string> executionOrder) :
         IExecuteActivity<RevisionArguments>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<RevisionArguments> context)
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<RevisionArguments> context)
         {
             executionOrder.Enqueue(context.Arguments.Label);
             return Task.FromResult(context.Completed());
@@ -276,7 +272,7 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
     public sealed class RevisingActivity(Func<Uri> recordingAddress, bool preserveSource) :
         IExecuteActivity<RevisionArguments>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<RevisionArguments> context) =>
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<RevisionArguments> context) =>
             Task.FromResult(context.ReviseItinerary(itinerary =>
             {
                 if (preserveSource)
@@ -290,7 +286,7 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
     public sealed class SubscriptionRevisingActivity(Func<Uri> recordingAddress, Uri subscriptionAddress) :
         IExecuteActivity<RevisionArguments>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<RevisionArguments> context) =>
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<RevisionArguments> context) =>
             Task.FromResult(context.ReviseItinerary(itinerary =>
             {
                 itinerary.AddActivity("Subscribed", recordingAddress(), new RevisionArguments("subscribed"));
@@ -306,7 +302,7 @@ public sealed class RoutingSlipRevisionAndSubscriptionTests
 
     public sealed class CustomEventActivity : IExecuteActivity<CustomEventArguments>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<CustomEventArguments> context) =>
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<CustomEventArguments> context) =>
             Task.FromResult(context.Completed());
     }
 

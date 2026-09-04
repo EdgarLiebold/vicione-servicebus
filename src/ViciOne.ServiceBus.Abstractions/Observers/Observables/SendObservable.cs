@@ -8,21 +8,21 @@ public class SendObservable :
     Connectable<ISendObserver>,
     ISendObserver
 {
-    public Task PreSend<T>(SendContext<T> context)
+    public Task PreSendAsync<T>(SendContext<T> context)
         where T : class
     {
-        return ForEachAsync(x => x.PreSend(context));
+        return ForEachAsync(x => x.PreSendAsync(context));
     }
 
-    public Task PostSend<T>(SendContext<T> context)
+    public Task PostSendAsync<T>(SendContext<T> context)
         where T : class
     {
-        return ForEachAsync(x => x.PostSend(context));
+        return ForEachAsync(x => x.PostSendAsync(context));
     }
 
-    public Task SendFault<T>(SendContext<T> context, Exception exception)
+    public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
         where T : class
     {
-        return ForEachAsync(x => x.SendFault(context, exception));
+        return ForEachAsync(x => x.SendFaultAsync(context, exception));
     }
 }

@@ -35,7 +35,7 @@ internal class WriteProperty<T, TProperty> : IWriteProperty<T, TProperty>
 
     public Type TargetType { get; }
 
-    public void Set(T content, TProperty value) => _setMethod(content, value);
+    public void Set(T content, TProperty? value) => _setMethod(content, value!);
 
     static Action<T, TProperty> CreateSetter(Type implementationType, MethodInfo setMethod)
     {

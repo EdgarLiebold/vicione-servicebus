@@ -6,18 +6,18 @@ namespace ViciOne.ServiceBus.Transports;
 
 public static class ReceiveTransportObserverExtensions
 {
-    public static Task NotifyReady(this IReceiveTransportObserver observer, Uri inputAddress, bool isStarted = true)
+    public static Task NotifyReadyAsync(this IReceiveTransportObserver observer, Uri inputAddress, bool isStarted = true, CancellationToken cancellationToken = default)
     {
-        return observer.Ready(new ReceiveTransportReadyEvent(inputAddress, isStarted));
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return observer.ReadyAsync(new ReceiveTransportReadyEvent(inputAddress, isStarted));
     }
 
-    public static Task NotifyCompleted(this IReceiveTransportObserver observer, Uri inputAddress, DeliveryMetrics metrics)
+    public static Task NotifyCompletedAsync(this IReceiveTransportObserver observer, Uri inputAddress, DeliveryMetrics metrics, CancellationToken cancellationToken = default)
     {
-        return observer.Completed(new ReceiveTransportCompletedEvent(inputAddress, metrics));
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return observer.CompletedAsync(new ReceiveTransportCompletedEvent(inputAddress, metrics));
     }
 
-    public static Task NotifyFaulted(this IReceiveTransportObserver observer, Uri inputAddress, Exception exception, bool isTerminal)
+    public static Task NotifyFaultedAsync(this IReceiveTransportObserver observer, Uri inputAddress, Exception exception, bool isTerminal, CancellationToken cancellationToken = default)
     {
-        return observer.Faulted(new ReceiveTransportFaultedEvent(inputAddress, exception, isTerminal));
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return observer.FaultedAsync(new ReceiveTransportFaultedEvent(inputAddress, exception, isTerminal));
     }
 }

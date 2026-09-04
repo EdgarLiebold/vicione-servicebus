@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Initializers;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
 public static class EndpointConventionExtensions
 {
@@ -15,15 +15,15 @@ public static class EndpointConventionExtensions
     /// <param name="message">The message</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static async Task Send<T>(this ISendEndpointProvider provider, T message, CancellationToken cancellationToken = default)
+    public static async Task SendAsync<T>(this ISendEndpointProvider provider, T message, CancellationToken cancellationToken = default)
         where T : class
     {
         if (!EndpointConvention.TryGetDestinationAddress<T>(provider, out var destinationAddress))
             throw new ArgumentException($"A convention for the message type {TypeCache<T>.ShortName} was not found");
 
-        var endpoint = await provider.GetSendEndpoint(destinationAddress).ConfigureAwait(false);
+        var endpoint = await provider.GetSendEndpointAsync(destinationAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        await endpoint.Send(message, cancellationToken).ConfigureAwait(false);
+        await endpoint.SendAsync(message, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -35,16 +35,16 @@ public static class EndpointConventionExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static async Task Send<T>(this ISendEndpointProvider provider, T message, IPipe<SendContext<T>> pipe,
+    public static async Task SendAsync<T>(this ISendEndpointProvider provider, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken = default)
         where T : class
     {
         if (!EndpointConvention.TryGetDestinationAddress<T>(provider, out var destinationAddress))
             throw new ArgumentException($"A convention for the message type {TypeCache<T>.ShortName} was not found");
 
-        var endpoint = await provider.GetSendEndpoint(destinationAddress).ConfigureAwait(false);
+        var endpoint = await provider.GetSendEndpointAsync(destinationAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        await endpoint.Send(message, pipe, cancellationToken).ConfigureAwait(false);
+        await endpoint.SendAsync(message, pipe, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -56,10 +56,10 @@ public static class EndpointConventionExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task Send<T>(this ISendEndpointProvider provider, T message, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
+    public static Task SendAsync<T>(this ISendEndpointProvider provider, T message, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        return Send(provider, message, (IPipe<SendContext<T>>)pipe, cancellationToken);
+        return SendAsync(provider, message, (IPipe<SendContext<T>>)pipe, cancellationToken);
     }
 
     /// <summary>
@@ -69,7 +69,7 @@ public static class EndpointConventionExtensions
     /// <param name="message">The message</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static async Task Send(this ISendEndpointProvider provider, object message, CancellationToken cancellationToken = default)
+    public static async Task SendAsync(this ISendEndpointProvider provider, object message, CancellationToken cancellationToken = default)
     {
         if (message == null)
             throw new ArgumentNullException(nameof(message));
@@ -79,9 +79,9 @@ public static class EndpointConventionExtensions
         if (!EndpointConvention.TryGetDestinationAddress(provider, messageType, out var destinationAddress))
             throw new ArgumentException($"A convention for the message type {TypeCache.GetShortName(messageType)} was not found");
 
-        var endpoint = await provider.GetSendEndpoint(destinationAddress).ConfigureAwait(false);
+        var endpoint = await provider.GetSendEndpointAsync(destinationAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        await endpoint.Send(message, messageType, cancellationToken).ConfigureAwait(false);
+        await endpoint.SendAsync(message, messageType, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -92,14 +92,14 @@ public static class EndpointConventionExtensions
     /// <param name="messageType"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static async Task Send(this ISendEndpointProvider provider, object message, Type messageType, CancellationToken cancellationToken = default)
+    public static async Task SendAsync(this ISendEndpointProvider provider, object message, Type messageType, CancellationToken cancellationToken = default)
     {
         if (!EndpointConvention.TryGetDestinationAddress(provider, messageType, out var destinationAddress))
             throw new ArgumentException($"A convention for the message type {TypeCache.GetShortName(messageType)} was not found");
 
-        var endpoint = await provider.GetSendEndpoint(destinationAddress).ConfigureAwait(false);
+        var endpoint = await provider.GetSendEndpointAsync(destinationAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        await endpoint.Send(message, messageType, cancellationToken).ConfigureAwait(false);
+        await endpoint.SendAsync(message, messageType, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -110,7 +110,7 @@ public static class EndpointConventionExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static async Task Send(this ISendEndpointProvider provider, object message, IPipe<SendContext> pipe,
+    public static async Task SendAsync(this ISendEndpointProvider provider, object message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
     {
         if (message == null)
@@ -121,9 +121,9 @@ public static class EndpointConventionExtensions
         if (!EndpointConvention.TryGetDestinationAddress(provider, messageType, out var destinationAddress))
             throw new ArgumentException($"A convention for the message type {TypeCache.GetShortName(messageType)} was not found");
 
-        var endpoint = await provider.GetSendEndpoint(destinationAddress).ConfigureAwait(false);
+        var endpoint = await provider.GetSendEndpointAsync(destinationAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        await endpoint.Send(message, pipe, cancellationToken).ConfigureAwait(false);
+        await endpoint.SendAsync(message, pipe, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -135,7 +135,7 @@ public static class EndpointConventionExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static async Task Send(this ISendEndpointProvider provider, object message, Type messageType, IPipe<SendContext> pipe,
+    public static async Task SendAsync(this ISendEndpointProvider provider, object message, Type messageType, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
     {
         if (message == null)
@@ -147,9 +147,9 @@ public static class EndpointConventionExtensions
         if (!EndpointConvention.TryGetDestinationAddress(provider, messageType, out var destinationAddress))
             throw new ArgumentException($"A convention for the message type {TypeCache.GetShortName(messageType)} was not found");
 
-        var endpoint = await provider.GetSendEndpoint(destinationAddress).ConfigureAwait(false);
+        var endpoint = await provider.GetSendEndpointAsync(destinationAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        await endpoint.Send(message, messageType, pipe, cancellationToken).ConfigureAwait(false);
+        await endpoint.SendAsync(message, messageType, pipe, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -160,10 +160,10 @@ public static class EndpointConventionExtensions
     /// <param name="values"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task Send<T>(this ISendEndpointProvider provider, object values, CancellationToken cancellationToken = default)
+    public static Task SendAsync<T>(this ISendEndpointProvider provider, object values, CancellationToken cancellationToken = default)
         where T : class
     {
-        return Send(provider, values, Pipe.Empty<SendContext<T>>(), cancellationToken);
+        return SendAsync(provider, values, Pipe.Empty<SendContext<T>>(), cancellationToken);
     }
 
     /// <summary>
@@ -175,7 +175,7 @@ public static class EndpointConventionExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static async Task Send<T>(this ISendEndpointProvider provider, object values, IPipe<SendContext<T>> pipe,
+    public static async Task SendAsync<T>(this ISendEndpointProvider provider, object values, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken = default)
         where T : class
     {
@@ -185,13 +185,13 @@ public static class EndpointConventionExtensions
         if (!EndpointConvention.TryGetDestinationAddress<T>(provider, out var destinationAddress))
             throw new ArgumentException($"A convention for the message type {TypeCache<T>.ShortName} was not found");
 
-        var endpoint = await provider.GetSendEndpoint(destinationAddress).ConfigureAwait(false);
+        var endpoint = await provider.GetSendEndpointAsync(destinationAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         (var message, IPipe<SendContext<T>> sendPipe) = provider is ConsumeContext consumeContext
-            ? await MessageInitializerCache<T>.InitializeMessage(consumeContext, values, pipe).ConfigureAwait(false)
-            : await MessageInitializerCache<T>.InitializeMessage(values, pipe, cancellationToken).ConfigureAwait(false);
+            ? await MessageInitializerCache<T>.InitializeMessageAsync(consumeContext, values, pipe, cancellationToken: cancellationToken).ConfigureAwait(false)
+            : await MessageInitializerCache<T>.InitializeMessageAsync(values, pipe, cancellationToken).ConfigureAwait(false);
 
-        await endpoint.Send(message, sendPipe, cancellationToken).ConfigureAwait(false);
+        await endpoint.SendAsync(message, sendPipe, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -203,10 +203,10 @@ public static class EndpointConventionExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task Send<T>(this ISendEndpointProvider provider, object values, IPipe<SendContext> pipe,
+    public static Task SendAsync<T>(this ISendEndpointProvider provider, object values, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
         where T : class
     {
-        return Send(provider, values, (IPipe<SendContext<T>>)pipe, cancellationToken);
+        return SendAsync(provider, values, (IPipe<SendContext<T>>)pipe, cancellationToken);
     }
 }

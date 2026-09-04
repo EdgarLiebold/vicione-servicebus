@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.BenchmarkConsole;
 public class SupervisorBenchmark
 {
     [Benchmark]
-    public async Task AddAgentAndStop()
+    public async Task AddAgentAndStopAsync()
     {
         var supervisor = new Supervisor();
 
@@ -21,13 +21,13 @@ public class SupervisorBenchmark
 
         await supervisor.Ready;
 
-        await supervisor.Stop();
+        await supervisor.StopAsync();
 
         await supervisor.Completed;
     }
 
     [Benchmark]
-    public async Task AddAgentWithManagerAndStop()
+    public async Task AddAgentWithManagerAndStopAsync()
     {
         var supervisor = new Supervisor();
 
@@ -43,7 +43,7 @@ public class SupervisorBenchmark
 
         await supervisor.Ready;
 
-        await supervisor.Stop();
+        await supervisor.StopAsync();
 
         await supervisor.Completed;
     }

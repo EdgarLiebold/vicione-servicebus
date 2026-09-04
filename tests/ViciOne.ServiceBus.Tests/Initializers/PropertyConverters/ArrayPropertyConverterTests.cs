@@ -8,7 +8,7 @@ public sealed class ArrayPropertyConverterTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-INITIALIZER-ARRAY-CONVERSION", "scalar-exact-and-nested")]
-    public async Task ArrayProperties_ConvertScalarValuesAndNestedContractsWithoutLosingOrder()
+    public async Task ArrayProperties_ConvertScalarValuesAndNestedContractsWithoutLosingOrderAsync()
     {
         var source = new
         {
@@ -17,7 +17,7 @@ public sealed class ArrayPropertyConverterTests
             SubValues = new object[] { new { Text = "Frank" }, new { Text = "Lola" } },
         };
 
-        InitializeContext<ArrayMessage> context = await MessageInitializerCache<ArrayMessage>.Initialize(
+        InitializeContext<ArrayMessage> context = await MessageInitializerCache<ArrayMessage>.InitializeAsync(
             source,
             TestContext.Current.CancellationToken);
 

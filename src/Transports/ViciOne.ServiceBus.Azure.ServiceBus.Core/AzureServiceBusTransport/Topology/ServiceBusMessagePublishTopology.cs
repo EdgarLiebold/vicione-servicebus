@@ -57,7 +57,7 @@ public class ServiceBusMessagePublishTopology<TMessage> :
 
     public string Path => _topicConfigurator.Path;
 
-    public string BasePath
+    public string? BasePath
     {
         get => _topicConfigurator.BasePath;
         set => _topicConfigurator.BasePath = value;

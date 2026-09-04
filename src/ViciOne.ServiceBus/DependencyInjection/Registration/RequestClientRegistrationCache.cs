@@ -17,7 +17,7 @@ public static class RequestClientRegistrationCache
 
     static CachedRegistration Factory(Type type)
     {
-        return (CachedRegistration)Activator.CreateInstance(typeof(CachedRegistration<>).MakeGenericType(type));
+        return (CachedRegistration)(Activator.CreateInstance(typeof(CachedRegistration<>).MakeGenericType(type)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
     }
 
 

@@ -32,7 +32,7 @@ public class ShortTypeConverter :
         return true;
     }
 
-    public bool TryConvert(object input, out short result)
+    public bool TryConvert(object? input, out short result)
     {
         if (input != null)
         {
@@ -50,7 +50,7 @@ public class ShortTypeConverter :
         return true;
     }
 
-    public bool TryConvert(string input, out short result)
+    public bool TryConvert(string? input, out short result)
     {
         return short.TryParse(input, out result);
     }

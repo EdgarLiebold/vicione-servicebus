@@ -22,12 +22,14 @@ public class RabbitMqPublishTopology :
 
     IRabbitMqMessagePublishTopology<T> IRabbitMqPublishTopology.GetMessageTopology<T>()
     {
-        return GetMessageTopology<T>() as IRabbitMqMessagePublishTopologyConfigurator<T>;
+        return GetMessageTopology<T>() as IRabbitMqMessagePublishTopologyConfigurator<T>
+            ?? throw new InvalidOperationException($"The message topology for '{typeof(T)}' is not a RabbitMQ publish topology.");
     }
 
     IRabbitMqMessagePublishTopologyConfigurator IRabbitMqPublishTopologyConfigurator.GetMessageTopology(Type messageType)
     {
-        return GetMessageTopology(messageType) as IRabbitMqMessagePublishTopologyConfigurator;
+        return GetMessageTopology(messageType) as IRabbitMqMessagePublishTopologyConfigurator
+            ?? throw new InvalidOperationException($"The message topology for '{messageType}' is not a RabbitMQ publish topology.");
     }
 
     public BrokerTopology GetPublishBrokerTopology()
@@ -46,7 +48,8 @@ public class RabbitMqPublishTopology :
 
     IRabbitMqMessagePublishTopologyConfigurator<T> IRabbitMqPublishTopologyConfigurator.GetMessageTopology<T>()
     {
-        return GetMessageTopology<T>() as IRabbitMqMessagePublishTopologyConfigurator<T>;
+        return GetMessageTopology<T>() as IRabbitMqMessagePublishTopologyConfigurator<T>
+            ?? throw new InvalidOperationException($"The message topology for '{typeof(T)}' is not a RabbitMQ publish topology.");
     }
 
     protected override IMessagePublishTopologyConfigurator CreateMessageTopology<T>()

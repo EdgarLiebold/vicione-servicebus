@@ -33,17 +33,17 @@ public class InMemoryRequestResponseBenchmark
     }
 
     [GlobalCleanup]
-    public Task Cleanup() => _busControl.StopAsync(CancellationToken.None);
+    public Task CleanupAsync() => _busControl.StopAsync(CancellationToken.None);
 
     [Benchmark(Description = "InMemory request/response")]
-    public Task<Response<ExampleResponse>> RequestResponse() => _requestClient.GetResponse<ExampleResponse>(_request);
+    public Task<Response<ExampleResponse>> RequestResponseAsync() => _requestClient.GetResponseAsync<ExampleResponse>(_request);
 }
 
 
 public class ExampleRequestConsumer :
     IConsumer<ExampleRequest>
 {
-    public Task Consume(ConsumeContext<ExampleRequest> context)
+    public Task ConsumeAsync(ConsumeContext<ExampleRequest> context)
     {
         return context.RespondAsync(new ExampleResponse
         {

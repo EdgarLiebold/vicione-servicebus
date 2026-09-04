@@ -23,7 +23,7 @@ public sealed class RabbitMqTopologyEntityCache
     readonly ConcurrentDictionary<EntityKey, Entry> _entries = new();
     long _generation;
 
-    public Task DeclareExchange(Exchange exchange, Func<CancellationToken, Task> declare, CancellationToken cancellationToken)
+    public Task DeclareExchangeAsync(Exchange exchange, Func<CancellationToken, Task> declare, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(exchange);
         ArgumentNullException.ThrowIfNull(declare);
@@ -31,14 +31,14 @@ public sealed class RabbitMqTopologyEntityCache
         if (!IsStable(exchange))
             return declare(cancellationToken);
 
-        return Execute(
+        return ExecuteAsync(
             EntityKey.Exchange(exchange.ExchangeName),
             Definition.Exchange(exchange),
             declare,
             cancellationToken);
     }
 
-    public Task DeclareQueue(Queue queue, Func<CancellationToken, Task> declare, CancellationToken cancellationToken)
+    public Task DeclareQueueAsync(Queue queue, Func<CancellationToken, Task> declare, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(queue);
         ArgumentNullException.ThrowIfNull(declare);
@@ -46,14 +46,14 @@ public sealed class RabbitMqTopologyEntityCache
         if (!IsStable(queue))
             return declare(cancellationToken);
 
-        return Execute(
+        return ExecuteAsync(
             EntityKey.Queue(queue.QueueName),
             Definition.Queue(queue),
             declare,
             cancellationToken);
     }
 
-    public Task Bind(ExchangeToQueueBinding binding, Func<CancellationToken, Task> bind, CancellationToken cancellationToken)
+    public Task BindAsync(ExchangeToQueueBinding binding, Func<CancellationToken, Task> bind, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(binding);
         ArgumentNullException.ThrowIfNull(bind);
@@ -61,7 +61,7 @@ public sealed class RabbitMqTopologyEntityCache
         if (!IsStable(binding.Source) || !IsStable(binding.Destination))
             return bind(cancellationToken);
 
-        return Execute(
+        return ExecuteAsync(
             EntityKey.ExchangeToQueueBinding(
                 binding.Source.ExchangeName,
                 binding.Destination.QueueName,
@@ -71,7 +71,7 @@ public sealed class RabbitMqTopologyEntityCache
             cancellationToken);
     }
 
-    public Task Bind(ExchangeToExchangeBinding binding, Func<CancellationToken, Task> bind, CancellationToken cancellationToken)
+    public Task BindAsync(ExchangeToExchangeBinding binding, Func<CancellationToken, Task> bind, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(binding);
         ArgumentNullException.ThrowIfNull(bind);
@@ -79,7 +79,7 @@ public sealed class RabbitMqTopologyEntityCache
         if (!IsStable(binding.Source) || !IsStable(binding.Destination))
             return bind(cancellationToken);
 
-        return Execute(
+        return ExecuteAsync(
             EntityKey.ExchangeToExchangeBinding(
                 binding.Source.ExchangeName,
                 binding.Destination.ExchangeName,
@@ -99,7 +99,7 @@ public sealed class RabbitMqTopologyEntityCache
         _entries.Clear();
     }
 
-    async Task Execute(EntityKey key, Definition definition, Func<CancellationToken, Task> action, CancellationToken cancellationToken)
+    async Task ExecuteAsync(EntityKey key, Definition definition, Func<CancellationToken, Task> action, CancellationToken cancellationToken)
     {
         while (true)
         {
@@ -246,7 +246,7 @@ public sealed class RabbitMqTopologyEntityCache
                 byte[] bytes => Frame('x', Convert.ToHexString(bytes)),
                 ReadOnlyMemory<byte> bytes => Frame('x', Convert.ToHexString(bytes.Span)),
                 Memory<byte> bytes => Frame('x', Convert.ToHexString(bytes.Span)),
-                IDictionary<string, object> dictionary => FormatDictionary(dictionary.Select(pair =>
+                IDictionary<string, object?> dictionary => FormatDictionary(dictionary.Select(pair =>
                     Frame('k', pair.Key) + Format(pair.Value))),
                 System.Collections.IDictionary dictionary => FormatDictionary(dictionary.Keys.Cast<object?>().Select(key =>
                     Format(key) + Format(key == null ? null : dictionary[key]))),

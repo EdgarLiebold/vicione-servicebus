@@ -15,17 +15,17 @@ public class DelegateConsumerFactory<TConsumer> :
         _factoryMethod = factoryMethod ?? throw new ArgumentNullException(nameof(factoryMethod));
     }
 
-    public async Task Send<TMessage>(ConsumeContext<TMessage> context, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)
+    public async Task SendAsync<TMessage>(ConsumeContext<TMessage> context, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)
         where TMessage : class
     {
-        TConsumer consumer = null;
+        TConsumer? consumer = null;
         try
         {
             consumer = _factoryMethod();
             if (consumer == null)
                 throw new ConsumerException($"Unable to resolve consumer type '{TypeCache<TConsumer>.ShortName}'.");
 
-            await next.Send(new ConsumerConsumeContextScope<TConsumer, TMessage>(context, consumer)).ConfigureAwait(false);
+            await next.SendAsync(new ConsumerConsumeContextScope<TConsumer, TMessage>(context, consumer)).ConfigureAwait(false);
         }
         finally
         {

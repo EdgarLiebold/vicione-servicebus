@@ -1,6 +1,6 @@
-namespace ViciOne.ServiceBus.Samples.DeveloperJourneys;
-
 using Microsoft.Extensions.DependencyInjection;
+
+namespace ViciOne.ServiceBus.Samples.DeveloperJourneys;
 
 public static class Journey08MessageData
 {
@@ -13,10 +13,10 @@ public static class Journey08MessageData
             options.MaximumTransportEnvelopeBytes = 2 * 1024 * 1024;
         });
 
-    public static async Task<LargeOrderDocument> Store(
+    public static async Task<LargeOrderDocument> StoreAsync(
         IMessageDataRepository repository,
         Guid orderId,
         string document,
-        CancellationToken cancellationToken) =>
-        new(orderId, await repository.PutString(document, cancellationToken));
+        CancellationToken cancellationToken = default) =>
+        new(orderId, await repository.PutStringAsync(document, cancellationToken));
 }

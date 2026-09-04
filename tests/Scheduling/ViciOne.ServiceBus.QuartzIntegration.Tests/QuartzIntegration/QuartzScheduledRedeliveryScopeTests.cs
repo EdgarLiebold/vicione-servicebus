@@ -16,13 +16,13 @@ public sealed class QuartzScheduledRedeliveryScopeTests
     [InlineData(RedeliveryScope.Endpoint)]
     [InlineData(RedeliveryScope.Bus)]
     [RequirementCoverage("REQ-VSB-QUARTZ-REDELIVERY-SCOPE", "handler-consumer-message-endpoint-and-bus")]
-    public async Task ConfiguredScope_RedeliversTwiceThroughQuartzAndPreservesTheCounter(RedeliveryScope scope)
+    public async Task ConfiguredScope_RedeliversTwiceThroughQuartzAndPreservesTheCounterAsync(RedeliveryScope scope)
     {
         TimeSpan timeout = OperationTimeout();
         var probe = new RedeliveryProbe();
         string queueName = $"quartz-redelivery-{scope.ToString().ToLowerInvariant()}";
         var inputAddress = new Uri($"loopback://localhost/{queueName}");
-        await using QuartzTestBus fixture = await QuartzTestBus.Start(
+        await using QuartzTestBus fixture = await QuartzTestBus.StartAsync(
             timeout,
             configure: configurator =>
             {
@@ -37,7 +37,7 @@ public sealed class QuartzScheduledRedeliveryScopeTests
                     if (scope == RedeliveryScope.Handler)
                     {
                         endpoint.Handler<RedeliveryPayload>(
-                            probe.Consume,
+                            probe.ConsumeAsync,
                             handler => handler.UseScheduledRedelivery(ConfigureIntervals));
                     }
                     else
@@ -57,10 +57,9 @@ public sealed class QuartzScheduledRedeliveryScopeTests
             });
         var scheduledCommands = new ConsumeCompletionObserver<ScheduleMessage>(_ => true, expectedCount: 2);
         using ConnectHandle observer = fixture.Bus.ConnectConsumeObserver(scheduledCommands);
-        ISendEndpoint input = await fixture.Bus.GetSendEndpoint(inputAddress)
-            .WaitAsync(timeout, TestContext.Current.CancellationToken);
+        ISendEndpoint input = await fixture.Bus.GetSendEndpointAsync(inputAddress, TestContext.Current.CancellationToken).WaitAsync(timeout, TestContext.Current.CancellationToken);
 
-        await input.Send(new RedeliveryPayload(scope.ToString()), TestContext.Current.CancellationToken);
+        await input.SendAsync(new RedeliveryPayload(scope.ToString()), TestContext.Current.CancellationToken);
         int deliveredRedeliveryCount = await probe.Delivered
             .WaitAsync(timeout, TestContext.Current.CancellationToken);
         await scheduledCommands.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
@@ -89,7 +88,7 @@ public sealed class QuartzScheduledRedeliveryScopeTests
 
     private sealed class RedeliveryConsumer(RedeliveryProbe probe) : IConsumer<RedeliveryPayload>
     {
-        public Task Consume(ConsumeContext<RedeliveryPayload> context) => probe.Consume(context);
+        public Task ConsumeAsync(ConsumeContext<RedeliveryPayload> context) => probe.ConsumeAsync(context);
     }
 
     private sealed class RedeliveryProbe
@@ -101,13 +100,13 @@ public sealed class QuartzScheduledRedeliveryScopeTests
         public Task<int> Delivered => _delivered.Task;
         public ConcurrentQueue<int> RedeliveryCounts { get; } = new();
 
-        public Task Consume(ConsumeContext<RedeliveryPayload> context)
+        public Task ConsumeAsync(ConsumeContext<RedeliveryPayload> context)
         {
-            RedeliveryCounts.Enqueue(context.GetRedeliveryCount());
+            RedeliveryCounts.Enqueue(context.Advanced().GetRedeliveryCount());
             if (Interlocked.Increment(ref _attempts) <= 2)
                 throw new InvalidOperationException("Intentional redelivery failure.");
 
-            _delivered.TrySetResult(context.GetRedeliveryCount());
+            _delivered.TrySetResult(context.Advanced().GetRedeliveryCount());
             return Task.CompletedTask;
         }
     }

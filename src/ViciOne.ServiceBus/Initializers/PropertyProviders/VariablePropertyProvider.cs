@@ -21,21 +21,30 @@ public class VariablePropertyProvider<TInput, TProperty, TValue> :
         _provider = provider;
     }
 
-    public Task<TValue> GetProperty<T>(InitializeContext<T, TInput> context)
+    public Task<TValue?> GetPropertyAsync<T>(InitializeContext<T, TInput> context, CancellationToken cancellationToken = default)
         where T : class
     {
         if (!context.HasInput)
-            return TaskResults.Default<TValue>();
+            return TaskResults.DefaultAsync<TValue>(cancellationToken: cancellationToken);
 
-        Task<TProperty> propertyTask = _provider.GetProperty(context);
+        Task<TProperty?> propertyTask = _provider.GetPropertyAsync(context, cancellationToken: cancellationToken);
         if (propertyTask.Status == TaskStatus.RanToCompletion)
-            return propertyTask.Result.GetValue(context);
+            return propertyTask.Result == null
+                ? TaskResults.DefaultAsync<TValue>(cancellationToken: cancellationToken)
+                : GetValueAsync(propertyTask.Result);
 
-        async Task<TValue> GetPropertyAsync()
+        async Task<TValue?> GetPropertyAsync()
         {
             var property = await propertyTask.ConfigureAwait(false);
+            if (property == null)
+                return default;
 
-            return await property.GetValue(context).ConfigureAwait(false);
+            return await property.GetValueAsync(context, cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+
+        async Task<TValue?> GetValueAsync(TProperty property)
+        {
+            return await property.GetValueAsync(context, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         return GetPropertyAsync();

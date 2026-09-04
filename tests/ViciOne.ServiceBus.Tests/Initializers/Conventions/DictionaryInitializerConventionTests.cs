@@ -9,7 +9,7 @@ public sealed class DictionaryInitializerConventionTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-DICTIONARY-INITIALIZER", "expando-scalar-enum-guid")]
-    public async Task ExpandoObjectInput_ConvertsScalarEnumAndGuidValues()
+    public async Task ExpandoObjectInput_ConvertsScalarEnumAndGuidValuesAsync()
     {
         var uniqueId = Guid.Parse("9b915632-74ed-4145-af1c-9793468c48b8");
         var source = new ExpandoObject();
@@ -20,7 +20,7 @@ public sealed class DictionaryInitializerConventionTests
         values.Add(nameof(MessageContract.CustomerType), 1L);
         values.Add(nameof(MessageContract.TypeByName), "Internal");
 
-        InitializeContext<MessageContract> context = await MessageInitializerCache<MessageContract>.Initialize(
+        InitializeContext<MessageContract> context = await MessageInitializerCache<MessageContract>.InitializeAsync(
             source,
             TestContext.Current.CancellationToken);
 
@@ -33,7 +33,7 @@ public sealed class DictionaryInitializerConventionTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DICTIONARY-INITIALIZER", "plain-dictionary")]
-    public async Task DictionaryInput_InitializesTheMessageContract()
+    public async Task DictionaryInput_InitializesTheMessageContractAsync()
     {
         var uniqueId = Guid.Parse("7cdcb2c7-7f7b-4aa7-9896-e2f4aef1614f");
         IDictionary<string, object> source = new Dictionary<string, object>
@@ -43,7 +43,7 @@ public sealed class DictionaryInitializerConventionTests
             [nameof(MessageContract.UniqueId)] = uniqueId,
         };
 
-        InitializeContext<MessageContract> context = await MessageInitializerCache<MessageContract>.Initialize(
+        InitializeContext<MessageContract> context = await MessageInitializerCache<MessageContract>.InitializeAsync(
             source,
             TestContext.Current.CancellationToken);
 
@@ -54,7 +54,7 @@ public sealed class DictionaryInitializerConventionTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DICTIONARY-INITIALIZER", "nested-dictionary-property")]
-    public async Task DictionaryValuedProperty_InitializesANestedMessageContract()
+    public async Task DictionaryValuedProperty_InitializesANestedMessageContractAsync()
     {
         var uniqueId = Guid.Parse("a637c61e-4ca8-46c5-a1db-dee0f24ed020");
         IDictionary<string, object> contract = new Dictionary<string, object>
@@ -64,7 +64,7 @@ public sealed class DictionaryInitializerConventionTests
             [nameof(MessageContract.UniqueId)] = uniqueId,
         };
 
-        InitializeContext<MessageEnvelope> context = await MessageInitializerCache<MessageEnvelope>.Initialize(
+        InitializeContext<MessageEnvelope> context = await MessageInitializerCache<MessageEnvelope>.InitializeAsync(
             new { Contract = contract },
             TestContext.Current.CancellationToken);
 
@@ -76,7 +76,7 @@ public sealed class DictionaryInitializerConventionTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DICTIONARY-INITIALIZER", "nested-expando-list")]
-    public async Task NestedExpandoObjectList_ConvertsEveryExposedValue()
+    public async Task NestedExpandoObjectList_ConvertsEveryExposedValueAsync()
     {
         var orderId = Guid.Parse("59010453-4b77-4a1e-9827-665a11cb1ddc");
 
@@ -103,7 +103,7 @@ public sealed class DictionaryInitializerConventionTests
         values.Add(nameof(MessageContract.Product), product);
         values.Add(nameof(MessageContract.Orders), new List<object> { order });
 
-        InitializeContext<MessageContract> context = await MessageInitializerCache<MessageContract>.Initialize(
+        InitializeContext<MessageContract> context = await MessageInitializerCache<MessageContract>.InitializeAsync(
             source,
             TestContext.Current.CancellationToken);
 

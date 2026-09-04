@@ -127,7 +127,7 @@ public interface IClientFactory
     /// <param name="timeout"></param>
     /// <typeparam name="T">The message type</typeparam>
     /// <returns></returns>
-    IRequestClient<T> CreateRequestClient<T>(ConsumeContext consumeContext, RequestTimeout timeout = default)
+    IRequestClient<T> CreateRequestClient<T>(ConsumeContext? consumeContext, RequestTimeout timeout = default)
         where T : class;
 
     /// <summary>
@@ -148,6 +148,6 @@ public interface IClientFactory
     /// <param name="timeout">The default timeout for requests</param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    IRequestClient<T> CreateRequestClient<T>(ConsumeContext consumeContext, Uri destinationAddress, RequestTimeout timeout = default)
+    IRequestClient<T> CreateRequestClient<T>(ConsumeContext? consumeContext, Uri destinationAddress, RequestTimeout timeout = default)
         where T : class;
 }

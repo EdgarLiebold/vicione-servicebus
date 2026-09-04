@@ -16,12 +16,12 @@ public sealed class AzureStorageMessageDataTimeProviderTests
     [InlineData(0, 1)]
     [InlineData(-5, 1)]
     [RequirementCoverage("REQ-VSB-AZURE-STORAGE-MESSAGE-DATA-TIME", "ttl-and-minimum-expiration-use-injected-clock")]
-    public async Task TimeToLiveMetadata_UsesTheInjectedClockAndMinimumExpiration(int requestedMinutes, int expectedMinutes)
+    public async Task TimeToLiveMetadata_UsesTheInjectedClockAndMinimumExpirationAsync(int requestedMinutes, int expectedMinutes)
     {
         var handler = new RecordingBlobHandler();
         var repository = CreateRepository(handler, new FixedTimeProvider(Now));
 
-        Uri address = await repository.Put(
+        Uri address = await repository.PutAsync(
             new MemoryStream([1, 2, 3]),
             TimeSpan.FromMinutes(requestedMinutes),
             TestContext.Current.CancellationToken);
@@ -35,12 +35,12 @@ public sealed class AzureStorageMessageDataTimeProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AZURE-STORAGE-MESSAGE-DATA-TIME", "missing-ttl-does-not-write-expiration-metadata")]
-    public async Task MissingTimeToLive_DoesNotIssueAMetadataWrite()
+    public async Task MissingTimeToLive_DoesNotIssueAMetadataWriteAsync()
     {
         var handler = new RecordingBlobHandler();
         var repository = CreateRepository(handler, new FixedTimeProvider(Now));
 
-        await repository.Put(new MemoryStream([4, 5, 6]), cancellationToken: TestContext.Current.CancellationToken);
+        await repository.PutAsync(new MemoryStream([4, 5, 6]), cancellationToken: TestContext.Current.CancellationToken);
 
         RecordedRequest upload = Assert.Single(handler.Requests);
         Assert.False(upload.IsMetadata);
@@ -76,7 +76,7 @@ public sealed class AzureStorageMessageDataTimeProviderTests
     {
         public List<RecordedRequest> Requests { get; } = [];
 
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken = default)
         {
             bool isMetadata = request.RequestUri?.Query.Contains("comp=metadata", StringComparison.Ordinal) == true;
             string? validUntilUtc = request.Headers.TryGetValues("x-ms-meta-ValidUntilUtc", out IEnumerable<string>? values)

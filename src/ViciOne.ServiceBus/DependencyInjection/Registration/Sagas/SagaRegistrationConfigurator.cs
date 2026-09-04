@@ -8,9 +8,9 @@ public class SagaRegistrationConfigurator<TSaga> :
     where TSaga : class, ISaga
 {
     readonly IRegistrationConfigurator _configurator;
-    readonly ISagaRegistration _registration;
+    readonly ISagaRegistration? _registration = null!;
 
-    public SagaRegistrationConfigurator(IRegistrationConfigurator configurator, ISagaRegistration registration = null)
+    public SagaRegistrationConfigurator(IRegistrationConfigurator configurator, ISagaRegistration? registration = null)
     {
         _configurator = configurator;
         _registration = registration;
@@ -36,7 +36,9 @@ public class SagaRegistrationConfigurator<TSaga> :
 
         configure?.Invoke(configurator);
 
-        _configurator.AddEndpoint<SagaEndpointDefinition<TSaga>, TSaga>(_registration, configurator.Settings);
+        var registration = _registration
+            ?? throw new ConfigurationException("An endpoint cannot be configured for a repository-only saga registration.");
+        _configurator.AddEndpoint<SagaEndpointDefinition<TSaga>, TSaga>(registration, configurator.Settings);
 
         return this;
     }

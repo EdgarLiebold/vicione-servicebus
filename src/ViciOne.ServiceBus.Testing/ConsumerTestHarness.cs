@@ -7,18 +7,18 @@ public class ConsumerTestHarness<TConsumer> :
     IConsumerTestHarness<TConsumer>
     where TConsumer : class, IConsumer
 {
-    readonly Action<IConsumerConfigurator<TConsumer>> _configure;
+    readonly Action<IConsumerConfigurator<TConsumer>>? _configure;
     readonly ReceivedMessageList _consumed;
     readonly IConsumerFactory<TConsumer> _consumerFactory;
 
     public ConsumerTestHarness(BusTestHarness testHarness, IConsumerFactory<TConsumer> consumerFactory,
-        Action<IConsumerConfigurator<TConsumer>> configure, string queueName)
+        Action<IConsumerConfigurator<TConsumer>> configure, string? queueName)
         : this(testHarness, consumerFactory, queueName)
     {
         _configure = configure;
     }
 
-    public ConsumerTestHarness(BusTestHarness testHarness, IConsumerFactory<TConsumer> consumerFactory, string queueName)
+    public ConsumerTestHarness(BusTestHarness testHarness, IConsumerFactory<TConsumer> consumerFactory, string? queueName)
         : this(testHarness, consumerFactory)
     {
         if (string.IsNullOrWhiteSpace(queueName))

@@ -19,7 +19,7 @@ public class RoutingSlipExecutor :
         _timeProvider = timeProvider ?? TimeProvider.System;
     }
 
-    public async Task Execute(RoutingSlip routingSlip, CancellationToken cancellationToken = default)
+    public async Task ExecuteAsync(RoutingSlip routingSlip, CancellationToken cancellationToken = default)
     {
         if (routingSlip.RanToCompletion())
         {
@@ -28,15 +28,15 @@ public class RoutingSlipExecutor :
 
             IRoutingSlipEventPublisher publisher = new RoutingSlipEventPublisher(_sendEndpointProvider, _publishEndpoint, routingSlip, cancellationToken);
 
-            await publisher.PublishRoutingSlipCompleted(timestamp, duration, routingSlip.Variables).ConfigureAwait(false);
+            await publisher.PublishRoutingSlipCompletedAsync(timestamp, duration, routingSlip.Variables, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
         else
         {
             var address = routingSlip.GetNextExecuteAddress() ?? throw new RoutingSlipException("Activity execute address was not specified.");
 
-            var endpoint = await _sendEndpointProvider.GetSendEndpoint(address).ConfigureAwait(false);
+            var endpoint = await _sendEndpointProvider.GetSendEndpointAsync(address, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-            await endpoint.Send(routingSlip, cancellationToken).ConfigureAwait(false);
+            await endpoint.SendAsync(routingSlip, cancellationToken).ConfigureAwait(false);
         }
     }
 }

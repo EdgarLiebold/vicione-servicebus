@@ -116,7 +116,7 @@ public readonly struct Response<T1, T2> :
 
     public Guid? InitiatorId => _response.InitiatorId;
 
-    public DateTime? ExpirationTime => _response.ExpirationTime;
+    public DateTimeOffset? ExpirationTime => _response.ExpirationTime;
 
     public Uri? SourceAddress => _response.SourceAddress;
 
@@ -126,7 +126,7 @@ public readonly struct Response<T1, T2> :
 
     public Uri? FaultAddress => _response.FaultAddress;
 
-    public DateTime? SentTime => _response.SentTime;
+    public DateTimeOffset? SentTime => _response.SentTime;
 
     public Headers Headers => _response.Headers;
 
@@ -243,7 +243,7 @@ public readonly struct Response<T1, T2, T3> :
 
     public Guid? InitiatorId => _response.InitiatorId;
 
-    public DateTime? ExpirationTime => _response.ExpirationTime;
+    public DateTimeOffset? ExpirationTime => _response.ExpirationTime;
 
     public Uri? SourceAddress => _response.SourceAddress;
 
@@ -253,7 +253,7 @@ public readonly struct Response<T1, T2, T3> :
 
     public Uri? FaultAddress => _response.FaultAddress;
 
-    public DateTime? SentTime => _response.SentTime;
+    public DateTimeOffset? SentTime => _response.SentTime;
 
     public Headers Headers => _response.Headers;
 

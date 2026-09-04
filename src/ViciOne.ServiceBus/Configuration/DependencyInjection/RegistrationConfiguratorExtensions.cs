@@ -13,7 +13,7 @@ public static class RegistrationConfiguratorExtensions
     /// <param name="configure"></param>
     /// <typeparam name="T">The consumer type</typeparam>
     public static IConsumerRegistrationConfigurator<T> AddConsumer<T>(this IRegistrationConfigurator configurator,
-        Action<IConsumerConfigurator<T>> configure = null)
+        Action<IConsumerConfigurator<T>>? configure = null)
         where T : class, IConsumer
     {
         return configure != null ? configurator.AddConsumer<T>((_, cfg) => configure.Invoke(cfg)) : configurator.AddConsumer<T>();
@@ -27,7 +27,7 @@ public static class RegistrationConfiguratorExtensions
     /// <param name="configure"></param>
     /// <typeparam name="T">The consumer type</typeparam>
     public static IConsumerRegistrationConfigurator<T> AddConsumer<T>(this IRegistrationConfigurator configurator,
-        Type consumerDefinitionType, Action<IConsumerConfigurator<T>> configure = null)
+        Type consumerDefinitionType, Action<IConsumerConfigurator<T>>? configure = null)
         where T : class, IConsumer
     {
         return configure != null
@@ -43,7 +43,7 @@ public static class RegistrationConfiguratorExtensions
     /// <param name="configure"></param>
     /// <typeparam name="T">The saga type</typeparam>
     public static ISagaRegistrationConfigurator<T> AddSaga<T>(this IRegistrationConfigurator configurator,
-        Action<ISagaConfigurator<T>> configure = null)
+        Action<ISagaConfigurator<T>>? configure = null)
         where T : class, ISaga
     {
         return configure != null ? configurator.AddSaga<T>((_, cfg) => configure.Invoke(cfg)) : configurator.AddSaga<T>();
@@ -58,7 +58,7 @@ public static class RegistrationConfiguratorExtensions
     /// <param name="configure"></param>
     /// <typeparam name="T">The saga type</typeparam>
     public static ISagaRegistrationConfigurator<T> AddSaga<T>(this IRegistrationConfigurator configurator, Type sagaDefinitionType,
-        Action<ISagaConfigurator<T>> configure = null)
+        Action<ISagaConfigurator<T>>? configure = null)
         where T : class, ISaga
     {
         return configure != null
@@ -75,7 +75,7 @@ public static class RegistrationConfiguratorExtensions
     /// <typeparam name="TStateMachine"></typeparam>
     /// <typeparam name="T"></typeparam>
     public static ISagaRegistrationConfigurator<T> AddSagaStateMachine<TStateMachine, T>(this IRegistrationConfigurator configurator,
-        Action<ISagaConfigurator<T>> configure = null)
+        Action<ISagaConfigurator<T>>? configure = null)
         where TStateMachine : class, SagaStateMachine<T>
         where T : class, SagaStateMachineInstance
     {
@@ -94,7 +94,7 @@ public static class RegistrationConfiguratorExtensions
     /// <typeparam name="TStateMachine"></typeparam>
     /// <typeparam name="T"></typeparam>
     public static ISagaRegistrationConfigurator<T> AddSagaStateMachine<TStateMachine, T>(this IRegistrationConfigurator configurator,
-        Type sagaDefinitionType, Action<ISagaConfigurator<T>> configure = null)
+        Type sagaDefinitionType, Action<ISagaConfigurator<T>>? configure = null)
         where TStateMachine : class, SagaStateMachine<T>
         where T : class, SagaStateMachineInstance
     {
@@ -112,7 +112,7 @@ public static class RegistrationConfiguratorExtensions
     /// <typeparam name="TArguments">The argument type</typeparam>
     public static IExecuteActivityRegistrationConfigurator<TActivity, TArguments> AddExecuteActivity<TActivity, TArguments>(
         this IRegistrationConfigurator configurator,
-        Action<IExecuteActivityConfigurator<TActivity, TArguments>> configure = null)
+        Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
@@ -131,7 +131,7 @@ public static class RegistrationConfiguratorExtensions
     /// <typeparam name="TArguments">The argument type</typeparam>
     public static IExecuteActivityRegistrationConfigurator<TActivity, TArguments> AddExecuteActivity<TActivity, TArguments>(
         this IRegistrationConfigurator configurator, Type executeActivityDefinitionType,
-        Action<IExecuteActivityConfigurator<TActivity, TArguments>> configure = null)
+        Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
@@ -151,8 +151,8 @@ public static class RegistrationConfiguratorExtensions
     /// <typeparam name="TLog">The log type</typeparam>
     public static IActivityRegistrationConfigurator<TActivity, TArguments, TLog> AddActivity<TActivity, TArguments, TLog>(
         this IRegistrationConfigurator configurator,
-        Action<IExecuteActivityConfigurator<TActivity, TArguments>> configureExecute = null,
-        Action<ICompensateActivityConfigurator<TActivity, TLog>> configureCompensate = null)
+        Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configureExecute = null,
+        Action<ICompensateActivityConfigurator<TActivity, TLog>>? configureCompensate = null)
         where TActivity : class, IActivity<TArguments, TLog>
         where TLog : class
         where TArguments : class
@@ -173,8 +173,8 @@ public static class RegistrationConfiguratorExtensions
     /// <typeparam name="TLog">The log type</typeparam>
     public static IActivityRegistrationConfigurator<TActivity, TArguments, TLog> AddActivity<TActivity, TArguments, TLog>(
         this IRegistrationConfigurator configurator, Type activityDefinitionType,
-        Action<IExecuteActivityConfigurator<TActivity, TArguments>> configureExecute = null,
-        Action<ICompensateActivityConfigurator<TActivity, TLog>> configureCompensate = null)
+        Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configureExecute = null,
+        Action<ICompensateActivityConfigurator<TActivity, TLog>>? configureCompensate = null)
         where TActivity : class, IActivity<TArguments, TLog>
         where TLog : class
         where TArguments : class
@@ -190,12 +190,12 @@ public static class RegistrationConfiguratorExtensions
     /// <param name="consumerType">The consumer type</param>
     /// <param name="consumerDefinitionType">The consumer definition type</param>
     public static IConsumerRegistrationConfigurator AddConsumer(this IRegistrationConfigurator configurator, Type consumerType,
-        Type consumerDefinitionType = null)
+        Type? consumerDefinitionType = null)
     {
         if (RegistrationMetadata.IsSaga(consumerType))
             throw new ArgumentException($"{TypeCache.GetShortName(consumerType)} is a saga, and cannot be registered as a consumer", nameof(consumerType));
 
-        var register = (IRegisterConsumer)Activator.CreateInstance(typeof(RegisterConsumer<>).MakeGenericType(consumerType));
+        var register = (IRegisterConsumer)(Activator.CreateInstance(typeof(RegisterConsumer<>).MakeGenericType(consumerType)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
         return register.Register(configurator, consumerDefinitionType);
     }
@@ -206,12 +206,12 @@ public static class RegistrationConfiguratorExtensions
     /// <param name="configurator"></param>
     /// <param name="sagaType">The saga type</param>
     /// <param name="sagaDefinitionType">The saga definition type</param>
-    public static ISagaRegistrationConfigurator AddSaga(this IRegistrationConfigurator configurator, Type sagaType, Type sagaDefinitionType = null)
+    public static ISagaRegistrationConfigurator AddSaga(this IRegistrationConfigurator configurator, Type sagaType, Type? sagaDefinitionType = null)
     {
         if (sagaType.ImplementsInterface<SagaStateMachineInstance>())
             throw new ArgumentException($"State machine sagas must be registered using AddSagaStateMachine: {TypeCache.GetShortName(sagaType)}");
 
-        var register = (IRegisterSaga)Activator.CreateInstance(typeof(RegisterSaga<>).MakeGenericType(sagaType));
+        var register = (IRegisterSaga)(Activator.CreateInstance(typeof(RegisterSaga<>).MakeGenericType(sagaType)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
         return register.Register(configurator, sagaDefinitionType);
     }
@@ -223,12 +223,12 @@ public static class RegistrationConfiguratorExtensions
     /// <param name="sagaType">The saga type</param>
     /// <param name="sagaDefinitionType">The saga definition type</param>
     public static ISagaRegistrationConfigurator AddSagaStateMachine(this IRegistrationConfigurator configurator, Type sagaType,
-        Type sagaDefinitionType = null)
+        Type? sagaDefinitionType = null)
     {
         if (!sagaType.TryGetSingleClosedGenericArguments(typeof(SagaStateMachine<>), out Type[] types))
             throw new ArgumentException($"The type is not a saga state machine: {TypeCache.GetShortName(sagaType)}", nameof(sagaType));
 
-        var register = (IRegisterSaga)Activator.CreateInstance(typeof(RegisterSagaStateMachine<,>).MakeGenericType(sagaType, types[0]));
+        var register = (IRegisterSaga)(Activator.CreateInstance(typeof(RegisterSagaStateMachine<,>).MakeGenericType(sagaType, types[0])) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
         return register.Register(configurator, sagaDefinitionType);
     }
@@ -240,12 +240,12 @@ public static class RegistrationConfiguratorExtensions
     /// <param name="activityType"></param>
     /// <param name="activityDefinitionType"></param>
     public static IActivityRegistrationConfigurator AddActivity(this IRegistrationConfigurator configurator, Type activityType,
-        Type activityDefinitionType = null)
+        Type? activityDefinitionType = null)
     {
         if (!activityType.TryGetSingleClosedGenericArguments(typeof(IActivity<,>), out Type[] types))
             throw new ArgumentException($"The type is not a Courier activity: {TypeCache.GetShortName(activityType)}", nameof(activityType));
 
-        var register = (IRegisterActivity)Activator.CreateInstance(typeof(RegisterActivity<,,>).MakeGenericType(activityType, types[0], types[1]));
+        var register = (IRegisterActivity)(Activator.CreateInstance(typeof(RegisterActivity<,,>).MakeGenericType(activityType, types[0], types[1])) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
         return register.Register(configurator, activityDefinitionType);
     }
@@ -257,12 +257,12 @@ public static class RegistrationConfiguratorExtensions
     /// <param name="activityType"></param>
     /// <param name="activityDefinitionType"></param>
     public static IExecuteActivityRegistrationConfigurator AddExecuteActivity(this IRegistrationConfigurator configurator, Type activityType,
-        Type activityDefinitionType = null)
+        Type? activityDefinitionType = null)
     {
         if (!activityType.TryGetSingleClosedGenericArguments(typeof(IExecuteActivity<>), out Type[] types))
             throw new ArgumentException($"The type is not a Courier execute activity: {TypeCache.GetShortName(activityType)}", nameof(activityType));
 
-        var register = (IRegisterExecuteActivity)Activator.CreateInstance(typeof(RegisterExecuteActivity<,>).MakeGenericType(activityType, types[0]));
+        var register = (IRegisterExecuteActivity)(Activator.CreateInstance(typeof(RegisterExecuteActivity<,>).MakeGenericType(activityType, types[0])) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
         return register.Register(configurator, activityDefinitionType);
     }
@@ -274,7 +274,7 @@ public static class RegistrationConfiguratorExtensions
     /// <param name="futureType"></param>
     /// <param name="futureDefinitionType">The future definition type</param>
     public static IFutureRegistrationConfigurator AddFuture(this IRegistrationConfigurator configurator, Type futureType,
-        Type futureDefinitionType = null)
+        Type? futureDefinitionType = null)
     {
         ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(futureType);
@@ -284,7 +284,7 @@ public static class RegistrationConfiguratorExtensions
             || types[0] != typeof(FutureState))
             throw new ArgumentException($"The type is not a future: {TypeCache.GetShortName(futureType)}", nameof(futureType));
 
-        var register = (IRegisterFuture)Activator.CreateInstance(typeof(RegisterFuture<>).MakeGenericType(futureType));
+        var register = (IRegisterFuture)(Activator.CreateInstance(typeof(RegisterFuture<>).MakeGenericType(futureType)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
         return register.Register(configurator, futureDefinitionType);
     }
@@ -292,7 +292,7 @@ public static class RegistrationConfiguratorExtensions
 
     interface IRegisterConsumer
     {
-        IConsumerRegistrationConfigurator Register(IRegistrationConfigurator configurator, Type consumerDefinitionType);
+        IConsumerRegistrationConfigurator Register(IRegistrationConfigurator configurator, Type? consumerDefinitionType);
     }
 
 
@@ -300,7 +300,7 @@ public static class RegistrationConfiguratorExtensions
         IRegisterConsumer
         where TConsumer : class, IConsumer
     {
-        public IConsumerRegistrationConfigurator Register(IRegistrationConfigurator configurator, Type consumerDefinitionType)
+        public IConsumerRegistrationConfigurator Register(IRegistrationConfigurator configurator, Type? consumerDefinitionType)
         {
             return configurator.AddConsumer<TConsumer>(consumerDefinitionType);
         }
@@ -309,7 +309,7 @@ public static class RegistrationConfiguratorExtensions
 
     interface IRegisterSaga
     {
-        ISagaRegistrationConfigurator Register(IRegistrationConfigurator configurator, Type sagaDefinitionType);
+        ISagaRegistrationConfigurator Register(IRegistrationConfigurator configurator, Type? sagaDefinitionType);
     }
 
 
@@ -317,7 +317,7 @@ public static class RegistrationConfiguratorExtensions
         IRegisterSaga
         where TSaga : class, ISaga
     {
-        public ISagaRegistrationConfigurator Register(IRegistrationConfigurator configurator, Type sagaDefinitionType)
+        public ISagaRegistrationConfigurator Register(IRegistrationConfigurator configurator, Type? sagaDefinitionType)
         {
             return configurator.AddSaga<TSaga>(sagaDefinitionType);
         }
@@ -329,7 +329,7 @@ public static class RegistrationConfiguratorExtensions
         where TStateMachine : class, SagaStateMachine<TSaga>
         where TSaga : class, SagaStateMachineInstance
     {
-        public ISagaRegistrationConfigurator Register(IRegistrationConfigurator configurator, Type sagaDefinitionType)
+        public ISagaRegistrationConfigurator Register(IRegistrationConfigurator configurator, Type? sagaDefinitionType)
         {
             return configurator.AddSagaStateMachine<TStateMachine, TSaga>(sagaDefinitionType);
         }
@@ -338,7 +338,7 @@ public static class RegistrationConfiguratorExtensions
 
     interface IRegisterActivity
     {
-        IActivityRegistrationConfigurator Register(IRegistrationConfigurator configurator, Type activityDefinitionType);
+        IActivityRegistrationConfigurator Register(IRegistrationConfigurator configurator, Type? activityDefinitionType);
     }
 
 
@@ -348,7 +348,7 @@ public static class RegistrationConfiguratorExtensions
         where TArguments : class
         where TLog : class
     {
-        public IActivityRegistrationConfigurator Register(IRegistrationConfigurator configurator, Type activityDefinitionType)
+        public IActivityRegistrationConfigurator Register(IRegistrationConfigurator configurator, Type? activityDefinitionType)
         {
             return configurator.AddActivity<TActivity, TArguments, TLog>(activityDefinitionType);
         }
@@ -357,7 +357,7 @@ public static class RegistrationConfiguratorExtensions
 
     interface IRegisterExecuteActivity
     {
-        IExecuteActivityRegistrationConfigurator Register(IRegistrationConfigurator configurator, Type activityDefinitionType);
+        IExecuteActivityRegistrationConfigurator Register(IRegistrationConfigurator configurator, Type? activityDefinitionType);
     }
 
 
@@ -366,7 +366,7 @@ public static class RegistrationConfiguratorExtensions
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
-        public IExecuteActivityRegistrationConfigurator Register(IRegistrationConfigurator configurator, Type activityDefinitionType)
+        public IExecuteActivityRegistrationConfigurator Register(IRegistrationConfigurator configurator, Type? activityDefinitionType)
         {
             return configurator.AddExecuteActivity<TActivity, TArguments>(activityDefinitionType);
         }
@@ -375,7 +375,7 @@ public static class RegistrationConfiguratorExtensions
 
     interface IRegisterFuture
     {
-        IFutureRegistrationConfigurator Register(IRegistrationConfigurator configurator, Type futureDefinitionType);
+        IFutureRegistrationConfigurator Register(IRegistrationConfigurator configurator, Type? futureDefinitionType);
     }
 
 
@@ -383,7 +383,7 @@ public static class RegistrationConfiguratorExtensions
         IRegisterFuture
         where TFuture : class, SagaStateMachine<FutureState>
     {
-        public IFutureRegistrationConfigurator Register(IRegistrationConfigurator configurator, Type futureDefinitionType)
+        public IFutureRegistrationConfigurator Register(IRegistrationConfigurator configurator, Type? futureDefinitionType)
         {
             return configurator.AddFuture<TFuture>(futureDefinitionType);
         }

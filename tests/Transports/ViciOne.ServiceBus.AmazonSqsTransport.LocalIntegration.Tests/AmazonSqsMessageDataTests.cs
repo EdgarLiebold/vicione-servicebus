@@ -13,7 +13,7 @@ public sealed class AmazonSqsMessageDataTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0228", "s3-backed-payload-round-trips-through-sqs")]
-    public async Task S3BackedPayload_RoundTripsThroughSqs()
+    public async Task S3BackedPayload_RoundTripsThroughSqsAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("message-data");
         string queueName = fixture.Name("input");
@@ -32,8 +32,10 @@ public sealed class AmazonSqsMessageDataTests
                 try
                 {
                     MessageData<string> payload = context.Message.Payload;
-                    string value = await payload.Value.WaitAsync(fixture.OperationTimeout, context.CancellationToken);
-                    handled.TrySetResult(new MessageDataObservation(payload.Address, value));
+                    string value = Assert.IsType<string>(
+                        await payload.Value.WaitAsync(fixture.OperationTimeout, context.CancellationToken));
+                    Uri address = Assert.IsType<Uri>(payload.Address);
+                    handled.TrySetResult(new MessageDataObservation(address, value));
                 }
                 catch (Exception exception)
                 {
@@ -57,7 +59,7 @@ public sealed class AmazonSqsMessageDataTests
                 .DoesS3BucketExistV2Async(fixture.S3Client, bucketName)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken));
 
-            await bus.Publish(
+            await bus.PublishAsync(
                     new S3PayloadMessage(new PutMessageData<string>(expected)),
                     cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);

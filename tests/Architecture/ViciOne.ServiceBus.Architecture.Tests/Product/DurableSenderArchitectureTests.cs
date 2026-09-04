@@ -135,7 +135,7 @@ public sealed class DurableSenderArchitectureTests
     {
         string filter = Source(
             "src/ViciOne.ServiceBus/InMemoryTransport/DurableSend/InMemoryDurableSendCompletionFilter.cs");
-        int pipeline = filter.IndexOf("await next.Send(context)", StringComparison.Ordinal);
+        int pipeline = filter.IndexOf("await next.SendAsync(context)", StringComparison.Ordinal);
         int receiveCompleted = filter.IndexOf("await context.ReceiveCompleted", StringComparison.Ordinal);
         int completion = filter.IndexOf("ConsumerCompletion.CompleteAsync", StringComparison.Ordinal);
         Assert.True(pipeline >= 0);

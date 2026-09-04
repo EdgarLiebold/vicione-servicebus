@@ -21,7 +21,7 @@ public class SanitizedRoutingSlip :
     [SuppressMessage("ReSharper", "ConstantNullCoalescingCondition")]
     public SanitizedRoutingSlip(ConsumeContext<RoutingSlip> context)
     {
-        _serializerContext = context.SerializerContext;
+        _serializerContext = context.Advanced().SerializerContext;
 
         var routingSlip = context.Message;
 
@@ -52,7 +52,7 @@ public class SanitizedRoutingSlip :
     }
 
     public Guid TrackingNumber { get; private set; }
-    public DateTime CreateTimestamp { get; private set; }
+    public DateTimeOffset CreateTimestamp { get; private set; }
     public IList<Activity> Itinerary { get; private set; }
     public IList<ActivityLog> ActivityLogs { get; private set; }
     public IList<CompensateLog> CompensateLogs { get; private set; }

@@ -14,30 +14,30 @@ public static class JobServiceEventExtensions
     public static TJob? GetJob<TJob>(this ConsumeContext<StartJob> context)
         where TJob : class
     {
-        return context.SerializerContext.DeserializeObject<TJob>(context.Message.Job);
+        return context.Advanced().SerializerContext.DeserializeObject<TJob>(context.Message.Job);
     }
 
     public static TJob? GetJob<TJob>(this ConsumeContext<FaultJob> context)
         where TJob : class
     {
-        return context.SerializerContext.DeserializeObject<TJob>(context.Message.Job);
+        return context.Advanced().SerializerContext.DeserializeObject<TJob>(context.Message.Job);
     }
 
     public static TJob? GetJob<TJob>(this ConsumeContext<CompleteJob> context)
         where TJob : class
     {
-        return context.SerializerContext.DeserializeObject<TJob>(context.Message.Job);
+        return context.Advanced().SerializerContext.DeserializeObject<TJob>(context.Message.Job);
     }
 
     public static TJob? GetJob<TJob>(this ConsumeContext<JobCompleted> context)
         where TJob : class
     {
-        return context.SerializerContext.DeserializeObject<TJob>(context.Message.Job);
+        return context.Advanced().SerializerContext.DeserializeObject<TJob>(context.Message.Job);
     }
 
     public static TJob? GetJob<TJob>(this ConsumeContext<JobFaulted> context)
         where TJob : class
     {
-        return context.SerializerContext.DeserializeObject<TJob>(context.Message.Job);
+        return context.Advanced().SerializerContext.DeserializeObject<TJob>(context.Message.Job);
     }
 }

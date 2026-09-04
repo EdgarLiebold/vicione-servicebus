@@ -7,5 +7,5 @@ public interface ICompensateActivityFactory<out TActivity, TLog> :
     where TLog : class
     where TActivity : class, ICompensateActivity<TLog>
 {
-    Task Compensate(CompensateContext<TLog> context, IPipe<CompensateActivityContext<TActivity, TLog>> next);
+    Task CompensateAsync(CompensateContext<TLog> context, IPipe<CompensateActivityContext<TActivity, TLog>> next, CancellationToken cancellationToken = default);
 }

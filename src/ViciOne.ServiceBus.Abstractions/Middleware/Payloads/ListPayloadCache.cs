@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ViciOne.ServiceBus.Payloads;
 
@@ -34,7 +35,7 @@ public class ListPayloadCache :
         return false;
     }
 
-    public bool TryGetPayload<TPayload>(out TPayload? payload)
+    public bool TryGetPayload<TPayload>([NotNullWhen(true)] out TPayload? payload)
         where TPayload : class
     {
         if (_cache == null)

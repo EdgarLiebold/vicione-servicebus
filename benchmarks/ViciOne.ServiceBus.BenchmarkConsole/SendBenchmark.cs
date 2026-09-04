@@ -77,52 +77,52 @@ public class SendBenchmark
     }
 
     [Benchmark]
-    public async Task EmptyPipe()
+    public async Task EmptyPipeAsync()
     {
-        await _emptyPipe.Send(_context);
+        await _emptyPipe.SendAsync(_context);
     }
 
     [Benchmark]
-    public async Task RetryPipe()
+    public async Task RetryPipeAsync()
     {
-        await _retryPipe.Send(_context);
+        await _retryPipe.SendAsync(_context);
     }
 
     [Benchmark]
-    public async Task ConcurrencyPipe()
+    public async Task ConcurrencyPipeAsync()
     {
-        await _concurrencyPipe.Send(_context);
+        await _concurrencyPipe.SendAsync(_context);
     }
 
     [Benchmark]
-    public async Task DoublePipe()
+    public async Task DoublePipeAsync()
     {
-        await _doublePipe.Send(_context);
+        await _doublePipe.SendAsync(_context);
     }
 
     [Benchmark]
-    public async Task DispatchPipe()
+    public async Task DispatchPipeAsync()
     {
-        await _dispatchPipe.SendCommand(_command);
+        await _dispatchPipe.SendCommandAsync(_command);
     }
 
     [Benchmark]
-    public async Task DoubleDispatchPipe()
+    public async Task DoubleDispatchPipeAsync()
     {
-        await _doubleDispatchPipe.SendCommand(_command);
+        await _doubleDispatchPipe.SendCommandAsync(_command);
     }
 
     [Benchmark]
-    public async Task TripleDispatchPipe()
+    public async Task TripleDispatchPipeAsync()
     {
-        await _tripleDispatchPipe.SendCommand(_command);
+        await _tripleDispatchPipe.SendCommandAsync(_command);
     }
 
-    public async Task FaultPipe()
+    public async Task FaultPipeAsync()
     {
         try
         {
-            await _faultPipe.Send(_context);
+            await _faultPipe.SendAsync(_context);
         }
         catch
         {
@@ -138,7 +138,7 @@ public class SendBenchmark
             ConcurrencyLimit = concurrencyLimit;
         }
 
-        public DateTime? Timestamp { get; } = DateTime.UtcNow;
+        public DateTimeOffset? Timestamp { get; } = TimeProvider.System.GetUtcNow();
         public string? Id => null;
         public int ConcurrencyLimit { get; }
     }

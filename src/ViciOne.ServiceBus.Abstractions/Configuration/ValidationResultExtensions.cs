@@ -9,7 +9,7 @@ public static class ValidationResultExtensions
         return new Result(ValidationResultDisposition.Failure, message);
     }
 
-    public static ValidationResult Failure(this ISpecification configurator, string key, string message)
+    public static ValidationResult Failure(this ISpecification? configurator, string key, string message)
     {
         return new Result(ValidationResultDisposition.Failure, key, message);
     }
@@ -24,7 +24,7 @@ public static class ValidationResultExtensions
         return new Result(ValidationResultDisposition.Warning, message);
     }
 
-    public static ValidationResult Warning(this ISpecification configurator, string key, string message)
+    public static ValidationResult Warning(this ISpecification? configurator, string key, string message)
     {
         return new Result(ValidationResultDisposition.Warning, key, message);
     }

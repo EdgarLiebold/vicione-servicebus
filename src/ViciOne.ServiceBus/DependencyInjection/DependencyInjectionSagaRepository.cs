@@ -33,19 +33,19 @@ public class DependencyInjectionSagaRepository<TSaga> :
         _repositoryContextFactory.Probe(scope);
     }
 
-    public Task Send<T>(ConsumeContext<T> context, ISagaPolicy<TSaga, T> policy, IPipe<SagaConsumeContext<TSaga, T>> next)
+    public Task SendAsync<T>(ConsumeContext<T> context, ISagaPolicy<TSaga, T> policy, IPipe<SagaConsumeContext<TSaga, T>> next)
         where T : class
     {
         var correlationId = context.CorrelationId ??
             throw new SagaException("The CorrelationId was not specified", typeof(TSaga), typeof(T));
 
-        return _repositoryContextFactory.Send(context, new SendSagaPipe<TSaga, T>(policy, next, correlationId));
+        return _repositoryContextFactory.SendAsync(context, new SendSagaPipe<TSaga, T>(policy, next, correlationId));
     }
 
-    public Task SendQuery<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, ISagaPolicy<TSaga, T> policy,
+    public Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, ISagaPolicy<TSaga, T> policy,
         IPipe<SagaConsumeContext<TSaga, T>> next)
         where T : class
     {
-        return _repositoryContextFactory.SendQuery(context, query, new SendQuerySagaPipe<TSaga, T>(policy, next));
+        return _repositoryContextFactory.SendQueryAsync(context, query, new SendQuerySagaPipe<TSaga, T>(policy, next));
     }
 }

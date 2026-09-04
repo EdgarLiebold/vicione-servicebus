@@ -20,11 +20,11 @@ public class MethodConsumerMessageFilter<TConsumer, TMessage> :
     }
 
     [DebuggerNonUserCode]
-    Task IFilter<ConsumerConsumeContext<TConsumer, TMessage>>.Send(ConsumerConsumeContext<TConsumer, TMessage> context,
+    Task IFilter<ConsumerConsumeContext<TConsumer, TMessage>>.SendAsync(ConsumerConsumeContext<TConsumer, TMessage> context,
         IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)
     {
         if (context.Consumer is IConsumer<TMessage> messageConsumer)
-            return messageConsumer.Consume(context);
+            return messageConsumer.ConsumeAsync(context);
 
         var message = $"Consumer type {TypeCache<TConsumer>.ShortName} is not a consumer of message type {TypeCache<TMessage>.ShortName}";
 

@@ -35,7 +35,7 @@ public sealed class EnvelopeMetadataProjectionTests
         Assert.Equal(context.FaultAddress?.ToString(), envelope.FaultAddress);
         Assert.Equal(context.SupportedMessageTypes, envelope.MessageType);
         Assert.Same(context.Message, envelope.Message);
-        Assert.Equal(ProjectionTime.UtcDateTime + context.TimeToLive, envelope.ExpirationTime);
+        Assert.Equal(ProjectionTime + context.TimeToLive, envelope.ExpirationTime);
         Assert.Equal(context.SentTime, envelope.SentTime);
         Assert.Equal("metadata", envelope.Headers["ViciOne-Test"]);
         Assert.NotNull(envelope.Host);
@@ -53,7 +53,7 @@ public sealed class EnvelopeMetadataProjectionTests
 
         var envelope = new JsonMessageEnvelope(context, new TestMessage("payload"), ["urn:message:test"]);
 
-        Assert.Equal(ProjectionTime.UtcDateTime, envelope.SentTime);
+        Assert.Equal(ProjectionTime, envelope.SentTime);
         Assert.Equal(ProjectionTime + TimeSpan.FromSeconds(1), timeProvider.GetUtcNow());
     }
 
@@ -69,7 +69,7 @@ public sealed class EnvelopeMetadataProjectionTests
         {
             MessageType = ["urn:message:original"],
             Message = new TestMessage("payload"),
-            ExpirationTime = ProjectionTime.UtcDateTime + TimeSpan.FromHours(1),
+            ExpirationTime = ProjectionTime + TimeSpan.FromHours(1),
             Headers = new Dictionary<string, object?>
             {
                 ["Preserved"] = "existing",
@@ -78,7 +78,7 @@ public sealed class EnvelopeMetadataProjectionTests
 
         envelope.Update(context);
 
-        Assert.Equal(ProjectionTime.UtcDateTime - TimeSpan.FromSeconds(30), envelope.ExpirationTime);
+        Assert.Equal(ProjectionTime - TimeSpan.FromSeconds(30), envelope.ExpirationTime);
         Assert.Equal("existing", envelope.Headers["Preserved"]);
         Assert.Equal("metadata", envelope.Headers["ViciOne-Test"]);
         Assert.Equal(envelope.MessageType, context.SupportedMessageTypes);
@@ -102,7 +102,7 @@ public sealed class EnvelopeMetadataProjectionTests
 
         envelope.Update(context);
 
-        Assert.Equal(ProjectionTime.UtcDateTime, envelope.ExpirationTime);
+        Assert.Equal(ProjectionTime, envelope.ExpirationTime);
     }
 
     [Fact]
@@ -126,8 +126,8 @@ public sealed class EnvelopeMetadataProjectionTests
 
         envelope.Update(context);
 
-        Assert.Equal(ProjectionTime.UtcDateTime, envelope.SentTime);
-        Assert.Equal(ProjectionTime.UtcDateTime + TimeSpan.FromMinutes(2), envelope.ExpirationTime);
+        Assert.Equal(ProjectionTime, envelope.SentTime);
+        Assert.Equal(ProjectionTime + TimeSpan.FromMinutes(2), envelope.ExpirationTime);
         Assert.Equal(ProjectionTime + TimeSpan.FromSeconds(1), timeProvider.GetUtcNow());
     }
 
@@ -147,8 +147,8 @@ public sealed class EnvelopeMetadataProjectionTests
             SourceAddress = "loopback://existing-source",
             ResponseAddress = "loopback://existing-response",
             FaultAddress = "loopback://existing-fault",
-            ExpirationTime = ProjectionTime.UtcDateTime + TimeSpan.FromMinutes(2),
-            SentTime = ProjectionTime.UtcDateTime - TimeSpan.FromMinutes(1),
+            ExpirationTime = ProjectionTime + TimeSpan.FromMinutes(2),
+            SentTime = ProjectionTime - TimeSpan.FromMinutes(1),
             MessageType = ["urn:message:original"],
             Message = new TestMessage("original"),
         };
@@ -160,8 +160,8 @@ public sealed class EnvelopeMetadataProjectionTests
         Assert.Equal("loopback://new-destination/", envelope.DestinationAddress);
         Assert.Equal("loopback://existing-response", envelope.ResponseAddress);
         Assert.Equal("loopback://existing-fault", envelope.FaultAddress);
-        Assert.Equal(ProjectionTime.UtcDateTime + TimeSpan.FromMinutes(2), envelope.ExpirationTime);
-        Assert.Equal(ProjectionTime.UtcDateTime - TimeSpan.FromMinutes(1), envelope.SentTime);
+        Assert.Equal(ProjectionTime + TimeSpan.FromMinutes(2), envelope.ExpirationTime);
+        Assert.Equal(ProjectionTime - TimeSpan.FromMinutes(1), envelope.SentTime);
     }
 
     private static MessageSendContext<TestMessage> CreateSendContext()
@@ -198,12 +198,12 @@ public sealed class EnvelopeMetadataProjectionTests
         public Guid? CorrelationId => null;
         public Guid? ConversationId => null;
         public Guid? InitiatorId => null;
-        public DateTime? ExpirationTime => null;
+        public DateTimeOffset? ExpirationTime => null;
         public Uri? SourceAddress => null;
         public Uri? DestinationAddress => null;
         public Uri? ResponseAddress => null;
         public Uri? FaultAddress => null;
-        public DateTime? SentTime => null;
+        public DateTimeOffset? SentTime => null;
         public Headers Headers => _headers;
         public HostInfo Host => HostMetadataCache.Host;
     }
@@ -226,7 +226,7 @@ public sealed class EnvelopeMetadataProjectionTests
         public Guid? ScheduledMessageId { get; set; }
         public SendHeaders Headers => _headers;
         public TimeSpan? TimeToLive { get; set; }
-        public DateTime? SentTime { get; init; }
+        public DateTimeOffset? SentTime { get; init; }
         public System.Net.Mime.ContentType? ContentType { get; set; }
         public bool Durable { get; set; }
         public TimeSpan? Delay { get; set; }

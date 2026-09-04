@@ -22,17 +22,17 @@ public class MessageSendEndpointContext :
 
     public string EntityPath => _client.EntityPath;
 
-    public Task Send(ServiceBusMessage message, CancellationToken cancellationToken)
+    public Task SendAsync(ServiceBusMessage message, CancellationToken cancellationToken)
     {
         return _client.SendMessageAsync(message, cancellationToken);
     }
 
-    public Task<long> ScheduleSend(ServiceBusMessage message, DateTime scheduleEnqueueTimeUtc, CancellationToken cancellationToken)
+    public Task<long> ScheduleSendAsync(ServiceBusMessage message, DateTimeOffset scheduleEnqueueTimeUtc, CancellationToken cancellationToken)
     {
         return _client.ScheduleMessageAsync(message, scheduleEnqueueTimeUtc, cancellationToken);
     }
 
-    public Task CancelScheduledSend(long sequenceNumber, CancellationToken cancellationToken)
+    public Task CancelScheduledSendAsync(long sequenceNumber, CancellationToken cancellationToken)
     {
         return _client.CancelScheduledMessageAsync(sequenceNumber, cancellationToken);
     }

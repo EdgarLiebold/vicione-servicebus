@@ -15,13 +15,13 @@ public class EventHubProcessorContext :
 {
     readonly EventProcessorClient _client;
     readonly IHostConfiguration _hostConfiguration;
-    readonly Func<PartitionClosingEventArgs, Task> _partitionClosingHandler;
-    readonly Func<PartitionInitializingEventArgs, Task> _partitionInitializingHandler;
-    Action _releaseClient;
+    readonly Func<PartitionClosingEventArgs, Task>? _partitionClosingHandler;
+    readonly Func<PartitionInitializingEventArgs, Task>? _partitionInitializingHandler;
+    Action? _releaseClient;
 
     public EventHubProcessorContext(IHostConfiguration hostConfiguration,
-        EventProcessorClient client, Func<PartitionInitializingEventArgs, Task> partitionInitializingHandler,
-        Func<PartitionClosingEventArgs, Task> partitionClosingHandler, CancellationToken cancellationToken)
+        EventProcessorClient client, Func<PartitionInitializingEventArgs, Task>? partitionInitializingHandler,
+        Func<PartitionClosingEventArgs, Task>? partitionClosingHandler, CancellationToken cancellationToken)
         : base(cancellationToken)
     {
         _hostConfiguration = hostConfiguration;
@@ -32,7 +32,8 @@ public class EventHubProcessorContext :
         _partitionClosingHandler = partitionClosingHandler;
     }
 
-    public ILogContext LogContext => _hostConfiguration.ReceiveLogContext;
+    public ILogContext LogContext => _hostConfiguration.ReceiveLogContext
+        ?? throw new InvalidOperationException("The receive log context has not been initialized.");
 
     public EventProcessorClient GetClient(ProcessorClientBuilderContext context)
     {
@@ -43,7 +44,7 @@ public class EventHubProcessorContext :
         {
             return async args =>
             {
-                await context.OnPartitionInitializing(args).ConfigureAwait(false);
+                await context.OnPartitionInitializingAsync(args).ConfigureAwait(false);
                 if (_partitionInitializingHandler != null)
                     await _partitionInitializingHandler(args).ConfigureAwait(false);
             };
@@ -58,7 +59,7 @@ public class EventHubProcessorContext :
                 if (_partitionClosingHandler != null)
                     await _partitionClosingHandler(args).ConfigureAwait(false);
 
-                await context.OnPartitionClosing(args).ConfigureAwait(false);
+                await context.OnPartitionClosingAsync(args).ConfigureAwait(false);
             };
         }
 

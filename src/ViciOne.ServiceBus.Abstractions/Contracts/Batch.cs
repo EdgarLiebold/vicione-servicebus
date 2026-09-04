@@ -16,12 +16,12 @@ public interface Batch<out T> :
     /// <summary>
     /// When the first message in this batch was received
     /// </summary>
-    DateTime FirstMessageReceived { get; }
+    DateTimeOffset FirstMessageReceived { get; }
 
     /// <summary>
     /// When the last message in this batch was received
     /// </summary>
-    DateTime LastMessageReceived { get; }
+    DateTimeOffset LastMessageReceived { get; }
 
     /// <summary>
     /// Returns the message at the specified index

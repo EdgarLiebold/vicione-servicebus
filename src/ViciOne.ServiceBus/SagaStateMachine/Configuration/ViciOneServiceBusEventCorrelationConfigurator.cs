@@ -14,12 +14,12 @@ public partial class StateMachineInterfaceType<TInstance, TData>
     {
         readonly Event<TData> _event;
         readonly SagaStateMachine<TInstance> _machine;
-        IFilter<ConsumeContext<TData>> _messageFilter;
-        IPipe<ConsumeContext<TData>> _missingPipe;
+        IFilter<ConsumeContext<TData>>? _messageFilter = null!;
+        IPipe<ConsumeContext<TData>> _missingPipe = null!;
         ISagaFactory<TInstance, TData> _sagaFactory;
-        SagaFilterFactory<TInstance, TData> _sagaFilterFactory;
+        SagaFilterFactory<TInstance, TData>? _sagaFilterFactory = null!;
 
-        public ViciOneServiceBusEventCorrelationConfigurator(SagaStateMachine<TInstance> machine, Event<TData> @event, EventCorrelation existingCorrelation)
+        public ViciOneServiceBusEventCorrelationConfigurator(SagaStateMachine<TInstance> machine, Event<TData> @event, EventCorrelation? existingCorrelation)
         {
             _event = @event;
             _machine = machine;

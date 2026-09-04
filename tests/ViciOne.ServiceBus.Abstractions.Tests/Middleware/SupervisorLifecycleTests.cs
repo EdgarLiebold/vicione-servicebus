@@ -8,7 +8,7 @@ public sealed class SupervisorLifecycleTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-SUPERVISOR-LIFECYCLE", "ready-fault-propagation")]
-    public async Task FaultedChildReadiness_FaultsSupervisorWhileShutdownStillCompletes()
+    public async Task FaultedChildReadiness_FaultsSupervisorWhileShutdownStillCompletesAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
 
@@ -29,7 +29,7 @@ public sealed class SupervisorLifecycleTests
             }
             finally
             {
-                await supervisor.Stop(cancellationToken);
+                await supervisor.StopAsync(cancellationToken);
                 await supervisor.Completed.WaitAsync(cancellationToken);
             }
 
@@ -43,14 +43,14 @@ public sealed class SupervisorLifecycleTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SUPERVISOR-LIFECYCLE", "empty-stop-completion")]
-    public async Task EmptySupervisor_StopsAndCompletes()
+    public async Task EmptySupervisor_StopsAndCompletesAsync()
     {
         var supervisor = new Supervisor();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         supervisor.SetReady();
 
         await supervisor.Ready.WaitAsync(cancellationToken);
-        await supervisor.Stop(cancellationToken);
+        await supervisor.StopAsync(cancellationToken);
         await supervisor.Completed.WaitAsync(cancellationToken);
 
         Assert.True(supervisor.Ready.IsCompletedSuccessfully);
@@ -63,7 +63,7 @@ public sealed class SupervisorLifecycleTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SUPERVISOR-LIFECYCLE", "nested-shutdown")]
-    public async Task NestedSupervisors_StopTheirCompleteAgentChain()
+    public async Task NestedSupervisors_StopTheirCompleteAgentChainAsync()
     {
         var outer = new Supervisor();
         var inner = new Supervisor();
@@ -76,7 +76,7 @@ public sealed class SupervisorLifecycleTests
         child.SetReady();
 
         await outer.Ready.WaitAsync(cancellationToken);
-        await outer.Stop(cancellationToken);
+        await outer.StopAsync(cancellationToken);
         await outer.Completed.WaitAsync(cancellationToken);
 
         Assert.True(child.Completed.IsCompletedSuccessfully);
@@ -91,7 +91,7 @@ public sealed class SupervisorLifecycleTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SUPERVISOR-LIFECYCLE", "agent-added-after-ready")]
-    public async Task AgentAddedAfterReadiness_IsStillStoppedAndCompleted()
+    public async Task AgentAddedAfterReadiness_IsStillStoppedAndCompletedAsync()
     {
         var supervisor = new Supervisor();
         var child = new Agent();
@@ -101,7 +101,7 @@ public sealed class SupervisorLifecycleTests
         await supervisor.Ready.WaitAsync(cancellationToken);
 
         supervisor.Add(child);
-        await supervisor.Stop(cancellationToken);
+        await supervisor.StopAsync(cancellationToken);
         await supervisor.Completed.WaitAsync(cancellationToken);
 
         Assert.True(child.Ready.IsCompletedSuccessfully);

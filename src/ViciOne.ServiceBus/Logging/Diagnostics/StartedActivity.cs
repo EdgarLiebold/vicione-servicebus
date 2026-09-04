@@ -8,10 +8,12 @@ namespace ViciOne.ServiceBus.Logging;
 public readonly struct StartedActivity
 {
     public readonly Activity Activity;
+    readonly TimeProvider _timeProvider;
 
-    public StartedActivity(Activity activity)
+    public StartedActivity(Activity activity, TimeProvider? timeProvider = null)
     {
         Activity = activity;
+        _timeProvider = timeProvider ?? TimeProvider.System;
     }
 
     public void SetTag(string key, string value)
@@ -43,7 +45,7 @@ public readonly struct StartedActivity
             { DiagnosticHeaders.Exceptions.Stacktrace, ExceptionUtil.GetStackTrace(exception) }
         };
 
-        var activityEvent = new ActivityEvent(DiagnosticHeaders.Exceptions.EventName, DateTimeOffset.UtcNow, tags);
+        var activityEvent = new ActivityEvent(DiagnosticHeaders.Exceptions.EventName, _timeProvider.GetUtcNow(), tags);
 
         ActivityObservation.TryAddEvent(Activity, activityEvent);
         ActivityObservation.TrySetStatus(Activity, ActivityStatusCode.Error, exceptionMessage);

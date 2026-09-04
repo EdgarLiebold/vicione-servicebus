@@ -12,18 +12,21 @@ public interface ReceiveLockContext
     /// Called to complete the message
     /// </summary>
     /// <returns></returns>
-    Task Complete();
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task CompleteAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Called if the message was faulted. This method should NOT throw an exception.
     /// </summary>
     /// <param name="exception"></param>
     /// <returns></returns>
-    Task Faulted(Exception exception);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task FaultedAsync(Exception exception, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Validate that the lock is still valid
     /// </summary>
     /// <returns></returns>
-    Task ValidateLockStatus();
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task ValidateLockStatusAsync(CancellationToken cancellationToken = default);
 }

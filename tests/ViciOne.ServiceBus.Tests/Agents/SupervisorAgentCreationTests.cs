@@ -9,7 +9,7 @@ public sealed class SupervisorAgentCreationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-BACKGROUND-AGENT-OWNERSHIP", "start-bridge-publishes-factory-fault")]
-    public async Task StartAgent_TransfersTheExactFactoryFailureToTheOwnedAsyncContext()
+    public async Task StartAgent_TransfersTheExactFactoryFailureToTheOwnedAsyncContextAsync()
     {
         var supervisor = new TestSupervisor();
         IAsyncPipeContextAgent<ChildContext> asyncContext = supervisor.AddAsyncContext<ChildContext>();
@@ -29,13 +29,13 @@ public sealed class SupervisorAgentCreationTests
         }
         finally
         {
-            await supervisor.Stop(CancellationToken.None);
+            await supervisor.StopAsync(CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BACKGROUND-AGENT-OWNERSHIP", "start-bridge-publishes-created-context")]
-    public async Task StartAgent_PublishesTheExactCreatedContextAndLeavesItUnderSupervisorLifecycle()
+    public async Task StartAgent_PublishesTheExactCreatedContextAndLeavesItUnderSupervisorLifecycleAsync()
     {
         var supervisor = new TestSupervisor();
         IAsyncPipeContextAgent<ChildContext> asyncContext = supervisor.AddAsyncContext<ChildContext>();
@@ -60,7 +60,7 @@ public sealed class SupervisorAgentCreationTests
         }
         finally
         {
-            await supervisor.Stop(CancellationToken.None);
+            await supervisor.StopAsync(CancellationToken.None);
         }
 
         Assert.True(asyncContext.Completed.IsCompletedSuccessfully);
@@ -70,10 +70,10 @@ public sealed class SupervisorAgentCreationTests
     {
         private readonly OwnerContext _context = new();
 
-        public Task Send(IPipe<OwnerContext> pipe, CancellationToken cancellationToken = default)
+        public Task SendAsync(IPipe<OwnerContext> pipe, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return pipe.Send(_context);
+            return pipe.SendAsync(_context);
         }
 
         public void Probe(ProbeContext context)

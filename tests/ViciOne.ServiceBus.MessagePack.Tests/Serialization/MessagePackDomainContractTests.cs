@@ -12,9 +12,9 @@ public sealed class MessagePackDomainContractTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-JOBS", "nested-interface-job-payload")]
-    public async Task JobPayload_RoundTripsThroughDictionaryAndRestoresNestedInterfaces()
+    public async Task JobPayload_RoundTripsThroughDictionaryAndRestoresNestedInterfacesAsync()
     {
-        var jobInitialization = await MessageInitializerCache<ConvertVideo>.Initialize(
+        var jobInitialization = await MessageInitializerCache<ConvertVideo>.InitializeAsync(
             new
             {
                 Path = "input.mp4",

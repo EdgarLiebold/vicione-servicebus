@@ -32,7 +32,7 @@ public sealed class JobTypeStateMachine :
 
         During(Initial, Active, Idle,
             When(JobSlotRequested)
-                .IfElseAsync(context => context.IsSlotAvailable(context.GetPayload<JobSagaSettings>().HeartbeatTimeout),
+                .IfElseAsync(context => context.IsSlotAvailableAsync(context.GetPayload<JobSagaSettings>().HeartbeatTimeout),
                     allocate => allocate
                         .TransitionTo(Active),
                     unavailable => unavailable
@@ -81,18 +81,18 @@ public sealed class JobTypeStateMachine :
     //
     // ReSharper disable UnassignedGetOnlyAutoProperty
     // ReSharper disable MemberCanBePrivate.Global
-    public State Active { get; }
-    public State Idle { get; }
+    public State Active { get; } = null!;
+    public State Idle { get; } = null!;
 
-    public Event<AllocateJobSlot> JobSlotRequested { get; }
-    public Event<JobSlotReleased> JobSlotReleased { get; }
-    public Event<SetConcurrentJobLimit> SetConcurrentJobLimit { get; }
+    public Event<AllocateJobSlot> JobSlotRequested { get; } = null!;
+    public Event<JobSlotReleased> JobSlotReleased { get; } = null!;
+    public Event<SetConcurrentJobLimit> SetConcurrentJobLimit { get; } = null!;
 }
 
 
 static class JobTypeStateMachineBehaviorExtensions
 {
-    public static async Task<bool> IsSlotAvailable(this BehaviorContext<JobTypeSaga, AllocateJobSlot> context, TimeSpan heartbeatTimeout)
+    public static async Task<bool> IsSlotAvailableAsync(this BehaviorContext<JobTypeSaga, AllocateJobSlot> context, TimeSpan heartbeatTimeout)
     {
         if (context.Saga.OverrideLimitExpiration.HasValue)
         {
@@ -108,7 +108,7 @@ static class JobTypeStateMachineBehaviorExtensions
         var activeJob = context.Saga.ActiveJobs.FirstOrDefault(x => x.JobId == jobId);
         if (activeJob != null)
         {
-            await context.RespondAsync<JobSlotAllocated>(new JobSlotAllocatedResponse
+            await ((ConsumeContext<AllocateJobSlot>)context).RespondAsync<JobSlotAllocated>(new JobSlotAllocatedResponse
             {
                 JobId = jobId,
                 InstanceAddress = activeJob.InstanceAddress,
@@ -130,7 +130,7 @@ static class JobTypeStateMachineBehaviorExtensions
 
         var strategy = context.GetJobDistributionStrategyOrUseDefault();
 
-        activeJob = await strategy.IsJobSlotAvailable(context, context.Saga).ConfigureAwait(false);
+        activeJob = await strategy.IsJobSlotAvailableAsync(context, context.Saga).ConfigureAwait(false);
         if (activeJob == null)
             return false;
 
@@ -152,7 +152,7 @@ static class JobTypeStateMachineBehaviorExtensions
         LogContext.Debug?.Log("Allocated Job Slot: {JobId} ({JobCount}): {InstanceAddress} ({InstanceCount})", jobId, context.Saga.ActiveJobCount,
             activeJob.InstanceAddress, context.Saga.ActiveJobs.Count(x => x.InstanceAddress == activeJob.InstanceAddress));
 
-        await context.RespondAsync<JobSlotAllocated>(new JobSlotAllocatedResponse
+        await ((ConsumeContext<AllocateJobSlot>)context).RespondAsync<JobSlotAllocated>(new JobSlotAllocatedResponse
         {
             JobId = jobId,
             InstanceAddress = activeJob.InstanceAddress,
@@ -163,11 +163,11 @@ static class JobTypeStateMachineBehaviorExtensions
 
     static IJobDistributionStrategy GetJobDistributionStrategyOrUseDefault(this ConsumeContext context)
     {
-        IJobDistributionStrategy strategy = null;
+        IJobDistributionStrategy? strategy = null;
 
-        if (context.TryGetPayload(out IServiceScope serviceScope))
+        if (context.TryGetPayload(out IServiceScope? serviceScope))
             strategy = serviceScope.ServiceProvider.GetService<IJobDistributionStrategy>();
-        else if (context.TryGetPayload(out IServiceProvider serviceProvider))
+        else if (context.TryGetPayload(out IServiceProvider? serviceProvider))
             strategy = serviceProvider.GetService<IJobDistributionStrategy>();
 
         return strategy ?? DefaultJobDistributionStrategy.Instance;
@@ -181,7 +181,7 @@ static class JobTypeStateMachineBehaviorExtensions
             var instanceAddress = context.Message.InstanceAddress;
             if (instanceAddress != null)
             {
-                DateTime instanceUpdated = context.SentTime ?? context.GetUtcDateTime();
+                DateTimeOffset instanceUpdated = context.SentTime ?? context.GetUtcDateTime();
 
                 if (context.Saga.Instances.TryGetValue(instanceAddress, out var instance))
                 {
@@ -206,11 +206,11 @@ static class JobTypeStateMachineBehaviorExtensions
                     }
                 }
 
-                if (context.Message.Kind != ConcurrentLimitKind.Stopped)
+                if (context.Message.Kind != ConcurrentLimitKind.Stopped && instance != null)
                 {
                     if (context.Message.InstanceProperties is { Count: > 0 })
                     {
-                        instance.Properties ??= new Dictionary<string, object>(context.Message.JobTypeProperties.Count, StringComparer.OrdinalIgnoreCase);
+                        instance.Properties ??= new Dictionary<string, object>(context.Message.InstanceProperties.Count, StringComparer.OrdinalIgnoreCase);
                         instance.Properties.SetValues(context.Message.InstanceProperties);
                     }
                 }
@@ -220,7 +220,8 @@ static class JobTypeStateMachineBehaviorExtensions
             {
                 context.Saga.ConcurrentJobLimit = context.Message.ConcurrentJobLimit;
                 context.Saga.GlobalConcurrentJobLimit = context.Message.GlobalConcurrentJobLimit;
-                context.Saga.Name = context.Message.JobTypeName;
+                context.Saga.Name = context.Message.JobTypeName
+                    ?? throw new InvalidOperationException("A job type name is required when configuring a concurrency limit.");
 
                 if (context.Message.JobTypeProperties is { Count: > 0 })
                 {

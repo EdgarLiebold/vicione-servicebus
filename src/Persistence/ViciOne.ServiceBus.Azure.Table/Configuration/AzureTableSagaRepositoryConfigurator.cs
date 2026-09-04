@@ -14,7 +14,7 @@ public class AzureTableSagaRepositoryConfigurator<TSaga> :
     ISpecification
     where TSaga : class, ISaga
 {
-    Func<IServiceProvider, TableClient> _tableClientFactory;
+    Func<IServiceProvider, TableClient>? _tableClientFactory;
 
     Func<IServiceProvider, ISagaKeyFormatter<TSaga>> _formatterFactory = provider =>
         new ConstPartitionSagaKeyFormatter<TSaga>(typeof(TSaga).Name);
@@ -59,8 +59,11 @@ public class AzureTableSagaRepositoryConfigurator<TSaga> :
     {
         ArgumentNullException.ThrowIfNull(configurator);
 
+        Func<IServiceProvider, TableClient> tableClientFactory = _tableClientFactory
+            ?? throw new InvalidOperationException("The Azure Table client factory must be configured before registration.");
+
         configurator.TryAddSingleton<ITableClientProvider<TSaga>>(provider =>
-            new FixedTableClientProvider<TSaga>(_tableClientFactory(provider)));
+            new FixedTableClientProvider<TSaga>(tableClientFactory(provider)));
         configurator.TryAddSingleton(_formatterFactory);
         configurator.RegisterLoadSagaRepository<TSaga, AzureTableSagaRepositoryContextFactory<TSaga>>();
         configurator.RegisterSagaRepository<TSaga, DatabaseContext<TSaga>, SagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga>,

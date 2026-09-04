@@ -11,17 +11,17 @@ public sealed class PostgreSqlLockRenewalTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0084", "postgresql-native-owner")]
-    public async Task SlowConsumer_RenewsItsProviderLockThreeTimesAndCompletesExactlyOnce()
+    public async Task SlowConsumer_RenewsItsProviderLockThreeTimesAndCompletesExactlyOnceAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase fixture = await PostgreSqlTestDatabase.CreateAsync(
             "lock-renewal",
             cancellationToken);
         await using NpgsqlConnection listener = fixture.CreateConnection();
-        await listener.OpenWithin(fixture.OperationTimeout, cancellationToken);
+        await listener.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
         string channel = $"lock_renewal_{Guid.NewGuid():N}";
-        await CreateRenewalAudit(listener, fixture.Schema, channel, cancellationToken);
-        await Listen(listener, channel, cancellationToken);
+        await CreateRenewalAuditAsync(listener, fixture.Schema, channel, cancellationToken);
+        await ListenAsync(listener, channel, cancellationToken);
         var state = new ConsumerState(expectedEntries: 1);
         string queueName = fixture.Name("renewed-input");
         IBusControl bus = CreateBus(fixture, queueName, TimeSpan.FromSeconds(10), state);
@@ -31,21 +31,21 @@ public sealed class PostgreSqlLockRenewalTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            await Send(bus, queueName, new LockMessage(Guid.NewGuid()), fixture.OperationTimeout, cancellationToken);
+            await SendAsync(bus, queueName, new LockMessage(Guid.NewGuid()), fixture.OperationTimeout, cancellationToken);
             await state.FirstStarted.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
 
-            await WaitForNotifications(listener, 3, fixture.OperationTimeout, cancellationToken);
+            await WaitForNotificationsAsync(listener, 3, fixture.OperationTimeout, cancellationToken);
 
             state.ReleaseFirst.TrySetResult(true);
             await state.AllCompleted.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
             await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
             started = false;
             await using NpgsqlConnection inspection = fixture.CreateConnection();
-            await inspection.OpenWithin(fixture.OperationTimeout, cancellationToken);
+            await inspection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
 
             Assert.Equal(1, state.Entries);
-            Assert.Equal(3, await RenewalCount(inspection, fixture.Schema, cancellationToken));
-            Assert.Equal(0, await inspection.DeliveryCount(fixture.Schema, queueName, 1, cancellationToken));
+            Assert.Equal(3, await RenewalCountAsync(inspection, fixture.Schema, cancellationToken));
+            Assert.Equal(0, await inspection.DeliveryCountAsync(fixture.Schema, queueName, 1, cancellationToken));
         }
         finally
         {
@@ -59,17 +59,17 @@ public sealed class PostgreSqlLockRenewalTests
     [InlineData(RenewalBoundary.MaxDuration)]
     [InlineData(RenewalBoundary.ProviderRefusal)]
     [RequirementCoverage("OBL-R0-SQL-0112", "postgresql-native-owner")]
-    public async Task RenewalBoundary_StopsFurtherRenewalOrMarksOwnershipLost(RenewalBoundary boundary)
+    public async Task RenewalBoundary_StopsFurtherRenewalOrMarksOwnershipLostAsync(RenewalBoundary boundary)
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase fixture = await PostgreSqlTestDatabase.CreateAsync(
             "renewal-boundary",
             cancellationToken);
         await using NpgsqlConnection listener = fixture.CreateConnection();
-        await listener.OpenWithin(fixture.OperationTimeout, cancellationToken);
+        await listener.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
         string channel = $"lock_boundary_{Guid.NewGuid():N}";
-        await CreateRenewalAudit(listener, fixture.Schema, channel, cancellationToken);
-        await Listen(listener, channel, cancellationToken);
+        await CreateRenewalAuditAsync(listener, fixture.Schema, channel, cancellationToken);
+        await ListenAsync(listener, channel, cancellationToken);
         var state = new ConsumerState(expectedEntries: 1);
         string queueName = fixture.Name(boundary == RenewalBoundary.MaxDuration ? "max-duration" : "refused");
         TimeSpan maxLockDuration = boundary == RenewalBoundary.MaxDuration
@@ -82,25 +82,25 @@ public sealed class PostgreSqlLockRenewalTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            await Send(bus, queueName, new LockMessage(Guid.NewGuid()), fixture.OperationTimeout, cancellationToken);
+            await SendAsync(bus, queueName, new LockMessage(Guid.NewGuid()), fixture.OperationTimeout, cancellationToken);
             await state.FirstStarted.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             SqlReceiveLockContext receiveLock = await state.ReceiveLock.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await WaitForNotifications(listener, 1, fixture.OperationTimeout, cancellationToken);
+            await WaitForNotificationsAsync(listener, 1, fixture.OperationTimeout, cancellationToken);
             int expectedRenewals;
             if (boundary == RenewalBoundary.MaxDuration)
             {
                 expectedRenewals = 2;
-                await WaitForNotifications(listener, 1, fixture.OperationTimeout, cancellationToken);
-                Assert.Equal(expectedRenewals, await RenewalCount(listener, fixture.Schema, cancellationToken));
-                Assert.Equal(2, await DistinctRenewalLockCount(listener, fixture.Schema, cancellationToken));
-                await receiveLock.ValidateLockStatus();
+                await WaitForNotificationsAsync(listener, 1, fixture.OperationTimeout, cancellationToken);
+                Assert.Equal(expectedRenewals, await RenewalCountAsync(listener, fixture.Schema, cancellationToken));
+                Assert.Equal(2, await DistinctRenewalLockCountAsync(listener, fixture.Schema, cancellationToken));
+                await receiveLock.ValidateLockStatusAsync(TestContext.Current.CancellationToken);
             }
             else
             {
                 expectedRenewals = 1;
-                await RefuseCurrentRenewal(listener, fixture.Schema, queueName, cancellationToken);
-                TransportException exception = await WaitForLostLock(
+                await RefuseCurrentRenewalAsync(listener, fixture.Schema, queueName, cancellationToken);
+                TransportException exception = await WaitForLostLockAsync(
                     receiveLock,
                     fixture.OperationTimeout,
                     cancellationToken);
@@ -114,7 +114,7 @@ public sealed class PostgreSqlLockRenewalTests
             started = false;
 
             Assert.Equal(1, state.Entries);
-            Assert.Equal(expectedRenewals, await RenewalCount(listener, fixture.Schema, cancellationToken));
+            Assert.Equal(expectedRenewals, await RenewalCountAsync(listener, fixture.Schema, cancellationToken));
         }
         finally
         {
@@ -143,7 +143,7 @@ public sealed class PostgreSqlLockRenewalTests
                     int entry = Interlocked.Increment(ref state.Entries);
                     if (entry == 1)
                     {
-                        state.ReceiveLock.TrySetResult(context.ReceiveContext.GetPayload<SqlReceiveLockContext>());
+                        state.ReceiveLock.TrySetResult(context.Advanced().ReceiveContext.GetPayload<SqlReceiveLockContext>());
                         state.FirstStarted.TrySetResult(true);
                         await state.ReleaseFirst.Task;
                     }
@@ -154,19 +154,19 @@ public sealed class PostgreSqlLockRenewalTests
             });
         });
 
-    private static async Task Send(
+    private static async Task SendAsync(
         IBus bus,
         string queueName,
         LockMessage message,
         TimeSpan timeout,
         CancellationToken cancellationToken)
     {
-        ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
+        ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), cancellationToken: cancellationToken)
             .WaitAsync(timeout, cancellationToken);
-        await endpoint.Send(message, cancellationToken).WaitAsync(timeout, cancellationToken);
+        await endpoint.SendAsync(message, cancellationToken).WaitAsync(timeout, cancellationToken);
     }
 
-    private static async Task CreateRenewalAudit(
+    private static async Task CreateRenewalAuditAsync(
         NpgsqlConnection connection,
         string schema,
         string channel,
@@ -207,13 +207,13 @@ public sealed class PostgreSqlLockRenewalTests
         await command.ExecuteNonQueryAsync(cancellationToken);
     }
 
-    private static async Task Listen(NpgsqlConnection connection, string channel, CancellationToken cancellationToken)
+    private static async Task ListenAsync(NpgsqlConnection connection, string channel, CancellationToken cancellationToken)
     {
         await using var command = new NpgsqlCommand($"LISTEN \"{channel}\"", connection);
         await command.ExecuteNonQueryAsync(cancellationToken);
     }
 
-    private static async Task WaitForNotifications(
+    private static async Task WaitForNotificationsAsync(
         NpgsqlConnection listener,
         int count,
         TimeSpan timeout,
@@ -223,7 +223,7 @@ public sealed class PostgreSqlLockRenewalTests
             await listener.WaitAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
     }
 
-    private static async Task RefuseCurrentRenewal(
+    private static async Task RefuseCurrentRenewalAsync(
         NpgsqlConnection connection,
         string schema,
         string queueName,
@@ -245,7 +245,7 @@ public sealed class PostgreSqlLockRenewalTests
         Assert.Equal(1, await command.ExecuteNonQueryAsync(cancellationToken));
     }
 
-    private static async Task<TransportException> WaitForLostLock(
+    private static async Task<TransportException> WaitForLostLockAsync(
         SqlReceiveLockContext receiveLock,
         TimeSpan timeout,
         CancellationToken cancellationToken)
@@ -257,7 +257,7 @@ public sealed class PostgreSqlLockRenewalTests
             timeoutSource.Token.ThrowIfCancellationRequested();
             try
             {
-                await receiveLock.ValidateLockStatus();
+                await receiveLock.ValidateLockStatusAsync(cancellationToken: cancellationToken);
             }
             catch (TransportException exception)
             {
@@ -268,7 +268,7 @@ public sealed class PostgreSqlLockRenewalTests
         }
     }
 
-    private static async Task<long> RenewalCount(
+    private static async Task<long> RenewalCountAsync(
         NpgsqlConnection connection,
         string schema,
         CancellationToken cancellationToken)
@@ -277,7 +277,7 @@ public sealed class PostgreSqlLockRenewalTests
         return Convert.ToInt64(await command.ExecuteScalarAsync(cancellationToken));
     }
 
-    private static async Task<long> DistinctRenewalLockCount(
+    private static async Task<long> DistinctRenewalLockCountAsync(
         NpgsqlConnection connection,
         string schema,
         CancellationToken cancellationToken)

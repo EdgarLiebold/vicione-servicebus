@@ -26,8 +26,8 @@ public class AzureServiceBusSendContext<T> :
     ServiceBusSendContext<T>
     where T : class
 {
-    string _partitionKey;
-    string _sessionId;
+    string? _partitionKey;
+    string? _sessionId;
 
     public AzureServiceBusSendContext(T message, CancellationToken cancellationToken)
         : base(message, cancellationToken)
@@ -36,34 +36,34 @@ public class AzureServiceBusSendContext<T> :
 
     public override TimeSpan? Delay
     {
-        get => ScheduledEnqueueTimeUtc.HasValue ? ScheduledEnqueueTimeUtc.Value - this.GetTimeProvider().GetUtcNow().UtcDateTime : default;
-        set => ScheduledEnqueueTimeUtc = value > TimeSpan.Zero
-            ? this.GetTimeProvider().GetUtcNow().UtcDateTime + value.Value
-            : default(DateTime?);
+        get => ScheduledEnqueueTimeUtc.HasValue ? ScheduledEnqueueTimeUtc.Value - this.GetTimeProvider().GetUtcNow() : default;
+        set => ScheduledEnqueueTimeUtc = value is { } delay && delay > TimeSpan.Zero
+            ? this.GetTimeProvider().GetUtcNow() + delay
+            : default(DateTimeOffset?);
     }
 
-    public string ReplyToSessionId { get; set; }
-    public string ReplyTo { get; set; }
+    public string? ReplyToSessionId { get; set; }
+    public string? ReplyTo { get; set; }
 
-    public DateTime? ScheduledEnqueueTimeUtc { get; set; }
+    public DateTimeOffset? ScheduledEnqueueTimeUtc { get; set; }
 
-    public string Label { get; set; }
+    public string? Label { get; set; }
 
-    public string PartitionKey
+    public string? PartitionKey
     {
         get => _partitionKey;
         set
         {
             _partitionKey = value;
 
-            if (string.IsNullOrWhiteSpace(_sessionId) || _sessionId.Equals(value))
+            if (string.IsNullOrWhiteSpace(_sessionId) || string.Equals(_sessionId, value, StringComparison.Ordinal))
                 return;
 
             _sessionId = null;
         }
     }
 
-    public string SessionId
+    public string? SessionId
     {
         get => _sessionId;
         set

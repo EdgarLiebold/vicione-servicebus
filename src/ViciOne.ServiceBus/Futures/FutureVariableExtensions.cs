@@ -5,23 +5,23 @@ namespace ViciOne.ServiceBus;
 
 public static class FutureVariableExtensions
 {
-    public static async Task<TValue> SetVariable<T, TValue>(this BehaviorContext<FutureState, T> context, string key,
-        AsyncEventMessageFactory<FutureState, T, TValue> factory)
+    public static async Task<TValue> SetVariableAsync<T, TValue>(this BehaviorContext<FutureState, T> context, string key,
+        AsyncEventMessageFactory<FutureState, T, TValue> factory, CancellationToken cancellationToken = default)
         where T : class
         where TValue : class
     {
-        var value = await factory(context).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested(); var value = await factory(context).ConfigureAwait(false);
 
         context.Saga.Variables[key] = value;
 
         return value;
     }
 
-    public static async Task<TValue> SetVariable<TValue>(this BehaviorContext<FutureState> context, string key,
-        AsyncEventMessageFactory<FutureState, TValue> factory)
+    public static async Task<TValue> SetVariableAsync<TValue>(this BehaviorContext<FutureState> context, string key,
+        AsyncEventMessageFactory<FutureState, TValue> factory, CancellationToken cancellationToken = default)
         where TValue : class
     {
-        var value = await factory(context).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested(); var value = await factory(context).ConfigureAwait(false);
 
         context.Saga.Variables[key] = value;
 
@@ -70,14 +70,14 @@ public static class FutureVariableExtensions
         where TData : class
         where TValue : class
     {
-        return binder.Add(new AsyncActivity<FutureState, TData>(context => context.SetVariable(key, valueFactory)));
+        return binder.Add(new AsyncActivity<FutureState, TData>(context => context.SetVariableAsync(key, valueFactory)));
     }
 
     public static EventActivityBinder<FutureState> SetVariable<TValue>(this EventActivityBinder<FutureState> binder, string key,
         AsyncEventMessageFactory<FutureState, TValue> valueFactory)
         where TValue : class
     {
-        return binder.Add(new AsyncActivity<FutureState>(context => context.SetVariable(key, valueFactory)));
+        return binder.Add(new AsyncActivity<FutureState>(context => context.SetVariableAsync(key, valueFactory)));
     }
 
     public static void SetVariable<TValue>(this BehaviorContext<FutureState> context, string key, TValue value)
@@ -86,7 +86,7 @@ public static class FutureVariableExtensions
         context.Saga.Variables[key] = value;
     }
 
-    public static bool TryGetVariable<T>(this BehaviorContext<FutureState> context, string key, out T result)
+    public static bool TryGetVariable<T>(this BehaviorContext<FutureState> context, string key, [NotNullWhen(true)] out T? result)
         where T : class
     {
         if (context.Saga.HasVariables())

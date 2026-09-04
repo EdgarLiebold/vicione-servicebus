@@ -17,7 +17,7 @@ public class BusOutboxMessageConsumer :
         _report = report;
     }
 
-    public async Task Consume(ConsumeContext<BusOutboxMessage> context)
+    public async Task ConsumeAsync(ConsumeContext<BusOutboxMessage> context)
     {
         var current = Interlocked.Increment(ref CurrentConsumerCount);
         var maxConsumerCount = MaxConsumerCount;
@@ -26,7 +26,7 @@ public class BusOutboxMessageConsumer :
 
         try
         {
-            await _report.Consumed<LatencyTestMessage>(context.Message.CorrelationId).ConfigureAwait(false);
+            await _report.ConsumedAsync<LatencyTestMessage>(context.Message.CorrelationId).ConfigureAwait(false);
         }
         finally
         {

@@ -24,12 +24,12 @@ public class InputDictionaryPropertyProvider<TInput, TProperty> :
         _key = key;
     }
 
-    public Task<TProperty> GetProperty<T>(InitializeContext<T, TInput> context)
+    public Task<TProperty?> GetPropertyAsync<T>(InitializeContext<T, TInput> context, CancellationToken cancellationToken = default)
         where T : class
     {
         if (context.HasInput && context.Input.TryGetValue(_key, out var value))
-            return Task.FromResult(value);
+            return Task.FromResult<TProperty?>(value);
 
-        return TaskResults.Default<TProperty>();
+        return TaskResults.DefaultAsync<TProperty>(cancellationToken: cancellationToken);
     }
 }

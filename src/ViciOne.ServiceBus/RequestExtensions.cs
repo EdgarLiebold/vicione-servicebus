@@ -18,8 +18,8 @@ public static class RequestExtensions
     /// <typeparam name="TRequest">The request type</typeparam>
     /// <typeparam name="TResponse">The response type</typeparam>
     /// <returns></returns>
-    public static async Task<Response<TResponse>> Request<TRequest, TResponse>(this IBus bus, Uri destinationAddress, TRequest message,
-        CancellationToken cancellationToken = default, RequestTimeout timeout = default, Action<SendContext<TRequest>> callback = null)
+    public static async Task<Response<TResponse>> RequestAsync<TRequest, TResponse>(this IBus bus, Uri destinationAddress, TRequest message,
+        RequestTimeout timeout = default, Action<SendContext<TRequest>>? callback = null, CancellationToken cancellationToken = default)
         where TRequest : class
         where TResponse : class
     {
@@ -30,7 +30,7 @@ public static class RequestExtensions
         if (callback != null)
             requestHandle.UseExecute(callback);
 
-        return await requestHandle.GetResponse<TResponse>().ConfigureAwait(false);
+        return await requestHandle.GetResponseAsync<TResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -45,8 +45,8 @@ public static class RequestExtensions
     /// <typeparam name="TRequest">The request type</typeparam>
     /// <typeparam name="TResponse">The response type</typeparam>
     /// <returns></returns>
-    public static async Task<Response<TResponse>> Request<TRequest, TResponse>(this IBus bus, Uri destinationAddress, object values,
-        CancellationToken cancellationToken = default, RequestTimeout timeout = default, Action<SendContext<TRequest>> callback = null)
+    public static async Task<Response<TResponse>> RequestAsync<TRequest, TResponse>(this IBus bus, Uri destinationAddress, object values,
+        RequestTimeout timeout = default, Action<SendContext<TRequest>>? callback = null, CancellationToken cancellationToken = default)
         where TRequest : class
         where TResponse : class
     {
@@ -57,7 +57,7 @@ public static class RequestExtensions
         if (callback != null)
             requestHandle.UseExecute(callback);
 
-        return await requestHandle.GetResponse<TResponse>().ConfigureAwait(false);
+        return await requestHandle.GetResponseAsync<TResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -71,8 +71,8 @@ public static class RequestExtensions
     /// <typeparam name="TRequest">The request type</typeparam>
     /// <typeparam name="TResponse">The response type</typeparam>
     /// <returns></returns>
-    public static async Task<Response<TResponse>> Request<TRequest, TResponse>(this IBus bus, TRequest message,
-        CancellationToken cancellationToken = default, RequestTimeout timeout = default, Action<SendContext<TRequest>> callback = null)
+    public static async Task<Response<TResponse>> RequestAsync<TRequest, TResponse>(this IBus bus, TRequest message,
+        RequestTimeout timeout = default, Action<SendContext<TRequest>>? callback = null, CancellationToken cancellationToken = default)
         where TRequest : class
         where TResponse : class
     {
@@ -83,7 +83,7 @@ public static class RequestExtensions
         if (callback != null)
             requestHandle.UseExecute(callback);
 
-        return await requestHandle.GetResponse<TResponse>().ConfigureAwait(false);
+        return await requestHandle.GetResponseAsync<TResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -97,8 +97,8 @@ public static class RequestExtensions
     /// <typeparam name="TRequest">The request type</typeparam>
     /// <typeparam name="TResponse">The response type</typeparam>
     /// <returns></returns>
-    public static async Task<Response<TResponse>> Request<TRequest, TResponse>(this IBus bus, object values, CancellationToken cancellationToken = default,
-        RequestTimeout timeout = default, Action<SendContext<TRequest>> callback = null)
+    public static async Task<Response<TResponse>> RequestAsync<TRequest, TResponse>(this IBus bus, object values, RequestTimeout timeout = default,
+        Action<SendContext<TRequest>>? callback = null, CancellationToken cancellationToken = default)
         where TRequest : class
         where TResponse : class
     {
@@ -109,7 +109,7 @@ public static class RequestExtensions
         if (callback != null)
             requestHandle.UseExecute(callback);
 
-        return await requestHandle.GetResponse<TResponse>().ConfigureAwait(false);
+        return await requestHandle.GetResponseAsync<TResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -125,8 +125,9 @@ public static class RequestExtensions
     /// <typeparam name="TRequest">The request type</typeparam>
     /// <typeparam name="TResponse">The response type</typeparam>
     /// <returns></returns>
-    public static async Task<Response<TResponse>> Request<TRequest, TResponse>(this ConsumeContext consumeContext, IBus bus, Uri destinationAddress,
-        TRequest message, CancellationToken cancellationToken = default, RequestTimeout timeout = default, Action<SendContext<TRequest>> callback = null)
+    public static async Task<Response<TResponse>> RequestAsync<TRequest, TResponse>(this ConsumeContext consumeContext, IBus bus, Uri destinationAddress,
+        TRequest message, RequestTimeout timeout = default, Action<SendContext<TRequest>>? callback = null,
+        CancellationToken cancellationToken = default)
         where TRequest : class
         where TResponse : class
     {
@@ -137,7 +138,7 @@ public static class RequestExtensions
         if (callback != null)
             requestHandle.UseExecute(callback);
 
-        return await requestHandle.GetResponse<TResponse>().ConfigureAwait(false);
+        return await requestHandle.GetResponseAsync<TResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -153,8 +154,9 @@ public static class RequestExtensions
     /// <typeparam name="TRequest">The request type</typeparam>
     /// <typeparam name="TResponse">The response type</typeparam>
     /// <returns></returns>
-    public static async Task<Response<TResponse>> Request<TRequest, TResponse>(this ConsumeContext consumeContext, IBus bus, Uri destinationAddress,
-        object values, CancellationToken cancellationToken = default, RequestTimeout timeout = default, Action<SendContext<TRequest>> callback = null)
+    public static async Task<Response<TResponse>> RequestAsync<TRequest, TResponse>(this ConsumeContext consumeContext, IBus bus, Uri destinationAddress,
+        object values, RequestTimeout timeout = default, Action<SendContext<TRequest>>? callback = null,
+        CancellationToken cancellationToken = default)
         where TRequest : class
         where TResponse : class
     {
@@ -165,7 +167,7 @@ public static class RequestExtensions
         if (callback != null)
             requestHandle.UseExecute(callback);
 
-        return await requestHandle.GetResponse<TResponse>().ConfigureAwait(false);
+        return await requestHandle.GetResponseAsync<TResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -180,8 +182,8 @@ public static class RequestExtensions
     /// <typeparam name="TRequest">The request type</typeparam>
     /// <typeparam name="TResponse">The response type</typeparam>
     /// <returns></returns>
-    public static async Task<Response<TResponse>> Request<TRequest, TResponse>(this ConsumeContext consumeContext, IBus bus, TRequest message,
-        CancellationToken cancellationToken = default, RequestTimeout timeout = default, Action<SendContext<TRequest>> callback = null)
+    public static async Task<Response<TResponse>> RequestAsync<TRequest, TResponse>(this ConsumeContext consumeContext, IBus bus, TRequest message,
+        RequestTimeout timeout = default, Action<SendContext<TRequest>>? callback = null, CancellationToken cancellationToken = default)
         where TRequest : class
         where TResponse : class
     {
@@ -192,7 +194,7 @@ public static class RequestExtensions
         if (callback != null)
             requestHandle.UseExecute(callback);
 
-        return await requestHandle.GetResponse<TResponse>().ConfigureAwait(false);
+        return await requestHandle.GetResponseAsync<TResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -207,8 +209,8 @@ public static class RequestExtensions
     /// <typeparam name="TRequest">The request type</typeparam>
     /// <typeparam name="TResponse">The response type</typeparam>
     /// <returns></returns>
-    public static async Task<Response<TResponse>> Request<TRequest, TResponse>(this ConsumeContext consumeContext, IBus bus, object values,
-        CancellationToken cancellationToken = default, RequestTimeout timeout = default, Action<SendContext<TRequest>> callback = null)
+    public static async Task<Response<TResponse>> RequestAsync<TRequest, TResponse>(this ConsumeContext consumeContext, IBus bus, object values,
+        RequestTimeout timeout = default, Action<SendContext<TRequest>>? callback = null, CancellationToken cancellationToken = default)
         where TRequest : class
         where TResponse : class
     {
@@ -219,6 +221,6 @@ public static class RequestExtensions
         if (callback != null)
             requestHandle.UseExecute(callback);
 
-        return await requestHandle.GetResponse<TResponse>().ConfigureAwait(false);
+        return await requestHandle.GetResponseAsync<TResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 }

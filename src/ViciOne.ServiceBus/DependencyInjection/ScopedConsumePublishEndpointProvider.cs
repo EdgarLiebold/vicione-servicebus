@@ -22,10 +22,10 @@ public class ScopedConsumePublishEndpointProvider :
         return _provider.ConnectPublishObserver(observer);
     }
 
-    async Task<ISendEndpoint> IPublishEndpointProvider.GetPublishSendEndpoint<T>()
+    async Task<ISendEndpoint> IPublishEndpointProvider.GetPublishSendEndpointAsync<T>(CancellationToken cancellationToken)
         where T : class
     {
-        var endpoint = await _provider.GetPublishEndpoint<T>(_consumeContext, default).ConfigureAwait(false);
+        var endpoint = await _provider.GetPublishEndpointAsync<T>(_consumeContext, default).ConfigureAwait(false);
 
         return new ScopedSendEndpoint(endpoint, _serviceProvider);
     }

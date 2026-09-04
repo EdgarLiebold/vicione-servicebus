@@ -24,11 +24,11 @@ public class GetMessageDataObjectArrayTransformConfiguration<TInput, TProperty, 
 
     public void Apply(ITransformConfigurator<TInput> configurator)
     {
-        if (_transformConfigurator.TryGetConverter(out IPropertyConverter<TElement, TElement> converter))
+        if (_transformConfigurator.TryGetConverter(out IPropertyConverter<TElement, TElement>? converter))
         {
             var inputPropertyProvider = new InputPropertyProvider<TInput, TProperty>(_property);
 
-            IPropertyConverter<TProperty, TProperty> arrayConverter = typeof(TProperty).IsArray
+            IPropertyConverter<TProperty, TProperty>? arrayConverter = typeof(TProperty).IsArray
                 ? new ArrayPropertyConverter<TElement, TElement>(converter) as IPropertyConverter<TProperty, TProperty>
                 : new ListPropertyConverter<TElement, TElement>(converter) as IPropertyConverter<TProperty, TProperty>;
 

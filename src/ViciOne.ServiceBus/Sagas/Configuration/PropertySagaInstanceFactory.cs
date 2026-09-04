@@ -19,7 +19,7 @@ internal sealed class PropertySagaInstanceFactory<TSaga>
         if (constructorInfo == null)
             throw new ArgumentException($"The saga {TypeCache<TSaga>.ShortName} does not have a default public constructor");
 
-        if (!TypeCache<TSaga>.ReadWritePropertyCache.TryGetValue(nameof(ISaga.CorrelationId), out ReadWriteProperty<TSaga> property))
+        if (!TypeCache<TSaga>.ReadWritePropertyCache.TryGetValue(nameof(ISaga.CorrelationId), out ReadWriteProperty<TSaga>? property))
             throw new ArgumentException($"The saga {TypeCache<TSaga>.ShortName} does not have a writable CorrelationId property");
 
         var correlationId = Expression.Parameter(typeof(Guid), "correlationId");

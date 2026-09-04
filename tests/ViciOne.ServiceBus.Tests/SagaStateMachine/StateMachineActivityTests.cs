@@ -17,13 +17,13 @@ public sealed class StateMachineActivityTests
     [InlineData(StateMachineConstructionStyle.Declarative)]
     [InlineData(StateMachineConstructionStyle.Dynamic)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-ACTIVITY", "transition-lifecycle-complete")]
-    public async Task TransitionLifecycle_ExecutesEveryHookInOrderWithTheExactStatePayload(
+    public async Task TransitionLifecycle_ExecutesEveryHookInOrderWithTheExactStatePayloadAsync(
         StateMachineConstructionStyle style)
     {
         LifecycleScenario scenario = CreateLifecycleScenario(style);
         var instance = new ActivityInstance();
 
-        await Raise(scenario.Machine, instance, scenario.Initialized);
+        await RaiseAsync(scenario.Machine, instance, scenario.Initialized);
 
         Assert.Equal(
             [
@@ -44,7 +44,7 @@ public sealed class StateMachineActivityTests
     [InlineData(StateMachineConstructionStyle.Declarative)]
     [InlineData(StateMachineConstructionStyle.Dynamic)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-ACTIVITY", "initial-binding-equivalence")]
-    public async Task DuringInitialAndInitially_BothExecuteAndTransitionExactly(
+    public async Task DuringInitialAndInitially_BothExecuteAndTransitionExactlyAsync(
         StateMachineConstructionStyle style)
     {
         TransitionScenario during = CreateInitialTransitionScenario(style, useInitially: false);
@@ -52,8 +52,8 @@ public sealed class StateMachineActivityTests
         var duringInstance = new ActivityInstance();
         var initiallyInstance = new ActivityInstance();
 
-        await Raise(during.Machine, duringInstance, during.Event);
-        await Raise(initially.Machine, initiallyInstance, initially.Event);
+        await RaiseAsync(during.Machine, duringInstance, during.Event);
+        await RaiseAsync(initially.Machine, initiallyInstance, initially.Event);
 
         Assert.Equal(["during-initial"], duringInstance.Markers);
         Assert.Same(during.Running, duringInstance.CurrentState);
@@ -65,12 +65,12 @@ public sealed class StateMachineActivityTests
     [InlineData(StateMachineConstructionStyle.Declarative)]
     [InlineData(StateMachineConstructionStyle.Dynamic)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-ACTIVITY", "finalize-finally-exact")]
-    public async Task Finalize_EntersFinalAndRunsFinallyExactlyOnce(StateMachineConstructionStyle style)
+    public async Task Finalize_EntersFinalAndRunsFinallyExactlyOnceAsync(StateMachineConstructionStyle style)
     {
         FinalizeScenario scenario = CreateFinalizeScenario(style);
         var instance = new ActivityInstance();
 
-        await Raise(scenario.Machine, instance, scenario.Event);
+        await RaiseAsync(scenario.Machine, instance, scenario.Event);
 
         Assert.Equal(["before-finalize", "finally"], instance.Markers);
         Assert.Equal("Finalized", instance.Value);
@@ -81,14 +81,14 @@ public sealed class StateMachineActivityTests
     [InlineData(StateMachineConstructionStyle.Declarative)]
     [InlineData(StateMachineConstructionStyle.Dynamic)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-ACTIVITY", "custom-data-activity-continuation")]
-    public async Task CustomDataActivity_ReceivesThePayloadAndContinuesTheBehavior(
+    public async Task CustomDataActivity_ReceivesThePayloadAndContinuesTheBehaviorAsync(
         StateMachineConstructionStyle style)
     {
         DataScenario scenario = CreateCustomActivityScenario(style);
         var instance = new ActivityInstance();
         var message = new ActivityData("custom-value");
 
-        await Raise(scenario.Machine, instance, scenario.Event, message);
+        await RaiseAsync(scenario.Machine, instance, scenario.Event, message);
 
         Assert.Equal("custom-value", instance.Value);
         Assert.Equal(["custom-activity", "after-custom-activity"], instance.Markers);
@@ -99,14 +99,14 @@ public sealed class StateMachineActivityTests
     [InlineData(StateMachineConstructionStyle.Declarative)]
     [InlineData(StateMachineConstructionStyle.Dynamic)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-ACTIVITY", "data-event-action-continuation")]
-    public async Task DataEventAction_CopiesThePayloadAndContinuesToTheTransition(
+    public async Task DataEventAction_CopiesThePayloadAndContinuesToTheTransitionAsync(
         StateMachineConstructionStyle style)
     {
         DataScenario scenario = CreateDataActionScenario(style);
         var instance = new ActivityInstance();
         var message = new ActivityData("Audi", "A6");
 
-        await Raise(scenario.Machine, instance, scenario.Event, message);
+        await RaiseAsync(scenario.Machine, instance, scenario.Event, message);
 
         Assert.Equal("Audi", instance.Value);
         Assert.Equal("A6", instance.SecondaryValue);
@@ -284,7 +284,7 @@ public sealed class StateMachineActivityTests
             .Then(context => context.Saga.Markers.Add("after-copy"))
             .TransitionTo(running);
 
-    private static async Task Raise(
+    private static async Task RaiseAsync(
         StateMachine<ActivityInstance> machine,
         ActivityInstance instance,
         Event @event)
@@ -292,15 +292,15 @@ public sealed class StateMachineActivityTests
         var message = new ActivitySignal();
         ConsumeContext<ActivitySignal> consumeContext = InMemoryOutboxTestContextFactory.Create(message);
         var sagaInstance = new SagaInstance<ActivityInstance>(instance);
-        await sagaInstance.MarkInUse(consumeContext.CancellationToken);
+        await sagaInstance.MarkInUseAsync(consumeContext.CancellationToken);
         using var sagaContext = new InMemorySagaConsumeContext<ActivityInstance, ActivitySignal>(consumeContext, sagaInstance);
         BehaviorContext<ActivityInstance> behaviorContext =
             new ViciOneServiceBusStateMachine<ActivityInstance>.BehaviorContextProxy(machine, sagaContext, @event);
 
-        await machine.RaiseEvent(behaviorContext);
+        await machine.RaiseEventAsync(behaviorContext);
     }
 
-    private static async Task Raise<T>(
+    private static async Task RaiseAsync<T>(
         StateMachine<ActivityInstance> machine,
         ActivityInstance instance,
         Event<T> @event,
@@ -309,12 +309,12 @@ public sealed class StateMachineActivityTests
     {
         ConsumeContext<T> consumeContext = InMemoryOutboxTestContextFactory.Create(message);
         var sagaInstance = new SagaInstance<ActivityInstance>(instance);
-        await sagaInstance.MarkInUse(consumeContext.CancellationToken);
+        await sagaInstance.MarkInUseAsync(consumeContext.CancellationToken);
         using var sagaContext = new InMemorySagaConsumeContext<ActivityInstance, T>(consumeContext, sagaInstance);
         BehaviorContext<ActivityInstance, T> behaviorContext =
             new ViciOneServiceBusStateMachine<ActivityInstance>.BehaviorContextProxy<T>(machine, sagaContext, sagaContext, @event);
 
-        await machine.RaiseEvent(behaviorContext);
+        await machine.RaiseEventAsync(behaviorContext);
     }
 
     public sealed record ActivitySignal;
@@ -362,20 +362,20 @@ public sealed class StateMachineActivityTests
 
     private sealed class SetValueActivity : IStateMachineActivity<ActivityInstance, ActivityData>
     {
-        public Task Execute(
+        public Task ExecuteAsync(
             BehaviorContext<ActivityInstance, ActivityData> context,
             IBehavior<ActivityInstance, ActivityData> next)
         {
             context.Saga.Value = context.Message.Value;
             context.Saga.Markers.Add("custom-activity");
-            return next.Execute(context);
+            return next.ExecuteAsync(context);
         }
 
-        public Task Faulted<TException>(
+        public Task FaultedAsync<TException>(
             BehaviorExceptionContext<ActivityInstance, ActivityData, TException> context,
             IBehavior<ActivityInstance, ActivityData> next)
             where TException : Exception =>
-            next.Faulted(context);
+            next.FaultedAsync(context);
 
         public void Accept(StateMachineVisitor visitor) => visitor.Visit(this);
 

@@ -35,11 +35,11 @@ public class RescueFilter<TContext, TRescueContext> :
     }
 
     [DebuggerNonUserCode]
-    async Task IFilter<TContext>.Send(TContext context, IPipe<TContext> next)
+    async Task IFilter<TContext>.SendAsync(TContext context, IPipe<TContext> next)
     {
         try
         {
-            await next.Send(context).ConfigureAwait(false);
+            await next.SendAsync(context).ConfigureAwait(false);
         }
         catch (AggregateException ex)
         {
@@ -49,7 +49,7 @@ public class RescueFilter<TContext, TRescueContext> :
             var rescueContext = _rescueContextFactory(context, ex)
                 ?? throw new InvalidOperationException("The rescue context factory returned null.");
 
-            await _rescuePipe.Send(rescueContext).ConfigureAwait(false);
+            await _rescuePipe.SendAsync(rescueContext).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -59,7 +59,7 @@ public class RescueFilter<TContext, TRescueContext> :
             var rescueContext = _rescueContextFactory(context, ex)
                 ?? throw new InvalidOperationException("The rescue context factory returned null.");
 
-            await _rescuePipe.Send(rescueContext).ConfigureAwait(false);
+            await _rescuePipe.SendAsync(rescueContext).ConfigureAwait(false);
         }
     }
 }

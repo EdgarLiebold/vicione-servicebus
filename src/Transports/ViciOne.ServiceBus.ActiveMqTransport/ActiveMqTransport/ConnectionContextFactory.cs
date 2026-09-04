@@ -21,12 +21,12 @@ public class ConnectionContextFactory :
 
     IPipeContextAgent<ConnectionContext> IPipeContextFactory<ConnectionContext>.CreateContext(ISupervisor supervisor)
     {
-        Task<ConnectionContext> context = Task.Run(() => CreateConnection(supervisor), supervisor.Stopped);
+        Task<ConnectionContext> context = Task.Run(() => CreateConnectionAsync(supervisor), supervisor.Stopped);
 
         IPipeContextAgent<ConnectionContext> contextHandle = supervisor.AddContext(context);
 
         var faultStopLock = new object();
-        Task faultStopTask = null;
+        Task? faultStopTask = null;
 
         void HandleConnectionException(Exception exception)
         {
@@ -44,14 +44,14 @@ public class ConnectionContextFactory :
 
             // Claim the transition before Stop is invoked, because NMS can report another
             // exception synchronously while that stop tears the connection down.
-            _ = StopAfterConnectionException(exception, stopCompletion);
+            _ = StopAfterConnectionExceptionAsync(exception, stopCompletion);
         }
 
-        async Task StopAfterConnectionException(Exception exception, TaskCompletionSource stopCompletion)
+        async Task StopAfterConnectionExceptionAsync(Exception exception, TaskCompletionSource stopCompletion)
         {
             try
             {
-                await contextHandle.Stop($"Connection Exception: {exception}").ConfigureAwait(false);
+                await contextHandle.StopAsync($"Connection Exception: {exception}").ConfigureAwait(false);
             }
             catch (Exception stopException)
             {
@@ -81,24 +81,24 @@ public class ConnectionContextFactory :
     IActivePipeContextAgent<ConnectionContext> IPipeContextFactory<ConnectionContext>.CreateActiveContext(ISupervisor supervisor,
         PipeContextHandle<ConnectionContext> context, CancellationToken cancellationToken)
     {
-        return supervisor.AddActiveContext(context, CreateSharedConnection(context.Context, cancellationToken));
+        return supervisor.AddActiveContext(context, CreateSharedConnectionAsync(context.Context, cancellationToken));
     }
 
-    static async Task<ConnectionContext> CreateSharedConnection(Task<ConnectionContext> context, CancellationToken cancellationToken)
+    static async Task<ConnectionContext> CreateSharedConnectionAsync(Task<ConnectionContext> context, CancellationToken cancellationToken)
     {
         return context.IsCompletedSuccessfully()
             ? new SharedConnectionContext(context.Result, cancellationToken)
-            : new SharedConnectionContext(await context.OrCanceled(cancellationToken).ConfigureAwait(false), cancellationToken);
+            : new SharedConnectionContext(await context.OrCanceledAsync(cancellationToken).ConfigureAwait(false), cancellationToken);
     }
 
-    async Task<ConnectionContext> CreateConnection(ISupervisor supervisor)
+    async Task<ConnectionContext> CreateConnectionAsync(ISupervisor supervisor)
     {
         var description = _hostConfiguration.Settings.ToDescription();
 
         if (supervisor.Stopping.IsCancellationRequested)
             throw new ActiveMqConnectionException($"The connection is stopping and cannot be used: {description}");
 
-        IConnection connection = null;
+        IConnection? connection = null;
         try
         {
             TransportLogMessages.ConnectHost(description);

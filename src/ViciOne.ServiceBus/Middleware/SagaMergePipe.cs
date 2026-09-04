@@ -32,10 +32,10 @@ public class SagaMergePipe<TSaga, TMessage> :
         _output.Probe(scope);
     }
 
-    public Task Send(SagaConsumeContext<TSaga> context)
+    public Task SendAsync(SagaConsumeContext<TSaga> context)
     {
         if (context is SagaConsumeContext<TSaga, TMessage> consumerContext)
-            return _output.Send(consumerContext);
+            return _output.SendAsync(consumerContext);
 
         throw new ArgumentException($"The message could not be retrieved: {TypeCache<TMessage>.ShortName}", nameof(context));
     }

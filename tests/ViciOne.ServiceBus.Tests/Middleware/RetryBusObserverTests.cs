@@ -8,22 +8,22 @@ public sealed class RetryBusObserverTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-RETRY-LIFECYCLE", "pre-stop-cancels-in-flight-retry")]
-    public async Task PreStop_CancelsTheStableStoppingTokenBeforeResourcesAreReleased()
+    public async Task PreStop_CancelsTheStableStoppingTokenBeforeResourcesAreReleasedAsync()
     {
         var observer = new RetryBusObserver();
         CancellationToken stoppingToken = observer.Stopping;
 
-        await observer.PreStop(null!);
+        await observer.PreStopAsync(null!);
 
         Assert.True(stoppingToken.IsCancellationRequested);
 
-        await observer.PostStop(null!);
+        await observer.PostStopAsync(null!);
         observer.Dispose();
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-RETRY-LIFECYCLE", "failed-bus-lifecycle-cancels-retry")]
-    public async Task BusCreationStartAndStopFailures_CancelAndReleaseTheirRetryLifetime()
+    public async Task BusCreationStartAndStopFailures_CancelAndReleaseTheirRetryLifetimeAsync()
     {
         var creationObserver = new RetryBusObserver();
         CancellationToken creationToken = creationObserver.Stopping;
@@ -34,8 +34,8 @@ public sealed class RetryBusObserverTests
         var exception = new ExpectedBusFailureException();
 
         creationObserver.CreateFaulted(exception);
-        await startObserver.StartFaulted(null!, exception);
-        await stopObserver.StopFaulted(null!, exception);
+        await startObserver.StartFaultedAsync(null!, exception);
+        await stopObserver.StopFaultedAsync(null!, exception);
 
         Assert.True(creationToken.IsCancellationRequested);
         Assert.True(startToken.IsCancellationRequested);

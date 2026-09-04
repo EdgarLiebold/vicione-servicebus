@@ -25,25 +25,25 @@ public class BusTestSendObserver :
 
     public ISentMessageList Messages => _messages;
 
-    public Task PreSend<T>(SendContext<T> context)
+    public Task PreSendAsync<T>(SendContext<T> context)
         where T : class
     {
-        return RestartTimer();
+        return RestartTimerAsync();
     }
 
-    public Task PostSend<T>(SendContext<T> context)
+    public Task PostSendAsync<T>(SendContext<T> context)
         where T : class
     {
         _messages.Add(context);
 
-        return RestartTimer(false);
+        return RestartTimerAsync(false);
     }
 
-    public Task SendFault<T>(SendContext<T> context, Exception exception)
+    public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
         where T : class
     {
         _messages.Add(context, exception);
 
-        return RestartTimer(false);
+        return RestartTimerAsync(false);
     }
 }

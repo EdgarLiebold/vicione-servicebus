@@ -57,7 +57,7 @@ internal sealed class HubLifetimeManagerTestEnvironment<THub> : IAsyncDisposable
 
         try
         {
-            await harness.Start().ConfigureAwait(false);
+            await harness.StartAsync().ConfigureAwait(false);
 
             for (var index = 0; index < endpoints.Length; index++)
             {
@@ -74,8 +74,8 @@ internal sealed class HubLifetimeManagerTestEnvironment<THub> : IAsyncDisposable
         }
     }
 
-    public Task<ConsumeContext<Ack<THub>>> ObserveNextAcknowledgement() =>
-        _harness.SubscribeHandler<Ack<THub>>();
+    public Task<ConsumeContext<Ack<THub>>> ObserveNextAcknowledgementAsync() =>
+        _harness.SubscribeHandlerAsync<Ack<THub>>();
 
     public Task<LogEntry> ObserveLogAsync(
         Func<LogEntry, bool> predicate,
@@ -86,7 +86,7 @@ internal sealed class HubLifetimeManagerTestEnvironment<THub> : IAsyncDisposable
     {
         try
         {
-            await _harness.Stop().ConfigureAwait(false);
+            await _harness.StopAsync().ConfigureAwait(false);
             _harness.Dispose();
         }
         finally
@@ -184,7 +184,7 @@ internal sealed class HubLifetimeManagerConsumerFactory<TConsumer, THub>(
 {
     public ViciOneServiceBusHubLifetimeManager<THub> Manager { private get; set; } = null!;
 
-    public async Task Send<TMessage>(
+    public async Task SendAsync<TMessage>(
         ConsumeContext<TMessage> context,
         IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)
         where TMessage : class
@@ -194,7 +194,7 @@ internal sealed class HubLifetimeManagerConsumerFactory<TConsumer, THub>(
 
         try
         {
-            await next.Send(new ConsumerConsumeContextScope<TConsumer, TMessage>(context, consumer))
+            await next.SendAsync(new ConsumerConsumeContextScope<TConsumer, TMessage>(context, consumer))
                 .ConfigureAwait(false);
         }
         finally

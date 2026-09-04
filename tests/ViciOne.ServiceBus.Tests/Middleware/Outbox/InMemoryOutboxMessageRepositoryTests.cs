@@ -8,19 +8,19 @@ public sealed class InMemoryOutboxMessageRepositoryTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-RELIABLE-INBOX", "held-message-lock-honors-requested-cancellation")]
-    public async Task HeldMessageLock_HonorsAnAlreadyRequestedCancellation()
+    public async Task HeldMessageLock_HonorsAnAlreadyRequestedCancellationAsync()
     {
         var repository = new InMemoryOutboxMessageRepository();
         Guid messageId = NewId.NextGuid();
         Guid consumerId = NewId.NextGuid();
-        InMemoryInboxMessage held = await repository.Lock(messageId, consumerId, CancellationToken.None);
+        InMemoryInboxMessage held = await repository.LockAsync(messageId, consumerId, CancellationToken.None);
         using var cancellation = new CancellationTokenSource();
         cancellation.Cancel();
 
         try
         {
             await Assert.ThrowsAnyAsync<OperationCanceledException>(
-                () => repository.Lock(messageId, consumerId, cancellation.Token));
+                () => repository.LockAsync(messageId, consumerId, cancellation.Token));
         }
         finally
         {

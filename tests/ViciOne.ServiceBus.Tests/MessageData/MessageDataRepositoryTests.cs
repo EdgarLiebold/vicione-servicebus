@@ -12,32 +12,32 @@ public sealed class MessageDataRepositoryTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-DATA-POLICY", "explicit-policy-null-boundary")]
-    public async Task ExplicitPolicyOverloads_RejectANullPolicyBeforeUsingTheValue()
+    public async Task ExplicitPolicyOverloads_RejectANullPolicyBeforeUsingTheValueAsync()
     {
         var repository = new RecordingRepository();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
 
         Assert.Equal("policy", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            repository.PutString("value", null, null!, cancellationToken))).ParamName);
+            repository.PutStringAsync("value", null, null!, cancellationToken))).ParamName);
         Assert.Equal("policy", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            repository.PutBytes([1], null, null!, cancellationToken))).ParamName);
+            repository.PutBytesAsync([1], null, null!, cancellationToken))).ParamName);
         Assert.Equal("policy", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            repository.PutObject(new object(), typeof(object), null, null!, cancellationToken))).ParamName);
+            repository.PutObjectAsync(new object(), typeof(object), null, null!, cancellationToken))).ParamName);
         Assert.Equal(0, repository.PutCalls);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-DATA-REPOSITORY", "in-memory-exact-round-trip-and-missing-address")]
-    public async Task InMemoryRepository_RoundTripsExactBytesAndRejectsAnUnknownAddress()
+    public async Task InMemoryRepository_RoundTripsExactBytesAndRejectsAnUnknownAddressAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         IMessageDataRepository repository = new InMemoryMessageDataRepository();
         byte[] expected = Enumerable.Range(0, 257).Select(index => (byte)(index % 251)).ToArray();
         Uri address;
         await using (var source = new MemoryStream(expected, writable: false))
-            address = await repository.Put(source, cancellationToken: cancellationToken);
+            address = await repository.PutAsync(source, cancellationToken: cancellationToken);
 
-        await using Stream stored = await repository.Get(address, cancellationToken);
+        await using Stream stored = await repository.GetAsync(address, cancellationToken);
         using var copy = new MemoryStream();
         await stored.CopyToAsync(copy, cancellationToken);
 
@@ -47,7 +47,7 @@ public sealed class MessageDataRepositoryTests
 
         Uri missing = new("urn:msgdata:missing");
         MessageDataNotFoundException exception = await Assert.ThrowsAsync<MessageDataNotFoundException>(
-            () => repository.Get(missing, cancellationToken));
+            () => repository.GetAsync(missing, cancellationToken));
         Assert.Equal($"The message data was not found: {missing}", exception.Message);
     }
 
@@ -55,7 +55,7 @@ public sealed class MessageDataRepositoryTests
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("REQ-VSB-MESSAGE-DATA-REPOSITORY", "filesystem-permanent-and-expiring-paths")]
-    public async Task FileSystemRepository_RoundTripsOneExactFileInTheExpectedPathClass(bool expiring)
+    public async Task FileSystemRepository_RoundTripsOneExactFileInTheExpectedPathClassAsync(bool expiring)
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         string root = Path.Combine(Path.GetTempPath(), "vsb-message-data", NewId.NextGuid().ToString("N"));
@@ -67,9 +67,9 @@ public sealed class MessageDataRepositoryTests
         {
             Uri address;
             await using (var source = new MemoryStream(expected, writable: false))
-                address = await repository.Put(source, expiring ? TimeSpan.FromDays(30) : null, cancellationToken);
+                address = await repository.PutAsync(source, expiring ? TimeSpan.FromDays(30) : null, cancellationToken);
 
-            await using Stream stored = await repository.Get(address, cancellationToken);
+            await using Stream stored = await repository.GetAsync(address, cancellationToken);
             using var copy = new MemoryStream();
             await stored.CopyToAsync(copy, cancellationToken);
 
@@ -87,7 +87,7 @@ public sealed class MessageDataRepositoryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-DATA-TTL-CLOCK", "filesystem-expiration-path")]
-    public async Task FileSystemExpirationPath_UsesTheInjectedClockAndExactTimeToLive()
+    public async Task FileSystemExpirationPath_UsesTheInjectedClockAndExactTimeToLiveAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         string root = Path.Combine(Path.GetTempPath(), "vsb-message-data-clock", NewId.NextGuid().ToString("N"));
@@ -99,7 +99,7 @@ public sealed class MessageDataRepositoryTests
         {
             await using var source = new MemoryStream([1, 2, 3], writable: false);
 
-            Uri address = await repository.Put(source, TimeSpan.FromMinutes(90), cancellationToken);
+            Uri address = await repository.PutAsync(source, TimeSpan.FromMinutes(90), cancellationToken);
 
             Assert.StartsWith("urn:file:2042:01:01:01:", address.OriginalString, StringComparison.Ordinal);
             Assert.Single(directory.EnumerateFiles("*", SearchOption.AllDirectories));
@@ -113,7 +113,7 @@ public sealed class MessageDataRepositoryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-DATA-THRESHOLD", "string-and-bytes-inline-stream-stored")]
-    public async Task InlineThreshold_EmbedsStringAndBytesButAlwaysStoresStreams()
+    public async Task InlineThreshold_EmbedsStringAndBytesButAlwaysStoresStreamsAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var policy = new MessageDataPolicy(alwaysWriteToRepository: false, threshold: 4096);
@@ -122,10 +122,10 @@ public sealed class MessageDataRepositoryTests
         byte[] bytes = [1, 3, 5, 7];
         byte[] streamBytes = [2, 4, 6, 8];
 
-        MessageData<string> stringData = await repository.PutString(text, null, policy, cancellationToken);
-        MessageData<byte[]> byteData = await repository.PutBytes(bytes, null, policy, cancellationToken);
+        MessageData<string> stringData = await repository.PutStringAsync(text, null, policy, cancellationToken);
+        MessageData<byte[]> byteData = await repository.PutBytesAsync(bytes, null, policy, cancellationToken);
         await using var source = new MemoryStream(streamBytes, writable: false);
-        MessageData<Stream> streamData = await repository.PutStream(source, cancellationToken);
+        MessageData<Stream> streamData = await repository.PutStreamAsync(source, cancellationToken);
 
         Assert.Null(stringData.Address);
         Assert.Null(byteData.Address);
@@ -138,7 +138,7 @@ public sealed class MessageDataRepositoryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-DATA-ENCRYPTION", "ciphertext-at-rest-and-three-type-round-trip")]
-    public async Task EncryptedRepository_StoresCiphertextAndRoundTripsStringBytesAndStream()
+    public async Task EncryptedRepository_StoresCiphertextAndRoundTripsStringBytesAndStreamAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var policy = new MessageDataPolicy(alwaysWriteToRepository: true, threshold: 1);
@@ -150,19 +150,23 @@ public sealed class MessageDataRepositoryTests
         byte[] bytes = Enumerable.Range(0, 129).Select(index => (byte)(index % 127)).ToArray();
         byte[] streamBytes = Enumerable.Range(0, 65).Select(index => (byte)(255 - index)).ToArray();
 
-        MessageData<string> stringData = await repository.PutString(text, null, policy, cancellationToken);
-        MessageData<byte[]> byteData = await repository.PutBytes(bytes, null, policy, cancellationToken);
+        MessageData<string> stringData = await repository.PutStringAsync(text, null, policy, cancellationToken);
+        MessageData<byte[]> byteData = await repository.PutBytesAsync(bytes, null, policy, cancellationToken);
         await using var source = new MemoryStream(streamBytes, writable: false);
-        MessageData<Stream> streamData = await repository.PutStream(source, cancellationToken);
+        MessageData<Stream> streamData = await repository.PutStreamAsync(source, cancellationToken);
 
-        Assert.NotEqual(Encoding.UTF8.GetBytes(text), inner.StoredBytes(stringData.Address));
-        Assert.NotEqual(bytes, inner.StoredBytes(byteData.Address));
-        Assert.NotEqual(streamBytes, inner.StoredBytes(streamData.Address));
+        Assert.NotEqual(Encoding.UTF8.GetBytes(text), inner.StoredBytes(MessageDataTestSupport.Require(stringData.Address, nameof(stringData))));
+        Assert.NotEqual(bytes, inner.StoredBytes(MessageDataTestSupport.Require(byteData.Address, nameof(byteData))));
+        Assert.NotEqual(streamBytes, inner.StoredBytes(MessageDataTestSupport.Require(streamData.Address, nameof(streamData))));
 
-        string restoredText = await (await repository.GetString(stringData.Address, cancellationToken)).Value;
+        string restoredText = MessageDataTestSupport.Require(
+            await (await repository.GetStringAsync(MessageDataTestSupport.Require(stringData.Address, nameof(stringData)), cancellationToken)).Value,
+            nameof(stringData));
         Assert.Equal(text.Select(static character => (int)character), restoredText.Select(static character => (int)character));
-        Assert.Equal(bytes, await (await repository.GetBytes(byteData.Address, cancellationToken)).Value);
-        await using Stream restored = await repository.Get(streamData.Address, cancellationToken);
+        Assert.Equal(bytes, await (await repository.GetBytesAsync(
+            MessageDataTestSupport.Require(byteData.Address, nameof(byteData)), cancellationToken)).Value);
+        await using Stream restored = await repository.GetAsync(
+            MessageDataTestSupport.Require(streamData.Address, nameof(streamData)), cancellationToken);
         using var copy = new MemoryStream();
         await restored.CopyToAsync(copy, cancellationToken);
         Assert.Equal(streamBytes, copy.ToArray());
@@ -170,7 +174,7 @@ public sealed class MessageDataRepositoryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-DATA-ENCRYPTION", "public-null-boundaries")]
-    public async Task EncryptedRepository_RejectsNullDependenciesAddressesAndStreamsAtThePublicBoundary()
+    public async Task EncryptedRepository_RejectsNullDependenciesAddressesAndStreamsAtThePublicBoundaryAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var repository = new InMemoryMessageDataRepository();
@@ -183,14 +187,14 @@ public sealed class MessageDataRepositoryTests
 
         var encrypted = new EncryptedMessageDataRepository(repository, streamProvider);
         Assert.Equal("address", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            encrypted.Get(null!, cancellationToken))).ParamName);
+            encrypted.GetAsync(null!, cancellationToken))).ParamName);
         Assert.Equal("stream", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            encrypted.Put(null!, cancellationToken: cancellationToken))).ParamName);
+            encrypted.PutAsync(null!, cancellationToken: cancellationToken))).ParamName);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-DATA-ENCRYPTION", "decrypt-construction-failure-releases-owned-stream")]
-    public async Task DecryptStreamConstructionFailure_DisposesTheInnerStreamAndPreservesTheOriginalFailure()
+    public async Task DecryptStreamConstructionFailure_DisposesTheInnerStreamAndPreservesTheOriginalFailureAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var innerStream = new TrackingStream([1, 2, 3]);
@@ -199,7 +203,7 @@ public sealed class MessageDataRepositoryTests
         var encrypted = new EncryptedMessageDataRepository(repository, new ThrowingCryptoStreamProvider(expected));
 
         InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            encrypted.Get(new Uri("urn:encrypted:test"), cancellationToken));
+            encrypted.GetAsync(new Uri("urn:encrypted:test"), cancellationToken));
 
         Assert.Same(expected, actual);
         Assert.True(innerStream.IsDisposed);
@@ -213,7 +217,7 @@ public sealed class MessageDataRepositoryTests
 
         public int PutCalls => Volatile.Read(ref _putCalls);
 
-        public Task<Stream> Get(Uri address, CancellationToken cancellationToken = default)
+        public Task<Stream> GetAsync(Uri address, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (!_values.TryGetValue(address, out byte[]? value))
@@ -222,7 +226,7 @@ public sealed class MessageDataRepositoryTests
             return Task.FromResult<Stream>(new MemoryStream(value, writable: false));
         }
 
-        public async Task<Uri> Put(
+        public async Task<Uri> PutAsync(
             Stream stream,
             TimeSpan? timeToLive = null,
             CancellationToken cancellationToken = default)
@@ -262,23 +266,22 @@ public sealed class MessageDataRepositoryTests
 
         public int GetCalls => Volatile.Read(ref _getCalls);
 
-        public Task<Stream> Get(Uri address, CancellationToken cancellationToken = default)
+        public Task<Stream> GetAsync(Uri address, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             Interlocked.Increment(ref _getCalls);
             return Task.FromResult<Stream>(stream);
         }
 
-        public Task<Uri> Put(Stream value, TimeSpan? timeToLive = null, CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
+        public Task<Uri> PutAsync(Stream value, TimeSpan? timeToLive = null, CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::System.Uri>(cancellationToken); throw new NotSupportedException(); }
     }
 
     private sealed class ThrowingCryptoStreamProvider(Exception failure) : ICryptoStreamProvider
     {
-        public Stream GetEncryptStream(Stream stream, string keyId, System.Security.Cryptography.CryptoStreamMode streamMode) =>
+        public Stream GetEncryptStream(Stream stream, string? keyId, System.Security.Cryptography.CryptoStreamMode streamMode) =>
             stream;
 
-        public Stream GetDecryptStream(Stream stream, string keyId, System.Security.Cryptography.CryptoStreamMode streamMode) =>
+        public Stream GetDecryptStream(Stream stream, string? keyId, System.Security.Cryptography.CryptoStreamMode streamMode) =>
             throw failure;
 
         public void Probe(ProbeContext context)

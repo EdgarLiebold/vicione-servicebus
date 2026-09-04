@@ -12,7 +12,7 @@ public sealed class AmazonSqsOutboxRedeliveryTests
     [InlineData(OutboxMode.MessageScopedSend)]
     [InlineData(OutboxMode.EndpointScopedPublish)]
     [RequirementCoverage("REQ-VSB-AWS-SQS-OUTBOX-REDELIVERY", "failed-attempts-discard-and-success-releases-exactly-once")]
-    public async Task DelayedRedelivery_PublishesAndSendsExactlyOnce(OutboxMode mode)
+    public async Task DelayedRedelivery_PublishesAndSendsExactlyOnceAsync(OutboxMode mode)
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("outboxredelivery");
         string queueName = fixture.Name("input");
@@ -33,15 +33,15 @@ public sealed class AmazonSqsOutboxRedeliveryTests
                 endpoint.Handler<OutboxCommand>(async context =>
                 {
                     int attempt = Interlocked.Increment(ref attemptCount) - 1;
-                    attempts.Enqueue(new AttemptObservation(context.GetRedeliveryCount(), context.GetRetryAttempt()));
+                    attempts.Enqueue(new AttemptObservation(context.Advanced().GetRedeliveryCount(), context.Advanced().GetRetryAttempt()));
                     if (mode == OutboxMode.MessageScopedSend)
                     {
-                        await context.Send(
-                            context.ReceiveContext.InputAddress,
+                        await context.Advanced().SendAsync(
+                            context.Advanced().ReceiveContext.InputAddress,
                             new OutboxSent(context.Message.CorrelationId));
                     }
                     else
-                        await context.Publish(new OutboxPublished(context.Message.CorrelationId), context.CancellationToken);
+                        await context.Advanced().PublishAsync(new OutboxPublished(context.Message.CorrelationId), context.CancellationToken);
 
                     if (attempt < 2)
                         throw new IntentionalOutboxFailureException(attempt);
@@ -50,8 +50,8 @@ public sealed class AmazonSqsOutboxRedeliveryTests
                     if (mode != OutboxMode.EndpointScopedPublish)
                         ConfigureOutbox(handler);
                 });
-                endpoint.Handler<OutboxPublished>(published.Observe);
-                endpoint.Handler<OutboxSent>(sent.Observe);
+                endpoint.Handler<OutboxPublished>(published.ObserveAsync);
+                endpoint.Handler<OutboxSent>(sent.ObserveAsync);
             });
         });
         using ConnectHandle sendObserver = bus.ConnectSendObserver(observer);
@@ -63,7 +63,7 @@ public sealed class AmazonSqsOutboxRedeliveryTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            await bus.Publish(new OutboxCommand(correlationId), cancellationToken)
+            await bus.PublishAsync(new OutboxCommand(correlationId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             Guid actual = mode == OutboxMode.MessageScopedSend
@@ -126,7 +126,7 @@ public sealed class AmazonSqsOutboxRedeliveryTests
         public TaskCompletionSource<Guid> Received { get; } =
             new(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        public Task Observe(ConsumeContext<T> context)
+        public Task ObserveAsync(ConsumeContext<T> context)
         {
             Guid correlationId = context.Message switch
             {
@@ -150,32 +150,32 @@ public sealed class AmazonSqsOutboxRedeliveryTests
         public int PublishCount => Volatile.Read(ref _publishCount);
         public int SendCount => Volatile.Read(ref _sendCount);
 
-        public Task PreSend<T>(SendContext<T> context) where T : class
+        public Task PreSendAsync<T>(SendContext<T> context) where T : class
         {
             if (context.Message is OutboxSent)
                 Interlocked.Increment(ref _sendCount);
             return Task.CompletedTask;
         }
 
-        public Task PostSend<T>(SendContext<T> context) where T : class => Task.CompletedTask;
+        public Task PostSendAsync<T>(SendContext<T> context) where T : class => Task.CompletedTask;
 
-        public Task SendFault<T>(SendContext<T> context, Exception exception) where T : class
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception) where T : class
         {
             if (context.Message is OutboxSent)
                 Interlocked.Increment(ref _faultCount);
             return Task.CompletedTask;
         }
 
-        public Task PrePublish<T>(PublishContext<T> context) where T : class
+        public Task PrePublishAsync<T>(PublishContext<T> context) where T : class
         {
             if (context.Message is OutboxPublished)
                 Interlocked.Increment(ref _publishCount);
             return Task.CompletedTask;
         }
 
-        public Task PostPublish<T>(PublishContext<T> context) where T : class => Task.CompletedTask;
+        public Task PostPublishAsync<T>(PublishContext<T> context) where T : class => Task.CompletedTask;
 
-        public Task PublishFault<T>(PublishContext<T> context, Exception exception) where T : class
+        public Task PublishFaultAsync<T>(PublishContext<T> context, Exception exception) where T : class
         {
             if (context.Message is OutboxPublished)
                 Interlocked.Increment(ref _faultCount);

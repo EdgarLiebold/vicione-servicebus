@@ -21,7 +21,7 @@ public static class ServiceBusBatchingExtensions
 
         consumerConfigurator.Options<BatchOptions>(o =>
         {
-            o.GroupBy<object, string>(e => e.SessionId())
+            o.GroupBy<object, string>(e => e.Advanced().SessionId())
                 .SetConcurrencyLimit(sessionOptions.MaxConcurrentSessions)
                 .SetMessageLimit(sessionOptions.MessageLimitPerSession)
                 .SetTimeLimit(sessionOptions.TimeLimit)

@@ -23,7 +23,7 @@ public static class PipeContextTimeProviderExtensions
     /// Returns the current UTC timestamp from the provider attached to the context. Message features
     /// use this method as their sole fallback when the transport did not supply a sent timestamp.
     /// </summary>
-    public static DateTime GetUtcDateTime(this PipeContext context)
+    public static DateTimeOffset GetUtcDateTime(this PipeContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
 

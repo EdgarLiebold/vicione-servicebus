@@ -23,7 +23,7 @@ public sealed class ViciOneServiceBusHubLifetimeManagerLocalTests : IAsyncLifeti
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SIGNALR-BROADCAST", "all-local-connections")]
-    public async Task SendAll_DeliversToEveryConnectedClient()
+    public async Task SendAll_DeliversToEveryConnectedClientAsync()
     {
         await using var first = new HubConnectionTestClient();
         await using var second = new HubConnectionTestClient();
@@ -34,14 +34,14 @@ public sealed class ViciOneServiceBusHubLifetimeManagerLocalTests : IAsyncLifeti
             ["World"],
             TestContext.Current.CancellationToken);
 
-        Assert.True(await _endpoint.All.Consumed.Any<All<TestHub>>(TestContext.Current.CancellationToken));
+        Assert.True(await _endpoint.All.Consumed.AnyAsync<All<TestHub>>(TestContext.Current.CancellationToken));
         await AssertInvocationAsync(first);
         await AssertInvocationAsync(second);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SIGNALR-BROADCAST", "disconnected-client-excluded")]
-    public async Task SendAll_DoesNotDeliverToADisconnectedClient()
+    public async Task SendAll_DoesNotDeliverToADisconnectedClientAsync()
     {
         await using var connected = new HubConnectionTestClient();
         await using var disconnected = new HubConnectionTestClient();
@@ -53,14 +53,14 @@ public sealed class ViciOneServiceBusHubLifetimeManagerLocalTests : IAsyncLifeti
             ["World"],
             TestContext.Current.CancellationToken);
 
-        Assert.True(await _endpoint.All.Consumed.Any<All<TestHub>>(TestContext.Current.CancellationToken));
+        Assert.True(await _endpoint.All.Consumed.AnyAsync<All<TestHub>>(TestContext.Current.CancellationToken));
         await AssertInvocationAsync(connected);
         await AssertNoInvocationAsync(disconnected);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SIGNALR-GROUP", "only-members-receive")]
-    public async Task SendGroup_DeliversOnlyToGroupMembers()
+    public async Task SendGroup_DeliversOnlyToGroupMembersAsync()
     {
         await using var member = new HubConnectionTestClient();
         await using var outsider = new HubConnectionTestClient();
@@ -76,14 +76,14 @@ public sealed class ViciOneServiceBusHubLifetimeManagerLocalTests : IAsyncLifeti
             ["World"],
             TestContext.Current.CancellationToken);
 
-        Assert.True(await _endpoint.Group.Consumed.Any<Group<TestHub>>(TestContext.Current.CancellationToken));
+        Assert.True(await _endpoint.Group.Consumed.AnyAsync<Group<TestHub>>(TestContext.Current.CancellationToken));
         await AssertInvocationAsync(member);
         await AssertNoInvocationAsync(outsider);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SIGNALR-GROUP", "disconnect-removes-membership")]
-    public async Task Disconnect_RemovesEveryGroupMembership()
+    public async Task Disconnect_RemovesEveryGroupMembershipAsync()
     {
         await using var disconnected = new HubConnectionTestClient();
         await using var remaining = new HubConnectionTestClient();
@@ -106,14 +106,14 @@ public sealed class ViciOneServiceBusHubLifetimeManagerLocalTests : IAsyncLifeti
             ["World"],
             TestContext.Current.CancellationToken);
 
-        Assert.True(await _endpoint.Group.Consumed.Any<Group<TestHub>>(TestContext.Current.CancellationToken));
+        Assert.True(await _endpoint.Group.Consumed.AnyAsync<Group<TestHub>>(TestContext.Current.CancellationToken));
         await AssertInvocationAsync(remaining);
         await AssertNoInvocationAsync(disconnected);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SIGNALR-GROUP", "local-remove-missing-is-no-op")]
-    public async Task RemoveFromGroup_ForLocalNonMember_DoesNotPublishGroupManagement()
+    public async Task RemoveFromGroup_ForLocalNonMember_DoesNotPublishGroupManagementAsync()
     {
         await using var client = new HubConnectionTestClient();
         await ConnectAsync(client);
@@ -130,7 +130,7 @@ public sealed class ViciOneServiceBusHubLifetimeManagerLocalTests : IAsyncLifeti
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SIGNALR-GROUP", "duplicate-local-add-is-idempotent")]
-    public async Task AddToGroup_Twice_DeliversOnlyOnce()
+    public async Task AddToGroup_Twice_DeliversOnlyOnceAsync()
     {
         await using var client = new HubConnectionTestClient();
         await ConnectAsync(client);
@@ -155,7 +155,7 @@ public sealed class ViciOneServiceBusHubLifetimeManagerLocalTests : IAsyncLifeti
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SIGNALR-GROUP", "failed-member-does-not-block-peers")]
-    public async Task SendGroup_WhenOneConnectionWriteFails_ContinuesServingOtherMembers()
+    public async Task SendGroup_WhenOneConnectionWriteFails_ContinuesServingOtherMembersAsync()
     {
         await using var failing = new HubConnectionTestClient(failWrites: true);
         await using var healthy = new HubConnectionTestClient();
@@ -192,7 +192,7 @@ public sealed class ViciOneServiceBusHubLifetimeManagerLocalTests : IAsyncLifeti
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SIGNALR-USER", "all-connections-for-user")]
-    public async Task SendUser_DeliversToEveryConnectionForOnlyThatUser()
+    public async Task SendUser_DeliversToEveryConnectionForOnlyThatUserAsync()
     {
         await using var first = new HubConnectionTestClient("user-a");
         await using var second = new HubConnectionTestClient("user-a");
@@ -205,7 +205,7 @@ public sealed class ViciOneServiceBusHubLifetimeManagerLocalTests : IAsyncLifeti
             ["World"],
             TestContext.Current.CancellationToken);
 
-        Assert.True(await _endpoint.User.Consumed.Any<User<TestHub>>(TestContext.Current.CancellationToken));
+        Assert.True(await _endpoint.User.Consumed.AnyAsync<User<TestHub>>(TestContext.Current.CancellationToken));
         await AssertInvocationAsync(first);
         await AssertInvocationAsync(second);
         await AssertNoInvocationAsync(other);
@@ -213,7 +213,7 @@ public sealed class ViciOneServiceBusHubLifetimeManagerLocalTests : IAsyncLifeti
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SIGNALR-CONNECTION", "exact-local-id")]
-    public async Task SendConnection_DeliversToTheExactLocalConnection()
+    public async Task SendConnection_DeliversToTheExactLocalConnectionAsync()
     {
         await using var client = new HubConnectionTestClient();
         await ConnectAsync(client);
@@ -229,7 +229,7 @@ public sealed class ViciOneServiceBusHubLifetimeManagerLocalTests : IAsyncLifeti
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SIGNALR-CONNECTION", "id-comparison-is-ordinal")]
-    public async Task SendConnection_WithDifferentIdCasing_DoesNotReachTheLocalConnection()
+    public async Task SendConnection_WithDifferentIdCasing_DoesNotReachTheLocalConnectionAsync()
     {
         await using var client = new HubConnectionTestClient();
         await ConnectAsync(client);
@@ -240,13 +240,13 @@ public sealed class ViciOneServiceBusHubLifetimeManagerLocalTests : IAsyncLifeti
             ["World"],
             TestContext.Current.CancellationToken);
 
-        Assert.True(await _endpoint.Connection.Consumed.Any<Connection<TestHub>>(TestContext.Current.CancellationToken));
+        Assert.True(await _endpoint.Connection.Consumed.AnyAsync<Connection<TestHub>>(TestContext.Current.CancellationToken));
         await AssertNoInvocationAsync(client);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SIGNALR-BROADCAST", "exact-exclusion")]
-    public async Task SendAllExcept_ExcludesTheExactConnectionId()
+    public async Task SendAllExcept_ExcludesTheExactConnectionIdAsync()
     {
         await using var client = new HubConnectionTestClient();
         await ConnectAsync(client);
@@ -257,13 +257,13 @@ public sealed class ViciOneServiceBusHubLifetimeManagerLocalTests : IAsyncLifeti
             [client.HubConnection.ConnectionId],
             TestContext.Current.CancellationToken);
 
-        Assert.True(await _endpoint.All.Consumed.Any<All<TestHub>>(TestContext.Current.CancellationToken));
+        Assert.True(await _endpoint.All.Consumed.AnyAsync<All<TestHub>>(TestContext.Current.CancellationToken));
         await AssertNoInvocationAsync(client);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SIGNALR-BROADCAST", "exclusion-comparison-is-ordinal")]
-    public async Task SendAllExcept_WithDifferentIdCasing_DoesNotExcludeTheConnection()
+    public async Task SendAllExcept_WithDifferentIdCasing_DoesNotExcludeTheConnectionAsync()
     {
         await using var client = new HubConnectionTestClient();
         await ConnectAsync(client);
@@ -279,7 +279,7 @@ public sealed class ViciOneServiceBusHubLifetimeManagerLocalTests : IAsyncLifeti
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SIGNALR-GROUP", "exact-member-exclusion")]
-    public async Task SendGroupExcept_ExcludesTheExactConnectionId()
+    public async Task SendGroupExcept_ExcludesTheExactConnectionIdAsync()
     {
         await using var client = new HubConnectionTestClient();
         await ConnectAsync(client);
@@ -295,13 +295,13 @@ public sealed class ViciOneServiceBusHubLifetimeManagerLocalTests : IAsyncLifeti
             [client.HubConnection.ConnectionId],
             TestContext.Current.CancellationToken);
 
-        Assert.True(await _endpoint.Group.Consumed.Any<Group<TestHub>>(TestContext.Current.CancellationToken));
+        Assert.True(await _endpoint.Group.Consumed.AnyAsync<Group<TestHub>>(TestContext.Current.CancellationToken));
         await AssertNoInvocationAsync(client);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SIGNALR-GROUP", "member-exclusion-comparison-is-ordinal")]
-    public async Task SendGroupExcept_WithDifferentIdCasing_DoesNotExcludeTheConnection()
+    public async Task SendGroupExcept_WithDifferentIdCasing_DoesNotExcludeTheConnectionAsync()
     {
         await using var client = new HubConnectionTestClient();
         await ConnectAsync(client);
@@ -322,7 +322,7 @@ public sealed class ViciOneServiceBusHubLifetimeManagerLocalTests : IAsyncLifeti
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SIGNALR-USER", "remaining-connection-stays-subscribed")]
-    public async Task DisconnectingOneUserConnection_PreservesTheOtherSubscription()
+    public async Task DisconnectingOneUserConnection_PreservesTheOtherSubscriptionAsync()
     {
         await using var disconnected = new HubConnectionTestClient("user-a");
         await using var remaining = new HubConnectionTestClient("user-a");

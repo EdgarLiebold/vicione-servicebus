@@ -9,11 +9,11 @@ namespace ViciOne.ServiceBus;
 
 public static class LogContext
 {
-    static readonly AsyncLocal<ILogContext> _current;
+    static readonly AsyncLocal<ILogContext?> _current;
 
     static LogContext()
     {
-        _current = new AsyncLocal<ILogContext>();
+        _current = new AsyncLocal<ILogContext?>();
     }
 
     public static EnabledLogger? Critical => Current?.Critical;
@@ -27,13 +27,13 @@ public static class LogContext
     /// Gets or sets the current operation (Activity) for the current thread.  This flows
     /// across async calls.
     /// </summary>
-    public static ILogContext Current
+    public static ILogContext? Current
     {
         get => _current.Value;
         set => _current.Value = value;
     }
 
-    public static void ConfigureCurrentLogContext(ILoggerFactory loggerFactory = null)
+    public static void ConfigureCurrentLogContext(ILoggerFactory? loggerFactory = null)
     {
         Current = new BusLogContext(loggerFactory ?? NullLoggerFactory.Instance);
     }
@@ -83,9 +83,9 @@ public static class LogContext
 
     public static LogMessage<T1> Define<T1>(LogLevel logLevel, string formatString)
     {
-        Action<ILogger, T1, Exception> logAction = LoggerMessage.Define<T1>(logLevel, default, formatString);
+        Action<ILogger, T1, Exception?> logAction = LoggerMessage.Define<T1>(logLevel, default, formatString);
 
-        void Log(T1 arg1, Exception exception)
+        void Log(T1 arg1, Exception? exception)
         {
             var logContext = Current;
             if (logContext != null)
@@ -97,9 +97,9 @@ public static class LogContext
 
     public static LogMessage<T1, T2> Define<T1, T2>(LogLevel logLevel, string formatString)
     {
-        Action<ILogger, T1, T2, Exception> logAction = LoggerMessage.Define<T1, T2>(logLevel, default, formatString);
+        Action<ILogger, T1, T2, Exception?> logAction = LoggerMessage.Define<T1, T2>(logLevel, default, formatString);
 
-        void Log(T1 arg1, T2 arg2, Exception exception)
+        void Log(T1 arg1, T2 arg2, Exception? exception)
         {
             var logContext = Current;
             if (logContext != null)
@@ -111,9 +111,9 @@ public static class LogContext
 
     public static LogMessage<T1, T2> DefineMessage<T1, T2>(LogLevel logLevel, string formatString)
     {
-        Action<ILogger, T1, T2, Exception> logAction = LoggerMessage.Define<T1, T2>(logLevel, default, formatString);
+        Action<ILogger, T1, T2, Exception?> logAction = LoggerMessage.Define<T1, T2>(logLevel, default, formatString);
 
-        void Log(T1 arg1, T2 arg2, Exception exception)
+        void Log(T1 arg1, T2 arg2, Exception? exception)
         {
             var logContext = Current;
             if (logContext != null)
@@ -125,13 +125,13 @@ public static class LogContext
 
     public static LogMessage<T1, T2, T3> Define<T1, T2, T3>(LogLevel logLevel, string formatString)
     {
-        Action<ILogger, T1, T2, T3, Exception> logAction = LoggerMessage.Define<T1, T2, T3>(logLevel, default, formatString);
+        Action<ILogger, T1, T2, T3, Exception?> logAction = LoggerMessage.Define<T1, T2, T3>(logLevel, default, formatString);
 
-        void Log(T1 arg1, T2 arg2, T3 arg3, Exception exception)
+        void Log(T1? arg1, T2 arg2, T3? arg3, Exception? exception)
         {
             var logContext = Current;
             if (logContext != null)
-                logAction(logContext.Logger, arg1, arg2, arg3, exception);
+                logAction(logContext.Logger, arg1!, arg2, arg3!, exception);
         }
 
         return Log;
@@ -139,13 +139,13 @@ public static class LogContext
 
     public static LogMessage<T1, T2, T3> DefineMessage<T1, T2, T3>(LogLevel logLevel, string formatString)
     {
-        Action<ILogger, T1, T2, T3, Exception> logAction = LoggerMessage.Define<T1, T2, T3>(logLevel, default, formatString);
+        Action<ILogger, T1, T2, T3, Exception?> logAction = LoggerMessage.Define<T1, T2, T3>(logLevel, default, formatString);
 
-        void Log(T1 arg1, T2 arg2, T3 arg3, Exception exception)
+        void Log(T1? arg1, T2 arg2, T3? arg3, Exception? exception)
         {
             var logContext = Current;
             if (logContext != null)
-                logAction(logContext.Messages.Logger, arg1, arg2, arg3, exception);
+                logAction(logContext.Messages.Logger, arg1!, arg2, arg3!, exception);
         }
 
         return Log;
@@ -153,9 +153,9 @@ public static class LogContext
 
     public static LogMessage<T1, T2, T3, T4> Define<T1, T2, T3, T4>(LogLevel logLevel, string formatString)
     {
-        Action<ILogger, T1, T2, T3, T4, Exception> logAction = LoggerMessage.Define<T1, T2, T3, T4>(logLevel, default, formatString);
+        Action<ILogger, T1, T2, T3, T4, Exception?> logAction = LoggerMessage.Define<T1, T2, T3, T4>(logLevel, default, formatString);
 
-        void Log(T1 arg1, T2 arg2, T3 arg3, T4 arg4, Exception exception)
+        void Log(T1 arg1, T2 arg2, T3 arg3, T4 arg4, Exception? exception)
         {
             var logContext = Current;
             if (logContext != null)
@@ -167,9 +167,9 @@ public static class LogContext
 
     public static LogMessage<T1, T2, T3, T4> DefineMessage<T1, T2, T3, T4>(LogLevel logLevel, string formatString)
     {
-        Action<ILogger, T1, T2, T3, T4, Exception> logAction = LoggerMessage.Define<T1, T2, T3, T4>(logLevel, default, formatString);
+        Action<ILogger, T1, T2, T3, T4, Exception?> logAction = LoggerMessage.Define<T1, T2, T3, T4>(logLevel, default, formatString);
 
-        void Log(T1 arg1, T2 arg2, T3 arg3, T4 arg4, Exception exception)
+        void Log(T1 arg1, T2 arg2, T3 arg3, T4 arg4, Exception? exception)
         {
             var logContext = Current;
             if (logContext != null)
@@ -181,13 +181,13 @@ public static class LogContext
 
     public static LogMessage<T1, T2, T3, T4, T5> Define<T1, T2, T3, T4, T5>(LogLevel logLevel, string formatString)
     {
-        Action<ILogger, T1, T2, T3, T4, T5, Exception> logAction = LoggerMessage.Define<T1, T2, T3, T4, T5>(logLevel, default, formatString);
+        Action<ILogger, T1, T2, T3, T4, T5, Exception?> logAction = LoggerMessage.Define<T1, T2, T3, T4, T5>(logLevel, default, formatString);
 
-        void Log(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Exception exception)
+        void Log(T1? arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Exception? exception)
         {
             var logContext = Current;
             if (logContext != null)
-                logAction(logContext.Logger, arg1, arg2, arg3, arg4, arg5, exception);
+                logAction(logContext.Logger, arg1!, arg2, arg3, arg4, arg5, exception);
         }
 
         return Log;
@@ -195,13 +195,13 @@ public static class LogContext
 
     public static LogMessage<T1, T2, T3, T4, T5> DefineMessage<T1, T2, T3, T4, T5>(LogLevel logLevel, string formatString)
     {
-        Action<ILogger, T1, T2, T3, T4, T5, Exception> logAction = LoggerMessage.Define<T1, T2, T3, T4, T5>(logLevel, default, formatString);
+        Action<ILogger, T1, T2, T3, T4, T5, Exception?> logAction = LoggerMessage.Define<T1, T2, T3, T4, T5>(logLevel, default, formatString);
 
-        void Log(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Exception exception)
+        void Log(T1? arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Exception? exception)
         {
             var logContext = Current;
             if (logContext != null)
-                logAction(logContext.Messages.Logger, arg1, arg2, arg3, arg4, arg5, exception);
+                logAction(logContext.Messages.Logger, arg1!, arg2, arg3, arg4, arg5, exception);
         }
 
         return Log;

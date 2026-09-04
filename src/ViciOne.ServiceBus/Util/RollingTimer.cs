@@ -15,7 +15,7 @@ public class RollingTimer :
     readonly object? _state;
     readonly TimeProvider _timeProvider;
     TimeSpan _timeout;
-    ITimer _timer;
+    ITimer? _timer;
     int _triggered;
 
     public RollingTimer(TimerCallback callback, TimeSpan timeout, object? state = default)

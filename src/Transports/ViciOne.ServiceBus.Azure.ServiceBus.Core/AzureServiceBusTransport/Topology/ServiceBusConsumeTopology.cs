@@ -39,7 +39,7 @@ public class ServiceBusConsumeTopology :
         _specifications.Add(specification);
     }
 
-    public void Subscribe(string topicName, string subscriptionName, Action<IServiceBusSubscriptionConfigurator> callback = null)
+    public void Subscribe(string topicName, string subscriptionName, Action<IServiceBusSubscriptionConfigurator>? callback = null)
     {
         if (string.IsNullOrWhiteSpace(topicName))
             throw new ArgumentException("Value cannot be null or whitespace.", nameof(topicName));

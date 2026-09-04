@@ -24,33 +24,33 @@ public class AsyncFactoryActivity<TSaga> :
         context.CreateScope("activityFactory");
     }
 
-    async Task IStateMachineActivity<TSaga>.Execute(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    async Task IStateMachineActivity<TSaga>.ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
         IStateMachineActivity<TSaga> activity = await _activityFactory(context).ConfigureAwait(false);
 
-        await activity.Execute(context, next).ConfigureAwait(false);
+        await activity.ExecuteAsync(context, next).ConfigureAwait(false);
     }
 
-    async Task IStateMachineActivity<TSaga>.Execute<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+    async Task IStateMachineActivity<TSaga>.ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
     {
         IStateMachineActivity<TSaga> activity = await _activityFactory(context).ConfigureAwait(false);
 
-        await activity.Execute(context, next).ConfigureAwait(false);
+        await activity.ExecuteAsync(context, next).ConfigureAwait(false);
     }
 
-    async Task IStateMachineActivity<TSaga>.Faulted<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
+    async Task IStateMachineActivity<TSaga>.FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
     {
         IStateMachineActivity<TSaga> activity = await _activityFactory(context).ConfigureAwait(false);
 
-        await activity.Faulted(context, next).ConfigureAwait(false);
+        await activity.FaultedAsync(context, next).ConfigureAwait(false);
     }
 
-    async Task IStateMachineActivity<TSaga>.Faulted<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context,
+    async Task IStateMachineActivity<TSaga>.FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context,
         IBehavior<TSaga, T> next)
     {
         IStateMachineActivity<TSaga> activity = await _activityFactory(context).ConfigureAwait(false);
 
-        await activity.Faulted(context, next).ConfigureAwait(false);
+        await activity.FaultedAsync(context, next).ConfigureAwait(false);
     }
 }
 
@@ -77,18 +77,18 @@ public class AsyncFactoryActivity<TSaga, TMessage> :
         context.CreateScope("activityFactory");
     }
 
-    public async Task Execute(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
+    public async Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
         IStateMachineActivity<TSaga, TMessage> activity = await _activityFactory(context).ConfigureAwait(false);
 
-        await activity.Execute(context, next).ConfigureAwait(false);
+        await activity.ExecuteAsync(context, next).ConfigureAwait(false);
     }
 
-    public async Task Faulted<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
+    public async Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
         where TException : Exception
     {
         IStateMachineActivity<TSaga, TMessage> activity = await _activityFactory(context).ConfigureAwait(false);
 
-        await activity.Faulted(context, next).ConfigureAwait(false);
+        await activity.FaultedAsync(context, next).ConfigureAwait(false);
     }
 }

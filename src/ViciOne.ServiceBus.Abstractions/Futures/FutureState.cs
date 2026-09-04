@@ -15,9 +15,9 @@ public class FutureState :
 
     public int CurrentState { get; set; }
 
-    public DateTime Created { get; set; }
-    public DateTime? Completed { get; set; }
-    public DateTime? Faulted { get; set; }
+    public DateTimeOffset Created { get; set; }
+    public DateTimeOffset? Completed { get; set; }
+    public DateTimeOffset? Faulted { get; set; }
 
     public Uri Location { get; set; } = null!;
 

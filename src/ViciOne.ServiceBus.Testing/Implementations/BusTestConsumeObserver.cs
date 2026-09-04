@@ -26,7 +26,7 @@ public class BusTestConsumeObserver :
 
     public override bool IsInactive => _activeCount == 0;
 
-    public Task PreConsume<T>(ConsumeContext<T> context)
+    public Task PreConsumeAsync<T>(ConsumeContext<T> context)
         where T : class
     {
         Interlocked.Increment(ref _activeCount);
@@ -34,19 +34,19 @@ public class BusTestConsumeObserver :
         return Task.CompletedTask;
     }
 
-    public Task PostConsume<T>(ConsumeContext<T> context)
+    public Task PostConsumeAsync<T>(ConsumeContext<T> context)
         where T : class
     {
         _messages.Add(context);
 
-        return Interlocked.Decrement(ref _activeCount) == 0 ? NotifyInactive() : Task.CompletedTask;
+        return Interlocked.Decrement(ref _activeCount) == 0 ? NotifyInactiveAsync() : Task.CompletedTask;
     }
 
-    public Task ConsumeFault<T>(ConsumeContext<T> context, Exception exception)
+    public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, Exception exception)
         where T : class
     {
         _messages.Add(context, exception);
 
-        return Interlocked.Decrement(ref _activeCount) == 0 ? NotifyInactive() : Task.CompletedTask;
+        return Interlocked.Decrement(ref _activeCount) == 0 ? NotifyInactiveAsync() : Task.CompletedTask;
     }
 }

@@ -16,7 +16,7 @@ public sealed class MinimalEnvelopeRedeliveryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MINIMAL-ENVELOPE-REDELIVERY", "exact-virtual-delay")]
-    public async Task MinimalEnvelope_IsConsumedAndRedeliveredAfterTheExactConfiguredDelay()
+    public async Task MinimalEnvelope_IsConsumedAndRedeliveredAfterTheExactConfiguredDelayAsync()
     {
         TimeSpan operationTimeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -54,8 +54,7 @@ public sealed class MinimalEnvelopeRedeliveryTests
                         redelivery.Intervals(RedeliveryInterval)));
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness()
-            .WaitAsync(operationTimeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(operationTimeout, cancellationToken);
         var redeliveryObserver = new ScheduledRedeliveryObserver();
         using ConnectHandle observerHandle = harness.Bus.ConnectSendObserver(redeliveryObserver);
 
@@ -73,7 +72,7 @@ public sealed class MinimalEnvelopeRedeliveryTests
                 }
                 """;
 
-            await harness.Bus.Publish<MinimalEnvelopeMessage>(
+            await harness.Bus.PublishAsync<MinimalEnvelopeMessage>(
                     new { CorrelationId = Guid.Empty },
                     context => context.Serializer = new CopyBodySerializer(
                         SystemTextJsonMessageSerializer.JsonContentType,
@@ -105,7 +104,7 @@ public sealed class MinimalEnvelopeRedeliveryTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None)
+            await harness.StopAsync(CancellationToken.None)
                 .WaitAsync(operationTimeout, CancellationToken.None);
         }
     }
@@ -116,13 +115,13 @@ public sealed class MinimalEnvelopeRedeliveryTests
         string expectedMessageUrn)
     {
         Assert.Equal(ExpectedCorrelationId, context.Message.CorrelationId);
-        Assert.Equal(expectedRedeliveryCount, context.GetRedeliveryCount());
+        Assert.Equal(expectedRedeliveryCount, context.Advanced().GetRedeliveryCount());
         Assert.Equal(
             SystemTextJsonMessageSerializer.JsonContentType,
-            context.ReceiveContext.ContentType);
+            context.Advanced().ReceiveContext.ContentType);
         Assert.Contains(
             expectedMessageUrn,
-            context.SupportedMessageTypes,
+            context.Advanced().SupportedMessageTypes,
             StringComparer.Ordinal);
     }
 
@@ -138,10 +137,10 @@ public sealed class MinimalEnvelopeRedeliveryTests
 
         public Task<SendContext> Scheduled => _scheduled.Task;
 
-        public Task PreSend<T>(SendContext<T> context)
+        public Task PreSendAsync<T>(SendContext<T> context)
             where T : class => Task.CompletedTask;
 
-        public Task PostSend<T>(SendContext<T> context)
+        public Task PostSendAsync<T>(SendContext<T> context)
             where T : class
         {
             if (typeof(T) == typeof(MinimalEnvelopeMessage) && context.Delay.HasValue)
@@ -150,7 +149,7 @@ public sealed class MinimalEnvelopeRedeliveryTests
             return Task.CompletedTask;
         }
 
-        public Task SendFault<T>(SendContext<T> context, Exception exception)
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
             where T : class
         {
             if (typeof(T) == typeof(MinimalEnvelopeMessage) && context.Delay.HasValue)

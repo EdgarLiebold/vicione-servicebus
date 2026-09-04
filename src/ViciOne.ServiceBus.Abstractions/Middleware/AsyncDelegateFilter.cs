@@ -22,17 +22,17 @@ public class AsyncDelegateFilter<TContext> :
 
     [DebuggerNonUserCode]
     [DebuggerStepThrough]
-    public Task Send(TContext context, IPipe<TContext> next)
+    public Task SendAsync(TContext context, IPipe<TContext> next)
     {
         var callbackTask = _callback(context);
         if (callbackTask.Status == TaskStatus.RanToCompletion)
-            return next.Send(context);
+            return next.SendAsync(context);
 
         async Task SendAsync()
         {
             await callbackTask.ConfigureAwait(false);
 
-            await next.Send(context).ConfigureAwait(false);
+            await next.SendAsync(context).ConfigureAwait(false);
         }
 
         return SendAsync();

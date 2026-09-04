@@ -24,36 +24,36 @@ public class FactoryActivity<TSaga> :
         context.CreateScope("factory");
     }
 
-    public Task Execute(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
         IStateMachineActivity<TSaga> activity = _activityFactory(context);
 
-        return activity.Execute(context, next);
+        return activity.ExecuteAsync(context, next);
     }
 
-    public Task Execute<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+    public Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
         IStateMachineActivity<TSaga> activity = _activityFactory(context);
 
-        return activity.Execute(context, next);
+        return activity.ExecuteAsync(context, next);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
+    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception
     {
         IStateMachineActivity<TSaga> activity = _activityFactory(context);
 
-        return activity.Faulted(context, next);
+        return activity.FaultedAsync(context, next);
     }
 
-    public Task Faulted<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
+    public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
         where T : class
         where TException : Exception
     {
         IStateMachineActivity<TSaga> activity = _activityFactory(context);
 
-        return activity.Faulted(context, next);
+        return activity.FaultedAsync(context, next);
     }
 }
 
@@ -80,18 +80,18 @@ public class FactoryActivity<TSaga, TMessage> :
         context.CreateScope("factory");
     }
 
-    public Task Execute(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
+    public Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
         IStateMachineActivity<TSaga, TMessage> activity = _activityFactory(context);
 
-        return activity.Execute(context, next);
+        return activity.ExecuteAsync(context, next);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
+    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
         where TException : Exception
     {
         IStateMachineActivity<TSaga, TMessage> activity = _activityFactory(context);
 
-        return activity.Faulted(context, next);
+        return activity.FaultedAsync(context, next);
     }
 }

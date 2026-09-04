@@ -8,7 +8,7 @@ public interface CommandContext :
     /// <summary>
     /// The timestamp at which the command was sent
     /// </summary>
-    DateTime Timestamp { get; }
+    DateTimeOffset Timestamp { get; }
 }
 
 

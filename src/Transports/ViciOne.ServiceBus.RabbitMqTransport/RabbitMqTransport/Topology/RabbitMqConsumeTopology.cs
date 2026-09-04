@@ -27,7 +27,8 @@ public class RabbitMqConsumeTopology :
 
     IRabbitMqMessageConsumeTopology<T> IRabbitMqConsumeTopology.GetMessageTopology<T>()
     {
-        return base.GetMessageTopology<T>() as IRabbitMqMessageConsumeTopologyConfigurator<T>;
+        return base.GetMessageTopology<T>() as IRabbitMqMessageConsumeTopologyConfigurator<T>
+            ?? throw new InvalidOperationException($"The message topology for '{typeof(T)}' is not a RabbitMQ consume topology.");
     }
 
     public void AddSpecification(IRabbitMqConsumeTopologySpecification specification)
@@ -40,7 +41,8 @@ public class RabbitMqConsumeTopology :
 
     IRabbitMqMessageConsumeTopologyConfigurator<T> IRabbitMqConsumeTopologyConfigurator.GetMessageTopology<T>()
     {
-        return base.GetMessageTopology<T>() as IRabbitMqMessageConsumeTopologyConfigurator<T>;
+        return base.GetMessageTopology<T>() as IRabbitMqMessageConsumeTopologyConfigurator<T>
+            ?? throw new InvalidOperationException($"The message topology for '{typeof(T)}' is not a RabbitMQ consume topology.");
     }
 
     public void Apply(IReceiveEndpointBrokerTopologyBuilder builder)
@@ -51,7 +53,7 @@ public class RabbitMqConsumeTopology :
         ForEach<IRabbitMqMessageConsumeTopologyConfigurator>(x => x.Apply(builder));
     }
 
-    public void Bind(string exchangeName, Action<IRabbitMqExchangeToExchangeBindingConfigurator> configure = null)
+    public void Bind(string exchangeName, Action<IRabbitMqExchangeToExchangeBindingConfigurator>? configure = null)
     {
         if (string.IsNullOrWhiteSpace(exchangeName))
             throw new ArgumentException("Value cannot be null or whitespace.", nameof(exchangeName));
@@ -65,7 +67,7 @@ public class RabbitMqConsumeTopology :
         _specifications.Add(specification);
     }
 
-    public void BindQueue(string exchangeName, string queueName, Action<IRabbitMqQueueBindingConfigurator> configure = null)
+    public void BindQueue(string exchangeName, string queueName, Action<IRabbitMqQueueBindingConfigurator>? configure = null)
     {
         if (string.IsNullOrWhiteSpace(exchangeName))
             throw new ArgumentException("Value cannot be null or whitespace.", nameof(exchangeName));

@@ -17,10 +17,10 @@ public class ServiceBusSubscriptionConfigurator :
 
     public bool? EnableDeadLetteringOnFilterEvaluationExceptions { private get; set; }
 
-    public RuleFilter Filter { get; set; }
-    public CreateRuleOptions Rule { get; set; }
+    public RuleFilter? Filter { get; set; }
+    public CreateRuleOptions? Rule { get; set; }
 
-    public string ForwardTo { private get; set; }
+    public string? ForwardTo { private get; set; }
 
     public string TopicPath { get; }
 

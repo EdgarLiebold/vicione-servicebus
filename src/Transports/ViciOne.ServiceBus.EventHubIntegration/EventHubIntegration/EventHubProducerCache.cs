@@ -7,6 +7,7 @@ namespace ViciOne.ServiceBus.EventHubIntegration;
 
 public class EventHubProducerCache<TKey> :
     IEventHubProducerCache<TKey>
+    where TKey : notnull
 {
     readonly KeyedResourceCache<TKey, CachedEventHubProducer<TKey>> _cache;
 
@@ -22,11 +23,11 @@ public class EventHubProducerCache<TKey> :
         return _cache.DisposeAsync();
     }
 
-    public async Task<IEventHubProducer> GetProducer(TKey key, Func<TKey, Task<IEventHubProducer>> factory)
+    public async Task<IEventHubProducer> GetProducerAsync(TKey key, Func<TKey, Task<IEventHubProducer>> factory, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(factory);
 
         return await _cache.GetOrAddAsync(key,
-            async (address, _) => new CachedEventHubProducer<TKey>(address, await factory(address).ConfigureAwait(false))).ConfigureAwait(false);
+            async (address, _) => new CachedEventHubProducer<TKey>(address, await factory(address).ConfigureAwait(false)), cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 }

@@ -12,7 +12,7 @@ public sealed class RequestFilterFaultTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-FILTER", "scoped-filter-faults-request-before-consumer")]
-    public async Task ScopedConsumeFilter_ProducesAnExactRequestFaultWithoutInvokingTheConsumer()
+    public async Task ScopedConsumeFilter_ProducesAnExactRequestFaultWithoutInvokingTheConsumerAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -36,7 +36,7 @@ public sealed class RequestFilterFaultTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
@@ -44,7 +44,7 @@ public sealed class RequestFilterFaultTests
             IRequestClient<ValidatedRequest> client = harness.GetRequestClient<ValidatedRequest>();
 
             RequestFaultException exception = await Assert.ThrowsAsync<RequestFaultException>(() =>
-                client.GetResponse<ValidatedResponse>(request, cancellationToken));
+                client.GetResponseAsync<ValidatedResponse>(request, cancellationToken));
             FilterObservation observation = await recorder.Observed.Task.WaitAsync(timeout, cancellationToken);
             ExceptionInfo fault = Assert.Single(exception.Fault!.Exceptions);
 
@@ -57,7 +57,7 @@ public sealed class RequestFilterFaultTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -77,14 +77,14 @@ public sealed class RequestFilterFaultTests
         public void Probe(ProbeContext context) =>
             context.CreateFilterScope("requestValidation");
 
-        public async Task Send(ConsumeContext<T> context, IPipe<ConsumeContext<T>> next)
+        public async Task SendAsync(ConsumeContext<T> context, IPipe<ConsumeContext<T>> next)
         {
             Guid correlationId = context.CorrelationId
                 ?? throw new InvalidOperationException("The validation request must have a correlation identifier.");
             recorder.Observed.TrySetResult(new FilterObservation(typeof(T), correlationId));
             var exception = new RequestValidationException(ValidationFailure);
-            await context.NotifyFaulted(
-                context.ReceiveContext.ElapsedTime,
+            await context.NotifyFaultedAsync(
+                context.Advanced().ReceiveContext.ElapsedTime,
                 TypeCache<RequestValidationScopedFilter<T>>.ShortName,
                 exception);
             throw exception;
@@ -93,7 +93,7 @@ public sealed class RequestFilterFaultTests
 
     public sealed class ValidatedRequestConsumer(ConsumerInvocationCounter counter) : IConsumer<ValidatedRequest>
     {
-        public Task Consume(ConsumeContext<ValidatedRequest> context)
+        public Task ConsumeAsync(ConsumeContext<ValidatedRequest> context)
         {
             counter.Increment();
             return context.RespondAsync(new ValidatedResponse(context.Message.CorrelationId));

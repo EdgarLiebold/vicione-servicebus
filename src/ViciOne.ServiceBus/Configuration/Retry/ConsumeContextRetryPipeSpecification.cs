@@ -14,7 +14,7 @@ public class ConsumeContextRetryPipeSpecification :
 {
     readonly CancellationToken _cancellationToken;
     readonly RetryObservable _observers;
-    RetryPolicyFactory _policyFactory;
+    RetryPolicyFactory _policyFactory = null!;
 
     public ConsumeContextRetryPipeSpecification(CancellationToken cancellationToken = default)
     {
@@ -61,15 +61,15 @@ public class ConsumeContextRetryPipeSpecification<TFilter, TContext> :
     ExceptionSpecification,
     IRetryConfigurator,
     IPipeSpecification<TFilter>
-    where TFilter : class, ConsumeContext
+    where TFilter : class, PipeContext
     where TContext : RetryConsumeContext, TFilter
 {
     readonly CancellationToken _cancellationToken;
-    readonly Func<TFilter, IRetryPolicy, RetryContext, TContext> _contextFactory;
+    readonly Func<TFilter, IRetryPolicy, RetryContext?, TContext> _contextFactory;
     readonly RetryObservable _observers;
-    RetryPolicyFactory _policyFactory;
+    RetryPolicyFactory _policyFactory = null!;
 
-    public ConsumeContextRetryPipeSpecification(Func<TFilter, IRetryPolicy, RetryContext, TContext> contextFactory,
+    public ConsumeContextRetryPipeSpecification(Func<TFilter, IRetryPolicy, RetryContext?, TContext> contextFactory,
         CancellationToken cancellationToken = default)
     {
         _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));

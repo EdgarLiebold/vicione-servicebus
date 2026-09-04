@@ -17,14 +17,14 @@ public class StateMachineRequestConfigurator<TInstance, TRequest, TResponse> :
 
     public RequestSettings<TInstance, TRequest, TResponse> Settings => this;
 
-    public Uri ServiceAddress { get; set; }
+    public Uri ServiceAddress { get; set; } = null!;
     public TimeSpan Timeout { get; set; }
     public bool ClearRequestIdOnFaulted { get; set; }
     public TimeSpan? TimeToLive { get; set; }
 
-    public Action<IEventCorrelationConfigurator<TInstance, TResponse>> Completed { get; set; }
-    public Action<IEventCorrelationConfigurator<TInstance, Fault<TRequest>>> Faulted { get; set; }
-    public Action<IEventCorrelationConfigurator<TInstance, RequestTimeoutExpired<TRequest>>> TimeoutExpired { get; set; }
+    public Action<IEventCorrelationConfigurator<TInstance, TResponse>> Completed { get; set; } = null!;
+    public Action<IEventCorrelationConfigurator<TInstance, Fault<TRequest>>> Faulted { get; set; } = null!;
+    public Action<IEventCorrelationConfigurator<TInstance, RequestTimeoutExpired<TRequest>>> TimeoutExpired { get; set; } = null!;
 }
 
 
@@ -44,7 +44,7 @@ public class StateMachineRequestConfigurator<TInstance, TRequest, TResponse, TRe
 
     public new RequestSettings<TInstance, TRequest, TResponse, TResponse2> Settings => this;
 
-    public Action<IEventCorrelationConfigurator<TInstance, TResponse2>> Completed2 { get; set; }
+    public Action<IEventCorrelationConfigurator<TInstance, TResponse2>> Completed2 { get; set; } = null!;
 }
 
 
@@ -65,5 +65,5 @@ public class StateMachineRequestConfigurator<TInstance, TRequest, TResponse, TRe
 
     public new RequestSettings<TInstance, TRequest, TResponse, TResponse2, TResponse3> Settings => this;
 
-    public Action<IEventCorrelationConfigurator<TInstance, TResponse3>> Completed3 { get; set; }
+    public Action<IEventCorrelationConfigurator<TInstance, TResponse3>> Completed3 { get; set; } = null!;
 }

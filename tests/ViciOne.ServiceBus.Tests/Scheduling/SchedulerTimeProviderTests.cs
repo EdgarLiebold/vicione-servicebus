@@ -30,14 +30,14 @@ public sealed class SchedulerTimeProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SCHEDULER-TIME-OWNER", "delayed-send-pipe-uses-scheduler-clock")]
-    public async Task DelayedSendPipe_UsesTheSchedulerClockWhenTheTransportContextHasNoClock()
+    public async Task DelayedSendPipe_UsesTheSchedulerClockWhenTheTransportContextHasNoClockAsync()
     {
         var clock = new FakeTimeProvider(CommandTime);
-        DateTime scheduledTime = CommandTime.UtcDateTime + TimeSpan.FromHours(3);
+        DateTimeOffset dueAt = CommandTime.UtcDateTime + TimeSpan.FromHours(3);
         var context = new InMemorySendContext<ClockProbe>(new ClockProbe());
-        var pipe = new ScheduleSendPipe<ClockProbe>(Pipe.Empty<SendContext<ClockProbe>>(), scheduledTime, clock);
+        var pipe = new ScheduleSendPipe<ClockProbe>(Pipe.Empty<SendContext<ClockProbe>>(), dueAt, clock);
 
-        await ((IPipe<SendContext<ClockProbe>>)pipe).Send(context);
+        await ((IPipe<SendContext<ClockProbe>>)pipe).SendAsync(context);
 
         Assert.Equal(TimeSpan.FromHours(3), context.Delay);
         Assert.Same(TimeProvider.System, context.GetTimeProvider());
@@ -47,11 +47,11 @@ public sealed class SchedulerTimeProviderTests
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("REQ-VSB-SCHEDULER-TIME-OWNER", "delayed-scheduler-factory-propagates-clock")]
-    public async Task DelayedSchedulerFactory_PropagatesItsClockToTheTransportDelay(bool useBusFactory)
+    public async Task DelayedSchedulerFactory_PropagatesItsClockToTheTransportDelayAsync(bool useBusFactory)
     {
         var clock = new FakeTimeProvider(CommandTime);
         IBusTopology topology = DispatchProxy.Create<IBusTopology, UnsupportedProxy>();
-        ISendEndpoint endpoint = DispatchProxy.Create<ISendEndpoint, ScheduleEndpointProxy>();
+        ISendEndpoint endpoint = DispatchProxy.Create<AdvancedScheduleEndpoint, ScheduleEndpointProxy>();
         var endpointCapture = (ScheduleEndpointProxy)(object)endpoint;
         IMessageScheduler scheduler;
 
@@ -70,7 +70,7 @@ public sealed class SchedulerTimeProviderTests
             scheduler = provider.CreateDelayedMessageScheduler(topology, clock);
         }
 
-        await scheduler.ScheduleSend(
+        await scheduler.ScheduleSendAsync(
             new Uri("loopback://localhost/time-provider"),
             CommandTime.UtcDateTime + TimeSpan.FromHours(3),
             new ClockProbe(),
@@ -95,16 +95,16 @@ public sealed class SchedulerTimeProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RECURRING-SCHEDULER-CLOCK", "endpoint-control-command-timestamps")]
-    public async Task EndpointRecurringControlCommands_UseTheInjectedClockAndPreserveScheduleIdentity()
+    public async Task EndpointRecurringControlCommands_UseTheInjectedClockAndPreserveScheduleIdentityAsync()
     {
         var clock = new FakeTimeProvider(CommandTime);
         ISendEndpoint endpoint = DispatchProxy.Create<ISendEndpoint, CaptureEndpointProxy>();
         var capture = (CaptureEndpointProxy)(object)endpoint;
         var scheduler = new EndpointRecurringMessageScheduler(endpoint, timeProvider: clock);
 
-        await scheduler.CancelScheduledRecurringSend("nightly", "operations");
-        await scheduler.PauseScheduledRecurringSend("nightly", "operations");
-        await scheduler.ResumeScheduledRecurringSend("nightly", "operations");
+        await scheduler.CancelScheduledRecurringSendAsync("nightly", "operations", TestContext.Current.CancellationToken);
+        await scheduler.PauseScheduledRecurringSendAsync("nightly", "operations", TestContext.Current.CancellationToken);
+        await scheduler.ResumeScheduledRecurringSendAsync("nightly", "operations", TestContext.Current.CancellationToken);
 
         AssertControlCommands(capture.Messages);
         Assert.Same(clock, scheduler.TimeProvider);
@@ -112,16 +112,16 @@ public sealed class SchedulerTimeProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RECURRING-SCHEDULER-CLOCK", "publish-control-command-timestamps")]
-    public async Task PublishRecurringControlCommands_UseTheInjectedClockAndPreserveScheduleIdentity()
+    public async Task PublishRecurringControlCommands_UseTheInjectedClockAndPreserveScheduleIdentityAsync()
     {
         var clock = new FakeTimeProvider(CommandTime);
         IPublishEndpoint endpoint = DispatchProxy.Create<IPublishEndpoint, CaptureEndpointProxy>();
         var capture = (CaptureEndpointProxy)(object)endpoint;
         var scheduler = new PublishRecurringMessageScheduler(endpoint, timeProvider: clock);
 
-        await scheduler.CancelScheduledRecurringSend("nightly", "operations");
-        await scheduler.PauseScheduledRecurringSend("nightly", "operations");
-        await scheduler.ResumeScheduledRecurringSend("nightly", "operations");
+        await scheduler.CancelScheduledRecurringSendAsync("nightly", "operations", TestContext.Current.CancellationToken);
+        await scheduler.PauseScheduledRecurringSendAsync("nightly", "operations", TestContext.Current.CancellationToken);
+        await scheduler.ResumeScheduledRecurringSendAsync("nightly", "operations", TestContext.Current.CancellationToken);
 
         AssertControlCommands(capture.Messages);
         Assert.Same(clock, scheduler.TimeProvider);
@@ -139,24 +139,24 @@ public sealed class SchedulerTimeProviderTests
 
     private static void AssertCommand(CancelScheduledRecurringMessage command)
     {
-        Assert.Equal(CommandTime.UtcDateTime, command.Timestamp);
-        Assert.Equal(DateTimeKind.Utc, command.Timestamp.Kind);
+        Assert.Equal(CommandTime, command.Timestamp);
+        Assert.Equal(TimeSpan.Zero, command.Timestamp.Offset);
         Assert.Equal("nightly", command.ScheduleId);
         Assert.Equal("operations", command.ScheduleGroup);
     }
 
     private static void AssertCommand(PauseScheduledRecurringMessage command)
     {
-        Assert.Equal(CommandTime.UtcDateTime, command.Timestamp);
-        Assert.Equal(DateTimeKind.Utc, command.Timestamp.Kind);
+        Assert.Equal(CommandTime, command.Timestamp);
+        Assert.Equal(TimeSpan.Zero, command.Timestamp.Offset);
         Assert.Equal("nightly", command.ScheduleId);
         Assert.Equal("operations", command.ScheduleGroup);
     }
 
     private static void AssertCommand(ResumeScheduledRecurringMessage command)
     {
-        Assert.Equal(CommandTime.UtcDateTime, command.Timestamp);
-        Assert.Equal(DateTimeKind.Utc, command.Timestamp.Kind);
+        Assert.Equal(CommandTime, command.Timestamp);
+        Assert.Equal(TimeSpan.Zero, command.Timestamp.Offset);
         Assert.Equal("nightly", command.ScheduleId);
         Assert.Equal("operations", command.ScheduleGroup);
     }
@@ -168,6 +168,10 @@ public sealed class SchedulerTimeProviderTests
 
     private sealed record ClockProbe;
 
+    private interface AdvancedScheduleEndpoint :
+        ISendEndpoint,
+        ViciOne.ServiceBus.Advanced.IAdvancedSendEndpoint;
+
     private class CaptureEndpointProxy : DispatchProxy
     {
         public List<object> Messages { get; } = [];
@@ -176,7 +180,7 @@ public sealed class SchedulerTimeProviderTests
         {
             ArgumentNullException.ThrowIfNull(targetMethod);
 
-            if (targetMethod.Name is "Send" or "Publish")
+            if (targetMethod.Name is "SendAsync" or "PublishAsync")
             {
                 Messages.Add(args![0]!);
                 return Task.CompletedTask;
@@ -194,12 +198,12 @@ public sealed class SchedulerTimeProviderTests
         {
             ArgumentNullException.ThrowIfNull(targetMethod);
 
-            if (targetMethod.Name == "Send"
+            if (targetMethod.Name == "SendAsync"
                 && args is [ClockProbe message, IPipe<SendContext<ClockProbe>> pipe, CancellationToken _])
             {
                 var context = new InMemorySendContext<ClockProbe>(message);
                 Context = context;
-                return pipe.Send(context);
+                return pipe.SendAsync(context);
             }
 
             throw new NotSupportedException(targetMethod.Name);
@@ -214,7 +218,7 @@ public sealed class SchedulerTimeProviderTests
         {
             ArgumentNullException.ThrowIfNull(targetMethod);
 
-            return targetMethod.Name == "GetSendEndpoint"
+            return targetMethod.Name == "GetSendEndpointAsync"
                 ? Task.FromResult(Endpoint)
                 : throw new NotSupportedException(targetMethod.Name);
         }
@@ -232,7 +236,7 @@ public sealed class SchedulerTimeProviderTests
             return targetMethod.Name switch
             {
                 "get_Topology" => Topology,
-                "GetSendEndpoint" => Task.FromResult(Endpoint),
+                "GetSendEndpointAsync" => Task.FromResult(Endpoint),
                 _ => throw new NotSupportedException(targetMethod.Name),
             };
         }

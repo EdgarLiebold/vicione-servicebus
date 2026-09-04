@@ -56,7 +56,7 @@ public static class InstanceExtensions
     /// <param name="instance">The instance to subscribe.</param>
     /// <param name="configure">Configure the instance</param>
     /// <returns>An instance subscription configurator.</returns>
-    public static void Instance<T>(this IReceiveEndpointConfigurator configurator, T instance, Action<IInstanceConfigurator<T>> configure = null)
+    public static void Instance<T>(this IReceiveEndpointConfigurator configurator, T instance, Action<IInstanceConfigurator<T>>? configure = null)
         where T : class, IConsumer
     {
         ArgumentNullException.ThrowIfNull(configurator);

@@ -12,12 +12,12 @@ public abstract class MediatorRequestHandler<TRequest> :
     IConsumer<TRequest>
     where TRequest : class
 {
-    public Task Consume(ConsumeContext<TRequest> context)
+    public Task ConsumeAsync(ConsumeContext<TRequest> context)
     {
-        return Handle(context.Message, context.CancellationToken);
+        return HandleAsync(context.Message, context.CancellationToken);
     }
 
-    protected abstract Task Handle(TRequest request, CancellationToken cancellationToken);
+    protected abstract Task HandleAsync(TRequest request, CancellationToken cancellationToken);
 }
 
 
@@ -32,12 +32,12 @@ public abstract class MediatorRequestHandler<TRequest, TResponse> :
     where TRequest : class, Request<TResponse>
     where TResponse : class
 {
-    public async Task Consume(ConsumeContext<TRequest> context)
+    public async Task ConsumeAsync(ConsumeContext<TRequest> context)
     {
-        var response = await Handle(context.Message, context.CancellationToken).ConfigureAwait(false);
+        var response = await HandleAsync(context.Message, context.CancellationToken).ConfigureAwait(false);
 
         await context.RespondAsync(response).ConfigureAwait(false);
     }
 
-    protected abstract Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken);
+    protected abstract Task<TResponse> HandleAsync(TRequest request, CancellationToken cancellationToken);
 }

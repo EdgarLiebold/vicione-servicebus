@@ -30,23 +30,23 @@ public class InMemorySendTransportContext :
     public override string EntityName => _exchange.Name;
     public override string ActivitySystem => "in-memory";
 
-    public override async Task<SendContext<T>> CreateSendContext<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    public override async Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
     {
         var sendContext = new InMemorySendContext<T>(message, cancellationToken);
 
-        await pipe.Send(sendContext).ConfigureAwait(false);
+        await pipe.SendAsync(sendContext).ConfigureAwait(false);
 
         return sendContext;
     }
 
-    public Task<SendContext<T>> CreateSendContext<T>(PipeContext context, T message, IPipe<SendContext<T>> pipe,
+    public Task<SendContext<T>> CreateSendContextAsync<T>(PipeContext context, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
-        return CreateSendContext(message, pipe, cancellationToken);
+        return CreateSendContextAsync(message, pipe, cancellationToken);
     }
 
-    public Task Send<T>(PipeContext transportContext, SendContext<T> sendContext)
+    public Task SendAsync<T>(PipeContext transportContext, SendContext<T> sendContext, CancellationToken cancellationToken = default)
         where T : class
     {
         InMemorySendContext<T> context = sendContext as InMemorySendContext<T>
@@ -56,27 +56,29 @@ public class InMemorySendTransportContext :
 
         var messageId = context.MessageId ?? NewId.NextGuid();
 
-        var transportMessage = new InMemoryTransportMessage(messageId, context.Body.GetBytes(), context.ContentType.ToString())
+        var body = context.Body ?? throw new InvalidOperationException("The send context body has not been serialized.");
+        var contentType = context.ContentType ?? throw new InvalidOperationException("The send context content type has not been set.");
+        var transportMessage = new InMemoryTransportMessage(messageId, body.GetBytes(), contentType.ToString())
         {
             Delay = context.Delay,
             RoutingKey = context.RoutingKey
         };
 
-        if (context.TryGetPayload(out InMemoryDurableSendContext durableSendContext))
+        if (context.TryGetPayload(out InMemoryDurableSendContext? durableSendContext))
             transportMessage.DurableSendContext = durableSendContext;
 
         SetHeaders(transportMessage.Headers, context.Headers);
 
         var deliveryContext = new InMemoryDeliveryContext(transportMessage, _delayProvider.UtcNow, context.CancellationToken);
 
-        return _exchange.Deliver(deliveryContext);
+        return _exchange.DeliverAsync(deliveryContext, cancellationToken: cancellationToken);
     }
 
-    public Task Send(IPipe<PipeContext> pipe, CancellationToken cancellationToken = default)
+    public Task SendAsync(IPipe<PipeContext> pipe, CancellationToken cancellationToken = default)
     {
         var pipeContext = new Context(cancellationToken);
 
-        return pipe.Send(pipeContext);
+        return pipe.SendAsync(pipeContext);
     }
 
     public void Probe(ProbeContext context)

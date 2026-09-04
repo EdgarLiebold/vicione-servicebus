@@ -15,7 +15,7 @@ public class ResumeScheduledMessageConsumer :
         _schedulerFactory = schedulerFactory ?? throw new ArgumentNullException(nameof(schedulerFactory));
     }
 
-    public async Task Consume(ConsumeContext<ResumeScheduledRecurringMessage> context)
+    public async Task ConsumeAsync(ConsumeContext<ResumeScheduledRecurringMessage> context)
     {
         ArgumentNullException.ThrowIfNull(context);
         var scheduler = await _schedulerFactory.GetScheduler(context.CancellationToken).ConfigureAwait(false);

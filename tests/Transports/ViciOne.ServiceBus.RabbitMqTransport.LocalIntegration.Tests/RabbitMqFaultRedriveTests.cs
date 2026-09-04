@@ -12,7 +12,7 @@ public sealed class RabbitMqFaultRedriveTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-FAULT-REDRIVE", "structured-filters-and-unmatched-requeue")]
-    public async Task StructuredFilters_RedriveOnlyMatchesAndRequeueEveryUnmatchedDelivery()
+    public async Task StructuredFilters_RedriveOnlyMatchesAndRequeueEveryUnmatchedDeliveryAsync()
     {
         using RabbitMqBroker fixture = RabbitMqBroker.Create("redrivefilters");
         string target = fixture.Name("input");
@@ -21,13 +21,13 @@ public sealed class RabbitMqFaultRedriveTests
         Guid correlationId = Guid.Parse("17eb2da5-4d99-43e3-86cd-03656ca1ce32");
         const string faultType = "System.InvalidOperationException";
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        await fixture.DeclareEndpointTopology(target, cancellationToken);
-        await fixture.DeclareQueue(source, cancellationToken);
-        await PublishSource(fixture, source, "other-message", GuidFrom(1), correlationId, faultType, cancellationToken);
-        await PublishSource(fixture, source, "match-one", messageId, correlationId, faultType, cancellationToken);
-        await PublishSource(fixture, source, "other-correlation", messageId, GuidFrom(2), faultType, cancellationToken);
-        await PublishSource(fixture, source, "match-two", messageId, correlationId, faultType, cancellationToken);
-        await PublishSource(fixture, source, "unscanned-match", messageId, correlationId, faultType, cancellationToken);
+        await fixture.DeclareEndpointTopologyAsync(target, cancellationToken);
+        await fixture.DeclareQueueAsync(source, cancellationToken);
+        await PublishSourceAsync(fixture, source, "other-message", GuidFrom(1), correlationId, faultType, cancellationToken);
+        await PublishSourceAsync(fixture, source, "match-one", messageId, correlationId, faultType, cancellationToken);
+        await PublishSourceAsync(fixture, source, "other-correlation", messageId, GuidFrom(2), faultType, cancellationToken);
+        await PublishSourceAsync(fixture, source, "match-two", messageId, correlationId, faultType, cancellationToken);
+        await PublishSourceAsync(fixture, source, "unscanned-match", messageId, correlationId, faultType, cancellationToken);
         await using ServiceProvider provider = CreateProvider(fixture);
         IBusControl bus = provider.GetRequiredService<IBusControl>();
         bool started = false;
@@ -38,7 +38,7 @@ public sealed class RabbitMqFaultRedriveTests
             started = true;
             IRabbitMqQueueOperations operations = provider.GetRequiredService<IRabbitMqQueueOperations>();
 
-            RabbitMqFaultRedriveResult result = await operations.RedriveFaultedMessages(
+            RabbitMqFaultRedriveResult result = await operations.RedriveFaultedMessagesAsync(
                     new RabbitMqFaultRedriveRequest(target)
                     {
                         MessageId = messageId,
@@ -54,10 +54,10 @@ public sealed class RabbitMqFaultRedriveTests
             Assert.Equal((4, 2, 2), (result.Scanned, result.Matched, result.Redriven));
             Assert.False(result.SourceExhausted);
             Assert.False(result.ScanLimitReached);
-            Assert.Equal(3U, await fixture.QueueMessageCount(source, cancellationToken));
-            Assert.Equal(2U, await fixture.QueueMessageCount(target, cancellationToken));
+            Assert.Equal(3U, await fixture.QueueMessageCountAsync(source, cancellationToken));
+            Assert.Equal(2U, await fixture.QueueMessageCountAsync(target, cancellationToken));
 
-            IReadOnlyList<RabbitMqBroker.RawMessage> messages = await fixture.GetRaw(target, 3, cancellationToken);
+            IReadOnlyList<RabbitMqBroker.RawMessage> messages = await fixture.GetRawAsync(target, 3, cancellationToken);
             Assert.Equal(["match-one", "match-two"], messages.Select(message => Encoding.UTF8.GetString(message.Body)));
             Assert.All(messages, message => Assert.Equal(source, message.RoutingKey));
             Assert.All(messages, message => Assert.Equal(messageId.ToString("D"), message.Properties.MessageId));
@@ -66,7 +66,7 @@ public sealed class RabbitMqFaultRedriveTests
             Assert.All(messages, message => Assert.Equal("ViciOne.Fault", message.Properties.Type));
             Assert.All(messages, message => Assert.True(message.Properties.Persistent));
             Assert.All(messages, message => Assert.Equal(faultType, FaultType(message.Properties)));
-            Assert.Equal(0U, await fixture.QueueMessageCount(target, cancellationToken));
+            Assert.Equal(0U, await fixture.QueueMessageCountAsync(target, cancellationToken));
         }
         finally
         {
@@ -78,17 +78,17 @@ public sealed class RabbitMqFaultRedriveTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-FAULT-REDRIVE", "unfiltered-redrive-limit")]
-    public async Task UnfilteredRedrive_StopsAtTheExactConfiguredMessageLimit()
+    public async Task UnfilteredRedrive_StopsAtTheExactConfiguredMessageLimitAsync()
     {
         using RabbitMqBroker fixture = RabbitMqBroker.Create("redrivelimit");
         string target = fixture.Name("input");
         string source = target + "_error";
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        await fixture.DeclareEndpointTopology(target, cancellationToken);
-        await fixture.DeclareQueue(source, cancellationToken);
-        await PublishSource(fixture, source, "first", GuidFrom(3), GuidFrom(4), "First", cancellationToken);
-        await PublishSource(fixture, source, "second", GuidFrom(5), GuidFrom(6), "Second", cancellationToken);
-        await PublishSource(fixture, source, "third", GuidFrom(7), GuidFrom(8), "Third", cancellationToken);
+        await fixture.DeclareEndpointTopologyAsync(target, cancellationToken);
+        await fixture.DeclareQueueAsync(source, cancellationToken);
+        await PublishSourceAsync(fixture, source, "first", GuidFrom(3), GuidFrom(4), "First", cancellationToken);
+        await PublishSourceAsync(fixture, source, "second", GuidFrom(5), GuidFrom(6), "Second", cancellationToken);
+        await PublishSourceAsync(fixture, source, "third", GuidFrom(7), GuidFrom(8), "Third", cancellationToken);
         await using ServiceProvider provider = CreateProvider(fixture);
         IBusControl bus = provider.GetRequiredService<IBusControl>();
         bool started = false;
@@ -99,7 +99,7 @@ public sealed class RabbitMqFaultRedriveTests
             started = true;
 
             RabbitMqFaultRedriveResult result = await provider.GetRequiredService<IRabbitMqQueueOperations>()
-                .RedriveFaultedMessages(new RabbitMqFaultRedriveRequest(target)
+                .RedriveFaultedMessagesAsync(new RabbitMqFaultRedriveRequest(target)
                 {
                     MaxMessages = 2,
                     MaxScanCount = 3,
@@ -109,8 +109,8 @@ public sealed class RabbitMqFaultRedriveTests
             Assert.Equal((2, 2, 2), (result.Scanned, result.Matched, result.Redriven));
             Assert.False(result.SourceExhausted);
             Assert.False(result.ScanLimitReached);
-            Assert.Equal(1U, await fixture.QueueMessageCount(source, cancellationToken));
-            Assert.Equal(2U, await fixture.QueueMessageCount(target, cancellationToken));
+            Assert.Equal(1U, await fixture.QueueMessageCountAsync(source, cancellationToken));
+            Assert.Equal(2U, await fixture.QueueMessageCountAsync(target, cancellationToken));
         }
         finally
         {
@@ -122,16 +122,16 @@ public sealed class RabbitMqFaultRedriveTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-FAULT-REDRIVE", "mandatory-rejection-retains-source")]
-    public async Task MandatoryTargetRejection_LeavesTheSourceMessageAvailable()
+    public async Task MandatoryTargetRejection_LeavesTheSourceMessageAvailableAsync()
     {
         using RabbitMqBroker fixture = RabbitMqBroker.Create("redrivereject");
         string target = fixture.Name("input");
         string source = target + "_error";
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        await fixture.DeclareQueue(target, cancellationToken);
-        await fixture.DeclareExchange(target, cancellationToken);
-        await fixture.DeclareQueue(source, cancellationToken);
-        await PublishSource(fixture, source, "must-remain", GuidFrom(9), GuidFrom(10), "Rejected", cancellationToken);
+        await fixture.DeclareQueueAsync(target, cancellationToken);
+        await fixture.DeclareExchangeAsync(target, cancellationToken);
+        await fixture.DeclareQueueAsync(source, cancellationToken);
+        await PublishSourceAsync(fixture, source, "must-remain", GuidFrom(9), GuidFrom(10), "Rejected", cancellationToken);
         await using ServiceProvider provider = CreateProvider(fixture);
         IBusControl bus = provider.GetRequiredService<IBusControl>();
         bool started = false;
@@ -142,14 +142,14 @@ public sealed class RabbitMqFaultRedriveTests
             started = true;
 
             await Assert.ThrowsAsync<PublishReturnException>(() => provider.GetRequiredService<IRabbitMqQueueOperations>()
-                .RedriveFaultedMessages(new RabbitMqFaultRedriveRequest(target)
+                .RedriveFaultedMessagesAsync(new RabbitMqFaultRedriveRequest(target)
                 {
                     MaxMessages = 1,
                     MaxScanCount = 1,
                 }, cancellationToken));
 
-            Assert.Equal(1U, await fixture.QueueMessageCount(source, cancellationToken));
-            Assert.Equal(0U, await fixture.QueueMessageCount(target, cancellationToken));
+            Assert.Equal(1U, await fixture.QueueMessageCountAsync(source, cancellationToken));
+            Assert.Equal(0U, await fixture.QueueMessageCountAsync(target, cancellationToken));
         }
         finally
         {
@@ -161,7 +161,7 @@ public sealed class RabbitMqFaultRedriveTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-FAULT-REDRIVE", "passive-topology-verification")]
-    public async Task MissingSourceTopology_IsRejectedWithoutCreatingOperatorSuppliedEntities()
+    public async Task MissingSourceTopology_IsRejectedWithoutCreatingOperatorSuppliedEntitiesAsync()
     {
         using RabbitMqBroker fixture = RabbitMqBroker.Create("redrivemissing");
         string target = fixture.Name("missing");
@@ -177,15 +177,15 @@ public sealed class RabbitMqFaultRedriveTests
             started = true;
 
             await Assert.ThrowsAnyAsync<OperationInterruptedException>(() => provider.GetRequiredService<IRabbitMqQueueOperations>()
-                .RedriveFaultedMessages(new RabbitMqFaultRedriveRequest(target)
+                .RedriveFaultedMessagesAsync(new RabbitMqFaultRedriveRequest(target)
                 {
                     MaxMessages = 1,
                     MaxScanCount = 1,
                 }, cancellationToken));
 
-            Assert.False((await fixture.Queue(source, cancellationToken)).Exists);
-            Assert.False((await fixture.Queue(target, cancellationToken)).Exists);
-            Assert.False((await fixture.Exchange(target, cancellationToken)).Exists);
+            Assert.False((await fixture.QueueAsync(source, cancellationToken)).Exists);
+            Assert.False((await fixture.QueueAsync(target, cancellationToken)).Exists);
+            Assert.False((await fixture.ExchangeAsync(target, cancellationToken)).Exists);
         }
         finally
         {
@@ -207,7 +207,7 @@ public sealed class RabbitMqFaultRedriveTests
         });
     }
 
-    private static Task PublishSource(
+    private static Task PublishSourceAsync(
         RabbitMqBroker fixture,
         string source,
         string body,
@@ -228,7 +228,7 @@ public sealed class RabbitMqFaultRedriveTests
                 [MessageHeaders.FaultExceptionType] = Encoding.UTF8.GetBytes(faultType),
             },
         };
-        return fixture.PublishRaw(
+        return fixture.PublishRawAsync(
             exchangeName: string.Empty,
             routingKey: source,
             properties,

@@ -33,29 +33,29 @@ public class SendEndpointContextFactory :
     public IActivePipeContextAgent<SendEndpointContext> CreateActiveContext(ISupervisor supervisor, PipeContextHandle<SendEndpointContext> context,
         CancellationToken cancellationToken)
     {
-        return supervisor.AddActiveContext(context, CreateSharedContext(context.Context, cancellationToken));
+        return supervisor.AddActiveContext(context, CreateSharedContextAsync(context.Context, cancellationToken));
     }
 
     void CreateSendEndpointContext(IAsyncPipeContextAgent<SendEndpointContext> asyncContext, CancellationToken cancellationToken)
     {
-        async Task<SendEndpointContext> Create(ConnectionContext context, CancellationToken createCancellationToken)
+        async Task<SendEndpointContext> CreateAsync(ConnectionContext context, CancellationToken createCancellationToken)
         {
             var messageSender = context.CreateMessageSender(_settings.EntityPath);
 
             var sendEndpointContext = new MessageSendEndpointContext(context, messageSender);
 
-            await _configureTopologyFilter.Configure(sendEndpointContext, createCancellationToken).ConfigureAwait(false);
+            await _configureTopologyFilter.ConfigureAsync(sendEndpointContext, createCancellationToken).ConfigureAwait(false);
 
             return sendEndpointContext;
         }
 
-        _supervisor.StartAgent(asyncContext, Create, cancellationToken);
+        _supervisor.StartAgent(asyncContext, CreateAsync, cancellationToken);
     }
 
-    static async Task<SendEndpointContext> CreateSharedContext(Task<SendEndpointContext> context, CancellationToken cancellationToken)
+    static async Task<SendEndpointContext> CreateSharedContextAsync(Task<SendEndpointContext> context, CancellationToken cancellationToken)
     {
         return context.IsCompletedSuccessfully()
             ? new SharedSendEndpointContext(context.Result, cancellationToken)
-            : new SharedSendEndpointContext(await context.OrCanceled(cancellationToken).ConfigureAwait(false), cancellationToken);
+            : new SharedSendEndpointContext(await context.OrCanceledAsync(cancellationToken).ConfigureAwait(false), cancellationToken);
     }
 }

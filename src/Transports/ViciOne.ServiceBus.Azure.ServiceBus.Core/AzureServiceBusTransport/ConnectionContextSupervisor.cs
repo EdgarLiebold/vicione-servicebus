@@ -26,27 +26,27 @@ public class ConnectionContextSupervisor :
         return new ServiceBusEndpointAddress(_hostConfiguration.HostAddress, address);
     }
 
-    public Task<ISendTransport> CreatePublishTransport<T>(ReceiveEndpointContext receiveEndpointContext, Uri publishAddress)
+    public Task<ISendTransport> CreatePublishTransportAsync<T>(ReceiveEndpointContext receiveEndpointContext, Uri publishAddress, CancellationToken cancellationToken = default)
         where T : class
     {
-        LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Transports.ISendTransport>(cancellationToken); LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
 
         IServiceBusMessagePublishTopologyConfigurator<T> publishTopology = _topologyConfiguration.Publish.GetMessageTopology<T>();
 
         var settings = publishTopology.GetSendSettings();
 
-        return CreateSendTransport(publishAddress, settings, receiveEndpointContext);
+        return CreateSendTransportAsync(publishAddress, settings, receiveEndpointContext);
     }
 
-    public Task<ISendTransport> CreateSendTransport(ReceiveEndpointContext receiveEndpointContext, Uri address)
+    public Task<ISendTransport> CreateSendTransportAsync(ReceiveEndpointContext receiveEndpointContext, Uri address, CancellationToken cancellationToken = default)
     {
-        LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Transports.ISendTransport>(cancellationToken); LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
 
         var endpointAddress = new ServiceBusEndpointAddress(_hostConfiguration.HostAddress, address);
 
         var settings = _topologyConfiguration.Send.GetSendSettings(endpointAddress);
 
-        return CreateSendTransport(endpointAddress, settings, receiveEndpointContext);
+        return CreateSendTransportAsync(endpointAddress, settings, receiveEndpointContext);
     }
 
     public IClientContextSupervisor CreateClientContextSupervisor(Func<IConnectionContextSupervisor, IPipeContextFactory<ClientContext>> factory)
@@ -71,7 +71,7 @@ public class ConnectionContextSupervisor :
         return new SendEndpointContextSupervisor(contextFactory);
     }
 
-    Task<ISendTransport> CreateSendTransport(Uri address, SendSettings settings, ReceiveEndpointContext receiveEndpointContext)
+    Task<ISendTransport> CreateSendTransportAsync(Uri address, SendSettings settings, ReceiveEndpointContext receiveEndpointContext)
     {
         TransportLogMessages.CreateSendTransport(address);
 

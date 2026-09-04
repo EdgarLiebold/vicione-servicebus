@@ -16,7 +16,7 @@ public static class DependencyInjectionReceiveEndpointExtensions
     /// <param name="configure"></param>
     /// <returns></returns>
     public static void Consumer<T>(this IReceiveEndpointConfigurator configurator, IRegistrationContext context,
-        Action<IConsumerConfigurator<T>> configure = null)
+        Action<IConsumerConfigurator<T>>? configure = null)
         where T : class, IConsumer
     {
         IConsumeScopeProvider scopeProvider = new ConsumeScopeProvider(context);
@@ -37,7 +37,7 @@ public static class DependencyInjectionReceiveEndpointExtensions
     /// <param name="configure"></param>
     /// <returns></returns>
     public static void Consumer<TConsumer, TMessage>(this IBatchConfigurator<TMessage> configurator, IRegistrationContext context,
-        Action<IConsumerMessageConfigurator<TConsumer, Batch<TMessage>>> configure = null)
+        Action<IConsumerMessageConfigurator<TConsumer, Batch<TMessage>>>? configure = null)
         where TConsumer : class, IConsumer<Batch<TMessage>>
         where TMessage : class
     {
@@ -81,7 +81,7 @@ public static class DependencyInjectionReceiveEndpointExtensions
     /// <param name="configure"></param>
     /// <returns></returns>
     public static void Saga<T>(this IReceiveEndpointConfigurator configurator, IRegistrationContext context,
-        Action<ISagaConfigurator<T>> configure = null)
+        Action<ISagaConfigurator<T>>? configure = null)
         where T : class, ISaga
     {
         ISagaRepository<T> repository = new DependencyInjectionSagaRepository<T>(context);
@@ -100,7 +100,7 @@ public static class DependencyInjectionReceiveEndpointExtensions
     /// <param name="configure">Optionally configure the saga</param>
     /// <returns></returns>
     public static void StateMachineSaga<TInstance>(this IReceiveEndpointConfigurator configurator, SagaStateMachine<TInstance> stateMachine,
-        IRegistrationContext context, Action<ISagaConfigurator<TInstance>> configure = null)
+        IRegistrationContext context, Action<ISagaConfigurator<TInstance>>? configure = null)
         where TInstance : class, SagaStateMachineInstance
     {
         ISagaRepository<TInstance> repository = new DependencyInjectionSagaRepository<TInstance>(context);
@@ -118,7 +118,7 @@ public static class DependencyInjectionReceiveEndpointExtensions
     /// <param name="configure">Optionally configure the saga</param>
     /// <returns></returns>
     public static void StateMachineSaga<TInstance>(this IReceiveEndpointConfigurator configurator, IRegistrationContext context,
-        Action<ISagaConfigurator<TInstance>> configure = null)
+        Action<ISagaConfigurator<TInstance>>? configure = null)
         where TInstance : class, SagaStateMachineInstance
     {
         var stateMachine = context.GetRequiredService<SagaStateMachine<TInstance>>();
@@ -129,7 +129,7 @@ public static class DependencyInjectionReceiveEndpointExtensions
 
 
     public static void ExecuteActivityHost<TActivity, TArguments>(this IReceiveEndpointConfigurator configurator, Uri compensateAddress,
-        IRegistrationContext context, Action<IExecuteActivityConfigurator<TActivity, TArguments>> configure = null)
+        IRegistrationContext context, Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
@@ -142,7 +142,7 @@ public static class DependencyInjectionReceiveEndpointExtensions
 
 
     public static void ExecuteActivityHost<TActivity, TArguments>(this IReceiveEndpointConfigurator configurator, IRegistrationContext context,
-        Action<IExecuteActivityConfigurator<TActivity, TArguments>> configure = null)
+        Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
@@ -155,7 +155,7 @@ public static class DependencyInjectionReceiveEndpointExtensions
 
 
     public static void CompensateActivityHost<TActivity, TLog>(this IReceiveEndpointConfigurator configurator, IRegistrationContext context,
-        Action<ICompensateActivityConfigurator<TActivity, TLog>> configure = null)
+        Action<ICompensateActivityConfigurator<TActivity, TLog>>? configure = null)
         where TActivity : class, ICompensateActivity<TLog>
         where TLog : class
     {

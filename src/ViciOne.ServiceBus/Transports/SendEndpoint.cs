@@ -10,12 +10,12 @@ public class SendEndpoint :
     ITransportSendEndpoint,
     IAsyncDisposable
 {
-    readonly ConnectHandle _observerHandle;
+    readonly ConnectHandle? _observerHandle = null!;
     readonly ISendPipe _sendPipe;
     readonly ISendTransport _transport;
 
     public SendEndpoint(ISendTransport transport, ReceiveEndpointContext context, Uri destinationAddress, ISendPipe sendPipe,
-        ConnectHandle observerHandle = null)
+        ConnectHandle? observerHandle = null)
     {
         _transport = transport;
         _sendPipe = sendPipe;
@@ -49,22 +49,22 @@ public class SendEndpoint :
         return _transport.ConnectSendObserver(observer);
     }
 
-    public Task<SendContext<T>> CreateSendContext<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    public Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
-        return _transport.CreateSendContext(message, new SendEndpointPipe<T>(this, pipe), cancellationToken);
+        return _transport.CreateSendContextAsync(message, new SendEndpointPipe<T>(this, pipe), cancellationToken);
     }
 
-    public Task Send<T>(T message, CancellationToken cancellationToken)
+    public Task SendAsync<T>(T message, CancellationToken cancellationToken)
         where T : class
     {
         if (message == null)
             throw new ArgumentNullException(nameof(message));
 
-        return _transport.Send(message, new SendEndpointPipe<T>(this), cancellationToken);
+        return _transport.SendAsync(message, new SendEndpointPipe<T>(this), cancellationToken);
     }
 
-    public Task Send<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    public Task SendAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
         if (message == null)
@@ -72,30 +72,30 @@ public class SendEndpoint :
         if (pipe == null)
             throw new ArgumentNullException(nameof(pipe));
 
-        return _transport.Send(message, new SendEndpointPipe<T>(this, pipe), cancellationToken);
+        return _transport.SendAsync(message, new SendEndpointPipe<T>(this, pipe), cancellationToken);
     }
 
-    public Task Send(object message, CancellationToken cancellationToken)
+    public Task SendAsync(object message, CancellationToken cancellationToken)
     {
         if (message == null)
             throw new ArgumentNullException(nameof(message));
 
         var messageType = message.GetType();
 
-        return SendEndpointConverterCache.Send(this, message, messageType, cancellationToken);
+        return SendEndpointConverterCache.SendAsync(this, message, messageType, cancellationToken);
     }
 
-    public Task Send(object message, Type messageType, CancellationToken cancellationToken)
+    public Task SendAsync(object message, Type messageType, CancellationToken cancellationToken)
     {
         if (message == null)
             throw new ArgumentNullException(nameof(message));
         if (messageType == null)
             throw new ArgumentNullException(nameof(messageType));
 
-        return SendEndpointConverterCache.Send(this, message, messageType, cancellationToken);
+        return SendEndpointConverterCache.SendAsync(this, message, messageType, cancellationToken);
     }
 
-    public Task Send<T>(T message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
+    public Task SendAsync<T>(T message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
         where T : class
     {
         if (message == null)
@@ -103,10 +103,10 @@ public class SendEndpoint :
         if (pipe == null)
             throw new ArgumentNullException(nameof(pipe));
 
-        return _transport.Send(message, new SendEndpointPipe<T>(this, pipe), cancellationToken);
+        return _transport.SendAsync(message, new SendEndpointPipe<T>(this, pipe), cancellationToken);
     }
 
-    public Task Send(object message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
+    public Task SendAsync(object message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
         if (message == null)
             throw new ArgumentNullException(nameof(message));
@@ -115,10 +115,10 @@ public class SendEndpoint :
 
         var messageType = message.GetType();
 
-        return SendEndpointConverterCache.Send(this, message, messageType, pipe, cancellationToken);
+        return SendEndpointConverterCache.SendAsync(this, message, messageType, pipe, cancellationToken);
     }
 
-    public Task Send(object message, Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken)
+    public Task SendAsync(object message, Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
         if (message == null)
             throw new ArgumentNullException(nameof(message));
@@ -127,34 +127,34 @@ public class SendEndpoint :
         if (pipe == null)
             throw new ArgumentNullException(nameof(pipe));
 
-        return SendEndpointConverterCache.Send(this, message, messageType, pipe, cancellationToken);
+        return SendEndpointConverterCache.SendAsync(this, message, messageType, pipe, cancellationToken);
     }
 
-    public async Task Send<T>(object values, CancellationToken cancellationToken)
+    public async Task SendAsync<T>(object values, CancellationToken cancellationToken)
         where T : class
     {
         if (values == null)
             throw new ArgumentNullException(nameof(values));
 
         (var message, IPipe<SendContext<T>> sendPipe) =
-            await MessageInitializerCache<T>.InitializeMessage(values, new SendEndpointPipe<T>(this), cancellationToken).ConfigureAwait(false);
+            await MessageInitializerCache<T>.InitializeMessageAsync(values, new SendEndpointPipe<T>(this), cancellationToken).ConfigureAwait(false);
 
-        await _transport.Send(message, sendPipe, cancellationToken).ConfigureAwait(false);
+        await _transport.SendAsync(message, sendPipe, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task Send<T>(object values, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    public async Task SendAsync<T>(object values, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
         if (values == null)
             throw new ArgumentNullException(nameof(values));
 
         (var message, IPipe<SendContext<T>> sendPipe) =
-            await MessageInitializerCache<T>.InitializeMessage(values, new SendEndpointPipe<T>(this, pipe), cancellationToken).ConfigureAwait(false);
+            await MessageInitializerCache<T>.InitializeMessageAsync(values, new SendEndpointPipe<T>(this, pipe), cancellationToken).ConfigureAwait(false);
 
-        await _transport.Send(message, sendPipe, cancellationToken).ConfigureAwait(false);
+        await _transport.SendAsync(message, sendPipe, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task Send<T>(object values, IPipe<SendContext> pipe, CancellationToken cancellationToken)
+    public async Task SendAsync<T>(object values, IPipe<SendContext> pipe, CancellationToken cancellationToken)
         where T : class
     {
         if (values == null)
@@ -163,9 +163,9 @@ public class SendEndpoint :
             throw new ArgumentNullException(nameof(pipe));
 
         (var message, IPipe<SendContext<T>> sendPipe) =
-            await MessageInitializerCache<T>.InitializeMessage(values, new SendEndpointPipe<T>(this, pipe), cancellationToken).ConfigureAwait(false);
+            await MessageInitializerCache<T>.InitializeMessageAsync(values, new SendEndpointPipe<T>(this, pipe), cancellationToken).ConfigureAwait(false);
 
-        await _transport.Send(message, sendPipe, cancellationToken).ConfigureAwait(false);
+        await _transport.SendAsync(message, sendPipe, cancellationToken).ConfigureAwait(false);
     }
 
 
@@ -174,8 +174,8 @@ public class SendEndpoint :
         where T : class
     {
         readonly SendEndpoint _endpoint;
-        readonly IPipe<SendContext<T>> _pipe;
-        readonly ISendContextPipe _sendContextPipe;
+        readonly IPipe<SendContext<T>>? _pipe;
+        readonly ISendContextPipe? _sendContextPipe = null!;
 
         public SendEndpointPipe(SendEndpoint endpoint)
         {
@@ -197,7 +197,7 @@ public class SendEndpoint :
             _pipe?.Probe(context);
         }
 
-        public async Task Send(SendContext<T> context)
+        public async Task SendAsync(SendContext<T> context)
         {
             context.Serializer = _endpoint.Serializer;
             context.Serialization = _endpoint.Serialization;
@@ -207,13 +207,13 @@ public class SendEndpoint :
                 context.SourceAddress = _endpoint.SourceAddress;
 
             if (_sendContextPipe != null)
-                await _sendContextPipe.Send(context).ConfigureAwait(false);
+                await _sendContextPipe.SendAsync(context).ConfigureAwait(false);
 
             if (_endpoint._sendPipe != null)
-                await _endpoint._sendPipe.Send(context).ConfigureAwait(false);
+                await _endpoint._sendPipe.SendAsync(context).ConfigureAwait(false);
 
-            if (_pipe.IsNotEmpty())
-                await _pipe.Send(context).ConfigureAwait(false);
+            if (_pipe != null && _pipe.IsNotEmpty())
+                await _pipe.SendAsync(context).ConfigureAwait(false);
 
             context.ConversationId ??= NewId.NextGuid();
         }

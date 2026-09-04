@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ViciOne.ServiceBus;
 
@@ -13,5 +14,5 @@ public interface IMessageContractCatalog
 
     Type GetMessageType(MessageContractIdentity identity);
 
-    bool TryGetMessageType(MessageContractIdentity identity, out Type? messageType);
+    bool TryGetMessageType(MessageContractIdentity identity, [NotNullWhen(true)] out Type? messageType);
 }

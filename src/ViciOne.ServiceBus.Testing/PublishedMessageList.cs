@@ -62,30 +62,30 @@ public class PublishedMessageList :
         return SelectAsync(message => messageFilter.Any(message), cancellationToken).Select<IPublishedMessage, IPublishedMessage<T>>();
     }
 
-    public Task<bool> Any(Action<PublishedMessageFilter> apply = default, CancellationToken cancellationToken = default)
+    public Task<bool> AnyAsync(Action<PublishedMessageFilter>? apply = default, CancellationToken cancellationToken = default)
     {
         var messageFilter = new PublishedMessageFilter();
         apply?.Invoke(messageFilter);
 
-        return Any(message => messageFilter.Any(message), cancellationToken);
+        return AnyAsync(message => messageFilter.Any(message), cancellationToken);
     }
 
-    public Task<bool> Any<T>(CancellationToken cancellationToken = default)
+    public Task<bool> AnyAsync<T>(CancellationToken cancellationToken = default)
         where T : class
     {
         var messageFilter = new PublishedMessageFilter();
         messageFilter.Includes.Add<T>();
 
-        return Any(message => messageFilter.Any(message), cancellationToken);
+        return AnyAsync(message => messageFilter.Any(message), cancellationToken);
     }
 
-    public Task<bool> Any<T>(FilterDelegate<IPublishedMessage<T>> filter, CancellationToken cancellationToken = default)
+    public Task<bool> AnyAsync<T>(FilterDelegate<IPublishedMessage<T>> filter, CancellationToken cancellationToken = default)
         where T : class
     {
         var messageFilter = new PublishedMessageFilter();
         messageFilter.Includes.Add(filter);
 
-        return Any(message => messageFilter.Any(message), cancellationToken);
+        return AnyAsync(message => messageFilter.Any(message), cancellationToken);
     }
 
     public void Add<T>(PublishContext<T> context)

@@ -10,7 +10,7 @@ public sealed class ActiveMqHandlerFlowTests
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-HANDLER-FLOW", "typed-send-publish-and-handler-emissions-are-exact")]
-    public async Task SendPublishAndHandlerFlow_RecordExactTypedEvents(string flavor)
+    public async Task SendPublishAndHandlerFlow_RecordExactTypedEventsAsync(string flavor)
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(flavor, "handlerflow");
         string queueName = fixture.Name("input");
@@ -37,12 +37,12 @@ public sealed class ActiveMqHandlerFlowTests
                     receivedA.TrySetResult(new Observed<A>(context.MessageId, context.Message));
                     Uri sourceAddress = context.SourceAddress
                         ?? throw new InvalidDataException("The ActiveMQ receive contract must carry its source queue address.");
-                    ISendEndpoint source = await context.GetSendEndpoint(sourceAddress);
-                    await source.Send(
+                    ISendEndpoint source = await context.Advanced().GetSendEndpointAsync(sourceAddress);
+                    await source.SendAsync(
                         new C(context.Message.FlowId),
                         sendContext => sendContext.MessageId = handlerSentCId,
                         context.CancellationToken);
-                    await context.Publish(
+                    await context.Advanced().PublishAsync(
                         new D(context.Message.FlowId),
                         publishContext => publishContext.MessageId = handlerPublishedDId,
                         context.CancellationToken);
@@ -67,12 +67,11 @@ public sealed class ActiveMqHandlerFlowTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
 
-            await input.Send(new A(flowId), context => context.MessageId = sentAId, cancellationToken)
+            await input.SendAsync(new A(flowId), context => context.MessageId = sentAId, cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await bus.Publish(new B(flowId), context => context.MessageId = publishedBId, cancellationToken)
+            await bus.PublishAsync(new B(flowId), context => context.MessageId = publishedBId, cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             Observed<A> actualA = await receivedA.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
@@ -104,10 +103,10 @@ public sealed class ActiveMqHandlerFlowTests
     private sealed class SentMessageObserver<TMessage>(TaskCompletionSource<Observed<TMessage>> completion) : ISendObserver
         where TMessage : class
     {
-        public Task PreSend<T>(SendContext<T> context)
+        public Task PreSendAsync<T>(SendContext<T> context)
             where T : class => Task.CompletedTask;
 
-        public Task PostSend<T>(SendContext<T> context)
+        public Task PostSendAsync<T>(SendContext<T> context)
             where T : class
         {
             if (context.Message is TMessage message)
@@ -116,7 +115,7 @@ public sealed class ActiveMqHandlerFlowTests
             return Task.CompletedTask;
         }
 
-        public Task SendFault<T>(SendContext<T> context, Exception exception)
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
             where T : class => Task.CompletedTask;
     }
 }

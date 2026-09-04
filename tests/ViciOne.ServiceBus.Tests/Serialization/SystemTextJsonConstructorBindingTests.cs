@@ -11,7 +11,7 @@ public sealed class SystemTextJsonConstructorBindingTests
     [RequirementCoverage(
         "REQ-VSB-SYSTEM-TEXT-JSON-CONSTRUCTOR-BOUND-MESSAGES",
         "request-response-immutable-values")]
-    public async Task ConstructorBoundRequestAndResponse_RoundTripEveryValue()
+    public async Task ConstructorBoundRequestAndResponse_RoundTripEveryValueAsync()
     {
         TimeSpan operationTimeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -31,11 +31,11 @@ public sealed class SystemTextJsonConstructorBindingTests
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
+            await harness.StartAsync(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
             IRequestClient<ConstructorBoundRequest> client =
                 harness.CreateRequestClient<ConstructorBoundRequest>();
 
-            Response<ConstructorBoundResponse> response = await client.GetResponse<ConstructorBoundResponse>(
+            Response<ConstructorBoundResponse> response = await client.GetResponseAsync<ConstructorBoundResponse>(
                     new ConstructorBoundRequest("This is the real deal."),
                     cancellationToken)
                 .WaitAsync(operationTimeout, cancellationToken);
@@ -46,7 +46,7 @@ public sealed class SystemTextJsonConstructorBindingTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(operationTimeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(operationTimeout, CancellationToken.None);
         }
     }
 

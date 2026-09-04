@@ -35,7 +35,10 @@ public static class ServiceBusConfigureEndpointCallbackExtensions
         configurator.AddConfigureEndpointsCallback((context, name, cfg) =>
         {
             if (cfg is IServiceBusReceiveEndpointConfigurator sb)
-                callback(context, name, sb);
+            {
+                callback(context, name
+                    ?? throw new InvalidOperationException("A configured Azure Service Bus endpoint must have a name."), sb);
+            }
         });
     }
 }

@@ -10,9 +10,10 @@ public class MediatorTestHarness :
     AsyncTestHarness,
     IBaseTestHarness
 {
-    BusTestConsumeObserver _consumed;
-    BusTestPublishObserver _published;
-    BusTestSendObserver _sent;
+    BusTestConsumeObserver? _consumed;
+    IMediator? _mediator;
+    BusTestPublishObserver? _published;
+    BusTestSendObserver? _sent;
 
     public MediatorTestHarness()
         : this(TimeProvider.System)
@@ -25,21 +26,21 @@ public class MediatorTestHarness :
         TestInactivityTimeout = TimeSpan.FromSeconds(1);
     }
 
-    public IMediator Mediator { get; private set; }
+    public IMediator Mediator => _mediator ?? throw new InvalidOperationException("The mediator test harness has not been started.");
     public CancellationToken CancellationToken => TestCancellationToken;
 
     public ConnectHandle ConnectConsumeObserver(IConsumeObserver observer) => Mediator.ConnectConsumeObserver(observer);
     public ConnectHandle ConnectPublishObserver(IPublishObserver observer) => Mediator.ConnectPublishObserver(observer);
     public ConnectHandle ConnectSendObserver(ISendObserver observer) => Mediator.ConnectSendObserver(observer);
-    public IReceivedMessageList Consumed => _consumed.Messages;
-    public IPublishedMessageList Published => _published.Messages;
-    public ISentMessageList Sent => _sent.Messages;
+    public IReceivedMessageList Consumed => _consumed?.Messages ?? throw new InvalidOperationException("The mediator test harness has not been started.");
+    public IPublishedMessageList Published => _published?.Messages ?? throw new InvalidOperationException("The mediator test harness has not been started.");
+    public ISentMessageList Sent => _sent?.Messages ?? throw new InvalidOperationException("The mediator test harness has not been started.");
 
-    public event Action<IMediatorConfigurator> OnConfigureMediator;
+    public event Action<IMediatorConfigurator>? OnConfigureMediator;
 
-    public virtual async Task Start()
+    public virtual async Task StartAsync(CancellationToken cancellationToken = default)
     {
-        _consumed = new BusTestConsumeObserver(TestTimeout, InactivityToken, TimeProvider);
+        cancellationToken.ThrowIfCancellationRequested(); _consumed = new BusTestConsumeObserver(TestTimeout, InactivityToken, TimeProvider);
         ((ITestContextRetention)_consumed.Messages).ConfigureRetention(ContextSaveMode, MaximumSavedContexts);
         _consumed.ConnectInactivityObserver(InactivityObserver);
 
@@ -51,11 +52,11 @@ public class MediatorTestHarness :
         ((ITestContextRetention)_sent.Messages).ConfigureRetention(ContextSaveMode, MaximumSavedContexts);
         _sent.ConnectInactivityObserver(InactivityObserver);
 
-        Mediator = CreateMediator();
+        _mediator = CreateMediator();
 
-        Mediator.ConnectConsumeObserver(_consumed);
-        Mediator.ConnectPublishObserver(_published);
-        Mediator.ConnectSendObserver(_sent);
+        _mediator.ConnectConsumeObserver(_consumed);
+        _mediator.ConnectPublishObserver(_published);
+        _mediator.ConnectSendObserver(_sent);
     }
 
     protected virtual void ConfigureMediator(IMediatorConfigurator configurator)

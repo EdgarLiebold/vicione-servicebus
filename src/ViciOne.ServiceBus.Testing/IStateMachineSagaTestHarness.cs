@@ -24,7 +24,8 @@ public interface ISagaStateMachineTestHarness<out TStateMachine, TInstance> :
     /// <param name="stateSelector"></param>
     /// <param name="timeout"></param>
     /// <returns></returns>
-    Task<Guid?> Exists(Guid correlationId, Func<TStateMachine, State> stateSelector, TimeSpan? timeout = default);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<Guid?> ExistsAsync(Guid correlationId, Func<TStateMachine, State> stateSelector, TimeSpan? timeout = default, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Waits until a saga exists with the specified correlationId in the specified state
@@ -33,7 +34,8 @@ public interface ISagaStateMachineTestHarness<out TStateMachine, TInstance> :
     /// <param name="state">The expected state</param>
     /// <param name="timeout"></param>
     /// <returns></returns>
-    Task<Guid?> Exists(Guid correlationId, State state, TimeSpan? timeout = default);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<Guid?> ExistsAsync(Guid correlationId, State state, TimeSpan? timeout = default, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Waits until a saga exists with the specified correlationId in the specified state
@@ -42,7 +44,8 @@ public interface ISagaStateMachineTestHarness<out TStateMachine, TInstance> :
     /// <param name="stateSelector"></param>
     /// <param name="timeout"></param>
     /// <returns></returns>
-    Task<IList<Guid>> Exists(Expression<Func<TInstance, bool>> expression, Func<TStateMachine, State> stateSelector, TimeSpan? timeout = default);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<IList<Guid>> ExistsAsync(Expression<Func<TInstance, bool>> expression, Func<TStateMachine, State> stateSelector, TimeSpan? timeout = default, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Waits until a saga exists with the specified correlationId in the specified state
@@ -51,5 +54,6 @@ public interface ISagaStateMachineTestHarness<out TStateMachine, TInstance> :
     /// <param name="state">The expected state</param>
     /// <param name="timeout"></param>
     /// <returns></returns>
-    Task<IList<Guid>> Exists(Expression<Func<TInstance, bool>> expression, State state, TimeSpan? timeout = default);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<IList<Guid>> ExistsAsync(Expression<Func<TInstance, bool>> expression, State state, TimeSpan? timeout = default, CancellationToken cancellationToken = default);
 }

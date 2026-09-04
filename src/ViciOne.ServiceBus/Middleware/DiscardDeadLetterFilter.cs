@@ -13,8 +13,8 @@ public class DiscardDeadLetterFilter :
         context.CreateFilterScope("discard-dead-letter");
     }
 
-    Task IFilter<ReceiveContext>.Send(ReceiveContext context, IPipe<ReceiveContext> next)
+    Task IFilter<ReceiveContext>.SendAsync(ReceiveContext context, IPipe<ReceiveContext> next)
     {
-        return next.Send(context);
+        return next.SendAsync(context);
     }
 }

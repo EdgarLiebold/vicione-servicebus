@@ -67,21 +67,21 @@ public class QueueInfo :
             await _batchDeleter.Value.DisposeAsync().ConfigureAwait(false);
     }
 
-    public Task Send(SendMessageBatchRequestEntry entry, CancellationToken cancellationToken)
+    public Task SendAsync(SendMessageBatchRequestEntry entry, CancellationToken cancellationToken)
     {
         Used?.Invoke();
-        return _batchSender.Value.Execute(entry, cancellationToken);
+        return _batchSender.Value.ExecuteAsync(entry, cancellationToken);
     }
 
-    public Task Delete(string receiptHandle, CancellationToken cancellationToken)
+    public Task DeleteAsync(string receiptHandle, CancellationToken cancellationToken)
     {
         Used?.Invoke();
         var entry = new DeleteMessageBatchRequestEntry("", receiptHandle);
 
-        return _batchDeleter.Value.Execute(entry, cancellationToken);
+        return _batchDeleter.Value.ExecuteAsync(entry, cancellationToken);
     }
 
-    public async Task<bool> UpdatePolicy(string sqsQueueArn, string topicArn, CancellationToken cancellationToken)
+    public async Task<bool> UpdatePolicyAsync(string sqsQueueArn, string topicArn, CancellationToken cancellationToken)
     {
         Used?.Invoke();
         await _updateSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);

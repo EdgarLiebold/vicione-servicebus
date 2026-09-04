@@ -15,7 +15,7 @@ public static class ConcurrencyLimitConfigurationExtensions
     /// <param name="configurator"></param>
     /// <param name="concurrencyLimit">The concurrency limit for the subsequent filters in the pipeline</param>
     /// <param name="router">A control pipe to support runtime adjustment</param>
-    public static void UseConcurrencyLimit<T>(this IPipeConfigurator<T> configurator, int concurrencyLimit, IPipeRouter router = null)
+    public static void UseConcurrencyLimit<T>(this IPipeConfigurator<T> configurator, int concurrencyLimit, IPipeRouter? router = null)
         where T : class, PipeContext
     {
         if (configurator == null)
@@ -47,7 +47,7 @@ public static class ConcurrencyLimitConfigurationExtensions
     /// <param name="managementEndpointConfigurator">A management endpoint configurator to support runtime adjustment</param>
     /// <param name="id">An identifier for the concurrency limit to allow selective adjustment</param>
     public static void UseConcurrencyLimit(this IConsumePipeConfigurator configurator, int concurrentMessageLimit,
-        IReceiveEndpointConfigurator managementEndpointConfigurator, string id = default)
+        IReceiveEndpointConfigurator managementEndpointConfigurator, string? id = default)
     {
         if (configurator == null)
             throw new ArgumentNullException(nameof(configurator));

@@ -13,7 +13,7 @@ public interface IServiceBusMessageConsumeTopologyConfigurator<TMessage> :
     /// </summary>
     /// <param name="subscriptionName"></param>
     /// <param name="configure">Configure the binding and the exchange</param>
-    void Subscribe(string subscriptionName, Action<IServiceBusSubscriptionConfigurator> configure = null);
+    void Subscribe(string subscriptionName, Action<IServiceBusSubscriptionConfigurator>? configure = null);
 }
 
 

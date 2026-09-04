@@ -7,7 +7,7 @@ using ViciOne.ServiceBus.Initializers;
 namespace ViciOne.ServiceBus.Scheduling;
 
 public class MessageScheduler :
-    IMessageScheduler
+    Advanced.IAdvancedMessageScheduler
 {
     readonly IBusTopology _busTopology;
     readonly IScheduleMessageProvider _provider;
@@ -21,7 +21,7 @@ public class MessageScheduler :
 
     public TimeProvider TimeProvider { get; }
 
-    public Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, T message,
+    public Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, T message,
         CancellationToken cancellationToken)
         where T : class
     {
@@ -30,24 +30,10 @@ public class MessageScheduler :
         if (message == null)
             throw new ArgumentNullException(nameof(message));
 
-        return _provider.ScheduleSend(destinationAddress, scheduledTime, message, Pipe.Empty<SendContext>(), cancellationToken);
+        return _provider.ScheduleSendAsync(destinationAddress, dueAt, message, Pipe.Empty<SendContext>(), cancellationToken);
     }
 
-    public Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, T message, IPipe<SendContext<T>> pipe,
-        CancellationToken cancellationToken)
-        where T : class
-    {
-        if (destinationAddress == null)
-            throw new ArgumentNullException(nameof(destinationAddress));
-        if (message == null)
-            throw new ArgumentNullException(nameof(message));
-        if (pipe == null)
-            throw new ArgumentNullException(nameof(pipe));
-
-        return _provider.ScheduleSend(destinationAddress, scheduledTime, message, pipe, cancellationToken);
-    }
-
-    public Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, T message, IPipe<SendContext> pipe,
+    public Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
@@ -58,10 +44,24 @@ public class MessageScheduler :
         if (pipe == null)
             throw new ArgumentNullException(nameof(pipe));
 
-        return _provider.ScheduleSend(destinationAddress, scheduledTime, message, pipe, cancellationToken);
+        return _provider.ScheduleSendAsync(destinationAddress, dueAt, message, pipe, cancellationToken);
     }
 
-    public Task<ScheduledMessage> ScheduleSend(Uri destinationAddress, DateTime scheduledTime, object message,
+    public Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, T message, IPipe<SendContext> pipe,
+        CancellationToken cancellationToken)
+        where T : class
+    {
+        if (destinationAddress == null)
+            throw new ArgumentNullException(nameof(destinationAddress));
+        if (message == null)
+            throw new ArgumentNullException(nameof(message));
+        if (pipe == null)
+            throw new ArgumentNullException(nameof(pipe));
+
+        return _provider.ScheduleSendAsync(destinationAddress, dueAt, message, pipe, cancellationToken);
+    }
+
+    public Task<ScheduledMessage> ScheduleSendAsync(Uri destinationAddress, DateTimeOffset dueAt, object message,
         CancellationToken cancellationToken)
     {
         if (destinationAddress == null)
@@ -70,10 +70,10 @@ public class MessageScheduler :
             throw new ArgumentNullException(nameof(message));
         var messageType = message.GetType();
 
-        return MessageSchedulerConverterCache.ScheduleSend(this, destinationAddress, scheduledTime, message, messageType, cancellationToken);
+        return MessageSchedulerConverterCache.ScheduleSendAsync(this, destinationAddress, dueAt, message, messageType, cancellationToken);
     }
 
-    public Task<ScheduledMessage> ScheduleSend(Uri destinationAddress, DateTime scheduledTime, object message, Type messageType,
+    public Task<ScheduledMessage> ScheduleSendAsync(Uri destinationAddress, DateTimeOffset dueAt, object message, Type messageType,
         CancellationToken cancellationToken)
     {
         if (destinationAddress == null)
@@ -83,10 +83,10 @@ public class MessageScheduler :
         if (messageType == null)
             throw new ArgumentNullException(nameof(messageType));
 
-        return MessageSchedulerConverterCache.ScheduleSend(this, destinationAddress, scheduledTime, message, messageType, cancellationToken);
+        return MessageSchedulerConverterCache.ScheduleSendAsync(this, destinationAddress, dueAt, message, messageType, cancellationToken);
     }
 
-    public Task<ScheduledMessage> ScheduleSend(Uri destinationAddress, DateTime scheduledTime, object message, IPipe<SendContext> pipe,
+    public Task<ScheduledMessage> ScheduleSendAsync(Uri destinationAddress, DateTimeOffset dueAt, object message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
     {
         if (destinationAddress == null)
@@ -98,10 +98,10 @@ public class MessageScheduler :
 
         var messageType = message.GetType();
 
-        return MessageSchedulerConverterCache.ScheduleSend(this, destinationAddress, scheduledTime, message, messageType, pipe, cancellationToken);
+        return MessageSchedulerConverterCache.ScheduleSendAsync(this, destinationAddress, dueAt, message, messageType, pipe, cancellationToken);
     }
 
-    public Task<ScheduledMessage> ScheduleSend(Uri destinationAddress, DateTime scheduledTime, object message, Type messageType,
+    public Task<ScheduledMessage> ScheduleSendAsync(Uri destinationAddress, DateTimeOffset dueAt, object message, Type messageType,
         IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
         if (destinationAddress == null)
@@ -113,10 +113,10 @@ public class MessageScheduler :
         if (pipe == null)
             throw new ArgumentNullException(nameof(pipe));
 
-        return MessageSchedulerConverterCache.ScheduleSend(this, destinationAddress, scheduledTime, message, messageType, pipe, cancellationToken);
+        return MessageSchedulerConverterCache.ScheduleSendAsync(this, destinationAddress, dueAt, message, messageType, pipe, cancellationToken);
     }
 
-    public async Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, object values,
+    public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, object values,
         CancellationToken cancellationToken)
         where T : class
     {
@@ -125,28 +125,12 @@ public class MessageScheduler :
         if (values == null)
             throw new ArgumentNullException(nameof(values));
 
-        SendTuple<T> send = await MessageInitializerCache<T>.InitializeMessage(values, cancellationToken).ConfigureAwait(false);
+        SendTuple<T> send = await MessageInitializerCache<T>.InitializeMessageAsync(values, cancellationToken).ConfigureAwait(false);
 
-        return await _provider.ScheduleSend(destinationAddress, scheduledTime, send.Message, send.Pipe, cancellationToken).ConfigureAwait(false);
+        return await _provider.ScheduleSendAsync(destinationAddress, dueAt, send.Message, send.Pipe, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, object values, IPipe<SendContext<T>> pipe,
-        CancellationToken cancellationToken)
-        where T : class
-    {
-        if (destinationAddress == null)
-            throw new ArgumentNullException(nameof(destinationAddress));
-        if (values == null)
-            throw new ArgumentNullException(nameof(values));
-        if (pipe == null)
-            throw new ArgumentNullException(nameof(pipe));
-
-        SendTuple<T> send = await MessageInitializerCache<T>.InitializeMessage(values, pipe, cancellationToken).ConfigureAwait(false);
-
-        return await _provider.ScheduleSend(destinationAddress, scheduledTime, send.Message, send.Pipe, cancellationToken).ConfigureAwait(false);
-    }
-
-    public async Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, object values, IPipe<SendContext> pipe,
+    public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, object values, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
@@ -157,43 +141,59 @@ public class MessageScheduler :
         if (pipe == null)
             throw new ArgumentNullException(nameof(pipe));
 
-        SendTuple<T> send = await MessageInitializerCache<T>.InitializeMessage(values, pipe, cancellationToken).ConfigureAwait(false);
+        SendTuple<T> send = await MessageInitializerCache<T>.InitializeMessageAsync(values, pipe, cancellationToken).ConfigureAwait(false);
 
-        return await _provider.ScheduleSend(destinationAddress, scheduledTime, send.Message, send.Pipe, cancellationToken).ConfigureAwait(false);
+        return await _provider.ScheduleSendAsync(destinationAddress, dueAt, send.Message, send.Pipe, cancellationToken).ConfigureAwait(false);
     }
 
-    public Task CancelScheduledSend(Uri destinationAddress, Guid tokenId, CancellationToken cancellationToken)
+    public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, object values, IPipe<SendContext> pipe,
+        CancellationToken cancellationToken)
+        where T : class
     {
-        return _provider.CancelScheduledSend(destinationAddress, tokenId, cancellationToken);
+        if (destinationAddress == null)
+            throw new ArgumentNullException(nameof(destinationAddress));
+        if (values == null)
+            throw new ArgumentNullException(nameof(values));
+        if (pipe == null)
+            throw new ArgumentNullException(nameof(pipe));
+
+        SendTuple<T> send = await MessageInitializerCache<T>.InitializeMessageAsync(values, pipe, cancellationToken).ConfigureAwait(false);
+
+        return await _provider.ScheduleSendAsync(destinationAddress, dueAt, send.Message, send.Pipe, cancellationToken).ConfigureAwait(false);
     }
 
-    public Task<ScheduledMessage<T>> SchedulePublish<T>(DateTime scheduledTime, T message, CancellationToken cancellationToken = default)
+    public Task CancelScheduledSendAsync(Uri destinationAddress, Guid tokenId, CancellationToken cancellationToken)
+    {
+        return _provider.CancelScheduledSendAsync(destinationAddress, tokenId, cancellationToken);
+    }
+
+    public Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, T message, CancellationToken cancellationToken = default)
         where T : class
     {
         var destinationAddress = GetPublishAddress<T>();
 
-        return ScheduleSend(destinationAddress, scheduledTime, message, cancellationToken);
+        return ScheduleSendAsync(destinationAddress, dueAt, message, cancellationToken);
     }
 
-    public Task<ScheduledMessage<T>> SchedulePublish<T>(DateTime scheduledTime, T message, IPipe<SendContext<T>> pipe,
+    public Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken = default)
         where T : class
     {
         var destinationAddress = GetPublishAddress<T>();
 
-        return ScheduleSend(destinationAddress, scheduledTime, message, pipe, cancellationToken);
+        return ScheduleSendAsync(destinationAddress, dueAt, message, pipe, cancellationToken);
     }
 
-    public Task<ScheduledMessage<T>> SchedulePublish<T>(DateTime scheduledTime, T message, IPipe<SendContext> pipe,
+    public Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, T message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
         where T : class
     {
         var destinationAddress = GetPublishAddress<T>();
 
-        return ScheduleSend(destinationAddress, scheduledTime, message, pipe, cancellationToken);
+        return ScheduleSendAsync(destinationAddress, dueAt, message, pipe, cancellationToken);
     }
 
-    public Task<ScheduledMessage> SchedulePublish(DateTime scheduledTime, object message, CancellationToken cancellationToken = default)
+    public Task<ScheduledMessage> SchedulePublishAsync(DateTimeOffset dueAt, object message, CancellationToken cancellationToken = default)
     {
         if (message == null)
             throw new ArgumentNullException(nameof(message));
@@ -202,20 +202,20 @@ public class MessageScheduler :
 
         var destinationAddress = GetPublishAddress(messageType);
 
-        return ScheduleSend(destinationAddress, scheduledTime, message, messageType, cancellationToken);
+        return ScheduleSendAsync(destinationAddress, dueAt, message, messageType, cancellationToken);
     }
 
-    public Task<ScheduledMessage> SchedulePublish(DateTime scheduledTime, object message, Type messageType, CancellationToken cancellationToken = default)
+    public Task<ScheduledMessage> SchedulePublishAsync(DateTimeOffset dueAt, object message, Type messageType, CancellationToken cancellationToken = default)
     {
         if (messageType == null)
             throw new ArgumentNullException(nameof(messageType));
 
         var destinationAddress = GetPublishAddress(messageType);
 
-        return ScheduleSend(destinationAddress, scheduledTime, message, messageType, cancellationToken);
+        return ScheduleSendAsync(destinationAddress, dueAt, message, messageType, cancellationToken);
     }
 
-    public Task<ScheduledMessage> SchedulePublish(DateTime scheduledTime, object message, IPipe<SendContext> pipe,
+    public Task<ScheduledMessage> SchedulePublishAsync(DateTimeOffset dueAt, object message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
     {
         if (message == null)
@@ -225,56 +225,56 @@ public class MessageScheduler :
 
         var destinationAddress = GetPublishAddress(messageType);
 
-        return ScheduleSend(destinationAddress, scheduledTime, message, pipe, cancellationToken);
+        return ScheduleSendAsync(destinationAddress, dueAt, message, pipe, cancellationToken);
     }
 
-    public Task<ScheduledMessage> SchedulePublish(DateTime scheduledTime, object message, Type messageType, IPipe<SendContext> pipe,
+    public Task<ScheduledMessage> SchedulePublishAsync(DateTimeOffset dueAt, object message, Type messageType, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
     {
         var destinationAddress = GetPublishAddress(messageType);
 
-        return ScheduleSend(destinationAddress, scheduledTime, message, messageType, pipe, cancellationToken);
+        return ScheduleSendAsync(destinationAddress, dueAt, message, messageType, pipe, cancellationToken);
     }
 
-    public Task<ScheduledMessage<T>> SchedulePublish<T>(DateTime scheduledTime, object values, CancellationToken cancellationToken = default)
+    public Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, object values, CancellationToken cancellationToken = default)
         where T : class
     {
         var destinationAddress = GetPublishAddress<T>();
 
-        return ScheduleSend<T>(destinationAddress, scheduledTime, values, cancellationToken);
+        return ScheduleSendAsync<T>(destinationAddress, dueAt, values, cancellationToken);
     }
 
-    public Task<ScheduledMessage<T>> SchedulePublish<T>(DateTime scheduledTime, object values, IPipe<SendContext<T>> pipe,
+    public Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, object values, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken = default)
         where T : class
     {
         var destinationAddress = GetPublishAddress<T>();
 
-        return ScheduleSend(destinationAddress, scheduledTime, values, pipe, cancellationToken);
+        return ScheduleSendAsync(destinationAddress, dueAt, values, pipe, cancellationToken);
     }
 
-    public Task<ScheduledMessage<T>> SchedulePublish<T>(DateTime scheduledTime, object values, IPipe<SendContext> pipe,
+    public Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, object values, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
         where T : class
     {
         var destinationAddress = GetPublishAddress<T>();
 
-        return ScheduleSend<T>(destinationAddress, scheduledTime, values, pipe, cancellationToken);
+        return ScheduleSendAsync<T>(destinationAddress, dueAt, values, pipe, cancellationToken);
     }
 
-    public Task CancelScheduledPublish<T>(Guid tokenId, CancellationToken cancellationToken)
+    public Task CancelScheduledPublishAsync<T>(Guid tokenId, CancellationToken cancellationToken)
         where T : class
     {
         var destinationAddress = GetPublishAddress<T>();
 
-        return CancelScheduledSend(destinationAddress, tokenId, cancellationToken);
+        return CancelScheduledSendAsync(destinationAddress, tokenId, cancellationToken);
     }
 
-    public Task CancelScheduledPublish(Type messageType, Guid tokenId, CancellationToken cancellationToken)
+    public Task CancelScheduledPublishAsync(Type messageType, Guid tokenId, CancellationToken cancellationToken)
     {
         var destinationAddress = GetPublishAddress(messageType);
 
-        return CancelScheduledSend(destinationAddress, tokenId, cancellationToken);
+        return CancelScheduledSendAsync(destinationAddress, tokenId, cancellationToken);
     }
 
     Uri GetPublishAddress<T>()

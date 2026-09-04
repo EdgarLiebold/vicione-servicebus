@@ -36,10 +36,10 @@ public class SqlReceiveLockContext :
         _locked = true;
 
         if (_message.LockId.HasValue)
-            _renewLockTask = RenewLock();
+            _renewLockTask = RenewLockAsync();
     }
 
-    public async Task ScheduleRedelivery(TimeSpan delay, Action<ConsumeContext, SendContext>? callback)
+    public async Task ScheduleRedeliveryAsync(TimeSpan delay, Action<ConsumeContext, SendContext>? callback, CancellationToken cancellationToken = default)
     {
         if (_locked == false)
             return;
@@ -59,7 +59,7 @@ public class SqlReceiveLockContext :
 
                 transportHeaders.Set(MessageHeaders.RedeliveryCount, redeliveryCount + 1);
 
-                var unlocked = await _clientContext.Unlock(_message.LockId.Value, _message.MessageDeliveryId, delay, transportHeaders)
+                var unlocked = await _clientContext.UnlockAsync(_message.LockId.Value, _message.MessageDeliveryId, delay, transportHeaders, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
                 _locked = false;
@@ -82,7 +82,7 @@ public class SqlReceiveLockContext :
         }
     }
 
-    public async Task Complete()
+    public async Task CompleteAsync(CancellationToken cancellationToken = default)
     {
         if (_locked == false)
             return;
@@ -93,7 +93,7 @@ public class SqlReceiveLockContext :
         {
             if (_message.LockId.HasValue)
             {
-                await _clientContext.DeleteMessage(_message.LockId.Value, _message.MessageDeliveryId).ConfigureAwait(false);
+                await _clientContext.DeleteMessageAsync(_message.LockId.Value, _message.MessageDeliveryId, cancellationToken: cancellationToken).ConfigureAwait(false);
 
                 _locked = false;
 
@@ -112,7 +112,7 @@ public class SqlReceiveLockContext :
         }
     }
 
-    public async Task Faulted(Exception exception)
+    public async Task FaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {
         if (_locked == false)
             return;
@@ -137,7 +137,7 @@ public class SqlReceiveLockContext :
                 headers.Set(MessageHeaders.FaultMessage, exceptionMessage);
                 headers.Set(MessageHeaders.FaultStackTrace, ExceptionUtil.GetStackTrace(exception));
 
-                await _clientContext.Unlock(_message.LockId.Value, _message.MessageDeliveryId, _settings.UnlockDelay ?? TimeSpan.Zero, headers)
+                await _clientContext.UnlockAsync(_message.LockId.Value, _message.MessageDeliveryId, _settings.UnlockDelay ?? TimeSpan.Zero, headers, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             }
 
@@ -156,15 +156,15 @@ public class SqlReceiveLockContext :
         }
     }
 
-    public Task ValidateLockStatus()
+    public Task ValidateLockStatusAsync(CancellationToken cancellationToken = default)
     {
-        if (_locked)
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (_locked)
             return Task.CompletedTask;
 
         throw new TransportException(_inputAddress, $"Message Lock Lost: {_message.LockId}");
     }
 
-    public async Task Expired()
+    public async Task ExpiredAsync(CancellationToken cancellationToken = default)
     {
         if (_locked == false)
             return;
@@ -179,8 +179,8 @@ public class SqlReceiveLockContext :
 
                 transportHeaders.Set(MessageHeaders.Reason, "expired");
 
-                await _clientContext.MoveMessage(_message.LockId.Value, _message.MessageDeliveryId, _settings.QueueName, SqlQueueType.DeadLetterQueue,
-                    _message.ExpirationTime, transportHeaders);
+                await _clientContext.MoveMessageAsync(_message.LockId.Value, _message.MessageDeliveryId, _settings.QueueName, SqlQueueType.DeadLetterQueue,
+                    _message.ExpirationTime, transportHeaders, cancellationToken: cancellationToken);
 
                 _locked = false;
 
@@ -199,7 +199,7 @@ public class SqlReceiveLockContext :
         }
     }
 
-    async Task RenewLock()
+    async Task RenewLockAsync()
     {
         TimeSpan CalculateDelay(TimeSpan timeout)
         {
@@ -226,7 +226,7 @@ public class SqlReceiveLockContext :
 
                 if (_message.LockId.HasValue)
                 {
-                    if (!await _clientContext.RenewLock(_message.LockId.Value, _message.MessageDeliveryId, duration).ConfigureAwait(false))
+                    if (!await _clientContext.RenewLockAsync(_message.LockId.Value, _message.MessageDeliveryId, duration).ConfigureAwait(false))
                     {
                         LogContext.Warning?.Log("Message Lock Lost: {InputAddress} - {MessageDeliveryId} ({LockId})", _inputAddress,
                             _message.MessageDeliveryId, _message.LockId);

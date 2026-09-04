@@ -68,27 +68,27 @@ public class MessageInitializer<TMessage, TInput> :
         return _factory.Create(baseContext);
     }
 
-    public Task<InitializeContext<TMessage>> Initialize(object input, CancellationToken cancellationToken)
+    public Task<InitializeContext<TMessage>> InitializeAsync(object input, CancellationToken cancellationToken)
     {
-        return InitializeMessage((TInput)input, cancellationToken);
+        return InitializeMessageAsync((TInput)input, cancellationToken);
     }
 
-    public Task<InitializeContext<TMessage>> Initialize(InitializeContext<TMessage> context, object input)
+    public Task<InitializeContext<TMessage>> InitializeAsync(InitializeContext<TMessage> context, object input, CancellationToken cancellationToken = default)
     {
-        return InitializeMessage(context, (TInput)input);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Initializers.InitializeContext<TMessage>>(cancellationToken); return InitializeMessageAsync(context, (TInput)input);
     }
 
-    public Task<SendTuple<TMessage>> InitializeMessage(PipeContext context, object input, IPipe<SendContext<TMessage>>? pipe)
+    public Task<SendTuple<TMessage>> InitializeMessageAsync(PipeContext context, object input, IPipe<SendContext<TMessage>>? pipe, CancellationToken cancellationToken = default)
     {
-        return PrepareSendTuple(Create(context), (TInput)input, pipe);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.SendTuple<TMessage>>(cancellationToken); return PrepareSendTupleAsync(Create(context), (TInput)input, pipe);
     }
 
-    public Task<SendTuple<TMessage>> InitializeMessage(object input, IPipe<SendContext<TMessage>> pipe, CancellationToken cancellationToken)
+    public Task<SendTuple<TMessage>> InitializeMessageAsync(object input, IPipe<SendContext<TMessage>> pipe, CancellationToken cancellationToken)
     {
-        return PrepareSendTuple(Create(cancellationToken), (TInput)input, pipe);
+        return PrepareSendTupleAsync(Create(cancellationToken), (TInput)input, pipe);
     }
 
-    public async Task<SendTuple<TMessage>> InitializeMessage(PipeContext context, object input, object?[] moreInputs, IPipe<SendContext<TMessage>>? pipe)
+    public async Task<SendTuple<TMessage>> InitializeMessageAsync(PipeContext context, object input, object?[] moreInputs, IPipe<SendContext<TMessage>>? pipe, CancellationToken cancellationToken = default)
     {
         InitializeContext<TMessage> initializeContext = Create(context);
 
@@ -99,36 +99,36 @@ public class MessageInitializer<TMessage, TInput> :
             {
                 IMessageInitializer<TMessage> initializer = MessageInitializerCache<TMessage>.GetInitializer(moreInput.GetType());
 
-                initializeContext = await initializer.Initialize(initializeContext, moreInput).ConfigureAwait(false);
+                initializeContext = await initializer.InitializeAsync(initializeContext, moreInput, cancellationToken: cancellationToken).ConfigureAwait(false);
             }
         }
 
-        return await PrepareSendTuple(initializeContext, (TInput)input, pipe).ConfigureAwait(false);
+        return await PrepareSendTupleAsync(initializeContext, (TInput)input, pipe).ConfigureAwait(false);
     }
 
-    Task<InitializeContext<TMessage>> InitializeMessage(TInput input, CancellationToken cancellationToken)
+    Task<InitializeContext<TMessage>> InitializeMessageAsync(TInput input, CancellationToken cancellationToken)
     {
         var context = new BaseInitializeContext(cancellationToken);
 
         InitializeContext<TMessage> messageContext = _factory.Create(context);
 
-        return InitializeMessage(messageContext, input);
+        return InitializeMessageAsync(messageContext, input);
     }
 
-    async Task<InitializeContext<TMessage>> InitializeMessage(InitializeContext<TMessage> messageContext, TInput input)
+    async Task<InitializeContext<TMessage>> InitializeMessageAsync(InitializeContext<TMessage> messageContext, TInput input)
     {
         InitializeContext<TMessage, TInput> inputContext = messageContext.CreateInputContext(input);
 
-        await Task.WhenAll(_initializers.Select(x => x.Apply(inputContext))).ConfigureAwait(false);
+        await Task.WhenAll(_initializers.Select(x => x.ApplyAsync(inputContext))).ConfigureAwait(false);
 
         return messageContext;
     }
 
-    async Task<SendTuple<TMessage>> PrepareSendTuple(InitializeContext<TMessage> messageContext, TInput input, IPipe<SendContext<TMessage>>? pipe = null)
+    async Task<SendTuple<TMessage>> PrepareSendTupleAsync(InitializeContext<TMessage> messageContext, TInput input, IPipe<SendContext<TMessage>>? pipe = null)
     {
         InitializeContext<TMessage, TInput> inputContext = messageContext.CreateInputContext(input);
 
-        await Task.WhenAll(_initializers.Select(x => x.Apply(inputContext))).ConfigureAwait(false);
+        await Task.WhenAll(_initializers.Select(x => x.ApplyAsync(inputContext))).ConfigureAwait(false);
 
         return _headerInitializers.Length > 0
             ? new SendTuple<TMessage>(inputContext.Message, new InitializerSendContextPipe(_headerInitializers, inputContext, pipe))
@@ -157,19 +157,19 @@ public class MessageInitializer<TMessage, TInput> :
             _pipe?.Probe(context);
         }
 
-        public async Task Send(SendContext<TMessage> context)
+        public async Task SendAsync(SendContext<TMessage> context)
         {
-            await Task.WhenAll(_initializers.Select(x => x.Apply(_context, context))).ConfigureAwait(false);
+            await Task.WhenAll(_initializers.Select(x => x.ApplyAsync(_context, context))).ConfigureAwait(false);
 
             if (_pipe != null && _pipe.IsNotEmpty())
-                await _pipe.Send(context).ConfigureAwait(false);
+                await _pipe.SendAsync(context).ConfigureAwait(false);
         }
 
-        public Task Send<T>(SendContext<T> context)
+        public Task SendAsync<T>(SendContext<T> context, CancellationToken cancellationToken)
             where T : class
         {
             return _pipe is ISendContextPipe sendContextPipe
-                ? sendContextPipe.Send(context)
+                ? sendContextPipe.SendAsync(context, cancellationToken)
                 : Task.CompletedTask;
         }
     }

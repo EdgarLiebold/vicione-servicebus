@@ -39,15 +39,15 @@ public class EventHubDataReceiver :
         _client = lockContext.Client;
         _lockContext = lockContext;
 
-        _client.ProcessErrorAsync += HandleError;
-        _client.ProcessEventAsync += HandleMessage;
+        _client.ProcessErrorAsync += HandleErrorAsync;
+        _client.ProcessEventAsync += HandleMessageAsync;
 
         TrySetManualConsumeTask();
 
         SetReady(_client.StartProcessingAsync(Stopping));
     }
 
-    async Task HandleError(ProcessErrorEventArgs eventArgs)
+    async Task HandleErrorAsync(ProcessErrorEventArgs eventArgs)
     {
         LogContext.SetCurrentIfNull(_context.LogContext);
 
@@ -65,17 +65,17 @@ public class EventHubDataReceiver :
         return !string.IsNullOrEmpty(partitionKey) ? Encoding.UTF8.GetBytes(partitionKey) : [];
     }
 
-    async Task HandleMessage(ProcessEventArgs eventArgs)
+    async Task HandleMessageAsync(ProcessEventArgs eventArgs)
     {
         if (IsStopping || !eventArgs.HasEvent)
             return;
 
         await _limit.WaitAsync(Stopping).ConfigureAwait(false);
-        await _lockContext.Pending(eventArgs).ConfigureAwait(false);
-        await _executorPool.EnqueueAsync(eventArgs, () => Handle(eventArgs), Stopping).ConfigureAwait(false);
+        await _lockContext.PendingAsync(eventArgs).ConfigureAwait(false);
+        await _executorPool.EnqueueAsync(eventArgs, () => HandleAsync(eventArgs), Stopping).ConfigureAwait(false);
     }
 
-    async Task Handle(ProcessEventArgs eventArgs)
+    async Task HandleAsync(ProcessEventArgs eventArgs)
     {
         if (IsStopping)
             return;
@@ -88,7 +88,7 @@ public class EventHubDataReceiver :
 
         try
         {
-            await Dispatch(eventArgs, context, new EventHubReceiveLockContext(eventArgs, _lockContext)).ConfigureAwait(false);
+            await DispatchAsync(eventArgs, context, new EventHubReceiveLockContext(eventArgs, _lockContext)).ConfigureAwait(false);
         }
         catch (Exception exception)
         {
@@ -102,11 +102,11 @@ public class EventHubDataReceiver :
         }
     }
 
-    protected override async Task ActiveAndActualAgentsCompleted(StopContext context)
+    protected override async Task ActiveAndActualAgentsCompletedAsync(StopContext context)
     {
         var stopProcessing = _client.StopProcessingAsync();
 
-        await base.ActiveAndActualAgentsCompleted(context).ConfigureAwait(false);
+        await base.ActiveAndActualAgentsCompletedAsync(context).ConfigureAwait(false);
 
         await _executorPool.DisposeAsync().ConfigureAwait(false);
 
@@ -114,8 +114,8 @@ public class EventHubDataReceiver :
         _checkpointTokenSource.Cancel();
 
         await stopProcessing.ConfigureAwait(false);
-        _client.ProcessEventAsync -= HandleMessage;
-        _client.ProcessErrorAsync -= HandleError;
+        _client.ProcessEventAsync -= HandleMessageAsync;
+        _client.ProcessErrorAsync -= HandleErrorAsync;
 
         await _lockContext.DisposeAsync().ConfigureAwait(false);
         _checkpointTokenSource.Dispose();

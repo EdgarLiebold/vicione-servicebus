@@ -11,9 +11,9 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration;
 public sealed class JobDataMessageContextTests
 {
     private static readonly DateTimeOffset FireTime = new(2035, 4, 5, 6, 7, 8, TimeSpan.Zero);
-    private static readonly DateTimeOffset ScheduledTime = FireTime.AddMinutes(-1);
-    private static readonly DateTimeOffset PreviousTime = ScheduledTime.AddHours(-1);
-    private static readonly DateTimeOffset NextTime = ScheduledTime.AddHours(1);
+    private static readonly DateTimeOffset DueAt = FireTime.AddMinutes(-1);
+    private static readonly DateTimeOffset PreviousTime = DueAt.AddHours(-1);
+    private static readonly DateTimeOffset NextTime = DueAt.AddHours(1);
 
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-JOB-DATA", "serialized-metadata-roundtrip")]
@@ -46,7 +46,7 @@ public sealed class JobDataMessageContextTests
         Assert.Equal("alpha.Recurring.Trigger.beta", context.Headers.Get<string>(MessageHeaders.Quartz.ScheduleId));
         Assert.Equal("DEFAULT", context.Headers.Get<string>(MessageHeaders.Quartz.ScheduleGroup));
         Assert.Equal(FireTime, context.Headers.Get<DateTimeOffset>(MessageHeaders.Quartz.Sent));
-        Assert.Equal(ScheduledTime, context.Headers.Get<DateTimeOffset>(MessageHeaders.Quartz.Scheduled));
+        Assert.Equal(DueAt, context.Headers.Get<DateTimeOffset>(MessageHeaders.Quartz.Scheduled));
         Assert.Equal(PreviousTime, context.Headers.Get<DateTimeOffset>(MessageHeaders.Quartz.PreviousSent));
         Assert.Equal(NextTime, context.Headers.Get<DateTimeOffset>(MessageHeaders.Quartz.NextScheduled));
         Assert.Equal("token-42", context.Headers.Get<string>(MessageHeaders.SchedulingTokenId));
@@ -82,7 +82,7 @@ public sealed class JobDataMessageContextTests
         var context = new JobDataMessageContext(execution, ServiceBusMetadataJson.ObjectDeserializer);
         Guid? first = context.MessageId;
         Guid? second = context.MessageId;
-        DateTime? firstSentTime = context.SentTime;
+        DateTimeOffset? firstSentTime = context.SentTime;
 
         Assert.NotNull(first);
         Assert.Equal(first, second);
@@ -100,7 +100,7 @@ public sealed class JobDataMessageContextTests
             .WithIdentity(triggerName)
             .ForJob(job.Key)
             .UsingJobData(data)
-            .StartAt(ScheduledTime)
+            .StartAt(DueAt)
             .Build();
         var bundle = new TriggerFiredBundle
         {
@@ -109,7 +109,7 @@ public sealed class JobDataMessageContextTests
             Calendar = null,
             Recovering = false,
             FireTimeUtc = FireTime,
-            ScheduledFireTimeUtc = ScheduledTime,
+            ScheduledFireTimeUtc = DueAt,
             PreviousFireTimeUtc = PreviousTime,
             NextFireTimeUtc = NextTime,
         };
@@ -119,6 +119,6 @@ public sealed class JobDataMessageContextTests
 
     private sealed class NoOpJob : IJob
     {
-        public ValueTask Execute(IJobExecutionContext context, CancellationToken cancellationToken = default) => ValueTask.CompletedTask;
+        public ValueTask Execute(IJobExecutionContext context, CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken); return ValueTask.CompletedTask; }
     }
 }

@@ -85,7 +85,7 @@ public class InMemoryReceiveTransport :
         readonly TaskExecutor _executor;
         readonly IMessageQueue<InMemoryTransportContext, InMemoryTransportMessage> _queue;
         readonly Task _startupTask;
-        TopologyHandle _topologyHandle;
+        TopologyHandle _topologyHandle = null!;
 
         public ReceiveTransportAgent(InMemoryReceiveEndpointContext context, IMessageQueue<InMemoryTransportContext, InMemoryTransportMessage> queue)
             : base(context)
@@ -95,10 +95,10 @@ public class InMemoryReceiveTransport :
 
             _executor = new TaskExecutor(context.ConcurrentMessageLimit ?? context.PrefetchCount);
 
-            _startupTask = Startup();
+            _startupTask = StartupAsync();
         }
 
-        public Task Deliver(InMemoryTransportMessage message, CancellationToken cancellationToken)
+        public Task DeliverAsync(InMemoryTransportMessage message, CancellationToken cancellationToken)
         {
             if (IsStopping)
                 return Task.CompletedTask;
@@ -111,7 +111,7 @@ public class InMemoryReceiveTransport :
 
                 try
                 {
-                    await Dispatch(message.SequenceNumber, context, NoLockReceiveContext.Instance).ConfigureAwait(false);
+                    await DispatchAsync(message.SequenceNumber, context, NoLockReceiveContext.Instance).ConfigureAwait(false);
                 }
                 catch (Exception exception)
                 {
@@ -130,20 +130,20 @@ public class InMemoryReceiveTransport :
             context.CreateScope("inMemory");
         }
 
-        Task ReceiveTransportHandle.Stop(CancellationToken cancellationToken)
+        Task ReceiveTransportHandle.StopAsync(CancellationToken cancellationToken)
         {
-            return this.Stop("Stop Receive Transport", cancellationToken);
+            return this.StopAsync("Stop Receive Transport", cancellationToken);
         }
 
-        async Task Startup()
+        async Task StartupAsync()
         {
             try
             {
-                await _context.DependenciesReady.OrCanceled(Stopping).ConfigureAwait(false);
+                await _context.DependenciesReady.OrCanceledAsync(Stopping).ConfigureAwait(false);
 
                 _topologyHandle = _queue.ConnectMessageReceiver(_context.TransportContext, this);
 
-                await _context.TransportObservers.NotifyReady(_context.InputAddress).ConfigureAwait(false);
+                await _context.TransportObservers.NotifyReadyAsync(_context.InputAddress).ConfigureAwait(false);
 
                 SetReady();
             }
@@ -157,7 +157,7 @@ public class InMemoryReceiveTransport :
 
                 try
                 {
-                    await _context.TransportObservers.NotifyFaulted(_context.InputAddress, exception, true).ConfigureAwait(false);
+                    await _context.TransportObservers.NotifyFaultedAsync(_context.InputAddress, exception, true).ConfigureAwait(false);
                 }
                 catch (Exception observerException)
                 {
@@ -167,23 +167,23 @@ public class InMemoryReceiveTransport :
             }
         }
 
-        protected override async Task ActiveAndActualAgentsCompleted(StopContext context)
+        protected override async Task ActiveAndActualAgentsCompletedAsync(StopContext context)
         {
             _topologyHandle?.Disconnect();
 
             try
             {
-                await _startupTask.OrCanceled(context.CancellationToken).ConfigureAwait(false);
+                await _startupTask.OrCanceledAsync(context.CancellationToken).ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
             }
 
-            await base.ActiveAndActualAgentsCompleted(context).ConfigureAwait(false);
+            await base.ActiveAndActualAgentsCompletedAsync(context).ConfigureAwait(false);
 
             await _executor.DisposeAsync().ConfigureAwait(false);
 
-            await _context.TransportObservers.NotifyCompleted(_context.InputAddress, this).ConfigureAwait(false);
+            await _context.TransportObservers.NotifyCompletedAsync(_context.InputAddress, this).ConfigureAwait(false);
 
             _context.LogConsumerCompleted(DeliveryCount, ConcurrentDeliveryCount);
         }

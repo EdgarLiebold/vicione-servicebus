@@ -14,7 +14,7 @@ public sealed class PutMessageDataPropertyProviderTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-DATA-REPOSITORY-RESOLUTION", "owner-bound-repository-and-policy")]
-    public async Task ConstructorRepositoryAndPolicy_AreUsedByTheProvider()
+    public async Task ConstructorRepositoryAndPolicy_AreUsedByTheProviderAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var repository = new RecordingRepository();
@@ -31,7 +31,8 @@ public sealed class PutMessageDataPropertyProviderTests
             timeToLive: TimeSpan.FromMinutes(12));
         var provider = new PutMessageDataPropertyProvider<TestInput, string>(inputProvider, repository, policy);
 
-        MessageData<string> result = await provider.GetProperty(context);
+        MessageData<string> result = await provider.GetPropertyAsync(context, TestContext.Current.CancellationToken)
+            ?? throw new Xunit.Sdk.XunitException("Expected the message-data property provider to return a value.");
 
         Assert.Equal(repository.Address, result.Address);
         Assert.Equal("context-owned repository", await result.Value);
@@ -57,10 +58,8 @@ public sealed class PutMessageDataPropertyProviderTests
 
         public TimeSpan? TimeToLive { get; private set; }
 
-        public Task<Stream> Get(Uri address, CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
-
-        public async Task<Uri> Put(
+        public Task<Stream> GetAsync(Uri address, CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::System.IO.Stream>(cancellationToken); throw new NotSupportedException(); }
+        public async Task<Uri> PutAsync(
             Stream stream,
             TimeSpan? timeToLive = null,
             CancellationToken cancellationToken = default)

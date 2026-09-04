@@ -27,7 +27,7 @@ public sealed class ActiveMqLifecycleTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "retained-send-session-retires-with-connection")]
-    public async Task SharedSendSession_RetiresWhenItsConnectionFaults()
+    public async Task SharedSendSession_RetiresWhenItsConnectionFaultsAsync()
     {
         ExceptionListener? exceptionListener = null;
         var recoveredListener = new TaskCompletionSource<ExceptionListener>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -64,8 +64,8 @@ public sealed class ActiveMqLifecycleTests
 
         try
         {
-            SessionContext firstUse = await CaptureSession(sendSupervisor);
-            SessionContext secondUse = await CaptureSession(sendSupervisor);
+            SessionContext firstUse = await CaptureSessionAsync(sendSupervisor);
+            SessionContext secondUse = await CaptureSessionAsync(sendSupervisor);
             SessionContext firstCachedSession = UnwrapSharedSession(firstUse);
             Assert.Same(firstCachedSession, UnwrapSharedSession(secondUse));
             ExceptionListener activeListener = Assert.IsType<ExceptionListener>(exceptionListener);
@@ -73,7 +73,7 @@ public sealed class ActiveMqLifecycleTests
             activeListener(new NMSException("connection lost"));
             Assert.True(await listenerRemoved.Task.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken));
 
-            SessionContext recoveredUse = await CaptureSession(sendSupervisor);
+            SessionContext recoveredUse = await CaptureSessionAsync(sendSupervisor);
             Assert.NotSame(firstCachedSession, UnwrapSharedSession(recoveredUse));
             Assert.Same(
                 await recoveredListener.Task.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken),
@@ -81,14 +81,14 @@ public sealed class ActiveMqLifecycleTests
         }
         finally
         {
-            await sendSupervisor.Stop("test complete", CancellationToken.None);
-            await parent.Stop("test complete", CancellationToken.None);
+            await sendSupervisor.StopAsync("test complete", CancellationToken.None);
+            await parent.StopAsync("test complete", CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "auto-delete-cleanup-acquires-live-session-at-stop")]
-    public async Task AutoDeleteCleanup_AcquiresALiveSessionWhenTheEndpointStops()
+    public async Task AutoDeleteCleanup_AcquiresALiveSessionWhenTheEndpointStopsAsync()
     {
         const string queueName = "temporary-orders";
         bool sessionCreated = false;
@@ -114,7 +114,7 @@ public sealed class ActiveMqLifecycleTests
         });
         ConnectionContext connection = InterfaceProxy<ConnectionContext>.Create((method, _) => method.Name switch
         {
-            nameof(ConnectionContext.CreateSession) => Record(
+            nameof(ConnectionContext.CreateSessionAsync) => Record(
                 () => sessionCreated = true,
                 Task.FromResult(stopSession)),
             nameof(ConnectionContext.TryRemoveTemporaryEntity) => false,
@@ -131,7 +131,7 @@ public sealed class ActiveMqLifecycleTests
         var topology = new ActiveMqBrokerTopology([], [queue], []);
         var agent = new RemoveAutoDeleteAgent(FixedConnectionSupervisor(connection), topology);
 
-        await agent.Stop("endpoint stopping", TestContext.Current.CancellationToken);
+        await agent.StopAsync("endpoint stopping", TestContext.Current.CancellationToken);
 
         Assert.True(sessionCreated);
         Assert.Equal(queueName, deletedQueue);
@@ -141,7 +141,7 @@ public sealed class ActiveMqLifecycleTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "connection-disposed-after-close-failure")]
-    public async Task ConnectionDispose_AttemptsEveryCleanupStageAfterCloseFails()
+    public async Task ConnectionDispose_AttemptsEveryCleanupStageAfterCloseFailsAsync()
     {
         var closeFailure = new NMSException("close failed");
         bool disposed = false;
@@ -161,7 +161,7 @@ public sealed class ActiveMqLifecycleTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "connection-cleanup-aggregates-in-stage-order")]
-    public async Task ConnectionDispose_AggregatesMultipleFailuresInStageOrder()
+    public async Task ConnectionDispose_AggregatesMultipleFailuresInStageOrderAsync()
     {
         var closeFailure = new NMSException("close failed");
         var disposeFailure = new InvalidOperationException("dispose failed");
@@ -183,7 +183,7 @@ public sealed class ActiveMqLifecycleTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "single-aggregate-cleanup-failure-preserves-identity")]
-    public async Task ConnectionDispose_PreservesASoleAggregateFailureAsTheOriginalStageException()
+    public async Task ConnectionDispose_PreservesASoleAggregateFailureAsTheOriginalStageExceptionAsync()
     {
         var closeFailure = new AggregateException(
             "provider close failed",
@@ -203,7 +203,7 @@ public sealed class ActiveMqLifecycleTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "session-disposed-after-close-failure")]
-    public async Task SessionDispose_AttemptsDisposeAfterCloseFails()
+    public async Task SessionDispose_AttemptsDisposeAfterCloseFailsAsync()
     {
         var closeFailure = new NMSException("close failed");
         bool disposed = false;
@@ -229,7 +229,7 @@ public sealed class ActiveMqLifecycleTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "session-cleanup-aggregates-in-stage-order")]
-    public async Task SessionDispose_AggregatesMultipleFailuresInStageOrder()
+    public async Task SessionDispose_AggregatesMultipleFailuresInStageOrderAsync()
     {
         var closeFailure = new NMSException("close failed");
         var disposeFailure = new InvalidOperationException("dispose failed");
@@ -257,7 +257,7 @@ public sealed class ActiveMqLifecycleTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "auto-delete-cleanup-attempts-every-entity-after-failure")]
-    public async Task AutoDeleteCleanup_AggregatesFailuresInStableOrderAndAttemptsEveryDistinctEntity()
+    public async Task AutoDeleteCleanup_AggregatesFailuresInStableOrderAndAttemptsEveryDistinctEntityAsync()
     {
         var firstFailure = new NMSException("first queue failed");
         var secondFailure = new InvalidOperationException("topic failed");
@@ -279,7 +279,7 @@ public sealed class ActiveMqLifecycleTests
         });
         ConnectionContext connection = InterfaceProxy<ConnectionContext>.Create((method, _) => method.Name switch
         {
-            nameof(ConnectionContext.CreateSession) => Task.FromResult(stopSession),
+            nameof(ConnectionContext.CreateSessionAsync) => Task.FromResult(stopSession),
             nameof(ConnectionContext.TryRemoveTemporaryEntity) => false,
             _ => Default(method.ReturnType),
         });
@@ -296,7 +296,7 @@ public sealed class ActiveMqLifecycleTests
         var agent = new RemoveAutoDeleteAgent(FixedConnectionSupervisor(connection), topology);
 
         AggregateException actual = await Assert.ThrowsAsync<AggregateException>(
-            () => agent.Stop("endpoint stopping", TestContext.Current.CancellationToken));
+            () => agent.StopAsync("endpoint stopping", TestContext.Current.CancellationToken));
 
         Assert.Collection(
             actual.InnerExceptions,
@@ -309,7 +309,7 @@ public sealed class ActiveMqLifecycleTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "temporary-entity-removed-after-delete")]
-    public async Task TemporaryEntityDelete_RemovesTheSuccessfulRegistration()
+    public async Task TemporaryEntityDelete_RemovesTheSuccessfulRegistrationAsync()
     {
         await using ActiveMqConnectionContext context = CreateConnectionContext(
             InterfaceProxy<IConnection>.Create((method, _) => method.Name switch
@@ -336,7 +336,7 @@ public sealed class ActiveMqLifecycleTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "failed-temporary-delete-remains-retryable")]
-    public async Task TemporaryEntityDelete_RestoresTheRegistrationWhenTheBrokerDeleteFails()
+    public async Task TemporaryEntityDelete_RestoresTheRegistrationWhenTheBrokerDeleteFailsAsync()
     {
         await using ActiveMqConnectionContext context = CreateConnectionContext(
             InterfaceProxy<IConnection>.Create((method, _) => method.Name switch
@@ -356,13 +356,14 @@ public sealed class ActiveMqLifecycleTests
             () => context.TryRemoveTemporaryEntity(session, "temp-orders"));
 
         Assert.Equal("delete failed", exception.Message);
-        Assert.True(context.TryGetTemporaryEntity("temp-orders", out IDestination restored));
+        Assert.True(context.TryGetTemporaryEntity("temp-orders", out IDestination? restored));
+        Assert.NotNull(restored);
         Assert.Same(destination, restored);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "temporary-topic-registration-reused-by-publisher")]
-    public async Task AmqpTemporaryTopicRegistration_IsReusedOnlyForTopicDestinations()
+    public async Task AmqpTemporaryTopicRegistration_IsReusedOnlyForTopicDestinationsAsync()
     {
         await using ActiveMqConnectionContext connectionContext = CreateConnectionContext(
             InterfaceProxy<IConnection>.Create((method, _) => method.Name switch
@@ -399,9 +400,9 @@ public sealed class ActiveMqLifecycleTests
             session,
             TestContext.Current.CancellationToken);
 
-        IDestination topic = await sessionContext.GetDestination("logical-name", DestinationType.Topic);
-        IDestination temporaryTopic = await sessionContext.GetDestination("logical-name", DestinationType.TemporaryTopic);
-        IDestination queue = await sessionContext.GetDestination("logical-name", DestinationType.Queue);
+        IDestination topic = await sessionContext.GetDestinationAsync("logical-name", DestinationType.Topic, TestContext.Current.CancellationToken);
+        IDestination temporaryTopic = await sessionContext.GetDestinationAsync("logical-name", DestinationType.TemporaryTopic, TestContext.Current.CancellationToken);
+        IDestination queue = await sessionContext.GetDestinationAsync("logical-name", DestinationType.Queue, TestContext.Current.CancellationToken);
 
         Assert.Same(registeredTopic, topic);
         Assert.Same(registeredTopic, temporaryTopic);
@@ -411,7 +412,7 @@ public sealed class ActiveMqLifecycleTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "openwire-virtual-topic-keeps-canonical-publish-name")]
-    public async Task OpenWireVirtualTopicPublication_DoesNotUseATemporaryTopicRegistration()
+    public async Task OpenWireVirtualTopicPublication_DoesNotUseATemporaryTopicRegistrationAsync()
     {
         await using ActiveMqConnectionContext connectionContext = CreateConnectionContext(
             InterfaceProxy<IConnection>.Create((method, _) => method.Name switch
@@ -446,12 +447,8 @@ public sealed class ActiveMqLifecycleTests
             session,
             TestContext.Current.CancellationToken);
 
-        IDestination publishTopic = await sessionContext.GetDestination(
-            "VirtualTopic.logical-name",
-            DestinationType.Topic);
-        IDestination explicitTemporaryTopic = await sessionContext.GetDestination(
-            "VirtualTopic.logical-name",
-            DestinationType.TemporaryTopic);
+        IDestination publishTopic = await sessionContext.GetDestinationAsync("VirtualTopic.logical-name", DestinationType.Topic, TestContext.Current.CancellationToken);
+        IDestination explicitTemporaryTopic = await sessionContext.GetDestinationAsync("VirtualTopic.logical-name", DestinationType.TemporaryTopic, TestContext.Current.CancellationToken);
 
         Assert.Same(canonicalTopic, publishTopic);
         Assert.Same(registeredTopic, explicitTemporaryTopic);
@@ -476,10 +473,10 @@ public sealed class ActiveMqLifecycleTests
                 .GetField("_temporaryEntities", BindingFlags.Instance | BindingFlags.NonPublic)!
                 .GetValue(context));
 
-    private static async Task<SessionContext> CaptureSession(ISessionContextSupervisor supervisor)
+    private static async Task<SessionContext> CaptureSessionAsync(ISessionContextSupervisor supervisor)
     {
         var pipe = new CaptureSessionPipe();
-        await supervisor.Send(pipe, TestContext.Current.CancellationToken);
+        await supervisor.SendAsync(pipe, TestContext.Current.CancellationToken);
         return Assert.IsAssignableFrom<SessionContext>(pipe.Context);
     }
 
@@ -559,7 +556,7 @@ public sealed class ActiveMqLifecycleTests
     private static IConnectionContextSupervisor FixedConnectionSupervisor(ConnectionContext connection) =>
         InterfaceProxy<IConnectionContextSupervisor>.Create((method, args) => method.Name switch
         {
-            "Send" => Assert.IsAssignableFrom<IPipe<ConnectionContext>>(args![0]).Send(connection),
+            "SendAsync" => Assert.IsAssignableFrom<IPipe<ConnectionContext>>(args![0]).SendAsync(connection),
             _ => Default(method.ReturnType),
         });
 
@@ -578,7 +575,7 @@ public sealed class ActiveMqLifecycleTests
     {
         public SessionContext? Context { get; private set; }
 
-        public Task Send(SessionContext context)
+        public Task SendAsync(SessionContext context)
         {
             Context = context;
             return Task.CompletedTask;
@@ -607,7 +604,7 @@ public sealed class ActiveMqLifecycleTests
         public IActivePipeContextAgent<SessionContext> CreateActiveContext(
             ISupervisor supervisor,
             PipeContextHandle<SessionContext> contextHandle,
-            CancellationToken cancellationToken = default) =>
-            supervisor.AddActiveContext(contextHandle, contextHandle.Context);
+            CancellationToken cancellationToken = default)
+        { cancellationToken.ThrowIfCancellationRequested(); return supervisor.AddActiveContext(contextHandle, contextHandle.Context); }
     }
 }

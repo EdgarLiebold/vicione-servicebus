@@ -8,7 +8,7 @@ public sealed class GaugeTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-GAUGE-ZERO-ACTIVITY", "removal-awaits-observers")]
-    public async Task FinalRemoval_CompletesOnlyAfterTheZeroActivityObserverCompletes()
+    public async Task FinalRemoval_CompletesOnlyAfterTheZeroActivityObserverCompletesAsync()
     {
         var gauge = new Gauge();
         var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -20,7 +20,7 @@ public sealed class GaugeTests
         };
         gauge.Add();
 
-        Task removal = gauge.Remove();
+        Task removal = gauge.RemoveAsync(TestContext.Current.CancellationToken);
         await entered.Task;
 
         Assert.False(removal.IsCompleted);
@@ -33,7 +33,7 @@ public sealed class GaugeTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-GAUGE-ZERO-ACTIVITY", "ordered-observer-fault-ownership")]
-    public async Task FinalRemoval_InvokesObserversInOrderAndPreservesTheFirstFailure()
+    public async Task FinalRemoval_InvokesObserversInOrderAndPreservesTheFirstFailureAsync()
     {
         var gauge = new Gauge();
         var expected = new ObserverFailureException();
@@ -55,7 +55,8 @@ public sealed class GaugeTests
         };
         gauge.Add();
 
-        ObserverFailureException actual = await Assert.ThrowsAsync<ObserverFailureException>(gauge.Remove);
+        ObserverFailureException actual = await Assert.ThrowsAsync<ObserverFailureException>(
+            () => gauge.RemoveAsync(TestContext.Current.CancellationToken));
 
         Assert.Same(expected, actual);
         Assert.Equal(["first", "failed"], events);

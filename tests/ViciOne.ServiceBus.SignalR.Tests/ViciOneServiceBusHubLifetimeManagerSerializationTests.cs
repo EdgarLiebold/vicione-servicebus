@@ -36,7 +36,7 @@ public sealed class ViciOneServiceBusHubLifetimeManagerSerializationTests : IAsy
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SIGNALR-SERIALIZATION", "origin-json-policy-crosses-backplane")]
-    public async Task SendAll_PreservesTheOriginatingJsonNamingPolicyAcrossTheBackplane()
+    public async Task SendAll_PreservesTheOriginatingJsonNamingPolicyAcrossTheBackplaneAsync()
     {
         var first = _environment.Endpoints[0];
         var second = _environment.Endpoints[1];
@@ -48,7 +48,7 @@ public sealed class ViciOneServiceBusHubLifetimeManagerSerializationTests : IAsy
             [new TestPayload { TestProperty = "value" }],
             TestContext.Current.CancellationToken);
 
-        Assert.True(await second.All.Consumed.Any<All<TestHub>>(TestContext.Current.CancellationToken));
+        Assert.True(await second.All.Consumed.AnyAsync<All<TestHub>>(TestContext.Current.CancellationToken));
         var invocation = await receivingClient.ReadInvocationAsync(
             TimeSpan.FromSeconds(5),
             TestContext.Current.CancellationToken);
@@ -61,7 +61,7 @@ public sealed class ViciOneServiceBusHubLifetimeManagerSerializationTests : IAsy
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SIGNALR-SERIALIZATION", "messagepack-crosses-backplane")]
-    public async Task SendAll_PreservesMessagePackInvocationsAcrossTheBackplane()
+    public async Task SendAll_PreservesMessagePackInvocationsAcrossTheBackplaneAsync()
     {
         var first = _environment.Endpoints[0];
         var second = _environment.Endpoints[1];
@@ -74,7 +74,7 @@ public sealed class ViciOneServiceBusHubLifetimeManagerSerializationTests : IAsy
             ["World"],
             TestContext.Current.CancellationToken);
 
-        Assert.True(await second.All.Consumed.Any<All<TestHub>>(TestContext.Current.CancellationToken));
+        Assert.True(await second.All.Consumed.AnyAsync<All<TestHub>>(TestContext.Current.CancellationToken));
         var invocation = await receivingClient.ReadInvocationAsync(
             TimeSpan.FromSeconds(5),
             TestContext.Current.CancellationToken);

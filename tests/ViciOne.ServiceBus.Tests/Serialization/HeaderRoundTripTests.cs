@@ -9,7 +9,7 @@ public sealed class HeaderRoundTripTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-OBJECT-HEADER", "complete-interface-round-trip")]
-    public async Task ObjectHeader_RoundTripsEveryInterfaceMemberWithoutAliasingTheSenderObject()
+    public async Task ObjectHeader_RoundTripsEveryInterfaceMemberWithoutAliasingTheSenderObjectAsync()
     {
         TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -28,15 +28,15 @@ public sealed class HeaderRoundTripTests
             Claims = ["One", "two", "Three"],
         };
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.InputQueueSendEndpoint.SendAsync(
                 new HeaderMessage("value"),
                 context => context.Headers.Set("Claims-Identity", original),
                 cancellationToken);
             ConsumeContext<HeaderMessage> context =
-                (await handler.Consumed.SelectAsync(cancellationToken).First()).Context;
+                (await handler.Consumed.SelectAsync(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken)).Context;
             ClaimsIdentity identity = Assert.IsAssignableFrom<ClaimsIdentity>(
                 context.Headers.Get<ClaimsIdentity>("Claims-Identity"));
 
@@ -48,7 +48,7 @@ public sealed class HeaderRoundTripTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 

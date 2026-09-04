@@ -109,7 +109,7 @@ internal class DynamicImplementationBuilder :
         var propertyAccessors = candidates
             .SelectMany(x => x.GetAccessors())
             .ToHashSet();
-        MethodInfo unsupportedMethod = contractTypes
+        MethodInfo? unsupportedMethod = contractTypes
             .SelectMany(x => x.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly))
             .FirstOrDefault(x => !propertyAccessors.Contains(x));
 
@@ -234,12 +234,12 @@ internal class DynamicImplementationBuilder :
             if (fi != null)
             {
                 fieldArguments.Add(fi);
-                fieldArgumentValues.Add(GetCustomAttributeValue(namedArg.TypedValue));
+                fieldArgumentValues.Add(GetCustomAttributeValue(namedArg.TypedValue)!);
             }
             else if (pi != null)
             {
                 propertyArguments.Add(pi);
-                propertyArgumentValues.Add(GetCustomAttributeValue(namedArg.TypedValue));
+                propertyArgumentValues.Add(GetCustomAttributeValue(namedArg.TypedValue)!);
             }
         }
 
@@ -254,7 +254,7 @@ internal class DynamicImplementationBuilder :
             fieldArgumentValues.ToArray());
     }
 
-    static object GetCustomAttributeValue(CustomAttributeTypedArgument argument)
+    static object? GetCustomAttributeValue(CustomAttributeTypedArgument argument)
     {
         if (argument.Value is not ReadOnlyCollection<CustomAttributeTypedArgument> elements)
             return argument.Value;
@@ -286,7 +286,7 @@ internal class DynamicImplementationBuilder :
         return callback(builder);
     }
 
-    static Type[] ReturnTypeCustomModifiersForProperty(PropertyInfo propertyInfo)
+    static Type[]? ReturnTypeCustomModifiersForProperty(PropertyInfo propertyInfo)
     {
         var hasInitSetter = propertyInfo.SetMethod?.ReturnParameter?.GetRequiredCustomModifiers()?.Contains(typeof(IsExternalInit)) ?? false;
 

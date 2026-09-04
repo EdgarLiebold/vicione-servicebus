@@ -10,14 +10,14 @@ public class InMemoryExecuteContextOutboxSpecification<TArguments> :
     IOutboxConfigurator
     where TArguments : class
 {
-    readonly ISetScopedConsumeContext _setter;
+    readonly ISetScopedConsumeContext? _setter;
 
     public InMemoryExecuteContextOutboxSpecification(IRegistrationContext context)
         : this(context as ISetScopedConsumeContext ?? throw new ArgumentException(nameof(context)))
     {
     }
 
-    public InMemoryExecuteContextOutboxSpecification(ISetScopedConsumeContext setter)
+    public InMemoryExecuteContextOutboxSpecification(ISetScopedConsumeContext? setter)
     {
         _setter = setter;
     }

@@ -19,7 +19,7 @@ public sealed class SerializationFaultTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-FAULT", "serialization-exception")]
-    public async Task ConsumerSerializationException_ReachesTheRequestCallerAsAnExactFault()
+    public async Task ConsumerSerializationException_ReachesTheRequestCallerAsAnExactFaultAsync()
     {
         TimeSpan operationTimeout = GetOperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -30,7 +30,7 @@ public sealed class SerializationFaultTests
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
+            await harness.StartAsync(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
             IRequestClient<SerializationFailureRequest> client =
                 harness.CreateRequestClient<SerializationFailureRequest>();
             var request = new SerializationFailureRequest(
@@ -38,10 +38,10 @@ public sealed class SerializationFaultTests
             Guid requestMessageId = Guid.Parse("820b32b5-75cb-4a70-a90e-f63554896878");
 
             RequestFaultException exception = await Assert.ThrowsAsync<RequestFaultException>(() =>
-                client.GetResponse<SerializationFailureResponse>(
+                client.Advanced().GetResponseAsync<SerializationFailureResponse>(
                     request,
-                    configurator => configurator.UseExecute(context => context.MessageId = requestMessageId),
-                    cancellationToken));
+                    callback: configurator => configurator.UseExecute(context => context.MessageId = requestMessageId),
+                    cancellationToken: cancellationToken));
 
             Fault fault = Assert.IsAssignableFrom<Fault>(exception.Fault);
             Fault<SerializationFailureRequest> typedFault =
@@ -62,13 +62,13 @@ public sealed class SerializationFaultTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(operationTimeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(operationTimeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RECEIVE-FAULT", "unsupported-content-type")]
-    public async Task UnsupportedUnreadableBody_PublishesAnExactReceiveFaultWithoutDispatching()
+    public async Task UnsupportedUnreadableBody_PublishesAnExactReceiveFaultWithoutDispatchingAsync()
     {
         TimeSpan operationTimeout = GetOperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -94,8 +94,8 @@ public sealed class SerializationFaultTests
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
-            await harness.InputQueueSendEndpoint.Send<UnreadableMessage>(
+            await harness.StartAsync(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync<UnreadableMessage>(
                     new { Value = "must-not-be-dispatched" },
                     context =>
                     {
@@ -122,13 +122,13 @@ public sealed class SerializationFaultTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(operationTimeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(operationTimeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RECEIVE-FAULT", "nested-contract-type-mismatch")]
-    public async Task NestedContractTypeMismatch_PublishesAReceiveFaultWithoutDispatching()
+    public async Task NestedContractTypeMismatch_PublishesAReceiveFaultWithoutDispatchingAsync()
     {
         TimeSpan operationTimeout = GetOperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -155,8 +155,8 @@ public sealed class SerializationFaultTests
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
-            await harness.InputQueueSendEndpoint.Send<MalformedOrder>(
+            await harness.StartAsync(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync<MalformedOrder>(
                     new
                     {
                         OrderId = Guid.Empty,
@@ -187,7 +187,7 @@ public sealed class SerializationFaultTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(operationTimeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(operationTimeout, CancellationToken.None);
         }
     }
 

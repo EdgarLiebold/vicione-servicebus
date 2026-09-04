@@ -15,7 +15,7 @@ public class GroupManagementConsumer<THub> :
         _hubLifetimeManager = hubLifetimeManager;
     }
 
-    public Task Consume(ConsumeContext<GroupManagement<THub>> context)
+    public Task ConsumeAsync(ConsumeContext<GroupManagement<THub>> context)
     {
         var connection = _hubLifetimeManager.Connections[context.Message.ConnectionId];
 
@@ -27,6 +27,6 @@ public class GroupManagementConsumer<THub> :
         else if (context.Message.Action == GroupAction.Add)
             _hubLifetimeManager.AddGroupAsyncCore(connection, context.Message.GroupName);
 
-        return context.RespondAsync<Ack<THub>>(new { _hubLifetimeManager.ServerName });
+        return context.Advanced().RespondAsync<Ack<THub>>(new { _hubLifetimeManager.ServerName });
     }
 }

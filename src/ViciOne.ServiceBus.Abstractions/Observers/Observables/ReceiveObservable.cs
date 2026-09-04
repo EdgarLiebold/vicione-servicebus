@@ -8,30 +8,30 @@ public class ReceiveObservable :
     Connectable<IReceiveObserver>,
     IReceiveObserver
 {
-    public Task PreReceive(ReceiveContext context)
+    public Task PreReceiveAsync(ReceiveContext context)
     {
-        return ForEachAsync(x => x.PreReceive(context));
+        return ForEachAsync(x => x.PreReceiveAsync(context));
     }
 
-    public Task PostReceive(ReceiveContext context)
+    public Task PostReceiveAsync(ReceiveContext context)
     {
-        return ForEachAsync(x => x.PostReceive(context));
+        return ForEachAsync(x => x.PostReceiveAsync(context));
     }
 
-    public Task PostConsume<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
+    public Task PostConsumeAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
         where T : class
     {
-        return ForEachAsync(x => x.PostConsume(context, duration, consumerType));
+        return ForEachAsync(x => x.PostConsumeAsync(context, duration, consumerType));
     }
 
-    public Task ConsumeFault<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
+    public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
         where T : class
     {
-        return ForEachAsync(x => x.ConsumeFault(context, duration, consumerType, exception));
+        return ForEachAsync(x => x.ConsumeFaultAsync(context, duration, consumerType, exception));
     }
 
-    public Task ReceiveFault(ReceiveContext context, Exception exception)
+    public Task ReceiveFaultAsync(ReceiveContext context, Exception exception)
     {
-        return ForEachAsync(x => x.ReceiveFault(context, exception));
+        return ForEachAsync(x => x.ReceiveFaultAsync(context, exception));
     }
 }

@@ -66,9 +66,9 @@ class ConfigurationHostSettings :
     public ICredentialsProvider? CredentialsProvider { get; set; }
     public uint? RequestedFrameMax { get; set; }
 
-    public Task Refresh(ConnectionFactory connectionFactory)
+    public Task RefreshAsync(ConnectionFactory connectionFactory, CancellationToken cancellationToken = default)
     {
-        return OnRefreshConnectionFactory?.Invoke(connectionFactory) ?? Task.CompletedTask;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return OnRefreshConnectionFactory?.Invoke(connectionFactory) ?? Task.CompletedTask;
     }
 
     public void ConfigureBatch(Action<ConfigurationBatchSettings> configure)

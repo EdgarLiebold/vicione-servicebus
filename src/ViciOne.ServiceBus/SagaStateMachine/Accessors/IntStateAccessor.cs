@@ -33,14 +33,14 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             _write = WritePropertyCache<TInstance>.GetProperty<int>(_propertyInfo);
         }
 
-        Task<State<TInstance>> IStateAccessor<TInstance>.Get(BehaviorContext<TInstance> context)
+        Task<State<TInstance>?> IStateAccessor<TInstance>.GetAsync(BehaviorContext<TInstance> context, CancellationToken cancellationToken)
         {
             var stateIndex = _read.Get(context.Saga);
 
             return Task.FromResult(_index[stateIndex]);
         }
 
-        Task IStateAccessor<TInstance>.Set(BehaviorContext<TInstance> context, State<TInstance> state)
+        Task IStateAccessor<TInstance>.SetAsync(BehaviorContext<TInstance> context, State<TInstance> state, CancellationToken cancellationToken)
         {
             if (state == null)
                 throw new ArgumentNullException(nameof(state));
@@ -54,9 +54,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
             _write.Set(context.Saga, stateIndex);
 
-            State<TInstance> previousState = _index[previousIndex];
+            State<TInstance>? previousState = _index[previousIndex];
 
-            return _observer.StateChanged(context, state, previousState);
+            return _observer.StateChangedAsync(context, state, previousState);
         }
 
         public Expression<Func<TInstance, bool>> GetStateExpression(params State[] states)
@@ -66,7 +66,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
             var parameterExpression = Expression.Parameter(typeof(TInstance), "instance");
 
-            var statePropertyExpression = Expression.Property(parameterExpression, _propertyInfo.GetMethod);
+            var getMethod = _propertyInfo.GetMethod
+                ?? throw new InvalidOperationException($"The state property '{_propertyInfo.Name}' does not have a getter.");
+            var statePropertyExpression = Expression.Property(parameterExpression, getMethod);
 
             var stateExpression = states.Select(state => Expression.Equal(statePropertyExpression, Expression.Constant(_index[state.Name])))
                 .Aggregate((left, right) => Expression.Or(left, right));

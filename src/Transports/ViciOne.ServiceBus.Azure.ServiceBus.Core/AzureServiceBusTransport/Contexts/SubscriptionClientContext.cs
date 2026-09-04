@@ -14,10 +14,10 @@ public class SubscriptionClientContext :
 {
     readonly IAgent _agent;
     readonly object _faultStopLock = new object();
-    Task _faultStopTask;
+    Task? _faultStopTask;
     readonly SubscriptionSettings _settings;
-    ServiceBusProcessor _queueClient;
-    ServiceBusSessionProcessor _sessionClient;
+    ServiceBusProcessor? _queueClient;
+    ServiceBusSessionProcessor? _sessionClient;
 
     public SubscriptionClientContext(ConnectionContext connectionContext, Uri inputAddress,
         SubscriptionSettings settings, IAgent agent)
@@ -65,24 +65,24 @@ public class SubscriptionClientContext :
         _sessionClient.ProcessErrorAsync += exceptionHandler;
     }
 
-    public async Task StartAsync()
+    public async Task StartAsync(CancellationToken cancellationToken = default)
     {
         if (_queueClient != null)
-            await _queueClient.StartProcessingAsync();
+            await _queueClient.StartProcessingAsync(cancellationToken: cancellationToken);
 
         if (_sessionClient != null)
-            await _sessionClient.StartProcessingAsync();
+            await _sessionClient.StartProcessingAsync(cancellationToken: cancellationToken);
     }
 
-    public async Task ShutdownAsync()
+    public async Task ShutdownAsync(CancellationToken cancellationToken = default)
     {
         try
         {
             if (_queueClient is { IsClosed: false })
-                await _queueClient.StopProcessingAsync().ConfigureAwait(false);
+                await _queueClient.StopProcessingAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 
             if (_sessionClient is { IsClosed: false })
-                await _sessionClient.StopProcessingAsync().ConfigureAwait(false);
+                await _sessionClient.StopProcessingAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
         catch (Exception exception)
         {
@@ -90,15 +90,15 @@ public class SubscriptionClientContext :
         }
     }
 
-    public async Task CloseAsync()
+    public async Task CloseAsync(CancellationToken cancellationToken = default)
     {
         try
         {
             if (_queueClient is { IsClosed: false })
-                await _queueClient.CloseAsync().ConfigureAwait(false);
+                await _queueClient.CloseAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 
             if (_sessionClient is { IsClosed: false })
-                await _sessionClient.CloseAsync().ConfigureAwait(false);
+                await _sessionClient.CloseAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
         catch (Exception exception)
         {
@@ -106,26 +106,26 @@ public class SubscriptionClientContext :
         }
     }
 
-    public Task NotifyFaulted(Exception exception, string entityPath)
+    public Task NotifyFaultedAsync(Exception exception, string entityPath, CancellationToken cancellationToken = default)
     {
-        // Azure invokes this from the processor callback. Defer closing the same processor, but
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken);        // Azure invokes this from the processor callback. Defer closing the same processor, but
         // retain the task and consume every stop outcome in this context owner.
         lock (_faultStopLock)
         {
             if (_faultStopTask == null || _faultStopTask.IsCompleted)
-                _faultStopTask = StopAfterCallback(entityPath);
+                _faultStopTask = StopAfterCallbackAsync(entityPath);
         }
 
         return Task.CompletedTask;
     }
 
-    async Task StopAfterCallback(string entityPath)
+    async Task StopAfterCallbackAsync(string entityPath)
     {
         await Task.Yield();
 
         try
         {
-            await _agent.Stop($"Unrecoverable exception on {entityPath}").ConfigureAwait(false);
+            await _agent.StopAsync($"Unrecoverable exception on {entityPath}").ConfigureAwait(false);
         }
         catch (Exception stopException)
         {

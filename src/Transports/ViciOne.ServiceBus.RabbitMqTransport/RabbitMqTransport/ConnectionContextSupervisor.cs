@@ -25,10 +25,10 @@ public class ConnectionContextSupervisor :
         return new RabbitMqEndpointAddress(_hostConfiguration.HostAddress, address);
     }
 
-    public Task<ISendTransport> CreateSendTransport(RabbitMqReceiveEndpointContext receiveEndpointContext,
-        IChannelContextSupervisor channelContextSupervisor, Uri address)
+    public Task<ISendTransport> CreateSendTransportAsync(RabbitMqReceiveEndpointContext receiveEndpointContext,
+        IChannelContextSupervisor channelContextSupervisor, Uri address, CancellationToken cancellationToken = default)
     {
-        LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Transports.ISendTransport>(cancellationToken); LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
 
         var endpointAddress = new RabbitMqEndpointAddress(_hostConfiguration.HostAddress, address);
 
@@ -40,14 +40,14 @@ public class ConnectionContextSupervisor :
 
         var configureTopology = new ConfigureRabbitMqTopologyFilter<SendSettings>(settings, brokerTopology);
 
-        return CreateSendTransport(receiveEndpointContext, channelContextSupervisor, configureTopology, settings.ExchangeName, endpointAddress);
+        return CreateSendTransportAsync(receiveEndpointContext, channelContextSupervisor, configureTopology, settings.ExchangeName, endpointAddress);
     }
 
-    public Task<ISendTransport> CreatePublishTransport<T>(RabbitMqReceiveEndpointContext receiveEndpointContext,
-        IChannelContextSupervisor channelContextSupervisor)
+    public Task<ISendTransport> CreatePublishTransportAsync<T>(RabbitMqReceiveEndpointContext receiveEndpointContext,
+        IChannelContextSupervisor channelContextSupervisor, CancellationToken cancellationToken = default)
         where T : class
     {
-        LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Transports.ISendTransport>(cancellationToken); LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
 
         IRabbitMqMessagePublishTopology<T> publishTopology = _topologyConfiguration.Publish.GetMessageTopology<T>();
 
@@ -59,11 +59,11 @@ public class ConnectionContextSupervisor :
 
         var endpointAddress = settings.GetSendAddress(_hostConfiguration.HostAddress);
 
-        return CreateSendTransport(receiveEndpointContext, channelContextSupervisor, configureTopology, publishTopology.Exchange.ExchangeName,
+        return CreateSendTransportAsync(receiveEndpointContext, channelContextSupervisor, configureTopology, publishTopology.Exchange.ExchangeName,
             endpointAddress);
     }
 
-    Task<ISendTransport> CreateSendTransport(ReceiveEndpointContext receiveEndpointContext, IChannelContextSupervisor channelContextSupervisor,
+    Task<ISendTransport> CreateSendTransportAsync(ReceiveEndpointContext receiveEndpointContext, IChannelContextSupervisor channelContextSupervisor,
         ConfigureRabbitMqTopologyFilter<SendSettings> filter, string exchangeName, RabbitMqEndpointAddress endpointAddress)
     {
         var supervisor = new ChannelContextSupervisor(channelContextSupervisor);

@@ -12,8 +12,8 @@ public class ProcessorContextSupervisor :
     IProcessorContextSupervisor
 {
     public ProcessorContextSupervisor(IConnectionContextSupervisor supervisor, IHostConfiguration hostConfiguration,
-        Func<EventProcessorClient> clientFactory, Func<PartitionClosingEventArgs, Task> partitionClosingHandler,
-        Func<PartitionInitializingEventArgs, Task> partitionInitializingHandler)
+        Func<EventProcessorClient> clientFactory, Func<PartitionClosingEventArgs, Task>? partitionClosingHandler,
+        Func<PartitionInitializingEventArgs, Task>? partitionInitializingHandler)
         : base(new ProcessorContextFactory(supervisor, hostConfiguration, clientFactory,
             partitionClosingHandler,
             partitionInitializingHandler))

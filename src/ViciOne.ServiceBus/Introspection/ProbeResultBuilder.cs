@@ -11,20 +11,24 @@ public class ProbeResultBuilder :
 {
     readonly Guid _probeId;
     readonly Guid _resultId;
-    readonly DateTime _startTimestamp;
+    readonly DateTimeOffset _startTimestamp;
+    readonly long _startedAt;
+    readonly TimeProvider _timeProvider;
 
-    public ProbeResultBuilder(Guid probeId, CancellationToken cancellationToken)
+    public ProbeResultBuilder(Guid probeId, CancellationToken cancellationToken, TimeProvider? timeProvider = null)
         : base(cancellationToken)
     {
         _probeId = probeId;
+        _timeProvider = timeProvider ?? TimeProvider.System;
 
         _resultId = Guid.NewGuid();
-        _startTimestamp = DateTime.UtcNow;
+        _startTimestamp = _timeProvider.GetUtcNow();
+        _startedAt = _timeProvider.GetTimestamp();
     }
 
     public new ProbeResult Build()
     {
-        var duration = DateTime.UtcNow - _startTimestamp;
+        TimeSpan duration = _timeProvider.GetElapsedTime(_startedAt);
 
         return new Result(_probeId, _resultId, _startTimestamp, duration, HostMetadataCache.Host, base.Build());
     }
@@ -33,7 +37,8 @@ public class ProbeResultBuilder :
     class Result :
         ProbeResult
     {
-        public Result(Guid probeId, Guid resultId, DateTime startTimestamp, TimeSpan duration, HostInfo host, IDictionary<string, object> results)
+        public Result(Guid probeId, Guid resultId, DateTimeOffset startTimestamp, TimeSpan duration, HostInfo host,
+            IDictionary<string, object> results)
         {
             ProbeId = probeId;
             ResultId = resultId;
@@ -45,7 +50,7 @@ public class ProbeResultBuilder :
 
         public Guid ResultId { get; }
         public Guid ProbeId { get; }
-        public DateTime StartTimestamp { get; }
+        public DateTimeOffset StartTimestamp { get; }
         public TimeSpan Duration { get; }
         public HostInfo Host { get; }
         public IDictionary<string, object> Results { get; }

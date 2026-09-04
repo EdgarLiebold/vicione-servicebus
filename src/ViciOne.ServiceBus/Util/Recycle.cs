@@ -10,7 +10,7 @@ namespace ViciOne.ServiceBus.Util;
 public class Recycle<T>
     where T : class, IAgent
 {
-    Lazy<T> _supervisor;
+    Lazy<T> _supervisor = null!;
 
     public Recycle(Func<T> supervisorFactory)
     {

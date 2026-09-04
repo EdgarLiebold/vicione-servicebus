@@ -21,36 +21,36 @@ public class FaultedPublishActivity<TSaga, TException, TMessage> :
         inspector.Visit(this);
     }
 
-    public Task Execute(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
-        return next.Execute(context);
+        return next.ExecuteAsync(context);
     }
 
-    public Task Execute<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+    public Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
-        return next.Execute(context);
+        return next.ExecuteAsync(context);
     }
 
-    public async Task Faulted<T>(BehaviorExceptionContext<TSaga, T> context,
+    public async Task FaultedAsync<T>(BehaviorExceptionContext<TSaga, T> context,
         IBehavior<TSaga> next)
         where T : Exception
     {
         if (context is BehaviorExceptionContext<TSaga, TException> exceptionContext)
-            await _messageFactory.Use(exceptionContext, (ctx, s) => ctx.Publish(s.Message, s.Pipe, ctx.CancellationToken)).ConfigureAwait(false);
+            await _messageFactory.UseAsync(exceptionContext, (ctx, s) => ctx.PublishAsync(s.Message, s.Pipe, ctx.CancellationToken)).ConfigureAwait(false);
 
-        await next.Faulted(context).ConfigureAwait(false);
+        await next.FaultedAsync(context).ConfigureAwait(false);
     }
 
-    public async Task Faulted<T, TOtherException>(BehaviorExceptionContext<TSaga, T, TOtherException> context,
+    public async Task FaultedAsync<T, TOtherException>(BehaviorExceptionContext<TSaga, T, TOtherException> context,
         IBehavior<TSaga, T> next)
         where T : class
         where TOtherException : Exception
     {
         if (context is BehaviorExceptionContext<TSaga, T, TException> exceptionContext)
-            await _messageFactory.Use(exceptionContext, (ctx, s) => ctx.Publish(s.Message, s.Pipe, ctx.CancellationToken)).ConfigureAwait(false);
+            await _messageFactory.UseAsync(exceptionContext, (ctx, s) => ctx.PublishAsync(s.Message, s.Pipe, ctx.CancellationToken)).ConfigureAwait(false);
 
-        await next.Faulted(context).ConfigureAwait(false);
+        await next.FaultedAsync(context).ConfigureAwait(false);
     }
 
     public void Probe(ProbeContext context)
@@ -84,18 +84,18 @@ public class FaultedPublishActivity<TSaga, TData, TException, TMessage> :
         context.CreateScope("publish-faulted");
     }
 
-    public Task Execute(BehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
+    public Task ExecuteAsync(BehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
     {
-        return next.Execute(context);
+        return next.ExecuteAsync(context);
     }
 
-    public async Task Faulted<T>(BehaviorExceptionContext<TSaga, TData, T> context,
+    public async Task FaultedAsync<T>(BehaviorExceptionContext<TSaga, TData, T> context,
         IBehavior<TSaga, TData> next)
         where T : Exception
     {
         if (context is BehaviorExceptionContext<TSaga, TData, TException> exceptionContext)
-            await _messageFactory.Use(exceptionContext, (ctx, s) => ctx.Publish(s.Message, s.Pipe, ctx.CancellationToken)).ConfigureAwait(false);
+            await _messageFactory.UseAsync(exceptionContext, (ctx, s) => ctx.PublishAsync(s.Message, s.Pipe, ctx.CancellationToken)).ConfigureAwait(false);
 
-        await next.Faulted(context).ConfigureAwait(false);
+        await next.FaultedAsync(context).ConfigureAwait(false);
     }
 }

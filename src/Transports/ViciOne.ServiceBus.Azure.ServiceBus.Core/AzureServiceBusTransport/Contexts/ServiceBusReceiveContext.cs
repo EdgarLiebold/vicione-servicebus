@@ -35,7 +35,7 @@ public sealed class ServiceBusReceiveContext :
 
     public TimeSpan TimeToLive => _message.TimeToLive;
 
-    public DateTime ExpiresAt => _message.ExpiresAt.UtcDateTime;
+    public DateTimeOffset ExpiresAt => _message.ExpiresAt.UtcDateTime;
 
     public IReadOnlyDictionary<string, object> Properties => _message.ApplicationProperties;
 
@@ -48,7 +48,7 @@ public sealed class ServiceBusReceiveContext :
 
     public string LockToken => _message.LockToken;
 
-    public DateTime LockedUntil => _message.LockedUntil.UtcDateTime;
+    public DateTimeOffset LockedUntil => _message.LockedUntil.UtcDateTime;
 
     public string SessionId => _message.SessionId;
 
@@ -62,11 +62,11 @@ public sealed class ServiceBusReceiveContext :
 
     public string ReplyTo => _message.ReplyTo;
 
-    public DateTime EnqueuedTime => _message.EnqueuedTime.UtcDateTime;
+    public DateTimeOffset EnqueuedTime => _message.EnqueuedTime.UtcDateTime;
 
-    public DateTime ScheduledEnqueueTime => _message.ScheduledEnqueueTime.UtcDateTime;
+    public DateTimeOffset ScheduledEnqueueTime => _message.ScheduledEnqueueTime.UtcDateTime;
 
-    public IDictionary<string, object> GetTransportProperties()
+    public IDictionary<string, object>? GetTransportProperties()
     {
         var properties = new Lazy<Dictionary<string, object>>(() => new Dictionary<string, object>());
 
@@ -84,7 +84,7 @@ public sealed class ServiceBusReceiveContext :
 
     protected override ContentType GetContentType()
     {
-        ContentType contentType = null;
+        ContentType? contentType = null;
         if (!string.IsNullOrWhiteSpace(_message.ContentType))
             contentType = ConvertToContentType(_message.ContentType);
 

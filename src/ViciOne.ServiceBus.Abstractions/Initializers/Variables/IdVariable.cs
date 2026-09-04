@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Initializers.Variables;
@@ -18,8 +19,9 @@ public class IdVariable :
         _id = id;
     }
 
-    Task<Guid> IInitializerVariable<Guid>.GetValue<TMessage>(InitializeContext<TMessage> context)
+    Task<Guid> IInitializerVariable<Guid>.GetValueAsync<TMessage>(InitializeContext<TMessage> context, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         var timestampContext = context.GetOrAddPayload<IdContext>(() => new Context(_id));
 
         return Task.FromResult(timestampContext.Id);

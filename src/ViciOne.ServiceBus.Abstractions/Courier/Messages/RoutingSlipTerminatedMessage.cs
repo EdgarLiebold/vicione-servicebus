@@ -13,7 +13,7 @@ public class RoutingSlipTerminatedMessage :
     {
     }
 
-    public RoutingSlipTerminatedMessage(HostInfo host, Guid trackingNumber, string activityName, Guid executionId, DateTime timestamp, TimeSpan duration,
+    public RoutingSlipTerminatedMessage(HostInfo host, Guid trackingNumber, string activityName, Guid executionId, DateTimeOffset timestamp, TimeSpan duration,
         IDictionary<string, object> variables, IEnumerable<Activity> discardedItinerary)
     {
         Host = host;
@@ -28,7 +28,7 @@ public class RoutingSlipTerminatedMessage :
     }
 
     public Guid TrackingNumber { get; set; }
-    public DateTime Timestamp { get; set; }
+    public DateTimeOffset Timestamp { get; set; }
     public TimeSpan Duration { get; set; }
 
     public string ActivityName { get; set; } = null!;

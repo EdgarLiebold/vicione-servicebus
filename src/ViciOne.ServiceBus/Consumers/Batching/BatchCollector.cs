@@ -13,7 +13,7 @@ public class BatchCollector<TMessage> :
     readonly IPipe<ConsumeContext<Batch<TMessage>>> _consumerPipe;
     readonly TaskExecutor _dispatcher;
     readonly BatchOptions _options;
-    BatchConsumer<TMessage> _currentConsumer;
+    BatchConsumer<TMessage>? _currentConsumer;
 
     public BatchCollector(BatchOptions options, IPipe<ConsumeContext<Batch<TMessage>>> consumerPipe)
     {
@@ -30,16 +30,16 @@ public class BatchCollector<TMessage> :
         await _dispatcher.DisposeAsync().ConfigureAwait(false);
     }
 
-    public Task<BatchConsumer<TMessage>> Collect(ConsumeContext<TMessage> context)
+    public Task<BatchConsumer<TMessage>> CollectAsync(ConsumeContext<TMessage> context, CancellationToken cancellationToken = default)
     {
-        var currentActivity = Activity.Current;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Batching.BatchConsumer<TMessage>>(cancellationToken); var currentActivity = Activity.Current;
 
-        return _collector.ExecuteAsync(() => Add(context, currentActivity), context.CancellationToken);
+        return _collector.ExecuteAsync(() => AddAsync(context, currentActivity), context.CancellationToken);
     }
 
-    public Task Complete(ConsumeContext<TMessage> context, BatchConsumer<TMessage> consumer)
+    public Task CompleteAsync(ConsumeContext<TMessage> context, BatchConsumer<TMessage> consumer, CancellationToken cancellationToken = default)
     {
-        return _collector.ExecuteAsync(() => Remove(consumer));
+        return _collector.ExecuteAsync(() => RemoveAsync(consumer), cancellationToken: cancellationToken);
     }
 
     public void Probe(ProbeContext context)
@@ -49,7 +49,7 @@ public class BatchCollector<TMessage> :
         _consumerPipe.Probe(scope);
     }
 
-    Task Remove(BatchConsumer<TMessage> consumer)
+    Task RemoveAsync(BatchConsumer<TMessage> consumer)
     {
         if (_currentConsumer == consumer)
             _currentConsumer = null;
@@ -57,18 +57,18 @@ public class BatchCollector<TMessage> :
         return Task.CompletedTask;
     }
 
-    async Task<BatchConsumer<TMessage>> Add(ConsumeContext<TMessage> context, Activity currentActivity)
+    async Task<BatchConsumer<TMessage>> AddAsync(ConsumeContext<TMessage> context, Activity? currentActivity)
     {
         if (_currentConsumer != null)
         {
-            if (context.GetRetryAttempt() > 0)
-                await _currentConsumer.ForceComplete().ConfigureAwait(false);
+            if (context.Advanced().GetRetryAttempt() > 0)
+                await _currentConsumer.ForceCompleteAsync().ConfigureAwait(false);
         }
 
         if (_currentConsumer == null || _currentConsumer.IsCompleted)
             _currentConsumer = new BatchConsumer<TMessage>(_options, _collector, _dispatcher, _consumerPipe, context.GetTimeProvider());
 
-        await _currentConsumer.Add(context, currentActivity).ConfigureAwait(false);
+        await _currentConsumer.AddAsync(context, currentActivity).ConfigureAwait(false);
 
         return _currentConsumer;
     }
@@ -78,6 +78,7 @@ public class BatchCollector<TMessage> :
 public class BatchCollector<TMessage, TKey> :
     IBatchCollector<TMessage>
     where TMessage : class
+    where TKey : notnull
 {
     readonly TaskExecutor _collector;
     readonly IDictionary<TKey, BatchConsumer<TMessage>> _collectors;
@@ -85,7 +86,7 @@ public class BatchCollector<TMessage, TKey> :
     readonly TaskExecutor _dispatcher;
     readonly IGroupKeyProvider<TMessage, TKey> _keyProvider;
     readonly BatchOptions _options;
-    BatchConsumer<TMessage> _currentConsumer;
+    BatchConsumer<TMessage>? _currentConsumer;
 
     public BatchCollector(BatchOptions options, IPipe<ConsumeContext<Batch<TMessage>>> consumerPipe, IGroupKeyProvider<TMessage, TKey> keyProvider)
     {
@@ -104,16 +105,16 @@ public class BatchCollector<TMessage, TKey> :
         await _dispatcher.DisposeAsync().ConfigureAwait(false);
     }
 
-    public Task<BatchConsumer<TMessage>> Collect(ConsumeContext<TMessage> context)
+    public Task<BatchConsumer<TMessage>> CollectAsync(ConsumeContext<TMessage> context, CancellationToken cancellationToken = default)
     {
-        var currentActivity = Activity.Current;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Batching.BatchConsumer<TMessage>>(cancellationToken); var currentActivity = Activity.Current;
 
-        return _collector.ExecuteAsync(() => Add(context, currentActivity), context.CancellationToken);
+        return _collector.ExecuteAsync(() => AddAsync(context, currentActivity), context.CancellationToken);
     }
 
-    public Task Complete(ConsumeContext<TMessage> context, BatchConsumer<TMessage> consumer)
+    public Task CompleteAsync(ConsumeContext<TMessage> context, BatchConsumer<TMessage> consumer, CancellationToken cancellationToken = default)
     {
-        return _collector.ExecuteAsync(() => Remove(context, consumer));
+        return _collector.ExecuteAsync(() => RemoveAsync(context, consumer), cancellationToken: cancellationToken);
     }
 
     public void Probe(ProbeContext context)
@@ -123,11 +124,11 @@ public class BatchCollector<TMessage, TKey> :
         _consumerPipe.Probe(scope);
     }
 
-    Task Remove(ConsumeContext<TMessage> context, BatchConsumer<TMessage> consumer)
+    Task RemoveAsync(ConsumeContext<TMessage> context, BatchConsumer<TMessage> consumer)
     {
         if (_currentConsumer == consumer)
             _currentConsumer = null;
-        else if (_keyProvider.TryGetKey(context, out var key) && _collectors.TryGetValue(key, out BatchConsumer<TMessage> existingConsumer))
+        else if (_keyProvider.TryGetKey(context, out var key) && _collectors.TryGetValue(key, out BatchConsumer<TMessage>? existingConsumer))
         {
             if (existingConsumer == consumer)
                 _collectors.Remove(key);
@@ -136,14 +137,14 @@ public class BatchCollector<TMessage, TKey> :
         return Task.CompletedTask;
     }
 
-    async Task<BatchConsumer<TMessage>> Add(ConsumeContext<TMessage> context, Activity currentActivity)
+    async Task<BatchConsumer<TMessage>> AddAsync(ConsumeContext<TMessage> context, Activity? currentActivity)
     {
         if (_keyProvider.TryGetKey(context, out var key))
         {
-            if (_collectors.TryGetValue(key, out BatchConsumer<TMessage> consumer))
+            if (_collectors.TryGetValue(key, out BatchConsumer<TMessage>? consumer))
             {
-                if (context.GetRetryAttempt() > 0)
-                    await consumer.ForceComplete().ConfigureAwait(false);
+                if (context.Advanced().GetRetryAttempt() > 0)
+                    await consumer.ForceCompleteAsync().ConfigureAwait(false);
             }
 
             if (consumer == null || consumer.IsCompleted)
@@ -152,21 +153,21 @@ public class BatchCollector<TMessage, TKey> :
                 _collectors[key] = consumer;
             }
 
-            await consumer.Add(context, currentActivity).ConfigureAwait(false);
+            await consumer.AddAsync(context, currentActivity).ConfigureAwait(false);
 
             return consumer;
         }
 
         if (_currentConsumer != null)
         {
-            if (context.GetRetryAttempt() > 0)
-                await _currentConsumer.ForceComplete().ConfigureAwait(false);
+            if (context.Advanced().GetRetryAttempt() > 0)
+                await _currentConsumer.ForceCompleteAsync().ConfigureAwait(false);
         }
 
         if (_currentConsumer == null || _currentConsumer.IsCompleted)
             _currentConsumer = new BatchConsumer<TMessage>(_options, _collector, _dispatcher, _consumerPipe, context.GetTimeProvider());
 
-        await _currentConsumer.Add(context, currentActivity).ConfigureAwait(false);
+        await _currentConsumer.AddAsync(context, currentActivity).ConfigureAwait(false);
 
         return _currentConsumer;
     }

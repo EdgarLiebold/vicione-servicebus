@@ -9,7 +9,7 @@ public sealed class PostgreSqlDeliveryLimitTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0092", "postgresql-native-owner")]
-    public async Task ConfiguredMaxDeliveryCount_IsPersistedInsteadOfTheDatabaseDefault()
+    public async Task ConfiguredMaxDeliveryCount_IsPersistedInsteadOfTheDatabaseDefaultAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase fixture = await PostgreSqlTestDatabase.CreateAsync(
@@ -17,32 +17,32 @@ public sealed class PostgreSqlDeliveryLimitTests
             cancellationToken);
         string queueName = fixture.Name("limited-input");
 
-        await DeclareQueue(fixture, queueName, maxDeliveryCount: 3, cancellationToken);
+        await DeclareQueueAsync(fixture, queueName, maxDeliveryCount: 3, cancellationToken);
         await using NpgsqlConnection connection = fixture.CreateConnection();
-        await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
+        await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
 
-        Assert.Equal(3, await QueueMaxDeliveryCount(connection, fixture.Schema, queueName, cancellationToken));
+        Assert.Equal(3, await QueueMaxDeliveryCountAsync(connection, fixture.Schema, queueName, cancellationToken));
     }
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0094", "postgresql-native-owner")]
-    public async Task ExhaustedDelivery_IsExcludedFromFetchAndMovedByDeadLetterMaintenance()
+    public async Task ExhaustedDelivery_IsExcludedFromFetchAndMovedByDeadLetterMaintenanceAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase fixture = await PostgreSqlTestDatabase.CreateAsync(
             "exhausted-delivery",
             cancellationToken);
         string queueName = fixture.Name("limited-input");
-        await DeclareQueue(fixture, queueName, maxDeliveryCount: 3, cancellationToken);
+        await DeclareQueueAsync(fixture, queueName, maxDeliveryCount: 3, cancellationToken);
         var exhausted = new LimitedMessage(Guid.NewGuid(), "exhausted");
         var control = new LimitedMessage(Guid.NewGuid(), "fetchable-control");
-        await Send(fixture, queueName, [exhausted, control], cancellationToken);
+        await SendAsync(fixture, queueName, [exhausted, control], cancellationToken);
 
         await using NpgsqlConnection connection = fixture.CreateConnection();
-        await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
-        int changed = await ExhaustDelivery(connection, fixture.Schema, exhausted.Id, cancellationToken);
+        await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
+        int changed = await ExhaustDeliveryAsync(connection, fixture.Schema, exhausted.Id, cancellationToken);
 
-        FetchedDelivery[] fetched = await FetchReadyDeliveries(
+        FetchedDelivery[] fetched = await FetchReadyDeliveriesAsync(
             connection,
             fixture.Schema,
             queueName,
@@ -53,17 +53,17 @@ public sealed class PostgreSqlDeliveryLimitTests
         Assert.Equal(control.Id, fetchedControl.MessageId);
         Assert.DoesNotContain(fetched, item => item.MessageId == exhausted.Id);
 
-        await DeleteFetchedDelivery(connection, fixture.Schema, fetchedControl, cancellationToken);
-        long moved = await DeadLetterExhausted(connection, fixture.Schema, queueName, cancellationToken);
+        await DeleteFetchedDeliveryAsync(connection, fixture.Schema, fetchedControl, cancellationToken);
+        long moved = await DeadLetterExhaustedAsync(connection, fixture.Schema, queueName, cancellationToken);
 
         Assert.Equal(1, moved);
-        Assert.Equal(0, await connection.DeliveryCount(fixture.Schema, queueName, 1, cancellationToken));
-        Assert.Equal(1, await connection.DeliveryCount(fixture.Schema, queueName, 3, cancellationToken));
+        Assert.Equal(0, await connection.DeliveryCountAsync(fixture.Schema, queueName, 1, cancellationToken));
+        Assert.Equal(1, await connection.DeliveryCountAsync(fixture.Schema, queueName, 3, cancellationToken));
     }
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0116", "postgresql-native-owner")]
-    public async Task RedeclaringQueueWithoutALimit_ResetsPriorConfiguredLimitToTen()
+    public async Task RedeclaringQueueWithoutALimit_ResetsPriorConfiguredLimitToTenAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase fixture = await PostgreSqlTestDatabase.CreateAsync(
@@ -71,17 +71,17 @@ public sealed class PostgreSqlDeliveryLimitTests
             cancellationToken);
         string queueName = fixture.Name("redeclared-input");
 
-        await DeclareQueue(fixture, queueName, maxDeliveryCount: 3, cancellationToken);
+        await DeclareQueueAsync(fixture, queueName, maxDeliveryCount: 3, cancellationToken);
         await using NpgsqlConnection connection = fixture.CreateConnection();
-        await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
-        Assert.Equal(3, await QueueMaxDeliveryCount(connection, fixture.Schema, queueName, cancellationToken));
+        await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
+        Assert.Equal(3, await QueueMaxDeliveryCountAsync(connection, fixture.Schema, queueName, cancellationToken));
 
-        await DeclareQueue(fixture, queueName, maxDeliveryCount: null, cancellationToken);
+        await DeclareQueueAsync(fixture, queueName, maxDeliveryCount: null, cancellationToken);
 
-        Assert.Equal(10, await QueueMaxDeliveryCount(connection, fixture.Schema, queueName, cancellationToken));
+        Assert.Equal(10, await QueueMaxDeliveryCountAsync(connection, fixture.Schema, queueName, cancellationToken));
     }
 
-    private static async Task DeclareQueue(
+    private static async Task DeclareQueueAsync(
         PostgreSqlTestDatabase fixture,
         string queueName,
         int? maxDeliveryCount,
@@ -101,7 +101,7 @@ public sealed class PostgreSqlDeliveryLimitTests
         await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
     }
 
-    private static async Task Send(
+    private static async Task SendAsync(
         PostgreSqlTestDatabase fixture,
         string queueName,
         IReadOnlyList<LimitedMessage> messages,
@@ -113,11 +113,11 @@ public sealed class PostgreSqlDeliveryLimitTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), cancellationToken: cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             foreach (LimitedMessage message in messages)
             {
-                await endpoint.Send(
+                await endpoint.SendAsync(
                         message,
                         context => context.MessageId = message.Id,
                         cancellationToken)
@@ -131,7 +131,7 @@ public sealed class PostgreSqlDeliveryLimitTests
         }
     }
 
-    private static async Task<int> QueueMaxDeliveryCount(
+    private static async Task<int> QueueMaxDeliveryCountAsync(
         NpgsqlConnection connection,
         string schema,
         string queueName,
@@ -144,7 +144,7 @@ public sealed class PostgreSqlDeliveryLimitTests
         return Convert.ToInt32(await command.ExecuteScalarAsync(cancellationToken));
     }
 
-    private static async Task<int> ExhaustDelivery(
+    private static async Task<int> ExhaustDeliveryAsync(
         NpgsqlConnection connection,
         string schema,
         Guid messageId,
@@ -159,7 +159,7 @@ public sealed class PostgreSqlDeliveryLimitTests
         return await command.ExecuteNonQueryAsync(cancellationToken);
     }
 
-    private static async Task<FetchedDelivery[]> FetchReadyDeliveries(
+    private static async Task<FetchedDelivery[]> FetchReadyDeliveriesAsync(
         NpgsqlConnection connection,
         string schema,
         string queueName,
@@ -180,7 +180,7 @@ public sealed class PostgreSqlDeliveryLimitTests
         return result.ToArray();
     }
 
-    private static async Task DeleteFetchedDelivery(
+    private static async Task DeleteFetchedDeliveryAsync(
         NpgsqlConnection connection,
         string schema,
         FetchedDelivery delivery,
@@ -194,7 +194,7 @@ public sealed class PostgreSqlDeliveryLimitTests
         Assert.Equal(delivery.DeliveryId, Convert.ToInt64(await command.ExecuteScalarAsync(cancellationToken)));
     }
 
-    private static async Task<long> DeadLetterExhausted(
+    private static async Task<long> DeadLetterExhaustedAsync(
         NpgsqlConnection connection,
         string schema,
         string queueName,

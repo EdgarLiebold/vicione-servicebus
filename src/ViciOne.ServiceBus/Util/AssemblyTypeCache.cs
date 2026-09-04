@@ -51,20 +51,20 @@ public static class AssemblyTypeCache
             static value => new Lazy<AssemblyScanTypeInfo>(() => new AssemblyScanTypeInfo(value), LazyThreadSafetyMode.ExecutionAndPublication)).Value;
     }
 
-    public static TypeSet FindTypes(IEnumerable<Assembly> assemblies, Func<Type, bool> filter = null)
+    public static TypeSet FindTypes(IEnumerable<Assembly> assemblies, Func<Type, bool>? filter = null)
     {
         ArgumentNullException.ThrowIfNull(assemblies);
         return new TypeSet(assemblies.Select(ForAssembly).ToArray(), filter);
     }
 
-    public static IEnumerable<Type> FindTypes(IEnumerable<Assembly> assemblies, TypeClassification classification, Func<Type, bool> filter = null)
+    public static IEnumerable<Type> FindTypes(IEnumerable<Assembly> assemblies, TypeClassification classification, Func<Type, bool>? filter = null)
     {
         ArgumentNullException.ThrowIfNull(assemblies);
         var query = new TypeQuery(classification, filter);
         return assemblies.SelectMany(assembly => query.Find(ForAssembly(assembly)));
     }
 
-    public static IEnumerable<Type> FindTypes(Assembly assembly, TypeClassification classification, Func<Type, bool> filter = null)
+    public static IEnumerable<Type> FindTypes(Assembly assembly, TypeClassification classification, Func<Type, bool>? filter = null)
     {
         ArgumentNullException.ThrowIfNull(assembly);
         var query = new TypeQuery(classification, filter);

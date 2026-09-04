@@ -16,9 +16,9 @@ public interface ISagaRepositoryLockStrategy<TSaga>
 
     IQueryable<TSaga> ApplyQueryCustomization(IQueryable<TSaga> query);
 
-    Task<TSaga?> Load(DbContext context, Guid correlationId, CancellationToken cancellationToken);
+    Task<TSaga?> LoadAsync(DbContext context, Guid correlationId, CancellationToken cancellationToken);
 
-    Task<SagaLockContext<TSaga>> CreateLockContext(DbContext context, ISagaQuery<TSaga> query, CancellationToken cancellationToken);
+    Task<SagaLockContext<TSaga>> CreateLockContextAsync(DbContext context, ISagaQuery<TSaga> query, CancellationToken cancellationToken);
 
     bool IsTransactionEnabled { get; }
 }

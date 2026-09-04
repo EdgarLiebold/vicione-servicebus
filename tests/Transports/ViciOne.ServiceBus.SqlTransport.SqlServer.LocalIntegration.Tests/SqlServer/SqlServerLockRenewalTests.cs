@@ -11,15 +11,15 @@ public sealed class SqlServerLockRenewalTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0085", "sqlserver-native-owner")]
-    public async Task SlowConsumer_RenewsItsProviderLockThreeTimesAndCompletesExactlyOnce()
+    public async Task SlowConsumer_RenewsItsProviderLockThreeTimesAndCompletesExactlyOnceAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using SqlServerTestDatabase fixture = await SqlServerTestDatabase.CreateAsync(
             "lock-renewal",
             cancellationToken);
         await using SqlConnection inspection = fixture.CreateConnection();
-        await inspection.OpenWithin(fixture.OperationTimeout, cancellationToken);
-        await CreateRenewalAudit(inspection, fixture.Schema, cancellationToken);
+        await inspection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
+        await CreateRenewalAuditAsync(inspection, fixture.Schema, cancellationToken);
         var state = new ConsumerState();
         string queueName = fixture.Name("renewed-input");
         IBusControl bus = SqlBusFactory.Create(configurator =>
@@ -46,13 +46,12 @@ public sealed class SqlServerLockRenewalTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await endpoint.Send(new LockMessage(Guid.NewGuid()), cancellationToken)
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await endpoint.SendAsync(new LockMessage(Guid.NewGuid()), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             await state.FirstStarted.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
 
-            await WaitForRenewalCount(inspection, fixture.Schema, 3, fixture.OperationTimeout, cancellationToken);
+            await WaitForRenewalCountAsync(inspection, fixture.Schema, 3, fixture.OperationTimeout, cancellationToken);
 
             state.Release.TrySetResult();
             await state.Completed.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
@@ -60,8 +59,8 @@ public sealed class SqlServerLockRenewalTests
             started = false;
 
             Assert.Equal(1, state.Entries);
-            Assert.Equal(3, await RenewalCount(inspection, fixture.Schema, cancellationToken));
-            Assert.Equal(0, await inspection.DeliveryCount(fixture.Schema, queueName, 1, cancellationToken));
+            Assert.Equal(3, await RenewalCountAsync(inspection, fixture.Schema, cancellationToken));
+            Assert.Equal(0, await inspection.DeliveryCountAsync(fixture.Schema, queueName, 1, cancellationToken));
         }
         finally
         {
@@ -71,7 +70,7 @@ public sealed class SqlServerLockRenewalTests
         }
     }
 
-    private static async Task CreateRenewalAudit(
+    private static async Task CreateRenewalAuditAsync(
         SqlConnection connection,
         string schema,
         CancellationToken cancellationToken)
@@ -108,7 +107,7 @@ public sealed class SqlServerLockRenewalTests
         await trigger.ExecuteNonQueryAsync(cancellationToken);
     }
 
-    private static async Task WaitForRenewalCount(
+    private static async Task WaitForRenewalCountAsync(
         SqlConnection connection,
         string schema,
         long expected,
@@ -117,11 +116,11 @@ public sealed class SqlServerLockRenewalTests
     {
         using var timeoutSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         timeoutSource.CancelAfter(timeout);
-        while (await RenewalCount(connection, schema, timeoutSource.Token) < expected)
+        while (await RenewalCountAsync(connection, schema, timeoutSource.Token) < expected)
             await Task.Yield();
     }
 
-    private static async Task<long> RenewalCount(
+    private static async Task<long> RenewalCountAsync(
         SqlConnection connection,
         string schema,
         CancellationToken cancellationToken)

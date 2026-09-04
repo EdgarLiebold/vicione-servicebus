@@ -123,28 +123,28 @@
     "variantKey": "provider-runner-preserves-native-mtp-exit-code-and-cleans-fixture",
     "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
     "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.ProviderFixtureRunnerTests",
-    "testMethod": "CommandMode_PreservesChildExitCodeAndCleansTheFixture"
+    "testMethod": "CommandMode_PreservesChildExitCodeAndCleansTheFixtureAsync"
   },
   {
     "requirementId": "REQ-TEST-203",
     "variantKey": "provider-runner-refuses-non-loopback-publication-before-child",
     "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
     "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.ProviderFixtureRunnerTests",
-    "testMethod": "CommandMode_RefusesANonLoopbackProviderEndpointBeforeRunningTheChild"
+    "testMethod": "CommandMode_RefusesANonLoopbackProviderEndpointBeforeRunningTheChildAsync"
   },
   {
     "requirementId": "REQ-TEST-203",
     "variantKey": "provider-runner-makes-cleanup-failure-terminal",
     "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
     "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.ProviderFixtureRunnerTests",
-    "testMethod": "CommandMode_MakesCleanupFailureRedWhenTheChildPassed"
+    "testMethod": "CommandMode_MakesCleanupFailureRedWhenTheChildPassedAsync"
   },
   {
     "requirementId": "REQ-TEST-203",
     "variantKey": "provider-runner-refuses-output-root-outside-owned-area",
     "testAssembly": "ViciOne.ServiceBus.Architecture.Tests",
     "testType": "ViciOne.ServiceBus.Architecture.Tests.Tooling.ProviderFixtureRunnerTests",
-    "testMethod": "CommandMode_RefusesAHandedRunRootOutsideTheRepositoryOwnedArea"
+    "testMethod": "CommandMode_RefusesAHandedRunRootOutsideTheRepositoryOwnedAreaAsync"
   },
   {
     "requirementId": "REQ-VSB-TIME-SOURCE-ARCHITECTURE",
@@ -194,4 +194,5 @@
   ,{ "requirementId": "REQ-VSB-API-DISCOVERABILITY", "variantKey": "preferred-journeys-use-no-advanced-or-historical-path", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Product.ApiSurfaceArchitectureTests", "testMethod": "PreferredPackageJourneys_UseOnlyApplicationAndProviderEntryPoints" }
   ,{ "requirementId": "REQ-VSB-STATIC-CONFIGURATION", "variantKey": "complete-fail-fast-family-inventory", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Product.ApiSurfaceArchitectureTests", "testMethod": "StaticConfigurationInventory_IsCompleteAndBoundToActionableExecutingTests" }
   ,{ "requirementId": "REQ-VSB-HERITAGE-DISPOSITION", "variantKey": "all-retained-shapes-carry-current-capability", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Product.ApiSurfaceArchitectureTests", "testMethod": "HeritageDisposition_IsTerminalAndCompatibilityOnlyIdentityIsAbsent" }
+  ,{ "requirementId": "REQ-VSB-API-ASYNC-CANCELLATION", "variantKey": "public-method-token-is-consumed-or-forwarded", "testAssembly": "ViciOne.ServiceBus.Architecture.Tests", "testType": "ViciOne.ServiceBus.Architecture.Tests.Product.CancellationTokenFlowArchitectureTests", "testMethod": "PublicMethods_ConsumeOrForwardEveryDeclaredCancellationToken" }
 ]

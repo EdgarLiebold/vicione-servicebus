@@ -10,7 +10,7 @@ public sealed class ConfigurationObserverTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-CONSUMER-CONFIGURATION-OBSERVATION", "generic-default-and-runtime-factory-registration")]
-    public async Task ConsumerRegistrationShapes_ReportTheExactConsumerAndMessageContracts()
+    public async Task ConsumerRegistrationShapes_ReportTheExactConsumerAndMessageContractsAsync()
     {
         Action<IInMemoryReceiveEndpointConfigurator>[] registrations =
         [
@@ -49,7 +49,7 @@ public sealed class ConfigurationObserverTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-HANDLER-AND-SAGA-CONFIGURATION-OBSERVATION", "exact-configured-contracts")]
-    public async Task HandlerAndSagaRegistration_ReportEveryConfiguredContractExactlyOnce()
+    public async Task HandlerAndSagaRegistration_ReportEveryConfiguredContractExactlyOnceAsync()
     {
         var handlerObserver = new RecordingHandlerObserver();
         var sagaObserver = new RecordingSagaObserver();
@@ -81,7 +81,7 @@ public sealed class ConfigurationObserverTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVITY-CONFIGURATION-OBSERVATION", "execute-compensatable-and-compensate-hosts")]
-    public async Task ActivityRegistration_ReportsExactTypesAndCompensationAddress()
+    public async Task ActivityRegistration_ReportsExactTypesAndCompensationAddressAsync()
     {
         var observer = new RecordingActivityObserver();
         Uri? compensationAddress = null;
@@ -177,9 +177,9 @@ public sealed class ConfigurationObserverTests
 
     public sealed class DualConsumer : IConsumer<AlphaMessage>, IConsumer<ZuluMessage>
     {
-        public Task Consume(ConsumeContext<AlphaMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<AlphaMessage> context) => Task.CompletedTask;
 
-        public Task Consume(ConsumeContext<ZuluMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<ZuluMessage> context) => Task.CompletedTask;
     }
 
     public sealed record HandlerMessage;
@@ -197,9 +197,9 @@ public sealed class ConfigurationObserverTests
 
         public Guid CorrelationId { get; set; }
 
-        public Task Consume(ConsumeContext<SagaStarted> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<SagaStarted> context) => Task.CompletedTask;
 
-        public Task Consume(ConsumeContext<SagaContinued> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<SagaContinued> context) => Task.CompletedTask;
     }
 
     public sealed record ActivityArguments;
@@ -208,15 +208,15 @@ public sealed class ConfigurationObserverTests
 
     public sealed class ExecuteOnlyActivity : IExecuteActivity<ActivityArguments>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<ActivityArguments> context) => Task.FromResult(context.Completed());
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<ActivityArguments> context) => Task.FromResult(context.Completed());
     }
 
     public sealed class CompensatingActivity : IActivity<ActivityArguments, ActivityLog>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<ActivityArguments> context) =>
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<ActivityArguments> context) =>
             Task.FromResult(context.Completed(new ActivityLog()));
 
-        public Task<CompensationResult> Compensate(CompensateContext<ActivityLog> context) =>
+        public Task<CompensationResult> CompensateAsync(CompensateContext<ActivityLog> context) =>
             Task.FromResult(context.Compensated());
     }
 

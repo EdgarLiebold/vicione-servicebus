@@ -23,12 +23,12 @@ public class ServiceBusReceiveLockContext :
         _timeProvider = timeProvider;
     }
 
-    public Task Complete()
+    public Task CompleteAsync(CancellationToken cancellationToken = default)
     {
-        return _lockContext.Complete();
+        return _lockContext.CompleteAsync(cancellationToken: cancellationToken);
     }
 
-    public async Task Faulted(Exception exception)
+    public async Task FaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {
         switch (exception)
         {
@@ -42,7 +42,7 @@ public class ServiceBusReceiveLockContext :
             default:
                 try
                 {
-                    await _lockContext.Abandon(exception).ConfigureAwait(false);
+                    await _lockContext.AbandonAsync(exception, cancellationToken: cancellationToken).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -53,9 +53,9 @@ public class ServiceBusReceiveLockContext :
         }
     }
 
-    public Task ValidateLockStatus()
+    public Task ValidateLockStatusAsync(CancellationToken cancellationToken = default)
     {
-        var utcNow = _timeProvider.GetUtcNow().UtcDateTime;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); var utcNow = _timeProvider.GetUtcNow().UtcDateTime;
 
         if (_message.LockedUntil <= utcNow)
             throw new MessageLockExpiredException(_inputAddress, $"The message lock expired: {_message.MessageId}");

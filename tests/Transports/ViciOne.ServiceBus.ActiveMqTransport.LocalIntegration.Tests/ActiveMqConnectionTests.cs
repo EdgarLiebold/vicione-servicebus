@@ -10,7 +10,7 @@ public sealed class ActiveMqConnectionTests
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [RequirementCoverage("OBL-R0-BRK-0379", "explicit-classic-endpoint-reaches-ready")]
-    public async Task OpenWireEndpoint_ReachesReady(string flavor)
+    public async Task OpenWireEndpoint_ReachesReadyAsync(string flavor)
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(flavor, "ready");
         IBusControl bus = Bus.Factory.CreateUsingActiveMq(fixture.ConfigureHost);
@@ -36,7 +36,7 @@ public sealed class ActiveMqConnectionTests
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [InlineData(ActiveMqBroker.ArtemisFlavor)]
     [RequirementCoverage("OBL-R0-BRK-0387", "explicit-configuration-is-healthy-and-delivers")]
-    public async Task ValidExplicitConfiguration_ReachesReadyAndHealthy(string flavor)
+    public async Task ValidExplicitConfiguration_ReachesReadyAndHealthyAsync(string flavor)
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(flavor, "configured");
         string queueName = fixture.Name("input");
@@ -65,9 +65,8 @@ public sealed class ActiveMqConnectionTests
             started = true;
             Assert.Equal(BusHealthStatus.Healthy, bus.CheckHealth().Status);
 
-            ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await input.Send(new ReadyMessage(expected), cancellationToken)
+            ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await input.SendAsync(new ReadyMessage(expected), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             Assert.Equal(expected, await received.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));

@@ -9,6 +9,6 @@ public class JobAttemptCanceledEvent :
 {
     public Guid JobId { get; set; }
     public Guid AttemptId { get; set; }
-    public DateTime Timestamp { get; set; }
+    public DateTimeOffset Timestamp { get; set; }
     public string Reason { get; set; } = null!;
 }

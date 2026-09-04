@@ -10,7 +10,7 @@ public class InMemoryBusConfiguration :
 {
     readonly BusObservable _busObservers;
 
-    public InMemoryBusConfiguration(IInMemoryTopologyConfiguration topologyConfiguration, Uri baseAddress)
+    public InMemoryBusConfiguration(IInMemoryTopologyConfiguration topologyConfiguration, Uri? baseAddress)
         : base(topologyConfiguration)
     {
         MessageRoutes = new MessageRouteTable();

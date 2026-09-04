@@ -43,12 +43,12 @@ public abstract class BaseConsumeContext :
     public abstract Guid? CorrelationId { get; }
     public abstract Guid? ConversationId { get; }
     public abstract Guid? InitiatorId { get; }
-    public abstract DateTime? ExpirationTime { get; }
-    public abstract Uri SourceAddress { get; }
-    public abstract Uri DestinationAddress { get; }
-    public abstract Uri ResponseAddress { get; }
-    public abstract Uri FaultAddress { get; }
-    public abstract DateTime? SentTime { get; }
+    public abstract DateTimeOffset? ExpirationTime { get; }
+    public abstract Uri? SourceAddress { get; }
+    public abstract Uri? DestinationAddress { get; }
+    public abstract Uri? ResponseAddress { get; }
+    public abstract Uri? FaultAddress { get; }
+    public abstract DateTimeOffset? SentTime { get; }
     public abstract Headers Headers { get; }
     public abstract HostInfo Host { get; }
     public abstract IEnumerable<string> SupportedMessageTypes { get; }
@@ -63,7 +63,7 @@ public abstract class BaseConsumeContext :
         if (message == null)
             throw new ArgumentNullException(nameof(message));
 
-        return ConsumeTask(RespondInternal(message));
+        return ConsumeTaskAsync(RespondInternalAsync(message));
     }
 
     public virtual Task RespondAsync<T>(T message, IPipe<SendContext<T>> sendPipe)
@@ -74,7 +74,7 @@ public abstract class BaseConsumeContext :
         if (sendPipe == null)
             throw new ArgumentNullException(nameof(sendPipe));
 
-        return ConsumeTask(RespondInternal(message, sendPipe));
+        return ConsumeTaskAsync(RespondInternalAsync(message, sendPipe));
     }
 
     public virtual Task RespondAsync<T>(T message, IPipe<SendContext> sendPipe)
@@ -85,7 +85,7 @@ public abstract class BaseConsumeContext :
         if (sendPipe == null)
             throw new ArgumentNullException(nameof(sendPipe));
 
-        return ConsumeTask(RespondInternal(message, sendPipe));
+        return ConsumeTaskAsync(RespondInternalAsync(message, sendPipe));
     }
 
     public virtual Task RespondAsync(object message)
@@ -95,7 +95,7 @@ public abstract class BaseConsumeContext :
 
         var messageType = message.GetType();
 
-        return ResponseEndpointConverterCache.Respond(this, message, messageType);
+        return ResponseEndpointConverterCache.RespondAsync(this, message, messageType);
     }
 
     public virtual Task RespondAsync(object message, Type messageType)
@@ -105,7 +105,7 @@ public abstract class BaseConsumeContext :
         if (messageType == null)
             throw new ArgumentNullException(nameof(messageType));
 
-        return ResponseEndpointConverterCache.Respond(this, message, messageType);
+        return ResponseEndpointConverterCache.RespondAsync(this, message, messageType);
     }
 
     public virtual Task RespondAsync(object message, IPipe<SendContext> sendPipe)
@@ -117,7 +117,7 @@ public abstract class BaseConsumeContext :
 
         var messageType = message.GetType();
 
-        return ResponseEndpointConverterCache.Respond(this, message, messageType, sendPipe);
+        return ResponseEndpointConverterCache.RespondAsync(this, message, messageType, sendPipe);
     }
 
     public virtual Task RespondAsync(object message, Type messageType, IPipe<SendContext> sendPipe)
@@ -129,7 +129,7 @@ public abstract class BaseConsumeContext :
         if (sendPipe == null)
             throw new ArgumentNullException(nameof(sendPipe));
 
-        return ResponseEndpointConverterCache.Respond(this, message, messageType, sendPipe);
+        return ResponseEndpointConverterCache.RespondAsync(this, message, messageType, sendPipe);
     }
 
     public virtual Task RespondAsync<T>(object values)
@@ -138,41 +138,41 @@ public abstract class BaseConsumeContext :
         if (values == null)
             throw new ArgumentNullException(nameof(values));
 
-        return ConsumeTask(RespondInternal<T>(values));
+        return ConsumeTaskAsync(RespondInternalAsync<T>(values));
     }
 
     public virtual Task RespondAsync<T>(object values, IPipe<SendContext<T>> sendPipe)
         where T : class
     {
-        return ConsumeTask(RespondInternal(values, sendPipe));
+        return ConsumeTaskAsync(RespondInternalAsync(values, sendPipe));
     }
 
     public virtual Task RespondAsync<T>(object values, IPipe<SendContext> sendPipe)
         where T : class
     {
-        return ConsumeTask(RespondInternal<T>(values, sendPipe));
+        return ConsumeTaskAsync(RespondInternalAsync<T>(values, sendPipe));
     }
 
-    public virtual void Respond<T>(T message)
+    public virtual void DeferResponse<T>(T message)
         where T : class
     {
-        AddConsumeTask(RespondInternal(message));
+        AddConsumeTask(RespondInternalAsync(message));
     }
 
-    public virtual async Task<ISendEndpoint> GetSendEndpoint(Uri address)
+    public virtual async Task<ISendEndpoint> GetSendEndpointAsync(Uri address, CancellationToken cancellationToken = default)
     {
-        var sendEndpoint = await ReceiveContext.SendEndpointProvider.GetSendEndpoint(address).ConfigureAwait(false);
+        var sendEndpoint = await ReceiveContext.SendEndpointProvider.GetSendEndpointAsync(address, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         return new ConsumeSendEndpoint(sendEndpoint, this);
     }
 
-    public virtual Task NotifyConsumed<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
+    public virtual Task NotifyConsumedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
         where T : class
     {
-        return ReceiveContext.NotifyConsumed(context, duration, consumerType);
+        return ReceiveContext.NotifyConsumedAsync(context, duration, consumerType, cancellationToken: cancellationToken);
     }
 
-    public virtual async Task NotifyFaulted<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
+    public virtual async Task NotifyFaultedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
         where T : class
     {
         switch (exception)
@@ -182,11 +182,11 @@ public abstract class BaseConsumeContext :
 
             default:
                 if (!context.CancellationToken.IsCancellationRequested)
-                    await GenerateFault(context, exception).ConfigureAwait(false);
+                    await GenerateFaultAsync(context, exception).ConfigureAwait(false);
                 break;
         }
 
-        await ReceiveContext.NotifyFaulted(context, duration, consumerType, exception).ConfigureAwait(false);
+        await ReceiveContext.NotifyFaultedAsync(context, duration, consumerType, exception, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
@@ -196,17 +196,17 @@ public abstract class BaseConsumeContext :
 
     public abstract void AddConsumeTask(Task task);
 
-    Task RespondInternal<T>(T message, IPipe<SendContext<T>>? pipe = null)
+    Task RespondInternalAsync<T>(T message, IPipe<SendContext<T>>? pipe = null)
         where T : class
     {
-        Task<ISendEndpoint> sendEndpointTask = this.GetResponseEndpoint<T>();
+        Task<ISendEndpoint> sendEndpointTask = this.GetResponseEndpointAsync<T>();
         if (sendEndpointTask.Status == TaskStatus.RanToCompletion)
         {
             var sendEndpoint = sendEndpointTask.Result;
 
             return pipe.IsNotEmpty()
-                ? sendEndpoint.Send(message, pipe!, CancellationToken)
-                : sendEndpoint.Send(message, CancellationToken);
+                ? sendEndpoint.SendAsync(message, pipe!, CancellationToken)
+                : sendEndpoint.SendAsync(message, CancellationToken);
         }
 
         async Task RespondInternalAsync()
@@ -214,25 +214,25 @@ public abstract class BaseConsumeContext :
             var sendEndpoint = await sendEndpointTask.ConfigureAwait(false);
 
             if (pipe.IsNotEmpty())
-                await sendEndpoint.Send(message, pipe!, CancellationToken).ConfigureAwait(false);
+                await sendEndpoint.SendAsync(message, pipe!, CancellationToken).ConfigureAwait(false);
             else
-                await sendEndpoint.Send(message, CancellationToken).ConfigureAwait(false);
+                await sendEndpoint.SendAsync(message, CancellationToken).ConfigureAwait(false);
         }
 
         return RespondInternalAsync();
     }
 
-    Task RespondInternal<T>(object values, IPipe<SendContext<T>>? pipe = null)
+    Task RespondInternalAsync<T>(object values, IPipe<SendContext<T>>? pipe = null)
         where T : class
     {
-        Task<ISendEndpoint> sendEndpointTask = this.GetResponseEndpoint<T>();
+        Task<ISendEndpoint> sendEndpointTask = this.GetResponseEndpointAsync<T>();
         if (sendEndpointTask.Status == TaskStatus.RanToCompletion)
         {
             var sendEndpoint = sendEndpointTask.Result;
 
             return pipe.IsNotEmpty()
-                ? sendEndpoint.Send(values, pipe!, CancellationToken)
-                : sendEndpoint.Send<T>(values, CancellationToken);
+                ? sendEndpoint.SendAsync(values, pipe!, CancellationToken)
+                : sendEndpoint.SendAsync<T>(values, CancellationToken);
         }
 
         async Task RespondInternalAsync()
@@ -240,30 +240,30 @@ public abstract class BaseConsumeContext :
             var sendEndpoint = await sendEndpointTask.ConfigureAwait(false);
 
             if (pipe.IsNotEmpty())
-                await sendEndpoint.Send(values, pipe!, CancellationToken).ConfigureAwait(false);
+                await sendEndpoint.SendAsync(values, pipe!, CancellationToken).ConfigureAwait(false);
             else
-                await sendEndpoint.Send<T>(values, CancellationToken).ConfigureAwait(false);
+                await sendEndpoint.SendAsync<T>(values, CancellationToken).ConfigureAwait(false);
         }
 
         return RespondInternalAsync();
     }
 
-    protected virtual Task GenerateFault<T>(ConsumeContext<T> context, Exception exception)
+    protected virtual Task GenerateFaultAsync<T>(ConsumeContext<T> context, Exception exception)
         where T : class
     {
-        return context.GenerateFault(exception);
+        return context.GenerateFaultAsync(exception);
     }
 
-    Task ConsumeTask(Task task)
+    Task ConsumeTaskAsync(Task task)
     {
         AddConsumeTask(task);
 
         return task;
     }
 
-    protected override async Task<ISendEndpoint> GetPublishSendEndpoint<T>()
+    protected override async Task<ISendEndpoint> GetPublishSendEndpointAsync<T>()
     {
-        var publishSendEndpoint = await base.GetPublishSendEndpoint<T>().ConfigureAwait(false);
+        var publishSendEndpoint = await base.GetPublishSendEndpointAsync<T>().ConfigureAwait(false);
 
         return new ConsumeSendEndpoint(publishSendEndpoint, this);
     }

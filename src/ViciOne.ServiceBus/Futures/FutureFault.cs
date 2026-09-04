@@ -17,7 +17,7 @@ public class FutureFault<TCommand, TFault, TInput> :
 
     public FutureFault()
     {
-        _factory = new ContextMessageFactory<BehaviorContext<FutureState, TInput>, TFault>(DefaultFactory);
+        _factory = new ContextMessageFactory<BehaviorContext<FutureState, TInput>, TFault>(DefaultFactoryAsync);
     }
 
     public ContextMessageFactory<BehaviorContext<FutureState, TInput>, TFault> Factory
@@ -32,26 +32,26 @@ public class FutureFault<TCommand, TFault, TInput> :
         yield break;
     }
 
-    public async Task SetFaulted(BehaviorContext<FutureState, TInput> context)
+    public async Task SetFaultedAsync(BehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default)
     {
         if (!WaitForPending || !context.Saga.HasPending())
         {
             context.SetFaulted(context.Saga.CorrelationId);
 
-            var fault = await context.SendMessageToSubscriptions(_factory,
-                context.Saga.HasSubscriptions() ? context.Saga.Subscriptions.ToArray() : []);
+            var fault = await context.SendMessageToSubscriptionsAsync(_factory,
+                context.Saga.HasSubscriptions() ? context.Saga.Subscriptions.ToArray() : [], cancellationToken: cancellationToken);
 
             context.SetFault(context.Saga.CorrelationId, fault);
         }
     }
 
-    static Task<SendTuple<TFault>> DefaultFactory(BehaviorContext<FutureState, TInput> context)
+    static Task<SendTuple<TFault>> DefaultFactoryAsync(BehaviorContext<FutureState, TInput> context)
     {
         if (context.Message is Fault fault)
         {
             var request = context.GetCommand<TCommand>();
 
-            return context.Init<TFault>(new
+            return context.InitAsync<TFault>(new
             {
                 fault.FaultId,
                 fault.FaultedMessageId,
@@ -63,7 +63,7 @@ public class FutureFault<TCommand, TFault, TInput> :
             });
         }
 
-        return context.Init<TFault>(_defaultValues);
+        return context.InitAsync<TFault>(_defaultValues);
     }
 
 
@@ -82,7 +82,7 @@ public class FutureFault<TFault> :
 
     public FutureFault()
     {
-        _factory = MessageFactory<TFault>.Create((Func<BehaviorContext<FutureState>, Task<SendTuple<TFault>>>)DefaultFactory);
+        _factory = MessageFactory<TFault>.Create((Func<BehaviorContext<FutureState>, Task<SendTuple<TFault>>>)DefaultFactoryAsync);
     }
 
     public ContextMessageFactory<BehaviorContext<FutureState>, TFault> Factory
@@ -97,22 +97,22 @@ public class FutureFault<TFault> :
         yield break;
     }
 
-    public async Task SetFaulted(BehaviorContext<FutureState> context)
+    public async Task SetFaultedAsync(BehaviorContext<FutureState> context, CancellationToken cancellationToken = default)
     {
         if (!WaitForPending || !context.Saga.HasPending())
         {
             context.SetFaulted(context.Saga.CorrelationId);
 
-            var fault = await context.SendMessageToSubscriptions(_factory,
-                context.Saga.HasSubscriptions() ? context.Saga.Subscriptions.ToArray() : []);
+            var fault = await context.SendMessageToSubscriptionsAsync(_factory,
+                context.Saga.HasSubscriptions() ? context.Saga.Subscriptions.ToArray() : [], cancellationToken: cancellationToken);
 
             context.SetFault(context.Saga.CorrelationId, fault);
         }
     }
 
-    static Task<SendTuple<TFault>> DefaultFactory(BehaviorContext<FutureState> context)
+    static Task<SendTuple<TFault>> DefaultFactoryAsync(BehaviorContext<FutureState> context)
     {
-        return context.Init<TFault>(_defaultValues);
+        return context.InitAsync<TFault>(_defaultValues);
     }
 
 

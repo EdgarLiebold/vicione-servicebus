@@ -9,9 +9,9 @@ public class InlineMessageData<T> :
 {
     readonly IInlineMessageData _messageData;
 
-    public InlineMessageData(Uri address, T value, IInlineMessageData messageData)
+    public InlineMessageData(Uri? address, T value, IInlineMessageData messageData)
     {
-        Value = Task.FromResult(value);
+        Value = Task.FromResult<T?>(value);
         Address = address;
 
         _messageData = messageData;
@@ -22,7 +22,7 @@ public class InlineMessageData<T> :
         _messageData.Set(reference);
     }
 
-    public Uri Address { get; }
+    public Uri? Address { get; }
     public bool HasValue => true;
-    public Task<T> Value { get; }
+    public Task<T?> Value { get; }
 }

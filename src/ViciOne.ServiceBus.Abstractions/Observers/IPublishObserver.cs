@@ -15,7 +15,7 @@ public interface IPublishObserver
     /// <typeparam name="T">The message type</typeparam>
     /// <param name="context">The message send context</param>
     /// <returns></returns>
-    Task PrePublish<T>(PublishContext<T> context)
+    Task PrePublishAsync<T>(PublishContext<T> context)
         where T : class;
 
     /// <summary>
@@ -24,7 +24,7 @@ public interface IPublishObserver
     /// <typeparam name="T">The message type</typeparam>
     /// <param name="context">The message send context</param>
     /// <returns></returns>
-    Task PostPublish<T>(PublishContext<T> context)
+    Task PostPublishAsync<T>(PublishContext<T> context)
         where T : class;
 
     /// <summary>
@@ -34,6 +34,6 @@ public interface IPublishObserver
     /// <param name="context">The message send context</param>
     /// <param name="exception">The exception from the transport</param>
     /// <returns></returns>
-    Task PublishFault<T>(PublishContext<T> context, Exception exception)
+    Task PublishFaultAsync<T>(PublishContext<T> context, Exception exception)
         where T : class;
 }

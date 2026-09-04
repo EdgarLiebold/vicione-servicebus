@@ -10,9 +10,9 @@ public sealed class RequestOutcomeTimeToLiveTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-OUTCOME-TTL", "expired-response-and-fault-grace")]
-    public async Task ExpiredRequest_GivesOnlyItsResponseAndFaultTheOneSecondGrace()
+    public async Task ExpiredRequest_GivesOnlyItsResponseAndFaultTheOneSecondGraceAsync()
     {
-        RequestOutcomeTimeToLive observation = await ObserveOutcomeTimeToLive(
+        RequestOutcomeTimeToLive observation = await ObserveOutcomeTimeToLiveAsync(
             TimeSpan.FromMinutes(2),
             TimeSpan.FromSeconds(30));
 
@@ -23,11 +23,11 @@ public sealed class RequestOutcomeTimeToLiveTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-OUTCOME-TTL", "active-response-and-fault-remainder")]
-    public async Task ActiveRequest_GivesOnlyItsResponseAndFaultTheRemainingLifetime()
+    public async Task ActiveRequest_GivesOnlyItsResponseAndFaultTheRemainingLifetimeAsync()
     {
         TimeSpan expectedRemainder = TimeSpan.FromSeconds(90);
 
-        RequestOutcomeTimeToLive observation = await ObserveOutcomeTimeToLive(
+        RequestOutcomeTimeToLive observation = await ObserveOutcomeTimeToLiveAsync(
             TimeSpan.FromMinutes(2),
             -expectedRemainder);
 
@@ -36,7 +36,7 @@ public sealed class RequestOutcomeTimeToLiveTests
         Assert.Null(observation.UnrelatedSend);
     }
 
-    private static async Task<RequestOutcomeTimeToLive> ObserveOutcomeTimeToLive(
+    private static async Task<RequestOutcomeTimeToLive> ObserveOutcomeTimeToLiveAsync(
         TimeSpan sourceTimeToLive,
         TimeSpan nowOffsetFromExpiration)
     {
@@ -58,29 +58,28 @@ public sealed class RequestOutcomeTimeToLiveTests
         harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
             configurator.Handler<RequestMessage>(async context =>
             {
-                DateTime expirationTime = Assert.IsType<DateTime>(context.ExpirationTime);
-                context.SetTimeProvider(new FakeTimeProvider(
-                    new DateTimeOffset(expirationTime + nowOffsetFromExpiration, TimeSpan.Zero)));
+                DateTimeOffset expirationTime = Assert.IsType<DateTimeOffset>(context.ExpirationTime);
+                context.SetTimeProvider(new FakeTimeProvider(expirationTime + nowOffsetFromExpiration));
                 TimeSpan? responseTimeToLive = null;
                 TimeSpan? faultTimeToLive = null;
                 TimeSpan? unrelatedTimeToLive = null;
 
-                ISendEndpoint responseEndpoint = await context.GetResponseEndpoint<OutcomeMessage>();
-                await responseEndpoint.Send(
+                ISendEndpoint responseEndpoint = await context.Advanced().GetResponseEndpointAsync<OutcomeMessage>();
+                await responseEndpoint.SendAsync(
                     new OutcomeMessage(),
                     Pipe.Execute<SendContext<OutcomeMessage>>(sendContext =>
                         responseTimeToLive = sendContext.TimeToLive),
                     context.CancellationToken);
 
-                ISendEndpoint faultEndpoint = await context.GetFaultEndpoint<OutcomeMessage>();
-                await faultEndpoint.Send(
+                ISendEndpoint faultEndpoint = await context.Advanced().GetFaultEndpointAsync<OutcomeMessage>();
+                await faultEndpoint.SendAsync(
                     new OutcomeMessage(),
                     Pipe.Execute<SendContext<OutcomeMessage>>(sendContext =>
                         faultTimeToLive = sendContext.TimeToLive),
                     context.CancellationToken);
 
-                ISendEndpoint unrelatedEndpoint = await context.GetSendEndpoint(unrelatedAddress);
-                await unrelatedEndpoint.Send(
+                ISendEndpoint unrelatedEndpoint = await context.Advanced().GetSendEndpointAsync(unrelatedAddress);
+                await unrelatedEndpoint.SendAsync(
                     new OutcomeMessage(),
                     Pipe.Execute<SendContext<OutcomeMessage>>(sendContext =>
                         unrelatedTimeToLive = sendContext.TimeToLive),
@@ -103,8 +102,8 @@ public sealed class RequestOutcomeTimeToLiveTests
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.StartAsync(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(
                     new RequestMessage(),
                     context =>
                     {
@@ -120,7 +119,7 @@ public sealed class RequestOutcomeTimeToLiveTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(operationTimeout, CancellationToken.None);
+            await harness.StopAsync().WaitAsync(operationTimeout, CancellationToken.None);
         }
     }
 

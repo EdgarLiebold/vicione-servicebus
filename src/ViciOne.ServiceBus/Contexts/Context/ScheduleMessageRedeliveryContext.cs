@@ -22,7 +22,7 @@ public class ScheduleMessageRedeliveryContext<TMessage> :
         _options = options;
     }
 
-    public Task ScheduleRedelivery(TimeSpan delay, Action<ConsumeContext, SendContext>? callback)
+    public Task ScheduleRedeliveryAsync(TimeSpan delay, Action<ConsumeContext, SendContext>? callback, CancellationToken cancellationToken = default)
     {
         var schedulerContext = _context.GetPayload<MessageSchedulerContext>();
 
@@ -33,6 +33,7 @@ public class ScheduleMessageRedeliveryContext<TMessage> :
             callback?.Invoke(consumeContext, sendContext);
         }
 
-        return schedulerContext.ScheduleSend(delay, _context.Message, new CopyContextPipe(_context, SendCallback));
+        return schedulerContext.ScheduleSendAsync(delay, _context.Message, new CopyContextPipe(_context.Advanced(), SendCallback),
+            cancellationToken: cancellationToken);
     }
 }

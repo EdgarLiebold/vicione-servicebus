@@ -22,7 +22,7 @@ public sealed class TaskCompletionSourcesTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-COMPLETION-SOURCES", "set-completed")]
-    public async Task SetCompleted_IsIdempotentAndRejectsANullSource()
+    public async Task SetCompleted_IsIdempotentAndRejectsANullSourceAsync()
     {
         TaskCompletionSource<bool> source = TaskCompletionSources.Create<bool>();
 

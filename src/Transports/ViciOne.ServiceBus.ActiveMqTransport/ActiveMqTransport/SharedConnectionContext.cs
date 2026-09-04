@@ -26,9 +26,9 @@ public class SharedConnectionContext :
     public Uri HostAddress => _context.HostAddress;
     public IActiveMqBusTopology Topology => _context.Topology;
 
-    Task<ISession> ConnectionContext.CreateSession(CancellationToken cancellationToken)
+    Task<ISession> ConnectionContext.CreateSessionAsync(CancellationToken cancellationToken)
     {
-        return _context.CreateSession(cancellationToken);
+        return _context.CreateSessionAsync(cancellationToken);
     }
 
     public bool IsVirtualTopicConsumer(string name)
@@ -46,7 +46,7 @@ public class SharedConnectionContext :
         return _context.GetTemporaryTopic(session, topicName);
     }
 
-    public bool TryGetTemporaryEntity(string name, out IDestination destination)
+    public bool TryGetTemporaryEntity(string name, out IDestination? destination)
     {
         return _context.TryGetTemporaryEntity(name, out destination);
     }

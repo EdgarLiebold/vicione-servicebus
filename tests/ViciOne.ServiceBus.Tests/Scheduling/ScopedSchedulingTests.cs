@@ -10,7 +10,7 @@ public sealed class ScopedSchedulingTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-SCHEDULER-SCOPE", "scheduled-send-uses-current-consume-scope")]
-    public async Task ScheduledSend_UsesTheSameScopedServiceAsTheInitiatingConsumer()
+    public async Task ScheduledSend_UsesTheSameScopedServiceAsTheInitiatingConsumerAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -36,15 +36,15 @@ public sealed class ScopedSchedulingTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Guid correlationId = NewId.NextGuid();
-            await harness.Bus.Publish(new ScheduleCommand(correlationId), cancellationToken);
+            await harness.Bus.PublishAsync(new ScheduleCommand(correlationId), cancellationToken);
             IReceivedMessage<ScheduleCommand> command = await harness.Consumed
                 .SelectAsync<ScheduleCommand>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             Assert.Equal(correlationId, command.Context.Message.CorrelationId);
             Assert.Null(command.Exception);
@@ -59,7 +59,7 @@ public sealed class ScopedSchedulingTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -98,9 +98,9 @@ public sealed class ScopedSchedulingTests
 
     public sealed class ScheduleCommandConsumer(ScheduleScope scope) : IConsumer<ScheduleCommand>
     {
-        public async Task Consume(ConsumeContext<ScheduleCommand> context)
+        public async Task ConsumeAsync(ConsumeContext<ScheduleCommand> context)
         {
-            await context.ScheduleSend(
+            await context.Advanced().ScheduleSendAsync(
                 new Uri($"queue:{DefaultEndpointNameFormatter.Instance.Consumer<ScheduledMessageConsumer>()}"),
                 TimeSpan.Zero,
                 new ScheduledMessage(context.Message.CorrelationId, scope.Id),
@@ -113,7 +113,7 @@ public sealed class ScopedSchedulingTests
         ScheduleScopeObservation observation) : IFilter<SendContext<T>>
         where T : class
     {
-        public Task Send(SendContext<T> context, IPipe<SendContext<T>> next)
+        public Task SendAsync(SendContext<T> context, IPipe<SendContext<T>> next)
         {
             if (context.Message is ScheduledMessage)
             {
@@ -122,7 +122,7 @@ public sealed class ScopedSchedulingTests
                 context.Headers.Set("Schedule-Scope-Id", scope.Id);
             }
 
-            return next.Send(context);
+            return next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("scheduleScope");
@@ -131,9 +131,9 @@ public sealed class ScopedSchedulingTests
     public sealed class ScheduledMessageConsumer(
         ScheduleScopeObservation observation) : IConsumer<ScheduledMessage>
     {
-        public Task Consume(ConsumeContext<ScheduledMessage> context)
+        public Task ConsumeAsync(ConsumeContext<ScheduledMessage> context)
         {
-            if (!context.TryGetHeader("Schedule-Scope-Id", out Guid? filterScopeId)
+            if (!context.Advanced().TryGetHeader("Schedule-Scope-Id", out Guid? filterScopeId)
                 || !filterScopeId.HasValue)
                 throw new InvalidDataException("The schedule scope identifier is missing.");
             observation.Completed.TrySetResult(new ScheduleScopeResult(

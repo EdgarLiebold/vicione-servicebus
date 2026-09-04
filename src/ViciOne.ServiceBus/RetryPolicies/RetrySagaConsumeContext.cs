@@ -10,7 +10,7 @@ public class RetrySagaConsumeContext<TSaga> :
 {
     readonly SagaConsumeContext<TSaga> _context;
 
-    public RetrySagaConsumeContext(SagaConsumeContext<TSaga> context, IRetryPolicy retryPolicy, RetryContext retryContext)
+    public RetrySagaConsumeContext(SagaConsumeContext<TSaga> context, IRetryPolicy retryPolicy, RetryContext? retryContext)
         : base(context, retryPolicy, retryContext)
     {
         _context = context;
@@ -18,9 +18,9 @@ public class RetrySagaConsumeContext<TSaga> :
 
     public TSaga Saga => _context.Saga;
 
-    Task SagaConsumeContext<TSaga>.SetCompleted()
+    Task SagaConsumeContext<TSaga>.SetCompletedAsync(CancellationToken cancellationToken)
     {
-        return _context.SetCompleted();
+        return _context.SetCompletedAsync(cancellationToken: cancellationToken);
     }
 
     public bool IsCompleted => _context.IsCompleted;

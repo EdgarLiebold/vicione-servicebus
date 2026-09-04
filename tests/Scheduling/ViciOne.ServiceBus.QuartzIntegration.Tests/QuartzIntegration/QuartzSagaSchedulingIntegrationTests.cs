@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using Quartz;
 using ViciOne.ServiceBus.QuartzIntegration.Tests.Testing;
+using ViciOne.ServiceBus.Saga;
 using ViciOne.ServiceBus.Scheduling;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -13,7 +14,7 @@ public sealed class QuartzSagaSchedulingIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-SAGA-RESCHEDULE", "replace-cancel-and-finalize")]
-    public async Task Rescheduling_ReplacesTheOldTriggerAndFinalizationCancelsTheReplacement()
+    public async Task Rescheduling_ReplacesTheOldTriggerAndFinalizationCancelsTheReplacementAsync()
     {
         TimeSpan timeout = OperationTimeout();
         Guid correlationId = NewId.NextGuid();
@@ -22,7 +23,7 @@ public sealed class QuartzSagaSchedulingIntegrationTests
         var repository = new InMemorySagaRepository<RescheduleState>();
         var stateMachine = new RescheduleStateMachine();
         var stopped = new TaskCompletionSource<RescheduleStopped>(TaskCreationOptions.RunContinuationsAsynchronously);
-        await using QuartzTestBus fixture = await QuartzTestBus.Start(
+        await using QuartzTestBus fixture = await QuartzTestBus.StartAsync(
             timeout,
             configure: configurator =>
             {
@@ -49,28 +50,29 @@ public sealed class QuartzSagaSchedulingIntegrationTests
         using ConnectHandle canceledObserver = fixture.Bus.ConnectConsumeObserver(canceled);
         using ConnectHandle startObserver = fixture.Bus.ConnectConsumeObserver(starts);
         using ConnectHandle refreshObserver = fixture.Bus.ConnectConsumeObserver(refreshes);
-        ISendEndpoint input = await fixture.Bus.GetSendEndpoint(inputAddress)
-            .WaitAsync(timeout, TestContext.Current.CancellationToken);
+        ISendEndpoint input = await fixture.Bus.GetSendEndpointAsync(inputAddress, TestContext.Current.CancellationToken).WaitAsync(timeout, TestContext.Current.CancellationToken);
 
-        await input.Send(new StartReschedule(correlationId), TestContext.Current.CancellationToken);
+        await input.SendAsync(new StartReschedule(correlationId), TestContext.Current.CancellationToken);
         await starts.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
         await firstSchedule.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
-        Guid firstToken = Assert.IsType<Guid>(repository[correlationId].Instance.ScheduleTokenId);
+        RescheduleState firstSaga = Assert.IsType<SagaInstance<RescheduleState>>(repository[correlationId]).Instance;
+        Guid firstToken = Assert.IsType<Guid>(firstSaga.ScheduleTokenId);
         TriggerKey firstTrigger = new(firstToken.ToString("N"));
         Assert.True(await fixture.Scheduler.Exists(firstTrigger, TestContext.Current.CancellationToken));
 
-        await input.Send(new RefreshSchedule(correlationId), TestContext.Current.CancellationToken);
+        await input.SendAsync(new RefreshSchedule(correlationId), TestContext.Current.CancellationToken);
         await refreshes.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
         await scheduled.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
         await firstCancellation.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
-        Guid replacementToken = Assert.IsType<Guid>(repository[correlationId].Instance.ScheduleTokenId);
+        RescheduleState replacementSaga = Assert.IsType<SagaInstance<RescheduleState>>(repository[correlationId]).Instance;
+        Guid replacementToken = Assert.IsType<Guid>(replacementSaga.ScheduleTokenId);
         TriggerKey replacementTrigger = new(replacementToken.ToString("N"));
 
         Assert.NotEqual(firstToken, replacementToken);
         Assert.False(await fixture.Scheduler.Exists(firstTrigger, TestContext.Current.CancellationToken));
         Assert.True(await fixture.Scheduler.Exists(replacementTrigger, TestContext.Current.CancellationToken));
 
-        await input.Send(new StopReschedule(correlationId), TestContext.Current.CancellationToken);
+        await input.SendAsync(new StopReschedule(correlationId), TestContext.Current.CancellationToken);
         RescheduleStopped final = await stopped.Task.WaitAsync(timeout, TestContext.Current.CancellationToken);
         await canceled.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
 
@@ -81,7 +83,7 @@ public sealed class QuartzSagaSchedulingIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-SAGA-SCHEDULE", "scheduled-message-correlates-and-finalizes")]
-    public async Task ScheduledMessage_CorrelatesToItsSagaAndFinalizesIt()
+    public async Task ScheduledMessage_CorrelatesToItsSagaAndFinalizesItAsync()
     {
         TimeSpan timeout = OperationTimeout();
         Guid correlationId = NewId.NextGuid();
@@ -90,7 +92,7 @@ public sealed class QuartzSagaSchedulingIntegrationTests
         var repository = new InMemorySagaRepository<RescheduleState>();
         var stateMachine = new RescheduleStateMachine();
         var fired = new TaskCompletionSource<ScheduleFired>(TaskCreationOptions.RunContinuationsAsynchronously);
-        await using QuartzTestBus fixture = await QuartzTestBus.Start(
+        await using QuartzTestBus fixture = await QuartzTestBus.StartAsync(
             timeout,
             configure: configurator =>
             {
@@ -109,13 +111,13 @@ public sealed class QuartzSagaSchedulingIntegrationTests
         var starts = new ConsumeCompletionObserver<StartReschedule>(message => message.CorrelationId == correlationId);
         using ConnectHandle scheduledObserver = fixture.Bus.ConnectConsumeObserver(scheduled);
         using ConnectHandle startObserver = fixture.Bus.ConnectConsumeObserver(starts);
-        ISendEndpoint input = await fixture.Bus.GetSendEndpoint(inputAddress)
-            .WaitAsync(timeout, TestContext.Current.CancellationToken);
+        ISendEndpoint input = await fixture.Bus.GetSendEndpointAsync(inputAddress, TestContext.Current.CancellationToken).WaitAsync(timeout, TestContext.Current.CancellationToken);
 
-        await input.Send(new StartReschedule(correlationId), TestContext.Current.CancellationToken);
+        await input.SendAsync(new StartReschedule(correlationId), TestContext.Current.CancellationToken);
         await starts.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
         await scheduled.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
-        Guid token = Assert.IsType<Guid>(repository[correlationId].Instance.ScheduleTokenId);
+        RescheduleState saga = Assert.IsType<SagaInstance<RescheduleState>>(repository[correlationId]).Instance;
+        Guid token = Assert.IsType<Guid>(saga.ScheduleTokenId);
         ITrigger trigger = Assert.IsAssignableFrom<ITrigger>(await fixture.Scheduler.GetTrigger(
             new TriggerKey(token.ToString("N")),
             TestContext.Current.CancellationToken));
@@ -130,7 +132,7 @@ public sealed class QuartzSagaSchedulingIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-SAGA-MULTIPLE-SCHEDULES", "independent-token-and-delivery")]
-    public async Task Saga_CanOwnAndReceiveTwoIndependentSchedules()
+    public async Task Saga_CanOwnAndReceiveTwoIndependentSchedulesAsync()
     {
         TimeSpan timeout = OperationTimeout();
         Guid correlationId = NewId.NextGuid();
@@ -140,7 +142,7 @@ public sealed class QuartzSagaSchedulingIntegrationTests
         var stateMachine = new MultipleScheduleStateMachine();
         var firstFired = new TaskCompletionSource<FirstScheduleFired>(TaskCreationOptions.RunContinuationsAsynchronously);
         var secondFired = new TaskCompletionSource<SecondScheduleFired>(TaskCreationOptions.RunContinuationsAsynchronously);
-        await using QuartzTestBus fixture = await QuartzTestBus.Start(
+        await using QuartzTestBus fixture = await QuartzTestBus.StartAsync(
             timeout,
             configure: configurator =>
             {
@@ -167,17 +169,16 @@ public sealed class QuartzSagaSchedulingIntegrationTests
         var starts = new ConsumeCompletionObserver<StartMultipleSchedules>(message => message.CorrelationId == correlationId);
         using ConnectHandle scheduledObserver = fixture.Bus.ConnectConsumeObserver(scheduled);
         using ConnectHandle startObserver = fixture.Bus.ConnectConsumeObserver(starts);
-        ISendEndpoint input = await fixture.Bus.GetSendEndpoint(inputAddress)
-            .WaitAsync(timeout, TestContext.Current.CancellationToken);
+        ISendEndpoint input = await fixture.Bus.GetSendEndpointAsync(inputAddress, TestContext.Current.CancellationToken).WaitAsync(timeout, TestContext.Current.CancellationToken);
 
-        await input.Send(new StartMultipleSchedules(correlationId), TestContext.Current.CancellationToken);
+        await input.SendAsync(new StartMultipleSchedules(correlationId), TestContext.Current.CancellationToken);
         await starts.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
         await scheduled.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
-        MultipleScheduleState saga = repository[correlationId].Instance;
+        MultipleScheduleState saga = Assert.IsType<SagaInstance<MultipleScheduleState>>(repository[correlationId]).Instance;
         Guid firstToken = Assert.IsType<Guid>(saga.FirstTokenId);
         Guid secondToken = Assert.IsType<Guid>(saga.SecondTokenId);
-        ITrigger firstTrigger = await GetTrigger(fixture, firstToken);
-        ITrigger secondTrigger = await GetTrigger(fixture, secondToken);
+        ITrigger firstTrigger = await GetTriggerAsync(fixture, firstToken);
+        ITrigger secondTrigger = await GetTriggerAsync(fixture, secondToken);
 
         Assert.NotEqual(firstToken, secondToken);
         await fixture.Scheduler.TriggerJob(firstTrigger.JobKey, firstTrigger.JobDataMap, TestContext.Current.CancellationToken);
@@ -196,7 +197,7 @@ public sealed class QuartzSagaSchedulingIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-SAGA-LOAD", "concurrent-schedules-finalize-and-remove-all-sagas")]
-    public async Task ConcurrentScheduledSagas_FinalizeAndLeaveNoStoredInstances()
+    public async Task ConcurrentScheduledSagas_FinalizeAndLeaveNoStoredInstancesAsync()
     {
         const int sagaCount = 20;
         TimeSpan timeout = OperationTimeout();
@@ -206,7 +207,7 @@ public sealed class QuartzSagaSchedulingIntegrationTests
         var stateMachine = new LoadStateMachine();
         var completedIds = new ConcurrentDictionary<Guid, byte>();
         var allCompleted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-        await using QuartzTestBus fixture = await QuartzTestBus.Start(
+        await using QuartzTestBus fixture = await QuartzTestBus.StartAsync(
             timeout,
             configure: configurator =>
             {
@@ -226,12 +227,11 @@ public sealed class QuartzSagaSchedulingIntegrationTests
             });
         var scheduled = new ConsumeCompletionObserver<ScheduleMessage>(_ => true, sagaCount);
         using ConnectHandle scheduledObserver = fixture.Bus.ConnectConsumeObserver(scheduled);
-        ISendEndpoint input = await fixture.Bus.GetSendEndpoint(inputAddress)
-            .WaitAsync(timeout, TestContext.Current.CancellationToken);
+        ISendEndpoint input = await fixture.Bus.GetSendEndpointAsync(inputAddress, TestContext.Current.CancellationToken).WaitAsync(timeout, TestContext.Current.CancellationToken);
         Guid[] correlationIds = Enumerable.Range(0, sagaCount).Select(_ => NewId.NextGuid()).ToArray();
 
         await Task.WhenAll(correlationIds.Select(correlationId =>
-            input.Send(new StartLoad(correlationId), TestContext.Current.CancellationToken)));
+            input.SendAsync(new StartLoad(correlationId), TestContext.Current.CancellationToken)));
         await scheduled.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
         await allCompleted.Task.WaitAsync(timeout, TestContext.Current.CancellationToken);
 
@@ -240,7 +240,7 @@ public sealed class QuartzSagaSchedulingIntegrationTests
         Assert.Equal(0, repository.Count);
     }
 
-    private static async Task<ITrigger> GetTrigger(QuartzTestBus fixture, Guid tokenId) =>
+    private static async Task<ITrigger> GetTriggerAsync(QuartzTestBus fixture, Guid tokenId) =>
         Assert.IsAssignableFrom<ITrigger>(await fixture.Scheduler.GetTrigger(
             new TriggerKey(tokenId.ToString("N")),
             TestContext.Current.CancellationToken));

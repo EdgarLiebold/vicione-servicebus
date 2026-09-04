@@ -93,7 +93,7 @@ public sealed class SqlLockStatementProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-LOCK-SQL", "pessimistic-executor-does-not-freeze-first-model")]
-    public async Task PessimisticExecutor_RequestsAStatementForEveryContext()
+    public async Task PessimisticExecutor_RequestsAStatementForEveryContextAsync()
     {
         var statements = new RecordingLockStatementProvider();
         var executor = new PessimisticLoadQueryExecutor<MappingSaga>(statements, null);
@@ -103,9 +103,9 @@ public sealed class SqlLockStatementProviderTests
         await cancellation.CancelAsync();
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
-            executor.Load(north, Guid.NewGuid(), cancellation.Token));
+            executor.LoadAsync(north, Guid.NewGuid(), cancellation.Token));
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
-            executor.Load(south, Guid.NewGuid(), cancellation.Token));
+            executor.LoadAsync(south, Guid.NewGuid(), cancellation.Token));
 
         Assert.Equal([typeof(NorthContext), typeof(SouthContext)], statements.ContextTypes);
     }

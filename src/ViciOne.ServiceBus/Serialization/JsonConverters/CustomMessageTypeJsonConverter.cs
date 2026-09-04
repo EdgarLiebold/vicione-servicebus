@@ -15,7 +15,7 @@ public class CustomMessageTypeJsonConverter<T> :
         _options = options;
     }
 
-    public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         return JsonSerializer.Deserialize<T>(ref reader, _options);
     }

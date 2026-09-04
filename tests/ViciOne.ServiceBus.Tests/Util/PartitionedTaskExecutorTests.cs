@@ -38,7 +38,7 @@ public sealed class PartitionedTaskExecutorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PARTITIONED-TASK-EXECUTOR-ORDER", "same-partition-fifo-and-serialization")]
-    public async Task SamePartition_ExecutesInSubmissionOrderWithoutOverlap()
+    public async Task SamePartition_ExecutesInSubmissionOrderWithoutOverlapAsync()
     {
         await using var executor = CreateExecutor(partitionCount: 2);
         var firstStarted = NewCompletionSource();
@@ -91,7 +91,7 @@ public sealed class PartitionedTaskExecutorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PARTITIONED-TASK-EXECUTOR-CONCURRENCY", "independent-partitions")]
-    public async Task DifferentPartitions_CanExecuteConcurrently()
+    public async Task DifferentPartitions_CanExecuteConcurrentlyAsync()
     {
         await using var executor = CreateExecutor(partitionCount: 2);
         var bothStarted = NewCompletionSource();
@@ -99,7 +99,7 @@ public sealed class PartitionedTaskExecutorTests
         var active = 0;
         var maximum = 0;
 
-        async Task RunPartition()
+        async Task RunPartitionAsync()
         {
             int current = Interlocked.Increment(ref active);
             UpdateMaximum(ref maximum, current);
@@ -110,8 +110,8 @@ public sealed class PartitionedTaskExecutorTests
             Interlocked.Decrement(ref active);
         }
 
-        Task first = executor.ExecuteAsync([0], RunPartition, TestCancellationToken);
-        Task second = executor.ExecuteAsync([1], RunPartition, TestCancellationToken);
+        Task first = executor.ExecuteAsync([0], RunPartitionAsync, TestCancellationToken);
+        Task second = executor.ExecuteAsync([1], RunPartitionAsync, TestCancellationToken);
 
         try
         {
@@ -129,7 +129,7 @@ public sealed class PartitionedTaskExecutorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PARTITIONED-TASK-EXECUTOR-CONCURRENCY", "same-partition-configured-limit")]
-    public async Task ConcurrentDeliveryLimit_IsAppliedWithinEachPartition()
+    public async Task ConcurrentDeliveryLimit_IsAppliedWithinEachPartitionAsync()
     {
         await using var executor = new PartitionedTaskExecutor<byte[]>(
             value => value,
@@ -141,7 +141,7 @@ public sealed class PartitionedTaskExecutorTests
         var active = 0;
         var maximum = 0;
 
-        async Task RunPartition()
+        async Task RunPartitionAsync()
         {
             int current = Interlocked.Increment(ref active);
             UpdateMaximum(ref maximum, current);
@@ -154,9 +154,9 @@ public sealed class PartitionedTaskExecutorTests
 
         Task[] work =
         [
-            executor.ExecuteAsync([0], RunPartition, TestCancellationToken),
-            executor.ExecuteAsync([0], RunPartition, TestCancellationToken),
-            executor.ExecuteAsync([0], RunPartition, TestCancellationToken),
+            executor.ExecuteAsync([0], RunPartitionAsync, TestCancellationToken),
+            executor.ExecuteAsync([0], RunPartitionAsync, TestCancellationToken),
+            executor.ExecuteAsync([0], RunPartitionAsync, TestCancellationToken),
         ];
 
         try
@@ -176,7 +176,7 @@ public sealed class PartitionedTaskExecutorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PARTITIONED-TASK-EXECUTOR-KEY", "null-and-empty-map-to-zero")]
-    public async Task NullAndEmptyKeys_MapToPartitionZeroWithoutHashing()
+    public async Task NullAndEmptyKeys_MapToPartitionZeroWithoutHashingAsync()
     {
         await using var executor = new PartitionedTaskExecutor<string>(
             value => value == "null" ? null! : [],
@@ -221,7 +221,7 @@ public sealed class PartitionedTaskExecutorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PARTITIONED-TASK-EXECUTOR-BACKPRESSURE", "bounded-per-partition")]
-    public async Task Capacity_IsBoundedPerPartitionWithoutBlockingIndependentPartitions()
+    public async Task Capacity_IsBoundedPerPartitionWithoutBlockingIndependentPartitionsAsync()
     {
         await using var executor = CreateExecutor(partitionCount: 2, partitionCapacity: 1);
         var firstStarted = NewCompletionSource();
@@ -272,7 +272,7 @@ public sealed class PartitionedTaskExecutorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PARTITIONED-TASK-EXECUTOR-DISPOSAL", "concurrent-drain-and-closed")]
-    public async Task ConcurrentDisposal_DrainsAcceptedWorkAndRejectsEveryPartition()
+    public async Task ConcurrentDisposal_DrainsAcceptedWorkAndRejectsEveryPartitionAsync()
     {
         var executor = CreateExecutor(partitionCount: 2);
         var started = NewCompletionSource();

@@ -8,7 +8,7 @@ public sealed class DynamicRoutingTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-DYNAMIC-ROUTING", "all-and-only-compatible-routes")]
-    public async Task DynamicRouter_InvokesEveryCompatibleRouteAndDisconnectsItExactly()
+    public async Task DynamicRouter_InvokesEveryCompatibleRouteAndDisconnectsItExactlyAsync()
     {
         IDynamicRouter<IRouteContext> router = new DynamicRouter<IRouteContext>(new RouteConverterFactory());
         var aCount = 0;
@@ -18,15 +18,15 @@ public sealed class DynamicRoutingTests
         ConnectHandle routeB = router.ConnectPipe(Pipe.Execute<IRouteContext<RouteB>>(_ =>
             Interlocked.Increment(ref bCount)));
 
-        await router.Send(new RoutedContext<RouteA>("a"));
-        await router.Send(new RoutedContext<RouteB>("b"));
-        await router.Send(new DualRoutedContext("both"));
+        await router.SendAsync(new RoutedContext<RouteA>("a"));
+        await router.SendAsync(new RoutedContext<RouteB>("b"));
+        await router.SendAsync(new DualRoutedContext("both"));
 
         Assert.Equal(2, aCount);
         Assert.Equal(2, bCount);
 
         routeA.Disconnect();
-        await router.Send(new RoutedContext<RouteA>("a-after-disconnect"));
+        await router.SendAsync(new RoutedContext<RouteA>("a-after-disconnect"));
 
         Assert.Equal(2, aCount);
         Assert.Equal(2, bCount);
@@ -35,7 +35,7 @@ public sealed class DynamicRoutingTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DISPATCH", "matching-output-and-single-continuation")]
-    public async Task UseDispatch_RoutesMatchingContextsAndContinuesTheInputPipeExactlyOnce()
+    public async Task UseDispatch_RoutesMatchingContextsAndContinuesTheInputPipeExactlyOnceAsync()
     {
         var trace = new List<string>();
         IPipe<IRouteContext> pipe = Pipe.New<IRouteContext>(configuration =>
@@ -48,15 +48,15 @@ public sealed class DynamicRoutingTests
             configuration.UseExecute(context => trace.Add($"next:{context.Key}"));
         });
 
-        await pipe.Send(new RoutedContext<RouteA>("a"));
-        await pipe.Send(new RoutedContext<RouteB>("b"));
+        await pipe.SendAsync(new RoutedContext<RouteA>("a"));
+        await pipe.SendAsync(new RoutedContext<RouteB>("b"));
 
         Assert.Equal(["route:a", "next:a", "next:b"], trace);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-KEYED-DYNAMIC-ROUTING", "type-key-and-disconnection")]
-    public async Task KeyedRouter_RequiresBothACompatibleTypeAndTheConnectedKey()
+    public async Task KeyedRouter_RequiresBothACompatibleTypeAndTheConnectedKeyAsync()
     {
         IDynamicRouter<IRouteContext, string> router =
             new DynamicRouter<IRouteContext, string>(new RouteConverterFactory(), context => context.Key);
@@ -64,9 +64,9 @@ public sealed class DynamicRoutingTests
         ConnectHandle east = router.ConnectPipe("east", Pipe.Execute<IRouteContext<RouteA>>(_ =>
             Interlocked.Increment(ref routed)));
 
-        await router.Send(new RoutedContext<RouteA>("east"));
-        await router.Send(new RoutedContext<RouteA>("west"));
-        await router.Send(new RoutedContext<RouteB>("east"));
+        await router.SendAsync(new RoutedContext<RouteA>("east"));
+        await router.SendAsync(new RoutedContext<RouteA>("west"));
+        await router.SendAsync(new RoutedContext<RouteB>("east"));
 
         Assert.Equal(1, routed);
         Assert.Throws<DuplicateKeyPipeConfigurationException>(() =>
@@ -75,13 +75,13 @@ public sealed class DynamicRoutingTests
             router.ConnectPipe(null!, Pipe.Empty<IRouteContext<RouteA>>()));
 
         east.Disconnect();
-        await router.Send(new RoutedContext<RouteA>("east"));
+        await router.SendAsync(new RoutedContext<RouteA>("east"));
         Assert.Equal(1, routed);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DYNAMIC-ROUTING", "invalid-collaborator-boundaries")]
-    public async Task DynamicRouting_RejectsMissingCollaboratorsAndInvalidConverterResults()
+    public async Task DynamicRouting_RejectsMissingCollaboratorsAndInvalidConverterResultsAsync()
     {
         Assert.Throws<ArgumentNullException>(() => new DynamicRouter<IRouteContext>(null!));
         Assert.Throws<ArgumentNullException>(() =>
@@ -98,13 +98,13 @@ public sealed class DynamicRoutingTests
             new DynamicRouter<IRouteContext>(new NullResultConverterFactory());
         invalidResult.ConnectPipe(Pipe.Empty<IRouteContext<RouteA>>());
         InvalidOperationException invalid = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            invalidResult.Send(new RoutedContext<RouteA>("a")));
+            invalidResult.SendAsync(new RoutedContext<RouteA>("a")));
 
         IDynamicRouter<IRouteContext, string> nullKey =
             new DynamicRouter<IRouteContext, string>(new RouteConverterFactory(), _ => null!);
         nullKey.ConnectPipe("configured", Pipe.Empty<IRouteContext<RouteA>>());
         InvalidOperationException invalidKey = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            nullKey.Send(new RoutedContext<RouteA>("ignored")));
+            nullKey.SendAsync(new RoutedContext<RouteA>("ignored")));
         IDynamicRouter<IRouteContext> incompatibleType =
             new DynamicRouter<IRouteContext>(new RouteConverterFactory());
         ArgumentException incompatible = Assert.Throws<ArgumentException>(() =>

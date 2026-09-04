@@ -9,7 +9,7 @@ public sealed class InterfaceMessageDispatchTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-INTERFACE-MESSAGE-DISPATCH", "all-implemented-contracts-exactly-once")]
-    public async Task ConcreteMessage_IsDeliveredToEveryImplementedInterfaceHandlerExactlyOnce()
+    public async Task ConcreteMessage_IsDeliveredToEveryImplementedInterfaceHandlerExactlyOnceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -23,23 +23,23 @@ public sealed class InterfaceMessageDispatchTests
         var message = new ConcreteMessage("Joe", 27);
         var stopped = false;
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             Task<IReceivedMessage<FirstMessageContract>> firstDelivery = first.Consumed
                 .SelectAsync(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             Task<IReceivedMessage<SecondMessageContract>> secondDelivery = second.Consumed
                 .SelectAsync(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
-            await harness.InputQueueSendEndpoint.Send((object)message, cancellationToken)
+            await harness.InputQueueSendEndpoint.Advanced().SendAsync((object)message, cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
             await Task.WhenAll(firstDelivery, secondDelivery).WaitAsync(timeout, cancellationToken);
             IReceivedMessage<FirstMessageContract> firstReceived = await firstDelivery;
             IReceivedMessage<SecondMessageContract> secondReceived = await secondDelivery;
 
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
             stopped = true;
 
             FirstMessageContract firstMessage = firstReceived.Context.Message;
@@ -57,7 +57,7 @@ public sealed class InterfaceMessageDispatchTests
         finally
         {
             if (!stopped)
-                await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+                await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 

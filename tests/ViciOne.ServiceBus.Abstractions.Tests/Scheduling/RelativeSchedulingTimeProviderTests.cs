@@ -1,5 +1,6 @@
 using System.Reflection;
 using Microsoft.Extensions.Time.Testing;
+using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -12,50 +13,50 @@ public sealed class RelativeSchedulingTimeProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SCHEDULER-TIME-OWNER", "relative-send-uses-scheduler-clock")]
-    public async Task RelativeSend_UsesTheSchedulerClockAndAddsTheDelayExactly()
+    public async Task RelativeSend_UsesTheSchedulerClockAndAddsTheDelayExactlyAsync()
     {
         var clock = new FakeTimeProvider(SchedulerNow);
-        IMessageScheduler scheduler = CreateScheduler<IMessageScheduler>(clock, out RecordingScheduleProxy recorder);
+        IMessageScheduler scheduler = CreateScheduler<IAdvancedMessageScheduler>(clock, out RecordingScheduleProxy recorder);
         TimeSpan delay = TimeSpan.FromMinutes(37);
 
-        await scheduler.ScheduleSend(Destination, delay, new ScheduledPayload("send"), TestContext.Current.CancellationToken);
+        await scheduler.ScheduleSendAsync(Destination, delay, new ScheduledPayload("send"), TestContext.Current.CancellationToken);
 
-        DateTime scheduledTime = Assert.Single(recorder.ScheduledTimes);
-        Assert.Equal(SchedulerNow.UtcDateTime + delay, scheduledTime);
-        Assert.Equal(DateTimeKind.Utc, scheduledTime.Kind);
+        DateTimeOffset dueAt = Assert.Single(recorder.ScheduledTimes);
+        Assert.Equal(SchedulerNow + delay, dueAt);
+        Assert.Equal(TimeSpan.Zero, dueAt.Offset);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SCHEDULER-TIME-OWNER", "relative-publish-uses-scheduler-clock")]
-    public async Task RelativePublish_UsesTheSchedulerClockAndAddsTheDelayExactly()
+    public async Task RelativePublish_UsesTheSchedulerClockAndAddsTheDelayExactlyAsync()
     {
         var clock = new FakeTimeProvider(SchedulerNow);
-        IMessageScheduler scheduler = CreateScheduler<IMessageScheduler>(clock, out RecordingScheduleProxy recorder);
+        IMessageScheduler scheduler = CreateScheduler<IAdvancedMessageScheduler>(clock, out RecordingScheduleProxy recorder);
         TimeSpan delay = TimeSpan.FromHours(3);
 
-        await scheduler.SchedulePublish(delay, new ScheduledPayload("publish"), TestContext.Current.CancellationToken);
+        await scheduler.SchedulePublishAsync(delay, new ScheduledPayload("publish"), TestContext.Current.CancellationToken);
 
-        DateTime scheduledTime = Assert.Single(recorder.ScheduledTimes);
-        Assert.Equal(SchedulerNow.UtcDateTime + delay, scheduledTime);
-        Assert.Equal(DateTimeKind.Utc, scheduledTime.Kind);
+        DateTimeOffset dueAt = Assert.Single(recorder.ScheduledTimes);
+        Assert.Equal(SchedulerNow + delay, dueAt);
+        Assert.Equal(TimeSpan.Zero, dueAt.Offset);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SCHEDULER-TIME-OWNER", "scheduler-context-relative-send")]
-    public async Task SchedulerContextRelativeSend_UsesItsExposedClock()
+    public async Task SchedulerContextRelativeSend_UsesItsExposedClockAsync()
     {
         var clock = new FakeTimeProvider(SchedulerNow);
         MessageSchedulerContext scheduler = CreateScheduler<MessageSchedulerContext>(clock, out RecordingScheduleProxy recorder);
         TimeSpan delay = TimeSpan.FromSeconds(19);
 
-        await scheduler.ScheduleSend(delay, new ScheduledPayload("context"), TestContext.Current.CancellationToken);
+        await scheduler.ScheduleSendAsync(delay, new ScheduledPayload("context"), TestContext.Current.CancellationToken);
 
-        Assert.Equal(SchedulerNow.UtcDateTime + delay, Assert.Single(recorder.ScheduledTimes));
+        Assert.Equal(SchedulerNow + delay, Assert.Single(recorder.ScheduledTimes));
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SCHEDULER-TIME-OWNER", "consume-context-relative-send")]
-    public async Task ConsumeContextRelativeSend_UsesTheConsumeContextClock()
+    public async Task ConsumeContextRelativeSend_UsesTheConsumeContextClockAsync()
     {
         var contextClock = new FakeTimeProvider(SchedulerNow);
         var unrelatedSchedulerClock = new FakeTimeProvider(SchedulerNow.AddYears(-10));
@@ -64,9 +65,9 @@ public sealed class RelativeSchedulingTimeProviderTests
         ((ConsumeContextProxy)(object)context).Configure(contextClock, scheduler);
         TimeSpan delay = TimeSpan.FromDays(2);
 
-        await context.ScheduleSend(Destination, delay, new ScheduledPayload("consume"), TestContext.Current.CancellationToken);
+        await context.ScheduleSendAsync(Destination, delay, new ScheduledPayload("consume"), TestContext.Current.CancellationToken);
 
-        Assert.Equal(SchedulerNow.UtcDateTime + delay, Assert.Single(recorder.ScheduledTimes));
+        Assert.Equal(SchedulerNow + delay, Assert.Single(recorder.ScheduledTimes));
     }
 
     private static T CreateScheduler<T>(TimeProvider clock, out RecordingScheduleProxy recorder)
@@ -84,7 +85,7 @@ public sealed class RelativeSchedulingTimeProviderTests
     {
         public TimeProvider Clock { get; set; } = TimeProvider.System;
 
-        public List<DateTime> ScheduledTimes { get; } = [];
+        public List<DateTimeOffset> ScheduledTimes { get; } = [];
 
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
         {
@@ -95,7 +96,7 @@ public sealed class RelativeSchedulingTimeProviderTests
 
             if (targetMethod.Name.StartsWith("Schedule", StringComparison.Ordinal))
             {
-                ScheduledTimes.Add(args!.OfType<DateTime>().Single());
+                ScheduledTimes.Add(args!.OfType<DateTimeOffset>().Single());
                 return CompletedTask(targetMethod.ReturnType);
             }
 

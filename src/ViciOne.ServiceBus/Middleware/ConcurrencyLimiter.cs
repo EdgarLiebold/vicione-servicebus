@@ -12,24 +12,24 @@ namespace ViciOne.ServiceBus.Middleware;
 public class ConcurrencyLimiter :
     IConcurrencyLimiter
 {
-    readonly string _id;
+    readonly string? _id = null!;
     readonly SemaphoreSlim _limit;
     int _concurrencyLimit;
-    DateTime _lastUpdated;
+    DateTimeOffset _lastUpdated;
 
-    public ConcurrencyLimiter(int concurrencyLimit, string id = null)
+    public ConcurrencyLimiter(int concurrencyLimit, string? id = null)
     {
         _concurrencyLimit = concurrencyLimit;
         _id = id;
 
         _limit = new SemaphoreSlim(concurrencyLimit);
-        _lastUpdated = DateTime.MinValue;
+        _lastUpdated = DateTimeOffset.MinValue;
     }
 
     int IConcurrencyLimiter.Available => _limit.CurrentCount;
     int IConcurrencyLimiter.Limit => _concurrencyLimit;
 
-    public Task Wait(CancellationToken cancellationToken)
+    public Task WaitAsync(CancellationToken cancellationToken)
     {
         return _limit.WaitAsync(cancellationToken);
     }
@@ -39,7 +39,7 @@ public class ConcurrencyLimiter :
         _limit.Release();
     }
 
-    public async Task Consume(ConsumeContext<SetConcurrencyLimit> context)
+    public async Task ConsumeAsync(ConsumeContext<SetConcurrencyLimit> context)
     {
         if (_id == null || _id.Equals(context.Message.Id, StringComparison.OrdinalIgnoreCase))
         {
@@ -60,7 +60,7 @@ public class ConcurrencyLimiter :
 
                         Interlocked.Add(ref _concurrencyLimit, releaseCount);
 
-                        _lastUpdated = context.Message.Timestamp ?? context.SentTime ?? context.GetTimeProvider().GetUtcNow().UtcDateTime;
+                        _lastUpdated = context.Message.Timestamp ?? context.SentTime ?? context.GetTimeProvider().GetUtcNow();
                     }
                     else if (concurrencyLimit < previousLimit)
                     {
@@ -70,13 +70,13 @@ public class ConcurrencyLimiter :
 
                             Interlocked.Decrement(ref _concurrencyLimit);
 
-                            _lastUpdated = context.Message.Timestamp ?? context.SentTime ?? context.GetTimeProvider().GetUtcNow().UtcDateTime;
+                            _lastUpdated = context.Message.Timestamp ?? context.SentTime ?? context.GetTimeProvider().GetUtcNow();
                         }
                     }
 
-                    await context.RespondAsync<ConcurrencyLimitUpdated>(new
+                    await context.Advanced().RespondAsync<ConcurrencyLimitUpdated>(new
                     {
-                        Timestamp = context.GetTimeProvider().GetUtcNow().UtcDateTime,
+                        Timestamp = context.GetTimeProvider().GetUtcNow(),
                         context.Message.Id,
                         context.Message.ConcurrencyLimit
                     }).ConfigureAwait(false);

@@ -20,7 +20,7 @@ public class MessageSendContext<TMessage> :
     readonly Lazy<MessageBody> _body;
     readonly DictionarySendHeaders _headers;
 
-    IMessageSerializer _serializer;
+    IMessageSerializer _serializer = null!;
 
     public MessageSendContext(TMessage message, CancellationToken cancellationToken = default)
         : base(cancellationToken)
@@ -65,7 +65,7 @@ public class MessageSendContext<TMessage> :
     public Uri? FaultAddress { get; set; }
 
     public TimeSpan? TimeToLive { get; set; }
-    public DateTime? SentTime { get; private set; }
+    public DateTimeOffset? SentTime { get; private set; }
 
     internal void SetDurableAdmissionMetadata(Guid idempotencyKey, Guid? correlationId)
     {
@@ -96,8 +96,7 @@ public class MessageSendContext<TMessage> :
         }
     }
 
-    public ISerialization Serialization { get; set; }
-
+    public ISerialization Serialization { get; set; } = null!;
     public string[] SupportedMessageTypes { get; set; }
 
     public long? BodyLength => _body.IsValueCreated ? _body.Value.Length : default;
@@ -136,7 +135,7 @@ public class MessageSendContext<TMessage> :
         return Serializer?.GetMessageBody(this) ?? throw new SerializationException("Unable to serialize message, no serializer specified.");
     }
 
-    protected static string ReadString(IReadOnlyDictionary<string, object> properties, string key, string defaultValue = null)
+    protected static string? ReadString(IReadOnlyDictionary<string, object> properties, string key, string? defaultValue = null)
     {
         if (properties.TryGetValue(key, out var value))
         {

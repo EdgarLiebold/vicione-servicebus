@@ -14,7 +14,7 @@ public class AnyExistingSagaPolicy<TSaga, TMessage> :
 {
     readonly IPipe<ConsumeContext<TMessage>> _missingPipe;
 
-    public AnyExistingSagaPolicy(IPipe<ConsumeContext<TMessage>> missingPipe = null, bool readOnly = false)
+    public AnyExistingSagaPolicy(IPipe<ConsumeContext<TMessage>>? missingPipe = null, bool readOnly = false)
     {
         IsReadOnly = readOnly;
         _missingPipe = missingPipe ?? Pipe.Empty<ConsumeContext<TMessage>>();
@@ -22,19 +22,19 @@ public class AnyExistingSagaPolicy<TSaga, TMessage> :
 
     public bool IsReadOnly { get; }
 
-    public bool PreInsertInstance(ConsumeContext<TMessage> context, out TSaga instance)
+    public bool PreInsertInstance(ConsumeContext<TMessage> context, [NotNullWhen(true)] out TSaga? instance)
     {
         instance = null;
         return false;
     }
 
-    Task ISagaPolicy<TSaga, TMessage>.Existing(SagaConsumeContext<TSaga, TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
+    Task ISagaPolicy<TSaga, TMessage>.ExistingAsync(SagaConsumeContext<TSaga, TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
     {
-        return next.Send(context);
+        return next.SendAsync(context);
     }
 
-    Task ISagaPolicy<TSaga, TMessage>.Missing(ConsumeContext<TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
+    Task ISagaPolicy<TSaga, TMessage>.MissingAsync(ConsumeContext<TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
     {
-        return _missingPipe.Send(context);
+        return _missingPipe.SendAsync(context);
     }
 }

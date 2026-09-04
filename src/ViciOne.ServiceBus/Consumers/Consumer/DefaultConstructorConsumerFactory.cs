@@ -8,15 +8,15 @@ public class DefaultConstructorConsumerFactory<TConsumer> :
     IConsumerFactory<TConsumer>
     where TConsumer : class, new()
 {
-    public async Task Send<T>(ConsumeContext<T> context, IPipe<ConsumerConsumeContext<TConsumer, T>> next)
+    public async Task SendAsync<T>(ConsumeContext<T> context, IPipe<ConsumerConsumeContext<TConsumer, T>> next)
         where T : class
     {
-        TConsumer consumer = null;
+        TConsumer? consumer = null;
         try
         {
             consumer = new TConsumer();
 
-            await next.Send(new ConsumerConsumeContextScope<TConsumer, T>(context, consumer)).ConfigureAwait(false);
+            await next.SendAsync(new ConsumerConsumeContextScope<TConsumer, T>(context, consumer)).ConfigureAwait(false);
         }
         finally
         {

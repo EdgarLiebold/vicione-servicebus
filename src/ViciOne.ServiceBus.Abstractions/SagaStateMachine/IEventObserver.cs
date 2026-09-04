@@ -11,7 +11,7 @@ public interface IEventObserver<TSaga>
     /// </summary>
     /// <param name="context">The event context</param>
     /// <returns></returns>
-    Task PreExecute(BehaviorContext<TSaga> context);
+    Task PreExecuteAsync(BehaviorContext<TSaga> context);
 
     /// <summary>
     /// Called before the event context is delivered to the activities
@@ -19,7 +19,7 @@ public interface IEventObserver<TSaga>
     /// <typeparam name="T">The event data type</typeparam>
     /// <param name="context">The event context</param>
     /// <returns></returns>
-    Task PreExecute<T>(BehaviorContext<TSaga, T> context)
+    Task PreExecuteAsync<T>(BehaviorContext<TSaga, T> context)
         where T : class;
 
     /// <summary>
@@ -27,7 +27,7 @@ public interface IEventObserver<TSaga>
     /// </summary>
     /// <param name="context">The event context</param>
     /// <returns></returns>
-    Task PostExecute(BehaviorContext<TSaga> context);
+    Task PostExecuteAsync(BehaviorContext<TSaga> context);
 
     /// <summary>
     /// Called when the event has been processed by the activities
@@ -35,7 +35,7 @@ public interface IEventObserver<TSaga>
     /// <typeparam name="T">The event data type</typeparam>
     /// <param name="context">The event context</param>
     /// <returns></returns>
-    Task PostExecute<T>(BehaviorContext<TSaga, T> context)
+    Task PostExecuteAsync<T>(BehaviorContext<TSaga, T> context)
         where T : class;
 
     /// <summary>
@@ -44,7 +44,7 @@ public interface IEventObserver<TSaga>
     /// <param name="context">The event context</param>
     /// <param name="exception">The exception that was thrown</param>
     /// <returns></returns>
-    Task ExecuteFault(BehaviorContext<TSaga> context, Exception exception);
+    Task ExecuteFaultAsync(BehaviorContext<TSaga> context, Exception exception);
 
     /// <summary>
     /// Called when the activity execution faults and is not handled by the activities
@@ -53,6 +53,6 @@ public interface IEventObserver<TSaga>
     /// <param name="context">The event context</param>
     /// <param name="exception">The exception that was thrown</param>
     /// <returns></returns>
-    Task ExecuteFault<T>(BehaviorContext<TSaga, T> context, Exception exception)
+    Task ExecuteFaultAsync<T>(BehaviorContext<TSaga, T> context, Exception exception)
         where T : class;
 }

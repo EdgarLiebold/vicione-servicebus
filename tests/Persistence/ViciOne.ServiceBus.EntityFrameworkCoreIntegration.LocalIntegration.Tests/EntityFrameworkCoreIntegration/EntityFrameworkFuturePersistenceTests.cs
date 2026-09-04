@@ -14,32 +14,32 @@ public sealed class EntityFrameworkFuturePersistenceTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-FUTURE-REGISTRATION", "explicit-definition-persists-completed-result")]
-    public async Task ExplicitFutureDefinition_CompletesAndPersistsTheResult()
+    public async Task ExplicitFutureDefinition_CompletesAndPersistsTheResultAsync()
     {
         await using FutureFixture fixture = await FutureFixture.StartAsync("future-explicit", useShortcutRegistration: false);
         var command = new CalculateValue(NewId.NextGuid(), 21, fail: false);
 
-        Response<ValueCalculated> response = await fixture.Request(command);
+        Response<ValueCalculated> response = await fixture.RequestAsync(command);
         IReceivedMessage<CalculateValue> consumedCommand = await fixture.Harness.Consumed
             .SelectAsync<CalculateValue>(
                 message => message.Context.Message.CorrelationId == command.CorrelationId
-                    && IsConsumedByCalculationFuture(message.Context),
+                    && IsConsumedByCalculationFuture(message.Context.Advanced()),
                 TestContext.Current.CancellationToken)
-            .First();
+            .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
         IReceivedMessage<ValueCalculated> consumedResult = await fixture.Harness.Consumed
             .SelectAsync<ValueCalculated>(
                 message => message.Context.Message.CorrelationId == command.CorrelationId
-                    && IsConsumedByCalculationFuture(message.Context),
+                    && IsConsumedByCalculationFuture(message.Context.Advanced()),
                 TestContext.Current.CancellationToken)
-            .First();
-        FutureState persisted = await fixture.ReadFuture(command.CorrelationId);
+            .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
+        FutureState persisted = await fixture.ReadFutureAsync(command.CorrelationId);
 
         Assert.Equal(command.CorrelationId, response.Message.CorrelationId);
         Assert.Equal(42, response.Message.Value);
         Assert.Equal(1, fixture.Attempts.Count);
         Assert.Equal(command.CorrelationId, persisted.CorrelationId);
-        Assert.Equal(Assert.IsType<DateTime>(consumedCommand.Context.SentTime), persisted.Created);
-        Assert.Equal(Assert.IsType<DateTime>(consumedResult.Context.SentTime), persisted.Completed);
+        Assert.Equal(Assert.IsType<DateTimeOffset>(consumedCommand.Context.SentTime), persisted.Created);
+        Assert.Equal(Assert.IsType<DateTimeOffset>(consumedResult.Context.SentTime), persisted.Completed);
         Assert.Null(persisted.Faulted);
         Assert.Empty(persisted.Pending);
         Assert.Single(persisted.Results);
@@ -48,14 +48,14 @@ public sealed class EntityFrameworkFuturePersistenceTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-FUTURE-DURABILITY", "completed-result-is-reused-without-reexecution")]
-    public async Task CompletedFuture_ReusesThePersistedResultWithoutReexecutingTheConsumer()
+    public async Task CompletedFuture_ReusesThePersistedResultWithoutReexecutingTheConsumerAsync()
     {
         await using FutureFixture fixture = await FutureFixture.StartAsync("future-durable-result", useShortcutRegistration: true);
         var command = new CalculateValue(NewId.NextGuid(), 7, fail: false);
 
-        Response<ValueCalculated> first = await fixture.Request(command);
-        Response<ValueCalculated> second = await fixture.Request(command);
-        FutureState persisted = await fixture.ReadFuture(command.CorrelationId);
+        Response<ValueCalculated> first = await fixture.RequestAsync(command);
+        Response<ValueCalculated> second = await fixture.RequestAsync(command);
+        FutureState persisted = await fixture.ReadFutureAsync(command.CorrelationId);
 
         Assert.Equal(command.CorrelationId, first.Message.CorrelationId);
         Assert.Equal(14, first.Message.Value);
@@ -71,14 +71,14 @@ public sealed class EntityFrameworkFuturePersistenceTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-FUTURE-DURABILITY", "fault-is-reused-without-reexecution")]
-    public async Task FaultedFuture_ReusesThePersistedFaultWithoutReexecutingTheConsumer()
+    public async Task FaultedFuture_ReusesThePersistedFaultWithoutReexecutingTheConsumerAsync()
     {
         await using FutureFixture fixture = await FutureFixture.StartAsync("future-durable-fault", useShortcutRegistration: true);
         var command = new CalculateValue(NewId.NextGuid(), 5, fail: true);
 
-        RequestFaultException first = await Assert.ThrowsAsync<RequestFaultException>(() => fixture.Request(command));
-        RequestFaultException second = await Assert.ThrowsAsync<RequestFaultException>(() => fixture.Request(command));
-        FutureState persisted = await fixture.ReadFuture(command.CorrelationId);
+        RequestFaultException first = await Assert.ThrowsAsync<RequestFaultException>(() => fixture.RequestAsync(command));
+        RequestFaultException second = await Assert.ThrowsAsync<RequestFaultException>(() => fixture.RequestAsync(command));
+        FutureState persisted = await fixture.ReadFutureAsync(command.CorrelationId);
 
         AssertFault(first, command);
         AssertFault(second, command);
@@ -92,7 +92,7 @@ public sealed class EntityFrameworkFuturePersistenceTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-FUTURE-FAN-IN", "all-pending-results-complete-once")]
-    public async Task FanInFuture_CompletesAfterEveryPersistedPendingRequest()
+    public async Task FanInFuture_CompletesAfterEveryPersistedPendingRequestAsync()
     {
         await using FutureFixture fixture = await FutureFixture.StartAsync("future-fan-in", useShortcutRegistration: true);
         Guid correlationId = NewId.NextGuid();
@@ -102,9 +102,9 @@ public sealed class EntityFrameworkFuturePersistenceTests
             new CalculationItem(NewId.NextGuid(), 7, fail: false),
         ]);
 
-        Response<ValuesAggregated> response = await fixture.Request<AggregateValues, ValuesAggregated>(command);
-        Response<ValuesAggregated> repeated = await fixture.Request<AggregateValues, ValuesAggregated>(command);
-        FutureState persisted = await fixture.ReadFuture(correlationId);
+        Response<ValuesAggregated> response = await fixture.RequestAsync<AggregateValues, ValuesAggregated>(command);
+        Response<ValuesAggregated> repeated = await fixture.RequestAsync<AggregateValues, ValuesAggregated>(command);
+        FutureState persisted = await fixture.ReadFutureAsync(correlationId);
 
         Assert.Equal(correlationId, response.Message.CorrelationId);
         Assert.Equal(15, response.Message.Total);
@@ -128,7 +128,7 @@ public sealed class EntityFrameworkFuturePersistenceTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-FUTURE-FAN-IN", "one-failed-part-persists-terminal-fault")]
-    public async Task FanInFuture_PersistsOneTerminalFaultWhenAnyPartFails()
+    public async Task FanInFuture_PersistsOneTerminalFaultWhenAnyPartFailsAsync()
     {
         await using FutureFixture fixture = await FutureFixture.StartAsync("future-fan-in-fault", useShortcutRegistration: true);
         Guid correlationId = NewId.NextGuid();
@@ -140,10 +140,10 @@ public sealed class EntityFrameworkFuturePersistenceTests
         ]);
 
         RequestFaultException exception = await Assert.ThrowsAsync<RequestFaultException>(() =>
-            fixture.Request<AggregateValues, ValuesAggregated>(command));
+            fixture.RequestAsync<AggregateValues, ValuesAggregated>(command));
         RequestFaultException repeated = await Assert.ThrowsAsync<RequestFaultException>(() =>
-            fixture.Request<AggregateValues, ValuesAggregated>(command));
-        FutureState persisted = await fixture.ReadFuture(correlationId);
+            fixture.RequestAsync<AggregateValues, ValuesAggregated>(command));
+        FutureState persisted = await fixture.ReadFutureAsync(correlationId);
 
         Fault<AggregateValues> fault = Assert.IsAssignableFrom<Fault<AggregateValues>>(exception.Fault);
         Fault<AggregateValues> repeatedFault = Assert.IsAssignableFrom<Fault<AggregateValues>>(repeated.Fault);
@@ -168,7 +168,7 @@ public sealed class EntityFrameworkFuturePersistenceTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-FUTURE-COMPOSITION", "nested-futures-persist-variables-and-reuse-terminal-result")]
-    public async Task ComposedFuture_PersistsNestedBranchesAndReusesTheTerminalResult()
+    public async Task ComposedFuture_PersistsNestedBranchesAndReusesTheTerminalResultAsync()
     {
         await using FutureFixture fixture = await FutureFixture.StartAsync("future-composed", useShortcutRegistration: true);
         Guid correlationId = NewId.NextGuid();
@@ -184,11 +184,11 @@ public sealed class EntityFrameworkFuturePersistenceTests
                 new CalculationItem(NewId.NextGuid(), 4, fail: false),
             ]);
 
-        Response<ValuesComposed> first = await fixture.Request<ComposeValues, ValuesComposed>(command);
-        Response<ValuesComposed> repeated = await fixture.Request<ComposeValues, ValuesComposed>(command);
-        FutureState parent = await fixture.ReadFuture(correlationId);
-        FutureState calculation = await fixture.ReadFuture(calculationId);
-        FutureState aggregation = await fixture.ReadFuture(aggregationId);
+        Response<ValuesComposed> first = await fixture.RequestAsync<ComposeValues, ValuesComposed>(command);
+        Response<ValuesComposed> repeated = await fixture.RequestAsync<ComposeValues, ValuesComposed>(command);
+        FutureState parent = await fixture.ReadFutureAsync(correlationId);
+        FutureState calculation = await fixture.ReadFutureAsync(calculationId);
+        FutureState aggregation = await fixture.ReadFutureAsync(aggregationId);
 
         Assert.Equal(correlationId, first.Message.CorrelationId);
         Assert.Equal(28, first.Message.Total);
@@ -357,7 +357,7 @@ public sealed class EntityFrameworkFuturePersistenceTests
 
     public sealed class CalculationConsumer(FutureAttemptProbe attempts) : IConsumer<CalculateValue>
     {
-        public Task Consume(ConsumeContext<CalculateValue> context)
+        public Task ConsumeAsync(ConsumeContext<CalculateValue> context)
         {
             attempts.Record(context.Message.CorrelationId);
             if (context.Message.Fail)
@@ -453,7 +453,7 @@ public sealed class EntityFrameworkFuturePersistenceTests
 
             WhenAllCompleted(result => result.SetCompletedUsingInitializer(context =>
             {
-                if (!context.TryGetVariable(CalculationVariableName, out CalculationVariable calculation))
+                if (!context.TryGetVariable(CalculationVariableName, out CalculationVariable? calculation) || calculation is null)
                     throw new InvalidOperationException("The persisted calculation variable is missing.");
 
                 ValuesAggregated aggregation = context.SelectResults<ValuesAggregated>().Single();
@@ -469,7 +469,7 @@ public sealed class EntityFrameworkFuturePersistenceTests
 
     public sealed class PartConsumer(PartAttemptProbe attempts) : IConsumer<CalculatePart>
     {
-        public Task Consume(ConsumeContext<CalculatePart> context)
+        public Task ConsumeAsync(ConsumeContext<CalculatePart> context)
         {
             attempts.Record(context.Message.ItemId);
             if (context.Message.Fail)
@@ -617,7 +617,7 @@ public sealed class EntityFrameworkFuturePersistenceTests
                 ServiceProvider provider = services.BuildServiceProvider(validateScopes: true);
                 try
                 {
-                    ITestHarness harness = await provider.StartTestHarness()
+                    ITestHarness harness = await provider.StartTestHarnessAsync()
                         .WaitAsync(database.OperationTimeout, cancellationToken);
                     return new FutureFixture(database, provider, harness, attempts, partAttempts);
                 }
@@ -634,21 +634,21 @@ public sealed class EntityFrameworkFuturePersistenceTests
             }
         }
 
-        public Task<Response<ValueCalculated>> Request(CalculateValue command)
+        public Task<Response<ValueCalculated>> RequestAsync(CalculateValue command)
         {
-            return Request<CalculateValue, ValueCalculated>(command);
+            return RequestAsync<CalculateValue, ValueCalculated>(command);
         }
 
-        public Task<Response<TResponse>> Request<TRequest, TResponse>(TRequest command)
+        public Task<Response<TResponse>> RequestAsync<TRequest, TResponse>(TRequest command)
             where TRequest : class
             where TResponse : class
         {
             IRequestClient<TRequest> client = Harness.GetRequestClient<TRequest>();
-            return client.GetResponse<TResponse>(command, TestContext.Current.CancellationToken)
+            return client.GetResponseAsync<TResponse>(command, TestContext.Current.CancellationToken)
                 .WaitAsync(_database.OperationTimeout, TestContext.Current.CancellationToken);
         }
 
-        public async Task<FutureState> ReadFuture(Guid correlationId)
+        public async Task<FutureState> ReadFutureAsync(Guid correlationId)
         {
             await using FutureSagaDbContext context = CreateDbContext(_database.ConnectionString);
             return await context.Set<FutureState>()
@@ -660,7 +660,7 @@ public sealed class EntityFrameworkFuturePersistenceTests
         {
             try
             {
-                await Harness.Stop(CancellationToken.None)
+                await Harness.StopAsync(CancellationToken.None)
                     .WaitAsync(_database.OperationTimeout, CancellationToken.None);
             }
             finally

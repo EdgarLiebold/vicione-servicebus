@@ -31,7 +31,8 @@ public class ConsumeContextRetryPolicy :
 
             var retryConsumeContext = new RetryConsumeContext(consumeContext, _retryPolicy, null);
 
-            return new ConsumeContextRetryPolicyContext(retryPolicyContext, retryConsumeContext, _cancellationToken) as RetryPolicyContext<T>;
+            return new ConsumeContextRetryPolicyContext(retryPolicyContext, retryConsumeContext, _cancellationToken) as RetryPolicyContext<T>
+                ?? throw new InvalidOperationException($"The retry policy context cannot be represented as {TypeCache<T>.ShortName}.");
         }
 
         throw new ArgumentException("The argument must be a ConsumeContext", nameof(context));
@@ -46,15 +47,15 @@ public class ConsumeContextRetryPolicy :
 
 public class ConsumeContextRetryPolicy<TFilter, TContext> :
     IRetryPolicy
-    where TFilter : class, ConsumeContext
+    where TFilter : class, PipeContext
     where TContext : class, TFilter, ConsumeRetryContext
 {
     readonly CancellationToken _cancellationToken;
-    readonly Func<TFilter, IRetryPolicy, RetryContext, TContext> _contextFactory;
+    readonly Func<TFilter, IRetryPolicy, RetryContext?, TContext> _contextFactory;
     readonly IRetryPolicy _retryPolicy;
 
     public ConsumeContextRetryPolicy(IRetryPolicy retryPolicy, CancellationToken cancellationToken,
-        Func<TFilter, IRetryPolicy, RetryContext, TContext> contextFactory)
+        Func<TFilter, IRetryPolicy, RetryContext?, TContext> contextFactory)
     {
         _retryPolicy = retryPolicy ?? throw new ArgumentNullException(nameof(retryPolicy));
         _cancellationToken = cancellationToken;
@@ -81,7 +82,8 @@ public class ConsumeContextRetryPolicy<TFilter, TContext> :
             ?? throw new InvalidOperationException("The consume retry context factory returned null.");
 
         return new ConsumeContextRetryPolicyContext<TFilter, TContext>(retryPolicyContext, retryConsumeContext,
-            _cancellationToken) as RetryPolicyContext<T>;
+                _cancellationToken) as RetryPolicyContext<T>
+            ?? throw new InvalidOperationException($"The retry policy context cannot be represented as {TypeCache<T>.ShortName}.");
     }
 
     public bool IsHandled(Exception exception)

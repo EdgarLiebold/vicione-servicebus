@@ -11,6 +11,8 @@ public static class CancellationTokenExtensions
     /// Completes a task when the token is canceled. This models cancellation as a signal and does not
     /// create a canceled Task, which is useful for Task.WhenAny coordination.
     /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="cancelTask">The cancel task used by the operation.</param>
     public static CancellationTokenRegistration RegisterTask(this CancellationToken cancellationToken, out Task cancelTask)
     {
         if (!cancellationToken.CanBeCanceled)

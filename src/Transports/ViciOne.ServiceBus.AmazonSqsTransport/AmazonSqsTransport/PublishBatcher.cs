@@ -33,7 +33,7 @@ public class PublishBatcher :
                 .Sum(x => encoding.GetByteCount(x.Key) + encoding.GetByteCount(x.Value.StringValue))).GetValueOrDefault();
     }
 
-    protected override async Task SendBatch(IList<BatchEntry<PublishBatchRequestEntry>> batch)
+    protected override async Task SendBatchAsync(IList<BatchEntry<PublishBatchRequestEntry>> batch)
     {
         var batchRequest = new PublishBatchRequest
         {

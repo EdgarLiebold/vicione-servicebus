@@ -26,9 +26,8 @@ class CompensatedCompensationResult<TLog> :
         _duration = _compensateContext.Elapsed;
     }
 
-    protected IDictionary<string, object> Variables { get; private set; }
-
-    public async Task Evaluate()
+    protected IDictionary<string, object> Variables { get; private set; } = null!;
+    public async Task EvaluateAsync(CancellationToken cancellationToken = default)
     {
         var builder = CreateRoutingSlipBuilder(_routingSlip);
 
@@ -36,26 +35,28 @@ class CompensatedCompensationResult<TLog> :
 
         var routingSlip = builder.Build();
 
-        await _publisher.PublishRoutingSlipActivityCompensated(_compensateContext.ActivityName, _compensateContext.ExecutionId,
-            _compensateContext.Timestamp, _duration, _routingSlip.Variables, _compensateLog.Data).ConfigureAwait(false);
+        await _publisher.PublishRoutingSlipActivityCompensatedAsync(_compensateContext.ActivityName, _compensateContext.ExecutionId,
+            _compensateContext.Timestamp, _duration, _routingSlip.Variables, _compensateLog.Data, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (HasMoreCompensations(routingSlip))
         {
-            var endpoint = await _compensateContext.GetSendEndpoint(routingSlip.GetNextCompensateAddress()).ConfigureAwait(false);
+            var compensateAddress = routingSlip.GetNextCompensateAddress()
+                ?? throw new RoutingSlipException("The next compensation address was not specified.");
+            var endpoint = await _compensateContext.GetSendEndpointAsync(compensateAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-            await _compensateContext.Forward(endpoint, routingSlip).ConfigureAwait(false);
+            await _compensateContext.ForwardAsync(endpoint, routingSlip).ConfigureAwait(false);
         }
         else
         {
             var faultedTimestamp = _compensateContext.Timestamp + _duration;
             var faultedDuration = faultedTimestamp - _routingSlip.CreateTimestamp;
 
-            await _publisher.PublishRoutingSlipFaulted(faultedTimestamp, faultedDuration, _routingSlip.Variables,
-                _routingSlip.ActivityExceptions.ToArray()).ConfigureAwait(false);
+            await _publisher.PublishRoutingSlipFaultedAsync(faultedTimestamp, faultedDuration, _routingSlip.Variables,
+                _routingSlip.ActivityExceptions.ToArray(), cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 
-    public bool IsFailed(out Exception exception)
+    public bool IsFailed([NotNullWhen(true)] out Exception? exception)
     {
         exception = null;
         return false;

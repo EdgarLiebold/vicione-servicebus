@@ -16,7 +16,7 @@ public class RequestConsumer :
         _report = report;
     }
 
-    public async Task Consume(ConsumeContext<RequestMessage> context)
+    public async Task ConsumeAsync(ConsumeContext<RequestMessage> context)
     {
         var current = Interlocked.Increment(ref CurrentConsumerCount);
         var maxConsumerCount = MaxConsumerCount;
@@ -25,9 +25,9 @@ public class RequestConsumer :
 
         try
         {
-            context.Respond(new ResponseMessage(context.Message.CorrelationId));
+            context.DeferResponse(new ResponseMessage(context.Message.CorrelationId));
 
-            await _report.Consumed<RequestMessage>(context.Message.CorrelationId).ConfigureAwait(false);
+            await _report.ConsumedAsync<RequestMessage>(context.Message.CorrelationId).ConfigureAwait(false);
         }
         finally
         {

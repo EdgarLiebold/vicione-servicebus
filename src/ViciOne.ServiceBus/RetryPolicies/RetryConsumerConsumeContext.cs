@@ -9,7 +9,7 @@ public class RetryConsumerConsumeContext<TConsumer> :
 {
     readonly ConsumerConsumeContext<TConsumer> _context;
 
-    public RetryConsumerConsumeContext(ConsumerConsumeContext<TConsumer> context, IRetryPolicy retryPolicy, RetryContext retryContext)
+    public RetryConsumerConsumeContext(ConsumerConsumeContext<TConsumer> context, IRetryPolicy retryPolicy, RetryContext? retryContext)
         : base(context, retryPolicy, retryContext)
     {
         _context = context;

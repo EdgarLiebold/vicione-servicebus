@@ -14,12 +14,12 @@ public sealed class AmazonSqsReceiveLifecycleTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SQS-RECEIVE", "provider-cancellation-is-not-silently-converted")]
-    public async Task ReceiveLoop_PropagatesUnrequestedProviderCancellation()
+    public async Task ReceiveLoop_PropagatesUnrequestedProviderCancellationAsync()
     {
         var expected = new OperationCanceledException("provider canceled independently");
 
         OperationCanceledException actual = await Assert.ThrowsAsync<OperationCanceledException>(
-            () => AmazonSqsMessageReceiver.ReceiveMessages(
+            () => AmazonSqsMessageReceiver.ReceiveMessagesAsync(
                 _ => Task.FromException<IList<Message>>(expected),
                 CancellationToken.None));
 
@@ -28,7 +28,7 @@ public sealed class AmazonSqsReceiveLifecycleTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SQS-VISIBILITY", "monotonic-renewal-bounded-by-total-duration")]
-    public async Task VisibilityRenewal_UsesMonotonicTimeAndNeverExtendsBeyondTheTotalLimit()
+    public async Task VisibilityRenewal_UsesMonotonicTimeAndNeverExtendsBeyondTheTotalLimitAsync()
     {
         var timeProvider = new FakeTimeProvider(StartTime);
         QueueReceiveSettings settings = CreateSettings();
@@ -65,7 +65,7 @@ public sealed class AmazonSqsReceiveLifecycleTests
         Assert.Equal(18, renewalSeconds);
         Assert.Equal(1, Volatile.Read(ref renewalCalls));
 
-        await receiveLock.Complete();
+        await receiveLock.CompleteAsync(TestContext.Current.CancellationToken);
         timeProvider.Advance(TimeSpan.FromHours(1));
 
         Assert.Equal(1, Volatile.Read(ref renewalCalls));
@@ -74,7 +74,7 @@ public sealed class AmazonSqsReceiveLifecycleTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SQS-VISIBILITY", "unrequested-renewal-cancellation-loses-lock")]
-    public async Task UnrequestedProviderCancellationDuringRenewal_MarksTheReceiveLockLost()
+    public async Task UnrequestedProviderCancellationDuringRenewal_MarksTheReceiveLockLostAsync()
     {
         QueueReceiveSettings settings = CreateSettings();
         settings.VisibilityTimeout = 0;
@@ -90,13 +90,13 @@ public sealed class AmazonSqsReceiveLifecycleTests
             (_, _, _) => Task.CompletedTask,
             () => false);
 
-        await Assert.ThrowsAsync<TransportException>(() => receiveLock.ValidateLockStatus());
-        await receiveLock.Faulted(new InvalidOperationException("business failure"));
+        await Assert.ThrowsAsync<TransportException>(() => receiveLock.ValidateLockStatusAsync(TestContext.Current.CancellationToken));
+        await receiveLock.FaultedAsync(new InvalidOperationException("business failure"), TestContext.Current.CancellationToken);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SQS-VISIBILITY", "maximum-renewal-window-expiry-loses-lock")]
-    public async Task MaximumRenewalWindowExpiry_MarksTheReceiveLockLost()
+    public async Task MaximumRenewalWindowExpiry_MarksTheReceiveLockLostAsync()
     {
         QueueReceiveSettings settings = CreateSettings();
         settings.VisibilityTimeout = 0;
@@ -121,14 +121,15 @@ public sealed class AmazonSqsReceiveLifecycleTests
             (_, _, _) => Task.CompletedTask,
             () => false);
 
-        await Assert.ThrowsAsync<TransportException>(receiveLock.ValidateLockStatus);
+        await Assert.ThrowsAsync<TransportException>(
+            () => receiveLock.ValidateLockStatusAsync(TestContext.Current.CancellationToken));
         Assert.Equal(0, renewalCalls);
-        await receiveLock.Faulted(new InvalidOperationException("business failure"));
+        await receiveLock.FaultedAsync(new InvalidOperationException("business failure"), TestContext.Current.CancellationToken);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SQS-VISIBILITY", "settings-snapshot-and-settlement-order")]
-    public async Task Complete_CancelsTheSnapshottedRenewalBeforeDeletingTheMessage()
+    public async Task Complete_CancelsTheSnapshottedRenewalBeforeDeletingTheMessageAsync()
     {
         var timeProvider = new FakeTimeProvider(StartTime);
         QueueReceiveSettings settings = CreateSettings();
@@ -156,7 +157,7 @@ public sealed class AmazonSqsReceiveLifecycleTests
 
         settings.VisibilityTimeout = 0;
         settings.QueueUrl = "https://mutated.example.invalid";
-        await receiveLock.Complete();
+        await receiveLock.CompleteAsync(TestContext.Current.CancellationToken);
         timeProvider.Advance(TimeSpan.FromHours(1));
 
         Assert.Equal(0, deleteObservedRenewalCount);
@@ -167,7 +168,7 @@ public sealed class AmazonSqsReceiveLifecycleTests
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("REQ-VSB-AWS-SQS-VISIBILITY", "failed-or-cancelled-completion-preserves-error-and-loses-lock")]
-    public async Task FailedOrCancelledComplete_PreservesTheOriginalFailureAndMarksTheLockLost(bool callerCancellation)
+    public async Task FailedOrCancelledComplete_PreservesTheOriginalFailureAndMarksTheLockLostAsync(bool callerCancellation)
     {
         using var cancellationSource = new CancellationTokenSource();
         if (callerCancellation)
@@ -188,10 +189,12 @@ public sealed class AmazonSqsReceiveLifecycleTests
             (_, _, _) => Task.FromException(expected),
             () => false);
 
-        Exception actual = await Assert.ThrowsAnyAsync<Exception>(receiveLock.Complete);
+        Exception actual = await Assert.ThrowsAnyAsync<Exception>(
+            () => receiveLock.CompleteAsync(TestContext.Current.CancellationToken));
 
         Assert.Same(expected, actual);
-        await Assert.ThrowsAsync<TransportException>(receiveLock.ValidateLockStatus);
+        await Assert.ThrowsAsync<TransportException>(
+            () => receiveLock.ValidateLockStatusAsync(TestContext.Current.CancellationToken));
     }
 
     private static QueueReceiveSettings CreateSettings()

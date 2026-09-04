@@ -12,7 +12,7 @@ public sealed class PostgreSqlReadOnlySagaTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-SAGA-READ-ONLY", "response-observes-state-without-persisting-handler-mutation")]
-    public async Task ReadOnlyEvent_RespondsFromThePersistedStateWithoutSavingItsMutation()
+    public async Task ReadOnlyEvent_RespondsFromThePersistedStateWithoutSavingItsMutationAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
@@ -37,21 +37,21 @@ public sealed class PostgreSqlReadOnlySagaTests
                     });
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Guid sagaId = Guid.NewGuid();
             IRequestClient<StartReadOnlySaga> startClient = harness.GetRequestClient<StartReadOnlySaga>();
-            Response<ReadOnlySagaStarted> started = await startClient.GetResponse<ReadOnlySagaStarted>(
+            Response<ReadOnlySagaStarted> started = await startClient.GetResponseAsync<ReadOnlySagaStarted>(
                 new StartReadOnlySaga(sagaId),
                 cancellationToken);
             IRequestClient<CheckReadOnlySaga> statusClient = harness.GetRequestClient<CheckReadOnlySaga>();
 
-            Response<ReadOnlySagaStatus> first = await statusClient.GetResponse<ReadOnlySagaStatus>(
+            Response<ReadOnlySagaStatus> first = await statusClient.GetResponseAsync<ReadOnlySagaStatus>(
                 new CheckReadOnlySaga(sagaId),
                 cancellationToken);
-            Response<ReadOnlySagaStatus> second = await statusClient.GetResponse<ReadOnlySagaStatus>(
+            Response<ReadOnlySagaStatus> second = await statusClient.GetResponseAsync<ReadOnlySagaStatus>(
                 new CheckReadOnlySaga(sagaId),
                 cancellationToken);
 
@@ -66,7 +66,7 @@ public sealed class PostgreSqlReadOnlySagaTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 

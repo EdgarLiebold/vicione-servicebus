@@ -1,6 +1,6 @@
-namespace ViciOne.ServiceBus.Samples.DeveloperJourneys;
-
 using Microsoft.Extensions.DependencyInjection;
+
+namespace ViciOne.ServiceBus.Samples.DeveloperJourneys;
 
 public static class Journey12HealthAndTelemetry
 {

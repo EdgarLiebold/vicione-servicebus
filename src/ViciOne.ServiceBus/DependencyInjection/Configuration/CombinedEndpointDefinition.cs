@@ -15,6 +15,8 @@ public class CombinedEndpointDefinition :
     {
         _definitions = definitions ?? throw new ArgumentNullException(nameof(definitions));
         _context = context ?? throw new ArgumentNullException(nameof(context));
+        if (_definitions.Count == 0)
+            throw new ArgumentException("At least one endpoint definition is required.", nameof(definitions));
         if (string.IsNullOrWhiteSpace(endpointName))
             throw new ArgumentException("Endpoint name must not be empty.", nameof(endpointName));
 
@@ -56,10 +58,10 @@ public class CombinedEndpointDefinition :
 
     public string GetEndpointName(IEndpointNameFormatter formatter)
     {
-        return _definitions.FirstOrDefault()?.GetEndpointName(formatter);
+        return _definitions[0].GetEndpointName(formatter);
     }
 
-    public void Configure<T>(T configurator, IRegistrationContext context)
+    public void Configure<T>(T configurator, IRegistrationContext? context)
         where T : IReceiveEndpointConfigurator
     {
         foreach (var definition in _definitions)

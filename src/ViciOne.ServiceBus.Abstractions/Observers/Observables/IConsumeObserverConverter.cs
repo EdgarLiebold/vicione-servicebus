@@ -8,9 +8,9 @@ namespace ViciOne.ServiceBus.Observables;
 /// </summary>
 public interface IConsumeObserverConverter
 {
-    Task PreConsume(IConsumeObserver observer, object context);
+    Task PreConsumeAsync(IConsumeObserver observer, object context, CancellationToken cancellationToken = default);
 
-    Task PostConsume(IConsumeObserver observer, object context);
+    Task PostConsumeAsync(IConsumeObserver observer, object context, CancellationToken cancellationToken = default);
 
-    Task ConsumeFault(IConsumeObserver observer, object context, Exception exception);
+    Task ConsumeFaultAsync(IConsumeObserver observer, object context, Exception exception, CancellationToken cancellationToken = default);
 }

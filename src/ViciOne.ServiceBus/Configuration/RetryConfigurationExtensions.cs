@@ -55,7 +55,7 @@ public static class RetryConfigurationExtensions
         configurator.AddPipeSpecification(specification);
     }
 
-    static RetryConsumeContext<T> Factory<T>(ConsumeContext<T> context, IRetryPolicy retryPolicy, RetryContext retryContext)
+    static RetryConsumeContext<T> Factory<T>(ConsumeContext<T> context, IRetryPolicy retryPolicy, RetryContext? retryContext)
         where T : class
     {
         return new RetryConsumeContext<T>(context, retryPolicy, retryContext);
@@ -76,7 +76,7 @@ public static class RetryConfigurationExtensions
     }
 
     static RetryConsumerConsumeContext<TConsumer> Factory<TConsumer>(ConsumerConsumeContext<TConsumer> context, IRetryPolicy retryPolicy,
-        RetryContext retryContext)
+        RetryContext? retryContext)
         where TConsumer : class
     {
         return new RetryConsumerConsumeContext<TConsumer>(context, retryPolicy, retryContext);
@@ -95,7 +95,7 @@ public static class RetryConfigurationExtensions
         configurator.AddPipeSpecification(specification);
     }
 
-    static RetrySagaConsumeContext<TSaga> Factory<TSaga>(SagaConsumeContext<TSaga> context, IRetryPolicy retryPolicy, RetryContext retryContext)
+    static RetrySagaConsumeContext<TSaga> Factory<TSaga>(SagaConsumeContext<TSaga> context, IRetryPolicy retryPolicy, RetryContext? retryContext)
         where TSaga : class, ISaga
     {
         return new RetrySagaConsumeContext<TSaga>(context, retryPolicy, retryContext);

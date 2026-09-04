@@ -15,13 +15,13 @@ public class ErrorTransportFilter :
         context.CreateFilterScope("moveFault");
     }
 
-    async Task IFilter<ExceptionReceiveContext>.Send(ExceptionReceiveContext context, IPipe<ExceptionReceiveContext> next)
+    async Task IFilter<ExceptionReceiveContext>.SendAsync(ExceptionReceiveContext context, IPipe<ExceptionReceiveContext> next)
     {
-        if (!context.TryGetPayload(out IErrorTransport transport))
+        if (!context.TryGetPayload(out IErrorTransport? transport))
             throw new TransportException(context.InputAddress, $"The {nameof(IErrorTransport)} was not available on the {nameof(ReceiveContext)}.");
 
-        await transport.Send(context).ConfigureAwait(false);
+        await transport.SendAsync(context).ConfigureAwait(false);
 
-        await next.Send(context).ConfigureAwait(false);
+        await next.SendAsync(context).ConfigureAwait(false);
     }
 }

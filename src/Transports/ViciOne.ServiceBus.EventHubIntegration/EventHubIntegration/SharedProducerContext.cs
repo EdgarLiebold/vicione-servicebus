@@ -22,19 +22,19 @@ public class SharedProducerContext :
 
     public override CancellationToken CancellationToken { get; }
 
-    public Task Produce(EventDataBatch eventDataBatch, CancellationToken cancellationToken)
+    public Task ProduceAsync(EventDataBatch eventDataBatch, CancellationToken cancellationToken)
     {
-        return _context.Produce(eventDataBatch, cancellationToken);
+        return _context.ProduceAsync(eventDataBatch, cancellationToken);
     }
 
-    public Task Produce(IEnumerable<EventData> eventData, SendEventOptions options, CancellationToken cancellationToken)
+    public Task ProduceAsync(IEnumerable<EventData> eventData, SendEventOptions options, CancellationToken cancellationToken)
     {
-        return _context.Produce(eventData, options, cancellationToken);
+        return _context.ProduceAsync(eventData, options, cancellationToken);
     }
 
-    public ValueTask<EventDataBatch> CreateBatch(CreateBatchOptions options, CancellationToken cancellationToken)
+    public ValueTask<EventDataBatch> CreateBatchAsync(CreateBatchOptions options, CancellationToken cancellationToken)
     {
-        return _context.CreateBatch(options, cancellationToken);
+        return _context.CreateBatchAsync(options, cancellationToken);
     }
 
     public ValueTask DisposeAsync()

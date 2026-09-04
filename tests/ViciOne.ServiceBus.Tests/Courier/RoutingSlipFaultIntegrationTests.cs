@@ -10,7 +10,7 @@ public sealed class RoutingSlipFaultIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-FAULT", "thrown-exception-capture-and-complete-compensation")]
-    public async Task ThrownActivityException_IsCapturedAfterEveryCompletedActivityIsCompensated()
+    public async Task ThrownActivityException_IsCapturedAfterEveryCompletedActivityIsCompensatedAsync()
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -33,7 +33,7 @@ public sealed class RoutingSlipFaultIntegrationTests
         activityCompleted.Configure(harness);
         compensated.Configure(harness);
         faulted.Configure(harness);
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
@@ -43,12 +43,12 @@ public sealed class RoutingSlipFaultIntegrationTests
             builder.AddActivity(second.Name, second.ExecuteAddress, new CourierArguments("second"));
             builder.AddActivity(throwing.Name, throwing.ExecuteAddress, new FaultingCourierArguments("thrown-courier-failure"));
 
-            await harness.Bus.Execute(builder.Build(), cancellationToken);
+            await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
             await Task.WhenAll(
-                activityCompleted.Wait(timeout, cancellationToken),
-                compensated.Wait(timeout, cancellationToken),
-                faulted.Wait(timeout, cancellationToken));
-            await harness.Stop();
+                activityCompleted.WaitAsync(timeout, cancellationToken),
+                compensated.WaitAsync(timeout, cancellationToken),
+                faulted.WaitAsync(timeout, cancellationToken));
+            await harness.StopAsync(TestContext.Current.CancellationToken);
 
             Assert.Equal(2, activityCompleted.Count);
             Assert.Equal(2, compensated.Count);
@@ -69,13 +69,13 @@ public sealed class RoutingSlipFaultIntegrationTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-FAULT", "reverse-compensation-and-complete-event-shape")]
-    public async Task ThirdActivityFailure_CompensatesBothCompletedActivitiesInReverseOrder()
+    public async Task ThirdActivityFailure_CompensatesBothCompletedActivitiesInReverseOrderAsync()
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -100,7 +100,7 @@ public sealed class RoutingSlipFaultIntegrationTests
         activityFaulted.Configure(harness);
         compensated.Configure(harness);
         faulted.Configure(harness);
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
@@ -111,13 +111,13 @@ public sealed class RoutingSlipFaultIntegrationTests
             builder.AddActivity(failing.Name, failing.ExecuteAddress, new FaultingCourierArguments("expected-courier-failure"));
             builder.AddVariable("SlipVariable", "knife");
 
-            await harness.Bus.Execute(builder.Build(), cancellationToken);
+            await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
             await Task.WhenAll(
-                activityCompleted.Wait(timeout, cancellationToken),
-                activityFaulted.Wait(timeout, cancellationToken),
-                compensated.Wait(timeout, cancellationToken),
-                faulted.Wait(timeout, cancellationToken));
-            await harness.Stop();
+                activityCompleted.WaitAsync(timeout, cancellationToken),
+                activityFaulted.WaitAsync(timeout, cancellationToken),
+                compensated.WaitAsync(timeout, cancellationToken),
+                faulted.WaitAsync(timeout, cancellationToken));
+            await harness.StopAsync(TestContext.Current.CancellationToken);
 
             Assert.Equal(new[] { "second:second", "first:first" }, compensationOrder.ToArray());
             Assert.Equal(2, activityCompleted.Count);
@@ -144,7 +144,7 @@ public sealed class RoutingSlipFaultIntegrationTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 }

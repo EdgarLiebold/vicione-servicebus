@@ -17,7 +17,7 @@ public interface EntitySettings
     /// <summary>
     /// Arguments passed to exchange-declare
     /// </summary>
-    IDictionary<string, object> ExchangeArguments { get; }
+    IDictionary<string, object?> ExchangeArguments { get; }
 
     /// <summary>
     /// The exchange name to bind to the queue as the default exchange

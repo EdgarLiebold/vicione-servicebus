@@ -16,7 +16,7 @@ public class RequestHandlerConsumer<TMessage, TResponse> :
         _handler = method.Handler;
     }
 
-    public async Task Consume(ConsumeContext<TMessage> context)
+    public async Task ConsumeAsync(ConsumeContext<TMessage> context)
     {
         var response = await _handler(context).ConfigureAwait(false);
 
@@ -42,7 +42,7 @@ public class RequestHandlerConsumer<TMessage, T1, TResponse> :
         _handler = method.Handler;
     }
 
-    public async Task Consume(ConsumeContext<TMessage> context)
+    public async Task ConsumeAsync(ConsumeContext<TMessage> context)
     {
         var response = await _handler(context, _arg1).ConfigureAwait(false);
 
@@ -71,7 +71,7 @@ public class RequestHandlerConsumer<TMessage, T1, T2, TResponse> :
         _handler = method.Handler;
     }
 
-    public async Task Consume(ConsumeContext<TMessage> context)
+    public async Task ConsumeAsync(ConsumeContext<TMessage> context)
     {
         var response = await _handler(context, _arg1, _arg2).ConfigureAwait(false);
 
@@ -103,7 +103,7 @@ public class RequestHandlerConsumer<TMessage, T1, T2, T3, TResponse> :
         _handler = method.Handler;
     }
 
-    public async Task Consume(ConsumeContext<TMessage> context)
+    public async Task ConsumeAsync(ConsumeContext<TMessage> context)
     {
         var response = await _handler(context, _arg1, _arg2, _arg3).ConfigureAwait(false);
 

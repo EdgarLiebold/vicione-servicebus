@@ -12,70 +12,70 @@ public class ListPropertyConverter<TElement> :
     IPropertyConverter<IEnumerable<TElement>, IEnumerable<TElement>>,
     IPropertyConverter<ICollection<TElement>, IEnumerable<TElement>>
 {
-    Task<ICollection<TElement>> IPropertyConverter<ICollection<TElement>, IEnumerable<TElement>>.Convert<T>(InitializeContext<T> context,
-        IEnumerable<TElement> input)
+    Task<ICollection<TElement>?> IPropertyConverter<ICollection<TElement>, IEnumerable<TElement>>.ConvertAsync<T>(InitializeContext<T> context,
+        IEnumerable<TElement>? input, CancellationToken cancellationToken)
     {
         switch (input)
         {
             case null:
-                return TaskResults.Default<ICollection<TElement>>();
+                return TaskResults.DefaultAsync<ICollection<TElement>>(cancellationToken: cancellationToken);
             case ICollection<TElement> list:
-                return Task.FromResult(list);
+                return Task.FromResult<ICollection<TElement>?>(list);
             default:
-                return Task.FromResult<ICollection<TElement>>(input.ToList());
+                return Task.FromResult<ICollection<TElement>?>(input.ToList());
         }
     }
 
-    Task<IEnumerable<TElement>> IPropertyConverter<IEnumerable<TElement>, IEnumerable<TElement>>.Convert<T>(InitializeContext<T> context,
-        IEnumerable<TElement> input)
+    Task<IEnumerable<TElement>?> IPropertyConverter<IEnumerable<TElement>, IEnumerable<TElement>>.ConvertAsync<T>(InitializeContext<T> context,
+        IEnumerable<TElement>? input, CancellationToken cancellationToken)
     {
         switch (input)
         {
             case null:
-                return TaskResults.Default<IEnumerable<TElement>>();
+                return TaskResults.DefaultAsync<IEnumerable<TElement>>(cancellationToken: cancellationToken);
             default:
-                return Task.FromResult(input);
+                return Task.FromResult<IEnumerable<TElement>?>(input);
         }
     }
 
-    Task<IList<TElement>> IPropertyConverter<IList<TElement>, IEnumerable<TElement>>.Convert<T>(InitializeContext<T> context, IEnumerable<TElement> input)
+    Task<IList<TElement>?> IPropertyConverter<IList<TElement>, IEnumerable<TElement>>.ConvertAsync<T>(InitializeContext<T> context, IEnumerable<TElement>? input, CancellationToken cancellationToken)
     {
         switch (input)
         {
             case null:
-                return TaskResults.Default<IList<TElement>>();
+                return TaskResults.DefaultAsync<IList<TElement>>(cancellationToken: cancellationToken);
             case IList<TElement> list:
-                return Task.FromResult(list);
+                return Task.FromResult<IList<TElement>?>(list);
             default:
-                return Task.FromResult<IList<TElement>>(input.ToList());
+                return Task.FromResult<IList<TElement>?>(input.ToList());
         }
     }
 
-    Task<IReadOnlyList<TElement>> IPropertyConverter<IReadOnlyList<TElement>, IEnumerable<TElement>>.Convert<T>(InitializeContext<T> context,
-        IEnumerable<TElement> input)
+    Task<IReadOnlyList<TElement>?> IPropertyConverter<IReadOnlyList<TElement>, IEnumerable<TElement>>.ConvertAsync<T>(InitializeContext<T> context,
+        IEnumerable<TElement>? input, CancellationToken cancellationToken)
     {
         switch (input)
         {
             case null:
-                return TaskResults.Default<IReadOnlyList<TElement>>();
+                return TaskResults.DefaultAsync<IReadOnlyList<TElement>>(cancellationToken: cancellationToken);
             case IReadOnlyList<TElement> list:
-                return Task.FromResult(list);
+                return Task.FromResult<IReadOnlyList<TElement>?>(list);
             default:
-                return Task.FromResult<IReadOnlyList<TElement>>(input.ToList());
+                return Task.FromResult<IReadOnlyList<TElement>?>(input.ToList());
         }
     }
 
-    public Task<List<TElement>> Convert<TMessage>(InitializeContext<TMessage> context, IEnumerable<TElement> input)
+    public Task<List<TElement>?> ConvertAsync<TMessage>(InitializeContext<TMessage> context, IEnumerable<TElement>? input, CancellationToken cancellationToken = default)
         where TMessage : class
     {
         switch (input)
         {
             case null:
-                return TaskResults.Default<List<TElement>>();
+                return TaskResults.DefaultAsync<List<TElement>>(cancellationToken: cancellationToken);
             case List<TElement> list:
-                return Task.FromResult(list);
+                return Task.FromResult<List<TElement>?>(list);
             default:
-                return Task.FromResult(input.ToList());
+                return Task.FromResult<List<TElement>?>(input.ToList());
         }
     }
 }
@@ -95,14 +95,14 @@ public class ListPropertyConverter<TElement, TInputElement> :
         _converter = converter;
     }
 
-    public Task<ICollection<TElement>> Convert<T>(InitializeContext<T> context, IEnumerable<TInputElement> elements)
+    public Task<ICollection<TElement>?> ConvertAsync<T>(InitializeContext<T> context, IEnumerable<TInputElement>? elements, CancellationToken cancellationToken = default)
         where T : class
     {
-        Task<List<TElement>> resultTask = ConvertSync(context, elements);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::System.Collections.Generic.ICollection<TElement>?>(cancellationToken); Task<List<TElement>?> resultTask = ConvertSyncAsync(context, elements);
         if (resultTask.Status == TaskStatus.RanToCompletion)
-            return Task.FromResult<ICollection<TElement>>(resultTask.Result);
+            return Task.FromResult<ICollection<TElement>?>(resultTask.Result);
 
-        async Task<ICollection<TElement>> ConvertAsync()
+        async Task<ICollection<TElement>?> ConvertAsync()
         {
             return await resultTask.ConfigureAwait(false);
         }
@@ -110,14 +110,14 @@ public class ListPropertyConverter<TElement, TInputElement> :
         return ConvertAsync();
     }
 
-    Task<IEnumerable<TElement>> IPropertyConverter<IEnumerable<TElement>, IEnumerable<TInputElement>>.Convert<T>(InitializeContext<T> context,
-        IEnumerable<TInputElement> elements)
+    Task<IEnumerable<TElement>?> IPropertyConverter<IEnumerable<TElement>, IEnumerable<TInputElement>>.ConvertAsync<T>(InitializeContext<T> context,
+        IEnumerable<TInputElement>? elements, CancellationToken cancellationToken)
     {
-        Task<List<TElement>> resultTask = ConvertSync(context, elements);
+        Task<List<TElement>?> resultTask = ConvertSyncAsync(context, elements);
         if (resultTask.IsCompleted)
-            return Task.FromResult<IEnumerable<TElement>>(resultTask.Result);
+            return Task.FromResult<IEnumerable<TElement>?>(resultTask.Result);
 
-        async Task<IEnumerable<TElement>> ConvertAsync()
+        async Task<IEnumerable<TElement>?> ConvertAsync()
         {
             return await resultTask.ConfigureAwait(false);
         }
@@ -125,14 +125,14 @@ public class ListPropertyConverter<TElement, TInputElement> :
         return ConvertAsync();
     }
 
-    Task<IList<TElement>> IPropertyConverter<IList<TElement>, IEnumerable<TInputElement>>.Convert<T>(InitializeContext<T> context,
-        IEnumerable<TInputElement> elements)
+    Task<IList<TElement>?> IPropertyConverter<IList<TElement>, IEnumerable<TInputElement>>.ConvertAsync<T>(InitializeContext<T> context,
+        IEnumerable<TInputElement>? elements, CancellationToken cancellationToken)
     {
-        Task<List<TElement>> resultTask = ConvertSync(context, elements);
+        Task<List<TElement>?> resultTask = ConvertSyncAsync(context, elements);
         if (resultTask.Status == TaskStatus.RanToCompletion)
-            return Task.FromResult<IList<TElement>>(resultTask.Result);
+            return Task.FromResult<IList<TElement>?>(resultTask.Result);
 
-        async Task<IList<TElement>> ConvertAsync()
+        async Task<IList<TElement>?> ConvertAsync()
         {
             return await resultTask.ConfigureAwait(false);
         }
@@ -140,14 +140,14 @@ public class ListPropertyConverter<TElement, TInputElement> :
         return ConvertAsync();
     }
 
-    Task<IReadOnlyList<TElement>> IPropertyConverter<IReadOnlyList<TElement>, IEnumerable<TInputElement>>.Convert<T>(InitializeContext<T> context,
-        IEnumerable<TInputElement> elements)
+    Task<IReadOnlyList<TElement>?> IPropertyConverter<IReadOnlyList<TElement>, IEnumerable<TInputElement>>.ConvertAsync<T>(InitializeContext<T> context,
+        IEnumerable<TInputElement>? elements, CancellationToken cancellationToken)
     {
-        Task<List<TElement>> resultTask = ConvertSync(context, elements);
+        Task<List<TElement>?> resultTask = ConvertSyncAsync(context, elements);
         if (resultTask.Status == TaskStatus.RanToCompletion)
-            return Task.FromResult<IReadOnlyList<TElement>>(resultTask.Result);
+            return Task.FromResult<IReadOnlyList<TElement>?>(resultTask.Result);
 
-        async Task<IReadOnlyList<TElement>> ConvertAsync()
+        async Task<IReadOnlyList<TElement>?> ConvertAsync()
         {
             return await resultTask.ConfigureAwait(false);
         }
@@ -155,24 +155,24 @@ public class ListPropertyConverter<TElement, TInputElement> :
         return ConvertAsync();
     }
 
-    Task<List<TElement>> IPropertyConverter<List<TElement>, IEnumerable<TInputElement>>.Convert<T>(InitializeContext<T> context,
-        IEnumerable<TInputElement> elements)
+    Task<List<TElement>?> IPropertyConverter<List<TElement>, IEnumerable<TInputElement>>.ConvertAsync<T>(InitializeContext<T> context,
+        IEnumerable<TInputElement>? elements, CancellationToken cancellationToken)
     {
-        return ConvertSync(context, elements);
+        return ConvertSyncAsync(context, elements);
     }
 
-    Task<List<TElement>> ConvertSync<TMessage>(InitializeContext<TMessage> context, IEnumerable<TInputElement> input)
+    Task<List<TElement>?> ConvertSyncAsync<TMessage>(InitializeContext<TMessage> context, IEnumerable<TInputElement>? input)
         where TMessage : class
     {
         if (input == null)
-            return TaskResults.Default<List<TElement>>();
+            return TaskResults.DefaultAsync<List<TElement>>();
 
         var capacity = 0;
         if (input is ICollection<TElement> collection)
         {
             capacity = collection.Count;
             if (capacity == 0)
-                return Task.FromResult(new List<TElement>());
+                return Task.FromResult<List<TElement>?>(new List<TElement>());
         }
 
         var results = new List<TElement>(capacity);
@@ -180,26 +180,26 @@ public class ListPropertyConverter<TElement, TInputElement> :
         var disposeEnumerator = true;
         try
         {
-            async Task<List<TElement>> ConvertAsync(IEnumerator<TInputElement> asyncEnumerator, Task<TElement> elementTask)
+            async Task<List<TElement>?> ConvertAsync(IEnumerator<TInputElement> asyncEnumerator, Task<TElement?> elementTask)
             {
                 try
                 {
                     var element = await elementTask.ConfigureAwait(false);
 
-                    results.Add(element);
+                    results.Add(element!);
 
                     while (asyncEnumerator.MoveNext())
                     {
                         var current = asyncEnumerator.Current;
 
-                        elementTask = _converter.Convert(context, current);
+                        elementTask = _converter.ConvertAsync(context, current);
                         if (elementTask.Status == TaskStatus.RanToCompletion)
-                            results.Add(elementTask.Result);
+                            results.Add(elementTask.Result!);
                         else
                         {
                             element = await elementTask.ConfigureAwait(false);
 
-                            results.Add(element);
+                            results.Add(element!);
                         }
                     }
 
@@ -215,9 +215,9 @@ public class ListPropertyConverter<TElement, TInputElement> :
             {
                 var current = enumerator.Current;
 
-                Task<TElement> elementTask = _converter.Convert(context, current);
+                Task<TElement?> elementTask = _converter.ConvertAsync(context, current);
                 if (elementTask.Status == TaskStatus.RanToCompletion)
-                    results.Add(elementTask.Result);
+                    results.Add(elementTask.Result!);
                 else
                 {
                     disposeEnumerator = false;
@@ -231,6 +231,6 @@ public class ListPropertyConverter<TElement, TInputElement> :
                 enumerator.Dispose();
         }
 
-        return Task.FromResult(results);
+        return Task.FromResult<List<TElement>?>(results);
     }
 }

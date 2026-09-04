@@ -20,8 +20,8 @@ public class MessagePackEnvelope :
     public string[]? MessageType { get; set; }
     public bool IsMessageNativeMessagePackSerialized { get; set; }
     public object? Message { get; set; }
-    public DateTime? ExpirationTime { get; set; }
-    public DateTime? SentTime { get; set; }
+    public DateTimeOffset? ExpirationTime { get; set; }
+    public DateTimeOffset? SentTime { get; set; }
     public Dictionary<string, object?>? Headers { get; set; }
     public HostInfo? Host { get; set; }
 

@@ -8,7 +8,7 @@ public sealed class DictionaryPropertyConverterTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-INITIALIZER-DICTIONARY-CONVERSION", "exact-key-value-and-nested")]
-    public async Task DictionaryProperties_PreserveExactValuesAndConvertKeysValuesAndNestedContracts()
+    public async Task DictionaryProperties_PreserveExactValuesAndConvertKeysValuesAndNestedContractsAsync()
     {
         var source = new
         {
@@ -29,7 +29,7 @@ public sealed class DictionaryPropertyConverterTests
             },
         };
 
-        InitializeContext<DictionaryMessage> context = await MessageInitializerCache<DictionaryMessage>.Initialize(
+        InitializeContext<DictionaryMessage> context = await MessageInitializerCache<DictionaryMessage>.InitializeAsync(
             source,
             TestContext.Current.CancellationToken);
 

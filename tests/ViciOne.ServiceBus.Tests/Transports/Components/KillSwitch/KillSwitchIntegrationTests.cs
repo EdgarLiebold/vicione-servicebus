@@ -12,7 +12,7 @@ public sealed class KillSwitchIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-KILL-SWITCH-INMEMORY", "healthy-degraded-healthy-with-continued-delivery")]
-    public async Task InMemoryEndpoint_TransitionsHealthyDegradedHealthyAndContinuesDelivery()
+    public async Task InMemoryEndpoint_TransitionsHealthyDegradedHealthyAndContinuesDeliveryAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -39,7 +39,7 @@ public sealed class KillSwitchIntegrationTests
             ValidateOnBuild = true,
             ValidateScopes = true,
         });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         IBusControl bus = provider.GetRequiredService<IBusControl>();
         HealthCheckService healthChecks = provider.GetRequiredService<HealthCheckService>();
         HealthyDeliveryProbe delivery = provider.GetRequiredService<HealthyDeliveryProbe>();
@@ -53,7 +53,7 @@ public sealed class KillSwitchIntegrationTests
             Assert.Equal(BusHealthStatus.Healthy, initial.Status);
             Assert.Equal(HealthStatus.Healthy, (await healthChecks.CheckHealthAsync(cancellationToken)).Status);
 
-            await bus.PublishBatch(
+            await bus.PublishBatchAsync(
                 Enumerable.Range(0, 4).Select(index => new FailingMessage(index)),
                 cancellationToken);
             BusHealthResult degraded = await bus.WaitForHealthStatusAsync(
@@ -63,7 +63,7 @@ public sealed class KillSwitchIntegrationTests
             Assert.Equal(BusHealthStatus.Degraded, degraded.Status);
             Assert.Equal(HealthStatus.Degraded, (await healthChecks.CheckHealthAsync(cancellationToken)).Status);
 
-            await time.WaitForTimerCount(1).WaitAsync(timeout, cancellationToken);
+            await time.WaitForTimerCountAsync(1).WaitAsync(timeout, cancellationToken);
             time.Advance(TimeSpan.FromSeconds(1));
             await lifecycle.SecondReady.WaitAsync(timeout, cancellationToken);
             BusHealthResult recovered = await bus.WaitForHealthStatusAsync(
@@ -73,19 +73,19 @@ public sealed class KillSwitchIntegrationTests
             Assert.Equal(BusHealthStatus.Healthy, recovered.Status);
             Assert.Equal(HealthStatus.Healthy, (await healthChecks.CheckHealthAsync(cancellationToken)).Status);
 
-            await bus.Publish(new HealthyMessage("after recovery"), cancellationToken);
+            await bus.PublishAsync(new HealthyMessage("after recovery"), cancellationToken);
             HealthyMessage consumed = await delivery.Delivered.WaitAsync(timeout, cancellationToken);
             Assert.Equal("after recovery", consumed.Value);
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-KILL-SWITCH-INMEMORY", "terminal-bus-stop-prevents-zombie-restart")]
-    public async Task BusStopWhileEndpointIsPaused_CancelsRecoveryAndPreventsAZombieRestart()
+    public async Task BusStopWhileEndpointIsPaused_CancelsRecoveryAndPreventsAZombieRestartAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -112,18 +112,18 @@ public sealed class KillSwitchIntegrationTests
             ValidateOnBuild = true,
             ValidateScopes = true,
         });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         IBusControl bus = provider.GetRequiredService<IBusControl>();
         var stopped = false;
 
         try
         {
-            await bus.Publish(new FailingMessage(0), cancellationToken);
+            await bus.PublishAsync(new FailingMessage(0), cancellationToken);
             await bus.WaitForHealthStatusAsync(BusHealthStatus.Degraded, timeout, cancellationToken);
-            await time.WaitForTimerCount(1).WaitAsync(timeout, cancellationToken);
+            await time.WaitForTimerCountAsync(1).WaitAsync(timeout, cancellationToken);
             Assert.Equal(1, lifecycle.TargetReadyCount);
 
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
             stopped = true;
             time.Advance(TimeSpan.FromDays(1));
             await Task.Yield();
@@ -134,7 +134,7 @@ public sealed class KillSwitchIntegrationTests
         finally
         {
             if (!stopped)
-                await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+                await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -148,10 +148,10 @@ public sealed class KillSwitchIntegrationTests
         IConsumer<FailingMessage>,
         IConsumer<HealthyMessage>
     {
-        public Task Consume(ConsumeContext<FailingMessage> context) =>
+        public Task ConsumeAsync(ConsumeContext<FailingMessage> context) =>
             throw new InvalidOperationException($"intentional failure {context.Message.Index}");
 
-        public Task Consume(ConsumeContext<HealthyMessage> context)
+        public Task ConsumeAsync(ConsumeContext<HealthyMessage> context)
         {
             delivery.MarkDelivered(context.Message);
             return Task.CompletedTask;
@@ -177,7 +177,7 @@ public sealed class KillSwitchIntegrationTests
         public int TargetReadyCount => Volatile.Read(ref _targetReadyCount);
         public Task SecondReady => _secondReady.Task;
 
-        public Task Ready(ReceiveEndpointReady ready)
+        public Task ReadyAsync(ReceiveEndpointReady ready)
         {
             if (ready.InputAddress.AbsolutePath.Trim('/').Equals(targetEndpointName, StringComparison.OrdinalIgnoreCase))
             {
@@ -189,10 +189,10 @@ public sealed class KillSwitchIntegrationTests
             return Task.CompletedTask;
         }
 
-        public Task Stopping(ReceiveEndpointStopping stopping) => Task.CompletedTask;
+        public Task StoppingAsync(ReceiveEndpointStopping stopping) => Task.CompletedTask;
 
-        public Task Completed(ReceiveEndpointCompleted completed) => Task.CompletedTask;
+        public Task CompletedAsync(ReceiveEndpointCompleted completed) => Task.CompletedTask;
 
-        public Task Faulted(ReceiveEndpointFaulted faulted) => Task.CompletedTask;
+        public Task FaultedAsync(ReceiveEndpointFaulted faulted) => Task.CompletedTask;
     }
 }

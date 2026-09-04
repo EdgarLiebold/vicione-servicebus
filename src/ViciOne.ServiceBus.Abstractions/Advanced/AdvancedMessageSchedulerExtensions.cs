@@ -1,0 +1,200 @@
+namespace ViciOne.ServiceBus.Advanced;
+
+/// <summary>Provides access to low-level scheduling operations.</summary>
+public static class AdvancedMessageSchedulerExtensions
+{
+    /// <summary>Returns the advanced scheduling contract implemented by the scheduler.</summary>
+    public static IAdvancedMessageScheduler Advanced(this IMessageScheduler scheduler)
+    {
+        ArgumentNullException.ThrowIfNull(scheduler);
+        return scheduler as IAdvancedMessageScheduler
+            ?? throw new NotSupportedException($"The message scheduler '{scheduler.GetType().FullName}' does not expose advanced operations.");
+    }
+
+    /// <summary>Schedules a typed message through a typed send-context pipe.</summary>
+    /// <param name="scheduler">The scheduler used by the operation.</param>
+    /// <param name="destination">The destination used by the operation.</param>
+    /// <param name="dueAt">The due at used by the operation.</param>
+    /// <param name="message">The message processed by the operation.</param>
+    /// <param name="pipe">The pipe used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this IMessageScheduler scheduler, Uri destination, DateTimeOffset dueAt,
+        T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
+        where T : class
+    {
+        return scheduler.Advanced().ScheduleSendAsync(destination, dueAt, message, pipe, cancellationToken);
+    }
+
+    /// <summary>Schedules a typed message through an untyped send-context pipe.</summary>
+    /// <param name="scheduler">The scheduler used by the operation.</param>
+    /// <param name="destination">The destination used by the operation.</param>
+    /// <param name="dueAt">The due at used by the operation.</param>
+    /// <param name="message">The message processed by the operation.</param>
+    /// <param name="pipe">The pipe used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this IMessageScheduler scheduler, Uri destination, DateTimeOffset dueAt,
+        T message, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
+        where T : class
+    {
+        return scheduler.Advanced().ScheduleSendAsync(destination, dueAt, message, pipe, cancellationToken);
+    }
+
+    /// <summary>Schedules a runtime-typed message.</summary>
+    /// <param name="scheduler">The scheduler used by the operation.</param>
+    /// <param name="destination">The destination used by the operation.</param>
+    /// <param name="dueAt">The due at used by the operation.</param>
+    /// <param name="message">The message processed by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static Task<ScheduledMessage> ScheduleSendAsync(this IMessageScheduler scheduler, Uri destination, DateTimeOffset dueAt,
+        object message, CancellationToken cancellationToken = default)
+    {
+        return scheduler.Advanced().ScheduleSendAsync(destination, dueAt, message, cancellationToken);
+    }
+
+    /// <summary>Schedules a message as the specified runtime type.</summary>
+    /// <param name="scheduler">The scheduler used by the operation.</param>
+    /// <param name="destination">The destination used by the operation.</param>
+    /// <param name="dueAt">The due at used by the operation.</param>
+    /// <param name="message">The message processed by the operation.</param>
+    /// <param name="messageType">The message type used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static Task<ScheduledMessage> ScheduleSendAsync(this IMessageScheduler scheduler, Uri destination, DateTimeOffset dueAt,
+        object message, Type messageType, CancellationToken cancellationToken = default)
+    {
+        return scheduler.Advanced().ScheduleSendAsync(destination, dueAt, message, messageType, cancellationToken);
+    }
+
+    /// <summary>Schedules a runtime-typed message through a send-context pipe.</summary>
+    /// <param name="scheduler">The scheduler used by the operation.</param>
+    /// <param name="destination">The destination used by the operation.</param>
+    /// <param name="dueAt">The due at used by the operation.</param>
+    /// <param name="message">The message processed by the operation.</param>
+    /// <param name="pipe">The pipe used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static Task<ScheduledMessage> ScheduleSendAsync(this IMessageScheduler scheduler, Uri destination, DateTimeOffset dueAt,
+        object message, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
+    {
+        return scheduler.Advanced().ScheduleSendAsync(destination, dueAt, message, pipe, cancellationToken);
+    }
+
+    /// <summary>Schedules a message as the specified runtime type through a send-context pipe.</summary>
+    /// <param name="scheduler">The scheduler used by the operation.</param>
+    /// <param name="destination">The destination used by the operation.</param>
+    /// <param name="dueAt">The due at used by the operation.</param>
+    /// <param name="message">The message processed by the operation.</param>
+    /// <param name="messageType">The message type used by the operation.</param>
+    /// <param name="pipe">The pipe used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static Task<ScheduledMessage> ScheduleSendAsync(this IMessageScheduler scheduler, Uri destination, DateTimeOffset dueAt,
+        object message, Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
+    {
+        return scheduler.Advanced().ScheduleSendAsync(destination, dueAt, message, messageType, pipe, cancellationToken);
+    }
+
+    /// <summary>Cancels a scheduled send by destination and token.</summary>
+    /// <param name="scheduler">The scheduler used by the operation.</param>
+    /// <param name="destination">The destination used by the operation.</param>
+    /// <param name="tokenId">The token id used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static Task CancelScheduledSendAsync(this IMessageScheduler scheduler, Uri destination, Guid tokenId,
+        CancellationToken cancellationToken = default)
+    {
+        return scheduler.Advanced().CancelScheduledSendAsync(destination, tokenId, cancellationToken);
+    }
+
+    /// <summary>Schedules a typed publication through a typed send-context pipe.</summary>
+    /// <param name="scheduler">The scheduler used by the operation.</param>
+    /// <param name="dueAt">The due at used by the operation.</param>
+    /// <param name="message">The message processed by the operation.</param>
+    /// <param name="pipe">The pipe used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, DateTimeOffset dueAt, T message,
+        IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
+        where T : class
+    {
+        return scheduler.Advanced().SchedulePublishAsync(dueAt, message, pipe, cancellationToken);
+    }
+
+    /// <summary>Schedules a typed publication through an untyped send-context pipe.</summary>
+    /// <param name="scheduler">The scheduler used by the operation.</param>
+    /// <param name="dueAt">The due at used by the operation.</param>
+    /// <param name="message">The message processed by the operation.</param>
+    /// <param name="pipe">The pipe used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, DateTimeOffset dueAt, T message,
+        IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
+        where T : class
+    {
+        return scheduler.Advanced().SchedulePublishAsync(dueAt, message, pipe, cancellationToken);
+    }
+
+    /// <summary>Schedules a runtime-typed publication.</summary>
+    /// <param name="scheduler">The scheduler used by the operation.</param>
+    /// <param name="dueAt">The due at used by the operation.</param>
+    /// <param name="message">The message processed by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static Task<ScheduledMessage> SchedulePublishAsync(this IMessageScheduler scheduler, DateTimeOffset dueAt, object message,
+        CancellationToken cancellationToken = default)
+    {
+        return scheduler.Advanced().SchedulePublishAsync(dueAt, message, cancellationToken);
+    }
+
+    /// <summary>Schedules a publication as the specified runtime type.</summary>
+    /// <param name="scheduler">The scheduler used by the operation.</param>
+    /// <param name="dueAt">The due at used by the operation.</param>
+    /// <param name="message">The message processed by the operation.</param>
+    /// <param name="messageType">The message type used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static Task<ScheduledMessage> SchedulePublishAsync(this IMessageScheduler scheduler, DateTimeOffset dueAt, object message,
+        Type messageType, CancellationToken cancellationToken = default)
+    {
+        return scheduler.Advanced().SchedulePublishAsync(dueAt, message, messageType, cancellationToken);
+    }
+
+    /// <summary>Schedules a runtime-typed publication through a send-context pipe.</summary>
+    /// <param name="scheduler">The scheduler used by the operation.</param>
+    /// <param name="dueAt">The due at used by the operation.</param>
+    /// <param name="message">The message processed by the operation.</param>
+    /// <param name="pipe">The pipe used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static Task<ScheduledMessage> SchedulePublishAsync(this IMessageScheduler scheduler, DateTimeOffset dueAt, object message,
+        IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
+    {
+        return scheduler.Advanced().SchedulePublishAsync(dueAt, message, pipe, cancellationToken);
+    }
+
+    /// <summary>Schedules a publication as the specified runtime type through a send-context pipe.</summary>
+    /// <param name="scheduler">The scheduler used by the operation.</param>
+    /// <param name="dueAt">The due at used by the operation.</param>
+    /// <param name="message">The message processed by the operation.</param>
+    /// <param name="messageType">The message type used by the operation.</param>
+    /// <param name="pipe">The pipe used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static Task<ScheduledMessage> SchedulePublishAsync(this IMessageScheduler scheduler, DateTimeOffset dueAt, object message,
+        Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
+    {
+        return scheduler.Advanced().SchedulePublishAsync(dueAt, message, messageType, pipe, cancellationToken);
+    }
+
+    /// <summary>Cancels a scheduled publication by message type and token.</summary>
+    /// <param name="scheduler">The scheduler used by the operation.</param>
+    /// <param name="tokenId">The token id used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static Task CancelScheduledPublishAsync<T>(this IMessageScheduler scheduler, Guid tokenId,
+        CancellationToken cancellationToken = default)
+        where T : class
+    {
+        return scheduler.Advanced().CancelScheduledPublishAsync<T>(tokenId, cancellationToken);
+    }
+
+    /// <summary>Cancels a scheduled publication by runtime message type and token.</summary>
+    /// <param name="scheduler">The scheduler used by the operation.</param>
+    /// <param name="messageType">The message type used by the operation.</param>
+    /// <param name="tokenId">The token id used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static Task CancelScheduledPublishAsync(this IMessageScheduler scheduler, Type messageType, Guid tokenId,
+        CancellationToken cancellationToken = default)
+    {
+        return scheduler.Advanced().CancelScheduledPublishAsync(messageType, tokenId, cancellationToken);
+    }
+}

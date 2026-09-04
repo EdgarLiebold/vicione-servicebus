@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using ViciOne.ServiceBus.Courier;
 using ViciOne.ServiceBus.Courier.Contracts;
 
@@ -10,8 +9,9 @@ public abstract class BaseCourierContext :
     CourierContext
 {
     readonly Guid _executionId;
-    readonly Stopwatch _timer;
-    readonly DateTime _timestamp;
+    readonly long _startedAt;
+    readonly DateTimeOffset _timestamp;
+    readonly TimeProvider _timeProvider;
 
     protected BaseCourierContext(ConsumeContext<RoutingSlip> consumeContext)
         : base(consumeContext)
@@ -19,7 +19,8 @@ public abstract class BaseCourierContext :
         if (consumeContext == null)
             throw new ArgumentNullException(nameof(consumeContext));
 
-        _timer = Stopwatch.StartNew();
+        _timeProvider = consumeContext.GetTimeProvider();
+        _startedAt = _timeProvider.GetTimestamp();
         var newId = NewId.Next();
 
         _executionId = newId.ToGuid();
@@ -34,8 +35,8 @@ public abstract class BaseCourierContext :
     protected IRoutingSlipEventPublisher Publisher { get; }
     protected SanitizedRoutingSlip RoutingSlip { get; }
 
-    DateTime CourierContext.Timestamp => _timestamp;
-    TimeSpan CourierContext.Elapsed => _timer.Elapsed;
+    DateTimeOffset CourierContext.Timestamp => _timestamp;
+    TimeSpan CourierContext.Elapsed => _timeProvider.GetElapsedTime(_startedAt);
     Guid CourierContext.TrackingNumber => RoutingSlip.TrackingNumber;
     Guid CourierContext.ExecutionId => _executionId;
 

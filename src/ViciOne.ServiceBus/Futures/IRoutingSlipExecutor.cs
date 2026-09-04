@@ -6,5 +6,5 @@ public interface IRoutingSlipExecutor<in TInput>
     where TInput : class
 {
     bool TrackRoutingSlip { set; }
-    Task Execute(BehaviorContext<FutureState, TInput> context);
+    Task ExecuteAsync(BehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default);
 }

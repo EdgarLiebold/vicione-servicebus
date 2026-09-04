@@ -8,7 +8,7 @@ public sealed class ForkFilterTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-PIPE-FORK", "parallel-execution-and-joined-completion")]
-    public async Task Fork_StartsBothBranchesAndCompletesOnlyAfterBothFinish()
+    public async Task Fork_StartsBothBranchesAndCompletesOnlyAfterBothFinishAsync()
     {
         var forkEntered = NewSignal();
         var nextEntered = NewSignal();
@@ -29,7 +29,7 @@ public sealed class ForkFilterTests
             });
         });
 
-        Task send = pipe.Send(new TestPipeContext());
+        Task send = pipe.SendAsync(new TestPipeContext());
         await Task.WhenAll(forkEntered.Task, nextEntered.Task);
         Assert.False(send.IsCompleted);
 
@@ -41,7 +41,7 @@ public sealed class ForkFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PIPE-FORK", "both-branch-failures-retained")]
-    public async Task Fork_RetainsFailuresFromBothBranches()
+    public async Task Fork_RetainsFailuresFromBothBranchesAsync()
     {
         var forkFailure = new ForkBranchException("fork");
         var nextFailure = new NextBranchException("next");
@@ -52,7 +52,7 @@ public sealed class ForkFilterTests
             configuration.UseExecuteAsync(_ => Task.FromException(nextFailure));
         });
 
-        Task send = pipe.Send(new TestPipeContext());
+        Task send = pipe.SendAsync(new TestPipeContext());
         await Assert.ThrowsAnyAsync<Exception>(() => send);
         AggregateException aggregate = Assert.IsType<AggregateException>(send.Exception);
 

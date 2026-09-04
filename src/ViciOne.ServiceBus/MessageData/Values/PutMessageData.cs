@@ -13,10 +13,10 @@ public class PutMessageData<T> :
     public PutMessageData(T value, bool hasValue = true)
     {
         HasValue = hasValue;
-        Value = Task.FromResult(value);
+        Value = Task.FromResult<T?>(value);
     }
 
-    public Uri Address => null;
+    public Uri? Address => null;
     public bool HasValue { get; }
-    public Task<T> Value { get; }
+    public Task<T?> Value { get; }
 }

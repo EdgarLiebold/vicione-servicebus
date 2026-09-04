@@ -16,7 +16,7 @@ public sealed class InMemoryOutboxRedeliveryTests
     [InlineData(RedeliveryConfiguration.ConsumerMessage, DeferredOperation.Send)]
     [InlineData(RedeliveryConfiguration.Endpoint, DeferredOperation.Publish)]
     [RequirementCoverage("REQ-VSB-INMEMORY-OUTBOX-REDELIVERY", "failed-attempts-never-flush-outbox")]
-    public async Task FailedDelivery_NeverFlushesItsOutboxAcrossImmediateAndDelayedAttempts(
+    public async Task FailedDelivery_NeverFlushesItsOutboxAcrossImmediateAndDelayedAttemptsAsync(
         RedeliveryConfiguration configurationShape,
         DeferredOperation deferredOperation)
     {
@@ -57,8 +57,7 @@ public sealed class InMemoryOutboxRedeliveryTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness()
-            .WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         var scheduledObserver = new ScheduledRedeliveryObserver();
         using ConnectHandle observerHandle = harness.Bus.ConnectSendObserver(scheduledObserver);
 
@@ -66,10 +65,10 @@ public sealed class InMemoryOutboxRedeliveryTests
         {
             Task<IPublishedMessage<Fault<OutboxCommand>>> fault = harness.Published
                 .SelectAsync<Fault<OutboxCommand>>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             Guid messageId = NewId.NextGuid();
 
-            await harness.Bus.Publish(new OutboxCommand(messageId), cancellationToken)
+            await harness.Bus.PublishAsync(new OutboxCommand(messageId), cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
             SendContext scheduled = await scheduledObserver.Scheduled.WaitAsync(timeout, cancellationToken);
 
@@ -95,7 +94,7 @@ public sealed class InMemoryOutboxRedeliveryTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None)
+            await harness.StopAsync(CancellationToken.None)
                 .WaitAsync(timeout, CancellationToken.None);
         }
     }
@@ -126,18 +125,18 @@ public sealed class InMemoryOutboxRedeliveryTests
         IConsumer<OutboxCommand>,
         IConsumer<OutboxSideEffect>
     {
-        public async Task Consume(ConsumeContext<OutboxCommand> context)
+        public async Task ConsumeAsync(ConsumeContext<OutboxCommand> context)
         {
-            observation.RecordAttempt(context.GetRedeliveryCount());
+            observation.RecordAttempt(context.Advanced().GetRedeliveryCount());
             if (observation.DeferredOperation == DeferredOperation.Publish)
-                await context.Publish(new OutboxSideEffect(context.Message.Id));
+                await context.Advanced().PublishAsync(new OutboxSideEffect(context.Message.Id));
             else
-                await context.Send(context.ReceiveContext.InputAddress, new OutboxSideEffect(context.Message.Id));
+                await context.Advanced().SendAsync(context.Advanced().ReceiveContext.InputAddress, new OutboxSideEffect(context.Message.Id));
 
             throw new ExpectedOutboxFailureException();
         }
 
-        public Task Consume(ConsumeContext<OutboxSideEffect> context)
+        public Task ConsumeAsync(ConsumeContext<OutboxSideEffect> context)
         {
             observation.RecordSideEffect();
             return Task.CompletedTask;
@@ -181,10 +180,10 @@ public sealed class InMemoryOutboxRedeliveryTests
 
         public Task<SendContext> Scheduled => _scheduled.Task;
 
-        public Task PreSend<T>(SendContext<T> context)
+        public Task PreSendAsync<T>(SendContext<T> context)
             where T : class => Task.CompletedTask;
 
-        public Task PostSend<T>(SendContext<T> context)
+        public Task PostSendAsync<T>(SendContext<T> context)
             where T : class
         {
             if (typeof(T) == typeof(OutboxCommand) && context.Delay.HasValue)
@@ -193,7 +192,7 @@ public sealed class InMemoryOutboxRedeliveryTests
             return Task.CompletedTask;
         }
 
-        public Task SendFault<T>(SendContext<T> context, Exception exception)
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
             where T : class
         {
             if (typeof(T) == typeof(OutboxCommand) && context.Delay.HasValue)

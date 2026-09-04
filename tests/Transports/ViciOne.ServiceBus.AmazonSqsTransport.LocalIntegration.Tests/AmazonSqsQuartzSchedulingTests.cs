@@ -9,7 +9,7 @@ public sealed class AmazonSqsQuartzSchedulingTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0239", "quartz-scheduled-publish-reaches-sqs-consumer-exactly-once")]
-    public async Task QuartzScheduledPublish_ReachesTheSqsConsumerOnce()
+    public async Task QuartzScheduledPublish_ReachesTheSqsConsumerOnceAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("quartzpublish");
         string inputQueue = fixture.Name("input");
@@ -31,7 +31,7 @@ public sealed class AmazonSqsQuartzSchedulingTests
                 {
                     try
                     {
-                        ScheduledMessage<QuartzDelivery> result = await context.SchedulePublish(
+                        ScheduledMessage<QuartzDelivery> result = await context.Advanced().SchedulePublishAsync(
                             TimeSpan.FromSeconds(1),
                             new QuartzDelivery(context.Message.FlowId),
                             context.CancellationToken);
@@ -59,9 +59,8 @@ public sealed class AmazonSqsQuartzSchedulingTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{inputQueue}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await input.Send(new QuartzTrigger(flowId), cancellationToken)
+            ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{inputQueue}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await input.SendAsync(new QuartzTrigger(flowId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             ScheduledMessage<QuartzDelivery> schedule = await scheduled.Task

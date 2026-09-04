@@ -14,9 +14,9 @@ public sealed class QuartzExplicitRedeliveryIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-EXPLICIT-REDELIVERY", "two-explicit-redeliveries")]
-    public async Task Redeliver_SchedulesEachRequestedDeliveryThroughQuartz()
+    public async Task Redeliver_SchedulesEachRequestedDeliveryThroughQuartzAsync()
     {
-        ExplicitRedeliveryResult result = await ExecuteRedelivery(includeCallback: false);
+        ExplicitRedeliveryResult result = await ExecuteRedeliveryAsync(includeCallback: false);
 
         Assert.Equal([0, 1, 2], result.RedeliveryCounts);
         Assert.Equal(2, result.ScheduledCommandCount);
@@ -26,9 +26,9 @@ public sealed class QuartzExplicitRedeliveryIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-EXPLICIT-REDELIVERY", "callback-mutates-redelivered-message")]
-    public async Task Redeliver_CallbackRunsBeforeSchedulingAndMutatesTheRedeliveredMessage()
+    public async Task Redeliver_CallbackRunsBeforeSchedulingAndMutatesTheRedeliveredMessageAsync()
     {
-        ExplicitRedeliveryResult result = await ExecuteRedelivery(includeCallback: true);
+        ExplicitRedeliveryResult result = await ExecuteRedeliveryAsync(includeCallback: true);
 
         Assert.Equal([0, 1, 2], result.RedeliveryCounts);
         Assert.Equal(2, result.ScheduledCommandCount);
@@ -36,22 +36,22 @@ public sealed class QuartzExplicitRedeliveryIntegrationTests
         Assert.Equal(2, result.FinalCallbackOrdinal);
     }
 
-    private static async Task<ExplicitRedeliveryResult> ExecuteRedelivery(bool includeCallback)
+    private static async Task<ExplicitRedeliveryResult> ExecuteRedeliveryAsync(bool includeCallback)
     {
         TimeSpan timeout = OperationTimeout();
         var probe = new ExplicitRedeliveryProbe(includeCallback);
         string queueName = $"quartz-explicit-redelivery-{NewId.NextGuid():N}";
         var inputAddress = new Uri($"loopback://localhost/{queueName}");
-        await using QuartzTestBus fixture = await QuartzTestBus.Start(
+        await using QuartzTestBus fixture = await QuartzTestBus.StartAsync(
             timeout,
             configure: configurator => configurator.ReceiveEndpoint(queueName, endpoint =>
-                endpoint.Handler<ExplicitRedeliveryPayload>(probe.Consume)));
+                endpoint.Handler<ExplicitRedeliveryPayload>(probe.ConsumeAsync)));
         var scheduledCommands = new ConsumeCompletionObserver<ScheduleMessage>(_ => true, expectedCount: 2);
         using ConnectHandle observer = fixture.Bus.ConnectConsumeObserver(scheduledCommands);
-        ISendEndpoint input = await fixture.Bus.GetSendEndpoint(inputAddress)
+        ISendEndpoint input = await fixture.Bus.GetSendEndpointAsync(inputAddress)
             .WaitAsync(timeout, TestContext.Current.CancellationToken);
 
-        await input.Send(new ExplicitRedeliveryPayload(NewId.NextGuid()), TestContext.Current.CancellationToken);
+        await input.SendAsync(new ExplicitRedeliveryPayload(NewId.NextGuid()), TestContext.Current.CancellationToken);
         int? finalCallbackOrdinal = await probe.Delivered
             .WaitAsync(timeout, TestContext.Current.CancellationToken);
         await scheduledCommands.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
@@ -85,16 +85,16 @@ public sealed class QuartzExplicitRedeliveryIntegrationTests
         public ConcurrentQueue<int> RedeliveryCounts { get; } = new();
         public int CallbackCount => Volatile.Read(ref _callbackCount);
 
-        public async Task Consume(ConsumeContext<ExplicitRedeliveryPayload> context)
+        public async Task ConsumeAsync(ConsumeContext<ExplicitRedeliveryPayload> context)
         {
-            int redeliveryCount = context.GetRedeliveryCount();
+            int redeliveryCount = context.Advanced().GetRedeliveryCount();
             RedeliveryCounts.Enqueue(redeliveryCount);
 
             if (redeliveryCount < 2)
             {
                 if (includeCallback)
                 {
-                    await context.Redeliver(TimeSpan.Zero, (_, sendContext) =>
+                    await context.RedeliverAsync(TimeSpan.Zero, (_, sendContext) =>
                     {
                         int callbackOrdinal = Interlocked.Increment(ref _callbackCount);
                         sendContext.Headers.Set(CallbackOrdinalHeader, callbackOrdinal);
@@ -102,7 +102,7 @@ public sealed class QuartzExplicitRedeliveryIntegrationTests
                 }
                 else
                 {
-                    await context.Redeliver(TimeSpan.Zero);
+                    await context.RedeliverAsync(TimeSpan.Zero);
                 }
 
                 return;

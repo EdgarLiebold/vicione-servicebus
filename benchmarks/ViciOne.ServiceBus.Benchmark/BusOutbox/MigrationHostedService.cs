@@ -37,5 +37,6 @@ public class MigrationHostedService<TDbContext> :
 
     public async Task StopAsync(CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
     }
 }

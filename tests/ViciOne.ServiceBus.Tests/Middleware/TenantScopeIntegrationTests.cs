@@ -19,7 +19,7 @@ public sealed class TenantScopeIntegrationTests
     [InlineData(TenantPipeline.RetrySendOpenConsume)]
     [InlineData(TenantPipeline.ExecuteActivity)]
     [RequirementCoverage("REQ-VSB-TENANT-SCOPE", "header-filter-initializes-scope-before-consumer-or-activity-resolution")]
-    public async Task TenantFilter_InitializesTheScopeBeforeDependentComponentsAreResolved(TenantPipeline pipeline)
+    public async Task TenantFilter_InitializesTheScopeBeforeDependentComponentsAreResolvedAsync(TenantPipeline pipeline)
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -71,7 +71,7 @@ public sealed class TenantScopeIntegrationTests
             ValidateOnBuild = true,
             ValidateScopes = true,
         });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
@@ -83,13 +83,13 @@ public sealed class TenantScopeIntegrationTests
                     "tenant",
                     new Uri($"queue:{DefaultEndpointNameFormatter.Instance.ExecuteActivity<TenantActivity, TenantArguments>()}"),
                     new TenantArguments(correlationId));
-                await harness.Bus.Execute(builder.Build(), cancellationToken);
-                Assert.True(await harness.Published.Any<RoutingSlipCompleted>(cancellationToken));
+                await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
+                Assert.True(await harness.Published.AnyAsync<RoutingSlipCompleted>(cancellationToken));
             }
             else
             {
                 IRequestClient<TenantRequest> client = harness.GetRequestClient<TenantRequest>();
-                Response<TenantResponse> response = await client.GetResponse<TenantResponse>(
+                Response<TenantResponse> response = await client.GetResponseAsync<TenantResponse>(
                     new TenantRequest(correlationId, pipeline == TenantPipeline.RetrySendOpenConsume ? 2 : 0),
                     cancellationToken);
                 Assert.Equal(correlationId, response.Message.CorrelationId);
@@ -103,7 +103,7 @@ public sealed class TenantScopeIntegrationTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -158,7 +158,7 @@ public sealed class TenantScopeIntegrationTests
         TenantDbContext database,
         TenantObservation observation) : IConsumer<TenantRequest>
     {
-        public async Task Consume(ConsumeContext<TenantRequest> context)
+        public async Task ConsumeAsync(ConsumeContext<TenantRequest> context)
         {
             int attempt = observation.NextAttempt();
             if (attempt <= context.Message.FailureCount)
@@ -178,7 +178,7 @@ public sealed class TenantScopeIntegrationTests
         TenantDbContext database,
         TenantObservation observation) : IExecuteActivity<TenantArguments>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<TenantArguments> context)
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<TenantArguments> context)
         {
             int attempt = observation.NextAttempt();
             observation.Completed.TrySetResult(new TenantResult(
@@ -193,10 +193,10 @@ public sealed class TenantScopeIntegrationTests
     public sealed class PublishTenantFilter<T> : IFilter<PublishContext<T>>
         where T : class
     {
-        public Task Send(PublishContext<T> context, IPipe<PublishContext<T>> next)
+        public Task SendAsync(PublishContext<T> context, IPipe<PublishContext<T>> next)
         {
             context.Headers.Set(TenantHeader, "tenant-native");
-            return next.Send(context);
+            return next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("publishTenant");
@@ -204,10 +204,10 @@ public sealed class TenantScopeIntegrationTests
 
     public sealed class TypedPublishTenantFilter : IFilter<PublishContext<TenantRequest>>
     {
-        public Task Send(PublishContext<TenantRequest> context, IPipe<PublishContext<TenantRequest>> next)
+        public Task SendAsync(PublishContext<TenantRequest> context, IPipe<PublishContext<TenantRequest>> next)
         {
             context.Headers.Set(TenantHeader, "tenant-native");
-            return next.Send(context);
+            return next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("typedPublishTenant");
@@ -216,10 +216,10 @@ public sealed class TenantScopeIntegrationTests
     public sealed class SendTenantFilter<T> : IFilter<SendContext<T>>
         where T : class
     {
-        public Task Send(SendContext<T> context, IPipe<SendContext<T>> next)
+        public Task SendAsync(SendContext<T> context, IPipe<SendContext<T>> next)
         {
             context.Headers.Set(TenantHeader, "tenant-native");
-            return next.Send(context);
+            return next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("sendTenant");
@@ -228,10 +228,10 @@ public sealed class TenantScopeIntegrationTests
     public sealed class TenantConsumeFilter<T>(TenantContext tenant) : IFilter<ConsumeContext<T>>
         where T : class
     {
-        public Task Send(ConsumeContext<T> context, IPipe<ConsumeContext<T>> next)
+        public Task SendAsync(ConsumeContext<T> context, IPipe<ConsumeContext<T>> next)
         {
             tenant.TenantId = context.Headers.Get<string>(TenantHeader) ?? string.Empty;
-            return next.Send(context);
+            return next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("consumeTenant");
@@ -239,10 +239,10 @@ public sealed class TenantScopeIntegrationTests
 
     public sealed class TypedTenantConsumeFilter(TenantContext tenant) : IFilter<ConsumeContext<TenantRequest>>
     {
-        public Task Send(ConsumeContext<TenantRequest> context, IPipe<ConsumeContext<TenantRequest>> next)
+        public Task SendAsync(ConsumeContext<TenantRequest> context, IPipe<ConsumeContext<TenantRequest>> next)
         {
             tenant.TenantId = context.Headers.Get<string>(TenantHeader) ?? string.Empty;
-            return next.Send(context);
+            return next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("typedConsumeTenant");
@@ -251,10 +251,10 @@ public sealed class TenantScopeIntegrationTests
     public sealed class TenantExecuteFilter<T>(TenantContext tenant) : IFilter<ExecuteContext<T>>
         where T : class
     {
-        public Task Send(ExecuteContext<T> context, IPipe<ExecuteContext<T>> next)
+        public Task SendAsync(ExecuteContext<T> context, IPipe<ExecuteContext<T>> next)
         {
             tenant.TenantId = context.Headers.Get<string>(TenantHeader) ?? string.Empty;
-            return next.Send(context);
+            return next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("executeTenant");

@@ -18,15 +18,15 @@ public class PartitionCheckpointData
         _pending = pending;
     }
 
-    public Task Pending(ProcessEventArgs eventArgs)
+    public Task PendingAsync(ProcessEventArgs eventArgs, CancellationToken cancellationToken = default)
     {
         var pendingConfirmation = _pending.Add(eventArgs);
-        return _checkpointer.Pending(pendingConfirmation);
+        return _checkpointer.PendingAsync(pendingConfirmation, cancellationToken: cancellationToken);
     }
 
-    public async Task Close(PartitionClosingEventArgs args)
+    public async Task CloseAsync(PartitionClosingEventArgs args, CancellationToken cancellationToken = default)
     {
-        if (args.Reason != ProcessingStoppedReason.Shutdown)
+        cancellationToken.ThrowIfCancellationRequested(); if (args.Reason != ProcessingStoppedReason.Shutdown)
             _cancellationTokenSource.Cancel();
 
         await _checkpointer.DisposeAsync().ConfigureAwait(false);

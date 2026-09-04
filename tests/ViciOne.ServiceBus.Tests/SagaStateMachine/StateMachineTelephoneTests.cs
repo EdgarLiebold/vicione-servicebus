@@ -13,7 +13,7 @@ public sealed class StateMachineTelephoneTests
     [InlineData(StateMachineConstructionStyle.Dynamic, TelephonePath.HoldResumeHangUp)]
     [InlineData(StateMachineConstructionStyle.Dynamic, TelephonePath.HoldHangUp)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-TELEPHONE", "connected-superstate-lifecycle-matrix")]
-    public async Task ConnectedSuperstate_EntersAndLeavesExactlyOnceAcrossEveryCallPath(
+    public async Task ConnectedSuperstate_EntersAndLeavesExactlyOnceAcrossEveryCallPathAsync(
         StateMachineConstructionStyle style,
         TelephonePath path)
     {
@@ -21,25 +21,25 @@ public sealed class StateMachineTelephoneTests
         var phone = new TelephoneInstance();
         var states = new List<string>();
 
-        await RaiseAndRecord(scenario, phone, scenario.ServiceEstablished, new ServiceEstablished("555-1212"), states);
-        await RaiseAndRecord(scenario, phone, scenario.CallDialed, states);
-        await RaiseAndRecord(scenario, phone, scenario.CallConnected, states);
+        await RaiseAndRecordAsync(scenario, phone, scenario.ServiceEstablished, new ServiceEstablished("555-1212"), states);
+        await RaiseAndRecordAsync(scenario, phone, scenario.CallDialed, states);
+        await RaiseAndRecordAsync(scenario, phone, scenario.CallConnected, states);
 
         switch (path)
         {
             case TelephonePath.ConnectedHangUp:
-                await RaiseAndRecord(scenario, phone, scenario.HungUp, states);
+                await RaiseAndRecordAsync(scenario, phone, scenario.HungUp, states);
                 Assert.Equal(["OffHook", "Ringing", "Connected", "OffHook"], states);
                 break;
             case TelephonePath.HoldResumeHangUp:
-                await RaiseAndRecord(scenario, phone, scenario.PlacedOnHold, states);
-                await RaiseAndRecord(scenario, phone, scenario.TakenOffHold, states);
-                await RaiseAndRecord(scenario, phone, scenario.HungUp, states);
+                await RaiseAndRecordAsync(scenario, phone, scenario.PlacedOnHold, states);
+                await RaiseAndRecordAsync(scenario, phone, scenario.TakenOffHold, states);
+                await RaiseAndRecordAsync(scenario, phone, scenario.HungUp, states);
                 Assert.Equal(["OffHook", "Ringing", "Connected", "OnHold", "Connected", "OffHook"], states);
                 break;
             case TelephonePath.HoldHangUp:
-                await RaiseAndRecord(scenario, phone, scenario.PlacedOnHold, states);
-                await RaiseAndRecord(scenario, phone, scenario.HungUp, states);
+                await RaiseAndRecordAsync(scenario, phone, scenario.PlacedOnHold, states);
+                await RaiseAndRecordAsync(scenario, phone, scenario.HungUp, states);
                 Assert.Equal(["OffHook", "Ringing", "Connected", "OnHold", "OffHook"], states);
                 break;
             default:
@@ -51,28 +51,28 @@ public sealed class StateMachineTelephoneTests
         Assert.Equal(1, phone.ConnectedLeaveCount);
         Assert.Equal(["connected-enter", "connected-leave"], phone.LifecycleMarkers);
         Assert.Equal("OffHook", phone.CurrentState);
-        Assert.Same(scenario.OffHook, await StateMachineTestExecution.GetState(scenario.Machine, phone));
+        Assert.Same(scenario.OffHook, await StateMachineTestExecution.GetStateAsync(scenario.Machine, phone));
     }
 
-    private static async Task RaiseAndRecord(
+    private static async Task RaiseAndRecordAsync(
         TelephoneScenario scenario,
         TelephoneInstance phone,
         Event @event,
         List<string> states)
     {
-        await StateMachineTestExecution.Raise(scenario.Machine, phone, @event);
-        states.Add((await StateMachineTestExecution.GetState(scenario.Machine, phone)).Name);
+        await StateMachineTestExecution.RaiseAsync(scenario.Machine, phone, @event);
+        states.Add((await StateMachineTestExecution.GetStateAsync(scenario.Machine, phone)).Name);
     }
 
-    private static async Task RaiseAndRecord(
+    private static async Task RaiseAndRecordAsync(
         TelephoneScenario scenario,
         TelephoneInstance phone,
         Event<ServiceEstablished> @event,
         ServiceEstablished message,
         List<string> states)
     {
-        await StateMachineTestExecution.Raise(scenario.Machine, phone, @event, message);
-        states.Add((await StateMachineTestExecution.GetState(scenario.Machine, phone)).Name);
+        await StateMachineTestExecution.RaiseAsync(scenario.Machine, phone, @event, message);
+        states.Add((await StateMachineTestExecution.GetStateAsync(scenario.Machine, phone)).Name);
     }
 
     private static TelephoneScenario CreateScenario(StateMachineConstructionStyle style)

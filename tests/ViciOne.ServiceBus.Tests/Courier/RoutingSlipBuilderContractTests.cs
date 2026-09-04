@@ -20,8 +20,8 @@ public sealed class RoutingSlipBuilderContractTests
 
         RoutingSlip routingSlip = builder.Build();
 
-        Assert.Equal(now.UtcDateTime, routingSlip.CreateTimestamp);
-        Assert.Equal(DateTimeKind.Utc, routingSlip.CreateTimestamp.Kind);
+        Assert.Equal(now, routingSlip.CreateTimestamp);
+        Assert.Equal(TimeSpan.Zero, routingSlip.CreateTimestamp.Offset);
     }
 
     [Fact]
@@ -47,12 +47,12 @@ public sealed class RoutingSlipBuilderContractTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-BUILDER", "cyclic-object-graph-rejected")]
-    public async Task CyclicArgumentGraph_FailsWithTheSerializationCause()
+    public async Task CyclicArgumentGraph_FailsWithTheSerializationCauseAsync()
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using InMemoryTestHarness harness = CourierTestSupport.CreateHarness("courier-cycle");
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
@@ -65,19 +65,19 @@ public sealed class RoutingSlipBuilderContractTests
                 new { Content = outer });
 
             SerializationException exception = await Assert.ThrowsAsync<SerializationException>(() =>
-                harness.Bus.Execute(builder.Build(), cancellationToken).WaitAsync(timeout, cancellationToken));
+                harness.Bus.ExecuteAsync(builder.Build(), cancellationToken).WaitAsync(timeout, cancellationToken));
 
             Assert.IsType<JsonException>(exception.InnerException);
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-SERIALIZATION", "transport-round-trip-with-subscription")]
-    public async Task RoutingSlipTransport_RoundTripsItsActivityAndSubscriptionExactly()
+    public async Task RoutingSlipTransport_RoundTripsItsActivityAndSubscriptionExactlyAsync()
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -90,7 +90,7 @@ public sealed class RoutingSlipBuilderContractTests
                 received.TrySetResult(context);
                 return Task.CompletedTask;
             });
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
@@ -102,7 +102,7 @@ public sealed class RoutingSlipBuilderContractTests
                 RoutingSlipEvents.Completed | RoutingSlipEvents.Faulted,
                 RoutingSlipEventContents.All);
 
-            await harness.InputQueueSendEndpoint.Send(builder.Build(), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(builder.Build(), cancellationToken);
             RoutingSlip actual = (await received.Task.WaitAsync(timeout, cancellationToken)).Message;
 
             Assert.Equal(trackingNumber, actual.TrackingNumber);
@@ -113,7 +113,7 @@ public sealed class RoutingSlipBuilderContractTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 

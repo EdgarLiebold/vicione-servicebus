@@ -12,7 +12,7 @@ public sealed class AzureServiceBusFunctionReceiverTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-FUNCTION-RECEIVER", "retry-exhaustion-rethrows-and-publishes-one-fault")]
-    public async Task FaultingFunctionConsumer_RetriesExactlyAndPublishesOneTerminalFault()
+    public async Task FaultingFunctionConsumer_RetriesExactlyAndPublishesOneTerminalFaultAsync()
     {
         AzureServiceBusLocalFixture fixture = AzureServiceBusLocalFixture.Create("function");
         ServiceBusAdministrationClient admin = fixture.CreateAdministrationClient();
@@ -41,8 +41,7 @@ public sealed class AzureServiceBusFunctionReceiverTests
         try
         {
             FunctionFailureException exception = await Assert.ThrowsAsync<FunctionFailureException>(
-                () => harness.HandleConsumer<FaultingFunctionConsumer>(new FunctionMessage())
-                    .WaitAsync(fixture.OperationTimeout, cancellationToken));
+                () => harness.HandleConsumerAsync<FaultingFunctionConsumer>(new FunctionMessage(), cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken));
 
             Assert.Same(ledger.Failure, exception);
             Assert.Equal(4, ledger.Attempts);
@@ -78,7 +77,7 @@ public sealed class AzureServiceBusFunctionReceiverTests
 
     public sealed class FaultingFunctionConsumer(AttemptLedger ledger) : IConsumer<FunctionMessage>
     {
-        public Task Consume(ConsumeContext<FunctionMessage> context)
+        public Task ConsumeAsync(ConsumeContext<FunctionMessage> context)
         {
             ledger.Record();
             throw ledger.Failure;

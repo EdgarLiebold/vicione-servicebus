@@ -25,7 +25,7 @@ public class InMemoryDeliveryContext :
 
     public InMemoryTransportMessage Message { get; }
     public string? RoutingKey => Message.RoutingKey;
-    public DateTime? EnqueueTime => _enqueueTime;
+    public DateTimeOffset? EnqueueTime => _enqueueTime;
     public long? ReceiverId => default;
 
     public bool WasAlreadyDelivered(IMessageSink<InMemoryTransportMessage> sink)

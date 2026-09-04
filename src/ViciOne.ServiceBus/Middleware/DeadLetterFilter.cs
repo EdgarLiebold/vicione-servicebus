@@ -26,14 +26,14 @@ public class DeadLetterFilter :
     }
 
     [DebuggerNonUserCode]
-    async Task IFilter<ReceiveContext>.Send(ReceiveContext context, IPipe<ReceiveContext> next)
+    async Task IFilter<ReceiveContext>.SendAsync(ReceiveContext context, IPipe<ReceiveContext> next)
     {
-        await next.Send(context).ConfigureAwait(false);
+        await next.SendAsync(context).ConfigureAwait(false);
 
         if (context.IsDelivered || context.IsFaulted)
             return;
 
-        await _deadLetterPipe.Send(context).ConfigureAwait(false);
+        await _deadLetterPipe.SendAsync(context).ConfigureAwait(false);
 
         context.LogSkipped();
     }

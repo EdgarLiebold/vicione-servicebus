@@ -58,10 +58,10 @@ public class TestActivityListener :
 
         _listener.Dispose();
 
-        await GenerateOutput().ConfigureAwait(false);
+        await GenerateOutputAsync().ConfigureAwait(false);
     }
 
-    async Task GenerateOutput()
+    async Task GenerateOutputAsync()
     {
         var chart = new ChartTable(50);
 
@@ -93,7 +93,7 @@ public class TestActivityListener :
 
                 var details = FormatDetailsColumn(span);
 
-                chart.Add(sb.ToString(), span.StartTime.LocalDateTime, span.Duration, details);
+                chart.Add(sb.ToString(), span.StartTime, span.Duration, details);
 
                 foreach (var childSpan in trace.Spans.Values.Where(x => x.ParentId == span.SpanId).OrderByDescending(x => x.StartTime))
                     stack.Push((depth + 1, childSpan));

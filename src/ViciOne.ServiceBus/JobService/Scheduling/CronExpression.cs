@@ -1351,7 +1351,8 @@ public sealed class CronExpression :
             if (nextFireTimeCursor.RestartLoop)
                 continue;
 
-            date = new DateTimeOffset(nextFireTimeCursor.Date.Value.DateTime, TimeZoneUtil.GetUtcOffset(nextFireTimeCursor.Date.Value.DateTime, TimeZone));
+            date = new DateTimeOffset(nextFireTimeCursor.Date.Value.DateTime,
+                TimeZoneUtil.GetAmbiguousTimeUtcOffset(nextFireTimeCursor.Date.Value, TimeZone));
             foundNextFireTime = true;
         }
 

@@ -26,12 +26,12 @@ public class BusHealthResult
         return new BusHealthResult(BusHealthStatus.Healthy, description, null, endpoints);
     }
 
-    public static BusHealthResult Degraded(string description, Exception exception, IReadOnlyDictionary<string, EndpointHealthResult> endpoints)
+    public static BusHealthResult Degraded(string description, Exception? exception, IReadOnlyDictionary<string, EndpointHealthResult> endpoints)
     {
         return new BusHealthResult(BusHealthStatus.Degraded, description, exception, endpoints);
     }
 
-    public static BusHealthResult Unhealthy(string description, Exception exception, IReadOnlyDictionary<string, EndpointHealthResult> endpoints)
+    public static BusHealthResult Unhealthy(string description, Exception? exception, IReadOnlyDictionary<string, EndpointHealthResult> endpoints)
     {
         return new BusHealthResult(BusHealthStatus.Unhealthy, description, exception, endpoints);
     }

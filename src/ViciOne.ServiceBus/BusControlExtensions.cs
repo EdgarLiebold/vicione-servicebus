@@ -59,9 +59,10 @@ public static class BusControlExtensions
     /// </summary>
     /// <param name="bus">The bus handle</param>
     /// <param name="startTimeout">The wait time before throwing an exception</param>
-    public static async Task<BusHandle> StartAsync(this IBusControl bus, TimeSpan startTimeout)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static async Task<BusHandle> StartAsync(this IBusControl bus, TimeSpan startTimeout, CancellationToken cancellationToken = default)
     {
-        using var cancellationTokenSource = new CancellationTokenSource(startTimeout);
+        cancellationToken.ThrowIfCancellationRequested(); using var cancellationTokenSource = new CancellationTokenSource(startTimeout);
 
         return await bus.StartAsync(cancellationTokenSource.Token).ConfigureAwait(false);
     }
@@ -71,9 +72,10 @@ public static class BusControlExtensions
     /// </summary>
     /// <param name="bus">The bus handle</param>
     /// <param name="stopTimeout">The wait time before throwing an exception</param>
-    public static async Task StopAsync(this IBusControl bus, TimeSpan stopTimeout)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static async Task StopAsync(this IBusControl bus, TimeSpan stopTimeout, CancellationToken cancellationToken = default)
     {
-        using var cancellationTokenSource = new CancellationTokenSource(stopTimeout);
+        cancellationToken.ThrowIfCancellationRequested(); using var cancellationTokenSource = new CancellationTokenSource(stopTimeout);
 
         await bus.StopAsync(cancellationTokenSource.Token).ConfigureAwait(false);
     }

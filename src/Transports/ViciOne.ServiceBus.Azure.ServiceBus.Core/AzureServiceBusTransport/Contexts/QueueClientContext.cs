@@ -14,10 +14,10 @@ public class QueueClientContext :
 {
     readonly IAgent _agent;
     readonly object _faultStopLock = new object();
-    Task _faultStopTask;
+    Task? _faultStopTask;
     readonly ReceiveSettings _settings;
-    ServiceBusProcessor _processor;
-    ServiceBusSessionProcessor _sessionProcessor;
+    ServiceBusProcessor? _processor;
+    ServiceBusSessionProcessor? _sessionProcessor;
 
     public QueueClientContext(ConnectionContext connectionContext, Uri inputAddress, ReceiveSettings settings, IAgent agent)
     {
@@ -29,7 +29,8 @@ public class QueueClientContext :
 
     public ConnectionContext ConnectionContext { get; }
 
-    public string EntityPath => _processor?.EntityPath ?? _sessionProcessor?.EntityPath;
+    public string EntityPath => _processor?.EntityPath ?? _sessionProcessor?.EntityPath
+        ?? throw new InvalidOperationException("The Azure Service Bus queue client has not been initialized.");
 
     public bool IsClosedOrClosing => _processor?.IsClosed ?? _sessionProcessor?.IsClosed ?? false;
 
@@ -63,24 +64,25 @@ public class QueueClientContext :
         _sessionProcessor.ProcessErrorAsync += exceptionHandler;
     }
 
-    public async Task StartAsync()
+    public async Task StartAsync(CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         if (_processor != null)
-            await _processor.StartProcessingAsync(CancellationToken).ConfigureAwait(false);
+            await _processor.StartProcessingAsync(cancellationToken).ConfigureAwait(false);
 
         if (_sessionProcessor != null)
-            await _sessionProcessor.StartProcessingAsync(CancellationToken).ConfigureAwait(false);
+            await _sessionProcessor.StartProcessingAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task ShutdownAsync()
+    public async Task ShutdownAsync(CancellationToken cancellationToken = default)
     {
         try
         {
             if (_processor is { IsClosed: false })
-                await _processor.StopProcessingAsync().ConfigureAwait(false);
+                await _processor.StopProcessingAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 
             if (_sessionProcessor is { IsClosed: false })
-                await _sessionProcessor.StopProcessingAsync().ConfigureAwait(false);
+                await _sessionProcessor.StopProcessingAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
         catch (Exception exception)
         {
@@ -88,15 +90,15 @@ public class QueueClientContext :
         }
     }
 
-    public async Task CloseAsync()
+    public async Task CloseAsync(CancellationToken cancellationToken = default)
     {
         try
         {
             if (_processor is { IsClosed: false })
-                await _processor.CloseAsync().ConfigureAwait(false);
+                await _processor.CloseAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 
             if (_sessionProcessor is { IsClosed: false })
-                await _sessionProcessor.CloseAsync().ConfigureAwait(false);
+                await _sessionProcessor.CloseAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
         catch (Exception exception)
         {
@@ -104,26 +106,26 @@ public class QueueClientContext :
         }
     }
 
-    public Task NotifyFaulted(Exception exception, string entityPath)
+    public Task NotifyFaultedAsync(Exception exception, string entityPath, CancellationToken cancellationToken = default)
     {
-        // Azure invokes this from the processor callback. Defer closing the same processor, but
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken);        // Azure invokes this from the processor callback. Defer closing the same processor, but
         // retain the task and consume every stop outcome in this context owner.
         lock (_faultStopLock)
         {
             if (_faultStopTask == null || _faultStopTask.IsCompleted)
-                _faultStopTask = StopAfterCallback(entityPath);
+                _faultStopTask = StopAfterCallbackAsync(entityPath);
         }
 
         return Task.CompletedTask;
     }
 
-    async Task StopAfterCallback(string entityPath)
+    async Task StopAfterCallbackAsync(string entityPath)
     {
         await Task.Yield();
 
         try
         {
-            await _agent.Stop($"Unrecoverable exception on {entityPath}").ConfigureAwait(false);
+            await _agent.StopAsync($"Unrecoverable exception on {entityPath}").ConfigureAwait(false);
         }
         catch (Exception stopException)
         {

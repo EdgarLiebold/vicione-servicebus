@@ -60,18 +60,18 @@ public class SqlServerDbConnectionContext :
         return new SqlServerClientContext(this, cancellationToken);
     }
 
-    async Task<ISqlTransportConnection> ConnectionContext.CreateConnection(CancellationToken cancellationToken)
+    async Task<ISqlTransportConnection> ConnectionContext.CreateConnectionAsync(CancellationToken cancellationToken)
     {
-        return await CreateConnection(cancellationToken).ConfigureAwait(false);
+        return await CreateConnectionAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    public Task<T> Query<T>(Func<IDbConnection, IDbTransaction, Task<T>> callback, CancellationToken cancellationToken)
+    public Task<T> QueryAsync<T>(Func<IDbConnection, IDbTransaction, Task<T>> callback, CancellationToken cancellationToken)
     {
         return _executor.ExecuteAsync(() =>
         {
-            return _retryPolicy.Retry(async () =>
+            return _retryPolicy.RetryAsync(async () =>
             {
-                await using var connection = await CreateConnection(cancellationToken).ConfigureAwait(false);
+                await using var connection = await CreateConnectionAsync(cancellationToken).ConfigureAwait(false);
 
                 await using var transaction = await connection.Connection.BeginTransactionAsync(_hostSettings.IsolationLevel, cancellationToken)
                     .ConfigureAwait(false);
@@ -85,12 +85,12 @@ public class SqlServerDbConnectionContext :
         }, cancellationToken);
     }
 
-    Task ConnectionContext.DelayUntilMessageReady(long queueId, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken)
+    Task ConnectionContext.DelayUntilMessageReadyAsync(long queueId, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken)
     {
-        return DelayUntilMessageReady(queueId, timeout, timeProvider, cancellationToken);
+        return DelayUntilMessageReadyAsync(queueId, timeout, timeProvider, cancellationToken);
     }
 
-    internal static Task DelayUntilMessageReady(long queueId, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken)
+    internal static Task DelayUntilMessageReadyAsync(long queueId, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(timeProvider);
         _ = queueId;
@@ -102,11 +102,11 @@ public class SqlServerDbConnectionContext :
         TransportLogMessages.DisconnectedHost(_hostConfiguration.HostAddress.ToString());
     }
 
-    public async Task<ISqlServerSqlTransportConnection> CreateConnection(CancellationToken cancellationToken)
+    public async Task<ISqlServerSqlTransportConnection> CreateConnectionAsync(CancellationToken cancellationToken)
     {
         var connection = new SqlServerSqlTransportConnection(_hostSettings.GetConnectionString());
 
-        await connection.Open(cancellationToken).ConfigureAwait(false);
+        await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
 
         return connection;
     }
@@ -152,14 +152,14 @@ public class SqlServerDbConnectionContext :
             _hostConfiguration = hostConfiguration;
             _logContext = hostConfiguration.LogContext;
 
-            var runTask = Task.Run(() => PerformMaintenance(), Stopping);
+            var runTask = Task.Run(() => PerformMaintenanceAsync(), Stopping);
 
             SetReady(runTask);
 
             SetCompleted(runTask);
         }
 
-        async Task PerformMaintenance()
+        async Task PerformMaintenanceAsync()
         {
             LogContext.SetCurrentIfNull(_logContext);
 
@@ -185,18 +185,18 @@ public class SqlServerDbConnectionContext :
                     }
                     catch (OperationCanceledException)
                     {
-                        await Execute<long>(processMetricsSql, new
+                        await ExecuteAsync<long>(processMetricsSql, new
                         {
                             rowLimit = _hostConfiguration.Settings.MaintenanceBatchSize,
                         }, CancellationToken.None);
 
                         if (lastCleanup == null)
-                            await Execute<long>(purgeTopologySql, new { }, CancellationToken.None);
+                            await ExecuteAsync<long>(purgeTopologySql, new { }, CancellationToken.None);
                     }
 
-                    await _hostConfiguration.Retry(async () =>
+                    await _hostConfiguration.RetryAsync(async () =>
                     {
-                        await Execute<long>(processMetricsSql, new
+                        await ExecuteAsync<long>(processMetricsSql, new
                         {
                             rowLimit = _hostConfiguration.Settings.MaintenanceBatchSize,
                         }, Stopping);
@@ -205,12 +205,12 @@ public class SqlServerDbConnectionContext :
 
                         if (lastCleanup == null || lastCleanup < utcNow - cleanupInterval)
                         {
-                            await Execute<long>(purgeTopologySql, new { }, CancellationToken.None);
+                            await ExecuteAsync<long>(purgeTopologySql, new { }, CancellationToken.None);
 
                             lastCleanup = utcNow;
                             cleanupInterval = AddJitter(_hostConfiguration.Settings.QueueCleanupInterval, random);
 
-                            await _context.Query((x, t) => x.ExecuteScalarAsync<long?>(removeOrphanedMessagesSql,
+                            await _context.QueryAsync((x, t) => x.ExecuteScalarAsync<long?>(removeOrphanedMessagesSql,
                                 new { RowLimit = _hostConfiguration.Settings.MaintenanceBatchSize }, t,
                                 commandType: CommandType.StoredProcedure), Stopping);
                         }
@@ -226,10 +226,10 @@ public class SqlServerDbConnectionContext :
             }
         }
 
-        Task<T?> Execute<T>(string functionName, object values, CancellationToken cancellationToken)
+        Task<T?> ExecuteAsync<T>(string functionName, object values, CancellationToken cancellationToken)
             where T : struct
         {
-            return _context.Query((connection, transaction) => connection
+            return _context.QueryAsync((connection, transaction) => connection
                 .ExecuteScalarAsync<T?>(functionName, values, transaction, commandType: CommandType.StoredProcedure), cancellationToken);
         }
 

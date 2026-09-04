@@ -38,7 +38,8 @@ public static class InstanceConnectorCache
     public static IInstanceConnector GetInstanceConnector(Type type)
     {
         return InstanceCache.Cached.Value.GetOrAdd(type, _ => new Lazy<IInstanceConnector>(() =>
-            (IInstanceConnector)Activator.CreateInstance(typeof(InstanceConnector<>).MakeGenericType(type)))).Value;
+            (IInstanceConnector)(Activator.CreateInstance(typeof(InstanceConnector<>).MakeGenericType(type))
+                ?? throw new InvalidOperationException($"Could not create an instance connector for '{type}'.")))).Value;
     }
 
 

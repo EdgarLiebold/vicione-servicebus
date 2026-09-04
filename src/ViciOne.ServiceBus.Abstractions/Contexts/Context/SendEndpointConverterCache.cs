@@ -15,26 +15,26 @@ public class SendEndpointConverterCache
 
     ISendEndpointConverter this[Type type] => _types.GetOrAdd(type, CreateTypeConverter).Value;
 
-    public static Task Send(ISendEndpoint endpoint, object message, Type messageType, CancellationToken cancellationToken = default)
+    public static Task SendAsync(ISendEndpoint endpoint, object message, Type messageType, CancellationToken cancellationToken = default)
     {
-        return Cached.Converters.Value[messageType].Send(endpoint, message, cancellationToken);
+        return Cached.Converters.Value[messageType].SendAsync(endpoint, message, cancellationToken);
     }
 
-    public static Task Send(ISendEndpoint endpoint, object message, Type messageType, IPipe<SendContext> pipe,
+    public static Task SendAsync(ISendEndpoint endpoint, object message, Type messageType, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
     {
-        return Cached.Converters.Value[messageType].Send(endpoint, message, pipe, cancellationToken);
+        return Cached.Converters.Value[messageType].SendAsync(endpoint, message, pipe, cancellationToken);
     }
 
-    public static Task SendInitializer(ISendEndpoint endpoint, Type messageType, object values, CancellationToken cancellationToken = default)
+    public static Task SendInitializerAsync(ISendEndpoint endpoint, Type messageType, object values, CancellationToken cancellationToken = default)
     {
-        return Cached.Converters.Value[messageType].SendInitializer(endpoint, values, cancellationToken);
+        return Cached.Converters.Value[messageType].SendInitializerAsync(endpoint, values, cancellationToken);
     }
 
-    public static Task SendInitializer(ISendEndpoint endpoint, Type messageType, object values, IPipe<SendContext> pipe,
+    public static Task SendInitializerAsync(ISendEndpoint endpoint, Type messageType, object values, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
     {
-        return Cached.Converters.Value[messageType].SendInitializer(endpoint, values, pipe, cancellationToken);
+        return Cached.Converters.Value[messageType].SendInitializerAsync(endpoint, values, pipe, cancellationToken);
     }
 
     static Lazy<ISendEndpointConverter> CreateTypeConverter(Type type)
@@ -54,13 +54,13 @@ public class SendEndpointConverterCache
     /// </summary>
     interface ISendEndpointConverter
     {
-        Task Send(ISendEndpoint endpoint, object message, CancellationToken cancellationToken = default);
+        Task SendAsync(ISendEndpoint endpoint, object message, CancellationToken cancellationToken = default);
 
-        Task Send(ISendEndpoint endpoint, object message, IPipe<SendContext> pipe, CancellationToken cancellationToken = default);
+        Task SendAsync(ISendEndpoint endpoint, object message, IPipe<SendContext> pipe, CancellationToken cancellationToken = default);
 
-        Task SendInitializer(ISendEndpoint endpoint, object values, CancellationToken cancellationToken = default);
+        Task SendInitializerAsync(ISendEndpoint endpoint, object values, CancellationToken cancellationToken = default);
 
-        Task SendInitializer(ISendEndpoint endpoint, object values, IPipe<SendContext> pipe, CancellationToken cancellationToken = default);
+        Task SendInitializerAsync(ISendEndpoint endpoint, object values, IPipe<SendContext> pipe, CancellationToken cancellationToken = default);
     }
 
 
@@ -73,7 +73,7 @@ public class SendEndpointConverterCache
         ISendEndpointConverter
         where T : class
     {
-        public Task Send(ISendEndpoint endpoint, object message, CancellationToken cancellationToken)
+        public Task SendAsync(ISendEndpoint endpoint, object message, CancellationToken cancellationToken)
         {
             if (endpoint == null)
                 throw new ArgumentNullException(nameof(endpoint));
@@ -81,12 +81,12 @@ public class SendEndpointConverterCache
                 throw new ArgumentNullException(nameof(message));
 
             if (message is T msg)
-                return endpoint.Send(msg, cancellationToken);
+                return endpoint.SendAsync(msg, cancellationToken);
 
             throw new ArgumentException("Unexpected message type: " + TypeCache.GetShortName(message.GetType()));
         }
 
-        public Task Send(ISendEndpoint endpoint, object message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
+        public Task SendAsync(ISendEndpoint endpoint, object message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
         {
             if (endpoint == null)
                 throw new ArgumentNullException(nameof(endpoint));
@@ -96,22 +96,22 @@ public class SendEndpointConverterCache
                 throw new ArgumentNullException(nameof(pipe));
 
             if (message is T msg)
-                return endpoint.Send(msg, pipe, cancellationToken);
+                return endpoint.SendAsync(msg, pipe, cancellationToken);
 
             throw new ArgumentException("Unexpected message type: " + TypeCache.GetShortName(message.GetType()));
         }
 
-        public Task SendInitializer(ISendEndpoint endpoint, object values, CancellationToken cancellationToken)
+        public Task SendInitializerAsync(ISendEndpoint endpoint, object values, CancellationToken cancellationToken)
         {
             if (endpoint == null)
                 throw new ArgumentNullException(nameof(endpoint));
             if (values == null)
                 throw new ArgumentNullException(nameof(values));
 
-            return endpoint.Send<T>(values, cancellationToken);
+            return endpoint.SendAsync<T>(values, cancellationToken);
         }
 
-        public Task SendInitializer(ISendEndpoint endpoint, object values, IPipe<SendContext> pipe, CancellationToken cancellationToken)
+        public Task SendInitializerAsync(ISendEndpoint endpoint, object values, IPipe<SendContext> pipe, CancellationToken cancellationToken)
         {
             if (endpoint == null)
                 throw new ArgumentNullException(nameof(endpoint));
@@ -120,7 +120,7 @@ public class SendEndpointConverterCache
             if (pipe == null)
                 throw new ArgumentNullException(nameof(pipe));
 
-            return endpoint.Send<T>(values, pipe, cancellationToken);
+            return endpoint.SendAsync<T>(values, pipe, cancellationToken);
         }
     }
 

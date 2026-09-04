@@ -15,13 +15,13 @@ public class ProcessorContextFactory :
     readonly Func<EventProcessorClient> _clientFactory;
     readonly IConnectionContextSupervisor _contextSupervisor;
     readonly IHostConfiguration _hostConfiguration;
-    readonly Func<PartitionClosingEventArgs, Task> _partitionClosingHandler;
-    readonly Func<PartitionInitializingEventArgs, Task> _partitionInitializingHandler;
+    readonly Func<PartitionClosingEventArgs, Task>? _partitionClosingHandler;
+    readonly Func<PartitionInitializingEventArgs, Task>? _partitionInitializingHandler;
 
     public ProcessorContextFactory(IConnectionContextSupervisor contextSupervisor, IHostConfiguration hostConfiguration,
         Func<EventProcessorClient> clientFactory,
-        Func<PartitionClosingEventArgs, Task> partitionClosingHandler,
-        Func<PartitionInitializingEventArgs, Task> partitionInitializingHandler)
+        Func<PartitionClosingEventArgs, Task>? partitionClosingHandler,
+        Func<PartitionInitializingEventArgs, Task>? partitionInitializingHandler)
     {
         _contextSupervisor = contextSupervisor;
         _hostConfiguration = hostConfiguration;
@@ -33,7 +33,7 @@ public class ProcessorContextFactory :
     public IActivePipeContextAgent<ProcessorContext> CreateActiveContext(ISupervisor supervisor, PipeContextHandle<ProcessorContext> context,
         CancellationToken cancellationToken)
     {
-        return supervisor.AddActiveContext(context, CreateSharedConnection(context.Context, cancellationToken));
+        return supervisor.AddActiveContext(context, CreateSharedConnectionAsync(context.Context, cancellationToken));
     }
 
     IPipeContextAgent<ProcessorContext> IPipeContextFactory<ProcessorContext>.CreateContext(ISupervisor supervisor)
@@ -45,17 +45,17 @@ public class ProcessorContextFactory :
         return asyncContext;
     }
 
-    static async Task<ProcessorContext> CreateSharedConnection(Task<ProcessorContext> context,
+    static async Task<ProcessorContext> CreateSharedConnectionAsync(Task<ProcessorContext> context,
         CancellationToken cancellationToken)
     {
         return context.IsCompletedSuccessfully()
             ? new SharedProcessorContext(context.Result, cancellationToken)
-            : new SharedProcessorContext(await context.OrCanceled(cancellationToken).ConfigureAwait(false), cancellationToken);
+            : new SharedProcessorContext(await context.OrCanceledAsync(cancellationToken).ConfigureAwait(false), cancellationToken);
     }
 
     void CreateProcessor(IAsyncPipeContextAgent<ProcessorContext> asyncContext, CancellationToken cancellationToken)
     {
-        Task<ProcessorContext> Create(ConnectionContext connectionContext, CancellationToken createCancellationToken)
+        Task<ProcessorContext> CreateAsync(ConnectionContext connectionContext, CancellationToken createCancellationToken)
         {
             var client = _clientFactory();
 
@@ -64,6 +64,6 @@ public class ProcessorContextFactory :
             return Task.FromResult(context);
         }
 
-        _contextSupervisor.StartAgent(asyncContext, Create, cancellationToken);
+        _contextSupervisor.StartAgent(asyncContext, CreateAsync, cancellationToken);
     }
 }

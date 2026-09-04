@@ -61,9 +61,10 @@ public class ScopeProbeContext :
 
         if (_variables.TryGetValue(key, out var value))
         {
-            list = value as IList<ScopeProbeContext>;
-            if (list == null)
+            if (value is not IList<ScopeProbeContext> existingScopes)
                 throw new InvalidOperationException("The key already exists and is not a scope collection: " + key);
+
+            list = existingScopes;
         }
         else
         {

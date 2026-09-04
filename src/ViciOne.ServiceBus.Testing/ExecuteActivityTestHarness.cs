@@ -8,6 +8,7 @@ public class ExecuteActivityTestHarness<TActivity, TArguments>
 {
     readonly IExecuteActivityFactory<TActivity, TArguments> _activityFactory;
     readonly Action<IExecuteActivityConfigurator<TActivity, TArguments>> _configureExecute;
+    Uri? _executeAddress;
 
     public ExecuteActivityTestHarness(BusTestHarness testHarness, IExecuteActivityFactory<TActivity, TArguments> activityFactory,
         Action<IExecuteActivityConfigurator<TActivity, TArguments>> configureExecute)
@@ -24,9 +25,9 @@ public class ExecuteActivityTestHarness<TActivity, TArguments>
 
     public string ExecuteQueueName { get; private set; }
     public string Name { get; private set; }
-    public Uri ExecuteAddress { get; private set; }
+    public Uri ExecuteAddress => _executeAddress ?? throw new InvalidOperationException("The execute activity test harness has not been configured.");
 
-    public event Action<IReceiveEndpointConfigurator> OnConfigureExecuteReceiveEndpoint;
+    public event Action<IReceiveEndpointConfigurator>? OnConfigureExecuteReceiveEndpoint;
 
     void ConfigureBus(IBusFactoryConfigurator configurator)
     {
@@ -36,7 +37,7 @@ public class ExecuteActivityTestHarness<TActivity, TArguments>
 
             x.ExecuteActivityHost(_activityFactory, _configureExecute);
 
-            ExecuteAddress = x.InputAddress;
+            _executeAddress = x.InputAddress;
         });
     }
 

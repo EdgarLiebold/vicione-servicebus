@@ -44,8 +44,8 @@ public sealed class AzureTableMessageJournalStore : IMessageJournalStore
                 $"The sanitized journal entry exceeds the configured {Limits.MaximumEntryBytes}-byte limit.");
         }
 
-        MessageJournalCapacityLease lease = await GetOrCreateLease(cancellationToken).ConfigureAwait(false);
-        List<MessageJournalRecord> existing = await LoadBoundedPartition(cancellationToken).ConfigureAwait(false);
+        MessageJournalCapacityLease lease = await GetOrCreateLeaseAsync(cancellationToken).ConfigureAwait(false);
+        List<MessageJournalRecord> existing = await LoadBoundedPartitionAsync(cancellationToken).ConfigureAwait(false);
         DateTimeOffset retentionBoundary = RetentionBoundary(entry.ObservedAt, Limits.RetentionPeriod);
 
         MessageJournalRecord[] expired = existing
@@ -81,7 +81,7 @@ public sealed class AzureTableMessageJournalStore : IMessageJournalStore
         await _table.SubmitTransactionAsync(actions, cancellationToken).ConfigureAwait(false);
     }
 
-    private async Task<MessageJournalCapacityLease> GetOrCreateLease(CancellationToken cancellationToken)
+    private async Task<MessageJournalCapacityLease> GetOrCreateLeaseAsync(CancellationToken cancellationToken)
     {
         try
         {
@@ -115,7 +115,7 @@ public sealed class AzureTableMessageJournalStore : IMessageJournalStore
         }
     }
 
-    private async Task<List<MessageJournalRecord>> LoadBoundedPartition(CancellationToken cancellationToken)
+    private async Task<List<MessageJournalRecord>> LoadBoundedPartitionAsync(CancellationToken cancellationToken)
     {
         var entries = new List<MessageJournalRecord>(AzureTableMessageJournalStoreOptions.MaximumBatchBoundEntries);
         string filter = TableClient.CreateQueryFilter(

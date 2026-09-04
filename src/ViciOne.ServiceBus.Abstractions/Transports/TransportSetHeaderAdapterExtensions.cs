@@ -64,14 +64,14 @@ public static class TransportSetHeaderAdapterExtensions
     }
 
     public static void Set<TValueType>(this ITransportSetHeaderAdapter<TValueType> adapter, IDictionary<string, TValueType> dictionary, string key,
-        DateTime? value)
+        DateTimeOffset? value)
     {
         if (value.HasValue)
             adapter.Set(dictionary, new HeaderValue<string>(key, ToString(value.Value)));
     }
 
     public static void Set<TValueType>(this ITransportSetHeaderAdapter<TValueType> adapter, IDictionary<string, TValueType> dictionary, string key,
-        DateTime? value, Func<DateTime, string> formatter)
+        DateTimeOffset? value, Func<DateTimeOffset, string> formatter)
     {
         if (value.HasValue)
             adapter.Set(dictionary, new HeaderValue<string>(key, formatter(value.Value)));
@@ -120,7 +120,7 @@ public static class TransportSetHeaderAdapterExtensions
         return value.ToString();
     }
 
-    static string ToString(DateTime dateTime)
+    static string ToString(DateTimeOffset dateTime)
     {
         return dateTime.ToString("O");
     }

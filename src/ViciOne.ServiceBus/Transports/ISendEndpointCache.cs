@@ -12,5 +12,6 @@ public interface ISendEndpointCache<TKey> :
     /// <param name="key">The key for the endpoint</param>
     /// <param name="factory"></param>
     /// <returns></returns>
-    Task<ISendEndpoint> GetSendEndpoint(TKey key, SendEndpointFactory<TKey> factory);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<ISendEndpoint> GetSendEndpointAsync(TKey key, SendEndpointFactory<TKey> factory, CancellationToken cancellationToken = default);
 }

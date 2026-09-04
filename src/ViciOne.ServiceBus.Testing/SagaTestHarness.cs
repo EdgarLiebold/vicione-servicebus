@@ -11,8 +11,8 @@ public class SagaTestHarness<TSaga> :
     readonly SagaList<TSaga> _created;
     readonly SagaList<TSaga> _sagas;
 
-    public SagaTestHarness(BusTestHarness testHarness, ISagaRepository<TSaga> repository, IQuerySagaRepository<TSaga> querySagaRepository,
-        ILoadSagaRepository<TSaga> loadSagaRepository, string queueName)
+    public SagaTestHarness(BusTestHarness testHarness, ISagaRepository<TSaga> repository, IQuerySagaRepository<TSaga>? querySagaRepository,
+        ILoadSagaRepository<TSaga>? loadSagaRepository, string? queueName)
         : base(querySagaRepository, loadSagaRepository, testHarness.TestTimeout, testHarness.TimeProvider)
     {
         _consumed = new ReceivedMessageList(testHarness.TestTimeout, testHarness.InactivityToken, testHarness.TimeProvider);

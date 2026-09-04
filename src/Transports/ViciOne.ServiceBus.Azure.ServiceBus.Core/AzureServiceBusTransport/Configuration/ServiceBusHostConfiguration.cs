@@ -18,7 +18,6 @@ public class ServiceBusHostConfiguration :
     readonly Recycle<IConnectionContextSupervisor> _connectionContext;
     readonly IServiceBusTopologyConfiguration _topologyConfiguration;
     ServiceBusHostSettings _hostSettings;
-    IMessageNameFormatter _messageNameFormatter;
 
     public ServiceBusHostConfiguration(IServiceBusBusConfiguration busConfiguration, IServiceBusTopologyConfiguration topologyConfiguration)
         : base(busConfiguration)
@@ -96,24 +95,24 @@ public class ServiceBusHostConfiguration :
 
     public void SetNamespaceSeparatorToTilde()
     {
-        _messageNameFormatter = new ServiceBusMessageNameFormatter("~");
-        _topologyConfiguration.Message.SetEntityNameFormatter(new MessageNameFormatterEntityNameFormatter(_messageNameFormatter));
+        var messageNameFormatter = new ServiceBusMessageNameFormatter("~");
+        _topologyConfiguration.Message.SetEntityNameFormatter(new MessageNameFormatterEntityNameFormatter(messageNameFormatter));
     }
 
     public void SetNamespaceSeparatorToUnderscore()
     {
-        _messageNameFormatter = new ServiceBusMessageNameFormatter("_");
-        _topologyConfiguration.Message.SetEntityNameFormatter(new MessageNameFormatterEntityNameFormatter(_messageNameFormatter));
+        var messageNameFormatter = new ServiceBusMessageNameFormatter("_");
+        _topologyConfiguration.Message.SetEntityNameFormatter(new MessageNameFormatterEntityNameFormatter(messageNameFormatter));
     }
 
     public void SetNamespaceSeparatorTo(string separator)
     {
-        _messageNameFormatter = new ServiceBusMessageNameFormatter(separator);
-        _topologyConfiguration.Message.SetEntityNameFormatter(new MessageNameFormatterEntityNameFormatter(_messageNameFormatter));
+        var messageNameFormatter = new ServiceBusMessageNameFormatter(separator);
+        _topologyConfiguration.Message.SetEntityNameFormatter(new MessageNameFormatterEntityNameFormatter(messageNameFormatter));
     }
 
-    public override void ReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
-        Action<IServiceBusReceiveEndpointConfigurator> configureEndpoint = null)
+    public override void ReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
+        Action<IServiceBusReceiveEndpointConfigurator>? configureEndpoint = null)
     {
         var queueName = definition.GetEndpointName(endpointNameFormatter ?? DefaultEndpointNameFormatter.Instance);
 
@@ -141,7 +140,7 @@ public class ServiceBusHostConfiguration :
     }
 
     public IServiceBusReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
-        Action<IServiceBusReceiveEndpointConfigurator> configure)
+        Action<IServiceBusReceiveEndpointConfigurator>? configure)
     {
         var endpointConfiguration = _busConfiguration.CreateEndpointConfiguration();
 
@@ -151,7 +150,7 @@ public class ServiceBusHostConfiguration :
     }
 
     public IServiceBusReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(ReceiveEndpointSettings settings,
-        IServiceBusEndpointConfiguration endpointConfiguration, Action<IServiceBusReceiveEndpointConfigurator> configure)
+        IServiceBusEndpointConfiguration endpointConfiguration, Action<IServiceBusReceiveEndpointConfigurator>? configure)
     {
         if (settings == null)
             throw new ArgumentNullException(nameof(settings));
@@ -169,7 +168,7 @@ public class ServiceBusHostConfiguration :
         return configuration;
     }
 
-    public void SubscriptionEndpoint<T>(string subscriptionName, Action<IServiceBusSubscriptionEndpointConfigurator> configure)
+    public void SubscriptionEndpoint<T>(string subscriptionName, Action<IServiceBusSubscriptionEndpointConfigurator>? configure)
         where T : class
     {
         var endpointConfiguration = _busConfiguration.CreateEndpointConfiguration();
@@ -179,7 +178,7 @@ public class ServiceBusHostConfiguration :
         CreateSubscriptionEndpointConfiguration(settings, endpointConfiguration, configure);
     }
 
-    public void SubscriptionEndpoint(string subscriptionName, string topicPath, Action<IServiceBusSubscriptionEndpointConfigurator> configure)
+    public void SubscriptionEndpoint(string subscriptionName, string topicPath, Action<IServiceBusSubscriptionEndpointConfigurator>? configure)
     {
         var endpointConfiguration = _busConfiguration.CreateEndpointConfiguration();
         var settings = new SubscriptionEndpointSettings(endpointConfiguration, subscriptionName, topicPath);
@@ -190,9 +189,10 @@ public class ServiceBusHostConfiguration :
     public override IBusTopology Topology => _busTopology;
 
     public override IReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
-        Action<IReceiveEndpointConfigurator> configure = null)
+        Action<IReceiveEndpointConfigurator>? configure = null)
     {
-        return CreateReceiveEndpointConfiguration(queueName, configure);
+        return CreateReceiveEndpointConfiguration(queueName,
+            configure == null ? null : endpoint => configure(endpoint));
     }
 
     public override IHost Build()
@@ -206,7 +206,7 @@ public class ServiceBusHostConfiguration :
     }
 
     public IServiceBusSubscriptionEndpointConfiguration CreateSubscriptionEndpointConfiguration<T>(string subscriptionName,
-        Action<IServiceBusSubscriptionEndpointConfigurator> configure)
+        Action<IServiceBusSubscriptionEndpointConfigurator>? configure)
         where T : class
     {
         var endpointConfiguration = _busConfiguration.CreateEndpointConfiguration();
@@ -217,7 +217,7 @@ public class ServiceBusHostConfiguration :
     }
 
     public IServiceBusSubscriptionEndpointConfiguration CreateSubscriptionEndpointConfiguration(string subscriptionName, string topicPath,
-        Action<IServiceBusSubscriptionEndpointConfigurator> configure)
+        Action<IServiceBusSubscriptionEndpointConfigurator>? configure)
     {
         var endpointConfiguration = _busConfiguration.CreateEndpointConfiguration();
         var settings = new SubscriptionEndpointSettings(endpointConfiguration, subscriptionName, topicPath);
@@ -226,7 +226,7 @@ public class ServiceBusHostConfiguration :
     }
 
     public IServiceBusSubscriptionEndpointConfiguration CreateSubscriptionEndpointConfiguration(SubscriptionEndpointSettings settings,
-        IServiceBusEndpointConfiguration endpointConfiguration, Action<IServiceBusSubscriptionEndpointConfigurator> configure)
+        IServiceBusEndpointConfiguration endpointConfiguration, Action<IServiceBusSubscriptionEndpointConfigurator>? configure)
     {
         if (settings == null)
             throw new ArgumentNullException(nameof(settings));

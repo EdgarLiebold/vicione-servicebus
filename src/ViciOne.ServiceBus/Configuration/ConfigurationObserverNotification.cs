@@ -12,7 +12,7 @@ namespace ViciOne.ServiceBus.Configuration;
 internal sealed class ConfigurationObserverNotification
 {
     readonly object _lock = new object();
-    ExceptionDispatchInfo _failure;
+    ExceptionDispatchInfo _failure = null!;
     NotificationState _state;
 
     public void EnsureNotified(Action notify)

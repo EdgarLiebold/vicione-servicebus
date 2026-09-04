@@ -19,7 +19,7 @@ public class ReadOnlyDictionaryHeaders :
     {
         _deserializer = deserializer;
 
-        _headers = headers ?? new Dictionary<string, object>();
+        _headers = headers ?? new Dictionary<string, object?>();
     }
 
     public IEnumerable<KeyValuePair<string, object>> GetAll()
@@ -37,7 +37,7 @@ public class ReadOnlyDictionaryHeaders :
         return found;
     }
 
-    public T Get<T>(string key, T defaultValue)
+    public T? Get<T>(string key, T? defaultValue)
         where T : class
     {
         return _deserializer.GetValue(AsNonNullableDictionary(), key, defaultValue);

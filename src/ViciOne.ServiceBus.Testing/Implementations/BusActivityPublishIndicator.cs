@@ -14,21 +14,21 @@ public class BusActivityPublishIndicator : BaseBusActivityIndicatorConnectable,
     IPublishObserver
 {
     readonly RollingTimer _receiveIdleTimer;
-    readonly ISignalResource _signalResource;
+    readonly ISignalResource? _signalResource;
     int _activityStarted;
 
-    public BusActivityPublishIndicator(ISignalResource signalResource, TimeSpan receiveIdleTimeout)
+    public BusActivityPublishIndicator(ISignalResource? signalResource, TimeSpan receiveIdleTimeout)
         : this(signalResource, receiveIdleTimeout, TimeProvider.System)
     {
     }
 
-    public BusActivityPublishIndicator(ISignalResource signalResource, TimeSpan receiveIdleTimeout, TimeProvider timeProvider)
+    public BusActivityPublishIndicator(ISignalResource? signalResource, TimeSpan receiveIdleTimeout, TimeProvider timeProvider)
     {
         _signalResource = signalResource;
         _receiveIdleTimer = new RollingTimer(SignalInactivity, receiveIdleTimeout, null, timeProvider);
     }
 
-    public BusActivityPublishIndicator(ISignalResource signalResource)
+    public BusActivityPublishIndicator(ISignalResource? signalResource)
         :
         this(signalResource, TimeSpan.FromSeconds(5))
     {
@@ -60,7 +60,7 @@ public class BusActivityPublishIndicator : BaseBusActivityIndicatorConnectable,
         _receiveIdleTimer.Dispose();
     }
 
-    public Task PrePublish<T>(PublishContext<T> context)
+    public Task PrePublishAsync<T>(PublishContext<T> context)
         where T : class
     {
         Interlocked.CompareExchange(ref _activityStarted, 1, 0);
@@ -68,24 +68,24 @@ public class BusActivityPublishIndicator : BaseBusActivityIndicatorConnectable,
         return Task.CompletedTask;
     }
 
-    public Task PostPublish<T>(PublishContext<T> context)
+    public Task PostPublishAsync<T>(PublishContext<T> context)
         where T : class
     {
         _receiveIdleTimer.Restart();
         return Task.CompletedTask;
     }
 
-    public Task PublishFault<T>(PublishContext<T> context, Exception exception)
+    public Task PublishFaultAsync<T>(PublishContext<T> context, Exception exception)
         where T : class
     {
         _receiveIdleTimer.Restart();
         return Task.CompletedTask;
     }
 
-    void SignalInactivity(object state)
+    void SignalInactivity(object? state)
     {
         _signalResource?.Signal();
-        ConditionUpdated();
+        ConditionUpdatedAsync();
         Interlocked.CompareExchange(ref _activityStarted, 0, 1);
         _receiveIdleTimer.Stop();
     }

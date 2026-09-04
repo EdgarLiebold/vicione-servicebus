@@ -19,7 +19,7 @@ public class AesCryptoStreamProvider :
         _defaultKeyId = defaultKeyId;
     }
 
-    Stream ICryptoStreamProvider.GetEncryptStream(Stream stream, string keyId, CryptoStreamMode streamMode)
+    Stream ICryptoStreamProvider.GetEncryptStream(Stream stream, string? keyId, CryptoStreamMode streamMode)
     {
         if (stream == null)
             throw new ArgumentNullException(nameof(stream));
@@ -34,7 +34,7 @@ public class AesCryptoStreamProvider :
         return new DisposingCryptoStream(stream, encryptor, streamMode);
     }
 
-    Stream ICryptoStreamProvider.GetDecryptStream(Stream stream, string keyId, CryptoStreamMode streamMode)
+    Stream ICryptoStreamProvider.GetDecryptStream(Stream stream, string? keyId, CryptoStreamMode streamMode)
     {
         if (stream == null)
             throw new ArgumentNullException(nameof(stream));

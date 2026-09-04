@@ -10,5 +10,5 @@ public interface IMessageReceiver<in T> :
     IProbeSite
     where T : class
 {
-    Task Deliver(T message, CancellationToken cancellationToken);
+    Task DeliverAsync(T message, CancellationToken cancellationToken);
 }

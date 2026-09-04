@@ -25,22 +25,22 @@ public class BusTestPublishObserver :
 
     public IPublishedMessageList Messages => _messages;
 
-    Task IPublishObserver.PrePublish<T>(PublishContext<T> context)
+    Task IPublishObserver.PrePublishAsync<T>(PublishContext<T> context)
     {
-        return RestartTimer();
+        return RestartTimerAsync();
     }
 
-    Task IPublishObserver.PostPublish<T>(PublishContext<T> context)
+    Task IPublishObserver.PostPublishAsync<T>(PublishContext<T> context)
     {
         _messages.Add(context);
 
-        return RestartTimer(false);
+        return RestartTimerAsync(false);
     }
 
-    Task IPublishObserver.PublishFault<T>(PublishContext<T> context, Exception exception)
+    Task IPublishObserver.PublishFaultAsync<T>(PublishContext<T> context, Exception exception)
     {
         _messages.Add(context, exception);
 
-        return RestartTimer(false);
+        return RestartTimerAsync(false);
     }
 }

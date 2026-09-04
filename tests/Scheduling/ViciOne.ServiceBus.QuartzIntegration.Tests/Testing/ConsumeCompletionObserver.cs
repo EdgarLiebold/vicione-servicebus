@@ -12,10 +12,10 @@ internal sealed class ConsumeCompletionObserver<TMessage>(Func<TMessage, bool> p
     public Task Completed => _completed.Task;
     public int ObservedCount => Volatile.Read(ref _observedCount);
 
-    public Task PreConsume<T>(ConsumeContext<T> context)
+    public Task PreConsumeAsync<T>(ConsumeContext<T> context)
         where T : class => Task.CompletedTask;
 
-    public Task PostConsume<T>(ConsumeContext<T> context)
+    public Task PostConsumeAsync<T>(ConsumeContext<T> context)
         where T : class
     {
         if (context.Message is TMessage message
@@ -28,7 +28,7 @@ internal sealed class ConsumeCompletionObserver<TMessage>(Func<TMessage, bool> p
         return Task.CompletedTask;
     }
 
-    public Task ConsumeFault<T>(ConsumeContext<T> context, Exception exception)
+    public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, Exception exception)
         where T : class
     {
         if (context.Message is TMessage message && predicate(message))

@@ -124,7 +124,7 @@ public class MultiTestConsumer
 
         public ReceivedMessageList<T> Received { get; }
 
-        public Task Consume(ConsumeContext<T> context)
+        public Task ConsumeAsync(ConsumeContext<T> context)
         {
             Received.Add(context);
             _multiConsumer._received.Add(context);
@@ -148,7 +148,7 @@ public class MultiTestConsumer
 
         public ReceivedMessageList<T> Received { get; }
 
-        public Task Consume(ConsumeContext<T> context)
+        public Task ConsumeAsync(ConsumeContext<T> context)
         {
             Received.Add(context);
             _multiConsumer._received.Add(context);

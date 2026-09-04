@@ -16,7 +16,7 @@ public class BatchOptions :
     /// <summary>
     /// Override the default receive endpoint configuration done by the batch options
     /// </summary>
-    public delegate void ConfigurationCallback(string name, IReceiveEndpointConfigurator configurator);
+    public delegate void ConfigurationCallback(string? name, IReceiveEndpointConfigurator configurator);
 
 
     ConfigurationCallback _configurationCallback;
@@ -56,7 +56,7 @@ public class BatchOptions :
     /// </summary>
     public object? GroupKeyProvider { get; private set; }
 
-    public void Configure(string name, IReceiveEndpointConfigurator configurator)
+    public void Configure(string? name, IReceiveEndpointConfigurator configurator)
     {
         _configurationCallback(name, configurator);
     }
@@ -80,7 +80,7 @@ public class BatchOptions :
         return this;
     }
 
-    void DefaultConfigurationCallback(string name, IReceiveEndpointConfigurator configurator)
+    void DefaultConfigurationCallback(string? name, IReceiveEndpointConfigurator configurator)
     {
         var messageCapacity = ConcurrencyLimit * MessageLimit;
 

@@ -97,19 +97,19 @@ public sealed class AnalyticsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BENCHMARK-ANALYTICS", "latency-capture-starts-before-send")]
-    public async Task LatencyCapture_StartsBeforeTheSendDelegateIsInvoked()
+    public async Task LatencyCapture_StartsBeforeTheSendDelegateIsInvokedAsync()
     {
         var clock = new BenchmarkTestClock();
         var capture = new LatencyMetricCapture(1, clock);
         var messageId = Guid.NewGuid();
 
-        await capture.Sent(messageId, () =>
+        await capture.SentAsync(messageId, () =>
         {
             clock.Advance(137);
             return Task.CompletedTask;
         });
         clock.Advance(23);
-        await ((ViciOneServiceBusBenchmark.Latency.IReportConsumerMetric)capture).Consumed<object>(messageId);
+        await ((ViciOneServiceBusBenchmark.Latency.IReportConsumerMetric)capture).ConsumedAsync<object>(messageId);
 
         var metric = Assert.Single(capture.GetMessageMetrics());
         Assert.Equal(137, metric.SendCompletionLatency);
@@ -118,19 +118,19 @@ public sealed class AnalyticsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BENCHMARK-ANALYTICS", "request-capture-starts-before-delegate")]
-    public async Task RequestCapture_StartsBeforeTheRequestDelegateIsInvoked()
+    public async Task RequestCapture_StartsBeforeTheRequestDelegateIsInvokedAsync()
     {
         var clock = new BenchmarkTestClock();
         var capture = new RequestMetricCapture(1, clock);
         var messageId = Guid.NewGuid();
 
-        await capture.ResponseReceived(messageId, () =>
+        await capture.ResponseReceivedAsync(messageId, () =>
         {
             clock.Advance(211);
             return Task.FromResult(new object());
         });
         clock.Advance(34);
-        await ((ViciOneServiceBusBenchmark.RequestResponse.IReportConsumerMetric)capture).Consumed<object>(messageId);
+        await ((ViciOneServiceBusBenchmark.RequestResponse.IReportConsumerMetric)capture).ConsumedAsync<object>(messageId);
 
         var metric = Assert.Single(capture.GetMessageMetrics());
         Assert.Equal(211, metric.RequestLatency);

@@ -8,7 +8,6 @@ namespace ViciOne.ServiceBus.ActiveMqTransport;
 public static class TransportHeaderExtensions
 {
     static readonly DateTimeOffsetTypeConverter _dateTimeOffsetConverter = new DateTimeOffsetTypeConverter();
-    static readonly DateTimeTypeConverter _dateTimeConverter = new DateTimeTypeConverter();
 
     public static void SetHeaders(this IPrimitiveMap dictionary, SendHeaders headers)
     {
@@ -39,9 +38,15 @@ public static class TransportHeaderExtensions
                     break;
 
                 case DateTime dateTime:
-                    if (_dateTimeConverter.TryConvert(dateTime, out result))
+                    DateTimeOffset instant = dateTime.Kind switch
+                    {
+                        DateTimeKind.Local => new DateTimeOffset(dateTime).ToUniversalTime(),
+                        DateTimeKind.Utc => new DateTimeOffset(dateTime),
+                        _ => new DateTimeOffset(DateTime.SpecifyKind(dateTime, DateTimeKind.Utc)),
+                    };
+                    if (_dateTimeOffsetConverter.TryConvert(instant, out result))
                         dictionary[header.Key] = result;
-                    else if (_dateTimeConverter.TryConvert(dateTime, out string text))
+                    else if (_dateTimeOffsetConverter.TryConvert(instant, out string text))
                         dictionary[header.Key] = text;
 
                     break;

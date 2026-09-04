@@ -31,17 +31,17 @@ public class MessageFanOutExchange<T> :
 
     public string Name { get; }
 
-    public Task Deliver(DeliveryContext<T> context)
+    public Task DeliverAsync(DeliveryContext<T> context, CancellationToken cancellationToken = default)
     {
         return _sinks.ForEachAsync(async sink =>
         {
             if (context.WasAlreadyDelivered(sink))
                 return;
 
-            await sink.Deliver(context).ConfigureAwait(false);
+            await sink.DeliverAsync(context, cancellationToken: cancellationToken).ConfigureAwait(false);
 
             context.Delivered(sink);
-        });
+        }, cancellationToken: cancellationToken);
     }
 
     public ConnectHandle Connect(IMessageSink<T> sink, string? routingKey)

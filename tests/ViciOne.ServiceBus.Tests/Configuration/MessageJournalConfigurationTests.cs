@@ -70,16 +70,15 @@ public sealed class MessageJournalConfigurationTests
         public MessageJournalStoreLimits Limits { get; } =
             new(1024, maximumEntries: 1, retentionPeriod: TimeSpan.FromMinutes(1));
 
-        public ValueTask AppendAsync(MessageJournalEntry entry, CancellationToken cancellationToken) =>
-            ValueTask.CompletedTask;
+        public ValueTask AppendAsync(MessageJournalEntry entry, CancellationToken cancellationToken) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken); return ValueTask.CompletedTask; }
     }
 
     private sealed class ExcludingPolicy : IMessageJournalPolicy
     {
         public ValueTask<MessageJournalProjection?> ProjectAsync(
             MessageJournalCapture capture,
-            CancellationToken cancellationToken) =>
-            ValueTask.FromResult<MessageJournalProjection?>(null);
+            CancellationToken cancellationToken)
+        { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled<global::ViciOne.ServiceBus.MessageJournal.MessageJournalProjection?>(cancellationToken); return ValueTask.FromResult<MessageJournalProjection?>(null); }
     }
 
     private sealed class ExpectedConnectionException : Exception;

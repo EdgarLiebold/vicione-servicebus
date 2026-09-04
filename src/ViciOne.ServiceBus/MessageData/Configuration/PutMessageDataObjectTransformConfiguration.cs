@@ -24,7 +24,7 @@ public class PutMessageDataObjectTransformConfiguration<TInput, TProperty> :
 
     public void Apply(ITransformConfigurator<TInput> configurator)
     {
-        if (_transformConfigurator.TryGetConverter(out IPropertyConverter<TProperty, TProperty> converter))
+        if (_transformConfigurator.TryGetConverter(out IPropertyConverter<TProperty, TProperty>? converter))
         {
             var inputPropertyProvider = new InputPropertyProvider<TInput, TProperty>(_property);
 

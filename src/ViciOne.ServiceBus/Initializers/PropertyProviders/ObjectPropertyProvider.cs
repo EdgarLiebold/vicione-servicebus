@@ -22,28 +22,30 @@ public class ObjectPropertyProvider<TInput, TProperty> :
         _converters = new ConcurrentDictionary<Type, Converter>();
     }
 
-    public Task<TProperty> GetProperty<T>(InitializeContext<T, TInput> context)
+    public Task<TProperty?> GetPropertyAsync<T>(InitializeContext<T, TInput> context, CancellationToken cancellationToken = default)
         where T : class
     {
-        Task<object> propertyTask = _provider.GetProperty(context);
+        Task<object?> propertyTask = _provider.GetPropertyAsync(context, cancellationToken: cancellationToken);
         if (propertyTask.Status == TaskStatus.RanToCompletion)
         {
             var propertyValue = propertyTask.Result;
             if (propertyValue == default)
-                return TaskResults.Default<TProperty>();
+                return TaskResults.DefaultAsync<TProperty>(cancellationToken: cancellationToken);
 
             var converter = _converters.GetOrAdd(propertyValue.GetType(), CreateConverter);
 
-            return converter.Convert(context, propertyValue);
+            return converter.ConvertAsync(context, propertyValue);
         }
 
-        async Task<TProperty> GetPropertyAsync()
+        async Task<TProperty?> GetPropertyAsync()
         {
             var propertyValue = await propertyTask.ConfigureAwait(false);
+            if (propertyValue == null)
+                return null;
 
             var converter = _converters.GetOrAdd(propertyValue.GetType(), CreateConverter);
 
-            return await converter.Convert(context, propertyValue).ConfigureAwait(false);
+            return await converter.ConvertAsync(context, propertyValue).ConfigureAwait(false);
         }
 
         return GetPropertyAsync();
@@ -51,13 +53,13 @@ public class ObjectPropertyProvider<TInput, TProperty> :
 
     Converter CreateConverter(Type type)
     {
-        return (Converter)Activator.CreateInstance(typeof(ObjectConverter<>).MakeGenericType(typeof(TInput), typeof(TProperty), type), _factory);
+        return (Converter)(Activator.CreateInstance(typeof(ObjectConverter<>).MakeGenericType(typeof(TInput), typeof(TProperty), type), _factory) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
     }
 
 
     interface Converter
     {
-        Task<TProperty> Convert<T>(InitializeContext<T, TInput> context, object propertyValue)
+        Task<TProperty?> ConvertAsync<T>(InitializeContext<T, TInput> context, object propertyValue)
             where T : class;
     }
 
@@ -65,19 +67,19 @@ public class ObjectPropertyProvider<TInput, TProperty> :
     class ObjectConverter<TObject> :
         Converter
     {
-        readonly IPropertyConverter<TProperty, TObject> _converter;
+        readonly IPropertyConverter<TProperty, TObject>? _converter;
 
         public ObjectConverter(IPropertyProviderFactory<TInput> factory)
         {
             factory.TryGetPropertyConverter(out _converter);
         }
 
-        public Task<TProperty> Convert<T>(InitializeContext<T, TInput> context, object propertyValue)
+        public Task<TProperty?> ConvertAsync<T>(InitializeContext<T, TInput> context, object propertyValue)
             where T : class
         {
             return _converter == null
-                ? TaskResults.Default<TProperty>()
-                : _converter.Convert(context, (TObject)propertyValue);
+                ? TaskResults.DefaultAsync<TProperty>()
+                : _converter.ConvertAsync(context, (TObject)propertyValue);
         }
     }
 }

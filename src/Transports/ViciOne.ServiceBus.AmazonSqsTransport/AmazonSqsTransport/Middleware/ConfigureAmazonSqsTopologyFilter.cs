@@ -25,13 +25,13 @@ public class ConfigureAmazonSqsTopologyFilter<TSettings> :
         _context = context;
     }
 
-    public async Task Send(ClientContext context, IPipe<ClientContext> next)
+    public async Task SendAsync(ClientContext context, IPipe<ClientContext> next)
     {
-        OneTimeContext<ConfigureTopologyContext<TSettings>> oneTimeContext = await Configure(context, context.CancellationToken);
+        OneTimeContext<ConfigureTopologyContext<TSettings>> oneTimeContext = await ConfigureAsync(context, context.CancellationToken);
 
         try
         {
-            await next.Send(context).ConfigureAwait(false);
+            await next.SendAsync(context).ConfigureAwait(false);
         }
         catch (Exception)
         {
@@ -48,29 +48,29 @@ public class ConfigureAmazonSqsTopologyFilter<TSettings> :
         _brokerTopology.Probe(scope);
     }
 
-    public async Task<OneTimeContext<ConfigureTopologyContext<TSettings>>> Configure(ClientContext context, CancellationToken cancellationToken)
+    public async Task<OneTimeContext<ConfigureTopologyContext<TSettings>>> ConfigureAsync(ClientContext context, CancellationToken cancellationToken)
     {
-        return await context.OneTimeSetup<ConfigureTopologyContext<TSettings>>(() =>
+        return await context.OneTimeSetupAsync<ConfigureTopologyContext<TSettings>>(() =>
         {
             context.GetOrAddPayload(() => _settings);
 
             if (_context != null && AnyAutoDelete())
                 _context.AddSendAgent(new RemoveAmazonSqsTopologyAgent(context, _brokerTopology));
 
-            return ConfigureTopology(context, cancellationToken);
-        }).ConfigureAwait(false);
+            return ConfigureTopologyAsync(context, cancellationToken);
+        }, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    async Task ConfigureTopology(ClientContext context, CancellationToken cancellationToken)
+    async Task ConfigureTopologyAsync(ClientContext context, CancellationToken cancellationToken)
     {
-        IEnumerable<Task<TopicInfo>> topics = _brokerTopology.Topics.Select(topic => Declare(context, topic, cancellationToken));
+        IEnumerable<Task<TopicInfo>> topics = _brokerTopology.Topics.Select(topic => DeclareAsync(context, topic, cancellationToken));
 
-        IEnumerable<Task<QueueInfo>> queues = _brokerTopology.Queues.Select(queue => Declare(context, queue, cancellationToken));
+        IEnumerable<Task<QueueInfo>> queues = _brokerTopology.Queues.Select(queue => DeclareAsync(context, queue, cancellationToken));
 
         await Task.WhenAll(topics).ConfigureAwait(false);
         await Task.WhenAll(queues).ConfigureAwait(false);
 
-        IEnumerable<Task> subscriptions = _brokerTopology.QueueSubscriptions.Select(subscription => Declare(context, subscription, cancellationToken));
+        IEnumerable<Task> subscriptions = _brokerTopology.QueueSubscriptions.Select(subscription => DeclareAsync(context, subscription, cancellationToken));
         await Task.WhenAll(subscriptions).ConfigureAwait(false);
     }
 
@@ -79,9 +79,9 @@ public class ConfigureAmazonSqsTopologyFilter<TSettings> :
         return _brokerTopology.Topics.Any(x => x.AutoDelete) || _brokerTopology.Queues.Any(x => x.AutoDelete);
     }
 
-    internal static async Task<TopicInfo> Declare(ClientContext context, Topic topic, CancellationToken cancellationToken)
+    internal static async Task<TopicInfo> DeclareAsync(ClientContext context, Topic topic, CancellationToken cancellationToken)
     {
-        var topicInfo = await context.CreateTopic(topic, cancellationToken).ConfigureAwait(false);
+        var topicInfo = await context.CreateTopicAsync(topic, cancellationToken).ConfigureAwait(false);
 
         if (topicInfo.Existing)
         {
@@ -94,16 +94,16 @@ public class ConfigureAmazonSqsTopologyFilter<TSettings> :
         return topicInfo;
     }
 
-    static async Task Declare(ClientContext context, QueueSubscription subscription, CancellationToken cancellationToken)
+    static async Task DeclareAsync(ClientContext context, QueueSubscription subscription, CancellationToken cancellationToken)
     {
-        var created = await context.CreateQueueSubscription(subscription.Source, subscription.Destination, cancellationToken).ConfigureAwait(false);
+        var created = await context.CreateQueueSubscriptionAsync(subscription.Source, subscription.Destination, cancellationToken).ConfigureAwait(false);
         LogContext.Debug?.Log(created ? "Created subscription {Topic} to {Queue}" : "Existing subscription {Topic} to {Queue}",
             subscription.Source, subscription.Destination);
     }
 
-    internal static async Task<QueueInfo> Declare(ClientContext context, Queue queue, CancellationToken cancellationToken)
+    internal static async Task<QueueInfo> DeclareAsync(ClientContext context, Queue queue, CancellationToken cancellationToken)
     {
-        var queueInfo = await context.CreateQueue(queue, cancellationToken).ConfigureAwait(false);
+        var queueInfo = await context.CreateQueueAsync(queue, cancellationToken).ConfigureAwait(false);
         if (queueInfo.Existing)
         {
             LogContext.Debug?.Log("Existing queue {Queue} {QueueArn} {QueueUrl}", queueInfo.EntityName, queueInfo.Arn, queueInfo.Url);

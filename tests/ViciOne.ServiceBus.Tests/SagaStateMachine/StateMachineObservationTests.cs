@@ -11,7 +11,7 @@ public sealed class StateMachineObservationTests
     [InlineData(MachineStyle.Declarative)]
     [InlineData(MachineStyle.Dynamic)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-OBSERVATION", "simple-complete-state-sequence")]
-    public async Task SimpleMachine_ReportsTheCompleteStateSequence(MachineStyle style)
+    public async Task SimpleMachine_ReportsTheCompleteStateSequenceAsync(MachineStyle style)
     {
         ObservationScenario scenario = CreateSimpleScenario(style);
         var instance = new ObservationInstance();
@@ -19,8 +19,8 @@ public sealed class StateMachineObservationTests
 
         using (scenario.Machine.ConnectStateObserver(stateObserver))
         {
-            await Raise(scenario.Machine, instance, scenario.Initialized);
-            await Raise(scenario.Machine, instance, scenario.Finish);
+            await RaiseAsync(scenario.Machine, instance, scenario.Initialized);
+            await RaiseAsync(scenario.Machine, instance, scenario.Finish);
         }
 
         Assert.Equal(
@@ -39,7 +39,7 @@ public sealed class StateMachineObservationTests
     [InlineData(MachineStyle.Declarative)]
     [InlineData(MachineStyle.Dynamic)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-OBSERVATION", "substate-events-and-complete-state-sequence")]
-    public async Task SubstateMachine_ReportsEveryTransitionAndSelectedRaisedEvent(MachineStyle style)
+    public async Task SubstateMachine_ReportsEveryTransitionAndSelectedRaisedEventAsync(MachineStyle style)
     {
         ObservationScenario scenario = CreateSubstateScenario(style);
         var instance = new ObservationInstance();
@@ -50,9 +50,9 @@ public sealed class StateMachineObservationTests
         using (scenario.Machine.ConnectEventObserver(scenario.Initialized, eventObserver))
         using (scenario.Machine.ConnectEventObserver(scenario.LegCramped!, eventObserver))
         {
-            await Raise(scenario.Machine, instance, scenario.Initialized);
-            await Raise(scenario.Machine, instance, scenario.LegCramped!);
-            await Raise(scenario.Machine, instance, scenario.Finish);
+            await RaiseAsync(scenario.Machine, instance, scenario.Initialized);
+            await RaiseAsync(scenario.Machine, instance, scenario.LegCramped!);
+            await RaiseAsync(scenario.Machine, instance, scenario.Finish);
         }
 
         Assert.Equal(
@@ -82,7 +82,7 @@ public sealed class StateMachineObservationTests
     [InlineData(MachineStyle.Declarative)]
     [InlineData(MachineStyle.Dynamic)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-OBSERVATION", "substate-return-and-transition-events")]
-    public async Task ReturningFromSubstate_ReportsTheSuperstateAndTransitionEventsExactly(MachineStyle style)
+    public async Task ReturningFromSubstate_ReportsTheSuperstateAndTransitionEventsExactlyAsync(MachineStyle style)
     {
         ObservationScenario scenario = CreateSubstateScenario(style);
         var instance = new ObservationInstance();
@@ -93,10 +93,10 @@ public sealed class StateMachineObservationTests
         using (scenario.Machine.ConnectEventObserver(scenario.Running.BeforeEnter, eventObserver))
         using (scenario.Machine.ConnectEventObserver(scenario.Running.AfterLeave, eventObserver))
         {
-            await Raise(scenario.Machine, instance, scenario.Initialized);
-            await Raise(scenario.Machine, instance, scenario.LegCramped!);
-            await Raise(scenario.Machine, instance, scenario.Recovered!);
-            await Raise(scenario.Machine, instance, scenario.Finish);
+            await RaiseAsync(scenario.Machine, instance, scenario.Initialized);
+            await RaiseAsync(scenario.Machine, instance, scenario.LegCramped!);
+            await RaiseAsync(scenario.Machine, instance, scenario.Recovered!);
+            await RaiseAsync(scenario.Machine, instance, scenario.Finish);
         }
 
         Assert.Equal(
@@ -187,17 +187,17 @@ public sealed class StateMachineObservationTests
         return new ObservationScenario(dynamicMachine, running, resting, initialized, legCramped, recovered, finish);
     }
 
-    private static async Task Raise(StateMachine<ObservationInstance> machine, ObservationInstance instance, Event @event)
+    private static async Task RaiseAsync(StateMachine<ObservationInstance> machine, ObservationInstance instance, Event @event)
     {
         var message = new ObservationSignal();
         ConsumeContext<ObservationSignal> consumeContext = InMemoryOutboxTestContextFactory.Create(message);
         var sagaInstance = new SagaInstance<ObservationInstance>(instance);
-        await sagaInstance.MarkInUse(consumeContext.CancellationToken);
+        await sagaInstance.MarkInUseAsync(consumeContext.CancellationToken);
         using var sagaContext = new InMemorySagaConsumeContext<ObservationInstance, ObservationSignal>(consumeContext, sagaInstance);
         BehaviorContext<ObservationInstance> behaviorContext =
             new ViciOneServiceBusStateMachine<ObservationInstance>.BehaviorContextProxy(machine, sagaContext, @event);
 
-        await machine.RaiseEvent(behaviorContext);
+        await machine.RaiseEventAsync(behaviorContext);
     }
 
     public enum MachineStyle
@@ -274,7 +274,7 @@ public sealed class StateMachineObservationTests
     {
         public List<StateChange> Changes { get; } = [];
 
-        public Task StateChanged(BehaviorContext<ObservationInstance> context, State currentState, State previousState)
+        public Task StateChangedAsync(BehaviorContext<ObservationInstance> context, State currentState, State? previousState)
         {
             Changes.Add(new StateChange(context.Saga, previousState, currentState));
             return Task.CompletedTask;
@@ -285,36 +285,36 @@ public sealed class StateMachineObservationTests
     {
         public List<EventObservation> Events { get; } = [];
 
-        public Task PreExecute(BehaviorContext<ObservationInstance> context)
+        public Task PreExecuteAsync(BehaviorContext<ObservationInstance> context)
         {
             Events.Add(new EventObservation(context.Saga, context.Event, ObservationPhase.Pre));
             return Task.CompletedTask;
         }
 
-        public Task PreExecute<T>(BehaviorContext<ObservationInstance, T> context)
+        public Task PreExecuteAsync<T>(BehaviorContext<ObservationInstance, T> context)
             where T : class
         {
             Events.Add(new EventObservation(context.Saga, context.Event, ObservationPhase.Pre));
             return Task.CompletedTask;
         }
 
-        public Task PostExecute(BehaviorContext<ObservationInstance> context)
+        public Task PostExecuteAsync(BehaviorContext<ObservationInstance> context)
         {
             Events.Add(new EventObservation(context.Saga, context.Event, ObservationPhase.Post));
             return Task.CompletedTask;
         }
 
-        public Task PostExecute<T>(BehaviorContext<ObservationInstance, T> context)
+        public Task PostExecuteAsync<T>(BehaviorContext<ObservationInstance, T> context)
             where T : class
         {
             Events.Add(new EventObservation(context.Saga, context.Event, ObservationPhase.Post));
             return Task.CompletedTask;
         }
 
-        public Task ExecuteFault(BehaviorContext<ObservationInstance> context, Exception exception) =>
+        public Task ExecuteFaultAsync(BehaviorContext<ObservationInstance> context, Exception exception) =>
             Task.FromException(new InvalidOperationException("The observation scenario did not expect an event fault.", exception));
 
-        public Task ExecuteFault<T>(BehaviorContext<ObservationInstance, T> context, Exception exception)
+        public Task ExecuteFaultAsync<T>(BehaviorContext<ObservationInstance, T> context, Exception exception)
             where T : class =>
             Task.FromException(new InvalidOperationException("The observation scenario did not expect an event fault.", exception));
     }

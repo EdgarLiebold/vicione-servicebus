@@ -9,7 +9,7 @@ public sealed class AmazonSqsScopeTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0241", "queue-address-is-contained-by-host-scope")]
-    public async Task ScopedSend_UsesOnlyTheScopedQueue()
+    public async Task ScopedSend_UsesOnlyTheScopedQueueAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("queuescope");
         string queueName = fixture.Name("input");
@@ -36,9 +36,8 @@ public sealed class AmazonSqsScopeTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await input.Send(new ScopedMessage(messageId), cancellationToken)
+            ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await input.SendAsync(new ScopedMessage(messageId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             ScopedObservation actual = await consumed.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
@@ -47,7 +46,7 @@ public sealed class AmazonSqsScopeTests
             Assert.Equal(
                 new Uri($"amazonsqs://{fixture.Region}/{fixture.Prefix}/{queueName}"),
                 actual.DestinationAddress);
-            Assert.Empty(await fixture.ListOwnedTopicNames(cancellationToken));
+            Assert.Empty(await fixture.ListOwnedTopicNamesAsync(cancellationToken));
         }
         finally
         {
@@ -58,7 +57,7 @@ public sealed class AmazonSqsScopeTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0242", "published-topic-name-is-contained-by-host-scope")]
-    public async Task ScopedPublish_UsesOnlyTheScopedTopic()
+    public async Task ScopedPublish_UsesOnlyTheScopedTopicAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("topicscope");
         string queueName = fixture.Name("input");
@@ -85,7 +84,7 @@ public sealed class AmazonSqsScopeTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            await bus.Publish(new ScopedMessage(messageId), cancellationToken)
+            await bus.PublishAsync(new ScopedMessage(messageId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             ScopedObservation actual = await consumed.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
@@ -94,7 +93,7 @@ public sealed class AmazonSqsScopeTests
 
             Assert.Equal(messageId, actual.Id);
             Assert.Equal(new Uri($"amazonsqs://{fixture.Region}/{expectedTopicName}?type=topic"), actual.DestinationAddress);
-            Assert.Equal([expectedTopicName], await fixture.ListOwnedTopicNames(cancellationToken));
+            Assert.Equal([expectedTopicName], await fixture.ListOwnedTopicNamesAsync(cancellationToken));
         }
         finally
         {

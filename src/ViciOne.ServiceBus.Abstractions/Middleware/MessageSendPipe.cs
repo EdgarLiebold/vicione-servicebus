@@ -27,8 +27,8 @@ public class MessageSendPipe<TOutput> :
     }
 
     [DebuggerNonUserCode]
-    Task IPipe<SendContext<TOutput>>.Send(SendContext<TOutput> context)
+    Task IPipe<SendContext<TOutput>>.SendAsync(SendContext<TOutput> context)
     {
-        return _outputPipe.Send(context);
+        return _outputPipe.SendAsync(context);
     }
 }

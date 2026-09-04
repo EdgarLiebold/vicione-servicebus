@@ -19,9 +19,9 @@ public class ActiveMqPublishTransportProvider :
         _supervisor = context.SessionContextSupervisor;
     }
 
-    public Task<ISendTransport> GetPublishTransport<T>(Uri? publishAddress)
+    public Task<ISendTransport> GetPublishTransportAsync<T>(Uri? publishAddress, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _connectionContextSupervisor.CreatePublishTransport<T>(_context, _supervisor);
+        return _connectionContextSupervisor.CreatePublishTransportAsync<T>(_context, _supervisor, cancellationToken: cancellationToken);
     }
 }

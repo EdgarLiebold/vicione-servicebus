@@ -9,7 +9,7 @@ public sealed class PostgreSqlRoutingSlipTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0061", "postgresql-native-owner")]
-    public async Task CompletedSubscription_DeliversAllRoutingSlipContentAndItsCustomValue()
+    public async Task CompletedSubscription_DeliversAllRoutingSlipContentAndItsCustomValueAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase fixture = await PostgreSqlTestDatabase.CreateAsync(
@@ -40,17 +40,13 @@ public sealed class PostgreSqlRoutingSlipTests
             started = true;
             Guid trackingNumber = Guid.NewGuid();
             var builder = new RoutingSlipBuilder(trackingNumber);
-            await builder.AddSubscription(
-                new Uri($"queue:{completionQueue}"),
-                RoutingSlipEvents.Completed,
-                RoutingSlipEventContents.All,
-                subscription => subscription.Send<RegistrationCompleted>(new { Value = "Secret Value" }));
+            await builder.AddSubscriptionAsync(new Uri($"queue:{completionQueue}"), RoutingSlipEvents.Completed, RoutingSlipEventContents.All, subscription => subscription.SendAsync<RegistrationCompleted>(new { Value = "Secret Value" }), TestContext.Current.CancellationToken);
             builder.AddActivity(
                 "Registration",
                 new Uri($"queue:{activityQueue}"),
                 new RegistrationArguments("Hello"));
 
-            await bus.Execute(builder.Build(), cancellationToken)
+            await bus.ExecuteAsync(builder.Build(), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             ConsumeContext<RegistrationCompleted> context = await completed.Task
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
@@ -85,7 +81,7 @@ public sealed class PostgreSqlRoutingSlipTests
 
         public string? LastValue { get; private set; }
 
-        public Task<ExecutionResult> Execute(ExecuteContext<RegistrationArguments> context)
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<RegistrationArguments> context)
         {
             LastValue = context.Arguments.Value;
             Interlocked.Increment(ref _executions);

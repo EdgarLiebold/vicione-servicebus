@@ -30,27 +30,27 @@ public abstract class ClientContextFactory :
     public IActivePipeContextAgent<ClientContext> CreateActiveContext(ISupervisor supervisor, PipeContextHandle<ClientContext> context,
         CancellationToken cancellationToken)
     {
-        return supervisor.AddActiveContext(context, CreateSharedContext(context.Context, cancellationToken));
+        return supervisor.AddActiveContext(context, CreateSharedContextAsync(context.Context, cancellationToken));
     }
 
     protected abstract ClientContext CreateClientContext(ConnectionContext connectionContext, Uri inputAddress, IAgent agent);
 
     void CreateClientContext(IAsyncPipeContextAgent<ClientContext> asyncContext, CancellationToken cancellationToken)
     {
-        Task<ClientContext> Create(ConnectionContext connectionContext, CancellationToken createCancellationToken)
+        Task<ClientContext> CreateAsync(ConnectionContext connectionContext, CancellationToken createCancellationToken)
         {
             var inputAddress = _settings.GetInputAddress(connectionContext.Endpoint, _settings.Path);
 
             return Task.FromResult(CreateClientContext(connectionContext, inputAddress, asyncContext));
         }
 
-        _supervisor.StartAgent(asyncContext, Create, cancellationToken);
+        _supervisor.StartAgent(asyncContext, CreateAsync, cancellationToken);
     }
 
-    static async Task<ClientContext> CreateSharedContext(Task<ClientContext> context, CancellationToken cancellationToken)
+    static async Task<ClientContext> CreateSharedContextAsync(Task<ClientContext> context, CancellationToken cancellationToken)
     {
         return context.IsCompletedSuccessfully()
             ? new SharedClientContext(context.Result, cancellationToken)
-            : new SharedClientContext(await context.OrCanceled(cancellationToken).ConfigureAwait(false), cancellationToken);
+            : new SharedClientContext(await context.OrCanceledAsync(cancellationToken).ConfigureAwait(false), cancellationToken);
     }
 }

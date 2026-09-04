@@ -9,7 +9,7 @@ namespace ViciOneServiceBusBenchmark;
 
 public static class ServiceProviderExtensions
 {
-    public static async Task StartHostedServices(this IServiceProvider provider, CancellationToken cancellationToken = default)
+    public static async Task StartHostedServicesAsync(this IServiceProvider provider, CancellationToken cancellationToken = default)
     {
         IHostedService[] services = provider.GetServices<IHostedService>().ToArray();
 
@@ -17,7 +17,7 @@ public static class ServiceProviderExtensions
             await service.StartAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    public static async Task StopHostedServices(this IServiceProvider provider, CancellationToken cancellationToken = default)
+    public static async Task StopHostedServicesAsync(this IServiceProvider provider, CancellationToken cancellationToken = default)
     {
         IHostedService[] services = provider.GetServices<IHostedService>().ToArray();
 

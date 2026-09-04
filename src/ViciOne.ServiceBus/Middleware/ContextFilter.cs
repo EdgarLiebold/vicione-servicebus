@@ -19,7 +19,7 @@ public class ContextFilter<TContext> :
         _filter = filter ?? throw new ArgumentNullException(nameof(filter));
     }
 
-    public Task Send(TContext context, IPipe<TContext> next)
+    public Task SendAsync(TContext context, IPipe<TContext> next)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(next);
@@ -27,13 +27,13 @@ public class ContextFilter<TContext> :
         Task<bool> filterTask = _filter(context)
             ?? throw new InvalidOperationException("The context filter returned a null decision task.");
         if (filterTask.Status == TaskStatus.RanToCompletion && filterTask.Result)
-            return next.Send(context);
+            return next.SendAsync(context);
 
         async Task SendAsync()
         {
             var accept = await filterTask.ConfigureAwait(false);
             if (accept)
-                await next.Send(context).ConfigureAwait(false);
+                await next.SendAsync(context).ConfigureAwait(false);
         }
 
         return SendAsync();

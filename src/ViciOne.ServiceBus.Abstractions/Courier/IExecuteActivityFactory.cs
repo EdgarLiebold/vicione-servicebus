@@ -19,5 +19,6 @@ public interface IExecuteActivityFactory<out TActivity, TArguments> :
     /// <param name="context"></param>
     /// <param name="next"></param>
     /// <returns></returns>
-    Task Execute(ExecuteContext<TArguments> context, IPipe<ExecuteActivityContext<TActivity, TArguments>> next);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task ExecuteAsync(ExecuteContext<TArguments> context, IPipe<ExecuteActivityContext<TActivity, TArguments>> next, CancellationToken cancellationToken = default);
 }

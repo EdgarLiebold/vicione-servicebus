@@ -62,8 +62,11 @@ public class ConfigurationObserver :
     {
         if (typeof(TMessage).TryGetSingleClosedGenericArguments(typeof(Batch<>), out Type[] types))
         {
-            typeof(ConfigurationObserver)
+            var method = typeof(ConfigurationObserver)
                 .GetMethod(nameof(BatchConsumerConfigured))
+                ?? throw new InvalidOperationException($"The {nameof(BatchConsumerConfigured)} method was not found.");
+
+            method
                 .MakeGenericMethod(typeof(TConsumer), types[0])
                 .Invoke(this, new object[] { configurator });
         }

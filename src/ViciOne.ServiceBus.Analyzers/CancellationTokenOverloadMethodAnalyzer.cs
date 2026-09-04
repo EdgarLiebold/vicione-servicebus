@@ -55,6 +55,7 @@ public class CancellationTokenOverloadMethodAnalyzer :
             return;
 
         var consumeContextTypeSymbol = GetBestTypeByMetadataName(context.Compilation, "ViciOne.ServiceBus.ConsumeContext");
+        var outgoingMessagesTypeSymbol = GetBestTypeByMetadataName(context.Compilation, "ViciOne.ServiceBus.IOutgoingMessages");
 
         // The member cache holds ISymbol instances, which belong to one compilation. It used to
         // be a field of the analyzer, and an analyzer instance is reused across compilations, so
@@ -69,7 +70,8 @@ public class CancellationTokenOverloadMethodAnalyzer :
             if (!(analysisContext.ContainingSymbol is IMethodSymbol))
                 return;
 
-            if (IsConsumeContextCall(invocation, analysisContext.Compilation, consumeContextTypeSymbol, analysisContext.CancellationToken))
+            if (IsContextBoundServiceBusCall(invocation, analysisContext.Compilation, consumeContextTypeSymbol,
+                    outgoingMessagesTypeSymbol, analysisContext.CancellationToken))
                 return;
 
             if (!HasAnOverloadWithCancellationToken(invocation, cancellationTokenSymbol, cancellationTokenSourceSymbol, out var newParameterIndex,
@@ -96,14 +98,13 @@ public class CancellationTokenOverloadMethodAnalyzer :
         }, OperationKind.Invocation);
     }
 
-    static bool IsConsumeContextCall(IInvocationOperation operation, Compilation compilation, ISymbol? consumeContextTypeSymbol,
-        CancellationToken cancellationToken)
+    static bool IsContextBoundServiceBusCall(IInvocationOperation operation, Compilation compilation, ISymbol? consumeContextTypeSymbol,
+        ISymbol? outgoingMessagesTypeSymbol, CancellationToken cancellationToken)
     {
-        if (consumeContextTypeSymbol == null)
-            return false;
-
         var receiverType = operation.GetReceiverType(compilation, true, cancellationToken);
-        return receiverType != null && TryGetInterface(receiverType, consumeContextTypeSymbol, out _);
+        return receiverType != null
+            && (consumeContextTypeSymbol != null && TryGetInterface(receiverType, consumeContextTypeSymbol, out _)
+                || outgoingMessagesTypeSymbol != null && TryGetInterface(receiverType, outgoingMessagesTypeSymbol, out _));
     }
 
     static bool TryGetInterface(ITypeSymbol? symbol, ISymbol expectedSymbol, out ITypeSymbol? result)

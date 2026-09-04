@@ -27,7 +27,7 @@ public class RabbitMqTransportOptions
     public string VHost { get; set; }
     public string User { get; set; }
     public string Pass { get; set; }
-    public string ConnectionName { get; set; }
+    public string? ConnectionName { get; set; }
 
     public bool UseSsl
     {

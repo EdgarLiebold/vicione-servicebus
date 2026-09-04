@@ -11,7 +11,7 @@ public sealed class PostgreSqlSerializationAndRequestTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0090", "postgresql-native-owner")]
-    public async Task JsonExtensionData_RoundTripsStringAndNumberForElementAndObjectDictionaries()
+    public async Task JsonExtensionData_RoundTripsStringAndNumberForElementAndObjectDictionariesAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase fixture = await PostgreSqlTestDatabase.CreateAsync(
@@ -49,7 +49,7 @@ public sealed class PostgreSqlSerializationAndRequestTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            await bus.Publish(
+            await bus.PublishAsync(
                     new WithElement
                     {
                         Extra = new Dictionary<string, JsonElement>
@@ -60,7 +60,7 @@ public sealed class PostgreSqlSerializationAndRequestTests
                     },
                     cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await bus.Publish(
+            await bus.PublishAsync(
                     new WithObject
                     {
                         Extra = new Dictionary<string, object>
@@ -94,7 +94,7 @@ public sealed class PostgreSqlSerializationAndRequestTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0100", "postgresql-native-owner")]
-    public async Task RequestClient_FiveSequentialRequestsReturnTheirExactResponses()
+    public async Task RequestClient_FiveSequentialRequestsReturnTheirExactResponsesAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase fixture = await PostgreSqlTestDatabase.CreateAsync(
@@ -121,7 +121,7 @@ public sealed class PostgreSqlSerializationAndRequestTests
             for (var sequence = 0; sequence < 5; sequence++)
             {
                 var request = new RequestMessage(sequence, Guid.NewGuid());
-                Response<ResponseMessage> response = await client.GetResponse<ResponseMessage>(request, cancellationToken)
+                Response<ResponseMessage> response = await client.GetResponseAsync<ResponseMessage>(request, cancellationToken)
                     .WaitAsync(fixture.OperationTimeout, cancellationToken);
                 observed.Add((response.Message.Sequence, response.Message.CorrelationId));
             }

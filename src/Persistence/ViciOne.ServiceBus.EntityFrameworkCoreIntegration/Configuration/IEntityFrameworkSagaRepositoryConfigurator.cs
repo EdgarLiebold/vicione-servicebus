@@ -18,7 +18,7 @@ public interface IEntityFrameworkSagaRepositoryConfigurator
     /// <param name="optionsAction"></param>
     /// <typeparam name="TContext"></typeparam>
     /// <typeparam name="TImplementation"></typeparam>
-    void AddDbContext<TContext, TImplementation>(Action<IServiceProvider, DbContextOptionsBuilder<TImplementation>> optionsAction = null)
+    void AddDbContext<TContext, TImplementation>(Action<IServiceProvider, DbContextOptionsBuilder<TImplementation>>? optionsAction = null)
         where TContext : DbContext
         where TImplementation : DbContext, TContext;
 

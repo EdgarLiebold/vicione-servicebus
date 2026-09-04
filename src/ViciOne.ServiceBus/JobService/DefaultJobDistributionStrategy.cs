@@ -10,18 +10,18 @@ public class DefaultJobDistributionStrategy :
 {
     public static readonly IJobDistributionStrategy Instance = new DefaultJobDistributionStrategy();
 
-    public async Task<ActiveJob?> IsJobSlotAvailable(ConsumeContext<AllocateJobSlot> context, JobTypeInfo jobTypeInfo)
+    public async Task<ActiveJob?> IsJobSlotAvailableAsync(ConsumeContext<AllocateJobSlot> context, JobTypeInfo jobTypeInfo, CancellationToken cancellationToken = default)
     {
-        var instances = from i in jobTypeInfo.Instances
-                        join a in jobTypeInfo.ActiveJobs on i.Key equals a.InstanceAddress into ai
-                        where ai.Count() < jobTypeInfo.ConcurrentJobLimit
-                        orderby ai.Count(), i.Value.Used
-                        select new
-                        {
-                            Instance = i.Value,
-                            InstanceAddress = i.Key,
-                            InstanceCount = ai.Count()
-                        };
+        cancellationToken.ThrowIfCancellationRequested(); var instances = from i in jobTypeInfo.Instances
+                                                                          join a in jobTypeInfo.ActiveJobs on i.Key equals a.InstanceAddress into ai
+                                                                          where ai.Count() < jobTypeInfo.ConcurrentJobLimit
+                                                                          orderby ai.Count(), i.Value.Used
+                                                                          select new
+                                                                          {
+                                                                              Instance = i.Value,
+                                                                              InstanceAddress = i.Key,
+                                                                              InstanceCount = ai.Count()
+                                                                          };
 
         var firstInstance = instances.FirstOrDefault();
         if (firstInstance == null)

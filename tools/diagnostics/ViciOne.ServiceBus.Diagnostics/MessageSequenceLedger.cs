@@ -59,12 +59,14 @@ sealed class MessageSequenceLedger
     /// one.
     /// </para>
     /// </summary>
-    public Task<bool> WaitForAllExpected(TimeSpan budget, CancellationToken cancellationToken)
+    /// <param name="budget">The budget used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public Task<bool> WaitForAllExpectedAsync(TimeSpan budget, CancellationToken cancellationToken)
     {
-        return WaitForAllExpected(budget, cancellationToken, TimeProvider.System);
+        return WaitForAllExpectedAsync(budget, cancellationToken, TimeProvider.System);
     }
 
-    internal async Task<bool> WaitForAllExpected(TimeSpan budget, CancellationToken cancellationToken,
+    internal async Task<bool> WaitForAllExpectedAsync(TimeSpan budget, CancellationToken cancellationToken,
         TimeProvider timeProvider)
     {
         ArgumentNullException.ThrowIfNull(timeProvider);

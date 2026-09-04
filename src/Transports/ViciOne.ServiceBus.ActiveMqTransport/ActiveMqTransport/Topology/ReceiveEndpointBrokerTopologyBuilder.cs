@@ -4,7 +4,7 @@ public class ReceiveEndpointBrokerTopologyBuilder :
     BrokerTopologyBuilder,
     IReceiveEndpointBrokerTopologyBuilder
 {
-    public QueueHandle Queue { get; set; }
+    public QueueHandle Queue { get; set; } = null!;
 
     public BrokerTopology BuildTopologyLayout()
     {

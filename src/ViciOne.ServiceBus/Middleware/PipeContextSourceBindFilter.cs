@@ -22,19 +22,19 @@ public class PipeContextSourceBindFilter<TLeft, TRight> :
         _source = source;
     }
 
-    public Task Send(TLeft context, IPipe<TLeft> next)
+    public Task SendAsync(TLeft context, IPipe<TLeft> next)
     {
         var bindPipe = new BindPipe(context, _output);
 
-        var sourceTask = _source.Send(context, bindPipe);
+        var sourceTask = _source.SendAsync(context, bindPipe);
         if (sourceTask.Status == TaskStatus.RanToCompletion)
-            return next.Send(context);
+            return next.SendAsync(context);
 
         async Task SendAsync()
         {
             await sourceTask.ConfigureAwait(false);
 
-            await next.Send(context).ConfigureAwait(false);
+            await next.SendAsync(context).ConfigureAwait(false);
         }
 
         return SendAsync();
@@ -60,11 +60,11 @@ public class PipeContextSourceBindFilter<TLeft, TRight> :
             _output = output;
         }
 
-        public Task Send(TRight context)
+        public Task SendAsync(TRight context)
         {
             var bindContext = new BindContextProxy<TLeft, TRight>(_context, context);
 
-            return _output.Send(bindContext);
+            return _output.SendAsync(bindContext);
         }
 
         public void Probe(ProbeContext context)

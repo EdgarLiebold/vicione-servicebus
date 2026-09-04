@@ -15,7 +15,7 @@ public sealed class RabbitMqDurableSendAcceptanceTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-DURABLE-SEND", "confirm-persistent-mandatory-and-restart-retention")]
-    public async Task TransportAcceptance_IsPublisherConfirmedPersistentAndRetainedAfterSenderStop()
+    public async Task TransportAcceptance_IsPublisherConfirmedPersistentAndRetainedAfterSenderStopAsync()
     {
         using RabbitMqBroker fixture = RabbitMqBroker.Create("durableaccept");
         string queue = fixture.Name("accepted");
@@ -43,7 +43,7 @@ public sealed class RabbitMqDurableSendAcceptanceTests
             await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
             started = false;
 
-            IReadOnlyList<RabbitMqBroker.RawMessage> messages = await fixture.GetRaw(queue, 2, cancellationToken);
+            IReadOnlyList<RabbitMqBroker.RawMessage> messages = await fixture.GetRawAsync(queue, 2, cancellationToken);
             RabbitMqBroker.RawMessage message = Assert.Single(messages);
             Assert.Equal(body, message.Body);
             Assert.True(message.Properties.Persistent);
@@ -61,7 +61,7 @@ public sealed class RabbitMqDurableSendAcceptanceTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-DURABLE-SEND", "mandatory-unroutable-publish-is-not-accepted")]
-    public async Task UnroutablePublish_DoesNotReportTransportAcceptance()
+    public async Task UnroutablePublish_DoesNotReportTransportAcceptanceAsync()
     {
         using RabbitMqBroker fixture = RabbitMqBroker.Create("durablereject");
         string exchange = fixture.Name("unroutable");
@@ -92,13 +92,13 @@ public sealed class RabbitMqDurableSendAcceptanceTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-DURABLE-SEND", "caller-cancellation-prevents-provider-acceptance")]
-    public async Task CanceledAttempt_DoesNotPublishOrReportAcceptance()
+    public async Task CanceledAttempt_DoesNotPublishOrReportAcceptanceAsync()
     {
         using RabbitMqBroker fixture = RabbitMqBroker.Create("durablecancel");
         string queue = fixture.Name("canceled");
         DurableSendId durableSendId = new(NewId.NextGuid());
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        await fixture.DeclareEndpointTopology(queue, cancellationToken);
+        await fixture.DeclareEndpointTopologyAsync(queue, cancellationToken);
         await using ServiceProvider provider = CreateProvider(fixture);
         IBusControl bus = provider.GetRequiredService<IBusControl>();
         bool started = false;
@@ -114,7 +114,7 @@ public sealed class RabbitMqDurableSendAcceptanceTests
             await Assert.ThrowsAnyAsync<OperationCanceledException>(() => dispatcher.DispatchAsync(
                 CreateContext(durableSendId, new Uri($"queue:{queue}"), new byte[] { 99 }),
                 canceled.Token));
-            Assert.Equal(0U, await fixture.QueueMessageCount(queue, cancellationToken));
+            Assert.Equal(0U, await fixture.QueueMessageCountAsync(queue, cancellationToken));
         }
         finally
         {
@@ -170,8 +170,10 @@ public sealed class RabbitMqDurableSendAcceptanceTests
     {
         public DurableSendId DurableSendId { get; } = durableSendId;
 
-        public ValueTask<bool> CompleteAsync(CancellationToken cancellationToken = default) =>
-            ValueTask.FromException<bool>(new InvalidOperationException(
+        public ValueTask<bool> CompleteAsync(CancellationToken cancellationToken = default)
+        {
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled<bool>(cancellationToken); return ValueTask.FromException<bool>(new InvalidOperationException(
                 "RabbitMQ transport acceptance must never invoke the in-process consumer-completion capability."));
+        }
     }
 }

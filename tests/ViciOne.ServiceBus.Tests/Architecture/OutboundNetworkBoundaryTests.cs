@@ -13,7 +13,7 @@ public sealed class OutboundNetworkBoundaryTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-NO-OUTBOUND-VENDOR-CALL", "default-bus-lifecycle-and-publish")]
-    public async Task DefaultInMemoryBusLifecycle_IssuesNoOutgoingHttpRequest()
+    public async Task DefaultInMemoryBusLifecycle_IssuesNoOutgoingHttpRequestAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -31,7 +31,7 @@ public sealed class OutboundNetworkBoundaryTests
         await bus.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
-            await bus.Publish(new QuietMessage(), cancellationToken).WaitAsync(timeout, cancellationToken);
+            await bus.PublishAsync(new QuietMessage(), cancellationToken).WaitAsync(timeout, cancellationToken);
         }
         finally
         {
@@ -95,7 +95,7 @@ public sealed class OutboundNetworkBoundaryTests
 
     public sealed class QuietConsumer : IConsumer<QuietMessage>
     {
-        public Task Consume(ConsumeContext<QuietMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<QuietMessage> context) => Task.CompletedTask;
     }
 
     private sealed class ListenerObserver(ConcurrentQueue<string> requests) : IObserver<DiagnosticListener>

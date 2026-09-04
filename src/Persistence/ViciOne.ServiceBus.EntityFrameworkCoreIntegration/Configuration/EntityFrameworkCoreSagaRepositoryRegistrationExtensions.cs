@@ -41,8 +41,8 @@ public static class EntityFrameworkCoreSagaRepositoryRegistrationExtensions
     /// <typeparam name="TSaga"></typeparam>
     /// <returns></returns>
     public static ISagaRegistrationConfigurator<TSaga> EntityFrameworkRepository<TSaga>(this ISagaRegistrationConfigurator<TSaga> configurator,
-        IEntityFrameworkSagaRepository sagaRepository, Action<IEntityFrameworkSagaRepositoryConfigurator<TSaga>> configure = null,
-        Action<EntityTypeBuilder<TSaga>> configureSagaMapping = null)
+        IEntityFrameworkSagaRepository sagaRepository, Action<IEntityFrameworkSagaRepositoryConfigurator<TSaga>>? configure = null,
+        Action<EntityTypeBuilder<TSaga>>? configureSagaMapping = null)
         where TSaga : class, ISaga
     {
         return configurator.EntityFrameworkRepository(sagaRepository, configure, new ActionSagaClassMap<TSaga>(configureSagaMapping));
@@ -58,8 +58,8 @@ public static class EntityFrameworkCoreSagaRepositoryRegistrationExtensions
     /// <typeparam name="TSaga"></typeparam>
     /// <returns></returns>
     public static ISagaRegistrationConfigurator<TSaga> EntityFrameworkRepository<TSaga>(this ISagaRegistrationConfigurator<TSaga> configurator,
-        IEntityFrameworkSagaRepository sagaRepository, Action<IEntityFrameworkSagaRepositoryConfigurator<TSaga>> configure = null,
-        ISagaClassMap<TSaga> sagaClassMap = null)
+        IEntityFrameworkSagaRepository sagaRepository, Action<IEntityFrameworkSagaRepositoryConfigurator<TSaga>>? configure = null,
+        ISagaClassMap<TSaga>? sagaClassMap = null)
         where TSaga : class, ISaga
     {
         sagaRepository.AddSagaClassMap(sagaClassMap ?? new ActionSagaClassMap<TSaga>());
@@ -78,7 +78,7 @@ public static class EntityFrameworkCoreSagaRepositoryRegistrationExtensions
     /// <param name="configure"></param>
     /// <returns></returns>
     public static IJobSagaRegistrationConfigurator EntityFrameworkRepository(this IJobSagaRegistrationConfigurator configurator,
-        Action<IEntityFrameworkSagaRepositoryConfigurator> configure = null)
+        Action<IEntityFrameworkSagaRepositoryConfigurator>? configure = null)
     {
         var registrationProvider = new EntityFrameworkSagaRepositoryRegistrationProvider(configure);
 
@@ -264,9 +264,9 @@ public static class EntityFrameworkCoreSagaRepositoryRegistrationExtensions
     class ActionSagaClassMap<T> : SagaClassMap<T>
         where T : class, ISaga
     {
-        readonly Action<EntityTypeBuilder<T>> _configure;
+        readonly Action<EntityTypeBuilder<T>>? _configure;
 
-        public ActionSagaClassMap(Action<EntityTypeBuilder<T>> configure = null)
+        public ActionSagaClassMap(Action<EntityTypeBuilder<T>>? configure = null)
         {
             _configure = configure;
         }

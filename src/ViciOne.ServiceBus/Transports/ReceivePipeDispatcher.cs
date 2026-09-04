@@ -29,7 +29,7 @@ public class ReceivePipeDispatcher :
 
         _inputAddress = inputAddress.ToString();
         _activityName = $"{inputAddress.GetDiagnosticEndpointName()} receive";
-        _endpointName = inputAddress.GetEndpointName();
+        _endpointName = inputAddress.GetEndpointName() ?? "";
     }
 
     public int ActiveDispatchCount => _activeDispatchCount;
@@ -41,9 +41,9 @@ public class ReceivePipeDispatcher :
         return new Metrics(_dispatchCount, _maxConcurrentDispatchCount);
     }
 
-    public event ZeroActiveDispatchHandler ZeroActivity;
+    public event ZeroActiveDispatchHandler? ZeroActivity;
 
-    public async Task Dispatch(ReceiveContext context, ReceiveLockContext receiveLock)
+    public async Task DispatchAsync(ReceiveContext context, ReceiveLockContext receiveLock, CancellationToken cancellationToken = default)
     {
         LogContext.SetCurrentIfNull(_hostConfiguration.ReceiveLogContext);
 
@@ -55,33 +55,33 @@ public class ReceivePipeDispatcher :
         try
         {
             if (_observers.Count > 0)
-                await _observers.PreReceive(context).ConfigureAwait(false);
+                await _observers.PreReceiveAsync(context).ConfigureAwait(false);
 
-            var validateLockStatusTask = receiveLock.ValidateLockStatus();
+            var validateLockStatusTask = receiveLock.ValidateLockStatusAsync(cancellationToken: cancellationToken);
             if (validateLockStatusTask.Status != TaskStatus.RanToCompletion)
                 await validateLockStatusTask.ConfigureAwait(false);
 
-            await _receivePipe.Send(context).ConfigureAwait(false);
+            await _receivePipe.SendAsync(context).ConfigureAwait(false);
 
             await context.ReceiveCompleted.ConfigureAwait(false);
 
-            var receiveLockCompleteTask = receiveLock.Complete();
+            var receiveLockCompleteTask = receiveLock.CompleteAsync(cancellationToken: cancellationToken);
             if (receiveLockCompleteTask.Status != TaskStatus.RanToCompletion)
                 await receiveLockCompleteTask.ConfigureAwait(false);
 
             if (_observers.Count > 0)
-                await _observers.PostReceive(context).ConfigureAwait(false);
+                await _observers.PostReceiveAsync(context).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
             if (_observers.Count > 0)
-                await _observers.ReceiveFault(context, ex).ConfigureAwait(false);
+                await _observers.ReceiveFaultAsync(context, ex).ConfigureAwait(false);
 
             if (receiveLock != null)
             {
                 try
                 {
-                    var receiveLockFaultedTask = receiveLock.Faulted(ex);
+                    var receiveLockFaultedTask = receiveLock.FaultedAsync(ex);
                     if (receiveLockFaultedTask.Status != TaskStatus.RanToCompletion)
                         await receiveLockFaultedTask.ConfigureAwait(false);
 
@@ -111,7 +111,7 @@ public class ReceivePipeDispatcher :
             activity?.Stop();
             instrument?.Complete();
 
-            await active.Complete().ConfigureAwait(false);
+            await active.CompleteAsync().ConfigureAwait(false);
         }
     }
 
@@ -160,10 +160,10 @@ public class ReceivePipeDispatcher :
         while (current > _maxConcurrentDispatchCount)
             Interlocked.CompareExchange(ref _maxConcurrentDispatchCount, current, _maxConcurrentDispatchCount);
 
-        return new ActiveDispatch(Interlocked.Increment(ref _dispatchCount), DispatchComplete);
+        return new ActiveDispatch(Interlocked.Increment(ref _dispatchCount), DispatchCompleteAsync);
     }
 
-    async Task DispatchComplete(long id)
+    async Task DispatchCompleteAsync(long id)
     {
         var pendingCount = Interlocked.Decrement(ref _activeDispatchCount);
         if (pendingCount == 0)
@@ -192,7 +192,7 @@ public class ReceivePipeDispatcher :
             _complete = complete;
         }
 
-        public Task Complete()
+        public Task CompleteAsync()
         {
             return _complete(_id);
         }

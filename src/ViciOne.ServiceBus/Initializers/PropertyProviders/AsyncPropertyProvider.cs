@@ -12,29 +12,34 @@ public class AsyncPropertyProvider<TInput, TProperty> :
     IPropertyProvider<TInput, TProperty>
     where TInput : class
 {
-    readonly IPropertyProvider<TInput, Task<TProperty>> _provider;
+    readonly IPropertyProvider<TInput, Task<TProperty?>> _provider;
 
-    public AsyncPropertyProvider(IPropertyProvider<TInput, Task<TProperty>> provider)
+    public AsyncPropertyProvider(IPropertyProvider<TInput, Task<TProperty?>> provider)
     {
         _provider = provider;
     }
 
-    Task<TProperty> IPropertyProvider<TInput, TProperty>.GetProperty<T>(InitializeContext<T, TInput> context)
+    Task<TProperty?> IPropertyProvider<TInput, TProperty>.GetPropertyAsync<T>(InitializeContext<T, TInput> context, CancellationToken cancellationToken)
     {
         if (!context.HasInput)
-            return TaskResults.Default<TProperty>();
+            return TaskResults.DefaultAsync<TProperty>(cancellationToken: cancellationToken);
 
-        Task<Task<TProperty>> propertyTask = _provider.GetProperty(context);
+        Task<Task<TProperty?>?> propertyTask = _provider.GetPropertyAsync(context, cancellationToken: cancellationToken);
         if (propertyTask.Status == TaskStatus.RanToCompletion)
         {
-            Task<TProperty> valueTask = propertyTask.Result;
+            Task<TProperty?>? valueTask = propertyTask.Result;
+            if (valueTask == null)
+                return TaskResults.DefaultAsync<TProperty>(cancellationToken: cancellationToken);
+
             if (valueTask.Status == TaskStatus.RanToCompletion)
                 return valueTask;
         }
 
-        async Task<TProperty> GetPropertyAsync()
+        async Task<TProperty?> GetPropertyAsync()
         {
-            Task<TProperty> valueTask = await propertyTask.ConfigureAwait(false);
+            Task<TProperty?>? valueTask = await propertyTask.ConfigureAwait(false);
+            if (valueTask == null)
+                return default;
 
             return await valueTask.ConfigureAwait(false);
         }
@@ -55,34 +60,39 @@ public class AsyncPropertyProvider<TInput, TProperty, TTask> :
     where TInput : class
 {
     readonly IPropertyConverter<TProperty, TTask> _converter;
-    readonly IPropertyProvider<TInput, Task<TTask>> _provider;
+    readonly IPropertyProvider<TInput, Task<TTask?>> _provider;
 
-    public AsyncPropertyProvider(IPropertyProvider<TInput, Task<TTask>> provider, IPropertyConverter<TProperty, TTask> converter)
+    public AsyncPropertyProvider(IPropertyProvider<TInput, Task<TTask?>> provider, IPropertyConverter<TProperty, TTask> converter)
     {
         _provider = provider;
         _converter = converter;
     }
 
-    Task<TProperty> IPropertyProvider<TInput, TProperty>.GetProperty<T>(InitializeContext<T, TInput> context)
+    Task<TProperty?> IPropertyProvider<TInput, TProperty>.GetPropertyAsync<T>(InitializeContext<T, TInput> context, CancellationToken cancellationToken)
     {
         if (!context.HasInput)
-            return TaskResults.Default<TProperty>();
+            return TaskResults.DefaultAsync<TProperty>(cancellationToken: cancellationToken);
 
-        Task<Task<TTask>> propertyTask = _provider.GetProperty(context);
+        Task<Task<TTask?>?> propertyTask = _provider.GetPropertyAsync(context, cancellationToken: cancellationToken);
         if (propertyTask.Status == TaskStatus.RanToCompletion)
         {
-            Task<TTask> valueTask = propertyTask.Result;
+            Task<TTask?>? valueTask = propertyTask.Result;
+            if (valueTask == null)
+                return TaskResults.DefaultAsync<TProperty>(cancellationToken: cancellationToken);
+
             if (valueTask.Status == TaskStatus.RanToCompletion)
-                return _converter.Convert(context, valueTask.Result);
+                return _converter.ConvertAsync(context, valueTask.Result, cancellationToken: cancellationToken);
         }
 
-        async Task<TProperty> GetPropertyAsync()
+        async Task<TProperty?> GetPropertyAsync()
         {
-            Task<TTask> valueTask = await propertyTask.ConfigureAwait(false);
+            Task<TTask?>? valueTask = await propertyTask.ConfigureAwait(false);
+            if (valueTask == null)
+                return default;
 
             var value = await valueTask.ConfigureAwait(false);
 
-            return await _converter.Convert(context, value).ConfigureAwait(false);
+            return await _converter.ConvertAsync(context, value, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         return GetPropertyAsync();

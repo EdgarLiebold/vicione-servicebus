@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Apache.NMS;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Transports;
@@ -18,36 +19,39 @@ public class ActiveMqHeaderProvider :
 
     public IEnumerable<KeyValuePair<string, object>> GetAll()
     {
-        yield return new KeyValuePair<string, object>(MessageHeaders.TransportMessageId, _message.NMSMessageId);
-        yield return new KeyValuePair<string, object>(nameof(MessageContext.CorrelationId), _message.NMSCorrelationID);
+        if (_message.NMSMessageId is { } messageId)
+            yield return new KeyValuePair<string, object>(MessageHeaders.TransportMessageId, messageId);
+        if (_message.NMSCorrelationID is { } correlationId)
+            yield return new KeyValuePair<string, object>(nameof(MessageContext.CorrelationId), correlationId);
 
         foreach (string key in _message.Properties.Keys)
         {
             var value = _message.Properties[key];
 
-            yield return new KeyValuePair<string, object>(key, value);
+            if (value != null)
+                yield return new KeyValuePair<string, object>(key, value);
         }
     }
 
-    public bool TryGetHeader(string key, out object value)
+    public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
     {
         if (MessageHeaders.TransportMessageId.Equals(key, StringComparison.OrdinalIgnoreCase))
         {
             value = _message.NMSMessageId;
-            return true;
+            return value != null;
         }
 
         if (nameof(MessageContext.CorrelationId).Equals(key, StringComparison.OrdinalIgnoreCase))
         {
             value = _message.NMSCorrelationID;
-            return true;
+            return value != null;
         }
 
         if (MessageHeaders.TransportSentTime.Equals(key, StringComparison.OrdinalIgnoreCase))
         {
-            if (_message.NMSTimestamp > DateTimeConstants.Epoch)
+            if (_message.NMSTimestamp > DateTimeConstants.Epoch.UtcDateTime)
             {
-                value = _message.NMSTimestamp;
+                value = new DateTimeOffset(DateTime.SpecifyKind(_message.NMSTimestamp, DateTimeKind.Utc));
                 return true;
             }
         }
@@ -56,7 +60,7 @@ public class ActiveMqHeaderProvider :
         if (found)
         {
             value = _message.Properties[key];
-            return true;
+            return value != null;
         }
 
         value = null;

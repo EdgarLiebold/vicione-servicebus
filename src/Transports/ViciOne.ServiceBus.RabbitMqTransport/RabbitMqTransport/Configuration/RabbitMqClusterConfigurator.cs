@@ -21,7 +21,7 @@ public class RabbitMqClusterConfigurator :
         _nodes.Add(ClusterNode.Parse(nodeAddress));
     }
 
-    public IRabbitMqEndpointResolver GetEndpointResolver()
+    public IRabbitMqEndpointResolver? GetEndpointResolver()
     {
         if (_nodes.Count <= 0)
             return null;

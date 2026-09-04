@@ -15,7 +15,7 @@ public interface IIndexedSagaProperty<TSaga>
     /// Returns the saga with the specified key
     /// </summary>
     /// <param name="key"></param>
-    SagaInstance<TSaga> this[object key] { get; }
+    SagaInstance<TSaga>? this[object key] { get; }
 
     int Count { get; }
 

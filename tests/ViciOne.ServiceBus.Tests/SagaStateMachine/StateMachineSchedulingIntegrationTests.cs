@@ -15,7 +15,7 @@ public sealed class StateMachineSchedulingIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-SCHEDULE", "correlated-instance-delay-and-exact-deadline")]
-    public async Task CorrelatedSchedule_UsesTheInstanceDelayAndFinalizesAtTheExactAdvancedDeadline()
+    public async Task CorrelatedSchedule_UsesTheInstanceDelayAndFinalizesAtTheExactAdvancedDeadlineAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -40,7 +40,7 @@ public sealed class StateMachineSchedulingIntegrationTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         ISagaStateMachineTestHarness<ScheduledMachine, ScheduledState> sagaHarness =
             harness.GetSagaStateMachineHarness<ScheduledMachine, ScheduledState>();
         ILoadSagaRepository<ScheduledState> repository = provider.GetRequiredService<ILoadSagaRepository<ScheduledState>>();
@@ -50,13 +50,13 @@ public sealed class StateMachineSchedulingIntegrationTests
             Guid correlationId = NewId.NextGuid();
             Task<IReceivedMessage<TimeoutNotice>> timeoutDelivery = sagaHarness.Consumed
                 .SelectAsync<TimeoutNotice>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             Task<IPublishedMessage<ScheduleCompleted>> completed = harness.Published
                 .SelectAsync<ScheduleCompleted>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
-            await harness.Bus.Publish(new ScheduleStart(correlationId, InstanceDelay), cancellationToken);
-            Assert.Equal(correlationId, await sagaHarness.Exists(correlationId, state => state.Waiting, timeout));
+            await harness.Bus.PublishAsync(new ScheduleStart(correlationId, InstanceDelay), cancellationToken);
+            Assert.Equal(correlationId, await sagaHarness.ExistsAsync(correlationId, state => state.Waiting, timeout, TestContext.Current.CancellationToken));
             Assert.Equal(
                 await scheduleObservation.Expected.Task.WaitAsync(timeout, cancellationToken),
                 await scheduleObservation.Actual.Task.WaitAsync(timeout, cancellationToken));
@@ -73,11 +73,11 @@ public sealed class StateMachineSchedulingIntegrationTests
             Assert.Null(received.Exception);
             Assert.Equal(correlationId, received.Context.Message.CorrelationId);
             Assert.Equal(new ScheduleCompleted(correlationId, "expired"), result);
-            Assert.Null(await repository.Load(correlationId));
+            Assert.Null(await repository.LoadAsync(correlationId, TestContext.Current.CancellationToken));
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Single(sagaHarness.Consumed.Select<TimeoutNotice>(SnapshotOnlyToken()));
@@ -159,7 +159,7 @@ public sealed class StateMachineSchedulingIntegrationTests
     public sealed class RecordingSchedulerFilter<T>(ScheduleObservation observation) : IFilter<ConsumeContext<T>>
         where T : class
     {
-        public async Task Send(ConsumeContext<T> context, IPipe<ConsumeContext<T>> next)
+        public async Task SendAsync(ConsumeContext<T> context, IPipe<ConsumeContext<T>> next)
         {
             if (context.TryGetPayload(out MessageSchedulerContext? schedulerContext))
             {
@@ -170,7 +170,7 @@ public sealed class StateMachineSchedulingIntegrationTests
                 context.AddOrUpdatePayload<MessageSchedulerContext>(() => proxy, _ => proxy);
             }
 
-            await next.Send(context).ConfigureAwait(false);
+            await next.SendAsync(context).ConfigureAwait(false);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("recordScheduledDeadline");
@@ -187,9 +187,9 @@ public sealed class StateMachineSchedulingIntegrationTests
             ArgumentNullException.ThrowIfNull(targetMethod);
             ArgumentNullException.ThrowIfNull(args);
 
-            if (targetMethod.Name == nameof(MessageSchedulerContext.ScheduleSend)
-                && args.FirstOrDefault(argument => argument is DateTime) is DateTime scheduledTime)
-                Observation.Actual.TrySetResult(scheduledTime);
+            if (targetMethod.Name == nameof(MessageSchedulerContext.ScheduleSendAsync)
+                && args.FirstOrDefault(argument => argument is DateTimeOffset) is DateTimeOffset dueAt)
+                Observation.Actual.TrySetResult(dueAt.UtcDateTime);
 
             try
             {

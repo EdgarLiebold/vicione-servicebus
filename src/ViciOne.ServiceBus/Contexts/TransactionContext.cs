@@ -15,7 +15,8 @@ public interface TransactionContext
     /// <summary>
     /// Complete the transaction scope
     /// </summary>
-    Task Commit();
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task CommitAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Rollback the transaction

@@ -29,7 +29,8 @@ public interface RetryPolicyContext<TContext> :
     /// </summary>
     /// <param name="exception"></param>
     /// <returns></returns>
-    Task RetryFaulted(Exception exception);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Cancel any pending or subsequent retries

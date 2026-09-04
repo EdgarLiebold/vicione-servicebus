@@ -59,7 +59,7 @@ public class ReceiverConfiguration :
 
     public void AddEndpointSpecification(IReceiveEndpointSpecification specification)
     {
-        Specifications.Add(specification);
+        Specifications.Add(specification ?? throw new ArgumentNullException(nameof(specification)));
     }
 
     public override IEnumerable<ValidationResult> Validate()

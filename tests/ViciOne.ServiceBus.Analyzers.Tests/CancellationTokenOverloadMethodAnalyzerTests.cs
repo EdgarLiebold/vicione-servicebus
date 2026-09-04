@@ -11,7 +11,7 @@ public sealed class CancellationTokenOverloadMethodAnalyzerTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-CANCELLATION-TOKEN-ANALYZER", "task-delay-overload")]
-    public async Task TaskDelayWithoutToken_ReportsTheContextTokenOverload()
+    public async Task TaskDelayWithoutToken_ReportsTheContextTokenOverloadAsync()
     {
         var source = ServiceBusAnalyzerFixture.Usings + ServiceBusAnalyzerFixture.SimpleMessageContracts + @"
 namespace ConsoleApplication1
@@ -19,7 +19,7 @@ namespace ConsoleApplication1
     class Consumer :
         IConsumer<SubmitOrder>
     {
-        public Task Consume(ConsumeContext<SubmitOrder> context)
+        public Task ConsumeAsync(ConsumeContext<SubmitOrder> context)
         {
             return Task.Delay(10);
         }
@@ -27,7 +27,7 @@ namespace ConsoleApplication1
 }
 ";
 
-        await AssertDiagnostics(
+        await AssertDiagnosticsAsync(
             source,
             new DiagnosticObservation(
                 "MCA2016",
@@ -40,7 +40,7 @@ namespace ConsoleApplication1
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CANCELLATION-TOKEN-ANALYZER", "state-machine-activity-overloads")]
-    public async Task StateMachineActivity_ReportsEachAvailableContextToken()
+    public async Task StateMachineActivity_ReportsEachAvailableContextTokenAsync()
     {
         var source = ServiceBusAnalyzerFixture.Usings + ServiceBusAnalyzerFixture.SimpleMessageContracts + @"
 namespace ConsoleApplication1
@@ -58,16 +58,16 @@ namespace ConsoleApplication1
             IStateMachineActivity<TestInstance, SubmitOrder>
         {
 
-        Task IStateMachineActivity<TestInstance, SubmitOrder>.Execute(BehaviorContext<TestInstance, SubmitOrder> context,
+        Task IStateMachineActivity<TestInstance, SubmitOrder>.ExecuteAsync(BehaviorContext<TestInstance, SubmitOrder> context,
             IBehavior<TestInstance, SubmitOrder> next)
         {
             return Task.Delay(10);
         }
 
-        Task IStateMachineActivity<TestInstance, SubmitOrder>.Faulted<TException>(BehaviorExceptionContext<TestInstance, SubmitOrder, TException> ctx,
+        Task IStateMachineActivity<TestInstance, SubmitOrder>.FaultedAsync<TException>(BehaviorExceptionContext<TestInstance, SubmitOrder, TException> ctx,
             IBehavior<TestInstance, SubmitOrder> next)
         {
-            return Task.Run(() => next.Faulted(ctx));
+            return Task.Run(() => next.FaultedAsync(ctx));
         }
 
         public void Accept(StateMachineVisitor visitor)
@@ -82,7 +82,7 @@ namespace ConsoleApplication1
 }
 ";
 
-        await AssertDiagnostics(
+        await AssertDiagnosticsAsync(
             source,
             new DiagnosticObservation(
                 "MCA2016",
@@ -102,7 +102,7 @@ namespace ConsoleApplication1
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CANCELLATION-TOKEN-ANALYZER", "later-task-run-overload")]
-    public async Task ExistingTokenUse_DoesNotSuppressASeparateMissingToken()
+    public async Task ExistingTokenUse_DoesNotSuppressASeparateMissingTokenAsync()
     {
         var source = ServiceBusAnalyzerFixture.Usings + ServiceBusAnalyzerFixture.SimpleMessageContracts + @"
 namespace ConsoleApplication1
@@ -110,10 +110,10 @@ namespace ConsoleApplication1
     class Consumer :
         IConsumer<SubmitOrder>
     {
-        public async Task Consume(ConsumeContext<SubmitOrder> context)
+        public async Task ConsumeAsync(ConsumeContext<SubmitOrder> context)
         {
             await Task.Delay(10, context.CancellationToken);
-            context.RespondAsync<OrderSubmitted>(context.Message);
+            context.Advanced().RespondAsync<OrderSubmitted>(context.Message);
             await Task.Run(() => {});
 
         }
@@ -121,7 +121,7 @@ namespace ConsoleApplication1
 }
 ";
 
-        await AssertDiagnostics(
+        await AssertDiagnosticsAsync(
             source,
             new DiagnosticObservation(
                 "MCA2016",
@@ -134,7 +134,7 @@ namespace ConsoleApplication1
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CANCELLATION-TOKEN-ANALYZER", "existing-token-is-silent")]
-    public async Task ExistingCancellationToken_DoesNotReport()
+    public async Task ExistingCancellationToken_DoesNotReportAsync()
     {
         var source = ServiceBusAnalyzerFixture.Usings + ServiceBusAnalyzerFixture.SimpleMessageContracts + @"
 namespace ConsoleApplication1
@@ -142,21 +142,21 @@ namespace ConsoleApplication1
     class Consumer :
         IConsumer<SubmitOrder>
     {
-        public async Task Consume(ConsumeContext<SubmitOrder> context)
+        public async Task ConsumeAsync(ConsumeContext<SubmitOrder> context)
         {
             await Task.Delay(10, context.CancellationToken);
-            context.RespondAsync<OrderSubmitted>(context.Message);
+            context.Advanced().RespondAsync<OrderSubmitted>(context.Message);
         }
     }
 }
 ";
 
-        await AssertDiagnostics(source);
+        await AssertDiagnosticsAsync(source);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CANCELLATION-TOKEN-ANALYZER", "servicebus-method-is-excluded")]
-    public async Task ServiceBusPublishMethod_DoesNotSuggestItsOwnContextToken()
+    public async Task ServiceBusPublishMethod_DoesNotSuggestItsOwnContextTokenAsync()
     {
         var source = ServiceBusAnalyzerFixture.Usings + ServiceBusAnalyzerFixture.SimpleMessageContracts + @"
 namespace ConsoleApplication1
@@ -164,18 +164,18 @@ namespace ConsoleApplication1
     class Consumer :
         IConsumer<SubmitOrder>
     {
-        public Task Consume(ConsumeContext<SubmitOrder> context)
+        public Task ConsumeAsync(ConsumeContext<SubmitOrder> context)
         {
-            return context.Publish<OrderSubmitted>(new {});
+            return context.Outgoing.PublishAsync(context.Message);
         }
     }
 }
 ";
 
-        await AssertDiagnostics(source);
+        await AssertDiagnosticsAsync(source);
     }
 
-    private static async Task AssertDiagnostics(
+    private static async Task AssertDiagnosticsAsync(
         string source,
         params DiagnosticObservation[] expected)
     {

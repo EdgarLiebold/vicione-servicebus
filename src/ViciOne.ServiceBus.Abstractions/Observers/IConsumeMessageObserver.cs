@@ -15,7 +15,7 @@ public interface IConsumeMessageObserver<in T>
     /// </summary>
     /// <param name="context">The consume context</param>
     /// <returns></returns>
-    Task PreConsume(ConsumeContext<T> context);
+    Task PreConsumeAsync(ConsumeContext<T> context);
 
     /// <summary>
     /// Called after the message has been dispatched to all consumers - note that in the case of an exception
@@ -23,7 +23,7 @@ public interface IConsumeMessageObserver<in T>
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    Task PostConsume(ConsumeContext<T> context);
+    Task PostConsumeAsync(ConsumeContext<T> context);
 
     /// <summary>
     /// Called after the message has been dispatched to all consumers when one or more exceptions have occurred
@@ -31,5 +31,5 @@ public interface IConsumeMessageObserver<in T>
     /// <param name="context"></param>
     /// <param name="exception"></param>
     /// <returns></returns>
-    Task ConsumeFault(ConsumeContext<T> context, Exception exception);
+    Task ConsumeFaultAsync(ConsumeContext<T> context, Exception exception);
 }

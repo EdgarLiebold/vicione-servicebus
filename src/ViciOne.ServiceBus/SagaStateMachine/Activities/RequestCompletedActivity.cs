@@ -25,9 +25,9 @@ public class RequestCompletedActivity<TSaga, TMessage> :
         visitor.Visit(this);
     }
 
-    public async Task Execute(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
+    public async Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
-        await context.Publish<RequestCompleted>(new
+        await context.PublishAsync<RequestCompleted>(new
         {
             context.Saga.CorrelationId,
             InVar.Timestamp,
@@ -35,13 +35,13 @@ public class RequestCompletedActivity<TSaga, TMessage> :
             Payload = context.Message
         }, context.CancellationToken).ConfigureAwait(false);
 
-        await next.Execute(context).ConfigureAwait(false);
+        await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
+    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
         where TException : Exception
     {
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 }
 
@@ -76,9 +76,9 @@ public class RequestCompletedActivity<TSaga, TMessage, TResponse> :
         visitor.Visit(this);
     }
 
-    public async Task Execute(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
+    public async Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
-        await context.Publish<RequestCompleted>(new
+        await context.PublishAsync<RequestCompleted>(new
         {
             context.Saga.CorrelationId,
             InVar.Timestamp,
@@ -86,12 +86,12 @@ public class RequestCompletedActivity<TSaga, TMessage, TResponse> :
             Payload = _messageFactory(context)
         }, context.CancellationToken).ConfigureAwait(false);
 
-        await next.Execute(context).ConfigureAwait(false);
+        await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
+    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
         where TException : Exception
     {
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 }

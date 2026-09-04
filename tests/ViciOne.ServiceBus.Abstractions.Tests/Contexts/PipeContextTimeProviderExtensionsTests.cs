@@ -43,10 +43,10 @@ public sealed class PipeContextTimeProviderExtensionsTests
         var context = new TestPipeContext();
         context.SetTimeProvider(new FakeTimeProvider(expected));
 
-        DateTime actual = context.GetUtcDateTime();
+        DateTimeOffset actual = context.GetUtcDateTime();
 
-        Assert.Equal(expected.UtcDateTime, actual);
-        Assert.Equal(DateTimeKind.Utc, actual.Kind);
+        Assert.Equal(expected, actual);
+        Assert.Equal(TimeSpan.Zero, actual.Offset);
     }
 
     [Fact]

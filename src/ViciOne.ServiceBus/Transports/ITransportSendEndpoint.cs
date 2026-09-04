@@ -4,8 +4,9 @@ using System.Threading.Tasks;
 namespace ViciOne.ServiceBus.Transports;
 
 public interface ITransportSendEndpoint :
-    ISendEndpoint
+    ISendEndpoint,
+    Advanced.IAdvancedSendEndpoint
 {
-    Task<SendContext<T>> CreateSendContext<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class;
 }

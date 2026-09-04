@@ -41,23 +41,23 @@ public class SharedClientContext :
         _context.OnSessionAsync(callback, exceptionHandler);
     }
 
-    public Task StartAsync()
+    public Task StartAsync(CancellationToken cancellationToken = default)
     {
-        return _context.StartAsync();
+        return _context.StartAsync(cancellationToken: cancellationToken);
     }
 
-    public Task ShutdownAsync()
+    public Task ShutdownAsync(CancellationToken cancellationToken = default)
     {
-        return _context.ShutdownAsync();
+        return _context.ShutdownAsync(cancellationToken: cancellationToken);
     }
 
-    public Task CloseAsync()
+    public Task CloseAsync(CancellationToken cancellationToken = default)
     {
-        return _context.CloseAsync();
+        return _context.CloseAsync(cancellationToken: cancellationToken);
     }
 
-    public Task NotifyFaulted(Exception exception, string entityPath)
+    public Task NotifyFaultedAsync(Exception exception, string entityPath, CancellationToken cancellationToken = default)
     {
-        return _context.NotifyFaulted(exception, entityPath);
+        return _context.NotifyFaultedAsync(exception, entityPath, cancellationToken: cancellationToken);
     }
 }

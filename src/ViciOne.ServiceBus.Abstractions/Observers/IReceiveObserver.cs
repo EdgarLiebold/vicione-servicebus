@@ -14,14 +14,14 @@ public interface IReceiveObserver
     /// </summary>
     /// <param name="context">The receive context of the message</param>
     /// <returns></returns>
-    Task PreReceive(ReceiveContext context);
+    Task PreReceiveAsync(ReceiveContext context);
 
     /// <summary>
     /// Called when the message has been received and acknowledged on the transport
     /// </summary>
     /// <param name="context">The receive context of the message</param>
     /// <returns></returns>
-    Task PostReceive(ReceiveContext context);
+    Task PostReceiveAsync(ReceiveContext context);
 
     /// <summary>
     /// Called when a message has been consumed by a consumer
@@ -31,7 +31,7 @@ public interface IReceiveObserver
     /// <param name="duration">The consumer duration</param>
     /// <param name="consumerType">The consumer type</param>
     /// <returns></returns>
-    Task PostConsume<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
+    Task PostConsumeAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
         where T : class;
 
     /// <summary>
@@ -43,7 +43,7 @@ public interface IReceiveObserver
     /// <param name="consumerType">The consumer type</param>
     /// <param name="exception">The exception from the consumer</param>
     /// <returns></returns>
-    Task ConsumeFault<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
+    Task ConsumeFaultAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
         where T : class;
 
     /// <summary>
@@ -52,5 +52,5 @@ public interface IReceiveObserver
     /// <param name="context">The receive context of the message</param>
     /// <param name="exception">The exception that was thrown</param>
     /// <returns></returns>
-    Task ReceiveFault(ReceiveContext context, Exception exception);
+    Task ReceiveFaultAsync(ReceiveContext context, Exception exception);
 }

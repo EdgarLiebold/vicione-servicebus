@@ -30,7 +30,7 @@ public abstract class BaseRetryPolicyContext<TContext> :
         return _policy.IsHandled(exception) && !_cancellationTokenSource.Value.IsCancellationRequested;
     }
 
-    Task RetryPolicyContext<TContext>.RetryFaulted(Exception exception)
+    Task RetryPolicyContext<TContext>.RetryFaultedAsync(Exception exception, CancellationToken cancellationToken)
     {
         return Task.CompletedTask;
     }

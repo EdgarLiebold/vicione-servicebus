@@ -62,30 +62,30 @@ public class ReceivedMessageList :
         return SelectAsync(message => messageFilter.Any(message), cancellationToken).Select<IReceivedMessage, IReceivedMessage<T>>();
     }
 
-    public Task<bool> Any(Action<ReceivedMessageFilter> apply = default, CancellationToken cancellationToken = default)
+    public Task<bool> AnyAsync(Action<ReceivedMessageFilter>? apply = default, CancellationToken cancellationToken = default)
     {
         var messageFilter = new ReceivedMessageFilter();
         apply?.Invoke(messageFilter);
 
-        return Any(message => messageFilter.Any(message), cancellationToken);
+        return AnyAsync(message => messageFilter.Any(message), cancellationToken);
     }
 
-    public Task<bool> Any<T>(CancellationToken cancellationToken = default)
+    public Task<bool> AnyAsync<T>(CancellationToken cancellationToken = default)
         where T : class
     {
         var messageFilter = new ReceivedMessageFilter();
         messageFilter.Includes.Add<T>();
 
-        return Any(message => messageFilter.Any(message), cancellationToken);
+        return AnyAsync(message => messageFilter.Any(message), cancellationToken);
     }
 
-    public Task<bool> Any<T>(FilterDelegate<IReceivedMessage<T>> filter, CancellationToken cancellationToken = default)
+    public Task<bool> AnyAsync<T>(FilterDelegate<IReceivedMessage<T>> filter, CancellationToken cancellationToken = default)
         where T : class
     {
         var messageFilter = new ReceivedMessageFilter();
         messageFilter.Includes.Add(filter);
 
-        return Any(message => messageFilter.Any(message), cancellationToken);
+        return AnyAsync(message => messageFilter.Any(message), cancellationToken);
     }
 
     public void Add<T>(ConsumeContext<T> context)
@@ -127,9 +127,9 @@ public class ReceivedMessageList<T> :
         return SelectAsync(x => true, cancellationToken);
     }
 
-    public Task<bool> Any(CancellationToken cancellationToken = default)
+    public Task<bool> AnyAsync(CancellationToken cancellationToken = default)
     {
-        return Any(x => true, cancellationToken);
+        return AnyAsync(x => true, cancellationToken);
     }
 
     public void Add(ConsumeContext<T> context)

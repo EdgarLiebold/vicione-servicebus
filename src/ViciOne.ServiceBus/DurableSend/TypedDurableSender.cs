@@ -54,7 +54,7 @@ internal sealed class TypedDurableSender<TBus> : IDurableSender<TBus>
 
         cancellationToken.ThrowIfCancellationRequested();
         MessageContractIdentity contractIdentity = _contractCatalog.GetIdentity(typeof(TMessage));
-        ISendEndpoint endpoint = await _bus.GetSendEndpoint(destinationAddress).ConfigureAwait(false);
+        ISendEndpoint endpoint = await _bus.GetSendEndpointAsync(destinationAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
         cancellationToken.ThrowIfCancellationRequested();
 
         if (endpoint is not ITransportSendEndpoint transportEndpoint)
@@ -64,7 +64,7 @@ internal sealed class TypedDurableSender<TBus> : IDurableSender<TBus>
         }
 
         SendContext<TMessage> context = await transportEndpoint
-            .CreateSendContext(message, Pipe.Empty<SendContext<TMessage>>(), cancellationToken)
+            .CreateSendContextAsync(message, Pipe.Empty<SendContext<TMessage>>(), cancellationToken)
             .ConfigureAwait(false);
 
         if (context is not MessageSendContext<TMessage> messageContext)

@@ -34,39 +34,39 @@ public class RequestActivity<TInstance, TRequest, TResponse> :
         visitor.Visit(this);
     }
 
-    public async Task Execute(BehaviorContext<TInstance> context, IBehavior<TInstance> next)
+    public async Task ExecuteAsync(BehaviorContext<TInstance> context, IBehavior<TInstance> next)
     {
-        await Execute(context).ConfigureAwait(false);
+        await ExecuteAsync(context).ConfigureAwait(false);
 
-        await next.Execute(context).ConfigureAwait(false);
+        await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    public async Task Execute<T>(BehaviorContext<TInstance, T> context, IBehavior<TInstance, T> next)
+    public async Task ExecuteAsync<T>(BehaviorContext<TInstance, T> context, IBehavior<TInstance, T> next)
         where T : class
     {
-        await Execute(context).ConfigureAwait(false);
+        await ExecuteAsync(context).ConfigureAwait(false);
 
-        await next.Execute(context).ConfigureAwait(false);
+        await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<TInstance, TException> context, IBehavior<TInstance> next)
+    public Task FaultedAsync<TException>(BehaviorExceptionContext<TInstance, TException> context, IBehavior<TInstance> next)
         where TException : Exception
     {
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 
-    public Task Faulted<T, TException>(BehaviorExceptionContext<TInstance, T, TException> context, IBehavior<TInstance, T> next)
+    public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TInstance, T, TException> context, IBehavior<TInstance, T> next)
         where T : class
         where TException : Exception
     {
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 
-    Task Execute(BehaviorContext<TInstance> context)
+    Task ExecuteAsync(BehaviorContext<TInstance> context)
     {
         var serviceAddress = _serviceAddressProvider(context);
 
-        return _messageFactory.Use(context, (ctx, m) => SendRequest(ctx, m, serviceAddress));
+        return _messageFactory.UseAsync(context, (ctx, m) => SendRequestAsync(ctx, m, serviceAddress));
     }
 }
 
@@ -104,18 +104,18 @@ public class RequestActivity<TInstance, TData, TRequest, TResponse> :
         visitor.Visit(this);
     }
 
-    public async Task Execute(BehaviorContext<TInstance, TData> context, IBehavior<TInstance, TData> next)
+    public async Task ExecuteAsync(BehaviorContext<TInstance, TData> context, IBehavior<TInstance, TData> next)
     {
         var serviceAddress = _serviceAddressProvider(context);
 
-        await _messageFactory.Use(context, (ctx, m) => SendRequest(ctx, m, serviceAddress)).ConfigureAwait(false);
+        await _messageFactory.UseAsync(context, (ctx, m) => SendRequestAsync(ctx, m, serviceAddress)).ConfigureAwait(false);
 
-        await next.Execute(context).ConfigureAwait(false);
+        await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<TInstance, TData, TException> context, IBehavior<TInstance, TData> next)
+    public Task FaultedAsync<TException>(BehaviorExceptionContext<TInstance, TData, TException> context, IBehavior<TInstance, TData> next)
         where TException : Exception
     {
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 }

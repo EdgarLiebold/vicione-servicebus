@@ -22,7 +22,7 @@ public class DefaultSagaFactory<TSaga, TMessage> :
         return SagaMetadataCache<TSaga>.FactoryMethod(context.CorrelationId.Value);
     }
 
-    public Task Send(ConsumeContext<TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
+    public Task SendAsync(ConsumeContext<TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
     {
         if (!context.CorrelationId.HasValue)
             throw new SagaException("The correlationId was not present and the saga could not be created", typeof(TSaga), typeof(TMessage));
@@ -33,6 +33,6 @@ public class DefaultSagaFactory<TSaga, TMessage> :
 
         proxy.LogCreated();
 
-        return next.Send(proxy);
+        return next.SendAsync(proxy);
     }
 }

@@ -33,13 +33,13 @@ public class ConsumerMergePipe<TConsumer, TMessage> :
         _output.Probe(scope);
     }
 
-    public Task Send(ConsumerConsumeContext<TConsumer> context)
+    public Task SendAsync(ConsumerConsumeContext<TConsumer> context)
     {
         if (context is ConsumerConsumeContext<TConsumer, TMessage> consumerContext)
-            return _output.Send(consumerContext);
+            return _output.SendAsync(consumerContext);
 
-        if (context.TryGetMessage(out ConsumeContext<TMessage> messageContext))
-            return _output.Send(new ConsumerConsumeContextScope<TConsumer, TMessage>(messageContext, context.Consumer));
+        if (context.TryGetMessage(out ConsumeContext<TMessage>? messageContext))
+            return _output.SendAsync(new ConsumerConsumeContextScope<TConsumer, TMessage>(messageContext, context.Consumer));
 
         throw new ArgumentException($"THe message could not be retrieved: {TypeCache<TMessage>.ShortName}", nameof(context));
     }

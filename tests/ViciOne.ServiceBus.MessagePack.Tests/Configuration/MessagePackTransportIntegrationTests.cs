@@ -27,7 +27,7 @@ public sealed class MessagePackTransportIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-DURABLE-SEND", "typed-facade-canonical-envelope-and-idempotent-retry")]
-    public async Task TypedDurableSender_UsesTheConfiguredMessagePackEnvelopeWithoutReserialization()
+    public async Task TypedDurableSender_UsesTheConfiguredMessagePackEnvelopeWithoutReserializationAsync()
     {
         var destination = new Uri("loopback://messagepack-durable/input");
         var durableId = new DurableSendId(Guid.Parse("9358cc89-9ff0-4ef4-8202-835f98ef5e09"));
@@ -76,7 +76,7 @@ public sealed class MessagePackTransportIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-INTERFACES", "in-memory-pipeline-dispatch")]
-    public async Task InterfaceMessage_DispatchesThroughTheConfiguredInMemoryPipeline()
+    public async Task InterfaceMessage_DispatchesThroughTheConfiguredInMemoryPipelineAsync()
     {
         await using var provider = new ServiceCollection()
             .AddViciOneServiceBusTestHarness(configuration =>
@@ -87,13 +87,13 @@ public sealed class MessagePackTransportIntegrationTests
                     transport.ConfigureEndpoints(context);
                 }))
             .BuildServiceProvider(validateScopes: true);
-        var harness = await provider.StartTestHarness();
+        var harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         try
         {
             Task<ConsumeContext<InterfaceDispatchMessage>> received =
-                await harness.ConnectPublishHandler<InterfaceDispatchMessage>(_ => true);
-            await harness.Bus.Publish<InterfaceDispatchMessage>(
+                await harness.ConnectPublishHandlerAsync<InterfaceDispatchMessage>(_ => true, cancellationToken: TestContext.Current.CancellationToken);
+            await harness.Bus.PublishAsync<InterfaceDispatchMessage>(
                 new { Value = "preserved" },
                 TestContext.Current.CancellationToken);
 
@@ -102,19 +102,19 @@ public sealed class MessagePackTransportIntegrationTests
                 TestContext.Current.CancellationToken);
 
             Assert.Equal("preserved", context.Message.Value);
-            Assert.Equal(MessagePackMessageSerializer.MessagePackContentType, context.ReceiveContext.ContentType);
-            Assert.True(await harness.Consumed.Any<InterfaceDispatchMessage>(
+            Assert.Equal(MessagePackMessageSerializer.MessagePackContentType, context.Advanced().ReceiveContext.ContentType);
+            Assert.True(await harness.Consumed.AnyAsync<InterfaceDispatchMessage>(
                 TestContext.Current.CancellationToken));
         }
         finally
         {
-            await harness.Stop(TestContext.Current.CancellationToken);
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-FORWARDING", "expired-discarded-before-serialization")]
-    public async Task ExpiredForwardedMessage_IsDiscardedBeforeMessagePackSerialization()
+    public async Task ExpiredForwardedMessage_IsDiscardedBeforeMessagePackSerializationAsync()
     {
         TimeSpan operationTimeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -136,10 +136,10 @@ public sealed class MessagePackTransportIntegrationTests
         harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
             configurator.Handler<ForwardExpirationMessage>(async context =>
             {
-                DateTime expiration = Assert.IsType<DateTime>(context.ExpirationTime).ToUniversalTime();
-                var timeProvider = new FakeTimeProvider(new DateTimeOffset(expiration).AddMinutes(1));
+                DateTimeOffset expiration = Assert.IsType<DateTimeOffset>(context.ExpirationTime).ToUniversalTime();
+                var timeProvider = new FakeTimeProvider(expiration.AddMinutes(1));
                 context.SetTimeProvider(timeProvider);
-                await context.Forward(
+                await context.ForwardAsync(
                         forwardAddress,
                         Pipe.Execute<SendContext<ForwardExpirationMessage>>(sendContext =>
                             projection.TrySetResult(new ForwardExpirationProjection(
@@ -162,9 +162,9 @@ public sealed class MessagePackTransportIntegrationTests
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
+            await harness.StartAsync(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
             using ConnectHandle observerHandle = harness.Bus.ConnectSendObserver(observer);
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.InputQueueSendEndpoint.SendAsync(
                     new ForwardExpirationMessage { Value = "expired" },
                     context => context.TimeToLive = TimeSpan.FromMinutes(5),
                     cancellationToken)
@@ -177,7 +177,7 @@ public sealed class MessagePackTransportIntegrationTests
                 operationTimeout,
                 cancellationToken);
 
-            Assert.True(Assert.IsType<DateTime>(source.ExpirationTime) < projected.CapturedAtUtc);
+            Assert.True(Assert.IsType<DateTimeOffset>(source.ExpirationTime) < projected.CapturedAtUtc);
             Assert.True(Assert.IsType<TimeSpan>(projected.TimeToLive) < TimeSpan.Zero);
             Assert.Equal(0, Volatile.Read(ref destinationDeliveryCount));
             Assert.Equal(0, observer.PreSendCount);
@@ -186,13 +186,13 @@ public sealed class MessagePackTransportIntegrationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(operationTimeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(operationTimeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-REDELIVERY", "messagepack-envelope-remains-consumable")]
-    public async Task DelayedRedelivery_PreservesMessageTypeAndReachesTheSecondDelivery()
+    public async Task DelayedRedelivery_PreservesMessageTypeAndReachesTheSecondDeliveryAsync()
     {
         TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -218,7 +218,7 @@ public sealed class MessagePackTransportIntegrationTests
                 });
             })
             .BuildServiceProvider(validateScopes: true);
-        var harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        var harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         var scheduled = new MessagePackScheduledObserver();
         using ConnectHandle observerHandle = harness.Bus.ConnectSendObserver(scheduled);
         Guid originalMessageId = Guid.Parse("9d004f10-c5a8-42f7-bfd0-bf5df26fab78");
@@ -226,7 +226,7 @@ public sealed class MessagePackTransportIntegrationTests
 
         try
         {
-            await harness.Bus.Publish(
+            await harness.Bus.PublishAsync(
                 new RetryMessage { Value = "preserved" },
                 context => context.MessageId = originalMessageId,
                 cancellationToken);
@@ -235,7 +235,7 @@ public sealed class MessagePackTransportIntegrationTests
             Assert.Equal(interval, scheduledContext.Delay);
             provider.GetRequiredService<IInMemoryDelayProvider>().Advance(interval);
 
-            Assert.True(await harness.Published.Any<CompletedMessage>(cancellationToken));
+            Assert.True(await harness.Published.AnyAsync<CompletedMessage>(cancellationToken));
             deliveries = await harness.Consumed
                 .SelectAsync<RetryMessage>(cancellationToken)
                 .Take(2)
@@ -243,7 +243,7 @@ public sealed class MessagePackTransportIntegrationTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Equal(2, deliveries.Count);
@@ -252,21 +252,21 @@ public sealed class MessagePackTransportIntegrationTests
             Assert.Equal("preserved", delivery.Context.Message.Value);
             Assert.Equal(
                 MessagePackMessageSerializer.MessagePackContentType,
-                delivery.Context.ReceiveContext.ContentType);
+                delivery.Context.Advanced().ReceiveContext.ContentType);
             Assert.Contains(
                 MessageUrn.ForTypeString<RetryMessage>(),
-                delivery.Context.SupportedMessageTypes);
+                delivery.Context.Advanced().SupportedMessageTypes);
         });
         Assert.Equal(originalMessageId, deliveries[0].Context.MessageId);
         Assert.NotNull(deliveries[1].Context.MessageId);
         Assert.NotEqual(deliveries[0].Context.MessageId, deliveries[1].Context.MessageId);
-        Assert.Equal(0, deliveries[0].Context.GetRedeliveryCount());
-        Assert.Equal(1, deliveries[1].Context.GetRedeliveryCount());
+        Assert.Equal(0, deliveries[0].Context.Advanced().GetRedeliveryCount());
+        Assert.Equal(1, deliveries[1].Context.Advanced().GetRedeliveryCount());
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-MIXED-SERIALIZERS", "json-request-messagepack-response")]
-    public async Task MixedSerializers_PreserveEachDirectionAndExactContentType()
+    public async Task MixedSerializers_PreserveEachDirectionAndExactContentTypeAsync()
     {
         TimeSpan operationTimeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -293,8 +293,7 @@ public sealed class MessagePackTransportIntegrationTests
                 });
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness()
-            .WaitAsync(operationTimeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(operationTimeout, cancellationToken);
         Guid correlationId = Guid.Parse("a22b393a-5a4b-447b-bdc6-52089d5736a3");
         ConsumeContext<MixedPing> ping;
         ConsumeContext<MixedPong> pong;
@@ -302,8 +301,8 @@ public sealed class MessagePackTransportIntegrationTests
         try
         {
             Task<ConsumeContext<MixedPong>> pongReceived =
-                await harness.ConnectPublishHandler<MixedPong>(_ => true);
-            await harness.Bus.Publish(
+                await harness.ConnectPublishHandlerAsync<MixedPong>(_ => true, cancellationToken: TestContext.Current.CancellationToken);
+            await harness.Bus.PublishAsync(
                     new MixedPing(correlationId, "json"),
                     cancellationToken)
                 .WaitAsync(operationTimeout, cancellationToken);
@@ -312,28 +311,28 @@ public sealed class MessagePackTransportIntegrationTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None)
+            await harness.StopAsync(CancellationToken.None)
                 .WaitAsync(operationTimeout, CancellationToken.None);
         }
 
         Assert.Equal(correlationId, ping.Message.CorrelationId);
         Assert.Equal("json", ping.Message.Value);
-        Assert.Equal(SystemTextJsonMessageSerializer.JsonContentType, ping.ReceiveContext.ContentType);
+        Assert.Equal(SystemTextJsonMessageSerializer.JsonContentType, ping.Advanced().ReceiveContext.ContentType);
         Assert.Equal(correlationId, pong.Message.CorrelationId);
         Assert.Equal("messagepack", pong.Message.Value);
-        Assert.Equal(MessagePackMessageSerializer.MessagePackContentType, pong.ReceiveContext.ContentType);
+        Assert.Equal(MessagePackMessageSerializer.MessagePackContentType, pong.Advanced().ReceiveContext.ContentType);
     }
 
     private sealed class FaultOnceConsumer : IConsumer<RetryMessage>
     {
-        public async Task Consume(ConsumeContext<RetryMessage> context)
+        public async Task ConsumeAsync(ConsumeContext<RetryMessage> context)
         {
-            if (context.GetRedeliveryCount() == 0)
+            if (context.Advanced().GetRedeliveryCount() == 0)
             {
                 throw new ExpectedRedeliveryException();
             }
 
-            await context.Publish(
+            await context.Advanced().PublishAsync(
                 new CompletedMessage { Value = context.Message.Value },
                 context.CancellationToken);
         }
@@ -375,10 +374,10 @@ public sealed class MessagePackTransportIntegrationTests
 
         public Task<SendContext> Scheduled => _scheduled.Task;
 
-        public Task PreSend<T>(SendContext<T> context)
+        public Task PreSendAsync<T>(SendContext<T> context)
             where T : class => Task.CompletedTask;
 
-        public Task PostSend<T>(SendContext<T> context)
+        public Task PostSendAsync<T>(SendContext<T> context)
             where T : class
         {
             if (typeof(T) == typeof(RetryMessage) && context.Delay.HasValue)
@@ -387,7 +386,7 @@ public sealed class MessagePackTransportIntegrationTests
             return Task.CompletedTask;
         }
 
-        public Task SendFault<T>(SendContext<T> context, Exception exception)
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
             where T : class
         {
             if (typeof(T) == typeof(RetryMessage) && context.Delay.HasValue)
@@ -407,7 +406,7 @@ public sealed class MessagePackTransportIntegrationTests
         public int PreSendCount => Volatile.Read(ref _preSendCount);
         public int SendFaultCount => Volatile.Read(ref _sendFaultCount);
 
-        public Task PreSend<T>(SendContext<T> context)
+        public Task PreSendAsync<T>(SendContext<T> context)
             where T : class
         {
             if (context.DestinationAddress == destinationAddress)
@@ -416,7 +415,7 @@ public sealed class MessagePackTransportIntegrationTests
             return Task.CompletedTask;
         }
 
-        public Task PostSend<T>(SendContext<T> context)
+        public Task PostSendAsync<T>(SendContext<T> context)
             where T : class
         {
             if (context.DestinationAddress == destinationAddress)
@@ -425,7 +424,7 @@ public sealed class MessagePackTransportIntegrationTests
             return Task.CompletedTask;
         }
 
-        public Task SendFault<T>(SendContext<T> context, Exception exception)
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
             where T : class
         {
             if (context.DestinationAddress == destinationAddress)

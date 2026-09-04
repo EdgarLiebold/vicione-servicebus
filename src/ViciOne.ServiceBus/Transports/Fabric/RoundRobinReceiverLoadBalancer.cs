@@ -51,6 +51,6 @@ public class RoundRobinReceiverLoadBalancer<T> :
         }
 
         public IMessageReceiver<T> Current { get; }
-        public Receiver Next { get; set; }
+        public Receiver Next { get; set; } = null!;
     }
 }

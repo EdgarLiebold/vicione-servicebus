@@ -30,7 +30,7 @@ public class MessageRetryHandlerConfigurationObserver :
         configurator.AddPipeSpecification(specification);
     }
 
-    static RetryConsumeContext<T> Factory<T>(ConsumeContext<T> context, IRetryPolicy retryPolicy, RetryContext retryContext)
+    static RetryConsumeContext<T> Factory<T>(ConsumeContext<T> context, IRetryPolicy retryPolicy, RetryContext? retryContext)
         where T : class
     {
         return new RetryConsumeContext<T>(context, retryPolicy, retryContext);

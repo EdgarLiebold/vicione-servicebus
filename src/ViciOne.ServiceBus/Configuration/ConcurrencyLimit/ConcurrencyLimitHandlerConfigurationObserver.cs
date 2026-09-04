@@ -9,7 +9,7 @@ namespace ViciOne.ServiceBus.Configuration;
 public class ConcurrencyLimitHandlerConfigurationObserver :
     IHandlerConfigurationObserver
 {
-    public ConcurrencyLimitHandlerConfigurationObserver(int concurrentMessageLimit, string id = null)
+    public ConcurrencyLimitHandlerConfigurationObserver(int concurrentMessageLimit, string? id = null)
     {
         Limiter = new ConcurrencyLimiter(concurrentMessageLimit, id);
     }

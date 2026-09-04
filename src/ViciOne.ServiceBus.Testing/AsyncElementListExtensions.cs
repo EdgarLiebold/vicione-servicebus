@@ -8,20 +8,21 @@ namespace ViciOne.ServiceBus.Testing;
 
 public static class AsyncElementListExtensions
 {
-    public static async Task<TElement> First<TElement>(this IAsyncEnumerable<TElement> elements)
+    public static async Task<TElement> FirstObservedAsync<TElement>(this IAsyncEnumerable<TElement> elements,
+        CancellationToken cancellationToken = default)
         where TElement : class
     {
-        await foreach (var element in elements.ConfigureAwait(false))
+        await foreach (var element in elements.WithCancellation(cancellationToken).ConfigureAwait(false))
             return element;
 
         throw new InvalidOperationException("Message List was empty, or timed out");
     }
 
-    public static async Task<int> Count<TElement>(this IAsyncEnumerable<TElement> elements)
+    public static async Task<int> CountObservedAsync<TElement>(this IAsyncEnumerable<TElement> elements, CancellationToken cancellationToken = default)
         where TElement : class
     {
         var count = 0;
-        await foreach (var element in elements.ConfigureAwait(false))
+        await foreach (var element in elements.WithCancellation(cancellationToken).ConfigureAwait(false))
             count++;
 
         return count;
@@ -34,21 +35,23 @@ public static class AsyncElementListExtensions
     }
 
 
-    public static async Task<TElement> FirstOrDefault<TElement>(this IAsyncEnumerable<TElement> elements)
+    public static async Task<TElement?> FirstObservedOrDefaultAsync<TElement>(this IAsyncEnumerable<TElement> elements,
+        CancellationToken cancellationToken = default)
         where TElement : class
     {
-        await foreach (var element in elements.ConfigureAwait(false))
+        await foreach (var element in elements.WithCancellation(cancellationToken).ConfigureAwait(false))
             return element;
 
         return default;
     }
 
-    public static async Task<bool> Any<TElement>(this IAsyncEnumerable<TElement> elements)
+    public static async Task<bool> AnyObservedAsync<TElement>(this IAsyncEnumerable<TElement> elements,
+        CancellationToken cancellationToken = default)
         where TElement : class
     {
         try
         {
-            await foreach (var _ in elements.ConfigureAwait(false))
+            await foreach (var _ in elements.WithCancellation(cancellationToken).ConfigureAwait(false))
                 return true;
         }
         catch (OperationCanceledException)

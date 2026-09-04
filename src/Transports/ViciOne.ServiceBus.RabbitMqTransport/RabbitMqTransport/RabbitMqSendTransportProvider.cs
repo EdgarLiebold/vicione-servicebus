@@ -23,8 +23,8 @@ public class RabbitMqSendTransportProvider :
         return _connectionContextSupervisor.NormalizeAddress(address);
     }
 
-    public Task<ISendTransport> GetSendTransport(Uri address)
+    public Task<ISendTransport> GetSendTransportAsync(Uri address, CancellationToken cancellationToken = default)
     {
-        return _connectionContextSupervisor.CreateSendTransport(_receiveEndpointContext, _channelContextSupervisor, address);
+        return _connectionContextSupervisor.CreateSendTransportAsync(_receiveEndpointContext, _channelContextSupervisor, address, cancellationToken: cancellationToken);
     }
 }

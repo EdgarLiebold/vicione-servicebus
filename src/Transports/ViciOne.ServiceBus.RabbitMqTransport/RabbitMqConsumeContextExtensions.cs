@@ -7,12 +7,12 @@ namespace ViciOne.ServiceBus;
 
 public static class RabbitMqConsumeContextExtensions
 {
-    public static DateTime? GetRabbitMqTimestamp(this ConsumeContext context)
+    public static DateTimeOffset? GetRabbitMqTimestamp(this ConsumeContext context)
     {
         if (context.ReceiveContext.TransportHeaders.TryGetHeader(MessageHeaders.TransportSentTime, out object? value))
         {
             if (value is AmqpTimestamp ts)
-                return DateTimeConstants.Epoch + TimeSpan.FromMilliseconds(ts.UnixTime);
+                return DateTimeConstants.Epoch + TimeSpan.FromSeconds(ts.UnixTime);
         }
 
         return null;

@@ -12,7 +12,7 @@ public sealed class V5AnalyzerTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-V5-ANALYZERS", "blocking-only-inside-canonical-consume")]
-    public async Task BlockingConsumerAnalyzer_ReportsCanonicalBlockingCallsOnlyInsideConsume()
+    public async Task BlockingConsumerAnalyzer_ReportsCanonicalBlockingCallsOnlyInsideConsumeAsync()
     {
         const string source = """
             using System.Threading;
@@ -23,7 +23,7 @@ public sealed class V5AnalyzerTests
 
             public sealed class Consumer : IConsumer<Message>
             {
-                public Task Consume(ConsumeContext<Message> context)
+                public Task ConsumeAsync(ConsumeContext<Message> context)
                 {
                     Thread.Sleep(1);
                     Task.Delay(1).Wait();
@@ -59,7 +59,7 @@ public sealed class V5AnalyzerTests
             }
             """;
 
-        IReadOnlyList<DiagnosticObservation> diagnostics = await Analyze(
+        IReadOnlyList<DiagnosticObservation> diagnostics = await AnalyzeAsync(
             new BlockingConsumerCallAnalyzer(),
             source);
 
@@ -73,7 +73,7 @@ public sealed class V5AnalyzerTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-V5-ANALYZERS", "consumer-definition-canonical-properties")]
-    public async Task DefinitionAnalyzers_ReportOnlyCanonicalInheritedPropertiesInConsumerDefinitions()
+    public async Task DefinitionAnalyzers_ReportOnlyCanonicalInheritedPropertiesInConsumerDefinitionsAsync()
     {
         const string source = """
             using System.Threading.Tasks;
@@ -83,7 +83,7 @@ public sealed class V5AnalyzerTests
 
             public sealed class Consumer : IConsumer<Message>
             {
-                public Task Consume(ConsumeContext<Message> context) => Task.CompletedTask;
+                public Task ConsumeAsync(ConsumeContext<Message> context) => Task.CompletedTask;
             }
 
             public sealed class Definition : ConsumerDefinition<Consumer>
@@ -144,8 +144,8 @@ public sealed class V5AnalyzerTests
             }
             """;
 
-        IReadOnlyList<DiagnosticObservation> qos = await Analyze(new ConsumerEndpointQosAnalyzer(), source);
-        IReadOnlyList<DiagnosticObservation> concurrency = await Analyze(
+        IReadOnlyList<DiagnosticObservation> qos = await AnalyzeAsync(new ConsumerEndpointQosAnalyzer(), source);
+        IReadOnlyList<DiagnosticObservation> concurrency = await AnalyzeAsync(
             new ConsumerConcurrencyDeclarationAnalyzer(),
             source);
 
@@ -159,7 +159,7 @@ public sealed class V5AnalyzerTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-V5-ANALYZERS", "excluded-topology-canonical-contract")]
-    public async Task ExcludedTopologyAnalyzer_ReportsOnlyCanonicalExcludedConsumedContracts()
+    public async Task ExcludedTopologyAnalyzer_ReportsOnlyCanonicalExcludedConsumedContractsAsync()
     {
         const string source = """
             using System;
@@ -176,17 +176,17 @@ public sealed class V5AnalyzerTests
 
             public sealed class ExcludedConsumer : IConsumer<ExcludedMessage>
             {
-                public Task Consume(ConsumeContext<ExcludedMessage> context) => Task.CompletedTask;
+                public Task ConsumeAsync(ConsumeContext<ExcludedMessage> context) => Task.CompletedTask;
             }
 
             public sealed class NormalConsumer : IConsumer<NormalMessage>
             {
-                public Task Consume(ConsumeContext<NormalMessage> context) => Task.CompletedTask;
+                public Task ConsumeAsync(ConsumeContext<NormalMessage> context) => Task.CompletedTask;
             }
 
             public sealed class LookalikeConsumer : IConsumer<LookalikeExcludedMessage>
             {
-                public Task Consume(ConsumeContext<LookalikeExcludedMessage> context) => Task.CompletedTask;
+                public Task ConsumeAsync(ConsumeContext<LookalikeExcludedMessage> context) => Task.CompletedTask;
             }
 
             namespace Lookalike
@@ -196,7 +196,7 @@ public sealed class V5AnalyzerTests
             }
             """;
 
-        IReadOnlyList<DiagnosticObservation> diagnostics = await Analyze(
+        IReadOnlyList<DiagnosticObservation> diagnostics = await AnalyzeAsync(
             new ExcludedTopologyConsumerAnalyzer(),
             source);
 
@@ -208,7 +208,7 @@ public sealed class V5AnalyzerTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-V5-ANALYZERS", "large-inline-inherited-consumed-and-outbound-contracts")]
-    public async Task LargeInlinePayloadAnalyzer_CoversInheritedConsumedAndOutboundContractsWithoutMessageDataFalsePositive()
+    public async Task LargeInlinePayloadAnalyzer_CoversInheritedConsumedAndOutboundContractsWithoutMessageDataFalsePositiveAsync()
     {
         const string source = """
             using System;
@@ -229,7 +229,7 @@ public sealed class V5AnalyzerTests
 
             public sealed class Consumer : IConsumer<IncomingPayload>
             {
-                public Task Consume(ConsumeContext<IncomingPayload> context) => Task.CompletedTask;
+                public Task ConsumeAsync(ConsumeContext<IncomingPayload> context) => Task.CompletedTask;
             }
 
             public abstract class OutboundBase
@@ -244,7 +244,7 @@ public sealed class V5AnalyzerTests
             }
             """;
 
-        IReadOnlyList<DiagnosticObservation> diagnostics = await Analyze(
+        IReadOnlyList<DiagnosticObservation> diagnostics = await AnalyzeAsync(
             new LargeInlinePayloadAnalyzer(),
             source);
 
@@ -258,7 +258,7 @@ public sealed class V5AnalyzerTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-V5-ANALYZERS", "generated-code-is-excluded")]
-    public async Task EveryV5Analyzer_IgnoresGeneratedCode()
+    public async Task EveryV5Analyzer_IgnoresGeneratedCodeAsync()
     {
         const string source = """
             // <auto-generated/>
@@ -274,7 +274,7 @@ public sealed class V5AnalyzerTests
 
             public sealed class GeneratedConsumer : IConsumer<GeneratedMessage>
             {
-                public Task Consume(ConsumeContext<GeneratedMessage> context)
+                public Task ConsumeAsync(ConsumeContext<GeneratedMessage> context)
                 {
                     Thread.Sleep(1);
                     return Task.CompletedTask;
@@ -299,12 +299,12 @@ public sealed class V5AnalyzerTests
             """;
 
         foreach (DiagnosticAnalyzer analyzer in CreateAnalyzers())
-            Assert.Empty(await Analyze(analyzer, source));
+            Assert.Empty(await AnalyzeAsync(analyzer, source));
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-V5-ANALYZERS", "parallel-deterministic-shared-instance")]
-    public async Task EveryV5Analyzer_IsDeterministicWhenOneInstanceAnalyzesInParallel()
+    public async Task EveryV5Analyzer_IsDeterministicWhenOneInstanceAnalyzesInParallelAsync()
     {
         const string source = """
             using System.Threading;
@@ -319,7 +319,7 @@ public sealed class V5AnalyzerTests
 
             public sealed class Consumer : IConsumer<RiskyMessage>
             {
-                public Task Consume(ConsumeContext<RiskyMessage> context)
+                public Task ConsumeAsync(ConsumeContext<RiskyMessage> context)
                 {
                     Thread.Sleep(1);
                     return Task.CompletedTask;
@@ -328,7 +328,7 @@ public sealed class V5AnalyzerTests
 
             public sealed class SecondConsumer : IConsumer<RiskyMessage>
             {
-                public Task Consume(ConsumeContext<RiskyMessage> context) => Task.CompletedTask;
+                public Task ConsumeAsync(ConsumeContext<RiskyMessage> context) => Task.CompletedTask;
             }
 
             public sealed class Definition : ConsumerDefinition<Consumer>
@@ -351,7 +351,7 @@ public sealed class V5AnalyzerTests
         foreach (DiagnosticAnalyzer analyzer in CreateAnalyzers())
         {
             Task<IReadOnlyList<DiagnosticObservation>>[] runs = Enumerable.Range(0, 8)
-                .Select(_ => Analyze(analyzer, source))
+                .Select(_ => AnalyzeAsync(analyzer, source))
                 .ToArray();
             IReadOnlyList<DiagnosticObservation>[] results = await Task.WhenAll(runs);
 
@@ -371,7 +371,7 @@ public sealed class V5AnalyzerTests
         new LargeInlinePayloadAnalyzer(),
     ];
 
-    private static Task<IReadOnlyList<DiagnosticObservation>> Analyze(
+    private static Task<IReadOnlyList<DiagnosticObservation>> AnalyzeAsync(
         DiagnosticAnalyzer analyzer,
         string source) =>
         RoslynTestHost.AnalyzeAsync(

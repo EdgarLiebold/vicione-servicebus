@@ -8,7 +8,7 @@ public sealed class PartitionerTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-PARTITIONER", "same-key-serialized-different-key-concurrent")]
-    public async Task Partitioner_SerializesEqualKeysWhileDifferentPartitionsCanOverlap()
+    public async Task Partitioner_SerializesEqualKeysWhileDifferentPartitionsCanOverlapAsync()
     {
         await using var partitioner = new Partitioner(2, new FirstByteHashGenerator());
         var firstEntered = NewSignal();
@@ -39,10 +39,10 @@ public sealed class PartitionerTests
             });
         });
 
-        Task first = pipe.Send(new PartitionContext([0]));
+        Task first = pipe.SendAsync(new PartitionContext([0]));
         await firstEntered.Task;
-        Task second = pipe.Send(new PartitionContext([0]));
-        Task other = pipe.Send(new PartitionContext([1]));
+        Task second = pipe.SendAsync(new PartitionContext([0]));
+        Task other = pipe.SendAsync(new PartitionContext([1]));
         await otherPartitionEntered.Task;
 
         Assert.False(secondEntered.Task.IsCompleted);
@@ -56,7 +56,7 @@ public sealed class PartitionerTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PARTITIONER", "invalid-configuration-and-null-key")]
-    public async Task Partitioner_RejectsInvalidConstructionAndANullRuntimeKey()
+    public async Task Partitioner_RejectsInvalidConstructionAndANullRuntimeKeyAsync()
     {
         var hash = new FirstByteHashGenerator();
         Assert.Throws<ArgumentOutOfRangeException>(() => new Partitioner(0, hash));
@@ -70,14 +70,14 @@ public sealed class PartitionerTests
         });
 
         InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            pipe.Send(new PartitionContext([0])));
+            pipe.SendAsync(new PartitionContext([0])));
 
         Assert.Equal("The partition key provider returned null.", exception.Message);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PARTITIONER", "string-key-overload-delivery-and-null-boundary")]
-    public async Task Partitioner_StringKeysDeliverEveryContextAndRejectANullRuntimeKey()
+    public async Task Partitioner_StringKeysDeliverEveryContextAndRejectANullRuntimeKeyAsync()
     {
         var delivered = 0;
         IPipe<StringPartitionContext> pipe = Pipe.New<StringPartitionContext>(configuration =>
@@ -87,7 +87,7 @@ public sealed class PartitionerTests
         });
 
         await Task.WhenAll(Enumerable.Range(0, 100)
-            .Select(index => pipe.Send(new StringPartitionContext(index.ToString()))));
+            .Select(index => pipe.SendAsync(new StringPartitionContext(index.ToString()))));
 
         Assert.Equal(100, delivered);
 
@@ -97,7 +97,7 @@ public sealed class PartitionerTests
             configuration.UseExecute(_ => { });
         });
         InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            nullKeyPipe.Send(new StringPartitionContext("ignored")));
+            nullKeyPipe.SendAsync(new StringPartitionContext("ignored")));
 
         Assert.Equal("The partition key provider returned null.", exception.Message);
     }

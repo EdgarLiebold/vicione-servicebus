@@ -26,12 +26,12 @@ public class Receiver :
 
     public virtual void Start()
     {
-        _clientContext.OnMessageAsync(OnMessage, ExceptionHandler);
+        _clientContext.OnMessageAsync(OnMessageAsync, ExceptionHandlerAsync);
 
         SetReady(_clientContext.StartAsync());
     }
 
-    protected async Task ExceptionHandler(ProcessErrorEventArgs args)
+    protected async Task ExceptionHandlerAsync(ProcessErrorEventArgs args)
     {
         var requiresRecycle = args.Exception switch
         {
@@ -85,17 +85,17 @@ public class Receiver :
 
         if (requiresRecycle)
         {
-            await _clientContext.NotifyFaulted(args.Exception, args.EntityPath).ConfigureAwait(false);
+            await _clientContext.NotifyFaultedAsync(args.Exception, args.EntityPath).ConfigureAwait(false);
 
             TrySetConsumeException(args.Exception);
         }
     }
 
-    protected override async Task ActiveAndActualAgentsCompleted(StopContext context)
+    protected override async Task ActiveAndActualAgentsCompletedAsync(StopContext context)
     {
         await _clientContext.ShutdownAsync().ConfigureAwait(false);
 
-        await base.ActiveAndActualAgentsCompleted(context).ConfigureAwait(false);
+        await base.ActiveAndActualAgentsCompletedAsync(context).ConfigureAwait(false);
 
         try
         {
@@ -107,7 +107,7 @@ public class Receiver :
         }
     }
 
-    async Task OnMessage(ProcessMessageEventArgs messageReceiver, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
+    async Task OnMessageAsync(ProcessMessageEventArgs messageReceiver, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
     {
         if (IsStopping)
             return;
@@ -115,7 +115,7 @@ public class Receiver :
         MessageLockContext lockContext = new ServiceBusMessageLockContext(messageReceiver, message, Stopped);
         var context = new ServiceBusReceiveContext(message, _context, cancellationToken, lockContext, _clientContext);
 
-        CancellationTokenSource cancellationTokenSource = null;
+        CancellationTokenSource? cancellationTokenSource = null;
         CancellationTokenRegistration timeoutRegistration = default;
         CancellationTokenRegistration registration = default;
         if (cancellationToken.CanBeCanceled)
@@ -137,7 +137,7 @@ public class Receiver :
 
         try
         {
-            await Dispatch(message, context, lockContext).ConfigureAwait(false);
+            await DispatchAsync(message, context, lockContext).ConfigureAwait(false);
         }
         catch (Exception)
         {
@@ -154,11 +154,11 @@ public class Receiver :
         }
     }
 
-    protected async Task Dispatch(ServiceBusReceivedMessage message, ServiceBusReceiveContext context, MessageLockContext lockContext)
+    protected async Task DispatchAsync(ServiceBusReceivedMessage message, ServiceBusReceiveContext context, MessageLockContext lockContext)
     {
         try
         {
-            await Dispatch(context.SequenceNumber, context,
+            await DispatchAsync(context.SequenceNumber, context,
                     new ServiceBusReceiveLockContext(_context.InputAddress, lockContext, message, _context.GetTimeProvider()))
                 .ConfigureAwait(false);
         }

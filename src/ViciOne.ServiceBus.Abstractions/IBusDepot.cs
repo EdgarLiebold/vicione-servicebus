@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus;
 
 public interface IBusDepot
 {
-    Task Start(CancellationToken cancellationToken);
+    Task StartAsync(CancellationToken cancellationToken);
 
-    Task Stop(CancellationToken cancellationToken);
+    Task StopAsync(CancellationToken cancellationToken);
 }

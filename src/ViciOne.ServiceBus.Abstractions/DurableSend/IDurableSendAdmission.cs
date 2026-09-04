@@ -12,6 +12,8 @@ public interface IDurableSendAdmission<TBus>
     /// <summary>
     /// Commits the exact serialized intent to durable storage. Success confirms persistence commit only.
     /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="message">The message processed by the operation.</param>
     Task<DurableSendAdmissionResult> AdmitAsync(
         SerializedDurableSend message,
         CancellationToken cancellationToken = default);

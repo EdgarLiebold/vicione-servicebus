@@ -10,10 +10,10 @@ public class RateLimitPipeSpecification<T> :
 {
     readonly TimeSpan _interval;
     readonly int _rateLimit;
-    readonly IPipeRouter _router;
+    readonly IPipeRouter? _router = null!;
     readonly TimeProvider _timeProvider;
 
-    public RateLimitPipeSpecification(int rateLimit, TimeSpan interval, IPipeRouter router = null, TimeProvider timeProvider = null)
+    public RateLimitPipeSpecification(int rateLimit, TimeSpan interval, IPipeRouter? router = null, TimeProvider? timeProvider = null)
     {
         _rateLimit = rateLimit;
         _interval = interval;

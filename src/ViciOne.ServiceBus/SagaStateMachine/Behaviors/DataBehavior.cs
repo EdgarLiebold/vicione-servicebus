@@ -29,13 +29,13 @@ public class DataBehavior<TSaga, TMessage> :
         _behavior.Probe(context);
     }
 
-    Task IBehavior<TSaga, TMessage>.Execute(BehaviorContext<TSaga, TMessage> context)
+    Task IBehavior<TSaga, TMessage>.ExecuteAsync(BehaviorContext<TSaga, TMessage> context)
     {
-        return _behavior.Execute(context);
+        return _behavior.ExecuteAsync(context);
     }
 
-    Task IBehavior<TSaga, TMessage>.Faulted<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context)
+    Task IBehavior<TSaga, TMessage>.FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context)
     {
-        return _behavior.Faulted(context);
+        return _behavior.FaultedAsync(context);
     }
 }

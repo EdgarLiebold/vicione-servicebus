@@ -25,7 +25,7 @@ public static class TaskBlocking
         ArgumentNullException.ThrowIfNull(task);
 
         if (cancellationToken.CanBeCanceled)
-            task = task.OrCanceled(cancellationToken);
+            task = task.OrCanceledAsync(cancellationToken);
 
         task.GetAwaiter().GetResult();
     }
@@ -36,7 +36,7 @@ public static class TaskBlocking
 
         Task<T> task = taskFactory() ?? throw new InvalidOperationException("The task factory must return a Task.");
         if (cancellationToken.CanBeCanceled)
-            task = task.OrCanceled(cancellationToken);
+            task = task.OrCanceledAsync(cancellationToken);
 
         return task.GetAwaiter().GetResult();
     }

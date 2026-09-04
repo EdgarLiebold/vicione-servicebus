@@ -28,7 +28,7 @@ public class HubConsumerDefinition<THub> :
         return formatter.TemporaryEndpoint($"signalr_{_hubName.Value}");
     }
 
-    public void Configure<T>(T configurator, IRegistrationContext context)
+    public void Configure<T>(T configurator, IRegistrationContext? context)
         where T : IReceiveEndpointConfigurator
     {
     }

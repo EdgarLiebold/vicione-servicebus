@@ -26,7 +26,7 @@ public class SagaList<T> :
         return Select(x => filter(x.Saga), cancellationToken);
     }
 
-    public T Contains(Guid sagaId)
+    public T? Contains(Guid sagaId)
     {
         return Select(x => x.Saga.CorrelationId == sagaId).Select(x => x.Saga).FirstOrDefault();
     }
@@ -41,14 +41,14 @@ public class SagaList<T> :
         return SelectAsync(x => filter(x.Saga), cancellationToken);
     }
 
-    public Task<bool> Any(CancellationToken cancellationToken = default)
+    public Task<bool> AnyAsync(CancellationToken cancellationToken = default)
     {
-        return Any(x => true, cancellationToken);
+        return AnyAsync(x => true, cancellationToken);
     }
 
-    public Task<bool> Any(FilterDelegate<T> filter, CancellationToken cancellationToken = default)
+    public Task<bool> AnyAsync(FilterDelegate<T> filter, CancellationToken cancellationToken = default)
     {
-        return Any(x => filter(x.Saga), cancellationToken);
+        return AnyAsync(x => filter(x.Saga), cancellationToken);
     }
 
     public void Add(SagaConsumeContext<T> context)

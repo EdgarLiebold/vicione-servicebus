@@ -54,7 +54,8 @@ public interface JobContext :
     /// <param name="value"></param>
     /// <param name="limit"></param>
     /// <returns></returns>
-    Task SetJobProgress(long value, long? limit);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task SetJobProgressAsync(long value, long? limit, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Save job state, typically when canceling or faulting, so that subsequent retries can resume from the saved state
@@ -62,7 +63,8 @@ public interface JobContext :
     /// <param name="jobState"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    Task SaveJobState<T>(T? jobState)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task SaveJobStateAsync<T>(T? jobState, CancellationToken cancellationToken = default)
         where T : class;
 
     bool TryGetJobState<T>([NotNullWhen(true)] out T? jobState)

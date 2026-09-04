@@ -12,7 +12,7 @@ public class HostReceiveEndpointClientFactoryContext :
     public HostReceiveEndpointClientFactoryContext(
         HostReceiveEndpointHandle handle,
         RequestTimeout defaultTimeout = default,
-        TimeProvider timeProvider = null)
+        TimeProvider? timeProvider = null)
         : base(handle, defaultTimeout, timeProvider)
     {
         _handle = handle;

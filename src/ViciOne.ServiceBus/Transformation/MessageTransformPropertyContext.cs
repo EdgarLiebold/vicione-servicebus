@@ -10,7 +10,7 @@ public class MessageTransformPropertyContext<TProperty, TInput> :
 {
     readonly TransformContext<TInput> _context;
 
-    public MessageTransformPropertyContext(TransformContext<TInput> context, TProperty value)
+    public MessageTransformPropertyContext(TransformContext<TInput> context, TProperty? value)
         : base(context)
     {
         _context = context;
@@ -24,12 +24,12 @@ public class MessageTransformPropertyContext<TProperty, TInput> :
     public Guid? CorrelationId => _context.CorrelationId;
     public Guid? ConversationId => _context.ConversationId;
     public Guid? InitiatorId => _context.InitiatorId;
-    public DateTime? ExpirationTime => _context.ExpirationTime;
-    public Uri SourceAddress => _context.SourceAddress;
-    public Uri DestinationAddress => _context.DestinationAddress;
-    public Uri ResponseAddress => _context.ResponseAddress;
-    public Uri FaultAddress => _context.FaultAddress;
-    public DateTime? SentTime => _context.SentTime;
+    public DateTimeOffset? ExpirationTime => _context.ExpirationTime;
+    public Uri? SourceAddress => _context.SourceAddress;
+    public Uri? DestinationAddress => _context.DestinationAddress;
+    public Uri? ResponseAddress => _context.ResponseAddress;
+    public Uri? FaultAddress => _context.FaultAddress;
+    public DateTimeOffset? SentTime => _context.SentTime;
     public Headers Headers => _context.Headers;
     public HostInfo Host => _context.Host;
 
@@ -37,5 +37,5 @@ public class MessageTransformPropertyContext<TProperty, TInput> :
     public TInput Input => _context.Input;
 
     public bool HasValue { get; }
-    public TProperty Value { get; }
+    public TProperty? Value { get; }
 }

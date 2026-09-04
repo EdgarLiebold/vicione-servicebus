@@ -27,9 +27,9 @@ public class OutboxConsumeFilter<TContext, TMessage> :
         context.CreateFilterScope("outbox");
     }
 
-    public async Task Send(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
+    public async Task SendAsync(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
     {
-        await using IConsumeScopeContext<TMessage> scope = await _scopeProvider.GetScope(context).ConfigureAwait(false);
+        await using IConsumeScopeContext<TMessage> scope = await _scopeProvider.GetScopeAsync(context).ConfigureAwait(false);
 
         var contextFactory = scope.GetService<IOutboxContextFactory<TContext>>();
         if (contextFactory == null)
@@ -37,6 +37,6 @@ public class OutboxConsumeFilter<TContext, TMessage> :
 
         var pipe = new OutboxMessagePipe<TMessage>(_options, scope, next);
 
-        await contextFactory.Send(scope.Context, _options, pipe).ConfigureAwait(false);
+        await contextFactory.SendAsync(scope.Context, _options, pipe).ConfigureAwait(false);
     }
 }

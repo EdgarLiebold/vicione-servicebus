@@ -16,7 +16,7 @@ public class InMemoryMessageMoveTransport
         _delayProvider = delayProvider ?? throw new ArgumentNullException(nameof(delayProvider));
     }
 
-    protected async Task Move(ReceiveContext context, Action<InMemoryTransportMessage, SendHeaders> preSend)
+    protected async Task MoveAsync(ReceiveContext context, Action<InMemoryTransportMessage, SendHeaders> preSend)
     {
         var messageId = context.GetMessageId(NewId.NextGuid());
 
@@ -30,6 +30,6 @@ public class InMemoryMessageMoveTransport
 
         var deliveryContext = new InMemoryDeliveryContext(transportMessage, _delayProvider.UtcNow, CancellationToken.None);
 
-        await _exchange.Deliver(deliveryContext).ConfigureAwait(false);
+        await _exchange.DeliverAsync(deliveryContext).ConfigureAwait(false);
     }
 }

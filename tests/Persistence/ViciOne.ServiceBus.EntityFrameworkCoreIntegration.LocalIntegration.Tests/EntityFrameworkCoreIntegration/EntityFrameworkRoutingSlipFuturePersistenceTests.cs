@@ -12,13 +12,13 @@ public sealed class EntityFrameworkRoutingSlipFuturePersistenceTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-FUTURE-ROUTING-SLIP", "completed-slip-persists-terminal-result")]
-    public async Task CompletedRoutingSlip_PersistsTheActivityVariablesAndTerminalResult()
+    public async Task CompletedRoutingSlip_PersistsTheActivityVariablesAndTerminalResultAsync()
     {
         await using RoutingSlipFutureFixture fixture = await RoutingSlipFutureFixture.StartAsync("routing-future-completed");
         var command = new TransformValue(NewId.NextGuid(), 14, fail: false);
 
-        Response<ValueTransformed> response = await fixture.Request(command);
-        FutureState persisted = await fixture.ReadFuture(command.CorrelationId);
+        Response<ValueTransformed> response = await fixture.RequestAsync(command);
+        FutureState persisted = await fixture.ReadFutureAsync(command.CorrelationId);
 
         Assert.Equal(command.CorrelationId, response.Message.CorrelationId);
         Assert.Equal(42, response.Message.Value);
@@ -33,13 +33,13 @@ public sealed class EntityFrameworkRoutingSlipFuturePersistenceTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-FUTURE-ROUTING-SLIP", "faulted-slip-persists-original-activity-failure")]
-    public async Task FaultedRoutingSlip_PersistsAndPublishesTheOriginalActivityFailure()
+    public async Task FaultedRoutingSlip_PersistsAndPublishesTheOriginalActivityFailureAsync()
     {
         await using RoutingSlipFutureFixture fixture = await RoutingSlipFutureFixture.StartAsync("routing-future-faulted");
         var command = new TransformValue(NewId.NextGuid(), 14, fail: true);
 
-        RequestFaultException exception = await Assert.ThrowsAsync<RequestFaultException>(() => fixture.Request(command));
-        FutureState persisted = await fixture.ReadFuture(command.CorrelationId);
+        RequestFaultException exception = await Assert.ThrowsAsync<RequestFaultException>(() => fixture.RequestAsync(command));
+        FutureState persisted = await fixture.ReadFutureAsync(command.CorrelationId);
 
         Fault<TransformValue> fault = Assert.IsAssignableFrom<Fault<TransformValue>>(exception.Fault);
         ExceptionInfo original = Assert.Single(fault.Exceptions, candidate =>
@@ -120,7 +120,7 @@ public sealed class EntityFrameworkRoutingSlipFuturePersistenceTests
 
     public sealed class TransformValueActivity(RoutingSlipExecutionProbe probe) : IExecuteActivity<TransformArguments>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<TransformArguments> context)
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<TransformArguments> context)
         {
             probe.RecordExecution();
             if (context.Arguments.Fail)
@@ -213,7 +213,7 @@ public sealed class EntityFrameworkRoutingSlipFuturePersistenceTests
                 ServiceProvider provider = services.BuildServiceProvider(validateScopes: true);
                 try
                 {
-                    ITestHarness harness = await provider.StartTestHarness()
+                    ITestHarness harness = await provider.StartTestHarnessAsync()
                         .WaitAsync(database.OperationTimeout, cancellationToken);
                     return new RoutingSlipFutureFixture(database, provider, harness, probe);
                 }
@@ -230,14 +230,14 @@ public sealed class EntityFrameworkRoutingSlipFuturePersistenceTests
             }
         }
 
-        public Task<Response<ValueTransformed>> Request(TransformValue command)
+        public Task<Response<ValueTransformed>> RequestAsync(TransformValue command)
         {
             IRequestClient<TransformValue> client = Harness.GetRequestClient<TransformValue>();
-            return client.GetResponse<ValueTransformed>(command, TestContext.Current.CancellationToken)
+            return client.GetResponseAsync<ValueTransformed>(command, TestContext.Current.CancellationToken)
                 .WaitAsync(_database.OperationTimeout, TestContext.Current.CancellationToken);
         }
 
-        public async Task<FutureState> ReadFuture(Guid correlationId)
+        public async Task<FutureState> ReadFutureAsync(Guid correlationId)
         {
             await using FutureSagaDbContext context = CreateDbContext(_database.ConnectionString);
             return await context.Set<FutureState>()
@@ -249,7 +249,7 @@ public sealed class EntityFrameworkRoutingSlipFuturePersistenceTests
         {
             try
             {
-                await Harness.Stop(CancellationToken.None)
+                await Harness.StopAsync(CancellationToken.None)
                     .WaitAsync(_database.OperationTimeout, CancellationToken.None);
             }
             finally

@@ -11,6 +11,6 @@ public class JobAttemptFaultedEvent :
     public Guid AttemptId { get; set; }
     public int RetryAttempt { get; set; }
     public TimeSpan? RetryDelay { get; set; }
-    public DateTime Timestamp { get; set; }
+    public DateTimeOffset Timestamp { get; set; }
     public ExceptionInfo Exceptions { get; set; } = null!;
 }

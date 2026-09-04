@@ -12,22 +12,22 @@ public class ScheduleSendPipe<TMessage> :
     SendContextPipeAdapter<TMessage>
     where TMessage : class
 {
-    readonly DateTime _scheduledTime;
-    readonly TimeProvider _timeProvider;
-    SendContext _context;
+    readonly DateTimeOffset _dueAt;
+    readonly TimeProvider _timeProvider = null!;
+    SendContext _context = null!;
 
     Guid? _scheduledMessageId;
 
-    public ScheduleSendPipe(IPipe<SendContext<TMessage>> pipe, DateTime scheduledTime)
+    public ScheduleSendPipe(IPipe<SendContext<TMessage>> pipe, DateTimeOffset dueAt)
         : base(pipe)
     {
-        _scheduledTime = scheduledTime;
+        _dueAt = dueAt;
     }
 
-    public ScheduleSendPipe(IPipe<SendContext<TMessage>> pipe, DateTime scheduledTime, TimeProvider timeProvider)
+    public ScheduleSendPipe(IPipe<SendContext<TMessage>> pipe, DateTimeOffset dueAt, TimeProvider timeProvider)
         : base(pipe)
     {
-        _scheduledTime = scheduledTime;
+        _dueAt = dueAt;
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
     }
 
@@ -45,9 +45,7 @@ public class ScheduleSendPipe<TMessage> :
         _context.ScheduledMessageId = _scheduledMessageId;
 
         TimeProvider timeProvider = _timeProvider ?? context.GetTimeProvider();
-        var delay = _scheduledTime.Kind == DateTimeKind.Local
-            ? _scheduledTime - timeProvider.GetLocalNow().DateTime
-            : _scheduledTime - timeProvider.GetUtcNow().UtcDateTime;
+        TimeSpan delay = _dueAt - timeProvider.GetUtcNow();
 
         if (delay > TimeSpan.Zero)
             context.Delay = delay;

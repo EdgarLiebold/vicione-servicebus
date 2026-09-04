@@ -25,7 +25,7 @@ public class NewSagaPolicy<TSaga, TMessage> :
 
     public bool IsReadOnly => false;
 
-    public bool PreInsertInstance(ConsumeContext<TMessage> context, out TSaga instance)
+    public bool PreInsertInstance(ConsumeContext<TMessage> context, [NotNullWhen(true)] out TSaga? instance)
     {
         if (_insertOnInitial)
         {
@@ -37,14 +37,14 @@ public class NewSagaPolicy<TSaga, TMessage> :
         return false;
     }
 
-    Task ISagaPolicy<TSaga, TMessage>.Existing(SagaConsumeContext<TSaga, TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
+    Task ISagaPolicy<TSaga, TMessage>.ExistingAsync(SagaConsumeContext<TSaga, TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
     {
         throw new SagaException("The message cannot be accepted by an existing saga", typeof(TSaga), typeof(TMessage),
             context.CorrelationId ?? Guid.Empty);
     }
 
-    Task ISagaPolicy<TSaga, TMessage>.Missing(ConsumeContext<TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
+    Task ISagaPolicy<TSaga, TMessage>.MissingAsync(ConsumeContext<TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
     {
-        return _sagaFactory.Send(context, next);
+        return _sagaFactory.SendAsync(context, next);
     }
 }

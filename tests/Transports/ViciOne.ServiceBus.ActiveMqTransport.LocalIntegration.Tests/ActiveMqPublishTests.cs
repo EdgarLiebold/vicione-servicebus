@@ -11,7 +11,7 @@ public sealed class ActiveMqPublishTests
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [RequirementCoverage("OBL-R0-BRK-0441", "one-bus-publishes-every-declared-contract")]
-    public async Task OneBus_PublishesEveryDeclaredMessageContract(string flavor)
+    public async Task OneBus_PublishesEveryDeclaredMessageContractAsync(string flavor)
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(flavor, "publish");
         string queueName = fixture.Name("input");
@@ -54,9 +54,9 @@ public sealed class ActiveMqPublishTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            await bus.Publish<FirstPublishedContract>(new { CorrelationId = expected }, cancellationToken)
+            await bus.PublishAsync<FirstPublishedContract>(new { CorrelationId = expected }, cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await bus.Publish<SecondPublishedContract>(new { CorrelationId = expected }, cancellationToken)
+            await bus.PublishAsync<SecondPublishedContract>(new { CorrelationId = expected }, cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             Assert.Equal(expected, await first.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));

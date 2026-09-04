@@ -11,7 +11,7 @@ public static class LatestConfigurationExtensions
     /// <typeparam name="T"></typeparam>
     /// <param name="configurator"></param>
     /// <param name="configure"></param>
-    public static void UseLatest<T>(this IPipeConfigurator<T> configurator, Action<ILatestConfigurator<T>> configure = null)
+    public static void UseLatest<T>(this IPipeConfigurator<T> configurator, Action<ILatestConfigurator<T>>? configure = null)
         where T : class, PipeContext
     {
         if (configurator == null)

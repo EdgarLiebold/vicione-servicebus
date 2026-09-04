@@ -30,7 +30,7 @@ public interface ConnectionContext :
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ISession> CreateSession(CancellationToken cancellationToken);
+    Task<ISession> CreateSessionAsync(CancellationToken cancellationToken);
 
     bool IsVirtualTopicConsumer(string name);
 
@@ -38,7 +38,7 @@ public interface ConnectionContext :
 
     ITopic GetTemporaryTopic(ISession session, string topicName);
 
-    bool TryGetTemporaryEntity(string name, out IDestination destination);
+    bool TryGetTemporaryEntity(string name, out IDestination? destination);
 
     bool TryRemoveTemporaryEntity(ISession session, string name);
 }

@@ -274,7 +274,7 @@ public sealed class AmazonSqsHostConfigurationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SQS-HOST-CONFIGURATION", "per-host-cache-options-are-immutable-validated-and-time-provider-driven")]
-    public async Task ClientContextCacheOptions_ArePerHostAndExpireThroughTheConfiguredTimeProvider()
+    public async Task ClientContextCacheOptions_ArePerHostAndExpireThroughTheConfiguredTimeProviderAsync()
     {
         Assert.Throws<ArgumentOutOfRangeException>(
             () => new AmazonSqsClientContextCacheOptions(0, TimeSpan.FromMinutes(1), TimeProvider.System));
@@ -289,8 +289,8 @@ public sealed class AmazonSqsHostConfigurationTests
         var shortOptions = new AmazonSqsClientContextCacheOptions(8, TimeSpan.FromMinutes(1), shortClock);
         var longOptions = new AmazonSqsClientContextCacheOptions(8, TimeSpan.FromHours(1), longClock);
 
-        (int shortQueueCalls, int shortTopicCalls) = await ExerciseClientContextCaches(shortOptions, shortClock, TimeSpan.FromMinutes(2));
-        (int longQueueCalls, int longTopicCalls) = await ExerciseClientContextCaches(longOptions, longClock, TimeSpan.FromMinutes(2));
+        (int shortQueueCalls, int shortTopicCalls) = await ExerciseClientContextCachesAsync(shortOptions, shortClock, TimeSpan.FromMinutes(2));
+        (int longQueueCalls, int longTopicCalls) = await ExerciseClientContextCachesAsync(longOptions, longClock, TimeSpan.FromMinutes(2));
 
         Assert.Equal(2, shortQueueCalls);
         Assert.Equal(2, shortTopicCalls);
@@ -337,7 +337,7 @@ public sealed class AmazonSqsHostConfigurationTests
         return null;
     }
 
-    private static async Task<(int QueueCalls, int TopicCalls)> ExerciseClientContextCaches(
+    private static async Task<(int QueueCalls, int TopicCalls)> ExerciseClientContextCachesAsync(
         AmazonSqsClientContextCacheOptions options,
         FakeTimeProvider timeProvider,
         TimeSpan advance)
@@ -346,7 +346,7 @@ public sealed class AmazonSqsHostConfigurationTests
         var topicCalls = new Dictionary<string, int>(StringComparer.Ordinal);
         IAmazonSQS sqsClient = InterfaceProxy<IAmazonSQS>.Create((method, args) => method.Name switch
         {
-            nameof(IAmazonSQS.GetQueueUrlAsync) => GetQueueUrl(args, queueCalls),
+            nameof(IAmazonSQS.GetQueueUrlAsync) => GetQueueUrlAsync(args, queueCalls),
             nameof(IAmazonSQS.GetQueueAttributesAsync) => Task.FromResult(new GetQueueAttributesResponse
             {
                 HttpStatusCode = System.Net.HttpStatusCode.OK,
@@ -365,7 +365,7 @@ public sealed class AmazonSqsHostConfigurationTests
                 HttpStatusCode = System.Net.HttpStatusCode.OK,
                 Topics = []
             }),
-            nameof(IAmazonSimpleNotificationService.CreateTopicAsync) => CreateTopic(args, topicCalls),
+            nameof(IAmazonSimpleNotificationService.CreateTopicAsync) => CreateTopicAsync(args, topicCalls),
             nameof(IAmazonSimpleNotificationService.GetTopicAttributesAsync) => Task.FromResult(new GetTopicAttributesResponse
             {
                 HttpStatusCode = System.Net.HttpStatusCode.OK,
@@ -382,37 +382,37 @@ public sealed class AmazonSqsHostConfigurationTests
         bus.HostConfiguration.Settings = host.Settings;
         await using var context = new AmazonSqsConnectionContext(connection, bus.HostConfiguration, CancellationToken.None);
 
-        await context.GetQueueByName("target", CancellationToken.None);
-        await context.GetQueueByName("a", CancellationToken.None);
-        await context.GetQueueByName("b", CancellationToken.None);
-        await context.GetQueueByName("target", CancellationToken.None);
-        await context.GetQueueByName("c", CancellationToken.None);
+        await context.GetQueueByNameAsync("target", CancellationToken.None);
+        await context.GetQueueByNameAsync("a", CancellationToken.None);
+        await context.GetQueueByNameAsync("b", CancellationToken.None);
+        await context.GetQueueByNameAsync("target", CancellationToken.None);
+        await context.GetQueueByNameAsync("c", CancellationToken.None);
         timeProvider.Advance(advance);
-        await context.GetQueueByName("d", CancellationToken.None);
-        await context.GetQueueByName("e", CancellationToken.None);
-        await context.GetQueueByName("f", CancellationToken.None);
-        await context.GetQueueByName("target", CancellationToken.None);
+        await context.GetQueueByNameAsync("d", CancellationToken.None);
+        await context.GetQueueByNameAsync("e", CancellationToken.None);
+        await context.GetQueueByNameAsync("f", CancellationToken.None);
+        await context.GetQueueByNameAsync("target", CancellationToken.None);
 
-        await ExerciseTopicCache(context, timeProvider, advance);
+        await ExerciseTopicCacheAsync(context, timeProvider, advance);
 
         return (queueCalls["target"], topicCalls["target"]);
     }
 
-    private static async Task ExerciseTopicCache(AmazonSqsConnectionContext context, FakeTimeProvider timeProvider, TimeSpan advance)
+    private static async Task ExerciseTopicCacheAsync(AmazonSqsConnectionContext context, FakeTimeProvider timeProvider, TimeSpan advance)
     {
-        await context.GetTopic(new TestTopic("target"), CancellationToken.None);
-        await context.GetTopic(new TestTopic("a"), CancellationToken.None);
-        await context.GetTopic(new TestTopic("b"), CancellationToken.None);
-        await context.GetTopic(new TestTopic("target"), CancellationToken.None);
-        await context.GetTopic(new TestTopic("c"), CancellationToken.None);
+        await context.GetTopicAsync(new TestTopic("target"), CancellationToken.None);
+        await context.GetTopicAsync(new TestTopic("a"), CancellationToken.None);
+        await context.GetTopicAsync(new TestTopic("b"), CancellationToken.None);
+        await context.GetTopicAsync(new TestTopic("target"), CancellationToken.None);
+        await context.GetTopicAsync(new TestTopic("c"), CancellationToken.None);
         timeProvider.Advance(advance);
-        await context.GetTopic(new TestTopic("d"), CancellationToken.None);
-        await context.GetTopic(new TestTopic("e"), CancellationToken.None);
-        await context.GetTopic(new TestTopic("f"), CancellationToken.None);
-        await context.GetTopic(new TestTopic("target"), CancellationToken.None);
+        await context.GetTopicAsync(new TestTopic("d"), CancellationToken.None);
+        await context.GetTopicAsync(new TestTopic("e"), CancellationToken.None);
+        await context.GetTopicAsync(new TestTopic("f"), CancellationToken.None);
+        await context.GetTopicAsync(new TestTopic("target"), CancellationToken.None);
     }
 
-    private static Task<GetQueueUrlResponse> GetQueueUrl(object?[]? args, IDictionary<string, int> calls)
+    private static Task<GetQueueUrlResponse> GetQueueUrlAsync(object?[]? args, IDictionary<string, int> calls)
     {
         string queueName = Assert.IsType<string>(args![0]);
         calls.TryGetValue(queueName, out int observedCalls);
@@ -424,7 +424,7 @@ public sealed class AmazonSqsHostConfigurationTests
         });
     }
 
-    private static Task<CreateTopicResponse> CreateTopic(object?[]? args, IDictionary<string, int> calls)
+    private static Task<CreateTopicResponse> CreateTopicAsync(object?[]? args, IDictionary<string, int> calls)
     {
         CreateTopicRequest request = Assert.IsType<CreateTopicRequest>(args![0]);
         calls.TryGetValue(request.Name, out int observedCalls);

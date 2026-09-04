@@ -13,7 +13,7 @@ public static class HandlerExtensions
     /// <param name="handler"></param>
     /// <param name="configure"></param>
     public static void Handler<T>(this IReceiveEndpointConfigurator configurator, MessageHandler<T> handler,
-        Action<IHandlerConfigurator<T>> configure = null)
+        Action<IHandlerConfigurator<T>>? configure = null)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(configurator);
@@ -36,7 +36,7 @@ public static class HandlerExtensions
     /// </param>
     /// <param name="configurator"></param>
     public static ConnectHandle ConnectHandler<T>(this IConsumePipeConnector connector, MessageHandler<T> handler,
-        IBuildPipeConfigurator<ConsumeContext<T>> configurator = null)
+        IBuildPipeConfigurator<ConsumeContext<T>>? configurator = null)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(connector);

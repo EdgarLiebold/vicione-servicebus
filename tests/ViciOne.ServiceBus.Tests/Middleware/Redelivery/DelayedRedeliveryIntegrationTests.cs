@@ -21,7 +21,7 @@ public sealed class DelayedRedeliveryIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DELAYED-REDELIVERY", "exact-provider-owned-interval-sequence")]
-    public async Task ConfiguredIntervals_AreScheduledAndDeliveredInTheExactProviderOwnedSequence()
+    public async Task ConfiguredIntervals_AreScheduledAndDeliveredInTheExactProviderOwnedSequenceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -49,32 +49,32 @@ public sealed class DelayedRedeliveryIntegrationTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         var scheduled = new ScheduledSendObserver(typeof(IntervalMessage));
         using ConnectHandle observerHandle = harness.Bus.ConnectSendObserver(scheduled);
 
         try
         {
             Guid messageId = NewId.NextGuid();
-            await harness.Bus.Publish(
+            await harness.Bus.PublishAsync(
                     new IntervalMessage("exact-sequence"),
                     context => context.MessageId = messageId,
                     cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
 
-            DeliverySnapshot first = await deliveries.Next(timeout, cancellationToken);
+            DeliverySnapshot first = await deliveries.NextAsync(timeout, cancellationToken);
             var snapshots = new List<DeliverySnapshot> { first };
             var schedules = new List<ScheduleSnapshot>();
             IInMemoryDelayProvider delayProvider = provider.GetRequiredService<IInMemoryDelayProvider>();
 
             foreach (TimeSpan interval in Intervals)
             {
-                ScheduleSnapshot schedule = await scheduled.Next(timeout, cancellationToken);
+                ScheduleSnapshot schedule = await scheduled.NextAsync(timeout, cancellationToken);
                 Assert.Equal(interval, schedule.Delay);
                 schedules.Add(schedule);
 
                 delayProvider.Advance(interval);
-                snapshots.Add(await deliveries.Next(timeout, cancellationToken));
+                snapshots.Add(await deliveries.NextAsync(timeout, cancellationToken));
             }
 
             Assert.Equal([0, 1, 2, 3], snapshots.Select(snapshot => snapshot.RedeliveryCount));
@@ -83,7 +83,7 @@ public sealed class DelayedRedeliveryIntegrationTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Equal(4, deliveries.Count);
@@ -92,7 +92,7 @@ public sealed class DelayedRedeliveryIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DELAYED-REDELIVERY", "replacement-id-preserves-original-id")]
-    public async Task ReplaceMessageId_GeneratesANewIdentityAndPreservesTheOriginalIdentity()
+    public async Task ReplaceMessageId_GeneratesANewIdentityAndPreservesTheOriginalIdentityAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -120,7 +120,7 @@ public sealed class DelayedRedeliveryIntegrationTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         var scheduled = new ScheduledSendObserver(typeof(IdentityMessage));
         using ConnectHandle observerHandle = harness.Bus.ConnectSendObserver(scheduled);
         DeliverySnapshot first;
@@ -130,16 +130,16 @@ public sealed class DelayedRedeliveryIntegrationTests
         try
         {
             Guid originalMessageId = NewId.NextGuid();
-            await harness.Bus.Publish(
+            await harness.Bus.PublishAsync(
                     new IdentityMessage("replace"),
                     context => context.MessageId = originalMessageId,
                     cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
 
-            first = await deliveries.Next(timeout, cancellationToken);
-            schedule = await scheduled.Next(timeout, cancellationToken);
+            first = await deliveries.NextAsync(timeout, cancellationToken);
+            schedule = await scheduled.NextAsync(timeout, cancellationToken);
             provider.GetRequiredService<IInMemoryDelayProvider>().Advance(TimeSpan.FromHours(1));
-            second = await deliveries.Next(timeout, cancellationToken);
+            second = await deliveries.NextAsync(timeout, cancellationToken);
 
             Assert.Equal(originalMessageId, first.MessageId);
             Assert.Null(first.OriginalMessageId);
@@ -152,7 +152,7 @@ public sealed class DelayedRedeliveryIntegrationTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
         string messageUrn = MessageUrn.ForTypeString<IdentityMessage>();
@@ -166,7 +166,7 @@ public sealed class DelayedRedeliveryIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DELAYED-REDELIVERY", "exception-specific-filters-coexist")]
-    public async Task ExceptionSpecificFilters_RedeliverOnlyThroughTheMatchingPolicyAndPublishOneTerminalFault()
+    public async Task ExceptionSpecificFilters_RedeliverOnlyThroughTheMatchingPolicyAndPublishOneTerminalFaultAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -201,7 +201,7 @@ public sealed class DelayedRedeliveryIntegrationTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         var scheduled = new ScheduledSendObserver(typeof(SecondFilterMessage));
         using ConnectHandle observerHandle = harness.Bus.ConnectSendObserver(scheduled);
 
@@ -209,18 +209,18 @@ public sealed class DelayedRedeliveryIntegrationTests
         {
             Task<IPublishedMessage<Fault<SecondFilterMessage>>> terminalFault = harness.Published
                 .SelectAsync<Fault<SecondFilterMessage>>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
-            await harness.Bus.Publish(new SecondFilterMessage("second"), cancellationToken)
+            await harness.Bus.PublishAsync(new SecondFilterMessage("second"), cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
-            await secondAttempts.Next(timeout, cancellationToken);
+            await secondAttempts.NextAsync(timeout, cancellationToken);
 
             for (var index = 0; index < 2; index++)
             {
-                ScheduleSnapshot schedule = await scheduled.Next(timeout, cancellationToken);
+                ScheduleSnapshot schedule = await scheduled.NextAsync(timeout, cancellationToken);
                 Assert.Equal(TimeSpan.FromHours(2), schedule.Delay);
                 provider.GetRequiredService<IInMemoryDelayProvider>().Advance(schedule.Delay);
-                await secondAttempts.Next(timeout, cancellationToken);
+                await secondAttempts.NextAsync(timeout, cancellationToken);
             }
 
             IPublishedMessage<Fault<SecondFilterMessage>> fault = await terminalFault
@@ -231,7 +231,7 @@ public sealed class DelayedRedeliveryIntegrationTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Equal(3, secondAttempts.Count);
@@ -242,7 +242,7 @@ public sealed class DelayedRedeliveryIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DELAYED-REDELIVERY", "outbound-message-excludes-inbound-redelivery-header")]
-    public async Task PublishFromARedeliveredConsumer_DoesNotForwardTheInboundRedeliveryHeader()
+    public async Task PublishFromARedeliveredConsumer_DoesNotForwardTheInboundRedeliveryHeaderAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -259,7 +259,7 @@ public sealed class DelayedRedeliveryIntegrationTests
                     if (attempt == 1)
                         throw new ExpectedInboundFailure();
 
-                    await context.Publish(new OutboundMessage(context.Message.Value), context.CancellationToken);
+                    await context.Advanced().PublishAsync(new OutboundMessage(context.Message.Value), context.CancellationToken);
                 });
                 configuration.AddHandler<OutboundMessage>(context =>
                 {
@@ -275,28 +275,28 @@ public sealed class DelayedRedeliveryIntegrationTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         var scheduled = new ScheduledSendObserver(typeof(InboundMessage));
         using ConnectHandle observerHandle = harness.Bus.ConnectSendObserver(scheduled);
 
         try
         {
-            await harness.Bus.Publish(new InboundMessage("header-boundary"), cancellationToken)
+            await harness.Bus.PublishAsync(new InboundMessage("header-boundary"), cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
-            await inboundAttempts.Next(timeout, cancellationToken);
-            ScheduleSnapshot schedule = await scheduled.Next(timeout, cancellationToken);
+            await inboundAttempts.NextAsync(timeout, cancellationToken);
+            ScheduleSnapshot schedule = await scheduled.NextAsync(timeout, cancellationToken);
             provider.GetRequiredService<IInMemoryDelayProvider>().Advance(schedule.Delay);
 
             ConsumeContext<OutboundMessage> observed = await outbound.Task.WaitAsync(timeout, cancellationToken);
 
             Assert.Equal("header-boundary", observed.Message.Value);
-            Assert.Equal(0, observed.GetRedeliveryCount());
+            Assert.Equal(0, observed.Advanced().GetRedeliveryCount());
             Assert.False(observed.Headers.TryGetHeader(MessageHeaders.RedeliveryCount, out object? _));
             Assert.Equal([0, 1], inboundAttempts.Snapshots.Select(snapshot => snapshot.RedeliveryCount));
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Single(harness.Consumed.Select<OutboundMessage>(SnapshotOnlyToken()));
@@ -328,7 +328,7 @@ public sealed class DelayedRedeliveryIntegrationTests
         public int Record(ConsumeContext<TMessage> context)
         {
             int count = Interlocked.Increment(ref _count);
-            Guid? originalMessageId = context.TryGetHeader(
+            Guid? originalMessageId = context.Advanced().TryGetHeader(
                 MessageHeaders.OriginalMessageId,
                 out Guid? header)
                 ? header
@@ -336,15 +336,15 @@ public sealed class DelayedRedeliveryIntegrationTests
             var snapshot = new DeliverySnapshot(
                 context.MessageId,
                 originalMessageId,
-                context.GetRedeliveryCount(),
-                context.ReceiveContext.ContentType.MediaType,
-                [.. context.SupportedMessageTypes]);
+                context.Advanced().GetRedeliveryCount(),
+                context.Advanced().ReceiveContext.ContentType.MediaType,
+                [.. context.Advanced().SupportedMessageTypes]);
             _snapshots.Enqueue(snapshot);
             Assert.True(_deliveries.Writer.TryWrite(snapshot));
             return count;
         }
 
-        public Task<DeliverySnapshot> Next(TimeSpan timeout, CancellationToken cancellationToken) =>
+        public Task<DeliverySnapshot> NextAsync(TimeSpan timeout, CancellationToken cancellationToken) =>
             _deliveries.Reader.ReadAsync(cancellationToken).AsTask().WaitAsync(timeout, cancellationToken);
     }
 
@@ -356,13 +356,13 @@ public sealed class DelayedRedeliveryIntegrationTests
 
         public int Count => Volatile.Read(ref _count);
 
-        public Task<ScheduleSnapshot> Next(TimeSpan timeout, CancellationToken cancellationToken) =>
+        public Task<ScheduleSnapshot> NextAsync(TimeSpan timeout, CancellationToken cancellationToken) =>
             _scheduled.Reader.ReadAsync(cancellationToken).AsTask().WaitAsync(timeout, cancellationToken);
 
-        public Task PreSend<T>(SendContext<T> context)
+        public Task PreSendAsync<T>(SendContext<T> context)
             where T : class => Task.CompletedTask;
 
-        public Task PostSend<T>(SendContext<T> context)
+        public Task PostSendAsync<T>(SendContext<T> context)
             where T : class
         {
             if (_messageTypes.Contains(typeof(T)) && context.Delay is { } delay)
@@ -389,7 +389,7 @@ public sealed class DelayedRedeliveryIntegrationTests
             };
         }
 
-        public Task SendFault<T>(SendContext<T> context, Exception exception)
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
             where T : class
         {
             if (_messageTypes.Contains(typeof(T)) && context.Delay.HasValue)

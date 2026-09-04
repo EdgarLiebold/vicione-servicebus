@@ -9,7 +9,7 @@ public sealed class AmazonSqsPublishTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0229", "two-distinct-contracts-publish-from-one-bus")]
-    public async Task EveryDeclaredMessageContract_CanBePublishedFromOneBus()
+    public async Task EveryDeclaredMessageContract_CanBePublishedFromOneBusAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("publish-contracts");
         string queueName = fixture.Name("input");
@@ -48,9 +48,9 @@ public sealed class AmazonSqsPublishTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            await bus.Publish<FirstPublishedContract>(new { CorrelationId = expected }, cancellationToken)
+            await bus.PublishAsync<FirstPublishedContract>(new { CorrelationId = expected }, cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await bus.Publish<SecondPublishedContract>(new { CorrelationId = expected }, cancellationToken)
+            await bus.PublishAsync<SecondPublishedContract>(new { CorrelationId = expected }, cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             Assert.Equal(expected, await first.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
@@ -65,7 +65,7 @@ public sealed class AmazonSqsPublishTests
                     fixture,
                     typeof(FirstPublishedContract),
                     typeof(SecondPublishedContract)),
-                await fixture.ListOwnedTopicNames(cancellationToken));
+                await fixture.ListOwnedTopicNamesAsync(cancellationToken));
         }
         finally
         {

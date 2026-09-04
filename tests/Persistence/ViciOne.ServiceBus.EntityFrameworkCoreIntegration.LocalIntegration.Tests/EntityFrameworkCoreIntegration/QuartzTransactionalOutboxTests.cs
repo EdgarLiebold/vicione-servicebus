@@ -13,11 +13,11 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tes
 
 public sealed class QuartzTransactionalOutboxTests
 {
-    private static readonly DateTime ScheduledTime = new(2100, 2, 3, 4, 5, 6, DateTimeKind.Utc);
+    private static readonly DateTimeOffset DueAt = new(2100, 2, 3, 4, 5, 6, TimeSpan.Zero);
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-QUARTZ", "schedule-command-is-committed-before-quartz-registration")]
-    public async Task ScheduledPublish_ReachesQuartzOnlyAfterTheEntityFrameworkTransactionCommits()
+    public async Task ScheduledPublish_ReachesQuartzOnlyAfterTheEntityFrameworkTransactionCommitsAsync()
     {
         await using QuartzOutboxFixture fixture = await QuartzOutboxFixture.CreateAsync();
         var command = new ScheduleThroughOutbox(NewId.NextGuid());
@@ -25,7 +25,7 @@ public sealed class QuartzTransactionalOutboxTests
         using ConnectHandle sendObserver = fixture.Harness.Bus.ConnectSendObserver(scheduleObserver);
         using ConnectHandle publishObserver = fixture.Harness.Bus.ConnectPublishObserver(scheduleObserver);
 
-        await fixture.Harness.Bus.Publish(command, fixture.CancellationToken);
+        await fixture.Harness.Bus.PublishAsync(command, fixture.CancellationToken);
         ScheduledMessage<ScheduledOutboxPayload> scheduled = await fixture.Gate.Scheduled
             .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
         var triggerKey = new TriggerKey(scheduled.TokenId.ToString("N"));
@@ -45,8 +45,7 @@ public sealed class QuartzTransactionalOutboxTests
             .SelectAsync<ScheduleThroughOutbox>(
                 context => context.Context.Message.CorrelationId == command.CorrelationId,
                 fixture.CancellationToken)
-            .First()
-            .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
+            .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
         Guid? observedScheduleCorrelationId = await scheduleObserver.Completed
             .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
         ITrigger trigger = Assert.IsAssignableFrom<ITrigger>(
@@ -56,7 +55,7 @@ public sealed class QuartzTransactionalOutboxTests
         Assert.Null(consumed.Exception);
         Assert.Equal(1, scheduleObserver.ObservedCount);
         Assert.Equal(scheduled.TokenId, observedScheduleCorrelationId);
-        Assert.Equal(ScheduledTime, trigger.NextFireTimeUtc?.UtcDateTime);
+        Assert.Equal(DueAt, trigger.NextFireTimeUtc);
 
         await fixture.Scheduler.TriggerJob(trigger.JobKey, trigger.JobDataMap, fixture.CancellationToken).AsTask()
             .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
@@ -78,10 +77,10 @@ public sealed class QuartzTransactionalOutboxTests
 
     public sealed class ScheduleThroughOutboxConsumer(QuartzOutboxCommitGate gate) : IConsumer<ScheduleThroughOutbox>
     {
-        public async Task Consume(ConsumeContext<ScheduleThroughOutbox> context)
+        public async Task ConsumeAsync(ConsumeContext<ScheduleThroughOutbox> context)
         {
-            ScheduledMessage<ScheduledOutboxPayload> scheduled = await context.SchedulePublish(
-                ScheduledTime,
+            ScheduledMessage<ScheduledOutboxPayload> scheduled = await context.Advanced().SchedulePublishAsync(
+                DueAt,
                 new ScheduledOutboxPayload(context.Message.CorrelationId),
                 context.CancellationToken);
             gate.Record(scheduled);
@@ -92,7 +91,7 @@ public sealed class QuartzTransactionalOutboxTests
     public sealed class ScheduledOutboxPayloadConsumer(ScheduledOutboxDeliveryProbe deliveries)
         : IConsumer<ScheduledOutboxPayload>
     {
-        public Task Consume(ConsumeContext<ScheduledOutboxPayload> context)
+        public Task ConsumeAsync(ConsumeContext<ScheduledOutboxPayload> context)
         {
             deliveries.Record(context.Message);
             return Task.CompletedTask;
@@ -155,7 +154,7 @@ public sealed class QuartzTransactionalOutboxTests
 
         public int ObservedCount => Volatile.Read(ref _observedCount);
 
-        public Task PreSend<T>(SendContext<T> context) where T : class
+        public Task PreSendAsync<T>(SendContext<T> context) where T : class
         {
             if (context.Message is ScheduleMessage or SerializedMessageBody)
                 Interlocked.Increment(ref _observedCount);
@@ -163,7 +162,7 @@ public sealed class QuartzTransactionalOutboxTests
             return Task.CompletedTask;
         }
 
-        public Task PostSend<T>(SendContext<T> context) where T : class
+        public Task PostSendAsync<T>(SendContext<T> context) where T : class
         {
             if (context.Message is ScheduleMessage or SerializedMessageBody)
                 _completed.TrySetResult(context.CorrelationId);
@@ -171,7 +170,7 @@ public sealed class QuartzTransactionalOutboxTests
             return Task.CompletedTask;
         }
 
-        public Task SendFault<T>(SendContext<T> context, Exception exception) where T : class
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception) where T : class
         {
             if (context.Message is ScheduleMessage or SerializedMessageBody)
                 _completed.TrySetException(exception);
@@ -179,7 +178,7 @@ public sealed class QuartzTransactionalOutboxTests
             return Task.CompletedTask;
         }
 
-        public Task PrePublish<T>(PublishContext<T> context) where T : class
+        public Task PrePublishAsync<T>(PublishContext<T> context) where T : class
         {
             if (context.Message is ScheduleMessage)
                 Interlocked.Increment(ref _observedCount);
@@ -187,7 +186,7 @@ public sealed class QuartzTransactionalOutboxTests
             return Task.CompletedTask;
         }
 
-        public Task PostPublish<T>(PublishContext<T> context) where T : class
+        public Task PostPublishAsync<T>(PublishContext<T> context) where T : class
         {
             if (context.Message is ScheduleMessage)
                 _completed.TrySetResult(context.CorrelationId);
@@ -195,7 +194,7 @@ public sealed class QuartzTransactionalOutboxTests
             return Task.CompletedTask;
         }
 
-        public Task PublishFault<T>(PublishContext<T> context, Exception exception) where T : class
+        public Task PublishFaultAsync<T>(PublishContext<T> context, Exception exception) where T : class
         {
             if (context.Message is ScheduleMessage)
                 _completed.TrySetException(exception);
@@ -295,7 +294,7 @@ public sealed class QuartzTransactionalOutboxTests
                     ValidateOnBuild = true,
                     ValidateScopes = true,
                 });
-                ITestHarness harness = await provider.StartTestHarness().WaitAsync(operationTimeout, cancellationToken);
+                ITestHarness harness = await provider.StartTestHarnessAsync().WaitAsync(operationTimeout, cancellationToken);
                 IScheduler scheduler = await provider.GetRequiredService<ISchedulerFactory>()
                     .GetScheduler(cancellationToken).AsTask()
                     .WaitAsync(operationTimeout, cancellationToken);
@@ -321,7 +320,7 @@ public sealed class QuartzTransactionalOutboxTests
         public async ValueTask DisposeAsync()
         {
             Gate.Release();
-            await Harness.Stop(CancellationToken.None).WaitAsync(OperationTimeout, CancellationToken.None);
+            await Harness.StopAsync(CancellationToken.None).WaitAsync(OperationTimeout, CancellationToken.None);
             await Services.DisposeAsync();
             await _database.DisposeAsync();
         }

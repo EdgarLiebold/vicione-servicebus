@@ -10,7 +10,7 @@ public sealed class JsonObjectConsumptionTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-SYSTEM-TEXT-JSON-RAW-OBJECT", "typed-message-body")]
-    public async Task TypedMessage_IsDeliveredAsAnExactRawJsonObject()
+    public async Task TypedMessage_IsDeliveredAsAnExactRawJsonObjectAsync()
     {
         TimeSpan operationTimeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -33,8 +33,8 @@ public sealed class JsonObjectConsumptionTests
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
-            await harness.InputQueueSendEndpoint.Send(expected, cancellationToken)
+            await harness.StartAsync(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(expected, cancellationToken)
                 .WaitAsync(operationTimeout, cancellationToken);
             JsonObject actual = await received.Task.WaitAsync(operationTimeout, cancellationToken);
 
@@ -48,7 +48,7 @@ public sealed class JsonObjectConsumptionTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(operationTimeout, cancellationToken);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(operationTimeout, cancellationToken);
         }
     }
 

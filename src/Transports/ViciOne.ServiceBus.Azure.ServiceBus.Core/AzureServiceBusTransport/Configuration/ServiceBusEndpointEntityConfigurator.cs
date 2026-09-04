@@ -8,7 +8,7 @@ public class ServiceBusEndpointEntityConfigurator :
 {
     public bool? EnableDeadLetteringOnMessageExpiration { get; set; }
 
-    public string ForwardDeadLetteredMessagesTo { get; set; }
+    public string? ForwardDeadLetteredMessagesTo { get; set; }
 
     public TimeSpan? LockDuration { get; set; }
 

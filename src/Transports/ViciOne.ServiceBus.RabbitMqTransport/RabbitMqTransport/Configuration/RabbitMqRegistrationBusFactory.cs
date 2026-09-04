@@ -14,16 +14,16 @@ public class RabbitMqRegistrationBusFactory :
     readonly RabbitMqBusConfiguration _busConfiguration;
     readonly Action<IBusRegistrationContext, IRabbitMqBusFactoryConfigurator> _configure;
 
-    public RabbitMqRegistrationBusFactory(Action<IBusRegistrationContext, IRabbitMqBusFactoryConfigurator> configure)
+    public RabbitMqRegistrationBusFactory(Action<IBusRegistrationContext, IRabbitMqBusFactoryConfigurator>? configure)
         : this(new RabbitMqBusConfiguration(new RabbitMqTopologyConfiguration(RabbitMqBusFactory.CreateMessageTopology())), configure)
     {
     }
 
     RabbitMqRegistrationBusFactory(RabbitMqBusConfiguration busConfiguration,
-        Action<IBusRegistrationContext, IRabbitMqBusFactoryConfigurator> configure)
+        Action<IBusRegistrationContext, IRabbitMqBusFactoryConfigurator>? configure)
         : base(busConfiguration.HostConfiguration)
     {
-        _configure = configure;
+        _configure = configure ?? ((_, _) => { });
 
         _busConfiguration = busConfiguration;
     }

@@ -9,7 +9,7 @@ public interface SubscriptionSettings :
 
     CreateSubscriptionOptions CreateSubscriptionOptions { get; }
 
-    CreateRuleOptions Rule { get; }
+    CreateRuleOptions? Rule { get; }
 
-    RuleFilter Filter { get; }
+    RuleFilter? Filter { get; }
 }

@@ -57,9 +57,9 @@ public class PostgresClientContext :
         _unlockSql = string.Format(SqlStatements.DbUnlockSql, _context.Schema);
     }
 
-    public override Task<long> CreateQueue(Queue queue)
+    public override Task<long> CreateQueueAsync(Queue queue, CancellationToken cancellationToken = default)
     {
-        return _context.Query((x, t) => x.ExecuteScalarAsync<long>(_createQueueSql, new
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<long>(cancellationToken); return _context.QueryAsync((x, t) => x.ExecuteScalarAsync<long>(_createQueueSql, new
         {
             queue_name = queue.QueueName,
             auto_delete = (int?)queue.AutoDeleteOnIdle?.TotalSeconds,
@@ -67,14 +67,14 @@ public class PostgresClientContext :
         }, t), CancellationToken);
     }
 
-    public override Task<long> CreateTopic(Topic topic)
+    public override Task<long> CreateTopicAsync(Topic topic, CancellationToken cancellationToken = default)
     {
-        return _context.Query((x, t) => x.ExecuteScalarAsync<long>(_createTopicSql, new { topic_name = topic.TopicName }), CancellationToken);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<long>(cancellationToken); return _context.QueryAsync((x, t) => x.ExecuteScalarAsync<long>(_createTopicSql, new { topic_name = topic.TopicName }), CancellationToken);
     }
 
-    public override Task<long> CreateTopicSubscription(TopicToTopicSubscription subscription)
+    public override Task<long> CreateTopicSubscriptionAsync(TopicToTopicSubscription subscription, CancellationToken cancellationToken = default)
     {
-        return _context.Query((x, t) => x.ExecuteScalarAsync<long>(_createTopicSubscriptionSql, new
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<long>(cancellationToken); return _context.QueryAsync((x, t) => x.ExecuteScalarAsync<long>(_createTopicSubscriptionSql, new
         {
             source_topic_name = subscription.Source.TopicName,
             destination_topic_name = subscription.Destination.TopicName,
@@ -84,9 +84,9 @@ public class PostgresClientContext :
         }), CancellationToken);
     }
 
-    public override Task<long> CreateQueueSubscription(TopicToQueueSubscription subscription)
+    public override Task<long> CreateQueueSubscriptionAsync(TopicToQueueSubscription subscription, CancellationToken cancellationToken = default)
     {
-        return _context.Query((x, t) => x.ExecuteScalarAsync<long>(_createQueueSubscriptionSql, new
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<long>(cancellationToken); return _context.QueryAsync((x, t) => x.ExecuteScalarAsync<long>(_createQueueSubscriptionSql, new
         {
             source_topic_name = subscription.Source.TopicName,
             destination_queue_name = subscription.Destination.QueueName,
@@ -96,19 +96,19 @@ public class PostgresClientContext :
         }), CancellationToken);
     }
 
-    public override Task<long> PurgeQueue(string queueName, CancellationToken cancellationToken)
+    public override Task<long> PurgeQueueAsync(string queueName, CancellationToken cancellationToken = default)
     {
-        return _context.Query((x, t) => x.ExecuteScalarAsync<long>(_purgeQueueSql, new { queue_name = queueName }), CancellationToken);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<long>(cancellationToken); return _context.QueryAsync((x, t) => x.ExecuteScalarAsync<long>(_purgeQueueSql, new { queue_name = queueName }), CancellationToken);
     }
 
-    public override async Task<IEnumerable<SqlTransportMessage>> ReceiveMessages(string queueName, SqlReceiveMode mode, int messageLimit,
-        int concurrentLimit, TimeSpan lockDuration)
+    public override async Task<IEnumerable<SqlTransportMessage>> ReceiveMessagesAsync(string queueName, SqlReceiveMode mode, int messageLimit,
+        int concurrentLimit, TimeSpan lockDuration, CancellationToken cancellationToken = default)
     {
-        try
+        cancellationToken.ThrowIfCancellationRequested(); try
         {
             if (mode == SqlReceiveMode.Normal)
             {
-                return await _context.Query((x, t) => x.QueryAsync<SqlTransportMessage>(_receiveSql, new
+                return await _context.QueryAsync((x, t) => x.QueryAsync<SqlTransportMessage>(_receiveSql, new
                 {
                     queue_name = queueName,
                     fetch_consumer_id = _consumerId,
@@ -125,7 +125,7 @@ public class PostgresClientContext :
                 _ => 0
             };
 
-            return await _context.Query((x, t) => x.QueryAsync<SqlTransportMessage>(_receivePartitionedSql, new
+            return await _context.QueryAsync((x, t) => x.QueryAsync<SqlTransportMessage>(_receivePartitionedSql, new
             {
                 queue_name = queueName,
                 fetch_consumer_id = _consumerId,
@@ -142,23 +142,23 @@ public class PostgresClientContext :
         }
     }
 
-    public override Task TouchQueue(string queueName)
+    public override Task TouchQueueAsync(string queueName, CancellationToken cancellationToken = default)
     {
-        return _context.Query((x, t) => x.ExecuteScalarAsync<int?>(_touchQueueSql, new { queue_name = queueName }), CancellationToken);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return _context.QueryAsync((x, t) => x.ExecuteScalarAsync<int?>(_touchQueueSql, new { queue_name = queueName }), CancellationToken);
     }
 
-    public override Task<int?> DeadLetterQueue(string queueName, int messageCount)
+    public override Task<int?> DeadLetterQueueAsync(string queueName, int messageCount, CancellationToken cancellationToken = default)
     {
-        return _context.Query((x, t) => x.ExecuteScalarAsync<int?>(_deadLetterMessagesSql, new
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<int?>(cancellationToken); return _context.QueryAsync((x, t) => x.ExecuteScalarAsync<int?>(_deadLetterMessagesSql, new
         {
             queue_name = queueName,
             message_count = messageCount
         }), CancellationToken);
     }
 
-    public override Task Send<T>(string queueName, SqlMessageSendContext<T> context)
+    public override Task SendAsync<T>(string queueName, SqlMessageSendContext<T> context, CancellationToken cancellationToken = default)
     {
-        IEnumerable<KeyValuePair<string, object>> headers = context.Headers.GetAll().ToList();
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); IEnumerable<KeyValuePair<string, object>> headers = context.Headers.GetAll().ToList();
         var headersAsJson = headers.Any() ? JsonSerializer.Serialize(headers, ServiceBusMetadataJson.Options) : null;
 
         Guid? schedulingTokenId = context.Headers.Get<Guid>(MessageHeaders.SchedulingTokenId);
@@ -166,7 +166,7 @@ public class PostgresClientContext :
             ? context.GetTimeProvider().GetUtcNow().UtcDateTime + context.TimeToLive.Value
             : null;
 
-        return _context.Query((x, t) => x.ExecuteScalarAsync<long?>(_sendSql, new
+        return _context.QueryAsync((x, t) => x.ExecuteScalarAsync<long?>(_sendSql, new
         {
             entity_name = queueName,
             priority = (int)(context.Priority ?? 100),
@@ -195,9 +195,9 @@ public class PostgresClientContext :
         }), CancellationToken);
     }
 
-    public override Task Publish<T>(string topicName, SqlMessageSendContext<T> context)
+    public override Task PublishAsync<T>(string topicName, SqlMessageSendContext<T> context, CancellationToken cancellationToken = default)
     {
-        IEnumerable<KeyValuePair<string, object>> headers = context.Headers.GetAll().ToList();
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); IEnumerable<KeyValuePair<string, object>> headers = context.Headers.GetAll().ToList();
         var headersAsJson = headers.Any() ? JsonSerializer.Serialize(headers, ServiceBusMetadataJson.Options) : null;
 
         Guid? schedulingTokenId = context.Headers.Get<Guid>(MessageHeaders.SchedulingTokenId);
@@ -205,7 +205,7 @@ public class PostgresClientContext :
             ? context.GetTimeProvider().GetUtcNow().UtcDateTime + context.TimeToLive.Value
             : null;
 
-        return _context.Query((x, t) => x.ExecuteScalarAsync<long?>(_publishSql, new
+        return _context.QueryAsync((x, t) => x.ExecuteScalarAsync<long?>(_publishSql, new
         {
             entity_name = topicName,
             priority = (int)(context.Priority ?? 100),
@@ -234,9 +234,9 @@ public class PostgresClientContext :
         }), CancellationToken);
     }
 
-    public override async Task<bool> DeleteMessage(Guid lockId, long messageDeliveryId)
+    public override async Task<bool> DeleteMessageAsync(Guid lockId, long messageDeliveryId, CancellationToken cancellationToken = default)
     {
-        var result = await _context.Query((x, t) => x.ExecuteScalarAsync<long?>(_deleteMessageSql, new
+        cancellationToken.ThrowIfCancellationRequested(); var result = await _context.QueryAsync((x, t) => x.ExecuteScalarAsync<long?>(_deleteMessageSql, new
         {
             message_delivery_id = messageDeliveryId,
             lock_id = lockId
@@ -245,9 +245,9 @@ public class PostgresClientContext :
         return result == messageDeliveryId;
     }
 
-    public override async Task<bool> DeleteScheduledMessage(Guid tokenId, CancellationToken cancellationToken)
+    public override async Task<bool> DeleteScheduledMessageAsync(Guid tokenId, CancellationToken cancellationToken = default)
     {
-        IEnumerable<SqlTransportMessage>? result = await _context.Query((x, t) => x.QueryAsync<SqlTransportMessage>(_deleteScheduledMessageSql, new
+        IEnumerable<SqlTransportMessage>? result = await _context.QueryAsync((x, t) => x.QueryAsync<SqlTransportMessage>(_deleteScheduledMessageSql, new
         {
             token_id = tokenId,
         }), cancellationToken);
@@ -255,13 +255,13 @@ public class PostgresClientContext :
         return result.Any();
     }
 
-    public override async Task<bool> MoveMessage(Guid lockId, long messageDeliveryId, string queueName, SqlQueueType queueType,
-        DateTime? expirationTime, SendHeaders sendHeaders)
+    public override async Task<bool> MoveMessageAsync(Guid lockId, long messageDeliveryId, string queueName, SqlQueueType queueType,
+        DateTimeOffset? expirationTime, SendHeaders sendHeaders, CancellationToken cancellationToken = default)
     {
-        IEnumerable<KeyValuePair<string, object>> headers = sendHeaders.GetAll().ToList();
+        cancellationToken.ThrowIfCancellationRequested(); IEnumerable<KeyValuePair<string, object>> headers = sendHeaders.GetAll().ToList();
         var headersAsJson = headers.Any() ? JsonSerializer.Serialize(headers, ServiceBusMetadataJson.Options) : null;
 
-        var result = await _context.Query((x, t) => x.ExecuteScalarAsync<long?>(_moveMessageTypeSql, new
+        var result = await _context.QueryAsync((x, t) => x.ExecuteScalarAsync<long?>(_moveMessageTypeSql, new
         {
             message_delivery_id = messageDeliveryId,
             lock_id = lockId,
@@ -274,9 +274,9 @@ public class PostgresClientContext :
         return result == messageDeliveryId;
     }
 
-    public override async Task<bool> RenewLock(Guid lockId, long messageDeliveryId, TimeSpan duration)
+    public override async Task<bool> RenewLockAsync(Guid lockId, long messageDeliveryId, TimeSpan duration, CancellationToken cancellationToken = default)
     {
-        var result = await _context.Query((x, t) => x.ExecuteScalarAsync<long?>(_renewLockSql, new
+        cancellationToken.ThrowIfCancellationRequested(); var result = await _context.QueryAsync((x, t) => x.ExecuteScalarAsync<long?>(_renewLockSql, new
         {
             message_delivery_id = messageDeliveryId,
             lock_id = lockId,
@@ -286,12 +286,12 @@ public class PostgresClientContext :
         return result == messageDeliveryId;
     }
 
-    public override async Task<bool> Unlock(Guid lockId, long messageDeliveryId, TimeSpan delay, SendHeaders sendHeaders)
+    public override async Task<bool> UnlockAsync(Guid lockId, long messageDeliveryId, TimeSpan delay, SendHeaders sendHeaders, CancellationToken cancellationToken = default)
     {
-        IEnumerable<KeyValuePair<string, object>> headers = sendHeaders.GetAll().ToList();
+        cancellationToken.ThrowIfCancellationRequested(); IEnumerable<KeyValuePair<string, object>> headers = sendHeaders.GetAll().ToList();
         var headersAsJson = headers.Any() ? JsonSerializer.Serialize(headers, ServiceBusMetadataJson.Options) : null;
 
-        var result = await _context.Query((x, t) => x.ExecuteScalarAsync<long?>(_unlockSql, new
+        var result = await _context.QueryAsync((x, t) => x.ExecuteScalarAsync<long?>(_unlockSql, new
         {
             message_delivery_id = messageDeliveryId,
             lock_id = lockId,

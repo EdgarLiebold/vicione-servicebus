@@ -17,8 +17,8 @@ public class SendRequestSendEndpoint<TRequest> :
         _destinationAddress = destinationAddress;
     }
 
-    protected override async Task<ISendEndpoint> GetSendEndpoint()
+    protected override async Task<ISendEndpoint> GetSendEndpointAsync()
     {
-        return await _provider.GetSendEndpoint(_destinationAddress).ConfigureAwait(false);
+        return await _provider.GetSendEndpointAsync(_destinationAddress).ConfigureAwait(false);
     }
 }

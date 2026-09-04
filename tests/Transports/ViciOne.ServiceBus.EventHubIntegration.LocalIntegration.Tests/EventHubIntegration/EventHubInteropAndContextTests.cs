@@ -14,7 +14,7 @@ public sealed class EventHubInteropAndContextTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0156", "raw-sdk-event-is-consumed-and-published-to-bus-with-eventhub-source-and-initiator")]
-    public async Task RawSdkEvent_IsConsumedAndPublishesOntoTheBusWithTransportConversationMetadata()
+    public async Task RawSdkEvent_IsConsumedAndPublishesOntoTheBusWithTransportConversationMetadataAsync()
     {
         const string eventHubName = "raw-eh";
         var state = new RawInteropState(NewId.NextGuid());
@@ -87,7 +87,7 @@ public sealed class EventHubInteropAndContextTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0157", "raw-sdk-envelope-with-default-send-context-serializer-deserializes-to-contract")]
-    public async Task RawSdkEnvelope_UsesTheDefaultMessageSerializerAndDeserializesToTheContract()
+    public async Task RawSdkEnvelope_UsesTheDefaultMessageSerializerAndDeserializesToTheContractAsync()
     {
         const string eventHubName = "raw-eh";
         var state = new DefaultSerializerState(NewId.NextGuid());
@@ -144,9 +144,9 @@ public sealed class EventHubInteropAndContextTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0158", "consume-context-exposes-the-eventhub-provider-payload")]
-    public async Task RiderDelivery_ExposesTheEventHubConsumeContextPayload()
+    public async Task RiderDelivery_ExposesTheEventHubConsumeContextPayloadAsync()
     {
-        ContextProbeObservation observation = await RunContextProbe("payload", messageCount: 1);
+        ContextProbeObservation observation = await RunContextProbeAsync("payload", messageCount: 1);
 
         Assert.True(observation.PayloadPresent);
         Assert.NotNull(observation.PartitionId);
@@ -155,9 +155,9 @@ public sealed class EventHubInteropAndContextTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0259", "provider-context-reports-partition-offset-sequence-key-enqueued-time-and-properties")]
-    public async Task EventHubConsumeContext_ReportsProviderAssignedFieldsForTwoSamePartitionEvents()
+    public async Task EventHubConsumeContext_ReportsProviderAssignedFieldsForTwoSamePartitionEventsAsync()
     {
-        ContextProbeObservation observation = await RunContextProbe("provider-context", messageCount: 2);
+        ContextProbeObservation observation = await RunContextProbeAsync("provider-context", messageCount: 2);
         ContextSnapshot[] actual = observation.Snapshots.OrderBy(snapshot => snapshot.Index).ToArray();
 
         Assert.Equal(2, actual.Length);
@@ -177,7 +177,7 @@ public sealed class EventHubInteropAndContextTests
         Assert.NotEqual(actual[0].OffsetString, actual[1].OffsetString);
     }
 
-    private static async Task<ContextProbeObservation> RunContextProbe(string purpose, int messageCount)
+    private static async Task<ContextProbeObservation> RunContextProbeAsync(string purpose, int messageCount)
     {
         const string eventHubName = "config-eh";
         var state = new ContextProbeState(NewId.NextGuid(), messageCount);
@@ -214,10 +214,10 @@ public sealed class EventHubInteropAndContextTests
             started = true;
             await using AsyncServiceScope scope = provider.CreateAsyncScope();
             IEventHubProducer producer = await scope.ServiceProvider.GetRequiredService<IEventHubProducerProvider>()
-                .GetProducer(eventHubName).WaitAsync(fixture.OperationTimeout, cancellationToken);
+                .GetProducerAsync(eventHubName).WaitAsync(fixture.OperationTimeout, cancellationToken);
             for (int index = 0; index < messageCount; index++)
             {
-                await producer.Produce<IContextProbeMessage>(
+                await producer.ProduceAsync<IContextProbeMessage>(
                         new ContextProbeMessage(state.RunId, index),
                         Pipe.Execute<SendContext>(context =>
                         {
@@ -267,18 +267,18 @@ public sealed class EventHubInteropAndContextTests
 
     private sealed class RawInteropConsumer(RawInteropState state) : IConsumer<IRawInteropMessage>
     {
-        public async Task Consume(ConsumeContext<IRawInteropMessage> context)
+        public async Task ConsumeAsync(ConsumeContext<IRawInteropMessage> context)
         {
             if (context.Message.RunId != state.RunId)
                 return;
             state.Received.TrySetResult(context);
-            await context.Publish(new RawBusPing(context.Message.RunId), context.CancellationToken);
+            await context.Advanced().PublishAsync(new RawBusPing(context.Message.RunId), context.CancellationToken);
         }
     }
 
     private sealed class RawBusPingConsumer(RawInteropState state) : IConsumer<RawBusPing>
     {
-        public Task Consume(ConsumeContext<RawBusPing> context)
+        public Task ConsumeAsync(ConsumeContext<RawBusPing> context)
         {
             if (context.Message.RunId == state.RunId)
                 state.Ping.TrySetResult(context);
@@ -302,7 +302,7 @@ public sealed class EventHubInteropAndContextTests
 
     private sealed class DefaultSerializerConsumer(DefaultSerializerState state) : IConsumer<IDefaultSerializerMessage>
     {
-        public Task Consume(ConsumeContext<IDefaultSerializerMessage> context)
+        public Task ConsumeAsync(ConsumeContext<IDefaultSerializerMessage> context)
         {
             if (context.Message.RunId == state.RunId)
                 state.Received.TrySetResult(context.Message);
@@ -349,7 +349,7 @@ public sealed class EventHubInteropAndContextTests
 
     private sealed class ContextProbeConsumer(ContextProbeState state) : IConsumer<IContextProbeMessage>
     {
-        public Task Consume(ConsumeContext<IContextProbeMessage> context)
+        public Task ConsumeAsync(ConsumeContext<IContextProbeMessage> context)
         {
             if (context.Message.RunId != state.RunId)
                 return Task.CompletedTask;

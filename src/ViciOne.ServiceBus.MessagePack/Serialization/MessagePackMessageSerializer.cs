@@ -94,7 +94,7 @@ public class MessagePackMessageSerializer :
         return new MessagePackMessageBody<object>(value);
     }
 
-    static T InternalDeserializeObject<T>(object? value, T defaultValue)
+    static T? InternalDeserializeObject<T>(object? value, T? defaultValue)
     {
         if (value is null || Equals(value, defaultValue))
             return defaultValue;

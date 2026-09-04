@@ -16,7 +16,7 @@ public sealed class ActiveMqErrorTransportTests
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [RequirementCoverage("OBL-R0-BRK-0405", "nested-contract-type-mismatch-publishes-one-complete-receive-fault")]
-    public async Task NestedContractTypeMismatch_MovesOneCompleteFault(string flavor)
+    public async Task NestedContractTypeMismatch_MovesOneCompleteFaultAsync(string flavor)
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(flavor, "nested-type-mismatch");
         string queueName = fixture.Name("input");
@@ -53,9 +53,8 @@ public sealed class ActiveMqErrorTransportTests
                 return Task.CompletedTask;
             }));
             await faultEndpoint.Ready.WaitAsync(fixture.OperationTimeout, cancellationToken);
-            ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await input.Send<MalformedMessage>(
+            ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await input.SendAsync<MalformedMessage>(
                     new { Count = 1 },
                     context =>
                     {
@@ -100,7 +99,7 @@ public sealed class ActiveMqErrorTransportTests
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-RECEIVE-FAULT", "unreadable-envelope-preserves-transport-message-id")]
-    public async Task UnreadableEnvelope_PreservesTransportMessageIdInReceiveFault(string flavor)
+    public async Task UnreadableEnvelope_PreservesTransportMessageIdInReceiveFaultAsync(string flavor)
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(flavor, "invalid-envelope");
         string queueName = fixture.Name("input");
@@ -137,9 +136,8 @@ public sealed class ActiveMqErrorTransportTests
                 return Task.CompletedTask;
             }));
             await faultEndpoint.Ready.WaitAsync(fixture.OperationTimeout, cancellationToken);
-            ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await input.Send<UnreadableMessage>(
+            ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await input.SendAsync<UnreadableMessage>(
                     new { Value = "must-not-dispatch" },
                     context =>
                     {
@@ -184,7 +182,7 @@ public sealed class ActiveMqErrorTransportTests
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [RequirementCoverage("OBL-R0-BRK-0413", "serialization-fault-moves-one-complete-envelope")]
-    public async Task SerializationFault_MovesOneCompleteSanitizedEnvelope(string flavor)
+    public async Task SerializationFault_MovesOneCompleteSanitizedEnvelopeAsync(string flavor)
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(flavor, "error-transport");
         string queueName = fixture.Name("input");
@@ -201,7 +199,7 @@ public sealed class ActiveMqErrorTransportTests
                 endpoint.AutoDelete = false;
                 endpoint.Handler<FaultingMessage>(context =>
                 {
-                    receivedInputAddress = context.ReceiveContext.InputAddress;
+                    receivedInputAddress = context.Advanced().ReceiveContext.InputAddress;
                     throw new SerializationException(IntentionalFailureMessage);
                 });
             });
@@ -212,16 +210,16 @@ public sealed class ActiveMqErrorTransportTests
                 endpoint.Handler<FaultingMessage>(context =>
                 {
                     moved.TrySetResult(new ErrorObservation(
-                        context.ReceiveContext.InputAddress,
+                        context.Advanced().ReceiveContext.InputAddress,
                         context.CorrelationId,
                         context.SourceAddress,
                         context.DestinationAddress,
                         context.ResponseAddress,
                         context.FaultAddress,
-                        context.ReceiveContext.TransportHeaders.Get(MessageHeaders.FaultMessage, (string?)null),
-                        context.ReceiveContext.TransportHeaders.Get(MessageHeaders.Reason, (string?)null),
-                        context.ReceiveContext.TransportHeaders.Get(MessageHeaders.FaultInputAddress, (Uri?)null),
-                        context.ReceiveContext.TransportHeaders.Get(MessageHeaders.Host.MachineName, (string?)null)));
+                        context.Advanced().ReceiveContext.TransportHeaders.Get(MessageHeaders.FaultMessage, (string?)null),
+                        context.Advanced().ReceiveContext.TransportHeaders.Get(MessageHeaders.Reason, (string?)null),
+                        context.Advanced().ReceiveContext.TransportHeaders.Get(MessageHeaders.FaultInputAddress, (Uri?)null),
+                        context.Advanced().ReceiveContext.TransportHeaders.Get(MessageHeaders.Host.MachineName, (string?)null)));
                     return Task.CompletedTask;
                 });
             });
@@ -234,9 +232,8 @@ public sealed class ActiveMqErrorTransportTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await input.Send(
+            ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await input.SendAsync(
                     new FaultingMessage(correlationId),
                     context =>
                     {
@@ -254,7 +251,7 @@ public sealed class ActiveMqErrorTransportTests
 
             await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
             started = false;
-            ActiveMqBroker.ClassicQueueStatistics errorQueue = await fixture.GetClassicQueueStatistics(
+            ActiveMqBroker.ClassicQueueStatistics errorQueue = await fixture.GetClassicQueueStatisticsAsync(
                 errorQueueName,
                 cancellationToken);
 
@@ -283,7 +280,7 @@ public sealed class ActiveMqErrorTransportTests
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [RequirementCoverage("OBL-R0-BRK-0425", "raw-invalid-nms-message-publishes-one-receive-fault")]
-    public async Task RawInvalidNmsMessage_MovesOneCompleteFault(string flavor)
+    public async Task RawInvalidNmsMessage_MovesOneCompleteFaultAsync(string flavor)
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(flavor, "raw-invalid");
         string queueName = fixture.Name("input");
@@ -405,7 +402,7 @@ public sealed class ActiveMqErrorTransportTests
 
         public int ReceiveFaultPublishCount => Volatile.Read(ref _receiveFaultPublishCount);
 
-        public Task PrePublish<T>(PublishContext<T> context)
+        public Task PrePublishAsync<T>(PublishContext<T> context)
             where T : class
         {
             if (context.Message is ReceiveFault)
@@ -413,10 +410,10 @@ public sealed class ActiveMqErrorTransportTests
             return Task.CompletedTask;
         }
 
-        public Task PostPublish<T>(PublishContext<T> context)
+        public Task PostPublishAsync<T>(PublishContext<T> context)
             where T : class => Task.CompletedTask;
 
-        public Task PublishFault<T>(PublishContext<T> context, Exception exception)
+        public Task PublishFaultAsync<T>(PublishContext<T> context, Exception exception)
             where T : class => Task.CompletedTask;
     }
 }

@@ -23,9 +23,9 @@ public class DictionaryCopyHeaderInitializer<TMessage, TInput, THeader> :
         _headerProperty = WritePropertyCache<SendContext>.GetProperty<THeader>(propertyInfo);
     }
 
-    public Task Apply(InitializeContext<TMessage, TInput> context, SendContext sendContext)
+    public Task ApplyAsync(InitializeContext<TMessage, TInput> context, SendContext sendContext, CancellationToken cancellationToken = default)
     {
-        if (context.HasInput && context.Input.TryGetValue(_key, out var value))
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (context.HasInput && context.Input.TryGetValue(_key, out var value))
             _headerProperty.Set(sendContext, value);
 
         return Task.CompletedTask;

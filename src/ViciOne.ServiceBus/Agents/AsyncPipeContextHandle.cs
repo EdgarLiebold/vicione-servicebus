@@ -14,42 +14,44 @@ public class AsyncPipeContextHandle<TContext> :
 {
     readonly TaskCompletionSource<TContext> _context;
     readonly TaskCompletionSource<DateTime> _inactive;
+    readonly TimeProvider _timeProvider;
 
     /// <summary>
     /// Creates the handle
     /// </summary>
-    public AsyncPipeContextHandle()
+    public AsyncPipeContextHandle(TimeProvider? timeProvider = null)
     {
         _context = TaskCompletionSources.Create<TContext>();
         _inactive = TaskCompletionSources.Create<DateTime>();
+        _timeProvider = timeProvider ?? TimeProvider.System;
     }
 
     bool PipeContextHandle<TContext>.IsDisposed => _inactive.Task.IsCompleted;
 
     Task<TContext> PipeContextHandle<TContext>.Context => _context.Task;
 
-    Task IAsyncPipeContextHandle<TContext>.Created(TContext context)
+    Task IAsyncPipeContextHandle<TContext>.CreatedAsync(TContext context, CancellationToken cancellationToken)
     {
         _context.SetResult(context);
 
         return Task.CompletedTask;
     }
 
-    Task IAsyncPipeContextHandle<TContext>.CreateCanceled()
+    Task IAsyncPipeContextHandle<TContext>.CreateCanceledAsync(CancellationToken cancellationToken)
     {
         _context.SetCanceled();
 
         return Task.CompletedTask;
     }
 
-    Task IAsyncPipeContextHandle<TContext>.CreateFaulted(Exception exception)
+    Task IAsyncPipeContextHandle<TContext>.CreateFaultedAsync(Exception exception, CancellationToken cancellationToken)
     {
         _context.SetException(exception);
 
         return Task.CompletedTask;
     }
 
-    Task IAsyncPipeContextHandle<TContext>.Faulted(Exception exception)
+    Task IAsyncPipeContextHandle<TContext>.FaultedAsync(Exception exception, CancellationToken cancellationToken)
     {
         _inactive.TrySetException(exception);
 
@@ -58,7 +60,7 @@ public class AsyncPipeContextHandle<TContext> :
 
     ValueTask IAsyncDisposable.DisposeAsync()
     {
-        _inactive.TrySetResult(DateTime.UtcNow);
+        _inactive.TrySetResult(_timeProvider.GetUtcNow().UtcDateTime);
 
         return default;
     }

@@ -9,12 +9,12 @@ public class CancelScheduledMessageCommand :
     {
     }
 
-    public CancelScheduledMessageCommand(Guid tokenId, DateTime timestamp)
+    public CancelScheduledMessageCommand(Guid tokenId, DateTimeOffset timestamp)
     {
         Timestamp = timestamp;
         TokenId = tokenId;
     }
 
-    public DateTime Timestamp { get; set; }
+    public DateTimeOffset Timestamp { get; set; }
     public Guid TokenId { get; set; }
 }

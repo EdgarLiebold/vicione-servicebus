@@ -13,7 +13,7 @@ public class RoutingSlipActivityCompensatedMessage :
     }
 
     public RoutingSlipActivityCompensatedMessage(HostInfo host, Guid trackingNumber, string activityName, Guid executionId,
-        DateTime timestamp, TimeSpan duration, IDictionary<string, object> variables, IDictionary<string, object> data)
+        DateTimeOffset timestamp, TimeSpan duration, IDictionary<string, object> variables, IDictionary<string, object> data)
     {
         Host = host;
         Duration = duration;
@@ -33,5 +33,5 @@ public class RoutingSlipActivityCompensatedMessage :
     public TimeSpan Duration { get; set; }
     public string ActivityName { get; set; } = null!;
     public Guid TrackingNumber { get; set; }
-    public DateTime Timestamp { get; set; }
+    public DateTimeOffset Timestamp { get; set; }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Courier.Contracts;
 using ViciOne.ServiceBus.Logging;
@@ -20,9 +19,10 @@ public class ExecuteActivityHost<TActivity, TArguments> :
         _compensateAddress = compensateAddress;
     }
 
-    public async Task Send(ConsumeContext<RoutingSlip> context, IPipe<ConsumeContext<RoutingSlip>> next)
+    public async Task SendAsync(ConsumeContext<RoutingSlip> context, IPipe<ConsumeContext<RoutingSlip>> next)
     {
-        var timer = Stopwatch.StartNew();
+        TimeProvider timeProvider = context.GetTimeProvider();
+        long startedAt = timeProvider.GetTimestamp();
 
         StartedActivity? activity = LogContext.Current?.StartExecuteActivity<TActivity, TArguments>(context);
         var instrument = LogContext.Current?.StartActivityExecuteInstrument<TActivity, TArguments>(context);
@@ -32,38 +32,38 @@ public class ExecuteActivityHost<TActivity, TArguments> :
             ExecuteContext<TArguments> executeContext = new HostExecuteContext<TArguments>(_compensateAddress, context);
 
             LogContext.Debug?.Log("Execute Activity: {TrackingNumber} ({Activity}, {Host})", executeContext.TrackingNumber,
-                TypeCache<TActivity>.ShortName, context.ReceiveContext.InputAddress);
+                TypeCache<TActivity>.ShortName, context.Advanced().ReceiveContext.InputAddress);
 
             try
             {
-                await _executePipe.Send(executeContext).ConfigureAwait(false);
+                await _executePipe.SendAsync(executeContext).ConfigureAwait(false);
 
                 var result = executeContext.Result
                     ?? executeContext.Faulted(new ActivityExecutionException("The activity execute did not return a result"));
 
-                await result.Evaluate().ConfigureAwait(false);
+                await result.EvaluateAsync().ConfigureAwait(false);
             }
             catch (Exception exception)
             {
                 if (executeContext.Result == null || !executeContext.Result.IsFaulted(out var faultException) || faultException != exception)
                     executeContext.Result = executeContext.Faulted(exception);
 
-                await context.NotifyFaulted(timer.Elapsed, TypeCache<TActivity>.ShortName, exception).ConfigureAwait(false);
+                await context.NotifyFaultedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<TActivity>.ShortName, exception).ConfigureAwait(false);
 
                 activity?.AddExceptionEvent(exception);
                 instrument?.RecordException(exception);
 
-                await executeContext.Result.Evaluate().ConfigureAwait(false);
+                await executeContext.Result.EvaluateAsync().ConfigureAwait(false);
             }
 
-            await context.NotifyConsumed(timer.Elapsed, TypeCache<TActivity>.ShortName).ConfigureAwait(false);
+            await context.NotifyConsumedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<TActivity>.ShortName).ConfigureAwait(false);
 
-            await next.Send(context).ConfigureAwait(false);
+            await next.SendAsync(context).ConfigureAwait(false);
         }
         catch (Exception exception) when ((exception is OperationCanceledException || exception.GetBaseException() is OperationCanceledException)
                                           && !context.CancellationToken.IsCancellationRequested)
         {
-            await context.NotifyFaulted(timer.Elapsed, TypeCache<TActivity>.ShortName, exception).ConfigureAwait(false);
+            await context.NotifyFaultedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<TActivity>.ShortName, exception).ConfigureAwait(false);
 
             activity?.AddExceptionEvent(exception);
 
@@ -73,7 +73,7 @@ public class ExecuteActivityHost<TActivity, TArguments> :
         }
         catch (Exception exception)
         {
-            await context.NotifyFaulted(timer.Elapsed, TypeCache<TActivity>.ShortName, exception).ConfigureAwait(false);
+            await context.NotifyFaultedAsync(timeProvider.GetElapsedTime(startedAt), TypeCache<TActivity>.ShortName, exception).ConfigureAwait(false);
 
             activity?.AddExceptionEvent(exception);
 

@@ -7,17 +7,17 @@ namespace ViciOne.ServiceBus;
 
 public static class EventExtensions
 {
-    public static Task PublishEvent<T>(this IPipe<EventContext> pipe, T message, TimeProvider? timeProvider = null)
+    public static Task PublishEventAsync<T>(this IPipe<EventContext> pipe, T message, TimeProvider? timeProvider = null, CancellationToken cancellationToken = default)
         where T : class
     {
-        if (pipe == null)
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (pipe == null)
             throw new ArgumentNullException(nameof(pipe));
         if (message == null)
             throw new ArgumentNullException(nameof(message));
 
         var context = new PublishEventContext<T>(message, timeProvider ?? TimeProvider.System);
 
-        return pipe.Send(context);
+        return pipe.SendAsync(context);
     }
 
 
@@ -29,11 +29,11 @@ public static class EventExtensions
         public PublishEventContext(T @event, TimeProvider timeProvider)
         {
             Event = @event;
-            Timestamp = timeProvider.GetUtcNow().UtcDateTime;
+            Timestamp = timeProvider.GetUtcNow();
             this.SetTimeProvider(timeProvider);
         }
 
-        public DateTime Timestamp { get; }
+        public DateTimeOffset Timestamp { get; }
 
         public T Event { get; }
     }

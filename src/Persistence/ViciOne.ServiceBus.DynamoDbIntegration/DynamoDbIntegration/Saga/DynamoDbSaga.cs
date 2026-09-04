@@ -15,14 +15,14 @@ public class DynamoDbSaga
     }
 
     [DynamoDBHashKey(AttributeName = "PK")]
-    public string CorrelationId { get; set; }
+    public string CorrelationId { get; set; } = null!;
 
     [DynamoDBRangeKey(AttributeName = "SK")]
     public string EntityType { get; set; } = DefaultEntityType;
 
     public int VersionNumber { get; set; }
 
-    public string Properties { get; set; }
+    public string Properties { get; set; } = null!;
 
     public long? ExpirationEpochSeconds { get; set; }
 

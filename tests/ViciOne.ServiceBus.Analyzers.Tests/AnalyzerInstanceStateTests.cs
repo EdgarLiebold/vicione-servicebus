@@ -77,20 +77,20 @@ public sealed class AnalyzerInstanceStateTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ANALYZER-INSTANCE-STATE", "one-instance-multiple-compilations")]
-    public async Task OneAnalyzerInstance_ProducesIndependentResultsAcrossCompilations()
+    public async Task OneAnalyzerInstance_ProducesIndependentResultsAcrossCompilationsAsync()
     {
         var analyzer = new CancellationTokenOverloadMethodAnalyzer();
 
-        var first = await Analyze(analyzer, CancellableConsumer("FirstOrder"));
-        var second = await Analyze(analyzer, UncancellableConsumer("SecondOrder"));
-        var third = await Analyze(analyzer, CancellableConsumer("ThirdOrder"));
+        var first = await AnalyzeAsync(analyzer, CancellableConsumer("FirstOrder"));
+        var second = await AnalyzeAsync(analyzer, UncancellableConsumer("SecondOrder"));
+        var third = await AnalyzeAsync(analyzer, CancellableConsumer("ThirdOrder"));
 
         Assert.Equal([CancellationTokenOverloadMethodAnalyzer.CancellationTokenOverloadMethodRuleId], first);
         Assert.Empty(second);
         Assert.Equal([CancellationTokenOverloadMethodAnalyzer.CancellationTokenOverloadMethodRuleId], third);
     }
 
-    private static async Task<IReadOnlyList<string>> Analyze(DiagnosticAnalyzer analyzer, string source)
+    private static async Task<IReadOnlyList<string>> AnalyzeAsync(DiagnosticAnalyzer analyzer, string source)
     {
         var diagnostics = await RoslynTestHost.AnalyzeAsync(
             source,
@@ -122,7 +122,7 @@ namespace ConsoleApplication1
     class Consumer :
         IConsumer<{contract}>
     {{
-        public Task Consume(ConsumeContext<{contract}> context)
+        public Task ConsumeAsync(ConsumeContext<{contract}> context)
         {{
             {body}
         }}

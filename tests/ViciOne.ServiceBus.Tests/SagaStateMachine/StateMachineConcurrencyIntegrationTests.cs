@@ -12,7 +12,7 @@ public sealed class StateMachineConcurrencyIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-CONCURRENCY", "awaited-enter-finalization-removes-instance")]
-    public async Task AwaitedEnterActivity_FinalizesAndRemovesOnlyAfterTheExternalDecisionCompletes()
+    public async Task AwaitedEnterActivity_FinalizesAndRemovesOnlyAfterTheExternalDecisionCompletesAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -25,16 +25,16 @@ public sealed class StateMachineConcurrencyIntegrationTests
             harness.StateMachineSaga<AwaitedFinalizeState, AwaitedFinalizeMachine>(machine, repository);
 
         Guid correlationId = NewId.NextGuid();
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             Task<IReceivedMessage<AwaitedFinalizeStart>> consumed = sagaHarness.Consumed
                 .SelectAsync<AwaitedFinalizeStart>(cancellationToken)
-                .First();
-            await harness.InputQueueSendEndpoint.Send(new AwaitedFinalizeStart(correlationId), cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new AwaitedFinalizeStart(correlationId), cancellationToken);
             await entered.Task.WaitAsync(timeout, cancellationToken);
 
-            AwaitedFinalizeState inFlight = sagaHarness.Sagas.Contains(correlationId);
+            AwaitedFinalizeState? inFlight = sagaHarness.Sagas.Contains(correlationId);
             Assert.NotNull(inFlight);
             Assert.Equal(machine.PendingDecision.Name, inFlight.CurrentState);
             Assert.True(inFlight.ReceivedFirst);
@@ -47,16 +47,16 @@ public sealed class StateMachineConcurrencyIntegrationTests
         finally
         {
             decision.TrySetResult(true);
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
-        Assert.Null(await repository.Load(correlationId));
+        Assert.Null(await repository.LoadAsync(correlationId, TestContext.Current.CancellationToken));
         Assert.Single(sagaHarness.Consumed.Select<AwaitedFinalizeStart>(SnapshotOnlyToken()));
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-CONCURRENCY", "same-instance-wait-does-not-block-unrelated-instance")]
-    public async Task HeldInstanceLock_DoesNotBlockAnotherInstanceAndReleasesTheQueuedSameInstanceMessage()
+    public async Task HeldInstanceLock_DoesNotBlockAnotherInstanceAndReleasesTheQueuedSameInstanceMessageAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -70,40 +70,40 @@ public sealed class StateMachineConcurrencyIntegrationTests
         ISagaStateMachineTestHarness<RepositoryProgressMachine, RepositoryProgressState> sagaHarness =
             harness.StateMachineSaga<RepositoryProgressState, RepositoryProgressMachine>(machine, signalingRepository);
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             Guid heldId = NewId.NextGuid();
             Guid independentId = NewId.NextGuid();
-            await harness.InputQueueSendEndpoint.Send(new RepositoryCreate(heldId), cancellationToken);
-            Assert.Equal(heldId, await sagaHarness.Exists(heldId, machine.Active, timeout));
+            await harness.InputQueueSendEndpoint.SendAsync(new RepositoryCreate(heldId), cancellationToken);
+            Assert.Equal(heldId, await sagaHarness.ExistsAsync(heldId, machine.Active, timeout, TestContext.Current.CancellationToken));
 
             Task<IReceivedMessage<RepositoryComplete>> completed = sagaHarness.Consumed
                 .SelectAsync<RepositoryComplete>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             Task<IReceivedMessage<RepositoryCancel>> canceled = sagaHarness.Consumed
                 .SelectAsync<RepositoryCancel>(cancellationToken)
-                .First();
-            await harness.InputQueueSendEndpoint.Send(new RepositoryComplete(heldId), cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new RepositoryComplete(heldId), cancellationToken);
             await completionEntered.Task.WaitAsync(timeout, cancellationToken);
-            await harness.InputQueueSendEndpoint.Send(new RepositoryCancel(heldId), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new RepositoryCancel(heldId), cancellationToken);
             Task cancelDispatch = await cancelDispatched.Task.WaitAsync(timeout, cancellationToken);
             Assert.False(cancelDispatch.IsCompleted);
-            await harness.InputQueueSendEndpoint.Send(new RepositoryCreate(independentId), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new RepositoryCreate(independentId), cancellationToken);
 
-            Assert.Equal(independentId, await sagaHarness.Exists(independentId, machine.Active, timeout));
+            Assert.Equal(independentId, await sagaHarness.ExistsAsync(independentId, machine.Active, timeout, TestContext.Current.CancellationToken));
             Assert.False(completed.IsCompleted);
 
             releaseCompletion.TrySetResult();
             Assert.Null((await completed.WaitAsync(timeout, cancellationToken)).Exception);
             Assert.Null((await canceled.WaitAsync(timeout, cancellationToken)).Exception);
-            Assert.Null(await repository.Load(heldId));
-            Assert.Equal(independentId, await sagaHarness.Exists(independentId, machine.Active, timeout));
+            Assert.Null(await repository.LoadAsync(heldId, TestContext.Current.CancellationToken));
+            Assert.Equal(independentId, await sagaHarness.ExistsAsync(independentId, machine.Active, timeout, TestContext.Current.CancellationToken));
         }
         finally
         {
             releaseCompletion.TrySetResult();
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Equal(2, sagaHarness.Consumed.Select<RepositoryCreate>(SnapshotOnlyToken()).Count());
@@ -127,33 +127,33 @@ public sealed class StateMachineConcurrencyIntegrationTests
             _dispatched = dispatched;
         }
 
-        public Task<TSaga> Load(Guid correlationId) => _repository.Load(correlationId);
+        public Task<TSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default) => _repository.LoadAsync(correlationId, cancellationToken: cancellationToken);
 
-        public Task<IEnumerable<Guid>> Find(ISagaQuery<TSaga> query) => _repository.Find(query);
+        public Task<IEnumerable<Guid>> FindAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken = default) => _repository.FindAsync(query, cancellationToken: cancellationToken);
 
         public void Probe(ProbeContext context) => ((IProbeSite)_repository).Probe(context);
 
-        public Task Send<T>(ConsumeContext<T> context, ISagaPolicy<TSaga, T> policy, IPipe<SagaConsumeContext<TSaga, T>> next)
+        public Task SendAsync<T>(ConsumeContext<T> context, ISagaPolicy<TSaga, T> policy, IPipe<SagaConsumeContext<TSaga, T>> next)
             where T : class
         {
-            Task dispatch = ((ISagaRepository<TSaga>)_repository).Send(context, policy, next);
+            Task dispatch = ((ISagaRepository<TSaga>)_repository).SendAsync(context, policy, next);
             if (context.Message is TMessage)
                 _dispatched.TrySetResult(dispatch);
 
             return dispatch;
         }
 
-        public Task SendQuery<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, ISagaPolicy<TSaga, T> policy,
+        public Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, ISagaPolicy<TSaga, T> policy,
             IPipe<SagaConsumeContext<TSaga, T>> next)
             where T : class
         {
-            return ((ISagaRepository<TSaga>)_repository).SendQuery(context, query, policy, next);
+            return ((ISagaRepository<TSaga>)_repository).SendQueryAsync(context, query, policy, next);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-PARTITION", "one-hundred-keys-with-nested-message-pipe")]
-    public async Task FourWayPartitioner_CreatesAllOneHundredInstancesAndRunsTheNestedMessagePipeExactlyOnce()
+    public async Task FourWayPartitioner_CreatesAllOneHundredInstancesAndRunsTheNestedMessagePipeExactlyOnceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -172,17 +172,17 @@ public sealed class StateMachineConcurrencyIntegrationTests
                     pipe.UseExecute(context => recorder.Record(context.Message.CorrelationId))));
             });
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         Guid[] ids = Enumerable.Range(0, PartitionCount).Select(_ => NewId.NextGuid()).ToArray();
         try
         {
             Task[] publishes = ids
-                .Select(id => harness.Bus.Publish(new PartitionStart(id), cancellationToken))
+                .Select(id => harness.Bus.PublishAsync(new PartitionStart(id), cancellationToken))
                 .ToArray();
             await Task.WhenAll(publishes).WaitAsync(timeout, cancellationToken);
 
             Guid?[] located = await Task.WhenAll(ids.Select(id =>
-                repository.ShouldContainSagaInState(id, machine, machine.Waiting, timeout)));
+                repository.ShouldContainSagaInStateAsync(id, machine, machine.Waiting, timeout)));
             Assert.Equal(ids.Order(), located.Select(id => Assert.NotNull(id)).Order());
             Assert.Equal(PartitionCount, recorder.Count);
             Assert.Equal(ids.Order(), recorder.Ids.Order());
@@ -190,7 +190,7 @@ public sealed class StateMachineConcurrencyIntegrationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Equal(PartitionCount, harness.Consumed.Select<PartitionStart>(SnapshotOnlyToken()).Count());
@@ -199,7 +199,7 @@ public sealed class StateMachineConcurrencyIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-CONCURRENCY", "four-voice-single-instance-composite")]
-    public async Task ConcurrentVoices_UpdateOneInstanceWithoutLossAndReachHarmonyExactlyOnce()
+    public async Task ConcurrentVoices_UpdateOneInstanceWithoutLossAndReachHarmonyExactlyOnceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -213,22 +213,22 @@ public sealed class StateMachineConcurrencyIntegrationTests
         ISagaStateMachineTestHarness<ChoirMachine, ChoirState> sagaHarness =
             harness.StateMachineSaga<ChoirState, ChoirMachine>(machine);
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             Guid correlationId = NewId.NextGuid();
-            await harness.Bus.Publish(new RehearsalBegins(correlationId), cancellationToken);
-            Assert.Equal(correlationId, await sagaHarness.Exists(correlationId, machine.Warmup, timeout));
+            await harness.Bus.PublishAsync(new RehearsalBegins(correlationId), cancellationToken);
+            Assert.Equal(correlationId, await sagaHarness.ExistsAsync(correlationId, machine.Warmup, timeout, TestContext.Current.CancellationToken));
 
             await Task.WhenAll(
-                harness.Bus.Publish(new Bass(correlationId, "John"), cancellationToken),
-                harness.Bus.Publish(new Baritone(correlationId, "Mark"), cancellationToken),
-                harness.Bus.Publish(new Tenor(correlationId, "Anthony"), cancellationToken),
-                harness.Bus.Publish(new Countertenor(correlationId, "Tom"), cancellationToken))
+                harness.Bus.PublishAsync(new Bass(correlationId, "John"), cancellationToken),
+                harness.Bus.PublishAsync(new Baritone(correlationId, "Mark"), cancellationToken),
+                harness.Bus.PublishAsync(new Tenor(correlationId, "Anthony"), cancellationToken),
+                harness.Bus.PublishAsync(new Countertenor(correlationId, "Tom"), cancellationToken))
                 .WaitAsync(timeout, cancellationToken);
 
-            Assert.Equal(correlationId, await sagaHarness.Exists(correlationId, machine.Harmony, timeout));
-            ChoirState instance = sagaHarness.Sagas.Contains(correlationId);
+            Assert.Equal(correlationId, await sagaHarness.ExistsAsync(correlationId, machine.Harmony, timeout, TestContext.Current.CancellationToken));
+            ChoirState? instance = sagaHarness.Sagas.Contains(correlationId);
             Assert.NotNull(instance);
             Assert.Equal("John", instance.Bass);
             Assert.Equal("Mark", instance.Baritone);
@@ -238,7 +238,7 @@ public sealed class StateMachineConcurrencyIntegrationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Single(sagaHarness.Consumed.Select<Bass>(SnapshotOnlyToken()));

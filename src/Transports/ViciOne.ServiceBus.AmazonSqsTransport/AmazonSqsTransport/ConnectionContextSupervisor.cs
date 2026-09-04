@@ -26,10 +26,10 @@ public class ConnectionContextSupervisor :
         return new AmazonSqsEndpointAddress(_hostConfiguration.HostAddress, address);
     }
 
-    public Task<ISendTransport> CreateSendTransport(SqsReceiveEndpointContext receiveEndpointContext, IClientContextSupervisor clientContextSupervisor,
-        Uri address)
+    public Task<ISendTransport> CreateSendTransportAsync(SqsReceiveEndpointContext receiveEndpointContext, IClientContextSupervisor clientContextSupervisor,
+        Uri address, CancellationToken cancellationToken = default)
     {
-        LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Transports.ISendTransport>(cancellationToken); LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
 
         var endpointAddress = new AmazonSqsEndpointAddress(_hostConfiguration.HostAddress, address);
 
@@ -45,7 +45,7 @@ public class ConnectionContextSupervisor :
 
             var context = new QueueSendTransportContext(_hostConfiguration, receiveEndpointContext, supervisor, configureTopology, settings.EntityName);
 
-            return CreateTransport(clientContextSupervisor, context);
+            return CreateTransportAsync(clientContextSupervisor, context);
         }
         else
         {
@@ -63,15 +63,15 @@ public class ConnectionContextSupervisor :
 
             var context = new TopicSendTransportContext(_hostConfiguration, receiveEndpointContext, supervisor, configureTopology, settings.EntityName);
 
-            return CreateTransport(clientContextSupervisor, context);
+            return CreateTransportAsync(clientContextSupervisor, context);
         }
     }
 
-    public Task<ISendTransport> CreatePublishTransport<T>(SqsReceiveEndpointContext receiveEndpointContext,
-        IClientContextSupervisor clientContextSupervisor)
+    public Task<ISendTransport> CreatePublishTransportAsync<T>(SqsReceiveEndpointContext receiveEndpointContext,
+        IClientContextSupervisor clientContextSupervisor, CancellationToken cancellationToken = default)
         where T : class
     {
-        LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Transports.ISendTransport>(cancellationToken); LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
 
         IAmazonSqsMessagePublishTopology<T> publishTopology = _topologyConfiguration.Publish.GetMessageTopology<T>();
 
@@ -84,10 +84,10 @@ public class ConnectionContextSupervisor :
 
         var context = new TopicSendTransportContext(_hostConfiguration, receiveEndpointContext, supervisor, configureTopology, settings.EntityName);
 
-        return CreateTransport(clientContextSupervisor, context);
+        return CreateTransportAsync(clientContextSupervisor, context);
     }
 
-    static Task<ISendTransport> CreateTransport(IClientContextSupervisor clientContextSupervisor, SendTransportContext<ClientContext> transportContext)
+    static Task<ISendTransport> CreateTransportAsync(IClientContextSupervisor clientContextSupervisor, SendTransportContext<ClientContext> transportContext)
     {
         var transport = new SendTransport<ClientContext>(transportContext);
 

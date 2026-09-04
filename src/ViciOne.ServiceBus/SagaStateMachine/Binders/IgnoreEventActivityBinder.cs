@@ -6,11 +6,10 @@ public class IgnoreEventActivityBinder<TInstance> :
 {
     public IgnoreEventActivityBinder(Event @event)
     {
-        Event = @event;
+        Event = @event ?? throw new ArgumentNullException(nameof(@event));
     }
 
-    public Event Event { get; }
-
+    public Event Event { get; } = null!;
     public bool IsStateTransitionEvent(State state)
     {
         return Equals(Event, state.Enter) || Equals(Event, state.BeforeEnter)
@@ -33,17 +32,16 @@ public class IgnoreEventActivityBinder<TInstance, TData> :
     where TInstance : class, SagaStateMachineInstance
     where TData : class
 {
-    readonly Event<TData> _event;
+    readonly Event<TData> _event = null!;
     readonly StateMachineCondition<TInstance, TData> _filter;
 
     public IgnoreEventActivityBinder(Event<TData> @event, StateMachineCondition<TInstance, TData> filter)
     {
-        _event = @event;
-        _filter = filter;
+        _event = @event ?? throw new ArgumentNullException(nameof(@event));
+        _filter = filter ?? throw new ArgumentNullException(nameof(filter));
     }
 
     public Event Event => _event;
-
     public bool IsStateTransitionEvent(State state)
     {
         return Equals(_event, state.Enter) || Equals(_event, state.BeforeEnter)

@@ -33,20 +33,20 @@ public class RedeliveryRetryFilter<TContext, TMessage> :
     }
 
     [DebuggerNonUserCode]
-    public async Task Send(TContext context, IPipe<TContext> next)
+    public async Task SendAsync(TContext context, IPipe<TContext> next)
     {
         using (RetryPolicyContext<TContext> policyContext = _retryPolicy.CreatePolicyContext(context))
         {
             if (_observers.Count > 0)
             {
-                var postCreateTask = _observers.PostCreate(policyContext);
+                var postCreateTask = _observers.PostCreateAsync(policyContext);
                 if (postCreateTask.Status != TaskStatus.RanToCompletion)
                     await postCreateTask.ConfigureAwait(false);
             }
 
             try
             {
-                await next.Send(policyContext.Context).ConfigureAwait(false);
+                await next.SendAsync(policyContext.Context).ConfigureAwait(false);
             }
             catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
             {
@@ -69,13 +69,13 @@ public class RedeliveryRetryFilter<TContext, TMessage> :
                     {
                         context.GetOrAddPayload(() => retryContext);
 
-                        var retryFaultedTask = retryContext.RetryFaulted(exception);
+                        var retryFaultedTask = retryContext.RetryFaultedAsync(exception);
                         if (retryFaultedTask.Status != TaskStatus.RanToCompletion)
                             await retryFaultedTask.ConfigureAwait(false);
 
                         if (_observers.Count > 0)
                         {
-                            var retryFaultTask = _observers.RetryFault(retryContext);
+                            var retryFaultTask = _observers.RetryFaultAsync(retryContext);
                             if (retryFaultTask.Status != TaskStatus.RanToCompletion)
                                 await retryFaultTask.ConfigureAwait(false);
                         }
@@ -84,7 +84,7 @@ public class RedeliveryRetryFilter<TContext, TMessage> :
                     throw;
                 }
 
-                var previousDeliveryCount = context.GetRedeliveryCount();
+                var previousDeliveryCount = context.Advanced().GetRedeliveryCount();
                 for (var retryIndex = 0; retryIndex < previousDeliveryCount; retryIndex++)
                 {
                     if (!retryContext.CanRetry(exception, out retryContext))
@@ -93,13 +93,13 @@ public class RedeliveryRetryFilter<TContext, TMessage> :
                         {
                             context.GetOrAddPayload(() => retryContext);
 
-                            var retryFaultedTask = retryContext.RetryFaulted(exception);
+                            var retryFaultedTask = retryContext.RetryFaultedAsync(exception);
                             if (retryFaultedTask.Status != TaskStatus.RanToCompletion)
                                 await retryFaultedTask.ConfigureAwait(false);
 
                             if (_observers.Count > 0)
                             {
-                                var retryFaultTask = _observers.RetryFault(retryContext);
+                                var retryFaultTask = _observers.RetryFaultAsync(retryContext);
                                 if (retryFaultTask.Status != TaskStatus.RanToCompletion)
                                     await retryFaultTask.ConfigureAwait(false);
                             }
@@ -111,7 +111,7 @@ public class RedeliveryRetryFilter<TContext, TMessage> :
 
                 if (_observers.Count > 0)
                 {
-                    var postFaultTask = _observers.PostFault(retryContext);
+                    var postFaultTask = _observers.PostFaultAsync(retryContext);
                     if (postFaultTask.Status != TaskStatus.RanToCompletion)
                         await postFaultTask.ConfigureAwait(false);
                 }
@@ -122,14 +122,14 @@ public class RedeliveryRetryFilter<TContext, TMessage> :
 
                     var delay = retryContext.Delay ?? TimeSpan.Zero;
 
-                    await redeliveryContext.ScheduleRedelivery(delay).ConfigureAwait(false);
+                    await redeliveryContext.ScheduleRedeliveryAsync(delay).ConfigureAwait(false);
 
-                    await context.NotifyConsumed(context, context.ReceiveContext.ElapsedTime,
+                    await context.NotifyConsumedAsync(context, context.Advanced().ReceiveContext.ElapsedTime,
                         TypeCache<RedeliveryRetryFilter<TContext, TMessage>>.ShortName).ConfigureAwait(false);
                 }
                 catch (Exception redeliveryException)
                 {
-                    throw new TransportException(context.ReceiveContext.InputAddress, "The message delivery could not be rescheduled",
+                    throw new TransportException(context.Advanced().ReceiveContext.InputAddress, "The message delivery could not be rescheduled",
                         new AggregateException(redeliveryException, exception));
                 }
             }

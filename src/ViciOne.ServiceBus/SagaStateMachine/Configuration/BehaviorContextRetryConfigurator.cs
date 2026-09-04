@@ -13,8 +13,7 @@ public class BehaviorContextRetryConfigurator :
         _observers = new RetryObservable();
     }
 
-    public RetryPolicyFactory PolicyFactory { get; private set; }
-
+    public RetryPolicyFactory PolicyFactory { get; private set; } = null!;
     public void SetRetryPolicy(RetryPolicyFactory factory)
     {
         PolicyFactory = factory;

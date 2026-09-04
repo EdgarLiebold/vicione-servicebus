@@ -21,7 +21,7 @@ public class SqlScheduleMessageProvider :
         _context = context;
         _sendEndpointProvider = context;
 
-        _cancel = RetryUsingContext;
+        _cancel = RetryUsingContextAsync;
     }
 
     public SqlScheduleMessageProvider(ISqlHostConfiguration hostConfiguration, ISendEndpointProvider sendEndpointProvider)
@@ -29,53 +29,53 @@ public class SqlScheduleMessageProvider :
         _hostConfiguration = hostConfiguration;
         _sendEndpointProvider = sendEndpointProvider;
 
-        _cancel = RetryUsingHostConfiguration;
+        _cancel = RetryUsingHostConfigurationAsync;
     }
 
-    public async Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, T message, IPipe<SendContext<T>> pipe,
+    public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
         if (!MessageTypeCache<T>.IsValidMessageType)
             throw new ArgumentException(MessageTypeCache<T>.InvalidMessageTypeReason, nameof(T));
 
-        var schedulePipe = new ScheduleSendPipe<T>(pipe, scheduledTime);
+        var schedulePipe = new ScheduleSendPipe<T>(pipe, dueAt);
 
         var tokenId = ScheduleTokenIdCache<T>.GetTokenId(message);
 
         schedulePipe.ScheduledMessageId = tokenId;
 
-        var endpoint = await _sendEndpointProvider.GetSendEndpoint(destinationAddress).ConfigureAwait(false);
+        var endpoint = await _sendEndpointProvider.GetSendEndpointAsync(destinationAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        await endpoint.Send(message, schedulePipe, cancellationToken).ConfigureAwait(false);
+        await endpoint.SendAsync(message, schedulePipe, cancellationToken).ConfigureAwait(false);
 
         LogContext.Debug?.Log("SCHED {DestinationAddress} {MessageId} {MessageType} {DeliveryTime:G} {Token}",
-            destinationAddress, schedulePipe.MessageId, TypeCache<T>.ShortName, scheduledTime, schedulePipe.ScheduledMessageId);
+            destinationAddress, schedulePipe.MessageId, TypeCache<T>.ShortName, dueAt, schedulePipe.ScheduledMessageId);
 
-        return new ScheduledMessageHandle<T>(schedulePipe.ScheduledMessageId ?? NewId.NextGuid(), scheduledTime, destinationAddress, message);
+        return new ScheduledMessageHandle<T>(schedulePipe.ScheduledMessageId ?? NewId.NextGuid(), dueAt, destinationAddress, message);
     }
 
-    public Task CancelScheduledSend(Guid tokenId, CancellationToken cancellationToken)
+    public Task CancelScheduledSendAsync(Guid tokenId, CancellationToken cancellationToken)
     {
         return _cancel(async clientContext =>
         {
-            var deleted = await clientContext.DeleteScheduledMessage(tokenId, cancellationToken).ConfigureAwait(false);
+            var deleted = await clientContext.DeleteScheduledMessageAsync(tokenId, cancellationToken).ConfigureAwait(false);
             if (deleted)
                 LogContext.Debug?.Log("CANCEL {TokenId}", tokenId);
         }, cancellationToken);
     }
 
-    public Task CancelScheduledSend(Uri destinationAddress, Guid tokenId, CancellationToken cancellationToken)
+    public Task CancelScheduledSendAsync(Uri destinationAddress, Guid tokenId, CancellationToken cancellationToken)
     {
         return _cancel(async clientContext =>
         {
-            var deleted = await clientContext.DeleteScheduledMessage(tokenId, cancellationToken).ConfigureAwait(false);
+            var deleted = await clientContext.DeleteScheduledMessageAsync(tokenId, cancellationToken).ConfigureAwait(false);
             if (deleted)
                 LogContext.Debug?.Log("CANCEL {DestinationAddress} {TokenId}", destinationAddress, tokenId);
         }, cancellationToken);
     }
 
-    Task RetryUsingContext(Func<ClientContext, Task> callback, CancellationToken cancellationToken)
+    Task RetryUsingContextAsync(Func<ClientContext, Task> callback, CancellationToken cancellationToken)
     {
         if (!_context!.TryGetPayload(out ClientContext? clientContext))
             throw new ArgumentException("The client context was not available", nameof(_context));
@@ -83,13 +83,13 @@ public class SqlScheduleMessageProvider :
         return callback(clientContext);
     }
 
-    Task RetryUsingHostConfiguration(Func<ClientContext, Task> callback, CancellationToken cancellationToken)
+    Task RetryUsingHostConfigurationAsync(Func<ClientContext, Task> callback, CancellationToken cancellationToken)
     {
         ISqlHostConfiguration hostConfiguration = _hostConfiguration!;
         var pipe = new ClientContextPipe(callback, cancellationToken);
 
-        return hostConfiguration.Retry(() => hostConfiguration.ConnectionContextSupervisor.Send(pipe, cancellationToken), cancellationToken,
-            hostConfiguration.ConnectionContextSupervisor.Stopping);
+        return hostConfiguration.RetryAsync(() => hostConfiguration.ConnectionContextSupervisor.SendAsync(pipe, cancellationToken),
+            stoppingToken: hostConfiguration.ConnectionContextSupervisor.Stopping, cancellationToken: cancellationToken);
     }
 
 
@@ -105,7 +105,7 @@ public class SqlScheduleMessageProvider :
             _cancellationToken = cancellationToken;
         }
 
-        public Task Send(ConnectionContext context)
+        public Task SendAsync(ConnectionContext context)
         {
             var clientContext = context.CreateClientContext(_cancellationToken);
 

@@ -30,11 +30,11 @@ public sealed class ActiveMqReceiveContext :
 
     public string ActivitySystem => "activemq";
 
-    public string GroupId => TransportMessage.GetGroupId();
+    public string? GroupId => TransportMessage.GetGroupId();
 
     public int GroupSequence => TransportMessage.GetGroupSequence();
 
-    public IDictionary<string, object> GetTransportProperties()
+    public IDictionary<string, object>? GetTransportProperties()
     {
         var properties = new Lazy<Dictionary<string, object>>(() => new Dictionary<string, object>());
 
@@ -76,9 +76,9 @@ public sealed class ActiveMqReceiveContext :
             return _sendEndpointProvider.ConnectSendObserver(observer);
         }
 
-        public async Task<ISendEndpoint> GetSendEndpoint(Uri address)
+        public async Task<ISendEndpoint> GetSendEndpointAsync(Uri address, CancellationToken cancellationToken = default)
         {
-            var endpoint = await _sendEndpointProvider.GetSendEndpoint(address).ConfigureAwait(false);
+            var endpoint = await _sendEndpointProvider.GetSendEndpointAsync(address, cancellationToken: cancellationToken).ConfigureAwait(false);
 
             return new ReplyToSendEndpoint(endpoint, _replyTo);
         }

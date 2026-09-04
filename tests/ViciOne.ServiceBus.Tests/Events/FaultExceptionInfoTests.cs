@@ -12,9 +12,9 @@ public sealed class FaultExceptionInfoTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-FAULT-DIAGNOSTICS", "application-data-transport")]
-    public async Task ApplicationDiagnosticData_IsCarriedByExactlyOnePublishedFault()
+    public async Task ApplicationDiagnosticData_IsCarriedByExactlyOnePublishedFaultAsync()
     {
-        Fault<DiagnosticFailure> fault = await PublishFault(FailureSource.ApplicationWrapper);
+        Fault<DiagnosticFailure> fault = await PublishFaultAsync(FailureSource.ApplicationWrapper);
         ExceptionInfo exception = Assert.Single(fault.Exceptions);
 
         Assert.Equal(TypeCache<DiagnosticFailureException>.ShortName, exception.ExceptionType);
@@ -24,9 +24,9 @@ public sealed class FaultExceptionInfoTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-FAULT-DIAGNOSTICS", "exception-data-transport")]
-    public async Task ExceptionDiagnosticData_IsCarriedByExactlyOnePublishedFault()
+    public async Task ExceptionDiagnosticData_IsCarriedByExactlyOnePublishedFaultAsync()
     {
-        Fault<DiagnosticFailure> fault = await PublishFault(FailureSource.ExceptionData);
+        Fault<DiagnosticFailure> fault = await PublishFaultAsync(FailureSource.ExceptionData);
         ExceptionInfo exception = Assert.Single(fault.Exceptions);
 
         Assert.Equal(TypeCache<DiagnosticFailureException>.ShortName, exception.ExceptionType);
@@ -250,7 +250,7 @@ public sealed class FaultExceptionInfoTests
         Assert.Null(snapshot.Data);
     }
 
-    private static async Task<Fault<DiagnosticFailure>> PublishFault(FailureSource source)
+    private static async Task<Fault<DiagnosticFailure>> PublishFaultAsync(FailureSource source)
     {
         TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -267,17 +267,17 @@ public sealed class FaultExceptionInfoTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync().WaitAsync(timeout, cancellationToken);
 
         try
         {
             Task<IPublishedMessage<Fault<DiagnosticFailure>>> publishedFaultTask = harness.Published
                 .SelectAsync<Fault<DiagnosticFailure>>(cancellationToken)
-                .First();
+                .FirstObservedAsync();
             Task<ConsumeContext<Fault<DiagnosticFailure>>> receivedFaultTask =
-                await harness.ConnectPublishHandler<Fault<DiagnosticFailure>>(_ => true);
+                await harness.ConnectPublishHandlerAsync<Fault<DiagnosticFailure>>(_ => true);
 
-            await harness.Bus.Publish(new DiagnosticFailure(source), cancellationToken);
+            await harness.Bus.PublishAsync(new DiagnosticFailure(source), cancellationToken);
             await publishedFaultTask.WaitAsync(timeout, cancellationToken);
             Fault<DiagnosticFailure> fault =
                 (await receivedFaultTask.WaitAsync(timeout, cancellationToken)).Message;
@@ -287,7 +287,7 @@ public sealed class FaultExceptionInfoTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -301,7 +301,7 @@ public sealed class FaultExceptionInfoTests
 
     private sealed class DiagnosticFailureConsumer : IConsumer<DiagnosticFailure>
     {
-        public Task Consume(ConsumeContext<DiagnosticFailure> context)
+        public Task ConsumeAsync(ConsumeContext<DiagnosticFailure> context)
         {
             var failure = new DiagnosticFailureException("intentional diagnostic failure");
 

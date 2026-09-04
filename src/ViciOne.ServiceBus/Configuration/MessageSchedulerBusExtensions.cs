@@ -25,12 +25,12 @@ public static class MessageSchedulerBusExtensions
     /// <returns></returns>
     public static IMessageScheduler CreateMessageScheduler(this IBus bus, Uri schedulerEndpointAddress, TimeProvider? timeProvider = null)
     {
-        Task<ISendEndpoint> GetSchedulerEndpoint()
+        Task<ISendEndpoint> GetSchedulerEndpointAsync()
         {
-            return bus.GetSendEndpoint(schedulerEndpointAddress);
+            return bus.GetSendEndpointAsync(schedulerEndpointAddress);
         }
 
-        return new MessageScheduler(new EndpointScheduleMessageProvider(GetSchedulerEndpoint), bus.Topology, timeProvider);
+        return new MessageScheduler(new EndpointScheduleMessageProvider(GetSchedulerEndpointAsync), bus.Topology, timeProvider);
     }
 
     /// <summary>
@@ -47,12 +47,12 @@ public static class MessageSchedulerBusExtensions
     public static IMessageScheduler CreateMessageScheduler(this ISendEndpointProvider sendEndpointProvider, IBusTopology busTopology,
         Uri schedulerEndpointAddress, TimeProvider? timeProvider = null)
     {
-        Task<ISendEndpoint> GetSchedulerEndpoint()
+        Task<ISendEndpoint> GetSchedulerEndpointAsync()
         {
-            return sendEndpointProvider.GetSendEndpoint(schedulerEndpointAddress);
+            return sendEndpointProvider.GetSendEndpointAsync(schedulerEndpointAddress);
         }
 
-        return new MessageScheduler(new EndpointScheduleMessageProvider(GetSchedulerEndpoint), busTopology, timeProvider);
+        return new MessageScheduler(new EndpointScheduleMessageProvider(GetSchedulerEndpointAsync), busTopology, timeProvider);
     }
 
     /// <summary>

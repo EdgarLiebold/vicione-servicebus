@@ -21,7 +21,7 @@ public sealed class MessagePipelineActivityTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-ACTIVITY", "complete-send-receive-process-trace")]
-    public async Task MessageFlow_EmitsOneCompleteTraceWithExactKindsParentsBaggageAndTags()
+    public async Task MessageFlow_EmitsOneCompleteTraceWithExactKindsParentsBaggageAndTagsAsync()
     {
         TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -51,7 +51,7 @@ public sealed class MessagePipelineActivityTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
@@ -62,14 +62,14 @@ public sealed class MessagePipelineActivityTests
             {
                 caller.TraceStateString = TraceState;
                 caller.AddBaggage(BaggageKey, BaggageValue);
-                await harness.Bus.Publish(new ActivityMessage("trace"), cancellationToken)
+                await harness.Bus.PublishAsync(new ActivityMessage("trace"), cancellationToken)
                     .WaitAsync(timeout, cancellationToken);
-                Assert.True(await harness.Consumed.Any<ActivityMessage>(cancellationToken));
+                Assert.True(await harness.Consumed.AnyAsync<ActivityMessage>(cancellationToken));
             }
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
         Activity callerActivity = Assert.Single(recorded, activity => activity.Source.Name == CallerSource);
@@ -85,6 +85,8 @@ public sealed class MessagePipelineActivityTests
         Assert.Equal(ActivityKind.Producer, send.Kind);
         Assert.Equal(ActivityKind.Consumer, receive.Kind);
         Assert.Equal(ActivityKind.Consumer, process.Kind);
+        Assert.EndsWith(" receive", receive.OperationName, StringComparison.Ordinal);
+        Assert.Equal($"{receive.OperationName[..^" receive".Length]} process", process.OperationName);
         Assert.Equal(callerActivity.TraceId, send.TraceId);
         Assert.Equal(callerActivity.TraceId, receive.TraceId);
         Assert.Equal(callerActivity.TraceId, process.TraceId);
@@ -105,9 +107,9 @@ public sealed class MessagePipelineActivityTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-ACTIVITY", "unsampled-parent-context-propagation")]
-    public async Task UnsampledServiceBusActivity_StillPropagatesParentIdTraceStateAndBaggage()
+    public async Task UnsampledServiceBusActivity_StillPropagatesParentIdTraceStateAndBaggageAsync()
     {
-        HostileFlowResult result = await RunActivityFlow(
+        HostileFlowResult result = await RunActivityFlowAsync(
             static (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.None);
 
         Assert.Equal(1, result.Observation.DeliveryCount);
@@ -121,9 +123,9 @@ public sealed class MessagePipelineActivityTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-ACTIVITY", "sample-and-logging-fault-isolation")]
-    public async Task ThrowingSampleAndSecondaryLogger_DoNotChangeExactlyOnceDeliveryOrParentPropagation()
+    public async Task ThrowingSampleAndSecondaryLogger_DoNotChangeExactlyOnceDeliveryOrParentPropagationAsync()
     {
-        HostileFlowResult result = await RunActivityFlow(
+        HostileFlowResult result = await RunActivityFlowAsync(
             static (ref ActivityCreationOptions<ActivityContext> _) => throw new HostileTelemetryException("sample"),
             useThrowingLogger: true);
 
@@ -137,9 +139,9 @@ public sealed class MessagePipelineActivityTests
     [InlineData(CallbackFault.ActivityStarted)]
     [InlineData(CallbackFault.ActivityStopped)]
     [RequirementCoverage("REQ-VSB-MESSAGE-ACTIVITY", "start-and-stop-callback-fault-isolation")]
-    public async Task ThrowingStartOrStopCallback_DoesNotChangeExactlyOnceDelivery(CallbackFault callbackFault)
+    public async Task ThrowingStartOrStopCallback_DoesNotChangeExactlyOnceDeliveryAsync(CallbackFault callbackFault)
     {
-        HostileFlowResult result = await RunActivityFlow(
+        HostileFlowResult result = await RunActivityFlowAsync(
             static (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllDataAndRecorded,
             callbackFault);
 
@@ -150,7 +152,7 @@ public sealed class MessagePipelineActivityTests
             Assert.NotEqual(result.CallerId, result.Observation.ActivityIdHeader);
     }
 
-    private static async Task<HostileFlowResult> RunActivityFlow(
+    private static async Task<HostileFlowResult> RunActivityFlowAsync(
         SampleActivity<ActivityContext> sample,
         CallbackFault callbackFault = CallbackFault.None,
         bool useThrowingLogger = false)
@@ -173,7 +175,7 @@ public sealed class MessagePipelineActivityTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync().WaitAsync(timeout, cancellationToken);
         var listener = new ActivityListener
         {
             ShouldListenTo = source => source.Name == DiagnosticHeaders.DefaultListenerName,
@@ -182,7 +184,7 @@ public sealed class MessagePipelineActivityTests
             ActivityStarted = _ => ThrowIfSelected(callbackFault, CallbackFault.ActivityStarted),
             ActivityStopped = _ => ThrowIfSelected(callbackFault, CallbackFault.ActivityStopped),
         };
-        ILogContext previousLogContext = LogContext.Current;
+        ILogContext? previousLogContext = LogContext.Current;
 
         try
         {
@@ -200,17 +202,17 @@ public sealed class MessagePipelineActivityTests
             caller.Start();
             string callerId = Assert.IsType<string>(caller.Id);
 
-            await harness.Bus.Publish(new ActivityMessage("hostile-listener"), cancellationToken)
+            await harness.Bus.PublishAsync(new ActivityMessage("hostile-listener"), cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
-            Assert.True(await harness.Consumed.Any<ActivityMessage>(cancellationToken));
+            Assert.True(await harness.Consumed.AnyAsync<ActivityMessage>(cancellationToken));
 
             return new HostileFlowResult(observation, callerId);
         }
         finally
         {
-            LogContext.Current = previousLogContext;
+            LogContext.Current = previousLogContext!;
             listener.Dispose();
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -245,13 +247,13 @@ public sealed class MessagePipelineActivityTests
 
     private sealed class MessagePipelineActivityConsumer(ActivityObservation observation) : IConsumer<ActivityMessage>
     {
-        public Task Consume(ConsumeContext<ActivityMessage> context)
+        public Task ConsumeAsync(ConsumeContext<ActivityMessage> context)
         {
             observation.DeliveryCount++;
             observation.ActivityIdHeader = context.Headers.Get<string>(DiagnosticHeaders.ActivityId);
             observation.TraceStateHeader = context.Headers.Get<string>(DiagnosticHeaders.ActivityTraceState);
             observation.Baggage = Activity.Current?.GetBaggageItem(BaggageKey);
-            if (context.TryGetHeader(
+            if (context.Advanced().TryGetHeader(
                     DiagnosticHeaders.ActivityCorrelationContext,
                     out IEnumerable<KeyValuePair<string, object>>? baggage))
             {

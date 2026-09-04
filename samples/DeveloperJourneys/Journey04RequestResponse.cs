@@ -2,12 +2,12 @@ namespace ViciOne.ServiceBus.Samples.DeveloperJourneys;
 
 public static class Journey04RequestResponse
 {
-    public static async Task<OrderStatus> Request(
+    public static async Task<OrderStatus> RequestAsync(
         IRequestClient<GetOrder> client,
         GetOrder request,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
-        Response<OrderStatus> response = await client.GetResponse<OrderStatus>(request, cancellationToken);
+        Response<OrderStatus> response = await client.GetResponseAsync<OrderStatus>(request, cancellationToken);
         return response.Message;
     }
 }

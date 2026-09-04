@@ -76,17 +76,18 @@ public static class PipeExtensions
     /// <param name="context">The pipe context</param>
     /// <param name="setupMethod">The setup method, called once regardless of the thread count</param>
     /// <returns></returns>
-    public static async Task<OneTimeContext<T>> OneTimeSetup<T>(this PipeContext context, OneTimeSetupCallback setupMethod)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static async Task<OneTimeContext<T>> OneTimeSetupAsync<T>(this PipeContext context, OneTimeSetupCallback setupMethod, CancellationToken cancellationToken = default)
         where T : class
     {
-        if (context == null)
+        cancellationToken.ThrowIfCancellationRequested(); if (context == null)
             throw new ArgumentNullException(nameof(context));
         if (setupMethod == null)
             throw new ArgumentNullException(nameof(setupMethod));
 
         OneTimeContextPayload<T> oneTimeContext = context.GetOrAddPayload(() => new OneTimeContextPayload<T>());
 
-        await oneTimeContext.RunOneTime(() => new OneTimeSetupMethod(setupMethod)).ConfigureAwait(false);
+        await oneTimeContext.RunOneTimeAsync(() => new OneTimeSetupMethod(setupMethod)).ConfigureAwait(false);
 
         return oneTimeContext;
     }

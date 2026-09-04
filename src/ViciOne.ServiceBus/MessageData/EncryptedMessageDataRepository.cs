@@ -27,11 +27,11 @@ public class EncryptedMessageDataRepository :
         _streamProvider = streamProvider;
     }
 
-    public async Task<Stream> Get(Uri address, CancellationToken cancellationToken = default)
+    public async Task<Stream> GetAsync(Uri address, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(address);
 
-        var stream = await _repository.Get(address, cancellationToken).ConfigureAwait(false);
+        var stream = await _repository.GetAsync(address, cancellationToken).ConfigureAwait(false);
 
         try
         {
@@ -44,12 +44,12 @@ public class EncryptedMessageDataRepository :
         }
     }
 
-    public async Task<Uri> Put(Stream stream, TimeSpan? timeToLive = null, CancellationToken cancellationToken = default)
+    public async Task<Uri> PutAsync(Stream stream, TimeSpan? timeToLive = null, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(stream);
 
         using var cryptoStream = _streamProvider.GetEncryptStream(stream, null, CryptoStreamMode.Read);
 
-        return await _repository.Put(cryptoStream, timeToLive, cancellationToken).ConfigureAwait(false);
+        return await _repository.PutAsync(cryptoStream, timeToLive, cancellationToken).ConfigureAwait(false);
     }
 }

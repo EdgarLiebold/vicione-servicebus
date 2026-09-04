@@ -15,16 +15,16 @@ public abstract class OutboxConsumeContextProxy<TMessage> :
     protected OutboxConsumeContextProxy(ConsumeContext<TMessage> context, OutboxConsumeOptions options, IServiceProvider provider)
         : base(context)
     {
-        CapturedContext = context;
+        CapturedContext = context.Advanced();
         Options = options;
         _provider = provider;
 
-        var outboxReceiveContext = new OutboxReceiveContext(this, context.ReceiveContext);
+        var outboxReceiveContext = new OutboxReceiveContext(this, context.Advanced().ReceiveContext);
 
         ReceiveContext = outboxReceiveContext;
         PublishEndpointProvider = outboxReceiveContext.PublishEndpointProvider;
 
-        if (context.TryGetPayload(out MessageSchedulerContext schedulerContext))
+        if (context.TryGetPayload(out MessageSchedulerContext? schedulerContext))
         {
             context.AddOrUpdatePayload<MessageSchedulerContext>(
                 () => new ConsumeMessageSchedulerContext(this, schedulerContext.SchedulerFactory),
@@ -44,19 +44,19 @@ public abstract class OutboxConsumeContextProxy<TMessage> :
     public abstract int ReceiveCount { get; }
     public abstract long? LastSequenceNumber { get; }
 
-    public abstract Task SetConsumed();
-    public abstract Task SetDelivered();
+    public abstract Task SetConsumedAsync(CancellationToken cancellationToken = default);
+    public abstract Task SetDeliveredAsync(CancellationToken cancellationToken = default);
 
-    public abstract Task<List<OutboxMessageContext>> LoadOutboxMessages();
+    public abstract Task<List<OutboxMessageContext>> LoadOutboxMessagesAsync(CancellationToken cancellationToken = default);
 
-    public abstract Task NotifyOutboxMessageDelivered(OutboxMessageContext message);
+    public abstract Task NotifyOutboxMessageDeliveredAsync(OutboxMessageContext message, CancellationToken cancellationToken = default);
 
-    public abstract Task RemoveOutboxMessages();
+    public abstract Task RemoveOutboxMessagesAsync(CancellationToken cancellationToken = default);
 
-    public abstract Task AddSend<T>(SendContext<T> context)
+    public abstract Task AddSendAsync<T>(SendContext<T> context, CancellationToken cancellationToken = default)
         where T : class;
 
-    public object GetService(Type serviceType)
+    public object? GetService(Type serviceType)
     {
         return _provider.GetService(serviceType);
     }

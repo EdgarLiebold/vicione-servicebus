@@ -28,9 +28,9 @@ public class CopyHeaderInitializer<TMessage, TInput, THeader> :
         _headerProperty = WritePropertyCache<SendContext>.GetProperty<THeader>(headerPropertyInfo);
     }
 
-    public Task Apply(InitializeContext<TMessage, TInput> context, SendContext sendContext)
+    public Task ApplyAsync(InitializeContext<TMessage, TInput> context, SendContext sendContext, CancellationToken cancellationToken = default)
     {
-        var inputPropertyValue = _inputProperty.Get(context.Input);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); var inputPropertyValue = _inputProperty.Get(context.Input);
 
         _headerProperty.Set(sendContext, inputPropertyValue);
 

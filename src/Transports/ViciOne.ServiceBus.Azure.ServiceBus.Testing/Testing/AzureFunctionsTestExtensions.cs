@@ -26,10 +26,11 @@ public static class AzureFunctionsTestExtensions
     /// <param name="harness"></param>
     /// <param name="message"></param>
     /// <typeparam name="TConsumer"></typeparam>
-    public static Task HandleConsumer<TConsumer>(this ITestHarness harness, object message)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static Task HandleConsumerAsync<TConsumer>(this ITestHarness harness, object message, CancellationToken cancellationToken = default)
         where TConsumer : class, IConsumer
     {
-        var body = ServiceBusMetadataJson.ObjectDeserializer.SerializeObject(message);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); var body = ServiceBusMetadataJson.ObjectDeserializer.SerializeObject(message);
 
         var messageBody = new AmqpMessageBody([new BinaryData(body.GetBytes()).ToMemory()]);
         var annotatedMessage = new AmqpAnnotatedMessage(messageBody)
@@ -42,12 +43,14 @@ public static class AzureFunctionsTestExtensions
             }
         };
 
-        var receivedMessage = (ServiceBusReceivedMessage)typeof(ServiceBusReceivedMessage).GetConstructor(
-            BindingFlags.NonPublic | BindingFlags.Instance, null, [typeof(AmqpAnnotatedMessage)], null).Invoke([annotatedMessage]);
+        ConstructorInfo constructor = typeof(ServiceBusReceivedMessage).GetConstructor(
+            BindingFlags.NonPublic | BindingFlags.Instance, null, [typeof(AmqpAnnotatedMessage)], null)
+            ?? throw new InvalidOperationException("The Azure Service Bus received-message constructor is unavailable.");
+        var receivedMessage = (ServiceBusReceivedMessage)constructor.Invoke([annotatedMessage]);
 
         var receiver = harness.Scope.ServiceProvider.GetRequiredService<IMessageReceiver>();
         var formatter = harness.Scope.ServiceProvider.GetService<IEndpointNameFormatter>() ?? DefaultEndpointNameFormatter.Instance;
 
-        return receiver.HandleConsumer<TConsumer>(formatter.Consumer<TConsumer>(), receivedMessage, harness.CancellationToken);
+        return receiver.HandleConsumerAsync<TConsumer>(formatter.Consumer<TConsumer>(), receivedMessage, cancellationToken);
     }
 }

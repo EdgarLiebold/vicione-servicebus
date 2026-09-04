@@ -26,7 +26,7 @@ public class SubmitJobConsumer<TJob> :
         _jobTypeId = jobTypeId;
     }
 
-    public Task Consume(ConsumeContext<SubmitJob<TJob>> context)
+    public Task ConsumeAsync(ConsumeContext<SubmitJob<TJob>> context)
     {
         if (context.Message.Schedule != null)
         {
@@ -37,21 +37,22 @@ public class SubmitJobConsumer<TJob> :
                 CronExpression.ValidateExpression(context.Message.Schedule.CronExpression!);
         }
 
-        return PublishJobSubmitted(context, context.Message.JobId, context.Message.Job, context.SentTime ?? context.GetUtcDateTime(), context.Message.Schedule,
+        return PublishJobSubmittedAsync(context.Advanced(), context.Message.JobId, context.Message.Job, context.SentTime ?? context.GetUtcDateTime(), context.Message.Schedule,
             context.Message.Properties);
     }
 
-    public Task Consume(ConsumeContext<TJob> context)
+    public Task ConsumeAsync(ConsumeContext<TJob> context)
     {
         var jobId = context.RequestId ?? NewId.NextGuid();
 
-        return PublishJobSubmitted(context, jobId, context.Message, context.SentTime ?? context.GetUtcDateTime(), null, null);
+        return PublishJobSubmittedAsync(context.Advanced(), jobId, context.Message, context.SentTime ?? context.GetUtcDateTime(), null, null);
     }
 
-    async Task PublishJobSubmitted(ConsumeContext context, Guid jobId, TJob job, DateTime timestamp, RecurringJobSchedule? schedule,
+    async Task PublishJobSubmittedAsync(ConsumeContext context, Guid jobId, TJob job, DateTimeOffset timestamp,
+        RecurringJobSchedule? schedule,
         Dictionary<string, object>? jobProperties)
     {
-        await context.Publish<JobSubmitted>(new JobSubmittedEvent
+        await context.PublishAsync<JobSubmitted>(new JobSubmittedEvent
         {
             JobId = jobId,
             JobTypeId = _jobTypeId,

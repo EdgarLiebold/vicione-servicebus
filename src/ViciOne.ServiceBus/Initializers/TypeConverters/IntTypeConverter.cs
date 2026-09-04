@@ -26,7 +26,7 @@ public class IntTypeConverter :
         return true;
     }
 
-    public bool TryConvert(object input, out int result)
+    public bool TryConvert(object? input, out int result)
     {
         if (input != null)
         {
@@ -50,7 +50,7 @@ public class IntTypeConverter :
         return true;
     }
 
-    public bool TryConvert(string input, out int result)
+    public bool TryConvert(string? input, out int result)
     {
         return int.TryParse(input, out result);
     }

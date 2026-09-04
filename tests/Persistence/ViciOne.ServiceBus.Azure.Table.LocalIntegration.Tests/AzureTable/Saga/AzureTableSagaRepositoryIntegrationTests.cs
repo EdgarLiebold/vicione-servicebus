@@ -12,7 +12,7 @@ public sealed class AzureTableSagaRepositoryIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-SAGA-LIFECYCLE", "initiate-correlate-update-and-reload-on-real-table-api")]
-    public async Task Repository_PersistsAndReloadsTheCorrelatedSagaLifecycle()
+    public async Task Repository_PersistsAndReloadsTheCorrelatedSagaLifecycleAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         TimeSpan timeout = OperationTimeout();
@@ -25,29 +25,30 @@ public sealed class AzureTableSagaRepositoryIntegrationTests
                     .AzureTableRepository(repository => repository.TableClientFactory(() => fixture.Table));
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Guid sagaId = Guid.NewGuid();
-            ISendEndpoint endpoint = await harness.GetSagaEndpoint<PersistentSaga>();
+            ISendEndpoint endpoint = await harness.GetSagaEndpointAsync<PersistentSaga>(TestContext.Current.CancellationToken);
 
-            await endpoint.Send(new StartPersistentSaga(sagaId, "created"), cancellationToken);
+            await endpoint.SendAsync(new StartPersistentSaga(sagaId, "created"), cancellationToken);
             IPublishedMessage<PersistentSagaStarted> started = await harness.Published
                 .SelectAsync<PersistentSagaStarted>(
                     observed => observed.Context.Message.CorrelationId == sagaId,
                     cancellationToken)
-                .First();
-            await endpoint.Send(new UpdatePersistentSaga(sagaId, "updated"), cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
+            await endpoint.SendAsync(new UpdatePersistentSaga(sagaId, "updated"), cancellationToken);
             IPublishedMessage<PersistentSagaUpdated> updated = await harness.Published
                 .SelectAsync<PersistentSagaUpdated>(
                     observed => observed.Context.Message.CorrelationId == sagaId,
                     cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             var repository = (ILoadSagaRepository<PersistentSaga>)AzureTableSagaRepository<PersistentSaga>
                 .Create(() => fixture.Table);
-            PersistentSaga persisted = await repository.Load(sagaId);
+            PersistentSaga persisted = Assert.IsType<PersistentSaga>(
+                await repository.LoadAsync(sagaId, TestContext.Current.CancellationToken));
 
             Assert.Equal("created", started.Context.Message.Value);
             Assert.Equal("updated", updated.Context.Message.Value);
@@ -58,13 +59,13 @@ public sealed class AzureTableSagaRepositoryIntegrationTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-SAGA-READ-ONLY", "response-observes-state-without-persisting-handler-mutation")]
-    public async Task ReadOnlyEvent_RespondsFromPersistedStateWithoutSavingItsMutation()
+    public async Task ReadOnlyEvent_RespondsFromPersistedStateWithoutSavingItsMutationAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         TimeSpan timeout = OperationTimeout();
@@ -77,26 +78,27 @@ public sealed class AzureTableSagaRepositoryIntegrationTests
                     .AzureTableRepository(repository => repository.TableClientFactory(() => fixture.Table));
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Guid sagaId = Guid.NewGuid();
             IRequestClient<StartReadOnlySaga> startClient = harness.GetRequestClient<StartReadOnlySaga>();
-            Response<ReadOnlySagaStarted> started = await startClient.GetResponse<ReadOnlySagaStarted>(
+            Response<ReadOnlySagaStarted> started = await startClient.GetResponseAsync<ReadOnlySagaStarted>(
                 new StartReadOnlySaga(sagaId),
                 cancellationToken);
             IRequestClient<CheckReadOnlySaga> statusClient = harness.GetRequestClient<CheckReadOnlySaga>();
 
-            Response<ReadOnlySagaStatus> first = await statusClient.GetResponse<ReadOnlySagaStatus>(
+            Response<ReadOnlySagaStatus> first = await statusClient.GetResponseAsync<ReadOnlySagaStatus>(
                 new CheckReadOnlySaga(sagaId),
                 cancellationToken);
-            Response<ReadOnlySagaStatus> second = await statusClient.GetResponse<ReadOnlySagaStatus>(
+            Response<ReadOnlySagaStatus> second = await statusClient.GetResponseAsync<ReadOnlySagaStatus>(
                 new CheckReadOnlySaga(sagaId),
                 cancellationToken);
             var repository = (ILoadSagaRepository<ReadOnlyState>)AzureTableSagaRepository<ReadOnlyState>
                 .Create(() => fixture.Table);
-            ReadOnlyState persisted = await repository.Load(sagaId);
+            ReadOnlyState persisted = Assert.IsType<ReadOnlyState>(
+                await repository.LoadAsync(sagaId, TestContext.Current.CancellationToken));
 
             Assert.Equal(sagaId, started.Message.CorrelationId);
             Assert.Equal("Started", first.Message.Status);
@@ -106,7 +108,7 @@ public sealed class AzureTableSagaRepositoryIntegrationTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -135,20 +137,20 @@ public sealed class AzureTableSagaRepositoryIntegrationTests
 
         public string Value { get; set; } = string.Empty;
 
-        public Task Consume(ConsumeContext<StartPersistentSaga> context)
+        public Task ConsumeAsync(ConsumeContext<StartPersistentSaga> context)
         {
             Value = context.Message.Value;
             Revision = 1;
             Stage = PersistentSagaStage.Started;
-            return context.Publish(new PersistentSagaStarted(CorrelationId, Value), context.CancellationToken);
+            return context.Advanced().PublishAsync(new PersistentSagaStarted(CorrelationId, Value), context.CancellationToken);
         }
 
-        public Task Consume(ConsumeContext<UpdatePersistentSaga> context)
+        public Task ConsumeAsync(ConsumeContext<UpdatePersistentSaga> context)
         {
             Value = context.Message.Value;
             Revision++;
             Stage = PersistentSagaStage.Updated;
-            return context.Publish(new PersistentSagaUpdated(CorrelationId, Value), context.CancellationToken);
+            return context.Advanced().PublishAsync(new PersistentSagaUpdated(CorrelationId, Value), context.CancellationToken);
         }
     }
 

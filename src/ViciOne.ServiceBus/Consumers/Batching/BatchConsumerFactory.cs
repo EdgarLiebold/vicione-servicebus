@@ -16,7 +16,7 @@ public class BatchConsumerFactory<TMessage> :
         collector)
     {
         _options = options;
-        _collector = collector;
+        _collector = collector ?? throw new ArgumentNullException(nameof(collector));
     }
 
     public ValueTask DisposeAsync()
@@ -24,23 +24,23 @@ public class BatchConsumerFactory<TMessage> :
         return _collector.DisposeAsync();
     }
 
-    public virtual async Task Send<T>(ConsumeContext<T> context, IPipe<ConsumerConsumeContext<BatchConsumer<TMessage>, T>> next)
+    public virtual async Task SendAsync<T>(ConsumeContext<T> context, IPipe<ConsumerConsumeContext<BatchConsumer<TMessage>, T>> next)
         where T : class
     {
         var messageContext = context as ConsumeContext<TMessage>;
         if (messageContext == null)
             throw new MessageException(typeof(T), $"Expected batch message type: {TypeCache<TMessage>.ShortName}");
 
-        BatchConsumer<TMessage> consumer = await _collector.Collect(messageContext).ConfigureAwait(false);
+        BatchConsumer<TMessage> consumer = await _collector.CollectAsync(messageContext).ConfigureAwait(false);
 
         try
         {
-            await next.Send(new ConsumerConsumeContextProxy<BatchConsumer<TMessage>, T>(context, consumer)).ConfigureAwait(false);
+            await next.SendAsync(new ConsumerConsumeContextProxy<BatchConsumer<TMessage>, T>(context, consumer)).ConfigureAwait(false);
         }
         finally
         {
             if (consumer.IsCompleted)
-                await _collector.Complete(messageContext, consumer).ConfigureAwait(false);
+                await _collector.CompleteAsync(messageContext, consumer).ConfigureAwait(false);
         }
     }
 

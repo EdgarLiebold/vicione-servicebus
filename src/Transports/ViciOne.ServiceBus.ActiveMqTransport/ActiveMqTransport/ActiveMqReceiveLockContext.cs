@@ -15,18 +15,18 @@ public class ActiveMqReceiveLockContext :
         _message = message;
     }
 
-    public Task Complete()
+    public Task CompleteAsync(CancellationToken cancellationToken = default)
     {
-        return _message.AcknowledgeAsync();
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return _message.AcknowledgeAsync();
     }
 
-    public Task Faulted(Exception exception)
+    public Task FaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {
-        return Task.CompletedTask;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
     }
 
-    public Task ValidateLockStatus()
+    public Task ValidateLockStatusAsync(CancellationToken cancellationToken = default)
     {
-        return Task.CompletedTask;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
     }
 }

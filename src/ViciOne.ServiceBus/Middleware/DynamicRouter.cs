@@ -30,9 +30,9 @@ public class DynamicRouter<TContext> :
         _pipe.Probe(scope);
     }
 
-    Task IPipe<TContext>.Send(TContext context)
+    Task IPipe<TContext>.SendAsync(TContext context)
     {
-        return _pipe.Send(context);
+        return _pipe.SendAsync(context);
     }
 
     public ConnectHandle ConnectPipe<T>(IPipe<T> pipe)
@@ -56,6 +56,7 @@ public class DynamicRouter<TContext> :
 public class DynamicRouter<TContext, TKey> :
     IDynamicRouter<TContext, TKey>
     where TContext : class, PipeContext
+    where TKey : notnull
 {
     readonly IDynamicFilter<TContext, TKey> _filter;
     readonly IPipe<TContext> _pipe;
@@ -76,9 +77,9 @@ public class DynamicRouter<TContext, TKey> :
         _pipe.Probe(scope);
     }
 
-    Task IPipe<TContext>.Send(TContext context)
+    Task IPipe<TContext>.SendAsync(TContext context)
     {
-        return _pipe.Send(context);
+        return _pipe.SendAsync(context);
     }
 
     public ConnectHandle ConnectPipe<T>(IPipe<T> pipe)

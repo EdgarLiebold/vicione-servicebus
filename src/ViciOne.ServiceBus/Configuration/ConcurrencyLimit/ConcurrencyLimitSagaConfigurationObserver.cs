@@ -13,7 +13,7 @@ public class ConcurrencyLimitSagaConfigurationObserver<TSaga> :
 {
     readonly ISagaConfigurator<TSaga> _configurator;
 
-    public ConcurrencyLimitSagaConfigurationObserver(ISagaConfigurator<TSaga> configurator, int concurrentMessageLimit, string id = null)
+    public ConcurrencyLimitSagaConfigurationObserver(ISagaConfigurator<TSaga> configurator, int concurrentMessageLimit, string? id = null)
     {
         _configurator = configurator;
         Limiter = new ConcurrencyLimiter(concurrentMessageLimit, id);

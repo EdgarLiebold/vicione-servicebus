@@ -6,5 +6,5 @@ public interface IEventHubRider :
     IRiderControl,
     IEventHubEndpointConnector
 {
-    IEventHubProducerProvider GetProducerProvider(ConsumeContext consumeContext = default);
+    IEventHubProducerProvider GetProducerProvider(ConsumeContext? consumeContext = default);
 }

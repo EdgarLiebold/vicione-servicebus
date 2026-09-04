@@ -12,15 +12,15 @@ public class ServiceBusRegistrationBusFactory :
     TransportRegistrationBusFactory<IServiceBusReceiveEndpointConfigurator>
 {
     readonly ServiceBusBusConfiguration _busConfiguration;
-    readonly Action<IBusRegistrationContext, IServiceBusBusFactoryConfigurator> _configure;
+    readonly Action<IBusRegistrationContext, IServiceBusBusFactoryConfigurator>? _configure;
 
-    public ServiceBusRegistrationBusFactory(Action<IBusRegistrationContext, IServiceBusBusFactoryConfigurator> configure)
+    public ServiceBusRegistrationBusFactory(Action<IBusRegistrationContext, IServiceBusBusFactoryConfigurator>? configure)
         : this(new ServiceBusBusConfiguration(new ServiceBusTopologyConfiguration(AzureBusFactory.CreateMessageTopology())), configure)
     {
     }
 
     ServiceBusRegistrationBusFactory(ServiceBusBusConfiguration busConfiguration,
-        Action<IBusRegistrationContext, IServiceBusBusFactoryConfigurator> configure)
+        Action<IBusRegistrationContext, IServiceBusBusFactoryConfigurator>? configure)
         : base(busConfiguration.HostConfiguration)
     {
         _configure = configure;

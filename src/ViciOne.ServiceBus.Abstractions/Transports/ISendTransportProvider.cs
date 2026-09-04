@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.Transports;
 
 public interface ISendTransportProvider
 {
-    Task<ISendTransport> GetSendTransport(Uri address);
+    Task<ISendTransport> GetSendTransportAsync(Uri address, CancellationToken cancellationToken = default);
 
     Uri NormalizeAddress(Uri address);
 }

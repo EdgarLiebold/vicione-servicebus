@@ -16,7 +16,7 @@ public class CopyContextPipe :
         _callback = callback;
     }
 
-    public Task Send(SendContext context)
+    public Task SendAsync(SendContext context)
     {
         context.MessageId = _context.MessageId;
         context.RequestId = _context.RequestId;

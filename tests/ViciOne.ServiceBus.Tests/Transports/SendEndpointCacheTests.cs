@@ -11,14 +11,14 @@ public sealed class SendEndpointCacheTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-SEND-ENDPOINT-CACHE-LIFETIME", "dispose-awaits-and-releases-owned-endpoint-once")]
-    public async Task DisposeAsync_AwaitsAndReleasesTheOwnedEndpointExactlyOnce()
+    public async Task DisposeAsync_AwaitsAndReleasesTheOwnedEndpointExactlyOnceAsync()
     {
         var cache = new SendEndpointCache<string>();
         TrackedTransportEndpoint endpoint = DispatchProxy.Create<TrackedTransportEndpoint, TrackedTransportEndpointProxy>();
         var tracker = (TrackedTransportEndpointProxy)(object)endpoint;
 
-        ISendEndpoint first = await cache.GetSendEndpoint("queue-a", _ => Task.FromResult<ISendEndpoint>(endpoint));
-        ISendEndpoint second = await cache.GetSendEndpoint("queue-a", _ => throw new InvalidOperationException("The cached value must win."));
+        ISendEndpoint first = await cache.GetSendEndpointAsync("queue-a", _ => Task.FromResult<ISendEndpoint>(endpoint), TestContext.Current.CancellationToken);
+        ISendEndpoint second = await cache.GetSendEndpointAsync("queue-a", _ => throw new InvalidOperationException("The cached value must win."), TestContext.Current.CancellationToken);
 
         Assert.Same(first, second);
         Assert.IsAssignableFrom<IAsyncDisposable>(cache);
@@ -37,7 +37,7 @@ public sealed class SendEndpointCacheTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SEND-ENDPOINT-CACHE-IDENTITY", "concurrent-cold-and-warm-addresses")]
-    public async Task ConcurrentColdAndWarmLookups_PreserveIdentityPerAddress()
+    public async Task ConcurrentColdAndWarmLookups_PreserveIdentityPerAddressAsync()
     {
         TimeSpan operationTimeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -51,17 +51,17 @@ public sealed class SendEndpointCacheTests
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
+            await harness.StartAsync(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
             var firstAddress = new Uri(harness.BaseAddress, "queue-a");
             var secondAddress = new Uri(harness.BaseAddress, "queue-b");
 
             ISendEndpoint[] cold = await Task.WhenAll(
-                    harness.Bus.GetSendEndpoint(firstAddress),
-                    harness.Bus.GetSendEndpoint(secondAddress))
+                    harness.Bus.GetSendEndpointAsync(firstAddress, cancellationToken),
+                    harness.Bus.GetSendEndpointAsync(secondAddress, cancellationToken))
                 .WaitAsync(operationTimeout, cancellationToken);
             ISendEndpoint[] warm = await Task.WhenAll(
-                    harness.Bus.GetSendEndpoint(firstAddress),
-                    harness.Bus.GetSendEndpoint(secondAddress))
+                    harness.Bus.GetSendEndpointAsync(firstAddress, cancellationToken),
+                    harness.Bus.GetSendEndpointAsync(secondAddress, cancellationToken))
                 .WaitAsync(operationTimeout, cancellationToken);
 
             Assert.Same(cold[0], warm[0]);
@@ -70,7 +70,7 @@ public sealed class SendEndpointCacheTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(operationTimeout, cancellationToken);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(operationTimeout, cancellationToken);
         }
     }
 

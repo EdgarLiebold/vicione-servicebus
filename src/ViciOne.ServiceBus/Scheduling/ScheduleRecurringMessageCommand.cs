@@ -16,11 +16,10 @@ public class ScheduleRecurringMessageCommand<T> :
         PayloadType = MessageTypeCache<T>.MessageTypeNames;
     }
 
-    public RecurringSchedule Schedule { get; private set; }
-    public string[] PayloadType { get; private set; }
-    public Uri Destination { get; private set; }
-    public object Payload { get; private set; }
-
+    public RecurringSchedule Schedule { get; private set; } = null!;
+    public string[] PayloadType { get; private set; } = null!;
+    public Uri Destination { get; private set; } = null!;
+    public object Payload { get; private set; } = null!;
     public override string ToString()
     {
         return
@@ -32,8 +31,8 @@ public class ScheduleRecurringMessageCommand<T> :
 public class ScheduleRecurringMessageCommand :
     ScheduleRecurringMessage
 {
-    public RecurringSchedule Schedule { get; set; }
-    public string[] PayloadType { get; set; }
-    public Uri Destination { get; set; }
-    public object Payload { get; set; }
+    public RecurringSchedule Schedule { get; set; } = null!;
+    public string[] PayloadType { get; set; } = null!;
+    public Uri Destination { get; set; } = null!;
+    public object Payload { get; set; } = null!;
 }

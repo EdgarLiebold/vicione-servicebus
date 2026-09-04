@@ -16,7 +16,7 @@ public interface IActiveMqBusTopology :
     /// <param name="topicName"></param>
     /// <param name="configure">Callback to configure exchange settings</param>
     /// <returns></returns>
-    Uri GetDestinationAddress(string topicName, Action<IActiveMqTopicConfigurator> configure = null);
+    Uri GetDestinationAddress(string topicName, Action<IActiveMqTopicConfigurator>? configure = null);
 
     /// <summary>
     /// Returns the destination address for the specified message type
@@ -24,7 +24,7 @@ public interface IActiveMqBusTopology :
     /// <param name="messageType">The message type</param>
     /// <param name="configure">Callback to configure exchange settings</param>
     /// <returns></returns>
-    Uri GetDestinationAddress(Type messageType, Action<IActiveMqTopicConfigurator> configure = null);
+    Uri GetDestinationAddress(Type messageType, Action<IActiveMqTopicConfigurator>? configure = null);
 
     /// <summary>
     /// Returns the settings for sending to the specified address. Will parse any arguments

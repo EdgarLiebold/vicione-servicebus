@@ -20,7 +20,7 @@ public class MediatorConsumeContext<TMessage> :
         return messageType.IsAssignableFrom(typeof(TMessage));
     }
 
-    public override bool TryGetMessage<T>(out ConsumeContext<T> consumeContext)
+    public override bool TryGetMessage<T>([NotNullWhen(true)] out ConsumeContext<T>? consumeContext)
     {
         if (Message is T message)
         {
@@ -37,29 +37,29 @@ public class MediatorConsumeContext<TMessage> :
     public override Guid? CorrelationId => SerializerContext.CorrelationId;
     public override Guid? ConversationId => SerializerContext.ConversationId;
     public override Guid? InitiatorId => SerializerContext.InitiatorId;
-    public override DateTime? ExpirationTime => SerializerContext.ExpirationTime;
-    public override Uri SourceAddress => SerializerContext.SourceAddress;
-    public override Uri DestinationAddress => SerializerContext.DestinationAddress;
-    public override Uri ResponseAddress => SerializerContext.ResponseAddress;
-    public override Uri FaultAddress => SerializerContext.FaultAddress;
-    public override DateTime? SentTime => SerializerContext.SentTime;
+    public override DateTimeOffset? ExpirationTime => SerializerContext.ExpirationTime;
+    public override Uri? SourceAddress => SerializerContext.SourceAddress;
+    public override Uri? DestinationAddress => SerializerContext.DestinationAddress;
+    public override Uri? ResponseAddress => SerializerContext.ResponseAddress;
+    public override Uri? FaultAddress => SerializerContext.FaultAddress;
+    public override DateTimeOffset? SentTime => SerializerContext.SentTime;
     public override Headers Headers => SerializerContext.Headers;
     public override HostInfo Host => SerializerContext.Host;
     public override IEnumerable<string> SupportedMessageTypes => SerializerContext.SupportedMessageTypes;
 
     public TMessage Message { get; }
 
-    public Task NotifyConsumed(TimeSpan duration, string consumerType)
+    public Task NotifyConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
     {
-        return ReceiveContext.NotifyConsumed(this, duration, consumerType);
+        return ReceiveContext.NotifyConsumedAsync(this, duration, consumerType, cancellationToken: cancellationToken);
     }
 
-    public Task NotifyFaulted(TimeSpan duration, string consumerType, Exception exception)
+    public Task NotifyFaultedAsync(TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
     {
-        return ReceiveContext.NotifyFaulted(this, duration, consumerType, exception);
+        return ReceiveContext.NotifyFaultedAsync(this, duration, consumerType, exception, cancellationToken: cancellationToken);
     }
 
-    protected override Task GenerateFault<T>(ConsumeContext<T> context, Exception exception)
+    protected override Task GenerateFaultAsync<T>(ConsumeContext<T> context, Exception exception)
     {
         return Task.CompletedTask;
     }

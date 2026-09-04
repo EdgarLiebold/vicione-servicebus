@@ -26,35 +26,40 @@ public class PutMessageDataPropertyProvider<TInput, TValue> :
         _policy = policy ?? throw new ArgumentNullException(nameof(policy));
     }
 
-    public Task<MessageData<TValue>> GetProperty<T>(InitializeContext<T, TInput> context)
+    public Task<MessageData<TValue>?> GetPropertyAsync<T>(InitializeContext<T, TInput> context, CancellationToken cancellationToken = default)
         where T : class
     {
         if (!context.HasInput)
-            return TaskResults.Default<MessageData<TValue>>();
+            return TaskResults.DefaultAsync<MessageData<TValue>>(cancellationToken: cancellationToken);
 
-        Task<MessageData<TValue>> inputTask = _inputProvider.GetProperty(context);
+        Task<MessageData<TValue>?> inputTask = _inputProvider.GetPropertyAsync(context, cancellationToken: cancellationToken);
         if (inputTask.IsCompleted)
         {
-            MessageData<TValue> messageData = inputTask.Result;
+            MessageData<TValue>? messageData = inputTask.Result;
+            if (messageData == null)
+                return TaskResults.DefaultAsync<MessageData<TValue>>(cancellationToken: cancellationToken);
+
             if (messageData is PutMessageData<TValue> putMessageData && putMessageData.HasValue)
-                return Put(context, putMessageData.Value);
+                return PutAsync(context, putMessageData.Value);
 
             if (messageData is IInlineMessageData && messageData.HasValue && messageData.Address == null)
-                return Put(context, messageData.Value);
+                return PutAsync(context, messageData.Value);
 
             ObserveStoredReference(context, messageData);
-            return Task.FromResult(messageData);
+            return Task.FromResult<MessageData<TValue>?>(messageData);
         }
 
-        async Task<MessageData<TValue>> GetPropertyAsync()
+        async Task<MessageData<TValue>?> GetPropertyAsync()
         {
-            MessageData<TValue> messageData = await inputTask.ConfigureAwait(false);
+            MessageData<TValue>? messageData = await inputTask.ConfigureAwait(false);
+            if (messageData == null)
+                return null;
 
             if (messageData is PutMessageData<TValue> putMessageData && putMessageData.HasValue)
-                return await Put(context, putMessageData.Value).ConfigureAwait(false);
+                return await PutAsync(context, putMessageData.Value).ConfigureAwait(false);
 
             if (messageData is IInlineMessageData && messageData.HasValue && messageData.Address == null)
-                return await Put(context, messageData.Value).ConfigureAwait(false);
+                return await PutAsync(context, messageData.Value).ConfigureAwait(false);
 
             ObserveStoredReference(context, messageData);
             return messageData;
@@ -63,11 +68,11 @@ public class PutMessageDataPropertyProvider<TInput, TValue> :
         return GetPropertyAsync();
     }
 
-    async Task<MessageData<TValue>> Put(PipeContext context, Task<TValue> valueTask)
+    async Task<MessageData<TValue>?> PutAsync(PipeContext context, Task<TValue?> valueTask)
     {
         var repository = _repository;
         TimeSpan? timeToLive = default;
-        if (context.TryGetPayload(out SendContext sendContext) && sendContext.TimeToLive.HasValue)
+        if (context.TryGetPayload(out SendContext? sendContext) && sendContext.TimeToLive.HasValue)
             timeToLive = sendContext.TimeToLive;
 
         if (timeToLive.HasValue && _policy.ExtraTimeToLive.HasValue)
@@ -79,28 +84,28 @@ public class PutMessageDataPropertyProvider<TInput, TValue> :
         var value = await valueTask.ConfigureAwait(false);
         if (value is string stringValue)
         {
-            MessageData<string> messageData = await repository.PutString(stringValue, timeToLive, _policy, context.CancellationToken).ConfigureAwait(false);
+            MessageData<string> messageData = await repository.PutStringAsync(stringValue, timeToLive, _policy, context.CancellationToken).ConfigureAwait(false);
             ObserveStoredReference(context, messageData);
             return (MessageData<TValue>)messageData;
         }
 
         if (value is byte[] bytesValue)
         {
-            MessageData<byte[]> messageData = await repository.PutBytes(bytesValue, timeToLive, _policy, context.CancellationToken).ConfigureAwait(false);
+            MessageData<byte[]> messageData = await repository.PutBytesAsync(bytesValue, timeToLive, _policy, context.CancellationToken).ConfigureAwait(false);
             ObserveStoredReference(context, messageData);
             return (MessageData<TValue>)messageData;
         }
 
         if (value is Stream streamValue)
         {
-            MessageData<Stream> messageData = await repository.PutStream(streamValue, timeToLive, context.CancellationToken).ConfigureAwait(false);
+            MessageData<Stream> messageData = await repository.PutStreamAsync(streamValue, timeToLive, context.CancellationToken).ConfigureAwait(false);
             ObserveStoredReference(context, messageData);
             return (MessageData<TValue>)messageData;
         }
 
         if (value is { } && TypeMetadataCache.IsValidMessageDataType(value.GetType()))
         {
-            var messageData = await repository.PutObject(value, value.GetType(), timeToLive, _policy, context.CancellationToken).ConfigureAwait(false);
+            var messageData = await repository.PutObjectAsync(value, value.GetType(), timeToLive, _policy, context.CancellationToken).ConfigureAwait(false);
 
             if (messageData is IInlineMessageData inlineMessageData)
             {
@@ -122,7 +127,7 @@ public class PutMessageDataPropertyProvider<TInput, TValue> :
         if (messageData is not { HasValue: true } || messageData.Address == null)
             return;
 
-        PipeContext evidenceOwner = context.TryGetPayload(out SendContext sendContext)
+        PipeContext evidenceOwner = context.TryGetPayload(out SendContext? sendContext)
             ? sendContext
             : context;
         MessageDataAdmissionEvidence evidence = evidenceOwner.GetOrAddPayload(

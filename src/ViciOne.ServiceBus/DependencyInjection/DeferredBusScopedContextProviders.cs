@@ -7,7 +7,7 @@ internal abstract class DeferredBusScopedContextProvider<TBus> :
     IScopedBusContextProvider<TBus>
     where TBus : class, IBus
 {
-    protected DeferredBusScopedContextProvider(IBus bus, Bind<TBus, IClientFactory> clientFactory,
+    protected DeferredBusScopedContextProvider(IBus? bus, Bind<TBus, IClientFactory> clientFactory,
         Bind<TBus, IScopedConsumeContextProvider> consumeContextProvider, IScopedConsumeContextProvider globalConsumeContextProvider,
         IServiceProvider provider)
     {

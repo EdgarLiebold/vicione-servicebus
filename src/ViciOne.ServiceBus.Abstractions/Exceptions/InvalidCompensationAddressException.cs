@@ -10,7 +10,7 @@ public class InvalidCompensationAddressException :
     {
     }
 
-    public InvalidCompensationAddressException(Uri address)
+    public InvalidCompensationAddressException(Uri? address)
         : base($"An invalid compensation address was specified: {address}")
     {
     }

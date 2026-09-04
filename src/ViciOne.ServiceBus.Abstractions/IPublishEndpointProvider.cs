@@ -10,6 +10,7 @@ public interface IPublishEndpointProvider :
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    Task<ISendEndpoint> GetPublishSendEndpoint<T>()
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<ISendEndpoint> GetPublishSendEndpointAsync<T>(CancellationToken cancellationToken = default)
         where T : class;
 }

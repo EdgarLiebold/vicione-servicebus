@@ -13,14 +13,14 @@ public class SetSessionIdFilter<T> :
         _sessionIdFormatter = sessionIdFormatter;
     }
 
-    public Task Send(ServiceBusSendContext<T> context, IPipe<ServiceBusSendContext<T>> next)
+    public Task SendAsync(ServiceBusSendContext<T> context, IPipe<ServiceBusSendContext<T>> next)
     {
         var sessionId = _sessionIdFormatter.FormatSessionId(context);
 
         if (!string.IsNullOrWhiteSpace(sessionId))
             context.SessionId = sessionId;
 
-        return next.Send(context);
+        return next.SendAsync(context);
     }
 
     public void Probe(ProbeContext context)

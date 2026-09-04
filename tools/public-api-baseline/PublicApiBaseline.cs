@@ -290,6 +290,11 @@ internal static class PublicApiBaseline
             {
                 return null;
             }
+            catch (System.Globalization.CultureNotFoundException)
+            {
+                // Satellite assemblies are irrelevant to an API baseline and cannot be parsed in invariant mode.
+                return null;
+            }
         }
     }
 }

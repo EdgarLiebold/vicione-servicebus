@@ -13,13 +13,13 @@ public sealed class AzureTableRoutingSlipFuturePersistenceTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-FUTURE-ROUTING-SLIP", "completed-slip-persists-terminal-result")]
-    public async Task CompletedRoutingSlip_PersistsTheActivityVariablesAndTerminalResult()
+    public async Task CompletedRoutingSlip_PersistsTheActivityVariablesAndTerminalResultAsync()
     {
         await using RoutingSlipFutureFixture fixture = await RoutingSlipFutureFixture.StartAsync("routing-future-completed");
         var command = new TransformValue(NewId.NextGuid(), 14, fail: false);
 
-        Response<ValueTransformed> response = await fixture.Request(command);
-        FutureState persisted = await fixture.ReadFuture(command.CorrelationId);
+        Response<ValueTransformed> response = await fixture.RequestAsync(command);
+        FutureState persisted = await fixture.ReadFutureAsync(command.CorrelationId);
 
         Assert.Equal(command.CorrelationId, response.Message.CorrelationId);
         Assert.Equal(42, response.Message.Value);
@@ -34,13 +34,13 @@ public sealed class AzureTableRoutingSlipFuturePersistenceTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-FUTURE-ROUTING-SLIP", "faulted-slip-persists-original-activity-failure")]
-    public async Task FaultedRoutingSlip_PersistsAndPublishesTheOriginalActivityFailure()
+    public async Task FaultedRoutingSlip_PersistsAndPublishesTheOriginalActivityFailureAsync()
     {
         await using RoutingSlipFutureFixture fixture = await RoutingSlipFutureFixture.StartAsync("routing-future-faulted");
         var command = new TransformValue(NewId.NextGuid(), 14, fail: true);
 
-        RequestFaultException exception = await Assert.ThrowsAsync<RequestFaultException>(() => fixture.Request(command));
-        FutureState persisted = await fixture.ReadFuture(command.CorrelationId);
+        RequestFaultException exception = await Assert.ThrowsAsync<RequestFaultException>(() => fixture.RequestAsync(command));
+        FutureState persisted = await fixture.ReadFutureAsync(command.CorrelationId);
 
         Fault<TransformValue> fault = Assert.IsAssignableFrom<Fault<TransformValue>>(exception.Fault);
         ExceptionInfo original = Assert.Single(fault.Exceptions, candidate =>
@@ -121,7 +121,7 @@ public sealed class AzureTableRoutingSlipFuturePersistenceTests
 
     public sealed class TransformValueActivity(RoutingSlipExecutionProbe probe) : IExecuteActivity<TransformArguments>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<TransformArguments> context)
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<TransformArguments> context)
         {
             probe.RecordExecution();
             if (context.Arguments.Fail)
@@ -206,7 +206,7 @@ public sealed class AzureTableRoutingSlipFuturePersistenceTests
                 ServiceProvider provider = services.BuildServiceProvider(validateScopes: true);
                 try
                 {
-                    ITestHarness harness = await provider.StartTestHarness()
+                    ITestHarness harness = await provider.StartTestHarnessAsync()
                         .WaitAsync(OperationTimeout(), cancellationToken);
                     return new RoutingSlipFutureFixture(table, provider, harness, probe);
                 }
@@ -223,18 +223,18 @@ public sealed class AzureTableRoutingSlipFuturePersistenceTests
             }
         }
 
-        public Task<Response<ValueTransformed>> Request(TransformValue command)
+        public Task<Response<ValueTransformed>> RequestAsync(TransformValue command)
         {
             IRequestClient<TransformValue> client = Harness.GetRequestClient<TransformValue>();
-            return client.GetResponse<ValueTransformed>(command, TestContext.Current.CancellationToken)
+            return client.GetResponseAsync<ValueTransformed>(command, TestContext.Current.CancellationToken)
                 .WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
         }
 
-        public async Task<FutureState> ReadFuture(Guid correlationId)
+        public async Task<FutureState> ReadFutureAsync(Guid correlationId)
         {
             var repository = (ILoadSagaRepository<FutureState>)AzureTableSagaRepository<FutureState>
                 .Create(() => _table.Table);
-            return await repository.Load(correlationId)
+            return await repository.LoadAsync(correlationId)
                 ?? throw new InvalidOperationException($"Routing-slip future '{correlationId:D}' was not persisted.");
         }
 
@@ -242,7 +242,7 @@ public sealed class AzureTableRoutingSlipFuturePersistenceTests
         {
             try
             {
-                await Harness.Stop(CancellationToken.None)
+                await Harness.StopAsync(CancellationToken.None)
                     .WaitAsync(OperationTimeout(), CancellationToken.None);
             }
             finally

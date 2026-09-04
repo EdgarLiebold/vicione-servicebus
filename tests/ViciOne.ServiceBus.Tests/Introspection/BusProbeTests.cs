@@ -10,7 +10,7 @@ public sealed class BusProbeTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-PROBE-ENDPOINTS", "configured-and-dynamic-addresses")]
-    public async Task Probe_ReportsEveryConfiguredReceiveEndpointAddressExactlyOnce()
+    public async Task Probe_ReportsEveryConfiguredReceiveEndpointAddressExactlyOnceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -19,7 +19,7 @@ public sealed class BusProbeTests
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+            await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
             dynamicEndpoint = harness.Bus.ConnectReceiveEndpoint(
                 $"probe-{NewId.NextGuid():N}",
                 configurator => configurator.Handler<ProbeMessage>(_ => Task.CompletedTask));
@@ -37,13 +37,13 @@ public sealed class BusProbeTests
             if (dynamicEndpoint is not null)
                 await dynamicEndpoint.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
 
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-PROBE-ENDPOINTS", "stopped-dynamic-endpoint-removed")]
-    public async Task Probe_OmitsADynamicEndpointAfterItsHandleStops()
+    public async Task Probe_OmitsADynamicEndpointAfterItsHandleStopsAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -51,7 +51,7 @@ public sealed class BusProbeTests
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+            await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
             HostReceiveEndpointHandle dynamicEndpoint = harness.Bus.ConnectReceiveEndpoint(
                 $"probe-removed-{NewId.NextGuid():N}",
                 configurator => configurator.Handler<ProbeMessage>(_ => Task.CompletedTask));
@@ -67,7 +67,7 @@ public sealed class BusProbeTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 

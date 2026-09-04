@@ -38,39 +38,39 @@ public class AsyncPipeContextAgent<TContext> :
     CancellationToken IAgent.Stopping => _agent.Stopping;
     CancellationToken IAgent.Stopped => _agent.Stopped;
 
-    Task IAgent.Stop(StopContext context)
+    Task IAgent.StopAsync(StopContext context, CancellationToken cancellationToken)
     {
-        return _agent.Stop(context);
+        return _agent.StopAsync(context, cancellationToken: cancellationToken);
     }
 
-    Task IAsyncPipeContextHandle<TContext>.Created(TContext context)
+    Task IAsyncPipeContextHandle<TContext>.CreatedAsync(TContext context, CancellationToken cancellationToken)
     {
         _context.SetResult(context);
 
         return Task.CompletedTask;
     }
 
-    Task IAsyncPipeContextHandle<TContext>.CreateCanceled()
+    Task IAsyncPipeContextHandle<TContext>.CreateCanceledAsync(CancellationToken cancellationToken)
     {
         _context.SetCanceled();
 
-        return _agent.Stop("Create Canceled", CancellationToken.None);
+        return _agent.StopAsync("Create Canceled", CancellationToken.None);
     }
 
-    Task IAsyncPipeContextHandle<TContext>.CreateFaulted(Exception exception)
+    Task IAsyncPipeContextHandle<TContext>.CreateFaultedAsync(Exception exception, CancellationToken cancellationToken)
     {
         _context.SetException(exception);
 
-        return _agent.Stop($"Create Faulted: {exception.GetBaseException().Message}", CancellationToken.None);
+        return _agent.StopAsync($"Create Faulted: {exception.GetBaseException().Message}", CancellationToken.None);
     }
 
-    Task IAsyncPipeContextHandle<TContext>.Faulted(Exception exception)
+    Task IAsyncPipeContextHandle<TContext>.FaultedAsync(Exception exception, CancellationToken cancellationToken)
     {
-        return _agent.Stop($"Faulted: {exception.GetBaseException().Message}", CancellationToken.None);
+        return _agent.StopAsync($"Faulted: {exception.GetBaseException().Message}", CancellationToken.None);
     }
 
     /// <inheritdoc />
-    public override string ToString()
+    public override string? ToString()
     {
         return _agent.ToString();
     }

@@ -28,7 +28,7 @@ public static class ReceiveEndpointConfiguratorDependencyExtensions
 
         public Task Ready => _ready.Task;
 
-        Task IReceiveEndpointObserver.Ready(ReceiveEndpointReady ready)
+        Task IReceiveEndpointObserver.ReadyAsync(ReceiveEndpointReady ready)
         {
             _handle.Disconnect();
 
@@ -37,17 +37,17 @@ public static class ReceiveEndpointConfiguratorDependencyExtensions
             return Task.CompletedTask;
         }
 
-        Task IReceiveEndpointObserver.Stopping(ReceiveEndpointStopping stopping)
+        Task IReceiveEndpointObserver.StoppingAsync(ReceiveEndpointStopping stopping)
         {
             return Task.CompletedTask;
         }
 
-        Task IReceiveEndpointObserver.Completed(ReceiveEndpointCompleted completed)
+        Task IReceiveEndpointObserver.CompletedAsync(ReceiveEndpointCompleted completed)
         {
             return Task.CompletedTask;
         }
 
-        Task IReceiveEndpointObserver.Faulted(ReceiveEndpointFaulted faulted)
+        Task IReceiveEndpointObserver.FaultedAsync(ReceiveEndpointFaulted faulted)
         {
             return Task.CompletedTask;
         }
@@ -70,17 +70,17 @@ public static class ReceiveEndpointConfiguratorDependencyExtensions
 
         public Task Completed => _completed.Task;
 
-        Task IReceiveEndpointObserver.Ready(ReceiveEndpointReady ready)
+        Task IReceiveEndpointObserver.ReadyAsync(ReceiveEndpointReady ready)
         {
             return Task.CompletedTask;
         }
 
-        Task IReceiveEndpointObserver.Stopping(ReceiveEndpointStopping stopping)
+        Task IReceiveEndpointObserver.StoppingAsync(ReceiveEndpointStopping stopping)
         {
             return Task.CompletedTask;
         }
 
-        Task IReceiveEndpointObserver.Completed(ReceiveEndpointCompleted completed)
+        Task IReceiveEndpointObserver.CompletedAsync(ReceiveEndpointCompleted completed)
         {
             _handle.Disconnect();
 
@@ -89,7 +89,7 @@ public static class ReceiveEndpointConfiguratorDependencyExtensions
             return Task.CompletedTask;
         }
 
-        Task IReceiveEndpointObserver.Faulted(ReceiveEndpointFaulted faulted)
+        Task IReceiveEndpointObserver.FaultedAsync(ReceiveEndpointFaulted faulted)
         {
             return Task.CompletedTask;
         }

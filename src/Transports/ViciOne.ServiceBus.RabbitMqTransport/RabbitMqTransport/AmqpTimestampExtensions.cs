@@ -14,14 +14,14 @@ public static class AmqpTimestampExtensions
     /// <param name="dictionary">The dictionary</param>
     /// <param name="key">The dictionary key</param>
     /// <param name="timestamp">The timestamp</param>
-    public static void SetAmqpTimestamp(this IDictionary<string, object> dictionary, string key, DateTime timestamp)
+    public static void SetAmqpTimestamp(this IDictionary<string, object?> dictionary, string key, DateTimeOffset timestamp)
     {
         dictionary[key] = TryConvert(timestamp, out AmqpTimestamp? result)
             ? result
             : timestamp.ToString("O");
     }
 
-    static bool TryConvert(DateTime input, [NotNullWhen(true)] out AmqpTimestamp? result)
+    static bool TryConvert(DateTimeOffset input, [NotNullWhen(true)] out AmqpTimestamp? result)
     {
         if (input >= DateTimeConstants.Epoch)
         {

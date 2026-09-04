@@ -9,7 +9,7 @@ public sealed class ConversationContextTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-CONVERSATION-ID", "root-send-and-publish")]
-    public async Task RootSendAndPublish_CreateIndependentNonEmptyConversationIds()
+    public async Task RootSendAndPublish_CreateIndependentNonEmptyConversationIdsAsync()
     {
         using var harness = CreateHarness();
         HandlerTestHarness<RootMessage> handler = harness.Handler<RootMessage>();
@@ -17,18 +17,18 @@ public sealed class ConversationContextTests
         var sent = new RootMessage(NewId.NextGuid(), "sent");
         var published = new RootMessage(NewId.NextGuid(), "published");
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(sent, cancellationToken);
-            await harness.Bus.Publish(published, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(sent, cancellationToken);
+            await harness.Bus.PublishAsync(published, cancellationToken);
 
             ConsumeContext<RootMessage> sentContext = (await handler.Consumed
                 .SelectAsync(observation => observation.Context.Message.CorrelationId == sent.CorrelationId, cancellationToken)
-                .First()).Context;
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken)).Context;
             ConsumeContext<RootMessage> publishedContext = (await handler.Consumed
                 .SelectAsync(observation => observation.Context.Message.CorrelationId == published.CorrelationId, cancellationToken)
-                .First()).Context;
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken)).Context;
 
             Assert.NotNull(sentContext.ConversationId);
             Assert.NotEqual(Guid.Empty, sentContext.ConversationId);
@@ -38,31 +38,31 @@ public sealed class ConversationContextTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONVERSATION-ID", "consumer-inheritance-and-source")]
-    public async Task MessageProducedInsideAConsumer_InheritsConversationAndEndpointSource()
+    public async Task MessageProducedInsideAConsumer_InheritsConversationAndEndpointSourceAsync()
     {
         using var harness = CreateHarness();
         harness.Handler<ParentMessage>(context =>
-            context.Publish(new ChildMessage(context.Message.CorrelationId, "inherited")));
+            context.Advanced().PublishAsync(new ChildMessage(context.Message.CorrelationId, "inherited")));
         HandlerTestHarness<ChildMessage> childHandler = harness.Handler<ChildMessage>();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         Guid conversationId = NewId.NextGuid();
         var parent = new ParentMessage(NewId.NextGuid());
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.InputQueueSendEndpoint.SendAsync(
                 parent,
                 context => context.ConversationId = conversationId,
                 cancellationToken);
             ConsumeContext<ChildMessage> child =
-                (await childHandler.Consumed.SelectAsync(cancellationToken).First()).Context;
+                (await childHandler.Consumed.SelectAsync(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken)).Context;
 
             Assert.Equal(conversationId, child.ConversationId);
             Assert.Equal(parent.CorrelationId, child.InitiatorId);
@@ -71,17 +71,17 @@ public sealed class ConversationContextTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONVERSATION-ID", "consumer-starts-new-conversation")]
-    public async Task StartNewConversationInsideAConsumer_RecordsThePreviousConversation()
+    public async Task StartNewConversationInsideAConsumer_RecordsThePreviousConversationAsync()
     {
         using var harness = CreateHarness();
         harness.Handler<ParentMessage>(context =>
-            context.Publish(
+            context.Advanced().PublishAsync(
                 new ChildMessage(context.Message.CorrelationId, "new"),
                 sendContext => sendContext.StartNewConversation()));
         HandlerTestHarness<ChildMessage> childHandler = harness.Handler<ChildMessage>();
@@ -89,15 +89,15 @@ public sealed class ConversationContextTests
         Guid originalConversationId = NewId.NextGuid();
         var parent = new ParentMessage(NewId.NextGuid());
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.InputQueueSendEndpoint.SendAsync(
                 parent,
                 context => context.ConversationId = originalConversationId,
                 cancellationToken);
             ConsumeContext<ChildMessage> child =
-                (await childHandler.Consumed.SelectAsync(cancellationToken).First()).Context;
+                (await childHandler.Consumed.SelectAsync(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken)).Context;
 
             Assert.NotNull(child.ConversationId);
             Assert.NotEqual(Guid.Empty, child.ConversationId);
@@ -109,13 +109,13 @@ public sealed class ConversationContextTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONVERSATION-ID", "explicit-root-conversation")]
-    public async Task ExplicitRootConversation_UsesTheExactIdWithoutAnInitiatingHeader()
+    public async Task ExplicitRootConversation_UsesTheExactIdWithoutAnInitiatingHeaderAsync()
     {
         using var harness = CreateHarness();
         HandlerTestHarness<RootMessage> handler = harness.Handler<RootMessage>();
@@ -123,22 +123,22 @@ public sealed class ConversationContextTests
         Guid conversationId = NewId.NextGuid();
         var message = new RootMessage(NewId.NextGuid(), "explicit");
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.InputQueueSendEndpoint.SendAsync(
                 message,
                 context => context.StartNewConversation(conversationId),
                 cancellationToken);
             ConsumeContext<RootMessage> context =
-                (await handler.Consumed.SelectAsync(cancellationToken).First()).Context;
+                (await handler.Consumed.SelectAsync(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken)).Context;
 
             Assert.Equal(conversationId, context.ConversationId);
             Assert.Null(context.Headers.Get<Guid>(MessageHeaders.InitiatingConversationId));
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 

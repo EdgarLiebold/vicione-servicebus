@@ -24,31 +24,31 @@ public class ExecuteOnFaultedActivity<TSaga> :
         _activity.Probe(context);
     }
 
-    public Task Execute(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
-        return next.Execute(context);
+        return next.ExecuteAsync(context);
     }
 
-    public Task Execute<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+    public Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
-        return next.Execute(context);
+        return next.ExecuteAsync(context);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
+    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception
     {
         var nextBehavior = new ExecuteOnFaultedBehavior<TSaga, TException>(next, context);
 
-        return _activity.Execute(context, nextBehavior);
+        return _activity.ExecuteAsync(context, nextBehavior);
     }
 
-    public Task Faulted<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
+    public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
         where TException : Exception
         where T : class
     {
         var nextBehavior = new ExecuteOnFaultedBehavior<TSaga, T, TException>(next, context);
 
-        return _activity.Execute(context, nextBehavior);
+        return _activity.ExecuteAsync(context, nextBehavior);
     }
 }

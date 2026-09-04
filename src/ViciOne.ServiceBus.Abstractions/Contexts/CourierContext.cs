@@ -4,7 +4,8 @@ using ViciOne.ServiceBus.Courier.Contracts;
 namespace ViciOne.ServiceBus;
 
 public interface CourierContext :
-    ConsumeContext<RoutingSlip>
+    ConsumeContext<RoutingSlip>,
+    ConsumeContext
 {
     /// <summary>
     /// The tracking number for this routing slip
@@ -24,7 +25,7 @@ public interface CourierContext :
     /// <summary>
     /// The start time for the activity execution
     /// </summary>
-    DateTime Timestamp { get; }
+    DateTimeOffset Timestamp { get; }
 
     /// <summary>
     /// The time elapsed for the execution operation

@@ -11,7 +11,7 @@ public sealed class DynamoDbSagaConfigurationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-DYNAMODB-SAGA-CONFIGURATION", "frozen-sdk-options-reach-load-and-target-table-operations")]
-    public async Task FrozenSdkOptions_ReachLoadAndTargetTableOperations()
+    public async Task FrozenSdkOptions_ReachLoadAndTargetTableOperationsAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using DynamoDbTestTable fixture = await DynamoDbTestTable.CreateAsync("FrozenOptions", cancellationToken);
@@ -32,8 +32,8 @@ public sealed class DynamoDbSagaConfigurationTests
 
         Guid sagaId = Guid.NewGuid();
         using var context = new DynamoDbDatabaseContext<ConfiguredSaga>(fixture.CreateContext(), options);
-        await context.Insert(new ConfiguredSaga { CorrelationId = sagaId, Value = "persisted" }, cancellationToken);
-        ConfiguredSaga loaded = await context.Load(sagaId, cancellationToken);
+        await context.InsertAsync(new ConfiguredSaga { CorrelationId = sagaId, Value = "persisted" }, cancellationToken);
+        ConfiguredSaga loaded = Assert.IsType<ConfiguredSaga>(await context.LoadAsync(sagaId, cancellationToken));
 
         LoadConfig effectiveLoad = options.CreateLoadConfig();
         GetTargetTableConfig effectiveTarget = options.CreateTargetTableConfig();

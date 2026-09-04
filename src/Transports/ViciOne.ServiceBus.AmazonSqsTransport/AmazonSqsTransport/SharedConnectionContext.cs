@@ -26,42 +26,42 @@ public class SharedConnectionContext :
     public Uri HostAddress => _context.HostAddress;
     public IAmazonSqsBusTopology Topology => _context.Topology;
 
-    public async Task<QueueInfo> GetQueue(Queue queue, CancellationToken cancellationToken)
+    public async Task<QueueInfo> GetQueueAsync(Queue queue, CancellationToken cancellationToken)
     {
         using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
 
-        return await _context.GetQueue(queue, tokenSource.Token).ConfigureAwait(false);
+        return await _context.GetQueueAsync(queue, tokenSource.Token).ConfigureAwait(false);
     }
 
-    public async Task<QueueInfo> GetQueueByName(string name, CancellationToken cancellationToken)
+    public async Task<QueueInfo> GetQueueByNameAsync(string name, CancellationToken cancellationToken)
     {
         using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
 
-        return await _context.GetQueueByName(name, tokenSource.Token).ConfigureAwait(false);
+        return await _context.GetQueueByNameAsync(name, tokenSource.Token).ConfigureAwait(false);
     }
 
-    public Task<bool> RemoveQueueByName(string name)
+    public Task<bool> RemoveQueueByNameAsync(string name, CancellationToken cancellationToken = default)
     {
-        return _context.RemoveQueueByName(name);
+        return _context.RemoveQueueByNameAsync(name, cancellationToken: cancellationToken);
     }
 
-    public async Task<TopicInfo> GetTopic(Topic topic, CancellationToken cancellationToken)
-    {
-        using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
-
-        return await _context.GetTopic(topic, tokenSource.Token).ConfigureAwait(false);
-    }
-
-    public async Task<TopicInfo> GetTopicByName(string name, CancellationToken cancellationToken)
+    public async Task<TopicInfo> GetTopicAsync(Topic topic, CancellationToken cancellationToken)
     {
         using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
 
-        return await _context.GetTopicByName(name, tokenSource.Token).ConfigureAwait(false);
+        return await _context.GetTopicAsync(topic, tokenSource.Token).ConfigureAwait(false);
     }
 
-    public Task<bool> RemoveTopicByName(string name)
+    public async Task<TopicInfo> GetTopicByNameAsync(string name, CancellationToken cancellationToken)
     {
-        return _context.RemoveTopicByName(name);
+        using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
+
+        return await _context.GetTopicByNameAsync(name, tokenSource.Token).ConfigureAwait(false);
+    }
+
+    public Task<bool> RemoveTopicByNameAsync(string name, CancellationToken cancellationToken = default)
+    {
+        return _context.RemoveTopicByNameAsync(name, cancellationToken: cancellationToken);
     }
 
     public ClientContext CreateClientContext(CancellationToken cancellationToken)

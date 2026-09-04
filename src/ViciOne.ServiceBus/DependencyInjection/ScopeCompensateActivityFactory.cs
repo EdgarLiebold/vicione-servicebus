@@ -19,11 +19,11 @@ public class ScopeCompensateActivityFactory<TActivity, TLog> :
         _scopeProvider = scopeProvider;
     }
 
-    public async Task Compensate(CompensateContext<TLog> context, IPipe<CompensateActivityContext<TActivity, TLog>> next)
+    public async Task CompensateAsync(CompensateContext<TLog> context, IPipe<CompensateActivityContext<TActivity, TLog>> next, CancellationToken cancellationToken = default)
     {
-        await using ICompensateActivityScopeContext<TActivity, TLog> scope = await _scopeProvider.GetActivityScope(context).ConfigureAwait(false);
+        await using ICompensateActivityScopeContext<TActivity, TLog> scope = await _scopeProvider.GetActivityScopeAsync(context, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        await next.Send(scope.Context).ConfigureAwait(false);
+        await next.SendAsync(scope.Context).ConfigureAwait(false);
     }
 
     public void Probe(ProbeContext context)

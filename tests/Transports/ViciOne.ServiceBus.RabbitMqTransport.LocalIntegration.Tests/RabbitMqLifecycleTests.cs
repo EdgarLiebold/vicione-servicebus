@@ -9,7 +9,7 @@ public sealed class RabbitMqLifecycleTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-LIFECYCLE", "prestart-bind-and-purge-on-start")]
-    public async Task BoundQueue_BuffersBeforeEndpointStartAndPurgeRemovesOnlyTheStaleGeneration()
+    public async Task BoundQueue_BuffersBeforeEndpointStartAndPurgeRemovesOnlyTheStaleGenerationAsync()
     {
         using RabbitMqBroker fixture = RabbitMqBroker.Create("purge");
         string queue = fixture.Name("input");
@@ -23,13 +23,12 @@ public sealed class RabbitMqLifecycleTests
         {
             await producer.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             producerStarted = true;
-            ISendEndpoint bound = await producer.GetSendEndpoint(new Uri($"queue:{queue}?bind=true"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await bound.Send(new LifecycleMessage(stale), cancellationToken)
+            ISendEndpoint bound = await producer.GetSendEndpointAsync(new Uri($"queue:{queue}?bind=true"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await bound.SendAsync(new LifecycleMessage(stale), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             await producer.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
             producerStarted = false;
-            Assert.Equal(1U, await fixture.QueueMessageCount(queue, cancellationToken));
+            Assert.Equal(1U, await fixture.QueueMessageCountAsync(queue, cancellationToken));
         }
         finally
         {
@@ -62,8 +61,8 @@ public sealed class RabbitMqLifecycleTests
         {
             await consumer.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             consumerStarted = true;
-            Assert.Equal(0U, await fixture.QueueMessageCount(queue, cancellationToken));
-            await Send(consumer, queue, fresh, fixture, cancellationToken);
+            Assert.Equal(0U, await fixture.QueueMessageCountAsync(queue, cancellationToken));
+            await SendAsync(consumer, queue, fresh, fixture, cancellationToken);
             Assert.Equal(fresh, await received.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
             await consumer.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
             consumerStarted = false;
@@ -71,7 +70,7 @@ public sealed class RabbitMqLifecycleTests
             Assert.Single(identities);
             Assert.Equal(1, identities[fresh]);
             Assert.DoesNotContain(stale, identities.Keys);
-            Assert.Equal(0U, await fixture.QueueMessageCount(queue, cancellationToken));
+            Assert.Equal(0U, await fixture.QueueMessageCountAsync(queue, cancellationToken));
         }
         finally
         {
@@ -83,7 +82,7 @@ public sealed class RabbitMqLifecycleTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-LIFECYCLE", "restart-rebinds-and-drains-without-duplicate")]
-    public async Task StopAndRestart_RebindsTheEndpointAndDrainsEachGenerationExactlyOnce()
+    public async Task StopAndRestart_RebindsTheEndpointAndDrainsEachGenerationExactlyOnceAsync()
     {
         using RabbitMqBroker fixture = RabbitMqBroker.Create("restart");
         string queue = fixture.Name("input");
@@ -121,24 +120,24 @@ public sealed class RabbitMqLifecycleTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            await Send(bus, queue, first, fixture, cancellationToken);
+            await SendAsync(bus, queue, first, fixture, cancellationToken);
             await firstReceived.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
             await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
             started = false;
-            RabbitMqBroker.QueueState stopped = await fixture.Queue(queue, cancellationToken);
+            RabbitMqBroker.QueueState stopped = await fixture.QueueAsync(queue, cancellationToken);
             Assert.Equal(0, stopped.Consumers);
             Assert.Equal(0, stopped.Messages);
 
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            await Send(bus, queue, second, fixture, cancellationToken);
+            await SendAsync(bus, queue, second, fixture, cancellationToken);
             await secondReceived.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
             await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
             started = false;
 
             Assert.Equal(2, identities.Count);
             Assert.All(identities.Values, count => Assert.Equal(1, count));
-            RabbitMqBroker.QueueState terminal = await fixture.Queue(queue, cancellationToken);
+            RabbitMqBroker.QueueState terminal = await fixture.QueueAsync(queue, cancellationToken);
             Assert.Equal(0, terminal.Consumers);
             Assert.Equal(0, terminal.Messages);
         }
@@ -150,16 +149,16 @@ public sealed class RabbitMqLifecycleTests
         }
     }
 
-    private static async Task Send(
+    private static async Task SendAsync(
         IBus bus,
         string queue,
         Guid identity,
         RabbitMqBroker fixture,
         CancellationToken cancellationToken)
     {
-        ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queue}"))
+        ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queue}"), cancellationToken: cancellationToken)
             .WaitAsync(fixture.OperationTimeout, cancellationToken);
-        await endpoint.Send(new LifecycleMessage(identity), cancellationToken)
+        await endpoint.SendAsync(new LifecycleMessage(identity), cancellationToken)
             .WaitAsync(fixture.OperationTimeout, cancellationToken);
     }
 

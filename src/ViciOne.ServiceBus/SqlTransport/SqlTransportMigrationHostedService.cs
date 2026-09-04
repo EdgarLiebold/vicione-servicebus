@@ -29,21 +29,21 @@ public class SqlTransportMigrationHostedService :
         {
             _logger.LogInformation("ViciOne.ServiceBus SQL Transport creating database {Database}", _transportOptions.Database);
 
-            await _migrator.CreateDatabase(_transportOptions, cancellationToken).ConfigureAwait(false);
+            await _migrator.CreateDatabaseAsync(_transportOptions, cancellationToken).ConfigureAwait(false);
         }
 
         if (_options.CreateSchema)
         {
             _logger.LogInformation("ViciOne.ServiceBus SQL Transport creating schema for database {Database}", _transportOptions.Database);
 
-            await _migrator.CreateSchemaIfNotExist(_transportOptions, cancellationToken).ConfigureAwait(false);
+            await _migrator.CreateSchemaIfNotExistAsync(_transportOptions, cancellationToken).ConfigureAwait(false);
         }
 
         if (_options.CreateInfrastructure)
         {
             _logger.LogInformation("ViciOne.ServiceBus SQL Transport creating infrastructure for database {Database}", _transportOptions.Database);
 
-            await _migrator.CreateInfrastructure(_transportOptions, cancellationToken).ConfigureAwait(false);
+            await _migrator.CreateInfrastructureAsync(_transportOptions, cancellationToken).ConfigureAwait(false);
         }
     }
 
@@ -53,7 +53,7 @@ public class SqlTransportMigrationHostedService :
         {
             _logger.LogInformation("Deleting Database {Database}", _transportOptions.Database);
 
-            await _migrator.DeleteDatabase(_transportOptions, cancellationToken).ConfigureAwait(false);
+            await _migrator.DeleteDatabaseAsync(_transportOptions, cancellationToken).ConfigureAwait(false);
         }
     }
 }

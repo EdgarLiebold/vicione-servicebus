@@ -18,21 +18,21 @@ public sealed class AsyncElementListTests
         var messages = CreateList();
         Add(messages, new MessageA("expected"));
 
-        Assert.True(await messages.Any<MessageA>(TestContext.Current.CancellationToken));
+        Assert.True(await messages.AnyAsync<MessageA>(TestContext.Current.CancellationToken));
         ISentMessage<MessageA> selected = await messages
             .SelectAsync<MessageA>(TestContext.Current.CancellationToken)
-            .First();
+            .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
         Assert.Equal("expected", selected.Context.Message.Value);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASYNC-ELEMENT-LIST", "first-included-type")]
-    public async Task IncludeFilter_MatchesTheFirstConfiguredType()
+    public async Task IncludeFilter_MatchesTheFirstConfiguredTypeAsync()
     {
         var messages = CreateList();
         Add(messages, new MessageA("first"));
 
-        bool found = await messages.Any(
+        bool found = await messages.AnyAsync(
             filter => filter.Includes.Add<MessageA>().Add<MessageB>(),
             TestContext.Current.CancellationToken);
 
@@ -41,12 +41,12 @@ public sealed class AsyncElementListTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASYNC-ELEMENT-LIST", "second-included-type")]
-    public async Task IncludeFilter_MatchesTheSecondConfiguredType()
+    public async Task IncludeFilter_MatchesTheSecondConfiguredTypeAsync()
     {
         var messages = CreateList();
         Add(messages, new MessageB("second"));
 
-        bool found = await messages.Any(
+        bool found = await messages.AnyAsync(
             filter => filter.Includes.Add<MessageA>().Add<MessageB>(),
             TestContext.Current.CancellationToken);
 
@@ -55,13 +55,13 @@ public sealed class AsyncElementListTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASYNC-ELEMENT-LIST", "excluded-type")]
-    public async Task ExcludeFilter_RejectsTheExcludedType()
+    public async Task ExcludeFilter_RejectsTheExcludedTypeAsync()
     {
         var timeProvider = new FakeTimeProvider(StartTime);
         var messages = new SentMessageList(TimeSpan.FromMinutes(1), CancellationToken.None, timeProvider);
         Add(messages, new MessageB("excluded"));
 
-        Task<bool> observation = messages.Any(
+        Task<bool> observation = messages.AnyAsync(
             filter => filter.Excludes.Add<MessageB>(),
             TestContext.Current.CancellationToken);
 
@@ -74,12 +74,12 @@ public sealed class AsyncElementListTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASYNC-ELEMENT-LIST", "context-pattern")]
-    public async Task Predicate_CanMatchTheMessageContextByPattern()
+    public async Task Predicate_CanMatchTheMessageContextByPatternAsync()
     {
         var messages = CreateList();
         Add(messages, new MessageB("pattern"));
 
-        bool found = await messages.Any(
+        bool found = await messages.AnyAsync(
             message => message switch
             {
                 (MessageA value, _) => value.Value == "pattern",
@@ -93,10 +93,10 @@ public sealed class AsyncElementListTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASYNC-ELEMENT-LIST", "later-arrival")]
-    public async Task MessageAddedAfterObservationStarts_CompletesTheObservation()
+    public async Task MessageAddedAfterObservationStarts_CompletesTheObservationAsync()
     {
         var messages = CreateList();
-        Task<bool> observation = messages.Any<MessageA>(TestContext.Current.CancellationToken);
+        Task<bool> observation = messages.AnyAsync<MessageA>(TestContext.Current.CancellationToken);
 
         Assert.False(observation.IsCompleted);
 
@@ -107,13 +107,13 @@ public sealed class AsyncElementListTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASYNC-ELEMENT-LIST", "observation-cancellation")]
-    public async Task CompletionToken_EndsObservationWithoutReturningAnElement()
+    public async Task CompletionToken_EndsObservationWithoutReturningAnElementAsync()
     {
         using var completed = new CancellationTokenSource();
         var messages = new SentMessageList(TimeSpan.FromMinutes(1), completed.Token, new FakeTimeProvider(StartTime));
         Task<int> observation = messages
             .SelectAsync<MessageA>(TestContext.Current.CancellationToken)
-            .Count();
+            .CountObservedAsync(TestContext.Current.CancellationToken);
 
         Assert.False(observation.IsCompleted);
 
@@ -124,11 +124,11 @@ public sealed class AsyncElementListTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASYNC-ELEMENT-LIST", "virtual-timeout")]
-    public async Task AdvancingTheConfiguredTimeout_ReturnsFalseWithoutWallClockWaiting()
+    public async Task AdvancingTheConfiguredTimeout_ReturnsFalseWithoutWallClockWaitingAsync()
     {
         var timeProvider = new FakeTimeProvider(StartTime);
         var messages = new SentMessageList(TimeSpan.FromMinutes(1), CancellationToken.None, timeProvider);
-        Task<bool> observation = messages.Any<MessageA>(TestContext.Current.CancellationToken);
+        Task<bool> observation = messages.AnyAsync<MessageA>(TestContext.Current.CancellationToken);
 
         Assert.False(observation.IsCompleted);
 
@@ -139,7 +139,7 @@ public sealed class AsyncElementListTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASYNC-ELEMENT-LIST", "synchronous-virtual-timeout")]
-    public async Task SynchronousSelection_UsesTheSameVirtualTimeout()
+    public async Task SynchronousSelection_UsesTheSameVirtualTimeoutAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
         var messages = new SentMessageList(TimeSpan.FromMinutes(1), CancellationToken.None, timeProvider);
@@ -147,7 +147,7 @@ public sealed class AsyncElementListTests
             () => messages.Select<MessageA>(TestContext.Current.CancellationToken).Count(),
             TestContext.Current.CancellationToken);
 
-        await timeProvider.WaitForTimerCount(1);
+        await timeProvider.WaitForTimerCountAsync(1);
         timeProvider.Advance(TimeSpan.FromMinutes(1));
 
         Assert.Equal(0, await observation);

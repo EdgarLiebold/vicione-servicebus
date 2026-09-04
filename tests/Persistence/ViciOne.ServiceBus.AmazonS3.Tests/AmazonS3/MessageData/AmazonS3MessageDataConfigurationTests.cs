@@ -79,7 +79,7 @@ public sealed class AmazonS3MessageDataConfigurationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-S3-DATA-BOUNDARY", "stream-retention-and-address-validation")]
-    public async Task Repository_RejectsUnreadableStreamsAndUnsafeAddressesBeforeClientUse()
+    public async Task Repository_RejectsUnreadableStreamsAndUnsafeAddressesBeforeClientUseAsync()
     {
         var options = new AmazonS3MessageDataRepositoryOptions("valid-message-data", 7);
         using AmazonS3Client client = CreateNonNetworkClient();
@@ -87,11 +87,11 @@ public sealed class AmazonS3MessageDataConfigurationTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var unreadable = new MemoryStream();
         unreadable.Dispose();
-        await Assert.ThrowsAsync<ArgumentException>(() => repository.Put(unreadable, cancellationToken: cancellationToken));
+        await Assert.ThrowsAsync<ArgumentException>(() => repository.PutAsync(unreadable, cancellationToken: cancellationToken));
         await Assert.ThrowsAsync<NotSupportedException>(
-            () => repository.Put(new MemoryStream([1]), TimeSpan.FromHours(1), cancellationToken));
+            () => repository.PutAsync(new MemoryStream([1]), TimeSpan.FromHours(1), cancellationToken));
         await Assert.ThrowsAsync<NotSupportedException>(
-            () => repository.Put(new MemoryStream([1]), TimeSpan.FromDays(8), cancellationToken));
+            () => repository.PutAsync(new MemoryStream([1]), TimeSpan.FromDays(8), cancellationToken));
         Uri[] invalidAddresses =
         [
             new("urn:file:../foreign", UriKind.Absolute),
@@ -103,7 +103,7 @@ public sealed class AmazonS3MessageDataConfigurationTests
         foreach (Uri invalidAddress in invalidAddresses)
         {
             await Assert.ThrowsAsync<ArgumentException>(
-                () => repository.Get(invalidAddress, cancellationToken));
+                () => repository.GetAsync(invalidAddress, cancellationToken));
         }
     }
 

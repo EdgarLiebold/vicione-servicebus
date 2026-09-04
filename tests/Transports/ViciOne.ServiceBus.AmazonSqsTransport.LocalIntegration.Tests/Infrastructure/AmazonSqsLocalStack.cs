@@ -177,7 +177,7 @@ internal sealed class AmazonSqsLocalStack : IAsyncDisposable
             MaxErrorRetry = 0,
         });
 
-    public async Task<string[]> ListOwnedTopicNames(CancellationToken cancellationToken)
+    public async Task<string[]> ListOwnedTopicNamesAsync(CancellationToken cancellationToken)
     {
         var names = new List<string>();
         string? token = null;

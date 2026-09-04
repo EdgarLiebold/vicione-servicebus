@@ -6,6 +6,6 @@ namespace ViciOne.ServiceBus.Middleware.Outbox;
 public interface IBusOutboxNotification<TScope>
     where TScope : class
 {
-    Task WaitForDelivery(CancellationToken cancellationToken);
+    Task WaitForDeliveryAsync(CancellationToken cancellationToken);
     void Delivered();
 }

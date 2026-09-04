@@ -13,7 +13,7 @@ public interface IHandlerConnector<T>
     /// Connect a message handler for all messages of type T
     /// </summary>
     ConnectHandle ConnectHandler(IConsumePipeConnector consumePipe, MessageHandler<T> handler,
-        IBuildPipeConfigurator<ConsumeContext<T>> configurator);
+        IBuildPipeConfigurator<ConsumeContext<T>>? configurator);
 
     /// <summary>
     /// Connect a message handler for messages with the specified RequestId

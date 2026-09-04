@@ -9,15 +9,15 @@ public sealed class VariablePropertyConverterTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-INITIALIZER-VARIABLES", "shared-id-and-captured-timestamp")]
-    public async Task InitializerVariables_ShareTheContextIdAndPreserveTheCapturedTimestamp()
+    public async Task InitializerVariables_ShareTheContextIdAndPreserveTheCapturedTimestampAsync()
     {
         IdVariable correlationId = InVar.CorrelationId;
         IdVariable id = InVar.Id;
         IdVariable stringId = InVar.Id;
         TimestampVariable timestamp = InVar.Timestamp;
-        DateTime expectedTimestamp = timestamp;
+        DateTimeOffset expectedTimestamp = timestamp;
 
-        InitializeContext<VariableIntermediate> intermediate = await MessageInitializerCache<VariableIntermediate>.Initialize(
+        InitializeContext<VariableIntermediate> intermediate = await MessageInitializerCache<VariableIntermediate>.InitializeAsync(
             new
             {
                 CorrelationId = correlationId,
@@ -26,7 +26,7 @@ public sealed class VariablePropertyConverterTests
                 Timestamp = timestamp,
             },
             TestContext.Current.CancellationToken);
-        InitializeContext<VariableMessage> result = await MessageInitializerCache<VariableMessage>.Initialize(
+        InitializeContext<VariableMessage> result = await MessageInitializerCache<VariableMessage>.InitializeAsync(
             intermediate.Message,
             TestContext.Current.CancellationToken);
 
@@ -44,7 +44,7 @@ public sealed class VariablePropertyConverterTests
 
         string StringId { get; }
 
-        DateTime Timestamp { get; }
+        DateTimeOffset Timestamp { get; }
     }
 
     public interface VariableMessage
@@ -55,6 +55,6 @@ public sealed class VariablePropertyConverterTests
 
         Guid StringId { get; }
 
-        DateTime? Timestamp { get; }
+        DateTimeOffset? Timestamp { get; }
     }
 }

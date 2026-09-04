@@ -15,7 +15,7 @@ public sealed class MultiBusRequestTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MULTIBUS", "same-consumer-names-and-endpoint-callbacks-are-bus-owned")]
-    public async Task SameConsumerOnTwoBuses_KeepsNamesAndPerBusCallbacksIsolated()
+    public async Task SameConsumerOnTwoBuses_KeepsNamesAndPerBusCallbacksIsolatedAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -44,32 +44,31 @@ public sealed class MultiBusRequestTests
                 });
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             var message = new SharedMessage(NewId.NextGuid());
-            await harness.Bus.Publish(message, cancellationToken);
+            await harness.Bus.PublishAsync(message, cancellationToken);
             IReceivedMessage<SharedMessage> received = await harness.Consumed
                 .SelectAsync<SharedMessage>(cancellationToken)
-                .First()
-                .WaitAsync(timeout, cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(message, received.Context.Message);
-            Assert.Equal("first-bus-queue-name", received.Context.ReceiveContext.InputAddress.AbsolutePath.Trim('/'));
+            Assert.Equal("first-bus-queue-name", received.Context.Advanced().ReceiveContext.InputAddress.AbsolutePath.Trim('/'));
             Assert.Equal(1, Volatile.Read(ref counts.DefaultBus));
             Assert.Equal(1, Volatile.Read(ref counts.SecondaryBus));
             Assert.Equal(2, Volatile.Read(ref counts.Global));
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MULTIBUS", "validated-definitions-start-distinct-buses")]
-    public async Task ConsumerDefinitions_BuildAndStartTwoDistinctValidatedBusInstances()
+    public async Task ConsumerDefinitions_BuildAndStartTwoDistinctValidatedBusInstancesAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -94,7 +93,7 @@ public sealed class MultiBusRequestTests
         IBus defaultBus = provider.GetRequiredService<IBus>();
         IBusB secondaryBus = provider.GetRequiredService<IBusB>();
 
-        await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             Assert.NotSame(defaultBus, secondaryBus);
@@ -107,13 +106,13 @@ public sealed class MultiBusRequestTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MULTIBUS", "cross-bus-request-scope-and-causation")]
-    public async Task ScopedConsumer_PreservesCausationWhileRoutingThroughTheSecondaryBus()
+    public async Task ScopedConsumer_PreservesCausationWhileRoutingThroughTheSecondaryBusAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -141,18 +140,18 @@ public sealed class MultiBusRequestTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Guid correlationId = Guid.Parse("2b35606c-2d37-4dd5-8229-e936a56e99cd");
             IRequestClient<DefaultRequest> client = harness.GetRequestClient<DefaultRequest>();
 
-            Response<DefaultResponse> response = await client.GetResponse<DefaultResponse>(
+            Response<DefaultResponse> response = await client.Advanced().GetResponseAsync<DefaultResponse>(
                 new DefaultRequest(correlationId, "Hello"),
-                configurator => configurator.UseExecute(context =>
+                callback: configurator => configurator.UseExecute(context =>
                     context.Headers.Set(HeaderName, HeaderValue)),
-                cancellationToken);
+                cancellationToken: cancellationToken);
             CrossBusRequestObservation inner =
                 await observation.InnerRequest.Task.WaitAsync(timeout, cancellationToken);
 
@@ -171,13 +170,13 @@ public sealed class MultiBusRequestTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MULTIBUS", "default-custom-and-dynamic-buses-own-clients-instances-and-cross-bus-delivery")]
-    public async Task ThreeBusRegistration_ResolvesEveryOwnerClientAndCrossBusDeliveryExactly()
+    public async Task ThreeBusRegistration_ResolvesEveryOwnerClientAndCrossBusDeliveryExactlyAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -217,7 +216,7 @@ public sealed class MultiBusRequestTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
@@ -234,19 +233,19 @@ public sealed class MultiBusRequestTests
 
             Response<OwnedResponse> defaultResponse = await scope.ServiceProvider
                 .GetRequiredService<IRequestClient<DefaultOwnedRequest>>()
-                .GetResponse<OwnedResponse>(defaultRequest, cancellationToken)
+                .GetResponseAsync<OwnedResponse>(defaultRequest, cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
             Response<OwnedResponse> responseB = await scope.ServiceProvider
                 .GetRequiredService<Bind<IBusB, IRequestClient<BusBOwnedRequest>>>()
                 .Value
-                .GetResponse<OwnedResponse>(requestB, cancellationToken)
+                .GetResponseAsync<OwnedResponse>(requestB, cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
             Response<OwnedResponse> responseC = await scope.ServiceProvider
                 .GetRequiredService<Bind<IBusC, IRequestClient<BusCOwnedRequest>>>()
                 .Value
-                .GetResponse<OwnedResponse>(requestC, cancellationToken)
+                .GetResponseAsync<OwnedResponse>(requestC, cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
-            await busB.Publish(crossBus, cancellationToken);
+            await busB.PublishAsync(crossBus, cancellationToken);
             CrossBusDelivered delivered = await observation.Delivered.Task.WaitAsync(timeout, cancellationToken);
 
             Assert.NotSame(defaultBus, busB);
@@ -261,7 +260,7 @@ public sealed class MultiBusRequestTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -344,7 +343,7 @@ public sealed class MultiBusRequestTests
 
     public sealed class SharedConsumer : IConsumer<SharedMessage>
     {
-        public Task Consume(ConsumeContext<SharedMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<SharedMessage> context) => Task.CompletedTask;
     }
 
     public sealed class EndpointConfigurationCounts
@@ -362,32 +361,32 @@ public sealed class MultiBusRequestTests
 
     public sealed class DefaultOwnedRequestConsumer : IConsumer<DefaultOwnedRequest>
     {
-        public Task Consume(ConsumeContext<DefaultOwnedRequest> context) =>
+        public Task ConsumeAsync(ConsumeContext<DefaultOwnedRequest> context) =>
             context.RespondAsync(new OwnedResponse(context.Message.CorrelationId, "default"));
     }
 
     public sealed class BusBOwnedRequestConsumer : IConsumer<BusBOwnedRequest>
     {
-        public Task Consume(ConsumeContext<BusBOwnedRequest> context) =>
+        public Task ConsumeAsync(ConsumeContext<BusBOwnedRequest> context) =>
             context.RespondAsync(new OwnedResponse(context.Message.CorrelationId, "bus-b"));
     }
 
     public sealed class BusCOwnedRequestConsumer : IConsumer<BusCOwnedRequest>
     {
-        public Task Consume(ConsumeContext<BusCOwnedRequest> context) =>
+        public Task ConsumeAsync(ConsumeContext<BusCOwnedRequest> context) =>
             context.RespondAsync(new OwnedResponse(context.Message.CorrelationId, "bus-c"));
     }
 
     public sealed class CrossBusOriginConsumer(IBusB sourceBus, IBusC destinationBus) : IConsumer<CrossBusOrigin>
     {
-        public Task Consume(ConsumeContext<CrossBusOrigin> context) => destinationBus.Publish(
+        public Task ConsumeAsync(ConsumeContext<CrossBusOrigin> context) => destinationBus.PublishAsync(
             new CrossBusDelivered(context.Message.CorrelationId, sourceBus.Address, destinationBus.Address),
             context.CancellationToken);
     }
 
     public sealed class CrossBusDeliveredConsumer(ThreeBusObservation observation) : IConsumer<CrossBusDelivered>
     {
-        public Task Consume(ConsumeContext<CrossBusDelivered> context)
+        public Task ConsumeAsync(ConsumeContext<CrossBusDelivered> context)
         {
             observation.Delivered.TrySetResult(context.Message);
             return Task.CompletedTask;
@@ -397,7 +396,7 @@ public sealed class MultiBusRequestTests
     public sealed class CountingGlobalEndpointConfiguration(EndpointConfigurationCounts counts) :
         IConfigureReceiveEndpoint
     {
-        public void Configure(string name, IReceiveEndpointConfigurator configurator) =>
+        public void Configure(string? name, IReceiveEndpointConfigurator configurator) =>
             Interlocked.Increment(ref counts.Global);
     }
 
@@ -438,11 +437,11 @@ public sealed class MultiBusRequestTests
             _observation = observation;
         }
 
-        public async Task Consume(ConsumeContext<DefaultRequest> context)
+        public async Task ConsumeAsync(ConsumeContext<DefaultRequest> context)
         {
             _observation.ProvidersWereDistinct = !ReferenceEquals(_defaultProvider, _secondaryProvider);
-            _observation.OuterInputAddress = context.ReceiveContext.InputAddress;
-            Response<SecondaryResponse> response = await _client.GetResponse<SecondaryResponse>(
+            _observation.OuterInputAddress = context.Advanced().ReceiveContext.InputAddress;
+            Response<SecondaryResponse> response = await _client.GetResponseAsync<SecondaryResponse>(
                 new SecondaryRequest(context.Message.CorrelationId, context.Message.Key),
                 context.CancellationToken);
 
@@ -454,7 +453,7 @@ public sealed class MultiBusRequestTests
 
     public sealed class SecondaryRequestConsumer(CrossBusObservation observation) : IConsumer<SecondaryRequest>
     {
-        public async Task Consume(ConsumeContext<SecondaryRequest> context)
+        public async Task ConsumeAsync(ConsumeContext<SecondaryRequest> context)
         {
             observation.InnerRequest.TrySetResult(new CrossBusRequestObservation(
                 context.Message.CorrelationId,
@@ -472,7 +471,7 @@ public sealed class MultiBusRequestTests
 
     public sealed class DefaultDefinitionConsumer : IConsumer<DefinitionMessage>
     {
-        public Task Consume(ConsumeContext<DefinitionMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<DefinitionMessage> context) => Task.CompletedTask;
     }
 
     public sealed class DefaultConsumerDefinition : ConsumerDefinition<DefaultDefinitionConsumer>
@@ -481,7 +480,7 @@ public sealed class MultiBusRequestTests
 
     public sealed class SecondaryDefinitionConsumer : IConsumer<DefinitionMessage>
     {
-        public Task Consume(ConsumeContext<DefinitionMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<DefinitionMessage> context) => Task.CompletedTask;
     }
 
     public sealed class SecondaryConsumerDefinition : ConsumerDefinition<SecondaryDefinitionConsumer>

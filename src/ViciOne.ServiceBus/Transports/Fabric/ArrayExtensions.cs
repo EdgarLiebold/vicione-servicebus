@@ -4,9 +4,9 @@ namespace ViciOne.ServiceBus.Transports.Fabric;
 
 static class ArrayExtensions
 {
-    public static T[] Copy<T>(this T[] array)
+    public static T[] Copy<T>(this T[]? array)
     {
-        if ((array?.Length ?? 0) == 0)
+        if (array is not { Length: > 0 })
             return [];
 
         var result = new T[array.Length];
@@ -16,7 +16,7 @@ static class ArrayExtensions
 
     public static T[] Shuffle<T>(this T[] array)
     {
-        if ((array?.Length ?? 0) < 2)
+        if (array is not { Length: >= 2 })
             return array;
 
         var r = new Random();

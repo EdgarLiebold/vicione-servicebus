@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using Azure.Core;
 using Azure.Messaging.EventHubs.Producer;
 using ViciOne.ServiceBus.EventHubIntegration.Configuration;
 using ViciOne.ServiceBus.Middleware;
@@ -10,9 +11,9 @@ public class EventHubConnectionContext :
     BasePipeContext,
     ConnectionContext
 {
-    readonly Action<EventHubProducerClientOptions> _configureOptions;
+    readonly Action<EventHubProducerClientOptions>? _configureOptions;
 
-    public EventHubConnectionContext(IHostSettings hostSettings, IStorageSettings storageSettings, Action<EventHubProducerClientOptions> configureOptions,
+    public EventHubConnectionContext(IHostSettings hostSettings, IStorageSettings storageSettings, Action<EventHubProducerClientOptions>? configureOptions,
         CancellationToken cancellationToken)
         : base(cancellationToken)
     {
@@ -28,9 +29,17 @@ public class EventHubConnectionContext :
     {
         var options = new EventHubProducerClientOptions();
         _configureOptions?.Invoke(options);
-        var client = !string.IsNullOrWhiteSpace(HostSettings.ConnectionString)
-            ? new EventHubProducerClient(HostSettings.ConnectionString, eventHubName, options)
-            : new EventHubProducerClient(HostSettings.FullyQualifiedNamespace, eventHubName, HostSettings.TokenCredential, options);
+        EventHubProducerClient client;
+        if (!string.IsNullOrWhiteSpace(HostSettings.ConnectionString))
+            client = new EventHubProducerClient(HostSettings.ConnectionString, eventHubName, options);
+        else
+        {
+            string fullyQualifiedNamespace = HostSettings.FullyQualifiedNamespace
+                ?? throw new ConfigurationException("The Event Hubs namespace is not configured.");
+            TokenCredential credential = HostSettings.TokenCredential
+                ?? throw new ConfigurationException("The Event Hubs token credential is not configured.");
+            client = new EventHubProducerClient(fullyQualifiedNamespace, eventHubName, credential, options);
+        }
         return client;
     }
 }

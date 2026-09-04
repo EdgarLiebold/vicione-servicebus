@@ -17,7 +17,7 @@ public class BytesInlineMessageData :
         Address = address;
         _value = value;
 
-        Value = Task.FromResult(value);
+        Value = Task.FromResult<byte[]?>(value);
     }
 
     public void Set(IMessageDataReference reference)
@@ -30,7 +30,7 @@ public class BytesInlineMessageData :
 
     public bool HasValue => true;
 
-    public Task<byte[]> Value { get; }
+    public Task<byte[]?> Value { get; }
 }
 
 
@@ -40,14 +40,14 @@ public class BytesInlineMessageData<T> :
 {
     readonly IMessageDataConverter<T> _converter;
     readonly byte[] _value;
-    readonly Lazy<Task<T>> _valueTask;
+    readonly Lazy<Task<T?>> _valueTask;
 
     public BytesInlineMessageData(IMessageDataConverter<T> converter, byte[] value, Uri? address = null)
     {
         Address = address;
         _value = value;
 
-        _valueTask = new Lazy<Task<T>>(() => GetValue());
+        _valueTask = new Lazy<Task<T?>>(() => GetValueAsync());
 
         _converter = converter;
     }
@@ -62,12 +62,12 @@ public class BytesInlineMessageData<T> :
 
     public bool HasValue => true;
 
-    public Task<T> Value => _valueTask.Value;
+    public Task<T?> Value => _valueTask.Value;
 
-    async Task<T> GetValue()
+    async Task<T?> GetValueAsync()
     {
         using var stream = new MemoryStream(_value, false);
 
-        return await _converter.Convert(stream, CancellationToken.None).ConfigureAwait(false);
+        return await _converter.ConvertAsync(stream, CancellationToken.None).ConfigureAwait(false);
     }
 }

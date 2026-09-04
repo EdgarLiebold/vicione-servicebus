@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.MessageData.Converters;
 public class ByteArrayMessageDataConverter :
     IMessageDataConverter<byte[]>
 {
-    public async Task<byte[]> Convert(Stream stream, CancellationToken cancellationToken)
+    public async Task<byte[]?> ConvertAsync(Stream stream, CancellationToken cancellationToken)
     {
         using var ms = new MemoryStream();
 

@@ -23,7 +23,7 @@ public interface IStateMachineActivity<TSaga> :
     /// <param name="context">The behavior context</param>
     /// <param name="next">The behavior that follows this activity</param>
     /// <returns>An awaitable task</returns>
-    Task Execute(BehaviorContext<TSaga> context, IBehavior<TSaga> next);
+    Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next);
 
     /// <summary>
     /// Execute the activity with the given behavior context
@@ -31,7 +31,7 @@ public interface IStateMachineActivity<TSaga> :
     /// <param name="context">The behavior context</param>
     /// <param name="next">The behavior that follows this activity</param>
     /// <returns>An awaitable task</returns>
-    Task Execute<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+    Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class;
 
     /// <summary>
@@ -41,7 +41,7 @@ public interface IStateMachineActivity<TSaga> :
     /// <param name="context"></param>
     /// <param name="next"></param>
     /// <returns></returns>
-    Task Faulted<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
+    Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception;
 
     /// <summary>
@@ -52,7 +52,7 @@ public interface IStateMachineActivity<TSaga> :
     /// <param name="context"></param>
     /// <param name="next"></param>
     /// <returns></returns>
-    Task Faulted<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
+    Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
         where TException : Exception
         where T : class;
 }
@@ -74,7 +74,7 @@ public interface IStateMachineActivity<TSaga, TMessage> :
     /// <param name="context">The behavior context</param>
     /// <param name="next">The behavior that follows this activity</param>
     /// <returns>An awaitable task</returns>
-    Task Execute(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next);
+    Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next);
 
     /// <summary>
     /// The exception path through the behavior allows activities to catch and handle exceptions
@@ -83,6 +83,6 @@ public interface IStateMachineActivity<TSaga, TMessage> :
     /// <param name="context"></param>
     /// <param name="next"></param>
     /// <returns></returns>
-    Task Faulted<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
+    Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
         where TException : Exception;
 }

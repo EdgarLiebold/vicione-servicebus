@@ -23,9 +23,9 @@ public class OutboxSendEndpointProvider :
 
     IMessageRouteTable IMessageRouteProvider.MessageRoutes => EndpointConvention.GetMessageRoutes(_sendEndpointProvider);
 
-    public async Task<ISendEndpoint> GetSendEndpoint(Uri address)
+    public async Task<ISendEndpoint> GetSendEndpointAsync(Uri address, CancellationToken cancellationToken = default)
     {
-        var endpoint = await _sendEndpointProvider.GetSendEndpoint(address).ConfigureAwait(false);
+        var endpoint = await _sendEndpointProvider.GetSendEndpointAsync(address, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         return new OutboxSendEndpoint(_outboxContext, endpoint);
     }

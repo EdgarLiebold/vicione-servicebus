@@ -16,23 +16,27 @@ public interface IAsyncPipeContextHandle<TContext> :
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    Task Created(TContext context);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task CreatedAsync(TContext context, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Called when the PipeContext creation was canceled
     /// </summary>
-    Task CreateCanceled();
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task CreateCanceledAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Called when the PipeContext creation failed
     /// </summary>
     /// <param name="exception"></param>
-    Task CreateFaulted(Exception exception);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task CreateFaultedAsync(Exception exception, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Called when the successfully created PipeContext becomes faulted, indicating that it
     /// should no longer be used.
     /// </summary>
     /// <param name="exception">The exception which occurred</param>
-    Task Faulted(Exception exception);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task FaultedAsync(Exception exception, CancellationToken cancellationToken = default);
 }

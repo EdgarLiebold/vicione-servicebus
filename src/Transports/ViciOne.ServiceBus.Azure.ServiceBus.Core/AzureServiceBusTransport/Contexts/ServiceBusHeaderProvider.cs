@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Azure.Messaging.ServiceBus;
 using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Transports;
@@ -32,28 +33,29 @@ public class ServiceBusHeaderProvider :
         }
     }
 
-    public bool TryGetHeader(string key, out object value)
+    public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
     {
         if (_message.ApplicationProperties != null)
         {
-            if (_message.ApplicationProperties.TryGetValue(key, out value))
+            if (_message.ApplicationProperties.TryGetValue(key, out value) && value != null)
                 return true;
 
             if (DiagnosticHeaders.ActivityId.Equals(key, StringComparison.OrdinalIgnoreCase)
-                && _message.ApplicationProperties.TryGetValue(DiagnosticHeaders.DiagnosticId, out value))
+                && _message.ApplicationProperties.TryGetValue(DiagnosticHeaders.DiagnosticId, out value)
+                && value != null)
                 return true;
         }
 
         if (nameof(_message.MessageId).Equals(key, StringComparison.OrdinalIgnoreCase))
         {
             value = _message.MessageId;
-            return !string.IsNullOrWhiteSpace(_message.MessageId);
+            return !string.IsNullOrWhiteSpace(value as string);
         }
 
         if (nameof(_message.CorrelationId).Equals(key, StringComparison.OrdinalIgnoreCase))
         {
             value = _message.CorrelationId;
-            return !string.IsNullOrWhiteSpace(_message.CorrelationId);
+            return !string.IsNullOrWhiteSpace(value as string);
         }
 
         if (MessageHeaders.TransportSentTime.Equals(key, StringComparison.OrdinalIgnoreCase))

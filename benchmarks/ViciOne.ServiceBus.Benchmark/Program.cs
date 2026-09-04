@@ -71,7 +71,7 @@ class Program
 
             if (optionSet.Benchmark.HasFlag(ProgramOptionSet.BenchmarkOptions.Latency))
             {
-                await RunLatencyBenchmark(optionSet);
+                await RunLatencyBenchmarkAsync(optionSet);
                 executedBenchmarks++;
             }
 
@@ -83,7 +83,7 @@ class Program
 
             if (optionSet.Benchmark.HasFlag(ProgramOptionSet.BenchmarkOptions.BusOutbox))
             {
-                await RunBusOutboxBenchmark(optionSet);
+                await RunBusOutboxBenchmarkAsync(optionSet);
                 executedBenchmarks++;
             }
 
@@ -116,7 +116,7 @@ class Program
         }
     }
 
-    static async Task RunLatencyBenchmark(ProgramOptionSet optionSet)
+    static async Task RunLatencyBenchmarkAsync(ProgramOptionSet optionSet)
     {
         var messageLatencyOptionSet = new MessageLatencyOptionSet();
 
@@ -185,7 +185,7 @@ class Program
 
         var benchmark = new MessageLatencyBenchmark(transport, settings);
 
-        await benchmark.Run();
+        await benchmark.RunAsync();
     }
 
     static void RunRequestResponseBenchmark(ProgramOptionSet optionSet)
@@ -233,7 +233,7 @@ class Program
         benchmark.Run();
     }
 
-    static async Task RunBusOutboxBenchmark(ProgramOptionSet optionSet)
+    static async Task RunBusOutboxBenchmarkAsync(ProgramOptionSet optionSet)
     {
         var busOutboxBenchmarkOptions = new BusOutboxBenchmarkOptions();
 
@@ -271,7 +271,7 @@ class Program
 
         var benchmark = new BusOutboxBenchmark(transport, busOutboxBenchmarkOptions);
 
-        await benchmark.Run();
+        await benchmark.RunAsync();
     }
 
     static void ShowHelp(OptionSet p)

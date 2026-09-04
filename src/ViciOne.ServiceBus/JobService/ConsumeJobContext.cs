@@ -29,7 +29,7 @@ public class ConsumeJobContext<TJob> :
     JobProgressBuffer? _updateBuffer;
 
     public ConsumeJobContext(ConsumeContext<StartJob> context, Uri instanceAddress, TJob job, JobOptions<TJob> jobOptions)
-        : base(context)
+        : base(context.Advanced())
     {
         _context = context;
         _instanceAddress = instanceAddress;
@@ -58,32 +58,32 @@ public class ConsumeJobContext<TJob> :
 
     public TJob Message => Job;
 
-    public Task NotifyConsumed(TimeSpan duration, string consumerType)
+    public Task NotifyConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
     {
-        return _context.NotifyConsumed(_context, duration, consumerType);
+        return _context.NotifyConsumedAsync(_context, duration, consumerType, cancellationToken: cancellationToken);
     }
 
-    public Task NotifyFaulted(TimeSpan duration, string consumerType, Exception exception)
+    public Task NotifyFaultedAsync(TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
     {
-        return _context.NotifyFaulted(_context, duration, consumerType, exception);
+        return _context.NotifyFaultedAsync(_context, duration, consumerType, exception, cancellationToken: cancellationToken);
     }
 
     public async ValueTask DisposeAsync()
     {
         if (_updateBuffer != null)
-            await _updateBuffer.Flush().ConfigureAwait(false);
+            await _updateBuffer.FlushAsync().ConfigureAwait(false);
 
         _source.Dispose();
     }
 
-    public async Task NotifyCanceled()
+    public async Task NotifyCanceledAsync(CancellationToken cancellationToken = default)
     {
         LogContext.Debug?.Log("Job Canceled: {JobId} {AttemptId} ({RetryAttempt}) {Reason}", JobId, AttemptId, RetryAttempt, _cancellationReason);
 
         if (_updateBuffer != null)
-            await _updateBuffer.Flush().ConfigureAwait(false);
+            await _updateBuffer.FlushAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        await Notify<JobAttemptCanceled>(new JobAttemptCanceledEvent
+        await NotifyAsync<JobAttemptCanceled>(new JobAttemptCanceledEvent
         {
             JobId = JobId,
             AttemptId = AttemptId,
@@ -92,13 +92,13 @@ public class ConsumeJobContext<TJob> :
         }).ConfigureAwait(false);
     }
 
-    public async Task NotifyStarted()
+    public async Task NotifyStartedAsync(CancellationToken cancellationToken = default)
     {
         LogContext.Debug?.Log("Job Started: {JobId} {AttemptId} ({RetryAttempt})", JobId, AttemptId, RetryAttempt);
 
         var timestamp = UtcNow;
 
-        await Notify<JobAttemptStarted>(new JobAttemptStartedEvent
+        await NotifyAsync<JobAttemptStarted>(new JobAttemptStartedEvent
         {
             JobId = JobId,
             AttemptId = AttemptId,
@@ -107,9 +107,9 @@ public class ConsumeJobContext<TJob> :
             InstanceAddress = _instanceAddress
         }).ConfigureAwait(false);
 
-        var endpoint = await _context.ReceiveContext.PublishEndpointProvider.GetPublishSendEndpoint<JobStarted<TJob>>().ConfigureAwait(false);
+        var endpoint = await _context.Advanced().ReceiveContext.PublishEndpointProvider.GetPublishSendEndpointAsync<JobStarted<TJob>>(cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        await endpoint.Send<JobStarted<TJob>>(new JobStartedEvent<TJob>
+        await endpoint.SendAsync<JobStarted<TJob>>(new JobStartedEvent<TJob>
         {
             JobId = JobId,
             AttemptId = AttemptId,
@@ -118,14 +118,14 @@ public class ConsumeJobContext<TJob> :
         }, CancellationToken.None).ConfigureAwait(false);
     }
 
-    public async Task NotifyCompleted()
+    public async Task NotifyCompletedAsync(CancellationToken cancellationToken = default)
     {
         LogContext.Debug?.Log("Job Completed: {JobId} {AttemptId} ({RetryAttempt})", JobId, AttemptId, RetryAttempt);
 
         if (_updateBuffer != null)
-            await _updateBuffer.Flush().ConfigureAwait(false);
+            await _updateBuffer.FlushAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        await Notify<JobAttemptCompleted>(new JobAttemptCompletedEvent
+        await NotifyAsync<JobAttemptCompleted>(new JobAttemptCompletedEvent
         {
             JobId = JobId,
             AttemptId = AttemptId,
@@ -137,19 +137,19 @@ public class ConsumeJobContext<TJob> :
         }).ConfigureAwait(false);
     }
 
-    public Task NotifyJobProgress(SetJobProgress progress)
+    public Task NotifyJobProgressAsync(SetJobProgress progress, CancellationToken cancellationToken = default)
     {
-        return Notify(progress);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return NotifyAsync(progress);
     }
 
-    public async Task NotifyFaulted(Exception exception, TimeSpan? delay)
+    public async Task NotifyFaultedAsync(Exception exception, TimeSpan? delay, CancellationToken cancellationToken = default)
     {
         LogContext.Debug?.Log(exception, "Job Faulted: {JobId} {AttemptId} ({RetryAttempt})", JobId, AttemptId, RetryAttempt);
 
         if (_updateBuffer != null)
-            await _updateBuffer.Flush().ConfigureAwait(false);
+            await _updateBuffer.FlushAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        await Notify<JobAttemptFaulted>(new JobAttemptFaultedEvent
+        await NotifyAsync<JobAttemptFaulted>(new JobAttemptFaultedEvent
         {
             JobId = JobId,
             AttemptId = AttemptId,
@@ -169,21 +169,21 @@ public class ConsumeJobContext<TJob> :
 
     public TimeSpan ElapsedTime => _timeProvider.GetElapsedTime(_startedAt);
 
-    public Task SetJobProgress(long value, long? limit)
+    public Task SetJobProgressAsync(long value, long? limit, CancellationToken cancellationToken = default)
     {
-        _updateBuffer ??= new JobProgressBuffer(this, _timeProvider, _jobOptions.ProgressBuffer);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); _updateBuffer ??= new JobProgressBuffer(this, _timeProvider, _jobOptions.ProgressBuffer);
 
-        return _updateBuffer.Update(new JobProgressBuffer.ProgressUpdate(JobId, AttemptId, value, limit), CancellationToken.None);
+        return _updateBuffer.UpdateAsync(new JobProgressBuffer.ProgressUpdate(JobId, AttemptId, value, limit), CancellationToken.None);
     }
 
-    public Task SaveJobState<T>(T? jobState)
+    public Task SaveJobStateAsync<T>(T? jobState, CancellationToken cancellationToken = default)
         where T : class
     {
-        return Notify<SaveJobState>(new SaveJobStateCommand
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return NotifyAsync<SaveJobState>(new SaveJobStateCommand
         {
             JobId = JobId,
             AttemptId = AttemptId,
-            JobState = jobState != null ? _context.ToDictionary(jobState) : null
+            JobState = jobState != null ? _context.Advanced().ToDictionary(jobState) : null
         });
     }
 
@@ -192,7 +192,7 @@ public class ConsumeJobContext<TJob> :
     {
         if (_context.Message.JobState != null)
         {
-            jobState = _context.SerializerContext.DeserializeObject<T>(_context.Message.JobState);
+            jobState = _context.Advanced().SerializerContext.DeserializeObject<T>(_context.Message.JobState);
             return jobState != null;
         }
 
@@ -206,12 +206,12 @@ public class ConsumeJobContext<TJob> :
 
     DateTime UtcNow => _timeProvider.GetUtcNow().UtcDateTime;
 
-    async Task Notify<T>(T message)
+    async Task NotifyAsync<T>(T message)
         where T : class
     {
-        var endpoint = await _context.ReceiveContext.PublishEndpointProvider.GetPublishSendEndpoint<T>().ConfigureAwait(false);
+        var endpoint = await _context.Advanced().ReceiveContext.PublishEndpointProvider.GetPublishSendEndpointAsync<T>().ConfigureAwait(false);
 
-        await endpoint.Send(message, CancellationToken.None).ConfigureAwait(false);
+        await endpoint.SendAsync(message, CancellationToken.None).ConfigureAwait(false);
     }
 
     public void Cancel(string? reason)

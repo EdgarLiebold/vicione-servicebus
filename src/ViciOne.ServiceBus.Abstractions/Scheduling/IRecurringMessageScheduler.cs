@@ -21,7 +21,7 @@ public interface IRecurringMessageScheduler
     /// <param name="message">The message</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledRecurringMessage<T>> ScheduleRecurringSend<T>(Uri destinationAddress, RecurringSchedule schedule, T message,
+    Task<ScheduledRecurringMessage<T>> ScheduleRecurringSendAsync<T>(Uri destinationAddress, RecurringSchedule schedule, T message,
         CancellationToken cancellationToken = default)
         where T : class;
 
@@ -35,7 +35,7 @@ public interface IRecurringMessageScheduler
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledRecurringMessage<T>> ScheduleRecurringSend<T>(Uri destinationAddress, RecurringSchedule schedule, T message, IPipe<SendContext<T>> pipe,
+    Task<ScheduledRecurringMessage<T>> ScheduleRecurringSendAsync<T>(Uri destinationAddress, RecurringSchedule schedule, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken = default)
         where T : class;
 
@@ -49,7 +49,7 @@ public interface IRecurringMessageScheduler
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledRecurringMessage<T>> ScheduleRecurringSend<T>(Uri destinationAddress, RecurringSchedule schedule, T message, IPipe<SendContext> pipe,
+    Task<ScheduledRecurringMessage<T>> ScheduleRecurringSendAsync<T>(Uri destinationAddress, RecurringSchedule schedule, T message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
         where T : class;
 
@@ -61,7 +61,7 @@ public interface IRecurringMessageScheduler
     /// <param name="message">The message object</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledRecurringMessage> ScheduleRecurringSend(Uri destinationAddress, RecurringSchedule schedule, object message,
+    Task<ScheduledRecurringMessage> ScheduleRecurringSendAsync(Uri destinationAddress, RecurringSchedule schedule, object message,
         CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -74,7 +74,7 @@ public interface IRecurringMessageScheduler
     /// <param name="messageType">The type of the message (use message.GetType() if desired)</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledRecurringMessage> ScheduleRecurringSend(Uri destinationAddress, RecurringSchedule schedule, object message, Type messageType,
+    Task<ScheduledRecurringMessage> ScheduleRecurringSendAsync(Uri destinationAddress, RecurringSchedule schedule, object message, Type messageType,
         CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -86,7 +86,7 @@ public interface IRecurringMessageScheduler
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledRecurringMessage> ScheduleRecurringSend(Uri destinationAddress, RecurringSchedule schedule, object message, IPipe<SendContext> pipe,
+    Task<ScheduledRecurringMessage> ScheduleRecurringSendAsync(Uri destinationAddress, RecurringSchedule schedule, object message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -100,7 +100,7 @@ public interface IRecurringMessageScheduler
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledRecurringMessage> ScheduleRecurringSend(Uri destinationAddress, RecurringSchedule schedule, object message, Type messageType,
+    Task<ScheduledRecurringMessage> ScheduleRecurringSendAsync(Uri destinationAddress, RecurringSchedule schedule, object message, Type messageType,
         IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default);
 
@@ -114,7 +114,7 @@ public interface IRecurringMessageScheduler
     /// <param name="values">The property values to initialize on the interface</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledRecurringMessage<T>> ScheduleRecurringSend<T>(Uri destinationAddress, RecurringSchedule schedule, object values,
+    Task<ScheduledRecurringMessage<T>> ScheduleRecurringSendAsync<T>(Uri destinationAddress, RecurringSchedule schedule, object values,
         CancellationToken cancellationToken = default)
         where T : class;
 
@@ -129,7 +129,7 @@ public interface IRecurringMessageScheduler
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledRecurringMessage<T>> ScheduleRecurringSend<T>(Uri destinationAddress, RecurringSchedule schedule, object values,
+    Task<ScheduledRecurringMessage<T>> ScheduleRecurringSendAsync<T>(Uri destinationAddress, RecurringSchedule schedule, object values,
         IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken = default)
         where T : class;
@@ -145,7 +145,7 @@ public interface IRecurringMessageScheduler
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledRecurringMessage<T>> ScheduleRecurringSend<T>(Uri destinationAddress, RecurringSchedule schedule, object values, IPipe<SendContext> pipe,
+    Task<ScheduledRecurringMessage<T>> ScheduleRecurringSendAsync<T>(Uri destinationAddress, RecurringSchedule schedule, object values, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
         where T : class;
 
@@ -157,7 +157,7 @@ public interface IRecurringMessageScheduler
     /// <param name="message">The message</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task<ScheduledRecurringMessage<T>> ScheduleRecurringPublish<T>(RecurringSchedule schedule, T message, CancellationToken cancellationToken = default)
+    Task<ScheduledRecurringMessage<T>> ScheduleRecurringPublishAsync<T>(RecurringSchedule schedule, T message, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>
@@ -169,7 +169,7 @@ public interface IRecurringMessageScheduler
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    Task<ScheduledRecurringMessage<T>> ScheduleRecurringPublish<T>(RecurringSchedule schedule, T message, IPipe<SendContext<T>> pipe,
+    Task<ScheduledRecurringMessage<T>> ScheduleRecurringPublishAsync<T>(RecurringSchedule schedule, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken = default)
         where T : class;
 
@@ -182,7 +182,7 @@ public interface IRecurringMessageScheduler
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    Task<ScheduledRecurringMessage<T>> ScheduleRecurringPublish<T>(RecurringSchedule schedule, T message, IPipe<SendContext> pipe,
+    Task<ScheduledRecurringMessage<T>> ScheduleRecurringPublishAsync<T>(RecurringSchedule schedule, T message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
         where T : class;
 
@@ -193,7 +193,7 @@ public interface IRecurringMessageScheduler
     /// <param name="message">The message object</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    Task<ScheduledRecurringMessage> ScheduleRecurringPublish(RecurringSchedule schedule, object message, CancellationToken cancellationToken = default);
+    Task<ScheduledRecurringMessage> ScheduleRecurringPublishAsync(RecurringSchedule schedule, object message, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Publishes an object as a message, using the message type specified. If the object cannot be cast
@@ -204,7 +204,7 @@ public interface IRecurringMessageScheduler
     /// <param name="messageType">The type of the message (use message.GetType() if desired)</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    Task<ScheduledRecurringMessage> ScheduleRecurringPublish(RecurringSchedule schedule, object message, Type messageType,
+    Task<ScheduledRecurringMessage> ScheduleRecurringPublishAsync(RecurringSchedule schedule, object message, Type messageType,
         CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -215,7 +215,7 @@ public interface IRecurringMessageScheduler
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    Task<ScheduledRecurringMessage> ScheduleRecurringPublish(RecurringSchedule schedule, object message, IPipe<SendContext> pipe,
+    Task<ScheduledRecurringMessage> ScheduleRecurringPublishAsync(RecurringSchedule schedule, object message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -228,7 +228,7 @@ public interface IRecurringMessageScheduler
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    Task<ScheduledRecurringMessage> ScheduleRecurringPublish(RecurringSchedule schedule, object message, Type messageType, IPipe<SendContext> pipe,
+    Task<ScheduledRecurringMessage> ScheduleRecurringPublishAsync(RecurringSchedule schedule, object message, Type messageType, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -240,7 +240,7 @@ public interface IRecurringMessageScheduler
     /// <param name="values">The property values to initialize on the interface</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    Task<ScheduledRecurringMessage<T>> ScheduleRecurringPublish<T>(RecurringSchedule schedule, object values,
+    Task<ScheduledRecurringMessage<T>> ScheduleRecurringPublishAsync<T>(RecurringSchedule schedule, object values,
         CancellationToken cancellationToken = default)
         where T : class;
 
@@ -254,7 +254,7 @@ public interface IRecurringMessageScheduler
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    Task<ScheduledRecurringMessage<T>> ScheduleRecurringPublish<T>(RecurringSchedule schedule, object values, IPipe<SendContext<T>> pipe,
+    Task<ScheduledRecurringMessage<T>> ScheduleRecurringPublishAsync<T>(RecurringSchedule schedule, object values, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken = default)
         where T : class;
 
@@ -268,7 +268,7 @@ public interface IRecurringMessageScheduler
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    Task<ScheduledRecurringMessage<T>> ScheduleRecurringPublish<T>(RecurringSchedule schedule, object values, IPipe<SendContext> pipe,
+    Task<ScheduledRecurringMessage<T>> ScheduleRecurringPublishAsync<T>(RecurringSchedule schedule, object values, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
         where T : class;
 
@@ -277,19 +277,22 @@ public interface IRecurringMessageScheduler
     /// </summary>
     /// <param name="scheduleId">The scheduleId from the recurring schedule</param>
     /// <param name="scheduleGroup">The scheduleGroup from the recurring schedule</param>
-    Task CancelScheduledRecurringSend(string scheduleId, string scheduleGroup);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task CancelScheduledRecurringSendAsync(string scheduleId, string scheduleGroup, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Pause a scheduled message by ScheduleId and ScheduleGroup.
     /// </summary>
     /// <param name="scheduleId">The scheduleId from the recurring schedule</param>
     /// <param name="scheduleGroup">The scheduleGroup from the recurring schedule</param>
-    Task PauseScheduledRecurringSend(string scheduleId, string scheduleGroup);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task PauseScheduledRecurringSendAsync(string scheduleId, string scheduleGroup, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Resume a scheduled message by ScheduleId and ScheduleGroup.
     /// </summary>
     /// <param name="scheduleId">The scheduleId from the recurring schedule</param>
     /// <param name="scheduleGroup">The scheduleGroup from the recurring schedule</param>
-    Task ResumeScheduledRecurringSend(string scheduleId, string scheduleGroup);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task ResumeScheduledRecurringSendAsync(string scheduleId, string scheduleGroup, CancellationToken cancellationToken = default);
 }

@@ -24,12 +24,12 @@ public class CaseInsensitiveDictionaryJsonConverter<T, TValue> :
         writer.WriteEndObject();
     }
 
-    public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         return ReadInternal(ref reader, typeToConvert, options);
     }
 
-    protected T ReadInternal(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    protected T? ReadInternal(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         if (reader.TokenType != JsonTokenType.StartObject)
             throw new JsonException($"Expected StartObject, found: {reader.TokenType}");
@@ -50,7 +50,7 @@ public class CaseInsensitiveDictionaryJsonConverter<T, TValue> :
 
             reader.Read();
 
-            dictionary.Add(propertyName, JsonSerializer.Deserialize<TValue>(ref reader, options));
+            dictionary.Add(propertyName, JsonSerializer.Deserialize<TValue>(ref reader, options)!);
         }
 
         return dictionary as T;

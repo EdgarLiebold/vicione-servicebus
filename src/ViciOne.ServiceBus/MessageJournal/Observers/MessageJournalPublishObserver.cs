@@ -13,10 +13,10 @@ internal sealed class MessageJournalPublishObserver : IPublishObserver
         _writer = writer;
     }
 
-    public Task PrePublish<T>(PublishContext<T> context)
+    public Task PrePublishAsync<T>(PublishContext<T> context)
         where T : class => Task.CompletedTask;
 
-    public Task PostPublish<T>(PublishContext<T> context)
+    public Task PostPublishAsync<T>(PublishContext<T> context)
         where T : class => _writer.ObserveAsync(
             MessageJournalOperation.Publish,
             MessageJournalOutcome.Succeeded,
@@ -27,7 +27,7 @@ internal sealed class MessageJournalPublishObserver : IPublishObserver
                 MessageJournalOutcome.Succeeded,
                 exception: null));
 
-    public Task PublishFault<T>(PublishContext<T> context, Exception exception)
+    public Task PublishFaultAsync<T>(PublishContext<T> context, Exception exception)
         where T : class => _writer.ObserveAsync(
             MessageJournalOperation.Publish,
             MessageJournalOutcome.Faulted,

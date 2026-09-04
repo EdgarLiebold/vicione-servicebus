@@ -9,7 +9,7 @@ public sealed class SentMessageMetadataTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-SENT-TIME", "exact-utc-new-id-timestamp")]
-    public async Task ConsumedSentTime_IsTheExactUtcTimestampOfItsMessageId()
+    public async Task ConsumedSentTime_IsTheExactUtcTimestampOfItsMessageIdAsync()
     {
         TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -22,21 +22,21 @@ public sealed class SentMessageMetadataTests
         HandlerTestHarness<TimedMessage> handler = harness.Handler<TimedMessage>();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            await harness.Bus.Publish(new TimedMessage("value"), cancellationToken);
+            await harness.Bus.PublishAsync(new TimedMessage("value"), cancellationToken);
             ConsumeContext<TimedMessage> context =
-                (await handler.Consumed.SelectAsync(cancellationToken).First()).Context;
+                (await handler.Consumed.SelectAsync(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken)).Context;
 
             Guid messageId = Assert.IsType<Guid>(context.MessageId);
-            DateTime sentTime = Assert.IsType<DateTime>(context.SentTime);
-            Assert.Equal(DateTimeKind.Utc, sentTime.Kind);
-            Assert.Equal(messageId.ToNewId().Timestamp, sentTime);
+            DateTimeOffset sentTime = Assert.IsType<DateTimeOffset>(context.SentTime);
+            Assert.Equal(TimeSpan.Zero, sentTime.Offset);
+            Assert.Equal(messageId.ToNewId().Timestamp, sentTime.UtcDateTime);
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 

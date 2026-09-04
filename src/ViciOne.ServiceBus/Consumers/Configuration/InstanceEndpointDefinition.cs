@@ -37,7 +37,7 @@ public class InstanceEndpointDefinition :
         return formatter.SanitizeName(sb.ToString());
     }
 
-    public void Configure<T>(T configurator, IRegistrationContext context)
+    public void Configure<T>(T configurator, IRegistrationContext? context)
         where T : IReceiveEndpointConfigurator
     {
     }

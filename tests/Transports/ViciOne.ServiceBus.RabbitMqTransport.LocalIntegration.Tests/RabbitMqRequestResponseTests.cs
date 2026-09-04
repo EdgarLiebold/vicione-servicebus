@@ -8,7 +8,7 @@ public sealed class RabbitMqRequestResponseTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-REQUEST", "direct-reply-to-preserves-request-correlation")]
-    public async Task DirectReplyTo_PreservesRequestCorrelationExactlyOnce()
+    public async Task DirectReplyTo_PreservesRequestCorrelationExactlyOnceAsync()
     {
         using RabbitMqBroker fixture = RabbitMqBroker.Create("replyto");
         string queue = fixture.Name("service");
@@ -46,7 +46,7 @@ public sealed class RabbitMqRequestResponseTests
             IRequestClient<RequestMessage> client = clientFactory.CreateRequestClient<RequestMessage>(
                 new Uri($"queue:{queue}"),
                 RequestTimeout.After(ms: checked((int)fixture.OperationTimeout.TotalMilliseconds)));
-            Response<ResponseMessage> response = await client.GetResponse<ResponseMessage>(
+            Response<ResponseMessage> response = await client.GetResponseAsync<ResponseMessage>(
                     new RequestMessage(expected),
                     cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
@@ -67,7 +67,7 @@ public sealed class RabbitMqRequestResponseTests
             clientFactory = null;
             await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
             started = false;
-            RabbitMqBroker.QueueState terminal = await fixture.Queue(queue, cancellationToken);
+            RabbitMqBroker.QueueState terminal = await fixture.QueueAsync(queue, cancellationToken);
             Assert.Equal(0, terminal.Messages);
             Assert.Equal(1, entries);
         }

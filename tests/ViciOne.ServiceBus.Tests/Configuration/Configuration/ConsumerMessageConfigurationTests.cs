@@ -9,7 +9,7 @@ public sealed class ConsumerMessageConfigurationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-CONSUMER-FACTORY-INTERCEPTION", "around-consumer-exact-order")]
-    public async Task ConsumerFactoryFilter_RunsBeforeAndAfterTheExactConsumerInvocation()
+    public async Task ConsumerFactoryFilter_RunsBeforeAndAfterTheExactConsumerInvocationAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -25,12 +25,12 @@ public sealed class ConsumerMessageConfigurationTests
                 () => consumer,
                 configuration => configuration.UseFilter(new AroundConsumerFilter(observation)));
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             var message = new LayeredMessage(NewId.NextGuid());
 
-            await harness.InputQueueSendEndpoint.Send(message, cancellationToken)
+            await harness.InputQueueSendEndpoint.SendAsync(message, cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
             await observation.Completed.Task.WaitAsync(timeout, cancellationToken);
 
@@ -40,7 +40,7 @@ public sealed class ConsumerMessageConfigurationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -48,7 +48,7 @@ public sealed class ConsumerMessageConfigurationTests
     [InlineData(RegistrationShape.ConsumerFactory)]
     [InlineData(RegistrationShape.Instance)]
     [RequirementCoverage("REQ-VSB-CONSUMER-MESSAGE-LAYERING", "consumer-and-instance-registration")]
-    public async Task Registration_ComposesConsumerMessageAndConsumerSpecificMessageLayersExactlyOnce(
+    public async Task Registration_ComposesConsumerMessageAndConsumerSpecificMessageLayersExactlyOnceAsync(
         RegistrationShape registrationShape)
     {
         TimeSpan timeout = OperationTimeout();
@@ -80,12 +80,12 @@ public sealed class ConsumerMessageConfigurationTests
                 endpoint.Instance(consumer, Configure);
         };
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             var message = new LayeredMessage(NewId.NextGuid());
 
-            await harness.InputQueueSendEndpoint.Send(message, cancellationToken)
+            await harness.InputQueueSendEndpoint.SendAsync(message, cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
             await observation.Completed.Task.WaitAsync(timeout, cancellationToken);
 
@@ -104,7 +104,7 @@ public sealed class ConsumerMessageConfigurationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -122,7 +122,7 @@ public sealed class ConsumerMessageConfigurationTests
 
     private sealed class LayeredConsumer(LayerObservation observation) : IConsumer<LayeredMessage>
     {
-        public Task Consume(ConsumeContext<LayeredMessage> context)
+        public Task ConsumeAsync(ConsumeContext<LayeredMessage> context)
         {
             observation.Record("consume", this, context.Message);
             observation.Complete();
@@ -133,14 +133,14 @@ public sealed class ConsumerMessageConfigurationTests
     private sealed class AroundConsumerFilter(LayerObservation observation) :
         IFilter<ConsumerConsumeContext<LayeredConsumer>>
     {
-        public async Task Send(
+        public async Task SendAsync(
             ConsumerConsumeContext<LayeredConsumer> context,
             IPipe<ConsumerConsumeContext<LayeredConsumer>> next)
         {
             Assert.True(context.TryGetMessage(out ConsumeContext<LayeredMessage>? messageContext));
             observation.Record("before", context.Consumer, messageContext.Message);
 
-            await next.Send(context);
+            await next.SendAsync(context);
 
             observation.Record("after", context.Consumer, messageContext.Message);
             observation.Complete();

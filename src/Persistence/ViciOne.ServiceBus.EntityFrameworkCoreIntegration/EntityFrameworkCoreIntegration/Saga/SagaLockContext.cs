@@ -10,5 +10,6 @@ public interface SagaLockContext<TSaga>
     /// Execute the callback on each saga instance, and return a Task that waits on the results
     /// </summary>
     /// <returns></returns>
-    Task<IList<TSaga>> Load();
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<IList<TSaga>> LoadAsync(CancellationToken cancellationToken = default);
 }

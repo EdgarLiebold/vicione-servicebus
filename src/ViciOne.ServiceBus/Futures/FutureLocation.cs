@@ -17,7 +17,7 @@ public readonly struct FutureLocation
         if (!location.IsAbsoluteUri)
             throw CreateInvalidLocationException(location);
 
-        string value;
+        string? value;
         bool hasValue;
         try
         {
@@ -69,7 +69,7 @@ public readonly struct FutureLocation
     static readonly INewIdFormatter IdFormatter = new ZBase32Formatter();
     static readonly INewIdParser IdParser = new ZBase32Parser(true);
 
-    static FormatException CreateInvalidLocationException(Uri location, Exception innerException = null)
+    static FormatException CreateInvalidLocationException(Uri location, Exception? innerException = null)
     {
         var message = $"Location format invalid: {location}";
         return innerException == null

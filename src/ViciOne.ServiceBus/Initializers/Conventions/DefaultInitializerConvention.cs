@@ -24,7 +24,8 @@ public class DefaultInitializerConvention<TMessage, TInput> :
         _providerFactory = new PropertyProviderFactory<TInput>();
     }
 
-    public bool TryGetPropertyInitializer<TProperty>(PropertyInfo propertyInfo, out IPropertyInitializer<TMessage, TInput> initializer)
+    public bool TryGetPropertyInitializer<TProperty>(PropertyInfo propertyInfo,
+        [NotNullWhen(true)] out IPropertyInitializer<TMessage, TInput>? initializer)
     {
         var propertyName = propertyInfo?.Name ?? throw new ArgumentNullException(nameof(propertyInfo));
 
@@ -46,18 +47,18 @@ public class DefaultInitializerConvention<TMessage, TInput> :
                 if (inputPropertyType.TryGetTaskResultType(out var taskType))
                 {
                     var type = typeof(CopyAsyncObjectPropertyInitializer<,,>).MakeGenericType(typeof(TMessage), typeof(TInput), taskType);
-                    initializer = (IPropertyInitializer<TMessage, TInput>)Activator.CreateInstance(type, propertyInfo, inputPropertyInfo);
+                    initializer = (IPropertyInitializer<TMessage, TInput>)(Activator.CreateInstance(type, propertyInfo, inputPropertyInfo) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
                 }
                 else
                 {
                     var type = typeof(CopyObjectPropertyInitializer<,,>).MakeGenericType(typeof(TMessage), typeof(TInput), inputPropertyType);
-                    initializer = (IPropertyInitializer<TMessage, TInput>)Activator.CreateInstance(type, propertyInfo, inputPropertyInfo);
+                    initializer = (IPropertyInitializer<TMessage, TInput>)(Activator.CreateInstance(type, propertyInfo, inputPropertyInfo) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
                 }
 
                 return true;
             }
 
-            if (_providerFactory.TryGetPropertyProvider(inputPropertyInfo, out IPropertyProvider<TInput, TProperty> provider))
+            if (_providerFactory.TryGetPropertyProvider(inputPropertyInfo, out IPropertyProvider<TInput, TProperty>? provider))
             {
                 initializer = new ProviderPropertyInitializer<TMessage, TInput, TProperty>(provider, propertyInfo);
                 return true;
@@ -68,7 +69,8 @@ public class DefaultInitializerConvention<TMessage, TInput> :
         return false;
     }
 
-    public bool TryGetHeaderInitializer<TProperty>(PropertyInfo propertyInfo, out IHeaderInitializer<TMessage, TInput> initializer)
+    public bool TryGetHeaderInitializer<TProperty>(PropertyInfo propertyInfo,
+        [NotNullWhen(true)] out IHeaderInitializer<TMessage, TInput>? initializer)
     {
         var propertyName = propertyInfo?.Name ?? throw new ArgumentNullException(nameof(propertyInfo));
 
@@ -87,7 +89,7 @@ public class DefaultInitializerConvention<TMessage, TInput> :
                 return true;
             }
 
-            if (_providerFactory.TryGetPropertyProvider(inputPropertyInfo, out IPropertyProvider<TInput, TProperty> provider))
+            if (_providerFactory.TryGetPropertyProvider(inputPropertyInfo, out IPropertyProvider<TInput, TProperty>? provider))
             {
                 initializer = new ProviderHeaderInitializer<TMessage, TInput, TProperty>(provider, propertyInfo);
                 return true;
@@ -98,7 +100,8 @@ public class DefaultInitializerConvention<TMessage, TInput> :
         return false;
     }
 
-    public bool TryGetHeadersInitializer<TProperty>(PropertyInfo propertyInfo, out IHeaderInitializer<TMessage, TInput> initializer)
+    public bool TryGetHeadersInitializer<TProperty>(PropertyInfo propertyInfo,
+        [NotNullWhen(true)] out IHeaderInitializer<TMessage, TInput>? initializer)
     {
         var propertyName = propertyInfo?.Name ?? throw new ArgumentNullException(nameof(propertyInfo));
 
@@ -115,10 +118,10 @@ public class DefaultInitializerConvention<TMessage, TInput> :
                 return true;
             }
 
-            if (_providerFactory.TryGetPropertyProvider(propertyInfo, out IPropertyProvider<TInput, TProperty> provider))
+            if (_providerFactory.TryGetPropertyProvider(propertyInfo, out IPropertyProvider<TInput, TProperty>? provider))
             {
                 var type = typeof(SetHeaderInitializer<,,>).MakeGenericType(typeof(TMessage), typeof(TInput), inputPropertyType);
-                initializer = (IHeaderInitializer<TMessage, TInput>)Activator.CreateInstance(type, headerName, provider);
+                initializer = (IHeaderInitializer<TMessage, TInput>)(Activator.CreateInstance(type, headerName, provider) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
                 return true;
             }
         }

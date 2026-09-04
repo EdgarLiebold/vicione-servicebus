@@ -29,9 +29,9 @@ public class TextTable
         typeof(float)
     };
 
-    readonly List<object> _columns;
-    readonly List<object[]> _rows;
-    Type[] _columnTypes;
+    readonly List<object?> _columns;
+    readonly List<object?[]> _rows;
+    Type[] _columnTypes = null!;
 
     public TextTable(params string[] columns)
         : this(new TextTableOptions { Columns = new List<string>(columns) })
@@ -44,8 +44,8 @@ public class TextTable
 
         options.Out ??= TextWriter.Null;
 
-        _rows = new List<object[]>();
-        _columns = new List<object>(options.Columns);
+        _rows = new List<object?[]>();
+        _columns = new List<object?>(options.Columns);
     }
 
     public TextTableOptions Options { get; }
@@ -63,7 +63,7 @@ public class TextTable
         return this;
     }
 
-    public TextTable AddRow(params object[] values)
+    public TextTable AddRow(params object?[] values)
     {
         if (values == null)
             throw new ArgumentNullException(nameof(values));
@@ -99,7 +99,7 @@ public class TextTable
 
         var table = new TextTable(columnNames) { _columnTypes = columnTypes };
 
-        foreach (IEnumerable<object> propertyValues in rows.Select(value => properties.Select(column => column.GetProperty(value))))
+        foreach (IEnumerable<object?> propertyValues in rows.Select(value => properties.Select(column => column.GetProperty(value))))
             table.AddRow(propertyValues.ToArray());
 
         return table;
@@ -166,8 +166,7 @@ public class TextTable
         List<int> columnLengths = _columns
             .Select((t, i) => _rows.Select(x => x[i])
                 .Union(new[] { _columns[i] })
-                .Where(x => x != null)
-                .Select(x => x.ToString().Length).Max())
+                .Select(x => x?.ToString()?.Length ?? 0).Max())
             .ToList();
         return columnLengths;
     }
@@ -177,7 +176,7 @@ public class TextTable
         Options.Out.WriteLine(ToString());
     }
 
-    public TextTable SetColumn(int column, string name, Type columnType = default)
+    public TextTable SetColumn(int column, string name, Type? columnType = default)
     {
         if (column < 0 || column >= _columns.Count)
             throw new ArgumentOutOfRangeException(nameof(column));

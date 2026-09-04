@@ -7,10 +7,18 @@ public class VariablePropertyConverter<TResult, TVariable> :
     IPropertyConverter<TResult, TVariable>
     where TVariable : class, IInitializerVariable<TResult>
 {
-    public Task<TResult> Convert<T>(InitializeContext<T> context, TVariable input)
+    public Task<TResult?> ConvertAsync<T>(InitializeContext<T> context, TVariable? input, CancellationToken cancellationToken = default)
         where T : class
     {
-        return input?.GetValue(context) ?? TaskResults.Default<TResult>();
+        if (input == null)
+            return TaskResults.DefaultAsync<TResult>(cancellationToken: cancellationToken);
+
+        return GetValueAsync(input);
+
+        async Task<TResult?> GetValueAsync(TVariable variable)
+        {
+            return await variable.GetValueAsync(context, cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
     }
 }
 
@@ -26,21 +34,21 @@ public class VariablePropertyConverter<TResult, TVariable, TValue> :
         _propertyConverter = propertyConverter;
     }
 
-    public Task<TResult> Convert<T>(InitializeContext<T> context, TVariable input)
+    public Task<TResult?> ConvertAsync<T>(InitializeContext<T> context, TVariable? input, CancellationToken cancellationToken = default)
         where T : class
     {
         if (input == default)
-            return default;
+            return Task.FromResult<TResult?>(default);
 
-        Task<TValue> inputTask = input.GetValue(context);
+        Task<TValue> inputTask = input.GetValueAsync(context, cancellationToken: cancellationToken);
         if (inputTask.Status == TaskStatus.RanToCompletion)
-            return _propertyConverter.Convert(context, inputTask.Result);
+            return _propertyConverter.ConvertAsync(context, inputTask.Result, cancellationToken: cancellationToken);
 
-        async Task<TResult> ConvertAsync()
+        async Task<TResult?> ConvertAsync()
         {
             var value = await inputTask.ConfigureAwait(false);
 
-            Task<TResult> convertTask = _propertyConverter.Convert(context, value);
+            Task<TResult?> convertTask = _propertyConverter.ConvertAsync(context, value, cancellationToken: cancellationToken);
             if (convertTask.Status == TaskStatus.RanToCompletion)
                 return convertTask.Result;
 

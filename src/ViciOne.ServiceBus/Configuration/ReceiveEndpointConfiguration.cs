@@ -16,7 +16,7 @@ public abstract class ReceiveEndpointConfiguration :
     readonly HashSet<IReceiveEndpointDependent> _dependents;
     readonly List<string> _lateConfigurationKeys;
     readonly List<IReceiveEndpointSpecification> _specifications;
-    IReceiveEndpoint _receiveEndpoint;
+    IReceiveEndpoint _receiveEndpoint = null!;
 
     protected ReceiveEndpointConfiguration(IHostConfiguration hostConfiguration, IEndpointConfiguration endpointConfiguration)
         : base(endpointConfiguration)

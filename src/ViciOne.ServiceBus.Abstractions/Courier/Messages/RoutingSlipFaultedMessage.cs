@@ -13,7 +13,7 @@ public class RoutingSlipFaultedMessage :
     {
     }
 
-    public RoutingSlipFaultedMessage(Guid trackingNumber, DateTime timestamp, TimeSpan duration,
+    public RoutingSlipFaultedMessage(Guid trackingNumber, DateTimeOffset timestamp, TimeSpan duration,
         IEnumerable<ActivityException> activityExceptions, IDictionary<string, object> variables)
     {
         TrackingNumber = trackingNumber;
@@ -24,7 +24,7 @@ public class RoutingSlipFaultedMessage :
         Variables = variables;
     }
 
-    public RoutingSlipFaultedMessage(Guid trackingNumber, DateTime timestamp, TimeSpan duration, ActivityException activityException)
+    public RoutingSlipFaultedMessage(Guid trackingNumber, DateTimeOffset timestamp, TimeSpan duration, ActivityException activityException)
     {
         Timestamp = timestamp;
         Duration = duration;
@@ -35,7 +35,7 @@ public class RoutingSlipFaultedMessage :
     }
 
     public Guid TrackingNumber { get; set; }
-    public DateTime Timestamp { get; set; }
+    public DateTimeOffset Timestamp { get; set; }
     public TimeSpan Duration { get; set; }
     public ActivityException[] ActivityExceptions { get; set; } = null!;
     public IDictionary<string, object> Variables { get; set; } = null!;

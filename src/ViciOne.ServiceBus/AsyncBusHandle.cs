@@ -27,7 +27,7 @@ public class AsyncBusHandle :
 
         _logger.LogInformation("Starting ViciOne.ServiceBus");
 
-        _startTask = Task.Run(() => depot.Start(_tokenSource.Token), _tokenSource.Token);
+        _startTask = Task.Run(() => depot.StartAsync(_tokenSource.Token), _tokenSource.Token);
     }
 
     public async ValueTask DisposeAsync()
@@ -43,10 +43,10 @@ public class AsyncBusHandle :
 
                 _logger.LogInformation("Stopping ViciOne.ServiceBus (disposed)");
 
-                await _depot.Stop(tokenSource.Token).ConfigureAwait(false);
+                await _depot.StopAsync(tokenSource.Token).ConfigureAwait(false);
             }
             else
-                await _depot.Stop(CancellationToken.None).ConfigureAwait(false);
+                await _depot.StopAsync(CancellationToken.None).ConfigureAwait(false);
         }
         else
         {

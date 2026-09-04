@@ -37,16 +37,16 @@ public class Partition :
         });
     }
 
-    public async Task Send<T>(T context, IPipe<T> next)
+    public async Task SendAsync<T>(T context, IPipe<T> next, CancellationToken cancellationToken = default)
         where T : class, PipeContext
     {
-        await _limit.WaitAsync(context.CancellationToken).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested(); await _limit.WaitAsync(context.CancellationToken).ConfigureAwait(false);
 
         try
         {
             Interlocked.Increment(ref _attemptCount);
 
-            await next.Send(context).ConfigureAwait(false);
+            await next.SendAsync(context).ConfigureAwait(false);
 
             Interlocked.Increment(ref _successCount);
         }

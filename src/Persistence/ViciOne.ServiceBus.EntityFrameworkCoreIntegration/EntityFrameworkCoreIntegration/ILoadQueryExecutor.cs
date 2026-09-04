@@ -9,5 +9,5 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
 public interface ILoadQueryExecutor<TSaga>
     where TSaga : class, ISaga
 {
-    Task<TSaga?> Load(DbContext dbContext, Guid correlationId, CancellationToken cancellationToken);
+    Task<TSaga?> LoadAsync(DbContext dbContext, Guid correlationId, CancellationToken cancellationToken);
 }

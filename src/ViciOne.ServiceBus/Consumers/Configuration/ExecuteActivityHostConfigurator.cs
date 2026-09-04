@@ -16,7 +16,7 @@ public class ExecuteActivityHostConfigurator<TActivity, TArguments> :
 {
     readonly IExecuteActivityFactory<TActivity, TArguments> _activityFactory;
     readonly IBuildPipeConfigurator<ExecuteActivityContext<TActivity, TArguments>> _activityPipeConfigurator;
-    readonly Uri _compensateAddress;
+    readonly Uri _compensateAddress = null!;
     readonly ActivityConfigurationObservable _configurationObservers;
     readonly IBuildPipeConfigurator<ExecuteContext<TArguments>> _executePipeConfigurator;
     readonly ActivityObservable _observers;

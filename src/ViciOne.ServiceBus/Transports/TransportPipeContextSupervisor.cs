@@ -35,12 +35,12 @@ public class TransportPipeContextSupervisor<T> :
         _consumeSupervisor.Add(agent);
     }
 
-    protected override async Task StopSupervisor(StopSupervisorContext context)
+    protected override async Task StopSupervisorAsync(StopSupervisorContext context)
     {
-        await _consumeSupervisor.Stop(context).ConfigureAwait(false);
+        await _consumeSupervisor.StopAsync(context).ConfigureAwait(false);
 
-        await _sendSupervisor.Stop(context).ConfigureAwait(false);
+        await _sendSupervisor.StopAsync(context).ConfigureAwait(false);
 
-        await base.StopSupervisor(context).ConfigureAwait(false);
+        await base.StopSupervisorAsync(context).ConfigureAwait(false);
     }
 }

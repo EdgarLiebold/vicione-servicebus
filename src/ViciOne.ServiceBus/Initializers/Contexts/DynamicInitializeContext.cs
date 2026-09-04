@@ -31,10 +31,16 @@ public class DynamicInitializeContext<TMessage> :
         return new DynamicInitializeContext<TMessage, T>(this, Message, input);
     }
 
-    public bool TryGetParent<T>(out InitializeContext<T> parentContext)
+    public bool TryGetParent<T>([NotNullWhen(true)] out InitializeContext<T>? parentContext)
         where T : class
     {
-        if (this is InitializeContext<T> parent || (Parent != null && Parent.TryGetParent(out parent)))
+        InitializeContext<T>? parent;
+        if (this is InitializeContext<T> current)
+            parent = current;
+        else if (!Parent.TryGetParent(out parent))
+            parent = null;
+
+        if (parent != null)
         {
             parentContext = parent;
             return true;
@@ -65,5 +71,5 @@ public class DynamicInitializeContext<TMessage, TInput> :
     }
 
     public bool HasInput { get; }
-    public TInput Input { get; }
+    public TInput Input { get; } = null!;
 }

@@ -11,7 +11,7 @@ public class MessageSessionIdFormatter<TMessage> :
         _formatter = formatter;
     }
 
-    public string FormatSessionId(SendContext<TMessage> context)
+    public string? FormatSessionId(SendContext<TMessage> context)
     {
         return _formatter.FormatSessionId(context);
     }

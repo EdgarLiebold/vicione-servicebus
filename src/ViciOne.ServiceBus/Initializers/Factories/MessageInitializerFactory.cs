@@ -13,14 +13,14 @@ public class MessageInitializerFactory<TMessage, TInput> :
     where TInput : class
 {
     readonly IInitializerConvention[] _conventions;
-    readonly IMessageFactory<TMessage> _messageFactory;
+    readonly IMessageFactory<TMessage>? _messageFactory = null!;
 
     public MessageInitializerFactory(IInitializerConvention[] conventions)
     {
         _conventions = conventions;
     }
 
-    public MessageInitializerFactory(IMessageFactory<TMessage> messageFactory, IInitializerConvention[] conventions)
+    public MessageInitializerFactory(IMessageFactory<TMessage>? messageFactory, IInitializerConvention[] conventions)
     {
         _messageFactory = messageFactory;
         _conventions = conventions;
@@ -63,15 +63,17 @@ public class MessageInitializerFactory<TMessage, TInput> :
     static IEnumerable<IPropertyInitializerInspector<TMessage, TInput>> CreatePropertyInspectors()
     {
         return MessageTypeCache<TMessage>.Properties.Where(x => x.CanRead)
-            .Select(x => (IPropertyInitializerInspector<TMessage, TInput>)Activator.CreateInstance(
-                typeof(PropertyInitializerInspector<,,>).MakeGenericType(typeof(TMessage), typeof(TInput), x.PropertyType), x));
+            .Select(x => (IPropertyInitializerInspector<TMessage, TInput>)(Activator.CreateInstance(
+                typeof(PropertyInitializerInspector<,,>).MakeGenericType(typeof(TMessage), typeof(TInput), x.PropertyType), x)
+                ?? throw new InvalidOperationException($"Could not create a property initializer inspector for '{x.Name}'.")));
     }
 
     static IEnumerable<IHeaderInitializerInspector<TMessage, TInput>> CreateInputHeaderInspectors()
     {
         return MessageTypeCache<TInput>.Properties.Where(x => x.CanRead)
-            .Select(x => (IHeaderInitializerInspector<TMessage, TInput>)Activator.CreateInstance(
-                typeof(InputHeaderInitializerInspector<,,>).MakeGenericType(typeof(TMessage), typeof(TInput), x.PropertyType), x));
+            .Select(x => (IHeaderInitializerInspector<TMessage, TInput>)(Activator.CreateInstance(
+                typeof(InputHeaderInitializerInspector<,,>).MakeGenericType(typeof(TMessage), typeof(TInput), x.PropertyType), x)
+                ?? throw new InvalidOperationException($"Could not create an input header initializer inspector for '{x.Name}'.")));
     }
 
     static IEnumerable<IHeaderInitializerInspector<TMessage, TInput>> CreateHeaderInspectors()
@@ -105,9 +107,9 @@ public class MessageInitializerFactory<TMessage, TInput> :
         return new HeaderInitializerInspector<TMessage, TInput, TimeSpan?>(expression.GetPropertyInfo());
     }
 
-    static IHeaderInitializerInspector<TMessage, TInput> CreateHeaderInspector(Expression<Func<SendContext, Uri>> expression)
+    static IHeaderInitializerInspector<TMessage, TInput> CreateHeaderInspector(Expression<Func<SendContext, Uri?>> expression)
     {
-        return new HeaderInitializerInspector<TMessage, TInput, Uri>(expression.GetPropertyInfo());
+        return new HeaderInitializerInspector<TMessage, TInput, Uri?>(expression.GetPropertyInfo());
     }
 
     static IHeaderInitializerInspector<TMessage, TInput> CreateHeaderInspector(Expression<Func<SendContext, bool>> expression)

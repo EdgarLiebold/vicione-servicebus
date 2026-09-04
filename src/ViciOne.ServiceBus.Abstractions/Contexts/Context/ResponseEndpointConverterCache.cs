@@ -14,14 +14,14 @@ public class ResponseEndpointConverterCache
 
     IResponseEndpointConverter this[Type type] => _types.GetOrAdd(type, CreateTypeConverter).Value;
 
-    public static Task Respond(ConsumeContext consumeContext, object message, Type messageType)
+    public static Task RespondAsync(ConsumeContext consumeContext, object message, Type messageType, CancellationToken cancellationToken = default)
     {
-        return Cached.Converters.Value[messageType].Respond(consumeContext, message);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Cached.Converters.Value[messageType].RespondAsync(consumeContext, message);
     }
 
-    public static Task Respond(ConsumeContext consumeContext, object message, Type messageType, IPipe<SendContext> pipe)
+    public static Task RespondAsync(ConsumeContext consumeContext, object message, Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
-        return Cached.Converters.Value[messageType].Respond(consumeContext, message, pipe);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Cached.Converters.Value[messageType].RespondAsync(consumeContext, message, pipe);
     }
 
     static Lazy<IResponseEndpointConverter> CreateTypeConverter(Type type)
@@ -43,9 +43,9 @@ public class ResponseEndpointConverterCache
     /// </summary>
     interface IResponseEndpointConverter
     {
-        Task Respond(ConsumeContext consumeContext, object message);
+        Task RespondAsync(ConsumeContext consumeContext, object message);
 
-        Task Respond(ConsumeContext consumeContext, object message, IPipe<SendContext> pipe);
+        Task RespondAsync(ConsumeContext consumeContext, object message, IPipe<SendContext> pipe);
     }
 
 
@@ -58,7 +58,7 @@ public class ResponseEndpointConverterCache
         IResponseEndpointConverter
         where T : class
     {
-        Task IResponseEndpointConverter.Respond(ConsumeContext consumeContext, object message)
+        Task IResponseEndpointConverter.RespondAsync(ConsumeContext consumeContext, object message)
         {
             if (consumeContext == null)
                 throw new ArgumentNullException(nameof(consumeContext));
@@ -71,7 +71,7 @@ public class ResponseEndpointConverterCache
             throw new ArgumentException("Unexpected message type: " + TypeCache.GetShortName(message.GetType()));
         }
 
-        Task IResponseEndpointConverter.Respond(ConsumeContext consumeContext, object message, IPipe<SendContext> pipe)
+        Task IResponseEndpointConverter.RespondAsync(ConsumeContext consumeContext, object message, IPipe<SendContext> pipe)
         {
             if (consumeContext == null)
                 throw new ArgumentNullException(nameof(consumeContext));

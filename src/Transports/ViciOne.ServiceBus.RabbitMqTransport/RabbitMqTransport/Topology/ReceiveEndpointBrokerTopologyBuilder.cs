@@ -1,12 +1,25 @@
+using System;
+
 namespace ViciOne.ServiceBus.RabbitMqTransport.Topology;
 
 public class ReceiveEndpointBrokerTopologyBuilder :
     BrokerTopologyBuilder,
     IReceiveEndpointBrokerTopologyBuilder
 {
-    public QueueHandle Queue { get; set; }
+    QueueHandle? _queue;
+    ExchangeHandle? _exchange;
 
-    public ExchangeHandle Exchange { get; set; }
+    public QueueHandle Queue
+    {
+        get => _queue ?? throw new InvalidOperationException("The receive queue has not been declared.");
+        set => _queue = value;
+    }
 
-    public ExchangeHandle BoundExchange { get; set; }
+    public ExchangeHandle Exchange
+    {
+        get => _exchange ?? throw new InvalidOperationException("The receive exchange has not been declared.");
+        set => _exchange = value;
+    }
+
+    public ExchangeHandle? BoundExchange { get; set; }
 }

@@ -61,28 +61,28 @@ internal sealed class KillSwitch :
         }
     }
 
-    public Task PreConsume<T>(ConsumeContext<T> context)
+    public Task PreConsumeAsync<T>(ConsumeContext<T> context)
         where T : class
     {
         RecordAttempt();
         return Task.CompletedTask;
     }
 
-    public Task PostConsume<T>(ConsumeContext<T> context)
+    public Task PostConsumeAsync<T>(ConsumeContext<T> context)
         where T : class
     {
         RecordSuccess();
         return Task.CompletedTask;
     }
 
-    public Task ConsumeFault<T>(ConsumeContext<T> context, Exception exception)
+    public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, Exception exception)
         where T : class
     {
         RecordFailure(exception);
         return Task.CompletedTask;
     }
 
-    public Task PreExecute<TActivity, TArguments>(ExecuteActivityContext<TActivity, TArguments> context)
+    public Task PreExecuteAsync<TActivity, TArguments>(ExecuteActivityContext<TActivity, TArguments> context)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
@@ -90,7 +90,7 @@ internal sealed class KillSwitch :
         return Task.CompletedTask;
     }
 
-    public Task PostExecute<TActivity, TArguments>(ExecuteActivityContext<TActivity, TArguments> context)
+    public Task PostExecuteAsync<TActivity, TArguments>(ExecuteActivityContext<TActivity, TArguments> context)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
@@ -98,7 +98,7 @@ internal sealed class KillSwitch :
         return Task.CompletedTask;
     }
 
-    public Task ExecuteFault<TActivity, TArguments>(ExecuteActivityContext<TActivity, TArguments> context, Exception exception)
+    public Task ExecuteFaultAsync<TActivity, TArguments>(ExecuteActivityContext<TActivity, TArguments> context, Exception exception)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
@@ -106,7 +106,7 @@ internal sealed class KillSwitch :
         return Task.CompletedTask;
     }
 
-    public Task PreCompensate<TActivity, TLog>(CompensateActivityContext<TActivity, TLog> context)
+    public Task PreCompensateAsync<TActivity, TLog>(CompensateActivityContext<TActivity, TLog> context)
         where TActivity : class, ICompensateActivity<TLog>
         where TLog : class
     {
@@ -114,7 +114,7 @@ internal sealed class KillSwitch :
         return Task.CompletedTask;
     }
 
-    public Task PostCompensate<TActivity, TLog>(CompensateActivityContext<TActivity, TLog> context)
+    public Task PostCompensateAsync<TActivity, TLog>(CompensateActivityContext<TActivity, TLog> context)
         where TActivity : class, ICompensateActivity<TLog>
         where TLog : class
     {
@@ -122,7 +122,7 @@ internal sealed class KillSwitch :
         return Task.CompletedTask;
     }
 
-    public Task CompensateFail<TActivity, TLog>(CompensateActivityContext<TActivity, TLog> context, Exception exception)
+    public Task CompensateFailAsync<TActivity, TLog>(CompensateActivityContext<TActivity, TLog> context, Exception exception)
         where TActivity : class, ICompensateActivity<TLog>
         where TLog : class
     {
@@ -130,7 +130,7 @@ internal sealed class KillSwitch :
         return Task.CompletedTask;
     }
 
-    public Task Ready(ReceiveEndpointReady ready)
+    public Task ReadyAsync(ReceiveEndpointReady ready)
     {
         ArgumentNullException.ThrowIfNull(ready);
 
@@ -182,7 +182,7 @@ internal sealed class KillSwitch :
             endpoint.ConnectConsumeObserver(this);
     }
 
-    public Task Stopping(ReceiveEndpointStopping stopping)
+    public Task StoppingAsync(ReceiveEndpointStopping stopping)
     {
         CancellationTokenSource cancellation;
         Task recoveryTask;
@@ -201,9 +201,9 @@ internal sealed class KillSwitch :
         return recoveryTask;
     }
 
-    public Task Completed(ReceiveEndpointCompleted completed) => Task.CompletedTask;
+    public Task CompletedAsync(ReceiveEndpointCompleted completed) => Task.CompletedTask;
 
-    public Task Faulted(ReceiveEndpointFaulted faulted) => Task.CompletedTask;
+    public Task FaultedAsync(ReceiveEndpointFaulted faulted) => Task.CompletedTask;
 
     private void RecordAttempt()
     {
@@ -303,7 +303,7 @@ internal sealed class KillSwitch :
             while (true)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await PauseUntilSuccessful(endpoint, cancellationToken).ConfigureAwait(false);
+                await PauseUntilSuccessfulAsync(endpoint, cancellationToken).ConfigureAwait(false);
                 SetState(KillSwitchState.Paused);
 
                 var restartAt = _settings.TimeProvider.GetUtcNow() + _settings.RestartDelay;
@@ -319,7 +319,7 @@ internal sealed class KillSwitch :
                 try
                 {
                     SetOwnLogContext();
-                    ReceiveEndpointHandle handle = await endpoint.Restart(cancellationToken).ConfigureAwait(false);
+                    ReceiveEndpointHandle handle = await endpoint.RestartAsync(cancellationToken).ConfigureAwait(false);
                     await handle.Ready.WaitAsync(cancellationToken).ConfigureAwait(false);
                     SetVerifyingRecovery();
                     return;
@@ -344,7 +344,7 @@ internal sealed class KillSwitch :
         }
     }
 
-    private async Task PauseUntilSuccessful(
+    private async Task PauseUntilSuccessfulAsync(
         IKillSwitchEndpoint endpoint,
         CancellationToken cancellationToken)
     {
@@ -359,7 +359,7 @@ internal sealed class KillSwitch :
             try
             {
                 SetOwnLogContext();
-                await endpoint.Pause(cancellationToken).ConfigureAwait(false);
+                await endpoint.PauseAsync(cancellationToken).ConfigureAwait(false);
                 return;
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)

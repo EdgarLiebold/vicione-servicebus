@@ -10,7 +10,7 @@ public class ExchangeToQueueBindingConsumeTopologySpecification :
     QueueBindingConfigurator,
     IRabbitMqConsumeTopologySpecification
 {
-    public ExchangeToQueueBindingConsumeTopologySpecification(string exchangeName, string exchangeType, string queueName = null, bool durable = true,
+    public ExchangeToQueueBindingConsumeTopologySpecification(string exchangeName, string exchangeType, string? queueName = null, bool durable = true,
         bool autoDelete = false)
         : base(queueName ?? exchangeName, exchangeType, durable, autoDelete)
     {

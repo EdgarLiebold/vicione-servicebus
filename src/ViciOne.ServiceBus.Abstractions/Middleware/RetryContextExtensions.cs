@@ -1,4 +1,4 @@
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
 public static class RetryContextExtensions
 {
@@ -34,4 +34,5 @@ public static class RetryContextExtensions
             ?? context.ReceiveContext.TransportHeaders.Get(MessageHeaders.RedeliveryCount, default(int?))
             ?? 0;
     }
+
 }

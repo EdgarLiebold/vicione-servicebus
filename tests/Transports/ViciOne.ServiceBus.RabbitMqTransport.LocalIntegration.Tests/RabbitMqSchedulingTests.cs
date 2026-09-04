@@ -8,7 +8,7 @@ public sealed class RabbitMqSchedulingTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-SCHEDULING", "delayed-exchange-owns-future-delivery-and-header")]
-    public async Task FutureSchedule_IsProviderOwnedThenDeliveredExactlyOnce()
+    public async Task FutureSchedule_IsProviderOwnedThenDeliveredExactlyOnceAsync()
     {
         using RabbitMqBroker fixture = RabbitMqBroker.Create("schedule");
         string queue = fixture.Name("input");
@@ -42,7 +42,7 @@ public sealed class RabbitMqSchedulingTests
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
             IMessageScheduler scheduler = bus.CreateDelayedMessageScheduler();
-            await scheduler.ScheduleSend(
+            await scheduler.ScheduleSendAsync(
                     new Uri($"queue:{queue}"),
                     TimeProvider.System.GetUtcNow().UtcDateTime.AddSeconds(1),
                     new ScheduledMessage(expected),
@@ -58,14 +58,14 @@ public sealed class RabbitMqSchedulingTests
             Assert.NotNull(provider.Properties.Headers);
             Assert.True(provider.Properties.Headers!.TryGetValue("x-delay", out object? delay));
             Assert.True(Convert.ToInt64(delay) < 0, $"Expected the broker-negated x-delay header, actual: {delay}.");
-            RabbitMqBroker.ExchangeState exchange = await fixture.Exchange(queue + "_delay", cancellationToken);
+            RabbitMqBroker.ExchangeState exchange = await fixture.ExchangeAsync(queue + "_delay", cancellationToken);
             Assert.True(exchange.Exists);
             Assert.Equal("x-delayed-message", exchange.Type);
 
             await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
             started = false;
             Assert.Equal(1, entries);
-            Assert.Equal(0, (await fixture.Queue(queue, cancellationToken)).Messages);
+            Assert.Equal(0, (await fixture.QueueAsync(queue, cancellationToken)).Messages);
         }
         finally
         {

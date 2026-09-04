@@ -22,9 +22,9 @@ public interface ConnectionContext :
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ISqlTransportConnection> CreateConnection(CancellationToken cancellationToken);
+    Task<ISqlTransportConnection> CreateConnectionAsync(CancellationToken cancellationToken);
 
-    Task DelayUntilMessageReady(long queueId, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken);
+    Task DelayUntilMessageReadyAsync(long queueId, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken);
 
     /// <summary>
     /// Executes a query within a transaction using an available connection
@@ -33,5 +33,5 @@ public interface ConnectionContext :
     /// <param name="cancellationToken"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    Task<T> Query<T>(Func<IDbConnection, IDbTransaction, Task<T>> callback, CancellationToken cancellationToken);
+    Task<T> QueryAsync<T>(Func<IDbConnection, IDbTransaction, Task<T>> callback, CancellationToken cancellationToken);
 }

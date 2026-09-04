@@ -14,15 +14,16 @@ public class ReceiveFaultEvent :
     {
     }
 
-    public ReceiveFaultEvent(HostInfo host, Exception exception, string contentType, Guid? faultedMessageId, string[] faultMessageTypes)
+    public ReceiveFaultEvent(HostInfo host, Exception exception, string? contentType, Guid? faultedMessageId, string[]? faultMessageTypes,
+        TimeProvider? timeProvider = null)
     {
-        Timestamp = DateTime.UtcNow;
+        Timestamp = (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime;
         FaultId = NewId.NextGuid();
 
         Host = host;
         ContentType = contentType;
         FaultedMessageId = faultedMessageId;
-        FaultMessageTypes = faultMessageTypes;
+        FaultMessageTypes = faultMessageTypes ?? [];
 
         var aggregateException = exception as AggregateException;
 
@@ -32,10 +33,10 @@ public class ReceiveFaultEvent :
     }
 
     public Guid FaultId { get; set; }
-    public DateTime Timestamp { get; set; }
+    public DateTimeOffset Timestamp { get; set; }
     public Guid? FaultedMessageId { get; set; }
-    public ExceptionInfo[] Exceptions { get; set; }
-    public HostInfo Host { get; set; }
-    public string[] FaultMessageTypes { get; set; }
-    public string ContentType { get; set; }
+    public ExceptionInfo[] Exceptions { get; set; } = null!;
+    public HostInfo Host { get; set; } = null!;
+    public string[] FaultMessageTypes { get; set; } = null!;
+    public string? ContentType { get; set; }
 }

@@ -16,8 +16,8 @@ internal interface IKillSwitchEndpoint
     ILogContext LogContext { get; }
 
     void ConnectConsumeObserver(IConsumeObserver observer);
-    Task Pause(CancellationToken cancellationToken);
-    Task<ReceiveEndpointHandle> Restart(CancellationToken cancellationToken);
+    Task PauseAsync(CancellationToken cancellationToken);
+    Task<ReceiveEndpointHandle> RestartAsync(CancellationToken cancellationToken);
 }
 
 
@@ -30,7 +30,7 @@ internal sealed class RestartableReceiveEndpointKillSwitchEndpoint(IRestartableR
 
     public void ConnectConsumeObserver(IConsumeObserver observer) => endpoint.ConnectConsumeObserver(observer);
 
-    public Task Pause(CancellationToken cancellationToken) => endpoint.Pause(cancellationToken);
+    public Task PauseAsync(CancellationToken cancellationToken) => endpoint.PauseAsync(cancellationToken);
 
-    public Task<ReceiveEndpointHandle> Restart(CancellationToken cancellationToken) => endpoint.Restart(cancellationToken);
+    public Task<ReceiveEndpointHandle> RestartAsync(CancellationToken cancellationToken) => endpoint.RestartAsync(cancellationToken);
 }

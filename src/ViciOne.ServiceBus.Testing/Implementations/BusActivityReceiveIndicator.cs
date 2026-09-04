@@ -14,21 +14,21 @@ public class BusActivityReceiveIndicator : BaseBusActivityIndicatorConnectable,
     IReceiveObserver
 {
     readonly RollingTimer _receiveIdleTimer;
-    readonly ISignalResource _signalResource;
+    readonly ISignalResource? _signalResource;
     int _activityStarted;
 
-    public BusActivityReceiveIndicator(ISignalResource signalResource, TimeSpan receiveIdleTimeout)
+    public BusActivityReceiveIndicator(ISignalResource? signalResource, TimeSpan receiveIdleTimeout)
         : this(signalResource, receiveIdleTimeout, TimeProvider.System)
     {
     }
 
-    public BusActivityReceiveIndicator(ISignalResource signalResource, TimeSpan receiveIdleTimeout, TimeProvider timeProvider)
+    public BusActivityReceiveIndicator(ISignalResource? signalResource, TimeSpan receiveIdleTimeout, TimeProvider timeProvider)
     {
         _signalResource = signalResource;
         _receiveIdleTimer = new RollingTimer(SignalInactivity, receiveIdleTimeout, null, timeProvider);
     }
 
-    public BusActivityReceiveIndicator(ISignalResource signalResource)
+    public BusActivityReceiveIndicator(ISignalResource? signalResource)
         :
         this(signalResource, TimeSpan.FromSeconds(5))
     {
@@ -50,30 +50,30 @@ public class BusActivityReceiveIndicator : BaseBusActivityIndicatorConnectable,
         _receiveIdleTimer.Triggered ||
         Interlocked.CompareExchange(ref _activityStarted, int.MinValue, int.MinValue) == 0;
 
-    Task IReceiveObserver.PreReceive(ReceiveContext context)
+    Task IReceiveObserver.PreReceiveAsync(ReceiveContext context)
     {
         Interlocked.CompareExchange(ref _activityStarted, 1, 0);
         _receiveIdleTimer.Restart();
         return Task.CompletedTask;
     }
 
-    Task IReceiveObserver.PostReceive(ReceiveContext context)
+    Task IReceiveObserver.PostReceiveAsync(ReceiveContext context)
     {
         _receiveIdleTimer.Restart();
         return Task.CompletedTask;
     }
 
-    Task IReceiveObserver.PostConsume<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
+    Task IReceiveObserver.PostConsumeAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
     {
         return Task.CompletedTask;
     }
 
-    Task IReceiveObserver.ConsumeFault<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
+    Task IReceiveObserver.ConsumeFaultAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
     {
         return Task.CompletedTask;
     }
 
-    Task IReceiveObserver.ReceiveFault(ReceiveContext context, Exception exception)
+    Task IReceiveObserver.ReceiveFaultAsync(ReceiveContext context, Exception exception)
     {
         _receiveIdleTimer.Restart();
         return Task.CompletedTask;
@@ -89,10 +89,10 @@ public class BusActivityReceiveIndicator : BaseBusActivityIndicatorConnectable,
         _receiveIdleTimer.Dispose();
     }
 
-    void SignalInactivity(object state)
+    void SignalInactivity(object? state)
     {
         _signalResource?.Signal();
-        ConditionUpdated();
+        ConditionUpdatedAsync();
         Interlocked.CompareExchange(ref _activityStarted, 0, 1);
         _receiveIdleTimer.Stop();
     }

@@ -15,5 +15,6 @@ public interface ActivePipeContextHandle<TContext> :
     /// If the use of this context results in a fault which should cause the context to be disposed, this method signals that behavior to occur.
     /// </summary>
     /// <param name="exception">The bad thing that happened</param>
-    Task Faulted(Exception exception);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task FaultedAsync(Exception exception, CancellationToken cancellationToken = default);
 }

@@ -14,5 +14,5 @@ public interface IReceivePipeDispatcher :
     IReceiveObserverConnector,
     IProbeSite
 {
-    Task Dispatch(ReceiveContext context, ReceiveLockContext receiveLock);
+    Task DispatchAsync(ReceiveContext context, ReceiveLockContext receiveLock, CancellationToken cancellationToken = default);
 }

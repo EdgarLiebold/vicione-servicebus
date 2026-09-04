@@ -24,9 +24,9 @@ public class ContainerTestHarness :
     readonly Lazy<IServiceScope> _scope;
     readonly Lazy<BusTestSendObserver> _sent;
     CancellationToken _cancellationToken;
-    CancellationTokenSource _cancellationTokenSource;
+    CancellationTokenSource? _cancellationTokenSource;
     int _disposed;
-    IEnumerable<IHostedService> _hostedServices;
+    IEnumerable<IHostedService>? _hostedServices;
 
     public ContainerTestHarness(IServiceProvider provider, IOptions<TestHarnessOptions> options, TimeProvider timeProvider)
     {
@@ -170,18 +170,18 @@ public class ContainerTestHarness :
         return _scope.Value.ServiceProvider.GetRequiredService<IRequestClient<T>>();
     }
 
-    public Task<ISendEndpoint> GetConsumerEndpoint<T>()
+    public Task<ISendEndpoint> GetConsumerEndpointAsync<T>(CancellationToken cancellationToken = default)
         where T : class, IConsumer
     {
         var provider = _scope.Value.ServiceProvider.GetRequiredService<ISendEndpointProvider>();
 
-        return provider.GetSendEndpoint(GetConsumerAddress<T>());
+        return provider.GetSendEndpointAsync(GetConsumerAddress<T>(), cancellationToken: cancellationToken);
     }
 
-    public Task<ISendEndpoint> GetHandlerEndpoint<T>()
+    public Task<ISendEndpoint> GetHandlerEndpointAsync<T>(CancellationToken cancellationToken = default)
         where T : class
     {
-        return GetConsumerEndpoint<MessageHandlerConsumer<T>>();
+        return GetConsumerEndpointAsync<MessageHandlerConsumer<T>>(cancellationToken: cancellationToken);
     }
 
     public Uri GetConsumerAddress<T>()
@@ -196,12 +196,12 @@ public class ContainerTestHarness :
         return GetConsumerAddress<MessageHandlerConsumer<T>>();
     }
 
-    public Task<ISendEndpoint> GetSagaEndpoint<T>()
+    public Task<ISendEndpoint> GetSagaEndpointAsync<T>(CancellationToken cancellationToken = default)
         where T : class, ISaga
     {
         var provider = _scope.Value.ServiceProvider.GetRequiredService<ISendEndpointProvider>();
 
-        return provider.GetSendEndpoint(GetSagaAddress<T>());
+        return provider.GetSendEndpointAsync(GetSagaAddress<T>(), cancellationToken: cancellationToken);
     }
 
     public Uri GetSagaAddress<T>()
@@ -210,13 +210,13 @@ public class ContainerTestHarness :
         return new Uri($"queue:{EndpointNameFormatter.Saga<T>()}");
     }
 
-    public Task<ISendEndpoint> GetExecuteActivityEndpoint<T, TArguments>()
+    public Task<ISendEndpoint> GetExecuteActivityEndpointAsync<T, TArguments>(CancellationToken cancellationToken = default)
         where T : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
         var provider = _scope.Value.ServiceProvider.GetRequiredService<ISendEndpointProvider>();
 
-        return provider.GetSendEndpoint(GetExecuteActivityAddress<T, TArguments>());
+        return provider.GetSendEndpointAsync(GetExecuteActivityAddress<T, TArguments>(), cancellationToken: cancellationToken);
     }
 
     public Uri GetExecuteActivityAddress<T, TArguments>()
@@ -226,9 +226,9 @@ public class ContainerTestHarness :
         return new Uri($"queue:{EndpointNameFormatter.ExecuteActivity<T, TArguments>()}");
     }
 
-    public async Task Start()
+    public async Task StartAsync(CancellationToken cancellationToken = default)
     {
-        _hostedServices = _provider.GetServices<IHostedService>().ToArray();
+        cancellationToken.ThrowIfCancellationRequested(); _hostedServices = _provider.GetServices<IHostedService>().ToArray();
         if (!_hostedServices.Any())
             throw new ConfigurationException("The ViciOne.ServiceBus hosted service was not found.");
 
@@ -294,8 +294,8 @@ public class ContainerTestHarness :
 
     public void PostStart(IBus bus)
     {
-        _ = _received.Value.RestartTimer();
-        _ = _published.Value.RestartTimer();
-        _ = _sent.Value.RestartTimer();
+        _ = _received.Value.RestartTimerAsync();
+        _ = _published.Value.RestartTimerAsync();
+        _ = _sent.Value.RestartTimerAsync();
     }
 }

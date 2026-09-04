@@ -38,7 +38,7 @@ public class ActiveMqBusTopology :
         return _topologyConfiguration.Send.GetSendSettings(endpointAddress);
     }
 
-    public Uri GetDestinationAddress(string topicName, Action<IActiveMqTopicConfigurator> configure = null)
+    public Uri GetDestinationAddress(string topicName, Action<IActiveMqTopicConfigurator>? configure = null)
     {
         var address = new ActiveMqEndpointAddress(
             _hostConfiguration.HostAddress,
@@ -52,11 +52,13 @@ public class ActiveMqBusTopology :
         return sendSettings.GetSendAddress(_hostConfiguration.HostAddress);
     }
 
-    public Uri GetDestinationAddress(Type messageType, Action<IActiveMqTopicConfigurator> configure = null)
+    public Uri GetDestinationAddress(Type messageType, Action<IActiveMqTopicConfigurator>? configure = null)
     {
         var isTemporary = MessageTypeCache.IsTemporaryMessageType(messageType);
 
-        _topologyConfiguration.Publish.TryGetPublishAddress(messageType, _hostConfiguration.HostAddress, out var address);
+        if (!_topologyConfiguration.Publish.TryGetPublishAddress(messageType, _hostConfiguration.HostAddress, out var address)
+            || address == null)
+            throw new ArgumentException($"No ActiveMQ publish topology is configured for {messageType.FullName}.", nameof(messageType));
 
         var settings = new ActiveMqTopicSendSettings(new ActiveMqEndpointAddress(_hostConfiguration.HostAddress, address));
         if (isTemporary)

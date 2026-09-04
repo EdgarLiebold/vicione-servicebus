@@ -39,7 +39,7 @@ public static class InMemoryConfigurationExtensions
     /// <param name="configurator">The registration configurator (configured via AddViciOneServiceBus)</param>
     /// <param name="configure">The configuration callback for the bus factory</param>
     public static void UsingInMemory(this IBusRegistrationConfigurator configurator,
-        Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator> configure = null)
+        Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator>? configure = null)
     {
         UsingInMemory(configurator, null, configure);
     }
@@ -50,8 +50,8 @@ public static class InMemoryConfigurationExtensions
     /// <param name="configurator">The registration configurator (configured via AddViciOneServiceBus)</param>
     /// <param name="baseAddress">The base Address of the transport</param>
     /// <param name="configure">The configuration callback for the bus factory</param>
-    public static void UsingInMemory(this IBusRegistrationConfigurator configurator, Uri baseAddress,
-        Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator> configure = null)
+    public static void UsingInMemory(this IBusRegistrationConfigurator configurator, Uri? baseAddress,
+        Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator>? configure = null)
     {
         configurator.SetBusFactory(new InMemoryRegistrationBusFactory(baseAddress, configure));
         configurator.TryAddSingleton<IDurableSendDispatcher<IBus>, InMemoryDurableSendDispatcher<IBus>>();
@@ -70,7 +70,7 @@ public static class InMemoryConfigurationExtensions
     /// <param name="configurator">The typed registration configurator.</param>
     /// <param name="configure">The configuration callback for the bus factory.</param>
     public static void UsingInMemory<TBus>(this IBusRegistrationConfigurator<TBus> configurator,
-        Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator> configure = null)
+        Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator>? configure = null)
         where TBus : class, IBus
     {
         UsingInMemory(configurator, null, configure);
@@ -82,8 +82,8 @@ public static class InMemoryConfigurationExtensions
     /// <param name="configurator">The registration configurator (configured via AddViciOneServiceBus)</param>
     /// <param name="baseAddress">The base Address of the transport</param>
     /// <param name="configure">The configuration callback for the bus factory</param>
-    public static void UsingInMemory<TBus>(this IBusRegistrationConfigurator<TBus> configurator, Uri baseAddress,
-        Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator> configure = null)
+    public static void UsingInMemory<TBus>(this IBusRegistrationConfigurator<TBus> configurator, Uri? baseAddress,
+        Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator>? configure = null)
         where TBus : class, IBus
     {
         configurator.SetBusFactory(new InMemoryRegistrationBusFactory(baseAddress, configure));

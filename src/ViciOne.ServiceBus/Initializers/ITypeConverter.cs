@@ -13,5 +13,5 @@ public interface ITypeConverter<TResult, in TInput>
     /// <param name="input">The input value</param>
     /// <param name="result">The result value</param>
     /// <returns>True if the value was converted, otherwise false</returns>
-    bool TryConvert(TInput input, out TResult result);
+    bool TryConvert(TInput? input, out TResult? result);
 }

@@ -12,7 +12,7 @@ public sealed class AzureServiceBusPublishTopologyTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-PUBLISH-TOPOLOGY", "hierarchy-multiple-types-and-array-drain-exactly-once")]
-    public async Task HierarchyMultipleTypesAndArray_DeliverEveryIdentityExactlyOnce()
+    public async Task HierarchyMultipleTypesAndArray_DeliverEveryIdentityExactlyOnceAsync()
     {
         AzureServiceBusLocalFixture fixture = AzureServiceBusLocalFixture.Create("publish-matrix");
         ServiceBusAdministrationClient admin = fixture.CreateAdministrationClient();
@@ -42,10 +42,10 @@ public sealed class AzureServiceBusPublishTopologyTests
                 ConfigureSubscription<AlphaMessage>(endpoint, fixture.Name("alpha-sub"));
                 ConfigureSubscription<BetaMessage>(endpoint, fixture.Name("beta-sub"));
                 ConfigureSubscription<ArrayMessage[]>(endpoint, fixture.Name("array-sub"));
-                endpoint.Handler<IHierarchyBase>(context => Record(context.Message.Id));
-                endpoint.Handler<AlphaMessage>(context => Record(context.Message.Id));
-                endpoint.Handler<BetaMessage>(context => Record(context.Message.Id));
-                endpoint.Handler<ArrayMessage[]>(context => Record(Assert.Single(context.Message).Id));
+                endpoint.Handler<IHierarchyBase>(context => RecordAsync(context.Message.Id));
+                endpoint.Handler<AlphaMessage>(context => RecordAsync(context.Message.Id));
+                endpoint.Handler<BetaMessage>(context => RecordAsync(context.Message.Id));
+                endpoint.Handler<ArrayMessage[]>(context => RecordAsync(Assert.Single(context.Message).Id));
             });
         });
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -55,17 +55,17 @@ public sealed class AzureServiceBusPublishTopologyTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            await bus.Publish<IHierarchyLeft>(new { Id = leftId, Value = "left" }, cancellationToken);
-            await bus.Publish<IHierarchyRight>(new { Id = rightId, Value = "right" }, cancellationToken);
-            await bus.Publish(new AlphaMessage(alphaId), cancellationToken);
-            await bus.Publish(new BetaMessage(betaId), cancellationToken);
-            await bus.Publish(new[] { new ArrayMessage(arrayId) }, cancellationToken);
+            await bus.PublishAsync<IHierarchyLeft>(new { Id = leftId, Value = "left" }, cancellationToken);
+            await bus.PublishAsync<IHierarchyRight>(new { Id = rightId, Value = "right" }, cancellationToken);
+            await bus.PublishAsync(new AlphaMessage(alphaId), cancellationToken);
+            await bus.PublishAsync(new BetaMessage(betaId), cancellationToken);
+            await bus.PublishAsync(new[] { new ArrayMessage(arrayId) }, cancellationToken);
             var formatter = new ServiceBusMessageNameFormatter();
             string baseTopic = formatter.GetMessageName(typeof(IHierarchyBase)).ToString();
             string leftTopic = formatter.GetMessageName(typeof(IHierarchyLeft)).ToString();
             string rightTopic = formatter.GetMessageName(typeof(IHierarchyRight)).ToString();
-            SubscriptionProperties leftBridge = Assert.Single(await GetSubscriptions(admin, leftTopic, cancellationToken));
-            SubscriptionProperties rightBridge = Assert.Single(await GetSubscriptions(admin, rightTopic, cancellationToken));
+            SubscriptionProperties leftBridge = Assert.Single(await GetSubscriptionsAsync(admin, leftTopic, cancellationToken));
+            SubscriptionProperties rightBridge = Assert.Single(await GetSubscriptionsAsync(admin, rightTopic, cancellationToken));
             Assert.Equal(baseTopic, ForwardEntityPath(leftBridge.ForwardTo));
             Assert.Equal(baseTopic, ForwardEntityPath(rightBridge.ForwardTo));
             Assert.True(await completed.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
@@ -87,7 +87,7 @@ public sealed class AzureServiceBusPublishTopologyTests
             await fixture.CleanupAsync(admin);
         }
 
-        Task Record(Guid id)
+        Task RecordAsync(Guid id)
         {
             deliveries.AddOrUpdate(id, 1, static (_, count) => count + 1);
             if (Interlocked.Increment(ref entries) == 5)
@@ -98,7 +98,7 @@ public sealed class AzureServiceBusPublishTopologyTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-PUBLISH-TOPOLOGY", "direct-topic-uses-exact-provider-address-and-drains")]
-    public async Task DirectTopic_UsesExactProviderAddressAndDrains()
+    public async Task DirectTopic_UsesExactProviderAddressAndDrainsAsync()
     {
         AzureServiceBusLocalFixture fixture = AzureServiceBusLocalFixture.Create("address-routes");
         ServiceBusAdministrationClient admin = fixture.CreateAdministrationClient();
@@ -138,14 +138,13 @@ public sealed class AzureServiceBusPublishTopologyTests
             SubscriptionProperties configured =
                 (await admin.GetSubscriptionAsync(topic, subscription, cancellationToken)).Value;
             Assert.Equal(topicQueue, ForwardEntityPath(configured.ForwardTo));
-            ISendEndpoint topicEndpoint = await bus.GetSendEndpoint(new Uri($"topic:{topic}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await topicEndpoint.Send(new DirectTopicMessage(topicId, "exact-topic-value"), cancellationToken);
+            ISendEndpoint topicEndpoint = await bus.GetSendEndpointAsync(new Uri($"topic:{topic}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await topicEndpoint.SendAsync(new DirectTopicMessage(topicId, "exact-topic-value"), cancellationToken);
 
             ConsumeContext<DirectTopicMessage> topicContext =
                 await direct.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.Equal(new DirectTopicMessage(topicId, "exact-topic-value"), topicContext.Message);
-            Assert.Equal(new Uri($"sb://localhost/{topicQueue}"), topicContext.ReceiveContext.InputAddress);
+            Assert.Equal(new Uri($"sb://localhost/{topicQueue}"), topicContext.Advanced().ReceiveContext.InputAddress);
 
             await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
             started = false;
@@ -187,7 +186,7 @@ public sealed class AzureServiceBusPublishTopologyTests
     static TaskCompletionSource<T> Observation<T>() =>
         new(TaskCreationOptions.RunContinuationsAsynchronously);
 
-    static async Task<SubscriptionProperties[]> GetSubscriptions(
+    static async Task<SubscriptionProperties[]> GetSubscriptionsAsync(
         ServiceBusAdministrationClient admin,
         string topic,
         CancellationToken cancellationToken)

@@ -102,12 +102,12 @@ public class ServiceBusReceiveEndpointConfiguration :
         set => _settings.RemoveSubscriptions = value;
     }
 
-    public void Subscribe(string topicName, string subscriptionName, Action<IServiceBusSubscriptionConfigurator> callback)
+    public void Subscribe(string topicName, string subscriptionName, Action<IServiceBusSubscriptionConfigurator>? callback)
     {
         _endpointConfiguration.Topology.Consume.Subscribe(topicName, subscriptionName, callback);
     }
 
-    public void Subscribe<T>(string subscriptionName, Action<IServiceBusSubscriptionConfigurator> callback)
+    public void Subscribe<T>(string subscriptionName, Action<IServiceBusSubscriptionConfigurator>? callback)
         where T : class
     {
         _endpointConfiguration.Topology.Consume.GetMessageTopology<T>().Subscribe(subscriptionName, callback);

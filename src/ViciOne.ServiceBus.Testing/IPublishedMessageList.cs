@@ -22,11 +22,11 @@ public interface IPublishedMessageList :
     IAsyncEnumerable<IPublishedMessage<T>> SelectAsync<T>(FilterDelegate<IPublishedMessage<T>> filter, CancellationToken cancellationToken = default)
         where T : class;
 
-    Task<bool> Any(Action<PublishedMessageFilter> apply = default, CancellationToken cancellationToken = default);
+    Task<bool> AnyAsync(Action<PublishedMessageFilter>? apply = default, CancellationToken cancellationToken = default);
 
-    Task<bool> Any<T>(CancellationToken cancellationToken = default)
+    Task<bool> AnyAsync<T>(CancellationToken cancellationToken = default)
         where T : class;
 
-    Task<bool> Any<T>(FilterDelegate<IPublishedMessage<T>> filter, CancellationToken cancellationToken = default)
+    Task<bool> AnyAsync<T>(FilterDelegate<IPublishedMessage<T>> filter, CancellationToken cancellationToken = default)
         where T : class;
 }

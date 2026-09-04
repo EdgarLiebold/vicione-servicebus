@@ -35,7 +35,7 @@ public interface IRabbitMqQueueConfigurator :
     /// </summary>
     /// <param name="key">The argument key</param>
     /// <param name="value">The argument value</param>
-    void SetQueueArgument(string key, object value);
+    void SetQueueArgument(string key, object? value);
 
     /// <summary>
     /// Set the queue argument to the TimeSpan (which is converted to milliseconds)

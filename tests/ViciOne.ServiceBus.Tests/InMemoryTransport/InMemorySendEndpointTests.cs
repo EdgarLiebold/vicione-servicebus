@@ -10,7 +10,7 @@ public sealed class InMemorySendEndpointTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-SEND-OVERLOADS", "seven-runtime-interface-and-context-paths")]
-    public async Task EverySendOverload_DeliversItsRuntimeContractAndContextExactlyOnce()
+    public async Task EverySendOverload_DeliversItsRuntimeContractAndContextExactlyOnceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -22,9 +22,9 @@ public sealed class InMemorySendEndpointTests
         var recorder = new SendRecorder(expectedCount: 7);
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
         {
-            endpoint.Handler<InterfaceSent>(recorder.RecordInterface);
-            endpoint.Handler<DynamicSent>(recorder.RecordDynamic);
-            endpoint.Handler<ConcreteSent>(recorder.RecordConcrete);
+            endpoint.Handler<InterfaceSent>(recorder.RecordInterfaceAsync);
+            endpoint.Handler<DynamicSent>(recorder.RecordDynamicAsync);
+            endpoint.Handler<ConcreteSent>(recorder.RecordConcreteAsync);
         };
         Guid typedCallbackRequestId = Guid.Parse("19420342-92cf-4f2d-84af-61f7948ca0aa");
         Guid explicitTypeRequestId = Guid.Parse("c6c937c6-b7ef-475f-a534-991249f02b8a");
@@ -33,36 +33,36 @@ public sealed class InMemorySendEndpointTests
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+            await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
             started = true;
             ISendEndpoint endpoint = harness.InputQueueSendEndpoint;
 
-            await endpoint.Send(new InterfaceConcreteSent(1), cancellationToken);
-            await endpoint.Send<DynamicSent>(new { Sequence = 2 }, cancellationToken);
+            await endpoint.SendAsync(new InterfaceConcreteSent(1), cancellationToken);
+            await endpoint.SendAsync<DynamicSent>(new { Sequence = 2 }, cancellationToken);
 
             object runtimeObject = new ConcreteSent(3);
-            await endpoint.Send(runtimeObject, cancellationToken);
-            await endpoint.Send(new ConcreteSent(4), cancellationToken);
-            await endpoint.Send(
+            await endpoint.Advanced().SendAsync(runtimeObject, cancellationToken);
+            await endpoint.SendAsync(new ConcreteSent(4), cancellationToken);
+            await endpoint.SendAsync(
                 new ConcreteSent(5),
                 context => { context.RequestId = typedCallbackRequestId; },
                 cancellationToken);
 
             object explicitTypeObject = new ConcreteSent(6);
-            await endpoint.Send(
+            await endpoint.Advanced().SendAsync(
                 explicitTypeObject,
                 typeof(ConcreteSent),
-                context => { context.RequestId = explicitTypeRequestId; },
+                ((Action<SendContext>)(context => context.RequestId = explicitTypeRequestId)).ToPipe(),
                 cancellationToken);
 
             object callbackObject = new ConcreteSent(7);
-            await endpoint.Send(
+            await endpoint.Advanced().SendAsync(
                 callbackObject,
-                context => { context.RequestId = objectCallbackRequestId; },
+                ((Action<SendContext>)(context => context.RequestId = objectCallbackRequestId)).ToPipe(),
                 cancellationToken);
 
             await recorder.Completed.WaitAsync(timeout, cancellationToken);
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
             started = false;
 
             SendObservation[] observations = recorder.Observations;
@@ -79,7 +79,7 @@ public sealed class InMemorySendEndpointTests
         finally
         {
             if (started)
-                await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+                await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -114,16 +114,16 @@ public sealed class InMemorySendEndpointTests
 
         public SendObservation[] Observations => _observations.ToArray();
 
-        public Task RecordInterface(ConsumeContext<InterfaceSent> context) =>
-            Record(new SendObservation(context.Message.Sequence, context.RequestId, "interface"));
+        public Task RecordInterfaceAsync(ConsumeContext<InterfaceSent> context) =>
+            RecordAsync(new SendObservation(context.Message.Sequence, context.RequestId, "interface"));
 
-        public Task RecordDynamic(ConsumeContext<DynamicSent> context) =>
-            Record(new SendObservation(context.Message.Sequence, context.RequestId, "dynamic"));
+        public Task RecordDynamicAsync(ConsumeContext<DynamicSent> context) =>
+            RecordAsync(new SendObservation(context.Message.Sequence, context.RequestId, "dynamic"));
 
-        public Task RecordConcrete(ConsumeContext<ConcreteSent> context) =>
-            Record(new SendObservation(context.Message.Sequence, context.RequestId, "concrete"));
+        public Task RecordConcreteAsync(ConsumeContext<ConcreteSent> context) =>
+            RecordAsync(new SendObservation(context.Message.Sequence, context.RequestId, "concrete"));
 
-        private Task Record(SendObservation observation)
+        private Task RecordAsync(SendObservation observation)
         {
             _observations.Enqueue(observation);
             if (Interlocked.Increment(ref _count) == expectedCount)

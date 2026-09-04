@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus;
 public static class CourierHostConfiguratorExtensions
 {
     public static void ExecuteActivityHost<TActivity, TArguments>(this IReceiveEndpointConfigurator configurator,
-        Action<IExecuteActivityConfigurator<TActivity, TArguments>> configure = null)
+        Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>, new()
         where TArguments : class
     {
@@ -15,7 +15,7 @@ public static class CourierHostConfiguratorExtensions
     }
 
     public static void ExecuteActivityHost<TActivity, TArguments>(this IReceiveEndpointConfigurator configurator,
-        Uri compensateAddress, Action<IExecuteActivityConfigurator<TActivity, TArguments>> configure = null)
+        Uri compensateAddress, Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>, new()
         where TArguments : class
     {
@@ -23,7 +23,7 @@ public static class CourierHostConfiguratorExtensions
     }
 
     public static void ExecuteActivityHost<TActivity, TArguments>(this IReceiveEndpointConfigurator configurator,
-        Uri compensateAddress, Func<TActivity> activityFactory, Action<IExecuteActivityConfigurator<TActivity, TArguments>> configure = null)
+        Uri compensateAddress, Func<TActivity> activityFactory, Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
@@ -31,7 +31,7 @@ public static class CourierHostConfiguratorExtensions
     }
 
     public static void ExecuteActivityHost<TActivity, TArguments>(this IReceiveEndpointConfigurator configurator,
-        Func<TActivity> activityFactory, Action<IExecuteActivityConfigurator<TActivity, TArguments>> configure = null)
+        Func<TActivity> activityFactory, Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
@@ -40,7 +40,7 @@ public static class CourierHostConfiguratorExtensions
 
     public static void ExecuteActivityHost<TActivity, TArguments>(this IReceiveEndpointConfigurator configurator,
         Uri compensateAddress, Func<TArguments, TActivity> activityFactory,
-        Action<IExecuteActivityConfigurator<TActivity, TArguments>> configure = null)
+        Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
@@ -54,7 +54,7 @@ public static class CourierHostConfiguratorExtensions
 
     public static void ExecuteActivityHost<TActivity, TArguments>(this IReceiveEndpointConfigurator configurator,
         Func<TArguments, TActivity> activityFactory,
-        Action<IExecuteActivityConfigurator<TActivity, TArguments>> configure = null)
+        Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
@@ -67,7 +67,7 @@ public static class CourierHostConfiguratorExtensions
     }
 
     public static void ExecuteActivityHost<TActivity, TArguments>(this IReceiveEndpointConfigurator configurator, Uri compensateAddress,
-        IExecuteActivityFactory<TActivity, TArguments> factory, Action<IExecuteActivityConfigurator<TActivity, TArguments>> configure = null)
+        IExecuteActivityFactory<TActivity, TArguments> factory, Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
@@ -91,7 +91,7 @@ public static class CourierHostConfiguratorExtensions
     }
 
     public static void ExecuteActivityHost<TActivity, TArguments>(this IReceiveEndpointConfigurator configurator,
-        IExecuteActivityFactory<TActivity, TArguments> factory, Action<IExecuteActivityConfigurator<TActivity, TArguments>> configure = null)
+        IExecuteActivityFactory<TActivity, TArguments> factory, Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
@@ -112,7 +112,7 @@ public static class CourierHostConfiguratorExtensions
     }
 
     public static void CompensateActivityHost<TActivity, TLog>(this IReceiveEndpointConfigurator configurator,
-        Action<ICompensateActivityConfigurator<TActivity, TLog>> configure = null)
+        Action<ICompensateActivityConfigurator<TActivity, TLog>>? configure = null)
         where TActivity : class, ICompensateActivity<TLog>, new()
         where TLog : class
     {
@@ -120,7 +120,7 @@ public static class CourierHostConfiguratorExtensions
     }
 
     public static void CompensateActivityHost<TActivity, TLog>(this IReceiveEndpointConfigurator configurator, Func<TActivity> activityFactory,
-        Action<ICompensateActivityConfigurator<TActivity, TLog>> configure = null)
+        Action<ICompensateActivityConfigurator<TActivity, TLog>>? configure = null)
         where TActivity : class, ICompensateActivity<TLog>
         where TLog : class
     {
@@ -131,7 +131,7 @@ public static class CourierHostConfiguratorExtensions
     }
 
     public static void CompensateActivityHost<TActivity, TLog>(this IReceiveEndpointConfigurator configurator, Func<TLog, TActivity> activityFactory,
-        Action<ICompensateActivityConfigurator<TActivity, TLog>> configure = null)
+        Action<ICompensateActivityConfigurator<TActivity, TLog>>? configure = null)
         where TActivity : class, ICompensateActivity<TLog>
         where TLog : class
     {
@@ -144,7 +144,7 @@ public static class CourierHostConfiguratorExtensions
     }
 
     public static void CompensateActivityHost<TActivity, TLog>(this IReceiveEndpointConfigurator configurator,
-        ICompensateActivityFactory<TActivity, TLog> factory, Action<ICompensateActivityConfigurator<TActivity, TLog>> configure = null)
+        ICompensateActivityFactory<TActivity, TLog> factory, Action<ICompensateActivityConfigurator<TActivity, TLog>>? configure = null)
         where TActivity : class, ICompensateActivity<TLog>
         where TLog : class
     {

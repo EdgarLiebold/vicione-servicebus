@@ -15,7 +15,7 @@ public sealed class ContainerMediatorIntegrationTests
     [InlineData(MediatorBusRoute.Publish, true)]
     [InlineData(MediatorBusRoute.Send, true)]
     [RequirementCoverage("REQ-VSB-CONTAINER-MEDIATOR", "bus-source-address-for-publish-send-and-custom-base")]
-    public async Task MediatorBusBridge_UsesTheExactDefaultOrConfiguredMediatorSource(
+    public async Task MediatorBusBridge_UsesTheExactDefaultOrConfiguredMediatorSourceAsync(
         MediatorBusRoute route,
         bool customBaseAddress)
     {
@@ -37,7 +37,7 @@ public sealed class ContainerMediatorIntegrationTests
             services.AddMediator(baseAddress, configuration => AddMediatorRoute(configuration, route));
 
         await using ServiceProvider provider = services.BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
@@ -45,11 +45,10 @@ public sealed class ContainerMediatorIntegrationTests
             IScopedMediator mediator = scope.ServiceProvider.GetRequiredService<IScopedMediator>();
             var command = new MediatorBridgeCommand(NewId.NextGuid(), route);
 
-            await mediator.Send(command, cancellationToken).WaitAsync(timeout, cancellationToken);
+            await mediator.SendAsync(command, cancellationToken).WaitAsync(timeout, cancellationToken);
             IReceivedMessage<MediatorBridgeMessage> received = await harness.Consumed
                 .SelectAsync<MediatorBridgeMessage>(cancellationToken)
-                .First()
-                .WaitAsync(timeout, cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(command.CorrelationId, received.Context.Message.CorrelationId);
             Assert.Equal(route, received.Context.Message.Route);
@@ -59,19 +58,19 @@ public sealed class ContainerMediatorIntegrationTests
                     : new Uri($"{baseAddress.AbsoluteUri.TrimEnd('/')}/mediator"),
                 received.Context.SourceAddress);
             if (route == MediatorBusRoute.Publish)
-                Assert.True(await harness.Published.Any<MediatorBridgeMessage>(cancellationToken));
+                Assert.True(await harness.Published.AnyAsync<MediatorBridgeMessage>(cancellationToken));
             else
-                Assert.True(await harness.Sent.Any<MediatorBridgeMessage>(cancellationToken));
+                Assert.True(await harness.Sent.AnyAsync<MediatorBridgeMessage>(cancellationToken));
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-MEDIATOR", "bus-publication-does-not-inherit-mediator-headers")]
-    public async Task MediatorConsumerPublishingOnBus_DoesNotInventAnInitiator()
+    public async Task MediatorConsumerPublishingOnBus_DoesNotInventAnInitiatorAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -79,7 +78,7 @@ public sealed class ContainerMediatorIntegrationTests
             .AddViciOneServiceBusTestHarness(configuration => configuration.SetTestTimeouts(timeout, timeout))
             .AddMediator(configuration => configuration.AddConsumer<BusPublishingMediatorConsumer>())
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
@@ -87,24 +86,23 @@ public sealed class ContainerMediatorIntegrationTests
             IScopedMediator mediator = scope.ServiceProvider.GetRequiredService<IScopedMediator>();
             var command = new MediatorBusCommand(NewId.NextGuid(), "expected");
 
-            await mediator.Send(command, cancellationToken).WaitAsync(timeout, cancellationToken);
+            await mediator.SendAsync(command, cancellationToken).WaitAsync(timeout, cancellationToken);
             IPublishedMessage<MediatorBusEvent> published = await harness.Published
                 .SelectAsync<MediatorBusEvent>(cancellationToken)
-                .First()
-                .WaitAsync(timeout, cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(new MediatorBusEvent(command.CorrelationId, command.Value), published.Context.Message);
             Assert.Null(published.Context.InitiatorId);
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-MEDIATOR", "nested-request-metadata-and-response-filter")]
-    public async Task NestedMediatorRequest_PreservesCausationAndRunsTheResponseFilter()
+    public async Task NestedMediatorRequest_PreservesCausationAndRunsTheResponseFilterAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -124,7 +122,7 @@ public sealed class ContainerMediatorIntegrationTests
             .GetRequiredService<IRequestClient<OuterMediatorRequest>>();
         Guid correlationId = NewId.NextGuid();
 
-        Response<OuterMediatorResponse> response = await client.GetResponse<OuterMediatorResponse>(
+        Response<OuterMediatorResponse> response = await client.GetResponseAsync<OuterMediatorResponse>(
             new OuterMediatorRequest(correlationId, "world"),
             cancellationToken).WaitAsync(timeout, cancellationToken);
 
@@ -136,7 +134,7 @@ public sealed class ContainerMediatorIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-MEDIATOR", "published-message-initiates-container-saga")]
-    public async Task MediatorConsumerPublication_InitiatesTheRegisteredSagaInstance()
+    public async Task MediatorConsumerPublication_InitiatesTheRegisteredSagaInstanceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -152,9 +150,9 @@ public sealed class ContainerMediatorIntegrationTests
         ILoadSagaRepository<MediatorOrderSaga> repository = provider.GetRequiredService<ILoadSagaRepository<MediatorOrderSaga>>();
         Guid correlationId = NewId.NextGuid();
 
-        await mediator.Send(new StartMediatorOrder(correlationId, "90210"), cancellationToken)
+        await mediator.SendAsync(new StartMediatorOrder(correlationId, "90210"), cancellationToken)
             .WaitAsync(timeout, cancellationToken);
-        Guid? found = await repository.ShouldContainSaga(correlationId, timeout);
+        Guid? found = await repository.ShouldContainSagaAsync(correlationId, timeout, cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal(correlationId, found);
     }
@@ -182,7 +180,7 @@ public sealed class ContainerMediatorIntegrationTests
     public sealed class MediatorPublishingBridgeConsumer(IPublishEndpoint publishEndpoint) :
         IConsumer<MediatorBridgeCommand>
     {
-        public Task Consume(ConsumeContext<MediatorBridgeCommand> context) => publishEndpoint.Publish(
+        public Task ConsumeAsync(ConsumeContext<MediatorBridgeCommand> context) => publishEndpoint.PublishAsync(
             new MediatorBridgeMessage(context.Message.CorrelationId, context.Message.Route),
             context.CancellationToken);
     }
@@ -190,11 +188,11 @@ public sealed class ContainerMediatorIntegrationTests
     public sealed class MediatorSendingBridgeConsumer(ISendEndpointProvider sendEndpointProvider) :
         IConsumer<MediatorBridgeCommand>
     {
-        public async Task Consume(ConsumeContext<MediatorBridgeCommand> context)
+        public async Task ConsumeAsync(ConsumeContext<MediatorBridgeCommand> context)
         {
-            ISendEndpoint endpoint = await sendEndpointProvider.GetSendEndpoint(
+            ISendEndpoint endpoint = await sendEndpointProvider.GetSendEndpointAsync(
                 new Uri("queue:container-mediator-ingress"));
-            await endpoint.Send(
+            await endpoint.SendAsync(
                 new MediatorBridgeMessage(context.Message.CorrelationId, context.Message.Route),
                 context.CancellationToken);
         }
@@ -202,7 +200,7 @@ public sealed class ContainerMediatorIntegrationTests
 
     public sealed class MediatorBusIngressConsumer : IConsumer<MediatorBridgeMessage>
     {
-        public Task Consume(ConsumeContext<MediatorBridgeMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<MediatorBridgeMessage> context) => Task.CompletedTask;
     }
 
     public sealed record MediatorBusCommand(Guid CorrelationId, string Value) : CorrelatedBy<Guid>;
@@ -210,7 +208,7 @@ public sealed class ContainerMediatorIntegrationTests
 
     public sealed class BusPublishingMediatorConsumer(IBus bus) : IConsumer<MediatorBusCommand>
     {
-        public Task Consume(ConsumeContext<MediatorBusCommand> context) => bus.Publish(
+        public Task ConsumeAsync(ConsumeContext<MediatorBusCommand> context) => bus.PublishAsync(
             new MediatorBusEvent(context.Message.CorrelationId, context.Message.Value),
             context.CancellationToken);
     }
@@ -237,9 +235,9 @@ public sealed class ContainerMediatorIntegrationTests
     public sealed class OuterMediatorRequestConsumer(IRequestClient<InnerMediatorRequest> client) :
         IConsumer<OuterMediatorRequest>
     {
-        public async Task Consume(ConsumeContext<OuterMediatorRequest> context)
+        public async Task ConsumeAsync(ConsumeContext<OuterMediatorRequest> context)
         {
-            Response<InnerMediatorResponse> response = await client.GetResponse<InnerMediatorResponse>(
+            Response<InnerMediatorResponse> response = await client.GetResponseAsync<InnerMediatorResponse>(
                 new InnerMediatorRequest(context.Message.CorrelationId, context.Message.Value),
                 context.CancellationToken);
             await context.RespondAsync(new OuterMediatorResponse(
@@ -252,7 +250,7 @@ public sealed class ContainerMediatorIntegrationTests
 
     public sealed class InnerMediatorRequestConsumer : IConsumer<InnerMediatorRequest>
     {
-        public Task Consume(ConsumeContext<InnerMediatorRequest> context) => context.RespondAsync(
+        public Task ConsumeAsync(ConsumeContext<InnerMediatorRequest> context) => context.RespondAsync(
             new InnerMediatorResponse(
                 context.Message.CorrelationId,
                 context.ConversationId!.Value,
@@ -262,11 +260,11 @@ public sealed class ContainerMediatorIntegrationTests
 
     public sealed class UppercaseMediatorResponseFilter<T> : IFilter<SendContext<T>> where T : class
     {
-        public Task Send(SendContext<T> context, IPipe<SendContext<T>> next)
+        public Task SendAsync(SendContext<T> context, IPipe<SendContext<T>> next)
         {
             if (context.Message is InnerMediatorResponse inner)
                 inner.Value = inner.Value.ToUpperInvariant();
-            return next.Send(context);
+            return next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("uppercaseMediatorResponse");
@@ -277,7 +275,7 @@ public sealed class ContainerMediatorIntegrationTests
 
     public sealed class SagaStartingMediatorConsumer : IConsumer<StartMediatorOrder>
     {
-        public Task Consume(ConsumeContext<StartMediatorOrder> context) => context.Publish(
+        public Task ConsumeAsync(ConsumeContext<StartMediatorOrder> context) => context.Advanced().PublishAsync(
             new MediatorOrderSubmitted(context.Message.CorrelationId, context.Message.OrderNumber),
             context.CancellationToken);
     }
@@ -287,7 +285,7 @@ public sealed class ContainerMediatorIntegrationTests
         public Guid CorrelationId { get; set; }
         public string? OrderNumber { get; set; }
 
-        public Task Consume(ConsumeContext<MediatorOrderSubmitted> context)
+        public Task ConsumeAsync(ConsumeContext<MediatorOrderSubmitted> context)
         {
             OrderNumber = context.Message.OrderNumber;
             return Task.CompletedTask;

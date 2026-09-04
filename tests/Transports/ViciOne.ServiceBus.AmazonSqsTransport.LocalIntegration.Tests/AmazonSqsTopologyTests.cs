@@ -14,7 +14,7 @@ public sealed class AmazonSqsTopologyTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0182", "one-queue-twenty-three-distinct-topic-subscriptions")]
-    public async Task OneQueue_CarriesMultipleDistinctTopicSubscriptions()
+    public async Task OneQueue_CarriesMultipleDistinctTopicSubscriptionsAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("subscriptions");
         using AmazonSQSClient sqs = fixture.CreateSqsClient();
@@ -42,29 +42,29 @@ public sealed class AmazonSqsTopologyTests
             {
                 endpoint.Durable = false;
                 endpoint.AutoDelete = true;
-                endpoint.Handler<TopologyMessage00>(context => Complete(context.Message, received));
-                endpoint.Handler<TopologyMessage01>(context => Complete(context.Message, received));
-                endpoint.Handler<TopologyMessage02>(context => Complete(context.Message, received));
-                endpoint.Handler<TopologyMessage03>(context => Complete(context.Message, received));
-                endpoint.Handler<TopologyMessage04>(context => Complete(context.Message, received));
-                endpoint.Handler<TopologyMessage05>(context => Complete(context.Message, received));
-                endpoint.Handler<TopologyMessage06>(context => Complete(context.Message, received));
-                endpoint.Handler<TopologyMessage07>(context => Complete(context.Message, received));
-                endpoint.Handler<TopologyMessage08>(context => Complete(context.Message, received));
-                endpoint.Handler<TopologyMessage09>(context => Complete(context.Message, received));
-                endpoint.Handler<TopologyMessage10>(context => Complete(context.Message, received));
-                endpoint.Handler<TopologyMessage11>(context => Complete(context.Message, received));
-                endpoint.Handler<TopologyMessage12>(context => Complete(context.Message, received));
-                endpoint.Handler<TopologyMessage13>(context => Complete(context.Message, received));
-                endpoint.Handler<TopologyMessage14>(context => Complete(context.Message, received));
-                endpoint.Handler<TopologyMessage15>(context => Complete(context.Message, received));
-                endpoint.Handler<TopologyMessage16>(context => Complete(context.Message, received));
-                endpoint.Handler<TopologyMessage17>(context => Complete(context.Message, received));
-                endpoint.Handler<TopologyMessage18>(context => Complete(context.Message, received));
-                endpoint.Handler<TopologyMessage19>(context => Complete(context.Message, received));
-                endpoint.Handler<TopologyMessage20>(context => Complete(context.Message, received));
-                endpoint.Handler<TopologyMessage21>(context => Complete(context.Message, received));
-                endpoint.Handler<TopologyMessage22>(context => Complete(context.Message, received));
+                endpoint.Handler<TopologyMessage00>(context => CompleteAsync(context.Message, received));
+                endpoint.Handler<TopologyMessage01>(context => CompleteAsync(context.Message, received));
+                endpoint.Handler<TopologyMessage02>(context => CompleteAsync(context.Message, received));
+                endpoint.Handler<TopologyMessage03>(context => CompleteAsync(context.Message, received));
+                endpoint.Handler<TopologyMessage04>(context => CompleteAsync(context.Message, received));
+                endpoint.Handler<TopologyMessage05>(context => CompleteAsync(context.Message, received));
+                endpoint.Handler<TopologyMessage06>(context => CompleteAsync(context.Message, received));
+                endpoint.Handler<TopologyMessage07>(context => CompleteAsync(context.Message, received));
+                endpoint.Handler<TopologyMessage08>(context => CompleteAsync(context.Message, received));
+                endpoint.Handler<TopologyMessage09>(context => CompleteAsync(context.Message, received));
+                endpoint.Handler<TopologyMessage10>(context => CompleteAsync(context.Message, received));
+                endpoint.Handler<TopologyMessage11>(context => CompleteAsync(context.Message, received));
+                endpoint.Handler<TopologyMessage12>(context => CompleteAsync(context.Message, received));
+                endpoint.Handler<TopologyMessage13>(context => CompleteAsync(context.Message, received));
+                endpoint.Handler<TopologyMessage14>(context => CompleteAsync(context.Message, received));
+                endpoint.Handler<TopologyMessage15>(context => CompleteAsync(context.Message, received));
+                endpoint.Handler<TopologyMessage16>(context => CompleteAsync(context.Message, received));
+                endpoint.Handler<TopologyMessage17>(context => CompleteAsync(context.Message, received));
+                endpoint.Handler<TopologyMessage18>(context => CompleteAsync(context.Message, received));
+                endpoint.Handler<TopologyMessage19>(context => CompleteAsync(context.Message, received));
+                endpoint.Handler<TopologyMessage20>(context => CompleteAsync(context.Message, received));
+                endpoint.Handler<TopologyMessage21>(context => CompleteAsync(context.Message, received));
+                endpoint.Handler<TopologyMessage22>(context => CompleteAsync(context.Message, received));
             });
         });
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -74,15 +74,15 @@ public sealed class AmazonSqsTopologyTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            await Task.WhenAll(messages.Select(message => bus.Publish(message, message.GetType(), cancellationToken)))
+            await Task.WhenAll(messages.Select(message => bus.PublishAsync(message, message.GetType(), cancellationToken)))
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             Guid[] actual = await Task.WhenAll(received.Select(completion => completion.Task))
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.Equal(expected, actual);
 
-            string[] queueNames = await ListOwnedQueueNames(sqs, fixture.Prefix, fixture.OperationTimeout, cancellationToken);
-            Topic[] topics = await ListOwnedTopics(sns, fixture.Prefix, fixture.OperationTimeout, cancellationToken);
+            string[] queueNames = await ListOwnedQueueNamesAsync(sqs, fixture.Prefix, fixture.OperationTimeout, cancellationToken);
+            Topic[] topics = await ListOwnedTopicsAsync(sns, fixture.Prefix, fixture.OperationTimeout, cancellationToken);
             Assert.Equal([queueName], queueNames);
             Assert.Equal(SubscriptionCount, topics.Length);
 
@@ -105,7 +105,7 @@ public sealed class AmazonSqsTopologyTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0273", "queue-and-topic-tags-persist-exactly")]
-    public async Task QueueAndTopicTags_ArePersistedExactly()
+    public async Task QueueAndTopicTags_ArePersistedExactlyAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("topologytags");
         using AmazonSQSClient sqs = fixture.CreateSqsClient();
@@ -150,7 +150,7 @@ public sealed class AmazonSqsTopologyTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            await bus.Publish(new TaggedMessage(correlationId), cancellationToken)
+            await bus.PublishAsync(new TaggedMessage(correlationId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.Equal(correlationId, await delivered.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
 
@@ -163,7 +163,7 @@ public sealed class AmazonSqsTopologyTests
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.Equal(expectedQueueTags, queueTags.Tags);
 
-            Topic[] topics = await ListOwnedTopics(sns, fixture.Prefix, fixture.OperationTimeout, cancellationToken);
+            Topic[] topics = await ListOwnedTopicsAsync(sns, fixture.Prefix, fixture.OperationTimeout, cancellationToken);
             Topic topic = Assert.Single(topics, candidate =>
                 candidate.TopicArn.EndsWith(':' + fixture.Prefix + '_' + topicName, StringComparison.Ordinal));
             ListTagsForResourceResponse topicTags = await sns.ListTagsForResourceAsync(
@@ -181,7 +181,7 @@ public sealed class AmazonSqsTopologyTests
         }
     }
 
-    private static Task Complete(IIndexedTopologyMessage message, TaskCompletionSource<Guid>[] received)
+    private static Task CompleteAsync(IIndexedTopologyMessage message, TaskCompletionSource<Guid>[] received)
     {
         if (message.Index is < 0 or >= SubscriptionCount)
             throw new InvalidDataException($"The topology message index {message.Index} is outside the test-owned subscription set.");
@@ -189,7 +189,7 @@ public sealed class AmazonSqsTopologyTests
         return Task.CompletedTask;
     }
 
-    private static async Task<string[]> ListOwnedQueueNames(
+    private static async Task<string[]> ListOwnedQueueNamesAsync(
         IAmazonSQS sqs,
         string prefix,
         TimeSpan timeout,
@@ -204,7 +204,7 @@ public sealed class AmazonSqsTopologyTests
             .ToArray();
     }
 
-    private static async Task<Topic[]> ListOwnedTopics(
+    private static async Task<Topic[]> ListOwnedTopicsAsync(
         IAmazonSimpleNotificationService sns,
         string prefix,
         TimeSpan timeout,

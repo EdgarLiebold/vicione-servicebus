@@ -18,6 +18,6 @@ public interface SqlMessageContext :
     Guid? LockId { get; }
 
     short Priority { get; }
-    DateTime EnqueueTime { get; }
+    DateTimeOffset EnqueueTime { get; }
     int DeliveryCount { get; }
 }

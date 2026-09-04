@@ -9,10 +9,10 @@ public class RetryCompensateContext<TLog> :
     where TLog : class
 {
     readonly CompensateContext<TLog> _context;
-    readonly CompensationResult _existingResult;
+    readonly CompensationResult _existingResult = null!;
     readonly IRetryPolicy _retryPolicy;
 
-    public RetryCompensateContext(CompensateContext<TLog> context, IRetryPolicy retryPolicy, RetryContext retryContext)
+    public RetryCompensateContext(CompensateContext<TLog> context, IRetryPolicy retryPolicy, RetryContext? retryContext)
         : base(context)
     {
         _retryPolicy = retryPolicy;
@@ -45,12 +45,13 @@ public class RetryCompensateContext<TLog> :
         if (retryContext is RetryContext<CompensateContext<TLog>> compensateRetryContext && _existingResult != null)
             compensateRetryContext.Context.Result = _existingResult;
 
-        return new RetryCompensateContext<TLog>(_context, _retryPolicy, retryContext) as TContext;
+        return new RetryCompensateContext<TLog>(_context, _retryPolicy, retryContext) as TContext
+            ?? throw new InvalidOperationException($"The retry context cannot be represented as {TypeCache<TContext>.ShortName}.");
     }
 
-    public Task NotifyPendingFaults()
+    public Task NotifyPendingFaultsAsync(CancellationToken cancellationToken = default)
     {
-        if (_existingResult != null && Result is RetryCompensationResult)
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (_existingResult != null && Result is RetryCompensationResult)
             Result = _existingResult;
 
         return Task.CompletedTask;
@@ -60,19 +61,19 @@ public class RetryCompensateContext<TLog> :
     class RetryCompensationResult :
         CompensationResult
     {
-        readonly Exception _exception;
+        readonly Exception? _exception = null!;
 
-        public RetryCompensationResult(Exception exception = null)
+        public RetryCompensationResult(Exception? exception = null)
         {
             _exception = exception;
         }
 
-        public Task Evaluate()
+        public Task EvaluateAsync(CancellationToken cancellationToken = default)
         {
-            return Task.CompletedTask;
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
         }
 
-        public bool IsFailed(out Exception exception)
+        public bool IsFailed([NotNullWhen(true)] out Exception? exception)
         {
             exception = _exception;
             return exception != null;

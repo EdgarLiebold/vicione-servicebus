@@ -10,7 +10,7 @@ public sealed class MessageFabricTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-FABRIC-BINDING", "acyclic-exchange-and-queue-graph")]
-    public async Task AcyclicBindingGraph_ConnectsEveryDeclaredDestination()
+    public async Task AcyclicBindingGraph_ConnectsEveryDeclaredDestinationAsync()
     {
         var fabric = new MessageFabric<object, FabricMessage>();
         var context = new object();
@@ -33,13 +33,13 @@ public sealed class MessageFabricTests
         }
         finally
         {
-            await fabric.Stop(CancellationToken.None);
+            await fabric.StopAsync(CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-FABRIC-BINDING", "cycle-rejected-without-partial-edge")]
-    public async Task CyclicBinding_IsRejectedWithoutChangingTheGraph()
+    public async Task CyclicBinding_IsRejectedWithoutChangingTheGraphAsync()
     {
         var fabric = new MessageFabric<object, FabricMessage>();
         var context = new object();
@@ -63,13 +63,13 @@ public sealed class MessageFabricTests
         }
         finally
         {
-            await fabric.Stop(CancellationToken.None);
+            await fabric.StopAsync(CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-BACKPRESSURE", "immediate-queue-capacity-and-fifo")]
-    public async Task ImmediateQueueCapacity_BlocksTheNextProducerAndPreservesFifoDelivery()
+    public async Task ImmediateQueueCapacity_BlocksTheNextProducerAndPreservesFifoDeliveryAsync()
     {
         TimeSpan timeout = TimeSpan.FromSeconds(10);
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -81,11 +81,11 @@ public sealed class MessageFabricTests
 
         try
         {
-            await queue.Deliver(new FabricDelivery("first", cancellationToken));
+            await queue.DeliverAsync(new FabricDelivery("first", cancellationToken), TestContext.Current.CancellationToken);
             await receiver.FirstDeliveryStarted.WaitAsync(timeout, cancellationToken);
-            await queue.Deliver(new FabricDelivery("second", cancellationToken)).WaitAsync(timeout, cancellationToken);
+            await queue.DeliverAsync(new FabricDelivery("second", cancellationToken), TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
-            Task thirdAdmission = queue.Deliver(new FabricDelivery("third", cancellationToken));
+            Task thirdAdmission = queue.DeliverAsync(new FabricDelivery("third", cancellationToken), TestContext.Current.CancellationToken);
             await Task.Delay(TimeSpan.FromMilliseconds(250), cancellationToken);
             Assert.False(thirdAdmission.IsCompleted);
 
@@ -97,13 +97,13 @@ public sealed class MessageFabricTests
         }
         finally
         {
-            await fabric.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await fabric.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-BACKPRESSURE", "scheduled-admission-capacity")]
-    public async Task ScheduledDeliveryCapacity_BlocksUntilTheOwnedDelayCompletes()
+    public async Task ScheduledDeliveryCapacity_BlocksUntilTheOwnedDelayCompletesAsync()
     {
         TimeSpan timeout = TimeSpan.FromSeconds(10);
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -113,12 +113,12 @@ public sealed class MessageFabricTests
         var receiver = new RecordingReceiver(expectedCount: 2);
         queue.ConnectMessageReceiver(context, receiver);
         var delayProvider = Assert.IsType<InMemoryDelayProvider>(fabric.DelayProvider);
-        DateTime enqueueTime = delayProvider.UtcNow.AddMinutes(1).UtcDateTime;
+        DateTimeOffset enqueueTime = delayProvider.UtcNow.AddMinutes(1);
 
         try
         {
-            await queue.Deliver(new FabricDelivery("first", cancellationToken, enqueueTime));
-            Task secondAdmission = queue.Deliver(new FabricDelivery("second", cancellationToken, enqueueTime));
+            await queue.DeliverAsync(new FabricDelivery("first", cancellationToken, enqueueTime), TestContext.Current.CancellationToken);
+            Task secondAdmission = queue.DeliverAsync(new FabricDelivery("second", cancellationToken, enqueueTime), TestContext.Current.CancellationToken);
 
             Assert.False(secondAdmission.IsCompleted);
 
@@ -130,13 +130,13 @@ public sealed class MessageFabricTests
         }
         finally
         {
-            await fabric.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await fabric.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-BACKPRESSURE", "scheduled-admission-cancellation")]
-    public async Task ScheduledCapacityWait_PreservesTheCanceledProducerTokenAndAddsNoDelivery()
+    public async Task ScheduledCapacityWait_PreservesTheCanceledProducerTokenAndAddsNoDeliveryAsync()
     {
         TimeSpan timeout = TimeSpan.FromSeconds(10);
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -146,13 +146,13 @@ public sealed class MessageFabricTests
         var receiver = new RecordingReceiver(expectedCount: 1);
         queue.ConnectMessageReceiver(context, receiver);
         var delayProvider = Assert.IsType<InMemoryDelayProvider>(fabric.DelayProvider);
-        DateTime enqueueTime = delayProvider.UtcNow.AddMinutes(1).UtcDateTime;
+        DateTimeOffset enqueueTime = delayProvider.UtcNow.AddMinutes(1);
         using var source = new CancellationTokenSource();
 
         try
         {
-            await queue.Deliver(new FabricDelivery("accepted", cancellationToken, enqueueTime));
-            Task blocked = queue.Deliver(new FabricDelivery("canceled", source.Token, enqueueTime));
+            await queue.DeliverAsync(new FabricDelivery("accepted", cancellationToken, enqueueTime), TestContext.Current.CancellationToken);
+            Task blocked = queue.DeliverAsync(new FabricDelivery("canceled", source.Token, enqueueTime), TestContext.Current.CancellationToken);
             Assert.False(blocked.IsCompleted);
 
             source.Cancel();
@@ -165,13 +165,13 @@ public sealed class MessageFabricTests
         }
         finally
         {
-            await fabric.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await fabric.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-BACKGROUND-OWNERSHIP", "stop-awaits-scheduled-delivery")]
-    public async Task QueueStop_CancelsAndAwaitsEveryAcceptedScheduledDelivery()
+    public async Task QueueStop_CancelsAndAwaitsEveryAcceptedScheduledDeliveryAsync()
     {
         TimeSpan timeout = TimeSpan.FromSeconds(10);
         var delayProvider = new ControlledDelayProvider();
@@ -180,13 +180,13 @@ public sealed class MessageFabricTests
             "owned-scheduled-delivery",
             delayProvider,
             capacity: 1);
-        await queue.Deliver(new FabricDelivery(
+        await queue.DeliverAsync(new FabricDelivery(
             "scheduled",
             TestContext.Current.CancellationToken,
-            delayProvider.UtcNow.AddMinutes(1).UtcDateTime));
+            delayProvider.UtcNow.AddMinutes(1)), TestContext.Current.CancellationToken);
         await delayProvider.Waiting.WaitAsync(timeout, TestContext.Current.CancellationToken);
 
-        Task stop = queue.Stop(CancellationToken.None);
+        Task stop = queue.StopAsync(CancellationToken.None);
         await delayProvider.CancellationRequested.WaitAsync(timeout, TestContext.Current.CancellationToken);
 
         await Task.Delay(TimeSpan.FromMilliseconds(250), TestContext.Current.CancellationToken);
@@ -218,14 +218,14 @@ public sealed class MessageFabricTests
     private sealed class FabricDelivery(
         string value,
         CancellationToken cancellationToken,
-        DateTime? enqueueTime = null) : DeliveryContext<FabricMessage>
+        DateTimeOffset? enqueueTime = null) : DeliveryContext<FabricMessage>
     {
         private readonly HashSet<IMessageSink<FabricMessage>> _delivered = [];
 
         public CancellationToken CancellationToken { get; } = cancellationToken;
         public FabricMessage Message { get; } = new(value);
         public string? RoutingKey => null;
-        public DateTime? EnqueueTime { get; } = enqueueTime;
+        public DateTimeOffset? EnqueueTime { get; } = enqueueTime;
         public long? ReceiverId => null;
 
         public bool WasAlreadyDelivered(IMessageSink<FabricMessage> sink) => _delivered.Contains(sink);
@@ -242,9 +242,9 @@ public sealed class MessageFabricTests
         public Task Completed => _completed.Task;
         public string[] Values => _values.ToArray();
 
-        public Task Deliver(FabricMessage message, CancellationToken cancellationToken)
+        public Task DeliverAsync(FabricMessage message, CancellationToken cancellationToken)
         {
-            _values.Enqueue(message.Value);
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); _values.Enqueue(message.Value);
             if (Interlocked.Increment(ref _received) == expectedCount)
                 _completed.TrySetResult();
 
@@ -268,7 +268,7 @@ public sealed class MessageFabricTests
         public Task FirstDeliveryStarted => _firstDeliveryStarted.Task;
         public string[] Values => _values.ToArray();
 
-        public async Task Deliver(FabricMessage message, CancellationToken cancellationToken)
+        public async Task DeliverAsync(FabricMessage message, CancellationToken cancellationToken)
         {
             _values.Enqueue(message.Value);
             int received = Interlocked.Increment(ref _received);
@@ -304,10 +304,10 @@ public sealed class MessageFabricTests
         public DateTimeOffset UtcNow { get; } = new(2026, 9, 3, 10, 0, 0, TimeSpan.Zero);
         public Task Waiting => _waiting.Task;
 
-        public Task Delay(TimeSpan delay, CancellationToken cancellationToken = default) =>
-            Delay(UtcNow.Add(delay), cancellationToken);
+        public Task DelayAsync(TimeSpan delay, CancellationToken cancellationToken = default) =>
+            DelayAsync(UtcNow.Add(delay), cancellationToken);
 
-        public Task Delay(DateTimeOffset delayUntil, CancellationToken cancellationToken = default)
+        public Task DelayAsync(DateTimeOffset delayUntil, CancellationToken cancellationToken = default)
         {
             _cancellationToken = cancellationToken;
             cancellationToken.Register(() => _cancellationRequested.TrySetResult());
@@ -352,13 +352,13 @@ public sealed class MessageTopicExchangeTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-TOPIC-EXCHANGE-ROUTING", "hash-pattern")]
-    public async Task HashPattern_DeliversTheRoutedMessage()
+    public async Task HashPattern_DeliversTheRoutedMessageAsync()
     {
         var exchange = new MessageTopicExchange<TopicMessage>("test-exchange");
         var sink = new RecordingSink();
         using ConnectHandle connection = exchange.Connect(sink, "#");
 
-        Delivery delivery = await Deliver(exchange, "alpha", "matching");
+        Delivery delivery = await DeliverAsync(exchange, "alpha", "matching");
 
         Assert.Equal(new[] { new ReceivedMessage("alpha", "matching") }, sink.Messages);
         Assert.True(delivery.WasAlreadyDelivered(sink));
@@ -366,15 +366,15 @@ public sealed class MessageTopicExchangeTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TOPIC-EXCHANGE-ROUTING", "single-segment-wildcard")]
-    public async Task SingleSegmentWildcard_DeliversOnlyTheMatchingRoute()
+    public async Task SingleSegmentWildcard_DeliversOnlyTheMatchingRouteAsync()
     {
         var exchange = new MessageTopicExchange<TopicMessage>("test-exchange");
         var sink = new RecordingSink();
         using ConnectHandle connection = exchange.Connect(sink, "car.*");
 
-        await Deliver(exchange, "bus.red", "bad-red");
-        await Deliver(exchange, "bus.green", "bad-green");
-        Delivery matchingDelivery = await Deliver(exchange, "car.blue", "good");
+        await DeliverAsync(exchange, "bus.red", "bad-red");
+        await DeliverAsync(exchange, "bus.green", "bad-green");
+        Delivery matchingDelivery = await DeliverAsync(exchange, "car.blue", "good");
 
         Assert.Equal(new[] { new ReceivedMessage("car.blue", "good") }, sink.Messages);
         Assert.True(matchingDelivery.WasAlreadyDelivered(sink));
@@ -382,25 +382,25 @@ public sealed class MessageTopicExchangeTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TOPIC-EXCHANGE-ROUTING", "three-segment-wildcard")]
-    public async Task ThreeSegmentWildcard_DeliversOnlyTheMatchingRoute()
+    public async Task ThreeSegmentWildcard_DeliversOnlyTheMatchingRouteAsync()
     {
         var exchange = new MessageTopicExchange<TopicMessage>("test-exchange");
         var sink = new RecordingSink();
         using ConnectHandle connection = exchange.Connect(sink, "car.*.large");
 
-        await Deliver(exchange, "bus.red.large", "bad-bus-large");
-        await Deliver(exchange, "car.green.small", "bad-car-small");
-        await Deliver(exchange, "bus.green.small", "bad-bus-small");
-        Delivery matchingDelivery = await Deliver(exchange, "car.blue.large", "good");
+        await DeliverAsync(exchange, "bus.red.large", "bad-bus-large");
+        await DeliverAsync(exchange, "car.green.small", "bad-car-small");
+        await DeliverAsync(exchange, "bus.green.small", "bad-bus-small");
+        Delivery matchingDelivery = await DeliverAsync(exchange, "car.blue.large", "good");
 
         Assert.Equal(new[] { new ReceivedMessage("car.blue.large", "good") }, sink.Messages);
         Assert.True(matchingDelivery.WasAlreadyDelivered(sink));
     }
 
-    private static async Task<Delivery> Deliver(MessageTopicExchange<TopicMessage> exchange, string routingKey, string value)
+    private static async Task<Delivery> DeliverAsync(MessageTopicExchange<TopicMessage> exchange, string routingKey, string value)
     {
         var delivery = new Delivery(new TopicMessage(value), routingKey, TestContext.Current.CancellationToken);
-        await exchange.Deliver(delivery);
+        await exchange.DeliverAsync(delivery);
         return delivery;
     }
 
@@ -409,9 +409,9 @@ public sealed class MessageTopicExchangeTests
     {
         public List<ReceivedMessage> Messages { get; } = [];
 
-        public Task Deliver(DeliveryContext<TopicMessage> context)
+        public Task DeliverAsync(DeliveryContext<TopicMessage> context, CancellationToken cancellationToken = default)
         {
-            Messages.Add(new ReceivedMessage(context.RoutingKey!, context.Message.Value));
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); Messages.Add(new ReceivedMessage(context.RoutingKey!, context.Message.Value));
             return Task.CompletedTask;
         }
 
@@ -435,7 +435,7 @@ public sealed class MessageTopicExchangeTests
         public CancellationToken CancellationToken { get; }
         public TopicMessage Message { get; }
         public string RoutingKey { get; }
-        public DateTime? EnqueueTime => null;
+        public DateTimeOffset? EnqueueTime => null;
         public long? ReceiverId => null;
 
         public bool WasAlreadyDelivered(IMessageSink<TopicMessage> sink) => _delivered.Contains(sink);

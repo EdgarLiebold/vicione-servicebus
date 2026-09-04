@@ -30,14 +30,14 @@ public class SlimActivity<TSaga, TMessage> :
         _activity.Probe(context);
     }
 
-    public Task Execute(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
+    public Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
-        return _activity.Execute(context, next);
+        return _activity.ExecuteAsync(context, next);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
+    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
         where TException : Exception
     {
-        return _activity.Faulted(context, next);
+        return _activity.FaultedAsync(context, next);
     }
 }

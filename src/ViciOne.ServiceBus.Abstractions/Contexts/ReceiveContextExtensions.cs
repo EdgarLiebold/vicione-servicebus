@@ -101,7 +101,7 @@ public static class ReceiveContextExtensions
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    public static DateTime? GetSentTime(this ReceiveContext context)
+    public static DateTimeOffset? GetSentTime(this ReceiveContext context)
     {
         return context.TransportHeaders.GetTimestamp(MessageHeaders.TransportSentTime);
     }

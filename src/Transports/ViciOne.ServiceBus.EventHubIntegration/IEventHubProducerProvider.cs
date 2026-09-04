@@ -6,5 +6,5 @@ namespace ViciOne.ServiceBus;
 public interface IEventHubProducerProvider :
     ISendObserverConnector
 {
-    Task<IEventHubProducer> GetProducer(Uri address);
+    Task<IEventHubProducer> GetProducerAsync(Uri address, CancellationToken cancellationToken = default);
 }

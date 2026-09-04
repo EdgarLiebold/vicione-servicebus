@@ -34,11 +34,11 @@ public class TopicSendTransportContext :
     {
     }
 
-    public override async Task<SendContext<T>> CreateSendContext<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    public override async Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
     {
         var sendContext = new SqlMessageSendContext<T>(message, cancellationToken);
 
-        await pipe.Send(sendContext).ConfigureAwait(false);
+        await pipe.SendAsync(sendContext).ConfigureAwait(false);
 
         return sendContext;
     }
@@ -48,25 +48,26 @@ public class TopicSendTransportContext :
         return [];
     }
 
-    public Task Send(IPipe<ClientContext> pipe, CancellationToken cancellationToken = default)
+    public Task SendAsync(IPipe<ClientContext> pipe, CancellationToken cancellationToken = default)
     {
-        return _hostConfiguration.Retry(() => _supervisor.Send(pipe, cancellationToken), cancellationToken, _supervisor.SendStopping);
+        return _hostConfiguration.RetryAsync(() => _supervisor.SendAsync(pipe, cancellationToken),
+            stoppingToken: _supervisor.SendStopping, cancellationToken: cancellationToken);
     }
 
-    public Task<SendContext<T>> CreateSendContext<T>(ClientContext context, T message, IPipe<SendContext<T>> pipe,
+    public Task<SendContext<T>> CreateSendContextAsync<T>(ClientContext context, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
-        return CreateSendContext(message, pipe, cancellationToken);
+        return CreateSendContextAsync(message, pipe, cancellationToken);
     }
 
-    public async Task Send<T>(ClientContext clientContext, SendContext<T> sendContext)
+    public async Task SendAsync<T>(ClientContext clientContext, SendContext<T> sendContext, CancellationToken cancellationToken = default)
         where T : class
     {
         SqlMessageSendContext<T> context = sendContext as SqlMessageSendContext<T>
             ?? throw new ArgumentException("Invalid SendContext<T> type", nameof(sendContext));
 
-        await _configureTopologyPipe.Send(clientContext).ConfigureAwait(false);
+        await _configureTopologyPipe.SendAsync(clientContext).ConfigureAwait(false);
 
         sendContext.CancellationToken.ThrowIfCancellationRequested();
 
@@ -78,6 +79,6 @@ public class TopicSendTransportContext :
                 Activity.Current.SetTag(nameof(context.PartitionKey), context.PartitionKey);
         }
 
-        await clientContext.Publish(EntityName, context).ConfigureAwait(false);
+        await clientContext.PublishAsync(EntityName, context, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 }

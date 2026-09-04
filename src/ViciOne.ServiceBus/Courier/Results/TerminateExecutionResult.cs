@@ -20,11 +20,11 @@ class TerminateExecutionResult<TArguments> :
         return new RoutingSlipBuilder(routingSlip, [], routingSlip.Itinerary.Skip(1));
     }
 
-    protected override async Task PublishActivityEvents(RoutingSlip routingSlip, RoutingSlipBuilder builder)
+    protected override async Task PublishActivityEventsAsync(RoutingSlip routingSlip, RoutingSlipBuilder builder)
     {
-        await base.PublishActivityEvents(routingSlip, builder).ConfigureAwait(false);
+        await base.PublishActivityEventsAsync(routingSlip, builder).ConfigureAwait(false);
 
-        await Publisher.PublishRoutingSlipTerminated(Context.ActivityName, Context.ExecutionId, Context.Timestamp, Context.Elapsed, routingSlip.Variables,
+        await Publisher.PublishRoutingSlipTerminatedAsync(Context.ActivityName, Context.ExecutionId, Context.Timestamp, Context.Elapsed, routingSlip.Variables,
             builder.SourceItinerary).ConfigureAwait(false);
     }
 }

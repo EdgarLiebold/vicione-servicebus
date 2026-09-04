@@ -12,7 +12,7 @@ public sealed class StateMachineOutboxSchedulingIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-OUTBOX", "serializer-failure-retry-continues-scheduled-request-loop")]
-    public async Task SerializerFailureDuringScheduledOutboxDelivery_RetriesFromTheCommittedSagaStateAndCompletesOnce()
+    public async Task SerializerFailureDuringScheduledOutboxDelivery_RetriesFromTheCommittedSagaStateAndCompletesOnceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -30,7 +30,7 @@ public sealed class StateMachineOutboxSchedulingIntegrationTests
                 configuration.SetEndpointNameFormatter(endpointNameFormatter);
                 configuration.AddHandler(async (ConsumeContext<LoopRequest> context) =>
                 {
-                    await coordinator.WaitForTerminalTransition(timeout, context.CancellationToken);
+                    await coordinator.WaitForTerminalTransitionAsync(timeout, context.CancellationToken);
                     await context.RespondAsync(
                         new LoopResponse(context.Message.Count >= 5 ? "Finished" : "Running"));
                 });
@@ -51,7 +51,7 @@ public sealed class StateMachineOutboxSchedulingIntegrationTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         ISagaStateMachineTestHarness<ScheduledOutboxMachine, ScheduledOutboxState> sagaHarness =
             harness.GetSagaStateMachineHarness<ScheduledOutboxMachine, ScheduledOutboxState>();
 
@@ -62,9 +62,9 @@ public sealed class StateMachineOutboxSchedulingIntegrationTests
                 .SelectAsync<LoopCompleted>(
                     message => message.Context.Message.CorrelationId == correlationId,
                     cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
-            await harness.Bus.Publish(new StartLoop(correlationId), cancellationToken);
+            await harness.Bus.PublishAsync(new StartLoop(correlationId), cancellationToken);
             LoopCompleted result = (await completed.WaitAsync(timeout, cancellationToken)).Context.Message;
 
             Assert.Equal(new LoopCompleted(correlationId, "Faulted"), result);
@@ -72,11 +72,11 @@ public sealed class StateMachineOutboxSchedulingIntegrationTests
             Assert.Equal([2], failures.FailedCounts);
             Assert.Equal(1, coordinator.SignalCount);
             Assert.Equal(correlationId, coordinator.TerminalCorrelationId);
-            Assert.Equal(correlationId, await sagaHarness.Exists(correlationId, machine => machine.Failed, timeout));
+            Assert.Equal(correlationId, await sagaHarness.ExistsAsync(correlationId, machine => machine.Failed, timeout, TestContext.Current.CancellationToken));
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Single(harness.Published.Select<LoopCompleted>(SnapshotOnlyToken()));
@@ -225,12 +225,12 @@ public sealed class StateMachineOutboxSchedulingIntegrationTests
     public sealed class FailingScheduledSendFilter<T>(SerializerFailureRecorder failures) : IFilter<SendContext<T>>
         where T : class
     {
-        public Task Send(SendContext<T> context, IPipe<SendContext<T>> next)
+        public Task SendAsync(SendContext<T> context, IPipe<SendContext<T>> next)
         {
             if (context.Message is ScheduledLoopEvent { Count: 2 } scheduled)
                 context.Serializer = new ThrowingSerializer(failures, scheduled.Count);
 
-            return next.Send(context);
+            return next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("scheduledOutboxSerializerFailure");
@@ -257,7 +257,7 @@ public sealed class StateMachineOutboxSchedulingIntegrationTests
 
         public Guid TerminalCorrelationId => _terminalTransition.Task.GetAwaiter().GetResult();
 
-        public Task WaitForTerminalTransition(TimeSpan timeout, CancellationToken cancellationToken) =>
+        public Task WaitForTerminalTransitionAsync(TimeSpan timeout, CancellationToken cancellationToken) =>
             _terminalTransition.Task.WaitAsync(timeout, cancellationToken);
 
         public void SignalTerminalTransition(Guid correlationId)

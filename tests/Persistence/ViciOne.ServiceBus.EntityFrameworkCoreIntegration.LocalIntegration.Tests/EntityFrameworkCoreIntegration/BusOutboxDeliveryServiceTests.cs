@@ -24,7 +24,7 @@ public sealed class BusOutboxDeliveryServiceTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-BUS-OUTBOX-DELIVERY", "commit-delivers-exact-envelope-without-poll-advance")]
-    public async Task CommittedBatch_DeliversTheExactEnvelopeWithoutAdvancingThePollClock()
+    public async Task CommittedBatch_DeliversTheExactEnvelopeWithoutAdvancingThePollClockAsync()
     {
         await using BusOutboxFixture fixture = await BusOutboxFixture.CreateAsync(useRawJson: false);
         Guid messageId = Guid.NewGuid();
@@ -36,7 +36,7 @@ public sealed class BusOutboxDeliveryServiceTests
             var dbContext = scope.ServiceProvider.GetRequiredService<BusOutboxDbContext>();
             var publishEndpoint = scope.ServiceProvider.GetRequiredService<IPublishEndpoint>();
 
-            await publishEndpoint.Publish(
+            await publishEndpoint.PublishAsync(
                 new OutboxProbe(1),
                 context =>
                 {
@@ -71,7 +71,7 @@ public sealed class BusOutboxDeliveryServiceTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-BUS-OUTBOX-DELIVERY", "raw-json-preserves-user-header")]
-    public async Task RawJsonDelivery_PreservesTheUserHeaderAndEnvelopeIdentity()
+    public async Task RawJsonDelivery_PreservesTheUserHeaderAndEnvelopeIdentityAsync()
     {
         await using BusOutboxFixture fixture = await BusOutboxFixture.CreateAsync(useRawJson: true);
         Guid messageId = Guid.NewGuid();
@@ -98,7 +98,7 @@ public sealed class BusOutboxDeliveryServiceTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-BUS-OUTBOX-DELIVERY", "successive-commits-use-distinct-batches-without-loss")]
-    public async Task SuccessiveCommits_DrainDistinctBatchesWithoutLossOrDuplication()
+    public async Task SuccessiveCommits_DrainDistinctBatchesWithoutLossOrDuplicationAsync()
     {
         await using BusOutboxFixture fixture = await BusOutboxFixture.CreateAsync(useRawJson: false);
         Guid firstMessageId = Guid.NewGuid();
@@ -109,13 +109,13 @@ public sealed class BusOutboxDeliveryServiceTests
             var dbContext = scope.ServiceProvider.GetRequiredService<BusOutboxDbContext>();
             var publishEndpoint = scope.ServiceProvider.GetRequiredService<IPublishEndpoint>();
 
-            await publishEndpoint.Publish(
+            await publishEndpoint.PublishAsync(
                 new OutboxProbe(10),
                 context => context.MessageId = firstMessageId,
                 fixture.CancellationToken);
             await dbContext.SaveChangesAsync(fixture.CancellationToken);
 
-            await publishEndpoint.Publish(
+            await publishEndpoint.PublishAsync(
                 new OutboxProbe(20),
                 context => context.MessageId = secondMessageId,
                 fixture.CancellationToken);
@@ -145,7 +145,7 @@ public sealed class BusOutboxDeliveryServiceTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-RETRY", "retry-waits-for-persisted-due-time")]
-    public async Task FailedSend_RetriesOnlyAfterThePersistedDueTimeAndANewSignal()
+    public async Task FailedSend_RetriesOnlyAfterThePersistedDueTimeAndANewSignalAsync()
     {
         var notification = new ControlledOutboxNotification();
         var failingSend = new FailingSendFilter();
@@ -185,7 +185,7 @@ public sealed class BusOutboxDeliveryServiceTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-BUS-OUTBOX-DELIVERY", "otel-baggage-round-trip")]
-    public async Task Delivery_RestoresOpenTelemetryBaggageFromTheStoredEnvelope()
+    public async Task Delivery_RestoresOpenTelemetryBaggageFromTheStoredEnvelopeAsync()
     {
         await using BusOutboxFixture fixture = await BusOutboxFixture.CreateAsync(useRawJson: false);
         using var publishingActivity = new Activity("bus-outbox-publisher");
@@ -214,7 +214,7 @@ public sealed class BusOutboxDeliveryServiceTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-BUS-OUTBOX-DELIVERY", "concurrent-batches-cross-delivery-limit-without-loss-or-duplication")]
-    public async Task ConcurrentBatches_DeliverEveryMessageExactlyOnceAcrossDeliveryWindows()
+    public async Task ConcurrentBatches_DeliverEveryMessageExactlyOnceAcrossDeliveryWindowsAsync()
     {
         const int batchCount = 12;
         const int messagesPerBatch = 12;
@@ -255,7 +255,7 @@ public sealed class BusOutboxDeliveryServiceTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-BUS-OUTBOX-DELIVERY", "scheduled-publish-keeps-delay-after-outbox-commit")]
-    public async Task ScheduledPublish_RemainsDeferredUntilTheExactTransportDeadline()
+    public async Task ScheduledPublish_RemainsDeferredUntilTheExactTransportDeadlineAsync()
     {
         TimeSpan delay = TimeSpan.FromHours(3);
         await using BusOutboxFixture fixture = await BusOutboxFixture.CreateAsync(useRawJson: false);
@@ -279,7 +279,7 @@ public sealed class BusOutboxDeliveryServiceTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-BUS-OUTBOX-WRITE", "persists-without-started-bus-or-delivery-service")]
-    public async Task PersistedBatch_DoesNotRequireAStartedBusOrDeliveryService()
+    public async Task PersistedBatch_DoesNotRequireAStartedBusOrDeliveryServiceAsync()
     {
         Guid messageId = Guid.NewGuid();
         await using BusOutboxFixture fixture = await BusOutboxFixture.CreateAsync(
@@ -309,7 +309,7 @@ public sealed class BusOutboxDeliveryServiceTests
 
     public sealed class OutboxProbeConsumer(DeliveryProbe deliveries) : IConsumer<OutboxProbe>
     {
-        public Task Consume(ConsumeContext<OutboxProbe> context)
+        public Task ConsumeAsync(ConsumeContext<OutboxProbe> context)
         {
             context.Headers.TryGetHeader("tenant", out object? tenant);
             deliveries.Record(new DeliveryObservation(
@@ -415,7 +415,7 @@ public sealed class BusOutboxDeliveryServiceTests
             TransactionEndEventData eventData,
             CancellationToken cancellationToken = default)
         {
-            if (eventData.Context is { } context && _pending.TryRemove(context, out Guid[]? outboxIds))
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (eventData.Context is { } context && _pending.TryRemove(context, out Guid[]? outboxIds))
             {
                 foreach (Guid outboxId in outboxIds)
                 {
@@ -432,7 +432,7 @@ public sealed class BusOutboxDeliveryServiceTests
             TransactionEndEventData eventData,
             CancellationToken cancellationToken = default)
         {
-            Forget(eventData.Context);
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); Forget(eventData.Context);
             return Task.CompletedTask;
         }
 
@@ -441,7 +441,7 @@ public sealed class BusOutboxDeliveryServiceTests
             TransactionErrorEventData eventData,
             CancellationToken cancellationToken = default)
         {
-            Forget(eventData.Context);
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); Forget(eventData.Context);
             return Task.CompletedTask;
         }
 
@@ -482,7 +482,7 @@ public sealed class BusOutboxDeliveryServiceTests
                 throw new InvalidOperationException("The controlled outbox notification rejected a delivery signal.");
         }
 
-        public async Task WaitForDelivery(CancellationToken cancellationToken)
+        public async Task WaitForDeliveryAsync(CancellationToken cancellationToken)
         {
             int waitCount = Interlocked.Increment(ref _waitCount);
             if (!_waitEntries.Writer.TryWrite(waitCount))
@@ -503,7 +503,7 @@ public sealed class BusOutboxDeliveryServiceTests
 
         public int AttemptCount => Volatile.Read(ref _attemptCount);
 
-        public Task Send(SendContext context, IPipe<SendContext> next)
+        public Task SendAsync(SendContext context, IPipe<SendContext> next)
         {
             int attempt = Interlocked.Increment(ref _attemptCount);
             if (!_attempts.Writer.TryWrite(attempt))
@@ -631,7 +631,7 @@ public sealed class BusOutboxDeliveryServiceTests
                 });
                 ITestHarness harness = provider.GetTestHarness();
                 if (startHarness)
-                    await harness.Start().WaitAsync(operationTimeout, cancellationToken);
+                    await harness.StartAsync().WaitAsync(operationTimeout, cancellationToken);
 
                 return new BusOutboxFixture(
                     database,
@@ -664,7 +664,7 @@ public sealed class BusOutboxDeliveryServiceTests
             await using AsyncServiceScope scope = Services.CreateAsyncScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<BusOutboxDbContext>();
             var publishEndpoint = scope.ServiceProvider.GetRequiredService<IPublishEndpoint>();
-            await publishEndpoint.Publish(message, configure, CancellationToken);
+            await publishEndpoint.PublishAsync(message, configure, CancellationToken);
             await dbContext.SaveChangesAsync(CancellationToken);
         }
 
@@ -674,7 +674,7 @@ public sealed class BusOutboxDeliveryServiceTests
             var dbContext = scope.ServiceProvider.GetRequiredService<BusOutboxDbContext>();
             var publishEndpoint = scope.ServiceProvider.GetRequiredService<IPublishEndpoint>();
             await Task.WhenAll(messages.Select(message =>
-                publishEndpoint.Publish(
+                publishEndpoint.PublishAsync(
                     message,
                     context => context.MessageId = Guid.NewGuid(),
                     CancellationToken)));
@@ -686,7 +686,7 @@ public sealed class BusOutboxDeliveryServiceTests
             await using AsyncServiceScope scope = Services.CreateAsyncScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<BusOutboxDbContext>();
             var scheduler = scope.ServiceProvider.GetRequiredService<IMessageScheduler>();
-            await scheduler.SchedulePublish(delay, message, CancellationToken);
+            await scheduler.SchedulePublishAsync(delay, message, CancellationToken);
             await dbContext.SaveChangesAsync(CancellationToken);
         }
 
@@ -728,7 +728,7 @@ public sealed class BusOutboxDeliveryServiceTests
         public async ValueTask DisposeAsync()
         {
             if (_harnessStarted)
-                await Harness.Stop(CancellationToken.None).WaitAsync(OperationTimeout, CancellationToken.None);
+                await Harness.StopAsync(CancellationToken.None).WaitAsync(OperationTimeout, CancellationToken.None);
 
             await Services.DisposeAsync();
             await _database.DisposeAsync();

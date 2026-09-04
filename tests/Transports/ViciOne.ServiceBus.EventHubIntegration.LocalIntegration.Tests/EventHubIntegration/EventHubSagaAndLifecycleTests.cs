@@ -15,7 +15,7 @@ public sealed class EventHubSagaAndLifecycleTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0153", "saga-transition-produces-state-derived-event-with-correlation-as-initiator")]
-    public async Task SagaTransition_ProducesStateDerivedEventWithTheSagaCorrelationAsInitiator()
+    public async Task SagaTransition_ProducesStateDerivedEventWithTheSagaCorrelationAsInitiatorAsync()
     {
         var state = new SagaDeliveryState(NewId.NextGuid(), expected: 1);
         await using EventHubLocalFixture fixture = EventHubLocalFixture.Create("saga-produce");
@@ -31,7 +31,7 @@ public sealed class EventHubSagaAndLifecycleTests
             Guid correlationId = NewId.NextGuid();
             await using AsyncServiceScope scope = provider.CreateAsyncScope();
             await scope.ServiceProvider.GetRequiredService<IPublishEndpoint>()
-                .Publish(new SagaStart(correlationId, state.RunId, "ABC123"), cancellationToken)
+                .PublishAsync(new SagaStart(correlationId, state.RunId, "ABC123"), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             ConsumeContext<SagaProduced> actual = (await state.Completed.Task
@@ -51,7 +51,7 @@ public sealed class EventHubSagaAndLifecycleTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0263", "both-faulted-produce-arities-carry-exception-data-and-saga-initiator")]
-    public async Task FaultedSagaActivities_BothProduceExceptionDerivedEventsWithTheSagaInitiator()
+    public async Task FaultedSagaActivities_BothProduceExceptionDerivedEventsWithTheSagaInitiatorAsync()
     {
         var state = new SagaDeliveryState(NewId.NextGuid(), expected: 2);
         await using EventHubLocalFixture fixture = EventHubLocalFixture.Create("saga-faulted");
@@ -69,9 +69,9 @@ public sealed class EventHubSagaAndLifecycleTests
             await using AsyncServiceScope scope = provider.CreateAsyncScope();
             IPublishEndpoint publishEndpoint = scope.ServiceProvider.GetRequiredService<IPublishEndpoint>();
 
-            await publishEndpoint.Publish(new DataFaultStart(dataCorrelationId, state.RunId), cancellationToken)
+            await publishEndpoint.PublishAsync(new DataFaultStart(dataCorrelationId, state.RunId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await publishEndpoint.Publish(new PlainFaultStart(plainCorrelationId, state.RunId), cancellationToken)
+            await publishEndpoint.PublishAsync(new PlainFaultStart(plainCorrelationId, state.RunId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             ConsumeContext<SagaProduced>[] deliveries = await state.Completed.Task
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
@@ -93,7 +93,7 @@ public sealed class EventHubSagaAndLifecycleTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0260", "partition-initialize-precedes-delivery-and-clean-close-follows-for-every-partition")]
-    public async Task PartitionCallbacks_BracketDeliveryForEveryPartitionAndReportCleanShutdown()
+    public async Task PartitionCallbacks_BracketDeliveryForEveryPartitionAndReportCleanShutdownAsync()
     {
         var state = new LifecycleState(NewId.NextGuid(), expectedDeliveries: 1);
         await using EventHubLocalFixture fixture = EventHubLocalFixture.Create("partition-callbacks");
@@ -107,7 +107,7 @@ public sealed class EventHubSagaAndLifecycleTests
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
             await state.FirstInitialized.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await ProduceLifecycleMessage(provider, state.RunId, index: 0, fixture.OperationTimeout, cancellationToken);
+            await ProduceLifecycleMessageAsync(provider, state.RunId, index: 0, fixture.OperationTimeout, cancellationToken);
             await state.DeliveriesCompleted.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
             await bus.StopAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = false;
@@ -130,7 +130,7 @@ public sealed class EventHubSagaAndLifecycleTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0159", "consumer-reclaims-all-partitions-after-stop-start-and-delivers-once")]
-    public async Task ConsumerRecycle_ReleasesAndReclaimsEveryPartitionBeforeDeliveringExactlyOnce()
+    public async Task ConsumerRecycle_ReleasesAndReclaimsEveryPartitionBeforeDeliveringExactlyOnceAsync()
     {
         var state = new LifecycleState(NewId.NextGuid(), expectedDeliveries: 1);
         await using EventHubLocalFixture fixture = EventHubLocalFixture.Create("consumer-recycle");
@@ -151,7 +151,7 @@ public sealed class EventHubSagaAndLifecycleTests
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
             await state.SecondInitialized.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await ProduceLifecycleMessage(provider, state.RunId, index: 41, fixture.OperationTimeout, cancellationToken);
+            await ProduceLifecycleMessageAsync(provider, state.RunId, index: 41, fixture.OperationTimeout, cancellationToken);
             await state.DeliveriesCompleted.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
             await bus.StopAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = false;
@@ -172,7 +172,7 @@ public sealed class EventHubSagaAndLifecycleTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0160", "fresh-producer-scope-after-recycle-delivers-after-the-pre-recycle-producer")]
-    public async Task ProducerRecycle_DeliversFromFreshScopesOnBothSidesOfTheRestart()
+    public async Task ProducerRecycle_DeliversFromFreshScopesOnBothSidesOfTheRestartAsync()
     {
         var state = new LifecycleState(NewId.NextGuid(), expectedDeliveries: 2);
         await using EventHubLocalFixture fixture = EventHubLocalFixture.Create("producer-recycle");
@@ -186,7 +186,7 @@ public sealed class EventHubSagaAndLifecycleTests
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
             await state.FirstInitialized.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await ProduceLifecycleMessage(provider, state.RunId, index: 0, fixture.OperationTimeout, cancellationToken);
+            await ProduceLifecycleMessageAsync(provider, state.RunId, index: 0, fixture.OperationTimeout, cancellationToken);
             await state.FirstDelivery.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
             await bus.StopAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = false;
@@ -195,7 +195,7 @@ public sealed class EventHubSagaAndLifecycleTests
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
             await state.SecondInitialized.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await ProduceLifecycleMessage(provider, state.RunId, index: 1, fixture.OperationTimeout, cancellationToken);
+            await ProduceLifecycleMessageAsync(provider, state.RunId, index: 1, fixture.OperationTimeout, cancellationToken);
             await state.DeliveriesCompleted.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
             await bus.StopAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = false;
@@ -268,8 +268,8 @@ public sealed class EventHubSagaAndLifecycleTests
                             endpoint.ContainerName = fixture.ContainerName("lifecycle");
                             endpoint.CheckpointMessageCount = 1;
                             endpoint.ConcurrentDeliveryLimit = 1;
-                            endpoint.OnPartitionInitializing(state.OnInitializing);
-                            endpoint.OnPartitionClosing(state.OnClosing);
+                            endpoint.OnPartitionInitializing(state.OnInitializingAsync);
+                            endpoint.OnPartitionClosing(state.OnClosingAsync);
                             endpoint.ConfigureConsumer<LifecycleConsumer>(context);
                         });
                     });
@@ -278,7 +278,7 @@ public sealed class EventHubSagaAndLifecycleTests
             .BuildServiceProvider(true);
     }
 
-    private static async Task ProduceLifecycleMessage(
+    private static async Task ProduceLifecycleMessageAsync(
         ServiceProvider provider,
         Guid runId,
         int index,
@@ -287,8 +287,8 @@ public sealed class EventHubSagaAndLifecycleTests
     {
         await using AsyncServiceScope scope = provider.CreateAsyncScope();
         IEventHubProducer producer = await scope.ServiceProvider.GetRequiredService<IEventHubProducerProvider>()
-            .GetProducer(LifecycleEventHub).WaitAsync(timeout, cancellationToken);
-        await producer.Produce(new LifecycleMessage(runId, index), cancellationToken)
+            .GetProducerAsync(LifecycleEventHub, cancellationToken: cancellationToken).WaitAsync(timeout, cancellationToken);
+        await producer.ProduceAsync(new LifecycleMessage(runId, index), cancellationToken)
             .WaitAsync(timeout, cancellationToken);
     }
 
@@ -418,7 +418,7 @@ public sealed class EventHubSagaAndLifecycleTests
 
     private sealed class SagaProducedConsumer(SagaDeliveryState state) : IConsumer<SagaProduced>
     {
-        public Task Consume(ConsumeContext<SagaProduced> context)
+        public Task ConsumeAsync(ConsumeContext<SagaProduced> context)
         {
             state.Record(context);
             return Task.CompletedTask;
@@ -457,7 +457,7 @@ public sealed class EventHubSagaAndLifecycleTests
         public TaskCompletionSource FirstDelivery { get; } = NewSignal();
         public TaskCompletionSource DeliveriesCompleted { get; } = NewSignal();
 
-        public Task OnInitializing(PartitionInitializingEventArgs args)
+        public Task OnInitializingAsync(PartitionInitializingEventArgs args)
         {
             args.DefaultStartingPosition = EventPosition.Earliest;
             int count = Interlocked.Increment(ref _initializedCount);
@@ -470,7 +470,7 @@ public sealed class EventHubSagaAndLifecycleTests
             return Task.CompletedTask;
         }
 
-        public Task OnClosing(PartitionClosingEventArgs args)
+        public Task OnClosingAsync(PartitionClosingEventArgs args)
         {
             int count = Interlocked.Increment(ref _closedCount);
             int generation = ((count - 1) / 4) + 1;
@@ -514,7 +514,7 @@ public sealed class EventHubSagaAndLifecycleTests
 
     private sealed class LifecycleConsumer(LifecycleState state) : IConsumer<LifecycleMessage>
     {
-        public Task Consume(ConsumeContext<LifecycleMessage> context)
+        public Task ConsumeAsync(ConsumeContext<LifecycleMessage> context)
         {
             Assert.True(context.TryGetPayload(out EventHubConsumeContext? payload));
             Assert.NotNull(payload);

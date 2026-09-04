@@ -11,7 +11,7 @@ public class UnscheduleActivity<TSaga> :
 
     public UnscheduleActivity(Schedule<TSaga> schedule)
     {
-        _schedule = schedule;
+        _schedule = schedule ?? throw new ArgumentNullException(nameof(schedule));
     }
 
     public void Accept(StateMachineVisitor inspector)
@@ -24,35 +24,35 @@ public class UnscheduleActivity<TSaga> :
         context.CreateScope("unschedule");
     }
 
-    public async Task Execute(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public async Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
-        await Execute(context).ConfigureAwait(false);
+        await ExecuteAsync(context).ConfigureAwait(false);
 
-        await next.Execute(context).ConfigureAwait(false);
+        await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    public async Task Execute<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+    public async Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
-        await Execute(context).ConfigureAwait(false);
+        await ExecuteAsync(context).ConfigureAwait(false);
 
-        await next.Execute(context).ConfigureAwait(false);
+        await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
+    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception
     {
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 
-    public Task Faulted<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
+    public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
         where T : class
         where TException : Exception
     {
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 
-    async Task Execute(SagaConsumeContext<TSaga> context)
+    async Task ExecuteAsync(SagaConsumeContext<TSaga> context)
     {
         Guid? previousTokenId = _schedule.GetTokenId(context.Saga);
         if (previousTokenId.HasValue)
@@ -62,7 +62,7 @@ public class UnscheduleActivity<TSaga> :
             {
                 var schedulerContext = context.GetPayload<MessageSchedulerContext>();
 
-                await schedulerContext.CancelScheduledSend(context.ReceiveContext.InputAddress, previousTokenId.Value, context.CancellationToken)
+                await schedulerContext.CancelScheduledSendAsync(context.ReceiveContext.InputAddress, previousTokenId.Value, context.CancellationToken)
                     .ConfigureAwait(false);
 
                 _schedule.SetTokenId(context.Saga, null);

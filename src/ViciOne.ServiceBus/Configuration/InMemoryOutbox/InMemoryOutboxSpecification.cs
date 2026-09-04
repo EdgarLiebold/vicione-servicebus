@@ -10,14 +10,14 @@ public class InMemoryOutboxSpecification<T> :
     IOutboxConfigurator
     where T : class
 {
-    readonly ISetScopedConsumeContext _setter;
+    readonly ISetScopedConsumeContext? _setter;
 
     public InMemoryOutboxSpecification(IRegistrationContext context)
         : this(context as ISetScopedConsumeContext ?? throw new ArgumentException(nameof(context)))
     {
     }
 
-    public InMemoryOutboxSpecification(ISetScopedConsumeContext setter)
+    public InMemoryOutboxSpecification(ISetScopedConsumeContext? setter)
     {
         _setter = setter;
     }
@@ -44,14 +44,14 @@ public class InMemoryOutboxSpecification<T> :
         IPipeSpecification<ConsumeContext<Batch<T>>>,
         IOutboxConfigurator
     {
-        readonly ISetScopedConsumeContext _setter;
+        readonly ISetScopedConsumeContext? _setter;
 
         public Batch(IRegistrationContext context)
             : this(context as ISetScopedConsumeContext ?? throw new ArgumentException(nameof(context)))
         {
         }
 
-        public Batch(ISetScopedConsumeContext setter)
+        public Batch(ISetScopedConsumeContext? setter)
         {
             _setter = setter;
         }

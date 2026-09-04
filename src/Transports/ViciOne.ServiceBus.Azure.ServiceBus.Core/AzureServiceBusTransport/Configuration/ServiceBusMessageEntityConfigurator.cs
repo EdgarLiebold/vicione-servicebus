@@ -6,7 +6,7 @@ public abstract class ServiceBusMessageEntityConfigurator :
     ServiceBusEntityConfigurator,
     IServiceBusMessageEntityConfigurator
 {
-    string _basePath;
+    string? _basePath;
 
     protected ServiceBusMessageEntityConfigurator(string path)
     {
@@ -19,7 +19,7 @@ public abstract class ServiceBusMessageEntityConfigurator :
 
     public string Path { get; set; }
 
-    public string BasePath
+    public string? BasePath
     {
         get => _basePath;
         set => _basePath = value?.Trim('/');

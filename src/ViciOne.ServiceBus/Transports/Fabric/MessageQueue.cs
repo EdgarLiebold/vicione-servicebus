@@ -46,7 +46,7 @@ public class MessageQueue<TContext, T> :
             FullMode = BoundedChannelFullMode.Wait
         });
 
-        _dispatcher = StartDispatcher();
+        _dispatcher = StartDispatcherAsync();
     }
 
     public string Name { get; }
@@ -67,16 +67,16 @@ public class MessageQueue<TContext, T> :
         }
     }
 
-    public async Task Deliver(DeliveryContext<T> context)
+    public async Task DeliverAsync(DeliveryContext<T> context, CancellationToken cancellationToken = default)
     {
-        if (context.WasAlreadyDelivered(this))
+        cancellationToken.ThrowIfCancellationRequested(); if (context.WasAlreadyDelivered(this))
             return;
 
         if (context.EnqueueTime.HasValue)
         {
             await _delayedCapacity.WaitAsync(context.CancellationToken).ConfigureAwait(false);
 
-            Task delivery = DeliverWithDelay(context);
+            Task delivery = DeliverWithDelayAsync(context);
             _delayedDeliveries.Add(delivery);
         }
         else
@@ -95,9 +95,9 @@ public class MessageQueue<TContext, T> :
         _receivers.Probe(scope);
     }
 
-    protected override async Task StopAgent(StopContext context)
+    protected override async Task StopAgentAsync(StopContext context)
     {
-        await _delayedDeliveries.Completed().ConfigureAwait(false);
+        await _delayedDeliveries.CompletedAsync().ConfigureAwait(false);
 
         _channel.Writer.TryComplete();
 
@@ -107,10 +107,10 @@ public class MessageQueue<TContext, T> :
 
         _delayedCapacity.Dispose();
 
-        await base.StopAgent(context).ConfigureAwait(false);
+        await base.StopAgentAsync(context).ConfigureAwait(false);
     }
 
-    async Task DeliverWithDelay(DeliveryContext<T> context)
+    async Task DeliverWithDelayAsync(DeliveryContext<T> context)
     {
         var delayed = false;
         try
@@ -118,13 +118,14 @@ public class MessageQueue<TContext, T> :
             if (context.CancellationToken.IsCancellationRequested)
                 return;
 
-            var enqueueTime = new DateTimeOffset(DateTime.SpecifyKind(context.EnqueueTime!.Value, DateTimeKind.Utc));
+            DateTimeOffset enqueueTime = context.EnqueueTime
+                ?? throw new InvalidOperationException("A delayed delivery requires an enqueue time.");
             if (enqueueTime > _delayProvider.UtcNow)
             {
                 _metrics.DelayedMessageCount.Add();
                 delayed = true;
 
-                await _delayProvider.Delay(enqueueTime, Stopping).ConfigureAwait(false);
+                await _delayProvider.DelayAsync(enqueueTime, Stopping).ConfigureAwait(false);
             }
 
             await _channel.Writer.WriteAsync(context, Stopping).ConfigureAwait(false);
@@ -141,13 +142,13 @@ public class MessageQueue<TContext, T> :
         finally
         {
             if (delayed)
-                await _metrics.DelayedMessageCount.Remove().ConfigureAwait(false);
+                await _metrics.DelayedMessageCount.RemoveAsync().ConfigureAwait(false);
 
             _delayedCapacity.Release();
         }
     }
 
-    async Task StartDispatcher()
+    async Task StartDispatcherAsync()
     {
         try
         {
@@ -156,7 +157,7 @@ public class MessageQueue<TContext, T> :
                 if (!_channel.Reader.TryRead(out DeliveryContext<T>? context))
                     continue;
 
-                await _metrics.MessageCount.Remove().ConfigureAwait(false);
+                await _metrics.MessageCount.RemoveAsync().ConfigureAwait(false);
 
                 try
                 {
@@ -168,9 +169,9 @@ public class MessageQueue<TContext, T> :
                             LogContext.Debug?.Log("Receiver not found: {Queue}, {ReceiverId}", Name, context.ReceiverId.Value);
                     }
 
-                    receiver ??= await _receivers.Next(context.Message, Stopping).ConfigureAwait(false);
+                    receiver ??= await _receivers.NextAsync(context.Message, Stopping).ConfigureAwait(false);
                     if (receiver != null)
-                        await receiver.Deliver(context.Message, Stopping).ConfigureAwait(false);
+                        await receiver.DeliverAsync(context.Message, Stopping).ConfigureAwait(false);
                 }
                 catch (OperationCanceledException)
                 {

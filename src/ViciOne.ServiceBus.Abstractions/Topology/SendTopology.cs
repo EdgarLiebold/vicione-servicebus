@@ -111,7 +111,7 @@ public class SendTopology :
 
         foreach (var convention in conventions)
         {
-            if (convention.TryGetMessageSendTopologyConvention(out IMessageSendTopologyConvention<T> messageSendTopologyConvention))
+            if (convention.TryGetMessageSendTopologyConvention(out IMessageSendTopologyConvention<T>? messageSendTopologyConvention))
                 messageTopology.TryAddConvention(messageSendTopologyConvention);
         }
     }

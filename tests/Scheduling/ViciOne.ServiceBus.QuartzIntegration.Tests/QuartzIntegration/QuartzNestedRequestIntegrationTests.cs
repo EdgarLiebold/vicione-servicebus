@@ -12,14 +12,14 @@ public sealed class QuartzNestedRequestIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-NESTED-REQUEST", "response-completes-original-request")]
-    public async Task NestedSagaRequest_ResponseCompletesTheOriginalRequestAndClearsBothSagas()
+    public async Task NestedSagaRequest_ResponseCompletesTheOriginalRequestAndClearsBothSagasAsync()
     {
-        await using NestedRequestFixture fixture = await NestedRequestFixture.Start(faultService: false);
+        await using NestedRequestFixture fixture = await NestedRequestFixture.StartAsync(faultService: false);
         IRequestClient<CreateShortLink> client = fixture.Bus.CreateRequestClient<CreateShortLink>(
             fixture.SagaAddress,
             fixture.Timeout);
 
-        Response<ShortLinkCreated> response = await client.GetResponse<ShortLinkCreated>(
+        Response<ShortLinkCreated> response = await client.GetResponseAsync<ShortLinkCreated>(
                 new CreateShortLink(new Uri("https://example.test/complete")),
                 TestContext.Current.CancellationToken)
             .WaitAsync(fixture.Timeout, TestContext.Current.CancellationToken);
@@ -36,15 +36,15 @@ public sealed class QuartzNestedRequestIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-NESTED-REQUEST", "fault-propagates-to-original-request")]
-    public async Task NestedSagaRequest_FaultPropagatesToTheOriginalRequesterAndClearsBothSagas()
+    public async Task NestedSagaRequest_FaultPropagatesToTheOriginalRequesterAndClearsBothSagasAsync()
     {
-        await using NestedRequestFixture fixture = await NestedRequestFixture.Start(faultService: true);
+        await using NestedRequestFixture fixture = await NestedRequestFixture.StartAsync(faultService: true);
         IRequestClient<CreateShortLink> client = fixture.Bus.CreateRequestClient<CreateShortLink>(
             fixture.SagaAddress,
             fixture.Timeout);
 
         RequestFaultException exception = await Assert.ThrowsAsync<RequestFaultException>(() =>
-            client.GetResponse<ShortLinkCreated>(
+            client.GetResponseAsync<ShortLinkCreated>(
                 new CreateShortLink(new Uri("https://example.test/fault")),
                 TestContext.Current.CancellationToken));
         await fixture.Scheduled.Completed.WaitAsync(fixture.Timeout, TestContext.Current.CancellationToken);
@@ -93,7 +93,7 @@ public sealed class QuartzNestedRequestIntegrationTests
         public ConsumeCompletionObserver<ScheduleMessage> Scheduled { get; }
         public ConsumeCompletionObserver<CancelScheduledMessage> Canceled { get; }
 
-        public static async Task<NestedRequestFixture> Start(bool faultService)
+        public static async Task<NestedRequestFixture> StartAsync(bool faultService)
         {
             TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
                 .GetValidatedOptions()
@@ -105,7 +105,7 @@ public sealed class QuartzNestedRequestIntegrationTests
             var requestRepository = new InMemorySagaRepository<RequestState>();
             var linkMachine = new CreateLinkStateMachine(serviceAddress);
             var requestMachine = new RequestStateMachine();
-            QuartzTestBus fixture = await QuartzTestBus.Start(
+            QuartzTestBus fixture = await QuartzTestBus.StartAsync(
                 timeout,
                 configure: configurator =>
                 {

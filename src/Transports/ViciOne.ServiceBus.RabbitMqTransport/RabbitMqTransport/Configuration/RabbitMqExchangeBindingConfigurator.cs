@@ -9,25 +9,25 @@ public abstract class RabbitMqExchangeBindingConfigurator :
     IRabbitMqExchangeBindingConfigurator
 {
     protected RabbitMqExchangeBindingConfigurator(string exchangeName, string exchangeType, bool durable = true, bool autoDelete = false,
-        string routingKey = null)
+        string? routingKey = null)
         : base(exchangeName, exchangeType, durable, autoDelete)
     {
         RoutingKey = routingKey ?? "";
 
-        BindingArguments = new Dictionary<string, object>();
+        BindingArguments = new Dictionary<string, object?>();
     }
 
-    protected RabbitMqExchangeBindingConfigurator(Exchange exchange, string routingKey = null)
+    protected RabbitMqExchangeBindingConfigurator(Exchange exchange, string? routingKey = null)
         : base(exchange)
     {
         RoutingKey = routingKey ?? "";
 
-        BindingArguments = new Dictionary<string, object>();
+        BindingArguments = new Dictionary<string, object?>();
     }
 
-    public IDictionary<string, object> BindingArguments { get; }
+    public IDictionary<string, object?> BindingArguments { get; }
 
-    public void SetBindingArgument(string key, object value)
+    public void SetBindingArgument(string key, object? value)
     {
         if (key == null)
             throw new ArgumentNullException(nameof(key));

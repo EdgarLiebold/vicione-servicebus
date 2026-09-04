@@ -10,7 +10,7 @@ public sealed class MessageDataEndpointIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-DATA-SERIALIZATION", "system-text-json-large-payload-size-matrix")]
-    public async Task SystemTextJson_RoundTripsEveryLargePayloadSizeWithoutLoss()
+    public async Task SystemTextJson_RoundTripsEveryLargePayloadSizeWithoutLossAsync()
     {
         TimeSpan timeout = MessageDataTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -26,7 +26,7 @@ public sealed class MessageDataEndpointIntegrationTests
 
             try
             {
-                LargePayload body = await context.Message.Body.Value;
+                LargePayload body = MessageDataTestSupport.Require(await context.Message.Body.Value, nameof(context.Message.Body));
                 deliveryCounts.AddOrUpdate(context.Message.CorrelationId, 1, (_, count) => count + 1);
                 completion.TrySetResult(new LargePayloadSnapshot(
                     context.Message.Body.Address,
@@ -41,7 +41,7 @@ public sealed class MessageDataEndpointIntegrationTests
             }
         });
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         var stopped = false;
         try
         {
@@ -53,7 +53,7 @@ public sealed class MessageDataEndpointIntegrationTests
                     TaskCreationOptions.RunContinuationsAsynchronously);
                 Assert.True(observations.TryAdd(correlationId, completion));
 
-                await harness.Bus.Publish<LargePayloadEvent>(new
+                await harness.Bus.PublishAsync<LargePayloadEvent>(new
                 {
                     CorrelationId = correlationId,
                     Body = new LargePayload(correlationId, values, true),
@@ -66,7 +66,7 @@ public sealed class MessageDataEndpointIntegrationTests
                 Assert.True(actual.IsComplete);
             }
 
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
             stopped = true;
             Assert.Equal(3, observations.Count);
             Assert.All(observations.Values, completion => Assert.True(completion.Task.IsCompletedSuccessfully));
@@ -76,13 +76,13 @@ public sealed class MessageDataEndpointIntegrationTests
         finally
         {
             if (!stopped)
-                await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+                await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-DATA-PUBLISH", "stored-string-address-and-exact-content")]
-    public async Task Publish_StoresAndLoadsTheExactStringThroughTheConfiguredRepository()
+    public async Task Publish_StoresAndLoadsTheExactStringThroughTheConfiguredRepositoryAsync()
     {
         TimeSpan timeout = MessageDataTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -98,7 +98,7 @@ public sealed class MessageDataEndpointIntegrationTests
                 observed.TrySetResult(new PublishedSnapshot(
                     context.Message.CorrelationId,
                     context.Message.StringData.Address,
-                    await context.Message.StringData.Value));
+                    MessageDataTestSupport.Require(await context.Message.StringData.Value, nameof(context.Message.StringData))));
             }
             catch (Exception exception)
             {
@@ -109,11 +109,11 @@ public sealed class MessageDataEndpointIntegrationTests
         Guid correlationId = NewId.NextGuid();
         const string expected = "published message data must survive the transport exactly";
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         var stopped = false;
         try
         {
-            await harness.Bus.Publish<DocumentPublished>(new
+            await harness.Bus.PublishAsync<DocumentPublished>(new
             {
                 CorrelationId = correlationId,
                 StringData = expected,
@@ -123,16 +123,16 @@ public sealed class MessageDataEndpointIntegrationTests
             Assert.Equal(correlationId, actual.CorrelationId);
             Assert.NotNull(actual.Address);
             Assert.Equal(expected, actual.Value);
-            MessageData<string> stored = await repository.GetString(actual.Address, cancellationToken);
+            MessageData<string> stored = await repository.GetStringAsync(actual.Address, cancellationToken);
             Assert.Equal(expected, await stored.Value);
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
             stopped = true;
             Assert.Equal(1, Volatile.Read(ref deliveryCount));
         }
         finally
         {
             if (!stopped)
-                await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+                await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -140,7 +140,7 @@ public sealed class MessageDataEndpointIntegrationTests
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("REQ-VSB-MESSAGE-DATA-REQUEST", "created-and-connected-client-response-data")]
-    public async Task RequestResponse_LoadsTheExactStoredValueForCreatedAndConnectedClients(bool connectedClient)
+    public async Task RequestResponse_LoadsTheExactStoredValueForCreatedAndConnectedClientsAsync(bool connectedClient)
     {
         TimeSpan timeout = MessageDataTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -150,7 +150,7 @@ public sealed class MessageDataEndpointIntegrationTests
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<DataRequest>(context =>
         {
             Interlocked.Increment(ref handlerCalls);
-            return context.RespondAsync<DataResponse>(new
+            return context.Advanced().RespondAsync<DataResponse>(new
             {
                 context.Message.CorrelationId,
                 context.Message.Key,
@@ -160,35 +160,34 @@ public sealed class MessageDataEndpointIntegrationTests
         Guid correlationId = NewId.NextGuid();
         const string key = "request-key";
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         var stopped = false;
         try
         {
             IRequestClient<DataRequest> client = connectedClient
-                ? await harness.ConnectRequestClient<DataRequest>()
-                : harness.Bus.CreateRequestClient<DataRequest>(harness.InputQueueAddress, timeout);
+                ? await harness.ConnectRequestClientAsync<DataRequest>(TestContext.Current.CancellationToken) : harness.Bus.CreateRequestClient<DataRequest>(harness.InputQueueAddress, timeout);
 
-            Response<DataResponse> response = await client.GetResponse<DataResponse>(new
+            Response<DataResponse> response = await client.Advanced().GetResponseAsync<DataResponse>(values: new
             {
                 CorrelationId = correlationId,
                 Key = key,
-            }, cancellationToken);
-            string value = await response.Message.Value.Value;
+            }, cancellationToken: cancellationToken);
+            string value = MessageDataTestSupport.Require(await response.Message.Value.Value, nameof(response.Message.Value));
 
             Assert.Equal(correlationId, response.Message.CorrelationId);
             Assert.Equal(key, response.Message.Key);
             Assert.NotNull(response.Message.Value.Address);
             Assert.Equal($"response:{key}", value);
-            MessageData<string> stored = await repository.GetString(response.Message.Value.Address, cancellationToken);
+            MessageData<string> stored = await repository.GetStringAsync(response.Message.Value.Address, cancellationToken);
             Assert.Equal(value, await stored.Value);
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
             stopped = true;
             Assert.Equal(1, Volatile.Read(ref handlerCalls));
         }
         finally
         {
             if (!stopped)
-                await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+                await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 

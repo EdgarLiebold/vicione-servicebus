@@ -14,7 +14,7 @@ public sealed class BusActivityIndicatorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-ACTIVITY", "publish-idle-deadline")]
-    public async Task PublishActivity_BecomesIdleOnTheConfiguredClock()
+    public async Task PublishActivity_BecomesIdleOnTheConfiguredClockAsync()
     {
         TimeSpan timeout = OperationTimeout();
         var timeProvider = new FakeTimeProvider(StartTime);
@@ -22,11 +22,11 @@ public sealed class BusActivityIndicatorTests
         using var indicator = new BusActivityPublishIndicator(signal, TimeSpan.FromMinutes(1), timeProvider);
         using var harness = CreateHarness(timeout, timeProvider);
 
-        await harness.Start(TestContext.Current.CancellationToken);
+        await harness.StartAsync(TestContext.Current.CancellationToken);
         using ConnectHandle observer = harness.Bus.ConnectPublishObserver(indicator);
         try
         {
-            await harness.Bus.Publish(new ActivityMessage(), TestContext.Current.CancellationToken);
+            await harness.Bus.PublishAsync(new ActivityMessage(), TestContext.Current.CancellationToken);
             Assert.False(indicator.IsMet);
 
             timeProvider.Advance(TimeSpan.FromMinutes(1));
@@ -37,13 +37,13 @@ public sealed class BusActivityIndicatorTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-ACTIVITY", "send-idle-deadline")]
-    public async Task SendActivity_BecomesIdleOnTheConfiguredClock()
+    public async Task SendActivity_BecomesIdleOnTheConfiguredClockAsync()
     {
         TimeSpan timeout = OperationTimeout();
         var timeProvider = new FakeTimeProvider(StartTime);
@@ -52,11 +52,11 @@ public sealed class BusActivityIndicatorTests
         using var harness = CreateHarness(timeout, timeProvider);
         harness.Handler<ActivityMessage>();
 
-        await harness.Start(TestContext.Current.CancellationToken);
+        await harness.StartAsync(TestContext.Current.CancellationToken);
         using ConnectHandle observer = harness.Bus.ConnectSendObserver(indicator);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(new ActivityMessage(), TestContext.Current.CancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new ActivityMessage(), TestContext.Current.CancellationToken);
             Assert.False(indicator.IsMet);
 
             timeProvider.Advance(TimeSpan.FromMinutes(1));
@@ -67,13 +67,13 @@ public sealed class BusActivityIndicatorTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-ACTIVITY", "receive-idle-deadline")]
-    public async Task ReceiveActivity_BecomesIdleOnTheConfiguredClock()
+    public async Task ReceiveActivity_BecomesIdleOnTheConfiguredClockAsync()
     {
         TimeSpan timeout = OperationTimeout();
         var timeProvider = new FakeTimeProvider(StartTime);
@@ -83,13 +83,13 @@ public sealed class BusActivityIndicatorTests
         using var harness = CreateHarness(timeout, timeProvider);
         HandlerTestHarness<ActivityMessage> handler = harness.Handler<ActivityMessage>();
 
-        await harness.Start(TestContext.Current.CancellationToken);
+        await harness.StartAsync(TestContext.Current.CancellationToken);
         using ConnectHandle observer = harness.Bus.ConnectReceiveObserver(indicator);
         using ConnectHandle completionObserver = harness.Bus.ConnectReceiveObserver(receiveCompleted);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(new ActivityMessage(), TestContext.Current.CancellationToken);
-            Assert.True(await handler.Consumed.Any(TestContext.Current.CancellationToken));
+            await harness.InputQueueSendEndpoint.SendAsync(new ActivityMessage(), TestContext.Current.CancellationToken);
+            Assert.True(await handler.Consumed.AnyAsync(TestContext.Current.CancellationToken));
             await receiveCompleted.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
             Assert.False(indicator.IsMet);
 
@@ -101,13 +101,13 @@ public sealed class BusActivityIndicatorTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-ACTIVITY", "consume-in-flight-lifecycle")]
-    public async Task ConsumeActivity_RemainsBusyUntilTheConsumerCompletes()
+    public async Task ConsumeActivity_RemainsBusyUntilTheConsumerCompletesAsync()
     {
         TimeSpan timeout = OperationTimeout();
         var signal = new CountingSignalResource();
@@ -120,11 +120,11 @@ public sealed class BusActivityIndicatorTests
         };
         harness.Consumer(() => consumer);
 
-        await harness.Start(TestContext.Current.CancellationToken);
+        await harness.StartAsync(TestContext.Current.CancellationToken);
         using ConnectHandle observer = harness.Bus.ConnectConsumeObserver(indicator);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(new GatedMessage(), TestContext.Current.CancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new GatedMessage(), TestContext.Current.CancellationToken);
             await consumer.Started.WaitAsync(timeout, TestContext.Current.CancellationToken);
             Assert.False(indicator.IsMet);
             Assert.Equal(0, signal.Count);
@@ -134,18 +134,18 @@ public sealed class BusActivityIndicatorTests
 
             Assert.True(indicator.IsMet);
             Assert.Equal(1, signal.Count);
-            Assert.True(await harness.Consumed.Any<GatedMessage>(TestContext.Current.CancellationToken));
+            Assert.True(await harness.Consumed.AnyAsync<GatedMessage>(TestContext.Current.CancellationToken));
         }
         finally
         {
             consumer.Release();
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-ACTIVITY", "consume-fault-returns-idle")]
-    public async Task ConsumeActivity_ReturnsIdleWhenTheConsumerFaults()
+    public async Task ConsumeActivity_ReturnsIdleWhenTheConsumerFaultsAsync()
     {
         TimeSpan timeout = OperationTimeout();
         var signal = new CountingSignalResource();
@@ -157,15 +157,15 @@ public sealed class BusActivityIndicatorTests
         };
         harness.Consumer<FailingConsumer>();
 
-        await harness.Start(TestContext.Current.CancellationToken);
+        await harness.StartAsync(TestContext.Current.CancellationToken);
         using ConnectHandle observer = harness.Bus.ConnectConsumeObserver(indicator);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(new FailingMessage(), TestContext.Current.CancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new FailingMessage(), TestContext.Current.CancellationToken);
             await signal.Signaled.WaitAsync(timeout, TestContext.Current.CancellationToken);
             IReceivedMessage<FailingMessage> consumed = await harness.Consumed
                 .SelectAsync<FailingMessage>(TestContext.Current.CancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             Assert.True(indicator.IsMet);
             Assert.Equal(1, signal.Count);
@@ -174,7 +174,7 @@ public sealed class BusActivityIndicatorTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
@@ -221,7 +221,7 @@ public sealed class BusActivityIndicatorTests
 
         public Task Started => _started.Task;
 
-        public async Task Consume(ConsumeContext<GatedMessage> context)
+        public async Task ConsumeAsync(ConsumeContext<GatedMessage> context)
         {
             _started.TrySetResult(true);
             await _release.Task.WaitAsync(context.CancellationToken);
@@ -232,7 +232,7 @@ public sealed class BusActivityIndicatorTests
 
     private sealed class FailingConsumer : IConsumer<FailingMessage>
     {
-        public Task Consume(ConsumeContext<FailingMessage> context) =>
+        public Task ConsumeAsync(ConsumeContext<FailingMessage> context) =>
             Task.FromException(new ExpectedConsumerException("consumer failed"));
     }
 
@@ -245,21 +245,21 @@ public sealed class BusActivityIndicatorTests
 
         public Task Completed => _completed.Task;
 
-        public Task PreReceive(ReceiveContext context) => Task.CompletedTask;
+        public Task PreReceiveAsync(ReceiveContext context) => Task.CompletedTask;
 
-        public Task PostReceive(ReceiveContext context)
+        public Task PostReceiveAsync(ReceiveContext context)
         {
             _completed.TrySetResult(true);
             return Task.CompletedTask;
         }
 
-        public Task PostConsume<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
+        public Task PostConsumeAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
             where T : class => Task.CompletedTask;
 
-        public Task ConsumeFault<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
+        public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
             where T : class => Task.CompletedTask;
 
-        public Task ReceiveFault(ReceiveContext context, Exception exception)
+        public Task ReceiveFaultAsync(ReceiveContext context, Exception exception)
         {
             _completed.TrySetException(exception);
             return Task.CompletedTask;

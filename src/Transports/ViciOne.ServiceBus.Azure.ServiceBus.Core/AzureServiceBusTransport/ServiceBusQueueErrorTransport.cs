@@ -13,15 +13,15 @@ public class ServiceBusQueueErrorTransport :
     {
     }
 
-    public Task Send(ExceptionReceiveContext context)
+    public Task SendAsync(ExceptionReceiveContext context, CancellationToken cancellationToken = default)
     {
-        void PreSend(ServiceBusMessage message, SendHeaders headers)
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); void PreSend(ServiceBusMessage message, SendHeaders headers)
         {
             headers.CopyFrom(context.ExceptionHeaders);
 
             message.TimeToLive = Defaults.BasicMessageTimeToLive;
         }
 
-        return Move(context, PreSend);
+        return MoveAsync(context, PreSend);
     }
 }

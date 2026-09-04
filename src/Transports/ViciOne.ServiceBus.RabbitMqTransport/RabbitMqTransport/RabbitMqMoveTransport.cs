@@ -21,7 +21,7 @@ public class RabbitMqMoveTransport<TSettings>
         _exchange = exchange;
     }
 
-    protected async Task Move(ReceiveContext context, Action<BasicProperties, SendHeaders> preSend)
+    protected async Task MoveAsync(ReceiveContext context, Action<BasicProperties, SendHeaders> preSend)
     {
         if (!context.TryGetPayload(out ChannelContext? channelContext))
             throw new ArgumentException("The ReceiveContext must contain a ChannelContext", nameof(context));
@@ -40,7 +40,7 @@ public class RabbitMqMoveTransport<TSettings>
         }
 
         OneTimeContext<ConfigureTopologyContext<TSettings>> oneTimeContext =
-            await _topologyFilter.Configure(channelContext, context.CancellationToken).ConfigureAwait(false);
+            await _topologyFilter.ConfigureAsync(channelContext, context.CancellationToken).ConfigureAwait(false);
 
         BasicProperties properties;
         var routingKey = "";

@@ -22,11 +22,11 @@ public interface ISentMessageList :
     IAsyncEnumerable<ISentMessage<T>> SelectAsync<T>(FilterDelegate<ISentMessage<T>> filter, CancellationToken cancellationToken = default)
         where T : class;
 
-    Task<bool> Any(Action<SentMessageFilter> apply = default, CancellationToken cancellationToken = default);
+    Task<bool> AnyAsync(Action<SentMessageFilter>? apply = default, CancellationToken cancellationToken = default);
 
-    Task<bool> Any<T>(CancellationToken cancellationToken = default)
+    Task<bool> AnyAsync<T>(CancellationToken cancellationToken = default)
         where T : class;
 
-    Task<bool> Any<T>(FilterDelegate<ISentMessage<T>> filter, CancellationToken cancellationToken = default)
+    Task<bool> AnyAsync<T>(FilterDelegate<ISentMessage<T>> filter, CancellationToken cancellationToken = default)
         where T : class;
 }

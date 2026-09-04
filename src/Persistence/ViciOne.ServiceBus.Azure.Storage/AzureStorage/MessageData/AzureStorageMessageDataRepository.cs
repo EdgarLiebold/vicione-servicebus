@@ -67,7 +67,7 @@ public class AzureStorageMessageDataRepository :
     {
     }
 
-    public async Task PreStart(IBus bus)
+    public async Task PreStartAsync(IBus bus)
     {
         try
         {
@@ -90,32 +90,32 @@ public class AzureStorageMessageDataRepository :
         }
     }
 
-    public Task PostStart(IBus bus, Task<BusReady> busReady)
+    public Task PostStartAsync(IBus bus, Task<BusReady> busReady)
     {
         return Task.CompletedTask;
     }
 
-    public Task StartFaulted(IBus bus, Exception exception)
+    public Task StartFaultedAsync(IBus bus, Exception exception)
     {
         return Task.CompletedTask;
     }
 
-    public Task PreStop(IBus bus)
+    public Task PreStopAsync(IBus bus)
     {
         return Task.CompletedTask;
     }
 
-    public Task PostStop(IBus bus)
+    public Task PostStopAsync(IBus bus)
     {
         return Task.CompletedTask;
     }
 
-    public Task StopFaulted(IBus bus, Exception exception)
+    public Task StopFaultedAsync(IBus bus, Exception exception)
     {
         return Task.CompletedTask;
     }
 
-    public async Task<Stream> Get(Uri address, CancellationToken cancellationToken = default)
+    public async Task<Stream> GetAsync(Uri address, CancellationToken cancellationToken = default)
     {
         var blobName = new BlobUriBuilder(address).BlobName;
         var blob = _container.GetBlobClient(blobName);
@@ -132,7 +132,7 @@ public class AzureStorageMessageDataRepository :
         }
     }
 
-    public async Task<Uri> Put(Stream stream, TimeSpan? timeToLive = default, CancellationToken cancellationToken = default)
+    public async Task<Uri> PutAsync(Stream stream, TimeSpan? timeToLive = default, CancellationToken cancellationToken = default)
     {
         var blobName = _nameGenerator.GenerateBlobName();
         if (_compress)
@@ -158,14 +158,14 @@ public class AzureStorageMessageDataRepository :
             await blob.UploadAsync(stream, cancellationToken).ConfigureAwait(false);
         }
 
-        await SetBlobExpiration(blob, timeToLive, _timeProvider).ConfigureAwait(false);
+        await SetBlobExpirationAsync(blob, timeToLive, _timeProvider).ConfigureAwait(false);
 
         LogContext.Debug?.Log("PUT Message Data: {Address} ({Blob})", blob.Uri, blob.Name);
 
         return blob.Uri;
     }
 
-    static async Task SetBlobExpiration(BlobBaseClient blob, TimeSpan? timeToLive, TimeProvider timeProvider)
+    static async Task SetBlobExpirationAsync(BlobBaseClient blob, TimeSpan? timeToLive, TimeProvider timeProvider)
     {
         if (timeToLive.HasValue)
         {

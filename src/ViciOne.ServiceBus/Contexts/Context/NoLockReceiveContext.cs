@@ -14,18 +14,20 @@ public class NoLockReceiveContext :
     {
     }
 
-    public Task Complete()
+    public Task CompleteAsync(CancellationToken cancellationToken = default)
     {
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
+    }
+
+    public Task FaultedAsync(Exception exception, CancellationToken cancellationToken = default)
+    {
+        _ = exception;
+        _ = cancellationToken;
         return Task.CompletedTask;
     }
 
-    public Task Faulted(Exception exception)
+    public Task ValidateLockStatusAsync(CancellationToken cancellationToken = default)
     {
-        return Task.CompletedTask;
-    }
-
-    public Task ValidateLockStatus()
-    {
-        return Task.CompletedTask;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
     }
 }

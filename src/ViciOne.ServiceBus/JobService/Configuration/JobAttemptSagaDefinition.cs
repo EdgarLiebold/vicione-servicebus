@@ -53,7 +53,7 @@ public class JobAttemptSagaDefinition :
 
         _setOptions.JobAttemptSagaEndpointAddress = configurator.InputAddress;
 
-        if (context.GetRequiredService<IContainerSelector>().TryGetRegistration(context, typeof(JobServiceState), out IJobServiceRegistration registration))
+        if (context.GetRequiredService<IContainerSelector>().TryGetRegistration(context, typeof(JobServiceState), out IJobServiceRegistration? registration))
             registration.AddReceiveEndpointDependency(configurator);
     }
 }

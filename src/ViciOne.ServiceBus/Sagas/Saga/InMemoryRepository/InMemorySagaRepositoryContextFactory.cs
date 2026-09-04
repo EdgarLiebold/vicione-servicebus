@@ -25,16 +25,16 @@ public class InMemorySagaRepositoryContextFactory<TSaga> :
         _factory = factory;
     }
 
-    public Task<T> Execute<T>(Func<LoadSagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken = default)
+    public Task<T?> ExecuteAsync<T>(Func<LoadSagaRepositoryContext<TSaga>, Task<T?>> asyncMethod, CancellationToken cancellationToken = default)
         where T : class
     {
-        return ExecuteAsyncMethod(asyncMethod, cancellationToken);
+        return ExecuteAsyncMethodAsync(asyncMethod, cancellationToken);
     }
 
-    public Task<T> Execute<T>(Func<QuerySagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken)
+    public Task<T> ExecuteAsync<T>(Func<QuerySagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken)
         where T : class
     {
-        return ExecuteAsyncMethod(asyncMethod, cancellationToken);
+        return ExecuteAsyncMethodAsync(asyncMethod, cancellationToken);
     }
 
     public void Probe(ProbeContext context)
@@ -43,20 +43,20 @@ public class InMemorySagaRepositoryContextFactory<TSaga> :
         context.Add("persistence", "memory");
     }
 
-    public async Task Send<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
+    public async Task SendAsync<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
         where T : class
     {
-        await _sagas.MarkInUse(context.CancellationToken).ConfigureAwait(false);
+        await _sagas.MarkInUseAsync(context.CancellationToken).ConfigureAwait(false);
 
         using var repositoryContext = new InMemorySagaRepositoryContext<TSaga, T>(_sagas, _factory, context);
 
-        await next.Send(repositoryContext).ConfigureAwait(false);
+        await next.SendAsync(repositoryContext).ConfigureAwait(false);
     }
 
-    public async Task SendQuery<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
+    public async Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
         where T : class
     {
-        await _sagas.MarkInUse(context.CancellationToken).ConfigureAwait(false);
+        await _sagas.MarkInUseAsync(context.CancellationToken).ConfigureAwait(false);
 
         using var repositoryContext = new InMemorySagaRepositoryContext<TSaga, T>(_sagas, _factory, context);
 
@@ -64,11 +64,10 @@ public class InMemorySagaRepositoryContextFactory<TSaga> :
 
         var queryContext = new DefaultSagaRepositoryQueryContext<TSaga, T>(repositoryContext, matchingInstances);
 
-        await next.Send(queryContext).ConfigureAwait(false);
+        await next.SendAsync(queryContext).ConfigureAwait(false);
     }
 
-    Task<T> ExecuteAsyncMethod<T>(Func<InMemorySagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken)
-        where T : class
+    Task<T> ExecuteAsyncMethodAsync<T>(Func<InMemorySagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken)
     {
         var repositoryContext = new InMemorySagaRepositoryContext<TSaga>(_sagas, cancellationToken);
 

@@ -41,5 +41,6 @@ public interface SagaConsumeContext<out TSaga> :
     /// specified.
     /// </summary>
     /// <returns></returns>
-    Task SetCompleted();
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task SetCompletedAsync(CancellationToken cancellationToken = default);
 }

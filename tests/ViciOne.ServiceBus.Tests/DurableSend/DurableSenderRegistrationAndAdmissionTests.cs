@@ -24,7 +24,7 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DURABLE-TYPED-API", "one-builder-route-serializer-offline-idempotency-and-cancellation")]
-    public async Task TypedSender_UsesTheCanonicalRouteAndSerializerBeforeOfflineDurableAdmission()
+    public async Task TypedSender_UsesTheCanonicalRouteAndSerializerBeforeOfflineDurableAdmissionAsync()
     {
         var destination = new Uri("loopback://typed-durable/orders");
         var correlationId = Guid.Parse("77777777-2222-3333-4444-555555555555");
@@ -92,7 +92,7 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DURABLE-TYPED-API", "multibus-facades-routes-stores-and-identities-are-isolated")]
-    public async Task TypedSender_MultiBusKeepsFacadeRouteStoreAndPersistenceIdentityIsolated()
+    public async Task TypedSender_MultiBusKeepsFacadeRouteStoreAndPersistenceIdentityIsolatedAsync()
     {
         var primaryDestination = new Uri("loopback://typed-primary/messages");
         var secondaryDestination = new Uri("loopback://typed-secondary/messages");
@@ -160,7 +160,7 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DURABLE-TYPED-API", "message-data-offload-and-payload-admission-share-normal-send-path")]
-    public async Task TypedSender_UsesMessageDataOffloadEvidenceForPayloadAdmission()
+    public async Task TypedSender_UsesMessageDataOffloadEvidenceForPayloadAdmissionAsync()
     {
         const string contractName = "vicione.tests.typed-message-data";
         string largeValue = new('z', 2048);
@@ -213,7 +213,7 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DURABLE-TYPED-API", "configured-payload-limit-rejects-before-persistence")]
-    public async Task TypedSender_EnforcesPayloadAdmissionBeforePersistentMutation()
+    public async Task TypedSender_EnforcesPayloadAdmissionBeforePersistentMutationAsync()
     {
         var destination = new Uri("loopback://typed-admission/input");
         var services = new ServiceCollection();
@@ -259,7 +259,7 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DURABLE-ADMISSION-CATALOG", "registered-contract-and-configured-limits-reach-store")]
-    public async Task Admission_RegisteredIdentityUsesTheConfiguredLimitsAndApplicationClock()
+    public async Task Admission_RegisteredIdentityUsesTheConfiguredLimitsAndApplicationClockAsync()
     {
         var time = new FakeTimeProvider(Epoch);
         var store = new ObservingStore(DurableSenderTestFactory.CreateInMemoryStore<ITestBus>());
@@ -286,7 +286,7 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DURABLE-ADMISSION-CATALOG", "unknown-contract-rejected-before-store")]
-    public async Task Admission_UnknownStableIdentityIsRejectedBeforeAnyStoreMutation()
+    public async Task Admission_UnknownStableIdentityIsRejectedBeforeAnyStoreMutationAsync()
     {
         var store = new ObservingStore(DurableSenderTestFactory.CreateInMemoryStore<ITestBus>());
         using ServiceProvider provider = Services(
@@ -439,7 +439,7 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DURABLE-OPERATIONS", "bounded-requeue-and-discard-use-host-clock")]
-    public async Task Operations_ValidatePagesAndUseTheInjectedClockForOperatorTransitions()
+    public async Task Operations_ValidatePagesAndUseTheInjectedClockForOperatorTransitionsAsync()
     {
         IDurableSendStore<ITestBus> store = DurableSenderTestFactory.CreateInMemoryStore<ITestBus>();
         var time = new FakeTimeProvider(Epoch.AddHours(3));
@@ -500,7 +500,7 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DURABLE-HEALTH", "capacity-is-degraded-with-bounded-nonsensitive-data")]
-    public async Task HealthCheck_ReportsCapacityWithoutMessagePayloadOrIdentity()
+    public async Task HealthCheck_ReportsCapacityWithoutMessagePayloadOrIdentityAsync()
     {
         IDurableSendStore<ITestBus> store = DurableSenderTestFactory.CreateInMemoryStore<ITestBus>();
         var time = new FakeTimeProvider(Epoch);

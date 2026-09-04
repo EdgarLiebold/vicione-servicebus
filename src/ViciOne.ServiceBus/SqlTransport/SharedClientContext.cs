@@ -24,82 +24,82 @@ public class SharedClientContext :
 
     public ConnectionContext ConnectionContext => _context.ConnectionContext;
 
-    public Task<long> CreateQueue(Queue queue)
+    public Task<long> CreateQueueAsync(Queue queue, CancellationToken cancellationToken = default)
     {
-        return _context.CreateQueue(queue);
+        return _context.CreateQueueAsync(queue, cancellationToken: cancellationToken);
     }
 
-    public Task<long> CreateTopic(Topic topic)
+    public Task<long> CreateTopicAsync(Topic topic, CancellationToken cancellationToken = default)
     {
-        return _context.CreateTopic(topic);
+        return _context.CreateTopicAsync(topic, cancellationToken: cancellationToken);
     }
 
-    public Task<long> CreateTopicSubscription(TopicToTopicSubscription subscription)
+    public Task<long> CreateTopicSubscriptionAsync(TopicToTopicSubscription subscription, CancellationToken cancellationToken = default)
     {
-        return _context.CreateTopicSubscription(subscription);
+        return _context.CreateTopicSubscriptionAsync(subscription, cancellationToken: cancellationToken);
     }
 
-    public Task<long> CreateQueueSubscription(TopicToQueueSubscription subscription)
+    public Task<long> CreateQueueSubscriptionAsync(TopicToQueueSubscription subscription, CancellationToken cancellationToken = default)
     {
-        return _context.CreateQueueSubscription(subscription);
+        return _context.CreateQueueSubscriptionAsync(subscription, cancellationToken: cancellationToken);
     }
 
-    public Task<long> PurgeQueue(string queueName, CancellationToken cancellationToken)
+    public Task<long> PurgeQueueAsync(string queueName, CancellationToken cancellationToken)
     {
-        return _context.PurgeQueue(queueName, cancellationToken);
+        return _context.PurgeQueueAsync(queueName, cancellationToken);
     }
 
-    public Task Send<T>(string queueName, SqlMessageSendContext<T> context)
+    public Task SendAsync<T>(string queueName, SqlMessageSendContext<T> context, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _context.Send(queueName, context);
+        return _context.SendAsync(queueName, context, cancellationToken: cancellationToken);
     }
 
-    public Task Publish<T>(string topicName, SqlMessageSendContext<T> context)
+    public Task PublishAsync<T>(string topicName, SqlMessageSendContext<T> context, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _context.Publish(topicName, context);
+        return _context.PublishAsync(topicName, context, cancellationToken: cancellationToken);
     }
 
-    public Task<bool> RenewLock(Guid lockId, long messageDeliveryId, TimeSpan duration)
+    public Task<bool> RenewLockAsync(Guid lockId, long messageDeliveryId, TimeSpan duration, CancellationToken cancellationToken = default)
     {
-        return _context.RenewLock(lockId, messageDeliveryId, duration);
+        return _context.RenewLockAsync(lockId, messageDeliveryId, duration, cancellationToken: cancellationToken);
     }
 
-    public Task<bool> Unlock(Guid lockId, long messageDeliveryId, TimeSpan delay, SendHeaders sendHeaders)
+    public Task<bool> UnlockAsync(Guid lockId, long messageDeliveryId, TimeSpan delay, SendHeaders sendHeaders, CancellationToken cancellationToken = default)
     {
-        return _context.Unlock(lockId, messageDeliveryId, delay, sendHeaders);
+        return _context.UnlockAsync(lockId, messageDeliveryId, delay, sendHeaders, cancellationToken: cancellationToken);
     }
 
-    public Task<IEnumerable<SqlTransportMessage>> ReceiveMessages(string queueName, SqlReceiveMode mode, int messageLimit, int concurrentLimit,
-        TimeSpan lockDuration)
+    public Task<IEnumerable<SqlTransportMessage>> ReceiveMessagesAsync(string queueName, SqlReceiveMode mode, int messageLimit, int concurrentLimit,
+        TimeSpan lockDuration, CancellationToken cancellationToken = default)
     {
-        return _context.ReceiveMessages(queueName, mode, messageLimit, concurrentLimit, lockDuration);
+        return _context.ReceiveMessagesAsync(queueName, mode, messageLimit, concurrentLimit, lockDuration, cancellationToken: cancellationToken);
     }
 
-    public Task TouchQueue(string queueName)
+    public Task TouchQueueAsync(string queueName, CancellationToken cancellationToken = default)
     {
-        return _context.TouchQueue(queueName);
+        return _context.TouchQueueAsync(queueName, cancellationToken: cancellationToken);
     }
 
-    public Task<int?> DeadLetterQueue(string queueName, int messageCount)
+    public Task<int?> DeadLetterQueueAsync(string queueName, int messageCount, CancellationToken cancellationToken = default)
     {
-        return _context.DeadLetterQueue(queueName, messageCount);
+        return _context.DeadLetterQueueAsync(queueName, messageCount, cancellationToken: cancellationToken);
     }
 
-    public Task<bool> DeleteMessage(Guid lockId, long messageDeliveryId)
+    public Task<bool> DeleteMessageAsync(Guid lockId, long messageDeliveryId, CancellationToken cancellationToken = default)
     {
-        return _context.DeleteMessage(lockId, messageDeliveryId);
+        return _context.DeleteMessageAsync(lockId, messageDeliveryId, cancellationToken: cancellationToken);
     }
 
-    public Task<bool> DeleteScheduledMessage(Guid tokenId, CancellationToken cancellationToken)
+    public Task<bool> DeleteScheduledMessageAsync(Guid tokenId, CancellationToken cancellationToken)
     {
-        return _context.DeleteScheduledMessage(tokenId, cancellationToken);
+        return _context.DeleteScheduledMessageAsync(tokenId, cancellationToken);
     }
 
-    public Task<bool> MoveMessage(Guid lockId, long messageDeliveryId, string queueName, SqlQueueType queueType, DateTime? expirationTime,
-        SendHeaders sendHeaders)
+    public Task<bool> MoveMessageAsync(Guid lockId, long messageDeliveryId, string queueName, SqlQueueType queueType, DateTimeOffset? expirationTime,
+        SendHeaders sendHeaders, CancellationToken cancellationToken = default)
     {
-        return _context.MoveMessage(lockId, messageDeliveryId, queueName, queueType, expirationTime, sendHeaders);
+        return _context.MoveMessageAsync(lockId, messageDeliveryId, queueName, queueType, expirationTime, sendHeaders, cancellationToken: cancellationToken);
     }
 }

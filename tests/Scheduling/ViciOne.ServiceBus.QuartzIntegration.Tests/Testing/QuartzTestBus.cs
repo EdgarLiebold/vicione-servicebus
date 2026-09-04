@@ -19,7 +19,7 @@ internal sealed class QuartzTestBus : IAsyncDisposable
     public IScheduler Scheduler { get; }
     public ISendEndpoint SchedulerEndpoint { get; }
 
-    public static async Task<QuartzTestBus> Start(
+    public static async Task<QuartzTestBus> StartAsync(
         TimeSpan timeout,
         TimeProvider? timeProvider = null,
         Action<IInMemoryBusFactoryConfigurator>? configure = null,
@@ -55,7 +55,7 @@ internal sealed class QuartzTestBus : IAsyncDisposable
                 .WaitAsync(timeout, TestContext.Current.CancellationToken);
             IScheduler scheduler = await schedulerFactory.GetScheduler(TestContext.Current.CancellationToken).AsTask()
                 .WaitAsync(timeout, TestContext.Current.CancellationToken);
-            ISendEndpoint schedulerEndpoint = await bus.GetSendEndpoint(Assert.IsType<Uri>(schedulerAddress))
+            ISendEndpoint schedulerEndpoint = await bus.GetSendEndpointAsync(Assert.IsType<Uri>(schedulerAddress))
                 .WaitAsync(timeout, TestContext.Current.CancellationToken);
 
             return new QuartzTestBus(bus, scheduler, schedulerEndpoint, timeout);

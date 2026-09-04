@@ -7,38 +7,38 @@ public class RetryObservable :
     Connectable<IRetryObserver>,
     IRetryObserver
 {
-    public Task PostCreate<T>(RetryPolicyContext<T> context)
+    public Task PostCreateAsync<T>(RetryPolicyContext<T> context)
         where T : class, PipeContext
     {
-        return ForEachAsync(x => x.PostCreate(context));
+        return ForEachAsync(x => x.PostCreateAsync(context));
     }
 
-    public Task PostFault<T>(RetryContext<T> context)
+    public Task PostFaultAsync<T>(RetryContext<T> context)
         where T : class, PipeContext
     {
-        return ForEachAsync(x => x.PostFault(context));
+        return ForEachAsync(x => x.PostFaultAsync(context));
     }
 
-    public Task PreRetry<T>(RetryContext<T> context)
+    public Task PreRetryAsync<T>(RetryContext<T> context)
         where T : class, PipeContext
     {
-        return ForEachAsync(x => x.PreRetry(context));
+        return ForEachAsync(x => x.PreRetryAsync(context));
     }
 
-    public Task RetryFault<T>(RetryContext<T> context)
+    public Task RetryFaultAsync<T>(RetryContext<T> context)
         where T : class, PipeContext
     {
-        return ForEachAsync(x => x.RetryFault(context));
+        return ForEachAsync(x => x.RetryFaultAsync(context));
     }
 
-    public Task RetryComplete<T>(RetryContext<T> context)
+    public Task RetryCompleteAsync<T>(RetryContext<T> context)
         where T : class, PipeContext
     {
-        return ForEachAsync(x => x.RetryComplete(context));
+        return ForEachAsync(x => x.RetryCompleteAsync(context));
     }
 
-    public Task RetryFault(RetryContext context)
+    public Task RetryFaultAsync(RetryContext context, CancellationToken cancellationToken = default)
     {
-        return ForEachAsync(x => RetryFaultObserverCache.RetryFault(x, context, context.ContextType));
+        return ForEachAsync(x => RetryFaultObserverCache.RetryFaultAsync(x, context, context.ContextType, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
     }
 }

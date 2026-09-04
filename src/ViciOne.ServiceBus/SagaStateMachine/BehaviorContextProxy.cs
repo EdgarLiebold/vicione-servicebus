@@ -29,27 +29,27 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
         public TInstance Saga => _context.Saga;
 
-        public Task SetCompleted()
+        public Task SetCompletedAsync(CancellationToken cancellationToken = default)
         {
-            return _context.SetCompleted();
+            return _context.SetCompletedAsync(cancellationToken: cancellationToken);
         }
 
         public bool IsCompleted => _context.IsCompleted;
 
-        public Task Raise(Event @event)
+        public Task RaiseAsync(Event @event, CancellationToken cancellationToken = default)
         {
-            return StateMachine.RaiseEvent(CreateProxy(@event));
+            return StateMachine.RaiseEventAsync(CreateProxy(@event), cancellationToken: cancellationToken);
         }
 
-        public Task Raise<T>(Event<T> @event, T data)
+        public Task RaiseAsync<T>(Event<T> @event, T data, CancellationToken cancellationToken = default)
             where T : class
         {
-            return StateMachine.RaiseEvent(CreateProxy(@event, data));
+            return StateMachine.RaiseEventAsync(CreateProxy(@event, data), cancellationToken: cancellationToken);
         }
 
-        Task<SendTuple<T>> BehaviorContext<TInstance>.Init<T>(object values)
+        Task<SendTuple<T>> BehaviorContext<TInstance>.InitAsync<T>(object values, CancellationToken cancellationToken)
         {
-            return MessageInitializerCache<T>.InitializeMessage(this, values);
+            return MessageInitializerCache<T>.InitializeMessageAsync(this, values, cancellationToken: cancellationToken);
         }
 
         Event BehaviorContext<TInstance>.Event => _event;
@@ -92,32 +92,32 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
         public TInstance Saga => _context.Saga;
 
-        public Task SetCompleted()
+        public Task SetCompletedAsync(CancellationToken cancellationToken = default)
         {
-            return _context.SetCompleted();
+            return _context.SetCompletedAsync(cancellationToken: cancellationToken);
         }
 
         public bool IsCompleted => _context.IsCompleted;
 
-        public Task Raise(Event @event)
+        public Task RaiseAsync(Event @event, CancellationToken cancellationToken = default)
         {
-            return StateMachine.RaiseEvent(CreateProxy(@event));
+            return StateMachine.RaiseEventAsync(CreateProxy(@event), cancellationToken: cancellationToken);
         }
 
-        public Task Raise<T>(Event<T> @event, T data)
+        public Task RaiseAsync<T>(Event<T> @event, T data, CancellationToken cancellationToken = default)
             where T : class
         {
-            return StateMachine.RaiseEvent(CreateProxy(@event, data));
+            return StateMachine.RaiseEventAsync(CreateProxy(@event, data), cancellationToken: cancellationToken);
         }
 
-        Task<SendTuple<T>> BehaviorContext<TInstance, TMessage>.Init<T>(object values)
+        Task<SendTuple<T>> BehaviorContext<TInstance, TMessage>.InitAsync<T>(object values, CancellationToken cancellationToken)
         {
-            return MessageInitializerCache<T>.InitializeMessage(this, values);
+            return MessageInitializerCache<T>.InitializeMessageAsync(this, values, cancellationToken: cancellationToken);
         }
 
-        Task<SendTuple<T>> BehaviorContext<TInstance>.Init<T>(object values)
+        Task<SendTuple<T>> BehaviorContext<TInstance>.InitAsync<T>(object values, CancellationToken cancellationToken)
         {
-            return MessageInitializerCache<T>.InitializeMessage(this, values);
+            return MessageInitializerCache<T>.InitializeMessageAsync(this, values, cancellationToken: cancellationToken);
         }
 
         public TMessage Data => Message;

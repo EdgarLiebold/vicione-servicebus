@@ -31,10 +31,10 @@ public abstract class TransformSpecification<TMessage> :
 
     public void Default<TProperty>(Expression<Func<TMessage, TProperty>> propertyExpression)
     {
-        Set(propertyExpression, (TProperty)default);
+        Set(propertyExpression, (TProperty?)default);
     }
 
-    public void Set<TProperty>(Expression<Func<TMessage, TProperty>> propertyExpression, TProperty value)
+    public void Set<TProperty>(Expression<Func<TMessage, TProperty>> propertyExpression, TProperty? value)
     {
         var propertyInfo = propertyExpression.GetPropertyInfo();
 
@@ -52,12 +52,12 @@ public abstract class TransformSpecification<TMessage> :
 
         var inputValueProvider = new InputPropertyProvider<TMessage, TProperty>(propertyInfo);
 
-        Task<TProperty> PropertyProvider(TransformPropertyContext<TProperty, TMessage> context)
+        Task<TProperty> PropertyProviderAsync(TransformPropertyContext<TProperty, TMessage> context)
         {
             return Task.FromResult(valueProvider(context));
         }
 
-        var propertyProvider = new DelegatePropertyProvider<TMessage, TProperty>(inputValueProvider, PropertyProvider);
+        var propertyProvider = new DelegatePropertyProvider<TMessage, TProperty>(inputValueProvider, PropertyProviderAsync);
 
         var initializer = new ProviderPropertyInitializer<TMessage, TMessage, TProperty>(propertyProvider, propertyInfo);
 
@@ -85,7 +85,7 @@ public abstract class TransformSpecification<TMessage> :
 
     protected IMessageInitializer<TMessage> Build()
     {
-        IMessageFactory<TMessage> messageFactory = null;
+        IMessageFactory<TMessage>? messageFactory = null;
         IEnumerable<IInitializerConvention> conventions = Enumerable.Repeat<IInitializerConvention>(_convention, 1);
         if (Replace)
             messageFactory = new ReplaceMessageFactory<TMessage>();

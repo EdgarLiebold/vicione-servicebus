@@ -41,19 +41,19 @@ public sealed class AmazonSqsMessageReceiver :
 
         _executorPool = new FifoPartitionedTaskExecutor(_receiveSettings);
 
-        TrySetConsumeTask(Consume());
+        TrySetConsumeTask(ConsumeAsync());
     }
 
-    protected override async Task ActiveAndActualAgentsCompleted(StopContext context)
+    protected override async Task ActiveAndActualAgentsCompletedAsync(StopContext context)
     {
-        await base.ActiveAndActualAgentsCompleted(context).ConfigureAwait(false);
+        await base.ActiveAndActualAgentsCompletedAsync(context).ConfigureAwait(false);
 
         await _executorPool.DisposeAsync().ConfigureAwait(false);
     }
 
-    async Task Consume()
+    async Task ConsumeAsync()
     {
-        await GetQueueAttributes(Stopping).ConfigureAwait(false);
+        await GetQueueAttributesAsync(Stopping).ConfigureAwait(false);
 
         using var algorithm = new RequestRateAlgorithm(new RequestRateAlgorithmOptions
         {
@@ -64,13 +64,13 @@ public sealed class AmazonSqsMessageReceiver :
 
         SetReady();
 
-        Task Handle(Message message, CancellationToken cancellationToken)
+        Task HandleAsync(Message message, CancellationToken cancellationToken)
         {
             var lockContext = new AmazonSqsReceiveLockContext(_context.InputAddress, message, _receiveSettings, _client, Stopped);
 
             return _receiveSettings.IsOrdered
-                ? _executorPool.EnqueueAsync(message, () => HandleMessage(message, lockContext), cancellationToken)
-                : HandleMessage(message, lockContext);
+                ? _executorPool.EnqueueAsync(message, () => HandleMessageAsync(message, lockContext), cancellationToken)
+                : HandleMessageAsync(message, lockContext);
         }
 
         try
@@ -79,16 +79,16 @@ public sealed class AmazonSqsMessageReceiver :
             {
                 if (_receiveSettings is { IsOrdered: true, ConcurrentDeliveryLimit: 1 })
                 {
-                    await algorithm.Run(
-                            ReceiveMessages,
-                            (message, cancellationToken) => Handle(message, cancellationToken),
+                    await algorithm.RunAsync(
+                            ReceiveMessagesAsync,
+                            (message, cancellationToken) => HandleAsync(message, cancellationToken),
                             GroupByMessageGroup,
                             OrderBySequenceNumber,
                             Stopping)
                         .ConfigureAwait(false);
                 }
                 else
-                    await algorithm.Run(ReceiveMessages, (message, cancellationToken) => Handle(message, cancellationToken), Stopping)
+                    await algorithm.RunAsync(ReceiveMessagesAsync, (message, cancellationToken) => HandleAsync(message, cancellationToken), Stopping)
                         .ConfigureAwait(false);
             }
         }
@@ -97,9 +97,9 @@ public sealed class AmazonSqsMessageReceiver :
         }
     }
 
-    async Task GetQueueAttributes(CancellationToken cancellationToken)
+    async Task GetQueueAttributesAsync(CancellationToken cancellationToken)
     {
-        var queueInfo = await _client.GetQueueInfo(_receiveSettings.EntityName, cancellationToken).ConfigureAwait(false);
+        var queueInfo = await _client.GetQueueInfoAsync(_receiveSettings.EntityName, cancellationToken).ConfigureAwait(false);
 
         _receiveSettings.QueueUrl = queueInfo.Url;
 
@@ -113,7 +113,7 @@ public sealed class AmazonSqsMessageReceiver :
         }
     }
 
-    async Task HandleMessage(Message message, ReceiveLockContext lockContext)
+    async Task HandleMessageAsync(Message message, ReceiveLockContext lockContext)
     {
         if (IsStopping)
             return;
@@ -123,7 +123,7 @@ public sealed class AmazonSqsMessageReceiver :
         var context = new AmazonSqsReceiveContext(message, redelivered, _context, _client, _receiveSettings, _client.ConnectionContext);
         try
         {
-            await Dispatch(message.MessageId, context, lockContext).ConfigureAwait(false);
+            await DispatchAsync(message.MessageId, context, lockContext).ConfigureAwait(false);
         }
         catch (Exception exception)
         {
@@ -135,15 +135,15 @@ public sealed class AmazonSqsMessageReceiver :
         }
     }
 
-    async Task<IEnumerable<Message>> ReceiveMessages(int messageLimit, CancellationToken cancellationToken)
+    async Task<IEnumerable<Message>> ReceiveMessagesAsync(int messageLimit, CancellationToken cancellationToken)
     {
-        return await ReceiveMessages(
-                token => _client.ReceiveMessages(_receiveSettings.EntityName, messageLimit, _receiveSettings.WaitTimeSeconds, token),
+        return await ReceiveMessagesAsync(
+                token => _client.ReceiveMessagesAsync(_receiveSettings.EntityName, messageLimit, _receiveSettings.WaitTimeSeconds, token),
                 cancellationToken)
             .ConfigureAwait(false);
     }
 
-    internal static async Task<IEnumerable<Message>> ReceiveMessages(
+    internal static async Task<IEnumerable<Message>> ReceiveMessagesAsync(
         Func<CancellationToken, Task<IList<Message>>> receive,
         CancellationToken cancellationToken)
     {

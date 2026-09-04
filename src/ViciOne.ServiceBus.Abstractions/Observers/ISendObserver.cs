@@ -15,7 +15,7 @@ public interface ISendObserver
     /// <typeparam name="T">The message type</typeparam>
     /// <param name="context">The message send context</param>
     /// <returns></returns>
-    Task PreSend<T>(SendContext<T> context)
+    Task PreSendAsync<T>(SendContext<T> context)
         where T : class;
 
     /// <summary>
@@ -24,7 +24,7 @@ public interface ISendObserver
     /// <typeparam name="T">The message type</typeparam>
     /// <param name="context">The message send context</param>
     /// <returns></returns>
-    Task PostSend<T>(SendContext<T> context)
+    Task PostSendAsync<T>(SendContext<T> context)
         where T : class;
 
     /// <summary>
@@ -34,6 +34,6 @@ public interface ISendObserver
     /// <param name="context">The message send context</param>
     /// <param name="exception">The exception from the transport</param>
     /// <returns></returns>
-    Task SendFault<T>(SendContext<T> context, Exception exception)
+    Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
         where T : class;
 }

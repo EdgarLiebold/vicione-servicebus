@@ -16,17 +16,17 @@ public abstract class RequestActivityImpl<TInstance, TRequest, TResponse>
         _request = request;
     }
 
-    protected async Task SendRequest(BehaviorContext<TInstance> context, SendTuple<TRequest> sendTuple, Uri serviceAddress)
+    protected async Task SendRequestAsync(BehaviorContext<TInstance> context, SendTuple<TRequest> sendTuple, Uri serviceAddress)
     {
         var requestId = _request.GenerateRequestId(context.Saga);
 
         var pipe = new SendRequestPipe(_request, context.ReceiveContext.InputAddress, requestId, sendTuple.Pipe);
 
         var endpoint = serviceAddress != null
-            ? await context.GetSendEndpoint(serviceAddress).ConfigureAwait(false)
-            : await context.ReceiveContext.PublishEndpointProvider.GetPublishEndpoint<TRequest>(context, null);
+            ? await context.GetSendEndpointAsync(serviceAddress).ConfigureAwait(false)
+            : await context.ReceiveContext.PublishEndpointProvider.GetPublishEndpointAsync<TRequest>(context, null);
 
-        await endpoint.Send(sendTuple.Message, pipe, context.CancellationToken).ConfigureAwait(false);
+        await endpoint.SendAsync(sendTuple.Message, pipe, context.CancellationToken).ConfigureAwait(false);
 
         _request.SetRequestId(context.Saga, requestId);
 
@@ -38,8 +38,8 @@ public abstract class RequestActivityImpl<TInstance, TRequest, TResponse>
             RequestTimeoutExpired<TRequest> message =
                 new TimeoutExpired<TRequest>(now, expirationTime, context.Saga.CorrelationId, pipe.RequestId, sendTuple.Message);
 
-            if (context.TryGetPayload(out MessageSchedulerContext schedulerContext))
-                await schedulerContext.ScheduleSend(expirationTime, message, context.CancellationToken).ConfigureAwait(false);
+            if (context.TryGetPayload(out MessageSchedulerContext? schedulerContext))
+                await schedulerContext.ScheduleSendAsync(expirationTime, message, context.CancellationToken).ConfigureAwait(false);
             else
                 throw new ConfigurationException("A request timeout was specified but no message scheduler was specified or available");
         }
@@ -60,7 +60,7 @@ public abstract class RequestActivityImpl<TInstance, TRequest, TResponse>
     class SendRequestPipe :
         IPipe<SendContext<TRequest>>
     {
-        readonly IPipe<SendContext<TRequest>> _pipe;
+        readonly IPipe<SendContext<TRequest>> _pipe = null!;
         readonly Request<TInstance, TRequest, TResponse> _request;
         readonly Uri _responseAddress;
 
@@ -81,7 +81,7 @@ public abstract class RequestActivityImpl<TInstance, TRequest, TResponse>
         {
         }
 
-        public Task Send(SendContext<TRequest> context)
+        public Task SendAsync(SendContext<TRequest> context)
         {
             context.RequestId = RequestId;
             context.ResponseAddress = _responseAddress;
@@ -89,7 +89,7 @@ public abstract class RequestActivityImpl<TInstance, TRequest, TResponse>
             _request.SetSendContextHeaders(context);
 
             return _pipe != null
-                ? _pipe.Send(context)
+                ? _pipe.SendAsync(context)
                 : Task.CompletedTask;
         }
     }
@@ -99,7 +99,7 @@ public abstract class RequestActivityImpl<TInstance, TRequest, TResponse>
         RequestTimeoutExpired<T>
         where T : class
     {
-        public TimeoutExpired(DateTime timestamp, DateTime expirationTime, Guid correlationId, Guid requestId, T message)
+        public TimeoutExpired(DateTimeOffset timestamp, DateTimeOffset expirationTime, Guid correlationId, Guid requestId, T message)
         {
             Timestamp = timestamp;
             ExpirationTime = expirationTime;
@@ -108,9 +108,9 @@ public abstract class RequestActivityImpl<TInstance, TRequest, TResponse>
             Message = message;
         }
 
-        public DateTime Timestamp { get; }
+        public DateTimeOffset Timestamp { get; }
 
-        public DateTime ExpirationTime { get; }
+        public DateTimeOffset ExpirationTime { get; }
 
         public Guid CorrelationId { get; }
 

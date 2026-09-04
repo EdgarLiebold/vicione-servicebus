@@ -8,7 +8,7 @@ public sealed class ConditionExpressionTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-CONDITION", "or-of-and-blocks")]
-    public async Task ConditionBlocks_ApplyAndWithinABlockAndOrBetweenBlocks()
+    public async Task ConditionBlocks_ApplyAndWithinABlockAndOrBetweenBlocksAsync()
     {
         var signal = new CountingSignalResource();
         var first = new TestCondition();
@@ -18,23 +18,23 @@ public sealed class ConditionExpressionTests
         expression.AddConditionBlock(first, second);
         expression.AddConditionBlock(alternative);
 
-        await first.Set(true);
+        await first.SetAsync(true);
         Assert.False(expression.CheckCondition());
         Assert.Equal(0, signal.Count);
 
-        await second.Set(true);
+        await second.SetAsync(true);
         Assert.True(expression.CheckCondition());
         Assert.Equal(1, signal.Count);
 
-        await first.Set(false);
-        await alternative.Set(true);
+        await first.SetAsync(false);
+        await alternative.SetAsync(true);
         Assert.True(expression.CheckCondition());
         Assert.Equal(2, signal.Count);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-CONDITION", "clear-disconnects-observers")]
-    public async Task ClearAllConditions_DisconnectsEveryObserverAndLeavesAnExplicitEmptyState()
+    public async Task ClearAllConditions_DisconnectsEveryObserverAndLeavesAnExplicitEmptyStateAsync()
     {
         var signal = new CountingSignalResource();
         var removedCondition = new TestCondition();
@@ -42,7 +42,7 @@ public sealed class ConditionExpressionTests
         expression.AddConditionBlock(removedCondition);
 
         expression.ClearAllConditions();
-        await removedCondition.Set(true);
+        await removedCondition.SetAsync(true);
 
         Assert.Equal(0, signal.Count);
         InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => expression.CheckCondition());
@@ -50,7 +50,7 @@ public sealed class ConditionExpressionTests
 
         var replacementCondition = new TestCondition(initialValue: true);
         expression.AddConditionBlock(replacementCondition);
-        await removedCondition.Set(false);
+        await removedCondition.SetAsync(false);
 
         Assert.Equal(0, signal.Count);
         Assert.True(expression.CheckCondition());
@@ -78,10 +78,10 @@ public sealed class ConditionExpressionTests
 
         public override bool IsMet => _isMet;
 
-        public Task Set(bool value)
+        public Task SetAsync(bool value)
         {
             _isMet = value;
-            return ConditionUpdated();
+            return ConditionUpdatedAsync();
         }
     }
 

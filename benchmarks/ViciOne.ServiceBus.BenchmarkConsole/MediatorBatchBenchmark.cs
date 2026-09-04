@@ -40,16 +40,16 @@ public class MediatorBatchBenchmark
     }
 
     [Benchmark(Description = "Mediator send batch completion")]
-    public Task SendBatch()
+    public Task SendBatchAsync()
     {
-        return Task.WhenAll(Enumerable.Range(0, BatchSize).Select(_ => _mediator.Send(_command)));
+        return Task.WhenAll(Enumerable.Range(0, BatchSize).Select(_ => _mediator.SendAsync(_command)));
     }
 
     [Benchmark(Description = "Mediator request batch completion")]
-    public Task RequestBatch()
+    public Task RequestBatchAsync()
     {
         return Task.WhenAll(Enumerable.Range(0, BatchSize)
-            .Select(_ => _client.GetResponse<BenchmarkResponse>(_request)));
+            .Select(_ => _client.GetResponseAsync<BenchmarkResponse>(_request)));
     }
 
 

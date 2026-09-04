@@ -28,5 +28,6 @@ public interface ISagaDbContextFactory<out TSaga>
     /// Release the DbContext once it is no longer needed
     /// </summary>
     /// <param name="dbContext"></param>
-    ValueTask ReleaseAsync(DbContext dbContext);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    ValueTask ReleaseAsync(DbContext dbContext, CancellationToken cancellationToken = default);
 }

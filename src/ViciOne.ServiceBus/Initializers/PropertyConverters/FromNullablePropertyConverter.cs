@@ -6,7 +6,7 @@ public class FromNullablePropertyConverter<TResult> :
     IPropertyConverter<TResult, TResult?>
     where TResult : struct
 {
-    Task<TResult> IPropertyConverter<TResult, TResult?>.Convert<T>(InitializeContext<T> context, TResult? input)
+    Task<TResult> IPropertyConverter<TResult, TResult?>.ConvertAsync<T>(InitializeContext<T> context, TResult? input, CancellationToken cancellationToken)
     {
         return Task.FromResult(input ?? default);
     }
@@ -24,8 +24,8 @@ public class FromNullablePropertyConverter<TResult, TInput> :
         _converter = converter;
     }
 
-    Task<TResult> IPropertyConverter<TResult, TInput?>.Convert<T>(InitializeContext<T> context, TInput? input)
+    Task<TResult?> IPropertyConverter<TResult, TInput?>.ConvertAsync<T>(InitializeContext<T> context, TInput? input, CancellationToken cancellationToken)
     {
-        return _converter.Convert(context, input ?? default);
+        return _converter.ConvertAsync(context, input ?? default, cancellationToken: cancellationToken);
     }
 }

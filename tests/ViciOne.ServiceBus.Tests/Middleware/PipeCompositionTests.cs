@@ -8,7 +8,7 @@ public sealed class PipeCompositionTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-PIPE-COMPOSITION", "nested-pipe-completes-before-parent")]
-    public async Task NestedPipe_CompletesBeforeTheParentContinues()
+    public async Task NestedPipe_CompletesBeforeTheParentContinuesAsync()
     {
         var trace = new List<string>();
         IPipe<ParentContext> parent = Pipe.New<ParentContext>(configuration =>
@@ -16,12 +16,12 @@ public sealed class PipeCompositionTests
             configuration.UseExecuteAsync(async _ =>
             {
                 IPipe<ChildContext> child = Pipe.Execute<ChildContext>(_ => trace.Add("child"));
-                await child.Send(new ChildContext());
+                await child.SendAsync(new ChildContext());
                 trace.Add("parent");
             });
         });
 
-        await parent.Send(new ParentContext());
+        await parent.SendAsync(new ParentContext());
 
         Assert.Equal(["child", "parent"], trace);
     }

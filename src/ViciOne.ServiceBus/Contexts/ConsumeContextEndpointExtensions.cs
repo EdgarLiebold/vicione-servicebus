@@ -16,12 +16,13 @@ public static class ConsumeContextEndpointExtensions
     /// <param name="context"></param>
     /// <typeparam name="T">The message type</typeparam>
     /// <returns></returns>
-    public static Task<ISendEndpoint> GetFaultEndpoint<T>(this ConsumeContext context)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static Task<ISendEndpoint> GetFaultEndpointAsync<T>(this ConsumeContext context, CancellationToken cancellationToken = default)
         where T : class
     {
-        var destinationAddress = context.FaultAddress ?? context.ResponseAddress;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.ISendEndpoint>(cancellationToken); var destinationAddress = context.FaultAddress ?? context.ResponseAddress;
 
-        return GetEndpoint<Fault<T>>(context.ReceiveContext, context, destinationAddress, context.RequestId);
+        return GetEndpointAsync<Fault<T>>(context.Advanced().ReceiveContext, context, destinationAddress, context.RequestId);
     }
 
     /// <summary>
@@ -32,12 +33,13 @@ public static class ConsumeContextEndpointExtensions
     /// <param name="requestId"></param>
     /// <typeparam name="T">The response type</typeparam>
     /// <returns></returns>
-    public static Task<ISendEndpoint> GetFaultEndpoint<T>(this ConsumeContext context, Uri faultAddress, Guid? requestId = null)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static Task<ISendEndpoint> GetFaultEndpointAsync<T>(this ConsumeContext context, Uri faultAddress, Guid? requestId = null, CancellationToken cancellationToken = default)
         where T : class
     {
-        var destinationAddress = faultAddress ?? context.FaultAddress ?? context.ResponseAddress;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.ISendEndpoint>(cancellationToken); var destinationAddress = faultAddress ?? context.FaultAddress ?? context.ResponseAddress;
 
-        return GetEndpoint<T>(context.ReceiveContext, context, destinationAddress, requestId ?? context.RequestId);
+        return GetEndpointAsync<T>(context.Advanced().ReceiveContext, context, destinationAddress, requestId ?? context.RequestId);
     }
 
     /// <summary>
@@ -47,11 +49,12 @@ public static class ConsumeContextEndpointExtensions
     /// <param name="consumeContext"></param>
     /// <param name="requestId"></param>
     /// <returns></returns>
-    public static Task<ISendEndpoint> GetReceiveFaultEndpoint(this ReceiveContext context, ConsumeContext consumeContext, Guid? requestId)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static Task<ISendEndpoint> GetReceiveFaultEndpointAsync(this ReceiveContext context, ConsumeContext? consumeContext, Guid? requestId, CancellationToken cancellationToken = default)
     {
-        var destinationAddress = consumeContext?.FaultAddress ?? consumeContext?.ResponseAddress;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.ISendEndpoint>(cancellationToken); var destinationAddress = consumeContext?.FaultAddress ?? consumeContext?.ResponseAddress;
 
-        return GetEndpoint<ReceiveFault>(context, consumeContext, destinationAddress, requestId);
+        return GetEndpointAsync<ReceiveFault>(context, consumeContext, destinationAddress, requestId);
     }
 
     /// <summary>
@@ -60,10 +63,11 @@ public static class ConsumeContextEndpointExtensions
     /// <param name="context"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public static Task<ISendEndpoint> GetResponseEndpoint<T>(this ConsumeContext context)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static Task<ISendEndpoint> GetResponseEndpointAsync<T>(this ConsumeContext context, CancellationToken cancellationToken = default)
         where T : class
     {
-        return GetEndpoint<T>(context.ReceiveContext, context, context.ResponseAddress, context.RequestId);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.ISendEndpoint>(cancellationToken); return GetEndpointAsync<T>(context.Advanced().ReceiveContext, context, context.ResponseAddress, context.RequestId);
     }
 
     /// <summary>
@@ -74,10 +78,11 @@ public static class ConsumeContextEndpointExtensions
     /// <param name="requestId"></param>
     /// <typeparam name="T">The response type</typeparam>
     /// <returns></returns>
-    public static Task<ISendEndpoint> GetResponseEndpoint<T>(this ConsumeContext context, Uri responseAddress, Guid? requestId = null)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static Task<ISendEndpoint> GetResponseEndpointAsync<T>(this ConsumeContext context, Uri responseAddress, Guid? requestId = null, CancellationToken cancellationToken = default)
         where T : class
     {
-        return GetEndpoint<T>(context.ReceiveContext, context, responseAddress ?? context.ResponseAddress, requestId ?? context.RequestId);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.ISendEndpoint>(cancellationToken); return GetEndpointAsync<T>(context.Advanced().ReceiveContext, context, responseAddress ?? context.ResponseAddress, requestId ?? context.RequestId);
     }
 
     /// <summary>
@@ -89,23 +94,23 @@ public static class ConsumeContextEndpointExtensions
     /// <param name="requestId"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    static Task<ISendEndpoint> GetEndpoint<T>(ReceiveContext receiveContext, ConsumeContext consumeContext, Uri destinationAddress, Guid? requestId)
+    static Task<ISendEndpoint> GetEndpointAsync<T>(ReceiveContext receiveContext, ConsumeContext? consumeContext, Uri? destinationAddress, Guid? requestId)
         where T : class
     {
         // This resolver is used only for responses and faults. Mark that semantic role explicitly:
         // destination-address matching cannot identify custom fault addresses or publish fallbacks,
         // and request deadlines must not leak into ordinary consume-context sends.
         if (destinationAddress != null && consumeContext != null)
-            return GetSendEndpoint(receiveContext.SendEndpointProvider, consumeContext, destinationAddress, requestId, true);
+            return GetSendEndpointAsync(receiveContext.SendEndpointProvider, consumeContext, destinationAddress, requestId, true);
 
-        return GetPublishEndpoint<T>(receiveContext.PublishEndpointProvider, consumeContext, requestId, true);
+        return GetPublishEndpointAsync<T>(receiveContext.PublishEndpointProvider, consumeContext, requestId, true);
     }
 
-    internal static Task<ISendEndpoint> GetPublishEndpoint<T>(this IPublishEndpointProvider publishEndpointProvider, ConsumeContext consumeContext,
+    internal static Task<ISendEndpoint> GetPublishEndpointAsync<T>(this IPublishEndpointProvider publishEndpointProvider, ConsumeContext? consumeContext,
         Guid? requestId, bool inheritRequestTimeToLive = false)
         where T : class
     {
-        Task<ISendEndpoint> publishSendEndpointTask = publishEndpointProvider.GetPublishSendEndpoint<T>();
+        Task<ISendEndpoint> publishSendEndpointTask = publishEndpointProvider.GetPublishSendEndpointAsync<T>();
         if (publishSendEndpointTask.Status == TaskStatus.RanToCompletion)
         {
             return consumeContext != null
@@ -129,10 +134,10 @@ public static class ConsumeContextEndpointExtensions
         return GetPublishSendEndpointAsync();
     }
 
-    internal static Task<ISendEndpoint> GetSendEndpoint(this ISendEndpointProvider sendEndpointProvider, ConsumeContext consumeContext,
+    internal static Task<ISendEndpoint> GetSendEndpointAsync(this ISendEndpointProvider sendEndpointProvider, ConsumeContext consumeContext,
         Uri destinationAddress, Guid? requestId, bool inheritRequestTimeToLive = false)
     {
-        Task<ISendEndpoint> sendEndpointTask = sendEndpointProvider.GetSendEndpoint(destinationAddress);
+        Task<ISendEndpoint> sendEndpointTask = sendEndpointProvider.GetSendEndpointAsync(destinationAddress);
         if (sendEndpointTask.Status == TaskStatus.RanToCompletion)
         {
             return Task.FromResult<ISendEndpoint>(new ConsumeSendEndpoint(
@@ -152,21 +157,21 @@ public static class ConsumeContextEndpointExtensions
         return GetResponseEndpointAsync();
     }
 
-    internal static async Task GenerateFault<T>(this ConsumeContext<T> context, Exception exception)
+    internal static async Task GenerateFaultAsync<T>(this ConsumeContext<T> context, Exception exception)
         where T : class
     {
-        if (context.ReceiveContext.PublishFaults || context.FaultAddress != null || context.ResponseAddress != null)
+        if (context.Advanced().ReceiveContext.PublishFaults || context.FaultAddress != null || context.ResponseAddress != null)
         {
             Fault<T> fault = new FaultEvent<T>(context.Message, context.MessageId, HostMetadataCache.Host, exception,
-                context.SupportedMessageTypes.ToArray());
+                context.Advanced().SupportedMessageTypes.ToArray(), context.GetTimeProvider());
 
             var faultPipe = new FaultPipe<T>(context);
 
-            var faultContext = InternalOutboxExtensions.SkipOutbox(context);
+            var faultContext = InternalOutboxExtensions.SkipOutbox(context.Advanced());
 
-            var faultEndpoint = await faultContext.GetFaultEndpoint<T>().ConfigureAwait(false);
+            var faultEndpoint = await faultContext.GetFaultEndpointAsync<T>().ConfigureAwait(false);
 
-            await faultEndpoint.Send(fault, faultPipe, context.CancellationToken).ConfigureAwait(false);
+            await faultEndpoint.SendAsync(fault, faultPipe, context.CancellationToken).ConfigureAwait(false);
         }
     }
 
@@ -182,19 +187,19 @@ public static class ConsumeContextEndpointExtensions
             _context = context;
         }
 
-        public Task Send(SendContext<Fault<T>> context)
+        public Task SendAsync(SendContext<Fault<T>> context)
         {
-            context.TransferConsumeContextHeaders(_context);
+            context.TransferConsumeContextHeaders(_context.Advanced());
 
             context.CorrelationId = _context.CorrelationId;
             context.RequestId = _context.RequestId;
 
-            if (_context.TryGetPayload(out ConsumeRetryContext consumeRetryContext) && consumeRetryContext.RetryCount > 0)
+            if (_context.TryGetPayload(out ConsumeRetryContext? consumeRetryContext) && consumeRetryContext.RetryCount > 0)
                 context.Headers.Set(MessageHeaders.FaultRetryCount, consumeRetryContext.RetryCount);
-            else if (_context.TryGetPayload(out RetryContext retryContext) && retryContext.RetryCount > 0)
+            else if (_context.TryGetPayload(out RetryContext? retryContext) && retryContext.RetryCount > 0)
                 context.Headers.Set(MessageHeaders.FaultRetryCount, retryContext.RetryCount);
 
-            var redeliveryCount = _context.GetRedeliveryCount();
+            var redeliveryCount = _context.Advanced().GetRedeliveryCount();
             if (redeliveryCount > 0)
                 context.Headers.Set(MessageHeaders.FaultRedeliveryCount, redeliveryCount);
 

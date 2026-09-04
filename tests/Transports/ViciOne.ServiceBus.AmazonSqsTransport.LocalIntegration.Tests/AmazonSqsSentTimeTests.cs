@@ -9,18 +9,18 @@ public sealed class AmazonSqsSentTimeTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0243", "envelope-carries-exact-utc-sent-time-and-provider-timestamp")]
-    public Task Envelope_CarriesExactUtcSentTime() => AssertSentTime(useRawJson: false);
+    public Task Envelope_CarriesExactUtcSentTimeAsync() => AssertSentTimeAsync(useRawJson: false);
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0244", "raw-json-carries-exact-utc-sent-time-and-provider-timestamp")]
-    public Task RawJson_CarriesExactUtcSentTime() => AssertSentTime(useRawJson: true);
+    public Task RawJson_CarriesExactUtcSentTimeAsync() => AssertSentTimeAsync(useRawJson: true);
 
-    private static async Task AssertSentTime(bool useRawJson)
+    private static async Task AssertSentTimeAsync(bool useRawJson)
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create(useRawJson ? "rawsent" : "senttime");
         string queueName = fixture.Name("input");
         Guid? sentMessageId = null;
-        DateTime? sentTime = null;
+        DateTimeOffset? sentTime = null;
         var consumed = new TaskCompletionSource<SentTimeObservation>(TaskCreationOptions.RunContinuationsAsynchronously);
         IBusControl bus = Bus.Factory.CreateUsingAmazonSqs(configurator =>
         {
@@ -37,8 +37,8 @@ public sealed class AmazonSqsSentTimeTests
                     consumed.TrySetResult(new SentTimeObservation(
                         context.MessageId,
                         context.SentTime,
-                        context.ReceiveContext.GetSentTime(),
-                        context.ReceiveContext.ContentType));
+                        context.Advanced().ReceiveContext.GetSentTime(),
+                        context.Advanced().ReceiveContext.ContentType));
                     return Task.CompletedTask;
                 });
             });
@@ -50,9 +50,9 @@ public sealed class AmazonSqsSentTimeTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
+            ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"))
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await input.Send(
+            await input.SendAsync(
                     new SentTimeMessage(Guid.NewGuid()),
                     context =>
                     {
@@ -65,13 +65,13 @@ public sealed class AmazonSqsSentTimeTests
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             SentTimeObservation actual = await consumed.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
-            DateTime providerSentTime = Assert.IsType<DateTime>(actual.ProviderSentTime);
+            DateTimeOffset providerSentTime = Assert.IsType<DateTimeOffset>(actual.ProviderSentTime);
 
             Assert.Equal(Assert.IsType<Guid>(sentMessageId), actual.MessageId);
-            Assert.Equal(Assert.IsType<DateTime>(sentTime), actual.EnvelopeSentTime);
-            Assert.Equal(DateTimeKind.Utc, Assert.IsType<DateTime>(actual.EnvelopeSentTime).Kind);
-            Assert.Equal(DateTimeKind.Utc, providerSentTime.Kind);
-            Assert.True(providerSentTime > DateTime.UnixEpoch);
+            Assert.Equal(Assert.IsType<DateTimeOffset>(sentTime), actual.EnvelopeSentTime);
+            Assert.Equal(TimeSpan.Zero, Assert.IsType<DateTimeOffset>(actual.EnvelopeSentTime).Offset);
+            Assert.Equal(TimeSpan.Zero, providerSentTime.Offset);
+            Assert.True(providerSentTime > DateTimeOffset.UnixEpoch);
             Assert.Equal(0, providerSentTime.Ticks % TimeSpan.TicksPerMillisecond);
             Assert.Equal(
                 useRawJson ? SystemTextJsonRawMessageSerializer.JsonContentType : SystemTextJsonMessageSerializer.JsonContentType,
@@ -88,7 +88,7 @@ public sealed class AmazonSqsSentTimeTests
 
     private sealed record SentTimeObservation(
         Guid? MessageId,
-        DateTime? EnvelopeSentTime,
-        DateTime? ProviderSentTime,
+        DateTimeOffset? EnvelopeSentTime,
+        DateTimeOffset? ProviderSentTime,
         System.Net.Mime.ContentType ContentType);
 }

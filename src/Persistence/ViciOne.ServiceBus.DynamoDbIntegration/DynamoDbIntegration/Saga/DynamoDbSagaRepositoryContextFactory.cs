@@ -24,7 +24,7 @@ internal class DynamoDbSagaRepositoryContextFactory<TSaga> :
         _options = options ?? throw new ArgumentNullException(nameof(options));
     }
 
-    public async Task<T> Execute<T>(Func<LoadSagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken = default)
+    public async Task<T?> ExecuteAsync<T>(Func<LoadSagaRepositoryContext<TSaga>, Task<T?>> asyncMethod, CancellationToken cancellationToken = default)
         where T : class
     {
         var database = _databaseFactory.Create();
@@ -47,7 +47,7 @@ internal class DynamoDbSagaRepositoryContextFactory<TSaga> :
         context.Add("persistence", "dynamodb");
     }
 
-    public async Task Send<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
+    public async Task SendAsync<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
         where T : class
     {
         var database = _databaseFactory.Create();
@@ -57,7 +57,7 @@ internal class DynamoDbSagaRepositoryContextFactory<TSaga> :
         {
             var repositoryContext = new DynamoDbSagaRepositoryContext<TSaga, T>(databaseContext, context, _factory);
 
-            await next.Send(repositoryContext).ConfigureAwait(false);
+            await next.SendAsync(repositoryContext).ConfigureAwait(false);
         }
         finally
         {
@@ -65,7 +65,7 @@ internal class DynamoDbSagaRepositoryContextFactory<TSaga> :
         }
     }
 
-    public async Task SendQuery<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
+    public async Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
         where T : class
     {
         throw new NotImplementedByDesignException("DynamoDb saga repository does not support queries");

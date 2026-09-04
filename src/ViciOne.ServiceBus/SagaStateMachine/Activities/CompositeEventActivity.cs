@@ -37,35 +37,35 @@ public class CompositeEventActivity<TSaga> :
         scope.Add("flag", _flag.ToString("X8"));
     }
 
-    public async Task Execute(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public async Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
-        await Execute(context).ConfigureAwait(false);
+        await ExecuteAsync(context).ConfigureAwait(false);
 
-        await next.Execute(context).ConfigureAwait(false);
+        await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    public async Task Execute<TData>(BehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
+    public async Task ExecuteAsync<TData>(BehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
         where TData : class
     {
-        await Execute(context).ConfigureAwait(false);
+        await ExecuteAsync(context).ConfigureAwait(false);
 
-        await next.Execute(context).ConfigureAwait(false);
+        await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
+    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception
     {
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 
-    public Task Faulted<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
+    public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
         where T : class
         where TException : Exception
     {
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 
-    Task Execute(BehaviorContext<TSaga> context)
+    Task ExecuteAsync(BehaviorContext<TSaga> context)
     {
         var value = _accessor.Get(context.Saga);
 
@@ -77,12 +77,12 @@ public class CompositeEventActivity<TSaga> :
         _accessor.Set(context.Saga, value);
 
         return value.Equals(_complete)
-            ? RaiseCompositeEvent(context)
+            ? RaiseCompositeEventAsync(context)
             : Task.CompletedTask;
     }
 
-    Task RaiseCompositeEvent(BehaviorContext<TSaga> context)
+    Task RaiseCompositeEventAsync(BehaviorContext<TSaga> context)
     {
-        return context.Raise(Event);
+        return context.RaiseAsync(Event);
     }
 }

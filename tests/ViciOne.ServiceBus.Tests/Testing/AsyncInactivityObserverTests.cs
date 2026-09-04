@@ -13,7 +13,7 @@ public sealed class AsyncInactivityObserverTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INACTIVITY-OBSERVER", "forced-before-task-materialization")]
-    public async Task ForcedBeforeTaskMaterialization_CompletesImmediately()
+    public async Task ForcedBeforeTaskMaterialization_CompletesImmediatelyAsync()
     {
         var observer = CreateObserver();
 
@@ -25,7 +25,7 @@ public sealed class AsyncInactivityObserverTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INACTIVITY-OBSERVER", "forced-during-first-interval")]
-    public async Task ForcedDuringFirstInterval_CompletesWithoutAdvancingTime()
+    public async Task ForcedDuringFirstInterval_CompletesWithoutAdvancingTimeAsync()
     {
         var observer = CreateObserver();
         Task inactivity = observer.InactivityTask;
@@ -40,18 +40,18 @@ public sealed class AsyncInactivityObserverTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INACTIVITY-OBSERVER", "active-to-inactive-transition")]
-    public async Task ConnectedSource_KeepsWaitingUntilItReportsInactivity()
+    public async Task ConnectedSource_KeepsWaitingUntilItReportsInactivityAsync()
     {
         var observer = CreateObserver();
         var source = new ControlledSource { IsInactive = false };
         observer.Connected(source);
         Task inactivity = observer.InactivityTask;
 
-        await observer.NoActivity();
+        await observer.NoActivityAsync(TestContext.Current.CancellationToken);
         Assert.False(inactivity.IsCompleted);
 
         source.IsInactive = true;
-        await observer.NoActivity();
+        await observer.NoActivityAsync(TestContext.Current.CancellationToken);
 
         await inactivity;
         Assert.True(observer.InactivityToken.IsCancellationRequested);
@@ -59,7 +59,7 @@ public sealed class AsyncInactivityObserverTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INACTIVITY-OBSERVER", "one-query-per-virtual-interval")]
-    public async Task EachElapsedVirtualInterval_QueriesTheSourceExactlyOnce()
+    public async Task EachElapsedVirtualInterval_QueriesTheSourceExactlyOnceAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
         var observer = new AsyncInactivityObserver(Interval, CancellationToken.None, timeProvider);
@@ -67,14 +67,14 @@ public sealed class AsyncInactivityObserverTests
         observer.Connected(source);
         Task inactivity = observer.InactivityTask;
 
-        await timeProvider.WaitForTimerCount(1);
+        await timeProvider.WaitForTimerCountAsync(1);
         timeProvider.Advance(Interval);
         await source.FirstQuery;
 
         Assert.False(inactivity.IsCompleted);
         Assert.Equal(1, source.QueryCount);
 
-        await timeProvider.WaitForTimerCount(2);
+        await timeProvider.WaitForTimerCountAsync(2);
         timeProvider.Advance(Interval);
         await inactivity;
 
@@ -84,14 +84,14 @@ public sealed class AsyncInactivityObserverTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INACTIVITY-OBSERVER", "source-failure-is-visible")]
-    public async Task SourceFailure_IsExposedByTheObservationTask()
+    public async Task SourceFailure_IsExposedByTheObservationTaskAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
         var observer = new AsyncInactivityObserver(Interval, CancellationToken.None, timeProvider);
         observer.Connected(new FailingSource());
         Task inactivity = observer.InactivityTask;
 
-        await timeProvider.WaitForTimerCount(1);
+        await timeProvider.WaitForTimerCountAsync(1);
         timeProvider.Advance(Interval);
 
         InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(async () => await inactivity);

@@ -66,12 +66,12 @@ public class ClientRequestHandle<TRequest> :
         if (cancellationToken.CanBeCanceled)
             _registration = cancellationToken.Register(Cancel);
 
-        _send = SendRequest();
+        _send = SendRequestAsync();
 
         HandleFault();
     }
 
-    public async Task Send(SendContext<TRequest> context)
+    public async Task SendAsync(SendContext<TRequest> context)
     {
         await _readyToSend.Task.ConfigureAwait(false);
 
@@ -86,7 +86,7 @@ public class ClientRequestHandle<TRequest> :
         IPipe<SendContext<TRequest>> pipe = _pipeConfigurator.Build();
 
         if (pipe.IsNotEmpty())
-            await pipe.Send(context).ConfigureAwait(false);
+            await pipe.SendAsync(context).ConfigureAwait(false);
 
         _timeoutTimer = _context.TimeProvider.CreateTimer(
             TimeoutExpired,
@@ -121,10 +121,10 @@ public class ClientRequestHandle<TRequest> :
         _pipeConfigurator.AddPipeSpecification(specification);
     }
 
-    public Task<Response<T>> GetResponse<T>(bool readyToSend)
+    public Task<Response<T>> GetResponseAsync<T>(bool readyToSend, CancellationToken cancellationToken = default)
         where T : class
     {
-        Task<Response<T>> response = Response<T>();
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Response<T>>(cancellationToken); Task<Response<T>> response = ResponseAsync<T>();
 
         AcceptResponse<T>();
 
@@ -148,7 +148,7 @@ public class ClientRequestHandle<TRequest> :
         _accept.Add(MessageUrn.ForTypeString<T>());
     }
 
-    async Task SendRequest()
+    async Task SendRequestAsync()
     {
         try
         {
@@ -181,7 +181,7 @@ public class ClientRequestHandle<TRequest> :
         }
     }
 
-    Task<Response<T>> Response<T>(MessageHandler<T>? handler = null, Action<IHandlerConfigurator<T>>? configure = null)
+    Task<Response<T>> ResponseAsync<T>(MessageHandler<T>? handler = null, Action<IHandlerConfigurator<T>>? configure = null)
         where T : class
     {
         if (_responseHandlers.ContainsKey(typeof(T)))
@@ -206,19 +206,19 @@ public class ClientRequestHandle<TRequest> :
         if (_cancellationToken.IsCancellationRequested)
             return;
 
-        Task MessageHandler(ConsumeContext<Fault<TRequest>> context)
+        Task MessageHandlerAsync(ConsumeContext<Fault<TRequest>> context)
         {
-            return FaultHandler(context);
+            return FaultHandlerAsync(context);
         }
 
-        var connectHandle = _context.ConnectRequestHandler(RequestId, MessageHandler, new PipeConfigurator<ConsumeContext<Fault<TRequest>>>());
+        var connectHandle = _context.ConnectRequestHandler(RequestId, MessageHandlerAsync, new PipeConfigurator<ConsumeContext<Fault<TRequest>>>());
 
         var handle = new FaultHandlerConnectHandle(connectHandle);
 
         _responseHandlers.Add(typeof(Fault<TRequest>), handle);
     }
 
-    Task FaultHandler(ConsumeContext<Fault<TRequest>> context)
+    Task FaultHandlerAsync(ConsumeContext<Fault<TRequest>> context)
     {
         Fail(context.Message);
 

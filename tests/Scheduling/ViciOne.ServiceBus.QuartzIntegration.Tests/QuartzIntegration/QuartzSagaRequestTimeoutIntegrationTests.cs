@@ -1,5 +1,6 @@
 using Quartz;
 using ViciOne.ServiceBus.QuartzIntegration.Tests.Testing;
+using ViciOne.ServiceBus.Saga;
 using ViciOne.ServiceBus.Scheduling;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -12,15 +13,15 @@ public sealed class QuartzSagaRequestTimeoutIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-SAGA-REQUEST", "response-cancels-timeout-and-clears-request-id")]
-    public async Task SagaRequest_ResponseCancelsItsQuartzTimeoutAndClearsTheRequestIdentity()
+    public async Task SagaRequest_ResponseCancelsItsQuartzTimeoutAndClearsTheRequestIdentityAsync()
     {
-        await using RequestFixture fixture = await RequestFixture.Start(respond: true);
+        await using RequestFixture fixture = await RequestFixture.StartAsync(respond: true);
 
-        await fixture.SendStart();
+        await fixture.SendStartAsync();
         RequestOutcome outcome = await fixture.Outcome.WaitAsync(fixture.Timeout, TestContext.Current.CancellationToken);
         ScheduleMessage scheduled = await fixture.Scheduled.Message.WaitAsync(fixture.Timeout, TestContext.Current.CancellationToken);
         await fixture.Canceled.Completed.WaitAsync(fixture.Timeout, TestContext.Current.CancellationToken);
-        RequestSagaState saga = fixture.Repository[fixture.CorrelationId].Instance;
+        RequestSagaState saga = Assert.IsType<SagaInstance<RequestSagaState>>(fixture.Repository[fixture.CorrelationId]).Instance;
 
         Assert.Equal("Completed", outcome.Result);
         Assert.Equal(fixture.CorrelationId, outcome.CorrelationId);
@@ -33,11 +34,11 @@ public sealed class QuartzSagaRequestTimeoutIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-SAGA-REQUEST", "quartz-timeout-is-delivered-to-the-pending-saga")]
-    public async Task SagaRequest_QuartzTimeoutIsDeliveredToThePendingSaga()
+    public async Task SagaRequest_QuartzTimeoutIsDeliveredToThePendingSagaAsync()
     {
-        await using RequestFixture fixture = await RequestFixture.Start(respond: false);
+        await using RequestFixture fixture = await RequestFixture.StartAsync(respond: false);
 
-        await fixture.SendStart();
+        await fixture.SendStartAsync();
         ScheduleMessage scheduled = await fixture.Scheduled.Message.WaitAsync(fixture.Timeout, TestContext.Current.CancellationToken);
         ITrigger trigger = Assert.IsAssignableFrom<ITrigger>(await fixture.Scheduler.GetTrigger(
             new TriggerKey(scheduled.TokenId.ToString("N")),
@@ -45,7 +46,7 @@ public sealed class QuartzSagaRequestTimeoutIntegrationTests
 
         await fixture.Scheduler.TriggerJob(trigger.JobKey, trigger.JobDataMap, TestContext.Current.CancellationToken);
         RequestOutcome outcome = await fixture.Outcome.WaitAsync(fixture.Timeout, TestContext.Current.CancellationToken);
-        RequestSagaState saga = fixture.Repository[fixture.CorrelationId].Instance;
+        RequestSagaState saga = Assert.IsType<SagaInstance<RequestSagaState>>(fixture.Repository[fixture.CorrelationId]).Instance;
 
         Assert.Equal("TimedOut", outcome.Result);
         Assert.Equal(fixture.CorrelationId, outcome.CorrelationId);
@@ -94,7 +95,7 @@ public sealed class QuartzSagaRequestTimeoutIntegrationTests
         public ConsumeCompletionObserver<CancelScheduledMessage> Canceled { get; }
         public IScheduler Scheduler => _fixture.Scheduler;
 
-        public static async Task<RequestFixture> Start(bool respond)
+        public static async Task<RequestFixture> StartAsync(bool respond)
         {
             TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
                 .GetValidatedOptions()
@@ -106,7 +107,7 @@ public sealed class QuartzSagaRequestTimeoutIntegrationTests
             var repository = new InMemorySagaRepository<RequestSagaState>();
             var stateMachine = new RequestSagaStateMachine(serviceAddress);
             var outcome = new TaskCompletionSource<RequestOutcome>(TaskCreationOptions.RunContinuationsAsynchronously);
-            QuartzTestBus fixture = await QuartzTestBus.Start(
+            QuartzTestBus fixture = await QuartzTestBus.StartAsync(
                 timeout,
                 configure: configurator =>
                 {
@@ -147,11 +148,11 @@ public sealed class QuartzSagaRequestTimeoutIntegrationTests
                 canceledHandle);
         }
 
-        public async Task SendStart()
+        public async Task SendStartAsync()
         {
-            ISendEndpoint input = await _fixture.Bus.GetSendEndpoint(_inputAddress)
+            ISendEndpoint input = await _fixture.Bus.GetSendEndpointAsync(_inputAddress)
                 .WaitAsync(Timeout, TestContext.Current.CancellationToken);
-            await input.Send(new StartRequest(CorrelationId), TestContext.Current.CancellationToken);
+            await input.SendAsync(new StartRequest(CorrelationId), TestContext.Current.CancellationToken);
         }
 
         public async ValueTask DisposeAsync()
@@ -169,9 +170,9 @@ public sealed class QuartzSagaRequestTimeoutIntegrationTests
 
         public Task<ScheduleMessage> Message => _message.Task;
 
-        public Task PreConsume<T>(ConsumeContext<T> context) where T : class => Task.CompletedTask;
+        public Task PreConsumeAsync<T>(ConsumeContext<T> context) where T : class => Task.CompletedTask;
 
-        public Task PostConsume<T>(ConsumeContext<T> context) where T : class
+        public Task PostConsumeAsync<T>(ConsumeContext<T> context) where T : class
         {
             if (context.Message is ScheduleMessage message)
                 _message.TrySetResult(message);
@@ -179,7 +180,7 @@ public sealed class QuartzSagaRequestTimeoutIntegrationTests
             return Task.CompletedTask;
         }
 
-        public Task ConsumeFault<T>(ConsumeContext<T> context, Exception exception) where T : class
+        public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, Exception exception) where T : class
         {
             if (context.Message is ScheduleMessage)
                 _message.TrySetException(exception);

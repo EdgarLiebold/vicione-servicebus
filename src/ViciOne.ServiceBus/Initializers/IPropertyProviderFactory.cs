@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace ViciOne.ServiceBus.Initializers;
@@ -13,7 +14,8 @@ public interface IPropertyProviderFactory<TInput>
     /// <param name="provider"></param>
     /// <typeparam name="TResult"></typeparam>
     /// <returns></returns>
-    bool TryGetPropertyProvider<TResult>(PropertyInfo propertyInfo, out IPropertyProvider<TInput, TResult> provider);
+    bool TryGetPropertyProvider<TResult>(PropertyInfo propertyInfo,
+        [NotNullWhen(true)] out IPropertyProvider<TInput, TResult>? provider);
 
-    bool TryGetPropertyConverter<T, TProperty>(out IPropertyConverter<T, TProperty> converter);
+    bool TryGetPropertyConverter<T, TProperty>([NotNullWhen(true)] out IPropertyConverter<T, TProperty>? converter);
 }

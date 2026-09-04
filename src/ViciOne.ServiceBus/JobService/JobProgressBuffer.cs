@@ -32,27 +32,27 @@ public class JobProgressBuffer
         };
 
         _channel = Channel.CreateBounded<ProgressUpdate>(channelOptions);
-        _updateTask = WaitForUpdate();
+        _updateTask = WaitForUpdateAsync();
     }
 
-    public Task Flush()
+    public Task FlushAsync(CancellationToken cancellationToken = default)
     {
-        _channel.Writer.TryComplete();
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); _channel.Writer.TryComplete();
 
         return _updateTask;
     }
 
-    public async Task Update(ProgressUpdate progress, CancellationToken cancellationToken)
+    public async Task UpdateAsync(ProgressUpdate progress, CancellationToken cancellationToken)
     {
         await _channel.Writer.WriteAsync(progress, cancellationToken).ConfigureAwait(false);
     }
 
-    async Task WaitForUpdate()
+    async Task WaitForUpdateAsync()
     {
         try
         {
             while (await _channel.Reader.WaitToReadAsync().ConfigureAwait(false))
-                await ReadUpdate().ConfigureAwait(false);
+                await ReadUpdateAsync().ConfigureAwait(false);
         }
         catch (ChannelClosedException)
         {
@@ -63,7 +63,7 @@ public class JobProgressBuffer
         }
     }
 
-    async Task ReadUpdate()
+    async Task ReadUpdateAsync()
     {
         using var updateToken = new CancellationTokenSource(_settings.TimeLimit, _timeProvider);
 
@@ -93,7 +93,7 @@ public class JobProgressBuffer
             {
                 try
                 {
-                    await _notifyJobContext.NotifyJobProgress(new SetJobProgressCommand
+                    await _notifyJobContext.NotifyJobProgressAsync(new SetJobProgressCommand
                     {
                         JobId = latestUpdate.Value.JobId,
                         AttemptId = latestUpdate.Value.AttemptId,

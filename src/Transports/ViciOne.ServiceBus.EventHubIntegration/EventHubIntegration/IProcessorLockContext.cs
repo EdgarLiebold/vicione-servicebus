@@ -8,8 +8,8 @@ namespace ViciOne.ServiceBus.EventHubIntegration;
 public interface IProcessorLockContext :
     IAsyncDisposable
 {
-    Task Pending(ProcessEventArgs eventArgs);
-    Task Complete(ProcessEventArgs eventArgs);
-    Task Faulted(ProcessEventArgs eventArgs, Exception exception);
+    Task PendingAsync(ProcessEventArgs eventArgs, CancellationToken cancellationToken = default);
+    Task CompleteAsync(ProcessEventArgs eventArgs, CancellationToken cancellationToken = default);
+    Task FaultedAsync(ProcessEventArgs eventArgs, Exception exception, CancellationToken cancellationToken = default);
     void Canceled(ProcessEventArgs eventArgs, CancellationToken cancellationToken);
 }

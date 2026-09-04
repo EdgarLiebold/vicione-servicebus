@@ -9,7 +9,7 @@ public class RescueExceptionConsumeContext<TMessage> :
     ExceptionConsumeContext<TMessage>
     where TMessage : class
 {
-    ExceptionInfo _exceptionInfo;
+    ExceptionInfo _exceptionInfo = null!;
 
     public RescueExceptionConsumeContext(ConsumeContext<TMessage> context, Exception exception)
         : base(context)
@@ -30,7 +30,7 @@ public class RescueExceptionConsumeContext :
     ConsumeContextProxy,
     ExceptionConsumeContext
 {
-    ExceptionInfo _exceptionInfo;
+    ExceptionInfo _exceptionInfo = null!;
 
     public RescueExceptionConsumeContext(ConsumeContext context, Exception exception)
         : base(context)

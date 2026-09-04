@@ -31,7 +31,7 @@ public class RetryFilter<TContext> :
 
     [DebuggerNonUserCode]
     [DebuggerStepThrough]
-    async Task IFilter<TContext>.Send(TContext context, IPipe<TContext> next)
+    async Task IFilter<TContext>.SendAsync(TContext context, IPipe<TContext> next)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(next);
@@ -48,12 +48,12 @@ public class RetryFilter<TContext> :
         {
             if (_observers.Count > 0)
             {
-                var postCreateTask = _observers.PostCreate(policyContext);
+                var postCreateTask = _observers.PostCreateAsync(policyContext);
                 if (postCreateTask.Status != TaskStatus.RanToCompletion)
                     await postCreateTask.ConfigureAwait(false);
             }
 
-            await next.Send(policyContext.Context).ConfigureAwait(false);
+            await next.SendAsync(policyContext.Context).ConfigureAwait(false);
         }
         catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
         {
@@ -70,8 +70,8 @@ public class RetryFilter<TContext> :
         {
             policyContext.Context.CancellationToken.ThrowIfCancellationRequested();
 
-            if (await PropagateNestedRetryFailure(context, policyContext.Context, exception,
-                    () => policyContext.RetryFaulted(exception)).ConfigureAwait(false))
+            if (await PropagateNestedRetryFailureAsync(context, policyContext.Context, exception,
+                    () => policyContext.RetryFaultedAsync(exception)).ConfigureAwait(false))
                 throw;
 
             if (!policyContext.CanRetry(exception, out RetryContext<TContext> retryContext))
@@ -82,13 +82,13 @@ public class RetryFilter<TContext> :
                 {
                     context.GetOrAddPayload(() => retryContext);
 
-                    var retryFaultedTask = retryContext.RetryFaulted(exception);
+                    var retryFaultedTask = retryContext.RetryFaultedAsync(exception);
                     if (retryFaultedTask.Status != TaskStatus.RanToCompletion)
                         await retryFaultedTask.ConfigureAwait(false);
 
                     if (_observers.Count > 0)
                     {
-                        var retryFaultTask = _observers.RetryFault(retryContext);
+                        var retryFaultTask = _observers.RetryFaultAsync(retryContext);
                         if (retryFaultTask.Status != TaskStatus.RanToCompletion)
                             await retryFaultTask.ConfigureAwait(false);
                     }
@@ -101,12 +101,12 @@ public class RetryFilter<TContext> :
 
             if (_observers.Count > 0)
             {
-                var postFaultTask = _observers.PostFault(retryContext);
+                var postFaultTask = _observers.PostFaultAsync(retryContext);
                 if (postFaultTask.Status != TaskStatus.RanToCompletion)
                     await postFaultTask.ConfigureAwait(false);
             }
 
-            await Attempt(context, retryContext, next).ConfigureAwait(false);
+            await AttemptAsync(context, retryContext, next).ConfigureAwait(false);
         }
         finally
         {
@@ -116,7 +116,7 @@ public class RetryFilter<TContext> :
 
     [DebuggerNonUserCode]
     [DebuggerStepThrough]
-    async Task Attempt(TContext context, RetryContext<TContext> retryContext, IPipe<TContext> next)
+    async Task AttemptAsync(TContext context, RetryContext<TContext> retryContext, IPipe<TContext> next)
     {
         while (true)
         {
@@ -139,24 +139,24 @@ public class RetryFilter<TContext> :
                 }
             }
 
-            var preRetryContextTask = retryContext.PreRetry();
+            var preRetryContextTask = retryContext.PreRetryAsync();
             if (preRetryContextTask.Status != TaskStatus.RanToCompletion)
                 await preRetryContextTask.ConfigureAwait(false);
 
             if (_observers.Count > 0)
             {
-                var preRetryTask = _observers.PreRetry(retryContext);
+                var preRetryTask = _observers.PreRetryAsync(retryContext);
                 if (preRetryTask.Status != TaskStatus.RanToCompletion)
                     await preRetryTask.ConfigureAwait(false);
             }
 
             try
             {
-                await next.Send(retryContext.Context).ConfigureAwait(false);
+                await next.SendAsync(retryContext.Context).ConfigureAwait(false);
 
                 if (_observers.Count > 0)
                 {
-                    var retryCompleteTask = _observers.RetryComplete(retryContext);
+                    var retryCompleteTask = _observers.RetryCompleteAsync(retryContext);
                     if (retryCompleteTask.Status != TaskStatus.RanToCompletion)
                         await retryCompleteTask.ConfigureAwait(false);
                 }
@@ -178,8 +178,8 @@ public class RetryFilter<TContext> :
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
 
-                if (await PropagateNestedRetryFailure(context, retryContext.Context, exception,
-                        () => retryContext.RetryFaulted(exception)).ConfigureAwait(false))
+                if (await PropagateNestedRetryFailureAsync(context, retryContext.Context, exception,
+                        () => retryContext.RetryFaultedAsync(exception)).ConfigureAwait(false))
                     throw;
 
                 if (!retryContext.CanRetry(exception, out RetryContext<TContext> nextRetryContext))
@@ -190,13 +190,13 @@ public class RetryFilter<TContext> :
                     {
                         context.GetOrAddPayload(() => nextRetryContext);
 
-                        var retryFaultedTask = nextRetryContext.RetryFaulted(exception);
+                        var retryFaultedTask = nextRetryContext.RetryFaultedAsync(exception);
                         if (retryFaultedTask.Status != TaskStatus.RanToCompletion)
                             await retryFaultedTask.ConfigureAwait(false);
 
                         if (_observers.Count > 0)
                         {
-                            var retryFaultTask = _observers.RetryFault(nextRetryContext);
+                            var retryFaultTask = _observers.RetryFaultAsync(nextRetryContext);
                             if (retryFaultTask.Status != TaskStatus.RanToCompletion)
                                 await retryFaultTask.ConfigureAwait(false);
                         }
@@ -209,7 +209,7 @@ public class RetryFilter<TContext> :
 
                 if (_observers.Count > 0)
                 {
-                    var postFaultTask = _observers.PostFault(nextRetryContext);
+                    var postFaultTask = _observers.PostFaultAsync(nextRetryContext);
                     if (postFaultTask.Status != TaskStatus.RanToCompletion)
                         await postFaultTask.ConfigureAwait(false);
                 }
@@ -219,14 +219,14 @@ public class RetryFilter<TContext> :
         }
     }
 
-    async Task<bool> PropagateNestedRetryFailure(TContext rootContext, PipeContext currentContext,
+    async Task<bool> PropagateNestedRetryFailureAsync(TContext rootContext, PipeContext currentContext,
         Exception exception, Func<Task> notifyPolicyFault)
     {
         // A downstream retry owns the exception once its context is present. The outer retry
         // reports the terminal fault but must not start a second retry budget. The non-generic
         // payload is deliberate: dispatch may change the concrete PipeContext type, while
         // RetryContext.ContextType retains the exact type required by observer callbacks.
-        if (!currentContext.TryGetPayload(out RetryContext nestedRetryContext))
+        if (!currentContext.TryGetPayload(out RetryContext? nestedRetryContext))
             return false;
 
         if (!_retryPolicy.IsHandled(exception))
@@ -241,7 +241,7 @@ public class RetryFilter<TContext> :
 
         if (_observers.Count > 0)
         {
-            Task observerTask = _observers.RetryFault(nestedRetryContext);
+            Task observerTask = _observers.RetryFaultAsync(nestedRetryContext);
             if (observerTask.Status != TaskStatus.RanToCompletion)
                 await observerTask.ConfigureAwait(false);
         }

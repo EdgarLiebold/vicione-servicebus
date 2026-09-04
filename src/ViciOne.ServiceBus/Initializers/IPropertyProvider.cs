@@ -10,6 +10,6 @@ namespace ViciOne.ServiceBus.Initializers;
 public interface IPropertyProvider<in TInput, TProperty>
     where TInput : class
 {
-    Task<TProperty> GetProperty<T>(InitializeContext<T, TInput> context)
+    Task<TProperty?> GetPropertyAsync<T>(InitializeContext<T, TInput> context, CancellationToken cancellationToken = default)
         where T : class;
 }

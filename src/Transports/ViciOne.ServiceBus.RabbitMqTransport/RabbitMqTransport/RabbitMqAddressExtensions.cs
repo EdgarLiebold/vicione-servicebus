@@ -33,14 +33,14 @@ public static class RabbitMqAddressExtensions
         return settings;
     }
 
-    public static ConnectionFactory GetConnectionFactory(this RabbitMqHostSettings settings)
+    public static ConnectionFactory GetConnectionFactory(this RabbitMqHostSettings settings, TimeProvider? timeProvider = null)
     {
         var factory = new ConnectionFactory
         {
             AutomaticRecoveryEnabled = false,
             NetworkRecoveryInterval = TimeSpan.FromSeconds(1),
             TopologyRecoveryEnabled = false,
-            HostName = settings.Host,
+            HostName = settings.Host ?? "localhost",
             Port = settings.Port,
             VirtualHost = settings.VirtualHost ?? "/",
             RequestedHeartbeat = settings.Heartbeat == TimeSpan.Zero ? ConnectionFactory.DefaultHeartbeat : settings.Heartbeat,
@@ -57,7 +57,7 @@ public static class RabbitMqAddressExtensions
 
         if (settings.EndpointResolver != null)
         {
-            factory.HostName = null;
+            factory.HostName = "";
             factory.EndpointResolverFactory = x => settings.EndpointResolver;
         }
 
@@ -80,7 +80,7 @@ public static class RabbitMqAddressExtensions
 
         ApplySslOptions(settings, factory.Ssl);
 
-        factory.ClientProperties ??= new Dictionary<string, object>();
+        factory.ClientProperties ??= new Dictionary<string, object?>();
 
         var hostInfo = HostMetadataCache.Host;
 
@@ -88,7 +88,7 @@ public static class RabbitMqAddressExtensions
         factory.ClientProperties["ViciOneServiceBus_version"] = hostInfo.ViciOneServiceBusVersion;
         factory.ClientProperties["net_version"] = hostInfo.FrameworkVersion;
         factory.ClientProperties["hostname"] = hostInfo.MachineName;
-        factory.ClientProperties["connected"] = DateTimeOffset.Now.ToString("R");
+        factory.ClientProperties["connected"] = (timeProvider ?? TimeProvider.System).GetLocalNow().ToString("R");
         factory.ClientProperties["process_id"] = hostInfo.ProcessId.ToString();
         factory.ClientProperties["process_name"] = hostInfo.ProcessName;
         if (hostInfo.Assembly != null)
@@ -106,7 +106,7 @@ public static class RabbitMqAddressExtensions
         option.Version = settings.SslProtocol;
         option.AcceptablePolicyErrors = settings.AcceptablePolicyErrors;
         option.ServerName = string.IsNullOrWhiteSpace(settings.SslServerName)
-            ? settings.Host
+            ? settings.Host ?? ""
             : settings.SslServerName;
         option.Certs = settings.ClientCertificate == null ? null : new X509Certificate2Collection { settings.ClientCertificate };
         option.CertificateSelectionCallback = settings.CertificateSelectionCallback;

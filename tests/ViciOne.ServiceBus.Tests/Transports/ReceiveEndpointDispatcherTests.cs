@@ -16,7 +16,7 @@ public sealed class ReceiveEndpointDispatcherTests
     [InlineData(DispatchBody.RawJson)]
     [InlineData(DispatchBody.Empty)]
     [RequirementCoverage("REQ-VSB-RECEIVE-DISPATCHER", "raw-json-and-empty-body-dispatch-through-consumer-pipeline")]
-    public async Task Dispatch_DeliversRawJsonAndEmptyBodiesThroughTheConfiguredConsumer(DispatchBody body)
+    public async Task Dispatch_DeliversRawJsonAndEmptyBodiesThroughTheConfiguredConsumerAsync(DispatchBody body)
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -34,7 +34,7 @@ public sealed class ReceiveEndpointDispatcherTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
@@ -44,7 +44,7 @@ public sealed class ReceiveEndpointDispatcherTests
             IReceiveEndpointDispatcher<DispatchCommandConsumer> dispatcher =
                 provider.GetRequiredService<IReceiveEndpointDispatcher<DispatchCommandConsumer>>();
 
-            await dispatcher.Dispatch(bytes, headers, cancellationToken).WaitAsync(timeout, cancellationToken);
+            await dispatcher.DispatchAsync(bytes, headers, [], cancellationToken).WaitAsync(timeout, cancellationToken);
             DispatchResult result = await observation.Completed.Task.WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(messageId, result.MessageId);
@@ -54,7 +54,7 @@ public sealed class ReceiveEndpointDispatcherTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -114,12 +114,12 @@ public sealed class ReceiveEndpointDispatcherTests
 
     public sealed class DispatchCommandConsumer(DispatchObservation observation) : IConsumer<DispatchCommand>
     {
-        public Task Consume(ConsumeContext<DispatchCommand> context)
+        public Task ConsumeAsync(ConsumeContext<DispatchCommand> context)
         {
             observation.Record(new DispatchResult(
                 context.MessageId,
                 context.Message.Value,
-                context.ReceiveContext.ContentType?.ToString()));
+                context.Advanced().ReceiveContext.ContentType?.ToString()));
             return Task.CompletedTask;
         }
     }

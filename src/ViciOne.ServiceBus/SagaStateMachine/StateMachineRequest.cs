@@ -15,11 +15,11 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         where TResponse : class
     {
         readonly List<string> _accept;
-        readonly IReadProperty<TInstance, Guid?> _read;
-        readonly IWriteProperty<TInstance, Guid?> _write;
+        readonly IReadProperty<TInstance, Guid?> _read = null!;
+        readonly IWriteProperty<TInstance, Guid?> _write = null!;
 
         public StateMachineRequest(string name, RequestSettings<TInstance, TRequest, TResponse> settings,
-            Expression<Func<TInstance, Guid?>> requestIdExpression = default)
+            Expression<Func<TInstance, Guid?>>? requestIdExpression = default)
         {
             Name = name;
             Settings = settings;
@@ -39,11 +39,10 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
         public string Name { get; }
         public RequestSettings<TInstance, TRequest, TResponse> Settings { get; }
-        public Event<TResponse> Completed { get; set; }
-        public Event<Fault<TRequest>> Faulted { get; set; }
-        public Event<RequestTimeoutExpired<TRequest>> TimeoutExpired { get; set; }
-        public State Pending { get; set; }
-
+        public Event<TResponse> Completed { get; set; } = null!;
+        public Event<Fault<TRequest>> Faulted { get; set; } = null!;
+        public Event<RequestTimeoutExpired<TRequest>> TimeoutExpired { get; set; } = null!;
+        public State Pending { get; set; } = null!;
         public void SetRequestId(TInstance instance, Guid? requestId)
         {
             if (instance == null)
@@ -103,7 +102,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         where TResponse2 : class
     {
         public StateMachineRequest(string name, RequestSettings<TInstance, TRequest, TResponse, TResponse2> settings,
-            Expression<Func<TInstance, Guid?>> requestIdExpression = default)
+            Expression<Func<TInstance, Guid?>>? requestIdExpression = default)
             : base(name, settings, requestIdExpression)
         {
             Settings = settings;
@@ -113,7 +112,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
         public new RequestSettings<TInstance, TRequest, TResponse, TResponse2> Settings { get; }
 
-        public Event<TResponse2> Completed2 { get; set; }
+        public Event<TResponse2> Completed2 { get; set; } = null!;
     }
 
 
@@ -126,7 +125,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         where TResponse3 : class
     {
         public StateMachineRequest(string name, RequestSettings<TInstance, TRequest, TResponse, TResponse2, TResponse3> settings,
-            Expression<Func<TInstance, Guid?>> requestIdExpression = default)
+            Expression<Func<TInstance, Guid?>>? requestIdExpression = default)
             : base(name, settings, requestIdExpression)
         {
             Settings = settings;
@@ -136,6 +135,6 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
         public new RequestSettings<TInstance, TRequest, TResponse, TResponse2, TResponse3> Settings { get; }
 
-        public Event<TResponse3> Completed3 { get; set; }
+        public Event<TResponse3> Completed3 { get; set; } = null!;
     }
 }

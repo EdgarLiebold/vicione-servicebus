@@ -43,7 +43,9 @@ static class RunScopedBroker
     /// created here rather than assumed, because a standalone diagnostic scenario has no test-fixture
     /// setup to do it, and the broker of a fresh run carries no virtual host but the default one.
     /// </summary>
-    public static async Task CreateVirtualHost(string name, CancellationToken cancellationToken)
+    /// <param name="name">The name used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static async Task CreateVirtualHostAsync(string name, CancellationToken cancellationToken)
     {
         (var host, _, var username, var password) = Read();
         var managementPort = ManagementPort();

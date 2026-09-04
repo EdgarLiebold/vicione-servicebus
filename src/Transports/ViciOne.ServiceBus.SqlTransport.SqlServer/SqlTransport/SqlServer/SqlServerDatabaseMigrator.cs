@@ -1889,15 +1889,15 @@ END
         _logger = logger;
     }
 
-    public async Task CreateDatabase(SqlTransportOptions options, CancellationToken cancellationToken)
+    public async Task CreateDatabaseAsync(SqlTransportOptions options, CancellationToken cancellationToken)
     {
-        await CreateDatabaseIfNotExist(options, cancellationToken).ConfigureAwait(false);
+        await CreateDatabaseIfNotExistAsync(options, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task DeleteDatabase(SqlTransportOptions options, CancellationToken cancellationToken)
+    public async Task DeleteDatabaseAsync(SqlTransportOptions options, CancellationToken cancellationToken)
     {
         await using var connection = SqlServerSqlTransportConnection.GetSystemDatabaseConnection(options);
-        await connection.Open(cancellationToken).ConfigureAwait(false);
+        await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
 
         var result = await connection.Connection.ExecuteScalarAsync<int?>(string.Format(DbExistsSql, options.Database)).ConfigureAwait(false);
         if (result > 0)
@@ -1908,10 +1908,10 @@ END
         }
     }
 
-    public async Task CreateInfrastructure(SqlTransportOptions options, CancellationToken cancellationToken)
+    public async Task CreateInfrastructureAsync(SqlTransportOptions options, CancellationToken cancellationToken)
     {
         await using var connection = SqlServerSqlTransportConnection.GetDatabaseConnection(options);
-        await connection.Open(cancellationToken).ConfigureAwait(false);
+        await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
 
         try
         {
@@ -1948,14 +1948,14 @@ END
         }
         finally
         {
-            await connection.Close().ConfigureAwait(false);
+            await connection.CloseAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 
-    async Task CreateDatabaseIfNotExist(SqlTransportOptions options, CancellationToken cancellationToken)
+    async Task CreateDatabaseIfNotExistAsync(SqlTransportOptions options, CancellationToken cancellationToken)
     {
         await using var connection = SqlServerSqlTransportConnection.GetSystemDatabaseConnection(options);
-        await connection.Open(cancellationToken);
+        await connection.OpenAsync(cancellationToken);
 
         try
         {
@@ -1980,14 +1980,14 @@ END
         }
         finally
         {
-            await connection.Close();
+            await connection.CloseAsync(cancellationToken: cancellationToken);
         }
     }
 
-    public async Task CreateSchemaIfNotExist(SqlTransportOptions options, CancellationToken cancellationToken)
+    public async Task CreateSchemaIfNotExistAsync(SqlTransportOptions options, CancellationToken cancellationToken)
     {
         await using var connection = SqlServerSqlTransportConnection.GetDatabaseAdminConnection(options);
-        await connection.Open(cancellationToken).ConfigureAwait(false);
+        await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
 
         try
         {
@@ -1995,15 +1995,15 @@ END
 
             _logger.LogDebug("Schema {Schema} created", options.Schema);
 
-            await GrantAccess(connection, options).ConfigureAwait(false);
+            await GrantAccessAsync(connection, options).ConfigureAwait(false);
         }
         finally
         {
-            await connection.Close().ConfigureAwait(false);
+            await connection.CloseAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 
-    async Task GrantAccess(ISqlServerSqlTransportConnection connection, SqlTransportOptions options)
+    async Task GrantAccessAsync(ISqlServerSqlTransportConnection connection, SqlTransportOptions options)
     {
         if (string.IsNullOrWhiteSpace(options.Role))
             throw new ArgumentException("The SQL transport migrator requires a valid Role, but Role was not specified", nameof(options));

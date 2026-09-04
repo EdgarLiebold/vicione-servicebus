@@ -18,33 +18,33 @@ public class BusObservable :
         ForEach(x => x.CreateFaulted(exception));
     }
 
-    public Task PreStart(IBus bus)
+    public Task PreStartAsync(IBus bus)
     {
-        return ForEachAsync(x => x.PreStart(bus));
+        return ForEachAsync(x => x.PreStartAsync(bus));
     }
 
-    public Task PostStart(IBus bus, Task<BusReady> busReady)
+    public Task PostStartAsync(IBus bus, Task<BusReady> busReady)
     {
-        return ForEachAsync(x => x.PostStart(bus, busReady));
+        return ForEachAsync(x => x.PostStartAsync(bus, busReady));
     }
 
-    public Task StartFaulted(IBus bus, Exception exception)
+    public Task StartFaultedAsync(IBus bus, Exception exception)
     {
-        return ForEachAsync(x => x.StartFaulted(bus, exception));
+        return ForEachAsync(x => x.StartFaultedAsync(bus, exception));
     }
 
-    public Task PreStop(IBus bus)
+    public Task PreStopAsync(IBus bus)
     {
-        return ForEachAsync(x => x.PreStop(bus));
+        return ForEachAsync(x => x.PreStopAsync(bus));
     }
 
-    public Task PostStop(IBus bus)
+    public Task PostStopAsync(IBus bus)
     {
-        return ForEachAsync(x => x.PostStop(bus));
+        return ForEachAsync(x => x.PostStopAsync(bus));
     }
 
-    public Task StopFaulted(IBus bus, Exception exception)
+    public Task StopFaultedAsync(IBus bus, Exception exception)
     {
-        return ForEachAsync(x => x.StopFaulted(bus, exception));
+        return ForEachAsync(x => x.StopFaultedAsync(bus, exception));
     }
 }

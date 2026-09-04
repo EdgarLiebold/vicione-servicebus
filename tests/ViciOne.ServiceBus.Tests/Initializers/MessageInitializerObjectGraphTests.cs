@@ -10,11 +10,11 @@ public sealed class MessageInitializerObjectGraphTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-INITIALIZER-OBJECT-GRAPH", "covariant-fault")]
-    public async Task FaultWithDerivedMessage_IsProjectedIntoItsCovariantBaseContract()
+    public async Task FaultWithDerivedMessage_IsProjectedIntoItsCovariantBaseContractAsync()
     {
         var messageId = Guid.Parse("913a05a0-f19a-4298-8fcc-5a4b5cde8278");
         var host = new FixedHostInfo();
-        InitializeContext<Top> message = await MessageInitializerCache<Top>.Initialize(
+        InitializeContext<Top> message = await MessageInitializerCache<Top>.InitializeAsync(
             new { Text = "Hello" },
             TestContext.Current.CancellationToken);
         var sourceFault = new FaultEvent<Top>(
@@ -24,7 +24,7 @@ public sealed class MessageInitializerObjectGraphTests
             new InvalidOperationException("Expected failure"),
             ["urn:message:ViciOne.ServiceBus.Tests:Top"]);
 
-        InitializeContext<Report> context = await MessageInitializerCache<Report>.Initialize(
+        InitializeContext<Report> context = await MessageInitializerCache<Report>.InitializeAsync(
             new { Fault = sourceFault },
             TestContext.Current.CancellationToken);
 
@@ -44,9 +44,9 @@ public sealed class MessageInitializerObjectGraphTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INITIALIZER-OBJECT-GRAPH", "nested-private-setters")]
-    public async Task NestedAnonymousInput_InitializesPrivateSetterProperties()
+    public async Task NestedAnonymousInput_InitializesPrivateSetterPropertiesAsync()
     {
-        InitializeContext<Member> context = await MessageInitializerCache<Member>.Initialize(
+        InitializeContext<Member> context = await MessageInitializerCache<Member>.InitializeAsync(
             new
             {
                 Name = "Frank",
@@ -66,9 +66,9 @@ public sealed class MessageInitializerObjectGraphTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INITIALIZER-OBJECT-GRAPH", "interface-anonymous-readonly")]
-    public async Task InterfaceTarget_FromAnonymousInput_InitializesTheSuppliedWritableProperty()
+    public async Task InterfaceTarget_FromAnonymousInput_InitializesTheSuppliedWritablePropertyAsync()
     {
-        InitializeContext<IReadWriteReadOnly> context = await MessageInitializerCache<IReadWriteReadOnly>.Initialize(
+        InitializeContext<IReadWriteReadOnly> context = await MessageInitializerCache<IReadWriteReadOnly>.InitializeAsync(
             new { ReadWrite = "Some Property Value" },
             TestContext.Current.CancellationToken);
 
@@ -77,11 +77,11 @@ public sealed class MessageInitializerObjectGraphTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INITIALIZER-OBJECT-GRAPH", "interface-concrete-readonly")]
-    public async Task InterfaceTarget_FromConcreteInput_PreservesTheComputedReadOnlyProperty()
+    public async Task InterfaceTarget_FromConcreteInput_PreservesTheComputedReadOnlyPropertyAsync()
     {
         var source = new ReadWriteReadOnly { ReadWrite = "Some Property Value" };
 
-        InitializeContext<IReadWriteReadOnly> context = await MessageInitializerCache<IReadWriteReadOnly>.Initialize(
+        InitializeContext<IReadWriteReadOnly> context = await MessageInitializerCache<IReadWriteReadOnly>.InitializeAsync(
             source,
             TestContext.Current.CancellationToken);
 
@@ -91,9 +91,9 @@ public sealed class MessageInitializerObjectGraphTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INITIALIZER-OBJECT-GRAPH", "class-anonymous-readonly")]
-    public async Task ConcreteTarget_FromAnonymousInput_PreservesItsComputedReadOnlyProperty()
+    public async Task ConcreteTarget_FromAnonymousInput_PreservesItsComputedReadOnlyPropertyAsync()
     {
-        InitializeContext<ReadWriteReadOnly> context = await MessageInitializerCache<ReadWriteReadOnly>.Initialize(
+        InitializeContext<ReadWriteReadOnly> context = await MessageInitializerCache<ReadWriteReadOnly>.InitializeAsync(
             new { ReadWrite = "Some Property Value" },
             TestContext.Current.CancellationToken);
 
@@ -103,11 +103,11 @@ public sealed class MessageInitializerObjectGraphTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INITIALIZER-OBJECT-GRAPH", "class-concrete-readonly")]
-    public async Task ConcreteTarget_FromSameTypeInput_CreatesAnInitializedCopyWithComputedReadOnlyProperty()
+    public async Task ConcreteTarget_FromSameTypeInput_CreatesAnInitializedCopyWithComputedReadOnlyPropertyAsync()
     {
         var source = new ReadWriteReadOnly { ReadWrite = "Some Property Value" };
 
-        InitializeContext<ReadWriteReadOnly> context = await MessageInitializerCache<ReadWriteReadOnly>.Initialize(
+        InitializeContext<ReadWriteReadOnly> context = await MessageInitializerCache<ReadWriteReadOnly>.InitializeAsync(
             source,
             TestContext.Current.CancellationToken);
 
@@ -118,7 +118,7 @@ public sealed class MessageInitializerObjectGraphTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INITIALIZER-OBJECT-GRAPH", "complex-concrete-dto")]
-    public async Task DynamicInterfaceTarget_PreservesAnExactConcreteNestedDto()
+    public async Task DynamicInterfaceTarget_PreservesAnExactConcreteNestedDtoAsync()
     {
         var correlationId = Guid.Parse("582bcb34-d08c-4b95-ad1a-ccff34e41419");
         var timestamp = new DateTime(2024, 5, 6, 7, 8, 9, DateTimeKind.Utc);
@@ -138,7 +138,7 @@ public sealed class MessageInitializerObjectGraphTests
             },
         };
 
-        InitializeContext<PaymentGatewaySubmitted> context = await MessageInitializerCache<PaymentGatewaySubmitted>.Initialize(
+        InitializeContext<PaymentGatewaySubmitted> context = await MessageInitializerCache<PaymentGatewaySubmitted>.InitializeAsync(
             new
             {
                 Order = order,
@@ -165,9 +165,9 @@ public sealed class MessageInitializerObjectGraphTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INITIALIZER-OBJECT-GRAPH", "partial-exception-info")]
-    public async Task ExceptionInfoTarget_InitializesSuppliedPropertiesAndLeavesMissingPropertiesDefault()
+    public async Task ExceptionInfoTarget_InitializesSuppliedPropertiesAndLeavesMissingPropertiesDefaultAsync()
     {
-        InitializeContext<ExceptionInfo> context = await MessageInitializerCache<ExceptionInfo>.Initialize(
+        InitializeContext<ExceptionInfo> context = await MessageInitializerCache<ExceptionInfo>.InitializeAsync(
             new
             {
                 Message = "Hello",
@@ -185,12 +185,12 @@ public sealed class MessageInitializerObjectGraphTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INITIALIZER-OBJECT-GRAPH", "most-derived-duplicate-property")]
-    public async Task NestedConcreteInput_UsesTheMostDerivedDuplicateProperty()
+    public async Task NestedConcreteInput_UsesTheMostDerivedDuplicatePropertyAsync()
     {
         var nested = new DerivedProperty { NewProperty = "Derived value" };
         ((BaseProperty)nested).NewProperty = "Base value";
 
-        InitializeContext<DuplicatePropertyMessage> context = await MessageInitializerCache<DuplicatePropertyMessage>.Initialize(
+        InitializeContext<DuplicatePropertyMessage> context = await MessageInitializerCache<DuplicatePropertyMessage>.InitializeAsync(
             new { Value = nested },
             TestContext.Current.CancellationToken);
 
@@ -200,9 +200,9 @@ public sealed class MessageInitializerObjectGraphTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INITIALIZER-OBJECT-GRAPH", "nested-interface")]
-    public async Task NestedAnonymousInput_InitializesAnInterfaceProperty()
+    public async Task NestedAnonymousInput_InitializesAnInterfacePropertyAsync()
     {
-        InitializeContext<NestedInterfaceMessage> context = await MessageInitializerCache<NestedInterfaceMessage>.Initialize(
+        InitializeContext<NestedInterfaceMessage> context = await MessageInitializerCache<NestedInterfaceMessage>.InitializeAsync(
             new { Value = new { Text = "Mary" } },
             TestContext.Current.CancellationToken);
 

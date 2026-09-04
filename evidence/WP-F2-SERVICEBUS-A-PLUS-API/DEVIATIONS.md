@@ -45,6 +45,36 @@ Regression evidence:
 sets a valid maximum age, replaces it with 999 milliseconds, and proves the generated queue arguments
 contain no `x-max-age` entry.
 
+## Application overload resolution after surface reduction
+
+Removing runtime-object and pipe overloads from the application interfaces exposed an intentional C#
+resolution change: an `object`-typed variable would otherwise bind the remaining generic application
+method as `T = object`, losing its runtime message contract. All such framework and test call sites now
+select `.Advanced()` explicitly before invoking runtime-type, pipe, callback, or initializer forms.
+The capability and runtime type are preserved without reintroducing an ambiguous application overload.
+
+Regression evidence includes the interface-message dispatch, in-memory send-endpoint, buffered-bus,
+conversation-context, and container endpoint-routing tests. The final application inventory contains
+three send shapes and two publish shapes.
+
+## SQLite ordering for UTC `DateTimeOffset` outbox rows
+
+SQLite rejects `ORDER BY` over an Entity Framework Core `DateTimeOffset` expression. Client-side sorting
+would make the bounded quarantine operation read every matching row. The SQLite branch therefore orders
+the library-owned, UTC-normalized canonical persisted representation and then the outbox identifier,
+while providers with native `DateTimeOffset` ordering retain the typed expression. `Take` remains in the
+database query.
+
+The regression uses three owned quarantine rows with deliberately opposing time and identifier order,
+plus pending and foreign-bus rows. A targeted counterexample that ordered only by identifier was killed.
+
+## Mandatory external asynchronous names
+
+Quartz 4.0.0 requires explicit implementations named `IJob.Execute`, `IJobFactory.CreateJob`, and
+`IJobFactory.ReturnJob`. Renaming these members would violate the external interface. They remain the
+only non-entry-point task-like names without an `Async` suffix found by the bidirectional Roslyn check.
+They are explicit framework contracts, not ViciOne public API choices.
+
 ## Related defect: nondeterministic saga concurrency test barrier
 
 The existing held-instance concurrency test only waited until a cancel message was enqueued. Under a

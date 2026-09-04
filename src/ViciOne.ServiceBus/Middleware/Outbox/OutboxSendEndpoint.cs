@@ -34,25 +34,25 @@ public class OutboxSendEndpoint :
         return new EmptyConnectHandle();
     }
 
-    public Task<SendContext<T>> CreateSendContext<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    public Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
-        return _endpoint.CreateSendContext(message, new OutboxSendEndpointPipe<T>(pipe, _context), cancellationToken);
+        return _endpoint.CreateSendContextAsync(message, new OutboxSendEndpointPipe<T>(pipe, _context), cancellationToken);
     }
 
-    public async Task Send<T>(T message, CancellationToken cancellationToken)
+    public async Task SendAsync<T>(T message, CancellationToken cancellationToken)
         where T : class
     {
         if (message == null)
             throw new ArgumentNullException(nameof(message));
 
         SendContext<T> context =
-            await _endpoint.CreateSendContext(message, new OutboxSendEndpointPipe<T>(_context), cancellationToken).ConfigureAwait(false);
+            await _endpoint.CreateSendContextAsync(message, new OutboxSendEndpointPipe<T>(_context), cancellationToken).ConfigureAwait(false);
 
-        await AddSend(context).ConfigureAwait(false);
+        await AddSendAsync(context).ConfigureAwait(false);
     }
 
-    public async Task Send<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    public async Task SendAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
         if (message == null)
@@ -60,33 +60,33 @@ public class OutboxSendEndpoint :
         if (pipe == null)
             throw new ArgumentNullException(nameof(pipe));
 
-        SendContext<T> context = await _endpoint.CreateSendContext(message, new OutboxSendEndpointPipe<T>(pipe, _context), cancellationToken)
+        SendContext<T> context = await _endpoint.CreateSendContextAsync(message, new OutboxSendEndpointPipe<T>(pipe, _context), cancellationToken)
             .ConfigureAwait(false);
 
-        await AddSend(context).ConfigureAwait(false);
+        await AddSendAsync(context).ConfigureAwait(false);
     }
 
-    public Task Send(object message, CancellationToken cancellationToken)
+    public Task SendAsync(object message, CancellationToken cancellationToken)
     {
         if (message == null)
             throw new ArgumentNullException(nameof(message));
 
         var messageType = message.GetType();
 
-        return SendEndpointConverterCache.Send(this, message, messageType, cancellationToken);
+        return SendEndpointConverterCache.SendAsync(this, message, messageType, cancellationToken);
     }
 
-    public Task Send(object message, Type messageType, CancellationToken cancellationToken)
+    public Task SendAsync(object message, Type messageType, CancellationToken cancellationToken)
     {
         if (message == null)
             throw new ArgumentNullException(nameof(message));
         if (messageType == null)
             throw new ArgumentNullException(nameof(messageType));
 
-        return SendEndpointConverterCache.Send(this, message, messageType, cancellationToken);
+        return SendEndpointConverterCache.SendAsync(this, message, messageType, cancellationToken);
     }
 
-    public async Task Send<T>(T message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
+    public async Task SendAsync<T>(T message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
         where T : class
     {
         if (message == null)
@@ -94,13 +94,13 @@ public class OutboxSendEndpoint :
         if (pipe == null)
             throw new ArgumentNullException(nameof(pipe));
 
-        SendContext<T> context = await _endpoint.CreateSendContext(message, new OutboxSendEndpointPipe<T>(pipe, _context), cancellationToken)
+        SendContext<T> context = await _endpoint.CreateSendContextAsync(message, new OutboxSendEndpointPipe<T>(pipe, _context), cancellationToken)
             .ConfigureAwait(false);
 
-        await AddSend(context).ConfigureAwait(false);
+        await AddSendAsync(context).ConfigureAwait(false);
     }
 
-    public Task Send(object message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
+    public Task SendAsync(object message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
         if (message == null)
             throw new ArgumentNullException(nameof(message));
@@ -109,10 +109,10 @@ public class OutboxSendEndpoint :
 
         var messageType = message.GetType();
 
-        return SendEndpointConverterCache.Send(this, message, messageType, pipe, cancellationToken);
+        return SendEndpointConverterCache.SendAsync(this, message, messageType, pipe, cancellationToken);
     }
 
-    public Task Send(object message, Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken)
+    public Task SendAsync(object message, Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
         if (message == null)
             throw new ArgumentNullException(nameof(message));
@@ -121,41 +121,41 @@ public class OutboxSendEndpoint :
         if (pipe == null)
             throw new ArgumentNullException(nameof(pipe));
 
-        return SendEndpointConverterCache.Send(this, message, messageType, pipe, cancellationToken);
+        return SendEndpointConverterCache.SendAsync(this, message, messageType, pipe, cancellationToken);
     }
 
-    public async Task Send<T>(object values, CancellationToken cancellationToken)
+    public async Task SendAsync<T>(object values, CancellationToken cancellationToken)
         where T : class
     {
         if (values == null)
             throw new ArgumentNullException(nameof(values));
 
         (var message, IPipe<SendContext<T>> sendPipe) =
-            await MessageInitializerCache<T>.InitializeMessage(values, new OutboxSendEndpointPipe<T>(_context), cancellationToken).ConfigureAwait(false);
+            await MessageInitializerCache<T>.InitializeMessageAsync(values, new OutboxSendEndpointPipe<T>(_context), cancellationToken).ConfigureAwait(false);
 
         SendContext<T> context =
-            await _endpoint.CreateSendContext(message, new OutboxSendEndpointPipe<T>(sendPipe, _context), cancellationToken).ConfigureAwait(false);
+            await _endpoint.CreateSendContextAsync(message, new OutboxSendEndpointPipe<T>(sendPipe, _context), cancellationToken).ConfigureAwait(false);
 
-        await AddSend(context).ConfigureAwait(false);
+        await AddSendAsync(context).ConfigureAwait(false);
     }
 
-    public async Task Send<T>(object values, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    public async Task SendAsync<T>(object values, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
         if (values == null)
             throw new ArgumentNullException(nameof(values));
 
         (var message, IPipe<SendContext<T>> sendPipe) =
-            await MessageInitializerCache<T>.InitializeMessage(values, new OutboxSendEndpointPipe<T>(pipe, _context), cancellationToken)
+            await MessageInitializerCache<T>.InitializeMessageAsync(values, new OutboxSendEndpointPipe<T>(pipe, _context), cancellationToken)
                 .ConfigureAwait(false);
 
         SendContext<T> context =
-            await _endpoint.CreateSendContext(message, new OutboxSendEndpointPipe<T>(sendPipe, _context), cancellationToken).ConfigureAwait(false);
+            await _endpoint.CreateSendContextAsync(message, new OutboxSendEndpointPipe<T>(sendPipe, _context), cancellationToken).ConfigureAwait(false);
 
-        await AddSend(context).ConfigureAwait(false);
+        await AddSendAsync(context).ConfigureAwait(false);
     }
 
-    public async Task Send<T>(object values, IPipe<SendContext> pipe, CancellationToken cancellationToken)
+    public async Task SendAsync<T>(object values, IPipe<SendContext> pipe, CancellationToken cancellationToken)
         where T : class
     {
         if (values == null)
@@ -164,16 +164,16 @@ public class OutboxSendEndpoint :
             throw new ArgumentNullException(nameof(pipe));
 
         (var message, IPipe<SendContext<T>> sendPipe) =
-            await MessageInitializerCache<T>.InitializeMessage(values, new OutboxSendEndpointPipe<T>(pipe, _context), cancellationToken)
+            await MessageInitializerCache<T>.InitializeMessageAsync(values, new OutboxSendEndpointPipe<T>(pipe, _context), cancellationToken)
                 .ConfigureAwait(false);
 
         SendContext<T> context =
-            await _endpoint.CreateSendContext(message, new OutboxSendEndpointPipe<T>(sendPipe, _context), cancellationToken).ConfigureAwait(false);
+            await _endpoint.CreateSendContextAsync(message, new OutboxSendEndpointPipe<T>(sendPipe, _context), cancellationToken).ConfigureAwait(false);
 
-        await AddSend(context).ConfigureAwait(false);
+        await AddSendAsync(context).ConfigureAwait(false);
     }
 
-    async Task AddSend<T>(SendContext<T> context)
+    async Task AddSendAsync<T>(SendContext<T> context)
         where T : class
     {
         if (ForwardingExpiration.TryDiscard(context))
@@ -183,7 +183,7 @@ public class OutboxSendEndpoint :
         var instrument = LogContext.Current?.StartOutboxEnqueueInstrument();
         try
         {
-            await _context.AddSend(context).ConfigureAwait(false);
+            await _context.AddSendAsync(context).ConfigureAwait(false);
             activity?.Update(context);
         }
         catch (Exception ex)

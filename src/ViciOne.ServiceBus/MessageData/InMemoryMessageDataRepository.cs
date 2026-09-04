@@ -16,7 +16,7 @@ public class InMemoryMessageDataRepository :
         _values = new ConcurrentDictionary<Uri, byte[]>();
     }
 
-    Task<Stream> IMessageDataRepository.Get(Uri address, CancellationToken cancellationToken)
+    Task<Stream> IMessageDataRepository.GetAsync(Uri address, CancellationToken cancellationToken)
     {
         if (address == null)
             throw new ArgumentNullException(nameof(address));
@@ -27,7 +27,7 @@ public class InMemoryMessageDataRepository :
         throw new MessageDataNotFoundException(address);
     }
 
-    async Task<Uri> IMessageDataRepository.Put(Stream stream, TimeSpan? timeToLive, CancellationToken cancellationToken)
+    async Task<Uri> IMessageDataRepository.PutAsync(Stream stream, TimeSpan? timeToLive, CancellationToken cancellationToken)
     {
         var address = new InMemoryMessageDataId().Uri;
 

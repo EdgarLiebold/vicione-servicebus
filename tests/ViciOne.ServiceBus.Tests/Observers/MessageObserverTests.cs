@@ -9,7 +9,7 @@ public sealed class MessageObserverTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-OBSERVER", "configured-filter-and-response")]
-    public async Task ConfiguredObserver_ReceivesTheFilteredContextAndCompletesTheRequestResponse()
+    public async Task ConfiguredObserver_ReceivesTheFilteredContextAndCompletesTheRequestResponseAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -20,13 +20,13 @@ public sealed class MessageObserverTests
             configurator.Observer(observer, observerConfigurator =>
                 observerConfigurator.UseExecute(context => context.GetOrAddPayload(() => marker)));
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            IRequestClient<ObservedRequest> client = await harness.ConnectRequestClient<ObservedRequest>();
+            IRequestClient<ObservedRequest> client = await harness.ConnectRequestClientAsync<ObservedRequest>(TestContext.Current.CancellationToken);
             var request = new ObservedRequest(NewId.NextGuid(), "request");
 
-            Response<ObservedResponse> response = await client.GetResponse<ObservedResponse>(request, cancellationToken);
+            Response<ObservedResponse> response = await client.GetResponseAsync<ObservedResponse>(request, cancellationToken);
             ConsumeContext<ObservedRequest> observed = await observer.Observed.WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(new ObservedResponse(request.CorrelationId, "reply:request"), response.Message);
@@ -40,13 +40,13 @@ public sealed class MessageObserverTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-OBSERVER", "on-next-failure-isolated-from-consumers")]
-    public async Task OnNextFailure_IsReportedToOnErrorWithoutSuppressingIndependentConsumers()
+    public async Task OnNextFailure_IsReportedToOnErrorWithoutSuppressingIndependentConsumersAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -64,17 +64,17 @@ public sealed class MessageObserverTests
             });
         };
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             var request = new ObservedRequest(NewId.NextGuid(), "fault");
 
-            await harness.InputQueueSendEndpoint.Send(request, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(request, cancellationToken);
 
             Exception reported = await observer.Faulted.WaitAsync(timeout, cancellationToken);
             IPublishedMessage<Fault<ObservedRequest>> fault = await harness.Published
                 .SelectAsync<Fault<ObservedRequest>>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             Assert.Same(expected, reported);
             Assert.Equal(1, observer.OnNextCount);
@@ -87,7 +87,7 @@ public sealed class MessageObserverTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
@@ -137,7 +137,7 @@ public sealed class MessageObserverTests
             if (failure is not null)
                 throw failure;
 
-            context.Respond(new ObservedResponse(context.Message.CorrelationId, $"reply:{context.Message.Value}"));
+            context.DeferResponse(new ObservedResponse(context.Message.CorrelationId, $"reply:{context.Message.Value}"));
         }
     }
 

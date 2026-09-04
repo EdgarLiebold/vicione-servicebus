@@ -21,19 +21,19 @@ public class TestConsumeObserver :
 
     public IReceivedMessageList Messages => _messages;
 
-    Task IConsumeObserver.PreConsume<T>(ConsumeContext<T> context)
+    Task IConsumeObserver.PreConsumeAsync<T>(ConsumeContext<T> context)
     {
         return Task.CompletedTask;
     }
 
-    Task IConsumeObserver.PostConsume<T>(ConsumeContext<T> context)
+    Task IConsumeObserver.PostConsumeAsync<T>(ConsumeContext<T> context)
     {
         _messages.Add(context);
 
         return Task.CompletedTask;
     }
 
-    Task IConsumeObserver.ConsumeFault<T>(ConsumeContext<T> context, Exception exception)
+    Task IConsumeObserver.ConsumeFaultAsync<T>(ConsumeContext<T> context, Exception exception)
     {
         _messages.Add(context, exception);
 

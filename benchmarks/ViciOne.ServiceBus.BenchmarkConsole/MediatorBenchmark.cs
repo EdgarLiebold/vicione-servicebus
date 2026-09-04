@@ -38,24 +38,26 @@ public class MediatorBenchmark
     }
 
     [Benchmark(Baseline = true, Description = "Direct handler call")]
-    public Task CallingHandlerDirectly() => _handler.Handle(_command, CancellationToken.None);
+    public Task CallingHandlerDirectlyAsync() => _handler.HandleAsync(_command, CancellationToken.None);
 
     [Benchmark(Description = "ViciOne.ServiceBus mediator call")]
-    public Task CallingHandlerWithViciOneServiceBusMediator() => _mediator.Send(_command, CancellationToken.None);
+    public Task CallingHandlerWithViciOneServiceBusMediatorAsync() => _mediator.SendAsync(_command, CancellationToken.None);
 }
 
 
 public class ExampleCommandHandler :
     IConsumer<ExampleCommand>
 {
-    public Task Consume(ConsumeContext<ExampleCommand> context)
+    public Task ConsumeAsync(ConsumeContext<ExampleCommand> context)
     {
         return Task.CompletedTask;
     }
 
     /// <inheritdoc />
-    public Task Handle(ExampleCommand request, CancellationToken cancellationToken)
+    /// <param name="request">The request used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public Task HandleAsync(ExampleCommand request, CancellationToken cancellationToken)
     {
-        return Task.CompletedTask;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
     }
 }

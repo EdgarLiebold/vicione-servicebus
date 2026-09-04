@@ -11,37 +11,37 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         Connectable<IEventObserver<TInstance>>,
         IEventObserver<TInstance>
     {
-        public Task PreExecute(BehaviorContext<TInstance> context)
+        public Task PreExecuteAsync(BehaviorContext<TInstance> context)
         {
-            return ForEachAsync(x => x.PreExecute(context));
+            return ForEachAsync(x => x.PreExecuteAsync(context));
         }
 
-        public Task PreExecute<T>(BehaviorContext<TInstance, T> context)
+        public Task PreExecuteAsync<T>(BehaviorContext<TInstance, T> context)
             where T : class
         {
-            return ForEachAsync(x => x.PreExecute(context));
+            return ForEachAsync(x => x.PreExecuteAsync(context));
         }
 
-        public Task PostExecute(BehaviorContext<TInstance> context)
+        public Task PostExecuteAsync(BehaviorContext<TInstance> context)
         {
-            return ForEachAsync(x => x.PostExecute(context));
+            return ForEachAsync(x => x.PostExecuteAsync(context));
         }
 
-        public Task PostExecute<T>(BehaviorContext<TInstance, T> context)
+        public Task PostExecuteAsync<T>(BehaviorContext<TInstance, T> context)
             where T : class
         {
-            return ForEachAsync(x => x.PostExecute(context));
+            return ForEachAsync(x => x.PostExecuteAsync(context));
         }
 
-        public Task ExecuteFault(BehaviorContext<TInstance> context, Exception exception)
+        public Task ExecuteFaultAsync(BehaviorContext<TInstance> context, Exception exception)
         {
-            return ForEachAsync(x => x.ExecuteFault(context, exception));
+            return ForEachAsync(x => x.ExecuteFaultAsync(context, exception));
         }
 
-        public Task ExecuteFault<T>(BehaviorContext<TInstance, T> context, Exception exception)
+        public Task ExecuteFaultAsync<T>(BehaviorContext<TInstance, T> context, Exception exception)
             where T : class
         {
-            return ForEachAsync(x => x.ExecuteFault(context, exception));
+            return ForEachAsync(x => x.ExecuteFaultAsync(context, exception));
         }
     }
 }

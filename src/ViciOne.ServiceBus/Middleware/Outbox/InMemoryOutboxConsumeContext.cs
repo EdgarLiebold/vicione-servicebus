@@ -28,23 +28,23 @@ public class InMemoryOutboxConsumeContext<TMessage> :
 
     Guid InboxMessageId => _inboxMessage.MessageId;
 
-    public override async Task SetConsumed()
+    public override async Task SetConsumedAsync(CancellationToken cancellationToken = default)
     {
-        _inboxMessage.Consumed = this.GetTimeProvider().GetUtcNow().UtcDateTime;
+        cancellationToken.ThrowIfCancellationRequested(); _inboxMessage.Consumed = this.GetTimeProvider().GetUtcNow().UtcDateTime;
 
         LogContext.Debug?.Log("Outbox Consumed: {MessageId} {Consumed}", InboxMessageId, _inboxMessage.Consumed);
     }
 
-    public override async Task SetDelivered()
+    public override async Task SetDeliveredAsync(CancellationToken cancellationToken = default)
     {
-        _inboxMessage.Delivered = this.GetTimeProvider().GetUtcNow().UtcDateTime;
+        cancellationToken.ThrowIfCancellationRequested(); _inboxMessage.Delivered = this.GetTimeProvider().GetUtcNow().UtcDateTime;
 
         LogContext.Debug?.Log("Outbox Delivered: {MessageId} {Delivered}", InboxMessageId, _inboxMessage.Delivered);
     }
 
-    public override Task<List<OutboxMessageContext>> LoadOutboxMessages()
+    public override Task<List<OutboxMessageContext>> LoadOutboxMessagesAsync(CancellationToken cancellationToken = default)
     {
-        List<InMemoryOutboxMessage> messages = _inboxMessage.GetOutboxMessages();
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::System.Collections.Generic.List<global::ViciOne.ServiceBus.Middleware.OutboxMessageContext>>(cancellationToken); List<InMemoryOutboxMessage> messages = _inboxMessage.GetOutboxMessages();
 
         for (var i = 0; i < messages.Count; i++)
             messages[i].Deserialize(SerializerContext);
@@ -52,16 +52,16 @@ public class InMemoryOutboxConsumeContext<TMessage> :
         return Task.FromResult(messages.Cast<OutboxMessageContext>().ToList());
     }
 
-    public override Task NotifyOutboxMessageDelivered(OutboxMessageContext message)
+    public override Task NotifyOutboxMessageDeliveredAsync(OutboxMessageContext message, CancellationToken cancellationToken = default)
     {
-        _inboxMessage.LastSequenceNumber = message.SequenceNumber;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); _inboxMessage.LastSequenceNumber = message.SequenceNumber;
 
         return Task.CompletedTask;
     }
 
-    public override async Task RemoveOutboxMessages()
+    public override async Task RemoveOutboxMessagesAsync(CancellationToken cancellationToken = default)
     {
-        List<InMemoryOutboxMessage> messages = _inboxMessage.GetOutboxMessages();
+        cancellationToken.ThrowIfCancellationRequested(); List<InMemoryOutboxMessage> messages = _inboxMessage.GetOutboxMessages();
 
         _inboxMessage.RemoveOutboxMessages();
 
@@ -69,7 +69,7 @@ public class InMemoryOutboxConsumeContext<TMessage> :
             LogContext.Debug?.Log("Outbox removed {Count} messages: {MessageId}", messages.Count, InboxMessageId);
     }
 
-    internal Task DiscardPendingConsumerMessages()
+    internal Task DiscardPendingConsumerMessagesAsync()
     {
         _inboxMessage.RemoveOutboxMessages();
         _inboxMessage.LastSequenceNumber = null;
@@ -77,10 +77,10 @@ public class InMemoryOutboxConsumeContext<TMessage> :
         return Task.CompletedTask;
     }
 
-    public override async Task AddSend<T>(SendContext<T> context)
+    public override async Task AddSendAsync<T>(SendContext<T> context, CancellationToken cancellationToken = default)
         where T : class
     {
-        if (context.MessageId.HasValue == false)
+        cancellationToken.ThrowIfCancellationRequested(); if (context.MessageId.HasValue == false)
             throw new MessageException(typeof(T), "The SendContext MessageId must be present");
 
         var body = context.Serializer.GetMessageBody(context);

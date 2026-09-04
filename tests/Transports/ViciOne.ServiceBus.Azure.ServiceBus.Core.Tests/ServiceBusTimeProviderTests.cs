@@ -38,7 +38,7 @@ public sealed class ServiceBusTimeProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-TIME-SOURCE", "lock-and-ttl-exact-clock-boundaries")]
-    public async Task ReceiveLockValidation_UsesTheInjectedClockAtExactBoundaries()
+    public async Task ReceiveLockValidation_UsesTheInjectedClockAtExactBoundariesAsync()
     {
         var clock = new MutableTimeProvider(Now);
         var lockContext = new StubMessageLockContext();
@@ -47,7 +47,8 @@ public sealed class ServiceBusTimeProviderTests
             expiresAt: Now.AddHours(1));
         var expiredLock = new ServiceBusReceiveLockContext(InputAddress, lockContext, lockExpired, clock);
 
-        MessageLockExpiredException lockException = await Assert.ThrowsAsync<MessageLockExpiredException>(expiredLock.ValidateLockStatus);
+        MessageLockExpiredException lockException = await Assert.ThrowsAsync<MessageLockExpiredException>(
+            () => expiredLock.ValidateLockStatusAsync(TestContext.Current.CancellationToken));
         Assert.Contains("clock-message", lockException.Message, StringComparison.Ordinal);
 
         ServiceBusReceivedMessage ttlBoundary = CreateMessage(
@@ -55,11 +56,12 @@ public sealed class ServiceBusTimeProviderTests
             expiresAt: Now);
         var activeAtBoundary = new ServiceBusReceiveLockContext(InputAddress, lockContext, ttlBoundary, clock);
 
-        await activeAtBoundary.ValidateLockStatus();
+        await activeAtBoundary.ValidateLockStatusAsync(TestContext.Current.CancellationToken);
 
         clock.Advance(TimeSpan.FromTicks(1));
         MessageTimeToLiveExpiredException ttlException =
-            await Assert.ThrowsAsync<MessageTimeToLiveExpiredException>(activeAtBoundary.ValidateLockStatus);
+            await Assert.ThrowsAsync<MessageTimeToLiveExpiredException>(
+                () => activeAtBoundary.ValidateLockStatusAsync(TestContext.Current.CancellationToken));
         Assert.Contains("clock-message", ttlException.Message, StringComparison.Ordinal);
     }
 
@@ -103,12 +105,28 @@ public sealed class ServiceBusTimeProviderTests
 
     private sealed class StubMessageLockContext : MessageLockContext
     {
-        public Task Complete() => Task.CompletedTask;
+        public Task CompleteAsync(CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return Task.CompletedTask;
+        }
 
-        public Task Abandon(Exception exception) => Task.CompletedTask;
+        public Task AbandonAsync(Exception exception, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return Task.CompletedTask;
+        }
 
-        public Task DeadLetter() => Task.CompletedTask;
+        public Task DeadLetterAsync(CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return Task.CompletedTask;
+        }
 
-        public Task DeadLetter(Exception exception) => Task.CompletedTask;
+        public Task DeadLetterAsync(Exception exception, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return Task.CompletedTask;
+        }
     }
 }

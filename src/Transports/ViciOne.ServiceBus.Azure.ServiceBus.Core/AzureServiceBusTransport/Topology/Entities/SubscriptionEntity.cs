@@ -10,8 +10,8 @@ public class SubscriptionEntity :
 {
     readonly TopicEntity _topic;
 
-    public SubscriptionEntity(long id, TopicEntity topic, CreateSubscriptionOptions createSubscriptionOptions, CreateRuleOptions rule = null,
-        RuleFilter filter = null)
+    public SubscriptionEntity(long id, TopicEntity topic, CreateSubscriptionOptions createSubscriptionOptions, CreateRuleOptions? rule = null,
+        RuleFilter? filter = null)
     {
         Id = id;
 
@@ -30,8 +30,8 @@ public class SubscriptionEntity :
 
     public TopicHandle Topic => _topic;
 
-    public CreateRuleOptions Rule { get; }
-    public RuleFilter Filter { get; }
+    public CreateRuleOptions? Rule { get; }
+    public RuleFilter? Filter { get; }
     public long Id { get; }
     public Subscription Subscription => this;
 
@@ -46,7 +46,7 @@ public class SubscriptionEntity :
     sealed class SubscriptionEntityEqualityComparer :
         IEqualityComparer<SubscriptionEntity>
     {
-        public bool Equals(SubscriptionEntity x, SubscriptionEntity y)
+        public bool Equals(SubscriptionEntity? x, SubscriptionEntity? y)
         {
             if (ReferenceEquals(x, y))
                 return true;
@@ -108,7 +108,7 @@ public class SubscriptionEntity :
     sealed class NameEqualityComparer :
         IEqualityComparer<SubscriptionEntity>
     {
-        public bool Equals(SubscriptionEntity x, SubscriptionEntity y)
+        public bool Equals(SubscriptionEntity? x, SubscriptionEntity? y)
         {
             if (ReferenceEquals(x, y))
                 return true;

@@ -24,8 +24,7 @@ public class ReceiveTransport<TContext> :
         _transportPipe = transportPipe;
     }
 
-    public IPipe<TContext> PreStartPipe { get; set; }
-
+    public IPipe<TContext> PreStartPipe { get; set; } = null!;
     public void Probe(ProbeContext context)
     {
         var scope = context.CreateScope("receiveTransport");
@@ -73,7 +72,7 @@ public class ReceiveTransport<TContext> :
         readonly IRetryPolicy _retryPolicy;
         readonly Func<ITransportSupervisor<TContext>> _supervisorFactory;
         readonly IPipe<TContext> _transportPipe;
-        ITransportSupervisor<TContext> _supervisor;
+        ITransportSupervisor<TContext> _supervisor = null!;
 
         public ReceiveTransportAgent(IRetryPolicy retryPolicy, ReceiveEndpointContext context, Func<ITransportSupervisor<TContext>> supervisorFactory,
             IPipe<TContext> transportPipe, IPipe<TContext> preStartPipe)
@@ -84,26 +83,26 @@ public class ReceiveTransport<TContext> :
             _transportPipe = transportPipe;
             _preStartPipe = preStartPipe;
 
-            Task receiver = Run();
+            Task receiver = RunAsync();
             SetCompleted(receiver);
         }
 
-        public Task Stop(CancellationToken cancellationToken)
+        public Task StopAsync(CancellationToken cancellationToken)
         {
-            return this.Stop("Stop Receive Transport", cancellationToken);
+            return this.StopAsync("Stop Receive Transport", cancellationToken);
         }
 
-        protected override async Task StopAgent(StopContext context)
+        protected override async Task StopAgentAsync(StopContext context)
         {
             LogContext.SetCurrentIfNull(_context.LogContext);
 
             if (_supervisor != null)
-                await _supervisor.Stop(context).ConfigureAwait(false);
+                await _supervisor.StopAsync(context).ConfigureAwait(false);
 
             await Completed.ConfigureAwait(false);
         }
 
-        async Task Run()
+        async Task RunAsync()
         {
             var stoppingContext = new TransportStoppingContext(Stopping);
             stoppingContext.SetTimeProvider(_context.GetTimeProvider());
@@ -111,7 +110,7 @@ public class ReceiveTransport<TContext> :
             using RetryPolicyContext<TransportStoppingContext> policyContext = _retryPolicy.CreatePolicyContext(stoppingContext)
                 ?? throw new InvalidOperationException("The receive transport retry policy returned a null policy context.");
 
-            RetryContext<TransportStoppingContext> retryContext = null;
+            RetryContext<TransportStoppingContext>? retryContext = null;
 
             while (!Stopping.IsCancellationRequested)
             {
@@ -130,20 +129,20 @@ public class ReceiveTransport<TContext> :
                                 .ConfigureAwait(false);
                         }
 
-                        Task preRetry = retryContext.PreRetry()
+                        Task preRetry = retryContext.PreRetryAsync()
                             ?? throw new InvalidOperationException("The receive transport retry context returned a null pre-retry task.");
                         if (preRetry.Status != TaskStatus.RanToCompletion)
                             await preRetry.ConfigureAwait(false);
                     }
 
                     Stopping.ThrowIfCancellationRequested();
-                    await RunTransport().ConfigureAwait(false);
+                    await RunTransportAsync().ConfigureAwait(false);
 
                     if (!Stopping.IsCancellationRequested)
                     {
                         var exception = new ConnectionException(
                             $"Receive transport completed before shutdown: {_context.InputAddress}", isTransient: true);
-                        await NotifyFaulted(exception, false).ConfigureAwait(false);
+                        await NotifyFaultedAsync(exception, false).ConfigureAwait(false);
                         throw exception;
                     }
                 }
@@ -161,14 +160,14 @@ public class ReceiveTransport<TContext> :
                     {
                         if (nextRetryContext != null && _retryPolicy.IsHandled(exception))
                         {
-                            Task retryFaulted = nextRetryContext.RetryFaulted(exception)
+                            Task retryFaulted = nextRetryContext.RetryFaultedAsync(exception)
                                 ?? throw new InvalidOperationException("The receive transport retry context returned a null retry-faulted task.");
                             if (retryFaulted.Status != TaskStatus.RanToCompletion)
                                 await retryFaulted.ConfigureAwait(false);
                         }
 
                         LogContext.Error?.Log(exception, "ReceiveTransport retry budget exhausted: {InputAddress}", _context.InputAddress);
-                        await NotifyFaulted(exception, true).ConfigureAwait(false);
+                        await NotifyFaultedAsync(exception, true).ConfigureAwait(false);
                         break;
                     }
 
@@ -177,25 +176,25 @@ public class ReceiveTransport<TContext> :
             }
         }
 
-        async Task RunTransport()
+        async Task RunTransportAsync()
         {
             try
             {
                 _supervisor = _supervisorFactory();
 
                 if (_preStartPipe.IsNotEmpty())
-                    await _supervisor.Send(_preStartPipe, Stopping).ConfigureAwait(false);
+                    await _supervisor.SendAsync(_preStartPipe, Stopping).ConfigureAwait(false);
 
                 // Nothing connected to the pipe, so signal early we are available
                 if (!_context.ReceivePipe.Connected.IsCompleted)
-                    await _context.OnTransportStartup(_supervisor, Stopping).ConfigureAwait(false);
+                    await _context.OnTransportStartupAsync(_supervisor, Stopping).ConfigureAwait(false);
 
                 if (!IsStopping)
-                    await _supervisor.Send(_transportPipe, Stopped).ConfigureAwait(false);
+                    await _supervisor.SendAsync(_transportPipe, Stopped).ConfigureAwait(false);
             }
             catch (ConnectionException exception)
             {
-                await NotifyFaulted(exception, false).ConfigureAwait(false);
+                await NotifyFaultedAsync(exception, false).ConfigureAwait(false);
                 throw;
             }
             catch (OperationCanceledException)
@@ -204,17 +203,17 @@ public class ReceiveTransport<TContext> :
             }
             catch (Exception exception)
             {
-                throw await NotifyFaulted(exception, "ReceiveTransport faulted: ").ConfigureAwait(false);
+                throw await NotifyFaultedAsync(exception, "ReceiveTransport faulted: ").ConfigureAwait(false);
             }
         }
 
-        async Task<Exception> NotifyFaulted(Exception originalException, string message)
+        async Task<Exception> NotifyFaultedAsync(Exception originalException, string message)
         {
 
             var exception = _context.ConvertException(originalException, message);
 
 
-            await NotifyFaulted(exception, false).ConfigureAwait(false);
+            await NotifyFaultedAsync(exception, false).ConfigureAwait(false);
 
             return exception;
         }
@@ -222,9 +221,9 @@ public class ReceiveTransport<TContext> :
 
 
 
-        Task NotifyFaulted(Exception exception, bool isTerminal)
+        Task NotifyFaultedAsync(Exception exception, bool isTerminal)
         {
-            return _context.TransportObservers.NotifyFaulted(_context.InputAddress, exception, isTerminal);
+            return _context.TransportObservers.NotifyFaultedAsync(_context.InputAddress, exception, isTerminal);
         }
 
 

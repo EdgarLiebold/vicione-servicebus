@@ -13,29 +13,29 @@ public sealed class MessageDataInitializerIntegrationTests
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("REQ-VSB-MESSAGE-DATA-INITIALIZER", "interface-and-class-complete-conversion-matrix")]
-    public async Task Initializer_RoundTripsEveryPropertyAndReusesRepositoryAddresses(bool concreteContract)
+    public async Task Initializer_RoundTripsEveryPropertyAndReusesRepositoryAddressesAsync(bool concreteContract)
     {
         if (concreteContract)
-            await RoundTripEveryProperty<ClassProcessDocument>();
+            await RoundTripEveryPropertyAsync<ClassProcessDocument>();
         else
-            await RoundTripEveryProperty<InterfaceProcessDocument>();
+            await RoundTripEveryPropertyAsync<InterfaceProcessDocument>();
     }
 
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("REQ-VSB-MESSAGE-DATA-INITIALIZER", "interface-and-class-missing-data-fault")]
-    public async Task Initializer_MissingRequiredMessageDataProducesTheExactRequestFault(bool concreteContract)
+    public async Task Initializer_MissingRequiredMessageDataProducesTheExactRequestFaultAsync(bool concreteContract)
     {
         if (concreteContract)
-            await MissingDataFaults<ClassProcessDocument>();
+            await MissingDataFaultsAsync<ClassProcessDocument>();
         else
-            await MissingDataFaults<InterfaceProcessDocument>();
+            await MissingDataFaultsAsync<InterfaceProcessDocument>();
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-DATA-OBJECT", "application-object-address-and-false-dictionary-value")]
-    public async Task ApplicationObject_RoundTripsItsAddressAndEveryDictionaryValueIncludingFalse()
+    public async Task ApplicationObject_RoundTripsItsAddressAndEveryDictionaryValueIncludingFalseAsync()
     {
         TimeSpan timeout = MessageDataTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -44,9 +44,9 @@ public sealed class MessageDataInitializerIntegrationTests
         using var harness = CreateHarness("message-data-object", timeout, repository, StoredPolicy());
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<ObjectRequest>(async context =>
         {
-            SpecialPayload value = await context.Message.Payload.Value;
-            observedAddress.TrySetResult(context.Message.Payload.Address);
-            await context.RespondAsync<ObjectResponse>(new { context.Message.Payload });
+            SpecialPayload value = MessageDataTestSupport.Require(await context.Message.Payload.Value, nameof(context.Message.Payload));
+            observedAddress.TrySetResult(MessageDataTestSupport.Require(context.Message.Payload.Address, nameof(context.Message.Payload)));
+            await context.Advanced().RespondAsync<ObjectResponse>(new { context.Message.Payload });
         });
         var expected = new SpecialPayload(
             "object-payload",
@@ -57,17 +57,17 @@ public sealed class MessageDataInitializerIntegrationTests
                 ["false"] = false,
             });
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             IRequestClient<ObjectRequest> client =
                 harness.Bus.CreateRequestClient<ObjectRequest>(harness.InputQueueAddress, timeout);
-            Response<ObjectResponse> response = await client.GetResponse<ObjectResponse>(
-                new { Payload = expected },
-                cancellationToken);
+            Response<ObjectResponse> response = await client.Advanced().GetResponseAsync<ObjectResponse>(
+                values: new { Payload = expected },
+                cancellationToken: cancellationToken);
             Uri consumedAddress = await observedAddress.Task.WaitAsync(timeout, cancellationToken);
-            SpecialPayload actual = await response.Message.Payload.Value;
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            SpecialPayload actual = MessageDataTestSupport.Require(await response.Message.Payload.Value, nameof(response.Message.Payload));
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
 
             Assert.Equal(consumedAddress, response.Message.Payload.Address);
             Assert.Equal(expected.Value, actual.Value);
@@ -77,13 +77,13 @@ public sealed class MessageDataInitializerIntegrationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-DATA-INITIALIZER", "nested-array-exact-file-and-body")]
-    public async Task NestedArrayInitializer_StoresAndResolvesEveryDocumentBody()
+    public async Task NestedArrayInitializer_StoresAndResolvesEveryDocumentBodyAsync()
     {
         TimeSpan timeout = MessageDataTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -94,16 +94,20 @@ public sealed class MessageDataInitializerIntegrationTests
         {
             observed.TrySetResult(new NestedSnapshot(
                 context.Message.Bodies.Select(document => document.FileName).ToArray(),
-                await Task.WhenAll(context.Message.Bodies.Select(document => document.Body.Value)),
-                context.Message.Bodies.Select(document => document.Body.Address).ToArray()));
+                (await Task.WhenAll(context.Message.Bodies.Select(document => document.Body.Value)))
+                .Select((body, index) => MessageDataTestSupport.Require(body, $"Bodies[{index}].Body"))
+                .ToArray(),
+                context.Message.Bodies
+                .Select((document, index) => MessageDataTestSupport.Require(document.Body.Address, $"Bodies[{index}].Body.Address"))
+                .ToArray()));
         });
         byte[] first = Enumerable.Range(0, 10_000).Select(index => (byte)(index % 251)).ToArray();
         byte[] second = Enumerable.Range(0, 10_000).Select(index => (byte)(250 - index % 251)).ToArray();
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send<Documents>(new
+            await harness.InputQueueSendEndpoint.SendAsync<Documents>(new
             {
                 Bodies = new[]
                 {
@@ -112,7 +116,7 @@ public sealed class MessageDataInitializerIntegrationTests
                 },
             }, cancellationToken);
             NestedSnapshot actual = await observed.Task.WaitAsync(timeout, cancellationToken);
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
 
             Assert.Equal(["first.txt", "second.txt"], actual.FileNames);
             Assert.Equal(first, actual.Bodies[0]);
@@ -122,11 +126,11 @@ public sealed class MessageDataInitializerIntegrationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
-    private static async Task RoundTripEveryProperty<TRequest>()
+    private static async Task RoundTripEveryPropertyAsync<TRequest>()
         where TRequest : class, IProcessDocument
     {
         TimeSpan timeout = MessageDataTestSupport.OperationTimeout();
@@ -140,10 +144,10 @@ public sealed class MessageDataInitializerIntegrationTests
                 throw new MessageDataException("StringData was required.");
 
             observed.TrySetResult(new InputAddresses(
-                context.Message.StringData.Address,
-                context.Message.ByteData.Address,
-                context.Message.StreamData.Address));
-            await context.RespondAsync<ProcessedDocument>(new
+                MessageDataTestSupport.Require(context.Message.StringData.Address, nameof(context.Message.StringData)),
+                MessageDataTestSupport.Require(context.Message.ByteData.Address, nameof(context.Message.ByteData)),
+                MessageDataTestSupport.Require(context.Message.StreamData.Address, nameof(context.Message.StreamData))));
+            await context.Advanced().RespondAsync<ProcessedDocument>(new
             {
                 context.Message.CorrelationId,
                 context.Message.StringData,
@@ -163,11 +167,11 @@ public sealed class MessageDataInitializerIntegrationTests
         byte[] streamBytes = Enumerable.Range(0, 1000).Select(index => (byte)(index % 241)).ToArray();
         await using var source = new MemoryStream(streamBytes, writable: false);
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             IRequestClient<TRequest> client = harness.Bus.CreateRequestClient<TRequest>(harness.InputQueueAddress, timeout);
-            Response<ProcessedDocument> response = await client.GetResponse<ProcessedDocument>(new
+            Response<ProcessedDocument> response = await client.Advanced().GetResponseAsync<ProcessedDocument>(values: new
             {
                 CorrelationId = correlationId,
                 StringData = stringData,
@@ -175,11 +179,12 @@ public sealed class MessageDataInitializerIntegrationTests
                 StringValue = stringValue,
                 ByteValue = Encoding.UTF8.GetBytes(byteValue),
                 StreamData = source,
-            }, cancellationToken);
+            }, cancellationToken: cancellationToken);
             InputAddresses input = await observed.Task.WaitAsync(timeout, cancellationToken);
-            await using Stream returnedStream = await response.Message.StreamData.Value;
-            byte[] returnedStreamBytes = await ReadBytes(returnedStream, cancellationToken);
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await using Stream returnedStream = MessageDataTestSupport.Require(
+                await response.Message.StreamData.Value, nameof(response.Message.StreamData));
+            byte[] returnedStreamBytes = await ReadBytesAsync(returnedStream, cancellationToken);
+            await harness.StopAsync().WaitAsync(timeout, CancellationToken.None);
 
             Assert.Equal(correlationId, response.Message.CorrelationId);
             Assert.Equal(input.StringData, response.Message.StringData.Address);
@@ -187,20 +192,24 @@ public sealed class MessageDataInitializerIntegrationTests
             Assert.Equal(input.ByteData, response.Message.ByteData.Address);
             Assert.Equal(input.StreamData, response.Message.StreamData.Address);
             Assert.Equal(stringData, await response.Message.StringData.Value);
-            Assert.Equal(stringData, Encoding.UTF8.GetString(await response.Message.StringByteData.Value));
-            Assert.Equal(byteData, Encoding.UTF8.GetString(await response.Message.ByteData.Value));
+            Assert.Equal(stringData, Encoding.UTF8.GetString(MessageDataTestSupport.Require(
+                await response.Message.StringByteData.Value, nameof(response.Message.StringByteData))));
+            Assert.Equal(byteData, Encoding.UTF8.GetString(MessageDataTestSupport.Require(
+                await response.Message.ByteData.Value, nameof(response.Message.ByteData))));
             Assert.Equal(stringValue, await response.Message.StringValue.Value);
-            Assert.Equal(stringValue, Encoding.UTF8.GetString(await response.Message.StringByteValue.Value));
-            Assert.Equal(byteValue, Encoding.UTF8.GetString(await response.Message.ByteValue.Value));
+            Assert.Equal(stringValue, Encoding.UTF8.GetString(MessageDataTestSupport.Require(
+                await response.Message.StringByteValue.Value, nameof(response.Message.StringByteValue))));
+            Assert.Equal(byteValue, Encoding.UTF8.GetString(MessageDataTestSupport.Require(
+                await response.Message.ByteValue.Value, nameof(response.Message.ByteValue))));
             Assert.Equal(streamBytes, returnedStreamBytes);
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync().WaitAsync(timeout, CancellationToken.None);
         }
     }
 
-    private static async Task MissingDataFaults<TRequest>()
+    private static async Task MissingDataFaultsAsync<TRequest>()
         where TRequest : class, IProcessDocument
     {
         TimeSpan timeout = MessageDataTestSupport.OperationTimeout();
@@ -212,22 +221,22 @@ public sealed class MessageDataInitializerIntegrationTests
             if (context.Message.StringData is not { HasValue: true })
                 throw new MessageDataException("StringData was required.");
 
-            return context.RespondAsync<ProcessedDocument>(new { context.Message.StringData });
+            return context.Advanced().RespondAsync<ProcessedDocument>(new { context.Message.StringData });
         });
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             IRequestClient<TRequest> client = harness.Bus.CreateRequestClient<TRequest>(harness.InputQueueAddress, timeout);
             RequestFaultException exception = await Assert.ThrowsAsync<RequestFaultException>(() =>
-                client.GetResponse<ProcessedDocument>(new
+                client.Advanced().GetResponseAsync<ProcessedDocument>(values: new
                 {
                     CorrelationId = Guid.Parse("5d54bc39-28fb-480d-868b-99144c9f8df8"),
                     ByteData = "bytes",
                     StringValue = "value",
                     ByteValue = Encoding.UTF8.GetBytes("byte-value"),
-                }, cancellationToken));
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+                }, cancellationToken: cancellationToken));
+            await harness.StopAsync().WaitAsync(timeout, CancellationToken.None);
 
             Assert.NotNull(exception.Fault);
             ExceptionInfo fault = Assert.Single(exception.Fault.Exceptions);
@@ -236,7 +245,7 @@ public sealed class MessageDataInitializerIntegrationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync().WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -257,7 +266,7 @@ public sealed class MessageDataInitializerIntegrationTests
         return harness;
     }
 
-    private static async Task<byte[]> ReadBytes(Stream stream, CancellationToken cancellationToken)
+    private static async Task<byte[]> ReadBytesAsync(Stream stream, CancellationToken cancellationToken)
     {
         using var copy = new MemoryStream();
         await stream.CopyToAsync(copy, cancellationToken);

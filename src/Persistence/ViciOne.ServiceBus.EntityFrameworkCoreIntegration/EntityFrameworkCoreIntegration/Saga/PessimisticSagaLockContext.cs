@@ -27,13 +27,13 @@ public class PessimisticSagaLockContext<TSaga> :
         _executor = executor;
     }
 
-    public async Task<IList<TSaga>> Load()
+    public async Task<IList<TSaga>> LoadAsync(CancellationToken cancellationToken = default)
     {
-        var loaded = new List<TSaga>();
+        cancellationToken.ThrowIfCancellationRequested(); var loaded = new List<TSaga>();
 
         foreach (var correlationId in _instances)
         {
-            var result = await _executor.Load(_context, correlationId, _cancellationToken).ConfigureAwait(false);
+            var result = await _executor.LoadAsync(_context, correlationId, _cancellationToken).ConfigureAwait(false);
             if (result != null)
                 loaded.Add(result);
         }

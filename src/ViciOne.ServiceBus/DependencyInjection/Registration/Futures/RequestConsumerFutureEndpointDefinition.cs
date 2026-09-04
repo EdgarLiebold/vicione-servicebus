@@ -6,7 +6,7 @@ public class RequestConsumerFutureEndpointDefinition<TFuture> :
 {
     readonly IConsumerDefinition _consumerDefinition;
     readonly IDefinition _definition;
-    string _endpointName;
+    string _endpointName = null!;
 
     public RequestConsumerFutureEndpointDefinition(IDefinition definition, IConsumerDefinition consumerDefinition)
     {
@@ -16,7 +16,7 @@ public class RequestConsumerFutureEndpointDefinition<TFuture> :
 
     public bool ConfigureConsumeTopology => true;
 
-    public void Configure<T>(T configurator, IRegistrationContext context)
+    public void Configure<T>(T configurator, IRegistrationContext? context)
         where T : IReceiveEndpointConfigurator
     {
     }

@@ -9,7 +9,7 @@ public sealed class ResultDeliveryTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-DIAGNOSTICS-DELIVERY", "validation-failure-to-requested-file")]
-    public async Task ValidationFailureReachesRequestedFile()
+    public async Task ValidationFailureReachesRequestedFileAsync()
     {
         using var sink = new TemporaryFile();
 
@@ -26,7 +26,7 @@ public sealed class ResultDeliveryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DIAGNOSTICS-DELIVERY", "unwritable-sink-fallback")]
-    public async Task UnwritableSinkFallsBackWithoutSecondaryFailure()
+    public async Task UnwritableSinkFallsBackWithoutSecondaryFailureAsync()
     {
         string unwritable = Path.Combine(Path.GetTempPath(), $"vicione-{Guid.NewGuid():N}", "nested", "out.json");
 
@@ -38,7 +38,7 @@ public sealed class ResultDeliveryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DIAGNOSTICS-DELIVERY", "fallback-preserves-result")]
-    public async Task FallbackOutputCarriesUndeliveredResult()
+    public async Task FallbackOutputCarriesUndeliveredResultAsync()
     {
         string directory = Path.Combine(Path.GetTempPath(), $"vicione-{Guid.NewGuid():N}");
         Directory.CreateDirectory(directory);
@@ -47,7 +47,7 @@ public sealed class ResultDeliveryTests
 
         try
         {
-            bool delivered = await Program.Report(new { status = "failed", error = "a reason" }, directory,
+            bool delivered = await Program.ReportAsync(new { status = "failed", error = "a reason" }, directory,
                 CancellationToken.None, output, error);
 
             Assert.False(delivered);
@@ -65,11 +65,11 @@ public sealed class ResultDeliveryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DIAGNOSTICS-DELIVERY", "standard-output-without-file")]
-    public async Task NoRequestedFileWritesStandardOutput()
+    public async Task NoRequestedFileWritesStandardOutputAsync()
     {
         var output = new StringWriter();
 
-        bool delivered = await Program.Report(new { status = "ok" }, null, CancellationToken.None, output);
+        bool delivered = await Program.ReportAsync(new { status = "ok" }, null, CancellationToken.None, output);
 
         Assert.True(delivered);
         using JsonDocument written = JsonDocument.Parse(output.ToString());
@@ -78,12 +78,12 @@ public sealed class ResultDeliveryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DIAGNOSTICS-DELIVERY", "file-delivered-once")]
-    public async Task WrittenFileReportsDeliveredOnce()
+    public async Task WrittenFileReportsDeliveredOnceAsync()
     {
         using var sink = new TemporaryFile();
         var output = new StringWriter();
 
-        bool delivered = await Program.Report(new { status = "ok" }, sink.Path, CancellationToken.None, output);
+        bool delivered = await Program.ReportAsync(new { status = "ok" }, sink.Path, CancellationToken.None, output);
 
         Assert.True(delivered);
         Assert.Empty(output.ToString());
@@ -95,7 +95,7 @@ public sealed class ResultDeliveryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DIAGNOSTICS-DELIVERY", "undeliverable-result-fails-run")]
-    public async Task UndeliverableSuccessfulResultReturnsFailure()
+    public async Task UndeliverableSuccessfulResultReturnsFailureAsync()
     {
         string directory = Path.Combine(Path.GetTempPath(), $"vicione-{Guid.NewGuid():N}");
         Directory.CreateDirectory(directory);
@@ -103,7 +103,7 @@ public sealed class ResultDeliveryTests
 
         try
         {
-            int code = await Program.Deliver(new { status = "ok" }, directory, CancellationToken.None,
+            int code = await Program.DeliverAsync(new { status = "ok" }, directory, CancellationToken.None,
                 output, new StringWriter());
 
             Assert.NotEqual(0, code);
@@ -117,11 +117,11 @@ public sealed class ResultDeliveryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DIAGNOSTICS-DELIVERY", "delivered-result-succeeds-run")]
-    public async Task DeliveredSuccessfulResultReturnsSuccess()
+    public async Task DeliveredSuccessfulResultReturnsSuccessAsync()
     {
         using var sink = new TemporaryFile();
 
-        int code = await Program.Deliver(new { status = "ok" }, sink.Path, CancellationToken.None,
+        int code = await Program.DeliverAsync(new { status = "ok" }, sink.Path, CancellationToken.None,
             new StringWriter(), new StringWriter());
 
         Assert.Equal(0, code);
@@ -175,14 +175,14 @@ public sealed class ResultDeliveryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DIAGNOSTICS-DELIVERY", "unknown-scenario-without-sink")]
-    public async Task UnknownScenarioReturnsFailureWithoutSink()
+    public async Task UnknownScenarioReturnsFailureWithoutSinkAsync()
     {
         Assert.Equal(1, await Program.Main(["not-a-scenario"]));
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DIAGNOSTICS-DELIVERY", "unparseable-options-no-file")]
-    public async Task UnparseableOptionsCreateNoFile()
+    public async Task UnparseableOptionsCreateNoFileAsync()
     {
         using var sink = new TemporaryFile();
 

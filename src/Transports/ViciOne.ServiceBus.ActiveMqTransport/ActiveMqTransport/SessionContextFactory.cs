@@ -28,41 +28,41 @@ public class SessionContextFactory :
     public IActivePipeContextAgent<SessionContext> CreateActiveContext(ISupervisor supervisor,
         PipeContextHandle<SessionContext> context, CancellationToken cancellationToken)
     {
-        return supervisor.AddActiveContext(context, CreateSharedSession(context.Context, cancellationToken));
+        return supervisor.AddActiveContext(context, CreateSharedSessionAsync(context.Context, cancellationToken));
     }
 
-    static async Task<SessionContext> CreateSharedSession(Task<SessionContext> context, CancellationToken cancellationToken)
+    static async Task<SessionContext> CreateSharedSessionAsync(Task<SessionContext> context, CancellationToken cancellationToken)
     {
         return context.IsCompletedSuccessfully()
             ? new ScopeSessionContext(context.Result, cancellationToken)
-            : new ScopeSessionContext(await context.OrCanceled(cancellationToken).ConfigureAwait(false), cancellationToken);
+            : new ScopeSessionContext(await context.OrCanceledAsync(cancellationToken).ConfigureAwait(false), cancellationToken);
     }
 
     void CreateSession(IAsyncPipeContextAgent<SessionContext> asyncContext, CancellationToken cancellationToken)
     {
-        async Task<SessionContext> CreateSessionContext(ConnectionContext connectionContext, CancellationToken createCancellationToken)
+        async Task<SessionContext> CreateSessionContextAsync(ConnectionContext connectionContext, CancellationToken createCancellationToken)
         {
-            var session = await connectionContext.CreateSession(createCancellationToken).ConfigureAwait(false);
+            var session = await connectionContext.CreateSessionAsync(createCancellationToken).ConfigureAwait(false);
 
             var faultStopLock = new object();
-            Task faultStopTask = null;
+            Task? faultStopTask = null;
 
             void HandleConnectionException(Exception exception)
             {
                 lock (faultStopLock)
                 {
                     if (faultStopTask == null || faultStopTask.IsCompleted)
-                        faultStopTask = StopAfterConnectionException(exception);
+                        faultStopTask = StopAfterConnectionExceptionAsync(exception);
                 }
             }
 
-            async Task StopAfterConnectionException(Exception exception)
+            async Task StopAfterConnectionExceptionAsync(Exception exception)
             {
                 await Task.Yield();
 
                 try
                 {
-                    await asyncContext.Stop($"Connection Exception: {exception}").ConfigureAwait(false);
+                    await asyncContext.StopAsync($"Connection Exception: {exception}", cancellationToken: cancellationToken).ConfigureAwait(false);
                 }
                 catch (Exception stopException)
                 {
@@ -78,6 +78,6 @@ public class SessionContextFactory :
             return new ActiveMqSessionContext(connectionContext, session, createCancellationToken);
         }
 
-        _connectionContextSupervisor.StartAgent(asyncContext, CreateSessionContext, cancellationToken);
+        _connectionContextSupervisor.StartAgent(asyncContext, CreateSessionContextAsync, cancellationToken);
     }
 }

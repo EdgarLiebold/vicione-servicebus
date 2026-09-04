@@ -12,7 +12,7 @@ public sealed class PostgreSqlIsolationTests
     [InlineData(false, IsolationLevel.RepeatableRead, "repeatable read")]
     [InlineData(true, IsolationLevel.Serializable, "serializable")]
     [RequirementCoverage("OBL-R0-SQL-0108", "postgresql-native-owner")]
-    public async Task MessageInsert_UsesTheDefaultOrExplicitHostIsolation(
+    public async Task MessageInsert_UsesTheDefaultOrExplicitHostIsolationAsync(
         bool configureIsolation,
         IsolationLevel isolationLevel,
         string expectedProviderIsolation)
@@ -22,8 +22,8 @@ public sealed class PostgreSqlIsolationTests
             "transaction-isolation",
             cancellationToken);
         await using NpgsqlConnection connection = fixture.CreateConnection();
-        await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
-        await CreateIsolationAudit(connection, fixture.Schema, cancellationToken);
+        await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
+        await CreateIsolationAuditAsync(connection, fixture.Schema, cancellationToken);
         string queueName = fixture.Name("isolation-input");
         IBusControl bus = SqlBusFactory.Create(configurator =>
         {
@@ -41,9 +41,8 @@ public sealed class PostgreSqlIsolationTests
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
             Guid messageId = Guid.NewGuid();
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await endpoint.Send(
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await endpoint.SendAsync(
                     new IsolationMessage(messageId),
                     context => context.MessageId = messageId,
                     cancellationToken)
@@ -62,7 +61,7 @@ public sealed class PostgreSqlIsolationTests
         }
     }
 
-    private static async Task CreateIsolationAudit(
+    private static async Task CreateIsolationAuditAsync(
         NpgsqlConnection connection,
         string schema,
         CancellationToken cancellationToken)

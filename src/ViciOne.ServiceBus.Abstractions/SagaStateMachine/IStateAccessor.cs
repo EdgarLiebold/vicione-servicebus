@@ -8,9 +8,9 @@ public interface IStateAccessor<TSaga> :
     IProbeSite
     where TSaga : class, SagaStateMachineInstance
 {
-    Task<State<TSaga>> Get(BehaviorContext<TSaga> context);
+    Task<State<TSaga>?> GetAsync(BehaviorContext<TSaga> context, CancellationToken cancellationToken = default);
 
-    Task Set(BehaviorContext<TSaga> context, State<TSaga> state);
+    Task SetAsync(BehaviorContext<TSaga> context, State<TSaga> state, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Converts a state expression to the instance current state property type.

@@ -14,7 +14,7 @@ public static class RateLimitConfigurationExtensions
     /// <param name="configurator"></param>
     /// <param name="rateLimit">The number of messages allowed per interval</param>
     /// <param name="router">The control pipe used to adjust the rate limit dynamically</param>
-    public static void UseRateLimit<T>(this IPipeConfigurator<T> configurator, int rateLimit, IPipeRouter router = null)
+    public static void UseRateLimit<T>(this IPipeConfigurator<T> configurator, int rateLimit, IPipeRouter? router = null)
         where T : class, PipeContext
     {
         if (configurator == null)
@@ -35,8 +35,8 @@ public static class RateLimitConfigurationExtensions
     /// <param name="interval">The reset interval for each set of messages</param>
     /// <param name="router">The control pipe used to adjust the rate limit dynamically</param>
     /// <param name="timeProvider">The clock and timer source used to replenish the limit</param>
-    public static void UseRateLimit<T>(this IPipeConfigurator<T> configurator, int rateLimit, TimeSpan interval, IPipeRouter router = null,
-        TimeProvider timeProvider = null)
+    public static void UseRateLimit<T>(this IPipeConfigurator<T> configurator, int rateLimit, TimeSpan interval, IPipeRouter? router = null,
+        TimeProvider? timeProvider = null)
         where T : class, PipeContext
     {
         if (configurator == null)
@@ -55,7 +55,7 @@ public static class RateLimitConfigurationExtensions
     /// <param name="rateLimit">The number of messages allowed per interval</param>
     /// <param name="interval">The reset interval for each set of messages</param>
     /// <param name="timeProvider">The clock and timer source used to replenish the limit</param>
-    public static void UseRateLimit(this IConsumePipeConfigurator configurator, int rateLimit, TimeSpan interval, TimeProvider timeProvider = null)
+    public static void UseRateLimit(this IConsumePipeConfigurator configurator, int rateLimit, TimeSpan interval, TimeProvider? timeProvider = null)
     {
         if (configurator == null)
             throw new ArgumentNullException(nameof(configurator));

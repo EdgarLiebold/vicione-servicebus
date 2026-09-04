@@ -9,7 +9,7 @@ public class ScheduleActivity<TSaga, TMessage> :
     where TMessage : class
 {
     readonly ContextMessageFactory<BehaviorContext<TSaga>, TMessage> _messageFactory;
-    readonly Schedule<TSaga> _schedule;
+    readonly Schedule<TSaga> _schedule = null!;
     readonly ScheduleTimeProvider<TSaga> _timeProvider;
 
     public ScheduleActivity(Schedule<TSaga> schedule,
@@ -30,42 +30,42 @@ public class ScheduleActivity<TSaga, TMessage> :
         context.CreateScope("schedule");
     }
 
-    public async Task Execute(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public async Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
-        await Execute(context).ConfigureAwait(false);
+        await ExecuteAsync(context).ConfigureAwait(false);
 
-        await next.Execute(context).ConfigureAwait(false);
+        await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    public async Task Execute<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+    public async Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
-        await Execute(context).ConfigureAwait(false);
+        await ExecuteAsync(context).ConfigureAwait(false);
 
-        await next.Execute(context).ConfigureAwait(false);
+        await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
+    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception
     {
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 
-    public Task Faulted<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
+    public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
         where T : class
         where TException : Exception
     {
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 
-    async Task Execute(BehaviorContext<TSaga> context)
+    async Task ExecuteAsync(BehaviorContext<TSaga> context)
     {
         Guid? previousTokenId = _schedule.GetTokenId(context.Saga);
 
         var schedulerContext = context.GetPayload<MessageSchedulerContext>();
 
         ScheduledMessage<TMessage> message = await _messageFactory
-            .Use(context, (ctx, s) => schedulerContext.ScheduleSend(_timeProvider(ctx), s.Message, s.Pipe, ctx.CancellationToken)).ConfigureAwait(false);
+            .UseAsync(context, (ctx, s) => schedulerContext.ScheduleSendAsync(_timeProvider(ctx), s.Message, s.Pipe, ctx.CancellationToken)).ConfigureAwait(false);
 
         _schedule?.SetTokenId(context.Saga, message.TokenId);
 
@@ -74,7 +74,7 @@ public class ScheduleActivity<TSaga, TMessage> :
             Guid? messageTokenId = context.GetSchedulingTokenId();
             if (!messageTokenId.HasValue || previousTokenId.Value != messageTokenId.Value)
             {
-                await schedulerContext.CancelScheduledSend(context.ReceiveContext.InputAddress, previousTokenId.Value, context.CancellationToken)
+                await schedulerContext.CancelScheduledSendAsync(context.ReceiveContext.InputAddress, previousTokenId.Value, context.CancellationToken)
                     .ConfigureAwait(false);
             }
         }
@@ -96,7 +96,7 @@ public class ScheduleActivity<TSaga, TMessage, T> :
         ScheduleTimeProvider<TSaga, TMessage> timeProvider, ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> messageFactory)
     {
         _messageFactory = messageFactory;
-        _schedule = schedule;
+        _schedule = schedule ?? throw new ArgumentNullException(nameof(schedule));
         _timeProvider = timeProvider;
     }
 
@@ -110,33 +110,33 @@ public class ScheduleActivity<TSaga, TMessage, T> :
         context.CreateScope("schedule");
     }
 
-    public async Task Execute(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
+    public async Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
         Guid? previousTokenId = _schedule.GetTokenId(context.Saga);
 
         var schedulerContext = context.GetPayload<MessageSchedulerContext>();
 
         ScheduledMessage<T> message = await _messageFactory
-            .Use(context, (ctx, s) => schedulerContext.ScheduleSend(_timeProvider(ctx), s.Message, s.Pipe, ctx.CancellationToken)).ConfigureAwait(false);
+            .UseAsync(context, (ctx, s) => schedulerContext.ScheduleSendAsync(_timeProvider(ctx), s.Message, s.Pipe, ctx.CancellationToken)).ConfigureAwait(false);
 
-        _schedule?.SetTokenId(context.Saga, message.TokenId);
+        _schedule.SetTokenId(context.Saga, message.TokenId);
 
         if (previousTokenId.HasValue)
         {
             Guid? messageTokenId = context.GetSchedulingTokenId();
             if (!messageTokenId.HasValue || previousTokenId.Value != messageTokenId.Value)
             {
-                await schedulerContext.CancelScheduledSend(context.ReceiveContext.InputAddress, previousTokenId.Value, context.CancellationToken)
+                await schedulerContext.CancelScheduledSendAsync(context.ReceiveContext.InputAddress, previousTokenId.Value, context.CancellationToken)
                     .ConfigureAwait(false);
             }
         }
 
-        await next.Execute(context).ConfigureAwait(false);
+        await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
+    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
         where TException : Exception
     {
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 }

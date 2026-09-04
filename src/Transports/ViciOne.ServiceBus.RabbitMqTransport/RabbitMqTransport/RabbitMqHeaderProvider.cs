@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using ViciOne.ServiceBus.Initializers.TypeConverters;
 using ViciOne.ServiceBus.Transports;
@@ -9,7 +10,7 @@ namespace ViciOne.ServiceBus.RabbitMqTransport;
 public class RabbitMqHeaderProvider :
     IHeaderProvider
 {
-    static readonly DateTimeTypeConverter _dateTimeConverter = new DateTimeTypeConverter();
+    static readonly DateTimeOffsetTypeConverter _dateTimeConverter = new DateTimeOffsetTypeConverter();
 
     readonly RabbitMqBasicConsumeContext _context;
 
@@ -34,7 +35,7 @@ public class RabbitMqHeaderProvider :
 
         if (_context.Properties.IsHeadersPresent() && _context.Properties.Headers != null)
         {
-            foreach (KeyValuePair<string, object> header in _context.Properties.Headers)
+            foreach (KeyValuePair<string, object?> header in _context.Properties.Headers)
             {
                 var value = header.Value;
 
@@ -47,16 +48,18 @@ public class RabbitMqHeaderProvider :
                 }
                 else if (value is string s && !string.IsNullOrWhiteSpace(s))
                     yield return new KeyValuePair<string, object>(header.Key, s);
-                else if (value != default)
-                    yield return header;
+                else if (value != null)
+                    yield return new KeyValuePair<string, object>(header.Key, value);
             }
         }
     }
 
-    public bool TryGetHeader(string key, out object value)
+    public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
     {
-        if (_context.Properties.IsHeadersPresent() && _context.Properties.Headers != null && _context.Properties.Headers.TryGetValue(key, out value))
+        if (_context.Properties.IsHeadersPresent() && _context.Properties.Headers != null
+            && _context.Properties.Headers.TryGetValue(key, out var headerValue) && headerValue != null)
         {
+            value = headerValue;
             if (value is byte[] bytes)
             {
                 var text = Encoding.UTF8.GetString(bytes);
@@ -116,7 +119,7 @@ public class RabbitMqHeaderProvider :
             return value != default;
         }
 
-        value = default;
+        value = null;
         return false;
     }
 }

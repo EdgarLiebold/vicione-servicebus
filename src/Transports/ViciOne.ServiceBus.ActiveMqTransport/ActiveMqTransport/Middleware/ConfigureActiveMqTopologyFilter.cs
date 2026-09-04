@@ -23,13 +23,13 @@ public class ConfigureActiveMqTopologyFilter<TSettings> :
         _context = context;
     }
 
-    public async Task Send(SessionContext context, IPipe<SessionContext> next)
+    public async Task SendAsync(SessionContext context, IPipe<SessionContext> next)
     {
-        OneTimeContext<ConfigureTopologyContext<TSettings>> oneTimeContext = await Configure(context);
+        OneTimeContext<ConfigureTopologyContext<TSettings>> oneTimeContext = await ConfigureAsync(context);
 
         try
         {
-            await next.Send(context).ConfigureAwait(false);
+            await next.SendAsync(context).ConfigureAwait(false);
 
             // Apache.NMS.ActiveMQ exposes explicit destination deletion, whereas Apache.NMS.AMQP
             // deliberately does not. AMQP brokers own auto-delete lifetime and reject a client-side
@@ -60,37 +60,37 @@ public class ConfigureActiveMqTopologyFilter<TSettings> :
         _brokerTopology.Probe(scope);
     }
 
-    public async Task<OneTimeContext<ConfigureTopologyContext<TSettings>>> Configure(SessionContext context)
+    public async Task<OneTimeContext<ConfigureTopologyContext<TSettings>>> ConfigureAsync(SessionContext context, CancellationToken cancellationToken = default)
     {
-        return await context.OneTimeSetup<ConfigureTopologyContext<TSettings>>(() =>
+        return await context.OneTimeSetupAsync<ConfigureTopologyContext<TSettings>>(() =>
         {
             context.GetOrAddPayload(() => _settings);
 
-            return ConfigureTopology(context);
-        }).ConfigureAwait(false);
+            return ConfigureTopologyAsync(context);
+        }, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    async Task ConfigureTopology(SessionContext context)
+    async Task ConfigureTopologyAsync(SessionContext context)
     {
-        await Task.WhenAll(_brokerTopology.Topics.Select(topic => Declare(context, topic))).ConfigureAwait(false);
+        await Task.WhenAll(_brokerTopology.Topics.Select(topic => DeclareAsync(context, topic))).ConfigureAwait(false);
 
-        await Task.WhenAll(_brokerTopology.Queues.Select(queue => Declare(context, queue))).ConfigureAwait(false);
+        await Task.WhenAll(_brokerTopology.Queues.Select(queue => DeclareAsync(context, queue))).ConfigureAwait(false);
     }
 
-    Task Declare(SessionContext context, Topic topic)
+    Task DeclareAsync(SessionContext context, Topic topic)
     {
         LogContext.Debug?.Log("Declare topic {Topic}", topic);
 
         // The outcome, not the steps. Resolving a name is a client side act that leaves the broker
         // without the topic, which is what this filter used to do and why a deployed topology was
         // deployed nowhere.
-        return context.EnsureTopicExists(topic);
+        return context.EnsureTopicExistsAsync(topic);
     }
 
-    Task Declare(SessionContext context, Queue queue)
+    Task DeclareAsync(SessionContext context, Queue queue)
     {
         LogContext.Debug?.Log("Get queue {Queue}", queue);
 
-        return context.GetQueue(queue);
+        return context.GetQueueAsync(queue);
     }
 }

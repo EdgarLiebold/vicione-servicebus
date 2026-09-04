@@ -16,9 +16,8 @@ public class MessageFabricConsumeTopologyBuilder<TContext, T> :
         _fabric = fabric;
     }
 
-    public string Exchange { get; set; }
-    public string Queue { get; set; }
-
+    public string Exchange { get; set; } = null!;
+    public string Queue { get; set; } = null!;
     public void ExchangeBind(string source, string destination, string? routingKey)
     {
         _fabric.ExchangeBind(_context, source, destination, routingKey);

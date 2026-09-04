@@ -19,9 +19,9 @@ public class QuerySagaRepository<TSaga> :
         _repositoryContextFactory = repositoryContextFactory;
     }
 
-    public Task<IEnumerable<Guid>> Find(ISagaQuery<TSaga> query)
+    public Task<IEnumerable<Guid>> FindAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken = default)
     {
-        return _repositoryContextFactory.Execute<IEnumerable<Guid>>(async context => await context.Query(query).ConfigureAwait(false));
+        return _repositoryContextFactory.ExecuteAsync<IEnumerable<Guid>>(async context => await context.QueryAsync(query, cancellationToken: cancellationToken).ConfigureAwait(false), cancellationToken: cancellationToken);
     }
 
     public void Probe(ProbeContext context)

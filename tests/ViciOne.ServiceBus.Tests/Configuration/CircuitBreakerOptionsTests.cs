@@ -113,7 +113,7 @@ public sealed class CircuitBreakerOptionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CIRCUIT-BREAKER-CONFIGURATION", "immutable-runtime-snapshot")]
-    public async Task BuiltPipe_UsesAnImmutableConfigurationSnapshot()
+    public async Task BuiltPipe_UsesAnImmutableConfigurationSnapshotAsync()
     {
         var initialTime = new FakeTimeProvider(new DateTimeOffset(2030, 1, 1, 0, 0, 0, TimeSpan.Zero));
         var replacementTime = new FakeTimeProvider(new DateTimeOffset(2040, 1, 1, 0, 0, 0, TimeSpan.Zero));
@@ -143,11 +143,11 @@ public sealed class CircuitBreakerOptionsTests
             .SetBreakDuration(TimeSpan.FromDays(1))
             .SetTimeProvider(replacementTime);
 
-        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.Send(new TestPipeContext()));
+        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.SendAsync(new TestPipeContext()));
         CircuitBreakerOpenException rejection = await Assert.ThrowsAsync<CircuitBreakerOpenException>(
-            () => pipe.Send(new TestPipeContext()));
+            () => pipe.SendAsync(new TestPipeContext()));
         initialTime.Advance(TimeSpan.FromSeconds(1));
-        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.Send(new TestPipeContext()));
+        await Assert.ThrowsAsync<ExpectedFailureException>(() => pipe.SendAsync(new TestPipeContext()));
 
         Assert.Equal(2, entered);
         Assert.Equal(TimeSpan.FromSeconds(1), rejection.RetryAfter);

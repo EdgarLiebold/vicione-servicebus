@@ -11,7 +11,7 @@ public class HandlerConnector<TMessage> :
     where TMessage : class
 {
     public ConnectHandle ConnectHandler(IConsumePipeConnector consumePipe, MessageHandler<TMessage> handler,
-        IBuildPipeConfigurator<ConsumeContext<TMessage>> configurator)
+        IBuildPipeConfigurator<ConsumeContext<TMessage>>? configurator)
     {
         configurator ??= new PipeConfigurator<ConsumeContext<TMessage>>();
         configurator.AddPipeSpecification(new HandlerPipeSpecification<TMessage>(handler));

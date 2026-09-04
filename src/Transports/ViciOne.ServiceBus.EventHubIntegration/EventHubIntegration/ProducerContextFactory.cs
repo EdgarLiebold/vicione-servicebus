@@ -20,7 +20,7 @@ public class ProducerContextFactory :
     public IActivePipeContextAgent<ProducerContext> CreateActiveContext(ISupervisor supervisor, PipeContextHandle<ProducerContext> context,
         CancellationToken cancellationToken)
     {
-        return supervisor.AddActiveContext(context, CreateSharedConnection(context.Context, cancellationToken));
+        return supervisor.AddActiveContext(context, CreateSharedConnectionAsync(context.Context, cancellationToken));
     }
 
     public IPipeContextAgent<ProducerContext> CreateContext(ISupervisor supervisor)
@@ -32,23 +32,23 @@ public class ProducerContextFactory :
         return asyncContext;
     }
 
-    static async Task<ProducerContext> CreateSharedConnection(Task<ProducerContext> context,
+    static async Task<ProducerContext> CreateSharedConnectionAsync(Task<ProducerContext> context,
         CancellationToken cancellationToken)
     {
         return context.IsCompletedSuccessfully()
             ? new SharedProducerContext(context.Result, cancellationToken)
-            : new SharedProducerContext(await context.OrCanceled(cancellationToken).ConfigureAwait(false), cancellationToken);
+            : new SharedProducerContext(await context.OrCanceledAsync(cancellationToken).ConfigureAwait(false), cancellationToken);
     }
 
     void CreateProcessor(IAsyncPipeContextAgent<ProducerContext> asyncContext, CancellationToken cancellationToken)
     {
-        Task<ProducerContext> Create(ConnectionContext connectionContext, CancellationToken createCancellationToken)
+        Task<ProducerContext> CreateAsync(ConnectionContext connectionContext, CancellationToken createCancellationToken)
         {
             var client = connectionContext.CreateEventHubClient(_eventHubName);
             ProducerContext context = new EventHubProducerContext(client, createCancellationToken);
             return Task.FromResult(context);
         }
 
-        _contextSupervisor.StartAgent(asyncContext, Create, cancellationToken);
+        _contextSupervisor.StartAgent(asyncContext, CreateAsync, cancellationToken);
     }
 }

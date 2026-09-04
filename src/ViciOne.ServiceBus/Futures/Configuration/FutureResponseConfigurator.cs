@@ -17,7 +17,7 @@ public class FutureResponseConfigurator<TCommand, TResult, TFault, TRequest, TRe
 {
     readonly IFutureStateMachineConfigurator _configurator;
     readonly FutureRequestHandle<TCommand, TResult, TFault, TRequest> _request;
-    FutureResult<TCommand, TResult, TResponse> _result;
+    FutureResult<TCommand, TResult, TResponse> _result = null!;
 
     public FutureResponseConfigurator(IFutureStateMachineConfigurator configurator, FutureRequestHandle<TCommand, TResult, TFault, TRequest> request)
     {
@@ -27,14 +27,13 @@ public class FutureResponseConfigurator<TCommand, TResult, TFault, TRequest, TRe
         Completed = configurator.CreateResponseEvent<TResponse>();
     }
 
-    public PendingFutureIdProvider<TResponse> PendingResponseIdProvider { get; private set; }
-
+    public PendingFutureIdProvider<TResponse> PendingResponseIdProvider { get; private set; } = null!;
     public Event<TResponse> Completed { get; }
 
     public Event<Fault<TRequest>> Faulted => _request.Faulted;
 
     public FutureResponseHandle<TCommand, TResult, TFault, TRequest, T> OnResponseReceived<T>(
-        Action<IFutureResponseConfigurator<TResult, T>> configure = default)
+        Action<IFutureResponseConfigurator<TResult, T>>? configure = default)
         where T : class
     {
         return _request.OnResponseReceived(configure);
@@ -70,9 +69,9 @@ public class FutureResponseConfigurator<TCommand, TResult, TFault, TRequest, TRe
         yield break;
     }
 
-    public Task SetResult(BehaviorContext<FutureState, TResponse> context)
+    public Task SetResultAsync(BehaviorContext<FutureState, TResponse> context, CancellationToken cancellationToken = default)
     {
-        return _result.SetResult(context);
+        return _result.SetResultAsync(context, cancellationToken: cancellationToken);
     }
 
     IFutureResultConfigurator<TResult, TResponse> GetResultConfigurator()

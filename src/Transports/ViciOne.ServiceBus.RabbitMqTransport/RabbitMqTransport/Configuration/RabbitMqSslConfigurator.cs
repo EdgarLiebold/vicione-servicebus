@@ -32,19 +32,19 @@ public class RabbitMqSslConfigurator :
         AcceptablePolicyErrors &= ~policyErrors;
     }
 
-    public string CertificatePath { get; set; }
+    public string? CertificatePath { get; set; }
 
-    public string CertificatePassphrase { get; set; }
+    public string? CertificatePassphrase { get; set; }
 
-    public X509Certificate Certificate { get; set; }
+    public X509Certificate? Certificate { get; set; }
 
-    public string ServerName { get; set; }
+    public string? ServerName { get; set; }
 
     public SslProtocols Protocol { get; set; }
 
     public bool UseCertificateAsAuthenticationIdentity { get; set; }
 
-    public LocalCertificateSelectionCallback CertificateSelectionCallback { get; set; }
+    public LocalCertificateSelectionCallback? CertificateSelectionCallback { get; set; }
 
-    public RemoteCertificateValidationCallback CertificateValidationCallback { get; set; }
+    public RemoteCertificateValidationCallback? CertificateValidationCallback { get; set; }
 }

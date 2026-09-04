@@ -5,6 +5,6 @@ namespace ViciOne.ServiceBus.Transports;
 
 public interface IPublishTransportProvider
 {
-    Task<ISendTransport> GetPublishTransport<T>(Uri? publishAddress)
+    Task<ISendTransport> GetPublishTransportAsync<T>(Uri? publishAddress, CancellationToken cancellationToken = default)
         where T : class;
 }

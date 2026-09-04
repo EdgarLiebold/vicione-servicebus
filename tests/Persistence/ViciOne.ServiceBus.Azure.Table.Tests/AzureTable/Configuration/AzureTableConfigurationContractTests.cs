@@ -137,7 +137,7 @@ public sealed class AzureTableConfigurationContractTests
                 null!)).ParamName);
         Assert.Equal("asyncMethod", Assert.Throws<ArgumentNullException>(() =>
         {
-            _ = contextFactory.Execute<ConfigurationSaga>(null!, TestContext.Current.CancellationToken);
+            _ = contextFactory.ExecuteAsync<ConfigurationSaga>(null!, TestContext.Current.CancellationToken);
         }).ParamName);
         Assert.Equal("context", Assert.Throws<ArgumentNullException>(() =>
             contextFactory.Probe(null!)).ParamName);

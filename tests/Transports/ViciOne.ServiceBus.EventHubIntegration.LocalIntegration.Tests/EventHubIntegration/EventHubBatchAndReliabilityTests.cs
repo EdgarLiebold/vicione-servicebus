@@ -19,7 +19,7 @@ public sealed class EventHubBatchAndReliabilityTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0144", "hundred-item-single-partition-batch-preserves-cardinality-and-order")]
-    public async Task BatchConsumer_ReceivesExactlyOneHundredOrderedItemsFromOnePartitionKey()
+    public async Task BatchConsumer_ReceivesExactlyOneHundredOrderedItemsFromOnePartitionKeyAsync()
     {
         const string eventHubName = "batch-eh";
         const string partitionKey = "ordered-batch";
@@ -35,7 +35,7 @@ public sealed class EventHubBatchAndReliabilityTests
                     rider.AddConsumer<OrderedBatchConsumer>(consumer => consumer.Options<BatchOptions>(options => options
                         .SetMessageLimit(100)
                         .SetTimeLimit(TimeSpan.FromMinutes(1))
-                        .GroupBy<IBatchMessage, string>(context => context.PartitionKey() ?? string.Empty)));
+                        .GroupBy<IBatchMessage, string>(context => context.Advanced().PartitionKey() ?? string.Empty)));
                     rider.UsingEventHub((context, eventHubs) =>
                     {
                         fixture.Configure(eventHubs);
@@ -61,12 +61,12 @@ public sealed class EventHubBatchAndReliabilityTests
             started = true;
             await using AsyncServiceScope scope = provider.CreateAsyncScope();
             IEventHubProducer producer = await scope.ServiceProvider.GetRequiredService<IEventHubProducerProvider>()
-                .GetProducer(eventHubName).WaitAsync(fixture.OperationTimeout, cancellationToken);
+                .GetProducerAsync(eventHubName, cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             BatchMessage[] messages = Enumerable.Range(0, 100)
                 .Select(index => new BatchMessage(state.RunId, index))
                 .ToArray();
 
-            await producer.Produce<IBatchMessage>(
+            await producer.ProduceAsync<IBatchMessage>(
                     messages,
                     Pipe.Execute<SendContext>(context => context.SetPartitionKey(partitionKey)),
                     cancellationToken)
@@ -81,7 +81,7 @@ public sealed class EventHubBatchAndReliabilityTests
             Assert.All(actual.Message, item =>
             {
                 Assert.Equal(state.RunId, item.Message.RunId);
-                Assert.Equal(partitionKey, item.PartitionKey());
+                Assert.Equal(partitionKey, item.Advanced().PartitionKey());
             });
         }
         finally
@@ -93,7 +93,7 @@ public sealed class EventHubBatchAndReliabilityTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0146", "faulted-first-event-does-not-stop-same-partition-and-fault-is-observed")]
-    public async Task ConsumerFault_IsObservedAndTheNextSamePartitionEventStillCompletes()
+    public async Task ConsumerFault_IsObservedAndTheNextSamePartitionEventStillCompletesAsync()
     {
         const string eventHubName = "retry-eh";
         var state = new FaultContinuationState(NewId.NextGuid());
@@ -130,14 +130,14 @@ public sealed class EventHubBatchAndReliabilityTests
             started = true;
             await using AsyncServiceScope scope = provider.CreateAsyncScope();
             IEventHubProducer producer = await scope.ServiceProvider.GetRequiredService<IEventHubProducerProvider>()
-                .GetProducer(eventHubName).WaitAsync(fixture.OperationTimeout, cancellationToken);
+                .GetProducerAsync(eventHubName, cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             FaultContinuationMessage[] messages =
             [
                 new(state.RunId, 0),
                 new(state.RunId, 1),
             ];
 
-            await producer.Produce<IFaultContinuationMessage>(
+            await producer.ProduceAsync<IFaultContinuationMessage>(
                     messages,
                     Pipe.Execute<SendContext>(context => context.SetPartitionKey($"fault-{state.RunId:N}")),
                     cancellationToken)
@@ -160,7 +160,7 @@ public sealed class EventHubBatchAndReliabilityTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0147", "immediate-three-retry-budget-exposes-exact-attempt-and-count-sequences")]
-    public async Task ConsumerRetry_ExecutesOneOriginalAndThreeImmediateRetriesWithExactMetadata()
+    public async Task ConsumerRetry_ExecutesOneOriginalAndThreeImmediateRetriesWithExactMetadataAsync()
     {
         const string eventHubName = "retry-eh";
         var state = new RetryState(NewId.NextGuid());
@@ -197,9 +197,9 @@ public sealed class EventHubBatchAndReliabilityTests
             started = true;
             await using AsyncServiceScope scope = provider.CreateAsyncScope();
             IEventHubProducer producer = await scope.ServiceProvider.GetRequiredService<IEventHubProducerProvider>()
-                .GetProducer(eventHubName).WaitAsync(fixture.OperationTimeout, cancellationToken);
+                .GetProducerAsync(eventHubName, cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
 
-            await producer.Produce<IRetryMessage>(new RetryMessage(state.RunId), cancellationToken)
+            await producer.ProduceAsync<IRetryMessage>(new RetryMessage(state.RunId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             await state.Completed.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
             await bus.StopAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
@@ -217,7 +217,7 @@ public sealed class EventHubBatchAndReliabilityTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0148", "health-transitions-from-unhealthy-to-healthy-after-partition-ownership")]
-    public async Task RiderHealth_IsUnhealthyBeforeStartAndHealthyAfterAllDeclaredPartitionsInitialize()
+    public async Task RiderHealth_IsUnhealthyBeforeStartAndHealthyAfterAllDeclaredPartitionsInitializeAsync()
     {
         const string eventHubName = "lifecycle-eh";
         var lifecycle = new PartitionLifecycleState(expectedPartitions: 4);
@@ -234,7 +234,7 @@ public sealed class EventHubBatchAndReliabilityTests
                     eventHubs.ReceiveEndpoint(eventHubName, EventHubLocalFixture.ConsumerGroup, endpoint =>
                     {
                         endpoint.ContainerName = fixture.ContainerName("health");
-                        endpoint.OnPartitionInitializing(lifecycle.OnInitializing);
+                        endpoint.OnPartitionInitializing(lifecycle.OnInitializingAsync);
                     });
                 }));
             })
@@ -266,7 +266,7 @@ public sealed class EventHubBatchAndReliabilityTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0149", "checkpoint-is-written-only-after-long-running-consumer-confirms")]
-    public async Task Checkpoint_DoesNotAdvancePastAnInFlightEventAndAdvancesAfterConfirmation()
+    public async Task Checkpoint_DoesNotAdvancePastAnInFlightEventAndAdvancesAfterConfirmationAsync()
     {
         const string eventHubName = "checkpoint-gate-eh";
         var state = new GatedCheckpointState(NewId.NextGuid());
@@ -306,9 +306,9 @@ public sealed class EventHubBatchAndReliabilityTests
             started = true;
             await using AsyncServiceScope scope = provider.CreateAsyncScope();
             IEventHubProducer producer = await scope.ServiceProvider.GetRequiredService<IEventHubProducerProvider>()
-                .GetProducer(eventHubName).WaitAsync(fixture.OperationTimeout, cancellationToken);
+                .GetProducerAsync(eventHubName, cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
 
-            await producer.Produce<ICheckpointMessage>(new CheckpointMessage(state.RunId), cancellationToken)
+            await producer.ProduceAsync<ICheckpointMessage>(new CheckpointMessage(state.RunId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             await state.Entered.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
 
@@ -332,7 +332,7 @@ public sealed class EventHubBatchAndReliabilityTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0264", "custom-checkpoint-container-and-producer-options-reach-provider-clients")]
-    public async Task CustomContainerAndProducerOptions_AreAppliedToTheRealProviderClients()
+    public async Task CustomContainerAndProducerOptions_AreAppliedToTheRealProviderClientsAsync()
     {
         const string eventHubName = "config-eh";
         Guid marker = NewId.NextGuid();
@@ -384,9 +384,9 @@ public sealed class EventHubBatchAndReliabilityTests
             started = true;
             await using AsyncServiceScope scope = provider.CreateAsyncScope();
             IEventHubProducer producer = await scope.ServiceProvider.GetRequiredService<IEventHubProducerProvider>()
-                .GetProducer(eventHubName).WaitAsync(fixture.OperationTimeout, cancellationToken);
+                .GetProducerAsync(eventHubName, cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
 
-            await producer.Produce<IMarkerMessage>(new MarkerMessage(marker), cancellationToken)
+            await producer.ProduceAsync<IMarkerMessage>(new MarkerMessage(marker), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.Equal(marker, await received.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
             EventHubProducerClientOptions applied = await producerOptions.Task
@@ -454,7 +454,7 @@ public sealed class EventHubBatchAndReliabilityTests
 
     private sealed class OrderedBatchConsumer(BatchState state) : IConsumer<Batch<IBatchMessage>>
     {
-        public Task Consume(ConsumeContext<Batch<IBatchMessage>> context)
+        public Task ConsumeAsync(ConsumeContext<Batch<IBatchMessage>> context)
         {
             if (context.Message.Length == 100 && context.Message.All(item => item.Message.RunId == state.RunId))
                 state.Received.TrySetResult(context);
@@ -476,7 +476,7 @@ public sealed class EventHubBatchAndReliabilityTests
 
     private sealed class FaultContinuationConsumer(FaultContinuationState state) : IConsumer<IFaultContinuationMessage>
     {
-        public Task Consume(ConsumeContext<IFaultContinuationMessage> context)
+        public Task ConsumeAsync(ConsumeContext<IFaultContinuationMessage> context)
         {
             if (context.Message.RunId != state.RunId)
                 return Task.CompletedTask;
@@ -492,11 +492,11 @@ public sealed class EventHubBatchAndReliabilityTests
 
     private sealed class FaultConsumeObserver(FaultContinuationState state) : IConsumeObserver
     {
-        public Task PreConsume<T>(ConsumeContext<T> context) where T : class => Task.CompletedTask;
+        public Task PreConsumeAsync<T>(ConsumeContext<T> context) where T : class => Task.CompletedTask;
 
-        public Task PostConsume<T>(ConsumeContext<T> context) where T : class => Task.CompletedTask;
+        public Task PostConsumeAsync<T>(ConsumeContext<T> context) where T : class => Task.CompletedTask;
 
-        public Task ConsumeFault<T>(ConsumeContext<T> context, Exception exception) where T : class
+        public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, Exception exception) where T : class
         {
             if (context.Message is IFaultContinuationMessage message && message.RunId == state.RunId)
                 state.Faulted.TrySetResult(exception);
@@ -528,13 +528,13 @@ public sealed class EventHubBatchAndReliabilityTests
 
     private sealed class RetryConsumer(RetryState state) : IConsumer<IRetryMessage>
     {
-        public Task Consume(ConsumeContext<IRetryMessage> context)
+        public Task ConsumeAsync(ConsumeContext<IRetryMessage> context)
         {
             if (context.Message.RunId != state.RunId)
                 return Task.CompletedTask;
 
-            int attempt = context.GetRetryAttempt();
-            state.Record(attempt, context.GetRetryCount());
+            int attempt = context.Advanced().GetRetryAttempt();
+            state.Record(attempt, context.Advanced().GetRetryCount());
             if (attempt < 3)
                 return Task.FromException(new InvalidOperationException($"expected retry {attempt}"));
 
@@ -548,7 +548,7 @@ public sealed class EventHubBatchAndReliabilityTests
         private readonly ConcurrentDictionary<string, byte> _initialized = new(StringComparer.Ordinal);
         public TaskCompletionSource<string[]> AllInitialized { get; } = NewSignal<string[]>();
 
-        public Task OnInitializing(Azure.Messaging.EventHubs.Processor.PartitionInitializingEventArgs args)
+        public Task OnInitializingAsync(Azure.Messaging.EventHubs.Processor.PartitionInitializingEventArgs args)
         {
             _initialized.TryAdd(args.PartitionId, 0);
             if (_initialized.Count == expectedPartitions)
@@ -567,7 +567,7 @@ public sealed class EventHubBatchAndReliabilityTests
 
     private sealed class GatedCheckpointConsumer(GatedCheckpointState state) : IConsumer<ICheckpointMessage>
     {
-        public async Task Consume(ConsumeContext<ICheckpointMessage> context)
+        public async Task ConsumeAsync(ConsumeContext<ICheckpointMessage> context)
         {
             if (context.Message.RunId != state.RunId)
                 return;
@@ -605,7 +605,7 @@ public sealed class EventHubBatchAndReliabilityTests
 
     private sealed class MarkerConsumer(MarkerDelivery delivery) : IConsumer<IMarkerMessage>
     {
-        public Task Consume(ConsumeContext<IMarkerMessage> context)
+        public Task ConsumeAsync(ConsumeContext<IMarkerMessage> context)
         {
             if (context.Message.Marker == delivery.Marker)
                 delivery.Received.TrySetResult(context.Message.Marker);

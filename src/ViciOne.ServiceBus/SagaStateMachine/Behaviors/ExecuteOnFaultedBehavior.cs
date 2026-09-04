@@ -27,22 +27,22 @@ public class ExecuteOnFaultedBehavior<TSaga, TException> :
         _next.Probe(context);
     }
 
-    Task IBehavior<TSaga>.Execute(BehaviorContext<TSaga> context)
+    Task IBehavior<TSaga>.ExecuteAsync(BehaviorContext<TSaga> context)
     {
-        return _next.Faulted(_context);
+        return _next.FaultedAsync(_context);
     }
 
-    Task IBehavior<TSaga>.Execute<T>(BehaviorContext<TSaga, T> context)
+    Task IBehavior<TSaga>.ExecuteAsync<T>(BehaviorContext<TSaga, T> context)
     {
-        return _next.Faulted(_context);
+        return _next.FaultedAsync(_context);
     }
 
-    Task IBehavior<TSaga>.Faulted<TData, T>(BehaviorExceptionContext<TSaga, TData, T> context)
+    Task IBehavior<TSaga>.FaultedAsync<TData, T>(BehaviorExceptionContext<TSaga, TData, T> context)
     {
         throw new SagaStateMachineException("This should not ever be called.");
     }
 
-    Task IBehavior<TSaga>.Faulted<T>(BehaviorExceptionContext<TSaga, T> context)
+    Task IBehavior<TSaga>.FaultedAsync<T>(BehaviorExceptionContext<TSaga, T> context)
     {
         throw new SagaStateMachineException("This should not ever be called.");
     }
@@ -74,22 +74,22 @@ public class ExecuteOnFaultedBehavior<TSaga, TMessage, TException> :
         _next.Probe(context);
     }
 
-    Task IBehavior<TSaga>.Execute(BehaviorContext<TSaga> context)
+    Task IBehavior<TSaga>.ExecuteAsync(BehaviorContext<TSaga> context)
     {
-        return _next.Faulted(_context);
+        return _next.FaultedAsync(_context);
     }
 
-    Task IBehavior<TSaga>.Execute<T>(BehaviorContext<TSaga, T> context)
+    Task IBehavior<TSaga>.ExecuteAsync<T>(BehaviorContext<TSaga, T> context)
     {
-        return _next.Faulted(_context);
+        return _next.FaultedAsync(_context);
     }
 
-    Task IBehavior<TSaga>.Faulted<TD, T>(BehaviorExceptionContext<TSaga, TD, T> context)
+    Task IBehavior<TSaga>.FaultedAsync<TD, T>(BehaviorExceptionContext<TSaga, TD, T> context)
     {
         throw new SagaStateMachineException("This should not ever be called.");
     }
 
-    Task IBehavior<TSaga>.Faulted<T>(BehaviorExceptionContext<TSaga, T> context)
+    Task IBehavior<TSaga>.FaultedAsync<T>(BehaviorExceptionContext<TSaga, T> context)
     {
         throw new SagaStateMachineException("This should not ever be called.");
     }

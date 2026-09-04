@@ -28,7 +28,7 @@ public sealed class BrokerOutageControlClientTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-OUTAGE", "restore-failure-is-propagated")]
-    public async Task RestoreFailure_IsReported()
+    public async Task RestoreFailure_IsReportedAsync()
     {
         using var control = new ControlDirectory();
         BrokerOutageControlClient client = control.CreateClient();
@@ -48,7 +48,7 @@ public sealed class BrokerOutageControlClientTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-OUTAGE", "unanswered-request-times-out")]
-    public async Task UnansweredRequest_TimesOut()
+    public async Task UnansweredRequest_TimesOutAsync()
     {
         using var control = new ControlDirectory();
         var time = new FakeTimeProvider();
@@ -67,7 +67,7 @@ public sealed class BrokerOutageControlClientTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-OUTAGE", "rejected-interrupt-is-propagated")]
-    public async Task RejectedInterrupt_IsReported()
+    public async Task RejectedInterrupt_IsReportedAsync()
     {
         using var control = new ControlDirectory();
         BrokerOutageControlClient client = control.CreateClient();
@@ -146,7 +146,7 @@ public sealed class BrokerOutageControlClientTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-OUTAGE", "operation-completes-after-observed-effect")]
-    public async Task Interrupt_ReturnsOnlyAfterTheObservedEffect()
+    public async Task Interrupt_ReturnsOnlyAfterTheObservedEffectAsync()
     {
         using var control = new ControlDirectory();
         BrokerOutageControlClient client = control.CreateClient();

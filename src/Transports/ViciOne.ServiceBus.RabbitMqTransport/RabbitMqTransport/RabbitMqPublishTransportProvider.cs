@@ -19,9 +19,9 @@ public class RabbitMqPublishTransportProvider :
         _receiveEndpointContext = receiveEndpointContext;
     }
 
-    public Task<ISendTransport> GetPublishTransport<T>(Uri? publishAddress)
+    public Task<ISendTransport> GetPublishTransportAsync<T>(Uri? publishAddress, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _connectionContextSupervisor.CreatePublishTransport<T>(_receiveEndpointContext, _supervisor);
+        return _connectionContextSupervisor.CreatePublishTransportAsync<T>(_receiveEndpointContext, _supervisor, cancellationToken: cancellationToken);
     }
 }

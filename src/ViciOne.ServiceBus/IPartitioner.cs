@@ -22,5 +22,6 @@ public interface IPartitioner<TContext> :
     /// <param name="context">The context</param>
     /// <param name="next">The next pipe</param>
     /// <returns></returns>
-    Task Send(TContext context, IPipe<TContext> next);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task SendAsync(TContext context, IPipe<TContext> next, CancellationToken cancellationToken = default);
 }

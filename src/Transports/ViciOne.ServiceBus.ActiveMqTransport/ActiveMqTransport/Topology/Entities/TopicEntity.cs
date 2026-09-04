@@ -34,7 +34,7 @@ public class TopicEntity :
 
     sealed class NameEqualityComparer : IEqualityComparer<TopicEntity>
     {
-        public bool Equals(TopicEntity x, TopicEntity y)
+        public bool Equals(TopicEntity? x, TopicEntity? y)
         {
             if (ReferenceEquals(x, y))
                 return true;
@@ -61,7 +61,7 @@ public class TopicEntity :
     sealed class ExchangeEntityEqualityComparer :
         IEqualityComparer<TopicEntity>
     {
-        public bool Equals(TopicEntity x, TopicEntity y)
+        public bool Equals(TopicEntity? x, TopicEntity? y)
         {
             if (ReferenceEquals(x, y))
                 return true;

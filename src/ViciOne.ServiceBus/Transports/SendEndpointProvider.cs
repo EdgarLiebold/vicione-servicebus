@@ -26,11 +26,11 @@ public class SendEndpointProvider :
         _cache = new SendEndpointCache<Uri>();
     }
 
-    public Task<ISendEndpoint> GetSendEndpoint(Uri address)
+    public Task<ISendEndpoint> GetSendEndpointAsync(Uri address, CancellationToken cancellationToken = default)
     {
         address = _provider.NormalizeAddress(address);
 
-        return _cache.GetSendEndpoint(address, CreateSendEndpoint);
+        return _cache.GetSendEndpointAsync(address, CreateSendEndpointAsync, cancellationToken: cancellationToken);
     }
 
     IMessageRouteTable IMessageRouteProvider.MessageRoutes => _context.MessageRoutes;
@@ -45,9 +45,9 @@ public class SendEndpointProvider :
         return _observers.Connect(observer);
     }
 
-    async Task<ISendEndpoint> CreateSendEndpoint(Uri address)
+    async Task<ISendEndpoint> CreateSendEndpointAsync(Uri address)
     {
-        var sendTransport = await _provider.GetSendTransport(address).ConfigureAwait(false);
+        var sendTransport = await _provider.GetSendTransportAsync(address).ConfigureAwait(false);
 
         var handle = sendTransport.ConnectSendObserver(_observers);
 

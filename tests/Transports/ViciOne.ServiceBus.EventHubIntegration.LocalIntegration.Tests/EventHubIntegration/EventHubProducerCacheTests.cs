@@ -10,7 +10,7 @@ public sealed class EventHubProducerCacheTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EVENTHUB-PRODUCER-CACHE", "single-flight-preserves-key-identity")]
-    public async Task ConcurrentRequests_ShareOneProducerForTheSameAddress()
+    public async Task ConcurrentRequests_ShareOneProducerForTheSameAddressAsync()
     {
         var cache = new EventHubProducerCache<Uri>();
         var address = new Uri("sb://eventhub.local/orders");
@@ -19,20 +19,16 @@ public sealed class EventHubProducerCacheTests
         var factoryCalls = 0;
         var provider = new FakeEventHubProducer();
 
-        Task<IEventHubProducer> first = cache.GetProducer(
-            address,
-            async actualAddress =>
+        Task<IEventHubProducer> first = cache.GetProducerAsync(address, async actualAddress =>
             {
                 Assert.Equal(address, actualAddress);
                 Interlocked.Increment(ref factoryCalls);
                 factoryStarted.TrySetResult();
                 await releaseFactory.Task.WaitAsync(TestContext.Current.CancellationToken);
                 return provider;
-            });
+            }, TestContext.Current.CancellationToken);
         await factoryStarted.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
-        Task<IEventHubProducer> second = cache.GetProducer(
-            address,
-            _ => throw new InvalidOperationException("A waiter must not invoke a second factory."));
+        Task<IEventHubProducer> second = cache.GetProducerAsync(address, _ => throw new InvalidOperationException("A waiter must not invoke a second factory."), TestContext.Current.CancellationToken);
 
         releaseFactory.TrySetResult();
 
@@ -48,27 +44,23 @@ public sealed class EventHubProducerCacheTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EVENTHUB-PRODUCER-CACHE", "faulted-creation-is-retryable")]
-    public async Task FaultedProducerCreation_DoesNotPoisonTheAddress()
+    public async Task FaultedProducerCreation_DoesNotPoisonTheAddressAsync()
     {
         var cache = new EventHubProducerCache<string>();
         var expectedFailure = new InvalidOperationException("provider creation failed");
         var provider = new FakeEventHubProducer();
         var factoryCalls = 0;
 
-        InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() => cache.GetProducer(
-            "orders",
-            _ =>
+        InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() => cache.GetProducerAsync("orders", _ =>
             {
                 Interlocked.Increment(ref factoryCalls);
                 return Task.FromException<IEventHubProducer>(expectedFailure);
-            }));
-        IEventHubProducer recovered = await cache.GetProducer(
-            "orders",
-            _ =>
+            }, TestContext.Current.CancellationToken));
+        IEventHubProducer recovered = await cache.GetProducerAsync("orders", _ =>
             {
                 Interlocked.Increment(ref factoryCalls);
                 return Task.FromResult<IEventHubProducer>(provider);
-            });
+            }, TestContext.Current.CancellationToken);
 
         Assert.Same(expectedFailure, actual);
         Assert.Equal(2, Volatile.Read(ref factoryCalls));
@@ -77,7 +69,7 @@ public sealed class EventHubProducerCacheTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EVENTHUB-PRODUCER-CACHE", "cached-operations-refresh-usage-and-delegate")]
-    public async Task CachedOperations_RefreshUsageAndDelegateTheExactPayloadAndCancellation()
+    public async Task CachedOperations_RefreshUsageAndDelegateTheExactPayloadAndCancellationAsync()
     {
         var provider = new FakeEventHubProducer();
         var cached = new CachedEventHubProducer<string>("orders", provider);
@@ -86,7 +78,7 @@ public sealed class EventHubProducerCacheTests
         var message = new Message("one");
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
 
-        await cached.Produce(message, cancellationToken);
+        await cached.ProduceAsync(message, cancellationToken);
         using ConnectHandle handle = cached.ConnectSendObserver(new NoopSendObserver());
 
         Assert.Equal(2, Volatile.Read(ref usageSignals));
@@ -120,29 +112,29 @@ public sealed class EventHubProducerCacheTests
             return new NoopConnectHandle();
         }
 
-        public Task Produce<T>(T message, CancellationToken cancellationToken = default) where T : class =>
-            Record(message, cancellationToken);
+        public Task ProduceAsync<T>(T message, CancellationToken cancellationToken = default) where T : class =>
+            RecordAsync(message, cancellationToken);
 
-        public Task Produce<T>(IEnumerable<T> messages, CancellationToken cancellationToken = default) where T : class =>
-            Record(messages, cancellationToken);
+        public Task ProduceAsync<T>(IEnumerable<T> messages, CancellationToken cancellationToken = default) where T : class =>
+            RecordAsync(messages, cancellationToken);
 
-        public Task Produce<T>(T message, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken = default) where T : class =>
-            Record(message, cancellationToken);
+        public Task ProduceAsync<T>(T message, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken = default) where T : class =>
+            RecordAsync(message, cancellationToken);
 
-        public Task Produce<T>(IEnumerable<T> messages, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken = default)
-            where T : class => Record(messages, cancellationToken);
+        public Task ProduceAsync<T>(IEnumerable<T> messages, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken = default)
+            where T : class => RecordAsync(messages, cancellationToken);
 
-        public Task Produce<T>(object values, CancellationToken cancellationToken = default) where T : class =>
-            Record(values, cancellationToken);
+        public Task ProduceAsync<T>(object values, CancellationToken cancellationToken = default) where T : class =>
+            RecordAsync(values, cancellationToken);
 
-        public Task Produce<T>(IEnumerable<object> values, CancellationToken cancellationToken = default) where T : class =>
-            Record(values, cancellationToken);
+        public Task ProduceAsync<T>(IEnumerable<object> values, CancellationToken cancellationToken = default) where T : class =>
+            RecordAsync(values, cancellationToken);
 
-        public Task Produce<T>(object values, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken = default) where T : class =>
-            Record(values, cancellationToken);
+        public Task ProduceAsync<T>(object values, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken = default) where T : class =>
+            RecordAsync(values, cancellationToken);
 
-        public Task Produce<T>(IEnumerable<object> values, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken = default)
-            where T : class => Record(values, cancellationToken);
+        public Task ProduceAsync<T>(IEnumerable<object> values, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken = default)
+            where T : class => RecordAsync(values, cancellationToken);
 
         public ValueTask DisposeAsync()
         {
@@ -150,7 +142,7 @@ public sealed class EventHubProducerCacheTests
             return default;
         }
 
-        private Task Record(object payload, CancellationToken cancellationToken)
+        private Task RecordAsync(object payload, CancellationToken cancellationToken)
         {
             LastPayload = payload;
             LastCancellationToken = cancellationToken;
@@ -161,11 +153,11 @@ public sealed class EventHubProducerCacheTests
 
     private sealed class NoopSendObserver : ISendObserver
     {
-        public Task PreSend<T>(SendContext<T> context) where T : class => Task.CompletedTask;
+        public Task PreSendAsync<T>(SendContext<T> context) where T : class => Task.CompletedTask;
 
-        public Task PostSend<T>(SendContext<T> context) where T : class => Task.CompletedTask;
+        public Task PostSendAsync<T>(SendContext<T> context) where T : class => Task.CompletedTask;
 
-        public Task SendFault<T>(SendContext<T> context, Exception exception) where T : class => Task.CompletedTask;
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception) where T : class => Task.CompletedTask;
     }
 
     private sealed class NoopConnectHandle : ConnectHandle

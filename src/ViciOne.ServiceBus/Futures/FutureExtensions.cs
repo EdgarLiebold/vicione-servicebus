@@ -58,7 +58,7 @@ public static class FutureExtensions
         {
             var resultId = getResultId(context);
 
-            return context.SetResult(resultId, messageFactory);
+            return context.SetResultAsync(resultId, messageFactory);
         });
     }
 

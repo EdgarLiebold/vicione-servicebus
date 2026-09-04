@@ -8,7 +8,7 @@ public class AddressEqualityComparer :
 {
     public static readonly IEqualityComparer<Uri> Comparer = new AddressEqualityComparer();
 
-    public bool Equals(Uri x, Uri y)
+    public bool Equals(Uri? x, Uri? y)
     {
         return ReferenceEquals(x, y)
             || (x != null

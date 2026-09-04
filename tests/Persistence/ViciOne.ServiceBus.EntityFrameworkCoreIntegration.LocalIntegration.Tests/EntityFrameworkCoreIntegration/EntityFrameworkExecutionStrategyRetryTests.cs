@@ -14,7 +14,7 @@ public sealed class EntityFrameworkExecutionStrategyRetryTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-EXECUTION-STRATEGY", "retry-discards-rolled-back-tracked-state")]
-    public async Task TransientRetry_DiscardsRolledBackTrackedStateBeforeReexecutingTheConsumer()
+    public async Task TransientRetry_DiscardsRolledBackTrackedStateBeforeReexecutingTheConsumerAsync()
     {
         RetryScenarioResult result = await RunRetryScenarioAsync();
 
@@ -27,7 +27,7 @@ public sealed class EntityFrameworkExecutionStrategyRetryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-INBOX-CANCELLATION", "every-inbox-write-receives-the-consume-token")]
-    public async Task InboxPersistence_PropagatesTheConsumeTokenToEverySave()
+    public async Task InboxPersistence_PropagatesTheConsumeTokenToEverySaveAsync()
     {
         RetryScenarioResult result = await RunRetryScenarioAsync();
 
@@ -78,12 +78,12 @@ public sealed class EntityFrameworkExecutionStrategyRetryTests
             ValidateOnBuild = true,
             ValidateScopes = true,
         });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(operationTimeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync().WaitAsync(operationTimeout, cancellationToken);
         Guid messageId = Guid.NewGuid();
 
         try
         {
-            await harness.Bus.Publish(new RetryCommand(messageId), context => context.MessageId = messageId, cancellationToken);
+            await harness.Bus.PublishAsync(new RetryCommand(messageId), context => context.MessageId = messageId, cancellationToken);
             RetryEffect effect = await probe.EffectDelivered.WaitAsync(operationTimeout, cancellationToken);
 
             await using AsyncServiceScope scope = provider.CreateAsyncScope();
@@ -105,7 +105,7 @@ public sealed class EntityFrameworkExecutionStrategyRetryTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(operationTimeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(operationTimeout, CancellationToken.None);
         }
     }
 
@@ -114,7 +114,7 @@ public sealed class EntityFrameworkExecutionStrategyRetryTests
 
     public sealed class RetryConsumer(RetryProbe probe, RetryDbContext dbContext) : IConsumer<RetryCommand>
     {
-        public Task Consume(ConsumeContext<RetryCommand> context)
+        public Task ConsumeAsync(ConsumeContext<RetryCommand> context)
         {
             if (probe.RecordConsumerAttempt(context.CancellationToken) == 1)
             {
@@ -131,13 +131,13 @@ public sealed class EntityFrameworkExecutionStrategyRetryTests
                     PostgresErrorCodes.SerializationFailure);
             }
 
-            return context.Publish(new RetryEffect(context.MessageId!.Value), context.CancellationToken);
+            return context.Advanced().PublishAsync(new RetryEffect(context.MessageId!.Value), context.CancellationToken);
         }
     }
 
     public sealed class RetryEffectConsumer(RetryProbe probe) : IConsumer<RetryEffect>
     {
-        public Task Consume(ConsumeContext<RetryEffect> context)
+        public Task ConsumeAsync(ConsumeContext<RetryEffect> context)
         {
             probe.RecordEffect(context.Message);
             return Task.CompletedTask;
@@ -221,7 +221,7 @@ public sealed class EntityFrameworkExecutionStrategyRetryTests
         Guid MessageId,
         Guid InboxMessageId,
         int ReceiveCount,
-        DateTime? Consumed,
+        DateTimeOffset? Consumed,
         int ConsumerAttempts,
         bool StaleTrackedStateInjected,
         CancellationToken ConsumerCancellationToken,

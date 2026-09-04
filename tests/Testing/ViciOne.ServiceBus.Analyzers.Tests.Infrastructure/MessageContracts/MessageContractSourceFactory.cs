@@ -14,7 +14,7 @@ public static class MessageContractSourceFactory
         """;
 
     public const string Usings = MinimalUsings + """
-        using ViciOne.ServiceBus;
+        using ViciOne.ServiceBus; using ViciOne.ServiceBus.Advanced; using ViciOne.ServiceBus.Advanced.Initializers;
 
         """;
 
@@ -103,7 +103,7 @@ public static class MessageContractSourceFactory
                 {
                     var bus = Bus.Factory.CreateUsingInMemory(cfg => { });
         {{Indent(setup, 20)}}
-        {{Delivery(form, payload, value => $"await bus.Publish<{contract}>({value});", 20)}}
+        {{Delivery(form, payload, value => $"await bus.PublishAsync<{contract}>({value});", 20)}}
                 }
             }
         }
@@ -123,9 +123,9 @@ public static class MessageContractSourceFactory
                 static async Task Main()
                 {
                     var bus = Bus.Factory.CreateUsingInMemory(cfg => { });
-                    var endpoint = await bus.GetSendEndpoint(null);
+                    var endpoint = await bus.GetSendEndpointAsync(null);
         {{Indent(setup, 20)}}
-        {{Delivery(form, payload, value => $"await endpoint.Send<{contract}>({value});", 20)}}
+        {{Delivery(form, payload, value => $"await endpoint.SendAsync<{contract}>({value});", 20)}}
                 }
             }
         }
@@ -137,10 +137,10 @@ public static class MessageContractSourceFactory
         {
             class SubmitOrderConsumer : IConsumer<SubmitOrder>
             {
-                public async Task Consume(ConsumeContext<SubmitOrder> context)
+                public async Task ConsumeAsync(ConsumeContext<SubmitOrder> context)
                 {
                     Uri address = null;
-        {{Delivery(form, payload, value => $"await context.Send<OrderSubmitted>(address, {value});", 20)}}
+        {{Delivery(form, payload, value => $"await context.Advanced().SendAsync<OrderSubmitted>(address, {value});", 20)}}
                 }
             }
         }
@@ -159,7 +159,7 @@ public static class MessageContractSourceFactory
         {{Delivery(form, payload, value => $$"""
                     using (var request = client.Create({{value}}))
                     {
-                        _ = await request.GetResponse<OrderStatusResult>();
+                        _ = await request.GetResponseAsync<OrderStatusResult>();
                     }
         """, 20)}}
                 }
@@ -177,7 +177,7 @@ public static class MessageContractSourceFactory
                 {
                     var bus = Bus.Factory.CreateUsingInMemory(cfg => { });
                     var client = bus.CreateRequestClient<CheckOrderStatus>(null);
-        {{Delivery(form, payload, value => $"_ = await client.GetResponse<OrderStatusResult>({value});", 20)}}
+        {{Delivery(form, payload, value => $"_ = await client.Advanced().GetResponseAsync<OrderStatusResult>({value});", 20)}}
                 }
             }
         }
@@ -203,7 +203,7 @@ public static class MessageContractSourceFactory
                     where T : class, INotification
                 {
                     var bus = Bus.Factory.CreateUsingInMemory(cfg => { });
-        {{Delivery(form, payload, value => $"return bus.Publish<T>({value});", 20)}}
+        {{Delivery(form, payload, value => $"return bus.PublishAsync<T>({value});", 20)}}
                 }
             }
         }
@@ -231,7 +231,7 @@ public static class MessageContractSourceFactory
                 {
                     var bus = Bus.Factory.CreateUsingInMemory(cfg => { });
                     var client = bus.CreateRequestClient<Link<TMessage>>();
-        {{Delivery(form, payload, value => $"_ = await client.GetResponse<Up<TMessage>>({value});", 20)}}
+        {{Delivery(form, payload, value => $"_ = await client.Advanced().GetResponseAsync<Up<TMessage>>({value});", 20)}}
                 }
             }
         }

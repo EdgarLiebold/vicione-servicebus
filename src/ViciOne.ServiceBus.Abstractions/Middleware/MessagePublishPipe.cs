@@ -27,8 +27,8 @@ public class MessagePublishPipe<TMessage> :
     }
 
     [DebuggerNonUserCode]
-    Task IPipe<PublishContext<TMessage>>.Send(PublishContext<TMessage> context)
+    Task IPipe<PublishContext<TMessage>>.SendAsync(PublishContext<TMessage> context)
     {
-        return _outputPipe.Send(context);
+        return _outputPipe.SendAsync(context);
     }
 }

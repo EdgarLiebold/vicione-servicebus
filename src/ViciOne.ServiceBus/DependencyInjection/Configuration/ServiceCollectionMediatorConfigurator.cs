@@ -11,9 +11,9 @@ public class ServiceCollectionMediatorConfigurator :
     RegistrationConfigurator,
     IMediatorRegistrationConfigurator
 {
-    Action<IMediatorRegistrationContext, IMediatorConfigurator> _configure;
+    Action<IMediatorRegistrationContext, IMediatorConfigurator> _configure = null!;
 
-    public ServiceCollectionMediatorConfigurator(IServiceCollection collection, Uri baseAddress)
+    public ServiceCollectionMediatorConfigurator(IServiceCollection collection, Uri? baseAddress)
         : base(collection, new DependencyInjectionMediatorContainerRegistrar(collection))
     {
         IMediatorRegistrationContext CreateRegistrationContext(IServiceProvider provider)
@@ -60,7 +60,7 @@ public class ServiceCollectionMediatorConfigurator :
         collection.TryAddScoped(typeof(IRequestClient<>), typeof(GenericRequestClient<>));
     }
 
-    IMediator MediatorFactory(IServiceProvider provider, Uri baseAddress)
+    IMediator MediatorFactory(IServiceProvider provider, Uri? baseAddress)
     {
         ConfigureLogContext(provider);
 

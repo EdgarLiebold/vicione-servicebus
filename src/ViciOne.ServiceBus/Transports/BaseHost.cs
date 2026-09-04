@@ -11,7 +11,7 @@ public abstract class BaseHost :
     IHost
 {
     readonly IHostConfiguration _hostConfiguration;
-    HostHandle _handle;
+    HostHandle? _handle;
 
     protected BaseHost(IHostConfiguration hostConfiguration, IBusTopology busTopology)
     {
@@ -29,10 +29,10 @@ public abstract class BaseHost :
 
     public IBusTopology Topology { get; }
 
-    public abstract HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
-        Action<IReceiveEndpointConfigurator> configureEndpoint = null);
+    public abstract HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
+        Action<IReceiveEndpointConfigurator>? configureEndpoint = null);
 
-    public abstract HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator> configureEndpoint = null);
+    public abstract HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint = null);
 
     ConnectHandle IConsumeMessageObserverConnector.ConnectConsumeMessageObserver<T>(IConsumeMessageObserver<T> observer)
     {
@@ -142,7 +142,7 @@ public abstract class BaseHost :
         ReceiveEndpoints.Probe(scope);
     }
 
-    public async Task Stop(CancellationToken cancellationToken)
+    public async Task StopAsync(CancellationToken cancellationToken)
     {
         LogContext.Current = _hostConfiguration.LogContext;
 
@@ -151,12 +151,12 @@ public abstract class BaseHost :
         // The host can be started again after it is stopped. RiderCollection itself is an Agent,
         // and an Agent is intentionally one-shot, so stopping the collection would make every
         // later host stop a no-op and leave the restarted riders running.
-        await Riders.StopRiders(cancellationToken).ConfigureAwait(false);
+        await Riders.StopRidersAsync(cancellationToken).ConfigureAwait(false);
 
-        await ReceiveEndpoints.StopEndpoints(cancellationToken).ConfigureAwait(false);
+        await ReceiveEndpoints.StopEndpointsAsync(cancellationToken).ConfigureAwait(false);
 
         foreach (var agent in GetAgentHandles())
-            await agent.Stop("Bus stopped", cancellationToken).ConfigureAwait(false);
+            await agent.StopAsync("Bus stopped", cancellationToken).ConfigureAwait(false);
 
         _handle = null;
     }

@@ -122,9 +122,9 @@ public sealed class BusOutboxReliabilityStateTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-QUARANTINE", "missing-destination-is-retained")]
-    public async Task MissingDestination_IsPersistedAsQuarantinedAndNeverDeletedAsDelivered()
+    public async Task MissingDestination_IsPersistedAsQuarantinedAndNeverDeletedAsDeliveredAsync()
     {
-        await using DeliveryFixture fixture = await DeliveryFixture.Create();
+        await using DeliveryFixture fixture = await DeliveryFixture.CreateAsync();
         OutboxState state = CreateState();
         OutboxMessage message = CreatePersistableMessage(state.OutboxId, destinationAddress: null);
         fixture.DbContext.AddRange(state, message);
@@ -134,7 +134,7 @@ public sealed class BusOutboxReliabilityStateTests
         using ServiceProvider provider = CreateProvider();
         var service = CreateService(provider);
 
-        int delivered = await service.DeliverOutboxMessages(fixture.DbContext, state, TestContext.Current.CancellationToken);
+        int delivered = await service.DeliverOutboxMessagesAsync(fixture.DbContext, state, TestContext.Current.CancellationToken);
         fixture.DbContext.ChangeTracker.Clear();
 
         OutboxState persisted = await fixture.DbContext.Set<OutboxState>().SingleAsync(TestContext.Current.CancellationToken);
@@ -147,9 +147,9 @@ public sealed class BusOutboxReliabilityStateTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-QUARANTINE", "corrupt-metadata-is-retained")]
-    public async Task CorruptPersistedMetadata_IsQuarantinedInsteadOfHotLooping()
+    public async Task CorruptPersistedMetadata_IsQuarantinedInsteadOfHotLoopingAsync()
     {
-        await using DeliveryFixture fixture = await DeliveryFixture.Create();
+        await using DeliveryFixture fixture = await DeliveryFixture.CreateAsync();
         OutboxState state = CreateState();
         OutboxMessage message = CreatePersistableMessage(state.OutboxId, new Uri("loopback://localhost/valid"));
         message.Headers = "{";
@@ -160,7 +160,7 @@ public sealed class BusOutboxReliabilityStateTests
         using ServiceProvider provider = CreateProvider();
         var service = CreateService(provider);
 
-        int delivered = await service.DeliverOutboxMessages(fixture.DbContext, state, TestContext.Current.CancellationToken);
+        int delivered = await service.DeliverOutboxMessagesAsync(fixture.DbContext, state, TestContext.Current.CancellationToken);
         fixture.DbContext.ChangeTracker.Clear();
 
         OutboxState persisted = await fixture.DbContext.Set<OutboxState>().SingleAsync(TestContext.Current.CancellationToken);
@@ -173,9 +173,9 @@ public sealed class BusOutboxReliabilityStateTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-BUS-OUTBOX-DELIVERY", "empty-final-window-is-progress")]
-    public async Task EmptyFinalDeliveryWindow_MarksTheOutboxDeliveredAndReportsProgress()
+    public async Task EmptyFinalDeliveryWindow_MarksTheOutboxDeliveredAndReportsProgressAsync()
     {
-        await using DeliveryFixture fixture = await DeliveryFixture.Create();
+        await using DeliveryFixture fixture = await DeliveryFixture.CreateAsync();
         OutboxState state = CreateState();
         state.LastSequenceNumber = 42;
         fixture.DbContext.Add(state);
@@ -185,7 +185,7 @@ public sealed class BusOutboxReliabilityStateTests
         using ServiceProvider provider = CreateProvider();
         var service = CreateService(provider);
 
-        int progress = await service.DeliverOutboxMessages(fixture.DbContext, state, TestContext.Current.CancellationToken);
+        int progress = await service.DeliverOutboxMessagesAsync(fixture.DbContext, state, TestContext.Current.CancellationToken);
         fixture.DbContext.ChangeTracker.Clear();
 
         OutboxState persisted = await fixture.DbContext.Set<OutboxState>().SingleAsync(TestContext.Current.CancellationToken);
@@ -286,7 +286,7 @@ public sealed class BusOutboxReliabilityStateTests
 
     private sealed class RecordingNotification : IBusOutboxNotification<EntityFrameworkBusOutboxScope<IBus, DeliveryDbContext>>
     {
-        public Task WaitForDelivery(CancellationToken cancellationToken) => Task.CompletedTask;
+        public Task WaitForDeliveryAsync(CancellationToken cancellationToken) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
         public void Delivered()
         {
         }
@@ -309,7 +309,7 @@ public sealed class BusOutboxReliabilityStateTests
 
         public DeliveryDbContext DbContext { get; }
 
-        public static async Task<DeliveryFixture> Create()
+        public static async Task<DeliveryFixture> CreateAsync()
         {
             var connection = new SqliteConnection("Data Source=:memory:");
             await connection.OpenAsync(TestContext.Current.CancellationToken);

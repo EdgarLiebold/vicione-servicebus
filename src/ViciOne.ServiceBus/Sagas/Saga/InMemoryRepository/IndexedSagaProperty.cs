@@ -14,6 +14,7 @@ namespace ViciOne.ServiceBus.Saga;
 public class IndexedSagaProperty<TSaga, TProperty> :
     IIndexedSagaProperty<TSaga>
     where TSaga : class, ISaga
+    where TProperty : notnull
 {
     readonly Func<TSaga, TProperty> _getProperty;
     readonly IDictionary<TProperty, HashSet<SagaInstance<TSaga>>> _values;
@@ -30,13 +31,13 @@ public class IndexedSagaProperty<TSaga, TProperty> :
 
     public int Count => _values.Count;
 
-    public SagaInstance<TSaga> this[object key]
+    public SagaInstance<TSaga>? this[object key]
     {
         get
         {
             var keyValue = (TProperty)key;
 
-            if (_values.TryGetValue(keyValue, out HashSet<SagaInstance<TSaga>> result))
+            if (_values.TryGetValue(keyValue, out HashSet<SagaInstance<TSaga>>? result))
                 return result.SingleOrDefault();
 
             return null;
@@ -47,7 +48,7 @@ public class IndexedSagaProperty<TSaga, TProperty> :
     {
         var key = _getProperty(newItem.Instance);
 
-        if (!_values.TryGetValue(key, out HashSet<SagaInstance<TSaga>> hashSet))
+        if (!_values.TryGetValue(key, out HashSet<SagaInstance<TSaga>>? hashSet))
         {
             hashSet = new HashSet<SagaInstance<TSaga>>();
             _values.Add(key, hashSet);
@@ -60,7 +61,7 @@ public class IndexedSagaProperty<TSaga, TProperty> :
     {
         var key = _getProperty(instance.Instance);
 
-        if (!_values.TryGetValue(key, out HashSet<SagaInstance<TSaga>> hashSet))
+        if (!_values.TryGetValue(key, out HashSet<SagaInstance<TSaga>>? hashSet))
             return;
 
         if (hashSet.Remove(instance) && hashSet.Count == 0)
@@ -76,7 +77,7 @@ public class IndexedSagaProperty<TSaga, TProperty> :
     {
         var keyValue = (TProperty)key;
 
-        if (_values.TryGetValue(keyValue, out HashSet<SagaInstance<TSaga>> resultSet))
+        if (_values.TryGetValue(keyValue, out HashSet<SagaInstance<TSaga>>? resultSet))
             return resultSet.Where(x => filter(x.Instance));
 
         return Enumerable.Empty<SagaInstance<TSaga>>();

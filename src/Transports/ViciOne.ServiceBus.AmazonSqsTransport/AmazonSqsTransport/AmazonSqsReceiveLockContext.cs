@@ -32,8 +32,8 @@ public class AmazonSqsReceiveLockContext :
 
     public AmazonSqsReceiveLockContext(Uri inputAddress, Message message, ReceiveSettings settings, ClientContext clientContext,
         CancellationToken cancellationToken)
-        : this(inputAddress, message, settings, cancellationToken, TimeProvider.System, clientContext.ChangeMessageVisibility,
-            clientContext.DeleteMessage, () => clientContext.CancellationToken.IsCancellationRequested)
+        : this(inputAddress, message, settings, cancellationToken, TimeProvider.System, clientContext.ChangeMessageVisibilityAsync,
+            clientContext.DeleteMessageAsync, () => clientContext.CancellationToken.IsCancellationRequested)
     {
     }
 
@@ -71,14 +71,14 @@ public class AmazonSqsReceiveLockContext :
         _renewalTokenSource = CancellationTokenSource.CreateLinkedTokenSource(_activeTokenSource.Token, cancellationToken);
         _locked = 1;
 
-        _visibilityTask = RenewMessageVisibility();
+        _visibilityTask = RenewMessageVisibilityAsync();
     }
 
-    public async Task Complete()
+    public async Task CompleteAsync(CancellationToken cancellationToken = default)
     {
-        try
+        cancellationToken.ThrowIfCancellationRequested(); try
         {
-            await StopRenewal().ConfigureAwait(false);
+            await StopRenewalAsync().ConfigureAwait(false);
             await _deleteMessage(_entityName, _message.ReceiptHandle, _cancellationToken).ConfigureAwait(false);
         }
         finally
@@ -88,11 +88,11 @@ public class AmazonSqsReceiveLockContext :
         }
     }
 
-    public async Task Faulted(Exception exception)
+    public async Task FaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(exception);
+        cancellationToken.ThrowIfCancellationRequested(); ArgumentNullException.ThrowIfNull(exception);
 
-        await StopRenewal().ConfigureAwait(false);
+        await StopRenewalAsync().ConfigureAwait(false);
 
         try
         {
@@ -123,15 +123,15 @@ public class AmazonSqsReceiveLockContext :
         }
     }
 
-    public Task ValidateLockStatus()
+    public Task ValidateLockStatusAsync(CancellationToken cancellationToken = default)
     {
-        if (Volatile.Read(ref _locked) == 1)
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (Volatile.Read(ref _locked) == 1)
             return Task.CompletedTask;
 
         throw new TransportException(_inputAddress, $"Message Lock Lost: {_message.ReceiptHandle}");
     }
 
-    async Task RenewMessageVisibility()
+    async Task RenewMessageVisibilityAsync()
     {
         var delay = CalculateDelay(_visibilityTimeout);
 
@@ -188,7 +188,7 @@ public class AmazonSqsReceiveLockContext :
         }
     }
 
-    async Task StopRenewal()
+    async Task StopRenewalAsync()
     {
         if (!_activeTokenSource.IsCancellationRequested)
             await _activeTokenSource.CancelAsync().ConfigureAwait(false);

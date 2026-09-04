@@ -12,9 +12,9 @@ namespace ViciOne.ServiceBus.InMemoryTransport;
 /// </summary>
 internal sealed class InMemoryDurableSendCompletionFilter : IFilter<ReceiveContext>
 {
-    public async Task Send(ReceiveContext context, IPipe<ReceiveContext> next)
+    public async Task SendAsync(ReceiveContext context, IPipe<ReceiveContext> next)
     {
-        await next.Send(context).ConfigureAwait(false);
+        await next.SendAsync(context).ConfigureAwait(false);
 
         if (!context.TryGetPayload(out InMemoryDurableSendContext? durableContext))
             return;

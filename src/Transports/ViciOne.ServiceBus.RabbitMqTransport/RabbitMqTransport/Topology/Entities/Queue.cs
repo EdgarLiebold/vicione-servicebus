@@ -30,5 +30,5 @@ public interface Queue
     /// <summary>
     /// Additional queue arguments
     /// </summary>
-    IDictionary<string, object> QueueArguments { get; }
+    IDictionary<string, object?> QueueArguments { get; }
 }

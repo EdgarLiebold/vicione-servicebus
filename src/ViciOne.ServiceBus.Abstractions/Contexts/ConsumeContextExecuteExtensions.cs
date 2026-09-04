@@ -39,7 +39,7 @@ public static class ConsumeContextExecuteExtensions
             _callback = callback;
         }
 
-        public Task Send(ConsumeContext<T> context)
+        public Task SendAsync(ConsumeContext<T> context)
         {
             _callback(context);
 
@@ -64,7 +64,7 @@ public static class ConsumeContextExecuteExtensions
             _callback = callback;
         }
 
-        public Task Send(ConsumeContext<T> context)
+        public Task SendAsync(ConsumeContext<T> context)
         {
             return _callback(context);
         }
@@ -86,7 +86,7 @@ public static class ConsumeContextExecuteExtensions
             _callback = callback;
         }
 
-        public Task Send(ConsumeContext context)
+        public Task SendAsync(ConsumeContext context)
         {
             _callback(context);
 
@@ -110,7 +110,7 @@ public static class ConsumeContextExecuteExtensions
             _callback = callback;
         }
 
-        public Task Send(ConsumeContext context)
+        public Task SendAsync(ConsumeContext context)
         {
             return _callback(context);
         }

@@ -7,15 +7,15 @@ public class SessionIdMessageSendTopologyConvention<TMessage> :
     ISessionIdMessageSendTopologyConvention<TMessage>
     where TMessage : class
 {
-    IMessageSessionIdFormatter<TMessage> _formatter;
+    IMessageSessionIdFormatter<TMessage>? _formatter;
 
-    public SessionIdMessageSendTopologyConvention(ISessionIdFormatter formatter)
+    public SessionIdMessageSendTopologyConvention(ISessionIdFormatter? formatter)
     {
         if (formatter != null)
             SetFormatter(formatter);
     }
 
-    public bool TryGetMessageSendTopology(out IMessageSendTopology<TMessage> messageSendTopology)
+    public bool TryGetMessageSendTopology([NotNullWhen(true)] out IMessageSendTopology<TMessage>? messageSendTopology)
     {
         if (_formatter != null)
         {
@@ -27,7 +27,7 @@ public class SessionIdMessageSendTopologyConvention<TMessage> :
         return false;
     }
 
-    public bool TryGetMessageSendTopologyConvention<T>(out IMessageSendTopologyConvention<T> convention)
+    public bool TryGetMessageSendTopologyConvention<T>([NotNullWhen(true)] out IMessageSendTopologyConvention<T>? convention)
         where T : class
     {
         convention = this as IMessageSendTopologyConvention<T>;

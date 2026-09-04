@@ -11,13 +11,13 @@ public sealed class TaskTimeoutTimeProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-TIMEOUT-CLOCK", "non-generic-exact-boundary")]
-    public async Task PendingTask_TimesOutOnlyAtTheConfiguredClockBoundary()
+    public async Task PendingTask_TimesOutOnlyAtTheConfiguredClockBoundaryAsync()
     {
         TimeSpan timeout = TimeSpan.FromSeconds(45);
         var clock = new FakeTimeProvider(StartTime);
         var source = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        Task observed = source.Task.OrTimeout(timeout, clock, TestContext.Current.CancellationToken);
+        Task observed = source.Task.OrTimeoutAsync(timeout, clock, TestContext.Current.CancellationToken);
         Assert.False(observed.IsCompleted);
 
         clock.Advance(timeout - TimeSpan.FromTicks(1));
@@ -27,18 +27,18 @@ public sealed class TaskTimeoutTimeProviderTests
         TimeoutException exception = await Assert.ThrowsAsync<TimeoutException>(() => observed)
             .WaitAsync(TimeSpan.FromSeconds(2), TestContext.Current.CancellationToken);
 
-        Assert.Contains(nameof(PendingTask_TimesOutOnlyAtTheConfiguredClockBoundary), exception.Message, StringComparison.Ordinal);
+        Assert.Contains(nameof(PendingTask_TimesOutOnlyAtTheConfiguredClockBoundaryAsync), exception.Message, StringComparison.Ordinal);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-TIMEOUT-CLOCK", "generic-completion-wins")]
-    public async Task GenericTaskCompletion_BeatsTheConfiguredTimeoutAndPreservesTheResult()
+    public async Task GenericTaskCompletion_BeatsTheConfiguredTimeoutAndPreservesTheResultAsync()
     {
         TimeSpan timeout = TimeSpan.FromMinutes(2);
         var clock = new FakeTimeProvider(StartTime);
         var source = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        Task<int> observed = source.Task.OrTimeout(timeout, clock, TestContext.Current.CancellationToken);
+        Task<int> observed = source.Task.OrTimeoutAsync(timeout, clock, TestContext.Current.CancellationToken);
         source.SetResult(173);
 
         Assert.Equal(173, await observed);
@@ -54,7 +54,7 @@ public sealed class TaskTimeoutTimeProviderTests
 
         var exception = Assert.Throws<ArgumentNullException>(() =>
         {
-            _ = source.Task.OrTimeout(TimeSpan.FromSeconds(1), null!, TestContext.Current.CancellationToken);
+            _ = source.Task.OrTimeoutAsync(TimeSpan.FromSeconds(1), null!, TestContext.Current.CancellationToken);
         });
 
         Assert.Equal("timeProvider", exception.ParamName);

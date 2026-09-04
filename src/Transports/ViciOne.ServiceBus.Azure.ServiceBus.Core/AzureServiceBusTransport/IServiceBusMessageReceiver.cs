@@ -12,5 +12,5 @@ public interface IServiceBusMessageReceiver
     /// <param name="message"></param>
     /// <param name="cancellationToken">Specify an optional cancellationToken</param>
     /// <returns></returns>
-    Task Handle(ServiceBusReceivedMessage message, CancellationToken cancellationToken = default);
+    Task HandleAsync(ServiceBusReceivedMessage message, CancellationToken cancellationToken = default);
 }

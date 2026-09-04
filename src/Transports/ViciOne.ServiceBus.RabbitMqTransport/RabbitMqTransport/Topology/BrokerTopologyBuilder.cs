@@ -26,7 +26,7 @@ public abstract class BrokerTopologyBuilder
         return Interlocked.Increment(ref _nextId);
     }
 
-    public ExchangeHandle ExchangeDeclare(string name, string type, bool durable, bool autoDelete, IDictionary<string, object> arguments)
+    public ExchangeHandle ExchangeDeclare(string name, string type, bool durable, bool autoDelete, IDictionary<string, object?> arguments)
     {
         var id = GetNextId();
 
@@ -35,7 +35,7 @@ public abstract class BrokerTopologyBuilder
         return _exchanges.GetOrAdd(exchange);
     }
 
-    public ExchangeBindingHandle ExchangeBind(ExchangeHandle source, ExchangeHandle destination, string routingKey, IDictionary<string, object> arguments)
+    public ExchangeBindingHandle ExchangeBind(ExchangeHandle source, ExchangeHandle destination, string routingKey, IDictionary<string, object?> arguments)
     {
         var id = GetNextId();
 
@@ -48,11 +48,11 @@ public abstract class BrokerTopologyBuilder
         return _exchangeBindings.GetOrAdd(binding);
     }
 
-    public QueueHandle QueueDeclare(string name, bool durable, bool autoDelete, bool exclusive, IDictionary<string, object> arguments)
+    public QueueHandle QueueDeclare(string name, bool durable, bool autoDelete, bool exclusive, IDictionary<string, object?> arguments)
     {
         var id = GetNextId();
 
-        var queueArguments = new Dictionary<string, object>(arguments);
+        var queueArguments = new Dictionary<string, object?>(arguments);
 
         var queueAutoDelete = autoDelete;
         if (queueArguments.TryGetValue(RabbitMQ.Client.Headers.XExpires, out _))
@@ -61,7 +61,7 @@ public abstract class BrokerTopologyBuilder
             autoDelete = true;
         }
 
-        var isQuorumQueue = queueArguments.TryGetValue(RabbitMQ.Client.Headers.XQueueType, out var queueType) && queueType.Equals("quorum");
+        var isQuorumQueue = queueArguments.TryGetValue(RabbitMQ.Client.Headers.XQueueType, out var queueType) && Equals(queueType, "quorum");
 
         var durableQueue = durable || isQuorumQueue;
 
@@ -72,7 +72,7 @@ public abstract class BrokerTopologyBuilder
         return _queues.GetOrAdd(queue);
     }
 
-    public QueueBindingHandle QueueBind(ExchangeHandle exchange, QueueHandle queue, string routingKey, IDictionary<string, object> arguments)
+    public QueueBindingHandle QueueBind(ExchangeHandle exchange, QueueHandle queue, string routingKey, IDictionary<string, object?> arguments)
     {
         var id = GetNextId();
 

@@ -15,7 +15,7 @@ public interface JobSubmitted
     /// <summary>
     /// The time the job was submitted
     /// </summary>
-    DateTime Timestamp { get; }
+    DateTimeOffset Timestamp { get; }
 
     /// <summary>
     /// Timeout when running job

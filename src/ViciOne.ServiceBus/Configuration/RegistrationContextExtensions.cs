@@ -16,7 +16,7 @@ public static class RegistrationContextExtensions
     /// <param name="endpointNameFormatter">Optional, the endpoint name formatter</param>
     /// <typeparam name="T">The bus factory type (depends upon the transport)</typeparam>
     public static void ConfigureEndpoints<T>(this IBusFactoryConfigurator<T> configurator, IBusRegistrationContext registration,
-        IEndpointNameFormatter endpointNameFormatter = null)
+        IEndpointNameFormatter? endpointNameFormatter = null)
         where T : IReceiveEndpointConfigurator
     {
         registration.ConfigureEndpoints(configurator, endpointNameFormatter);
@@ -34,7 +34,7 @@ public static class RegistrationContextExtensions
     /// <param name="endpointNameFormatter">Optional, the endpoint name formatter</param>
     /// <typeparam name="T">The bus factory type (depends upon the transport)</typeparam>
     public static void ConfigureEndpoints<T>(this IBusFactoryConfigurator<T> configurator, IBusRegistrationContext registration,
-        Action<IRegistrationFilterConfigurator> configureFilter, IEndpointNameFormatter endpointNameFormatter = null)
+        Action<IRegistrationFilterConfigurator> configureFilter, IEndpointNameFormatter? endpointNameFormatter = null)
         where T : IReceiveEndpointConfigurator
     {
         registration.ConfigureEndpoints(configurator, endpointNameFormatter, configureFilter);
@@ -51,7 +51,7 @@ public static class RegistrationContextExtensions
     /// <param name="endpointNameFormatter">Optional, the endpoint name formatter</param>
     /// <typeparam name="T">The bus factory type (depends upon the transport)</typeparam>
     public static void ConfigureEndpoints<T>(this IServiceInstanceConfigurator<T> configurator, IBusRegistrationContext registration,
-        IEndpointNameFormatter endpointNameFormatter = null)
+        IEndpointNameFormatter? endpointNameFormatter = null)
         where T : IReceiveEndpointConfigurator
     {
         registration.ConfigureEndpoints(configurator, endpointNameFormatter);
@@ -69,7 +69,7 @@ public static class RegistrationContextExtensions
     /// <param name="endpointNameFormatter">Optional, the endpoint name formatter</param>
     /// <typeparam name="T">The bus factory type (depends upon the transport)</typeparam>
     public static void ConfigureEndpoints<T>(this IServiceInstanceConfigurator<T> configurator, IBusRegistrationContext registration,
-        Action<IRegistrationFilterConfigurator> configureFilter, IEndpointNameFormatter endpointNameFormatter = null)
+        Action<IRegistrationFilterConfigurator> configureFilter, IEndpointNameFormatter? endpointNameFormatter = null)
         where T : IReceiveEndpointConfigurator
     {
         registration.ConfigureEndpoints(configurator, endpointNameFormatter, configureFilter);
@@ -85,7 +85,7 @@ public static class RegistrationContextExtensions
     /// <param name="options">Optional service instance options to start</param>
     /// <typeparam name="T">The bus factory type (depends upon the transport)</typeparam>
     public static void ConfigureServiceInstanceEndpoints<T>(this IBusFactoryConfigurator<T> configurator, IBusRegistrationContext registration,
-        Action<IRegistrationFilterConfigurator> configureFilter, ServiceInstanceOptions options = null)
+        Action<IRegistrationFilterConfigurator>? configureFilter, ServiceInstanceOptions? options = null)
         where T : IReceiveEndpointConfigurator
     {
         options ??= new ServiceInstanceOptions();
@@ -114,7 +114,7 @@ public static class RegistrationContextExtensions
     /// <param name="options">Optional service instance options to start</param>
     /// <typeparam name="T">The bus factory type (depends upon the transport)</typeparam>
     public static void ConfigureServiceInstanceEndpoints<T>(this IBusFactoryConfigurator<T> configurator, IBusRegistrationContext registration,
-        ServiceInstanceOptions options = null)
+        ServiceInstanceOptions? options = null)
         where T : IReceiveEndpointConfigurator
     {
         ConfigureServiceInstanceEndpoints(configurator, registration, null, options);
@@ -139,7 +139,7 @@ public static class RegistrationContextExtensions
     /// <param name="configure"></param>
     /// <typeparam name="T">The consumer type</typeparam>
     public static void ConfigureConsumer<T>(this IReceiveEndpointConfigurator configurator, IRegistrationContext registration,
-        Action<IConsumerConfigurator<T>> configure = null)
+        Action<IConsumerConfigurator<T>>? configure = null)
         where T : class, IConsumer
     {
         registration.ConfigureConsumer(configurator, configure);
@@ -174,7 +174,7 @@ public static class RegistrationContextExtensions
     /// <param name="configure"></param>
     /// <typeparam name="T">The saga type</typeparam>
     public static void ConfigureSaga<T>(this IReceiveEndpointConfigurator configurator, IRegistrationContext registration,
-        Action<ISagaConfigurator<T>> configure = null)
+        Action<ISagaConfigurator<T>>? configure = null)
         where T : class, ISaga
     {
         registration.ConfigureSaga(configurator, configure);

@@ -21,7 +21,7 @@ public sealed class ActiveMqTelemetryTests
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [RequirementCoverage("OBL-R0-BRK-0440", "send-and-consume-emit-exact-correlated-activities-and-tags")]
-    public async Task SendAndConsume_EmitExactCorrelatedActivitiesAndTags(string flavor)
+    public async Task SendAndConsume_EmitExactCorrelatedActivitiesAndTagsAsync(string flavor)
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(flavor, "telemetry");
         string queueName = fixture.Name("input");
@@ -68,7 +68,7 @@ public sealed class ActiveMqTelemetryTests
             {
                 caller.AddBaggage(BaggageKey, BaggageValue);
                 callerContext = caller.Context;
-                await bus.Publish(
+                await bus.PublishAsync(
                         new TelemetryMessage(correlationId),
                         context =>
                         {

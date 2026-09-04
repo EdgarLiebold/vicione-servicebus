@@ -15,7 +15,7 @@ public interface ActivityException
     /// <summary>
     /// The point in time when the exception occurred
     /// </summary>
-    DateTime Timestamp { get; }
+    DateTimeOffset Timestamp { get; }
 
     /// <summary>
     /// The time from when the routing slip was created until the exception occurred

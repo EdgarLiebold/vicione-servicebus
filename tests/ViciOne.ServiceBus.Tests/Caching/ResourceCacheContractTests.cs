@@ -23,7 +23,7 @@ public sealed class ResourceCacheContractTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-DIRECT-ADD", "index-identity-and-factory-bypass")]
-    public async Task AddAsync_PublishesTheExactInstanceAndBypassesTheFallbackFactory()
+    public async Task AddAsync_PublishesTheExactInstanceAndBypassesTheFallbackFactoryAsync()
     {
         await using var cache = CreateCache();
         var factoryCalls = 0;
@@ -55,7 +55,7 @@ public sealed class ResourceCacheContractTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-INDEX-FACTORY", "create")]
-    public async Task MissingValueFactory_CommitsOneInstanceForFactoryResultAndPlainReads()
+    public async Task MissingValueFactory_CommitsOneInstanceForFactoryResultAndPlainReadsAsync()
     {
         await using var cache = CreateCache();
         var expected = new CacheValue("one", "first");
@@ -75,7 +75,7 @@ public sealed class ResourceCacheContractTests
     }
 
     [Fact]
-    public async Task MissingPlainRead_ThrowsAndRecordsExactlyOneMiss()
+    public async Task MissingPlainRead_ThrowsAndRecordsExactlyOneMissAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, CacheValue> index = cache.AddIndex("id", value => value.Id);
@@ -91,7 +91,7 @@ public sealed class ResourceCacheContractTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-MULTI-INDEX", "propagation")]
-    public async Task FactoryCommit_IsAtomicallyVisibleThroughEveryIndex()
+    public async Task FactoryCommit_IsAtomicallyVisibleThroughEveryIndexAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, CacheValue> idIndex = cache.AddIndex("id", value => value.Id);
@@ -111,7 +111,7 @@ public sealed class ResourceCacheContractTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-MULTI-INDEX", "clear")]
-    public async Task ClearAsync_RemovesEveryIndexAndAllowsTheSameKeysToBeReused()
+    public async Task ClearAsync_RemovesEveryIndexAndAllowsTheSameKeysToBeReusedAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, CacheValue> idIndex = cache.AddIndex("id", value => value.Id);
@@ -138,7 +138,7 @@ public sealed class ResourceCacheContractTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-MULTI-INDEX", "cross-index-removal")]
-    public async Task RemoveAsync_AtomicallyRemovesTheResourceFromEveryIndex()
+    public async Task RemoveAsync_AtomicallyRemovesTheResourceFromEveryIndexAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, CacheValue> idIndex = cache.AddIndex("id", value => value.Id);
@@ -159,7 +159,7 @@ public sealed class ResourceCacheContractTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-MULTI-INDEX", "pending-removal-truthfulness")]
-    public async Task RemoveAsync_DuringCreationReportsFalseAndPreservesTheCommittedResource()
+    public async Task RemoveAsync_DuringCreationReportsFalseAndPreservesTheCommittedResourceAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, CacheValue> idIndex = cache.AddIndex("id", value => value.Id);
@@ -188,7 +188,7 @@ public sealed class ResourceCacheContractTests
     }
 
     [Fact]
-    public async Task AddIndex_ProjectsExistingResourcesBeforePublishingTheIndex()
+    public async Task AddIndex_ProjectsExistingResourcesBeforePublishingTheIndexAsync()
     {
         await using var cache = CreateCache();
         var first = new CacheValue("one", "first", 1);
@@ -203,7 +203,7 @@ public sealed class ResourceCacheContractTests
     }
 
     [Fact]
-    public async Task DuplicateProjection_RejectsTheNewIndexWithoutPartialPublication()
+    public async Task DuplicateProjection_RejectsTheNewIndexWithoutPartialPublicationAsync()
     {
         await using var cache = CreateCache();
         await cache.AddAsync(new CacheValue("one", "same"), TestContext.Current.CancellationToken);
@@ -218,7 +218,7 @@ public sealed class ResourceCacheContractTests
     }
 
     [Fact]
-    public async Task FactoryProjectedKeyMismatch_FaultsWithoutPublishingTheResource()
+    public async Task FactoryProjectedKeyMismatch_FaultsWithoutPublishingTheResourceAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, CacheValue> index = cache.AddIndex("id", value => value.Id);
@@ -237,7 +237,7 @@ public sealed class ResourceCacheContractTests
     }
 
     [Fact]
-    public async Task DuplicateKey_AddAsyncPreservesTheOriginalAndRejectsTheSecondValue()
+    public async Task DuplicateKey_AddAsyncPreservesTheOriginalAndRejectsTheSecondValueAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, CacheValue> index = cache.AddIndex("id", value => value.Id, comparer: StringComparer.OrdinalIgnoreCase);
@@ -254,7 +254,7 @@ public sealed class ResourceCacheContractTests
     }
 
     [Fact]
-    public async Task IndexLookup_RejectsMissingNamesAndMismatchedKeyTypes()
+    public async Task IndexLookup_RejectsMissingNamesAndMismatchedKeyTypesAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, CacheValue> expected = cache.AddIndex("id", value => value.Id);

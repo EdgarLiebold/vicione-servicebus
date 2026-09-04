@@ -19,7 +19,7 @@ public static class InMemoryOutboxConfigurationExtensions
     /// <param name="context"></param>
     /// <param name="configure">Configure the outbox</param>
     public static void UseInMemoryOutbox<T>(this IPipeConfigurator<ConsumeContext<T>> configurator, IRegistrationContext context,
-        Action<IOutboxConfigurator> configure = default)
+        Action<IOutboxConfigurator>? configure = default)
         where T : class
     {
         if (configurator == null)
@@ -39,13 +39,13 @@ public static class InMemoryOutboxConfigurationExtensions
     /// </summary>
     /// <param name="configurator">The pipe configurator</param>
     /// <param name="configure">Configure the outbox</param>
-    public static void UseInMemoryOutbox<T>(this IPipeConfigurator<ConsumeContext<T>> configurator, Action<IOutboxConfigurator> configure = default)
+    public static void UseInMemoryOutbox<T>(this IPipeConfigurator<ConsumeContext<T>> configurator, Action<IOutboxConfigurator>? configure = default)
         where T : class
     {
         if (configurator == null)
             throw new ArgumentNullException(nameof(configurator));
 
-        var specification = new InMemoryOutboxSpecification<T>((ISetScopedConsumeContext)null);
+        var specification = new InMemoryOutboxSpecification<T>((ISetScopedConsumeContext?)null);
 
         configure?.Invoke(specification);
 
@@ -61,7 +61,7 @@ public static class InMemoryOutboxConfigurationExtensions
     /// <param name="context"></param>
     /// <param name="configure">Configure the outbox</param>
     public static void UseInMemoryOutbox(this IConsumePipeConfigurator configurator, IRegistrationContext context,
-        Action<IOutboxConfigurator> configure = default)
+        Action<IOutboxConfigurator>? configure = default)
     {
         if (configurator == null)
             throw new ArgumentNullException(nameof(configurator));
@@ -76,12 +76,12 @@ public static class InMemoryOutboxConfigurationExtensions
     /// </summary>
     /// <param name="configurator">The pipe configurator</param>
     /// <param name="configure">Configure the outbox</param>
-    public static void UseInMemoryOutbox(this IConsumePipeConfigurator configurator, Action<IOutboxConfigurator> configure = default)
+    public static void UseInMemoryOutbox(this IConsumePipeConfigurator configurator, Action<IOutboxConfigurator>? configure = default)
     {
         if (configurator == null)
             throw new ArgumentNullException(nameof(configurator));
 
-        var observer = new InMemoryOutboxConfigurationObserver((ISetScopedConsumeContext)null, configurator, configure);
+        var observer = new InMemoryOutboxConfigurationObserver((ISetScopedConsumeContext?)null, configurator, configure);
     }
 
     /// <summary>
@@ -93,7 +93,7 @@ public static class InMemoryOutboxConfigurationExtensions
     /// <param name="context"></param>
     /// <param name="configure">Configure the outbox</param>
     public static void UseInMemoryOutbox<TConsumer>(this IConsumerConfigurator<TConsumer> configurator, IRegistrationContext context,
-        Action<IOutboxConfigurator> configure = default)
+        Action<IOutboxConfigurator>? configure = default)
         where TConsumer : class
     {
         if (configurator == null)
@@ -110,13 +110,13 @@ public static class InMemoryOutboxConfigurationExtensions
     /// </summary>
     /// <param name="configurator"></param>
     /// <param name="configure">Configure the outbox</param>
-    public static void UseInMemoryOutbox<TConsumer>(this IConsumerConfigurator<TConsumer> configurator, Action<IOutboxConfigurator> configure = default)
+    public static void UseInMemoryOutbox<TConsumer>(this IConsumerConfigurator<TConsumer> configurator, Action<IOutboxConfigurator>? configure = default)
         where TConsumer : class
     {
         if (configurator == null)
             throw new ArgumentNullException(nameof(configurator));
 
-        var observer = new InMemoryOutboxConsumerConfigurationObserver<TConsumer>((ISetScopedConsumeContext)null, configurator, configure);
+        var observer = new InMemoryOutboxConsumerConfigurationObserver<TConsumer>((ISetScopedConsumeContext?)null, configurator, configure);
         configurator.ConnectConsumerConfigurationObserver(observer);
     }
 
@@ -129,7 +129,7 @@ public static class InMemoryOutboxConfigurationExtensions
     /// <param name="context"></param>
     /// <param name="configure">Configure the outbox</param>
     public static void UseInMemoryOutbox<TSaga>(this ISagaConfigurator<TSaga> configurator, IRegistrationContext context,
-        Action<IOutboxConfigurator> configure = default)
+        Action<IOutboxConfigurator>? configure = default)
         where TSaga : class, ISaga
     {
         if (configurator == null)
@@ -146,13 +146,13 @@ public static class InMemoryOutboxConfigurationExtensions
     /// </summary>
     /// <param name="configurator"></param>
     /// <param name="configure">Configure the outbox</param>
-    public static void UseInMemoryOutbox<TSaga>(this ISagaConfigurator<TSaga> configurator, Action<IOutboxConfigurator> configure = default)
+    public static void UseInMemoryOutbox<TSaga>(this ISagaConfigurator<TSaga> configurator, Action<IOutboxConfigurator>? configure = default)
         where TSaga : class, ISaga
     {
         if (configurator == null)
             throw new ArgumentNullException(nameof(configurator));
 
-        var observer = new InMemoryOutboxSagaConfigurationObserver<TSaga>((ISetScopedConsumeContext)null, configurator, configure);
+        var observer = new InMemoryOutboxSagaConfigurationObserver<TSaga>((ISetScopedConsumeContext?)null, configurator, configure);
         configurator.ConnectSagaConfigurationObserver(observer);
     }
 
@@ -165,7 +165,7 @@ public static class InMemoryOutboxConfigurationExtensions
     /// <param name="context"></param>
     /// <param name="configure">Configure the outbox</param>
     public static void UseInMemoryOutbox<TMessage>(this IHandlerConfigurator<TMessage> configurator, IRegistrationContext context,
-        Action<IOutboxConfigurator> configure = default)
+        Action<IOutboxConfigurator>? configure = default)
         where TMessage : class
     {
         if (configurator == null)
@@ -182,13 +182,13 @@ public static class InMemoryOutboxConfigurationExtensions
     /// </summary>
     /// <param name="configurator"></param>
     /// <param name="configure">Configure the outbox</param>
-    public static void UseInMemoryOutbox<TMessage>(this IHandlerConfigurator<TMessage> configurator, Action<IOutboxConfigurator> configure = default)
+    public static void UseInMemoryOutbox<TMessage>(this IHandlerConfigurator<TMessage> configurator, Action<IOutboxConfigurator>? configure = default)
         where TMessage : class
     {
         if (configurator == null)
             throw new ArgumentNullException(nameof(configurator));
 
-        var observer = new InMemoryOutboxHandlerConfigurationObserver((ISetScopedConsumeContext)null, configure);
+        var observer = new InMemoryOutboxHandlerConfigurationObserver((ISetScopedConsumeContext?)null, configure);
         configurator.ConnectHandlerConfigurationObserver(observer);
     }
 

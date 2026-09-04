@@ -30,7 +30,8 @@ public interface RequestHandle :
     /// <param name="readyToSend">If true, sets the request as ready to send and sends it</param>
     /// <typeparam name="T">The result type</typeparam>
     /// <returns>True if the result type specified is present, otherwise false</returns>
-    Task<Response<T>> GetResponse<T>(bool readyToSend = true)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<Response<T>> GetResponseAsync<T>(bool readyToSend = true, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>

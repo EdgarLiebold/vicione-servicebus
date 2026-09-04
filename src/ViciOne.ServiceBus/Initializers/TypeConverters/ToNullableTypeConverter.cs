@@ -23,7 +23,7 @@ public class ToNullableTypeConverter<T, TInput> :
         _typeConverter = typeConverter;
     }
 
-    public bool TryConvert(TInput input, out T? result)
+    public bool TryConvert(TInput? input, out T? result)
     {
         if (_typeConverter.TryConvert(input, out var intermediateValue))
         {

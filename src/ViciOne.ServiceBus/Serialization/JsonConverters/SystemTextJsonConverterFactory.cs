@@ -120,7 +120,7 @@ public class SystemTextJsonConverterFactory :
         if (!typeToConvert.IsInterface)
             return false;
 
-        if (_converterFactory.TryGetValue(typeToConvert, out Func<JsonConverter> _))
+        if (_converterFactory.TryGetValue(typeToConvert, out _))
             return true;
 
         if (_openTypeFactory.TryGetValue(typeToConvert, out _))
@@ -134,7 +134,7 @@ public class SystemTextJsonConverterFactory :
 
     public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
     {
-        if (_converterFactory.TryGetValue(typeToConvert, out Func<JsonConverter> converterFactory))
+        if (_converterFactory.TryGetValue(typeToConvert, out Func<JsonConverter>? converterFactory))
             return converterFactory();
 
         if (typeToConvert.IsGenericType)
@@ -159,14 +159,14 @@ public class SystemTextJsonConverterFactory :
                 {
                     if (elementTypes[0] == typeof(string))
                     {
-                        return (JsonConverter)Activator.CreateInstance(typeof(CaseInsensitiveDictionaryJsonConverter<,>)
-                            .MakeGenericType(typeToConvert, elementTypes[1]));
+                        return (JsonConverter)(Activator.CreateInstance(typeof(CaseInsensitiveDictionaryJsonConverter<,>)
+                            .MakeGenericType(typeToConvert, elementTypes[1])) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
                     }
 
                     if (elementTypes[0] == typeof(Uri))
                     {
-                        return (JsonConverter)Activator.CreateInstance(typeof(UriDictionarySystemTextJsonConverter<,>)
-                            .MakeGenericType(typeToConvert, elementTypes[1]));
+                        return (JsonConverter)(Activator.CreateInstance(typeof(UriDictionarySystemTextJsonConverter<,>)
+                            .MakeGenericType(typeToConvert, elementTypes[1])) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
                     }
                 }
             }
@@ -185,15 +185,15 @@ public class SystemTextJsonConverterFactory :
                     interfaceType = interfaceType.MakeGenericType(arguments[0]);
                     concreteType = concreteType.MakeGenericType(arguments[0]);
 
-                    return (JsonConverter)Activator.CreateInstance(typeof(TypeMappingJsonConverter<,>).MakeGenericType(interfaceType, concreteType));
+                    return (JsonConverter)(Activator.CreateInstance(typeof(TypeMappingJsonConverter<,>).MakeGenericType(interfaceType, concreteType)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
                 }
             }
         }
 
         if (IsConvertibleInterfaceType(typeToConvert))
         {
-            return (JsonConverter)Activator.CreateInstance(
-                typeof(InterfaceJsonConverter<,>).MakeGenericType(typeToConvert, TypeMetadataCache.GetImplementationType(typeToConvert)));
+            return (JsonConverter)(Activator.CreateInstance(
+                typeof(InterfaceJsonConverter<,>).MakeGenericType(typeToConvert, TypeMetadataCache.GetImplementationType(typeToConvert))) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
         }
 
         throw new ViciOneServiceBusException($"Unsupported type for json serialization {TypeCache.GetShortName(typeToConvert)}");

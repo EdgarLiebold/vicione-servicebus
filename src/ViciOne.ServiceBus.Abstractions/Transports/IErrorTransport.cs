@@ -7,5 +7,5 @@ namespace ViciOne.ServiceBus.Transports;
 /// </summary>
 public interface IErrorTransport
 {
-    Task Send(ExceptionReceiveContext context);
+    Task SendAsync(ExceptionReceiveContext context, CancellationToken cancellationToken = default);
 }

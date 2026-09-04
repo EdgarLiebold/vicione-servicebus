@@ -3,7 +3,7 @@ namespace ViciOne.ServiceBus.Initializers.TypeConverters;
 public class StateTypeConverter :
     ITypeConverter<string, State>
 {
-    public bool TryConvert(State input, out string result)
+    public bool TryConvert(State? input, out string? result)
     {
         if (input != null)
         {

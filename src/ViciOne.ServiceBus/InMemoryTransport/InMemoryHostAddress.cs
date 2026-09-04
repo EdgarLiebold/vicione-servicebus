@@ -15,9 +15,9 @@ public readonly struct InMemoryHostAddress
 
     public InMemoryHostAddress(Uri address)
     {
-        Scheme = default;
-        Host = default;
-        VirtualHost = default;
+        Scheme = null!;
+        Host = null!;
+        VirtualHost = null!;
 
         var scheme = address.Scheme.ToLowerInvariant();
         switch (scheme)

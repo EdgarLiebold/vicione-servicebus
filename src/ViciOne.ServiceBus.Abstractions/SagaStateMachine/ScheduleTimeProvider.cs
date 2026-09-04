@@ -2,10 +2,10 @@ using System;
 
 namespace ViciOne.ServiceBus;
 
-public delegate DateTime ScheduleTimeProvider<TSaga>(BehaviorContext<TSaga> context)
+public delegate DateTimeOffset ScheduleTimeProvider<TSaga>(BehaviorContext<TSaga> context)
     where TSaga : class, SagaStateMachineInstance;
 
 
-public delegate DateTime ScheduleTimeProvider<TSaga, in TMessage>(BehaviorContext<TSaga, TMessage> context)
+public delegate DateTimeOffset ScheduleTimeProvider<TSaga, in TMessage>(BehaviorContext<TSaga, TMessage> context)
     where TMessage : class
     where TSaga : class, SagaStateMachineInstance;

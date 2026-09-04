@@ -15,21 +15,21 @@ public class TransformPropertyConverter<TProperty> :
         _initializer = initializer;
     }
 
-    public Task<TProperty> Convert<TMessage>(InitializeContext<TMessage> context, TProperty input)
+    public Task<TProperty?> ConvertAsync<TMessage>(InitializeContext<TMessage> context, TProperty? input, CancellationToken cancellationToken = default)
         where TMessage : class
     {
-        if (input == null || !context.TryGetPayload(out TransformContext<TMessage> transformContext) || !transformContext.HasInput)
-            return TaskResults.Default<TProperty>();
+        if (input == null || !context.TryGetPayload(out TransformContext<TMessage>? transformContext) || !transformContext.HasInput)
+            return TaskResults.DefaultAsync<TProperty>(cancellationToken: cancellationToken);
 
         var propertyTransformContext = new PropertyTransformContext<TMessage, TProperty>(transformContext, input);
 
         InitializeContext<TProperty> messageContext = _initializer.Create(propertyTransformContext);
 
-        Task<InitializeContext<TProperty>> initTask = _initializer.Initialize(messageContext, input);
+        Task<InitializeContext<TProperty>> initTask = _initializer.InitializeAsync(messageContext, input, cancellationToken: cancellationToken);
         if (initTask.IsCompleted)
-            return Task.FromResult(initTask.Result.Message);
+            return Task.FromResult<TProperty?>(initTask.Result.Message);
 
-        async Task<TProperty> ConvertAsync()
+        async Task<TProperty?> ConvertAsync()
         {
             InitializeContext<TProperty> result = await initTask.ConfigureAwait(false);
 

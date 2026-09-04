@@ -22,16 +22,19 @@ public abstract class BaseConsumeScopeProvider
         SetScopedConsumeContext = setScopedConsumeContext;
     }
 
-    protected ValueTask<TScopeContext> GetScopeContext<TScopeContext, TPipeContext>(TPipeContext context,
+    protected ValueTask<TScopeContext> GetScopeContextAsync<TScopeContext, TPipeContext>(TPipeContext context,
         Func<TPipeContext, IServiceScope, IDisposable, TScopeContext> existingScopeContextFactory,
         Func<TPipeContext, IServiceScope, IDisposable, TScopeContext> createdScopeContextFactory,
         Func<TPipeContext, IServiceScope, IServiceProvider, TPipeContext> pipeContextFactory)
-        where TPipeContext : ConsumeContext
+        where TPipeContext : class, PipeContext
     {
+        var consumeContext = context as ConsumeContext
+            ?? throw new NotSupportedException($"The consume context '{context.GetType().FullName}' does not expose advanced operations.");
+
         if (context.TryGetPayload<IServiceScope>(out var existingServiceScope))
         {
             return new ValueTask<TScopeContext>(existingScopeContextFactory(context, existingServiceScope,
-                SetScopedConsumeContext.PushContext(existingServiceScope, context)));
+                SetScopedConsumeContext.PushContext(existingServiceScope, consumeContext)));
         }
 
         var serviceProvider = context.GetPayload(_serviceProvider);
@@ -41,15 +44,21 @@ public abstract class BaseConsumeScopeProvider
         {
             var scopeContext = pipeContextFactory(context, serviceScope, serviceScope.ServiceProvider);
 
-            if (scopeContext.TryGetPayload(out MessageSchedulerContext schedulerContext))
+            if (scopeContext.TryGetPayload(out MessageSchedulerContext? schedulerContext))
             {
+                var advancedScopeContext = scopeContext as ConsumeContext
+                    ?? throw new NotSupportedException($"The consume context '{scopeContext.GetType().FullName}' does not expose advanced operations.");
+
                 scopeContext.AddOrUpdatePayload<MessageSchedulerContext>(
-                    () => new ConsumeMessageSchedulerContext(scopeContext, schedulerContext.SchedulerFactory),
-                    existing => new ConsumeMessageSchedulerContext(scopeContext, existing.SchedulerFactory));
+                    () => new ConsumeMessageSchedulerContext(advancedScopeContext, schedulerContext.SchedulerFactory),
+                    existing => new ConsumeMessageSchedulerContext(advancedScopeContext, existing.SchedulerFactory));
             }
 
+            var advancedScope = scopeContext as ConsumeContext
+                ?? throw new NotSupportedException($"The consume context '{scopeContext.GetType().FullName}' does not expose advanced operations.");
+
             return new ValueTask<TScopeContext>(createdScopeContextFactory(scopeContext, serviceScope,
-                SetScopedConsumeContext.PushContext(serviceScope, scopeContext)));
+                SetScopedConsumeContext.PushContext(serviceScope, advancedScope)));
         }
         catch (Exception ex)
         {

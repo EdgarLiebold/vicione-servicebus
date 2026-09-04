@@ -45,7 +45,7 @@ public static class DependencyInjectionSagaStateMachineRegistrationExtensions
     }
 
     public static ISagaRegistration RegisterSagaStateMachine<T, TSaga>(this IServiceCollection collection, IContainerRegistrar registrar,
-        Type sagaDefinitionType)
+        Type? sagaDefinitionType)
         where T : class, SagaStateMachine<TSaga>
         where TSaga : class, SagaStateMachineInstance
     {
@@ -58,14 +58,14 @@ public static class DependencyInjectionSagaStateMachineRegistrationExtensions
                 nameof(sagaDefinitionType));
         }
 
-        var register = (ISagaRegistrar)Activator.CreateInstance(
-            typeof(SagaDefinitionRegistrar<,,>).MakeGenericType(typeof(T), typeof(TSaga), sagaDefinitionType));
+        var register = (ISagaRegistrar)(Activator.CreateInstance(
+            typeof(SagaDefinitionRegistrar<,,>).MakeGenericType(typeof(T), typeof(TSaga), sagaDefinitionType)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
         return register.Register(collection, registrar);
     }
 
     public static ISagaRegistration RegisterSagaStateMachine(this IServiceCollection collection, IContainerRegistrar registrar, Type sagaType,
-        Type sagaDefinitionType = null)
+        Type? sagaDefinitionType = null)
     {
         if (!sagaType.TryGetSingleClosedGenericArguments(typeof(SagaStateMachine<>), out Type[] instanceTypes))
             throw new ArgumentException($"The saga type must be a saga state machine: {TypeCache.GetShortName(sagaType)}");
@@ -82,13 +82,13 @@ public static class DependencyInjectionSagaStateMachineRegistrationExtensions
                     nameof(sagaDefinitionType));
             }
 
-            var sagaRegistrar = (ISagaRegistrar)Activator.CreateInstance(typeof(SagaDefinitionRegistrar<,,>).MakeGenericType(sagaType,
-                instanceTypes[0], sagaDefinitionType));
+            var sagaRegistrar = (ISagaRegistrar)(Activator.CreateInstance(typeof(SagaDefinitionRegistrar<,,>).MakeGenericType(sagaType,
+                instanceTypes[0], sagaDefinitionType)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
             return sagaRegistrar.Register(collection, registrar);
         }
 
-        var register = (ISagaRegistrar)Activator.CreateInstance(typeof(SagaRegistrar<,>).MakeGenericType(sagaType, instanceTypes[0]));
+        var register = (ISagaRegistrar)(Activator.CreateInstance(typeof(SagaRegistrar<,>).MakeGenericType(sagaType, instanceTypes[0])) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
         return register.Register(collection, registrar);
     }

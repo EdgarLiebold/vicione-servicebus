@@ -8,11 +8,11 @@ public sealed class TaskPropertyConverterTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-INITIALIZER-NESTED-TASK", "task-of-task-to-value")]
-    public async Task NestedTaskInput_IsFullyAwaitedAndConvertedToTheTargetValue()
+    public async Task NestedTaskInput_IsFullyAwaitedAndConvertedToTheTargetValueAsync()
     {
         Task<Task<int>> nestedValue = Task.FromResult(Task.FromResult(37));
 
-        InitializeContext<TaskMessage> context = await MessageInitializerCache<TaskMessage>.Initialize(
+        InitializeContext<TaskMessage> context = await MessageInitializerCache<TaskMessage>.InitializeAsync(
             new { Value = nestedValue },
             TestContext.Current.CancellationToken);
 

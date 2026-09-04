@@ -15,9 +15,9 @@ public class InMemoryOutboxMessage :
     /// <summary>
     /// When the message should be visible / ready to be delivered
     /// </summary>
-    public DateTime? EnqueueTime { get; set; }
+    public DateTimeOffset? EnqueueTime { get; set; }
 
-    public DateTime SentTime { get; set; }
+    public DateTimeOffset SentTime { get; set; }
 
     public string? Headers { get; set; }
 
@@ -44,10 +44,10 @@ public class InMemoryOutboxMessage :
     public Uri? ResponseAddress { get; set; }
     public Uri? FaultAddress { get; set; }
 
-    public DateTime? ExpirationTime { get; set; }
+    public DateTimeOffset? ExpirationTime { get; set; }
 
     Guid? MessageContext.MessageId => MessageId;
-    DateTime? MessageContext.SentTime => SentTime;
+    DateTimeOffset? MessageContext.SentTime => SentTime;
     Headers MessageContext.Headers => _headers ?? EmptyHeaders.Instance;
     HostInfo MessageContext.Host => HostMetadataCache.Host;
 

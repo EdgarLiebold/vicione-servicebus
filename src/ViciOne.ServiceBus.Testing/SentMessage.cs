@@ -24,14 +24,14 @@ public class SentMessage<T> :
 
         ElementId = _context.MessageId;
 
-        var now = timeProvider.GetUtcNow().UtcDateTime;
+        DateTimeOffset now = timeProvider.GetUtcNow();
         StartTime = context.SentTime ?? now;
         ElapsedTime = now - StartTime;
     }
 
     public Guid? ElementId { get; }
     SendContext ISentMessage.Context => _context;
-    public DateTime StartTime { get; }
+    public DateTimeOffset StartTime { get; }
     public TimeSpan ElapsedTime { get; }
     object ISentMessage.MessageObject => _context.Message;
     Exception? ISentMessage.Exception => _exception;

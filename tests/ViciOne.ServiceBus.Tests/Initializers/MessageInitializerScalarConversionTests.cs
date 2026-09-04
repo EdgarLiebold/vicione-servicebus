@@ -9,20 +9,20 @@ public sealed class MessageInitializerScalarConversionTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-INITIALIZER-SCALAR-CONVERSION", "value-type-to-string")]
-    public async Task ValueTypeSource_UsesItsStringRepresentation()
+    public async Task ValueTypeSource_UsesItsStringRepresentationAsync()
     {
-        InitializeContext<StringMessage> context = await MessageInitializerCache<StringMessage>.Initialize(new { Text = 1_234_567 }, TestContext.Current.CancellationToken);
+        InitializeContext<StringMessage> context = await MessageInitializerCache<StringMessage>.InitializeAsync(new { Text = 1_234_567 }, TestContext.Current.CancellationToken);
 
         Assert.Equal("1234567", context.Message.Text);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INITIALIZER-SCALAR-CONVERSION", "exact-type-copy")]
-    public async Task MatchingScalarTypes_AreCopiedWithoutConversion()
+    public async Task MatchingScalarTypes_AreCopiedWithoutConversionAsync()
     {
         ScalarValues source = CreateValues();
 
-        InitializeContext<ScalarMessage> context = await MessageInitializerCache<ScalarMessage>.Initialize(source, TestContext.Current.CancellationToken);
+        InitializeContext<ScalarMessage> context = await MessageInitializerCache<ScalarMessage>.InitializeAsync(source, TestContext.Current.CancellationToken);
 
         AssertScalarValues(context.Message, source);
         Assert.Same(source.ObjectValue, context.Message.ObjectValue);
@@ -30,7 +30,7 @@ public sealed class MessageInitializerScalarConversionTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INITIALIZER-SCALAR-CONVERSION", "nullable-to-nonnullable")]
-    public async Task NullableScalarSources_AreUnwrappedIntoNonNullableTargets()
+    public async Task NullableScalarSources_AreUnwrappedIntoNonNullableTargetsAsync()
     {
         ScalarValues expected = CreateValues();
         var source = new NullableScalarValues
@@ -49,14 +49,14 @@ public sealed class MessageInitializerScalarConversionTests
             DayValue = expected.DayValue,
         };
 
-        InitializeContext<ScalarMessage> context = await MessageInitializerCache<ScalarMessage>.Initialize(source, TestContext.Current.CancellationToken);
+        InitializeContext<ScalarMessage> context = await MessageInitializerCache<ScalarMessage>.InitializeAsync(source, TestContext.Current.CancellationToken);
 
         AssertScalarValues(context.Message, expected);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INITIALIZER-SCALAR-CONVERSION", "string-to-scalar")]
-    public async Task RoundTripStrings_AreConvertedToScalarTargets()
+    public async Task RoundTripStrings_AreConvertedToScalarTargetsAsync()
     {
         ScalarValues expected = CreateValues();
         var source = new StringScalarValues
@@ -76,7 +76,7 @@ public sealed class MessageInitializerScalarConversionTests
             ObjectValue = expected.ObjectValue,
         };
 
-        InitializeContext<ScalarMessage> context = await MessageInitializerCache<ScalarMessage>.Initialize(source, TestContext.Current.CancellationToken);
+        InitializeContext<ScalarMessage> context = await MessageInitializerCache<ScalarMessage>.InitializeAsync(source, TestContext.Current.CancellationToken);
 
         AssertScalarValues(context.Message, expected);
         Assert.Same(expected.ObjectValue, context.Message.ObjectValue);
@@ -84,12 +84,12 @@ public sealed class MessageInitializerScalarConversionTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INITIALIZER-SCALAR-CONVERSION", "nonnullable-to-nullable")]
-    public async Task NonNullableScalarSources_AreWrappedByNullableTargets()
+    public async Task NonNullableScalarSources_AreWrappedByNullableTargetsAsync()
     {
         ScalarValues source = CreateValues();
 
         InitializeContext<NullableScalarMessage> context =
-            await MessageInitializerCache<NullableScalarMessage>.Initialize(source, TestContext.Current.CancellationToken);
+            await MessageInitializerCache<NullableScalarMessage>.InitializeAsync(source, TestContext.Current.CancellationToken);
 
         Assert.Equal(source.BoolValue, context.Message.BoolValue);
         Assert.Equal(source.ByteValue, context.Message.ByteValue);
@@ -106,7 +106,7 @@ public sealed class MessageInitializerScalarConversionTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INITIALIZER-SCALAR-CONVERSION", "chained-numeric-enum-and-uri")]
-    public async Task ChainedContracts_ConvertNumericEnumAndUriValuesWithoutLosingMeaning()
+    public async Task ChainedContracts_ConvertNumericEnumAndUriValuesWithoutLosingMeaningAsync()
     {
         var timestamp = new DateTime(2024, 6, 7, 8, 9, 10, DateTimeKind.Utc);
         var serviceAddress = new Uri("https://service.example.test/");
@@ -130,10 +130,10 @@ public sealed class MessageInitializerScalarConversionTests
         };
 
         InitializeContext<ScalarIntermediateMessage> intermediate =
-            await MessageInitializerCache<ScalarIntermediateMessage>.Initialize(
+            await MessageInitializerCache<ScalarIntermediateMessage>.InitializeAsync(
                 source,
                 TestContext.Current.CancellationToken);
-        InitializeContext<ChainedScalarMessage> result = await MessageInitializerCache<ChainedScalarMessage>.Initialize(
+        InitializeContext<ChainedScalarMessage> result = await MessageInitializerCache<ChainedScalarMessage>.InitializeAsync(
             intermediate.Message,
             TestContext.Current.CancellationToken);
 

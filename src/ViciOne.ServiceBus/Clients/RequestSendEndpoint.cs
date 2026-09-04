@@ -19,30 +19,30 @@ public abstract class RequestSendEndpoint<TRequest> :
         _consumeContext = consumeContext;
     }
 
-    public async Task<TRequest> Send(Guid requestId, object values, IPipe<SendContext<TRequest>> pipe, CancellationToken cancellationToken)
+    public async Task<TRequest> SendAsync(Guid requestId, object values, IPipe<SendContext<TRequest>> pipe, CancellationToken cancellationToken)
     {
-        ISendEndpoint endpoint = (await GetSendEndpoint().ConfigureAwait(false)).SkipOutbox();
+        ISendEndpoint endpoint = (await GetSendEndpointAsync().ConfigureAwait(false)).SkipOutbox();
 
         (var message, IPipe<SendContext<TRequest>> sendPipe) = _consumeContext != null
-            ? await MessageInitializerCache<TRequest>.InitializeMessage(_consumeContext, values,
-                new ConsumeSendPipeAdapter<TRequest>(_consumeContext, pipe, requestId)).ConfigureAwait(false)
-            : await MessageInitializerCache<TRequest>.InitializeMessage(values, pipe, cancellationToken).ConfigureAwait(false);
+            ? await MessageInitializerCache<TRequest>.InitializeMessageAsync(_consumeContext, values,
+                new ConsumeSendPipeAdapter<TRequest>(_consumeContext, pipe, requestId), cancellationToken: cancellationToken).ConfigureAwait(false)
+            : await MessageInitializerCache<TRequest>.InitializeMessageAsync(values, pipe, cancellationToken).ConfigureAwait(false);
 
-        await endpoint.Send(message, sendPipe, cancellationToken).ConfigureAwait(false);
+        await endpoint.SendAsync(message, sendPipe, cancellationToken).ConfigureAwait(false);
 
         return message;
     }
 
-    public async Task Send(Guid requestId, TRequest message, IPipe<SendContext<TRequest>> pipe, CancellationToken cancellationToken)
+    public async Task SendAsync(Guid requestId, TRequest message, IPipe<SendContext<TRequest>> pipe, CancellationToken cancellationToken)
     {
-        ISendEndpoint endpoint = (await GetSendEndpoint().ConfigureAwait(false)).SkipOutbox();
+        ISendEndpoint endpoint = (await GetSendEndpointAsync().ConfigureAwait(false)).SkipOutbox();
 
         IPipe<SendContext<TRequest>> consumePipe = _consumeContext != null
             ? new ConsumeSendPipeAdapter<TRequest>(_consumeContext, pipe, requestId)
             : pipe;
 
-        await endpoint.Send(message, consumePipe, cancellationToken).ConfigureAwait(false);
+        await endpoint.SendAsync(message, consumePipe, cancellationToken).ConfigureAwait(false);
     }
 
-    protected abstract Task<ISendEndpoint> GetSendEndpoint();
+    protected abstract Task<ISendEndpoint> GetSendEndpointAsync();
 }

@@ -34,7 +34,7 @@ public sealed class ConsumerConventionIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONSUMER-CONVENTION", "custom-message-only-handler-contract")]
-    public async Task CustomConvention_DispatchesEveryDeclaredMessageOnlyHandlerExactlyOnce()
+    public async Task CustomConvention_DispatchesEveryDeclaredMessageOnlyHandlerExactlyOnceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -49,16 +49,16 @@ public sealed class ConsumerConventionIntegrationTests
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
-            await harness.Bus.Publish<FirstHandled>(new { Value = "first" }, cancellationToken);
-            await harness.Bus.Publish<SecondHandled>(new { Value = "second" }, cancellationToken);
+            await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
+            await harness.Bus.PublishAsync<FirstHandled>(new { Value = "first" }, cancellationToken);
+            await harness.Bus.PublishAsync<SecondHandled>(new { Value = "second" }, cancellationToken);
 
             Assert.Equal("first", (await first.Task.WaitAsync(timeout, cancellationToken)).Value);
             Assert.Equal("second", (await second.Task.WaitAsync(timeout, cancellationToken)).Value);
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
             ConsumerConvention.Remove<MessageOnlyConsumerConvention>();
         }
 
@@ -68,7 +68,7 @@ public sealed class ConsumerConventionIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONSUMER-CONVENTION", "default-consumer-contract")]
-    public async Task DefaultConvention_DispatchesTheDeclaredConsumerMessageExactlyOnce()
+    public async Task DefaultConvention_DispatchesTheDeclaredConsumerMessageExactlyOnceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -77,15 +77,15 @@ public sealed class ConsumerConventionIntegrationTests
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
             endpoint.Consumer(typeof(DefaultHandler), _ => new DefaultHandler(received));
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
-            await harness.Bus.Publish<DefaultHandled>(new { Value = "default" }, cancellationToken);
+            await harness.Bus.PublishAsync<DefaultHandled>(new { Value = "default" }, cancellationToken);
             Assert.Equal("default", (await received.Task.WaitAsync(timeout, cancellationToken)).Value);
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Single(harness.Consumed.Select<DefaultHandled>(SnapshotOnlyToken()));
@@ -136,7 +136,7 @@ public sealed class ConsumerConventionIntegrationTests
 
     public sealed class DefaultHandler(TaskCompletionSource<DefaultHandled> received) : IConsumer<DefaultHandled>
     {
-        public Task Consume(ConsumeContext<DefaultHandled> context)
+        public Task ConsumeAsync(ConsumeContext<DefaultHandled> context)
         {
             received.TrySetResult(context.Message);
             return Task.CompletedTask;
@@ -229,7 +229,7 @@ public sealed class ConsumerConventionIntegrationTests
         }
 
         [DebuggerNonUserCode]
-        Task IFilter<ConsumerConsumeContext<TConsumer, TMessage>>.Send(
+        Task IFilter<ConsumerConsumeContext<TConsumer, TMessage>>.SendAsync(
             ConsumerConsumeContext<TConsumer, TMessage> context,
             IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)
         {

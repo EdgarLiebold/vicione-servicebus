@@ -35,7 +35,7 @@ public class MessageDirectExchange<T> :
 
     public string Name { get; }
 
-    public async Task Deliver(DeliveryContext<T> context)
+    public async Task DeliverAsync(DeliveryContext<T> context, CancellationToken cancellationToken = default)
     {
         if (_sinks.TryGetValue(context.RoutingKey ?? "", out Connectable<IMessageSink<T>>? forKey))
         {
@@ -44,10 +44,10 @@ public class MessageDirectExchange<T> :
                 if (context.WasAlreadyDelivered(sink))
                     return;
 
-                await sink.Deliver(context).ConfigureAwait(false);
+                await sink.DeliverAsync(context, cancellationToken: cancellationToken).ConfigureAwait(false);
 
                 context.Delivered(sink);
-            }).ConfigureAwait(false);
+            }, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 

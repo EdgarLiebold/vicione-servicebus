@@ -4,5 +4,5 @@ namespace ViciOne.ServiceBus.SqlTransport;
 
 public interface IQueueNotificationListener
 {
-    Task MessageReady(string queueName);
+    Task MessageReadyAsync(string queueName, CancellationToken cancellationToken = default);
 }

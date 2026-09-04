@@ -24,7 +24,7 @@ static class NmsExtensions
             nmsConsumer.Start();
     }
 
-    public static string GetGroupId(this IMessage message)
+    public static string? GetGroupId(this IMessage message)
     {
         if (message is NmsMessage nmsMessage)
             return nmsMessage.NMSXGroupId;

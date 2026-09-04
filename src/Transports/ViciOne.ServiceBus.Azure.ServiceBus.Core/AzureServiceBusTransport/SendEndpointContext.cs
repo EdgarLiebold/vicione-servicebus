@@ -19,7 +19,7 @@ public interface SendEndpointContext :
     /// <param name="message"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task Send(ServiceBusMessage message, CancellationToken cancellationToken);
+    Task SendAsync(ServiceBusMessage message, CancellationToken cancellationToken);
 
     /// <summary>
     /// Schedule a send in the future to the messaging entity
@@ -28,7 +28,7 @@ public interface SendEndpointContext :
     /// <param name="scheduleEnqueueTimeUtc"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<long> ScheduleSend(ServiceBusMessage message, DateTime scheduleEnqueueTimeUtc, CancellationToken cancellationToken);
+    Task<long> ScheduleSendAsync(ServiceBusMessage message, DateTimeOffset scheduleEnqueueTimeUtc, CancellationToken cancellationToken);
 
     /// <summary>
     /// Cancel a previously schedule send on the messaging entity
@@ -36,5 +36,5 @@ public interface SendEndpointContext :
     /// <param name="sequenceNumber"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task CancelScheduledSend(long sequenceNumber, CancellationToken cancellationToken);
+    Task CancelScheduledSendAsync(long sequenceNumber, CancellationToken cancellationToken);
 }

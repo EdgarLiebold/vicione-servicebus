@@ -70,15 +70,16 @@ public static class TimeZoneUtil
         return timeZoneInfo.GetUtcOffset(dateTimeOffset);
     }
 
-    public static TimeSpan GetUtcOffset(DateTime dateTime, TimeZoneInfo timeZoneInfo)
+    public static TimeSpan GetAmbiguousTimeUtcOffset(DateTimeOffset dateTime, TimeZoneInfo timeZoneInfo)
     {
         // Unlike the default behavior of TimeZoneInfo.GetUtcOffset, it is prefered to choose
         // the DAYLIGHT time when the input is ambiguous, because the daylight instance is the
         // FIRST instance, and time moves in a forward direction.
+        DateTime wallTime = dateTime.DateTime;
 
-        var offset = timeZoneInfo.IsAmbiguousTime(dateTime)
-            ? timeZoneInfo.GetAmbiguousTimeOffsets(dateTime).Max()
-            : timeZoneInfo.GetUtcOffset(dateTime);
+        var offset = timeZoneInfo.IsAmbiguousTime(wallTime)
+            ? timeZoneInfo.GetAmbiguousTimeOffsets(wallTime).Max()
+            : timeZoneInfo.GetUtcOffset(wallTime);
 
         return offset;
     }

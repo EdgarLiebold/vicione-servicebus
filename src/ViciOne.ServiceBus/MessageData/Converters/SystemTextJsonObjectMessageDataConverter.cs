@@ -16,7 +16,7 @@ public class SystemTextJsonObjectMessageDataConverter<T> :
         _options = options;
     }
 
-    public async Task<T> Convert(Stream stream, CancellationToken cancellationToken)
+    public async Task<T?> ConvertAsync(Stream stream, CancellationToken cancellationToken)
     {
         var result = await JsonSerializer.DeserializeAsync<T>(stream, _options, cancellationToken).ConfigureAwait(false);
 

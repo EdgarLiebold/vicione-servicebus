@@ -9,7 +9,7 @@ namespace ViciOne.ServiceBus.Configuration;
 internal abstract class TimeoutPipeSpecification<TContext, TResult> :
     IPipeSpecification<TContext>,
     ITimeoutConfigurator
-    where TContext : class, ConsumeContext
+    where TContext : class, PipeContext
     where TResult : TContext
 {
     TimeProvider? _timeProvider;

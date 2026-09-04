@@ -10,7 +10,7 @@ public sealed class RabbitMqPayloadAndConcurrencyTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-PAYLOAD", "binary-payload-round-trips-byte-for-byte")]
-    public async Task BinaryPayload_RoundTripsByteForByteExactlyOnce()
+    public async Task BinaryPayload_RoundTripsByteForByteExactlyOnceAsync()
     {
         using RabbitMqBroker fixture = RabbitMqBroker.Create("binary");
         string queue = fixture.Name("input");
@@ -36,9 +36,8 @@ public sealed class RabbitMqPayloadAndConcurrencyTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queue}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await endpoint.Send(new BinaryPayload(expected), cancellationToken)
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queue}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await endpoint.SendAsync(new BinaryPayload(expected), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             BinaryPayload actual = await received.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.Equal(expected, actual.Contents);
@@ -46,7 +45,7 @@ public sealed class RabbitMqPayloadAndConcurrencyTests
             await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
             started = false;
             Assert.Equal(1, entries);
-            Assert.Equal(0, (await fixture.Queue(queue, cancellationToken)).Messages);
+            Assert.Equal(0, (await fixture.QueueAsync(queue, cancellationToken)).Messages);
         }
         finally
         {
@@ -58,7 +57,7 @@ public sealed class RabbitMqPayloadAndConcurrencyTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-PAYLOAD", "raw-json-preserves-payload-header-and-envelope-identities")]
-    public async Task RawJson_PreservesPayloadHeaderAndEnvelopeIdentitiesExactlyOnce()
+    public async Task RawJson_PreservesPayloadHeaderAndEnvelopeIdentitiesExactlyOnceAsync()
     {
         using RabbitMqBroker fixture = RabbitMqBroker.Create("rawjson");
         string queue = fixture.Name("input");
@@ -85,9 +84,8 @@ public sealed class RabbitMqPayloadAndConcurrencyTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queue}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await endpoint.Send(
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queue}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await endpoint.SendAsync(
                     new RawPayload(expected, "raw-value"),
                     context => context.Headers.Set("raw-marker", "exact-marker"),
                     cancellationToken)
@@ -97,18 +95,18 @@ public sealed class RabbitMqPayloadAndConcurrencyTests
             Assert.Equal(expected, actual.Message.CorrelationId);
             Assert.Equal("raw-value", actual.Message.Value);
             Assert.Equal("exact-marker", actual.Headers.Get<string>("raw-marker"));
-            Assert.Equal(SystemTextJsonRawMessageSerializer.JsonContentType, actual.ReceiveContext.ContentType);
+            Assert.Equal(SystemTextJsonRawMessageSerializer.JsonContentType, actual.Advanced().ReceiveContext.ContentType);
             Assert.NotNull(actual.MessageId);
             Assert.NotNull(actual.ConversationId);
             Assert.NotNull(actual.CorrelationId);
             Assert.NotNull(actual.DestinationAddress);
             Assert.NotNull(actual.Host);
-            Assert.Single(actual.SupportedMessageTypes);
+            Assert.Single(actual.Advanced().SupportedMessageTypes);
 
             await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
             started = false;
             Assert.Equal(1, entries);
-            Assert.Equal(0, (await fixture.Queue(queue, cancellationToken)).Messages);
+            Assert.Equal(0, (await fixture.QueueAsync(queue, cancellationToken)).Messages);
         }
         finally
         {
@@ -120,7 +118,7 @@ public sealed class RabbitMqPayloadAndConcurrencyTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-CONCURRENCY", "one-hundred-deliveries-obey-exact-consumer-limit")]
-    public async Task ConsumerConcurrency_ProcessesOneHundredUniqueMessagesWithAnExactMaximumOfTwo()
+    public async Task ConsumerConcurrency_ProcessesOneHundredUniqueMessagesWithAnExactMaximumOfTwoAsync()
     {
         const int expectedCount = 100;
         using RabbitMqBroker fixture = RabbitMqBroker.Create("concurrency");
@@ -161,10 +159,9 @@ public sealed class RabbitMqPayloadAndConcurrencyTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queue}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queue}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             Task[] sends = Enumerable.Range(0, expectedCount)
-                .Select(identity => endpoint.Send(new ConcurrentPayload(identity), cancellationToken))
+                .Select(identity => endpoint.SendAsync(new ConcurrentPayload(identity), cancellationToken))
                 .ToArray();
             await Task.WhenAll(sends).WaitAsync(fixture.OperationTimeout, cancellationToken);
             await reachedLimit.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
@@ -177,7 +174,7 @@ public sealed class RabbitMqPayloadAndConcurrencyTests
             Assert.Equal(expectedCount, consumed);
             Assert.Equal(expectedCount, identities.Count);
             Assert.Equal(2, maximum);
-            Assert.Equal(0, (await fixture.Queue(queue, cancellationToken)).Messages);
+            Assert.Equal(0, (await fixture.QueueAsync(queue, cancellationToken)).Messages);
         }
         finally
         {

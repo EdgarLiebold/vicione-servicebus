@@ -25,16 +25,16 @@ public class MessageSchedulerFilter :
         scope.Add("address", _schedulerAddress);
     }
 
-    public Task Send(ConsumeContext context, IPipe<ConsumeContext> next)
+    public Task SendAsync(ConsumeContext context, IPipe<ConsumeContext> next)
     {
         context.GetOrAddPayload<MessageSchedulerContext>(() => new ConsumeMessageSchedulerContext(context, SchedulerFactory));
 
-        return next.Send(context);
+        return next.SendAsync(context);
     }
 
     IMessageScheduler SchedulerFactory(ConsumeContext context)
     {
-        return new MessageScheduler(new EndpointScheduleMessageProvider(() => context.GetSendEndpoint(_schedulerAddress)),
+        return new MessageScheduler(new EndpointScheduleMessageProvider(() => context.GetSendEndpointAsync(_schedulerAddress)),
             context.GetPayload<IBusTopology>(), context.GetTimeProvider());
     }
 }

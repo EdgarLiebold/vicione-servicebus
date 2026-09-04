@@ -24,10 +24,10 @@ public class HandlerTestHarness<TMessage>
 
     void ConfigureReceiveEndpoint(IReceiveEndpointConfigurator configurator)
     {
-        configurator.Handler<TMessage>(HandleMessage);
+        configurator.Handler<TMessage>(HandleMessageAsync);
     }
 
-    async Task HandleMessage(ConsumeContext<TMessage> context)
+    async Task HandleMessageAsync(ConsumeContext<TMessage> context)
     {
         try
         {

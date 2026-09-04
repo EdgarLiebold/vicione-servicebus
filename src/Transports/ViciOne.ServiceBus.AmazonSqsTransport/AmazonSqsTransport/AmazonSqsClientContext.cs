@@ -39,20 +39,20 @@ public class AmazonSqsClientContext :
 
     public ConnectionContext ConnectionContext { get; }
 
-    public Task<TopicInfo> CreateTopic(Topology.Topic topic, CancellationToken cancellationToken)
+    public Task<TopicInfo> CreateTopicAsync(Topology.Topic topic, CancellationToken cancellationToken)
     {
-        return ConnectionContext.GetTopic(topic, cancellationToken);
+        return ConnectionContext.GetTopicAsync(topic, cancellationToken);
     }
 
-    public Task<QueueInfo> CreateQueue(Queue queue, CancellationToken cancellationToken)
+    public Task<QueueInfo> CreateQueueAsync(Queue queue, CancellationToken cancellationToken)
     {
-        return ConnectionContext.GetQueue(queue, cancellationToken);
+        return ConnectionContext.GetQueueAsync(queue, cancellationToken);
     }
 
-    public async Task<bool> CreateQueueSubscription(Topology.Topic topic, Queue queue, CancellationToken cancellationToken)
+    public async Task<bool> CreateQueueSubscriptionAsync(Topology.Topic topic, Queue queue, CancellationToken cancellationToken)
     {
-        var topicInfo = await ConnectionContext.GetTopic(topic, cancellationToken).ConfigureAwait(false);
-        var queueInfo = await ConnectionContext.GetQueue(queue, cancellationToken).ConfigureAwait(false);
+        var topicInfo = await ConnectionContext.GetTopicAsync(topic, cancellationToken).ConfigureAwait(false);
+        var queueInfo = await ConnectionContext.GetQueueAsync(queue, cancellationToken).ConfigureAwait(false);
 
         Dictionary<string, string> subscriptionAttributes = topic.TopicSubscriptionAttributes.MergeLeft(queue.QueueSubscriptionAttributes)
             .ToDictionary(x => x.Key, x => x.Value.ToString()!);
@@ -116,12 +116,12 @@ public class AmazonSqsClientContext :
 
         var sqsQueueArn = queueInfo.Arn;
 
-        return await queueInfo.UpdatePolicy(sqsQueueArn, topicInfo.Arn, cancellationToken).ConfigureAwait(false);
+        return await queueInfo.UpdatePolicyAsync(sqsQueueArn, topicInfo.Arn, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task DeleteTopic(Topology.Topic topic, CancellationToken cancellationToken)
+    public async Task DeleteTopicAsync(Topology.Topic topic, CancellationToken cancellationToken)
     {
-        var topicInfo = await ConnectionContext.GetTopic(topic, cancellationToken).ConfigureAwait(false);
+        var topicInfo = await ConnectionContext.GetTopicAsync(topic, cancellationToken).ConfigureAwait(false);
 
         TransportLogMessages.DeleteTopic(topicInfo.Arn);
 
@@ -129,12 +129,12 @@ public class AmazonSqsClientContext :
 
         response.EnsureSuccessfulResponse();
 
-        await ConnectionContext.RemoveTopicByName(topic.EntityName).ConfigureAwait(false);
+        await ConnectionContext.RemoveTopicByNameAsync(topic.EntityName, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task DeleteQueue(Queue queue, CancellationToken cancellationToken)
+    public async Task DeleteQueueAsync(Queue queue, CancellationToken cancellationToken)
     {
-        var queueInfo = await ConnectionContext.GetQueue(queue, cancellationToken).ConfigureAwait(false);
+        var queueInfo = await ConnectionContext.GetQueueAsync(queue, cancellationToken).ConfigureAwait(false);
 
         TransportLogMessages.DeleteQueue(queueInfo.Url);
 
@@ -142,49 +142,49 @@ public class AmazonSqsClientContext :
         {
             TransportLogMessages.DeleteSubscription(queueInfo.Url, subscriptionArn);
 
-            await DeleteQueueSubscription(subscriptionArn, cancellationToken).ConfigureAwait(false);
+            await DeleteQueueSubscriptionAsync(subscriptionArn, cancellationToken).ConfigureAwait(false);
         }
 
         var response = await _sqsClient.DeleteQueueAsync(queueInfo.Url, cancellationToken).ConfigureAwait(false);
 
         response.EnsureSuccessfulResponse();
 
-        await ConnectionContext.RemoveQueueByName(queue.EntityName).ConfigureAwait(false);
+        await ConnectionContext.RemoveQueueByNameAsync(queue.EntityName, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task Publish(string topicName, PublishBatchRequestEntry request, CancellationToken cancellationToken)
+    public async Task PublishAsync(string topicName, PublishBatchRequestEntry request, CancellationToken cancellationToken)
     {
-        var topicInfo = await ConnectionContext.GetTopicByName(topicName, cancellationToken).ConfigureAwait(false);
+        var topicInfo = await ConnectionContext.GetTopicByNameAsync(topicName, cancellationToken).ConfigureAwait(false);
 
-        await topicInfo.Publish(request, cancellationToken).ConfigureAwait(false);
+        await topicInfo.PublishAsync(request, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task SendMessage(string queueName, SendMessageBatchRequestEntry request, CancellationToken cancellationToken)
+    public async Task SendMessageAsync(string queueName, SendMessageBatchRequestEntry request, CancellationToken cancellationToken)
     {
-        var queueInfo = await ConnectionContext.GetQueueByName(queueName, cancellationToken).ConfigureAwait(false);
+        var queueInfo = await ConnectionContext.GetQueueByNameAsync(queueName, cancellationToken).ConfigureAwait(false);
 
-        await queueInfo.Send(request, cancellationToken).ConfigureAwait(false);
+        await queueInfo.SendAsync(request, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task DeleteMessage(string queueName, string receiptHandle, CancellationToken cancellationToken)
+    public async Task DeleteMessageAsync(string queueName, string receiptHandle, CancellationToken cancellationToken)
     {
-        var queueInfo = await ConnectionContext.GetQueueByName(queueName, cancellationToken).ConfigureAwait(false);
+        var queueInfo = await ConnectionContext.GetQueueByNameAsync(queueName, cancellationToken).ConfigureAwait(false);
 
-        await queueInfo.Delete(receiptHandle, cancellationToken).ConfigureAwait(false);
+        await queueInfo.DeleteAsync(receiptHandle, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task PurgeQueue(string queueName, CancellationToken cancellationToken)
+    public async Task PurgeQueueAsync(string queueName, CancellationToken cancellationToken)
     {
-        var queueInfo = await ConnectionContext.GetQueueByName(queueName, cancellationToken).ConfigureAwait(false);
+        var queueInfo = await ConnectionContext.GetQueueByNameAsync(queueName, cancellationToken).ConfigureAwait(false);
 
         var response = await _sqsClient.PurgeQueueAsync(queueInfo.Url, cancellationToken).ConfigureAwait(false);
 
         response.EnsureSuccessfulResponse();
     }
 
-    public async Task<IList<Message>> ReceiveMessages(string queueName, int messageLimit, int waitTime, CancellationToken cancellationToken)
+    public async Task<IList<Message>> ReceiveMessagesAsync(string queueName, int messageLimit, int waitTime, CancellationToken cancellationToken)
     {
-        var queueInfo = await ConnectionContext.GetQueueByName(queueName, cancellationToken).ConfigureAwait(false);
+        var queueInfo = await ConnectionContext.GetQueueByNameAsync(queueName, cancellationToken).ConfigureAwait(false);
 
         var request = new ReceiveMessageRequest(queueInfo.Url)
         {
@@ -201,12 +201,12 @@ public class AmazonSqsClientContext :
         return response.Messages ?? new List<Message>();
     }
 
-    public Task<QueueInfo> GetQueueInfo(string queueName, CancellationToken cancellationToken)
+    public Task<QueueInfo> GetQueueInfoAsync(string queueName, CancellationToken cancellationToken)
     {
-        return ConnectionContext.GetQueueByName(queueName, cancellationToken);
+        return ConnectionContext.GetQueueByNameAsync(queueName, cancellationToken);
     }
 
-    public async Task ChangeMessageVisibility(string queueUrl, string receiptHandle, int seconds, CancellationToken cancellationToken)
+    public async Task ChangeMessageVisibilityAsync(string queueUrl, string receiptHandle, int seconds, CancellationToken cancellationToken)
     {
         var response = await _sqsClient.ChangeMessageVisibilityAsync(new ChangeMessageVisibilityRequest
         {
@@ -218,7 +218,7 @@ public class AmazonSqsClientContext :
         response.EnsureSuccessfulResponse();
     }
 
-    async Task DeleteQueueSubscription(string subscriptionArn, CancellationToken cancellationToken)
+    async Task DeleteQueueSubscriptionAsync(string subscriptionArn, CancellationToken cancellationToken)
     {
         var unsubscribeRequest = new UnsubscribeRequest { SubscriptionArn = subscriptionArn };
 

@@ -67,7 +67,7 @@ public class MessageReceiverCollection<T> :
         }
     }
 
-    public Task<IMessageReceiver<T>> Next(T message, CancellationToken cancellationToken)
+    public Task<IMessageReceiver<T>> NextAsync(T message, CancellationToken cancellationToken)
     {
         Task<IReceiverLoadBalancer<T>> task = _balancer.Task;
         if (task.IsCompletedSuccessfully())
@@ -80,7 +80,7 @@ public class MessageReceiverCollection<T> :
 
         async Task<IMessageReceiver<T>> NextAsync()
         {
-            IReceiverLoadBalancer<T> balancer = await _balancer.Task.OrCanceled(cancellationToken).ConfigureAwait(false);
+            IReceiverLoadBalancer<T> balancer = await _balancer.Task.OrCanceledAsync(cancellationToken).ConfigureAwait(false);
 
             return balancer.SelectReceiver(message);
         }
@@ -88,7 +88,7 @@ public class MessageReceiverCollection<T> :
         return NextAsync();
     }
 
-    public bool TryGetReceiver(long id, out IMessageReceiver<T> consumer)
+    public bool TryGetReceiver(long id, [NotNullWhen(true)] out IMessageReceiver<T>? consumer)
     {
         lock (_receivers)
             return _receivers.TryGetValue(id, out consumer);

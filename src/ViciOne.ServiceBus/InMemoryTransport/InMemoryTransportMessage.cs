@@ -9,7 +9,7 @@ public class InMemoryTransportMessage
 {
     static long _nextSequenceNumber;
 
-    public InMemoryTransportMessage(Guid messageId, byte[] body, string contentType)
+    public InMemoryTransportMessage(Guid messageId, byte[] body, string? contentType)
     {
         Headers = new DictionarySendHeaders();
         MessageId = messageId;

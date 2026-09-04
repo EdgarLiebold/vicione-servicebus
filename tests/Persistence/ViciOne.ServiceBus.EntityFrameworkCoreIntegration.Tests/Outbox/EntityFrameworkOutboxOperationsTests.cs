@@ -9,20 +9,22 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Outbox;
 
 public sealed class EntityFrameworkOutboxOperationsTests
 {
-    private static readonly DateTime Created = new(2042, 3, 4, 5, 6, 7, DateTimeKind.Utc);
+    private static readonly DateTimeOffset Created = new(2042, 3, 4, 5, 6, 7, TimeSpan.Zero);
     private const string FirstBusKey = "first-bus-v1";
     private const string SecondBusKey = "second-bus-v1";
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-OPERATIONS", "quarantine-list-is-bounded-owned-and-deterministic")]
-    public async Task GetQuarantined_ReturnsOnlyTheOwnedBusInDeterministicBoundedOrder()
+    public async Task GetQuarantined_ReturnsOnlyTheOwnedBusInDeterministicBoundedOrderAsync()
     {
-        await using OperationsFixture fixture = await OperationsFixture.Create();
+        await using OperationsFixture fixture = await OperationsFixture.CreateAsync();
         Guid laterId = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
         Guid earlierId = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
+        Guid oldestId = Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc");
         fixture.DbContext.AddRange(
             CreateState(laterId, FirstBusKey, OutboxDeliveryStatus.Quarantined),
             CreateState(earlierId, FirstBusKey, OutboxDeliveryStatus.Quarantined),
+            CreateState(oldestId, FirstBusKey, OutboxDeliveryStatus.Quarantined, Created.AddMinutes(-1)),
             CreateState(Guid.NewGuid(), FirstBusKey, OutboxDeliveryStatus.Pending),
             CreateState(Guid.Parse("00000000-0000-0000-0000-000000000001"), SecondBusKey,
                 OutboxDeliveryStatus.Quarantined));
@@ -32,7 +34,7 @@ public sealed class EntityFrameworkOutboxOperationsTests
 
         IReadOnlyList<OutboxQuarantineEntry> entries = await operations.GetQuarantinedAsync(2, TestContext.Current.CancellationToken);
 
-        Assert.Equal([earlierId, laterId], entries.Select(x => x.OutboxId));
+        Assert.Equal([oldestId, earlierId], entries.Select(x => x.OutboxId));
         Assert.All(entries, x => Assert.Equal(OutboxFailureKind.Permanent, x.FailureKind));
         Assert.Equal(0, notification.DeliveredCount);
         await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
@@ -44,9 +46,9 @@ public sealed class EntityFrameworkOutboxOperationsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-OPERATIONS", "requeue-resets-owned-quarantine-and-signals")]
-    public async Task Requeue_ResetsEveryFailureFieldAndSignalsOnlyAfterPersistence()
+    public async Task Requeue_ResetsEveryFailureFieldAndSignalsOnlyAfterPersistenceAsync()
     {
-        await using OperationsFixture fixture = await OperationsFixture.Create();
+        await using OperationsFixture fixture = await OperationsFixture.CreateAsync();
         OutboxState state = CreateState(Guid.NewGuid(), FirstBusKey,
             OutboxDeliveryStatus.Quarantined);
         fixture.DbContext.Add(state);
@@ -72,9 +74,9 @@ public sealed class EntityFrameworkOutboxOperationsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-OPERATIONS", "discard-removes-owned-quarantine-and-messages")]
-    public async Task Discard_RemovesTheOwnedQuarantineAndMessagesWithoutTouchingAnotherBus()
+    public async Task Discard_RemovesTheOwnedQuarantineAndMessagesWithoutTouchingAnotherBusAsync()
     {
-        await using OperationsFixture fixture = await OperationsFixture.Create();
+        await using OperationsFixture fixture = await OperationsFixture.CreateAsync();
         OutboxState owned = CreateState(Guid.NewGuid(), FirstBusKey,
             OutboxDeliveryStatus.Quarantined);
         OutboxState foreign = CreateState(Guid.NewGuid(), SecondBusKey,
@@ -94,9 +96,9 @@ public sealed class EntityFrameworkOutboxOperationsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-OPERATIONS", "foreign-and-nonquarantined-state-fail-closed")]
-    public async Task Mutations_RejectForeignAndNonQuarantinedStatesWithoutChangingEither()
+    public async Task Mutations_RejectForeignAndNonQuarantinedStatesWithoutChangingEitherAsync()
     {
-        await using OperationsFixture fixture = await OperationsFixture.Create();
+        await using OperationsFixture fixture = await OperationsFixture.CreateAsync();
         OutboxState pending = CreateState(Guid.NewGuid(), FirstBusKey,
             OutboxDeliveryStatus.Pending);
         OutboxState foreign = CreateState(Guid.NewGuid(), SecondBusKey,
@@ -118,21 +120,26 @@ public sealed class EntityFrameworkOutboxOperationsTests
         Assert.Contains(states, x => x.OutboxId == foreign.OutboxId && x.Status == OutboxDeliveryStatus.Quarantined);
     }
 
-    private static OutboxState CreateState(Guid id, string busKey, OutboxDeliveryStatus status) => new()
+    private static OutboxState CreateState(Guid id, string busKey, OutboxDeliveryStatus status, DateTimeOffset? created = null)
     {
-        OutboxId = id,
-        BusKey = busKey,
-        Created = Created,
-        Status = status,
-        NextDeliveryTime = Created.AddMinutes(1),
-        DeliveryAttempts = 4,
-        LastFailureKind = OutboxFailureKind.Permanent,
-        LastFailureTime = Created,
-        LastFailure = "failure",
-        FailedSequenceNumber = 17,
-        FailedMessageId = Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"),
-        Delivered = Created
-    };
+        DateTimeOffset createdAt = created ?? Created;
+
+        return new OutboxState
+        {
+            OutboxId = id,
+            BusKey = busKey,
+            Created = createdAt,
+            Status = status,
+            NextDeliveryTime = createdAt.AddMinutes(1),
+            DeliveryAttempts = 4,
+            LastFailureKind = OutboxFailureKind.Permanent,
+            LastFailureTime = createdAt,
+            LastFailure = "failure",
+            FailedSequenceNumber = 17,
+            FailedMessageId = Guid.Parse("dddddddd-dddd-dddd-dddd-dddddddddddd"),
+            Delivered = createdAt
+        };
+    }
 
     private static EntityFrameworkOutboxOperations<IFirstBus, OperationsDbContext> CreateOperations(
         OperationsDbContext dbContext,
@@ -157,7 +164,7 @@ public sealed class EntityFrameworkOutboxOperationsTests
     {
         private int _deliveredCount;
         public int DeliveredCount => Volatile.Read(ref _deliveredCount);
-        public Task WaitForDelivery(CancellationToken cancellationToken) => Task.CompletedTask;
+        public Task WaitForDeliveryAsync(CancellationToken cancellationToken) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
         public void Delivered() => Interlocked.Increment(ref _deliveredCount);
     }
 
@@ -178,7 +185,7 @@ public sealed class EntityFrameworkOutboxOperationsTests
 
         public OperationsDbContext DbContext { get; }
 
-        public static async Task<OperationsFixture> Create()
+        public static async Task<OperationsFixture> CreateAsync()
         {
             var connection = new SqliteConnection("Data Source=:memory:");
             await connection.OpenAsync(TestContext.Current.CancellationToken);

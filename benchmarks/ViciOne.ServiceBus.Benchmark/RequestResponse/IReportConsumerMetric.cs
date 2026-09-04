@@ -5,9 +5,9 @@ namespace ViciOneServiceBusBenchmark.RequestResponse;
 
 public interface IReportConsumerMetric
 {
-    Task Consumed<T>(Guid messageId)
+    Task ConsumedAsync<T>(Guid messageId)
         where T : class;
 
-    Task<T> ResponseReceived<T>(Guid messageId, Func<Task<T>> request)
+    Task<T> ResponseReceivedAsync<T>(Guid messageId, Func<Task<T>> request)
         where T : class;
 }

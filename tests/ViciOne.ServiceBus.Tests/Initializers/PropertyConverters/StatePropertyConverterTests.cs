@@ -9,7 +9,7 @@ public sealed class StatePropertyConverterTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-INITIALIZER-STATE-PROPERTY", "integer-state-to-name-and-header")]
-    public async Task PublishInitializer_MapsTheCurrentIntegerStateToItsName()
+    public async Task PublishInitializer_MapsTheCurrentIntegerStateToItsNameAsync()
     {
         TimeSpan operationTimeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -37,9 +37,9 @@ public sealed class StatePropertyConverterTests
 
         try
         {
-            await harness.Start(cancellationToken);
+            await harness.StartAsync(cancellationToken);
 
-            await harness.Bus.Publish(new StateTransitionStarted { CorrelationId = sagaId }, cancellationToken);
+            await harness.Bus.PublishAsync(new StateTransitionStarted { CorrelationId = sagaId }, cancellationToken);
 
             ConsumeContext<StateTransitionPublished> context = await received.Task.WaitAsync(
                 operationTimeout,
@@ -52,7 +52,7 @@ public sealed class StatePropertyConverterTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
@@ -73,10 +73,10 @@ public sealed class StatePropertyConverterTests
             Initially(
                 When(Started)
                     .TransitionTo(Running)
-                    .PublishAsync(context => context.Init<StateTransitionPublished>(new
+                    .PublishAsync(context => context.InitAsync<StateTransitionPublished>(new
                     {
                         context.Saga.CorrelationId,
-                        CurrentState = this.GetState(context),
+                        CurrentState = this.GetStateAsync(context),
                         __Header_Custom_Header_Value = "Frankie Say Relax",
                     })));
         }

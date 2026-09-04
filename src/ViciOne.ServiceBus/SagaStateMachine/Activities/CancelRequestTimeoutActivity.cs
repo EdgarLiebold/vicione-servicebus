@@ -29,14 +29,14 @@ public class CancelRequestTimeoutActivity<TSaga, TMessage, TRequest, TResponse> 
         context.CreateScope("cancelRequest");
     }
 
-    public async Task Execute(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
+    public async Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
         Guid? requestId = _request.GetRequestId(context.Saga);
         if (requestId.HasValue && _request.Settings.Timeout > TimeSpan.Zero)
         {
-            if (context.TryGetPayload(out MessageSchedulerContext schedulerContext))
+            if (context.TryGetPayload(out MessageSchedulerContext? schedulerContext))
             {
-                await schedulerContext.CancelScheduledSend(context.ReceiveContext.InputAddress, requestId.Value, context.CancellationToken)
+                await schedulerContext.CancelScheduledSendAsync(context.ReceiveContext.InputAddress, requestId.Value, context.CancellationToken)
                     .ConfigureAwait(false);
             }
             else
@@ -46,12 +46,12 @@ public class CancelRequestTimeoutActivity<TSaga, TMessage, TRequest, TResponse> 
         if (_request.Settings.ClearRequestIdOnFaulted || _completed)
             _request.SetRequestId(context.Saga, null);
 
-        await next.Execute(context).ConfigureAwait(false);
+        await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
+    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
         where TException : Exception
     {
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 }

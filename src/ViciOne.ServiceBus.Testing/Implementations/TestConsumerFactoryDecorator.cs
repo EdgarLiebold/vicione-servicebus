@@ -16,10 +16,10 @@ public class TestConsumerFactoryDecorator<TConsumer> :
         _received = received;
     }
 
-    public Task Send<TMessage>(ConsumeContext<TMessage> context, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)
+    public Task SendAsync<TMessage>(ConsumeContext<TMessage> context, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)
         where TMessage : class
     {
-        return _consumerFactory.Send(context, new TestDecoratorPipe<TMessage>(_received, next));
+        return _consumerFactory.SendAsync(context, new TestDecoratorPipe<TMessage>(_received, next));
     }
 
     void IProbeSite.Probe(ProbeContext context)
@@ -48,11 +48,11 @@ public class TestConsumerFactoryDecorator<TConsumer> :
             _next.Probe(context);
         }
 
-        public async Task Send(ConsumerConsumeContext<TConsumer, TMessage> context)
+        public async Task SendAsync(ConsumerConsumeContext<TConsumer, TMessage> context)
         {
             try
             {
-                await _next.Send(context).ConfigureAwait(false);
+                await _next.SendAsync(context).ConfigureAwait(false);
 
                 _received.Add(context);
             }

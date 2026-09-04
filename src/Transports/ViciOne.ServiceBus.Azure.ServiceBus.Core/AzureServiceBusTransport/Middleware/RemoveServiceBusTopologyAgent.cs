@@ -20,27 +20,27 @@ public sealed class RemoveServiceBusTopologyAgent :
         SetReady();
     }
 
-    protected override async Task StopAgent(StopContext context)
+    protected override async Task StopAgentAsync(StopContext context)
     {
         try
         {
-            await RemoveSubscriptions(_context).ConfigureAwait(false);
+            await RemoveSubscriptionsAsync(_context).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
             LogContext.Warning?.Log(ex, "Failed to remove one or more subscriptions from the endpoint.");
         }
 
-        await base.StopAgent(context);
+        await base.StopAgentAsync(context);
     }
 
-    async Task RemoveSubscriptions(ConnectionContext context)
+    async Task RemoveSubscriptionsAsync(ConnectionContext context)
     {
-        await Task.WhenAll(_brokerTopology.QueueSubscriptions.Select(subscription => Delete(context, subscription))).ConfigureAwait(false);
+        await Task.WhenAll(_brokerTopology.QueueSubscriptions.Select(subscription => DeleteAsync(context, subscription))).ConfigureAwait(false);
     }
 
-    static Task Delete(ConnectionContext context, QueueSubscription subscription)
+    static Task DeleteAsync(ConnectionContext context, QueueSubscription subscription)
     {
-        return context.DeleteTopicSubscription(subscription.Subscription.CreateSubscriptionOptions, context.CancellationToken);
+        return context.DeleteTopicSubscriptionAsync(subscription.Subscription.CreateSubscriptionOptions, context.CancellationToken);
     }
 }

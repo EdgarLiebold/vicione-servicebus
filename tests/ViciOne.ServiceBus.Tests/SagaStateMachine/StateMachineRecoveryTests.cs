@@ -9,13 +9,13 @@ public sealed class StateMachineRecoveryTests
     [InlineData(StateMachineConstructionStyle.Declarative)]
     [InlineData(StateMachineConstructionStyle.Dynamic)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-RECOVERY", "dependency-factory-and-continuation")]
-    public async Task FactoryActivity_UsesItsDependencyAndContinuesExactlyOnce(
+    public async Task FactoryActivity_UsesItsDependencyAndContinuesExactlyOnceAsync(
         StateMachineConstructionStyle style)
     {
         RecoveryScenario scenario = CreateDependencyScenario(style);
         var instance = new RecoveryInstance();
 
-        await StateMachineTestExecution.Raise(
+        await StateMachineTestExecution.RaiseAsync(
             scenario.Machine,
             instance,
             scenario.Create,
@@ -33,7 +33,7 @@ public sealed class StateMachineRecoveryTests
     [InlineData(StateMachineConstructionStyle.Declarative)]
     [InlineData(StateMachineConstructionStyle.Dynamic)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-RECOVERY", "compensation-restores-and-preserves-failure")]
-    public async Task CompensatingActivity_RestoresOriginalValueAndPreservesTheFailure(
+    public async Task CompensatingActivity_RestoresOriginalValueAndPreservesTheFailureAsync(
         StateMachineConstructionStyle style)
     {
         ExpectedActivityFailureException failure = new("downstream failed");
@@ -41,7 +41,7 @@ public sealed class StateMachineRecoveryTests
         var instance = new RecoveryInstance { Value = "original" };
 
         EventExecutionException exception = await Assert.ThrowsAsync<EventExecutionException>(() =>
-            StateMachineTestExecution.Raise(
+            StateMachineTestExecution.RaiseAsync(
                 scenario.Machine,
                 instance,
                 scenario.Create,
@@ -56,7 +56,7 @@ public sealed class StateMachineRecoveryTests
         Assert.Equal(1, instance.ActivityCount);
         Assert.Equal(1, instance.CompensationCount);
         Assert.Equal(0, instance.ContinuationCount);
-        Assert.Same(scenario.Machine.Initial, await StateMachineTestExecution.GetState(scenario.Machine, instance));
+        Assert.Same(scenario.Machine.Initial, await StateMachineTestExecution.GetStateAsync(scenario.Machine, instance));
     }
 
     [Theory]
@@ -65,7 +65,7 @@ public sealed class StateMachineRecoveryTests
     [InlineData(true, false)]
     [InlineData(true, true)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-RECOVERY", "retry-trigger-data-catch-matrix")]
-    public async Task Retry_ExhaustsFourAttemptsAndEitherPropagatesOrRunsOneCatch(
+    public async Task Retry_ExhaustsFourAttemptsAndEitherPropagatesOrRunsOneCatchAsync(
         bool dataEvent,
         bool withCatch)
     {
@@ -75,17 +75,17 @@ public sealed class StateMachineRecoveryTests
         if (withCatch)
         {
             if (dataEvent)
-                await StateMachineTestExecution.Raise(machine, instance, machine.Data, new RetryData("payload"));
+                await StateMachineTestExecution.RaiseAsync(machine, instance, machine.Data, new RetryData("payload"));
             else
-                await StateMachineTestExecution.Raise(machine, instance, machine.Trigger);
+                await StateMachineTestExecution.RaiseAsync(machine, instance, machine.Trigger);
         }
         else
         {
             ExpectedRetryFailureException exception = dataEvent
                 ? await Assert.ThrowsAsync<ExpectedRetryFailureException>(() =>
-                    StateMachineTestExecution.Raise(machine, instance, machine.Data, new RetryData("payload")))
+                    StateMachineTestExecution.RaiseAsync(machine, instance, machine.Data, new RetryData("payload")))
                 : await Assert.ThrowsAsync<ExpectedRetryFailureException>(() =>
-                    StateMachineTestExecution.Raise(machine, instance, machine.Trigger));
+                    StateMachineTestExecution.RaiseAsync(machine, instance, machine.Trigger));
 
             Assert.Same(instance.Failure, exception);
         }
@@ -99,7 +99,7 @@ public sealed class StateMachineRecoveryTests
         else
             Assert.Null(instance.CaughtFailure);
         Assert.Contains(nameof(Attempt), instance.Failure.StackTrace);
-        Assert.Same(machine.Initial, await StateMachineTestExecution.GetState(machine, instance));
+        Assert.Same(machine.Initial, await StateMachineTestExecution.GetStateAsync(machine, instance));
     }
 
     private static RecoveryScenario CreateDependencyScenario(StateMachineConstructionStyle style)
@@ -264,7 +264,7 @@ public sealed class StateMachineRecoveryTests
         CalculatorService calculator,
         bool compensate) : IStateMachineActivity<RecoveryInstance, CalculationData>
     {
-        public async Task Execute(
+        public async Task ExecuteAsync(
             BehaviorContext<RecoveryInstance, CalculationData> context,
             IBehavior<RecoveryInstance, CalculationData> next)
         {
@@ -275,7 +275,7 @@ public sealed class StateMachineRecoveryTests
 
             try
             {
-                await next.Execute(context);
+                await next.ExecuteAsync(context);
             }
             catch (Exception exception) when (compensate)
             {
@@ -287,10 +287,10 @@ public sealed class StateMachineRecoveryTests
             }
         }
 
-        public Task Faulted<TException>(
+        public Task FaultedAsync<TException>(
             BehaviorExceptionContext<RecoveryInstance, CalculationData, TException> context,
             IBehavior<RecoveryInstance, CalculationData> next)
-            where TException : Exception => next.Faulted(context);
+            where TException : Exception => next.FaultedAsync(context);
 
         public void Accept(StateMachineVisitor visitor) => visitor.Visit(this);
 

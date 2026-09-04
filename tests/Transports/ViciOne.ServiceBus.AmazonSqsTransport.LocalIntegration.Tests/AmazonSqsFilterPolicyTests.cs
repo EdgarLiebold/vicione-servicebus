@@ -10,7 +10,7 @@ public sealed class AmazonSqsFilterPolicyTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0212", "mutually-exclusive-policies-route-to-only-their-own-queue")]
-    public async Task MutuallyExclusivePolicies_DeliverOnlyToTheirMatchingQueue()
+    public async Task MutuallyExclusivePolicies_DeliverOnlyToTheirMatchingQueueAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("filterpolicy");
         using AmazonSimpleNotificationServiceClient sns = fixture.CreateSnsClient();
@@ -32,12 +32,12 @@ public sealed class AmazonSqsFilterPolicyTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            await bus.Publish(
+            await bus.PublishAsync(
                     new FilteredMessage("foo", "Hello"),
                     context => context.Headers.Set("RoutingKey", "foo"),
                     cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await bus.Publish(
+            await bus.PublishAsync(
                     new FilteredMessage("bar", "World"),
                     context => context.Headers.Set("RoutingKey", "bar"),
                     cancellationToken)
@@ -48,7 +48,7 @@ public sealed class AmazonSqsFilterPolicyTests
             Assert.Equal(new FilteredMessage("bar", "World"),
                 await bar.Received.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
 
-            Topic topic = Assert.Single(await ListOwnedTopics(sns, fixture.Prefix, fixture.OperationTimeout, cancellationToken));
+            Topic topic = Assert.Single(await ListOwnedTopicsAsync(sns, fixture.Prefix, fixture.OperationTimeout, cancellationToken));
             ListSubscriptionsByTopicResponse subscriptions = await sns.ListSubscriptionsByTopicAsync(
                     new ListSubscriptionsByTopicRequest { TopicArn = topic.TopicArn }, cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
@@ -90,13 +90,13 @@ public sealed class AmazonSqsFilterPolicyTests
             endpoint.AutoDelete = true;
             endpoint.QueueSubscriptionAttributes["FilterPolicy"] = Policy(recorder.ExpectedKey);
             endpoint.Subscribe<FilteredMessage>();
-            endpoint.Handler<FilteredMessage>(recorder.Observe);
+            endpoint.Handler<FilteredMessage>(recorder.ObserveAsync);
         });
     }
 
     private static string Policy(string key) => $"{{\"RoutingKey\":[\"{key}\"]}}";
 
-    private static async Task<Topic[]> ListOwnedTopics(
+    private static async Task<Topic[]> ListOwnedTopicsAsync(
         IAmazonSimpleNotificationService sns,
         string prefix,
         TimeSpan timeout,
@@ -124,7 +124,7 @@ public sealed class AmazonSqsFilterPolicyTests
         public TaskCompletionSource<FilteredMessage> Received { get; } =
             new(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        public Task Observe(ConsumeContext<FilteredMessage> context)
+        public Task ObserveAsync(ConsumeContext<FilteredMessage> context)
         {
             Interlocked.Increment(ref _deliveryCount);
             if (context.Message is { Key: var key, Value: var value }

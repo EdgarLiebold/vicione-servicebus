@@ -18,11 +18,11 @@ public class ServiceBusQueueMoveTransport
         _sendEndpointContext = new Recycle<ISendEndpointContextSupervisor>(() => supervisor.CreateSendEndpointContextSupervisor(settings));
     }
 
-    protected Task Move(ReceiveContext context, Action<ServiceBusMessage, SendHeaders> preSend)
+    protected Task MoveAsync(ReceiveContext context, Action<ServiceBusMessage, SendHeaders> preSend)
     {
         IPipe<SendEndpointContext> clientPipe = Pipe.ExecuteAsync<SendEndpointContext>(async clientContext =>
         {
-            if (!context.TryGetPayload(out ServiceBusMessageContext messageContext))
+            if (!context.TryGetPayload(out ServiceBusMessageContext? messageContext))
                 throw new ArgumentException("The ReceiveContext must contain a BrokeredMessageContext (from Azure Service Bus)", nameof(context));
 
             var body = context.GetBody();
@@ -52,9 +52,9 @@ public class ServiceBusQueueMoveTransport
 
             preSend(message, sendHeaders);
 
-            await clientContext.Send(message, clientContext.CancellationToken).ConfigureAwait(false);
+            await clientContext.SendAsync(message, clientContext.CancellationToken).ConfigureAwait(false);
         });
 
-        return _sendEndpointContext.Supervisor.Send(clientPipe, context.CancellationToken);
+        return _sendEndpointContext.Supervisor.SendAsync(clientPipe, context.CancellationToken);
     }
 }

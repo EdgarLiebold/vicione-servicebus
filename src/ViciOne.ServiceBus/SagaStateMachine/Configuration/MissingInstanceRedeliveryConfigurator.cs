@@ -14,7 +14,7 @@ public class MissingInstanceRedeliveryConfigurator<TSaga, TMessage> :
 {
     readonly IMissingInstanceConfigurator<TSaga, TMessage> _configurator;
     IPipe<ConsumeContext<TMessage>> _finalPipe;
-    RetryPolicyFactory _policyFactory;
+    RetryPolicyFactory _policyFactory = null!;
 
     public MissingInstanceRedeliveryConfigurator(IMissingInstanceConfigurator<TSaga, TMessage> configurator)
     {

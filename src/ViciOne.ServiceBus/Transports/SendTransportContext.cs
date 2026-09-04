@@ -33,7 +33,7 @@ public interface SendTransportContext :
     /// <param name="cancellationToken"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    Task<SendContext<T>> CreateSendContext<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class;
 }
 
@@ -54,9 +54,9 @@ public interface SendTransportContext<TContext> :
     /// <param name="cancellationToken"></param>
     /// <typeparam name="T">The message type</typeparam>
     /// <returns></returns>
-    Task<SendContext<T>> CreateSendContext<T>(TContext context, T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    Task<SendContext<T>> CreateSendContextAsync<T>(TContext context, T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class;
 
-    Task Send<T>(TContext transportContext, SendContext<T> sendContext)
+    Task SendAsync<T>(TContext transportContext, SendContext<T> sendContext, CancellationToken cancellationToken = default)
         where T : class;
 }

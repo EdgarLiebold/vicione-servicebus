@@ -8,7 +8,7 @@ public class FutureRequestConsumerDefinition<TConsumer, TRequest> :
     where TRequest : class
     where TConsumer : class, IConsumer<TRequest>
 {
-    Lazy<Uri> _requestAddress;
+    Lazy<Uri> _requestAddress = null!;
 
     public Uri RequestAddress =>
         _requestAddress?.Value ??

@@ -9,9 +9,9 @@ internal sealed class ReceiveCompletionObserver(int expectedCount) : IReceiveObs
     public Task Completed => _completed.Task;
     public int CompletedCount => Volatile.Read(ref _completedCount);
 
-    public Task PreReceive(ReceiveContext context) => Task.CompletedTask;
+    public Task PreReceiveAsync(ReceiveContext context) => Task.CompletedTask;
 
-    public Task PostReceive(ReceiveContext context)
+    public Task PostReceiveAsync(ReceiveContext context)
     {
         if (Interlocked.Increment(ref _completedCount) >= expectedCount)
             _completed.TrySetResult(true);
@@ -19,13 +19,13 @@ internal sealed class ReceiveCompletionObserver(int expectedCount) : IReceiveObs
         return Task.CompletedTask;
     }
 
-    public Task PostConsume<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
+    public Task PostConsumeAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
         where T : class => Task.CompletedTask;
 
-    public Task ConsumeFault<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
+    public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
         where T : class => Task.CompletedTask;
 
-    public Task ReceiveFault(ReceiveContext context, Exception exception)
+    public Task ReceiveFaultAsync(ReceiveContext context, Exception exception)
     {
         _completed.TrySetException(exception);
         return Task.CompletedTask;

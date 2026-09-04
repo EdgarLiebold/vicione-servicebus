@@ -19,7 +19,7 @@ public class AmazonSqsConsumerFilter :
     {
     }
 
-    async Task IFilter<ClientContext>.Send(ClientContext context, IPipe<ClientContext> next)
+    async Task IFilter<ClientContext>.SendAsync(ClientContext context, IPipe<ClientContext> next)
     {
         var receiver = new AmazonSqsMessageReceiver(context, _context);
 
@@ -27,7 +27,7 @@ public class AmazonSqsConsumerFilter :
 
         _context.AddConsumeAgent(receiver);
 
-        await _context.TransportObservers.NotifyReady(_context.InputAddress).ConfigureAwait(false);
+        await _context.TransportObservers.NotifyReadyAsync(_context.InputAddress).ConfigureAwait(false);
 
         try
         {
@@ -37,7 +37,7 @@ public class AmazonSqsConsumerFilter :
         {
             DeliveryMetrics metrics = receiver;
 
-            await _context.TransportObservers.NotifyCompleted(_context.InputAddress, metrics).ConfigureAwait(false);
+            await _context.TransportObservers.NotifyCompletedAsync(_context.InputAddress, metrics).ConfigureAwait(false);
 
             _context.LogConsumerCompleted(metrics.DeliveryCount, metrics.ConcurrentDeliveryCount);
         }

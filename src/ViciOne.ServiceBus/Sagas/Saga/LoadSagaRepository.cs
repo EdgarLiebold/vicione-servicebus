@@ -18,9 +18,9 @@ public class LoadSagaRepository<TSaga> :
         _repositoryContextFactory = repositoryContextFactory;
     }
 
-    public Task<TSaga> Load(Guid correlationId)
+    public Task<TSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
-        return _repositoryContextFactory.Execute(context => context.Load(correlationId));
+        return _repositoryContextFactory.ExecuteAsync(context => context.LoadAsync(correlationId, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
     }
 
     public void Probe(ProbeContext context)

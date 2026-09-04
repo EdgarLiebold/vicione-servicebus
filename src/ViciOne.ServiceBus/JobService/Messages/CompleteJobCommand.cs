@@ -9,7 +9,7 @@ public class CompleteJobCommand :
     CompleteJob
 {
     public Guid JobId { get; set; }
-    public DateTime Timestamp { get; set; }
+    public DateTimeOffset Timestamp { get; set; }
     public TimeSpan Duration { get; set; }
     public Dictionary<string, object> Job { get; set; } = null!;
     public Guid JobTypeId { get; set; }

@@ -8,7 +8,7 @@ public sealed class RabbitMqTopologyEntityCacheTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-TOPOLOGY-CACHE", "stable-declaration-single-flight")]
-    public async Task StableDeclarations_AreSingleFlightAndConnectionOwned()
+    public async Task StableDeclarations_AreSingleFlightAndConnectionOwnedAsync()
     {
         var cache = new RabbitMqTopologyEntityCache();
         var entered = NewSignal();
@@ -17,7 +17,7 @@ public sealed class RabbitMqTopologyEntityCacheTests
         var receivedCancelableToken = true;
         var exchange = Exchange("orders");
 
-        Task Declare(CancellationToken token)
+        Task DeclareAsync(CancellationToken token)
         {
             receivedCancelableToken = token.CanBeCanceled;
             Interlocked.Increment(ref invocations);
@@ -25,10 +25,10 @@ public sealed class RabbitMqTopologyEntityCacheTests
             return release.Task;
         }
 
-        Task first = cache.DeclareExchange(exchange, Declare, TestContext.Current.CancellationToken);
+        Task first = cache.DeclareExchangeAsync(exchange, DeclareAsync, TestContext.Current.CancellationToken);
         await entered.Task.WaitAsync(TestContext.Current.CancellationToken);
         Task[] followers = Enumerable.Range(0, 31)
-            .Select(_ => cache.DeclareExchange(exchange, Declare, TestContext.Current.CancellationToken))
+            .Select(_ => cache.DeclareExchangeAsync(exchange, DeclareAsync, TestContext.Current.CancellationToken))
             .ToArray();
 
         try
@@ -47,7 +47,7 @@ public sealed class RabbitMqTopologyEntityCacheTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-TOPOLOGY-CACHE", "caller-cancellation-does-not-evict-shared-work")]
-    public async Task CanceledWaiter_DoesNotEvictTheSharedDeclarationOrStartADuplicate()
+    public async Task CanceledWaiter_DoesNotEvictTheSharedDeclarationOrStartADuplicateAsync()
     {
         var cache = new RabbitMqTopologyEntityCache();
         var entered = NewSignal();
@@ -55,23 +55,23 @@ public sealed class RabbitMqTopologyEntityCacheTests
         var invocations = 0;
         var exchange = Exchange("orders");
 
-        Task Declare(CancellationToken _)
+        Task DeclareAsync(CancellationToken _)
         {
             Interlocked.Increment(ref invocations);
             entered.TrySetResult();
             return release.Task;
         }
 
-        Task owner = cache.DeclareExchange(exchange, Declare, TestContext.Current.CancellationToken);
+        Task owner = cache.DeclareExchangeAsync(exchange, DeclareAsync, TestContext.Current.CancellationToken);
         await entered.Task.WaitAsync(TestContext.Current.CancellationToken);
         using var canceledWait = new CancellationTokenSource();
-        Task waiter = cache.DeclareExchange(exchange, Declare, canceledWait.Token);
+        Task waiter = cache.DeclareExchangeAsync(exchange, DeclareAsync, canceledWait.Token);
         canceledWait.Cancel();
 
         OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => waiter);
         Assert.Equal(canceledWait.Token, exception.CancellationToken);
 
-        Task laterWaiter = cache.DeclareExchange(exchange, Declare, TestContext.Current.CancellationToken);
+        Task laterWaiter = cache.DeclareExchangeAsync(exchange, DeclareAsync, TestContext.Current.CancellationToken);
         try
         {
             Assert.Equal(1, Volatile.Read(ref invocations));
@@ -86,20 +86,20 @@ public sealed class RabbitMqTopologyEntityCacheTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-TOPOLOGY-CACHE", "fault-eviction-and-retry")]
-    public async Task FaultedDeclaration_IsEvictedAndTheNextCallerRetries()
+    public async Task FaultedDeclaration_IsEvictedAndTheNextCallerRetriesAsync()
     {
         var cache = new RabbitMqTopologyEntityCache();
         var expected = new InvalidOperationException("declare failed");
         var invocations = 0;
         var queue = Queue("orders");
 
-        Task Declare(CancellationToken _) => Interlocked.Increment(ref invocations) == 1
+        Task DeclareAsync(CancellationToken _) => Interlocked.Increment(ref invocations) == 1
             ? Task.FromException(expected)
             : Task.CompletedTask;
 
         InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(
-            () => cache.DeclareQueue(queue, Declare, TestContext.Current.CancellationToken));
-        await cache.DeclareQueue(queue, Declare, TestContext.Current.CancellationToken);
+            () => cache.DeclareQueueAsync(queue, DeclareAsync, TestContext.Current.CancellationToken));
+        await cache.DeclareQueueAsync(queue, DeclareAsync, TestContext.Current.CancellationToken);
 
         Assert.Same(expected, actual);
         Assert.Equal(2, invocations);
@@ -107,23 +107,23 @@ public sealed class RabbitMqTopologyEntityCacheTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-TOPOLOGY-CACHE", "generation-invalidation-redeclares")]
-    public async Task InvalidationRacingADeclaration_ForcesTheWaitingCallerToRedeclare()
+    public async Task InvalidationRacingADeclaration_ForcesTheWaitingCallerToRedeclareAsync()
     {
         var cache = new RabbitMqTopologyEntityCache();
         var entered = NewSignal();
         var release = NewSignal();
         var invocations = 0;
 
-        Task Declare(CancellationToken _)
+        Task DeclareAsync(CancellationToken _)
         {
             Interlocked.Increment(ref invocations);
             entered.TrySetResult();
             return release.Task;
         }
 
-        Task declaration = cache.DeclareExchange(
+        Task declaration = cache.DeclareExchangeAsync(
             Exchange("orders"),
-            Declare,
+            DeclareAsync,
             TestContext.Current.CancellationToken);
         await entered.Task.WaitAsync(TestContext.Current.CancellationToken);
         cache.Invalidate();
@@ -135,25 +135,25 @@ public sealed class RabbitMqTopologyEntityCacheTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-TOPOLOGY-CACHE", "immutable-definition-snapshot")]
-    public async Task DefinitionSnapshot_IsImmutableAndConflictsFailBeforeProviderWork()
+    public async Task DefinitionSnapshot_IsImmutableAndConflictsFailBeforeProviderWorkAsync()
     {
         var cache = new RabbitMqTopologyEntityCache();
         var invocations = 0;
-        var mutableArguments = new Dictionary<string, object>(StringComparer.Ordinal)
+        var mutableArguments = new Dictionary<string, object?>(StringComparer.Ordinal)
         {
             ["mode"] = "original",
         };
         var original = Queue("orders", mutableArguments);
 
-        await cache.DeclareQueue(original, _ =>
+        await cache.DeclareQueueAsync(original, _ =>
         {
             invocations++;
             return Task.CompletedTask;
         }, TestContext.Current.CancellationToken);
         mutableArguments["mode"] = "mutated";
 
-        await cache.DeclareQueue(
-            Queue("orders", new Dictionary<string, object> { ["mode"] = "original" }),
+        await cache.DeclareQueueAsync(
+            Queue("orders", new Dictionary<string, object?> { ["mode"] = "original" }),
             _ =>
             {
                 invocations++;
@@ -161,7 +161,7 @@ public sealed class RabbitMqTopologyEntityCacheTests
             },
             TestContext.Current.CancellationToken);
         ConfigurationException conflict = await Assert.ThrowsAsync<ConfigurationException>(() =>
-            cache.DeclareQueue(original, _ =>
+            cache.DeclareQueueAsync(original, _ =>
             {
                 invocations++;
                 return Task.CompletedTask;
@@ -173,64 +173,64 @@ public sealed class RabbitMqTopologyEntityCacheTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-TOPOLOGY-CACHE", "canonical-nested-definition")]
-    public async Task CanonicalDefinition_IgnoresMapOrderButRetainsNestedTypesAndValues()
+    public async Task CanonicalDefinition_IgnoresMapOrderButRetainsNestedTypesAndValuesAsync()
     {
         var cache = new RabbitMqTopologyEntityCache();
         var invocations = 0;
-        var first = Queue("orders", new Dictionary<string, object>
+        var first = Queue("orders", new Dictionary<string, object?>
         {
             ["z"] = new object[] { "value", 7 },
-            ["a"] = new Dictionary<string, object> { ["right"] = 2L, ["left"] = true },
+            ["a"] = new Dictionary<string, object?> { ["right"] = 2L, ["left"] = true },
         });
-        var equivalent = Queue("orders", new Dictionary<string, object>
+        var equivalent = Queue("orders", new Dictionary<string, object?>
         {
-            ["a"] = new Dictionary<string, object> { ["left"] = true, ["right"] = 2L },
+            ["a"] = new Dictionary<string, object?> { ["left"] = true, ["right"] = 2L },
             ["z"] = new List<object> { "value", 7 },
         });
-        var changedType = Queue("orders", new Dictionary<string, object>
+        var changedType = Queue("orders", new Dictionary<string, object?>
         {
-            ["a"] = new Dictionary<string, object> { ["left"] = true, ["right"] = 2 },
+            ["a"] = new Dictionary<string, object?> { ["left"] = true, ["right"] = 2 },
             ["z"] = new object[] { "value", 7 },
         });
 
-        Task Declare(CancellationToken _)
+        Task DeclareAsync(CancellationToken _)
         {
             invocations++;
             return Task.CompletedTask;
         }
 
-        await cache.DeclareQueue(first, Declare, TestContext.Current.CancellationToken);
-        await cache.DeclareQueue(equivalent, Declare, TestContext.Current.CancellationToken);
+        await cache.DeclareQueueAsync(first, DeclareAsync, TestContext.Current.CancellationToken);
+        await cache.DeclareQueueAsync(equivalent, DeclareAsync, TestContext.Current.CancellationToken);
         await Assert.ThrowsAsync<ConfigurationException>(
-            () => cache.DeclareQueue(changedType, Declare, TestContext.Current.CancellationToken));
+            () => cache.DeclareQueueAsync(changedType, DeclareAsync, TestContext.Current.CancellationToken));
 
         Assert.Equal(1, invocations);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-TOPOLOGY-CACHE", "structured-entity-key")]
-    public async Task StructuredBindingKeys_DoNotAliasNamesContainingDelimiters()
+    public async Task StructuredBindingKeys_DoNotAliasNamesContainingDelimitersAsync()
     {
         var cache = new RabbitMqTopologyEntityCache();
         var invocations = 0;
         var first = new TestExchangeToQueueBinding(Exchange("a:b"), Queue("c"), "d", Arguments());
         var second = new TestExchangeToQueueBinding(Exchange("a"), Queue("b:c"), "d", Arguments());
 
-        Task Bind(CancellationToken _)
+        Task BindAsync(CancellationToken _)
         {
             invocations++;
             return Task.CompletedTask;
         }
 
-        await cache.Bind(first, Bind, TestContext.Current.CancellationToken);
-        await cache.Bind(second, Bind, TestContext.Current.CancellationToken);
+        await cache.BindAsync(first, BindAsync, TestContext.Current.CancellationToken);
+        await cache.BindAsync(second, BindAsync, TestContext.Current.CancellationToken);
 
         Assert.Equal(2, invocations);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-TOPOLOGY-CACHE", "transient-topology-remains-channel-scoped")]
-    public async Task TransientEntitiesAndBindings_AreNeverCached()
+    public async Task TransientEntitiesAndBindings_AreNeverCachedAsync()
     {
         var cache = new RabbitMqTopologyEntityCache();
         var invocations = 0;
@@ -238,19 +238,19 @@ public sealed class RabbitMqTopologyEntityCacheTests
         var transientQueue = Queue("temporary", durable: false, exclusive: true, autoDelete: true);
         var binding = new TestExchangeToQueueBinding(transientExchange, transientQueue, string.Empty, Arguments());
 
-        Task Invoke(CancellationToken token)
+        Task InvokeAsync(CancellationToken token)
         {
             Assert.Equal(TestContext.Current.CancellationToken, token);
             invocations++;
             return Task.CompletedTask;
         }
 
-        await cache.DeclareExchange(transientExchange, Invoke, TestContext.Current.CancellationToken);
-        await cache.DeclareExchange(transientExchange, Invoke, TestContext.Current.CancellationToken);
-        await cache.DeclareQueue(transientQueue, Invoke, TestContext.Current.CancellationToken);
-        await cache.DeclareQueue(transientQueue, Invoke, TestContext.Current.CancellationToken);
-        await cache.Bind(binding, Invoke, TestContext.Current.CancellationToken);
-        await cache.Bind(binding, Invoke, TestContext.Current.CancellationToken);
+        await cache.DeclareExchangeAsync(transientExchange, InvokeAsync, TestContext.Current.CancellationToken);
+        await cache.DeclareExchangeAsync(transientExchange, InvokeAsync, TestContext.Current.CancellationToken);
+        await cache.DeclareQueueAsync(transientQueue, InvokeAsync, TestContext.Current.CancellationToken);
+        await cache.DeclareQueueAsync(transientQueue, InvokeAsync, TestContext.Current.CancellationToken);
+        await cache.BindAsync(binding, InvokeAsync, TestContext.Current.CancellationToken);
+        await cache.BindAsync(binding, InvokeAsync, TestContext.Current.CancellationToken);
 
         Assert.Equal(6, invocations);
     }
@@ -258,19 +258,19 @@ public sealed class RabbitMqTopologyEntityCacheTests
     private static TaskCompletionSource NewSignal() =>
         new(TaskCreationOptions.RunContinuationsAsynchronously);
 
-    private static IDictionary<string, object> Arguments() =>
-        new Dictionary<string, object>(StringComparer.Ordinal);
+    private static IDictionary<string, object?> Arguments() =>
+        new Dictionary<string, object?>(StringComparer.Ordinal);
 
     private static TestExchange Exchange(
         string name,
         bool durable = true,
         bool autoDelete = false,
-        IDictionary<string, object>? arguments = null) =>
+        IDictionary<string, object?>? arguments = null) =>
         new(name, RabbitMQ.Client.ExchangeType.Direct, durable, autoDelete, arguments ?? Arguments());
 
     private static TestQueue Queue(
         string name,
-        IDictionary<string, object>? arguments = null,
+        IDictionary<string, object?>? arguments = null,
         bool durable = true,
         bool exclusive = false,
         bool autoDelete = false) =>
@@ -281,18 +281,18 @@ public sealed class RabbitMqTopologyEntityCacheTests
         string ExchangeType,
         bool Durable,
         bool AutoDelete,
-        IDictionary<string, object> ExchangeArguments) : Exchange;
+        IDictionary<string, object?> ExchangeArguments) : Exchange;
 
     private sealed record TestQueue(
         string QueueName,
         bool Durable,
         bool Exclusive,
         bool AutoDelete,
-        IDictionary<string, object> QueueArguments) : Queue;
+        IDictionary<string, object?> QueueArguments) : Queue;
 
     private sealed record TestExchangeToQueueBinding(
         Exchange Source,
         Queue Destination,
         string RoutingKey,
-        IDictionary<string, object> Arguments) : ExchangeToQueueBinding;
+        IDictionary<string, object?> Arguments) : ExchangeToQueueBinding;
 }

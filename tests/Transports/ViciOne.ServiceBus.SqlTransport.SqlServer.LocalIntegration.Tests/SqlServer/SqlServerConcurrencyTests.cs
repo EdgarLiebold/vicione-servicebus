@@ -10,7 +10,7 @@ public sealed class SqlServerConcurrencyTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0097", "sqlserver-native-owner")]
-    public async Task PartitionedReceive_ThirtyMessagesPreserveOrderWithinBothKeysAtConcurrencyTen()
+    public async Task PartitionedReceive_ThirtyMessagesPreserveOrderWithinBothKeysAtConcurrencyTenAsync()
     {
         const int messageCount = 30;
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -31,7 +31,7 @@ public sealed class SqlServerConcurrencyTests
                 endpoint.SetReceiveMode(SqlReceiveMode.PartitionedOrdered);
                 endpoint.Handler<PartitionedMessage>(context =>
                 {
-                    string key = context.PartitionKey()
+                    string key = context.Advanced().PartitionKey()
                         ?? throw new InvalidOperationException("The SQL Server delivery lost its partition key.");
                     received.Enqueue((key, context.Message.Index));
                     if (Interlocked.Decrement(ref remaining) == 0)
@@ -46,12 +46,11 @@ public sealed class SqlServerConcurrencyTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             for (int index = 1; index <= messageCount; index++)
             {
                 string key = (index % 2).ToString();
-                await endpoint.Send(
+                await endpoint.SendAsync(
                         new PartitionedMessage(index),
                         context => context.SetPartitionKey(key),
                         cancellationToken)
@@ -75,7 +74,7 @@ public sealed class SqlServerConcurrencyTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0099", "sqlserver-native-owner")]
-    public async Task ParallelPublish_OneThousandMessagesFromTenPublishersArriveExactlyOnce()
+    public async Task ParallelPublish_OneThousandMessagesFromTenPublishersArriveExactlyOnceAsync()
     {
         const int messageCount = 1000;
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -116,7 +115,7 @@ public sealed class SqlServerConcurrencyTests
                     MaxDegreeOfParallelism = 10,
                 },
                 async (id, token) =>
-                    await bus.Publish(new ParallelPublishMessage(id), token)
+                    await bus.PublishAsync(new ParallelPublishMessage(id), token)
                         .WaitAsync(fixture.OperationTimeout, token));
             await completed.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
         }

@@ -13,8 +13,8 @@ public class DiscardErrorTransportFilter :
         context.CreateFilterScope("discardFault");
     }
 
-    Task IFilter<ExceptionReceiveContext>.Send(ExceptionReceiveContext context, IPipe<ExceptionReceiveContext> next)
+    Task IFilter<ExceptionReceiveContext>.SendAsync(ExceptionReceiveContext context, IPipe<ExceptionReceiveContext> next)
     {
-        return next.Send(context);
+        return next.SendAsync(context);
     }
 }

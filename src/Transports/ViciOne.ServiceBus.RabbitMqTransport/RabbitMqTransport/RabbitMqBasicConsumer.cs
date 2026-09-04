@@ -22,7 +22,7 @@ public class RabbitMqBasicConsumer :
     readonly RabbitMqReceiveEndpointContext _context;
     readonly ReceiveSettings _receiveSettings;
 
-    string _consumerTag;
+    string _consumerTag = "";
 
     /// <summary>
     /// The basic consumer receives messages pushed from the broker.
@@ -42,13 +42,13 @@ public class RabbitMqBasicConsumer :
 
     public Task HandleBasicConsumeOkAsync(string consumerTag, CancellationToken cancellationToken)
     {
-        LogContext.Current = _context.LogContext;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); LogContext.Current = _context.LogContext;
 
         LogContext.Debug?.Log("Consumer Ok: {InputAddress} - {ConsumerTag}", _context.InputAddress, consumerTag);
 
-        _channel.Channel.ChannelShutdownAsync += HandleChannelShutdown;
+        _channel.Channel.ChannelShutdownAsync += ObserveChannelShutdownAsync;
         Completed.GetAwaiter().OnCompleted(() =>
-            _channel.Channel.ChannelShutdownAsync -= HandleChannelShutdown);
+            _channel.Channel.ChannelShutdownAsync -= ObserveChannelShutdownAsync);
 
         _consumerTag = consumerTag;
 
@@ -59,7 +59,7 @@ public class RabbitMqBasicConsumer :
 
     public Task HandleBasicCancelOkAsync(string consumerTag, CancellationToken cancellationToken)
     {
-        LogContext.Current = _context.LogContext;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); LogContext.Current = _context.LogContext;
 
         LogContext.Debug?.Log("Consumer Cancel Ok: {InputAddress} - {ConsumerTag}", _context.InputAddress, consumerTag);
 
@@ -96,7 +96,7 @@ public class RabbitMqBasicConsumer :
     public async Task HandleBasicDeliverAsync(string consumerTag, ulong deliveryTag, bool redelivered, string exchange, string routingKey,
         IReadOnlyBasicProperties properties, ReadOnlyMemory<byte> body, CancellationToken cancellationToken)
     {
-        LogContext.Current = _context.LogContext;
+        cancellationToken.ThrowIfCancellationRequested(); LogContext.Current = _context.LogContext;
 
         var context = new RabbitMqReceiveContext(exchange, routingKey, _consumerTag, deliveryTag, body, redelivered, properties,
             _context, _receiveSettings, _channel, _channel.ConnectionContext);
@@ -106,7 +106,7 @@ public class RabbitMqBasicConsumer :
             if (IsStopping)
                 return;
 
-            await Dispatch(deliveryTag, context, _receiveSettings.NoAck
+            await DispatchAsync(deliveryTag, context, _receiveSettings.NoAck
                     ? NoLockReceiveContext.Instance
                     : new RabbitMqReceiveLockContext(_channel, deliveryTag, context.CancellationToken))
                 .ConfigureAwait(false);
@@ -150,22 +150,22 @@ public class RabbitMqBasicConsumer :
         return deliveryTag != 1 || _context.IsNotReplyTo;
     }
 
-    protected override async Task ActiveAndActualAgentsCompleted(StopContext context)
+    protected override async Task ActiveAndActualAgentsCompletedAsync(StopContext context)
     {
         try
         {
             if (IsGracefulShutdown && _channel.Channel.IsOpen)
-                await _channel.BasicCancel(_consumerTag, context.CancellationToken).ConfigureAwait(false);
+                await _channel.BasicCancelAsync(_consumerTag, context.CancellationToken).ConfigureAwait(false);
         }
         catch (Exception exception)
         {
             LogContext.Warning?.Log(exception, "BasicCancel faulted: {InputAddress} - {ConsumerTag}", _context.InputAddress, _consumerTag);
         }
 
-        await base.ActiveAndActualAgentsCompleted(context).ConfigureAwait(false);
+        await base.ActiveAndActualAgentsCompletedAsync(context).ConfigureAwait(false);
     }
 
-    Task HandleChannelShutdown(object channel, ShutdownEventArgs reason)
+    Task ObserveChannelShutdownAsync(object channel, ShutdownEventArgs reason)
     {
         LogContext.Current = _context.LogContext;
 

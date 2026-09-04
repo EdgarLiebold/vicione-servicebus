@@ -57,28 +57,28 @@ public sealed class RequestClientBoundaryTests
         switch (entryPoint)
         {
             case EntryPoint.CreateTyped:
-                _ = client.Create((BoundaryRequest)null!);
+                _ = client.Advanced().Create((BoundaryRequest)null!);
                 break;
             case EntryPoint.CreateValues:
-                _ = client.Create((object)null!);
+                _ = client.Advanced().Create((object)null!);
                 break;
             case EntryPoint.SingleTyped:
-                _ = client.GetResponse<BoundaryResponse>((BoundaryRequest)null!);
+                _ = client.Advanced().GetResponseAsync<BoundaryResponse>((BoundaryRequest)null!);
                 break;
             case EntryPoint.SingleValues:
-                _ = client.GetResponse<BoundaryResponse>((object)null!);
+                _ = client.Advanced().GetResponseAsync<BoundaryResponse>((object)null!);
                 break;
             case EntryPoint.DoubleTyped:
-                _ = client.GetResponse<BoundaryResponse, AlternateResponse>((BoundaryRequest)null!);
+                _ = client.Advanced().GetResponseAsync<BoundaryResponse, AlternateResponse>((BoundaryRequest)null!);
                 break;
             case EntryPoint.DoubleValues:
-                _ = client.GetResponse<BoundaryResponse, AlternateResponse>((object)null!);
+                _ = client.Advanced().GetResponseAsync<BoundaryResponse, AlternateResponse>((object)null!);
                 break;
             case EntryPoint.TripleTyped:
-                _ = client.GetResponse<BoundaryResponse, AlternateResponse, ThirdResponse>((BoundaryRequest)null!);
+                _ = client.Advanced().GetResponseAsync<BoundaryResponse, AlternateResponse, ThirdResponse>((BoundaryRequest)null!);
                 break;
             case EntryPoint.TripleValues:
-                _ = client.GetResponse<BoundaryResponse, AlternateResponse, ThirdResponse>((object)null!);
+                _ = client.Advanced().GetResponseAsync<BoundaryResponse, AlternateResponse, ThirdResponse>((object)null!);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(entryPoint), entryPoint, null);
@@ -109,23 +109,23 @@ public sealed class RequestClientBoundaryTests
     {
         public int SendCount { get; private set; }
 
-        public Task<BoundaryRequest> Send(
+        public Task<BoundaryRequest> SendAsync(
             Guid requestId,
             object values,
             IPipe<SendContext<BoundaryRequest>> pipe,
             CancellationToken cancellationToken)
         {
-            SendCount++;
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Tests.Clients.RequestClientBoundaryTests.BoundaryRequest>(cancellationToken); SendCount++;
             throw new InvalidOperationException("A rejected input reached the send endpoint.");
         }
 
-        public Task Send(
+        public Task SendAsync(
             Guid requestId,
             BoundaryRequest message,
             IPipe<SendContext<BoundaryRequest>> pipe,
             CancellationToken cancellationToken)
         {
-            SendCount++;
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); SendCount++;
             throw new InvalidOperationException("A rejected input reached the send endpoint.");
         }
     }

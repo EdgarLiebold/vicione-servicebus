@@ -43,8 +43,8 @@ public class SubscriptionEndpointSettings :
     CreateTopicOptions SubscriptionSettings.CreateTopicOptions => _createTopicOptions;
     CreateSubscriptionOptions SubscriptionSettings.CreateSubscriptionOptions => _subscriptionConfigurator.GetCreateSubscriptionOptions();
 
-    public CreateRuleOptions Rule { get; set; }
-    public RuleFilter Filter { get; set; }
+    public CreateRuleOptions? Rule { get; set; }
+    public RuleFilter? Filter { get; set; }
 
     public override string Path { get; }
 

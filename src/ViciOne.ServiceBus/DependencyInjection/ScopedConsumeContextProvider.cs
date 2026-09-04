@@ -11,7 +11,7 @@ namespace ViciOne.ServiceBus.DependencyInjection;
 public class ScopedConsumeContextProvider :
     IScopedConsumeContextProvider
 {
-    ConsumeContext _context;
+    ConsumeContext _context = null!;
 
     public bool HasContext => _context != null && !(_context is MissingConsumeContext);
 
@@ -44,7 +44,7 @@ public class ScopedConsumeContextProvider :
     class PushedContext :
         IDisposable
     {
-        readonly ConsumeContext _context;
+        readonly ConsumeContext _context = null!;
         readonly ConsumeContext _originalContext;
         readonly ScopedConsumeContextProvider _provider;
 

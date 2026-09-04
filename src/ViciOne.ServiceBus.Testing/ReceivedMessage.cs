@@ -24,15 +24,15 @@ public class ReceivedMessage<T> :
 
         ElementId = _context.MessageId;
 
-        ElapsedTime = context.ReceiveContext.ElapsedTime;
-        StartTime = timeProvider.GetUtcNow().UtcDateTime - ElapsedTime;
+        ElapsedTime = context.Advanced().ReceiveContext.ElapsedTime;
+        StartTime = timeProvider.GetUtcNow() - ElapsedTime;
         if (StartTime < context.SentTime)
             StartTime = context.SentTime.Value;
     }
 
     public Guid? ElementId { get; }
-    ConsumeContext IReceivedMessage.Context => _context;
-    public DateTime StartTime { get; }
+    ConsumeContext IReceivedMessage.Context => _context.Advanced();
+    public DateTimeOffset StartTime { get; }
     public TimeSpan ElapsedTime { get; }
     Exception? IReceivedMessage.Exception => _exception;
     Type IReceivedMessage.MessageType => typeof(T);

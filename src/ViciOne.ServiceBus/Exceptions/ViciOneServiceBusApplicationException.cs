@@ -13,7 +13,7 @@ namespace ViciOne.ServiceBus;
 public class ViciOneServiceBusApplicationException :
     Exception
 {
-    Dictionary<string, object> _data;
+    Dictionary<string, object> _data = null!;
 
     protected ViciOneServiceBusApplicationException()
     {

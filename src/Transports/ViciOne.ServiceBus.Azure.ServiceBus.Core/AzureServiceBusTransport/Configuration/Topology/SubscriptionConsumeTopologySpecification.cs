@@ -12,11 +12,11 @@ public class SubscriptionConsumeTopologySpecification :
 {
     readonly CreateSubscriptionOptions _createSubscriptionOptions;
     readonly CreateTopicOptions _createTopicOptions;
-    readonly RuleFilter _filter;
-    readonly CreateRuleOptions _rule;
+    readonly RuleFilter? _filter;
+    readonly CreateRuleOptions? _rule;
 
     public SubscriptionConsumeTopologySpecification(CreateTopicOptions createTopicOptions, CreateSubscriptionOptions createSubscriptionOptions,
-        CreateRuleOptions rule, RuleFilter filter)
+        CreateRuleOptions? rule, RuleFilter? filter)
     {
         _createTopicOptions = createTopicOptions;
         _createSubscriptionOptions = createSubscriptionOptions;

@@ -7,7 +7,7 @@ public sealed class TaskPropertyProviderTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-PROPERTY-PROVIDER-TASK-RESULT", "scalar-and-converted-array")]
-    public async Task ScalarAndArrayValues_CanBeReturnedAsTasks()
+    public async Task ScalarAndArrayValues_CanBeReturnedAsTasksAsync()
     {
         var scalarReader = PropertyProviderTestContext.For(new ScalarInput(27));
         var arrayReader = PropertyProviderTestContext.For(new ArrayInput([1, 2, 3]));

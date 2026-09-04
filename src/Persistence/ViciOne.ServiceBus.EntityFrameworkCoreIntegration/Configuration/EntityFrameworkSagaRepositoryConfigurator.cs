@@ -20,10 +20,10 @@ public class EntityFrameworkSagaRepositoryConfigurator<TSaga> :
     where TSaga : class, ISaga
 {
     ConcurrencyMode _concurrencyMode;
-    Action<ISagaRepositoryRegistrationConfigurator<TSaga>> _configureDbContext;
+    Action<ISagaRepositoryRegistrationConfigurator<TSaga>>? _configureDbContext;
     IsolationLevel _isolationLevel;
-    ILockStatementProvider _lockStatementProvider;
-    Func<IQueryable<TSaga>, IQueryable<TSaga>> _queryCustomization;
+    ILockStatementProvider? _lockStatementProvider;
+    Func<IQueryable<TSaga>, IQueryable<TSaga>>? _queryCustomization;
     bool _isTransactionEnabled = true;
 
     public EntityFrameworkSagaRepositoryConfigurator()
@@ -52,7 +52,7 @@ public class EntityFrameworkSagaRepositoryConfigurator<TSaga> :
         set => _lockStatementProvider = value ?? throw new ArgumentNullException(nameof(value));
     }
 
-    public void AddDbContext<TContext, TImplementation>(Action<IServiceProvider, DbContextOptionsBuilder<TImplementation>> optionsAction)
+    public void AddDbContext<TContext, TImplementation>(Action<IServiceProvider, DbContextOptionsBuilder<TImplementation>>? optionsAction)
         where TContext : DbContext
         where TImplementation : DbContext, TContext
     {
@@ -115,7 +115,7 @@ public class EntityFrameworkSagaRepositoryConfigurator<TSaga> :
     }
 
     static void AddDbContext<TContext, TImplementation>(IServiceCollection collection,
-        Action<IServiceProvider, DbContextOptionsBuilder<TImplementation>> optionsAction)
+        Action<IServiceProvider, DbContextOptionsBuilder<TImplementation>>? optionsAction)
         where TImplementation : DbContext, TContext
         where TContext : DbContext
     {
@@ -131,7 +131,7 @@ public class EntityFrameworkSagaRepositoryConfigurator<TSaga> :
     }
 
     static DbContextOptions<TContext> DbContextOptionsFactory<TContext>(IServiceProvider provider,
-        Action<IServiceProvider, DbContextOptionsBuilder<TContext>> optionsAction)
+        Action<IServiceProvider, DbContextOptionsBuilder<TContext>>? optionsAction)
         where TContext : DbContext
     {
         var builder = new DbContextOptionsBuilder<TContext>(new DbContextOptions<TContext>(new Dictionary<Type, IDbContextOptionsExtension>()));

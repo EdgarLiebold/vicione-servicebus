@@ -20,7 +20,8 @@ public class ServiceBusPublishTopology :
 
     IServiceBusMessagePublishTopology<T> IServiceBusPublishTopology.GetMessageTopology<T>()
     {
-        return GetMessageTopology<T>() as IServiceBusMessagePublishTopologyConfigurator<T>;
+        return GetMessageTopology<T>() as IServiceBusMessagePublishTopologyConfigurator<T>
+            ?? throw new InvalidOperationException($"The publish topology for {typeof(T).FullName} is not an Azure Service Bus topology.");
     }
 
     public string FormatSubscriptionName(string subscriptionName)
@@ -44,7 +45,7 @@ public class ServiceBusPublishTopology :
         return name;
     }
 
-    public string GenerateSubscriptionName(string entityName, string hostScope)
+    public string GenerateSubscriptionName(string entityName, string? hostScope = null)
     {
         if (entityName == null)
             throw new ArgumentNullException(nameof(entityName));
@@ -54,7 +55,8 @@ public class ServiceBusPublishTopology :
 
     IServiceBusMessagePublishTopologyConfigurator IServiceBusPublishTopologyConfigurator.GetMessageTopology(Type messageType)
     {
-        return GetMessageTopology(messageType) as IServiceBusMessagePublishTopologyConfigurator;
+        return GetMessageTopology(messageType) as IServiceBusMessagePublishTopologyConfigurator
+            ?? throw new InvalidOperationException($"The publish topology for {messageType.FullName} is not an Azure Service Bus topology.");
     }
 
     public BrokerTopology GetPublishBrokerTopology()
@@ -73,7 +75,8 @@ public class ServiceBusPublishTopology :
 
     IServiceBusMessagePublishTopologyConfigurator<T> IServiceBusPublishTopologyConfigurator.GetMessageTopology<T>()
     {
-        return GetMessageTopology<T>() as IServiceBusMessagePublishTopologyConfigurator<T>;
+        return GetMessageTopology<T>() as IServiceBusMessagePublishTopologyConfigurator<T>
+            ?? throw new InvalidOperationException($"The publish topology for {typeof(T).FullName} is not an Azure Service Bus topology.");
     }
 
     protected override IMessagePublishTopologyConfigurator CreateMessageTopology<T>()

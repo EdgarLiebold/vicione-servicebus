@@ -10,9 +10,9 @@ namespace ViciOne.ServiceBus.Testing;
 public class AzureServiceBusTestHarness :
     BusTestHarness
 {
-    Uri _inputQueueAddress;
+    Uri? _inputQueueAddress;
 
-    public AzureServiceBusTestHarness(Uri serviceUri, AzureNamedKeyCredential namedKeyCredential, string inputQueueName = null)
+    public AzureServiceBusTestHarness(Uri serviceUri, AzureNamedKeyCredential namedKeyCredential, string? inputQueueName = null)
     {
         if (serviceUri == null)
             throw new ArgumentNullException(nameof(serviceUri));
@@ -29,11 +29,12 @@ public class AzureServiceBusTestHarness :
     public override string InputQueueName { get; }
     public bool ConfigureMessageScheduler { get; set; }
 
-    public override Uri InputQueueAddress => _inputQueueAddress;
+    public override Uri InputQueueAddress => _inputQueueAddress
+        ?? throw new InvalidOperationException("The input queue address is not available before the bus has been created.");
     public Uri HostAddress { get; }
 
-    public event Action<IServiceBusBusFactoryConfigurator> OnConfigureServiceBusBus;
-    public event Action<IServiceBusReceiveEndpointConfigurator> OnConfigureServiceBusReceiveEndpoint;
+    public event Action<IServiceBusBusFactoryConfigurator>? OnConfigureServiceBusBus;
+    public event Action<IServiceBusReceiveEndpointConfigurator>? OnConfigureServiceBusReceiveEndpoint;
 
     protected virtual void ConfigureServiceBusBus(IServiceBusBusFactoryConfigurator configurator)
     {
@@ -45,32 +46,32 @@ public class AzureServiceBusTestHarness :
         OnConfigureServiceBusReceiveEndpoint?.Invoke(configurator);
     }
 
-    public override async Task Clean()
+    public override async Task CleanAsync(CancellationToken cancellationToken = default)
     {
         var managementClient = CreateManagementClient();
 
-        AsyncPageable<TopicProperties> pageableTopics = managementClient.GetTopicsAsync();
-        IList<TopicProperties> topics = await pageableTopics.ToListAsync();
+        AsyncPageable<TopicProperties> pageableTopics = managementClient.GetTopicsAsync(cancellationToken: cancellationToken);
+        IList<TopicProperties> topics = await pageableTopics.ToListAsync(cancellationToken: cancellationToken);
         while (topics.Count > 0)
         {
             foreach (var topic in topics)
-                await managementClient.DeleteTopicAsync(topic.Name);
+                await managementClient.DeleteTopicAsync(topic.Name, cancellationToken: cancellationToken);
 
-            await Task.Delay(500);
+            await Task.Delay(500, cancellationToken);
 
-            topics = await managementClient.GetTopicsAsync().ToListAsync();
+            topics = await managementClient.GetTopicsAsync(cancellationToken: cancellationToken).ToListAsync(cancellationToken: cancellationToken);
         }
 
-        AsyncPageable<QueueProperties> pageableQueues = managementClient.GetQueuesAsync();
-        IList<QueueProperties> queues = await pageableQueues.ToListAsync();
+        AsyncPageable<QueueProperties> pageableQueues = managementClient.GetQueuesAsync(cancellationToken: cancellationToken);
+        IList<QueueProperties> queues = await pageableQueues.ToListAsync(cancellationToken: cancellationToken);
         while (queues.Count > 0)
         {
             foreach (var queue in queues)
-                await managementClient.DeleteQueueAsync(queue.Name);
+                await managementClient.DeleteQueueAsync(queue.Name, cancellationToken: cancellationToken);
 
-            await Task.Delay(500);
+            await Task.Delay(500, cancellationToken);
 
-            queues = await managementClient.GetQueuesAsync().ToListAsync();
+            queues = await managementClient.GetQueuesAsync(cancellationToken: cancellationToken).ToListAsync(cancellationToken: cancellationToken);
         }
     }
 
@@ -81,7 +82,7 @@ public class AzureServiceBusTestHarness :
         return new ServiceBusAdministrationClient(endpoint, NamedKeyCredential);
     }
 
-    protected override async Task<IBusControl> CreateBus()
+    protected override async Task<IBusControl> CreateBusAsync()
     {
         return ViciOne.ServiceBus.Bus.Factory.CreateUsingAzureServiceBus(x =>
         {

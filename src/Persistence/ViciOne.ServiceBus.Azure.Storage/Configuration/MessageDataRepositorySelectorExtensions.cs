@@ -15,7 +15,7 @@ public static class MessageDataRepositorySelectorExtensions
     /// <param name="compress">Specify if the file should be compressed (defaults to false)</param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public static IMessageDataRepository AzureStorage(this IMessageDataRepositorySelector selector, string connectionString, string containerName = default, bool compress = false)
+    public static IMessageDataRepository AzureStorage(this IMessageDataRepositorySelector selector, string connectionString, string? containerName = default, bool compress = false)
     {
         if (selector is null)
             throw new ArgumentNullException(nameof(selector));

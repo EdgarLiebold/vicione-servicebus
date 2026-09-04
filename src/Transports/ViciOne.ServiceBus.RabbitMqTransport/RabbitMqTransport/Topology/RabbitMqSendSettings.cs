@@ -12,17 +12,17 @@ public class RabbitMqSendSettings :
 {
     readonly List<ExchangeBindingPublishTopologySpecification> _exchangeBindings;
     bool _bindToQueue;
-    string _queueName;
+    string? _queueName;
 
     public RabbitMqSendSettings(RabbitMqEndpointAddress address)
         : base(address.Name, address.ExchangeType, address.Durable, address.AutoDelete)
     {
         _exchangeBindings = new List<ExchangeBindingPublishTopologySpecification>();
 
-        QueueArguments = new Dictionary<string, object>();
+        QueueArguments = new Dictionary<string, object?>();
 
         if (address.BindToQueue)
-            BindToQueue(address.QueueName);
+            BindToQueue(address.QueueName ?? throw new ArgumentException("A queue name is required when BindToQueue is enabled.", nameof(address)));
 
         if (!string.IsNullOrWhiteSpace(address.DelayedType))
             SetExchangeArgument("x-delayed-type", address.DelayedType);
@@ -37,14 +37,15 @@ public class RabbitMqSendSettings :
             SetQueueArgument(RabbitMQ.Client.Headers.XSingleActiveConsumer, true);
     }
 
-    public IDictionary<string, object> QueueArguments { get; }
+    public IDictionary<string, object?> QueueArguments { get; }
 
     public RabbitMqEndpointAddress GetSendAddress(Uri hostAddress)
     {
         return new RabbitMqEndpointAddress(hostAddress, ExchangeName, ExchangeType, Durable, AutoDelete, _bindToQueue, _queueName,
-            ExchangeArguments.TryGetValue("x-delayed-type", out var argument) ? (string)argument : default,
+            ExchangeArguments.TryGetValue("x-delayed-type", out var argument) && argument is string delayedType ? delayedType : default,
             _exchangeBindings.Count > 0 ? _exchangeBindings.Select(x => x.ExchangeName).ToArray() : default,
-            alternateExchange: ExchangeArguments.TryGetValue(RabbitMQ.Client.Headers.AlternateExchange, out argument) ? (string)argument : default);
+            alternateExchange: ExchangeArguments.TryGetValue(RabbitMQ.Client.Headers.AlternateExchange, out argument)
+                && argument is string alternateExchange ? alternateExchange : default);
     }
 
     public BrokerTopology GetBrokerTopology()
@@ -63,7 +64,7 @@ public class RabbitMqSendSettings :
         {
             var queue = builder.QueueDeclare(_queueName ?? ExchangeName, Durable, AutoDelete, false, QueueArguments);
 
-            builder.QueueBind(builder.Exchange, queue, "", new Dictionary<string, object>());
+            builder.QueueBind(builder.Exchange, queue, "", new Dictionary<string, object?>());
         }
 
         return builder.BuildBrokerTopology();
@@ -71,13 +72,18 @@ public class RabbitMqSendSettings :
 
     public void BindToQueue(string queueName)
     {
+        if (string.IsNullOrWhiteSpace(queueName))
+            throw new ArgumentException("Value cannot be null or whitespace.", nameof(queueName));
+
         _bindToQueue = true;
         _queueName = queueName;
     }
 
-    public void BindToExchange(string exchangeName, Action<IRabbitMqExchangeBindingConfigurator> configure = null)
+    public void BindToExchange(string exchangeName, Action<IRabbitMqExchangeBindingConfigurator>? configure = null)
     {
-        string exchangeType = ExchangeArguments.TryGetValue("x-delayed-type", out var argument) ? (string)argument : RabbitMQ.Client.ExchangeType.Fanout;
+        var exchangeType = ExchangeArguments.TryGetValue("x-delayed-type", out var argument) && argument is string delayedType
+            ? delayedType
+            : RabbitMQ.Client.ExchangeType.Fanout;
         var specification = new ExchangeBindingPublishTopologySpecification(exchangeName, exchangeType, Durable, AutoDelete);
 
         configure?.Invoke(specification);
@@ -87,13 +93,12 @@ public class RabbitMqSendSettings :
 
     public void BindToExchange(RabbitMqEndpointAddress address)
     {
-        string exchangeType = ExchangeArguments.TryGetValue("x-delayed-type", out var argument) ? (string)argument : RabbitMQ.Client.ExchangeType.Fanout;
         var specification = new ExchangeBindingPublishTopologySpecification(address.Name, address.ExchangeType, address.Durable, address.AutoDelete);
 
         _exchangeBindings.Add(specification);
     }
 
-    public void SetQueueArgument(string key, object value)
+    public void SetQueueArgument(string key, object? value)
     {
         if (key == null)
             throw new ArgumentNullException(nameof(key));
@@ -120,13 +125,13 @@ public class RabbitMqSendSettings :
 
         if (ExchangeArguments != null)
         {
-            foreach (KeyValuePair<string, object> argument in ExchangeArguments)
+            foreach (KeyValuePair<string, object?> argument in ExchangeArguments)
                 yield return $"e:{argument.Key}={argument.Value}";
         }
 
         if (QueueArguments != null)
         {
-            foreach (KeyValuePair<string, object> argument in QueueArguments)
+            foreach (KeyValuePair<string, object?> argument in QueueArguments)
                 yield return $"q:{argument.Key}={argument.Value}";
         }
     }

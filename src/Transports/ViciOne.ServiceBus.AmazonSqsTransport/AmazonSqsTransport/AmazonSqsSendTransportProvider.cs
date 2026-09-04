@@ -23,8 +23,8 @@ public class AmazonSqsSendTransportProvider :
         return _connectionContextSupervisor.NormalizeAddress(address);
     }
 
-    public Task<ISendTransport> GetSendTransport(Uri address)
+    public Task<ISendTransport> GetSendTransportAsync(Uri address, CancellationToken cancellationToken = default)
     {
-        return _connectionContextSupervisor.CreateSendTransport(_context, _clientContextSupervisor, address);
+        return _connectionContextSupervisor.CreateSendTransportAsync(_context, _clientContextSupervisor, address, cancellationToken: cancellationToken);
     }
 }

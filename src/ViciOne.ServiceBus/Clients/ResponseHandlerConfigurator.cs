@@ -41,14 +41,14 @@ public class ResponseHandlerConfigurator<TResponse> :
 
     public HandlerConnectHandle<TResponse> Connect(IRequestPipeConnector connector, Guid requestId)
     {
-        MessageHandler<TResponse> messageHandler = _handler != null ? AsyncMessageHandler : MessageHandler;
+        MessageHandler<TResponse> messageHandler = _handler != null ? AsyncMessageHandlerAsync : MessageHandlerAsync;
 
         var connectHandle = connector.ConnectRequestHandler(requestId, messageHandler, _pipeConfigurator);
 
         return new ResponseHandlerConnectHandle<TResponse>(connectHandle, _completed, _requestTask);
     }
 
-    async Task AsyncMessageHandler(ConsumeContext<TResponse> context)
+    async Task AsyncMessageHandlerAsync(ConsumeContext<TResponse> context)
     {
         try
         {
@@ -64,7 +64,7 @@ public class ResponseHandlerConfigurator<TResponse> :
         }
     }
 
-    Task MessageHandler(ConsumeContext<TResponse> context)
+    Task MessageHandlerAsync(ConsumeContext<TResponse> context)
     {
         try
         {

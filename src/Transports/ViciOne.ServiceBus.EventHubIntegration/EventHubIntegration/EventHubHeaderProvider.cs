@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Azure.Messaging.EventHubs;
 using ViciOne.ServiceBus.Transports;
 
@@ -26,11 +27,12 @@ public class EventHubHeaderProvider :
         {
             var value = _eventData.Properties[key];
 
-            yield return new KeyValuePair<string, object>(key, value);
+            if (value != null)
+                yield return new KeyValuePair<string, object>(key, value);
         }
     }
 
-    public bool TryGetHeader(string key, out object value)
+    public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
     {
         if (nameof(MessageContext.MessageId).Equals(key, StringComparison.OrdinalIgnoreCase))
         {
@@ -45,7 +47,7 @@ public class EventHubHeaderProvider :
         }
 
         var found = _eventData.Properties.TryGetValue(key, out value);
-        if (found)
+        if (found && value != null)
             return true;
 
         value = null;

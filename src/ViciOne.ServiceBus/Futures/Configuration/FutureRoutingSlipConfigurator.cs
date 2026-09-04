@@ -19,8 +19,8 @@ public class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, TInput> :
 {
     readonly IFutureStateMachineConfigurator _configurator;
     IRoutingSlipExecutor<TInput> _executor;
-    FutureFault<TCommand, TFault, RoutingSlipFaulted> _fault;
-    FutureResult<TCommand, TResult, RoutingSlipCompleted> _result;
+    FutureFault<TCommand, TFault, RoutingSlipFaulted> _fault = null!;
+    FutureResult<TCommand, TResult, RoutingSlipCompleted> _result = null!;
 
     public FutureRoutingSlipConfigurator(IFutureStateMachineConfigurator configurator, Event<RoutingSlipCompleted> routingSlipCompleted,
         Event<RoutingSlipFaulted> routingSlipFaulted)
@@ -34,9 +34,8 @@ public class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, TInput> :
         OnRoutingSlipFaulted(fault => fault.SetFaultedUsingInitializer(context => RoutingSlipFaultedValueProvider(context)));
     }
 
-    public PendingFutureIdProvider<RoutingSlipCompleted> CompletedIdProvider { get; private set; }
-    public PendingFutureIdProvider<RoutingSlipFaulted> FaultedIdProvider { get; private set; }
-
+    public PendingFutureIdProvider<RoutingSlipCompleted> CompletedIdProvider { get; private set; } = null!;
+    public PendingFutureIdProvider<RoutingSlipFaulted> FaultedIdProvider { get; private set; } = null!;
     public Event<RoutingSlipCompleted> Completed { get; }
     public Event<RoutingSlipFaulted> Faulted { get; }
 
@@ -143,9 +142,9 @@ public class FutureRoutingSlipConfigurator<TCommand, TResult, TFault, TInput> :
         return fault != null;
     }
 
-    public Task Execute(BehaviorContext<FutureState, TInput> context)
+    public Task ExecuteAsync(BehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default)
     {
-        return _executor.Execute(context);
+        return _executor.ExecuteAsync(context, cancellationToken: cancellationToken);
     }
 
     static Guid GetTrackingNumber(RoutingSlipCompleted message)

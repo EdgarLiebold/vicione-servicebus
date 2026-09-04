@@ -15,7 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus;
+using ViciOne.ServiceBus; using ViciOne.ServiceBus.Advanced.Initializers;
 ";
 
     private const string Contracts = @"
@@ -33,7 +33,7 @@ namespace ConsoleApplication1
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-CONTRACT-ANALYZER", "message-data-missing-properties")]
-    public async Task EmptyAnonymousValue_ReportsEveryMissingMessageDataProperty()
+    public async Task EmptyAnonymousValue_ReportsEveryMissingMessageDataPropertyAsync()
     {
         var source = Usings + Contracts + @"
 namespace ConsoleApplication1
@@ -44,7 +44,7 @@ namespace ConsoleApplication1
         {
             var bus = Bus.Factory.CreateUsingInMemory(cfg => { });
 
-            await bus.Publish<ProcessDocument>(new
+            await bus.PublishAsync<ProcessDocument>(new
             {
             });
         }
@@ -52,7 +52,7 @@ namespace ConsoleApplication1
 }
 ";
 
-        await AssertDiagnostics(
+        await AssertDiagnosticsAsync(
             source,
             new DiagnosticObservation(
                 "MCA0003",
@@ -60,12 +60,12 @@ namespace ConsoleApplication1
                 "Anonymous type is missing properties that are in the message contract 'ProcessDocument'. The following properties are missing: Id, CustomerId, Document, Stream.",
                 "Test0.cs",
                 28,
-                48));
+                53));
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-CONTRACT-ANALYZER", "message-data-incompatible-values")]
-    public async Task ScalarValues_RejectMessageDataStringAndStreamContracts()
+    public async Task ScalarValues_RejectMessageDataStringAndStreamContractsAsync()
     {
         var source = Usings + Contracts + @"
 namespace ConsoleApplication1
@@ -76,7 +76,7 @@ namespace ConsoleApplication1
         {
             var bus = Bus.Factory.CreateUsingInMemory(cfg => { });
 
-            await bus.Publish<ProcessDocument>(new
+            await bus.PublishAsync<ProcessDocument>(new
             {
                 InVar.Id,
                 CustomerId = ""53051996-AEEC-4EF1-BCFD-7835F17BA8E7"",
@@ -88,7 +88,7 @@ namespace ConsoleApplication1
 }
 ";
 
-        await AssertDiagnostics(
+        await AssertDiagnosticsAsync(
             source,
             new DiagnosticObservation(
                 "MCA0001",
@@ -96,12 +96,12 @@ namespace ConsoleApplication1
                 "Anonymous type does not map to message contract 'ProcessDocument'. The following properties of the anonymous type are incompatible: Document, Stream.",
                 "Test0.cs",
                 28,
-                48));
+                53));
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-CONTRACT-ANALYZER", "message-data-stream-compatible")]
-    public async Task StreamValue_SatisfiesTheMessageDataStreamContract()
+    public async Task StreamValue_SatisfiesTheMessageDataStreamContractAsync()
     {
         var source = Usings + Contracts + @"
 namespace ConsoleApplication1
@@ -113,7 +113,7 @@ namespace ConsoleApplication1
             var bus = Bus.Factory.CreateUsingInMemory(cfg => { });
             Stream testStream = new MemoryStream();
 
-            await bus.Publish<ProcessDocument>(new
+            await bus.PublishAsync<ProcessDocument>(new
             {
                 InVar.Id,
                 CustomerId = ""53051996-AEEC-4EF1-BCFD-7835F17BA8E7"",
@@ -125,12 +125,12 @@ namespace ConsoleApplication1
 }
 ";
 
-        await AssertDiagnostics(source);
+        await AssertDiagnosticsAsync(source);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-CONTRACT-ANALYZER", "message-data-derived-stream-compatible")]
-    public async Task DerivedStreamValue_SatisfiesTheMessageDataStreamContract()
+    public async Task DerivedStreamValue_SatisfiesTheMessageDataStreamContractAsync()
     {
         var source = Usings + Contracts + @"
 namespace ConsoleApplication1
@@ -142,7 +142,7 @@ namespace ConsoleApplication1
             var bus = Bus.Factory.CreateUsingInMemory(cfg => { });
             MemoryStream testStream = new MemoryStream();
 
-            await bus.Publish<ProcessDocument>(new
+            await bus.PublishAsync<ProcessDocument>(new
             {
                 InVar.Id,
                 CustomerId = ""53051996-AEEC-4EF1-BCFD-7835F17BA8E7"",
@@ -154,10 +154,10 @@ namespace ConsoleApplication1
 }
 ";
 
-        await AssertDiagnostics(source);
+        await AssertDiagnosticsAsync(source);
     }
 
-    private static async Task AssertDiagnostics(
+    private static async Task AssertDiagnosticsAsync(
         string source,
         params DiagnosticObservation[] expected)
     {

@@ -58,9 +58,10 @@ public class Connectable<T>
     /// </summary>
     /// <param name="callback">The callback</param>
     /// <returns>An awaitable Task for the operation</returns>
-    public Task ForEachAsync(Func<T, Task> callback)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public Task ForEachAsync(Func<T, Task> callback, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(callback);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); ArgumentNullException.ThrowIfNull(callback);
 
         T[] connected = GetConnected();
 
@@ -68,12 +69,12 @@ public class Connectable<T>
             return Task.CompletedTask;
 
         if (connected.Length == 1)
-            return InvokeCallback(connected[0], callback);
+            return InvokeCallbackAsync(connected[0], callback);
 
         var outputTasks = new Task[connected.Length];
         int i;
         for (i = 0; i < connected.Length; i++)
-            outputTasks[i] = InvokeCallback(connected[i], callback);
+            outputTasks[i] = InvokeCallbackAsync(connected[i], callback);
 
         for (i = 0; i < outputTasks.Length; i++)
         {
@@ -158,7 +159,7 @@ public class Connectable<T>
         }
     }
 
-    static Task InvokeCallback(T connection, Func<T, Task> callback)
+    static Task InvokeCallbackAsync(T connection, Func<T, Task> callback)
     {
         try
         {

@@ -30,12 +30,12 @@ public class QuartzBusObserver :
     {
     }
 
-    public Task PreStart(IBus bus)
+    public Task PreStartAsync(IBus bus)
     {
         return Task.CompletedTask;
     }
 
-    public async Task PostStart(IBus bus, Task<BusReady> busReady)
+    public async Task PostStartAsync(IBus bus, Task<BusReady> busReady)
     {
         await busReady.ConfigureAwait(false);
 
@@ -47,24 +47,24 @@ public class QuartzBusObserver :
             await _scheduler.Start().ConfigureAwait(false);
     }
 
-    public Task StartFaulted(IBus bus, Exception exception)
+    public Task StartFaultedAsync(IBus bus, Exception exception)
     {
         return Task.CompletedTask;
     }
 
-    public async Task PreStop(IBus bus)
+    public async Task PreStopAsync(IBus bus)
     {
         if (_scheduler != null)
             await _scheduler.Standby().ConfigureAwait(false);
     }
 
-    public async Task PostStop(IBus bus)
+    public async Task PostStopAsync(IBus bus)
     {
         if (_scheduler != null)
             await _scheduler.Shutdown(_settings.WaitForJobsToComplete).ConfigureAwait(false);
     }
 
-    public Task StopFaulted(IBus bus, Exception exception)
+    public Task StopFaultedAsync(IBus bus, Exception exception)
     {
         return Task.CompletedTask;
     }

@@ -15,17 +15,17 @@ public interface ServiceBusMessageContext :
     long SequenceNumber { get; }
     long EnqueuedSequenceNumber { get; }
     string LockToken { get; }
-    DateTime LockedUntil { get; }
+    DateTimeOffset LockedUntil { get; }
     string SessionId { get; }
     long Size { get; }
     string To { get; }
     string ReplyToSessionId { get; }
     string ReplyTo { get; }
-    DateTime EnqueuedTime { get; }
-    DateTime ScheduledEnqueueTime { get; }
+    DateTimeOffset EnqueuedTime { get; }
+    DateTimeOffset ScheduledEnqueueTime { get; }
     IReadOnlyDictionary<string, object> Properties { get; }
     TimeSpan TimeToLive { get; }
     string CorrelationId { get; }
     string MessageId { get; }
-    DateTime ExpiresAt { get; }
+    DateTimeOffset ExpiresAt { get; }
 }

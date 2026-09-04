@@ -25,9 +25,9 @@ public class InMemoryOutboxDeferredMethod :
         Interlocked.Exchange(ref _executionContext, null)?.Dispose();
     }
 
-    public async Task Run()
+    public async Task RunAsync(CancellationToken cancellationToken = default)
     {
-        if (Interlocked.Exchange(ref _claimed, 1) != 0)
+        cancellationToken.ThrowIfCancellationRequested(); if (Interlocked.Exchange(ref _claimed, 1) != 0)
             return;
 
         ExecutionContext? executionContext = Interlocked.Exchange(ref _executionContext, null);

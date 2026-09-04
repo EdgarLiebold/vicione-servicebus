@@ -19,12 +19,12 @@ public class MediatorSendMessageContext<T> :
     public Guid? CorrelationId => _context.CorrelationId;
     public Guid? ConversationId => _context.ConversationId;
     public Guid? InitiatorId => _context.InitiatorId;
-    public DateTime? ExpirationTime => _context.SentTime + _context.TimeToLive;
-    public Uri SourceAddress => _context.SourceAddress;
-    public Uri DestinationAddress => _context.DestinationAddress;
-    public Uri ResponseAddress => _context.ResponseAddress;
-    public Uri FaultAddress => _context.FaultAddress;
-    public DateTime? SentTime => _context.SentTime;
+    public DateTimeOffset? ExpirationTime => _context.SentTime + _context.TimeToLive;
+    public Uri? SourceAddress => _context.SourceAddress;
+    public Uri? DestinationAddress => _context.DestinationAddress;
+    public Uri? ResponseAddress => _context.ResponseAddress;
+    public Uri? FaultAddress => _context.FaultAddress;
+    public DateTimeOffset? SentTime => _context.SentTime;
     public Headers Headers => _context.Headers;
     public HostInfo Host => HostMetadataCache.Host;
 }

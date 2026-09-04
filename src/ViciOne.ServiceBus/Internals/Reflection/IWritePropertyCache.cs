@@ -8,5 +8,5 @@ internal interface IWritePropertyCache<in T>
     bool CanWrite(string name);
 
     IWriteProperty<T, TProperty> GetProperty<TProperty>(string name);
-    IWriteProperty<T, TProperty> GetProperty<TProperty>(PropertyInfo propertyInfo);
+    IWriteProperty<T, TProperty> GetProperty<TProperty>(PropertyInfo? propertyInfo);
 }

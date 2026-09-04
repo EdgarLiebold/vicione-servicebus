@@ -49,13 +49,13 @@ public class RabbitMqMessagePublishTopology<TMessage> :
         var exchangeHandle = builder.ExchangeDeclare(_exchange.ExchangeName, _exchange.ExchangeType, _exchange.Durable, _exchange.AutoDelete,
             _exchange.ExchangeArguments);
 
-        if (builder.Exchange != null)
+        if (builder.Exchange is { } parentExchange)
         {
-            var routingKey = builder.Exchange.Exchange.ExchangeType == ExchangeType.Topic
+            var routingKey = parentExchange.Exchange.ExchangeType == ExchangeType.Topic
                 ? "#"
                 : "";
 
-            builder.ExchangeBind(builder.Exchange, exchangeHandle, routingKey, new Dictionary<string, object>());
+            builder.ExchangeBind(parentExchange, exchangeHandle, routingKey, new Dictionary<string, object?>());
         }
         else
             builder.Exchange = exchangeHandle;
@@ -109,7 +109,7 @@ public class RabbitMqMessagePublishTopology<TMessage> :
         set => _exchange.ExchangeType = value;
     }
 
-    void IRabbitMqExchangeConfigurator.SetExchangeArgument(string key, object value)
+    void IRabbitMqExchangeConfigurator.SetExchangeArgument(string key, object? value)
     {
         _exchange.SetExchangeArgument(key, value);
     }

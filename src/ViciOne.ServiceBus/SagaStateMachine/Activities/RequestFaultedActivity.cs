@@ -27,11 +27,12 @@ public class RequestFaultedActivity<TSaga, TMessage, TRequest> :
         visitor.Visit(this);
     }
 
-    public async Task Execute(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
+    public async Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
     {
-        var payload = context.Message as Fault;
+        var payload = context.Message as Fault
+            ?? throw new InvalidOperationException($"The message type {TypeCache<TMessage>.ShortName} must implement {nameof(Fault)}.");
 
-        await context.Publish<RequestFaulted>(new
+        await context.PublishAsync<RequestFaulted>(new
         {
             context.Saga.CorrelationId,
             PayloadType = MessageTypeCache<Fault<TRequest>>.MessageTypeNames,
@@ -45,12 +46,12 @@ public class RequestFaultedActivity<TSaga, TMessage, TRequest> :
             }
         }, context.CancellationToken).ConfigureAwait(false);
 
-        await next.Execute(context).ConfigureAwait(false);
+        await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
+    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
         where TException : Exception
     {
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 }

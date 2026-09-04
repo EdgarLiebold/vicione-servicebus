@@ -27,7 +27,7 @@ public interface ITransformConfigurator<TInput>
     /// <param name="propertyExpression"></param>
     /// <param name="value"></param>
     /// <typeparam name="TProperty"></typeparam>
-    void Set<TProperty>(Expression<Func<TInput, TProperty>> propertyExpression, TProperty value);
+    void Set<TProperty>(Expression<Func<TInput, TProperty>> propertyExpression, TProperty? value);
 
     /// <summary>
     /// Set the property to the value, using the source context to create/select the value

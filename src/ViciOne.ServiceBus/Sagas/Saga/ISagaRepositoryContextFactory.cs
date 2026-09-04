@@ -16,7 +16,7 @@ public interface ISagaRepositoryContextFactory<TSaga> :
     /// <param name="next"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    Task Send<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
+    Task SendAsync<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
         where T : class;
 
     /// <summary>
@@ -27,6 +27,6 @@ public interface ISagaRepositoryContextFactory<TSaga> :
     /// <param name="next"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    Task SendQuery<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
+    Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
         where T : class;
 }

@@ -21,24 +21,24 @@ public class StartHostHandle :
 
     Task<HostReady> HostHandle.Ready
     {
-        get { return ReadyOrNot(_handles.Select(x => x.Ready).ToArray(), _riderHandles.Select(x => x.Ready).ToArray()); }
+        get { return ReadyOrNotAsync(_handles.Select(x => x.Ready).ToArray(), _riderHandles.Select(x => x.Ready).ToArray()); }
     }
 
-    Task HostHandle.Stop(CancellationToken cancellationToken)
+    Task HostHandle.StopAsync(CancellationToken cancellationToken)
     {
-        return _host.Stop(cancellationToken);
+        return _host.StopAsync(cancellationToken);
     }
 
-    async Task<HostReady> ReadyOrNot(Task<ReceiveEndpointReady>[] endpoints, Task<RiderReady>[] riders)
+    async Task<HostReady> ReadyOrNotAsync(Task<ReceiveEndpointReady>[] endpoints, Task<RiderReady>[] riders)
     {
-        ReceiveEndpointReady[] endpointsReady = await EndpointsReady(endpoints).ConfigureAwait(false);
+        ReceiveEndpointReady[] endpointsReady = await EndpointsReadyAsync(endpoints).ConfigureAwait(false);
 
-        RiderReady[] ridersReady = await RidersReady(riders).ConfigureAwait(false);
+        RiderReady[] ridersReady = await RidersReadyAsync(riders).ConfigureAwait(false);
 
         return new HostReadyEvent(_host.Address, endpointsReady, ridersReady);
     }
 
-    static async Task<ReceiveEndpointReady[]> EndpointsReady(Task<ReceiveEndpointReady>[] endpoints)
+    static async Task<ReceiveEndpointReady[]> EndpointsReadyAsync(Task<ReceiveEndpointReady>[] endpoints)
     {
         foreach (Task<ReceiveEndpointReady> ready in endpoints)
             await ready.ConfigureAwait(false);
@@ -46,7 +46,7 @@ public class StartHostHandle :
         return await Task.WhenAll(endpoints).ConfigureAwait(false);
     }
 
-    static async Task<RiderReady[]> RidersReady(Task<RiderReady>[] riders)
+    static async Task<RiderReady[]> RidersReadyAsync(Task<RiderReady>[] riders)
     {
         foreach (Task<RiderReady> ready in riders)
             await ready.ConfigureAwait(false);

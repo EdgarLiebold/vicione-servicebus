@@ -248,12 +248,12 @@ public sealed class MessagePackMessageSerializerTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-MESSAGE-DATA", "external-reference")]
-    public async Task MessageData_RoundTripsItsExternalReference()
+    public async Task MessageData_RoundTripsItsExternalReferenceAsync()
     {
         var repository = new InMemoryMessageDataRepository();
         var source = new MessageDataContainer
         {
-            Value = await repository.PutString(
+            Value = await repository.PutStringAsync(
                 new string('*', MessageDataPolicy.Default.Threshold + 100),
                 TestContext.Current.CancellationToken),
         };

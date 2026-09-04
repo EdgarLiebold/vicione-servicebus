@@ -19,7 +19,7 @@ public static class RegistrationExtensions
     /// <typeparam name="T">The consumer type</typeparam>
     /// <typeparam name="TDefinition">The consumer definition type</typeparam>
     public static IConsumerRegistrationConfigurator<T> AddConsumer<T, TDefinition>(this IRegistrationConfigurator configurator,
-        Action<IConsumerConfigurator<T>> configure = null)
+        Action<IConsumerConfigurator<T>>? configure = null)
         where T : class, IConsumer
         where TDefinition : class, IConsumerDefinition<T>
     {
@@ -42,7 +42,7 @@ public static class RegistrationExtensions
     /// <param name="configurator"></param>
     /// <param name="filter"></param>
     /// <param name="assemblies">The assemblies to scan for consumers</param>
-    public static void AddConsumers(this IRegistrationConfigurator configurator, Func<Type, bool> filter, params Assembly[] assemblies)
+    public static void AddConsumers(this IRegistrationConfigurator configurator, Func<Type, bool>? filter, params Assembly[] assemblies)
     {
         if (assemblies.Length == 0)
             assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -58,7 +58,7 @@ public static class RegistrationExtensions
     /// <param name="configurator"></param>
     /// <param name="filter"></param>
     /// <typeparam name="T">The anchor type</typeparam>
-    public static void AddConsumersFromNamespaceContaining<T>(this IRegistrationConfigurator configurator, Func<Type, bool> filter = null)
+    public static void AddConsumersFromNamespaceContaining<T>(this IRegistrationConfigurator configurator, Func<Type, bool>? filter = null)
     {
         AddConsumersFromNamespaceContaining(configurator, typeof(T), filter);
     }
@@ -69,7 +69,7 @@ public static class RegistrationExtensions
     /// <param name="configurator"></param>
     /// <param name="type">The type to use to identify the assembly and namespace to scan</param>
     /// <param name="filter"></param>
-    public static void AddConsumersFromNamespaceContaining(this IRegistrationConfigurator configurator, Type type, Func<Type, bool> filter = null)
+    public static void AddConsumersFromNamespaceContaining(this IRegistrationConfigurator configurator, Type type, Func<Type, bool>? filter = null)
     {
         if (type == null)
             throw new ArgumentNullException(nameof(type));
@@ -97,7 +97,7 @@ public static class RegistrationExtensions
     /// <param name="configurator"></param>
     /// <param name="filter"></param>
     /// <param name="types">The consumer types to add</param>
-    public static void AddConsumers(this IRegistrationConfigurator configurator, Func<Type, bool> filter, params Type[] types)
+    public static void AddConsumers(this IRegistrationConfigurator configurator, Func<Type, bool>? filter, params Type[] types)
     {
         filter ??= t => true;
 
@@ -127,7 +127,7 @@ public static class RegistrationExtensions
     /// <typeparam name="T">The saga type</typeparam>
     /// <typeparam name="TDefinition">The saga definition type</typeparam>
     public static ISagaRegistrationConfigurator<T> AddSaga<T, TDefinition>(this IRegistrationConfigurator configurator,
-        Action<ISagaConfigurator<T>> configure = null)
+        Action<ISagaConfigurator<T>>? configure = null)
         where T : class, ISaga
         where TDefinition : class, ISagaDefinition<T>
     {
@@ -171,7 +171,7 @@ public static class RegistrationExtensions
     /// </summary>
     /// <param name="configurator"></param>
     /// <param name="filter"></param>
-    public static void AddSagasFromNamespaceContaining<T>(this IRegistrationConfigurator configurator, Func<Type, bool> filter = null)
+    public static void AddSagasFromNamespaceContaining<T>(this IRegistrationConfigurator configurator, Func<Type, bool>? filter = null)
     {
         AddSagasFromNamespaceContaining(configurator, typeof(T), filter);
     }
@@ -183,7 +183,7 @@ public static class RegistrationExtensions
     /// <param name="configurator"></param>
     /// <param name="type">The type to use to identify the assembly and namespace to scan</param>
     /// <param name="filter"></param>
-    public static void AddSagasFromNamespaceContaining(this IRegistrationConfigurator configurator, Type type, Func<Type, bool> filter = null)
+    public static void AddSagasFromNamespaceContaining(this IRegistrationConfigurator configurator, Type type, Func<Type, bool>? filter = null)
     {
         if (type == null)
             throw new ArgumentNullException(nameof(type));
@@ -210,7 +210,7 @@ public static class RegistrationExtensions
     /// <param name="configurator"></param>
     /// <param name="filter"></param>
     /// <param name="types">The state machine types to add</param>
-    public static void AddSagas(this IRegistrationConfigurator configurator, Func<Type, bool> filter, params Type[] types)
+    public static void AddSagas(this IRegistrationConfigurator configurator, Func<Type, bool>? filter, params Type[] types)
     {
         filter ??= t => true;
 
@@ -241,7 +241,7 @@ public static class RegistrationExtensions
     /// <typeparam name="T">The state machine instance type</typeparam>
     /// <typeparam name="TDefinition">The saga definition type</typeparam>
     public static ISagaRegistrationConfigurator<T> AddSagaStateMachine<TStateMachine, T, TDefinition>(this IRegistrationConfigurator configurator,
-        Action<ISagaConfigurator<T>> configure = null)
+        Action<ISagaConfigurator<T>>? configure = null)
         where T : class, SagaStateMachineInstance
         where TStateMachine : class, SagaStateMachine<T>
         where TDefinition : class, ISagaDefinition<T>
@@ -272,7 +272,7 @@ public static class RegistrationExtensions
     /// </summary>
     /// <param name="configurator"></param>
     /// <param name="filter"></param>
-    public static void AddSagaStateMachinesFromNamespaceContaining<T>(this IRegistrationConfigurator configurator, Func<Type, bool> filter = null)
+    public static void AddSagaStateMachinesFromNamespaceContaining<T>(this IRegistrationConfigurator configurator, Func<Type, bool>? filter = null)
     {
         AddSagaStateMachinesFromNamespaceContaining(configurator, typeof(T), filter);
     }
@@ -284,7 +284,7 @@ public static class RegistrationExtensions
     /// <param name="configurator"></param>
     /// <param name="type">The type to use to identify the assembly and namespace to scan</param>
     /// <param name="filter"></param>
-    public static void AddSagaStateMachinesFromNamespaceContaining(this IRegistrationConfigurator configurator, Type type, Func<Type, bool> filter = null)
+    public static void AddSagaStateMachinesFromNamespaceContaining(this IRegistrationConfigurator configurator, Type type, Func<Type, bool>? filter = null)
     {
         if (type == null)
             throw new ArgumentNullException(nameof(type));
@@ -314,7 +314,7 @@ public static class RegistrationExtensions
     /// <param name="configurator"></param>
     /// <param name="filter"></param>
     /// <param name="types">The state machine types to add</param>
-    public static void AddSagaStateMachines(this IRegistrationConfigurator configurator, Func<Type, bool> filter, params Type[] types)
+    public static void AddSagaStateMachines(this IRegistrationConfigurator configurator, Func<Type, bool>? filter, params Type[] types)
     {
         filter ??= t => true;
 
@@ -346,7 +346,7 @@ public static class RegistrationExtensions
     /// <typeparam name="TDefinition">The activity definition type</typeparam>
     /// <returns></returns>
     public static IExecuteActivityRegistrationConfigurator<TActivity, TArguments> AddExecuteActivity<TActivity, TArguments, TDefinition>(
-        this IRegistrationConfigurator configurator, Action<IExecuteActivityConfigurator<TActivity, TArguments>> configure = null)
+        this IRegistrationConfigurator configurator, Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
         where TDefinition : class, IExecuteActivityDefinition<TActivity, TArguments>
@@ -367,8 +367,8 @@ public static class RegistrationExtensions
     /// <returns></returns>
     public static IActivityRegistrationConfigurator<TActivity, TArguments, TLog> AddActivity<TActivity, TArguments, TLog, TDefinition>(
         this IRegistrationConfigurator configurator,
-        Action<IExecuteActivityConfigurator<TActivity, TArguments>> configureExecute = null,
-        Action<ICompensateActivityConfigurator<TActivity, TLog>> configureCompensate = null)
+        Action<IExecuteActivityConfigurator<TActivity, TArguments>>? configureExecute = null,
+        Action<ICompensateActivityConfigurator<TActivity, TLog>>? configureCompensate = null)
         where TActivity : class, IActivity<TArguments, TLog>
         where TArguments : class
         where TDefinition : class, IActivityDefinition<TActivity, TArguments, TLog>
@@ -397,7 +397,7 @@ public static class RegistrationExtensions
     /// </summary>
     /// <param name="configurator"></param>
     /// <param name="filter"></param>
-    public static void AddActivitiesFromNamespaceContaining<T>(this IRegistrationConfigurator configurator, Func<Type, bool> filter = null)
+    public static void AddActivitiesFromNamespaceContaining<T>(this IRegistrationConfigurator configurator, Func<Type, bool>? filter = null)
     {
         AddActivitiesFromNamespaceContaining(configurator, typeof(T), filter);
     }
@@ -408,7 +408,7 @@ public static class RegistrationExtensions
     /// <param name="configurator"></param>
     /// <param name="type">The type to use to identify the assembly and namespace to scan</param>
     /// <param name="filter"></param>
-    public static void AddActivitiesFromNamespaceContaining(this IRegistrationConfigurator configurator, Type type, Func<Type, bool> filter = null)
+    public static void AddActivitiesFromNamespaceContaining(this IRegistrationConfigurator configurator, Type type, Func<Type, bool>? filter = null)
     {
         filter ??= _ => true;
 
@@ -431,7 +431,7 @@ public static class RegistrationExtensions
         AddActivities(configurator, null, types);
     }
 
-    public static void AddActivities(this IRegistrationConfigurator configurator, Func<Type, bool> filter, params Type[] types)
+    public static void AddActivities(this IRegistrationConfigurator configurator, Func<Type, bool>? filter, params Type[] types)
     {
         filter ??= _ => true;
 
@@ -515,7 +515,7 @@ public static class RegistrationExtensions
     /// <typeparam name="TRequest"></typeparam>
     /// <typeparam name="TResponse"></typeparam>
     public static IFutureRegistrationConfigurator<TFuture> AddFutureRequestConsumer<TFuture, TConsumer, TRequest, TResponse>(
-        this IRegistrationConfigurator configurator, Action<IConsumerConfigurator<TConsumer>> configure = null)
+        this IRegistrationConfigurator configurator, Action<IConsumerConfigurator<TConsumer>>? configure = null)
         where TFuture : Future<TRequest, TResponse>
         where TRequest : class
         where TResponse : class
@@ -542,7 +542,7 @@ public static class RegistrationExtensions
     /// <param name="configurator"></param>
     /// <param name="filter"></param>
     /// <param name="assemblies">The assemblies to scan for futures</param>
-    public static void AddFutures(this IRegistrationConfigurator configurator, Func<Type, bool> filter, params Assembly[] assemblies)
+    public static void AddFutures(this IRegistrationConfigurator configurator, Func<Type, bool>? filter, params Assembly[] assemblies)
     {
         if (assemblies.Length == 0)
             assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -558,7 +558,7 @@ public static class RegistrationExtensions
     /// <param name="configurator"></param>
     /// <param name="filter"></param>
     /// <typeparam name="T">The anchor type</typeparam>
-    public static void AddFuturesFromNamespaceContaining<T>(this IRegistrationConfigurator configurator, Func<Type, bool> filter = null)
+    public static void AddFuturesFromNamespaceContaining<T>(this IRegistrationConfigurator configurator, Func<Type, bool>? filter = null)
     {
         AddFuturesFromNamespaceContaining(configurator, typeof(T), filter);
     }
@@ -569,7 +569,7 @@ public static class RegistrationExtensions
     /// <param name="configurator"></param>
     /// <param name="type">The type to use to identify the assembly and namespace to scan</param>
     /// <param name="filter"></param>
-    public static void AddFuturesFromNamespaceContaining(this IRegistrationConfigurator configurator, Type type, Func<Type, bool> filter = null)
+    public static void AddFuturesFromNamespaceContaining(this IRegistrationConfigurator configurator, Type type, Func<Type, bool>? filter = null)
     {
         if (type == null)
             throw new ArgumentNullException(nameof(type));
@@ -597,7 +597,7 @@ public static class RegistrationExtensions
     /// <param name="configurator"></param>
     /// <param name="filter"></param>
     /// <param name="types">The consumer types to add</param>
-    public static void AddFutures(this IRegistrationConfigurator configurator, Func<Type, bool> filter, params Type[] types)
+    public static void AddFutures(this IRegistrationConfigurator configurator, Func<Type, bool>? filter, params Type[] types)
     {
         filter ??= t => true;
 

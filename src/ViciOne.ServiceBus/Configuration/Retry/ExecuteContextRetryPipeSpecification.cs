@@ -16,7 +16,7 @@ public class ExecuteContextRetryPipeSpecification<TArguments> :
 {
     readonly CancellationToken _cancellationToken;
     readonly RetryObservable _observers;
-    RetryPolicyFactory _policyFactory;
+    RetryPolicyFactory _policyFactory = null!;
 
     public ExecuteContextRetryPipeSpecification(CancellationToken cancellationToken = default)
     {
@@ -56,7 +56,7 @@ public class ExecuteContextRetryPipeSpecification<TArguments> :
         return _observers.Connect(observer);
     }
 
-    static RetryExecuteContext<TArguments> Factory(ExecuteContext<TArguments> context, IRetryPolicy retryPolicy, RetryContext retryContext)
+    static RetryExecuteContext<TArguments> Factory(ExecuteContext<TArguments> context, IRetryPolicy retryPolicy, RetryContext? retryContext)
     {
         return new RetryExecuteContext<TArguments>(context, retryPolicy, retryContext);
     }

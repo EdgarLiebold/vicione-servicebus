@@ -6,8 +6,8 @@ namespace ViciOne.ServiceBus.Serialization;
 class DisposingCryptoStream :
     CryptoStream
 {
-    Stream _stream;
-    ICryptoTransform _transform;
+    Stream? _stream;
+    ICryptoTransform? _transform;
 
     internal DisposingCryptoStream(Stream stream, ICryptoTransform transform, CryptoStreamMode mode)
         : base(stream, transform, mode)

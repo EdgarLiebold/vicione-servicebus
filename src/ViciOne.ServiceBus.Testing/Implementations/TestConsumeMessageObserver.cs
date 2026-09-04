@@ -23,21 +23,21 @@ public class TestConsumeMessageObserver<T> :
     public Task<T> PostConsumed => _postConsumed.Task;
     public Task<T> ConsumeFaulted => _consumeFaulted.Task;
 
-    Task IConsumeMessageObserver<T>.PreConsume(ConsumeContext<T> context)
+    Task IConsumeMessageObserver<T>.PreConsumeAsync(ConsumeContext<T> context)
     {
         _preConsumed.TrySetResult(context.Message);
 
         return Task.CompletedTask;
     }
 
-    Task IConsumeMessageObserver<T>.PostConsume(ConsumeContext<T> context)
+    Task IConsumeMessageObserver<T>.PostConsumeAsync(ConsumeContext<T> context)
     {
         _postConsumed.TrySetResult(context.Message);
 
         return Task.CompletedTask;
     }
 
-    Task IConsumeMessageObserver<T>.ConsumeFault(ConsumeContext<T> context, Exception exception)
+    Task IConsumeMessageObserver<T>.ConsumeFaultAsync(ConsumeContext<T> context, Exception exception)
     {
         _consumeFaulted.TrySetException(exception);
 

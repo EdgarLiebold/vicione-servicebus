@@ -18,10 +18,10 @@ public class TypePropertyConverter<TResult, TInput> :
         _converter = converter;
     }
 
-    Task<TResult> IPropertyConverter<TResult, TInput>.Convert<TMessage>(InitializeContext<TMessage> context, TInput input)
+    Task<TResult?> IPropertyConverter<TResult, TInput>.ConvertAsync<TMessage>(InitializeContext<TMessage> context, TInput? input, CancellationToken cancellationToken)
     {
         return _converter.TryConvert(input, out var result)
-            ? Task.FromResult(result)
-            : TaskResults.Default<TResult>();
+            ? Task.FromResult<TResult?>(result)
+            : TaskResults.DefaultAsync<TResult>(cancellationToken: cancellationToken);
     }
 }

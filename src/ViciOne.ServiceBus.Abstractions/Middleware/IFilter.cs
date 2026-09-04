@@ -18,5 +18,5 @@ public interface IFilter<TContext> :
     /// <param name="context">The pipe context type</param>
     /// <param name="next">The next pipe in the pipeline</param>
     /// <returns>An awaitable Task</returns>
-    Task Send(TContext context, IPipe<TContext> next);
+    Task SendAsync(TContext context, IPipe<TContext> next);
 }

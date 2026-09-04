@@ -28,41 +28,41 @@ public class SendActivity<TSaga, TMessage> :
         context.CreateScope("send");
     }
 
-    public async Task Execute(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public async Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
-        await Execute(context).ConfigureAwait(false);
+        await ExecuteAsync(context).ConfigureAwait(false);
 
-        await next.Execute(context).ConfigureAwait(false);
+        await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    public async Task Execute<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+    public async Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
-        await Execute(context).ConfigureAwait(false);
+        await ExecuteAsync(context).ConfigureAwait(false);
 
-        await next.Execute(context).ConfigureAwait(false);
+        await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
+    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception
     {
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 
-    public Task Faulted<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
+    public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
         where T : class
         where TException : Exception
     {
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 
-    async Task Execute(BehaviorContext<TSaga> context)
+    async Task ExecuteAsync(BehaviorContext<TSaga> context)
     {
         var destinationAddress = _destinationAddressProvider(context);
 
-        var endpoint = await context.GetSendEndpoint(destinationAddress).ConfigureAwait(false);
+        var endpoint = await context.GetSendEndpointAsync(destinationAddress).ConfigureAwait(false);
 
-        await _messageFactory.Use(context, (ctx, s) => endpoint.Send(s.Message, s.Pipe, ctx.CancellationToken)).ConfigureAwait(false);
+        await _messageFactory.UseAsync(context, (ctx, s) => endpoint.SendAsync(s.Message, s.Pipe, ctx.CancellationToken)).ConfigureAwait(false);
     }
 }
 
@@ -93,20 +93,20 @@ public class SendActivity<TSaga, TData, TMessage> :
         context.CreateScope("send");
     }
 
-    public async Task Execute(BehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
+    public async Task ExecuteAsync(BehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
     {
         var destinationAddress = _destinationAddressProvider(context);
 
-        var endpoint = await context.GetSendEndpoint(destinationAddress).ConfigureAwait(false);
+        var endpoint = await context.GetSendEndpointAsync(destinationAddress).ConfigureAwait(false);
 
-        await _messageFactory.Use(context, (ctx, s) => endpoint.Send(s.Message, s.Pipe, ctx.CancellationToken)).ConfigureAwait(false);
+        await _messageFactory.UseAsync(context, (ctx, s) => endpoint.SendAsync(s.Message, s.Pipe, ctx.CancellationToken)).ConfigureAwait(false);
 
-        await next.Execute(context).ConfigureAwait(false);
+        await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TData, TException> context, IBehavior<TSaga, TData> next)
+    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TData, TException> context, IBehavior<TSaga, TData> next)
         where TException : Exception
     {
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 }

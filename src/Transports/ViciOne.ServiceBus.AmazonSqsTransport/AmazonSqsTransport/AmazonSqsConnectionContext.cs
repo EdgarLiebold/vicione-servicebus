@@ -35,34 +35,34 @@ public class AmazonSqsConnectionContext :
 
     public Uri HostAddress => _hostConfiguration.HostAddress;
 
-    public Task<QueueInfo> GetQueue(Queue queue, CancellationToken cancellationToken)
+    public Task<QueueInfo> GetQueueAsync(Queue queue, CancellationToken cancellationToken)
     {
-        return _queueCache.Get(queue, cancellationToken);
+        return _queueCache.GetAsync(queue, cancellationToken);
     }
 
-    public Task<QueueInfo> GetQueueByName(string name, CancellationToken cancellationToken)
+    public Task<QueueInfo> GetQueueByNameAsync(string name, CancellationToken cancellationToken)
     {
-        return _queueCache.GetByName(name, cancellationToken);
+        return _queueCache.GetByNameAsync(name, cancellationToken);
     }
 
-    public Task<bool> RemoveQueueByName(string name)
+    public Task<bool> RemoveQueueByNameAsync(string name, CancellationToken cancellationToken = default)
     {
-        return _queueCache.RemoveByName(name);
+        return _queueCache.RemoveByNameAsync(name, cancellationToken: cancellationToken);
     }
 
-    public Task<TopicInfo> GetTopic(Topic topic, CancellationToken cancellationToken)
+    public Task<TopicInfo> GetTopicAsync(Topic topic, CancellationToken cancellationToken)
     {
-        return _topicCache.Get(topic, cancellationToken);
+        return _topicCache.GetAsync(topic, cancellationToken);
     }
 
-    public Task<TopicInfo> GetTopicByName(string name, CancellationToken cancellationToken)
+    public Task<TopicInfo> GetTopicByNameAsync(string name, CancellationToken cancellationToken)
     {
-        return _topicCache.GetByName(name, cancellationToken);
+        return _topicCache.GetByNameAsync(name, cancellationToken);
     }
 
-    public Task<bool> RemoveTopicByName(string name)
+    public Task<bool> RemoveTopicByNameAsync(string name, CancellationToken cancellationToken = default)
     {
-        return _topicCache.RemoveByName(name);
+        return _topicCache.RemoveByNameAsync(name, cancellationToken: cancellationToken);
     }
 
     public ClientContext CreateClientContext(CancellationToken cancellationToken)

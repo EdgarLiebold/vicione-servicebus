@@ -22,13 +22,13 @@ public class StartJobConsumer<TJob> :
         _jobPipe = jobPipe;
     }
 
-    public Task Consume(ConsumeContext<StartJob> context)
+    public Task ConsumeAsync(ConsumeContext<StartJob> context)
     {
         if (context.Message.JobTypeId != _jobTypeId)
             return Task.CompletedTask;
 
         var job = context.GetJob<TJob>() ?? throw new SerializationException($"The job could not be deserialized: {TypeCache<TJob>.ShortName}");
 
-        return _jobService.StartJob(context, job, _jobPipe, _options);
+        return _jobService.StartJobAsync(context, job, _jobPipe, _options);
     }
 }

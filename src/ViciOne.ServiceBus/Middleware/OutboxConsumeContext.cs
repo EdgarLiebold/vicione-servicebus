@@ -34,15 +34,15 @@ public interface OutboxConsumeContext :
     /// </summary>
     long? LastSequenceNumber { get; }
 
-    Task SetConsumed();
+    Task SetConsumedAsync(CancellationToken cancellationToken = default);
 
-    Task SetDelivered();
+    Task SetDeliveredAsync(CancellationToken cancellationToken = default);
 
-    Task<List<OutboxMessageContext>> LoadOutboxMessages();
+    Task<List<OutboxMessageContext>> LoadOutboxMessagesAsync(CancellationToken cancellationToken = default);
 
-    Task NotifyOutboxMessageDelivered(OutboxMessageContext message);
+    Task NotifyOutboxMessageDeliveredAsync(OutboxMessageContext message, CancellationToken cancellationToken = default);
 
-    Task RemoveOutboxMessages();
+    Task RemoveOutboxMessagesAsync(CancellationToken cancellationToken = default);
 }
 
 

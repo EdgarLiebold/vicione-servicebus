@@ -16,14 +16,14 @@ public interface IBehavior<TInstance> :
     /// </summary>
     /// <param name="context">The behavior context</param>
     /// <returns>An awaitable task</returns>
-    Task Execute(BehaviorContext<TInstance> context);
+    Task ExecuteAsync(BehaviorContext<TInstance> context);
 
     /// <summary>
     /// Execute the activity with the given behavior context
     /// </summary>
     /// <param name="context">The behavior context</param>
     /// <returns>An awaitable task</returns>
-    Task Execute<T>(BehaviorContext<TInstance, T> context)
+    Task ExecuteAsync<T>(BehaviorContext<TInstance, T> context)
         where T : class;
 
     /// <summary>
@@ -33,7 +33,7 @@ public interface IBehavior<TInstance> :
     /// <typeparam name="TException"></typeparam>
     /// <param name="context"></param>
     /// <returns></returns>
-    Task Faulted<T, TException>(BehaviorExceptionContext<TInstance, T, TException> context)
+    Task FaultedAsync<T, TException>(BehaviorExceptionContext<TInstance, T, TException> context)
         where T : class
         where TException : Exception;
 
@@ -43,7 +43,7 @@ public interface IBehavior<TInstance> :
     /// <typeparam name="TException"></typeparam>
     /// <param name="context"></param>
     /// <returns></returns>
-    Task Faulted<TException>(BehaviorExceptionContext<TInstance, TException> context)
+    Task FaultedAsync<TException>(BehaviorExceptionContext<TInstance, TException> context)
         where TException : Exception;
 }
 
@@ -63,7 +63,7 @@ public interface IBehavior<TSaga, in TMessage> :
     /// </summary>
     /// <param name="context">The behavior context</param>
     /// <returns>An awaitable task</returns>
-    Task Execute(BehaviorContext<TSaga, TMessage> context);
+    Task ExecuteAsync(BehaviorContext<TSaga, TMessage> context);
 
     /// <summary>
     /// The exception path through the behavior allows activities to catch and handle exceptions
@@ -71,6 +71,6 @@ public interface IBehavior<TSaga, in TMessage> :
     /// <typeparam name="TException"></typeparam>
     /// <param name="context"></param>
     /// <returns></returns>
-    Task Faulted<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context)
+    Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context)
         where TException : Exception;
 }

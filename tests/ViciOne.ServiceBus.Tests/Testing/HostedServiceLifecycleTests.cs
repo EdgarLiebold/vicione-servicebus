@@ -12,16 +12,16 @@ public sealed class HostedServiceLifecycleTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-LIFECYCLE", "hosted-services-restart-order")]
-    public async Task RestartHostedServices_StopsInReverseOrderAndStartsInRegistrationOrder()
+    public async Task RestartHostedServices_StopsInReverseOrderAndStartsInRegistrationOrderAsync()
     {
         var calls = new List<string>();
         await using ServiceProvider provider = CreateProvider(calls);
         await using var harness = CreateHarness(provider);
 
-        await harness.Start();
+        await harness.StartAsync(TestContext.Current.CancellationToken);
         calls.Clear();
 
-        await harness.RestartHostedServices(TestContext.Current.CancellationToken);
+        await harness.RestartHostedServicesAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(
             ["stop:third", "stop:second", "stop:first", "start:first", "start:second", "start:third"],
@@ -30,12 +30,12 @@ public sealed class HostedServiceLifecycleTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-LIFECYCLE", "dispose-reverse-order-and-idempotence")]
-    public async Task DisposeAsync_StopsHostedServicesInReverseOrderExactlyOnce()
+    public async Task DisposeAsync_StopsHostedServicesInReverseOrderExactlyOnceAsync()
     {
         var calls = new List<string>();
         await using ServiceProvider provider = CreateProvider(calls);
         var harness = CreateHarness(provider);
-        await harness.Start();
+        await harness.StartAsync(TestContext.Current.CancellationToken);
         calls.Clear();
 
         await harness.DisposeAsync();
@@ -76,13 +76,13 @@ public sealed class HostedServiceLifecycleTests
     {
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            calls.Add($"start:{name}");
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); calls.Add($"start:{name}");
             return Task.CompletedTask;
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            calls.Add($"stop:{name}");
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); calls.Add($"stop:{name}");
             return Task.CompletedTask;
         }
     }

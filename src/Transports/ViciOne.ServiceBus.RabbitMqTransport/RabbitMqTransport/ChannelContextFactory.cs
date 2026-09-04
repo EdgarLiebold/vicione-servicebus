@@ -25,9 +25,9 @@ public class ChannelContextFactory :
     {
         IAsyncPipeContextAgent<ChannelContext> asyncContext = supervisor.AddAsyncContext<ChannelContext>();
 
-        Task<ChannelContext> context = CreateChannel(asyncContext, supervisor.Stopped);
+        Task<ChannelContext> context = CreateChannelAsync(asyncContext, supervisor.Stopped);
 
-        Task HandleShutdown(object sender, ShutdownEventArgs args)
+        Task HandleShutdownAsync(object sender, ShutdownEventArgs args)
         {
             // Invalidation first, and it keeps the broker's own reason. Disposal is not started here:
             // the client raises this notification while the refused operation is still unwinding, and
@@ -39,7 +39,7 @@ public class ChannelContextFactory :
                 channelContext.Lifetime.Invalidate(args);
             }
 
-            return asyncContext.Stop(args.ReplyText);
+            return asyncContext.StopAsync(args.ReplyText);
         }
 
         context.GetAwaiter().OnCompleted(() =>
@@ -49,14 +49,14 @@ public class ChannelContextFactory :
 
             var channelContext = context.Result;
 
-            channelContext.Channel.ChannelShutdownAsync += HandleShutdown;
-            channelContext.ConnectionContext.Connection.ConnectionShutdownAsync += HandleShutdown;
+            channelContext.Channel.ChannelShutdownAsync += HandleShutdownAsync;
+            channelContext.ConnectionContext.Connection.ConnectionShutdownAsync += HandleShutdownAsync;
 
             void RemoveHandlers()
             {
                 try
                 {
-                    channelContext.ConnectionContext.Connection.ConnectionShutdownAsync -= HandleShutdown;
+                    channelContext.ConnectionContext.Connection.ConnectionShutdownAsync -= HandleShutdownAsync;
                 }
                 catch (ObjectDisposedException)
                 {
@@ -64,7 +64,7 @@ public class ChannelContextFactory :
 
                 try
                 {
-                    channelContext.Channel.ChannelShutdownAsync -= HandleShutdown;
+                    channelContext.Channel.ChannelShutdownAsync -= HandleShutdownAsync;
                 }
                 catch (ObjectDisposedException)
                 {
@@ -80,14 +80,14 @@ public class ChannelContextFactory :
     public IActivePipeContextAgent<ChannelContext> CreateActiveContext(ISupervisor supervisor, PipeContextHandle<ChannelContext> context,
         CancellationToken cancellationToken)
     {
-        return supervisor.AddActiveContext(context, CreateSharedChannel(context.Context, cancellationToken));
+        return supervisor.AddActiveContext(context, CreateSharedChannelAsync(context.Context, cancellationToken));
     }
 
-    static async Task<ChannelContext> CreateSharedChannel(Task<ChannelContext> contextTask, CancellationToken cancellationToken)
+    static async Task<ChannelContext> CreateSharedChannelAsync(Task<ChannelContext> contextTask, CancellationToken cancellationToken)
     {
         var context = contextTask.Status == TaskStatus.RanToCompletion
             ? contextTask.Result
-            : await contextTask.OrCanceled(cancellationToken).ConfigureAwait(false);
+            : await contextTask.OrCanceledAsync(cancellationToken).ConfigureAwait(false);
 
         if (context.Channel.IsClosed)
         {
@@ -104,14 +104,14 @@ public class ChannelContextFactory :
         return new ScopeChannelContext(context, cancellationToken);
     }
 
-    Task<ChannelContext> CreateChannel(IAsyncPipeContextAgent<ChannelContext> asyncContext, CancellationToken cancellationToken)
+    Task<ChannelContext> CreateChannelAsync(IAsyncPipeContextAgent<ChannelContext> asyncContext, CancellationToken cancellationToken)
     {
-        Task<ChannelContext> CreateChannelContext(ConnectionContext connectionContext, CancellationToken createCancellationToken,
+        Task<ChannelContext> CreateChannelContextAsync(ConnectionContext connectionContext, CancellationToken createCancellationToken,
             ushort? concurrentMessageLimit)
         {
-            return connectionContext.CreateChannelContext(asyncContext, concurrentMessageLimit, createCancellationToken);
+            return connectionContext.CreateChannelContextAsync(asyncContext, concurrentMessageLimit, createCancellationToken);
         }
 
-        return _supervisor.CreateAgent(asyncContext, (context, token) => CreateChannelContext(context, token, _concurrentMessageLimit), cancellationToken);
+        return _supervisor.CreateAgentAsync(asyncContext, (context, token) => CreateChannelContextAsync(context, token, _concurrentMessageLimit), cancellationToken);
     }
 }

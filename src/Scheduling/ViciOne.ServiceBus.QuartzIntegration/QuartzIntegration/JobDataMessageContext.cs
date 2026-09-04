@@ -20,7 +20,7 @@ public class JobDataMessageContext :
     Guid? _conversationId;
     Guid? _correlationId;
     Uri? _destinationAddress;
-    DateTime? _expirationTime;
+    DateTimeOffset? _expirationTime;
     Uri? _faultAddress;
     Headers? _headers;
     HostInfo? _hostInfo;
@@ -28,7 +28,7 @@ public class JobDataMessageContext :
     Guid? _messageId;
     Guid? _requestId;
     Uri? _responseAddress;
-    DateTime? _sentTime;
+    DateTimeOffset? _sentTime;
     Uri? _sourceAddress;
 
     public JobDataMessageContext(IJobExecutionContext executionContext, IObjectDeserializer objectDeserializer)
@@ -116,7 +116,7 @@ public class JobDataMessageContext :
     public Guid? ConversationId => _conversationId ??= _jobDataMap.TryGetValue(nameof(ConversationId), out string? value) ? ConvertIdToGuid(value) : default;
     public Guid? InitiatorId => _initiatorId ??= _jobDataMap.TryGetValue(nameof(InitiatorId), out string? value) ? ConvertIdToGuid(value) : default;
 
-    public DateTime? ExpirationTime =>
+    public DateTimeOffset? ExpirationTime =>
         _expirationTime ??= _jobDataMap.TryGetValue(nameof(ExpirationTime), out string? value) ? ConvertDateTime(value) : default;
 
     public Uri? SourceAddress => _sourceAddress ??= _jobDataMap.TryGetValue(nameof(SourceAddress), out string? value) ? ConvertToUri(value) : default;
@@ -126,7 +126,8 @@ public class JobDataMessageContext :
 
     public Uri? ResponseAddress => _responseAddress ??= _jobDataMap.TryGetValue(nameof(ResponseAddress), out string? value) ? ConvertToUri(value) : default;
     public Uri? FaultAddress => _faultAddress ??= _jobDataMap.TryGetValue(nameof(FaultAddress), out string? value) ? ConvertToUri(value) : default;
-    public DateTime? SentTime => _sentTime ??= _jobDataMap.TryGetValue(nameof(SentTime), out DateTime? value) ? value : default;
+    public DateTimeOffset? SentTime =>
+        _sentTime ??= _jobDataMap.TryGetValue(nameof(SentTime), out object? value) ? ConvertDateTime(value) : default;
     public Headers Headers => _headers ??= GetHeaders();
     public HostInfo Host => _hostInfo ??= _jobDataMap.TryGetValue(nameof(Host), out HostInfo? value) ? value! : HostMetadataCache.Empty;
 
@@ -174,15 +175,24 @@ public class JobDataMessageContext :
         return headers;
     }
 
-    static DateTime? ConvertDateTime(string? text)
+    static DateTimeOffset? ConvertDateTime(object? value)
     {
+        if (value is DateTimeOffset dateTimeOffset)
+            return dateTimeOffset;
+        if (value is DateTime dateTime)
+        {
+            return dateTime.Kind == DateTimeKind.Local
+                ? new DateTimeOffset(dateTime).ToUniversalTime()
+                : new DateTimeOffset(DateTime.SpecifyKind(dateTime, DateTimeKind.Utc));
+        }
+
+        string? text = value as string;
         if (string.IsNullOrWhiteSpace(text))
             return default;
 
-        return DateTime.TryParse(text, null, DateTimeStyles.RoundtripKind, out var expirationTime)
-            || DateTime.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out expirationTime)
-                ? expirationTime
-                : default(DateTime?);
+        return DateTimeOffset.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var timestamp)
+            ? timestamp
+            : default(DateTimeOffset?);
     }
 
     static Guid? ConvertIdToGuid(string? id)

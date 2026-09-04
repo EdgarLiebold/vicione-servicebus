@@ -11,7 +11,7 @@ public sealed class RabbitMqQueueRedeliveryTests
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-QUEUE-REDELIVERY", "classic-and-quorum-ttl-dlx-roundtrip")]
-    public async Task QueueRedelivery_PredeclaresFiniteTopologyAndReturnsThroughTheOriginalEndpoint(bool quorum)
+    public async Task QueueRedelivery_PredeclaresFiniteTopologyAndReturnsThroughTheOriginalEndpointAsync(bool quorum)
     {
         using RabbitMqBroker fixture = RabbitMqBroker.Create(quorum ? "redeliveryquorum" : "redelivery");
         string queue = fixture.Name("input");
@@ -51,7 +51,7 @@ public sealed class RabbitMqQueueRedeliveryTests
 
                     received.TrySetResult(new RedeliveryObservation(
                         context.Message.Value,
-                        context.GetRedeliveryCount(),
+                        context.Advanced().GetRedeliveryCount(),
                         context.Headers.Get<string>(RabbitMqHeaders.RedeliveryRoutingKey)));
                     return Task.CompletedTask;
                 });
@@ -65,9 +65,9 @@ public sealed class RabbitMqQueueRedeliveryTests
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
 
-            RabbitMqBroker.ExchangeState delayExchangeState = await fixture.Exchange(delayExchange, cancellationToken);
-            RabbitMqBroker.ExchangeState returnExchangeState = await fixture.Exchange(returnExchange, cancellationToken);
-            RabbitMqBroker.QueueState delayQueueState = await fixture.Queue(delayQueue, cancellationToken);
+            RabbitMqBroker.ExchangeState delayExchangeState = await fixture.ExchangeAsync(delayExchange, cancellationToken);
+            RabbitMqBroker.ExchangeState returnExchangeState = await fixture.ExchangeAsync(returnExchange, cancellationToken);
+            RabbitMqBroker.QueueState delayQueueState = await fixture.QueueAsync(delayQueue, cancellationToken);
             Assert.Equal((true, ExchangeType.Direct, true, false),
                 (delayExchangeState.Exists, delayExchangeState.Type, delayExchangeState.Durable, delayExchangeState.AutoDelete));
             Assert.Equal((true, ExchangeType.Direct, true, false),
@@ -86,8 +86,8 @@ public sealed class RabbitMqQueueRedeliveryTests
             else
                 Assert.Equal("classic", delayQueueState.Arguments["x-queue-type"]);
 
-            IReadOnlyList<RabbitMqBroker.BindingState> delayBindings = await fixture.QueueBindings(delayQueue, cancellationToken);
-            IReadOnlyList<RabbitMqBroker.BindingState> sourceBindings = await fixture.QueueBindings(queue, cancellationToken);
+            IReadOnlyList<RabbitMqBroker.BindingState> delayBindings = await fixture.QueueBindingsAsync(delayQueue, cancellationToken);
+            IReadOnlyList<RabbitMqBroker.BindingState> sourceBindings = await fixture.QueueBindingsAsync(queue, cancellationToken);
             Assert.Contains(delayBindings, binding =>
                 binding.Source == delayExchange
                 && binding.Destination == delayQueue
@@ -97,7 +97,7 @@ public sealed class RabbitMqQueueRedeliveryTests
                 && binding.Destination == queue
                 && binding.RoutingKey == queue);
 
-            await bus.Publish(new RetryMessage("redelivered"), cancellationToken)
+            await bus.PublishAsync(new RetryMessage("redelivered"), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             RedeliveryObservation observation = await received.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
 
@@ -105,8 +105,8 @@ public sealed class RabbitMqQueueRedeliveryTests
             Assert.Equal(1, observation.RedeliveryCount);
             Assert.Equal(originalRoutingKey, observation.OriginalRoutingKey);
             Assert.Equal(2, attempts);
-            Assert.Equal(0, (await fixture.Queue(queue, cancellationToken)).Messages);
-            Assert.Equal(0, (await fixture.Queue(delayQueue, cancellationToken)).Messages);
+            Assert.Equal(0, (await fixture.QueueAsync(queue, cancellationToken)).Messages);
+            Assert.Equal(0, (await fixture.QueueAsync(delayQueue, cancellationToken)).Messages);
         }
         finally
         {

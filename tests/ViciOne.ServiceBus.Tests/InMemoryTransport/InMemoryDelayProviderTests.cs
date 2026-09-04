@@ -14,13 +14,13 @@ public sealed class InMemoryDelayProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-DELAY", "time-provider-boundary")]
-    public async Task RelativeDelay_CompletesOnlyWhenItsTimeProviderReachesTheDeadline()
+    public async Task RelativeDelay_CompletesOnlyWhenItsTimeProviderReachesTheDeadlineAsync()
     {
         TimeSpan interval = TimeSpan.FromMinutes(5);
         var timeProvider = new ObservableTimeProvider(StartTime);
         await using var delayProvider = new InMemoryDelayProvider(timeProvider);
 
-        Task delay = delayProvider.Delay(interval, TestContext.Current.CancellationToken);
+        Task delay = delayProvider.DelayAsync(interval, TestContext.Current.CancellationToken);
 
         timeProvider.Advance(interval - TimeSpan.FromTicks(1));
         Assert.False(delay.IsCompleted);
@@ -32,14 +32,14 @@ public sealed class InMemoryDelayProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-DELAY", "manual-advance-boundary")]
-    public async Task Advance_ReleasesOnlyDeadlinesAtOrBeforeTheNewLogicalTime()
+    public async Task Advance_ReleasesOnlyDeadlinesAtOrBeforeTheNewLogicalTimeAsync()
     {
         TimeSpan firstInterval = TimeSpan.FromMinutes(1);
         TimeSpan secondInterval = TimeSpan.FromMinutes(2);
         var timeProvider = new ObservableTimeProvider(StartTime);
         await using var delayProvider = new InMemoryDelayProvider(timeProvider);
-        Task first = delayProvider.Delay(firstInterval, TestContext.Current.CancellationToken);
-        Task second = delayProvider.Delay(secondInterval, TestContext.Current.CancellationToken);
+        Task first = delayProvider.DelayAsync(firstInterval, TestContext.Current.CancellationToken);
+        Task second = delayProvider.DelayAsync(secondInterval, TestContext.Current.CancellationToken);
 
         delayProvider.Advance(firstInterval - TimeSpan.FromTicks(1));
         Assert.False(first.IsCompleted);
@@ -57,13 +57,13 @@ public sealed class InMemoryDelayProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-DELAY", "equal-deadlines")]
-    public async Task OneAdvance_ReleasesEveryDelayAtTheSameDeadline()
+    public async Task OneAdvance_ReleasesEveryDelayAtTheSameDeadlineAsync()
     {
         TimeSpan interval = TimeSpan.FromHours(1);
         var timeProvider = new FakeTimeProvider(StartTime);
         await using var delayProvider = new InMemoryDelayProvider(timeProvider);
         Task[] delays = Enumerable.Range(0, 32)
-            .Select(_ => delayProvider.Delay(StartTime + interval, TestContext.Current.CancellationToken))
+            .Select(_ => delayProvider.DelayAsync(StartTime + interval, TestContext.Current.CancellationToken))
             .ToArray();
 
         delayProvider.Advance(interval);
@@ -74,16 +74,16 @@ public sealed class InMemoryDelayProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-DELAY", "subsequent-deadline")]
-    public async Task DelayScheduledAfterAdvance_UsesTheAdvancedLogicalTime()
+    public async Task DelayScheduledAfterAdvance_UsesTheAdvancedLogicalTimeAsync()
     {
         TimeSpan interval = TimeSpan.FromMinutes(10);
         var timeProvider = new FakeTimeProvider(StartTime);
         await using var delayProvider = new InMemoryDelayProvider(timeProvider);
-        Task first = delayProvider.Delay(interval, TestContext.Current.CancellationToken);
+        Task first = delayProvider.DelayAsync(interval, TestContext.Current.CancellationToken);
 
         delayProvider.Advance(interval);
         await first;
-        Task subsequent = delayProvider.Delay(interval, TestContext.Current.CancellationToken);
+        Task subsequent = delayProvider.DelayAsync(interval, TestContext.Current.CancellationToken);
 
         Assert.False(subsequent.IsCompleted);
         delayProvider.Advance(interval);
@@ -93,18 +93,18 @@ public sealed class InMemoryDelayProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-DELAY", "absolute-deadline")]
-    public async Task AbsoluteDeadline_CompletesImmediatelyAtOrBeforeLogicalNow()
+    public async Task AbsoluteDeadline_CompletesImmediatelyAtOrBeforeLogicalNowAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
         await using var delayProvider = new InMemoryDelayProvider(timeProvider);
 
-        Assert.True(delayProvider.Delay(
+        Assert.True(delayProvider.DelayAsync(
             StartTime - TimeSpan.FromTicks(1),
             TestContext.Current.CancellationToken).IsCompletedSuccessfully);
-        Assert.True(delayProvider.Delay(StartTime, TestContext.Current.CancellationToken).IsCompletedSuccessfully);
+        Assert.True(delayProvider.DelayAsync(StartTime, TestContext.Current.CancellationToken).IsCompletedSuccessfully);
         Assert.Equal(0, timeProvider.ChangeCount);
 
-        Task future = delayProvider.Delay(
+        Task future = delayProvider.DelayAsync(
             StartTime + TimeSpan.FromTicks(1),
             TestContext.Current.CancellationToken);
         Assert.Equal(1, timeProvider.ChangeCount);
@@ -115,13 +115,13 @@ public sealed class InMemoryDelayProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-DELAY", "pending-cancellation")]
-    public async Task PendingCancellation_PreservesTheCallerTokenAndDoesNotBlockTheNextDeadline()
+    public async Task PendingCancellation_PreservesTheCallerTokenAndDoesNotBlockTheNextDeadlineAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
         await using var delayProvider = new InMemoryDelayProvider(timeProvider);
         using var cancellation = new CancellationTokenSource();
-        Task canceled = delayProvider.Delay(TimeSpan.FromMinutes(1), cancellation.Token);
-        Task later = delayProvider.Delay(TimeSpan.FromMinutes(2), TestContext.Current.CancellationToken);
+        Task canceled = delayProvider.DelayAsync(TimeSpan.FromMinutes(1), cancellation.Token);
+        Task later = delayProvider.DelayAsync(TimeSpan.FromMinutes(2), TestContext.Current.CancellationToken);
 
         Assert.Equal(TimeSpan.FromMinutes(1), timeProvider.LastDueTime);
         cancellation.Cancel();
@@ -136,7 +136,7 @@ public sealed class InMemoryDelayProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-DELAY", "pre-cancellation")]
-    public async Task AlreadyCanceledToken_IsRejectedBeforeAnyDelayIsRegistered()
+    public async Task AlreadyCanceledToken_IsRejectedBeforeAnyDelayIsRegisteredAsync()
     {
         var timeProvider = new FakeTimeProvider(StartTime);
         await using var delayProvider = new InMemoryDelayProvider(timeProvider);
@@ -144,9 +144,9 @@ public sealed class InMemoryDelayProviderTests
         cancellation.Cancel();
 
         OperationCanceledException relative = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
-            delayProvider.Delay(TimeSpan.FromMinutes(1), cancellation.Token));
+            delayProvider.DelayAsync(TimeSpan.FromMinutes(1), cancellation.Token));
         OperationCanceledException absolute = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
-            delayProvider.Delay(StartTime + TimeSpan.FromMinutes(1), cancellation.Token));
+            delayProvider.DelayAsync(StartTime + TimeSpan.FromMinutes(1), cancellation.Token));
 
         Assert.Equal(cancellation.Token, relative.CancellationToken);
         Assert.Equal(cancellation.Token, absolute.CancellationToken);
@@ -154,11 +154,11 @@ public sealed class InMemoryDelayProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-DELAY", "disposal")]
-    public async Task Disposal_CancelsPendingDelaysReleasesTheTimerAndClosesTheProvider()
+    public async Task Disposal_CancelsPendingDelaysReleasesTheTimerAndClosesTheProviderAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
         var delayProvider = new InMemoryDelayProvider(timeProvider);
-        Task pending = delayProvider.Delay(TimeSpan.FromDays(1), TestContext.Current.CancellationToken);
+        Task pending = delayProvider.DelayAsync(TimeSpan.FromDays(1), TestContext.Current.CancellationToken);
 
         Assert.Equal(1, timeProvider.ActiveTimerCount);
         await delayProvider.DisposeAsync();
@@ -167,7 +167,7 @@ public sealed class InMemoryDelayProviderTests
         Assert.True(pending.IsCanceled);
         Assert.Equal(0, timeProvider.ActiveTimerCount);
         await Assert.ThrowsAsync<ObjectDisposedException>(() =>
-            delayProvider.Delay(TimeSpan.FromMinutes(1), TestContext.Current.CancellationToken));
+            delayProvider.DelayAsync(TimeSpan.FromMinutes(1), TestContext.Current.CancellationToken));
         Assert.Throws<ObjectDisposedException>(() => delayProvider.Advance(TimeSpan.FromMinutes(1)));
         Assert.Throws<ObjectDisposedException>(() => _ = delayProvider.UtcNow);
         await delayProvider.DisposeAsync();
@@ -175,13 +175,13 @@ public sealed class InMemoryDelayProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-DELAY", "single-timer-lifetime")]
-    public async Task EveryPendingDelaySharesOneTimerForTheProviderLifetime()
+    public async Task EveryPendingDelaySharesOneTimerForTheProviderLifetimeAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
         var delayProvider = new InMemoryDelayProvider(timeProvider);
 
         Task[] delays = Enumerable.Range(1, 64)
-            .Select(index => delayProvider.Delay(
+            .Select(index => delayProvider.DelayAsync(
                 TimeSpan.FromMinutes(index),
                 TestContext.Current.CancellationToken))
             .ToArray();
@@ -198,13 +198,13 @@ public sealed class InMemoryDelayProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-DELAY", "negative-delay-validation")]
-    public async Task NegativeRelativeDelay_IsRejectedWithoutMovingLogicalTime()
+    public async Task NegativeRelativeDelay_IsRejectedWithoutMovingLogicalTimeAsync()
     {
         var timeProvider = new FakeTimeProvider(StartTime);
         await using var delayProvider = new InMemoryDelayProvider(timeProvider);
 
         ArgumentOutOfRangeException exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
-            delayProvider.Delay(TimeSpan.FromTicks(-1), TestContext.Current.CancellationToken));
+            delayProvider.DelayAsync(TimeSpan.FromTicks(-1), TestContext.Current.CancellationToken));
 
         Assert.Equal("delay", exception.ParamName);
         Assert.Equal(TimeSpan.FromTicks(-1), exception.ActualValue);
@@ -215,7 +215,7 @@ public sealed class InMemoryDelayProviderTests
     [InlineData(0)]
     [InlineData(-1)]
     [RequirementCoverage("REQ-VSB-INMEMORY-DELAY", "advance-validation")]
-    public async Task NonpositiveAdvance_IsRejectedWithoutMovingLogicalTime(long ticks)
+    public async Task NonpositiveAdvance_IsRejectedWithoutMovingLogicalTimeAsync(long ticks)
     {
         var timeProvider = new FakeTimeProvider(StartTime);
         await using var delayProvider = new InMemoryDelayProvider(timeProvider);
@@ -230,13 +230,13 @@ public sealed class InMemoryDelayProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-DELAY", "range-validation")]
-    public async Task TimeRangeOverflow_IsRejectedWithoutCorruptingLogicalTime()
+    public async Task TimeRangeOverflow_IsRejectedWithoutCorruptingLogicalTimeAsync()
     {
         var timeProvider = new FakeTimeProvider(DateTimeOffset.MaxValue - TimeSpan.FromMinutes(1));
         await using var delayProvider = new InMemoryDelayProvider(timeProvider);
 
         ArgumentOutOfRangeException delay = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
-            delayProvider.Delay(TimeSpan.FromMinutes(2), TestContext.Current.CancellationToken));
+            delayProvider.DelayAsync(TimeSpan.FromMinutes(2), TestContext.Current.CancellationToken));
         ArgumentOutOfRangeException advance = Assert.Throws<ArgumentOutOfRangeException>(() =>
             delayProvider.Advance(TimeSpan.FromMinutes(2)));
 
@@ -247,11 +247,11 @@ public sealed class InMemoryDelayProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-DELAY", "long-deadline-clamping")]
-    public async Task LongAbsoluteDelay_IsRearmedInSupportedTimerIntervals()
+    public async Task LongAbsoluteDelay_IsRearmedInSupportedTimerIntervalsAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
         var delayProvider = new InMemoryDelayProvider(timeProvider);
-        Task delay = delayProvider.Delay(DateTimeOffset.MaxValue, TestContext.Current.CancellationToken);
+        Task delay = delayProvider.DelayAsync(DateTimeOffset.MaxValue, TestContext.Current.CancellationToken);
 
         Assert.False(delay.IsCompleted);
         Assert.Equal(TimeSpan.FromMilliseconds(uint.MaxValue - 1L), timeProvider.LastDueTime);
@@ -267,7 +267,7 @@ public sealed class InMemoryDelayProviderTests
         Type provider = typeof(InMemoryDelayProvider);
         Type contract = typeof(IInMemoryDelayProvider);
         MethodInfo[] delays = contract.GetMethods()
-            .Where(method => method.Name == nameof(IInMemoryDelayProvider.Delay))
+            .Where(method => method.Name == nameof(IInMemoryDelayProvider.DelayAsync))
             .OrderBy(method => method.GetParameters()[0].ParameterType.FullName, StringComparer.Ordinal)
             .ToArray();
 

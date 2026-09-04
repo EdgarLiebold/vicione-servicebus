@@ -6,6 +6,6 @@ public interface IOutboxContextFactory<TContext> :
     IProbeSite
     where TContext : class
 {
-    Task Send<T>(ConsumeContext<T> context, OutboxConsumeOptions options, IPipe<OutboxConsumeContext<T>> next)
+    Task SendAsync<T>(ConsumeContext<T> context, OutboxConsumeOptions options, IPipe<OutboxConsumeContext<T>> next, CancellationToken cancellationToken = default)
         where T : class;
 }

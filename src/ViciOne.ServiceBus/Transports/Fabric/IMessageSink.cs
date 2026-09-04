@@ -7,5 +7,5 @@ public interface IMessageSink<T> :
     IProbeSite
     where T : class
 {
-    Task Deliver(DeliveryContext<T> context);
+    Task DeliverAsync(DeliveryContext<T> context, CancellationToken cancellationToken = default);
 }

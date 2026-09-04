@@ -45,9 +45,9 @@ public class DbContextOutboxConsumeContext<TDbContext, TMessage> :
 
     public Guid TransactionId => _transaction.TransactionId;
 
-    public override async Task SetConsumed()
+    public override async Task SetConsumedAsync(CancellationToken cancellationToken = default)
     {
-        _inboxState.Consumed = _timeProvider.GetUtcNow().UtcDateTime;
+        cancellationToken.ThrowIfCancellationRequested(); _inboxState.Consumed = _timeProvider.GetUtcNow().UtcDateTime;
         _dbContext.Update(_inboxState);
 
         await _dbContext.SaveChangesAsync(CancellationToken).ConfigureAwait(false);
@@ -55,9 +55,9 @@ public class DbContextOutboxConsumeContext<TDbContext, TMessage> :
         LogContext.Debug?.Log("Outbox Consumed: {MessageId} {Consumed}", MessageId, _inboxState.Consumed);
     }
 
-    public override async Task SetDelivered()
+    public override async Task SetDeliveredAsync(CancellationToken cancellationToken = default)
     {
-        _inboxState.Delivered = _timeProvider.GetUtcNow().UtcDateTime;
+        cancellationToken.ThrowIfCancellationRequested(); _inboxState.Delivered = _timeProvider.GetUtcNow().UtcDateTime;
         _dbContext.Update(_inboxState);
 
         await _dbContext.SaveChangesAsync(CancellationToken).ConfigureAwait(false);
@@ -65,9 +65,9 @@ public class DbContextOutboxConsumeContext<TDbContext, TMessage> :
         LogContext.Debug?.Log("Outbox Delivered: {MessageId} {Delivered}", MessageId, _inboxState.Delivered);
     }
 
-    public override async Task<List<OutboxMessageContext>> LoadOutboxMessages()
+    public override async Task<List<OutboxMessageContext>> LoadOutboxMessagesAsync(CancellationToken cancellationToken = default)
     {
-        var lastSequenceNumber = LastSequenceNumber ?? 0;
+        cancellationToken.ThrowIfCancellationRequested(); var lastSequenceNumber = LastSequenceNumber ?? 0;
 
         List<OutboxMessage> messages = await _dbContext.Set<OutboxMessage>()
             .Where(x => x.InboxMessageId == MessageId && x.InboxConsumerId == ConsumerId && x.SequenceNumber > lastSequenceNumber)
@@ -82,33 +82,33 @@ public class DbContextOutboxConsumeContext<TDbContext, TMessage> :
         return messages.Cast<OutboxMessageContext>().ToList();
     }
 
-    public override Task NotifyOutboxMessageDelivered(OutboxMessageContext message)
+    public override Task NotifyOutboxMessageDeliveredAsync(OutboxMessageContext message, CancellationToken cancellationToken = default)
     {
-        _inboxState.LastSequenceNumber = message.SequenceNumber;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); _inboxState.LastSequenceNumber = message.SequenceNumber;
         _dbContext.Update(_inboxState);
 
         return Task.CompletedTask;
     }
 
-    public override async Task RemoveOutboxMessages()
+    public override async Task RemoveOutboxMessagesAsync(CancellationToken cancellationToken = default)
     {
-        var count = await _dbContext.Set<OutboxMessage>()
-            .Where(x => x.InboxMessageId == MessageId && x.InboxConsumerId == ConsumerId)
-            .ExecuteDeleteAsync(CancellationToken).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested(); var count = await _dbContext.Set<OutboxMessage>()
+                    .Where(x => x.InboxMessageId == MessageId && x.InboxConsumerId == ConsumerId)
+                    .ExecuteDeleteAsync(CancellationToken).ConfigureAwait(false);
 
         if (count > 0)
             LogContext.Debug?.Log("Outbox removed {Count} messages: {MessageId}", count, MessageId);
     }
 
-    public override Task AddSend<T>(SendContext<T> context)
+    public override Task AddSendAsync<T>(SendContext<T> context, CancellationToken cancellationToken = default)
         where T : class
     {
-        OutboxMessage message = OutboxMessageFactory.Create(
-            context,
-            SerializerContext,
-            _timeProvider,
-            MessageId,
-            ConsumerId);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); OutboxMessage message = OutboxMessageFactory.Create(
+                    context,
+                    SerializerContext,
+                    _timeProvider,
+                    MessageId,
+                    ConsumerId);
         return _writeCoordinator.ExecuteAsync(() =>
         {
             _dbContext.Add(message);

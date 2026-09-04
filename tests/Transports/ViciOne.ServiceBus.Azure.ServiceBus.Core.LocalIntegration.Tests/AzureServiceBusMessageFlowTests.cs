@@ -12,7 +12,7 @@ public sealed class AzureServiceBusMessageFlowTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-MESSAGE-FLOW", "send-preserves-envelope-provider-properties-and-terminal-count")]
-    public async Task Send_PreservesTheCompleteEnvelopeAndProviderPropertiesExactlyOnce()
+    public async Task Send_PreservesTheCompleteEnvelopeAndProviderPropertiesExactlyOnceAsync()
     {
         AzureServiceBusLocalFixture fixture = AzureServiceBusLocalFixture.Create("flow");
         ServiceBusAdministrationClient admin = fixture.CreateAdministrationClient();
@@ -49,9 +49,8 @@ public sealed class AzureServiceBusMessageFlowTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queue}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await endpoint.Send(
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queue}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await endpoint.SendAsync(
                     new FlowMessage("exact-payload", sentAtUtc),
                     context =>
                     {
@@ -86,12 +85,12 @@ public sealed class AzureServiceBusMessageFlowTests
             Assert.Equal(responseAddress, actual.ResponseAddress);
             Assert.Equal(faultAddress, actual.FaultAddress);
             Assert.Equal("marker-value", actual.Headers.Get<string>("native-marker"));
-            Assert.False(actual.ReceiveContext.Redelivered);
+            Assert.False(actual.Advanced().ReceiveContext.Redelivered);
             Assert.Equal("exact-subject", provider.Label);
             Assert.Equal("reply-queue", provider.ReplyTo);
             Assert.Equal("reply-session", provider.ReplyToSessionId);
             Assert.Equal(TimeSpan.FromMinutes(4), provider.TimeToLive);
-            Assert.Equal(DateTimeKind.Utc, provider.EnqueuedTime.Kind);
+            Assert.Equal(TimeSpan.Zero, provider.EnqueuedTime.Offset);
             Assert.Equal(1, provider.DeliveryCount);
 
             await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
@@ -111,7 +110,7 @@ public sealed class AzureServiceBusMessageFlowTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-REQUEST-RESPONSE", "queue-request-response-preserves-request-correlation-and-terminal-count")]
-    public async Task RequestResponse_PreservesTheRequestCorrelationExactlyOnce()
+    public async Task RequestResponse_PreservesTheRequestCorrelationExactlyOnceAsync()
     {
         AzureServiceBusLocalFixture fixture = AzureServiceBusLocalFixture.Create("request");
         ServiceBusAdministrationClient admin = fixture.CreateAdministrationClient();
@@ -145,7 +144,7 @@ public sealed class AzureServiceBusMessageFlowTests
                 new Uri($"queue:{queue}"),
                 RequestTimeout.After(ms: checked((int)fixture.OperationTimeout.TotalMilliseconds)));
 
-            Response<ResponseMessage> response = await requestClient.GetResponse<ResponseMessage>(
+            Response<ResponseMessage> response = await requestClient.GetResponseAsync<ResponseMessage>(
                     new RequestMessage(correlationId),
                     cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
@@ -176,7 +175,7 @@ public sealed class AzureServiceBusMessageFlowTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-ERROR-TRANSPORT", "fault-moves-one-complete-envelope-and-publishes-one-correlated-fault")]
-    public async Task Fault_MovesOneCompleteEnvelopeAndPublishesOneCorrelatedFault()
+    public async Task Fault_MovesOneCompleteEnvelopeAndPublishesOneCorrelatedFaultAsync()
     {
         const string failureMessage = "intentional Azure Service Bus consumer failure";
         AzureServiceBusLocalFixture fixture = AzureServiceBusLocalFixture.Create("error");
@@ -237,9 +236,8 @@ public sealed class AzureServiceBusMessageFlowTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queue}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await endpoint.Send(
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queue}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await endpoint.SendAsync(
                     new ErrorMessage("must-move"),
                     context =>
                     {
@@ -263,9 +261,9 @@ public sealed class AzureServiceBusMessageFlowTests
             Assert.Equal(faultAddress, movedContext.FaultAddress);
             Assert.Equal(new Uri($"sb://localhost/{queue}"), movedContext.DestinationAddress);
             Assert.Equal(failureMessage,
-                movedContext.ReceiveContext.TransportHeaders.Get(MessageHeaders.FaultMessage, default(string)));
+                movedContext.Advanced().ReceiveContext.TransportHeaders.Get(MessageHeaders.FaultMessage, default(string)));
             Assert.Equal("fault",
-                movedContext.ReceiveContext.TransportHeaders.Get(MessageHeaders.Reason, default(string)));
+                movedContext.Advanced().ReceiveContext.TransportHeaders.Get(MessageHeaders.Reason, default(string)));
             Assert.Equal(conversationId, faultContext.ConversationId);
             Assert.Equal(correlationId, faultContext.CorrelationId);
             Assert.Equal(failureMessage, Assert.Single(faultContext.Message.Exceptions).Message);

@@ -23,8 +23,8 @@ public class ActiveMqSendTransportProvider :
         return _connectionContextSupervisor.NormalizeAddress(address);
     }
 
-    public Task<ISendTransport> GetSendTransport(Uri address)
+    public Task<ISendTransport> GetSendTransportAsync(Uri address, CancellationToken cancellationToken = default)
     {
-        return _connectionContextSupervisor.CreateSendTransport(_context, _sessionContextSupervisor, address);
+        return _connectionContextSupervisor.CreateSendTransportAsync(_context, _sessionContextSupervisor, address, cancellationToken: cancellationToken);
     }
 }

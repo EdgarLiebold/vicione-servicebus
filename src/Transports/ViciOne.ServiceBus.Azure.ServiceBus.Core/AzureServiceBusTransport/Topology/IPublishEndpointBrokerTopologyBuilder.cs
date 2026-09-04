@@ -9,7 +9,7 @@ public interface IPublishEndpointBrokerTopologyBuilder :
     /// <summary>
     /// The topic to which the message is published
     /// </summary>
-    TopicHandle Topic { get; set; }
+    TopicHandle? Topic { get; set; }
 
     /// <summary>
     /// Create an implemented builder which can be passed to implemented types

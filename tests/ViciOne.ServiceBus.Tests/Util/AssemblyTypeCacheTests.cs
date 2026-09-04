@@ -10,7 +10,7 @@ public sealed class AssemblyTypeCacheTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-ASSEMBLY-SCAN-LIFETIME", "synchronous-single-flight-and-clear")]
-    public async Task ConcurrentSynchronousReads_ShareOneSnapshotUntilTheCacheIsCleared()
+    public async Task ConcurrentSynchronousReads_ShareOneSnapshotUntilTheCacheIsClearedAsync()
     {
         AssemblyTypeCache.Clear();
         Assembly assembly = typeof(AssemblyTypeCacheTests).Assembly;

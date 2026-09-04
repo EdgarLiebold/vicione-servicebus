@@ -14,7 +14,7 @@ public class InMemoryOutboxConsumeContext :
 {
     readonly TaskCompletionSource<InMemoryOutboxConsumeContext> _clearToSend;
     readonly InMemoryOutboxDeferredMethodCollection _deferredMethods;
-    readonly InMemoryOutboxMessageSchedulerContext _outboxSchedulerContext;
+    readonly InMemoryOutboxMessageSchedulerContext _outboxSchedulerContext = null!;
 
     protected InMemoryOutboxConsumeContext(ConsumeContext context)
         : base(context)
@@ -30,7 +30,7 @@ public class InMemoryOutboxConsumeContext :
 
         _deferredMethods = new InMemoryOutboxDeferredMethodCollection(_clearToSend.Task);
 
-        if (context.TryGetPayload(out MessageSchedulerContext schedulerContext))
+        if (context.TryGetPayload(out MessageSchedulerContext? schedulerContext))
         {
             _outboxSchedulerContext = (InMemoryOutboxMessageSchedulerContext)context.AddOrUpdatePayload<MessageSchedulerContext>(
                 () => new InMemoryOutboxMessageSchedulerContext(context, schedulerContext.SchedulerFactory, _clearToSend.Task),
@@ -42,9 +42,9 @@ public class InMemoryOutboxConsumeContext :
 
     public Task ClearToSend => _clearToSend.Task;
 
-    public Task Add(Func<Task> method)
+    public Task AddAsync(Func<Task> method, CancellationToken cancellationToken = default)
     {
-        return _deferredMethods.Add(method);
+        return _deferredMethods.AddAsync(method, cancellationToken: cancellationToken);
     }
 
     public virtual OutboxCheckpoint CreateCheckpoint()
@@ -55,17 +55,17 @@ public class InMemoryOutboxConsumeContext :
             _outboxSchedulerContext?.CreateCheckpoint() ?? default);
     }
 
-    public virtual async Task ExecutePendingActions(bool concurrentMessageDelivery)
+    public virtual async Task ExecutePendingActionsAsync(bool concurrentMessageDelivery, CancellationToken cancellationToken = default)
     {
         _clearToSend.TrySetResult(this);
 
-        await _deferredMethods.Execute(concurrentMessageDelivery).ConfigureAwait(false);
+        await _deferredMethods.ExecuteAsync(concurrentMessageDelivery, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (_outboxSchedulerContext != null)
         {
             try
             {
-                await _outboxSchedulerContext.ExecutePendingActions().ConfigureAwait(false);
+                await _outboxSchedulerContext.ExecutePendingActionsAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -74,15 +74,15 @@ public class InMemoryOutboxConsumeContext :
         }
     }
 
-    public virtual async Task DiscardPendingActions()
+    public virtual async Task DiscardPendingActionsAsync(CancellationToken cancellationToken = default)
     {
-        await _deferredMethods.Discard().ConfigureAwait(false);
+        await _deferredMethods.DiscardAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (_outboxSchedulerContext != null)
         {
             try
             {
-                await _outboxSchedulerContext.CancelAllScheduledMessages().ConfigureAwait(false);
+                await _outboxSchedulerContext.CancelAllScheduledMessagesAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -91,16 +91,16 @@ public class InMemoryOutboxConsumeContext :
         }
     }
 
-    public virtual async Task DiscardPendingActions(OutboxCheckpoint checkpoint)
+    public virtual async Task DiscardPendingActionsAsync(OutboxCheckpoint checkpoint, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(checkpoint);
+        cancellationToken.ThrowIfCancellationRequested(); ArgumentNullException.ThrowIfNull(checkpoint);
         if (!ReferenceEquals(checkpoint.Owner, this))
             throw new ArgumentException("The checkpoint belongs to a different outbox context.", nameof(checkpoint));
 
-        await _deferredMethods.DiscardSince(checkpoint.DeferredMethodCount).ConfigureAwait(false);
+        await _deferredMethods.DiscardSinceAsync(checkpoint.DeferredMethodCount).ConfigureAwait(false);
 
         if (_outboxSchedulerContext != null)
-            await _outboxSchedulerContext.DiscardSince(checkpoint.SchedulerCheckpoint).ConfigureAwait(false);
+            await _outboxSchedulerContext.DiscardSinceAsync(checkpoint.SchedulerCheckpoint).ConfigureAwait(false);
     }
 }
 
@@ -113,21 +113,21 @@ public class InMemoryOutboxConsumeContext<T> :
     readonly ConsumeContext<T> _context;
 
     public InMemoryOutboxConsumeContext(ConsumeContext<T> context)
-        : base(context)
+        : base(context.Advanced())
     {
         _context = context;
     }
 
     public T Message => _context.Message;
 
-    public virtual Task NotifyConsumed(TimeSpan duration, string consumerType)
+    public virtual Task NotifyConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
     {
-        return NotifyConsumed(this, duration, consumerType);
+        return NotifyConsumedAsync(this, duration, consumerType, cancellationToken: cancellationToken);
     }
 
-    public virtual Task NotifyFaulted(TimeSpan duration, string consumerType, Exception exception)
+    public virtual Task NotifyFaultedAsync(TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
     {
-        return NotifyFaulted(this, duration, consumerType, exception);
+        return NotifyFaultedAsync(this, duration, consumerType, exception, cancellationToken: cancellationToken);
     }
 
 
@@ -139,7 +139,7 @@ public class InMemoryOutboxConsumeContext<T> :
         readonly List<InMemoryOutboxConsumeContext<T>> _messages;
 
         public Batch(ConsumeContext<Batch<T>> context)
-            : base(context)
+            : base(context.Advanced())
         {
             Batch<T> batch = context.Message;
             _messages = batch.Select(x => new InMemoryOutboxConsumeContext<T>(x)).ToList();
@@ -148,28 +148,28 @@ public class InMemoryOutboxConsumeContext<T> :
 
         public Batch<T> Message => _batch;
 
-        public Task NotifyConsumed(TimeSpan duration, string consumerType)
+        public Task NotifyConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
         {
-            return NotifyConsumed(this, duration, consumerType);
+            return NotifyConsumedAsync(this, duration, consumerType, cancellationToken: cancellationToken);
         }
 
-        public Task NotifyFaulted(TimeSpan duration, string consumerType, Exception exception)
+        public Task NotifyFaultedAsync(TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
         {
-            return NotifyFaulted(this, duration, consumerType, exception);
+            return NotifyFaultedAsync(this, duration, consumerType, exception, cancellationToken: cancellationToken);
         }
 
-        public override async Task ExecutePendingActions(bool concurrentMessageDelivery)
+        public override async Task ExecutePendingActionsAsync(bool concurrentMessageDelivery, CancellationToken cancellationToken = default)
         {
-            await base.ExecutePendingActions(concurrentMessageDelivery).ConfigureAwait(false);
+            await base.ExecutePendingActionsAsync(concurrentMessageDelivery, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-            await Task.WhenAll(_messages.Select(x => x.ExecutePendingActions(concurrentMessageDelivery))).ConfigureAwait(false);
+            await Task.WhenAll(_messages.Select(x => x.ExecutePendingActionsAsync(concurrentMessageDelivery, cancellationToken: cancellationToken))).ConfigureAwait(false);
         }
 
-        public override async Task DiscardPendingActions()
+        public override async Task DiscardPendingActionsAsync(CancellationToken cancellationToken = default)
         {
-            await base.DiscardPendingActions().ConfigureAwait(false);
+            await base.DiscardPendingActionsAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 
-            await Task.WhenAll(_messages.Select(x => x.DiscardPendingActions())).ConfigureAwait(false);
+            await Task.WhenAll(_messages.Select(x => x.DiscardPendingActionsAsync(cancellationToken: cancellationToken))).ConfigureAwait(false);
         }
 
         public override OutboxCheckpoint CreateCheckpoint()
@@ -184,7 +184,7 @@ public class InMemoryOutboxConsumeContext<T> :
                 childCheckpoints);
         }
 
-        public override async Task DiscardPendingActions(OutboxCheckpoint checkpoint)
+        public override async Task DiscardPendingActionsAsync(OutboxCheckpoint checkpoint, CancellationToken cancellationToken = default)
         {
             ArgumentNullException.ThrowIfNull(checkpoint);
             if (!ReferenceEquals(checkpoint.Owner, this))
@@ -192,10 +192,10 @@ public class InMemoryOutboxConsumeContext<T> :
             if (checkpoint.ChildCheckpoints.Count != _messages.Count)
                 throw new ArgumentException("The checkpoint does not describe this batch outbox.", nameof(checkpoint));
 
-            await base.DiscardPendingActions(checkpoint).ConfigureAwait(false);
+            await base.DiscardPendingActionsAsync(checkpoint, cancellationToken: cancellationToken).ConfigureAwait(false);
 
             await Task.WhenAll(_messages.Select((message, index) =>
-                message.DiscardPendingActions(checkpoint.ChildCheckpoints[index]))).ConfigureAwait(false);
+                message.DiscardPendingActionsAsync(checkpoint.ChildCheckpoints[index], cancellationToken: cancellationToken))).ConfigureAwait(false);
         }
     }
 }

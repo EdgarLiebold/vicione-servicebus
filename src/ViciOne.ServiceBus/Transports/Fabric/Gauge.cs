@@ -10,7 +10,7 @@ public class Gauge :
     long _activeCount;
     long _concurrentActiveCount;
 
-    public event ZeroActiveHandler ZeroActive;
+    public event ZeroActiveHandler? ZeroActive;
 
     public void Add()
     {
@@ -19,9 +19,9 @@ public class Gauge :
             Interlocked.CompareExchange(ref _concurrentActiveCount, currentActiveCount, _concurrentActiveCount);
     }
 
-    public Task Remove()
+    public Task RemoveAsync(CancellationToken cancellationToken = default)
     {
-        var pendingCount = Interlocked.Decrement(ref _activeCount);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); var pendingCount = Interlocked.Decrement(ref _activeCount);
         if (pendingCount != 0)
             return Task.CompletedTask;
 
@@ -29,10 +29,10 @@ public class Gauge :
         if (zeroActivity == null)
             return Task.CompletedTask;
 
-        return NotifyZeroActivity(zeroActivity);
+        return NotifyZeroActivityAsync(zeroActivity);
     }
 
-    static Task NotifyZeroActivity(ZeroActiveHandler zeroActivity)
+    static Task NotifyZeroActivityAsync(ZeroActiveHandler zeroActivity)
     {
         Delegate[] invocationList = zeroActivity.GetInvocationList();
 

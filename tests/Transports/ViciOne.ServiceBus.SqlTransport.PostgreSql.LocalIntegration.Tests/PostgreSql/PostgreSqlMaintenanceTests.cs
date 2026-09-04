@@ -9,7 +9,7 @@ public sealed class PostgreSqlMaintenanceTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0124", "postgresql-native-owner")]
-    public async Task RequeueProcedures_MoveOneAndManyUnlockedDeliveriesWithRequestedDelayAndBudget()
+    public async Task RequeueProcedures_MoveOneAndManyUnlockedDeliveriesWithRequestedDelayAndBudgetAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase fixture = await PostgreSqlTestDatabase.CreateAsync(
@@ -17,18 +17,18 @@ public sealed class PostgreSqlMaintenanceTests
             cancellationToken);
         string queueName = fixture.Name("requeue-input");
         await using NpgsqlConnection connection = fixture.CreateConnection();
-        await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
-        await CreateQueue(connection, fixture.Schema, queueName, cancellationToken);
+        await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
+        await CreateQueueAsync(connection, fixture.Schema, queueName, cancellationToken);
         var single = new MaintenanceMessage(Guid.NewGuid(), "single");
         var batch = new MaintenanceMessage(Guid.NewGuid(), "batch");
-        await Send(fixture, queueName, [single, batch], cancellationToken);
-        Assert.Equal(2, await MoveToErrorQueue(
+        await SendAsync(fixture, queueName, [single, batch], cancellationToken);
+        Assert.Equal(2, await MoveToErrorQueueAsync(
             connection,
             fixture.Schema,
             queueName,
             [single.Id, batch.Id],
             cancellationToken));
-        long singleDeliveryId = await DeliveryId(connection, fixture.Schema, single.Id, cancellationToken);
+        long singleDeliveryId = await DeliveryIdAsync(connection, fixture.Schema, single.Id, cancellationToken);
 
         await using (var command = new NpgsqlCommand(
             $"SELECT \"{fixture.Schema}\".requeue_message(@deliveryId, 1, INTERVAL '90 seconds', 4)",
@@ -45,8 +45,8 @@ public sealed class PostgreSqlMaintenanceTests
             Assert.Equal(1, Convert.ToInt32(await command.ExecuteScalarAsync(cancellationToken)));
         }
 
-        RequeueState singleState = await RequeueStateFor(connection, fixture.Schema, single.Id, cancellationToken);
-        RequeueState batchState = await RequeueStateFor(connection, fixture.Schema, batch.Id, cancellationToken);
+        RequeueState singleState = await RequeueStateForAsync(connection, fixture.Schema, single.Id, cancellationToken);
+        RequeueState batchState = await RequeueStateForAsync(connection, fixture.Schema, batch.Id, cancellationToken);
         Assert.Equal(1, singleState.QueueType);
         Assert.Equal(4, singleState.MaxDeliveryCount);
         Assert.Null(singleState.LockId);
@@ -67,7 +67,7 @@ public sealed class PostgreSqlMaintenanceTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0125", "postgresql-native-owner")]
-    public async Task ProcessMetrics_RollsMinutesIntoHoursAndHoursIntoDaysThenExpiresNinetyDayRows()
+    public async Task ProcessMetrics_RollsMinutesIntoHoursAndHoursIntoDaysThenExpiresNinetyDayRowsAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase fixture = await PostgreSqlTestDatabase.CreateAsync(
@@ -75,8 +75,8 @@ public sealed class PostgreSqlMaintenanceTests
             cancellationToken);
         string queueName = fixture.Name("metric-input");
         await using NpgsqlConnection connection = fixture.CreateConnection();
-        await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
-        long queueId = await CreateQueue(connection, fixture.Schema, queueName, cancellationToken);
+        await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
+        long queueId = await CreateQueueAsync(connection, fixture.Schema, queueName, cancellationToken);
         string insert = $$"""
             INSERT INTO "{{fixture.Schema}}".queue_metric
                 (start_time, duration, queue_id, consume_count, error_count, dead_letter_count)
@@ -95,7 +95,7 @@ public sealed class PostgreSqlMaintenanceTests
             connection))
             Assert.Equal(0, Convert.ToInt32(await command.ExecuteScalarAsync(cancellationToken)));
 
-        IReadOnlyList<MetricState> metrics = await MetricsFor(connection, fixture.Schema, queueId, cancellationToken);
+        IReadOnlyList<MetricState> metrics = await MetricsForAsync(connection, fixture.Schema, queueId, cancellationToken);
         Assert.Equal(2, metrics.Count);
         MetricState hourly = Assert.Single(metrics, metric => metric.Duration == TimeSpan.FromHours(1));
         Assert.Equal((11L, 12L, 13L), (hourly.ConsumeCount, hourly.ErrorCount, hourly.DeadLetterCount));
@@ -103,7 +103,7 @@ public sealed class PostgreSqlMaintenanceTests
         Assert.Equal((21L, 22L, 23L), (daily.ConsumeCount, daily.ErrorCount, daily.DeadLetterCount));
     }
 
-    private static async Task<long> CreateQueue(
+    private static async Task<long> CreateQueueAsync(
         NpgsqlConnection connection,
         string schema,
         string queueName,
@@ -118,7 +118,7 @@ public sealed class PostgreSqlMaintenanceTests
         return queueId;
     }
 
-    private static async Task Send(
+    private static async Task SendAsync(
         PostgreSqlTestDatabase fixture,
         string queueName,
         IReadOnlyList<MaintenanceMessage> messages,
@@ -130,11 +130,11 @@ public sealed class PostgreSqlMaintenanceTests
         {
             await sender.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint endpoint = await sender.GetSendEndpoint(new Uri($"queue:{queueName}"))
+            ISendEndpoint endpoint = await sender.GetSendEndpointAsync(new Uri($"queue:{queueName}"), cancellationToken: cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             foreach (MaintenanceMessage message in messages)
             {
-                await endpoint.Send(message, context => context.MessageId = message.Id, cancellationToken)
+                await endpoint.SendAsync(message, context => context.MessageId = message.Id, cancellationToken)
                     .WaitAsync(fixture.OperationTimeout, cancellationToken);
             }
         }
@@ -145,7 +145,7 @@ public sealed class PostgreSqlMaintenanceTests
         }
     }
 
-    private static async Task<int> MoveToErrorQueue(
+    private static async Task<int> MoveToErrorQueueAsync(
         NpgsqlConnection connection,
         string schema,
         string queueName,
@@ -162,7 +162,7 @@ public sealed class PostgreSqlMaintenanceTests
         return await command.ExecuteNonQueryAsync(cancellationToken);
     }
 
-    private static async Task<long> DeliveryId(
+    private static async Task<long> DeliveryIdAsync(
         NpgsqlConnection connection,
         string schema,
         Guid messageId,
@@ -176,7 +176,7 @@ public sealed class PostgreSqlMaintenanceTests
         return Convert.ToInt64(await command.ExecuteScalarAsync(cancellationToken));
     }
 
-    private static async Task<RequeueState> RequeueStateFor(
+    private static async Task<RequeueState> RequeueStateForAsync(
         NpgsqlConnection connection,
         string schema,
         Guid messageId,
@@ -201,7 +201,7 @@ public sealed class PostgreSqlMaintenanceTests
         return result;
     }
 
-    private static async Task<IReadOnlyList<MetricState>> MetricsFor(
+    private static async Task<IReadOnlyList<MetricState>> MetricsForAsync(
         NpgsqlConnection connection,
         string schema,
         long queueId,

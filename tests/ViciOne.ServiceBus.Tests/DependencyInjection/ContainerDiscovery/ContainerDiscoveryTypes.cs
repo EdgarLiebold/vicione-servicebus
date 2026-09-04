@@ -12,9 +12,9 @@ public sealed record PingLog(Guid CorrelationId);
 
 public sealed class DiscoveryPingConsumer : IConsumer<DiscoveryPing>
 {
-    public async Task Consume(ConsumeContext<DiscoveryPing> context)
+    public async Task ConsumeAsync(ConsumeContext<DiscoveryPing> context)
     {
-        await context.Publish(new PingReceived(context.Message.CorrelationId), context.CancellationToken);
+        await context.Advanced().PublishAsync(new PingReceived(context.Message.CorrelationId), context.CancellationToken);
         await context.RespondAsync(new DiscoveryPong(context.Message.CorrelationId));
     }
 }
@@ -30,7 +30,7 @@ public sealed class DiscoveryPingConsumerDefinition : ConsumerDefinition<Discove
 
 public sealed class DiscoveryExcludedConsumer : IConsumer<DiscoveryPong>
 {
-    public Task Consume(ConsumeContext<DiscoveryPong> context) => Task.CompletedTask;
+    public Task ConsumeAsync(ConsumeContext<DiscoveryPong> context) => Task.CompletedTask;
 }
 
 public sealed class DiscoveryPingSaga :
@@ -40,9 +40,9 @@ public sealed class DiscoveryPingSaga :
 {
     public Guid CorrelationId { get; set; }
 
-    public Task Consume(ConsumeContext<PingReceived> context) => Task.CompletedTask;
+    public Task ConsumeAsync(ConsumeContext<PingReceived> context) => Task.CompletedTask;
 
-    public Task Consume(ConsumeContext<PingAcknowledged> context) => Task.CompletedTask;
+    public Task ConsumeAsync(ConsumeContext<PingAcknowledged> context) => Task.CompletedTask;
 }
 
 public sealed class DiscoveryPingState : SagaStateMachineInstance
@@ -85,15 +85,15 @@ public sealed class DiscoveryPingStateDefinition : SagaDefinition<DiscoveryPingS
 
 public sealed class PingActivity : IActivity<PingArguments, PingLog>
 {
-    public Task<ExecutionResult> Execute(ExecuteContext<PingArguments> context) =>
+    public Task<ExecutionResult> ExecuteAsync(ExecuteContext<PingArguments> context) =>
         Task.FromResult(context.Completed<PingLog>(new PingLog(context.Arguments.CorrelationId)));
 
-    public Task<CompensationResult> Compensate(CompensateContext<PingLog> context) =>
+    public Task<CompensationResult> CompensateAsync(CompensateContext<PingLog> context) =>
         Task.FromResult(context.Compensated());
 }
 
 public sealed class PingSecondActivity : IExecuteActivity<PingArguments>
 {
-    public Task<ExecutionResult> Execute(ExecuteContext<PingArguments> context) =>
+    public Task<ExecutionResult> ExecuteAsync(ExecuteContext<PingArguments> context) =>
         Task.FromResult(context.Completed());
 }

@@ -19,5 +19,5 @@ public interface IAsyncElementList<out TElement>
 
     IAsyncEnumerable<TElement> SelectAsync(FilterDelegate<TElement> filter, CancellationToken cancellationToken = default);
 
-    Task<bool> Any(FilterDelegate<TElement> filter, CancellationToken cancellationToken = default);
+    Task<bool> AnyAsync(FilterDelegate<TElement> filter, CancellationToken cancellationToken = default);
 }

@@ -18,7 +18,7 @@ public static class MessageFactory<T>
             : Create(message);
     }
 
-    public static TaskMessageFactory<T> Create(T message, Action<SendContext<T>> callback)
+    public static TaskMessageFactory<T> Create(T message, Action<SendContext<T>>? callback)
     {
         if (callback == null)
             return Create(message);
@@ -33,12 +33,12 @@ public static class MessageFactory<T>
         if (factory.Status == TaskStatus.RanToCompletion)
             return new TaskMessageFactory<T>(Task.FromResult(new SendTuple<T>(factory.GetAwaiter().GetResult())));
 
-        async Task<SendTuple<T>> Factory()
+        async Task<SendTuple<T>> FactoryAsync()
         {
             return new SendTuple<T>(await factory.ConfigureAwait(false));
         }
 
-        return new TaskMessageFactory<T>(Factory());
+        return new TaskMessageFactory<T>(FactoryAsync());
     }
 
     public static TaskMessageFactory<T> Create(Task<T> factory, IPipe<SendContext<T>> pipe)
@@ -49,15 +49,15 @@ public static class MessageFactory<T>
         if (factory.Status == TaskStatus.RanToCompletion)
             return new TaskMessageFactory<T>(Task.FromResult(new SendTuple<T>(factory.GetAwaiter().GetResult(), pipe)));
 
-        async Task<SendTuple<T>> Factory()
+        async Task<SendTuple<T>> FactoryAsync()
         {
             return new SendTuple<T>(await factory.ConfigureAwait(false), pipe);
         }
 
-        return new TaskMessageFactory<T>(Factory());
+        return new TaskMessageFactory<T>(FactoryAsync());
     }
 
-    public static TaskMessageFactory<T> Create(Task<T> factory, Action<SendContext<T>> callback)
+    public static TaskMessageFactory<T> Create(Task<T> factory, Action<SendContext<T>>? callback)
     {
         if (callback == null)
             return Create(factory);
@@ -67,12 +67,12 @@ public static class MessageFactory<T>
         if (factory.Status == TaskStatus.RanToCompletion)
             return new TaskMessageFactory<T>(Task.FromResult(new SendTuple<T>(factory.GetAwaiter().GetResult(), callbackPipe)));
 
-        async Task<SendTuple<T>> Factory()
+        async Task<SendTuple<T>> FactoryAsync()
         {
             return new SendTuple<T>(await factory.ConfigureAwait(false), callbackPipe);
         }
 
-        return new TaskMessageFactory<T>(Factory());
+        return new TaskMessageFactory<T>(FactoryAsync());
     }
 
     // Saga/Message
@@ -106,14 +106,14 @@ public static class MessageFactory<T>
     }
 
     public static ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> Create<TSaga, TMessage>(
-        Func<BehaviorContext<TSaga, TMessage>, Task<SendTuple<T>>> factory, Action<SendContext<T>> callback)
+        Func<BehaviorContext<TSaga, TMessage>, Task<SendTuple<T>>> factory, Action<SendContext<T>>? callback)
         where TSaga : class, SagaStateMachineInstance
         where TMessage : class
     {
         if (callback == null)
             return Create(factory);
 
-        async Task<SendTuple<T>> Factory(BehaviorContext<TSaga, TMessage> context)
+        async Task<SendTuple<T>> FactoryAsync(BehaviorContext<TSaga, TMessage> context)
         {
             (var message, IPipe<SendContext<T>> sendPipe) = await factory(context).ConfigureAwait(false);
             if (sendPipe.IsNotEmpty())
@@ -125,7 +125,7 @@ public static class MessageFactory<T>
             return new SendTuple<T>(message, Pipe.Execute(callback));
         }
 
-        return new ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T>(Factory);
+        return new ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> Create<TSaga, TMessage>(
@@ -136,7 +136,7 @@ public static class MessageFactory<T>
         if (callback == null)
             return Create(factory);
 
-        async Task<SendTuple<T>> Factory(BehaviorContext<TSaga, TMessage> context)
+        async Task<SendTuple<T>> FactoryAsync(BehaviorContext<TSaga, TMessage> context)
         {
             SendTuple<T> result = await factory(context).ConfigureAwait(false);
             if (result.Pipe.IsNotEmpty())
@@ -148,28 +148,28 @@ public static class MessageFactory<T>
             return new SendTuple<T>(result.Message, Pipe.Execute<SendContext<T>>(ctx => callback(context, ctx)));
         }
 
-        return new ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T>(Factory);
+        return new ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> Create<TSaga, TMessage>(AsyncEventMessageFactory<TSaga, TMessage, T> factory)
         where TSaga : class, SagaStateMachineInstance
         where TMessage : class
     {
-        Task<SendTuple<T>> Factory(BehaviorContext<TSaga, TMessage> context)
+        Task<SendTuple<T>> FactoryAsync(BehaviorContext<TSaga, TMessage> context)
         {
             Task<T> result = factory(context);
             if (result.Status == TaskStatus.RanToCompletion)
                 return Task.FromResult(new SendTuple<T>(result.GetAwaiter().GetResult()));
 
-            async Task<SendTuple<T>> GetResult()
+            async Task<SendTuple<T>> GetResultAsync()
             {
                 return new SendTuple<T>(await result.ConfigureAwait(false));
             }
 
-            return GetResult();
+            return GetResultAsync();
         }
 
-        return new ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T>(Factory);
+        return new ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> Create<TSaga, TMessage>(AsyncEventMessageFactory<TSaga, TMessage, T> factory,
@@ -180,25 +180,25 @@ public static class MessageFactory<T>
         if (!pipe.IsNotEmpty())
             return Create(factory);
 
-        Task<SendTuple<T>> Factory(BehaviorContext<TSaga, TMessage> context)
+        Task<SendTuple<T>> FactoryAsync(BehaviorContext<TSaga, TMessage> context)
         {
             Task<T> result = factory(context);
             if (result.Status == TaskStatus.RanToCompletion)
                 return Task.FromResult(new SendTuple<T>(result.GetAwaiter().GetResult(), pipe));
 
-            async Task<SendTuple<T>> GetResult()
+            async Task<SendTuple<T>> GetResultAsync()
             {
                 return new SendTuple<T>(await result.ConfigureAwait(false), pipe);
             }
 
-            return GetResult();
+            return GetResultAsync();
         }
 
-        return new ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T>(Factory);
+        return new ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> Create<TSaga, TMessage>(AsyncEventMessageFactory<TSaga, TMessage, T> factory,
-        Action<SendContext<T>> callback)
+        Action<SendContext<T>>? callback)
         where TSaga : class, SagaStateMachineInstance
         where TMessage : class
     {
@@ -213,7 +213,7 @@ public static class MessageFactory<T>
         if (callback == null)
             return Create(factory);
 
-        Task<SendTuple<T>> Factory(BehaviorContext<TSaga, TMessage> context)
+        Task<SendTuple<T>> FactoryAsync(BehaviorContext<TSaga, TMessage> context)
         {
             IPipe<SendContext<T>> callbackPipe = Pipe.Execute<SendContext<T>>(ctx => callback(context, ctx));
 
@@ -221,28 +221,28 @@ public static class MessageFactory<T>
             if (result.Status == TaskStatus.RanToCompletion)
                 return Task.FromResult(new SendTuple<T>(result.GetAwaiter().GetResult(), callbackPipe));
 
-            async Task<SendTuple<T>> GetResult()
+            async Task<SendTuple<T>> GetResultAsync()
             {
                 return new SendTuple<T>(await result.ConfigureAwait(false), callbackPipe);
             }
 
-            return GetResult();
+            return GetResultAsync();
         }
 
-        return new ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T>(Factory);
+        return new ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> Create<TSaga, TMessage>(EventMessageFactory<TSaga, TMessage, T> factory)
         where TSaga : class, SagaStateMachineInstance
         where TMessage : class
     {
-        Task<SendTuple<T>> Factory(BehaviorContext<TSaga, TMessage> context)
+        Task<SendTuple<T>> FactoryAsync(BehaviorContext<TSaga, TMessage> context)
         {
             var result = factory(context);
             return Task.FromResult(new SendTuple<T>(result));
         }
 
-        return new ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T>(Factory);
+        return new ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> Create<TSaga, TMessage>(EventMessageFactory<TSaga, TMessage, T> factory,
@@ -253,17 +253,17 @@ public static class MessageFactory<T>
         if (!pipe.IsNotEmpty())
             return Create(factory);
 
-        Task<SendTuple<T>> Factory(BehaviorContext<TSaga, TMessage> context)
+        Task<SendTuple<T>> FactoryAsync(BehaviorContext<TSaga, TMessage> context)
         {
             var result = factory(context);
             return Task.FromResult(new SendTuple<T>(result, pipe));
         }
 
-        return new ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T>(Factory);
+        return new ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> Create<TSaga, TMessage>(EventMessageFactory<TSaga, TMessage, T> factory,
-        Action<SendContext<T>> callback)
+        Action<SendContext<T>>? callback)
         where TSaga : class, SagaStateMachineInstance
         where TMessage : class
     {
@@ -278,7 +278,7 @@ public static class MessageFactory<T>
         if (callback == null)
             return Create(factory);
 
-        Task<SendTuple<T>> Factory(BehaviorContext<TSaga, TMessage> context)
+        Task<SendTuple<T>> FactoryAsync(BehaviorContext<TSaga, TMessage> context)
         {
             IPipe<SendContext<T>> callbackPipe = Pipe.Execute<SendContext<T>>(ctx => callback(context, ctx));
 
@@ -286,7 +286,7 @@ public static class MessageFactory<T>
             return Task.FromResult(new SendTuple<T>(result, callbackPipe));
         }
 
-        return new ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T>(Factory);
+        return new ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T> Create<TSaga, TMessage, TException>(T message,
@@ -321,7 +321,7 @@ public static class MessageFactory<T>
     }
 
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T> Create<TSaga, TMessage, TException>(
-        Func<BehaviorExceptionContext<TSaga, TMessage, TException>, Task<SendTuple<T>>> factory, Action<SendContext<T>> callback)
+        Func<BehaviorExceptionContext<TSaga, TMessage, TException>, Task<SendTuple<T>>> factory, Action<SendContext<T>>? callback)
         where TSaga : class, SagaStateMachineInstance
         where TMessage : class
         where TException : Exception
@@ -329,7 +329,7 @@ public static class MessageFactory<T>
         if (callback == null)
             return Create(factory);
 
-        async Task<SendTuple<T>> Factory(BehaviorExceptionContext<TSaga, TMessage, TException> context)
+        async Task<SendTuple<T>> FactoryAsync(BehaviorExceptionContext<TSaga, TMessage, TException> context)
         {
             SendTuple<T> result = await factory(context).ConfigureAwait(false);
             if (result.Pipe.IsNotEmpty())
@@ -341,7 +341,7 @@ public static class MessageFactory<T>
             return new SendTuple<T>(result.Message, Pipe.Execute(callback));
         }
 
-        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T>(Factory);
+        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T> Create<TSaga, TMessage, TException>(
@@ -354,7 +354,7 @@ public static class MessageFactory<T>
         if (callback == null)
             return Create(factory);
 
-        async Task<SendTuple<T>> Factory(BehaviorExceptionContext<TSaga, TMessage, TException> context)
+        async Task<SendTuple<T>> FactoryAsync(BehaviorExceptionContext<TSaga, TMessage, TException> context)
         {
             SendTuple<T> result = await factory(context).ConfigureAwait(false);
             if (result.Pipe.IsNotEmpty())
@@ -366,7 +366,7 @@ public static class MessageFactory<T>
             return new SendTuple<T>(result.Message, Pipe.Execute<SendContext<T>>(ctx => callback(context, ctx)));
         }
 
-        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T>(Factory);
+        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T> Create<TSaga, TMessage, TException>(
@@ -375,21 +375,21 @@ public static class MessageFactory<T>
         where TMessage : class
         where TException : Exception
     {
-        Task<SendTuple<T>> Factory(BehaviorExceptionContext<TSaga, TMessage, TException> context)
+        Task<SendTuple<T>> FactoryAsync(BehaviorExceptionContext<TSaga, TMessage, TException> context)
         {
             Task<T> result = factory(context);
             if (result.Status == TaskStatus.RanToCompletion)
                 return Task.FromResult(new SendTuple<T>(result.GetAwaiter().GetResult()));
 
-            async Task<SendTuple<T>> GetResult()
+            async Task<SendTuple<T>> GetResultAsync()
             {
                 return new SendTuple<T>(await result.ConfigureAwait(false));
             }
 
-            return GetResult();
+            return GetResultAsync();
         }
 
-        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T>(Factory);
+        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T> Create<TSaga, TMessage, TException>(
@@ -401,25 +401,25 @@ public static class MessageFactory<T>
         if (!pipe.IsNotEmpty())
             return Create(factory);
 
-        Task<SendTuple<T>> Factory(BehaviorExceptionContext<TSaga, TMessage, TException> context)
+        Task<SendTuple<T>> FactoryAsync(BehaviorExceptionContext<TSaga, TMessage, TException> context)
         {
             Task<T> result = factory(context);
             if (result.Status == TaskStatus.RanToCompletion)
                 return Task.FromResult(new SendTuple<T>(result.GetAwaiter().GetResult(), pipe));
 
-            async Task<SendTuple<T>> GetResult()
+            async Task<SendTuple<T>> GetResultAsync()
             {
                 return new SendTuple<T>(await result.ConfigureAwait(false), pipe);
             }
 
-            return GetResult();
+            return GetResultAsync();
         }
 
-        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T>(Factory);
+        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T> Create<TSaga, TMessage, TException>(
-        AsyncEventExceptionMessageFactory<TSaga, TMessage, TException, T> factory, Action<SendContext<T>> callback)
+        AsyncEventExceptionMessageFactory<TSaga, TMessage, TException, T> factory, Action<SendContext<T>>? callback)
         where TSaga : class, SagaStateMachineInstance
         where TMessage : class
         where TException : Exception
@@ -436,7 +436,7 @@ public static class MessageFactory<T>
         if (callback == null)
             return Create(factory);
 
-        Task<SendTuple<T>> Factory(BehaviorExceptionContext<TSaga, TMessage, TException> context)
+        Task<SendTuple<T>> FactoryAsync(BehaviorExceptionContext<TSaga, TMessage, TException> context)
         {
             IPipe<SendContext<T>> callbackPipe = Pipe.Execute<SendContext<T>>(ctx => callback(context, ctx));
 
@@ -444,15 +444,15 @@ public static class MessageFactory<T>
             if (result.Status == TaskStatus.RanToCompletion)
                 return Task.FromResult(new SendTuple<T>(result.GetAwaiter().GetResult(), callbackPipe));
 
-            async Task<SendTuple<T>> GetResult()
+            async Task<SendTuple<T>> GetResultAsync()
             {
                 return new SendTuple<T>(await result.ConfigureAwait(false), callbackPipe);
             }
 
-            return GetResult();
+            return GetResultAsync();
         }
 
-        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T>(Factory);
+        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T> Create<TSaga, TMessage, TException>(
@@ -461,13 +461,13 @@ public static class MessageFactory<T>
         where TMessage : class
         where TException : Exception
     {
-        Task<SendTuple<T>> Factory(BehaviorExceptionContext<TSaga, TMessage, TException> context)
+        Task<SendTuple<T>> FactoryAsync(BehaviorExceptionContext<TSaga, TMessage, TException> context)
         {
             var result = factory(context);
             return Task.FromResult(new SendTuple<T>(result));
         }
 
-        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T>(Factory);
+        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T> Create<TSaga, TMessage, TException>(
@@ -479,17 +479,17 @@ public static class MessageFactory<T>
         if (!pipe.IsNotEmpty())
             return Create(factory);
 
-        Task<SendTuple<T>> Factory(BehaviorExceptionContext<TSaga, TMessage, TException> context)
+        Task<SendTuple<T>> FactoryAsync(BehaviorExceptionContext<TSaga, TMessage, TException> context)
         {
             var result = factory(context);
             return Task.FromResult(new SendTuple<T>(result, pipe));
         }
 
-        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T>(Factory);
+        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T> Create<TSaga, TMessage, TException>(
-        EventExceptionMessageFactory<TSaga, TMessage, TException, T> factory, Action<SendContext<T>> callback)
+        EventExceptionMessageFactory<TSaga, TMessage, TException, T> factory, Action<SendContext<T>>? callback)
         where TSaga : class, SagaStateMachineInstance
         where TMessage : class
         where TException : Exception
@@ -506,7 +506,7 @@ public static class MessageFactory<T>
         if (callback == null)
             return Create(factory);
 
-        Task<SendTuple<T>> Factory(BehaviorExceptionContext<TSaga, TMessage, TException> context)
+        Task<SendTuple<T>> FactoryAsync(BehaviorExceptionContext<TSaga, TMessage, TException> context)
         {
             IPipe<SendContext<T>> callbackPipe = Pipe.Execute<SendContext<T>>(ctx => callback(context, ctx));
 
@@ -514,7 +514,7 @@ public static class MessageFactory<T>
             return Task.FromResult(new SendTuple<T>(result, callbackPipe));
         }
 
-        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T>(Factory);
+        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TMessage, TException>, T>(FactoryAsync);
     }
 
     // Saga Only
@@ -562,13 +562,13 @@ public static class MessageFactory<T>
     }
 
     public static ContextMessageFactory<BehaviorContext<TSaga>, T> Create<TSaga>(Func<BehaviorContext<TSaga>, Task<SendTuple<T>>> factory,
-        Action<SendContext<T>> callback)
+        Action<SendContext<T>>? callback)
         where TSaga : class, SagaStateMachineInstance
     {
         if (callback == null)
             return Create(factory);
 
-        async Task<SendTuple<T>> Factory(BehaviorContext<TSaga> context)
+        async Task<SendTuple<T>> FactoryAsync(BehaviorContext<TSaga> context)
         {
             SendTuple<T> result = await factory(context).ConfigureAwait(false);
             if (result.Pipe.IsNotEmpty())
@@ -580,7 +580,7 @@ public static class MessageFactory<T>
             return new SendTuple<T>(result.Message, Pipe.Execute(callback));
         }
 
-        return new ContextMessageFactory<BehaviorContext<TSaga>, T>(Factory);
+        return new ContextMessageFactory<BehaviorContext<TSaga>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorContext<TSaga>, T> Create<TSaga>(Func<BehaviorContext<TSaga>, Task<SendTuple<T>>> factory,
@@ -590,7 +590,7 @@ public static class MessageFactory<T>
         if (callback == null)
             return Create(factory);
 
-        async Task<SendTuple<T>> Factory(BehaviorContext<TSaga> context)
+        async Task<SendTuple<T>> FactoryAsync(BehaviorContext<TSaga> context)
         {
             SendTuple<T> result = await factory(context).ConfigureAwait(false);
             if (result.Pipe.IsNotEmpty())
@@ -602,27 +602,27 @@ public static class MessageFactory<T>
             return new SendTuple<T>(result.Message, Pipe.Execute<SendContext<T>>(ctx => callback(context, ctx)));
         }
 
-        return new ContextMessageFactory<BehaviorContext<TSaga>, T>(Factory);
+        return new ContextMessageFactory<BehaviorContext<TSaga>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorContext<TSaga>, T> Create<TSaga>(AsyncEventMessageFactory<TSaga, T> factory)
         where TSaga : class, SagaStateMachineInstance
     {
-        Task<SendTuple<T>> Factory(BehaviorContext<TSaga> context)
+        Task<SendTuple<T>> FactoryAsync(BehaviorContext<TSaga> context)
         {
             Task<T> result = factory(context);
             if (result.Status == TaskStatus.RanToCompletion)
                 return Task.FromResult(new SendTuple<T>(result.GetAwaiter().GetResult()));
 
-            async Task<SendTuple<T>> GetResult()
+            async Task<SendTuple<T>> GetResultAsync()
             {
                 return new SendTuple<T>(await result.ConfigureAwait(false));
             }
 
-            return GetResult();
+            return GetResultAsync();
         }
 
-        return new ContextMessageFactory<BehaviorContext<TSaga>, T>(Factory);
+        return new ContextMessageFactory<BehaviorContext<TSaga>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorContext<TSaga>, T> Create<TSaga>(AsyncEventMessageFactory<TSaga, T> factory,
@@ -632,25 +632,25 @@ public static class MessageFactory<T>
         if (!pipe.IsNotEmpty())
             return Create(factory);
 
-        Task<SendTuple<T>> Factory(BehaviorContext<TSaga> context)
+        Task<SendTuple<T>> FactoryAsync(BehaviorContext<TSaga> context)
         {
             Task<T> result = factory(context);
             if (result.Status == TaskStatus.RanToCompletion)
                 return Task.FromResult(new SendTuple<T>(result.GetAwaiter().GetResult(), pipe));
 
-            async Task<SendTuple<T>> GetResult()
+            async Task<SendTuple<T>> GetResultAsync()
             {
                 return new SendTuple<T>(await result.ConfigureAwait(false), pipe);
             }
 
-            return GetResult();
+            return GetResultAsync();
         }
 
-        return new ContextMessageFactory<BehaviorContext<TSaga>, T>(Factory);
+        return new ContextMessageFactory<BehaviorContext<TSaga>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorContext<TSaga>, T> Create<TSaga>(AsyncEventMessageFactory<TSaga, T> factory,
-        Action<SendContext<T>> callback)
+        Action<SendContext<T>>? callback)
         where TSaga : class, SagaStateMachineInstance
     {
         return callback == null ? Create(factory) : Create(factory, Pipe.Execute(callback));
@@ -663,7 +663,7 @@ public static class MessageFactory<T>
         if (callback == null)
             return Create(factory);
 
-        Task<SendTuple<T>> Factory(BehaviorContext<TSaga> context)
+        Task<SendTuple<T>> FactoryAsync(BehaviorContext<TSaga> context)
         {
             IPipe<SendContext<T>> callbackPipe = Pipe.Execute<SendContext<T>>(ctx => callback(context, ctx));
 
@@ -671,27 +671,27 @@ public static class MessageFactory<T>
             if (result.Status == TaskStatus.RanToCompletion)
                 return Task.FromResult(new SendTuple<T>(result.GetAwaiter().GetResult(), callbackPipe));
 
-            async Task<SendTuple<T>> GetResult()
+            async Task<SendTuple<T>> GetResultAsync()
             {
                 return new SendTuple<T>(await result.ConfigureAwait(false), callbackPipe);
             }
 
-            return GetResult();
+            return GetResultAsync();
         }
 
-        return new ContextMessageFactory<BehaviorContext<TSaga>, T>(Factory);
+        return new ContextMessageFactory<BehaviorContext<TSaga>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorContext<TSaga>, T> Create<TSaga>(EventMessageFactory<TSaga, T> factory)
         where TSaga : class, SagaStateMachineInstance
     {
-        Task<SendTuple<T>> Factory(BehaviorContext<TSaga> context)
+        Task<SendTuple<T>> FactoryAsync(BehaviorContext<TSaga> context)
         {
             var result = factory(context);
             return Task.FromResult(new SendTuple<T>(result));
         }
 
-        return new ContextMessageFactory<BehaviorContext<TSaga>, T>(Factory);
+        return new ContextMessageFactory<BehaviorContext<TSaga>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorContext<TSaga>, T> Create<TSaga>(EventMessageFactory<TSaga, T> factory,
@@ -701,17 +701,17 @@ public static class MessageFactory<T>
         if (!pipe.IsNotEmpty())
             return Create(factory);
 
-        Task<SendTuple<T>> Factory(BehaviorContext<TSaga> context)
+        Task<SendTuple<T>> FactoryAsync(BehaviorContext<TSaga> context)
         {
             var result = factory(context);
             return Task.FromResult(new SendTuple<T>(result, pipe));
         }
 
-        return new ContextMessageFactory<BehaviorContext<TSaga>, T>(Factory);
+        return new ContextMessageFactory<BehaviorContext<TSaga>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorContext<TSaga>, T> Create<TSaga>(EventMessageFactory<TSaga, T> factory,
-        Action<SendContext<T>> callback)
+        Action<SendContext<T>>? callback)
         where TSaga : class, SagaStateMachineInstance
     {
         return callback == null ? Create(factory) : Create(factory, Pipe.Execute(callback));
@@ -724,7 +724,7 @@ public static class MessageFactory<T>
         if (callback == null)
             return Create(factory);
 
-        Task<SendTuple<T>> Factory(BehaviorContext<TSaga> context)
+        Task<SendTuple<T>> FactoryAsync(BehaviorContext<TSaga> context)
         {
             IPipe<SendContext<T>> callbackPipe = Pipe.Execute<SendContext<T>>(ctx => callback(context, ctx));
 
@@ -732,7 +732,7 @@ public static class MessageFactory<T>
             return Task.FromResult(new SendTuple<T>(result, callbackPipe));
         }
 
-        return new ContextMessageFactory<BehaviorContext<TSaga>, T>(Factory);
+        return new ContextMessageFactory<BehaviorContext<TSaga>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T> Create<TSaga, TException>(
@@ -744,14 +744,14 @@ public static class MessageFactory<T>
     }
 
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T> Create<TSaga, TException>(
-        Func<BehaviorExceptionContext<TSaga, TException>, Task<SendTuple<T>>> factory, Action<SendContext<T>> callback)
+        Func<BehaviorExceptionContext<TSaga, TException>, Task<SendTuple<T>>> factory, Action<SendContext<T>>? callback)
         where TSaga : class, SagaStateMachineInstance
         where TException : Exception
     {
         if (callback == null)
             return Create(factory);
 
-        async Task<SendTuple<T>> Factory(BehaviorExceptionContext<TSaga, TException> context)
+        async Task<SendTuple<T>> FactoryAsync(BehaviorExceptionContext<TSaga, TException> context)
         {
             (var message, IPipe<SendContext<T>> sendPipe) = await factory(context).ConfigureAwait(false);
             if (sendPipe.IsNotEmpty())
@@ -763,7 +763,7 @@ public static class MessageFactory<T>
             return new SendTuple<T>(message, Pipe.Execute(callback));
         }
 
-        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T>(Factory);
+        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T> Create<TSaga, TException>(
@@ -774,7 +774,7 @@ public static class MessageFactory<T>
         if (callback == null)
             return Create(factory);
 
-        async Task<SendTuple<T>> Factory(BehaviorExceptionContext<TSaga, TException> context)
+        async Task<SendTuple<T>> FactoryAsync(BehaviorExceptionContext<TSaga, TException> context)
         {
             (var message, IPipe<SendContext<T>> sendPipe) = await factory(context).ConfigureAwait(false);
             if (sendPipe.IsNotEmpty())
@@ -786,7 +786,7 @@ public static class MessageFactory<T>
             return new SendTuple<T>(message, Pipe.Execute<SendContext<T>>(ctx => callback(context, ctx)));
         }
 
-        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T>(Factory);
+        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T> Create<TSaga, TException>(
@@ -794,21 +794,21 @@ public static class MessageFactory<T>
         where TSaga : class, SagaStateMachineInstance
         where TException : Exception
     {
-        Task<SendTuple<T>> Factory(BehaviorExceptionContext<TSaga, TException> context)
+        Task<SendTuple<T>> FactoryAsync(BehaviorExceptionContext<TSaga, TException> context)
         {
             Task<T> result = factory(context);
             if (result.Status == TaskStatus.RanToCompletion)
                 return Task.FromResult(new SendTuple<T>(result.GetAwaiter().GetResult()));
 
-            async Task<SendTuple<T>> GetResult()
+            async Task<SendTuple<T>> GetResultAsync()
             {
                 return new SendTuple<T>(await result.ConfigureAwait(false));
             }
 
-            return GetResult();
+            return GetResultAsync();
         }
 
-        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T>(Factory);
+        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T> Create<TSaga, TException>(
@@ -819,25 +819,25 @@ public static class MessageFactory<T>
         if (!pipe.IsNotEmpty())
             return Create(factory);
 
-        Task<SendTuple<T>> Factory(BehaviorExceptionContext<TSaga, TException> context)
+        Task<SendTuple<T>> FactoryAsync(BehaviorExceptionContext<TSaga, TException> context)
         {
             Task<T> result = factory(context);
             if (result.Status == TaskStatus.RanToCompletion)
                 return Task.FromResult(new SendTuple<T>(result.GetAwaiter().GetResult(), pipe));
 
-            async Task<SendTuple<T>> GetResult()
+            async Task<SendTuple<T>> GetResultAsync()
             {
                 return new SendTuple<T>(await result.ConfigureAwait(false), pipe);
             }
 
-            return GetResult();
+            return GetResultAsync();
         }
 
-        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T>(Factory);
+        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T> Create<TSaga, TException>(
-        AsyncEventExceptionMessageFactory<TSaga, TException, T> factory, Action<SendContext<T>> callback)
+        AsyncEventExceptionMessageFactory<TSaga, TException, T> factory, Action<SendContext<T>>? callback)
         where TSaga : class, SagaStateMachineInstance
         where TException : Exception
     {
@@ -852,7 +852,7 @@ public static class MessageFactory<T>
         if (callback == null)
             return Create(factory);
 
-        Task<SendTuple<T>> Factory(BehaviorExceptionContext<TSaga, TException> context)
+        Task<SendTuple<T>> FactoryAsync(BehaviorExceptionContext<TSaga, TException> context)
         {
             IPipe<SendContext<T>> callbackPipe = Pipe.Execute<SendContext<T>>(ctx => callback(context, ctx));
 
@@ -860,15 +860,15 @@ public static class MessageFactory<T>
             if (result.Status == TaskStatus.RanToCompletion)
                 return Task.FromResult(new SendTuple<T>(result.GetAwaiter().GetResult(), callbackPipe));
 
-            async Task<SendTuple<T>> GetResult()
+            async Task<SendTuple<T>> GetResultAsync()
             {
                 return new SendTuple<T>(await result.ConfigureAwait(false), callbackPipe);
             }
 
-            return GetResult();
+            return GetResultAsync();
         }
 
-        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T>(Factory);
+        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T> Create<TSaga, TException>(
@@ -876,13 +876,13 @@ public static class MessageFactory<T>
         where TSaga : class, SagaStateMachineInstance
         where TException : Exception
     {
-        Task<SendTuple<T>> Factory(BehaviorExceptionContext<TSaga, TException> context)
+        Task<SendTuple<T>> FactoryAsync(BehaviorExceptionContext<TSaga, TException> context)
         {
             var result = factory(context);
             return Task.FromResult(new SendTuple<T>(result));
         }
 
-        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T>(Factory);
+        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T> Create<TSaga, TException>(
@@ -893,17 +893,17 @@ public static class MessageFactory<T>
         if (!pipe.IsNotEmpty())
             return Create(factory);
 
-        Task<SendTuple<T>> Factory(BehaviorExceptionContext<TSaga, TException> context)
+        Task<SendTuple<T>> FactoryAsync(BehaviorExceptionContext<TSaga, TException> context)
         {
             var result = factory(context);
             return Task.FromResult(new SendTuple<T>(result, pipe));
         }
 
-        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T>(Factory);
+        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T>(FactoryAsync);
     }
 
     public static ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T> Create<TSaga, TException>(
-        EventExceptionMessageFactory<TSaga, TException, T> factory, Action<SendContext<T>> callback)
+        EventExceptionMessageFactory<TSaga, TException, T> factory, Action<SendContext<T>>? callback)
         where TSaga : class, SagaStateMachineInstance
         where TException : Exception
     {
@@ -918,7 +918,7 @@ public static class MessageFactory<T>
         if (callback == null)
             return Create(factory);
 
-        Task<SendTuple<T>> Factory(BehaviorExceptionContext<TSaga, TException> context)
+        Task<SendTuple<T>> FactoryAsync(BehaviorExceptionContext<TSaga, TException> context)
         {
             IPipe<SendContext<T>> callbackPipe = Pipe.Execute<SendContext<T>>(ctx => callback(context, ctx));
 
@@ -926,6 +926,6 @@ public static class MessageFactory<T>
             return Task.FromResult(new SendTuple<T>(result, callbackPipe));
         }
 
-        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T>(Factory);
+        return new ContextMessageFactory<BehaviorExceptionContext<TSaga, TException>, T>(FactoryAsync);
     }
 }

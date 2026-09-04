@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Diagnostics;
@@ -11,7 +10,7 @@ internal sealed class DurableSendConsumerCompletion<TBus> : IDurableSendConsumer
 {
     readonly Guid _generationToken;
     readonly V5ServiceBusInstrumentation<TBus> _instrumentation;
-    readonly long _startedTimestamp = Stopwatch.GetTimestamp();
+    readonly long _startedTimestamp;
     readonly IDurableSendStore<TBus> _store;
     readonly TimeProvider _timeProvider;
 
@@ -29,6 +28,7 @@ internal sealed class DurableSendConsumerCompletion<TBus> : IDurableSendConsumer
         _store = store ?? throw new ArgumentNullException(nameof(store));
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         _instrumentation = instrumentation ?? throw new ArgumentNullException(nameof(instrumentation));
+        _startedTimestamp = _timeProvider.GetTimestamp();
     }
 
     public DurableSendId DurableSendId { get; }
@@ -40,7 +40,7 @@ internal sealed class DurableSendConsumerCompletion<TBus> : IDurableSendConsumer
             .ConfigureAwait(false);
         _instrumentation.RecordDurableConsumerCompletion(
             retired,
-            Stopwatch.GetElapsedTime(_startedTimestamp).TotalSeconds);
+            _timeProvider.GetElapsedTime(_startedTimestamp).TotalSeconds);
         return retired;
     }
 }

@@ -13,7 +13,7 @@ public sealed class InMemoryBusLifecycleTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-LIFECYCLE", "stop-awaits-owned-startup-observation")]
-    public async Task Stop_WaitsForTheOwnedStartupObservationBeforeCompleting()
+    public async Task Stop_WaitsForTheOwnedStartupObservationBeforeCompletingAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -27,7 +27,7 @@ public sealed class InMemoryBusLifecycleTests
         IReceiveEndpoint endpoint = await observer.Entered.WaitAsync(timeout, cancellationToken);
         ReceiveTransportHandle transportHandle = GetTransportHandle(endpoint);
         await GetExecutor(transportHandle).DisposeAsync();
-        Task stop = transportHandle.Stop(CancellationToken.None);
+        Task stop = transportHandle.StopAsync(CancellationToken.None);
 
         Assert.False(stop.IsCompleted);
         Assert.False(observer.CompletedObserved.IsCompleted);
@@ -43,7 +43,7 @@ public sealed class InMemoryBusLifecycleTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-LIFECYCLE", "startup-fault-is-terminal-and-stop-is-owned")]
-    public async Task StartupDependencyFault_IsPublishedAsTerminalAndTheBusStillStops()
+    public async Task StartupDependencyFault_IsPublishedAsTerminalAndTheBusStillStopsAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -69,10 +69,10 @@ public sealed class InMemoryBusLifecycleTests
         using ConnectHandle observerHandle = bus.ConnectReceiveEndpointObserver(observer);
         var expected = new ExpectedStartupException();
 
-        await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         dependency.Fail(expected);
         ReceiveEndpointFaulted fault = await observer.FaultObserved.WaitAsync(timeout, cancellationToken);
-        await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
 
         Assert.True(fault.IsTerminal);
         Assert.Same(expected, fault.Exception);
@@ -81,7 +81,7 @@ public sealed class InMemoryBusLifecycleTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-LIFECYCLE", "start-request-stop-and-restart")]
-    public async Task StartRequestStopAndRestart_PreservesExactRequestRoutingAcrossBothRuns()
+    public async Task StartRequestStopAndRestart_PreservesExactRequestRoutingAcrossBothRunsAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -90,15 +90,15 @@ public sealed class InMemoryBusLifecycleTests
                 endpoint.Handler<LifecycleRequest>(context =>
                     context.RespondAsync(new LifecycleResponse(context.Message.Id, context.Message.Run)))));
 
-        LifecycleResponse first = await RunOnce(bus, new LifecycleRequest(NewId.NextGuid(), 1), timeout, cancellationToken);
-        LifecycleResponse second = await RunOnce(bus, new LifecycleRequest(NewId.NextGuid(), 2), timeout, cancellationToken);
+        LifecycleResponse first = await RunOnceAsync(bus, new LifecycleRequest(NewId.NextGuid(), 1), timeout, cancellationToken);
+        LifecycleResponse second = await RunOnceAsync(bus, new LifecycleRequest(NewId.NextGuid(), 2), timeout, cancellationToken);
 
         Assert.Equal(1, first.Run);
         Assert.Equal(2, second.Run);
         Assert.NotEqual(first.Id, second.Id);
     }
 
-    private static async Task<LifecycleResponse> RunOnce(
+    private static async Task<LifecycleResponse> RunOnceAsync(
         IBusControl bus,
         LifecycleRequest request,
         TimeSpan timeout,
@@ -109,7 +109,7 @@ public sealed class InMemoryBusLifecycleTests
         try
         {
             Response<LifecycleResponse> response = await bus.CreateRequestClient<LifecycleRequest>()
-                .GetResponse<LifecycleResponse>(request, cancellationToken)
+                .GetResponseAsync<LifecycleResponse>(request, cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
             Assert.Equal(request.Id, response.Message.Id);
             Assert.Equal(request.Run, response.Message.Run);
@@ -158,7 +158,7 @@ public sealed class InMemoryBusLifecycleTests
 
     public sealed class BlockedConsumer : IConsumer<BlockedMessage>
     {
-        public Task Consume(ConsumeContext<BlockedMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<BlockedMessage> context) => Task.CompletedTask;
     }
 
     public sealed class BlockedConsumerDefinition(IReceiveEndpointDependency dependency) : ConsumerDefinition<BlockedConsumer>
@@ -179,7 +179,7 @@ public sealed class InMemoryBusLifecycleTests
         public Task<ReceiveEndpointFaulted> FaultObserved => _faulted.Task;
         public Task<ReceiveEndpointReady> ReadyObserved => _ready.Task;
 
-        public Task Ready(ReceiveEndpointReady ready)
+        public Task ReadyAsync(ReceiveEndpointReady ready)
         {
             if (IsTarget(ready.InputAddress))
                 _ready.TrySetResult(ready);
@@ -187,11 +187,11 @@ public sealed class InMemoryBusLifecycleTests
             return Task.CompletedTask;
         }
 
-        public Task Stopping(ReceiveEndpointStopping stopping) => Task.CompletedTask;
+        public Task StoppingAsync(ReceiveEndpointStopping stopping) => Task.CompletedTask;
 
-        public Task Completed(ReceiveEndpointCompleted completed) => Task.CompletedTask;
+        public Task CompletedAsync(ReceiveEndpointCompleted completed) => Task.CompletedTask;
 
-        public Task Faulted(ReceiveEndpointFaulted faulted)
+        public Task FaultedAsync(ReceiveEndpointFaulted faulted)
         {
             if (IsTarget(faulted.InputAddress))
                 _faulted.TrySetResult(faulted);
@@ -221,7 +221,7 @@ public sealed class InMemoryBusLifecycleTests
         public Task CompletedObserved => _completed.Task;
         public int ReadyCount => Volatile.Read(ref _readyCount);
 
-        public async Task Ready(ReceiveEndpointReady ready)
+        public async Task ReadyAsync(ReceiveEndpointReady ready)
         {
             if (!IsTarget(ready.InputAddress))
                 return;
@@ -233,9 +233,9 @@ public sealed class InMemoryBusLifecycleTests
 
         public void Release() => _release.TrySetResult();
 
-        public Task Stopping(ReceiveEndpointStopping stopping) => Task.CompletedTask;
+        public Task StoppingAsync(ReceiveEndpointStopping stopping) => Task.CompletedTask;
 
-        public Task Completed(ReceiveEndpointCompleted completed)
+        public Task CompletedAsync(ReceiveEndpointCompleted completed)
         {
             if (IsTarget(completed.InputAddress))
                 _completed.TrySetResult();
@@ -243,7 +243,7 @@ public sealed class InMemoryBusLifecycleTests
             return Task.CompletedTask;
         }
 
-        public Task Faulted(ReceiveEndpointFaulted faulted) => Task.CompletedTask;
+        public Task FaultedAsync(ReceiveEndpointFaulted faulted) => Task.CompletedTask;
 
         private bool IsTarget(Uri address)
         {

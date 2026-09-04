@@ -25,7 +25,7 @@ public sealed class JobAttemptGenerationTests
     [InlineData(JobSagaState.AllocatingJobSlot)]
     [InlineData(JobSagaState.CancellationPending)]
     [RequirementCoverage("REQ-VSB-JOB-ATTEMPT-GENERATION", "stale-attempt-events-preserve-every-state")]
-    public async Task StaleAttemptEvents_LeaveTheCompleteSagaSnapshotUnchanged(JobSagaState sagaState)
+    public async Task StaleAttemptEvents_LeaveTheCompleteSagaSnapshotUnchangedAsync(JobSagaState sagaState)
     {
         var machine = new JobStateMachine();
         Guid currentAttemptId = NewId.NextGuid();
@@ -46,12 +46,12 @@ public sealed class JobAttemptGenerationTests
             JobProperties = new Dictionary<string, object> { ["owner"] = "native" },
         };
         State expectedState = GetState(machine, sagaState);
-        await SetState(machine, saga, expectedState);
+        await SetStateAsync(machine, saga, expectedState);
         JobSagaSnapshot expected = Snapshot(saga);
 
         foreach ((StaleAttemptEvent kind, object message) in CreateStaleEvents(saga))
         {
-            await Raise(machine, saga, kind, message);
+            await RaiseAsync(machine, saga, kind, message);
 
             Assert.Equal(expected, Snapshot(saga));
             Assert.True(machine.Accessor.GetStateExpression(expectedState).Compile()(saga),
@@ -61,7 +61,7 @@ public sealed class JobAttemptGenerationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-JOB-ATTEMPT-GENERATION", "current-attempt-keeps-state-rules")]
-    public async Task CurrentAttemptEvent_StillUsesTheConfiguredStateRule()
+    public async Task CurrentAttemptEvent_StillUsesTheConfiguredStateRuleAsync()
     {
         var machine = new JobStateMachine();
         var saga = new JobSaga
@@ -80,10 +80,10 @@ public sealed class JobAttemptGenerationTests
             Timestamp = new DateTime(2026, 8, 15, 7, 0, 0, DateTimeKind.Utc),
             InstanceAddress = new Uri("loopback://localhost/current-instance"),
         };
-        await SetState(machine, saga, machine.Submitted);
+        await SetStateAsync(machine, saga, machine.Submitted);
 
         await Assert.ThrowsAsync<UnhandledEventException>(() =>
-            Raise(machine, saga, machine.AttemptStarted, message));
+            RaiseAsync(machine, saga, machine.AttemptStarted, message));
     }
 
     private static IEnumerable<(StaleAttemptEvent Kind, object Message)> CreateStaleEvents(JobSaga saga)
@@ -140,41 +140,41 @@ public sealed class JobAttemptGenerationTests
         });
     }
 
-    private static Task Raise(JobStateMachine machine, JobSaga saga, StaleAttemptEvent kind, object message) =>
+    private static Task RaiseAsync(JobStateMachine machine, JobSaga saga, StaleAttemptEvent kind, object message) =>
         kind switch
         {
-            StaleAttemptEvent.Started => Raise(machine, saga, machine.AttemptStarted, (JobAttemptStarted)message),
-            StaleAttemptEvent.Completed => Raise(machine, saga, machine.AttemptCompleted, (JobAttemptCompleted)message),
-            StaleAttemptEvent.Faulted => Raise(machine, saga, machine.AttemptFaulted, (JobAttemptFaulted)message),
-            StaleAttemptEvent.Canceled => Raise(machine, saga, machine.AttemptCanceled, (JobAttemptCanceled)message),
-            StaleAttemptEvent.StartFaulted => Raise(machine, saga, machine.StartJobAttemptFaulted, (Fault<StartJobAttempt>)message),
+            StaleAttemptEvent.Started => RaiseAsync(machine, saga, machine.AttemptStarted, (JobAttemptStarted)message),
+            StaleAttemptEvent.Completed => RaiseAsync(machine, saga, machine.AttemptCompleted, (JobAttemptCompleted)message),
+            StaleAttemptEvent.Faulted => RaiseAsync(machine, saga, machine.AttemptFaulted, (JobAttemptFaulted)message),
+            StaleAttemptEvent.Canceled => RaiseAsync(machine, saga, machine.AttemptCanceled, (JobAttemptCanceled)message),
+            StaleAttemptEvent.StartFaulted => RaiseAsync(machine, saga, machine.StartJobAttemptFaulted, (Fault<StartJobAttempt>)message),
             _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, null),
         };
 
-    private static async Task Raise<T>(JobStateMachine machine, JobSaga saga, Event<T> @event, T message)
+    private static async Task RaiseAsync<T>(JobStateMachine machine, JobSaga saga, Event<T> @event, T message)
         where T : class
     {
         ConsumeContext<T> consumeContext = InMemoryOutboxTestContextFactory.Create(message);
         var instance = new SagaInstance<JobSaga>(saga);
-        await instance.MarkInUse(consumeContext.CancellationToken);
+        await instance.MarkInUseAsync(consumeContext.CancellationToken);
         using var sagaContext = new InMemorySagaConsumeContext<JobSaga, T>(consumeContext, instance);
         BehaviorContext<JobSaga, T> behaviorContext =
             new ViciOneServiceBusStateMachine<JobSaga>.BehaviorContextProxy<T>(machine, sagaContext, sagaContext, @event);
 
-        await ((StateMachine<JobSaga>)machine).RaiseEvent(behaviorContext);
+        await ((StateMachine<JobSaga>)machine).RaiseEventAsync(behaviorContext);
     }
 
-    private static async Task SetState(JobStateMachine machine, JobSaga saga, State state)
+    private static async Task SetStateAsync(JobStateMachine machine, JobSaga saga, State state)
     {
         var message = new StateSetupMessage();
         ConsumeContext<StateSetupMessage> consumeContext = InMemoryOutboxTestContextFactory.Create(message);
         var instance = new SagaInstance<JobSaga>(saga);
-        await instance.MarkInUse(consumeContext.CancellationToken);
+        await instance.MarkInUseAsync(consumeContext.CancellationToken);
         using var sagaContext = new InMemorySagaConsumeContext<JobSaga, StateSetupMessage>(consumeContext, instance);
         BehaviorContext<JobSaga> behaviorContext =
             new ViciOneServiceBusStateMachine<JobSaga>.BehaviorContextProxy(machine, sagaContext, machine.Initial.Enter);
 
-        await machine.Accessor.Set(behaviorContext, machine.GetState(state.Name));
+        await machine.Accessor.SetAsync(behaviorContext, machine.GetState(state.Name));
     }
 
     private static State GetState(JobStateMachine machine, JobSagaState state) =>
@@ -243,21 +243,21 @@ public sealed class JobAttemptGenerationTests
 
     private sealed record JobSagaSnapshot(
         int CurrentState,
-        DateTime? Submitted,
+        DateTimeOffset? Submitted,
         Uri ServiceAddress,
         TimeSpan? JobTimeout,
         Dictionary<string, object> Job,
         Guid JobTypeId,
         Guid AttemptId,
         int RetryAttempt,
-        DateTime? Started,
-        DateTime? Completed,
+        DateTimeOffset? Started,
+        DateTimeOffset? Completed,
         TimeSpan? Duration,
-        DateTime? Faulted,
-        string Reason,
+        DateTimeOffset? Faulted,
+        string? Reason,
         long? LastProgressValue,
         long? LastProgressLimit,
         long? LastProgressSequenceNumber,
-        Dictionary<string, object> JobState,
+        Dictionary<string, object>? JobState,
         Dictionary<string, object> JobProperties);
 }

@@ -24,10 +24,10 @@ public readonly struct ActiveMqHostAddress
 
         RejectCredentialsAndUnsupportedComponents(address);
 
-        Scheme = default;
-        Host = default;
+        Scheme = null!;
+        Host = null!;
         Port = default;
-        VirtualHost = default;
+        VirtualHost = null!;
 
         var scheme = address.Scheme.ToLowerInvariant();
         switch (scheme)

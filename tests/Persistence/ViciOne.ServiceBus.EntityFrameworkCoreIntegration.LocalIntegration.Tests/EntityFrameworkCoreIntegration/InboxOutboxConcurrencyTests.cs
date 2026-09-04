@@ -16,7 +16,7 @@ public sealed class InboxOutboxConcurrencyTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-INBOX-DEDUPLICATION", "concurrent-redeliveries-lock-and-produce-effects-once")]
-    public async Task ConcurrentRedeliveries_EnterTheConsumerOnceAndCommitOneEffectSet()
+    public async Task ConcurrentRedeliveries_EnterTheConsumerOnceAndCommitOneEffectSetAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         TimeSpan operationTimeout = TestConfigurationProvider.ForCurrentTestRun()
@@ -60,16 +60,16 @@ public sealed class InboxOutboxConcurrencyTests
             ValidateOnBuild = true,
             ValidateScopes = true,
         });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(operationTimeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(operationTimeout, cancellationToken);
         Guid messageId = Guid.NewGuid();
 
         try
         {
-            await harness.Bus.Publish(new InboxCommand(messageId), context => context.MessageId = messageId, cancellationToken);
+            await harness.Bus.PublishAsync(new InboxCommand(messageId), context => context.MessageId = messageId, cancellationToken);
             await consumer.Entered.WaitAsync(operationTimeout, cancellationToken);
             await Task.WhenAll(
-                harness.Bus.Publish(new InboxCommand(messageId), context => context.MessageId = messageId, cancellationToken),
-                harness.Bus.Publish(new InboxCommand(messageId), context => context.MessageId = messageId, cancellationToken));
+                harness.Bus.PublishAsync(new InboxCommand(messageId), context => context.MessageId = messageId, cancellationToken),
+                harness.Bus.PublishAsync(new InboxCommand(messageId), context => context.MessageId = messageId, cancellationToken));
 
             Guid[] lockingContexts = await databaseProbe.WaitForDistinctLockContextsAsync(3, operationTimeout, cancellationToken);
             Assert.Equal(3, lockingContexts.Distinct().Count());
@@ -99,7 +99,7 @@ public sealed class InboxOutboxConcurrencyTests
         finally
         {
             consumer.Release();
-            await harness.Stop(CancellationToken.None).WaitAsync(operationTimeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(operationTimeout, CancellationToken.None);
         }
     }
 
@@ -108,11 +108,11 @@ public sealed class InboxOutboxConcurrencyTests
 
     public sealed class InboxCommandConsumer(InboxConsumerProbe probe) : IConsumer<InboxCommand>
     {
-        public async Task Consume(ConsumeContext<InboxCommand> context)
+        public async Task ConsumeAsync(ConsumeContext<InboxCommand> context)
         {
             await probe.EnterAsync(context.CancellationToken);
             await Task.WhenAll(Enumerable.Range(0, 16).Select(index =>
-                context.Publish(
+                context.Advanced().PublishAsync(
                     new InboxEffect(context.MessageId!.Value, index),
                     context.CancellationToken)));
         }
@@ -120,7 +120,7 @@ public sealed class InboxOutboxConcurrencyTests
 
     public sealed class InboxEffectConsumer(InboxEffectProbe effects) : IConsumer<InboxEffect>
     {
-        public Task Consume(ConsumeContext<InboxEffect> context)
+        public Task ConsumeAsync(ConsumeContext<InboxEffect> context)
         {
             effects.Record(context.Message);
             return Task.CompletedTask;
@@ -221,7 +221,7 @@ public sealed class InboxOutboxConcurrencyTests
             InterceptionResult<DbDataReader> result,
             CancellationToken cancellationToken = default)
         {
-            ObserveOutboxDrain(command, eventData);
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled<global::Microsoft.EntityFrameworkCore.Diagnostics.InterceptionResult<global::System.Data.Common.DbDataReader>>(cancellationToken); ObserveOutboxDrain(command, eventData);
 
             if (eventData.Context is { } context
                 && command.CommandText.Contains("InboxState", StringComparison.Ordinal)
@@ -241,7 +241,7 @@ public sealed class InboxOutboxConcurrencyTests
             InterceptionResult<int> result,
             CancellationToken cancellationToken = default)
         {
-            ObserveOutboxDrain(command, eventData);
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled<global::Microsoft.EntityFrameworkCore.Diagnostics.InterceptionResult<int>>(cancellationToken); ObserveOutboxDrain(command, eventData);
             return ValueTask.FromResult(result);
         }
 
@@ -250,7 +250,7 @@ public sealed class InboxOutboxConcurrencyTests
             TransactionEndEventData eventData,
             CancellationToken cancellationToken = default)
         {
-            Interlocked.Increment(ref _transactionCommitCallbacks);
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); Interlocked.Increment(ref _transactionCommitCallbacks);
 
             if (eventData.Context is not { } context)
                 return Task.CompletedTask;
@@ -275,7 +275,7 @@ public sealed class InboxOutboxConcurrencyTests
             TransactionEndEventData eventData,
             CancellationToken cancellationToken = default)
         {
-            RecordTransactionFailure(eventData.Context, "rolled back");
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); RecordTransactionFailure(eventData.Context, "rolled back");
             return Task.CompletedTask;
         }
 
@@ -284,7 +284,7 @@ public sealed class InboxOutboxConcurrencyTests
             TransactionErrorEventData eventData,
             CancellationToken cancellationToken = default)
         {
-            RecordTransactionFailure(eventData.Context, $"failed: {eventData.Exception.GetType().Name}: {eventData.Exception.Message}");
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); RecordTransactionFailure(eventData.Context, $"failed: {eventData.Exception.GetType().Name}: {eventData.Exception.Message}");
             return Task.CompletedTask;
         }
 

@@ -37,9 +37,9 @@ public class ConsumePipe :
         _pipe.Probe(scope);
     }
 
-    public Task Send(ConsumeContext context)
+    public Task SendAsync(ConsumeContext context)
     {
-        return _pipe.Send(context);
+        return _pipe.SendAsync(context);
     }
 
     public ConnectHandle ConnectConsumeMessageObserver<TMessage>(IConsumeMessageObserver<TMessage> observer)

@@ -7,7 +7,7 @@ public class AsyncActivity<TSaga> :
     IStateMachineActivity<TSaga>
     where TSaga : class, SagaStateMachineInstance
 {
-    readonly Func<BehaviorContext<TSaga>, Task> _asyncAction;
+    readonly Func<BehaviorContext<TSaga>, Task> _asyncAction = null!;
 
     public AsyncActivity(Func<BehaviorContext<TSaga>, Task> asyncAction)
     {
@@ -24,32 +24,32 @@ public class AsyncActivity<TSaga> :
         context.CreateScope("thenAsync");
     }
 
-    public async Task Execute(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public async Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
         await _asyncAction(context).ConfigureAwait(false);
 
-        await next.Execute(context).ConfigureAwait(false);
+        await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    public async Task Execute<TData>(BehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
+    public async Task ExecuteAsync<TData>(BehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
         where TData : class
     {
         await _asyncAction(context).ConfigureAwait(false);
 
-        await next.Execute(context).ConfigureAwait(false);
+        await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
+    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception
     {
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 
-    public Task Faulted<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
+    public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
         where T : class
         where TException : Exception
     {
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 }
 
@@ -63,7 +63,7 @@ public class AsyncActivity<TInstance, TData> :
 
     public AsyncActivity(Func<BehaviorContext<TInstance, TData>, Task> asyncAction)
     {
-        _asyncAction = asyncAction;
+        _asyncAction = asyncAction ?? throw new ArgumentNullException(nameof(asyncAction));
     }
 
     public void Accept(StateMachineVisitor visitor)
@@ -76,16 +76,16 @@ public class AsyncActivity<TInstance, TData> :
         context.CreateScope("thenAsync");
     }
 
-    public async Task Execute(BehaviorContext<TInstance, TData> context, IBehavior<TInstance, TData> next)
+    public async Task ExecuteAsync(BehaviorContext<TInstance, TData> context, IBehavior<TInstance, TData> next)
     {
         await _asyncAction(context).ConfigureAwait(false);
 
-        await next.Execute(context).ConfigureAwait(false);
+        await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<TInstance, TData, TException> context, IBehavior<TInstance, TData> next)
+    public Task FaultedAsync<TException>(BehaviorExceptionContext<TInstance, TData, TException> context, IBehavior<TInstance, TData> next)
         where TException : Exception
     {
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -48,10 +49,10 @@ internal sealed class TransportLifetime :
     /// where it happens and rethrown, with its stack, to an owner that asks.
     /// </para>
     /// </summary>
-    readonly TaskCompletionSource<Exception> _disposed =
-        new TaskCompletionSource<Exception>(TaskCreationOptions.RunContinuationsAsynchronously);
+    readonly TaskCompletionSource<Exception?> _disposed =
+        new TaskCompletionSource<Exception?>(TaskCreationOptions.RunContinuationsAsynchronously);
 
-    ShutdownEventArgs _closeReason;
+    ShutdownEventArgs? _closeReason;
     int _active;
     int _disposeStarted;
     bool _invalidated;
@@ -76,7 +77,7 @@ internal sealed class TransportLifetime :
     }
 
     /// <summary>The broker's own reason for closing, or null while the subject is open.</summary>
-    public ShutdownEventArgs CloseReason
+    public ShutdownEventArgs? CloseReason
     {
         get
         {
@@ -92,7 +93,7 @@ internal sealed class TransportLifetime :
     /// operation that means reporting the stored close reason rather than inventing one.
     /// </para>
     /// </summary>
-    public bool TryLease(out Lease lease)
+    public bool TryLease([NotNullWhen(true)] out Lease? lease)
     {
         lock (_lock)
         {
@@ -128,7 +129,7 @@ internal sealed class TransportLifetime :
     /// is called from the client's shutdown notification, and waiting there would hold the very
     /// callback the disposal is waiting on.
     /// </summary>
-    public void Invalidate(ShutdownEventArgs reason)
+    public void Invalidate(ShutdownEventArgs? reason)
     {
         bool idle;
 
@@ -186,7 +187,7 @@ internal sealed class TransportLifetime :
         // The task is discarded explicitly rather than by accident. DisposeSubject catches every
         // exception and reports the outcome through _disposed, which DisposeAsync awaits and
         // rethrows from, so the discarded task carries no outcome that awaiting could recover.
-        _scheduleSubjectDisposal(DisposeSubject);
+        _scheduleSubjectDisposal(DisposeSubjectAsync);
     }
 
     static void QueueSubjectDisposal(Func<Task> disposeSubject) =>
@@ -197,9 +198,9 @@ internal sealed class TransportLifetime :
     /// everything on purpose: nothing awaits the task this returns, so a failure left in it would be
     /// an unobserved exception rather than a report.
     /// </summary>
-    async Task DisposeSubject()
+    async Task DisposeSubjectAsync()
     {
-        Exception failure = null;
+        Exception? failure = null;
 
         try
         {

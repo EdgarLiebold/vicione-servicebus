@@ -10,7 +10,7 @@ public sealed class ResourceCacheGenerationAndLockingTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-ENDPOINT-CACHE-IDENTITY", "add-and-read-same-instance")]
-    public async Task KeyedFacade_ReturnsTheExactCreatedInstanceForLaterReads()
+    public async Task KeyedFacade_ReturnsTheExactCreatedInstanceForLaterReadsAsync()
     {
         await using var cache = new KeyedResourceCache<string, Resource>(
             value => value.Id,
@@ -28,7 +28,7 @@ public sealed class ResourceCacheGenerationAndLockingTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-NODE-PROMOTION", "completed-factory-to-bucket-node")]
-    public async Task CompletedFactory_IsCommittedBeforeTheAddedObserverReceivesTheExactResource()
+    public async Task CompletedFactory_IsCommittedBeforeTheAddedObserverReceivesTheExactResourceAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
@@ -46,7 +46,7 @@ public sealed class ResourceCacheGenerationAndLockingTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-INDEX-FACTORY", "plain-read-identity")]
-    public async Task CreatedValue_IsReturnedByLaterPlainReadAsTheSameInstance()
+    public async Task CreatedValue_IsReturnedByLaterPlainReadAsTheSameInstanceAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
@@ -63,7 +63,7 @@ public sealed class ResourceCacheGenerationAndLockingTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-MULTI-INDEX", "post-clear-reuse")]
-    public async Task ClearAsync_AllowsEveryFormerKeyToBeCommittedAgain()
+    public async Task ClearAsync_AllowsEveryFormerKeyToBeCommittedAgainAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, Resource> idIndex = cache.AddIndex("id", value => value.Id);
@@ -82,7 +82,7 @@ public sealed class ResourceCacheGenerationAndLockingTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-LOCK-ORDER", "indexed-read-releases-index-before-node-usage")]
-    public async Task IndexedRead_ObtainsTimeOutsideTheStateLock()
+    public async Task IndexedRead_ObtainsTimeOutsideTheStateLockAsync()
     {
         var timeProvider = new CoordinatingTimeProvider();
         await using var cache = CreateCache(timeProvider);
@@ -98,7 +98,7 @@ public sealed class ResourceCacheGenerationAndLockingTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-LOCK-ORDER", "time-provider-runs-before-tracker-lock")]
-    public async Task CapacityMutation_ObtainsTimeOutsideTheStateLock()
+    public async Task CapacityMutation_ObtainsTimeOutsideTheStateLockAsync()
     {
         var timeProvider = new CoordinatingTimeProvider();
         await using var cache = CreateCache(timeProvider);
@@ -113,7 +113,7 @@ public sealed class ResourceCacheGenerationAndLockingTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-LOCK-ORDER", "usage-detach-runs-after-tracker-unlock")]
-    public async Task UsageHandlerDetach_CanCompleteAConcurrentCacheReadWithoutLockInversion()
+    public async Task UsageHandlerDetach_CanCompleteAConcurrentCacheReadWithoutLockInversionAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
@@ -129,7 +129,7 @@ public sealed class ResourceCacheGenerationAndLockingTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-LOCK-ORDER", "timed-cleanup-obtains-time-before-state-lock")]
-    public async Task TimedCleanup_ObtainsTimeOutsideTheStateLock()
+    public async Task TimedCleanup_ObtainsTimeOutsideTheStateLockAsync()
     {
         var timeProvider = new CoordinatingTimeProvider();
         await using var cache = CreateCache(timeProvider);
@@ -147,7 +147,7 @@ public sealed class ResourceCacheGenerationAndLockingTests
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("REQ-VSB-CACHE-LOCK-ORDER", "lifetime-cancellation-callbacks-run-after-state-lock")]
-    public async Task LifetimeCancellationCallbacks_CanReadCacheStateWithoutLockInversion(bool disposeCache)
+    public async Task LifetimeCancellationCallbacks_CanReadCacheStateWithoutLockInversionAsync(bool disposeCache)
     {
         var cache = CreateCache();
         IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
@@ -181,7 +181,7 @@ public sealed class ResourceCacheGenerationAndLockingTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-LOCK-ORDER", "concurrent-removal-cannot-leak-usage-subscription")]
-    public async Task UsageSubscription_RacingRemovalIsDetachedFromTheReleasedResource()
+    public async Task UsageSubscription_RacingRemovalIsDetachedFromTheReleasedResourceAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
@@ -202,7 +202,7 @@ public sealed class ResourceCacheGenerationAndLockingTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-INDEX-EVENT-ORDER", "stale-removal-preserves-new-generation")]
-    public async Task ActivityFromRemovedGeneration_CannotAffectReplacementWithTheSameKey()
+    public async Task ActivityFromRemovedGeneration_CannotAffectReplacementWithTheSameKeyAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
@@ -222,7 +222,7 @@ public sealed class ResourceCacheGenerationAndLockingTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-INDEX-EVENT-ORDER", "stale-add-cannot-replace-live-generation")]
-    public async Task InvalidatedFactoryCompletion_CannotReplaceANewerGenerationWithTheSameKey()
+    public async Task InvalidatedFactoryCompletion_CannotReplaceANewerGenerationWithTheSameKeyAsync()
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
@@ -343,14 +343,13 @@ public sealed class ResourceCacheGenerationAndLockingTests
 
         public ValueTask ResourceAddedAsync(Resource value, CancellationToken cancellationToken)
         {
-            ObservedValue = value;
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken); ObservedValue = value;
             WasCommittedWhenObserved = cache.Statistics is { Count: 1, PendingCreations: 0 };
             return default;
         }
 
-        public ValueTask ResourceRemovedAsync(Resource value, CancellationToken cancellationToken) => default;
-
-        public ValueTask CacheClearedAsync(CancellationToken cancellationToken) => default;
+        public ValueTask ResourceRemovedAsync(Resource value, CancellationToken cancellationToken) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken); return default; }
+        public ValueTask CacheClearedAsync(CancellationToken cancellationToken) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken); return default; }
     }
 
     private sealed class CoordinatingTimeProvider : TimeProvider

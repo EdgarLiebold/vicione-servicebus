@@ -21,7 +21,8 @@ public class DictionaryInitializerConvention<TMessage, TInput, TValue> :
         _providerFactory = new PropertyProviderFactory<TInput>();
     }
 
-    public bool TryGetPropertyInitializer<TProperty>(PropertyInfo propertyInfo, out IPropertyInitializer<TMessage, TInput> initializer)
+    public bool TryGetPropertyInitializer<TProperty>(PropertyInfo propertyInfo,
+        [NotNullWhen(true)] out IPropertyInitializer<TMessage, TInput>? initializer)
     {
         var key = propertyInfo?.Name ?? throw new ArgumentNullException(nameof(propertyInfo));
 
@@ -31,11 +32,11 @@ public class DictionaryInitializerConvention<TMessage, TInput, TValue> :
             return true;
         }
 
-        if (_providerFactory.TryGetPropertyConverter(out IPropertyConverter<TProperty, TValue> converter))
+        if (_providerFactory.TryGetPropertyConverter(out IPropertyConverter<TProperty, TValue>? converter))
         {
             var providerType = typeof(InputDictionaryPropertyProvider<,>).MakeGenericType(typeof(TInput), typeof(TValue));
 
-            var provider = (IPropertyProvider<TInput, TValue>)Activator.CreateInstance(providerType, key);
+            var provider = (IPropertyProvider<TInput, TValue>)(Activator.CreateInstance(providerType, key) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
             var convertProvider = new PropertyConverterPropertyProvider<TInput, TProperty, TValue>(converter, provider);
 
@@ -47,11 +48,11 @@ public class DictionaryInitializerConvention<TMessage, TInput, TValue> :
         {
             var inputProviderType = typeof(InputDictionaryPropertyProvider<,>).MakeGenericType(typeof(TInput), typeof(TValue));
 
-            var valueProvider = (IPropertyProvider<TInput, TValue>)Activator.CreateInstance(inputProviderType, key);
+            var valueProvider = (IPropertyProvider<TInput, TValue>)(Activator.CreateInstance(inputProviderType, key) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
             var providerType = typeof(ObjectPropertyProvider<,>).MakeGenericType(typeof(TInput), typeof(TProperty));
 
-            var provider = (IPropertyProvider<TInput, TProperty>)Activator.CreateInstance(providerType, _providerFactory, valueProvider);
+            var provider = (IPropertyProvider<TInput, TProperty>)(Activator.CreateInstance(providerType, _providerFactory, valueProvider) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
             initializer = new ProviderPropertyInitializer<TMessage, TInput, TProperty>(provider, propertyInfo);
             return true;
@@ -61,7 +62,8 @@ public class DictionaryInitializerConvention<TMessage, TInput, TValue> :
         return false;
     }
 
-    public bool TryGetHeaderInitializer<TProperty>(PropertyInfo propertyInfo, out IHeaderInitializer<TMessage, TInput> initializer)
+    public bool TryGetHeaderInitializer<TProperty>(PropertyInfo propertyInfo,
+        [NotNullWhen(true)] out IHeaderInitializer<TMessage, TInput>? initializer)
     {
         var propertyName = propertyInfo?.Name ?? throw new ArgumentNullException(nameof(propertyInfo));
 
@@ -74,11 +76,11 @@ public class DictionaryInitializerConvention<TMessage, TInput, TValue> :
             return true;
         }
 
-        if (_providerFactory.TryGetPropertyConverter(out IPropertyConverter<TProperty, TValue> converter))
+        if (_providerFactory.TryGetPropertyConverter(out IPropertyConverter<TProperty, TValue>? converter))
         {
             var providerType = typeof(InputDictionaryPropertyProvider<,>).MakeGenericType(typeof(TInput), typeof(TValue));
 
-            var provider = (IPropertyProvider<TInput, TValue>)Activator.CreateInstance(providerType, propertyName);
+            var provider = (IPropertyProvider<TInput, TValue>)(Activator.CreateInstance(providerType, propertyName) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
             var convertProvider = new PropertyConverterPropertyProvider<TInput, TProperty, TValue>(converter, provider);
 
@@ -90,7 +92,8 @@ public class DictionaryInitializerConvention<TMessage, TInput, TValue> :
         return false;
     }
 
-    public bool TryGetHeadersInitializer<TProperty>(PropertyInfo propertyInfo, out IHeaderInitializer<TMessage, TInput> initializer)
+    public bool TryGetHeadersInitializer<TProperty>(PropertyInfo propertyInfo,
+        [NotNullWhen(true)] out IHeaderInitializer<TMessage, TInput>? initializer)
     {
         initializer = default;
         return false;
@@ -118,7 +121,7 @@ public class DictionaryInitializerConvention<TMessage> :
             {
                 var conventionType = typeof(DictionaryInitializerConvention<,,>).MakeGenericType(typeof(TMessage), typeof(T), argumentTypes[1]);
 
-                return (IMessageInputInitializerConvention<TMessage>)Activator.CreateInstance(conventionType);
+                return (IMessageInputInitializerConvention<TMessage>)(Activator.CreateInstance(conventionType) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
             }
 
             return new Unsupported<T>();

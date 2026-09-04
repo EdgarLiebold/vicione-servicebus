@@ -10,7 +10,7 @@ public sealed class AzureServiceBusDeadLetterTransportTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-NATIVE-DEAD-LETTER", "skipped-message-uses-native-dead-letter-subqueue")]
-    public async Task SkippedMessage_UsesNativeDeadLetterQueueWithoutCreatingSkippedQueue()
+    public async Task SkippedMessage_UsesNativeDeadLetterQueueWithoutCreatingSkippedQueueAsync()
     {
         AzureServiceBusLocalFixture fixture = AzureServiceBusLocalFixture.Create("skipped-dlq");
         ServiceBusAdministrationClient admin = fixture.CreateAdministrationClient();
@@ -20,7 +20,7 @@ public sealed class AzureServiceBusDeadLetterTransportTests
         IBusControl bus = CreateBus(fixture, client, admin, queue, endpoint =>
             endpoint.ConfigureDeadLetterQueueDeadLetterTransport());
 
-        DeadLetterResult result = await SendAndReceiveDeadLetter(
+        DeadLetterResult result = await SendAndReceiveDeadLetterAsync(
             fixture,
             client,
             admin,
@@ -39,7 +39,7 @@ public sealed class AzureServiceBusDeadLetterTransportTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-NATIVE-DEAD-LETTER", "faulted-message-uses-native-dead-letter-subqueue-with-fault-headers")]
-    public async Task FaultedMessage_UsesNativeDeadLetterQueueWithExactFaultHeaders()
+    public async Task FaultedMessage_UsesNativeDeadLetterQueueWithExactFaultHeadersAsync()
     {
         const string failureMessage = "native-dead-letter-consumer-failure";
         AzureServiceBusLocalFixture fixture = AzureServiceBusLocalFixture.Create("fault-dlq");
@@ -58,7 +58,7 @@ public sealed class AzureServiceBusDeadLetterTransportTests
             });
         });
 
-        DeadLetterResult result = await SendAndReceiveDeadLetter(
+        DeadLetterResult result = await SendAndReceiveDeadLetterAsync(
             fixture,
             client,
             admin,
@@ -98,7 +98,7 @@ public sealed class AzureServiceBusDeadLetterTransportTests
             });
         });
 
-    static async Task<DeadLetterResult> SendAndReceiveDeadLetter<T>(
+    static async Task<DeadLetterResult> SendAndReceiveDeadLetterAsync<T>(
         AzureServiceBusLocalFixture fixture,
         ServiceBusClient client,
         ServiceBusAdministrationClient admin,
@@ -121,9 +121,9 @@ public sealed class AzureServiceBusDeadLetterTransportTests
                 SubQueue = SubQueue.DeadLetter,
             });
             Task<ServiceBusReceivedMessage?> received = deadLetter.ReceiveMessageAsync(fixture.OperationTimeout, cancellationToken);
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queue}"))
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queue}"), cancellationToken: cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await endpoint.Send(
+            await endpoint.SendAsync(
                     message,
                     context => context.MessageId = messageId,
                     cancellationToken)

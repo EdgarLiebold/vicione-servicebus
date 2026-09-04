@@ -78,17 +78,17 @@ internal sealed class AzureServiceBusLocalFixture
         await foreach (QueueProperties queue in administrationClient.GetQueuesAsync(timeout.Token))
         {
             if (queue.Name.StartsWith(Prefix, StringComparison.Ordinal))
-                await DeleteQueueIfPresent(administrationClient, queue.Name, timeout.Token);
+                await DeleteQueueIfPresentAsync(administrationClient, queue.Name, timeout.Token);
         }
 
         await foreach (TopicProperties topic in administrationClient.GetTopicsAsync(timeout.Token))
         {
             if (topic.Name.StartsWith(Prefix, StringComparison.Ordinal))
-                await DeleteTopicIfPresent(administrationClient, topic.Name, timeout.Token);
+                await DeleteTopicIfPresentAsync(administrationClient, topic.Name, timeout.Token);
         }
     }
 
-    static async Task DeleteQueueIfPresent(
+    static async Task DeleteQueueIfPresentAsync(
         ServiceBusAdministrationClient administrationClient,
         string queue,
         CancellationToken cancellationToken)
@@ -102,7 +102,7 @@ internal sealed class AzureServiceBusLocalFixture
         }
     }
 
-    static async Task DeleteTopicIfPresent(
+    static async Task DeleteTopicIfPresentAsync(
         ServiceBusAdministrationClient administrationClient,
         string topic,
         CancellationToken cancellationToken)

@@ -16,7 +16,7 @@ public class CancelScheduledMessageConsumer :
         _schedulerFactory = schedulerFactory ?? throw new ArgumentNullException(nameof(schedulerFactory));
     }
 
-    public async Task Consume(ConsumeContext<CancelScheduledMessage> context)
+    public async Task ConsumeAsync(ConsumeContext<CancelScheduledMessage> context)
     {
         ArgumentNullException.ThrowIfNull(context);
         var correlationId = context.Message.TokenId.ToString("N");
@@ -32,7 +32,7 @@ public class CancelScheduledMessageConsumer :
             LogContext.Debug?.Log("CancelScheduledMessage: no message found for {Id}", triggerKey);
     }
 
-    public async Task Consume(ConsumeContext<CancelScheduledRecurringMessage> context)
+    public async Task ConsumeAsync(ConsumeContext<CancelScheduledRecurringMessage> context)
     {
         ArgumentNullException.ThrowIfNull(context);
         var scheduler = await _schedulerFactory.GetScheduler(context.CancellationToken).ConfigureAwait(false);

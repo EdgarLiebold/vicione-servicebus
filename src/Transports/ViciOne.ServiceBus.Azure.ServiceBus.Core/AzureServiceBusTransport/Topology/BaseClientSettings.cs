@@ -33,7 +33,7 @@ public abstract class BaseClientSettings :
 
     public abstract string Path { get; }
 
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     public Uri GetInputAddress(Uri serviceUri, string path)
     {

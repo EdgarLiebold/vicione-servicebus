@@ -14,7 +14,7 @@ public class SessionIdSendTopologyConvention :
         _cache = new TopologyConventionCache<IMessageSendTopologyConvention>(typeof(ISessionIdMessageSendTopologyConvention<>), new Factory());
     }
 
-    bool IMessageSendTopologyConvention.TryGetMessageSendTopologyConvention<T>(out IMessageSendTopologyConvention<T> convention)
+    bool IMessageSendTopologyConvention.TryGetMessageSendTopologyConvention<T>([NotNullWhen(true)] out IMessageSendTopologyConvention<T>? convention)
     {
         return _cache.GetOrAdd<T, IMessageSendTopologyConvention<T>>().TryGetMessageSendTopologyConvention(out convention);
     }

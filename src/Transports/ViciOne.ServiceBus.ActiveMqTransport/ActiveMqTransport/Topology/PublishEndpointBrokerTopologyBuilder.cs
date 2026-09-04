@@ -14,7 +14,7 @@ public class PublishEndpointBrokerTopologyBuilder :
     /// <summary>
     /// The exchange to which the published message is sent
     /// </summary>
-    public TopicHandle Topic { get; set; }
+    public TopicHandle? Topic { get; set; }
 
     public IPublishEndpointBrokerTopologyBuilder CreateImplementedBuilder()
     {
@@ -42,7 +42,7 @@ public class PublishEndpointBrokerTopologyBuilder :
             _options = options;
         }
 
-        public TopicHandle Topic { get; set; }
+        public TopicHandle? Topic { get; set; }
 
         public IPublishEndpointBrokerTopologyBuilder CreateImplementedBuilder()
         {
@@ -62,7 +62,7 @@ public class PublishEndpointBrokerTopologyBuilder :
             return _builder.CreateQueue(name, durable, autoDelete);
         }
 
-        public ConsumerHandle BindConsumer(TopicHandle topic, QueueHandle queue, string selector, string consumerName = null, bool shared = false)
+        public ConsumerHandle BindConsumer(TopicHandle topic, QueueHandle? queue, string? selector, string? consumerName = null, bool shared = false)
         {
             return _builder.BindConsumer(topic, queue, selector, consumerName, shared);
         }

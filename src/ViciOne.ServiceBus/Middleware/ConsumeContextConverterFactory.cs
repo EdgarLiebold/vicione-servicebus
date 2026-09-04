@@ -12,7 +12,7 @@ public class ConsumeContextConverterFactory :
     {
         var innerType = typeof(TOutput).GetSingleClosedGenericArguments(typeof(ConsumeContext<>)).Single();
 
-        return (IPipeContextConverter<ConsumeContext, TOutput>)Activator.CreateInstance(typeof(Converter<>).MakeGenericType(innerType));
+        return (IPipeContextConverter<ConsumeContext, TOutput>)(Activator.CreateInstance(typeof(Converter<>).MakeGenericType(innerType)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
     }
 
 
@@ -20,7 +20,7 @@ public class ConsumeContextConverterFactory :
         IPipeContextConverter<ConsumeContext, ConsumeContext<T>>
         where T : class
     {
-        public bool TryConvert(ConsumeContext input, out ConsumeContext<T> output)
+        public bool TryConvert(ConsumeContext input, [NotNullWhen(true)] out ConsumeContext<T>? output)
         {
             return input.TryGetMessage(out output);
         }

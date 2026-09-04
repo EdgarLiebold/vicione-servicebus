@@ -60,7 +60,7 @@ public class AssemblyFinder
                 continue;
             }
 
-            Assembly loadedAssembly = null;
+            Assembly? loadedAssembly = null;
             try
             {
                 loadedAssembly = Assembly.Load(name);

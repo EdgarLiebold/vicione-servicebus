@@ -19,12 +19,12 @@ public class GroupConsumer<THub> :
         _hubLifetimeManager = hubLifetimeManager;
     }
 
-    public Task Consume(ConsumeContext<Group<THub>> context)
+    public Task ConsumeAsync(ConsumeContext<Group<THub>> context)
     {
-        return Handle(context.Message.GroupName, context.Message.ExcludedConnectionIds, context.Message.Messages);
+        return HandleAsync(context.Message.GroupName, context.Message.ExcludedConnectionIds, context.Message.Messages);
     }
 
-    async Task Handle(string groupName, string[] excludedConnectionIds, IReadOnlyDictionary<string, byte[]> messages)
+    async Task HandleAsync(string groupName, string[] excludedConnectionIds, IReadOnlyDictionary<string, byte[]> messages)
     {
         var message = new Lazy<SerializedHubMessage>(messages.ToSerializedHubMessage);
 

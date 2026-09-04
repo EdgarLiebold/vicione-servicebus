@@ -19,9 +19,9 @@ public class InMemoryOutboxDeferredMethodCollection
         _pendingMethods = [];
     }
 
-    public Task Add(Func<Task> method)
+    public Task AddAsync(Func<Task> method, CancellationToken cancellationToken = default)
     {
-        if (_clearToSend?.IsCompleted ?? false)
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (_clearToSend?.IsCompleted ?? false)
             return method();
 
         var executionContext = ExecutionContext.Capture();
@@ -40,7 +40,7 @@ public class InMemoryOutboxDeferredMethodCollection
             return _pendingMethods.Count;
     }
 
-    public async Task Execute(bool concurrent)
+    public async Task ExecuteAsync(bool concurrent, CancellationToken cancellationToken = default)
     {
         InMemoryOutboxDeferredMethod[] pendingActions;
         lock (_pendingMethods)
@@ -57,15 +57,15 @@ public class InMemoryOutboxDeferredMethodCollection
                 {
                     var collection = new PendingTaskCollection(pendingActions.Length);
 
-                    collection.Add(pendingActions.Select(method => method.Run()));
+                    collection.Add(pendingActions.Select(method => method.RunAsync(cancellationToken: cancellationToken)));
 
-                    await collection.Completed().ConfigureAwait(false);
+                    await collection.CompletedAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
                 }
                 else
                 {
                     foreach (var method in pendingActions)
                     {
-                        var task = method.Run();
+                        var task = method.RunAsync(cancellationToken: cancellationToken);
                         if (task != null)
                             await task.ConfigureAwait(false);
                     }
@@ -79,9 +79,9 @@ public class InMemoryOutboxDeferredMethodCollection
         }
     }
 
-    public async Task Discard()
+    public async Task DiscardAsync(CancellationToken cancellationToken = default)
     {
-        InMemoryOutboxDeferredMethod[] pendingMethods;
+        cancellationToken.ThrowIfCancellationRequested(); InMemoryOutboxDeferredMethod[] pendingMethods;
         lock (_pendingMethods)
         {
             pendingMethods = _pendingMethods.ToArray();
@@ -92,7 +92,7 @@ public class InMemoryOutboxDeferredMethodCollection
             method.Dispose();
     }
 
-    internal Task DiscardSince(int checkpoint)
+    internal Task DiscardSinceAsync(int checkpoint)
     {
         InMemoryOutboxDeferredMethod[] pendingMethods;
         lock (_pendingMethods)

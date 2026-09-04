@@ -28,7 +28,7 @@ public class AsyncInactivityObserver :
     {
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         _inactivityTaskSource = TaskCompletionSources.Create<bool>();
-        _inactivityTask = new Lazy<Task>(() => TimeoutTask(timeout, cancellationToken));
+        _inactivityTask = new Lazy<Task>(() => TimeoutTaskAsync(timeout, cancellationToken));
 
         _sources = new HashSet<IInactivityObservationSource>();
         _inactivityTokenSource = new CancellationTokenSource();
@@ -46,9 +46,9 @@ public class AsyncInactivityObserver :
             _sources.Add(source);
     }
 
-    public Task NoActivity()
+    public Task NoActivityAsync(CancellationToken cancellationToken = default)
     {
-        return CheckSourceActivity();
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return CheckSourceActivityAsync();
     }
 
     public void ForceInactive()
@@ -70,7 +70,7 @@ public class AsyncInactivityObserver :
         _inactivityTokenSource.Dispose();
     }
 
-    Task<bool> CheckSourceActivity()
+    Task<bool> CheckSourceActivityAsync()
     {
         IInactivityObservationSource[] sources;
         lock (_sources)
@@ -87,7 +87,7 @@ public class AsyncInactivityObserver :
         return TaskResults.False;
     }
 
-    async Task TimeoutTask(TimeSpan timeout, CancellationToken cancellationToken)
+    async Task TimeoutTaskAsync(TimeSpan timeout, CancellationToken cancellationToken)
     {
         try
         {
@@ -112,10 +112,10 @@ public class AsyncInactivityObserver :
 
                 await delay.ConfigureAwait(false);
 
-                inActive = await CheckSourceActivity().ConfigureAwait(false);
+                inActive = await CheckSourceActivityAsync().ConfigureAwait(false);
             }
 
-            await _inactivityTaskSource.Task.OrCanceled(cancellationToken).ConfigureAwait(false);
+            await _inactivityTaskSource.Task.OrCanceledAsync(cancellationToken).ConfigureAwait(false);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {

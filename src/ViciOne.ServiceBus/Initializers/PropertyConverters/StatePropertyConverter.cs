@@ -6,10 +6,10 @@ public class StatePropertyConverter<TInstance> :
     IPropertyConverter<string, State<TInstance>>
     where TInstance : class, SagaStateMachineInstance
 {
-    public Task<string> Convert<T>(InitializeContext<T> context, State<TInstance> input)
+    public Task<string?> ConvertAsync<T>(InitializeContext<T> context, State<TInstance>? input, CancellationToken cancellationToken = default)
         where T : class
     {
-        return Task.FromResult(input?.Name);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<string?>(cancellationToken); return Task.FromResult(input?.Name);
     }
 }
 
@@ -25,14 +25,14 @@ public class StatePropertyConverter<TResult, TInstance> :
         _propertyConverter = propertyConverter;
     }
 
-    public Task<TResult> Convert<T>(InitializeContext<T> context, State<TInstance> input)
+    public Task<TResult?> ConvertAsync<T>(InitializeContext<T> context, State<TInstance>? input, CancellationToken cancellationToken = default)
         where T : class
     {
         if (input == default)
-            return default;
+            return Task.FromResult<TResult?>(default);
 
         var name = input?.Name;
 
-        return _propertyConverter.Convert(context, name);
+        return _propertyConverter.ConvertAsync(context, name, cancellationToken: cancellationToken);
     }
 }

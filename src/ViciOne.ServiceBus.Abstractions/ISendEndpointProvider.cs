@@ -17,5 +17,6 @@ public interface ISendEndpointProvider :
     /// </summary>
     /// <param name="address">The endpoint address</param>
     /// <returns>The send endpoint</returns>
-    Task<ISendEndpoint> GetSendEndpoint(Uri address);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<ISendEndpoint> GetSendEndpointAsync(Uri address, CancellationToken cancellationToken = default);
 }

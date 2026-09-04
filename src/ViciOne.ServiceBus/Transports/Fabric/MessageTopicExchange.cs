@@ -22,11 +22,11 @@ public class MessageTopicExchange<T> :
 
     public string Name { get; }
 
-    public Task Deliver(DeliveryContext<T> context)
+    public Task DeliverAsync(DeliveryContext<T> context, CancellationToken cancellationToken = default)
     {
         var routingKey = context.RoutingKey;
 
-        return _root.Deliver(context, routingKey);
+        return _root.DeliverAsync(context, routingKey, cancellationToken: cancellationToken);
     }
 
     public ConnectHandle Connect(IMessageSink<T> sink, string? routingKey)

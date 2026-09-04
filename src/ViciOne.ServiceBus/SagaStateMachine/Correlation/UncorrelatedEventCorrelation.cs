@@ -15,7 +15,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             Event = @event;
         }
 
-        public SagaFilterFactory<TInstance, TData> FilterFactory => null;
+        public SagaFilterFactory<TInstance, TData>? FilterFactory => null;
 
         public Event<TData> Event { get; }
 
@@ -23,9 +23,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
         public bool ConfigureConsumeTopology => false;
 
-        public IFilter<ConsumeContext<TData>> MessageFilter => null;
+        public IFilter<ConsumeContext<TData>>? MessageFilter => null;
 
-        public ISagaPolicy<TInstance, TData> Policy => null;
+        public ISagaPolicy<TInstance, TData>? Policy => null;
 
         public IEnumerable<ValidationResult> Validate()
         {

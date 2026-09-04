@@ -17,7 +17,7 @@ public sealed class DependencyInjectionTestHarnessTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-DI", "scoped-service-publishes-through-started-bus")]
-    public async Task ScopedApplicationService_PublishesThroughTheStartedHarnessBus()
+    public async Task ScopedApplicationService_PublishesThroughTheStartedHarnessBusAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -25,28 +25,28 @@ public sealed class DependencyInjectionTestHarnessTests
             .AddScoped<ApplicationPublisher>()
             .AddViciOneServiceBusTestHarness(configuration => configuration.SetTestTimeouts(timeout, timeout))
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             ApplicationPublisher service = harness.Scope.ServiceProvider.GetRequiredService<ApplicationPublisher>();
-            await service.Publish(cancellationToken);
+            await service.PublishAsync(cancellationToken);
 
             IPublishedMessage<ApplicationEvent> published = await harness.Published
                 .SelectAsync<ApplicationEvent>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             Assert.Equal("registered", published.Context.Message.Value);
             Assert.Null(published.Exception);
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-DI", "custom-time-provider-propagation")]
-    public async Task RegisteredTimeProvider_IsTheSingleHarnessTimeSource()
+    public async Task RegisteredTimeProvider_IsTheSingleHarnessTimeSourceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -59,27 +59,27 @@ public sealed class DependencyInjectionTestHarnessTests
                 configuration.AddConsumer<TimeAwareConsumer>();
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Assert.Same(timeProvider, harness.TimeProvider);
             Assert.Same(timeProvider, provider.GetRequiredService<TimeProvider>());
 
-            await harness.Bus.Publish(new TimeAwareMessage(), cancellationToken);
+            await harness.Bus.PublishAsync(new TimeAwareMessage(), cancellationToken);
             IConsumerTestHarness<TimeAwareConsumer> consumer = harness.GetConsumerHarness<TimeAwareConsumer>();
 
-            Assert.True(await consumer.Consumed.Any<TimeAwareMessage>(cancellationToken));
+            Assert.True(await consumer.Consumed.AnyAsync<TimeAwareMessage>(cancellationToken));
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-DI", "default-system-time-provider")]
-    public async Task DefaultRegistration_UsesTheStandardSystemTimeProvider()
+    public async Task DefaultRegistration_UsesTheStandardSystemTimeProviderAsync()
     {
         await using ServiceProvider provider = new ServiceCollection()
             .AddViciOneServiceBusTestHarness()
@@ -93,20 +93,20 @@ public sealed class DependencyInjectionTestHarnessTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-DI", "missing-hosted-service-rejected")]
-    public async Task ContainerHarnessWithoutHostedServices_FailsAtStartWithAnExactConfigurationError()
+    public async Task ContainerHarnessWithoutHostedServices_FailsAtStartWithAnExactConfigurationErrorAsync()
     {
         await using ServiceProvider provider = new ServiceCollection().BuildServiceProvider(validateScopes: true);
         var options = Options.Create(new TestHarnessOptions());
         await using var harness = new ContainerTestHarness(provider, options, TimeProvider.System);
 
-        ConfigurationException exception = await Assert.ThrowsAsync<ConfigurationException>(() => harness.Start());
+        ConfigurationException exception = await Assert.ThrowsAsync<ConfigurationException>(() => harness.StartAsync(TestContext.Current.CancellationToken));
 
         Assert.Equal("The ViciOne.ServiceBus hosted service was not found.", exception.Message);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-DI", "scoped-request-client-response")]
-    public async Task ScopedRequestClient_RecordsTheExactRequestAndResponse()
+    public async Task ScopedRequestClient_RecordsTheExactRequestAndResponseAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -117,22 +117,22 @@ public sealed class DependencyInjectionTestHarnessTests
                 configuration.AddConsumer<RequestConsumer>();
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Guid correlationId = NewId.NextGuid();
             IRequestClient<RequestMessage> client = harness.GetRequestClient<RequestMessage>();
 
-            Response<ResponseMessage> response = await client.GetResponse<ResponseMessage>(
+            Response<ResponseMessage> response = await client.GetResponseAsync<ResponseMessage>(
                 new RequestMessage(correlationId),
                 cancellationToken);
             IReceivedMessage<RequestMessage> consumed = await harness.Consumed
                 .SelectAsync<RequestMessage>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             ISentMessage<ResponseMessage> sent = await harness.Sent
                 .SelectAsync<ResponseMessage>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             Assert.Equal(correlationId, response.Message.CorrelationId);
             Assert.Equal(correlationId, consumed.Context.Message.CorrelationId);
@@ -143,13 +143,13 @@ public sealed class DependencyInjectionTestHarnessTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-DI", "retry-produces-one-terminal-fault")]
-    public async Task RetryPolicy_ExecutesTheConfiguredAttemptsButRecordsOneTerminalFault()
+    public async Task RetryPolicy_ExecutesTheConfiguredAttemptsButRecordsOneTerminalFaultAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -164,19 +164,19 @@ public sealed class DependencyInjectionTestHarnessTests
                     endpoint.UseMessageRetry(retry => retry.Immediate(3)));
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Guid correlationId = NewId.NextGuid();
             Task<IPublishedMessage<Fault<RetryingMessage>>> terminalFaultTask = harness.Published
                 .SelectAsync<Fault<RetryingMessage>>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             Task<IReceivedMessage<RetryingMessage>> terminalConsumeTask = harness.Consumed
                 .SelectAsync<RetryingMessage>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
-            await harness.Bus.Publish(new RetryingMessage(correlationId), cancellationToken);
+            await harness.Bus.PublishAsync(new RetryingMessage(correlationId), cancellationToken);
             IPublishedMessage<Fault<RetryingMessage>> terminalFault = await terminalFaultTask.WaitAsync(timeout, cancellationToken);
             IReceivedMessage<RetryingMessage> terminalConsume = await terminalConsumeTask.WaitAsync(timeout, cancellationToken);
             using var completed = new CancellationTokenSource();
@@ -200,13 +200,13 @@ public sealed class DependencyInjectionTestHarnessTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-DI", "in-memory-saga-repository-management")]
-    public async Task InMemorySagaManagement_AddsUpdatesRemovesAndRejectsDuplicatesExactly()
+    public async Task InMemorySagaManagement_AddsUpdatesRemovesAndRejectsDuplicatesExactlyAsync()
     {
         TimeSpan timeout = OperationTimeout();
         await using ServiceProvider provider = new ServiceCollection()
@@ -224,30 +224,30 @@ public sealed class DependencyInjectionTestHarnessTests
         harness.AddSagaInstance<ManagedSaga>(correlationId, saga => saga.Value = "initial");
 
         Assert.Equal(1, repository.Count);
-        Assert.Equal("initial", repository[correlationId].Instance.Value);
+        Assert.Equal("initial", Assert.IsType<SagaInstance<ManagedSaga>>(repository[correlationId]).Instance.Value);
         ArgumentException duplicate = Assert.Throws<ArgumentException>(() =>
             harness.AddSagaInstance<ManagedSaga>(correlationId));
         Assert.Equal("correlationId", duplicate.ParamName);
 
-        await harness.AddOrUpdateSagaInstance<ManagedSaga>(
+        await harness.AddOrUpdateSagaInstanceAsync<ManagedSaga>(
             correlationId,
             saga => saga.Value = "updated",
             TestContext.Current.CancellationToken);
 
         Assert.Equal(1, repository.Count);
-        Assert.Equal("updated", repository[correlationId].Instance.Value);
-        Assert.True(await harness.TryRemoveSagaInstance<ManagedSaga>(
+        Assert.Equal("updated", Assert.IsType<SagaInstance<ManagedSaga>>(repository[correlationId]).Instance.Value);
+        Assert.True(await harness.TryRemoveSagaInstanceAsync<ManagedSaga>(
             correlationId,
             TestContext.Current.CancellationToken));
         Assert.Equal(0, repository.Count);
-        Assert.False(await harness.TryRemoveSagaInstance<ManagedSaga>(
+        Assert.False(await harness.TryRemoveSagaInstanceAsync<ManagedSaga>(
             correlationId,
             TestContext.Current.CancellationToken));
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-DI", "consumer-and-bus-observation-boundaries")]
-    public async Task ConsumerHarness_RecordsTheSameRequestAtItsConsumerAndBusBoundaries()
+    public async Task ConsumerHarness_RecordsTheSameRequestAtItsConsumerAndBusBoundariesAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -258,7 +258,7 @@ public sealed class DependencyInjectionTestHarnessTests
                 configuration.AddConsumer<RequestConsumer>();
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
@@ -266,15 +266,15 @@ public sealed class DependencyInjectionTestHarnessTests
             IRequestClient<RequestMessage> client = harness.GetRequestClient<RequestMessage>();
             IConsumerTestHarness<RequestConsumer> consumerHarness = harness.GetConsumerHarness<RequestConsumer>();
 
-            Response<ResponseMessage> response = await client.GetResponse<ResponseMessage>(
+            Response<ResponseMessage> response = await client.GetResponseAsync<ResponseMessage>(
                 new RequestMessage(correlationId),
                 cancellationToken);
             IReceivedMessage<RequestMessage> busObservation = await harness.Consumed
                 .SelectAsync<RequestMessage>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             IReceivedMessage<RequestMessage> consumerObservation = await consumerHarness.Consumed
                 .SelectAsync<RequestMessage>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             Assert.Equal(correlationId, response.Message.CorrelationId);
             Assert.Equal(correlationId, busObservation.Context.Message.CorrelationId);
@@ -285,13 +285,13 @@ public sealed class DependencyInjectionTestHarnessTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-DI", "scoped-consumer-dependency-publishes-follow-up")]
-    public async Task ScopedConsumerDependency_PublishesTheExactCausallyLinkedFollowUpMessage()
+    public async Task ScopedConsumerDependency_PublishesTheExactCausallyLinkedFollowUpMessageAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -303,24 +303,24 @@ public sealed class DependencyInjectionTestHarnessTests
                 configuration.AddConsumer<DependencyPublishingConsumer>();
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Guid correlationId = NewId.NextGuid();
 
-            await harness.Bus.Publish(new SubmitThroughDependency(correlationId, "expected"), cancellationToken);
+            await harness.Bus.PublishAsync(new SubmitThroughDependency(correlationId, "expected"), cancellationToken);
 
             IReceivedMessage<SubmitThroughDependency> consumed = await harness.Consumed
                 .SelectAsync<SubmitThroughDependency>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             IPublishedMessage<SubmittedThroughDependency> published = await harness.Published
                 .SelectAsync<SubmittedThroughDependency>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             IConsumerTestHarness<DependencyPublishingConsumer> consumerHarness =
                 harness.GetConsumerHarness<DependencyPublishingConsumer>();
 
-            Assert.True(await consumerHarness.Consumed.Any<SubmitThroughDependency>(cancellationToken));
+            Assert.True(await consumerHarness.Consumed.AnyAsync<SubmitThroughDependency>(cancellationToken));
             Assert.Null(consumed.Exception);
             Assert.Equal(correlationId, consumed.Context.CorrelationId);
             Assert.Equal(correlationId, published.Context.Message.CorrelationId);
@@ -330,13 +330,13 @@ public sealed class DependencyInjectionTestHarnessTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-DI", "classic-saga-registration-and-observations")]
-    public async Task ContainerSagaHarness_RecordsCreationStateConsumptionAndPublication()
+    public async Task ContainerSagaHarness_RecordsCreationStateConsumptionAndPublicationAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -347,7 +347,7 @@ public sealed class DependencyInjectionTestHarnessTests
                 configuration.AddSaga<SagaTestHarnessBehaviorTests.ClassicSaga>().InMemoryRepository();
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
@@ -357,18 +357,18 @@ public sealed class DependencyInjectionTestHarnessTests
                 "container",
                 [new SagaTestHarnessBehaviorTests.SagaValue("first"), new SagaTestHarnessBehaviorTests.SagaValue("second")]);
 
-            await harness.Bus.Publish(message, cancellationToken);
+            await harness.Bus.PublishAsync(message, cancellationToken);
 
             ISagaTestHarness<SagaTestHarnessBehaviorTests.ClassicSaga> sagaHarness =
                 harness.GetSagaHarness<SagaTestHarnessBehaviorTests.ClassicSaga>();
             IReceivedMessage<SagaTestHarnessBehaviorTests.StartSaga> received = await sagaHarness.Consumed
                 .SelectAsync<SagaTestHarnessBehaviorTests.StartSaga>(cancellationToken)
-                .First();
-            SagaTestHarnessBehaviorTests.ClassicSaga created = sagaHarness.Created.Contains(sagaId);
-            SagaTestHarnessBehaviorTests.ClassicSaga observed = sagaHarness.Sagas.Contains(sagaId);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
+            SagaTestHarnessBehaviorTests.ClassicSaga? created = sagaHarness.Created.Contains(sagaId);
+            SagaTestHarnessBehaviorTests.ClassicSaga? observed = sagaHarness.Sagas.Contains(sagaId);
             IPublishedMessage<SagaTestHarnessBehaviorTests.SagaStarted> published = await harness.Published
                 .SelectAsync<SagaTestHarnessBehaviorTests.SagaStarted>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             using var completed = new CancellationTokenSource();
             completed.Cancel();
 
@@ -384,13 +384,13 @@ public sealed class DependencyInjectionTestHarnessTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-DI", "state-machine-endpoint-causation-and-state")]
-    public async Task ContainerStateMachineHarness_PreservesCausationAndRecordsTheResultingState()
+    public async Task ContainerStateMachineHarness_PreservesCausationAndRecordsTheResultingStateAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -403,24 +403,24 @@ public sealed class DependencyInjectionTestHarnessTests
                     .InMemoryRepository();
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Guid sagaId = NewId.NextGuid();
-            ISendEndpoint endpoint = await harness.GetSagaEndpoint<ContainerMetadataState>();
+            ISendEndpoint endpoint = await harness.GetSagaEndpointAsync<ContainerMetadataState>(TestContext.Current.CancellationToken);
 
-            await endpoint.Send(new ContainerStart(sagaId, "expected"), cancellationToken);
+            await endpoint.SendAsync(new ContainerStart(sagaId, "expected"), cancellationToken);
 
             IReceivedMessage<ContainerStart> received = await harness.Consumed
                 .SelectAsync<ContainerStart>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             IPublishedMessage<ContainerStarted> published = await harness.Published
                 .SelectAsync<ContainerStarted>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             ISagaStateMachineTestHarness<ContainerMetadataStateMachine, ContainerMetadataState> sagaHarness =
                 harness.GetSagaStateMachineHarness<ContainerMetadataStateMachine, ContainerMetadataState>();
-            Guid? running = await sagaHarness.Exists(sagaId, machine => machine.Running, timeout);
+            Guid? running = await sagaHarness.ExistsAsync(sagaId, machine => machine.Running, timeout, TestContext.Current.CancellationToken);
             using var completed = new CancellationTokenSource();
             completed.Cancel();
             ContainerMetadataState? created = sagaHarness.Created
@@ -439,17 +439,17 @@ public sealed class DependencyInjectionTestHarnessTests
             Assert.NotNull(created);
             Assert.Equal("expected", created.Value);
             Assert.Equal(sagaHarness.StateMachine.Running.Name, created.CurrentState);
-            Assert.True(await sagaHarness.Consumed.Any<ContainerStart>(cancellationToken));
+            Assert.True(await sagaHarness.Consumed.AnyAsync<ContainerStart>(cancellationToken));
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-DI", "state-machine-request-response-and-state")]
-    public async Task ContainerStateMachineRequestClient_RespondsAndRecordsTheExactState()
+    public async Task ContainerStateMachineRequestClient_RespondsAndRecordsTheExactStateAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -463,7 +463,7 @@ public sealed class DependencyInjectionTestHarnessTests
                     .InMemoryRepository();
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
@@ -472,7 +472,7 @@ public sealed class DependencyInjectionTestHarnessTests
                 harness.GetRequestClient<SagaTestHarnessBehaviorTests.ResponsiveRequest>();
 
             Response<SagaTestHarnessBehaviorTests.ResponsiveResponse> response =
-                await client.GetResponse<SagaTestHarnessBehaviorTests.ResponsiveResponse>(
+                await client.GetResponseAsync<SagaTestHarnessBehaviorTests.ResponsiveResponse>(
                     new SagaTestHarnessBehaviorTests.ResponsiveRequest(sagaId, "container"),
                     cancellationToken);
             ISagaStateMachineTestHarness<
@@ -481,8 +481,8 @@ public sealed class DependencyInjectionTestHarnessTests
                 harness.GetSagaStateMachineHarness<
                     SagaTestHarnessBehaviorTests.ResponsiveStateMachine,
                     SagaTestHarnessBehaviorTests.ResponsiveState>();
-            Guid? responded = await sagaHarness.Exists(sagaId, machine => machine.Responded, timeout);
-            SagaTestHarnessBehaviorTests.ResponsiveState state = sagaHarness.Sagas.Contains(sagaId);
+            Guid? responded = await sagaHarness.ExistsAsync(sagaId, machine => machine.Responded, timeout, TestContext.Current.CancellationToken);
+            SagaTestHarnessBehaviorTests.ResponsiveState? state = sagaHarness.Sagas.Contains(sagaId);
 
             Assert.Equal(sagaId, response.Message.CorrelationId);
             Assert.Equal("response:container", response.Message.Value);
@@ -490,11 +490,11 @@ public sealed class DependencyInjectionTestHarnessTests
             Assert.NotNull(state);
             Assert.Equal("container", state.Value);
             Assert.Equal(sagaHarness.StateMachine.Responded.Name, state.CurrentState);
-            Assert.True(await sagaHarness.Consumed.Any<SagaTestHarnessBehaviorTests.ResponsiveRequest>(cancellationToken));
+            Assert.True(await sagaHarness.Consumed.AnyAsync<SagaTestHarnessBehaviorTests.ResponsiveRequest>(cancellationToken));
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -504,8 +504,8 @@ public sealed class DependencyInjectionTestHarnessTests
 
     private sealed class ApplicationPublisher(IBus bus)
     {
-        public Task Publish(CancellationToken cancellationToken) =>
-            bus.Publish(new ApplicationEvent("registered"), cancellationToken);
+        public Task PublishAsync(CancellationToken cancellationToken) =>
+            bus.PublishAsync(new ApplicationEvent("registered"), cancellationToken);
     }
 
     private sealed record ApplicationEvent(string Value);
@@ -514,7 +514,7 @@ public sealed class DependencyInjectionTestHarnessTests
 
     private sealed class TimeAwareConsumer : IConsumer<TimeAwareMessage>
     {
-        public Task Consume(ConsumeContext<TimeAwareMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<TimeAwareMessage> context) => Task.CompletedTask;
     }
 
     private sealed record RequestMessage(Guid CorrelationId);
@@ -529,8 +529,8 @@ public sealed class DependencyInjectionTestHarnessTests
 
     private sealed class ScopedConsumerDependency(IPublishEndpoint publishEndpoint)
     {
-        public Task Publish(ConsumeContext<SubmitThroughDependency> context) =>
-            publishEndpoint.Publish(
+        public Task PublishAsync(ConsumeContext<SubmitThroughDependency> context) =>
+            publishEndpoint.PublishAsync(
                 new SubmittedThroughDependency(context.Message.CorrelationId, context.Message.Value),
                 context.CancellationToken);
     }
@@ -538,12 +538,12 @@ public sealed class DependencyInjectionTestHarnessTests
     private sealed class DependencyPublishingConsumer(ScopedConsumerDependency dependency) :
         IConsumer<SubmitThroughDependency>
     {
-        public Task Consume(ConsumeContext<SubmitThroughDependency> context) => dependency.Publish(context);
+        public Task ConsumeAsync(ConsumeContext<SubmitThroughDependency> context) => dependency.PublishAsync(context);
     }
 
     private sealed class RequestConsumer : IConsumer<RequestMessage>
     {
-        public Task Consume(ConsumeContext<RequestMessage> context) =>
+        public Task ConsumeAsync(ConsumeContext<RequestMessage> context) =>
             context.RespondAsync(new ResponseMessage(context.Message.CorrelationId));
     }
 
@@ -551,7 +551,7 @@ public sealed class DependencyInjectionTestHarnessTests
 
     private sealed class RetryingConsumer(AttemptCounter counter) : IConsumer<RetryingMessage>
     {
-        public Task Consume(ConsumeContext<RetryingMessage> context)
+        public Task ConsumeAsync(ConsumeContext<RetryingMessage> context)
         {
             counter.Increment();
             return Task.FromException(new ExpectedRetryException("retry failed"));
@@ -623,20 +623,20 @@ public sealed class DependencyInjectionTestHarnessTests
 
         public void Accept(StateMachineVisitor visitor) => visitor.Visit(this);
 
-        public async Task Execute(
+        public async Task ExecuteAsync(
             BehaviorContext<ContainerMetadataState, ContainerStart> context,
             IBehavior<ContainerMetadataState, ContainerStart> next)
         {
-            await publishEndpoint.Publish(
+            await publishEndpoint.PublishAsync(
                 new ContainerStarted(context.Saga.CorrelationId, context.Saga.Value),
                 context.CancellationToken);
-            await next.Execute(context);
+            await next.ExecuteAsync(context);
         }
 
-        public Task Faulted<TException>(
+        public Task FaultedAsync<TException>(
             BehaviorExceptionContext<ContainerMetadataState, ContainerStart, TException> context,
             IBehavior<ContainerMetadataState, ContainerStart> next)
             where TException : Exception =>
-            next.Faulted(context);
+            next.FaultedAsync(context);
     }
 }

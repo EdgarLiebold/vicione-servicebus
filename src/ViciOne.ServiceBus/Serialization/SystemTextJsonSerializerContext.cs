@@ -27,7 +27,7 @@ public class SystemTextJsonSerializerContext :
     protected ContentType ContentType { get; }
     protected JsonSerializerOptions Options { get; }
 
-    public override bool TryGetMessage<T>(out T? message)
+    public override bool TryGetMessage<T>([NotNullWhen(true)] out T? message)
         where T : class
     {
         var jsonElement = GetJsonElement(Message);

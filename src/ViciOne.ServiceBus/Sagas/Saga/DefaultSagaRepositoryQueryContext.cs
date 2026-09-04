@@ -26,44 +26,44 @@ public class DefaultSagaRepositoryQueryContext<TSaga, TMessage> :
 
     public int Count => _results.Count;
 
-    public Task<SagaConsumeContext<TSaga, TMessage>> Add(TSaga instance)
+    public Task<SagaConsumeContext<TSaga, TMessage>> AddAsync(TSaga instance, CancellationToken cancellationToken = default)
     {
-        return _context.Add(instance);
+        return _context.AddAsync(instance, cancellationToken: cancellationToken);
     }
 
-    public Task<SagaConsumeContext<TSaga, TMessage>> Insert(TSaga instance)
+    public Task<SagaConsumeContext<TSaga, TMessage>?> InsertAsync(TSaga instance, CancellationToken cancellationToken = default)
     {
-        return _context.Insert(instance);
+        return _context.InsertAsync(instance, cancellationToken: cancellationToken);
     }
 
-    public Task<SagaConsumeContext<TSaga, TMessage>> Load(Guid correlationId)
+    public Task<SagaConsumeContext<TSaga, TMessage>?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
-        return _context.Load(correlationId);
+        return _context.LoadAsync(correlationId, cancellationToken: cancellationToken);
     }
 
-    public Task Save(SagaConsumeContext<TSaga> context)
+    public Task SaveAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        return _context.Save(context);
+        return _context.SaveAsync(context, cancellationToken: cancellationToken);
     }
 
-    public Task Discard(SagaConsumeContext<TSaga> context)
+    public Task DiscardAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        return _context.Discard(context);
+        return _context.DiscardAsync(context, cancellationToken: cancellationToken);
     }
 
-    public Task Undo(SagaConsumeContext<TSaga> context)
+    public Task UndoAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        return _context.Undo(context);
+        return _context.UndoAsync(context, cancellationToken: cancellationToken);
     }
 
-    public Task Update(SagaConsumeContext<TSaga> context)
+    public Task UpdateAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        return _context.Update(context);
+        return _context.UpdateAsync(context, cancellationToken: cancellationToken);
     }
 
-    public Task Delete(SagaConsumeContext<TSaga> context)
+    public Task DeleteAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        return _context.Delete(context);
+        return _context.DeleteAsync(context, cancellationToken: cancellationToken);
     }
 
     public IEnumerator<Guid> GetEnumerator()
@@ -76,10 +76,10 @@ public class DefaultSagaRepositoryQueryContext<TSaga, TMessage> :
         return GetEnumerator();
     }
 
-    public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContext<T>(ConsumeContext<T> consumeContext, TSaga instance, SagaConsumeContextMode mode)
+    public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContextAsync<T>(ConsumeContext<T> consumeContext, TSaga instance, SagaConsumeContextMode mode)
         where T : class
     {
-        return _context.CreateSagaConsumeContext(consumeContext, instance, mode);
+        return _context.CreateSagaConsumeContextAsync(consumeContext, instance, mode);
     }
 }
 
@@ -101,9 +101,9 @@ public class DefaultSagaRepositoryQueryContext<TSaga> :
 
     public int Count => _results.Count;
 
-    public Task<SagaRepositoryQueryContext<TSaga>> Query(ISagaQuery<TSaga> query, CancellationToken cancellationToken)
+    public Task<SagaRepositoryQueryContext<TSaga>> QueryAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken)
     {
-        return _queryContext.Query(query, cancellationToken);
+        return _queryContext.QueryAsync(query, cancellationToken);
     }
 
     public IEnumerator<Guid> GetEnumerator()

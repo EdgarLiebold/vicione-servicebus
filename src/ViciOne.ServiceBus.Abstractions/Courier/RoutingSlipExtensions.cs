@@ -29,16 +29,10 @@ public static class RoutingSlipExtensions
         return routingSlip.CompensateLogs.Select(x => x.Address).Last();
     }
 
-    public static Task Execute<T>(this T source, RoutingSlip routingSlip)
+    public static Task ExecuteAsync<T>(this T source, RoutingSlip routingSlip, CancellationToken cancellationToken = default)
         where T : IPublishEndpoint, ISendEndpointProvider
     {
-        return new RoutingSlipExecutor(source, source).Execute(routingSlip, CancellationToken.None);
-    }
-
-    public static Task Execute<T>(this T source, RoutingSlip routingSlip, CancellationToken cancellationToken)
-        where T : IPublishEndpoint, ISendEndpointProvider
-    {
-        return new RoutingSlipExecutor(source, source).Execute(routingSlip, cancellationToken);
+        return new RoutingSlipExecutor(source, source).ExecuteAsync(routingSlip, cancellationToken);
     }
 
     /// <summary>
@@ -50,7 +44,7 @@ public static class RoutingSlipExtensions
     /// <param name="publishEndpoint"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public static Task Execute(this RoutingSlip routingSlip, ISendEndpointProvider sendEndpointProvider, IPublishEndpoint publishEndpoint,
+    public static Task ExecuteAsync(this RoutingSlip routingSlip, ISendEndpointProvider sendEndpointProvider, IPublishEndpoint publishEndpoint,
         CancellationToken cancellationToken = default)
     {
         if (routingSlip == null)
@@ -60,6 +54,6 @@ public static class RoutingSlipExtensions
         if (publishEndpoint == null)
             throw new ArgumentNullException(nameof(publishEndpoint));
 
-        return new RoutingSlipExecutor(sendEndpointProvider, publishEndpoint).Execute(routingSlip, cancellationToken);
+        return new RoutingSlipExecutor(sendEndpointProvider, publishEndpoint).ExecuteAsync(routingSlip, cancellationToken);
     }
 }

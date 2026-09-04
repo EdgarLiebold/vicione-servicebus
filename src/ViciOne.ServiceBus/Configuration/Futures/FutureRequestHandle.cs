@@ -19,6 +19,6 @@ public interface FutureRequestHandle<out TCommand, TResult, TFault, TRequest>
     /// <param name="configure"></param>
     /// <typeparam name="T">The response type</typeparam>
     /// <returns></returns>
-    FutureResponseHandle<TCommand, TResult, TFault, TRequest, T> OnResponseReceived<T>(Action<IFutureResponseConfigurator<TResult, T>> configure = null)
+    FutureResponseHandle<TCommand, TResult, TFault, TRequest, T> OnResponseReceived<T>(Action<IFutureResponseConfigurator<TResult, T>>? configure = null)
         where T : class;
 }

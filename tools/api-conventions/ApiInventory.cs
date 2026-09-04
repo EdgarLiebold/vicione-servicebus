@@ -22,6 +22,9 @@ string[] products =
 [
     "ViciOne.ServiceBus.Abstractions",
     "ViciOne.ServiceBus",
+    "ViciOne.ServiceBus.Analyzers",
+    "ViciOne.ServiceBus.Analyzers.CodeFixes",
+    "ViciOne.ServiceBus.Analyzers.Package",
     "ViciOne.ServiceBus.Testing",
     "ViciOne.ServiceBus.MessagePack",
     "ViciOne.ServiceBus.SignalR",
@@ -177,7 +180,7 @@ foreach (string product in products)
             exception.LoaderExceptions.Select(loaderException => loaderException?.Message ?? "Unknown type-load failure."));
     }
 
-    List<Type> publicTypes = types.Where(type => type.IsPublic || type.IsNestedPublic).ToList();
+    List<Type> publicTypes = types.Where(IsPubliclyVisible).ToList();
     List<Type> topLevelTypes = publicTypes.Where(type => !type.IsNested).ToList();
     loadedPublicTypes.AddRange(publicTypes);
     try
@@ -218,7 +221,10 @@ var aggregate = new AggregateInventory(
     reports.Sum(report => report.AsyncMethods),
     reports.Sum(report => report.AsyncWithoutSuffix),
     reports.Sum(report => report.AsyncWithoutCancellationToken),
+    reports.Sum(report => report.AsyncCancellationTokenExceptions),
     reports.Sum(report => report.AsyncCancellationTokenNotLast),
+    reports.Sum(report => report.AsyncCancellationTokenNotOptional),
+    reports.Sum(report => report.AsyncCancellationTokenWrongName),
     reports.Sum(report => report.DateTimeInSignatures),
     reports.Sum(report => report.TypesInInternalsNamespace),
     reports.Sum(report => report.Obsolete),
@@ -261,6 +267,7 @@ AssemblyInventory InventoryAssembly(string assemblyName, List<Type> publicTypes,
     var extensionMethodsPerNamespace = new Dictionary<string, int>(StringComparer.Ordinal);
     var asyncNoSuffixSample = new List<string>();
     var asyncNoCancellationTokenSample = new List<string>();
+    var asyncCancellationTokenExceptionSample = new List<CancellationTokenException>();
     var asyncCancellationTokenNotLastSample = new List<string>();
     var dateTimeSignatures = new HashSet<string>(StringComparer.Ordinal);
     var sendShapes = new HashSet<string>(StringComparer.Ordinal);
@@ -273,7 +280,10 @@ AssemblyInventory InventoryAssembly(string assemblyName, List<Type> publicTypes,
     int asyncWithSuffix = 0;
     int asyncWithCancellationToken = 0;
     int asyncWithoutCancellationToken = 0;
+    int asyncCancellationTokenExceptions = 0;
     int asyncCancellationTokenNotLast = 0;
+    int asyncCancellationTokenNotOptional = 0;
+    int asyncCancellationTokenWrongName = 0;
     int obsolete = 0;
     int editorBrowsableNever = 0;
     int publicFields = 0;
@@ -348,8 +358,8 @@ AssemblyInventory InventoryAssembly(string assemblyName, List<Type> publicTypes,
                     }
                 }
 
-                bool delegateInvoke = type.BaseType?.FullName == "System.MulticastDelegate" && method.Name == "Invoke";
-                if (!IsTaskLike(method.ReturnType) || delegateInvoke)
+                bool delegateInfrastructureMethod = type.BaseType?.FullName == "System.MulticastDelegate";
+                if (!IsTaskLike(method.ReturnType) || delegateInfrastructureMethod)
                     continue;
 
                 asyncMethods++;
@@ -361,23 +371,45 @@ AssemblyInventory InventoryAssembly(string assemblyName, List<Type> publicTypes,
                 ParameterInfo[] asyncParameters = SafeParameters(method);
                 int cancellationTokenIndex = Array.FindIndex(
                     asyncParameters,
-                    parameter => parameter.ParameterType.FullName == "System.Threading.CancellationToken");
+                    parameter => parameter.ParameterType.FullName == "System.Threading.CancellationToken" &&
+                        parameter.Name == "cancellationToken");
+                if (cancellationTokenIndex < 0)
+                {
+                    cancellationTokenIndex = Array.FindIndex(
+                        asyncParameters,
+                        parameter => parameter.ParameterType.FullName == "System.Threading.CancellationToken");
+                }
                 bool hasCancellationToken = cancellationTokenIndex >= 0;
                 if (hasCancellationToken)
                 {
                     asyncWithCancellationToken++;
+                    ParameterInfo cancellationToken = asyncParameters[cancellationTokenIndex];
                     if (cancellationTokenIndex != asyncParameters.Length - 1)
                     {
                         asyncCancellationTokenNotLast++;
                         if (asyncCancellationTokenNotLastSample.Count < 400)
                             asyncCancellationTokenNotLastSample.Add($"{type.FullName}.{method.Name}");
                     }
+                    if (!cancellationToken.IsOptional || !cancellationToken.HasDefaultValue)
+                        asyncCancellationTokenNotOptional++;
+                    if (cancellationToken.Name != "cancellationToken")
+                        asyncCancellationTokenWrongName++;
                 }
-                else if (!IsCallbackMethod(type, method))
+                else if (GetCancellationTokenExceptionReason(type, method) is { } exceptionReason)
+                {
+                    asyncCancellationTokenExceptions++;
+                    if (asyncCancellationTokenExceptionSample.Count < 400)
+                    {
+                        asyncCancellationTokenExceptionSample.Add(new CancellationTokenException(
+                            MemberSignature(type, method),
+                            exceptionReason));
+                    }
+                }
+                else
                 {
                     asyncWithoutCancellationToken++;
                     if (asyncNoCancellationTokenSample.Count < 400)
-                        asyncNoCancellationTokenSample.Add($"{type.FullName}.{method.Name}");
+                        asyncNoCancellationTokenSample.Add(MemberSignature(type, method));
                 }
             }
             else if (member is FieldInfo field && !field.IsLiteral && !type.IsEnum)
@@ -414,7 +446,10 @@ AssemblyInventory InventoryAssembly(string assemblyName, List<Type> publicTypes,
         asyncMethods - asyncWithSuffix,
         asyncWithCancellationToken,
         asyncWithoutCancellationToken,
+        asyncCancellationTokenExceptions,
         asyncCancellationTokenNotLast,
+        asyncCancellationTokenNotOptional,
+        asyncCancellationTokenWrongName,
         obsolete,
         editorBrowsableNever,
         publicFields,
@@ -435,20 +470,23 @@ AssemblyInventory InventoryAssembly(string assemblyName, List<Type> publicTypes,
         namespaces.Order(StringComparer.Ordinal).ToArray(),
         asyncNoSuffixSample,
         asyncNoCancellationTokenSample,
+        asyncCancellationTokenExceptionSample,
         asyncCancellationTokenNotLastSample,
-        dateTimeSignatures.Order(StringComparer.Ordinal).Take(400).ToArray());
+        dateTimeSignatures.Order(StringComparer.Ordinal).ToArray());
 }
 
 ApplicationSurfaceInventory InventoryApplicationSurface(IReadOnlyCollection<Type> publicTypes)
 {
-    string[] sendReceivers =
+    string[] sendContracts =
     [
         "ViciOne.ServiceBus.ISendEndpoint",
-        "ViciOne.ServiceBus.ISendEndpointProvider",
-        "ViciOne.ServiceBus.ConsumeContext",
-        "ViciOne.ServiceBus.ConsumeContext`1",
+        "ViciOne.ServiceBus.IOutgoingMessages",
     ];
-    string[] publishReceivers = ["ViciOne.ServiceBus.IPublishEndpoint"];
+    string[] publishContracts =
+    [
+        "ViciOne.ServiceBus.IPublishEndpoint",
+        "ViciOne.ServiceBus.IOutgoingMessages",
+    ];
     var sendShapes = new HashSet<string>(StringComparer.Ordinal);
     var publishShapes = new HashSet<string>(StringComparer.Ordinal);
     var consumeMemberShapes = new HashSet<string>(StringComparer.Ordinal);
@@ -456,6 +494,20 @@ ApplicationSurfaceInventory InventoryApplicationSurface(IReadOnlyCollection<Type
 
     Type consumeContext = publicTypes.Single(type => type.FullName == "ViciOne.ServiceBus.ConsumeContext`1");
     IReadOnlyCollection<Type> consumeContextClosure = InterfaceClosure(consumeContext);
+
+    foreach (Type contract in publicTypes.Where(type => sendContracts.Contains(type.FullName, StringComparer.Ordinal)))
+    {
+        foreach (MethodInfo method in contract.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+                     .Where(method => !method.IsSpecialName && method.Name == "SendAsync"))
+            sendShapes.Add(OperationShape(method, SafeParameters(method), skipReceiver: false));
+    }
+
+    foreach (Type contract in publicTypes.Where(type => publishContracts.Contains(type.FullName, StringComparer.Ordinal)))
+    {
+        foreach (MethodInfo method in contract.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+                     .Where(method => !method.IsSpecialName && method.Name == "PublishAsync"))
+            publishShapes.Add(OperationShape(method, SafeParameters(method), skipReceiver: false));
+    }
 
     foreach (Type contract in consumeContextClosure)
     {
@@ -485,16 +537,12 @@ ApplicationSurfaceInventory InventoryApplicationSurface(IReadOnlyCollection<Type
 
             if (type.Namespace == "ViciOne.ServiceBus")
             {
-                if (!extensionMethod && type.FullName == "ViciOne.ServiceBus.ISendEndpoint" && operationName == "Send")
-                    sendShapes.Add(OperationShape(method, parameters, skipReceiver: false));
-                else if (!extensionMethod && type.FullName == "ViciOne.ServiceBus.IPublishEndpoint" && operationName == "Publish")
-                    publishShapes.Add(OperationShape(method, parameters, skipReceiver: false));
-                else if (extensionMethod && parameters.Length > 0)
+                if (extensionMethod && parameters.Length > 0)
                 {
                     string receiver = GenericDefinitionName(parameters[0].ParameterType);
-                    if (operationName == "Send" && sendReceivers.Contains(receiver, StringComparer.Ordinal))
+                    if (operationName == "Send" && sendContracts.Contains(receiver, StringComparer.Ordinal))
                         sendShapes.Add(OperationShape(method, parameters, skipReceiver: true));
-                    else if (operationName == "Publish" && publishReceivers.Contains(receiver, StringComparer.Ordinal))
+                    else if (operationName == "Publish" && publishContracts.Contains(receiver, StringComparer.Ordinal))
                         publishShapes.Add(OperationShape(method, parameters, skipReceiver: true));
 
                     if (IsExtensionApplicable(parameters[0].ParameterType, consumeContextClosure))
@@ -596,23 +644,122 @@ bool IsCallbackMethod(Type type, MethodInfo method)
 
     foreach (Type contract in type.GetInterfaces().Where(IsCallbackContract))
     {
-        MethodInfo[] contractMethods;
         try
         {
-            contractMethods = contract.GetMethods(BindingFlags.Public | BindingFlags.Instance);
+            InterfaceMapping map = type.GetInterfaceMap(contract);
+            if (map.TargetMethods.Any(target => SameMethodIdentity(target, method)))
+                return true;
         }
         catch (Exception exception)
         {
-            throw new InvalidOperationException(
-                $"Could not inspect callback contract '{contract}' on '{type.FullName}'.",
-                exception);
+            MethodInfo[] contractMethods;
+            try
+            {
+                contractMethods = contract.GetMethods(BindingFlags.Public | BindingFlags.Instance);
+            }
+            catch (Exception nestedException)
+            {
+                throw new InvalidOperationException(
+                    $"Could not inspect callback contract '{contract}' on '{type.FullName}'.",
+                    new AggregateException(exception, nestedException));
+            }
+            if (contractMethods.Any(contractMethod => SameMethodShape(contractMethod, method)))
+                return true;
         }
-
-        if (contractMethods.Any(contractMethod => SameMethodShape(contractMethod, method)))
-            return true;
     }
 
     return false;
+}
+
+string? GetCancellationTokenExceptionReason(Type type, MethodInfo method)
+{
+    if (IsCallbackMethod(type, method))
+        return "The callback context owns the cancellation token.";
+    if (IsContextBoundCancellationMethod(type, method))
+        return "The operation uses the cancellation token carried by its consume context.";
+    if (ImplementsExternalContract(type, method))
+        return "The signature is fixed by an external interface or base-class contract.";
+    return null;
+}
+
+static bool IsContextBoundCancellationMethod(Type type, MethodInfo method)
+{
+    if (type.FullName is "ViciOne.ServiceBus.ConsumeContext" or "ViciOne.ServiceBus.ConsumeContext`1")
+        return method.Name is "RespondAsync" or "ForwardAsync";
+
+    foreach (Type contract in type.GetInterfaces().Where(IsConsumeContext))
+    {
+        try
+        {
+            InterfaceMapping map = type.GetInterfaceMap(contract);
+            if (map.TargetMethods.Any(target => SameMethodIdentity(target, method)))
+                return method.Name is "RespondAsync" or "ForwardAsync";
+        }
+        catch
+        {
+            if (contract.GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                .Any(contractMethod => SameMethodShape(contractMethod, method)))
+            {
+                return method.Name is "RespondAsync" or "ForwardAsync";
+            }
+        }
+    }
+
+    ParameterInfo[] parameters = SafeParameters(method);
+    return method.IsStatic &&
+        HasAttribute(method, typeof(ExtensionAttribute).FullName!) &&
+        parameters.Length > 0 &&
+        IsConsumeContext(parameters[0].ParameterType) &&
+        method.Name is "RespondAsync" or "ForwardAsync";
+}
+
+static bool ImplementsExternalContract(Type type, MethodInfo method)
+{
+    MethodInfo? baseMethod = FindBaseMethod(type, method);
+    if (baseMethod is not null && !IsProductAssembly(baseMethod.DeclaringType?.Assembly))
+        return true;
+
+    foreach (Type contract in type.GetInterfaces().Where(contract => !IsProductAssembly(contract.Assembly)))
+    {
+        try
+        {
+            InterfaceMapping map = type.GetInterfaceMap(contract);
+            if (map.TargetMethods.Any(target => SameMethodIdentity(target, method)))
+                return true;
+        }
+        catch
+        {
+            if (contract.GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                .Any(contractMethod => SameMethodShape(contractMethod, method)))
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+static MethodInfo? FindBaseMethod(Type type, MethodInfo method)
+{
+    if (!method.IsVirtual || (method.Attributes & MethodAttributes.NewSlot) != 0)
+        return null;
+
+    for (Type? baseType = type.BaseType; baseType is not null; baseType = baseType.BaseType)
+    {
+        MethodInfo? match = baseType
+            .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+            .FirstOrDefault(candidate => SameMethodShape(candidate, method));
+        if (match is not null)
+            return match;
+    }
+
+    return null;
+}
+
+static bool IsProductAssembly(Assembly? assembly)
+{
+    return assembly?.GetName().Name?.StartsWith("ViciOne.ServiceBus", StringComparison.Ordinal) == true;
 }
 
 bool IsCallbackContract(Type type)
@@ -620,7 +767,26 @@ bool IsCallbackContract(Type type)
     if (!type.IsInterface)
         return false;
 
-    return callbackContracts.Contains(GenericDefinitionName(type));
+    return callbackContracts.Contains(GenericDefinitionName(type)) || type.GetInterfaces().Any(IsCallbackContract);
+}
+
+static bool SameMethodIdentity(MethodInfo left, MethodInfo right)
+{
+    try
+    {
+        return left.Module == right.Module && left.MetadataToken == right.MetadataToken;
+    }
+    catch
+    {
+        return SameMethodShape(left, right);
+    }
+}
+
+static bool IsPubliclyVisible(Type type)
+{
+    if (!type.IsNested)
+        return type.IsPublic;
+    return type.IsNestedPublic && type.DeclaringType is not null && IsPubliclyVisible(type.DeclaringType);
 }
 
 static bool SameMethodShape(MethodInfo contractMethod, MethodInfo implementationMethod)
@@ -797,7 +963,10 @@ internal sealed record AssemblyInventory(
     int AsyncWithoutSuffix,
     int AsyncWithCancellationToken,
     int AsyncWithoutCancellationToken,
+    int AsyncCancellationTokenExceptions,
     int AsyncCancellationTokenNotLast,
+    int AsyncCancellationTokenNotOptional,
+    int AsyncCancellationTokenWrongName,
     int Obsolete,
     int EditorBrowsableNever,
     int PublicFields,
@@ -815,6 +984,7 @@ internal sealed record AssemblyInventory(
     IReadOnlyList<string> NamespaceList,
     IReadOnlyList<string> AsyncNoSuffixSample,
     IReadOnlyList<string> AsyncNoCancellationTokenSample,
+    IReadOnlyList<CancellationTokenException> AsyncCancellationTokenExceptionSample,
     IReadOnlyList<string> AsyncCancellationTokenNotLastSample,
     IReadOnlyList<string> DateTimeSignatureSample);
 
@@ -827,7 +997,10 @@ internal sealed record AggregateInventory(
     int AsyncMethods,
     int AsyncWithoutSuffix,
     int AsyncWithoutCancellationToken,
+    int AsyncCancellationTokenExceptions,
     int AsyncCancellationTokenNotLast,
+    int AsyncCancellationTokenNotOptional,
+    int AsyncCancellationTokenWrongName,
     int DateTimeInSignatures,
     int TypesInInternalsNamespace,
     int Obsolete,
@@ -850,3 +1023,5 @@ internal sealed record ApplicationSurfaceInventory(
     IReadOnlyList<string> ConsumeContextExtensionSignatures);
 
 internal sealed record TypeInventory(string Assembly, string Namespace, string Name, string Kind);
+
+internal sealed record CancellationTokenException(string Method, string Reason);

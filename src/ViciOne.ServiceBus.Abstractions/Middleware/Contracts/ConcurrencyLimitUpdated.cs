@@ -10,7 +10,7 @@ public interface ConcurrencyLimitUpdated
     /// <summary>
     /// The actual time at which the adjustment was applied
     /// </summary>
-    DateTime Timestamp { get; }
+    DateTimeOffset Timestamp { get; }
 
     /// <summary>
     /// The identifier that was adjusted

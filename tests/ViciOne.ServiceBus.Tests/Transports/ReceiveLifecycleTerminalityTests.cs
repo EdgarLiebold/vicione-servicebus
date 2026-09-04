@@ -18,13 +18,13 @@ public sealed class ReceiveLifecycleTerminalityTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-RECEIVE-ENDPOINT-LIFETIME", "stop-awaits-context-reset")]
-    public async Task Stop_AwaitsOwnedProviderReleaseBeforeCompleting()
+    public async Task Stop_AwaitsOwnedProviderReleaseBeforeCompletingAsync()
     {
         var context = new TestReceiveEndpointContext(pauseReset: true);
         var endpoint = new ReceiveEndpoint(new ScriptedReceiveTransport(), context);
         endpoint.Start(CancellationToken.None);
 
-        Task stop = endpoint.Stop(TestContext.Current.CancellationToken);
+        Task stop = endpoint.StopAsync(TestContext.Current.CancellationToken);
         await context.ResetStarted.Task.WaitAsync(TestContext.Current.CancellationToken);
 
         Assert.False(stop.IsCompleted);
@@ -58,7 +58,7 @@ public sealed class ReceiveLifecycleTerminalityTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RECEIVE-START", "synchronous-fault-rolls-back-handle")]
-    public async Task SynchronousStartFailure_RollsBackTheHandleAndAllowsAHealthyRetry()
+    public async Task SynchronousStartFailure_RollsBackTheHandleAndAllowsAHealthyRetryAsync()
     {
         var expected = new ExpectedTransportException("start failed");
         var transport = new ScriptedReceiveTransport(expected);
@@ -72,7 +72,7 @@ public sealed class ReceiveLifecycleTerminalityTests
         Assert.Contains(expected.Message, endpoint.Message, StringComparison.Ordinal);
 
         ReceiveEndpointHandle handle = endpoint.Start(CancellationToken.None);
-        await transport.NotifyReady().WaitAsync(TestContext.Current.CancellationToken);
+        await transport.NotifyReadyAsync().WaitAsync(TestContext.Current.CancellationToken);
         ReceiveEndpointReady ready = await handle.Ready.WaitAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(2, transport.StartCount);
@@ -82,7 +82,7 @@ public sealed class ReceiveLifecycleTerminalityTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RECEIVE-START", "already-canceled-token-keeps-identity")]
-    public async Task AlreadyCanceledStart_RejectsBeforeTransportStartAndKeepsTheExactToken()
+    public async Task AlreadyCanceledStart_RejectsBeforeTransportStartAndKeepsTheExactTokenAsync()
     {
         using var canceled = new CancellationTokenSource();
         canceled.Cancel();
@@ -96,14 +96,14 @@ public sealed class ReceiveLifecycleTerminalityTests
         Assert.Equal(ReceiveEndpoint.State.Initial, endpoint.CurrentState);
 
         ReceiveEndpointHandle handle = endpoint.Start(CancellationToken.None);
-        await transport.NotifyReady().WaitAsync(TestContext.Current.CancellationToken);
+        await transport.NotifyReadyAsync().WaitAsync(TestContext.Current.CancellationToken);
         Assert.Equal(InputAddress, (await handle.Ready.WaitAsync(TestContext.Current.CancellationToken)).InputAddress);
         Assert.Equal(1, transport.StartCount);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RECEIVE-FAULT", "nonterminal-does-not-fail-readiness")]
-    public async Task NonterminalFault_LeavesReadinessPendingUntilATerminalFaultPreservesItsCause()
+    public async Task NonterminalFault_LeavesReadinessPendingUntilATerminalFaultPreservesItsCauseAsync()
     {
         var transport = new ScriptedReceiveTransport();
         var endpoint = new ReceiveEndpoint(transport, new TestReceiveEndpointContext());
@@ -111,10 +111,10 @@ public sealed class ReceiveLifecycleTerminalityTests
         var transient = new ExpectedTransportException("transient");
         var terminal = new ExpectedTransportException("terminal");
 
-        await transport.NotifyFaulted(transient, false).WaitAsync(TestContext.Current.CancellationToken);
+        await transport.NotifyFaultedAsync(transient, false).WaitAsync(TestContext.Current.CancellationToken);
         Assert.False(handle.Ready.IsCompleted);
 
-        await transport.NotifyFaulted(terminal, true).WaitAsync(TestContext.Current.CancellationToken);
+        await transport.NotifyFaultedAsync(terminal, true).WaitAsync(TestContext.Current.CancellationToken);
         ExpectedTransportException actual = await Assert.ThrowsAsync<ExpectedTransportException>(() => handle.Ready);
 
         Assert.Same(terminal, actual);
@@ -123,7 +123,7 @@ public sealed class ReceiveLifecycleTerminalityTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RECEIVE-CANCELLATION", "pending-readiness-keeps-token")]
-    public async Task CancellationAfterStart_CancelsPendingReadinessWithTheExactToken()
+    public async Task CancellationAfterStart_CancelsPendingReadinessWithTheExactTokenAsync()
     {
         using var cancellation = new CancellationTokenSource();
         var transport = new ScriptedReceiveTransport();
@@ -135,14 +135,14 @@ public sealed class ReceiveLifecycleTerminalityTests
         OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => handle.Ready);
 
         Assert.Equal(cancellation.Token, exception.CancellationToken);
-        await transport.NotifyFaulted(new ExpectedTransportException("late terminal"), true)
+        await transport.NotifyFaultedAsync(new ExpectedTransportException("late terminal"), true)
             .WaitAsync(TestContext.Current.CancellationToken);
         Assert.True(handle.Ready.IsCanceled);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RECEIVE-RETRY", "attempt-faults-and-terminal-exhaustion")]
-    public async Task RetryAttempts_AreNonterminalUntilTheRetryOwnerPublishesExhaustion()
+    public async Task RetryAttempts_AreNonterminalUntilTheRetryOwnerPublishesExhaustionAsync()
     {
         var first = new ConnectionException("first", isTransient: true);
         var terminal = new ConnectionException("terminal", isTransient: true);
@@ -160,7 +160,7 @@ public sealed class ReceiveLifecycleTerminalityTests
 
         ReceiveTransportHandle handle = transport.Start();
         ReceiveTransportFaulted terminalEvent = await observer.ThirdFault.WaitAsync(TestContext.Current.CancellationToken);
-        await handle.Stop(TestContext.Current.CancellationToken);
+        await handle.StopAsync(TestContext.Current.CancellationToken);
 
         ReceiveTransportFaulted[] faults = observer.Faults;
         Assert.Equal(3, faults.Length);
@@ -188,7 +188,7 @@ public sealed class ReceiveLifecycleTerminalityTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RECEIVE-STOP", "stop-cancels-backoff-without-terminal-fault")]
-    public async Task StopDuringRetryBackoff_CancelsTheOwnedRunWithoutAnotherAttemptOrTerminalFault()
+    public async Task StopDuringRetryBackoff_CancelsTheOwnedRunWithoutAnotherAttemptOrTerminalFaultAsync()
     {
         var timeProvider = new ObservableTimeProvider(new DateTimeOffset(2031, 2, 3, 4, 5, 6, TimeSpan.Zero));
         var context = new TestReceiveEndpointContext();
@@ -205,8 +205,8 @@ public sealed class ReceiveLifecycleTerminalityTests
 
         ReceiveTransportHandle handle = transport.Start();
         ReceiveTransportFaulted attempt = await observer.FirstFault.WaitAsync(TestContext.Current.CancellationToken);
-        await timeProvider.WaitForTimerCount(1).WaitAsync(TestContext.Current.CancellationToken);
-        await handle.Stop(TestContext.Current.CancellationToken);
+        await timeProvider.WaitForTimerCountAsync(1).WaitAsync(TestContext.Current.CancellationToken);
+        await handle.StopAsync(TestContext.Current.CancellationToken);
 
         ReceiveTransportFaulted singleFault = Assert.Single(observer.Faults);
         Assert.Same(attempt, singleFault);
@@ -218,7 +218,7 @@ public sealed class ReceiveLifecycleTerminalityTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-ENDPOINT-READINESS", "explicit-terminal-fault-cancels-waiters")]
-    public async Task BusEndpointWaiters_UseExplicitTerminalityAndPreserveTheFirstCause()
+    public async Task BusEndpointWaiters_UseExplicitTerminalityAndPreserveTheFirstCauseAsync()
     {
         var observer = new TerminalFaultObserverTestDriver();
         var endpoint = new StubReceiveEndpoint();
@@ -226,7 +226,7 @@ public sealed class ReceiveLifecycleTerminalityTests
         observer.Attach(firstWaiter);
         var nonterminal = new ConnectionException("recoverable attempt", isTransient: false);
 
-        await observer.Faulted(new ReceiveEndpointFaultedEvent(
+        await observer.FaultedAsync(new ReceiveEndpointFaultedEvent(
             new ReceiveTransportFaultedEvent(InputAddress, nonterminal, false),
             endpoint));
 
@@ -239,7 +239,7 @@ public sealed class ReceiveLifecycleTerminalityTests
         observer.Attach(callbackFaultingWaiter);
         var terminal = new ConnectionException("explicit terminal", isTransient: true);
 
-        await observer.Faulted(new ReceiveEndpointFaultedEvent(
+        await observer.FaultedAsync(new ReceiveEndpointFaultedEvent(
             new ReceiveTransportFaultedEvent(InputAddress, terminal, true),
             endpoint));
 
@@ -247,7 +247,7 @@ public sealed class ReceiveLifecycleTerminalityTests
         Assert.True(callbackFaultingWaiter.IsCancellationRequested);
         Assert.Same(terminal, observer.Cause);
 
-        await observer.Faulted(new ReceiveEndpointFaultedEvent(
+        await observer.FaultedAsync(new ReceiveEndpointFaultedEvent(
             new ReceiveTransportFaultedEvent(InputAddress, new ExpectedTransportException("later terminal"), true),
             endpoint));
 
@@ -277,10 +277,10 @@ public sealed class ReceiveLifecycleTerminalityTests
             return new StubReceiveTransportHandle();
         }
 
-        public Task NotifyReady() => _observers.Ready(new ReceiveTransportReadyEvent(InputAddress, true));
+        public Task NotifyReadyAsync() => _observers.ReadyAsync(new ReceiveTransportReadyEvent(InputAddress, true));
 
-        public Task NotifyFaulted(Exception exception, bool isTerminal) =>
-            _observers.Faulted(new ReceiveTransportFaultedEvent(InputAddress, exception, isTerminal));
+        public Task NotifyFaultedAsync(Exception exception, bool isTerminal) =>
+            _observers.FaultedAsync(new ReceiveTransportFaultedEvent(InputAddress, exception, isTerminal));
 
         public ConnectHandle ConnectReceiveTransportObserver(IReceiveTransportObserver observer) => _observers.Connect(observer);
 
@@ -297,7 +297,7 @@ public sealed class ReceiveLifecycleTerminalityTests
 
     private sealed class StubReceiveTransportHandle : ReceiveTransportHandle
     {
-        public Task Stop(CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task StopAsync(CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
     }
 
     private sealed class TestReceiveEndpointContext(bool pauseReset = false) : BasePipeContext, ReceiveEndpointContext
@@ -334,9 +334,9 @@ public sealed class ReceiveLifecycleTerminalityTests
 
         public IReceivePipeDispatcher CreateReceivePipeDispatcher() => throw new NotSupportedException();
 
-        public ValueTask ResetAsync()
+        public ValueTask ResetAsync(CancellationToken cancellationToken = default)
         {
-            Interlocked.Increment(ref _resetCount);
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled(cancellationToken); Interlocked.Increment(ref _resetCount);
             ResetStarted.TrySetResult();
             return pauseReset ? new ValueTask(_releaseReset.Task) : default;
         }
@@ -370,7 +370,7 @@ public sealed class ReceiveLifecycleTerminalityTests
     {
         public Task Connected => Task.CompletedTask;
 
-        public Task Send(ReceiveContext context) => Task.CompletedTask;
+        public Task SendAsync(ReceiveContext context) => Task.CompletedTask;
 
         public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)
             where T : class => new EmptyConnectHandle();
@@ -415,11 +415,11 @@ public sealed class ReceiveLifecycleTerminalityTests
         public Task<ReceiveTransportFaulted> ThirdFault => _thirdFault.Task;
         public Task<ReceiveTransportFaulted> TerminalFault => _terminalFault.Task;
 
-        public Task Ready(ReceiveTransportReady ready) => Task.CompletedTask;
+        public Task ReadyAsync(ReceiveTransportReady ready) => Task.CompletedTask;
 
-        public Task Completed(ReceiveTransportCompleted completed) => Task.CompletedTask;
+        public Task CompletedAsync(ReceiveTransportCompleted completed) => Task.CompletedTask;
 
-        public Task Faulted(ReceiveTransportFaulted faulted)
+        public Task FaultedAsync(ReceiveTransportFaulted faulted)
         {
             int count;
             lock (_gate)
@@ -445,7 +445,7 @@ public sealed class ReceiveLifecycleTerminalityTests
 
         public int AttemptCount { get; private set; }
 
-        public Task Send(TestPipeContext context)
+        public Task SendAsync(TestPipeContext context)
         {
             AttemptCount++;
             throw _failures.Dequeue();
@@ -481,8 +481,7 @@ public sealed class ReceiveLifecycleTerminalityTests
             return retryLimit > 0;
         }
 
-        public Task RetryFaulted(Exception exception) => Task.CompletedTask;
-
+        public Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
         public void Cancel()
         {
         }
@@ -500,15 +499,15 @@ public sealed class ReceiveLifecycleTerminalityTests
         int retryLimit) : BaseRetryContext<T>(context, exception, retryCount, CancellationToken.None), RetryContext<T>
         where T : class, PipeContext
     {
-        public override Task PreRetry()
+        public override Task PreRetryAsync(CancellationToken cancellationToken = default)
         {
-            trace.Add($"before:{RetryAttempt}");
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); trace.Add($"before:{RetryAttempt}");
             return Task.CompletedTask;
         }
 
-        public override Task RetryFaulted(Exception terminalException)
+        public override Task RetryFaultedAsync(Exception terminalException, CancellationToken cancellationToken = default)
         {
-            trace.Add($"terminal:{terminalException.Message}");
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); trace.Add($"terminal:{terminalException.Message}");
             return Task.CompletedTask;
         }
 
@@ -534,11 +533,10 @@ public sealed class ReceiveLifecycleTerminalityTests
         public int PeakActiveCount => 0;
         public long TotalCount => 0;
 
-        public Task Send(IPipe<TestPipeContext> pipe, CancellationToken cancellationToken = default) => pipe.Send(context);
-
-        public Task Stop(StopContext stopContext)
+        public Task SendAsync(IPipe<TestPipeContext> pipe, CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return pipe.SendAsync(context); }
+        public Task StopAsync(StopContext stopContext, CancellationToken cancellationToken = default)
         {
-            _stopping.Cancel();
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); _stopping.Cancel();
             _completed.TrySetResult();
             _stopped.Cancel();
             return Task.CompletedTask;
@@ -608,7 +606,7 @@ public sealed class ReceiveLifecycleTerminalityTests
         public Uri InputAddress => ReceiveLifecycleTerminalityTests.InputAddress;
         public Task<ReceiveEndpointReady> Started => Task.FromResult<ReceiveEndpointReady>(
             new StubReceiveEndpointReady(this));
-        public ReceiveEndpointHandle Start(CancellationToken cancellationToken) => throw new NotSupportedException();
+        public ReceiveEndpointHandle Start(CancellationToken cancellationToken) { cancellationToken.ThrowIfCancellationRequested(); throw new NotSupportedException(); }
         public bool IsStarted() => true;
         public ConnectHandle ConnectConsumeObserver(IConsumeObserver observer) => new EmptyConnectHandle();
         public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe) where T : class => new EmptyConnectHandle();
@@ -616,12 +614,12 @@ public sealed class ReceiveLifecycleTerminalityTests
         public ConnectHandle ConnectRequestPipe<T>(Guid requestId, IPipe<ConsumeContext<T>> pipe) where T : class => new EmptyConnectHandle();
         public ConnectHandle ConnectPublishObserver(IPublishObserver observer) => new EmptyConnectHandle();
         public ConnectHandle ConnectSendObserver(ISendObserver observer) => new EmptyConnectHandle();
-        public Task<ISendEndpoint> GetSendEndpoint(Uri address) => throw new NotSupportedException();
-        public Task<ISendEndpoint> GetPublishSendEndpoint<T>() where T : class => throw new NotSupportedException();
+        public Task<ISendEndpoint> GetSendEndpointAsync(Uri address, CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.ISendEndpoint>(cancellationToken); throw new NotSupportedException(); }
+        public Task<ISendEndpoint> GetPublishSendEndpointAsync<T>(CancellationToken cancellationToken = default) where T : class { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.ISendEndpoint>(cancellationToken); throw new NotSupportedException(); }
         public ConnectHandle ConnectReceiveObserver(IReceiveObserver observer) => new EmptyConnectHandle();
         public ConnectHandle ConnectConsumeMessageObserver<T>(IConsumeMessageObserver<T> observer) where T : class => new EmptyConnectHandle();
         public ConnectHandle ConnectReceiveEndpointObserver(IReceiveEndpointObserver observer) => new EmptyConnectHandle();
-        public Task Stop(CancellationToken cancellationToken) => Task.CompletedTask;
+        public Task StopAsync(CancellationToken cancellationToken) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
         public void Probe(ProbeContext context)
         {
         }

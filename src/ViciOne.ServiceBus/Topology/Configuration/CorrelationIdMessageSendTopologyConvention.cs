@@ -20,16 +20,17 @@ public class CorrelationIdMessageSendTopologyConvention<TMessage> :
         ];
     }
 
-    bool IMessageSendTopologyConvention.TryGetMessageSendTopologyConvention<T>(out IMessageSendTopologyConvention<T> convention)
+    bool IMessageSendTopologyConvention.TryGetMessageSendTopologyConvention<T>([NotNullWhen(true)] out IMessageSendTopologyConvention<T>? convention)
     {
         convention = this as IMessageSendTopologyConvention<T>;
 
         return convention != null;
     }
 
-    bool IMessageSendTopologyConvention<TMessage>.TryGetMessageSendTopology(out IMessageSendTopology<TMessage> messageSendTopology)
+    bool IMessageSendTopologyConvention<TMessage>.TryGetMessageSendTopology(
+        [NotNullWhen(true)] out IMessageSendTopology<TMessage>? messageSendTopology)
     {
-        if (TryGetMessageCorrelationId(out IMessageCorrelationId<TMessage> messageCorrelationId))
+        if (TryGetMessageCorrelationId(out IMessageCorrelationId<TMessage>? messageCorrelationId))
         {
             messageSendTopology = new SetCorrelationIdMessageSendTopology<TMessage>(messageCorrelationId);
             return true;
@@ -44,7 +45,7 @@ public class CorrelationIdMessageSendTopologyConvention<TMessage> :
         _selectors.Insert(0, new SetCorrelationIdSelector<TMessage>(messageCorrelationId));
     }
 
-    public bool TryGetMessageCorrelationId(out IMessageCorrelationId<TMessage> messageCorrelationId)
+    public bool TryGetMessageCorrelationId([NotNullWhen(true)] out IMessageCorrelationId<TMessage>? messageCorrelationId)
     {
         for (var index = 0; index < _selectors.Count; index++)
         {

@@ -21,7 +21,7 @@ public class FileSystemMessageDataRepository :
         _timeProvider = timeProvider ?? TimeProvider.System;
     }
 
-    Task<Stream> IMessageDataRepository.Get(Uri address, CancellationToken cancellationToken)
+    Task<Stream> IMessageDataRepository.GetAsync(Uri address, CancellationToken cancellationToken)
     {
         var filePath = ParseFilePath(address);
 
@@ -34,7 +34,7 @@ public class FileSystemMessageDataRepository :
         return Task.FromResult<Stream>(stream);
     }
 
-    async Task<Uri> IMessageDataRepository.Put(Stream stream, TimeSpan? timeToLive, CancellationToken cancellationToken)
+    async Task<Uri> IMessageDataRepository.PutAsync(Stream stream, TimeSpan? timeToLive, CancellationToken cancellationToken)
     {
         var filePath = GenerateFilePath(timeToLive, _timeProvider);
 

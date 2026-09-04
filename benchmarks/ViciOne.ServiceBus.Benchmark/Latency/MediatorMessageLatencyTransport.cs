@@ -16,12 +16,12 @@ public class MediatorMessageLatencyTransport :
         _settings = settings;
     }
 
-    public Task Send(LatencyTestMessage message)
+    public Task SendAsync(LatencyTestMessage message)
     {
-        return _mediator.Send(message);
+        return _mediator.SendAsync(message);
     }
 
-    public Task Start(Action<IReceiveEndpointConfigurator> callback, IReportConsumerMetric reportConsumerMetric)
+    public Task StartAsync(Action<IReceiveEndpointConfigurator> callback, IReportConsumerMetric reportConsumerMetric)
     {
         _mediator = Bus.Factory.CreateMediator(callback);
 

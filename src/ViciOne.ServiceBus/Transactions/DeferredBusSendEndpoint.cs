@@ -22,65 +22,65 @@ internal sealed class DeferredBusSendEndpoint :
         return _endpoint.ConnectSendObserver(observer);
     }
 
-    public Task<SendContext<T>> CreateSendContext<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    public Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
-        return _endpoint.CreateSendContext(message, pipe, cancellationToken);
+        return _endpoint.CreateSendContextAsync(message, pipe, cancellationToken);
     }
 
-    public Task Send<T>(T message, CancellationToken cancellationToken = default)
+    public Task SendAsync<T>(T message, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _deferredBus.Add(token => _endpoint.Send(message, token), cancellationToken);
+        return _deferredBus.AddAsync(token => _endpoint.SendAsync(message, token), cancellationToken);
     }
 
-    public Task Send<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
+    public Task SendAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _deferredBus.Add(token => _endpoint.Send(message, pipe, token), cancellationToken);
+        return _deferredBus.AddAsync(token => _endpoint.SendAsync(message, pipe, token), cancellationToken);
     }
 
-    public Task Send<T>(T message, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
+    public Task SendAsync<T>(T message, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _deferredBus.Add(token => _endpoint.Send(message, pipe, token), cancellationToken);
+        return _deferredBus.AddAsync(token => _endpoint.SendAsync(message, pipe, token), cancellationToken);
     }
 
-    public Task Send(object message, CancellationToken cancellationToken = default)
+    public Task SendAsync(object message, CancellationToken cancellationToken = default)
     {
-        return _deferredBus.Add(token => _endpoint.Send(message, token), cancellationToken);
+        return _deferredBus.AddAsync(token => _endpoint.SendAsync(message, token), cancellationToken);
     }
 
-    public Task Send(object message, Type messageType, CancellationToken cancellationToken = default)
+    public Task SendAsync(object message, Type messageType, CancellationToken cancellationToken = default)
     {
-        return _deferredBus.Add(token => _endpoint.Send(message, messageType, token), cancellationToken);
+        return _deferredBus.AddAsync(token => _endpoint.SendAsync(message, messageType, token), cancellationToken);
     }
 
-    public Task Send(object message, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
+    public Task SendAsync(object message, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
-        return _deferredBus.Add(token => _endpoint.Send(message, pipe, token), cancellationToken);
+        return _deferredBus.AddAsync(token => _endpoint.SendAsync(message, pipe, token), cancellationToken);
     }
 
-    public Task Send(object message, Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
+    public Task SendAsync(object message, Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
-        return _deferredBus.Add(token => _endpoint.Send(message, messageType, pipe, token), cancellationToken);
+        return _deferredBus.AddAsync(token => _endpoint.SendAsync(message, messageType, pipe, token), cancellationToken);
     }
 
-    public Task Send<T>(object values, CancellationToken cancellationToken = default)
+    public Task SendAsync<T>(object values, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _deferredBus.Add(token => _endpoint.Send<T>(values, token), cancellationToken);
+        return _deferredBus.AddAsync(token => _endpoint.SendAsync<T>(values, token), cancellationToken);
     }
 
-    public Task Send<T>(object values, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
+    public Task SendAsync<T>(object values, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _deferredBus.Add(token => _endpoint.Send(values, pipe, token), cancellationToken);
+        return _deferredBus.AddAsync(token => _endpoint.SendAsync(values, pipe, token), cancellationToken);
     }
 
-    public Task Send<T>(object values, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
+    public Task SendAsync<T>(object values, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _deferredBus.Add(token => _endpoint.Send<T>(values, pipe, token), cancellationToken);
+        return _deferredBus.AddAsync(token => _endpoint.SendAsync<T>(values, pipe, token), cancellationToken);
     }
 }

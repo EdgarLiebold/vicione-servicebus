@@ -11,12 +11,12 @@ public sealed class FutureRequestConsumerIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-FUTURE-REQUEST-CONSUMER", "registration-helper-completes-through-private-consumer-endpoint")]
-    public async Task RegistrationHelper_CompletesTheFutureWithTheExactConsumerResponse()
+    public async Task RegistrationHelper_CompletesTheFutureWithTheExactConsumerResponseAsync()
     {
-        await using Fixture fixture = await Fixture.Start();
+        await using Fixture fixture = await Fixture.StartAsync();
         Guid orderLineId = NewId.NextGuid();
 
-        Response<PriceCalculation> response = await fixture.Client.GetResponse<PriceCalculation>(
+        Response<PriceCalculation> response = await fixture.Client.GetResponseAsync<PriceCalculation>(
             new CalculatePriceMessage(orderLineId, "90210"),
             fixture.CancellationToken).WaitAsync(fixture.Timeout, fixture.CancellationToken);
 
@@ -28,13 +28,13 @@ public sealed class FutureRequestConsumerIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-FUTURE-REQUEST-CONSUMER", "registration-helper-propagates-consumer-fault")]
-    public async Task RegistrationHelper_PropagatesTheExactConsumerFailureAsARequestFault()
+    public async Task RegistrationHelper_PropagatesTheExactConsumerFailureAsARequestFaultAsync()
     {
-        await using Fixture fixture = await Fixture.Start();
+        await using Fixture fixture = await Fixture.StartAsync();
         Guid orderLineId = NewId.NextGuid();
 
         RequestFaultException exception = await Assert.ThrowsAsync<RequestFaultException>(() =>
-            fixture.Client.GetResponse<PriceCalculation>(
+            fixture.Client.GetResponseAsync<PriceCalculation>(
                 new CalculatePriceMessage(orderLineId, "missing"),
                 fixture.CancellationToken));
 
@@ -66,12 +66,12 @@ public sealed class FutureRequestConsumerIntegrationTests
 
     public sealed class CalculatePriceConsumer : IConsumer<CalculatePrice>
     {
-        public Task Consume(ConsumeContext<CalculatePrice> context)
+        public Task ConsumeAsync(ConsumeContext<CalculatePrice> context)
         {
             if (context.Message.Sku == "missing")
                 throw new ExpectedPriceException(context.Message.Sku);
 
-            return context.RespondAsync<PriceCalculation>(new
+            return context.Advanced().RespondAsync<PriceCalculation>(new
             {
                 context.Message.CorrelationId,
                 Amount = 1234.55m,
@@ -111,7 +111,7 @@ public sealed class FutureRequestConsumerIntegrationTests
 
         public TimeSpan Timeout { get; }
 
-        public static async Task<Fixture> Start()
+        public static async Task<Fixture> StartAsync()
         {
             TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
                 .GetValidatedOptions().OperationTimeout!.Value;
@@ -128,7 +128,7 @@ public sealed class FutureRequestConsumerIntegrationTests
                 .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
             try
             {
-                ITestHarness harness = await provider.StartTestHarness()
+                ITestHarness harness = await provider.StartTestHarnessAsync()
                     .WaitAsync(timeout, TestContext.Current.CancellationToken);
                 return new Fixture(provider, harness, timeout);
             }
@@ -143,7 +143,7 @@ public sealed class FutureRequestConsumerIntegrationTests
         {
             try
             {
-                await Harness.Stop(CancellationToken.None).WaitAsync(Timeout, CancellationToken.None);
+                await Harness.StopAsync(CancellationToken.None).WaitAsync(Timeout, CancellationToken.None);
             }
             finally
             {

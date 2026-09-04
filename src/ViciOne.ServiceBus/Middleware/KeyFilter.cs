@@ -15,6 +15,7 @@ public class KeyFilter<TContext, TKey> :
     IFilter<TContext>,
     IKeyPipeConnector<TKey>
     where TContext : class, PipeContext
+    where TKey : notnull
 {
     readonly KeyAccessor<TContext, TKey> _keyAccessor;
     readonly ConcurrentDictionary<TKey, IPipe<TContext>> _pipes;
@@ -37,16 +38,16 @@ public class KeyFilter<TContext, TKey> :
     }
 
     [DebuggerNonUserCode]
-    public async Task Send(TContext context, IPipe<TContext> next)
+    public async Task SendAsync(TContext context, IPipe<TContext> next)
     {
         var key = _keyAccessor(context);
         if (key == null)
             throw new InvalidOperationException("The key accessor returned null.");
 
-        if (_pipes.TryGetValue(key, out IPipe<TContext> pipe))
-            await pipe.Send(context).ConfigureAwait(false);
+        if (_pipes.TryGetValue(key, out IPipe<TContext>? pipe))
+            await pipe.SendAsync(context).ConfigureAwait(false);
 
-        await next.Send(context).ConfigureAwait(false);
+        await next.SendAsync(context).ConfigureAwait(false);
     }
 
     public ConnectHandle ConnectPipe<T>(TKey key, IPipe<T> pipe)
@@ -71,7 +72,7 @@ public class KeyFilter<TContext, TKey> :
 
     void RemovePipe(TKey key)
     {
-        _pipes.TryRemove(key, out IPipe<TContext> _);
+        _pipes.TryRemove(key, out _);
     }
 
 

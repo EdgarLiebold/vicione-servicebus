@@ -28,12 +28,12 @@ public class BatchCheckpointer :
         };
 
         _channel = Channel.CreateBounded<IPendingConfirmation>(channelOptions);
-        _checkpointTask = WaitForBatch();
+        _checkpointTask = WaitForBatchAsync();
     }
 
-    public async Task Pending(IPendingConfirmation confirmation)
+    public async Task PendingAsync(IPendingConfirmation confirmation, CancellationToken cancellationToken = default)
     {
-        await _channel.Writer.WriteAsync(confirmation).ConfigureAwait(false);
+        await _channel.Writer.WriteAsync(confirmation, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
     public async ValueTask DisposeAsync()
@@ -43,12 +43,12 @@ public class BatchCheckpointer :
         await _checkpointTask.ConfigureAwait(false);
     }
 
-    async Task WaitForBatch()
+    async Task WaitForBatchAsync()
     {
         try
         {
             while (await _channel.Reader.WaitToReadAsync(_cancellationToken).ConfigureAwait(false))
-                await ReadBatch().ConfigureAwait(false);
+                await ReadBatchAsync().ConfigureAwait(false);
         }
         catch (OperationCanceledException)
         {
@@ -62,7 +62,7 @@ public class BatchCheckpointer :
         }
     }
 
-    async Task ReadBatch()
+    async Task ReadBatchAsync()
     {
         var timeoutToken = new CancellationTokenSource(_settings.CheckpointInterval);
         var batchToken = CancellationTokenSource.CreateLinkedTokenSource(timeoutToken.Token, _cancellationToken);
@@ -76,7 +76,7 @@ public class BatchCheckpointer :
                 {
                     if (_channel.Reader.TryRead(out var confirmation))
                     {
-                        await confirmation.Confirmed.OrCanceled(_cancellationToken).ConfigureAwait(false);
+                        await confirmation.Confirmed.OrCanceledAsync(_cancellationToken).ConfigureAwait(false);
                         batch.Add(confirmation);
                     }
                     else if (await _channel.Reader.WaitToReadAsync(batchToken.Token).ConfigureAwait(false) == false)
@@ -89,7 +89,7 @@ public class BatchCheckpointer :
             {
             }
 
-            await Checkpoint(batch).ConfigureAwait(false);
+            await CheckpointAsync(batch).ConfigureAwait(false);
         }
         catch (OperationCanceledException exception) when (exception.CancellationToken == batchToken.Token)
         {
@@ -106,11 +106,11 @@ public class BatchCheckpointer :
         }
     }
 
-    async Task Checkpoint(List<IPendingConfirmation> batch)
+    async Task CheckpointAsync(List<IPendingConfirmation> batch)
     {
         for (var i = batch.Count - 1; i >= 0; i--)
         {
-            if (await TryCheckpoint(batch[i]).ConfigureAwait(false) == false)
+            if (await TryCheckpointAsync(batch[i]).ConfigureAwait(false) == false)
                 continue;
 
             batch.RemoveRange(0, i + 1);
@@ -118,7 +118,7 @@ public class BatchCheckpointer :
         }
     }
 
-    async Task<bool> TryCheckpoint(IPendingConfirmation confirmation)
+    async Task<bool> TryCheckpointAsync(IPendingConfirmation confirmation)
     {
         _cancellationToken.ThrowIfCancellationRequested();
 
@@ -127,7 +127,7 @@ public class BatchCheckpointer :
 
         try
         {
-            await confirmation.Checkpoint(_cancellationToken).ConfigureAwait(false);
+            await confirmation.CheckpointAsync(_cancellationToken).ConfigureAwait(false);
             return true;
         }
         catch (Exception exception)

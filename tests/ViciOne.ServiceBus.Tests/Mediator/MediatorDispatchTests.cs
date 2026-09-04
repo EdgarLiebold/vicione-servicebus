@@ -10,7 +10,7 @@ public sealed class MediatorDispatchTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-MEDIATOR-DISPATCH", "short-circuit-filter-responds-and-notifies-consumed")]
-    public async Task ShortCircuitFilter_RespondsWithoutInvokingConsumerAndStillNotifiesConsumed()
+    public async Task ShortCircuitFilter_RespondsWithoutInvokingConsumerAndStillNotifiesConsumedAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -34,7 +34,7 @@ public sealed class MediatorDispatchTests
         IRequestClient<ShortCircuitRequest> client = mediator.CreateRequestClient<ShortCircuitRequest>();
         Guid correlationId = NewId.NextGuid();
 
-        Response<ShortCircuitResponse> response = await client.GetResponse<ShortCircuitResponse>(
+        Response<ShortCircuitResponse> response = await client.GetResponseAsync<ShortCircuitResponse>(
             new ShortCircuitRequest(correlationId),
             cancellationToken).WaitAsync(timeout, cancellationToken);
         Guid postConsumed = await observation.PostConsumed.Task.WaitAsync(timeout, cancellationToken);
@@ -49,7 +49,7 @@ public sealed class MediatorDispatchTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MEDIATOR-DISPATCH", "dynamic-handler-connect-disconnect")]
-    public async Task DynamicHandler_ReceivesBeforeDisconnectAndNotAfterDisconnect()
+    public async Task DynamicHandler_ReceivesBeforeDisconnectAndNotAfterDisconnectAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -66,18 +66,18 @@ public sealed class MediatorDispatchTests
                    return Task.CompletedTask;
                }))
         {
-            await mediator.Publish(first, cancellationToken).WaitAsync(timeout, cancellationToken);
+            await mediator.PublishAsync(first, cancellationToken).WaitAsync(timeout, cancellationToken);
             Assert.Equal(1, Volatile.Read(ref received));
         }
 
-        await mediator.Publish(second, cancellationToken).WaitAsync(timeout, cancellationToken);
+        await mediator.PublishAsync(second, cancellationToken).WaitAsync(timeout, cancellationToken);
 
         Assert.Equal(1, Volatile.Read(ref received));
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MEDIATOR-DISPATCH", "send-and-publish-exactly-once")]
-    public async Task SendAndPublish_DeliverTheirExactMessagesExactlyOnce()
+    public async Task SendAndPublish_DeliverTheirExactMessagesExactlyOnceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -102,8 +102,8 @@ public sealed class MediatorDispatchTests
         });
         await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
 
-        await mediator.Send(sent, cancellationToken).WaitAsync(timeout, cancellationToken);
-        await mediator.Publish(published, cancellationToken).WaitAsync(timeout, cancellationToken);
+        await mediator.SendAsync(sent, cancellationToken).WaitAsync(timeout, cancellationToken);
+        await mediator.PublishAsync(published, cancellationToken).WaitAsync(timeout, cancellationToken);
 
         Assert.Equal(1, Volatile.Read(ref sentCount));
         Assert.Equal(1, Volatile.Read(ref publishedCount));
@@ -111,7 +111,7 @@ public sealed class MediatorDispatchTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MEDIATOR-DISPATCH", "send-original-exception")]
-    public async Task Send_PropagatesTheOriginalHandlerException()
+    public async Task Send_PropagatesTheOriginalHandlerExceptionAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var expected = new MediatorDispatchException("handler failed");
@@ -120,14 +120,14 @@ public sealed class MediatorDispatchTests
         await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
 
         MediatorDispatchException actual = await Assert.ThrowsAsync<MediatorDispatchException>(() =>
-            mediator.Send(new DispatchMessage("fault"), cancellationToken));
+            mediator.SendAsync(new DispatchMessage("fault"), cancellationToken));
 
         Assert.Same(expected, actual);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MEDIATOR-DISPATCH", "send-caller-cancellation")]
-    public async Task Send_PropagatesRequestedCallerCancellation()
+    public async Task Send_PropagatesRequestedCallerCancellationAsync()
     {
         TimeSpan timeout = OperationTimeout();
         using var source = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
@@ -141,7 +141,7 @@ public sealed class MediatorDispatchTests
             }));
         await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
 
-        Task send = mediator.Send(new DispatchMessage("cancel"), source.Token);
+        Task send = mediator.SendAsync(new DispatchMessage("cancel"), source.Token);
         await entered.Task.WaitAsync(timeout, TestContext.Current.CancellationToken);
         source.Cancel();
 
@@ -151,7 +151,7 @@ public sealed class MediatorDispatchTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MEDIATOR-DISPATCH", "request-caller-cancellation")]
-    public async Task Request_PropagatesRequestedCallerCancellation()
+    public async Task Request_PropagatesRequestedCallerCancellationAsync()
     {
         TimeSpan timeout = OperationTimeout();
         using var source = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
@@ -168,7 +168,7 @@ public sealed class MediatorDispatchTests
         IRequestClient<RequestMessage> client = mediator.CreateRequestClient<RequestMessage>(RequestTimeout.After(m: 1));
         var request = new RequestMessage(NewId.NextGuid());
 
-        Task<Response<ResponseMessage>> response = client.GetResponse<ResponseMessage>(request, source.Token);
+        Task<Response<ResponseMessage>> response = client.GetResponseAsync<ResponseMessage>(request, source.Token);
         await entered.Task.WaitAsync(timeout, TestContext.Current.CancellationToken);
         source.Cancel();
 
@@ -182,13 +182,13 @@ public sealed class MediatorDispatchTests
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("REQ-VSB-MEDIATOR-DISPATCH", "missing-consumer-mandatory-boundary")]
-    public async Task PublishWithoutConsumer_UsesTheMandatoryBoundary(bool mandatory)
+    public async Task PublishWithoutConsumer_UsesTheMandatoryBoundaryAsync(bool mandatory)
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         IMediator mediator = Bus.Factory.CreateMediator(_ => { });
         await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
 
-        Task publish = mediator.Publish(
+        Task publish = mediator.PublishAsync(
             new DispatchMessage(mandatory ? "mandatory" : "optional"),
             context => { context.Mandatory = mandatory; },
             cancellationToken);
@@ -252,19 +252,19 @@ public sealed class MediatorDispatchTests
     public sealed class ShortCircuitFilter<T>(ShortCircuitObservation observation) : IFilter<ConsumeContext<T>>
         where T : class
     {
-        public async Task Send(ConsumeContext<T> context, IPipe<ConsumeContext<T>> next)
+        public async Task SendAsync(ConsumeContext<T> context, IPipe<ConsumeContext<T>> next)
         {
             if (context is ConsumeContext<ShortCircuitRequest> request)
             {
                 observation.RecordFilter();
-                await context.NotifyConsumed(context.ReceiveContext.ElapsedTime, nameof(ShortCircuitFilter<T>));
+                await context.NotifyConsumedAsync(context.Advanced().ReceiveContext.ElapsedTime, nameof(ShortCircuitFilter<T>));
                 await request.RespondAsync(new ShortCircuitResponse(
                     request.Message.CorrelationId,
                     "filter"));
                 return;
             }
 
-            await next.Send(context);
+            await next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("shortCircuit");
@@ -272,7 +272,7 @@ public sealed class MediatorDispatchTests
 
     public sealed class ShortCircuitConsumer(ShortCircuitObservation observation) : IConsumer<ShortCircuitRequest>
     {
-        public async Task Consume(ConsumeContext<ShortCircuitRequest> context)
+        public async Task ConsumeAsync(ConsumeContext<ShortCircuitRequest> context)
         {
             observation.RecordConsumer();
             await context.RespondAsync(new ShortCircuitResponse(
@@ -283,10 +283,10 @@ public sealed class MediatorDispatchTests
 
     public sealed class ShortCircuitConsumeObserver(ShortCircuitObservation observation) : IConsumeObserver
     {
-        public Task PreConsume<T>(ConsumeContext<T> context)
+        public Task PreConsumeAsync<T>(ConsumeContext<T> context)
             where T : class => Task.CompletedTask;
 
-        public Task PostConsume<T>(ConsumeContext<T> context)
+        public Task PostConsumeAsync<T>(ConsumeContext<T> context)
             where T : class
         {
             if (context.Message is ShortCircuitRequest request)
@@ -295,7 +295,7 @@ public sealed class MediatorDispatchTests
             return Task.CompletedTask;
         }
 
-        public Task ConsumeFault<T>(ConsumeContext<T> context, Exception exception)
+        public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, Exception exception)
             where T : class
         {
             observation.ConsumeFault.TrySetResult(exception);

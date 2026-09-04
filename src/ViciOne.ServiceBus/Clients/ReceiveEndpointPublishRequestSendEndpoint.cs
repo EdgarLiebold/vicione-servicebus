@@ -14,10 +14,10 @@ public class ReceiveEndpointPublishRequestSendEndpoint<TRequest> :
         _handle = handle;
     }
 
-    protected override async Task<ISendEndpoint> GetSendEndpoint()
+    protected override async Task<ISendEndpoint> GetSendEndpointAsync()
     {
         var ready = await _handle.Ready.ConfigureAwait(false);
 
-        return await ready.ReceiveEndpoint.GetPublishSendEndpoint<TRequest>().ConfigureAwait(false);
+        return await ready.ReceiveEndpoint.GetPublishSendEndpointAsync<TRequest>().ConfigureAwait(false);
     }
 }

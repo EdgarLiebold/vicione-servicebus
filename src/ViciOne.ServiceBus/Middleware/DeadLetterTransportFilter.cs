@@ -14,13 +14,13 @@ public class DeadLetterTransportFilter :
         context.CreateFilterScope("dead-letter");
     }
 
-    async Task IFilter<ReceiveContext>.Send(ReceiveContext context, IPipe<ReceiveContext> next)
+    async Task IFilter<ReceiveContext>.SendAsync(ReceiveContext context, IPipe<ReceiveContext> next)
     {
-        if (!context.TryGetPayload(out IDeadLetterTransport transport))
+        if (!context.TryGetPayload(out IDeadLetterTransport? transport))
             throw new TransportException(context.InputAddress, $"The {nameof(IDeadLetterTransport)} was not available on the {nameof(ReceiveContext)}.");
 
-        await transport.Send(context, "dead-letter").ConfigureAwait(false);
+        await transport.SendAsync(context, "dead-letter").ConfigureAwait(false);
 
-        await next.Send(context).ConfigureAwait(false);
+        await next.SendAsync(context).ConfigureAwait(false);
     }
 }

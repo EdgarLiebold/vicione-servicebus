@@ -1463,15 +1463,15 @@ public class PostgresDatabaseMigrator :
         _logger = logger;
     }
 
-    public async Task CreateDatabase(SqlTransportOptions options, CancellationToken cancellationToken = default)
+    public async Task CreateDatabaseAsync(SqlTransportOptions options, CancellationToken cancellationToken = default)
     {
-        await CreateDatabaseIfNotExist(options, cancellationToken).ConfigureAwait(false);
+        await CreateDatabaseIfNotExistAsync(options, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task DeleteDatabase(SqlTransportOptions options, CancellationToken cancellationToken = default)
+    public async Task DeleteDatabaseAsync(SqlTransportOptions options, CancellationToken cancellationToken = default)
     {
         await using var connection = PostgresSqlTransportConnection.GetSystemDatabaseConnection(options);
-        await connection.Open(cancellationToken).ConfigureAwait(false);
+        await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
 
         var result = await connection.Connection.ExecuteScalarAsync<int>(string.Format(DbExistsSql, options.Database)).ConfigureAwait(false);
         if (result == 1)
@@ -1482,10 +1482,10 @@ public class PostgresDatabaseMigrator :
         }
     }
 
-    public async Task CreateInfrastructure(SqlTransportOptions options, CancellationToken cancellationToken)
+    public async Task CreateInfrastructureAsync(SqlTransportOptions options, CancellationToken cancellationToken)
     {
         await using var connection = PostgresSqlTransportConnection.GetDatabaseConnection(options);
-        await connection.Open(cancellationToken).ConfigureAwait(false);
+        await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
 
         try
         {
@@ -1498,14 +1498,14 @@ public class PostgresDatabaseMigrator :
         }
         finally
         {
-            await connection.Close().ConfigureAwait(false);
+            await connection.CloseAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 
-    async Task CreateDatabaseIfNotExist(SqlTransportOptions options, CancellationToken cancellationToken)
+    async Task CreateDatabaseIfNotExistAsync(SqlTransportOptions options, CancellationToken cancellationToken)
     {
         await using var connection = PostgresSqlTransportConnection.GetSystemDatabaseConnection(options);
-        await connection.Open(cancellationToken).ConfigureAwait(false);
+        await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
 
         try
         {
@@ -1521,14 +1521,14 @@ public class PostgresDatabaseMigrator :
         }
         finally
         {
-            await connection.Close().ConfigureAwait(false);
+            await connection.CloseAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 
-    public async Task CreateSchemaIfNotExist(SqlTransportOptions options, CancellationToken cancellationToken)
+    public async Task CreateSchemaIfNotExistAsync(SqlTransportOptions options, CancellationToken cancellationToken)
     {
         await using var connection = PostgresSqlTransportConnection.GetDatabaseAdminConnection(options);
-        await connection.Open(cancellationToken).ConfigureAwait(false);
+        await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
 
         try
         {
@@ -1536,15 +1536,15 @@ public class PostgresDatabaseMigrator :
 
             _logger.LogDebug("Schema {Schema} created", options.Schema);
 
-            await GrantAccess(connection, options);
+            await GrantAccessAsync(connection, options);
         }
         finally
         {
-            await connection.Close().ConfigureAwait(false);
+            await connection.CloseAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 
-    async Task GrantAccess(IPostgresSqlTransportConnection connection, SqlTransportOptions options)
+    async Task GrantAccessAsync(IPostgresSqlTransportConnection connection, SqlTransportOptions options)
     {
         var result = await connection.Connection.ExecuteScalarAsync<int>(string.Format(RoleExistsSql, options.Role)).ConfigureAwait(false);
         if (result != 1)

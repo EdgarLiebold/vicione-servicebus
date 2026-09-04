@@ -20,10 +20,11 @@ public class PropertyExpressionSagaQueryFactory<TInstance, TData, TProperty> :
         _propertyExpression = propertyExpression;
         _selector = selector;
 
-        _propertyInfo = typeof(PropertyExpressionPropertyValue<TProperty>).GetProperty(nameof(PropertyExpressionPropertyValue<TProperty>.Value));
+        _propertyInfo = typeof(PropertyExpressionPropertyValue<TProperty>).GetProperty(nameof(PropertyExpressionPropertyValue<TProperty>.Value))
+            ?? throw new InvalidOperationException("The saga query value property was not found.");
     }
 
-    public bool TryCreateQuery(ConsumeContext<TData> context, out ISagaQuery<TInstance> query)
+    public bool TryCreateQuery(ConsumeContext<TData> context, [NotNullWhen(true)] out ISagaQuery<TInstance>? query)
     {
         if (_selector.TryGetProperty(context, out var propertyValue))
         {

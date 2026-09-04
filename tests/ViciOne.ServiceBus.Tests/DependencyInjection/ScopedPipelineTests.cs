@@ -10,7 +10,7 @@ public sealed class ScopedPipelineTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-SCOPE", "consumer-middleware-exposes-owning-service-scope")]
-    public async Task ConsumerMiddleware_ExposesTheSameServiceScopeUsedToResolveTheConsumer()
+    public async Task ConsumerMiddleware_ExposesTheSameServiceScopeUsedToResolveTheConsumerAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -34,14 +34,14 @@ public sealed class ScopedPipelineTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Guid correlationId = NewId.NextGuid();
             IRequestClient<ScopedRequest> client = harness.GetRequestClient<ScopedRequest>();
 
-            Response<ScopedResponse> response = await client.GetResponse<ScopedResponse>(
+            Response<ScopedResponse> response = await client.GetResponseAsync<ScopedResponse>(
                 new ScopedRequest(correlationId),
                 cancellationToken);
             ScopeResult result = await observation.Completed.Task.WaitAsync(timeout, cancellationToken);
@@ -54,13 +54,13 @@ public sealed class ScopedPipelineTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-FILTER", "excluded-implemented-interface-does-not-duplicate-publish-filter")]
-    public async Task ExcludedImplementedInterface_DoesNotApplyThePublishFilterTwice()
+    public async Task ExcludedImplementedInterface_DoesNotApplyThePublishFilterTwiceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -82,14 +82,14 @@ public sealed class ScopedPipelineTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Guid correlationId = NewId.NextGuid();
             IRequestClient<FilteredRequest> client = harness.GetRequestClient<FilteredRequest>();
 
-            Response<FilteredResponse> response = await client.GetResponse<FilteredResponse>(
+            Response<FilteredResponse> response = await client.GetResponseAsync<FilteredResponse>(
                 new FilteredRequest(correlationId),
                 cancellationToken);
             FilterResult result = await observation.Completed.Task.WaitAsync(timeout, cancellationToken);
@@ -101,7 +101,7 @@ public sealed class ScopedPipelineTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -147,7 +147,7 @@ public sealed class ScopedPipelineTests
         where TConsumer : class
         where TMessage : class
     {
-        public async Task Send(
+        public async Task SendAsync(
             ConsumerConsumeContext<TConsumer, TMessage> context,
             IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)
         {
@@ -155,7 +155,7 @@ public sealed class ScopedPipelineTests
             var marker = scope.ServiceProvider.GetRequiredService<ScopeMarker>();
             context.GetOrAddPayload(() => new ScopeFilterPayload(marker, scope.ServiceProvider));
 
-            await next.Send(context);
+            await next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("scopeCapture");
@@ -168,7 +168,7 @@ public sealed class ScopedPipelineTests
         IServiceProvider scopeProvider,
         ScopeObservation observation) : IConsumer<ScopedRequest>
     {
-        public async Task Consume(ConsumeContext<ScopedRequest> context)
+        public async Task ConsumeAsync(ConsumeContext<ScopedRequest> context)
         {
             ScopeFilterPayload payload = context.GetPayload<ScopeFilterPayload>();
             observation.Completed.TrySetResult(new ScopeResult(
@@ -205,7 +205,7 @@ public sealed class ScopedPipelineTests
     public sealed class CountingPublishFilter<T>(FilterObservation observation) : IFilter<PublishContext<T>>
         where T : class
     {
-        public Task Send(PublishContext<T> context, IPipe<PublishContext<T>> next)
+        public Task SendAsync(PublishContext<T> context, IPipe<PublishContext<T>> next)
         {
             int count = (context.TryGetHeader("X-FilterCount", out int? existing) ? existing : 0) ?? 0;
             count++;
@@ -213,7 +213,7 @@ public sealed class ScopedPipelineTests
             if (context.Message is FilteredRequest)
                 observation.RecordRequest();
 
-            return next.Send(context);
+            return next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("countingPublish");
@@ -221,11 +221,11 @@ public sealed class ScopedPipelineTests
 
     public sealed class FilteredRequestConsumer(FilterObservation observation) : IConsumer<FilteredRequest>
     {
-        public async Task Consume(ConsumeContext<FilteredRequest> context)
+        public async Task ConsumeAsync(ConsumeContext<FilteredRequest> context)
         {
             observation.Completed.TrySetResult(new FilterResult(
                 context.Message.CorrelationId,
-                context.TryGetHeader("X-FilterCount", out int? count) ? count ?? 0 : 0));
+                context.Advanced().TryGetHeader("X-FilterCount", out int? count) ? count ?? 0 : 0));
             await context.RespondAsync(new FilteredResponse(context.Message.CorrelationId));
         }
     }

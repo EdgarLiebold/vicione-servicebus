@@ -6,5 +6,5 @@ namespace ViciOne.ServiceBus.EventHubIntegration.Checkpoints;
 public interface ICheckpointer :
     IAsyncDisposable
 {
-    Task Pending(IPendingConfirmation confirmation);
+    Task PendingAsync(IPendingConfirmation confirmation, CancellationToken cancellationToken = default);
 }

@@ -32,7 +32,7 @@ internal sealed class SchedulerBusObserver :
     {
     }
 
-    public async Task PreStart(IBus bus)
+    public async Task PreStartAsync(IBus bus)
     {
         LogContext.Debug?.Log("Creating Quartz Scheduler: {InputAddress}", _schedulerEndpointAddress);
 
@@ -42,7 +42,7 @@ internal sealed class SchedulerBusObserver :
         _scheduler.Context[ScheduledMessageJob.TimeProviderContextKey] = _settings.TimeProvider;
     }
 
-    public async Task PostStart(IBus bus, Task<BusReady> busReady)
+    public async Task PostStartAsync(IBus bus, Task<BusReady> busReady)
     {
         if (!_settings.StartScheduler)
         {
@@ -65,12 +65,12 @@ internal sealed class SchedulerBusObserver :
             _scheduler.SchedulerInstanceId);
     }
 
-    public Task StartFaulted(IBus bus, Exception exception)
+    public Task StartFaultedAsync(IBus bus, Exception exception)
     {
         return Task.CompletedTask;
     }
 
-    public async Task PreStop(IBus bus)
+    public async Task PreStopAsync(IBus bus)
     {
         if (!_settings.StartScheduler)
             return;
@@ -81,7 +81,7 @@ internal sealed class SchedulerBusObserver :
             _scheduler.SchedulerInstanceId);
     }
 
-    public async Task PostStop(IBus bus)
+    public async Task PostStopAsync(IBus bus)
     {
         try
         {
@@ -97,7 +97,7 @@ internal sealed class SchedulerBusObserver :
         }
     }
 
-    public Task StopFaulted(IBus bus, Exception exception)
+    public Task StopFaultedAsync(IBus bus, Exception exception)
     {
         return Task.CompletedTask;
     }

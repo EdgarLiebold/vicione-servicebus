@@ -33,14 +33,14 @@ public class AzureTableSagaRepositoryContext<TSaga, TMessage> :
         _factory = factory;
     }
 
-    public Task<SagaConsumeContext<TSaga, TMessage>> Add(TSaga instance)
+    public Task<SagaConsumeContext<TSaga, TMessage>> AddAsync(TSaga instance, CancellationToken cancellationToken = default)
     {
-        return _factory.CreateSagaConsumeContext(_context, _consumeContext, instance, SagaConsumeContextMode.Add);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.SagaConsumeContext<TSaga, TMessage>>(cancellationToken); return _factory.CreateSagaConsumeContextAsync(_context, _consumeContext, instance, SagaConsumeContextMode.Add);
     }
 
-    public async Task<SagaConsumeContext<TSaga, TMessage>> Insert(TSaga instance)
+    public async Task<SagaConsumeContext<TSaga, TMessage>?> InsertAsync(TSaga instance, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(instance);
+        cancellationToken.ThrowIfCancellationRequested(); ArgumentNullException.ThrowIfNull(instance);
 
         try
         {
@@ -48,7 +48,7 @@ public class AzureTableSagaRepositoryContext<TSaga, TMessage> :
             await insert.ConfigureAwait(false);
             _consumeContext.LogInsert<TSaga, TMessage>(instance.CorrelationId);
 
-            return await CreateSagaConsumeContext(entity, SagaConsumeContextMode.Insert).ConfigureAwait(false);
+            return await CreateSagaConsumeContextAsync(entity, SagaConsumeContextMode.Insert).ConfigureAwait(false);
         }
         catch (RequestFailedException exception) when (exception.Status == 409)
         {
@@ -57,7 +57,7 @@ public class AzureTableSagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
-    public async Task<SagaConsumeContext<TSaga, TMessage>> Load(Guid correlationId)
+    public async Task<SagaConsumeContext<TSaga, TMessage>?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
         var (partitionKey, rowKey) = _context.Format(correlationId);
 
@@ -69,20 +69,20 @@ public class AzureTableSagaRepositoryContext<TSaga, TMessage> :
             .ConfigureAwait(false);
 
         if (result.HasValue)
-            return await CreateSagaConsumeContext(new TableEntity(result.Value), SagaConsumeContextMode.Load).ConfigureAwait(false);
+            return await CreateSagaConsumeContextAsync(new TableEntity(result.Value), SagaConsumeContextMode.Load).ConfigureAwait(false);
 
         return default;
     }
 
-    public Task Save(SagaConsumeContext<TSaga> context)
+    public Task SaveAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        (Task<Azure.Response> insert, _) = TableInsert(context.Saga);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); (Task<Azure.Response> insert, _) = TableInsert(context.Saga);
         return insert;
     }
 
-    public async Task Update(SagaConsumeContext<TSaga> context)
+    public async Task UpdateAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        var instance = context.Saga;
+        cancellationToken.ThrowIfCancellationRequested(); var instance = context.Saga;
 
         try
         {
@@ -108,9 +108,9 @@ public class AzureTableSagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
-    public async Task Delete(SagaConsumeContext<TSaga> context)
+    public async Task DeleteAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        var instance = context.Saga;
+        cancellationToken.ThrowIfCancellationRequested(); var instance = context.Saga;
         try
         {
             var (partitionKey, rowKey) = _context.Format(instance.CorrelationId);
@@ -134,20 +134,20 @@ public class AzureTableSagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
-    public Task Discard(SagaConsumeContext<TSaga> context)
+    public Task DiscardAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        return Task.CompletedTask;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
     }
 
-    public Task Undo(SagaConsumeContext<TSaga> context)
+    public Task UndoAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        return Task.CompletedTask;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
     }
 
-    public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContext<T>(ConsumeContext<T> consumeContext, TSaga instance, SagaConsumeContextMode mode)
+    public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContextAsync<T>(ConsumeContext<T> consumeContext, TSaga instance, SagaConsumeContextMode mode)
         where T : class
     {
-        return _factory.CreateSagaConsumeContext(_context, consumeContext, instance, mode);
+        return _factory.CreateSagaConsumeContextAsync(_context, consumeContext, instance, mode);
     }
 
     (Task<Azure.Response>, TableEntity) TableInsert(TSaga instance)
@@ -165,11 +165,11 @@ public class AzureTableSagaRepositoryContext<TSaga, TMessage> :
         return consumeContext;
     }
 
-    async Task<SagaConsumeContext<TSaga, TMessage>> CreateSagaConsumeContext(TableEntity entity, SagaConsumeContextMode mode)
+    async Task<SagaConsumeContext<TSaga, TMessage>> CreateSagaConsumeContextAsync(TableEntity entity, SagaConsumeContextMode mode)
     {
         var instance = _context.Converter.GetObject(entity);
 
-        SagaConsumeContext<TSaga, TMessage> sagaConsumeContext = await _factory.CreateSagaConsumeContext(_context, _consumeContext, instance, mode)
+        SagaConsumeContext<TSaga, TMessage> sagaConsumeContext = await _factory.CreateSagaConsumeContextAsync(_context, _consumeContext, instance, mode)
             .ConfigureAwait(false);
 
         var eTag = new SagaETag(entity.ETag.ToString());
@@ -195,7 +195,7 @@ sealed class AzureTableLoadSagaRepositoryContext<TSaga> :
         _context = context;
     }
 
-    public async Task<TSaga> Load(Guid correlationId)
+    public async Task<TSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
         var (partitionKey, rowKey) = _context.Format(correlationId);
 

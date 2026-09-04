@@ -20,7 +20,8 @@ public interface BehaviorContext<TSaga> :
     /// </summary>
     /// <param name="event">The event to raise</param>
     /// <returns>An awaitable Task</returns>
-    Task Raise(Event @event);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task RaiseAsync(Event @event, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Raise an event on the current instance, pushing the current event on the stack
@@ -28,10 +29,11 @@ public interface BehaviorContext<TSaga> :
     /// <param name="event">The event to raise</param>
     /// <param name="data">THe event data</param>
     /// <returns>An awaitable Task</returns>
-    Task Raise<T>(Event<T> @event, T data)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task RaiseAsync<T>(Event<T> @event, T data, CancellationToken cancellationToken = default)
         where T : class;
 
-    Task<SendTuple<T>> Init<T>(object values)
+    Task<SendTuple<T>> InitAsync<T>(object values, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>
@@ -66,6 +68,6 @@ public interface BehaviorContext<TSaga, out TMessage> :
 {
     new Event<TMessage> Event { get; }
 
-    new Task<SendTuple<T>> Init<T>(object values)
+    new Task<SendTuple<T>> InitAsync<T>(object values, CancellationToken cancellationToken = default)
         where T : class;
 }

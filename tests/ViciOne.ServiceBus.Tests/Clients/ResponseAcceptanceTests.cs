@@ -14,7 +14,7 @@ public sealed class ResponseAcceptanceTests
     [InlineData(AcceptanceShape.CaseChangedAcceptedType, false, true)]
     [InlineData(AcceptanceShape.DifferentAcceptedType, true, false)]
     [RequirementCoverage("REQ-VSB-RESPONSE-ACCEPTANCE", "response-address-header-and-type-matching")]
-    public async Task ResponseAcceptance_RequiresAnAddressAndHonorsHeaderFallbackAndOrdinalCaseInsensitivity(
+    public async Task ResponseAcceptance_RequiresAnAddressAndHonorsHeaderFallbackAndOrdinalCaseInsensitivityAsync(
         AcceptanceShape shape,
         bool defaultIfHeaderNotFound,
         bool expected)
@@ -31,14 +31,14 @@ public sealed class ResponseAcceptanceTests
         var observed = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
         harness.Handler<AcceptanceProbe>(context =>
         {
-            observed.TrySetResult(context.IsResponseAccepted<AcceptedResponse>(defaultIfHeaderNotFound));
+            observed.TrySetResult(context.Advanced().IsResponseAccepted<AcceptedResponse>(defaultIfHeaderNotFound));
             return Task.CompletedTask;
         });
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.InputQueueSendEndpoint.SendAsync(
                 new AcceptanceProbe(shape),
                 context => Configure(context, shape, harness.Bus.Address),
                 cancellationToken);
@@ -47,7 +47,7 @@ public sealed class ResponseAcceptanceTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 

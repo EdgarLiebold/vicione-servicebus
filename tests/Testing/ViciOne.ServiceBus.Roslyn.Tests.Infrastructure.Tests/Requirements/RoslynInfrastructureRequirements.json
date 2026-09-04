@@ -4,20 +4,20 @@
     "variantKey": "invalid-fixture-fails-closed",
     "testAssembly": "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests",
     "testType": "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests.Compilation.RoslynTestHostTests",
-    "testMethod": "InvalidFixture_ThrowsBeforeAnalyzerExecution"
+    "testMethod": "InvalidFixture_ThrowsBeforeAnalyzerExecutionAsync"
   },
   {
     "requirementId": "REQ-VSB-ROSLYN-TEST-HOST",
     "variantKey": "valid-fixture-binds",
     "testAssembly": "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests",
     "testType": "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests.Compilation.RoslynTestHostTests",
-    "testMethod": "ValidFixture_ProducesNoCompilationFailure"
+    "testMethod": "ValidFixture_ProducesNoCompilationFailureAsync"
   },
   {
     "requirementId": "REQ-VSB-ROSLYN-TEST-HOST",
     "variantKey": "trusted-platform-closure",
     "testAssembly": "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests",
     "testType": "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests.Compilation.RoslynTestHostTests",
-    "testMethod": "SharedFrameworkFacades_AreAvailableToFixtures"
+    "testMethod": "SharedFrameworkFacades_AreAvailableToFixturesAsync"
   }
 ]

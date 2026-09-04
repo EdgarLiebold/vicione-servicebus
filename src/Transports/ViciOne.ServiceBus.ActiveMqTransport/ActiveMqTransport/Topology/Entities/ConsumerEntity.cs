@@ -7,17 +7,17 @@ public class ConsumerEntity :
     Consumer,
     ConsumerHandle
 {
-    readonly QueueEntity _queue;
+    readonly QueueEntity? _queue;
     readonly TopicEntity _topic;
 
-    public ConsumerEntity(long id, TopicEntity topic, QueueEntity queue, string selector, string consumerName, bool shared)
+    public ConsumerEntity(long id, TopicEntity topic, QueueEntity? queue, string? selector, string? consumerName, bool shared)
         : this(id, topic, queue, selector)
     {
         ConsumerName = consumerName;
         IsShared = shared;
     }
 
-    public ConsumerEntity(long id, TopicEntity topic, QueueEntity queue, string selector)
+    public ConsumerEntity(long id, TopicEntity topic, QueueEntity? queue, string? selector)
     {
         Id = id;
         Selector = selector;
@@ -29,9 +29,9 @@ public class ConsumerEntity :
     public static IEqualityComparer<ConsumerEntity> EntityComparer { get; } = new ConsumerEntityEqualityComparer();
 
     public Topic Source => _topic.Topic;
-    public Queue Destination => _queue?.Queue;
-    public string Selector { get; }
-    public string ConsumerName { get; }
+    public Queue? Destination => _queue?.Queue;
+    public string? Selector { get; }
+    public string? ConsumerName { get; }
     public bool IsShared { get; }
 
     public long Id { get; }
@@ -52,7 +52,7 @@ public class ConsumerEntity :
 
     sealed class ConsumerEntityEqualityComparer : IEqualityComparer<ConsumerEntity>
     {
-        public bool Equals(ConsumerEntity x, ConsumerEntity y)
+        public bool Equals(ConsumerEntity? x, ConsumerEntity? y)
         {
             if (ReferenceEquals(x, y))
                 return true;
@@ -94,7 +94,7 @@ public class ConsumerEntity :
 
     sealed class NameEqualityComparer : IEqualityComparer<ConsumerEntity>
     {
-        public bool Equals(ConsumerEntity x, ConsumerEntity y)
+        public bool Equals(ConsumerEntity? x, ConsumerEntity? y)
         {
             if (ReferenceEquals(x, y))
                 return true;
@@ -121,7 +121,7 @@ public class ConsumerEntity :
                 : obj._queue.EntityName.GetHashCode();
         }
 
-        static int CombineHashCodes(string topicName, string consumerName)
+        static int CombineHashCodes(string topicName, string? consumerName)
         {
             unchecked
             {

@@ -17,12 +17,12 @@ public class SetCorrelationIdFilter<T> :
         _messageCorrelationId = messageCorrelationId;
     }
 
-    public Task Send(SendContext<T> context, IPipe<SendContext<T>> next)
+    public Task SendAsync(SendContext<T> context, IPipe<SendContext<T>> next)
     {
         if (_messageCorrelationId.TryGetCorrelationId(context.Message, out var correlationId))
             context.CorrelationId = correlationId;
 
-        return next.Send(context);
+        return next.SendAsync(context);
     }
 
     public void Probe(ProbeContext context)

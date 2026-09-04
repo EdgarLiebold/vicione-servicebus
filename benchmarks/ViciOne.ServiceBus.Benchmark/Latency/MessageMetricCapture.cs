@@ -54,7 +54,7 @@ public class MessageMetricCapture :
     public Task<TimeSpan> SendCompleted => _sendCompleted.Task;
     public Task<TimeSpan> ConsumeCompleted => _consumeCompleted.Task;
 
-    Task IReportConsumerMetric.Consumed<T>(Guid messageId)
+    Task IReportConsumerMetric.ConsumedAsync<T>(Guid messageId)
     {
         _consumedMessages.Add(new ConsumedMessage(messageId, _clock.ElapsedTicks));
 
@@ -70,7 +70,7 @@ public class MessageMetricCapture :
     /// A send that throws takes its registration back with it, so a failure leaves no half message
     /// behind for a later completion to find.
     /// </summary>
-    public async Task Sent(Guid messageId, Func<Task> send, bool postSend = false)
+    public async Task SentAsync(Guid messageId, Func<Task> send, bool postSend = false)
     {
         if (send == null)
             throw new ArgumentNullException(nameof(send));
@@ -104,7 +104,7 @@ public class MessageMetricCapture :
     /// Closes the measurement a transport send observer reports. The timestamp is taken before
     /// anything else, so the bookkeeping below cannot be mistaken for transport time.
     /// </summary>
-    public Task PostSend(Guid messageId)
+    public Task PostSendAsync(Guid messageId)
     {
         Complete(messageId, _clock.ElapsedTicks);
 

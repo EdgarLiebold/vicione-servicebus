@@ -30,9 +30,9 @@ internal sealed class SystemTransactionContext :
 
     public bool IsActive => !_completed && !_disposed;
 
-    public async Task Commit()
+    public async Task CommitAsync(CancellationToken cancellationToken = default)
     {
-        if (_completed)
+        cancellationToken.ThrowIfCancellationRequested(); if (_completed)
             return;
 
         await Task.Factory.FromAsync(_transaction.BeginCommit, _transaction.EndCommit, null).ConfigureAwait(false);

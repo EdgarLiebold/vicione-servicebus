@@ -10,7 +10,7 @@ public sealed class TopologyConventionIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-SEND-TOPOLOGY", "correlation-selector-syntax")]
-    public async Task CorrelationSelectors_ApplyToInterfacePropertyAndBusOwnedMessageContracts()
+    public async Task CorrelationSelectors_ApplyToInterfacePropertyAndBusOwnedMessageContractsAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -29,28 +29,28 @@ public sealed class TopologyConventionIntegrationTests
         Guid propertyId = NewId.NextGuid();
         Guid globalId = NewId.NextGuid();
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.InputQueueSendEndpoint.SendAsync(
                     new NewUserEvent(interfaceId),
                     cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.InputQueueSendEndpoint.SendAsync(
                     new OtherMessage(propertyId),
                     cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.InputQueueSendEndpoint.SendAsync(
                     new ExplicitCorrelationMessage(globalId),
                     cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
 
             ConsumeContext<NewUserEvent> interfaceContext =
-                (await interfaceHandler.Consumed.SelectAsync(cancellationToken).First()).Context;
+                (await interfaceHandler.Consumed.SelectAsync(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken)).Context;
             ConsumeContext<OtherMessage> propertyContext =
-                (await propertyHandler.Consumed.SelectAsync(cancellationToken).First()).Context;
+                (await propertyHandler.Consumed.SelectAsync(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken)).Context;
             ConsumeContext<ExplicitCorrelationMessage> globalContext =
-                (await globalHandler.Consumed.SelectAsync(cancellationToken).First()).Context;
+                (await globalHandler.Consumed.SelectAsync(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken)).Context;
 
             Assert.Equal(interfaceId, interfaceContext.CorrelationId);
             Assert.Equal(propertyId, propertyContext.CorrelationId);
@@ -61,13 +61,13 @@ public sealed class TopologyConventionIntegrationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SEND-TOPOLOGY", "message-specific-serializer")]
-    public async Task MessageSerializerConvention_UsesRawJsonForTheConfiguredContract()
+    public async Task MessageSerializerConvention_UsesRawJsonForTheConfiguredContractAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -81,21 +81,21 @@ public sealed class TopologyConventionIntegrationTests
         };
         var message = new JsonMessage("Frank");
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
-            await harness.Bus.Publish(message, cancellationToken)
+            await harness.Bus.PublishAsync(message, cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
             ConsumeContext<JsonMessage> context =
-                (await handler.Consumed.SelectAsync(cancellationToken).First()).Context;
+                (await handler.Consumed.SelectAsync(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken)).Context;
 
             Assert.Equal("Frank", context.Message.Value);
-            Assert.Equal(SystemTextJsonRawMessageSerializer.JsonContentType, context.ReceiveContext.ContentType);
-            Assert.Equal("application/json", context.ReceiveContext.ContentType.MediaType);
+            Assert.Equal(SystemTextJsonRawMessageSerializer.JsonContentType, context.Advanced().ReceiveContext.ContentType);
+            Assert.Equal("application/json", context.Advanced().ReceiveContext.ContentType.MediaType);
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 

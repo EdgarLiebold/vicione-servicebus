@@ -29,7 +29,7 @@ public interface IActiveMqHostConfiguration :
     /// <param name="configure"></param>
     /// <returns></returns>
     IActiveMqReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
-        Action<IActiveMqReceiveEndpointConfigurator> configure = null);
+        Action<IActiveMqReceiveEndpointConfigurator>? configure = null);
 
     /// <summary>
     /// Create a receive endpoint configuration for the default host
@@ -39,5 +39,5 @@ public interface IActiveMqHostConfiguration :
     /// <param name="configure"></param>
     /// <returns></returns>
     IActiveMqReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(ActiveMqQueueReceiveSettings settings,
-        IActiveMqEndpointConfiguration endpointConfiguration, Action<IActiveMqReceiveEndpointConfigurator> configure = null);
+        IActiveMqEndpointConfiguration endpointConfiguration, Action<IActiveMqReceiveEndpointConfigurator>? configure = null);
 }

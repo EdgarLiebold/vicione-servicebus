@@ -40,7 +40,7 @@ public static class DependencyInjectionFutureRegistrationExtensions
         return RegisterFuture<T>(collection, new DependencyInjectionContainerRegistrar(collection), futureDefinitionType);
     }
 
-    public static IFutureRegistration RegisterFuture<T>(this IServiceCollection collection, IContainerRegistrar registrar, Type futureDefinitionType)
+    public static IFutureRegistration RegisterFuture<T>(this IServiceCollection collection, IContainerRegistrar registrar, Type? futureDefinitionType)
         where T : class, SagaStateMachine<FutureState>
     {
         if (futureDefinitionType == null)
@@ -52,13 +52,13 @@ public static class DependencyInjectionFutureRegistrationExtensions
                 nameof(futureDefinitionType));
         }
 
-        var register = (IFutureRegistrar)Activator.CreateInstance(typeof(FutureDefinitionRegistrar<,>).MakeGenericType(typeof(T), futureDefinitionType));
+        var register = (IFutureRegistrar)(Activator.CreateInstance(typeof(FutureDefinitionRegistrar<,>).MakeGenericType(typeof(T), futureDefinitionType)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
         return register.Register(collection, registrar);
     }
 
     public static IFutureRegistration RegisterFuture(this IServiceCollection collection, IContainerRegistrar registrar, Type futureType,
-        Type futureDefinitionType = null)
+        Type? futureDefinitionType = null)
     {
         if (!futureType.ImplementsInterface<SagaStateMachine<FutureState>>())
             throw new ArgumentException($"The registered type must be a future: {TypeCache.GetShortName(futureType)}");
@@ -73,7 +73,7 @@ public static class DependencyInjectionFutureRegistrationExtensions
         }
 
         var sagaRegistrar =
-            (IFutureRegistrar)Activator.CreateInstance(typeof(FutureDefinitionRegistrar<,>).MakeGenericType(futureType, futureDefinitionType));
+            (IFutureRegistrar)(Activator.CreateInstance(typeof(FutureDefinitionRegistrar<,>).MakeGenericType(futureType, futureDefinitionType)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
         return sagaRegistrar.Register(collection, registrar);
     }

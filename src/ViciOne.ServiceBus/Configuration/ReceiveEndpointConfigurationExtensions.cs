@@ -10,7 +10,7 @@ public static class ReceiveEndpointConfigurationExtensions
     /// <param name="configurator"></param>
     /// <param name="configure"></param>
     /// <returns></returns>
-    public static void ReceiveEndpoint(this IBusFactoryConfigurator configurator, Action<IReceiveEndpointConfigurator> configure = null)
+    public static void ReceiveEndpoint(this IBusFactoryConfigurator configurator, Action<IReceiveEndpointConfigurator>? configure = null)
     {
         configurator.ReceiveEndpoint(new TemporaryEndpointDefinition(), DefaultEndpointNameFormatter.Instance, configure);
     }
@@ -22,7 +22,7 @@ public static class ReceiveEndpointConfigurationExtensions
     /// <param name="definition"></param>
     /// <param name="configure"></param>
     /// <returns></returns>
-    public static void ReceiveEndpoint(this IBusFactoryConfigurator configurator, IEndpointDefinition definition, Action<IReceiveEndpointConfigurator>
+    public static void ReceiveEndpoint(this IBusFactoryConfigurator configurator, IEndpointDefinition definition, Action<IReceiveEndpointConfigurator>?
         configure = null)
     {
         configurator.ReceiveEndpoint(definition, DefaultEndpointNameFormatter.Instance, configure);

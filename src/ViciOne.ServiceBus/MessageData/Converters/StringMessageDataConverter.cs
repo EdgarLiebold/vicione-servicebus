@@ -9,7 +9,7 @@ namespace ViciOne.ServiceBus.MessageData.Converters;
 public class StringMessageDataConverter :
     IMessageDataConverter<string>
 {
-    public async Task<string> Convert(Stream stream, CancellationToken cancellationToken)
+    public async Task<string?> ConvertAsync(Stream stream, CancellationToken cancellationToken)
     {
         using var ms = new MemoryStream();
 

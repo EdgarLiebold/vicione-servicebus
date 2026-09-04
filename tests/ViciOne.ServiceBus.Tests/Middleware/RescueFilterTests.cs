@@ -8,7 +8,7 @@ public sealed class RescueFilterTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-RESCUE", "matching-exception-and-custom-context")]
-    public async Task Rescue_PassesTheExactHandledFailureToTheCustomRescueContext()
+    public async Task Rescue_PassesTheExactHandledFailureToTheCustomRescueContextAsync()
     {
         var expected = new HandledException("handled");
         RescueContext? rescued = null;
@@ -25,7 +25,7 @@ public sealed class RescueFilterTests
         });
 
         var source = new TestPipeContext();
-        await pipe.Send(source);
+        await pipe.SendAsync(source);
 
         Assert.NotNull(rescued);
         Assert.Same(source, rescued.Source);
@@ -34,7 +34,7 @@ public sealed class RescueFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RESCUE", "ignored-exception-rethrown")]
-    public async Task Rescue_RethrowsTheExactExceptionExcludedByTheFilter()
+    public async Task Rescue_RethrowsTheExactExceptionExcludedByTheFilterAsync()
     {
         var expected = new HandledException("ignored");
         var rescueCount = 0;
@@ -50,7 +50,7 @@ public sealed class RescueFilterTests
             configuration.UseExecute(_ => throw expected);
         });
 
-        HandledException actual = await Assert.ThrowsAsync<HandledException>(() => pipe.Send(new TestPipeContext()));
+        HandledException actual = await Assert.ThrowsAsync<HandledException>(() => pipe.SendAsync(new TestPipeContext()));
 
         Assert.Same(expected, actual);
         Assert.Equal(0, rescueCount);
@@ -58,7 +58,7 @@ public sealed class RescueFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RESCUE", "aggregate-match-preserves-full-failure")]
-    public async Task Rescue_MatchesAnAggregateByItsBaseFailureButPreservesTheFullAggregateForDiagnostics()
+    public async Task Rescue_MatchesAnAggregateByItsBaseFailureButPreservesTheFullAggregateForDiagnosticsAsync()
     {
         var root = new HandledException("root");
         var expected = new AggregateException("aggregate", root);
@@ -75,14 +75,14 @@ public sealed class RescueFilterTests
             configuration.UseExecute(_ => throw expected);
         });
 
-        await pipe.Send(new TestPipeContext());
+        await pipe.SendAsync(new TestPipeContext());
 
         Assert.Same(expected, rescuedFailure);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RESCUE", "rescue-pipe-failure-propagated")]
-    public async Task Rescue_PropagatesTheExactFailureRaisedByTheRescuePipe()
+    public async Task Rescue_PropagatesTheExactFailureRaisedByTheRescuePipeAsync()
     {
         var original = new HandledException("original");
         var rescueFailure = new RescueFailedException("rescue failed");
@@ -98,14 +98,14 @@ public sealed class RescueFilterTests
             configuration.UseExecute(_ => throw original);
         });
         RescueFailedException actual = await Assert.ThrowsAsync<RescueFailedException>(() =>
-            failingRescue.Send(new TestPipeContext()));
+            failingRescue.SendAsync(new TestPipeContext()));
 
         Assert.Same(rescueFailure, actual);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RESCUE", "null-factory-result-rejected")]
-    public async Task Rescue_RejectsANullFactoryResult()
+    public async Task Rescue_RejectsANullFactoryResultAsync()
     {
         var original = new HandledException("original");
 
@@ -116,7 +116,7 @@ public sealed class RescueFilterTests
             configuration.UseExecute(_ => throw original);
         });
         InvalidOperationException invalid = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            nullFactory.Send(new TestPipeContext()));
+            nullFactory.SendAsync(new TestPipeContext()));
 
         Assert.Equal("The rescue context factory returned null.", invalid.Message);
     }

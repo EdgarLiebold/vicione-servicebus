@@ -22,12 +22,12 @@ public class AmazonSqsMessageLatencyTransport :
         _settings = settings;
     }
 
-    public Task Send(LatencyTestMessage message)
+    public Task SendAsync(LatencyTestMessage message)
     {
-        return _targetEndpoint.Send(message);
+        return _targetEndpoint.SendAsync(message);
     }
 
-    public async Task Start(Action<IReceiveEndpointConfigurator> callback, IReportConsumerMetric reportConsumerMetric)
+    public async Task StartAsync(Action<IReceiveEndpointConfigurator> callback, IReportConsumerMetric reportConsumerMetric)
     {
         _provider = new ServiceCollection()
             .AddTextLogger(Console.Out)
@@ -56,17 +56,17 @@ public class AmazonSqsMessageLatencyTransport :
             })
             .BuildServiceProvider(true);
 
-        await _provider.StartHostedServices();
+        await _provider.StartHostedServicesAsync();
 
         _scope = _provider.CreateAsyncScope();
 
-        _targetEndpoint = await _scope.ServiceProvider.GetRequiredService<ISendEndpointProvider>().GetSendEndpoint(_targetAddress);
+        _targetEndpoint = await _scope.ServiceProvider.GetRequiredService<ISendEndpointProvider>().GetSendEndpointAsync(_targetAddress);
     }
 
     public async ValueTask DisposeAsync()
     {
         await _scope.DisposeAsync();
 
-        await _provider.StopHostedServices();
+        await _provider.StopHostedServicesAsync();
     }
 }

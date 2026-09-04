@@ -21,7 +21,7 @@ public class InlineFilter<TContext> :
 
     [DebuggerNonUserCode]
     [DebuggerStepThrough]
-    public Task Send(TContext context, IPipe<TContext> next)
+    public Task SendAsync(TContext context, IPipe<TContext> next)
     {
         return _filterMethod(context, next);
     }

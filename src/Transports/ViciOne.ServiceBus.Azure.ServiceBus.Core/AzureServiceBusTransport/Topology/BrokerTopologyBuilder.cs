@@ -37,8 +37,8 @@ public class BrokerTopologyBuilder :
         return Topics.GetOrAdd(exchange);
     }
 
-    public SubscriptionHandle CreateSubscription(TopicHandle topic, CreateSubscriptionOptions createSubscriptionOptions, CreateRuleOptions rule,
-        RuleFilter filter)
+    public SubscriptionHandle CreateSubscription(TopicHandle topic, CreateSubscriptionOptions createSubscriptionOptions, CreateRuleOptions? rule,
+        RuleFilter? filter)
     {
         var topicEntity = Topics.Get(topic);
 
@@ -55,7 +55,7 @@ public class BrokerTopologyBuilder :
     }
 
     public QueueSubscriptionHandle CreateQueueSubscription(TopicHandle exchange, QueueHandle queue, CreateSubscriptionOptions createSubscriptionOptions,
-        CreateRuleOptions rule, RuleFilter filter)
+        CreateRuleOptions? rule, RuleFilter? filter)
     {
         var topicEntity = Topics.Get(exchange);
 

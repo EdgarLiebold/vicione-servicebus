@@ -61,7 +61,8 @@ public abstract class TransportRegistrationBusFactory<TEndpointConfigurator> :
                 x.DiscardSkippedMessages();
             });
 
-            var host = _hostConfiguration.Build() as IHost<TEndpointConfigurator>;
+            var host = _hostConfiguration.Build() as IHost<TEndpointConfigurator>
+                ?? throw new ConfigurationException($"The configured host does not implement {typeof(IHost<TEndpointConfigurator>)}.");
 
             var bus = new ViciOneServiceBusBus(host, _hostConfiguration.BusConfiguration.BusObservers, busReceiveEndpointConfiguration,
                 context.GetService<TimeProvider>() ?? TimeProvider.System);

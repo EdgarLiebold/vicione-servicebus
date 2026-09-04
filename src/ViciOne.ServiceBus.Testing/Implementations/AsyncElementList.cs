@@ -142,7 +142,7 @@ public abstract class AsyncElementList<TElement> :
         }
     }
 
-    public async Task<bool> Any(FilterDelegate<TElement> filter, CancellationToken cancellationToken = default)
+    public async Task<bool> AnyAsync(FilterDelegate<TElement> filter, CancellationToken cancellationToken = default)
     {
         try
         {

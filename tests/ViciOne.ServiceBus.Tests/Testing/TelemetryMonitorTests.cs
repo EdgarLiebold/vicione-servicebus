@@ -13,7 +13,7 @@ public sealed class TelemetryMonitorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-TELEMETRY", "provider-backed-idle-completion")]
-    public async Task PublishWait_CompletesAtTheProviderBackedIdleDeadlineAfterTheReceiveFinishes()
+    public async Task PublishWait_CompletesAtTheProviderBackedIdleDeadlineAfterTheReceiveFinishesAsync()
     {
         TimeSpan operationTimeout = OperationTimeout();
         TimeSpan idleTimeout = TimeSpan.FromMinutes(1);
@@ -26,17 +26,13 @@ public sealed class TelemetryMonitorTests
         };
         harness.Consumer<MonitoredConsumer>();
 
-        await harness.Start(TestContext.Current.CancellationToken);
+        await harness.StartAsync(TestContext.Current.CancellationToken);
         using ConnectHandle observer = harness.Bus.ConnectReceiveObserver(receiveCompleted);
         try
         {
-            Task wait = harness.Bus.Wait(
-                endpoint => endpoint.Publish(new MonitoredMessage(NewId.NextGuid()), TestContext.Current.CancellationToken),
-                TimeSpan.FromMinutes(10),
-                idleTimeout,
-                timeProvider);
+            Task wait = harness.Bus.WaitAsync(endpoint => endpoint.PublishAsync(new MonitoredMessage(NewId.NextGuid()), TestContext.Current.CancellationToken), TimeSpan.FromMinutes(10), idleTimeout, timeProvider, cancellationToken: TestContext.Current.CancellationToken);
 
-            await timeProvider.WaitForTimerCount(1).WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
+            await timeProvider.WaitForTimerCountAsync(1).WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
             await receiveCompleted.IdleTimerArmedAfterReceive.WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
             Assert.Equal(idleTimeout, timeProvider.LastDueTime);
             Assert.False(wait.IsCompleted);
@@ -48,45 +44,41 @@ public sealed class TelemetryMonitorTests
             await wait.WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
             IReceivedMessage<MonitoredMessage> consumed = await harness.Consumed
                 .SelectAsync<MonitoredMessage>(TestContext.Current.CancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             Assert.Null(consumed.Exception);
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-TELEMETRY", "callback-failure-is-immediate")]
-    public async Task PublishWait_PropagatesCallbackFailureWithoutWaitingForTheMonitoringTimeout()
+    public async Task PublishWait_PropagatesCallbackFailureWithoutWaitingForTheMonitoringTimeoutAsync()
     {
         TimeSpan operationTimeout = OperationTimeout();
         var timeProvider = new ObservableTimeProvider(StartTime);
         using var harness = new InMemoryTestHarness($"telemetry-fault-{NewId.NextGuid():N}");
 
-        await harness.Start(TestContext.Current.CancellationToken);
+        await harness.StartAsync(TestContext.Current.CancellationToken);
         try
         {
             ExpectedCallbackException exception = await Assert.ThrowsAsync<ExpectedCallbackException>(() =>
-                harness.Bus.Wait(
-                    _ => Task.FromException(new ExpectedCallbackException("callback failed")),
-                    TimeSpan.FromDays(1),
-                    TimeSpan.FromDays(1),
-                    timeProvider).WaitAsync(operationTimeout, TestContext.Current.CancellationToken));
+                harness.Bus.WaitAsync(_ => Task.FromException(new ExpectedCallbackException("callback failed")), TimeSpan.FromDays(1), TimeSpan.FromDays(1), timeProvider, cancellationToken: TestContext.Current.CancellationToken).WaitAsync(operationTimeout, TestContext.Current.CancellationToken));
 
             Assert.Equal("callback failed", exception.Message);
             Assert.Equal(StartTime, timeProvider.GetUtcNow());
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-TELEMETRY", "send-waits-for-consumption")]
-    public async Task SendWait_CompletesOnlyAfterTheSentMessageHasBeenConsumedAndTheTraceIsIdle()
+    public async Task SendWait_CompletesOnlyAfterTheSentMessageHasBeenConsumedAndTheTraceIsIdleAsync()
     {
         TimeSpan operationTimeout = OperationTimeout();
         TimeSpan idleTimeout = TimeSpan.FromMinutes(1);
@@ -99,17 +91,13 @@ public sealed class TelemetryMonitorTests
         };
         ConsumerTestHarness<MonitoredConsumer> consumer = harness.Consumer<MonitoredConsumer>();
 
-        await harness.Start(TestContext.Current.CancellationToken);
+        await harness.StartAsync(TestContext.Current.CancellationToken);
         using ConnectHandle observer = harness.Bus.ConnectReceiveObserver(receiveCompleted);
         try
         {
-            Task wait = harness.InputQueueSendEndpoint.Wait(
-                endpoint => endpoint.Send(new MonitoredMessage(NewId.NextGuid()), TestContext.Current.CancellationToken),
-                TimeSpan.FromMinutes(10),
-                idleTimeout,
-                timeProvider);
+            Task wait = harness.InputQueueSendEndpoint.WaitAsync(endpoint => endpoint.SendAsync(new MonitoredMessage(NewId.NextGuid()), TestContext.Current.CancellationToken), TimeSpan.FromMinutes(10), idleTimeout, timeProvider, cancellationToken: TestContext.Current.CancellationToken);
 
-            await timeProvider.WaitForTimerCount(1).WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
+            await timeProvider.WaitForTimerCountAsync(1).WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
             await receiveCompleted.IdleTimerArmedAfterReceive.WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
             Assert.Equal(idleTimeout, timeProvider.LastDueTime);
             Assert.False(wait.IsCompleted);
@@ -121,18 +109,18 @@ public sealed class TelemetryMonitorTests
             await wait.WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
             IReceivedMessage<MonitoredMessage> consumed = await consumer.Consumed
                 .SelectAsync<MonitoredMessage>(TestContext.Current.CancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             Assert.Null(consumed.Exception);
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-TELEMETRY", "request-waits-for-response-and-produced-messages")]
-    public async Task RequestWait_ReturnsTheExactResponseOnlyAfterTheCompleteRequestTraceIsIdle()
+    public async Task RequestWait_ReturnsTheExactResponseOnlyAfterTheCompleteRequestTraceIsIdleAsync()
     {
         TimeSpan operationTimeout = OperationTimeout();
         TimeSpan idleTimeout = TimeSpan.FromMinutes(1);
@@ -146,31 +134,27 @@ public sealed class TelemetryMonitorTests
         };
         harness.Consumer<MonitoredRequestConsumer>();
 
-        await harness.Start(TestContext.Current.CancellationToken);
+        await harness.StartAsync(TestContext.Current.CancellationToken);
         using ConnectHandle observer = harness.Bus.ConnectReceiveObserver(receiveCompleted);
         try
         {
             Guid correlationId = NewId.NextGuid();
             IRequestClient<MonitoredRequest> client = harness.CreateRequestClient<MonitoredRequest>();
-            Task<Response<MonitoredResponse>> wait = client.Wait(
-                async requestClient =>
+            Task<Response<MonitoredResponse>> wait = client.WaitAsync(async requestClient =>
                 {
-                    Response<MonitoredResponse> response = await requestClient.GetResponse<MonitoredResponse>(
+                    Response<MonitoredResponse> response = await requestClient.GetResponseAsync<MonitoredResponse>(
                         new MonitoredRequest(correlationId),
                         TestContext.Current.CancellationToken);
                     callbackCompleted.TrySetResult(true);
                     return response;
-                },
-                TimeSpan.FromMinutes(10),
-                idleTimeout,
-                timeProvider);
+                }, TimeSpan.FromMinutes(10), idleTimeout, timeProvider, cancellationToken: TestContext.Current.CancellationToken);
 
-            await timeProvider.WaitForTimerCount(1).WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
+            await timeProvider.WaitForTimerCountAsync(1).WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
             await callbackCompleted.Task.WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
             await receiveCompleted.IdleTimerArmedAfterReceive.WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
             Assert.Equal(idleTimeout, timeProvider.LastDueTime);
             Assert.False(wait.IsCompleted);
-            Assert.True(await harness.Published.Any<MonitoredRequestHandled>(TestContext.Current.CancellationToken));
+            Assert.True(await harness.Published.AnyAsync<MonitoredRequestHandled>(TestContext.Current.CancellationToken));
 
             timeProvider.Advance(idleTimeout - TimeSpan.FromTicks(1));
             Assert.False(wait.IsCompleted);
@@ -178,11 +162,11 @@ public sealed class TelemetryMonitorTests
 
             Response<MonitoredResponse> response = await wait.WaitAsync(operationTimeout, TestContext.Current.CancellationToken);
             Assert.Equal(correlationId, response.Message.CorrelationId);
-            Assert.True(await harness.Consumed.Any<MonitoredRequest>(TestContext.Current.CancellationToken));
+            Assert.True(await harness.Consumed.AnyAsync<MonitoredRequest>(TestContext.Current.CancellationToken));
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
@@ -200,14 +184,14 @@ public sealed class TelemetryMonitorTests
 
     private sealed class MonitoredConsumer : IConsumer<MonitoredMessage>
     {
-        public Task Consume(ConsumeContext<MonitoredMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<MonitoredMessage> context) => Task.CompletedTask;
     }
 
     private sealed class MonitoredRequestConsumer : IConsumer<MonitoredRequest>
     {
-        public async Task Consume(ConsumeContext<MonitoredRequest> context)
+        public async Task ConsumeAsync(ConsumeContext<MonitoredRequest> context)
         {
-            await context.Publish(
+            await context.Advanced().PublishAsync(
                 new MonitoredRequestHandled(context.Message.CorrelationId),
                 context.CancellationToken);
             await context.RespondAsync(new MonitoredResponse(context.Message.CorrelationId));
@@ -221,22 +205,22 @@ public sealed class TelemetryMonitorTests
 
         public Task IdleTimerArmedAfterReceive => _idleTimerArmedAfterReceive.Task.Unwrap();
 
-        public Task PreReceive(ReceiveContext context) => Task.CompletedTask;
+        public Task PreReceiveAsync(ReceiveContext context) => Task.CompletedTask;
 
-        public Task PostReceive(ReceiveContext context)
+        public Task PostReceiveAsync(ReceiveContext context)
         {
-            Task nextTimerChange = timeProvider.WaitForChangeCount(timeProvider.ChangeCount + 1);
+            Task nextTimerChange = timeProvider.WaitForChangeCountAsync(timeProvider.ChangeCount + 1);
             _idleTimerArmedAfterReceive.TrySetResult(nextTimerChange);
             return Task.CompletedTask;
         }
 
-        public Task PostConsume<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
+        public Task PostConsumeAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
             where T : class => Task.CompletedTask;
 
-        public Task ConsumeFault<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
+        public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
             where T : class => Task.CompletedTask;
 
-        public Task ReceiveFault(ReceiveContext context, Exception exception)
+        public Task ReceiveFaultAsync(ReceiveContext context, Exception exception)
         {
             _idleTimerArmedAfterReceive.TrySetException(exception);
             return Task.CompletedTask;

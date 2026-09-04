@@ -10,7 +10,7 @@ public interface IConcurrencyLimiter :
     int Available { get; }
     int Limit { get; }
 
-    Task Wait(CancellationToken cancellationToken);
+    Task WaitAsync(CancellationToken cancellationToken);
 
     void Release();
 }

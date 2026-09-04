@@ -40,7 +40,7 @@ public sealed class ConfigurationValidationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TRANSPORT-REGISTRATION-VALIDATION", "host-start-without-transport")]
-    public async Task HostedServiceStart_RejectsARegistrationWithoutATransport()
+    public async Task HostedServiceStart_RejectsARegistrationWithoutATransportAsync()
     {
         await using ServiceProvider provider = new ServiceCollection()
             .AddViciOneServiceBusTextWriterLogger(TextWriter.Null)
@@ -104,7 +104,7 @@ public sealed class ConfigurationValidationTests
 
     public sealed class SingleMessageConsumer : IConsumer<ConsumedMessage>
     {
-        public Task Consume(ConsumeContext<ConsumedMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<ConsumedMessage> context) => Task.CompletedTask;
     }
 
     public sealed record StartSaga(Guid CorrelationId) : CorrelatedBy<Guid>;
@@ -118,7 +118,7 @@ public sealed class ConfigurationValidationTests
 
         public Guid CorrelationId { get; set; }
 
-        public Task Consume(ConsumeContext<StartSaga> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<StartSaga> context) => Task.CompletedTask;
     }
 
     public sealed record HandlerMessage;
@@ -129,10 +129,10 @@ public sealed class ConfigurationValidationTests
 
     public sealed class RetryActivity : IActivity<ActivityArguments, ActivityLog>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<ActivityArguments> context) =>
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<ActivityArguments> context) =>
             Task.FromResult(context.Completed(new ActivityLog()));
 
-        public Task<CompensationResult> Compensate(CompensateContext<ActivityLog> context) =>
+        public Task<CompensationResult> CompensateAsync(CompensateContext<ActivityLog> context) =>
             Task.FromResult(context.Compensated());
     }
 

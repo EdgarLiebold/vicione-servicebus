@@ -28,14 +28,14 @@ public class PostgresSqlTransportConnection :
         return command;
     }
 
-    public Task Open(CancellationToken cancellationToken = default)
+    public Task OpenAsync(CancellationToken cancellationToken = default)
     {
         return Connection.OpenAsync(cancellationToken);
     }
 
-    public Task Close()
+    public Task CloseAsync(CancellationToken cancellationToken = default)
     {
-        return Connection.CloseAsync();
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Connection.CloseAsync();
     }
 
     public static PostgresSqlTransportConnection GetSystemDatabaseConnection(SqlTransportOptions options)

@@ -11,7 +11,7 @@ public sealed class AzureServiceBusTopologyLifecycleTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-TOPOLOGY-LIFECYCLE", "deploy-publish-topology-creates-only-declared-topics")]
-    public async Task DeployPublishTopology_CreatesDeclaredTopicsWithoutAnUnusedBusQueue()
+    public async Task DeployPublishTopology_CreatesDeclaredTopicsWithoutAnUnusedBusQueueAsync()
     {
         AzureServiceBusLocalFixture fixture = AzureServiceBusLocalFixture.Create("deploy-topology");
         ServiceBusAdministrationClient admin = fixture.CreateAdministrationClient();
@@ -61,7 +61,7 @@ public sealed class AzureServiceBusTopologyLifecycleTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-TOPOLOGY-LIFECYCLE", "dynamic-endpoint-rejects-duplicate-removes-subscription-and-reconnects")]
-    public async Task DynamicEndpoint_RejectsDuplicateRemovesSubscriptionAndReconnects()
+    public async Task DynamicEndpoint_RejectsDuplicateRemovesSubscriptionAndReconnectsAsync()
     {
         AzureServiceBusLocalFixture fixture = AzureServiceBusLocalFixture.Create("dynamic-endpoint");
         ServiceBusAdministrationClient admin = fixture.CreateAdministrationClient();
@@ -98,7 +98,7 @@ public sealed class AzureServiceBusTopologyLifecycleTests
             Assert.Contains(queue, conflict.Message, StringComparison.Ordinal);
 
             Assert.True(await admin.SubscriptionExistsAsync(topic, subscription, cancellationToken));
-            await bus.Publish(new DynamicEndpointMessage(firstId), cancellationToken)
+            await bus.PublishAsync(new DynamicEndpointMessage(firstId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.Equal(firstId, (await first.Task.WaitAsync(fixture.OperationTimeout, cancellationToken)).Message.Id);
             await initial.StopAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
@@ -106,7 +106,7 @@ public sealed class AzureServiceBusTopologyLifecycleTests
 
             HostReceiveEndpointHandle reconnected = Connect(second);
             await reconnected.Ready.WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await bus.Publish(new DynamicEndpointMessage(secondId), cancellationToken)
+            await bus.PublishAsync(new DynamicEndpointMessage(secondId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.Equal(secondId, (await second.Task.WaitAsync(fixture.OperationTimeout, cancellationToken)).Message.Id);
             await reconnected.StopAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);

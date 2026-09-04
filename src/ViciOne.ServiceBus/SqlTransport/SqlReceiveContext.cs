@@ -42,7 +42,7 @@ public sealed class SqlReceiveContext :
     public string QueueName => TransportMessage.QueueName;
     public short Priority => TransportMessage.Priority;
     public long DeliveryMessageId => TransportMessage.MessageDeliveryId;
-    public DateTime EnqueueTime => TransportMessage.EnqueueTime;
+    public DateTimeOffset EnqueueTime => TransportMessage.EnqueueTime;
     public int DeliveryCount => TransportMessage.DeliveryCount;
 
     public string? PartitionKey => TransportMessage.PartitionKey;

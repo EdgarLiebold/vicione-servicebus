@@ -5,6 +5,7 @@ namespace ViciOne.ServiceBus.EventHubIntegration;
 
 public interface IEventHubProducerCache<TKey> :
     IAsyncDisposable
+    where TKey : notnull
 {
-    Task<IEventHubProducer> GetProducer(TKey key, Func<TKey, Task<IEventHubProducer>> factory);
+    Task<IEventHubProducer> GetProducerAsync(TKey key, Func<TKey, Task<IEventHubProducer>> factory, CancellationToken cancellationToken = default);
 }

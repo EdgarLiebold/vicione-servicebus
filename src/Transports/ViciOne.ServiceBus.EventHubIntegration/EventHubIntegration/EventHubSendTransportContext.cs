@@ -11,15 +11,15 @@ public interface EventHubSendTransportContext :
 {
     IEnumerable<IAgent> GetAgentHandles();
 
-    Task<EventHubSendContext<T>> CreateContext<T>(T value, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken,
-        IPipe<SendContext<T>> initializerPipe = null)
+    Task<EventHubSendContext<T>> CreateContextAsync<T>(T value, IPipe<EventHubSendContext<T>> pipe,
+        IPipe<SendContext<T>>? initializerPipe = null, CancellationToken cancellationToken = default)
         where T : class;
 
-    Task Send<T>(ProducerContext producerContext, EventHubSendContext<T> sendContext)
+    Task SendAsync<T>(ProducerContext producerContext, EventHubSendContext<T> sendContext, CancellationToken cancellationToken = default)
         where T : class;
 
-    Task Send<T>(ProducerContext producerContext, EventHubSendContext<T>[] sendContexts)
+    Task SendAsync<T>(ProducerContext producerContext, EventHubSendContext<T>[] sendContexts, CancellationToken cancellationToken = default)
         where T : class;
 
-    Task Send(IPipe<ProducerContext> pipe, CancellationToken cancellationToken);
+    Task SendAsync(IPipe<ProducerContext> pipe, CancellationToken cancellationToken);
 }

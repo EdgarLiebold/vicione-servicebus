@@ -37,8 +37,9 @@ public class ConfigureBusHealthCheckServiceOptions :
             var busOptions = _provider.GetService(optionsType);
             if (busOptions != null)
             {
-                var healthCheckOptions = (IHealthCheckOptions)optionsType.GetProperty("Value", BindingFlags.Instance | BindingFlags.Public)
-                    .GetValue(busOptions, null);
+                var healthCheckOptions = optionsType.GetProperty("Value", BindingFlags.Instance | BindingFlags.Public)?.GetValue(busOptions, null)
+                    as IHealthCheckOptions
+                    ?? throw new InvalidOperationException($"Could not read health check options for bus instance '{busInstance.Name}'.");
 
                 if (!string.IsNullOrWhiteSpace(healthCheckOptions.Name))
                     name = healthCheckOptions.Name;

@@ -32,7 +32,8 @@ public static class ConsumerConnectorCache
     static CachedConnector GetOrAdd(Type type)
     {
         return Cached.Instance.GetOrAdd(type, _ =>
-            (CachedConnector)Activator.CreateInstance(typeof(CachedConnector<>).MakeGenericType(type)));
+            (CachedConnector)(Activator.CreateInstance(typeof(CachedConnector<>).MakeGenericType(type))
+                ?? throw new InvalidOperationException($"Could not create a consumer connector for '{type}'.")));
     }
 
     public static ConnectHandle Connect(IConsumePipeConnector consumePipe, Type consumerType, Func<Type, object> objectFactory)

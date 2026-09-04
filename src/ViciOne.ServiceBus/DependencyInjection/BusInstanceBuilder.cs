@@ -43,10 +43,12 @@ public class BusInstanceBuilder :
         TResult result;
         try
         {
-            result = (TResult)typeof(IBusInstanceBuilderCallback<TBus, TResult>)
-                .GetMethod("GetResult")
+            var getResult = typeof(IBusInstanceBuilderCallback<TBus, TResult>).GetMethod("GetResult")
+                ?? throw new InvalidOperationException("The bus instance builder callback does not expose GetResult.");
+            result = (TResult)(getResult
                 .MakeGenericMethod(busInstanceType)
-                .Invoke(callback, []);
+                .Invoke(callback, [])
+                ?? throw new InvalidOperationException("The bus instance builder callback returned null."));
         }
         catch (TargetInvocationException exception) when (exception.InnerException != null)
         {
@@ -95,7 +97,8 @@ public class BusInstanceBuilder :
 
             Type[] parameterTypes = [typeof(IBusControl)];
 
-            var ctorParent = parentType.GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, parameterTypes, null);
+            var ctorParent = parentType.GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, parameterTypes, null)
+                ?? throw new InvalidOperationException($"The bus instance base type '{parentType}' does not expose the required constructor.");
             var ctorBuilder = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, parameterTypes);
             ctorBuilder.DefineParameter(1, ParameterAttributes.None, "busControl");
 

@@ -10,7 +10,7 @@ public sealed class RoutingSlipRequestIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-REQUEST", "successful-routing-slip-response")]
-    public async Task SuccessfulRoutingSlip_ReturnsTheResponseForTheOriginalRequest()
+    public async Task SuccessfulRoutingSlip_ReturnsTheResponseForTheOriginalRequestAsync()
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -25,7 +25,7 @@ public sealed class RoutingSlipRequestIntegrationTests
             endpoint.Instance(requestProxy);
             endpoint.Instance(responseProxy);
         };
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
@@ -34,8 +34,10 @@ public sealed class RoutingSlipRequestIntegrationTests
                 harness.InputQueueAddress,
                 timeout);
 
-            Response<CourierResponse> response = await client.GetResponse<CourierResponse>(request, cancellationToken);
-            await harness.Stop();
+            Response<CourierResponse> response = await client.Advanced().GetResponseAsync<CourierResponse>(
+                request,
+                cancellationToken: cancellationToken);
+            await harness.StopAsync(TestContext.Current.CancellationToken);
 
             Assert.Equal(request.DomainRequestId, response.Message.DomainRequestId);
             Assert.Equal("request-value-completed", response.Message.ActivityValue);
@@ -44,13 +46,13 @@ public sealed class RoutingSlipRequestIntegrationTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-REQUEST", "ordinary-request-fault")]
-    public async Task FaultedRoutingSlip_ProducesTheStandardFaultForTheOriginalRequest()
+    public async Task FaultedRoutingSlip_ProducesTheStandardFaultForTheOriginalRequestAsync()
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -65,7 +67,7 @@ public sealed class RoutingSlipRequestIntegrationTests
             endpoint.Instance(requestProxy);
             endpoint.Instance(responseProxy);
         };
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
@@ -75,8 +77,8 @@ public sealed class RoutingSlipRequestIntegrationTests
                 timeout);
 
             RequestFaultException exception = await Assert.ThrowsAsync<RequestFaultException>(() =>
-                client.GetResponse<CourierResponse>(request, cancellationToken));
-            await harness.Stop();
+                client.Advanced().GetResponseAsync<CourierResponse>(request, cancellationToken: cancellationToken));
+            await harness.StopAsync(TestContext.Current.CancellationToken);
 
             Fault<CourierRequest> fault = Assert.IsAssignableFrom<Fault<CourierRequest>>(exception.Fault);
             Assert.Equal(request, fault.Message);
@@ -86,13 +88,13 @@ public sealed class RoutingSlipRequestIntegrationTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-REQUEST", "response-proxy-retry-count-is-forwarded-to-request-fault")]
-    public async Task RetriedResponseProxy_ForwardsItsExactRetryCountToTheRequestFault()
+    public async Task RetriedResponseProxy_ForwardsItsExactRetryCountToTheRequestFaultAsync()
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -108,7 +110,7 @@ public sealed class RoutingSlipRequestIntegrationTests
             endpoint.Instance(requestProxy);
             endpoint.Instance(responseProxy);
         };
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
@@ -118,11 +120,11 @@ public sealed class RoutingSlipRequestIntegrationTests
                 timeout);
 
             RequestFaultException exception = await Assert.ThrowsAsync<RequestFaultException>(() =>
-                client.GetResponse<CourierResponse>(request, cancellationToken));
+                client.Advanced().GetResponseAsync<CourierResponse>(request, cancellationToken: cancellationToken));
             ISentMessage<Fault<CourierRequest>> sentFault = await harness.Sent
                 .SelectAsync<Fault<CourierRequest>>(cancellationToken)
-                .First();
-            await harness.Stop();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
+            await harness.StopAsync(TestContext.Current.CancellationToken);
 
             Assert.True(sentFault.Context.TryGetHeader(MessageHeaders.FaultRetryCount, out int? retryCount));
             Assert.Equal(1, retryCount);
@@ -130,13 +132,13 @@ public sealed class RoutingSlipRequestIntegrationTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-REQUEST", "declared-fault-response")]
-    public async Task FaultedRoutingSlip_ReturnsTheDeclaredFaultResponseInsteadOfAStandardFault()
+    public async Task FaultedRoutingSlip_ReturnsTheDeclaredFaultResponseInsteadOfAStandardFaultAsync()
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -151,7 +153,7 @@ public sealed class RoutingSlipRequestIntegrationTests
             endpoint.Instance(requestProxy);
             endpoint.Instance(responseProxy);
         };
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
@@ -161,9 +163,11 @@ public sealed class RoutingSlipRequestIntegrationTests
                 timeout);
 
             (Task<Response<CourierResponse>> responseTask, Task<Response<CourierFaultResponse>> faultTask) =
-                await client.GetResponse<CourierResponse, CourierFaultResponse>(request, cancellationToken);
+                await client.Advanced().GetResponseAsync<CourierResponse, CourierFaultResponse>(
+                    request,
+                    cancellationToken: cancellationToken);
             Response<CourierFaultResponse> response = await faultTask.WaitAsync(timeout, cancellationToken);
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
 
             Assert.False(responseTask.IsCompletedSuccessfully);
             Assert.Equal(request.DomainRequestId, response.Message.DomainRequestId);
@@ -173,7 +177,7 @@ public sealed class RoutingSlipRequestIntegrationTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
@@ -195,7 +199,7 @@ public sealed class RoutingSlipRequestIntegrationTests
 
     public sealed class RequestSuccessActivity : IExecuteActivity<RequestActivityArguments>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<RequestActivityArguments> context) =>
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<RequestActivityArguments> context) =>
             Task.FromResult(context.CompletedWithVariables(new
             {
                 ActivityValue = $"{context.Arguments.Value}-completed",
@@ -204,7 +208,7 @@ public sealed class RoutingSlipRequestIntegrationTests
 
     public sealed class RequestFaultActivity : IExecuteActivity<RequestActivityArguments>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<RequestActivityArguments> context) =>
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<RequestActivityArguments> context) =>
             Task.FromResult(context.Faulted(new CourierRequestFailure(context.Arguments.Value)));
     }
 
@@ -212,7 +216,7 @@ public sealed class RoutingSlipRequestIntegrationTests
 
     private sealed class SuccessfulRequestProxy(Func<Uri> activityAddress) : RoutingSlipRequestProxy<CourierRequest>
     {
-        protected override Task BuildRoutingSlip(RoutingSlipBuilder builder, ConsumeContext<CourierRequest> request)
+        protected override Task BuildRoutingSlipAsync(RoutingSlipBuilder builder, ConsumeContext<CourierRequest> request)
         {
             builder.AddActivity(
                 nameof(RequestSuccessActivity),
@@ -224,7 +228,7 @@ public sealed class RoutingSlipRequestIntegrationTests
 
     private sealed class FaultingRequestProxy(Func<Uri> activityAddress) : RoutingSlipRequestProxy<CourierRequest>
     {
-        protected override Task BuildRoutingSlip(RoutingSlipBuilder builder, ConsumeContext<CourierRequest> request)
+        protected override Task BuildRoutingSlipAsync(RoutingSlipBuilder builder, ConsumeContext<CourierRequest> request)
         {
             builder.AddActivity(
                 nameof(RequestFaultActivity),
@@ -236,7 +240,7 @@ public sealed class RoutingSlipRequestIntegrationTests
 
     private sealed class SuccessfulResponseProxy : RoutingSlipResponseProxy<CourierRequest, CourierResponse>
     {
-        protected override Task<CourierResponse> CreateResponseMessage(
+        protected override Task<CourierResponse> CreateResponseMessageAsync(
             ConsumeContext<RoutingSlipCompleted> context,
             CourierRequest request) =>
             Task.FromResult(new CourierResponse(
@@ -250,7 +254,7 @@ public sealed class RoutingSlipRequestIntegrationTests
 
     private sealed class StandardFaultResponseProxy : RoutingSlipResponseProxy<CourierRequest, CourierResponse>
     {
-        protected override Task<CourierResponse> CreateResponseMessage(
+        protected override Task<CourierResponse> CreateResponseMessageAsync(
             ConsumeContext<RoutingSlipCompleted> context,
             CourierRequest request) =>
             throw new InvalidOperationException("The fault scenario must not create a success response.");
@@ -260,7 +264,7 @@ public sealed class RoutingSlipRequestIntegrationTests
     {
         protected override IRetryPolicy RetryPolicy { get; } = Retry.Immediate(1);
 
-        protected override Task<CourierResponse> CreateResponseMessage(
+        protected override Task<CourierResponse> CreateResponseMessageAsync(
             ConsumeContext<RoutingSlipCompleted> context,
             CourierRequest request) =>
             throw new InvalidOperationException("The fault scenario must not create a success response.");
@@ -269,12 +273,12 @@ public sealed class RoutingSlipRequestIntegrationTests
     private sealed class DeclaredFaultResponseProxy :
         RoutingSlipResponseProxy<CourierRequest, CourierResponse, CourierFaultResponse>
     {
-        protected override Task<CourierResponse> CreateResponseMessage(
+        protected override Task<CourierResponse> CreateResponseMessageAsync(
             ConsumeContext<RoutingSlipCompleted> context,
             CourierRequest request) =>
             throw new InvalidOperationException("The declared fault scenario must not create a success response.");
 
-        protected override Task<CourierFaultResponse> CreateFaultedResponseMessage(
+        protected override Task<CourierFaultResponse> CreateFaultedResponseMessageAsync(
             ConsumeContext<RoutingSlipFaulted> context,
             CourierRequest request,
             Guid requestId)

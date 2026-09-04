@@ -13,7 +13,7 @@ public class ConcurrencyLimitConsumerConfigurationObserver<TConsumer> :
 {
     readonly IConsumerConfigurator<TConsumer> _configurator;
 
-    public ConcurrencyLimitConsumerConfigurationObserver(IConsumerConfigurator<TConsumer> configurator, int concurrentMessageLimit, string id = null)
+    public ConcurrencyLimitConsumerConfigurationObserver(IConsumerConfigurator<TConsumer> configurator, int concurrentMessageLimit, string? id = null)
     {
         _configurator = configurator;
         Limiter = new ConcurrencyLimiter(concurrentMessageLimit, id);

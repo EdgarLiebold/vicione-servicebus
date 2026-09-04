@@ -8,7 +8,7 @@ public sealed class PropertyProviderFactoryVariableTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-PROPERTY-PROVIDER-VARIABLE", "guid-and-string-results")]
-    public async Task InitializerVariable_ProvidesExactGuidAndStringRepresentations()
+    public async Task InitializerVariable_ProvidesExactGuidAndStringRepresentationsAsync()
     {
         var expected = new Guid("5b68c65a-5083-46b5-8e88-f4de120be46f");
         var reader = PropertyProviderTestContext.For(new VariableInput(new IdVariable(expected)));

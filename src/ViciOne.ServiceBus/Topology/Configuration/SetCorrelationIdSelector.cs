@@ -11,7 +11,7 @@ public class SetCorrelationIdSelector<T> :
         _messageCorrelationId = messageCorrelationId;
     }
 
-    public bool TryGetSetCorrelationId(out IMessageCorrelationId<T> messageCorrelationId)
+    public bool TryGetSetCorrelationId([NotNullWhen(true)] out IMessageCorrelationId<T>? messageCorrelationId)
     {
         messageCorrelationId = _messageCorrelationId;
         return true;

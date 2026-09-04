@@ -13,7 +13,7 @@ public sealed class PropertyProviderFactoryTests
     {
         var factory = new PropertyProviderFactory<IDictionary<string, object>>();
 
-        bool found = factory.TryGetPropertyConverter(out IPropertyConverter<DictionaryContract, object> converter);
+        bool found = factory.TryGetPropertyConverter(out IPropertyConverter<DictionaryContract, object>? converter);
 
         Assert.True(found);
         Assert.NotNull(converter);
@@ -27,7 +27,7 @@ public sealed class PropertyProviderFactoryTests
         var property = typeof(UnsupportedInput).GetProperty(nameof(UnsupportedInput.Value));
 
         Assert.NotNull(property);
-        bool found = factory.TryGetPropertyProvider(property, out IPropertyProvider<UnsupportedInput, ExceptionInfo> provider);
+        bool found = factory.TryGetPropertyProvider(property, out IPropertyProvider<UnsupportedInput, ExceptionInfo>? provider);
 
         Assert.False(found);
         Assert.Null(provider);

@@ -47,8 +47,8 @@ internal sealed class RabbitMqDurableSendDispatcher<TBus> : IDurableSendDispatch
                 $"Durable send contract identity '{message.ContractIdentity}' is not registered in the immutable message contract catalog.");
         }
 
-        ISendEndpoint endpoint = await _bus.GetSendEndpoint(message.DestinationAddress).ConfigureAwait(false);
-        await endpoint.Send(
+        ISendEndpoint endpoint = await _bus.GetSendEndpointAsync(message.DestinationAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
+        await endpoint.SendAsync(
                 new SerializedMessageBody(),
                 new RabbitMqDurableSendPipe(message, messageType!),
                 cancellationToken)
@@ -76,7 +76,7 @@ internal sealed class RabbitMqDurableSendDispatcher<TBus> : IDurableSendDispatch
             _messageType = messageType;
         }
 
-        public Task Send(SendContext<SerializedMessageBody> context)
+        public Task SendAsync(SendContext<SerializedMessageBody> context)
         {
             var contentType = new ContentType(_message.ContentType);
             context.Serializer = new CopyBodySerializer(contentType, new MemoryMessageBody(_message.Body));

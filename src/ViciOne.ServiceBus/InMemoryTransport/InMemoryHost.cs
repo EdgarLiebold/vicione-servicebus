@@ -19,14 +19,14 @@ public class InMemoryHost :
         _hostConfiguration = hostConfiguration;
     }
 
-    public override HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
-        Action<IReceiveEndpointConfigurator> configureEndpoint = null)
+    public override HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
+        Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
         return ConnectReceiveEndpoint(definition, endpointNameFormatter, configureEndpoint);
     }
 
-    public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
-        Action<IInMemoryReceiveEndpointConfigurator> configureEndpoint = null)
+    public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
+        Action<IInMemoryReceiveEndpointConfigurator>? configureEndpoint = null)
     {
         var queueName = definition.GetEndpointName(endpointNameFormatter ?? DefaultEndpointNameFormatter.Instance);
 
@@ -37,12 +37,12 @@ public class InMemoryHost :
         });
     }
 
-    public override HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator> configureEndpoint = null)
+    public override HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
         return ConnectReceiveEndpoint(queueName, configureEndpoint);
     }
 
-    public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IInMemoryReceiveEndpointConfigurator> configure = null)
+    public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IInMemoryReceiveEndpointConfigurator>? configure = null)
     {
         LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
 

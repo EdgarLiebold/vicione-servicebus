@@ -11,7 +11,7 @@ public sealed class ResourceCacheExpirationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-RETENTION", "within-capacity-and-age")]
-    public async Task ValuesAtCapacity_RemainWhenNoneAreExpired()
+    public async Task ValuesAtCapacity_RemainWhenNoneAreExpiredAsync()
     {
         var time = NewClock();
         await using var cache = CreateCache(3, time, maxAge: TimeSpan.FromMinutes(10));
@@ -29,7 +29,7 @@ public sealed class ResourceCacheExpirationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-EXPIRATION", "expired-values")]
-    public async Task CleanupExpiredAsync_RemovesExpiredValuesBeforeCapacityRequiresEviction()
+    public async Task CleanupExpiredAsync_RemovesExpiredValuesBeforeCapacityRequiresEvictionAsync()
     {
         var time = NewClock();
         await using var cache = CreateCache(8, time, maxAge: TimeSpan.FromMinutes(1));
@@ -48,7 +48,7 @@ public sealed class ResourceCacheExpirationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-CAPACITY", "simple-values")]
-    public async Task HardCapacity_EvictsTheLeastRecentlyUsedCommittedValue()
+    public async Task HardCapacity_EvictsTheLeastRecentlyUsedCommittedValueAsync()
     {
         var time = NewClock();
         await using var cache = CreateCache(3, time);
@@ -78,7 +78,7 @@ public sealed class ResourceCacheExpirationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-CAPACITY", "usage-aware-values")]
-    public async Task UsageNotification_RefreshesSlidingRetentionWithoutACacheLookup()
+    public async Task UsageNotification_RefreshesSlidingRetentionWithoutACacheLookupAsync()
     {
         var time = NewClock();
         await using var cache = CreateCache(2, time);
@@ -101,7 +101,7 @@ public sealed class ResourceCacheExpirationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-BUCKET", "push-links-node")]
-    public async Task CacheHit_MakesTheEntryMostRecentlyUsedForTheNextEviction()
+    public async Task CacheHit_MakesTheEntryMostRecentlyUsedForTheNextEvictionAsync()
     {
         var time = NewClock();
         await using var cache = CreateCache(2, time);
@@ -119,7 +119,7 @@ public sealed class ResourceCacheExpirationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-BUCKET", "used-callback-cannot-decrement-reused-generation")]
-    public async Task UsageFromAnEvictedGeneration_CannotRefreshItsReplacement()
+    public async Task UsageFromAnEvictedGeneration_CannotRefreshItsReplacementAsync()
     {
         var time = NewClock();
         await using var cache = CreateCache(1, time);
@@ -143,7 +143,7 @@ public sealed class ResourceCacheExpirationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-BUCKET", "rebucket-transfers-source-count-once")]
-    public async Task HighChurn_AccountsForEachCapacityEvictionExactlyOnce()
+    public async Task HighChurn_AccountsForEachCapacityEvictionExactlyOnceAsync()
     {
         const int capacity = 8;
         const int additions = 200;
@@ -163,7 +163,7 @@ public sealed class ResourceCacheExpirationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-NODE-VISIBILITY", "post-eviction-state-is-removed")]
-    public async Task EvictedValue_IsImmediatelyAbsentFromIndexAndVisibleState()
+    public async Task EvictedValue_IsImmediatelyAbsentFromIndexAndVisibleStateAsync()
     {
         var time = NewClock();
         await using var cache = CreateCache(1, time);
@@ -182,7 +182,7 @@ public sealed class ResourceCacheExpirationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-RETENTION", "stalled-current-bucket-honors-minimum-age")]
-    public async Task MinimumAge_PreventsTimeExpirationUntilBothAgeBoundsAreSatisfied()
+    public async Task MinimumAge_PreventsTimeExpirationUntilBothAgeBoundsAreSatisfiedAsync()
     {
         var time = NewClock();
         await using var cache = CreateCache(
@@ -205,7 +205,7 @@ public sealed class ResourceCacheExpirationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-ROLLOVER", "reset-precedes-current-add")]
-    public async Task ExactExpirationBoundary_RemainsVisibleUntilTimeMovesBeyondTheBoundary()
+    public async Task ExactExpirationBoundary_RemainsVisibleUntilTimeMovesBeyondTheBoundaryAsync()
     {
         var time = NewClock();
         await using var cache = CreateCache(
@@ -227,7 +227,7 @@ public sealed class ResourceCacheExpirationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-CAPACITY", "queued-cleanup-signal-is-retained")]
-    public async Task PeriodicCleanup_RemovesExpiredValuesWithoutAnotherCacheOperation()
+    public async Task PeriodicCleanup_RemovesExpiredValuesWithoutAnotherCacheOperationAsync()
     {
         var time = NewClock();
         await using var cache = CreateCache(
@@ -248,7 +248,7 @@ public sealed class ResourceCacheExpirationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-CAPACITY", "queued-cleanup-ring-preserves-live-values")]
-    public async Task RepeatedTimedCleanup_PreservesEveryLiveValueAndDoesNotDoubleDisposeExpiredValues()
+    public async Task RepeatedTimedCleanup_PreservesEveryLiveValueAndDoesNotDoubleDisposeExpiredValuesAsync()
     {
         var time = NewClock();
         await using var cache = CreateCache(
@@ -272,7 +272,7 @@ public sealed class ResourceCacheExpirationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-CAPACITY", "scheduler-rejection-falls-back-inline")]
-    public async Task ExplicitCleanup_RemainsAvailableWhenNoPeriodicTickHasRun()
+    public async Task ExplicitCleanup_RemainsAvailableWhenNoPeriodicTickHasRunAsync()
     {
         var time = NewClock();
         await using var cache = CreateCache(
@@ -292,7 +292,7 @@ public sealed class ResourceCacheExpirationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-CAPACITY", "scheduler-invoke-then-throw-is-idempotent")]
-    public async Task RepeatedCleanup_IsIdempotentForAlreadyReleasedResources()
+    public async Task RepeatedCleanup_IsIdempotentForAlreadyReleasedResourcesAsync()
     {
         var time = NewClock();
         await using var cache = CreateCache(2, time, maxAge: TimeSpan.FromSeconds(1));
@@ -309,7 +309,7 @@ public sealed class ResourceCacheExpirationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CACHE-CAPACITY", "follow-up-handoff-remains-single-flight")]
-    public async Task CapacityChurn_NeverExceedsTheConfiguredHardBound()
+    public async Task CapacityChurn_NeverExceedsTheConfiguredHardBoundAsync()
     {
         const int capacity = 4;
         var time = NewClock();
@@ -328,7 +328,7 @@ public sealed class ResourceCacheExpirationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ENDPOINT-CACHE-CAPACITY", "single-use-values")]
-    public async Task SingleUseValuesAboveCapacity_RetainExactlyTheNewestCapacity()
+    public async Task SingleUseValuesAboveCapacity_RetainExactlyTheNewestCapacityAsync()
     {
         const int capacity = 10;
         var time = NewClock();
@@ -348,7 +348,7 @@ public sealed class ResourceCacheExpirationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ENDPOINT-CACHE-CAPACITY", "usage-aware-retention")]
-    public async Task ReusedValues_AreRetainedAheadOfOlderUnusedValues()
+    public async Task ReusedValues_AreRetainedAheadOfOlderUnusedValuesAsync()
     {
         var time = NewClock();
         await using var cache = CreateCache(3, time);
@@ -366,7 +366,7 @@ public sealed class ResourceCacheExpirationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ENDPOINT-CACHE-METRICS", "deterministic-distribution")]
-    public async Task RepeatedDeterministicAccess_ReportsExactCountsAndHitRatio()
+    public async Task RepeatedDeterministicAccess_ReportsExactCountsAndHitRatioAsync()
     {
         const int distinct = 25;
         const int accesses = 500;
@@ -389,7 +389,7 @@ public sealed class ResourceCacheExpirationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ENDPOINT-CACHE-TRACKER", "high-churn-eviction")]
-    public async Task HighChurn_DisposesEveryValueBeyondTheHardCapacity()
+    public async Task HighChurn_DisposesEveryValueBeyondTheHardCapacityAsync()
     {
         const int capacity = 7;
         const int additions = 100;
@@ -412,7 +412,7 @@ public sealed class ResourceCacheExpirationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ENDPOINT-CACHE-TTL", "sequential-access-within-ttl")]
-    public async Task SequentialAccessWithinSlidingLifetime_PreservesTheValueAndExactHitRatio()
+    public async Task SequentialAccessWithinSlidingLifetime_PreservesTheValueAndExactHitRatioAsync()
     {
         var time = NewClock();
         await using var cache = CreateCache(4, time, maxAge: TimeSpan.FromSeconds(30));
@@ -438,7 +438,7 @@ public sealed class ResourceCacheExpirationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ENDPOINT-CACHE-TTL-CLOCK", "timestamp-frequency")]
-    public async Task Expiration_UsesTheConfiguredTimeProviderTimestampFrequency()
+    public async Task Expiration_UsesTheConfiguredTimeProviderTimestampFrequencyAsync()
     {
         var time = new FrequencyTimeProvider(1_000);
         await using var cache = new ResourceCache<Resource>(new ResourceCacheOptions(

@@ -39,12 +39,12 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
-    public async Task<SagaConsumeContext<TSaga, TMessage>> Add(TSaga instance)
+    public async Task<SagaConsumeContext<TSaga, TMessage>> AddAsync(TSaga instance, CancellationToken cancellationToken = default)
     {
-        if (_sagasLocked)
+        cancellationToken.ThrowIfCancellationRequested(); if (_sagasLocked)
         {
             SagaConsumeContext<TSaga, TMessage> consumeContext =
-                await _factory.CreateSagaConsumeContext(_sagas, _context, instance, SagaConsumeContextMode.Add).ConfigureAwait(false);
+                await _factory.CreateSagaConsumeContextAsync(_sagas, _context, instance, SagaConsumeContextMode.Add).ConfigureAwait(false);
 
             _sagas.Release();
             _sagasLocked = false;
@@ -52,10 +52,10 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
             return consumeContext;
         }
 
-        await _sagas.MarkInUse(_context.CancellationToken).ConfigureAwait(false);
+        await _sagas.MarkInUseAsync(_context.CancellationToken).ConfigureAwait(false);
         try
         {
-            return await _factory.CreateSagaConsumeContext(_sagas, _context, instance, SagaConsumeContextMode.Add).ConfigureAwait(false);
+            return await _factory.CreateSagaConsumeContextAsync(_sagas, _context, instance, SagaConsumeContextMode.Add).ConfigureAwait(false);
         }
         finally
         {
@@ -63,15 +63,15 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
-    public async Task<SagaConsumeContext<TSaga, TMessage>> Insert(TSaga instance)
+    public async Task<SagaConsumeContext<TSaga, TMessage>?> InsertAsync(TSaga instance, CancellationToken cancellationToken = default)
     {
-        if (_sagasLocked)
+        cancellationToken.ThrowIfCancellationRequested(); if (_sagasLocked)
         {
             if (_sagas[instance.CorrelationId] != null)
                 return default;
 
             SagaConsumeContext<TSaga, TMessage> consumeContext =
-                await _factory.CreateSagaConsumeContext(_sagas, _context, instance, SagaConsumeContextMode.Insert).ConfigureAwait(false);
+                await _factory.CreateSagaConsumeContextAsync(_sagas, _context, instance, SagaConsumeContextMode.Insert).ConfigureAwait(false);
 
             _sagas.Release();
             _sagasLocked = false;
@@ -79,13 +79,13 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
             return consumeContext;
         }
 
-        await _sagas.MarkInUse(_context.CancellationToken).ConfigureAwait(false);
+        await _sagas.MarkInUseAsync(_context.CancellationToken).ConfigureAwait(false);
         try
         {
             if (_sagas[instance.CorrelationId] != null)
                 return default;
 
-            return await _factory.CreateSagaConsumeContext(_sagas, _context, instance, SagaConsumeContextMode.Insert).ConfigureAwait(false);
+            return await _factory.CreateSagaConsumeContextAsync(_sagas, _context, instance, SagaConsumeContextMode.Insert).ConfigureAwait(false);
         }
         finally
         {
@@ -93,9 +93,9 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
-    public async Task<SagaConsumeContext<TSaga, TMessage>> Load(Guid correlationId)
+    public async Task<SagaConsumeContext<TSaga, TMessage>?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
-        SagaInstance<TSaga> saga;
+        cancellationToken.ThrowIfCancellationRequested(); SagaInstance<TSaga>? saga;
         if (_sagasLocked)
         {
             saga = _sagas[correlationId];
@@ -113,7 +113,7 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
         }
         else
         {
-            await _sagas.MarkInUse(_context.CancellationToken).ConfigureAwait(false);
+            await _sagas.MarkInUseAsync(_context.CancellationToken).ConfigureAwait(false);
             try
             {
                 saga = _sagas[correlationId];
@@ -133,25 +133,26 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
             }
         }
 
-        return await _factory.CreateSagaConsumeContext(_sagas, _context, saga.Instance, SagaConsumeContextMode.Load).ConfigureAwait(false);
+        return await _factory.CreateSagaConsumeContextAsync(_sagas, _context, saga.Instance, SagaConsumeContextMode.Load).ConfigureAwait(false);
     }
 
-    public Task Save(SagaConsumeContext<TSaga> context)
+    public Task SaveAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        return Task.CompletedTask;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
     }
 
-    public Task Update(SagaConsumeContext<TSaga> context)
+    public Task UpdateAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        return Save(context);
+        return SaveAsync(context, cancellationToken: cancellationToken);
     }
 
-    public async Task Delete(SagaConsumeContext<TSaga> context)
+    public async Task DeleteAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        await _sagas.MarkInUse(CancellationToken).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested(); await _sagas.MarkInUseAsync(CancellationToken).ConfigureAwait(false);
         try
         {
-            SagaInstance<TSaga> instance = _sagas[context.Saga.CorrelationId];
+            SagaInstance<TSaga> instance = _sagas[context.Saga.CorrelationId]
+                ?? throw new InvalidOperationException($"Saga {context.Saga.CorrelationId} was not found in the in-memory repository.");
 
             _sagas.Remove(instance);
         }
@@ -161,20 +162,20 @@ public class InMemorySagaRepositoryContext<TSaga, TMessage> :
         }
     }
 
-    public Task Discard(SagaConsumeContext<TSaga> context)
+    public Task DiscardAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        return Delete(context);
+        return DeleteAsync(context, cancellationToken: cancellationToken);
     }
 
-    public Task Undo(SagaConsumeContext<TSaga> context)
+    public Task UndoAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        return Task.CompletedTask;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
     }
 
-    public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContext<T>(ConsumeContext<T> consumeContext, TSaga instance, SagaConsumeContextMode mode)
+    public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContextAsync<T>(ConsumeContext<T> consumeContext, TSaga instance, SagaConsumeContextMode mode)
         where T : class
     {
-        return _factory.CreateSagaConsumeContext(_sagas, consumeContext, instance, mode);
+        return _factory.CreateSagaConsumeContextAsync(_sagas, consumeContext, instance, mode);
     }
 }
 
@@ -193,12 +194,12 @@ public class InMemorySagaRepositoryContext<TSaga> :
         _sagas = sagas;
     }
 
-    public async Task<TSaga> Load(Guid correlationId)
+    public async Task<TSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
-        await _sagas.MarkInUse(CancellationToken).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested(); await _sagas.MarkInUseAsync(CancellationToken).ConfigureAwait(false);
         try
         {
-            SagaInstance<TSaga> saga = _sagas[correlationId];
+            SagaInstance<TSaga>? saga = _sagas[correlationId];
             if (saga == null)
                 return default;
 
@@ -216,9 +217,9 @@ public class InMemorySagaRepositoryContext<TSaga> :
         }
     }
 
-    public async Task<SagaRepositoryQueryContext<TSaga>> Query(ISagaQuery<TSaga> query, CancellationToken cancellationToken)
+    public async Task<SagaRepositoryQueryContext<TSaga>> QueryAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken)
     {
-        List<Guid> matchingInstances = _sagas.Where(query).Select(x => x.Instance.CorrelationId).ToList();
+        cancellationToken.ThrowIfCancellationRequested(); List<Guid> matchingInstances = _sagas.Where(query).Select(x => x.Instance.CorrelationId).ToList();
 
         return new DefaultSagaRepositoryQueryContext<TSaga>(this, matchingInstances);
     }

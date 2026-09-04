@@ -15,15 +15,14 @@ public class FutureRequest<TInput, TRequest> :
 
     public FutureRequest()
     {
-        _factory = new ContextMessageFactory<BehaviorContext<FutureState, TInput>, TRequest>(DefaultFactory);
+        _factory = new ContextMessageFactory<BehaviorContext<FutureState, TInput>, TRequest>(DefaultFactoryAsync);
 
         AddressProvider = PublishAddressProvider;
     }
 
     public RequestAddressProvider<TInput> AddressProvider { get; set; }
 
-    public PendingFutureIdProvider<TRequest> PendingRequestIdProvider { get; set; }
-
+    public PendingFutureIdProvider<TRequest> PendingRequestIdProvider { get; set; } = null!;
     public ContextMessageFactory<BehaviorContext<FutureState, TInput>, TRequest> Factory
     {
         set => _factory = value;
@@ -37,36 +36,36 @@ public class FutureRequest<TInput, TRequest> :
             yield return this.Failure("RequestAddressProvider", "must not be null");
     }
 
-    static Uri PublishAddressProvider<T>(BehaviorContext<FutureState, T> context)
+    static Uri? PublishAddressProvider<T>(BehaviorContext<FutureState, T> context)
         where T : class
     {
         return default;
     }
 
-    public async Task SendRequest(BehaviorContext<FutureState, TInput> context)
+    public async Task SendRequestAsync(BehaviorContext<FutureState, TInput> context, CancellationToken cancellationToken = default)
     {
         var destinationAddress = AddressProvider(context);
 
         var endpoint = destinationAddress != null
-            ? await context.GetSendEndpoint(destinationAddress).ConfigureAwait(false)
-            : await context.ReceiveContext.PublishEndpointProvider.GetPublishEndpoint<TRequest>(context, default);
+            ? await context.GetSendEndpointAsync(destinationAddress, cancellationToken: cancellationToken).ConfigureAwait(false)
+            : await context.ReceiveContext.PublishEndpointProvider.GetPublishEndpointAsync<TRequest>(context, default);
 
-        await _factory.Use(context, async (ctx, s) =>
+        await _factory.UseAsync(context, async (ctx, s) =>
         {
             var pipe = new FutureRequestPipe<TRequest>(s.Pipe, context.ReceiveContext.InputAddress, context.Saga.CorrelationId);
 
-            await endpoint.Send(s.Message, pipe, ctx.CancellationToken).ConfigureAwait(false);
+            await endpoint.SendAsync(s.Message, pipe, ctx.CancellationToken).ConfigureAwait(false);
 
             if (PendingRequestIdProvider != null)
             {
                 var pendingId = PendingRequestIdProvider(s.Message);
                 context.Saga.Pending.Add(pendingId);
             }
-        });
+        }, cancellationToken: cancellationToken);
     }
 
-    static Task<SendTuple<TRequest>> DefaultFactory(BehaviorContext<FutureState, TInput> context)
+    static Task<SendTuple<TRequest>> DefaultFactoryAsync(BehaviorContext<FutureState, TInput> context)
     {
-        return context.Init<TRequest>(context.Message);
+        return context.InitAsync<TRequest>(context.Message);
     }
 }

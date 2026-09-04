@@ -25,7 +25,8 @@ public class EntityConverter<T> :
 
     public T GetObject(IDictionary<string, object> entityProperties)
     {
-        var entity = (T)Activator.CreateInstance(typeof(T));
+        var entity = Activator.CreateInstance(typeof(T)) as T
+            ?? throw new InvalidOperationException($"Unable to create Azure Table entity type {typeof(T).FullName}.");
 
         for (var i = 0; i < _converters.Count; i++)
             _converters[i].ToEntity(entity, entityProperties);

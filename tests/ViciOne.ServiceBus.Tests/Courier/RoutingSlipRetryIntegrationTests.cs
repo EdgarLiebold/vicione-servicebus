@@ -10,7 +10,7 @@ public sealed class RoutingSlipRetryIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-REDELIVERY", "redelivery-header-does-not-leak-into-compensation")]
-    public async Task RedeliveredActivity_DoesNotLeakItsRedeliveryCountIntoPreviousCompensation()
+    public async Task RedeliveredActivity_DoesNotLeakItsRedeliveryCountIntoPreviousCompensationAsync()
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -32,7 +32,7 @@ public sealed class RoutingSlipRetryIntegrationTests
         using var faulted = new CourierMessageRecorder<RoutingSlipFaulted>(1);
         compensated.Configure(harness);
         faulted.Configure(harness);
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
@@ -42,11 +42,11 @@ public sealed class RoutingSlipRetryIntegrationTests
             builder.AddActivity(compensating.Name, compensating.ExecuteAddress, new RetryArguments("log"));
             builder.AddActivity(failing.Name, failing.ExecuteAddress, new RedeliveryArguments(1));
 
-            await harness.Bus.Execute(builder.Build(), cancellationToken);
+            await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
             await Task.WhenAll(
-                compensated.Wait(timeout, cancellationToken),
-                faulted.Wait(timeout, cancellationToken));
-            await harness.Stop();
+                compensated.WaitAsync(timeout, cancellationToken),
+                faulted.WaitAsync(timeout, cancellationToken));
+            await harness.StopAsync(TestContext.Current.CancellationToken);
 
             Assert.Equal(
                 [new RetryObservation(0, 0, "header-isolation"), new RetryObservation(0, 1, "header-isolation")],
@@ -57,13 +57,13 @@ public sealed class RoutingSlipRetryIntegrationTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-RETRY", "immediate-retry-eventually-succeeds")]
-    public async Task ImmediateRetry_ReexecutesTheActivityWithTheSameVariablesThenCompletesOnce()
+    public async Task ImmediateRetry_ReexecutesTheActivityWithTheSameVariablesThenCompletesOnceAsync()
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -78,7 +78,7 @@ public sealed class RoutingSlipRetryIntegrationTests
         using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
         activityCompleted.Configure(harness);
         completed.Configure(harness);
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
@@ -87,11 +87,11 @@ public sealed class RoutingSlipRetryIntegrationTests
             builder.AddVariable("Seed", "retry-seed");
             builder.AddActivity(activity.Name, activity.ExecuteAddress, new RetryArguments("execute"));
 
-            await harness.Bus.Execute(builder.Build(), cancellationToken);
+            await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
             await Task.WhenAll(
-                activityCompleted.Wait(timeout, cancellationToken),
-                completed.Wait(timeout, cancellationToken));
-            await harness.Stop();
+                activityCompleted.WaitAsync(timeout, cancellationToken),
+                completed.WaitAsync(timeout, cancellationToken));
+            await harness.StopAsync(TestContext.Current.CancellationToken);
 
             Assert.Equal(
                 [new RetryObservation(0, 0, "retry-seed"), new RetryObservation(1, 0, "retry-seed")],
@@ -105,13 +105,13 @@ public sealed class RoutingSlipRetryIntegrationTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-RETRY", "immediate-retry-eventually-compensates")]
-    public async Task ImmediateRetry_ReexecutesCompensationWithTheOriginalLogThenFaultsOnce()
+    public async Task ImmediateRetry_ReexecutesCompensationWithTheOriginalLogThenFaultsOnceAsync()
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -132,7 +132,7 @@ public sealed class RoutingSlipRetryIntegrationTests
         using var faulted = new CourierMessageRecorder<RoutingSlipFaulted>(1);
         compensated.Configure(harness);
         faulted.Configure(harness);
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
@@ -142,11 +142,11 @@ public sealed class RoutingSlipRetryIntegrationTests
             builder.AddActivity(compensating.Name, compensating.ExecuteAddress, new RetryArguments("logged-value"));
             builder.AddActivity(failing.Name, failing.ExecuteAddress, new RetryArguments("terminal"));
 
-            await harness.Bus.Execute(builder.Build(), cancellationToken);
+            await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
             await Task.WhenAll(
-                compensated.Wait(timeout, cancellationToken),
-                faulted.Wait(timeout, cancellationToken));
-            await harness.Stop();
+                compensated.WaitAsync(timeout, cancellationToken),
+                faulted.WaitAsync(timeout, cancellationToken));
+            await harness.StopAsync(TestContext.Current.CancellationToken);
 
             Assert.Equal(
                 [
@@ -162,7 +162,7 @@ public sealed class RoutingSlipRetryIntegrationTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
@@ -170,7 +170,7 @@ public sealed class RoutingSlipRetryIntegrationTests
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("REQ-VSB-COURIER-FAULT", "compensation-failure-publish-and-explicit-subscription")]
-    public async Task ExhaustedCompensation_UsesEitherPublishOrTheExplicitSubscriptionExactlyOnce(
+    public async Task ExhaustedCompensation_UsesEitherPublishOrTheExplicitSubscriptionExactlyOnceAsync(
         bool explicitSubscription)
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
@@ -211,7 +211,7 @@ public sealed class RoutingSlipRetryIntegrationTests
         using var publishedSlipFailure = new CourierMessageRecorder<RoutingSlipCompensationFailed>(1);
         publishedActivityFailure.Configure(harness);
         publishedSlipFailure.Configure(harness);
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
@@ -229,7 +229,7 @@ public sealed class RoutingSlipRetryIntegrationTests
             builder.AddActivity(compensating.Name, compensating.ExecuteAddress, new RetryArguments("failed-log"));
             builder.AddActivity(failing.Name, failing.ExecuteAddress, new RetryArguments("terminal"));
 
-            await harness.Bus.Execute(builder.Build(), cancellationToken);
+            await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
             if (explicitSubscription)
             {
                 await Task.WhenAll(
@@ -239,10 +239,10 @@ public sealed class RoutingSlipRetryIntegrationTests
             else
             {
                 await Task.WhenAll(
-                    publishedActivityFailure.Wait(timeout, cancellationToken),
-                    publishedSlipFailure.Wait(timeout, cancellationToken));
+                    publishedActivityFailure.WaitAsync(timeout, cancellationToken),
+                    publishedSlipFailure.WaitAsync(timeout, cancellationToken));
             }
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
 
             Assert.Equal(
                 [
@@ -274,7 +274,7 @@ public sealed class RoutingSlipRetryIntegrationTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
@@ -283,7 +283,7 @@ public sealed class RoutingSlipRetryIntegrationTests
     [InlineData(2)]
     [InlineData(3)]
     [RequirementCoverage("REQ-VSB-COURIER-REDELIVERY", "exact-redelivery-count-and-variable-survival")]
-    public async Task DelayedRedelivery_PreservesVariablesAcrossEveryAttemptAndTerminalFault(int redeliveryCount)
+    public async Task DelayedRedelivery_PreservesVariablesAcrossEveryAttemptAndTerminalFaultAsync(int redeliveryCount)
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -298,7 +298,7 @@ public sealed class RoutingSlipRetryIntegrationTests
         using var faulted = new CourierMessageRecorder<RoutingSlipFaulted>(1);
         activityFaulted.Configure(harness);
         faulted.Configure(harness);
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
@@ -310,11 +310,11 @@ public sealed class RoutingSlipRetryIntegrationTests
                 activity.ExecuteAddress,
                 new RedeliveryArguments(redeliveryCount));
 
-            await harness.Bus.Execute(builder.Build(), cancellationToken);
+            await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
             await Task.WhenAll(
-                activityFaulted.Wait(timeout, cancellationToken),
-                faulted.Wait(timeout, cancellationToken));
-            await harness.Stop();
+                activityFaulted.WaitAsync(timeout, cancellationToken),
+                faulted.WaitAsync(timeout, cancellationToken));
+            await harness.StopAsync(TestContext.Current.CancellationToken);
 
             Assert.Equal(
                 Enumerable.Range(0, redeliveryCount + 1)
@@ -330,13 +330,13 @@ public sealed class RoutingSlipRetryIntegrationTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-RETRY", "retry-exhaustion-preserves-fault-variables")]
-    public async Task ImmediateRetry_PreservesVariablesUntilTheTerminalActivityAndSlipFaults()
+    public async Task ImmediateRetry_PreservesVariablesUntilTheTerminalActivityAndSlipFaultsAsync()
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -351,7 +351,7 @@ public sealed class RoutingSlipRetryIntegrationTests
         using var faulted = new CourierMessageRecorder<RoutingSlipFaulted>(1);
         activityFaulted.Configure(harness);
         faulted.Configure(harness);
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
@@ -360,11 +360,11 @@ public sealed class RoutingSlipRetryIntegrationTests
             builder.AddVariable("Seed", "retry-fault-seed");
             builder.AddActivity(activity.Name, activity.ExecuteAddress, new RetryArguments("fault"));
 
-            await harness.Bus.Execute(builder.Build(), cancellationToken);
+            await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
             await Task.WhenAll(
-                activityFaulted.Wait(timeout, cancellationToken),
-                faulted.Wait(timeout, cancellationToken));
-            await harness.Stop();
+                activityFaulted.WaitAsync(timeout, cancellationToken),
+                faulted.WaitAsync(timeout, cancellationToken));
+            await harness.StopAsync(TestContext.Current.CancellationToken);
 
             Assert.Equal(
                 [
@@ -383,7 +383,7 @@ public sealed class RoutingSlipRetryIntegrationTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
@@ -427,7 +427,7 @@ public sealed class RoutingSlipRetryIntegrationTests
     public sealed class RetryThenCompleteActivity(ConcurrentQueue<RetryObservation> attempts) :
         IExecuteActivity<RetryArguments>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<RetryArguments> context)
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<RetryArguments> context)
         {
             int retryAttempt = context.GetRetryAttempt();
             attempts.Enqueue(new RetryObservation(
@@ -445,10 +445,10 @@ public sealed class RoutingSlipRetryIntegrationTests
     public sealed class HeaderIsolationActivity(ConcurrentQueue<int> compensationCounts) :
         IActivity<RetryArguments, RetryLog>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<RetryArguments> context) =>
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<RetryArguments> context) =>
             Task.FromResult(context.Completed(new RetryLog(context.Arguments.Value)));
 
-        public Task<CompensationResult> Compensate(CompensateContext<RetryLog> context)
+        public Task<CompensationResult> CompensateAsync(CompensateContext<RetryLog> context)
         {
             compensationCounts.Enqueue(context.GetRedeliveryCount());
             return Task.FromResult(context.Compensated());
@@ -458,10 +458,10 @@ public sealed class RoutingSlipRetryIntegrationTests
     public sealed class RetryThenCompensateActivity(ConcurrentQueue<CompensationObservation> attempts) :
         IActivity<RetryArguments, RetryLog>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<RetryArguments> context) =>
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<RetryArguments> context) =>
             Task.FromResult(context.Completed(new RetryLog(context.Arguments.Value)));
 
-        public Task<CompensationResult> Compensate(CompensateContext<RetryLog> context)
+        public Task<CompensationResult> CompensateAsync(CompensateContext<RetryLog> context)
         {
             int retryAttempt = context.GetRetryAttempt();
             attempts.Enqueue(new CompensationObservation(
@@ -480,10 +480,10 @@ public sealed class RoutingSlipRetryIntegrationTests
     public sealed class AlwaysFailingCompensationActivity(ConcurrentQueue<CompensationObservation> attempts) :
         IActivity<RetryArguments, RetryLog>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<RetryArguments> context) =>
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<RetryArguments> context) =>
             Task.FromResult(context.Completed(new RetryLog(context.Arguments.Value)));
 
-        public Task<CompensationResult> Compensate(CompensateContext<RetryLog> context)
+        public Task<CompensationResult> CompensateAsync(CompensateContext<RetryLog> context)
         {
             attempts.Enqueue(new CompensationObservation(
                 context.GetRetryAttempt(),
@@ -496,14 +496,14 @@ public sealed class RoutingSlipRetryIntegrationTests
 
     public sealed class TerminalFaultActivity : IExecuteActivity<RetryArguments>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<RetryArguments> context) =>
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<RetryArguments> context) =>
             Task.FromResult(context.Faulted(new CourierExpectedException(context.Arguments.Value)));
     }
 
     public sealed class RedeliverThenFaultActivity(ConcurrentQueue<RetryObservation> attempts) :
         IExecuteActivity<RedeliveryArguments>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<RedeliveryArguments> context)
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<RedeliveryArguments> context)
         {
             int redeliveryCount = context.GetRedeliveryCount();
             attempts.Enqueue(new RetryObservation(
@@ -523,7 +523,7 @@ public sealed class RoutingSlipRetryIntegrationTests
     public sealed class RetryThenFaultActivity(ConcurrentQueue<RetryObservation> attempts) :
         IExecuteActivity<RetryArguments>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<RetryArguments> context)
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<RetryArguments> context)
         {
             int retryAttempt = context.GetRetryAttempt();
             attempts.Enqueue(new RetryObservation(

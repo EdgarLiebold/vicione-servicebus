@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus;
 public static class SendByConventionExtensions
 {
     public static EventActivityBinder<TInstance> Send<TInstance, TMessage>(this EventActivityBinder<TInstance> source,
-        TMessage message, Action<SendContext<TMessage>> callback = null)
+        TMessage message, Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
         where TMessage : class
     {
@@ -16,7 +16,7 @@ public static class SendByConventionExtensions
     }
 
     public static EventActivityBinder<TInstance> SendAsync<TInstance, TMessage>(this EventActivityBinder<TInstance> source,
-        Task<TMessage> message, Action<SendContext<TMessage>> callback = null)
+        Task<TMessage> message, Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
         where TMessage : class
     {
@@ -25,7 +25,7 @@ public static class SendByConventionExtensions
     }
 
     public static EventActivityBinder<TInstance> Send<TInstance, TMessage>(this EventActivityBinder<TInstance> source,
-        EventMessageFactory<TInstance, TMessage> messageFactory, Action<SendContext<TMessage>> callback = null)
+        EventMessageFactory<TInstance, TMessage> messageFactory, Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
         where TMessage : class
     {
@@ -34,7 +34,7 @@ public static class SendByConventionExtensions
     }
 
     public static EventActivityBinder<TInstance> SendAsync<TInstance, TMessage>(this EventActivityBinder<TInstance> source,
-        AsyncEventMessageFactory<TInstance, TMessage> messageFactory, Action<SendContext<TMessage>> callback = null)
+        AsyncEventMessageFactory<TInstance, TMessage> messageFactory, Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
         where TMessage : class
     {
@@ -43,7 +43,7 @@ public static class SendByConventionExtensions
     }
 
     public static EventActivityBinder<TInstance> SendAsync<TInstance, TMessage>(this EventActivityBinder<TInstance> source,
-        Func<BehaviorContext<TInstance>, Task<SendTuple<TMessage>>> messageFactory, Action<SendContext<TMessage>> callback = null)
+        Func<BehaviorContext<TInstance>, Task<SendTuple<TMessage>>> messageFactory, Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
         where TMessage : class
     {
@@ -52,7 +52,7 @@ public static class SendByConventionExtensions
     }
 
     public static EventActivityBinder<TInstance, TData> Send<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
-        TMessage message, Action<SendContext<TMessage>> callback = null)
+        TMessage message, Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
         where TData : class
         where TMessage : class
@@ -62,7 +62,7 @@ public static class SendByConventionExtensions
     }
 
     public static EventActivityBinder<TInstance, TData> SendAsync<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
-        Task<TMessage> message, Action<SendContext<TMessage>> callback = null)
+        Task<TMessage> message, Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
         where TData : class
         where TMessage : class
@@ -72,7 +72,7 @@ public static class SendByConventionExtensions
     }
 
     public static EventActivityBinder<TInstance, TData> Send<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
-        EventMessageFactory<TInstance, TData, TMessage> messageFactory, Action<SendContext<TMessage>> callback = null)
+        EventMessageFactory<TInstance, TData, TMessage> messageFactory, Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
         where TData : class
         where TMessage : class
@@ -82,7 +82,7 @@ public static class SendByConventionExtensions
     }
 
     public static EventActivityBinder<TInstance, TData> SendAsync<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
-        AsyncEventMessageFactory<TInstance, TData, TMessage> messageFactory, Action<SendContext<TMessage>> callback = null)
+        AsyncEventMessageFactory<TInstance, TData, TMessage> messageFactory, Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
         where TData : class
         where TMessage : class
@@ -92,7 +92,7 @@ public static class SendByConventionExtensions
     }
 
     public static EventActivityBinder<TInstance, TData> SendAsync<TInstance, TData, TMessage>(this EventActivityBinder<TInstance, TData> source,
-        Func<BehaviorContext<TInstance, TData>, Task<SendTuple<TMessage>>> messageFactory, Action<SendContext<TMessage>> callback = null)
+        Func<BehaviorContext<TInstance, TData>, Task<SendTuple<TMessage>>> messageFactory, Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
         where TData : class
         where TMessage : class
@@ -103,7 +103,7 @@ public static class SendByConventionExtensions
 
     public static ExceptionActivityBinder<TInstance, TException> Send<TInstance, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TException> source, TMessage message,
-        Action<SendContext<TMessage>> callback = null)
+        Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
         where TMessage : class
         where TException : Exception
@@ -114,7 +114,7 @@ public static class SendByConventionExtensions
 
     public static ExceptionActivityBinder<TInstance, TException> SendAsync<TInstance, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TException> source, Task<TMessage> message,
-        Action<SendContext<TMessage>> callback = null)
+        Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
         where TMessage : class
         where TException : Exception
@@ -125,7 +125,7 @@ public static class SendByConventionExtensions
 
     public static ExceptionActivityBinder<TInstance, TException> Send<TInstance, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TException> source,
-        EventExceptionMessageFactory<TInstance, TException, TMessage> messageFactory, Action<SendContext<TMessage>> callback = null)
+        EventExceptionMessageFactory<TInstance, TException, TMessage> messageFactory, Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
         where TMessage : class
         where TException : Exception
@@ -136,7 +136,7 @@ public static class SendByConventionExtensions
 
     public static ExceptionActivityBinder<TInstance, TException> SendAsync<TInstance, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TException> source,
-        AsyncEventExceptionMessageFactory<TInstance, TException, TMessage> messageFactory, Action<SendContext<TMessage>> callback = null)
+        AsyncEventExceptionMessageFactory<TInstance, TException, TMessage> messageFactory, Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
         where TMessage : class
         where TException : Exception
@@ -148,7 +148,7 @@ public static class SendByConventionExtensions
     public static ExceptionActivityBinder<TInstance, TException> SendAsync<TInstance, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TException> source,
         Func<BehaviorExceptionContext<TInstance, TException>, Task<SendTuple<TMessage>>> messageFactory,
-        Action<SendContext<TMessage>> callback = null)
+        Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
         where TMessage : class
         where TException : Exception
@@ -159,7 +159,7 @@ public static class SendByConventionExtensions
 
     public static ExceptionActivityBinder<TInstance, TData, TException> Send<TInstance, TData, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TData, TException> source, TMessage message,
-        Action<SendContext<TMessage>> callback = null)
+        Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
         where TData : class
         where TMessage : class
@@ -171,7 +171,7 @@ public static class SendByConventionExtensions
 
     public static ExceptionActivityBinder<TInstance, TData, TException> SendAsync<TInstance, TData, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TData, TException> source, Task<TMessage> message,
-        Action<SendContext<TMessage>> callback = null)
+        Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
         where TData : class
         where TMessage : class
@@ -183,7 +183,7 @@ public static class SendByConventionExtensions
 
     public static ExceptionActivityBinder<TInstance, TData, TException> Send<TInstance, TData, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TData, TException> source,
-        EventExceptionMessageFactory<TInstance, TData, TException, TMessage> messageFactory, Action<SendContext<TMessage>> callback = null)
+        EventExceptionMessageFactory<TInstance, TData, TException, TMessage> messageFactory, Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
         where TData : class
         where TMessage : class
@@ -195,7 +195,7 @@ public static class SendByConventionExtensions
 
     public static ExceptionActivityBinder<TInstance, TData, TException> SendAsync<TInstance, TData, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TData, TException> source,
-        AsyncEventExceptionMessageFactory<TInstance, TData, TException, TMessage> messageFactory, Action<SendContext<TMessage>> callback = null)
+        AsyncEventExceptionMessageFactory<TInstance, TData, TException, TMessage> messageFactory, Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
         where TData : class
         where TMessage : class
@@ -208,7 +208,7 @@ public static class SendByConventionExtensions
     public static ExceptionActivityBinder<TInstance, TData, TException> SendAsync<TInstance, TData, TException, TMessage>(
         this ExceptionActivityBinder<TInstance, TData, TException> source,
         Func<BehaviorExceptionContext<TInstance, TData, TException>, Task<SendTuple<TMessage>>> messageFactory,
-        Action<SendContext<TMessage>> callback = null)
+        Action<SendContext<TMessage>>? callback = null)
         where TInstance : class, SagaStateMachineInstance
         where TData : class
         where TMessage : class

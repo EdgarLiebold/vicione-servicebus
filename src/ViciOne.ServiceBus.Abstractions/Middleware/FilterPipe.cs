@@ -23,8 +23,8 @@ public class FilterPipe<TContext> :
     }
 
     [DebuggerStepThrough]
-    public Task Send(TContext context)
+    public Task SendAsync(TContext context)
     {
-        return _filter.Send(context, _next);
+        return _filter.SendAsync(context, _next);
     }
 }

@@ -14,6 +14,7 @@ public interface IPropertyConverter<TResult, in TProperty>
     /// <param name="context"></param>
     /// <param name="input"></param>
     /// <returns></returns>
-    Task<TResult> Convert<T>(InitializeContext<T> context, TProperty input)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<TResult?> ConvertAsync<T>(InitializeContext<T> context, TProperty? input, CancellationToken cancellationToken = default)
         where T : class;
 }

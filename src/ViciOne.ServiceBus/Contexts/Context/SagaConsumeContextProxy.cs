@@ -26,9 +26,9 @@ public class SagaConsumeContextProxy<TSaga, TMessage> :
 
     public TSaga Saga => _sagaContext.Saga;
 
-    public Task SetCompleted()
+    public Task SetCompletedAsync(CancellationToken cancellationToken = default)
     {
-        return _sagaContext.SetCompleted();
+        return _sagaContext.SetCompletedAsync(cancellationToken: cancellationToken);
     }
 
     public bool IsCompleted => _sagaContext.IsCompleted;

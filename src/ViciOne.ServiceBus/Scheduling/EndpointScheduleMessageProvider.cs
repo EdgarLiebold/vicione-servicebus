@@ -14,18 +14,18 @@ public class EndpointScheduleMessageProvider :
         _schedulerEndpoint = schedulerEndpoint;
     }
 
-    protected override async Task ScheduleSend(ScheduleMessage message, IPipe<SendContext<ScheduleMessage>> pipe, CancellationToken cancellationToken)
+    protected override async Task ScheduleSendAsync(ScheduleMessage message, IPipe<SendContext<ScheduleMessage>> pipe, CancellationToken cancellationToken = default)
     {
         var endpoint = await _schedulerEndpoint().ConfigureAwait(false);
 
-        await endpoint.Send(message, pipe, cancellationToken).ConfigureAwait(false);
+        await endpoint.SendAsync(message, pipe, cancellationToken).ConfigureAwait(false);
     }
 
-    protected override async Task CancelScheduledSend(Guid tokenId, Uri destinationAddress, CancellationToken cancellationToken)
+    protected override async Task CancelScheduledSendAsync(Guid tokenId, Uri? destinationAddress, CancellationToken cancellationToken = default)
     {
         var endpoint = await _schedulerEndpoint().ConfigureAwait(false);
 
-        await endpoint.Send<CancelScheduledMessage>(new
+        await endpoint.SendAsync<CancelScheduledMessage>(new
         {
             InVar.Timestamp,
             TokenId = tokenId

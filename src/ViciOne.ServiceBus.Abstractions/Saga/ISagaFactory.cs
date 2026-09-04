@@ -24,5 +24,5 @@ public interface ISagaFactory<out TSaga, TMessage>
     /// <param name="context"></param>
     /// <param name="next"></param>
     /// <returns></returns>
-    Task Send(ConsumeContext<TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next);
+    Task SendAsync(ConsumeContext<TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next);
 }

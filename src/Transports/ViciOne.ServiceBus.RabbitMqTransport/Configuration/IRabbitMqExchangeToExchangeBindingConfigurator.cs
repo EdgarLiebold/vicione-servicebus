@@ -13,5 +13,5 @@ public interface IRabbitMqExchangeToExchangeBindingConfigurator :
     /// </summary>
     /// <param name="exchangeName">Exchange name of the new exchange</param>
     /// <param name="configure">Configuration for new exchange and how to bind to it</param>
-    void Bind(string exchangeName, Action<IRabbitMqExchangeToExchangeBindingConfigurator> configure = null);
+    void Bind(string exchangeName, Action<IRabbitMqExchangeToExchangeBindingConfigurator>? configure = null);
 }

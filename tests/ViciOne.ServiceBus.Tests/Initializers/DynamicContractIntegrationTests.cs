@@ -10,7 +10,7 @@ public sealed class DynamicContractIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-DYNAMIC-CONTRACT", "anonymous-values-in-memory-send")]
-    public async Task AnonymousValues_SendAsAnInterfaceWithEveryValueAndContextIntact()
+    public async Task AnonymousValues_SendAsAnInterfaceWithEveryValueAndContextIntactAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -19,10 +19,10 @@ public sealed class DynamicContractIntegrationTests
         Guid correlationId = Guid.Parse("beec3a3c-1df8-4d44-aade-e787133d64a8");
         var address = new Uri("https://example.test/proxy/42");
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send<ProxyContract>(
+            await harness.InputQueueSendEndpoint.SendAsync<ProxyContract>(
                 new
                 {
                     CorrelationId = correlationId,
@@ -33,7 +33,7 @@ public sealed class DynamicContractIntegrationTests
                 },
                 cancellationToken);
             ConsumeContext<ProxyContract> consumed =
-                (await handler.Consumed.SelectAsync(cancellationToken).First()).Context;
+                (await handler.Consumed.SelectAsync(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken)).Context;
 
             Assert.Equal(correlationId, consumed.Message.CorrelationId);
             Assert.Equal(42, consumed.Message.Number);
@@ -47,16 +47,16 @@ public sealed class DynamicContractIntegrationTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DYNAMIC-CONTRACT", "raw-json-interface-roundtrip")]
-    public async Task RawSystemTextJson_RoundTripsAnEmittedInterfaceAndNestedContract()
+    public async Task RawSystemTextJson_RoundTripsAnEmittedInterfaceAndNestedContractAsync()
     {
         Guid correlationId = Guid.Parse("063e46c5-9c94-4444-925b-33f14e33318f");
-        InitializeContext<ProxyContract> initialized = await MessageInitializerCache<ProxyContract>.Initialize(
+        InitializeContext<ProxyContract> initialized = await MessageInitializerCache<ProxyContract>.InitializeAsync(
             new
             {
                 CorrelationId = correlationId,
@@ -82,13 +82,13 @@ public sealed class DynamicContractIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DYNAMIC-CONTRACT", "generic-interface-wrapper-flow")]
-    public async Task ConsumerProducedGenericWrapper_PreservesItsNestedContractsAndCredentials()
+    public async Task ConsumerProducedGenericWrapper_PreservesItsNestedContractsAndCredentialsAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout);
         HandlerTestHarness<ExecuteSql> command = harness.Handler<ExecuteSql>(context =>
-            context.Send<SecureCommand<ExecuteSql>>(
+            context.Advanced().SendAsync<SecureCommand<ExecuteSql>>(
                 harness.InputQueueAddress,
                 new
                 {
@@ -97,16 +97,16 @@ public sealed class DynamicContractIntegrationTests
                 }));
         HandlerTestHarness<SecureCommand<ExecuteSql>> secure = harness.Handler<SecureCommand<ExecuteSql>>();
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.InputQueueSendEndpoint.SendAsync(
                 new ExecuteSqlCommand("DROP TABLE [TemporaryData]"),
                 cancellationToken);
             ConsumeContext<ExecuteSql> commandContext =
-                (await command.Consumed.SelectAsync(cancellationToken).First()).Context;
+                (await command.Consumed.SelectAsync(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken)).Context;
             ConsumeContext<SecureCommand<ExecuteSql>> secureContext =
-                (await secure.Consumed.SelectAsync(cancellationToken).First()).Context;
+                (await secure.Consumed.SelectAsync(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken)).Context;
 
             Assert.Equal("DROP TABLE [TemporaryData]", commandContext.Message.SqlText);
             Assert.Equal(commandContext.Message.SqlText, secureContext.Message.Command.SqlText);
@@ -117,7 +117,7 @@ public sealed class DynamicContractIntegrationTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 

@@ -28,17 +28,17 @@ public class TeeFilter<TContext> :
     }
 
     [DebuggerNonUserCode]
-    public Task Send(TContext context, IPipe<TContext> next)
+    public Task SendAsync(TContext context, IPipe<TContext> next)
     {
-        var connectionsTask = _connections.ForEachAsync(pipe => pipe.Send(context));
+        var connectionsTask = _connections.ForEachAsync(pipe => pipe.SendAsync(context));
         if (connectionsTask.Status == TaskStatus.RanToCompletion)
-            return next.Send(context);
+            return next.SendAsync(context);
 
         async Task SendAsync()
         {
             await connectionsTask.ConfigureAwait(false);
 
-            await next.Send(context).ConfigureAwait(false);
+            await next.SendAsync(context).ConfigureAwait(false);
         }
 
         return SendAsync();
@@ -60,6 +60,7 @@ public class TeeFilter<TContext, TKey> :
     TeeFilter<TContext>,
     ITeeFilter<TContext, TKey>
     where TContext : class, PipeContext
+    where TKey : notnull
 {
     readonly KeyAccessor<TContext, TKey> _keyAccessor;
     readonly Lazy<IKeyPipeConnector<TKey>> _keyConnections;

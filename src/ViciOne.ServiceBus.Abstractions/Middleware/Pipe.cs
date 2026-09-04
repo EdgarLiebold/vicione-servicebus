@@ -131,7 +131,7 @@ public static class Pipe
             _callback = callback;
         }
 
-        public Task Send(T context)
+        public Task SendAsync(T context)
         {
             _callback(context);
 
@@ -158,9 +158,9 @@ public static class Pipe
             _callback = callback;
         }
 
-        public async Task Send(T context)
+        public async Task SendAsync(T context)
         {
-            await _nextPipe.Send(context).ConfigureAwait(false);
+            await _nextPipe.SendAsync(context).ConfigureAwait(false);
 
             _callback(context);
         }
@@ -183,7 +183,7 @@ public static class Pipe
             _callback = callback;
         }
 
-        public Task Send(T context)
+        public Task SendAsync(T context)
         {
             return _callback(context);
         }

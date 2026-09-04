@@ -13,7 +13,7 @@ class CompletedExecutionResult<TArguments> :
     where TArguments : class
 {
     readonly Uri _compensationAddress;
-    IDictionary<string, object> _data;
+    IDictionary<string, object> _data = null!;
 
     public CompletedExecutionResult(ExecuteContext<TArguments> context, IRoutingSlipEventPublisher publisher, Activity activity, RoutingSlip routingSlip,
         Uri compensationAddress)
@@ -45,7 +45,7 @@ class CompletedExecutionResult<TArguments> :
             _data[value.Key] = value.Value;
     }
 
-    public override async Task Evaluate()
+    public override async Task EvaluateAsync(CancellationToken cancellationToken = default)
     {
         var builder = CreateRoutingSlipBuilder(RoutingSlip);
 
@@ -53,7 +53,7 @@ class CompletedExecutionResult<TArguments> :
 
         var routingSlip = builder.Build();
 
-        await PublishActivityEvents(routingSlip, builder).ConfigureAwait(false);
+        await PublishActivityEventsAsync(routingSlip, builder).ConfigureAwait(false);
 
         if (HasNextActivity(routingSlip))
         {
@@ -66,14 +66,18 @@ class CompletedExecutionResult<TArguments> :
                         sendContext.Headers.Set(MessageHeaders.ForwarderAddress, forwarderAddress.ToString());
                 }
 
-                await Context.ScheduleSend(routingSlip.GetNextExecuteAddress(), Delay.Value, routingSlip, new CopyContextPipe(Context, AddForwarderAddress))
+                var executeAddress = routingSlip.GetNextExecuteAddress()
+                    ?? throw new RoutingSlipException("The next activity execute address was not specified.");
+                await Context.ScheduleSendAsync(executeAddress, Delay.Value, routingSlip, new CopyContextPipe(Context, AddForwarderAddress), cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             }
             else
             {
-                var endpoint = await Context.GetSendEndpoint(routingSlip.GetNextExecuteAddress()).ConfigureAwait(false);
+                var executeAddress = routingSlip.GetNextExecuteAddress()
+                    ?? throw new RoutingSlipException("The next activity execute address was not specified.");
+                var endpoint = await Context.GetSendEndpointAsync(executeAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-                await Context.Forward(endpoint, routingSlip).ConfigureAwait(false);
+                await Context.ForwardAsync(endpoint, routingSlip).ConfigureAwait(false);
             }
         }
         else
@@ -81,13 +85,13 @@ class CompletedExecutionResult<TArguments> :
             var completedTimestamp = Context.Timestamp + Duration;
             var completedDuration = completedTimestamp - RoutingSlip.CreateTimestamp;
 
-            await Publisher.PublishRoutingSlipCompleted(completedTimestamp, completedDuration, routingSlip.Variables).ConfigureAwait(false);
+            await Publisher.PublishRoutingSlipCompletedAsync(completedTimestamp, completedDuration, routingSlip.Variables, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 
-    protected virtual Task PublishActivityEvents(RoutingSlip routingSlip, RoutingSlipBuilder builder)
+    protected virtual Task PublishActivityEventsAsync(RoutingSlip routingSlip, RoutingSlipBuilder builder)
     {
-        return Publisher.PublishRoutingSlipActivityCompleted(Context.ActivityName, Context.ExecutionId, Context.Timestamp, Duration,
+        return Publisher.PublishRoutingSlipActivityCompletedAsync(Context.ActivityName, Context.ExecutionId, Context.Timestamp, Duration,
             routingSlip.Variables, Activity.Arguments, _data);
     }
 

@@ -8,7 +8,7 @@ public class EmptyPipe<TContext> :
     where TContext : class, PipeContext
 {
     [DebuggerNonUserCode]
-    Task IPipe<TContext>.Send(TContext context)
+    Task IPipe<TContext>.SendAsync(TContext context)
     {
         return Task.CompletedTask;
     }

@@ -15,7 +15,7 @@ public class ActiveJob :
     /// <summary>
     /// Calculated from the JobTimeout based on the time the job slot was requested, not currently used
     /// </summary>
-    public DateTime Deadline { get; set; }
+    public DateTimeOffset Deadline { get; set; }
 
     /// <summary>
     /// The instance assigned to the job

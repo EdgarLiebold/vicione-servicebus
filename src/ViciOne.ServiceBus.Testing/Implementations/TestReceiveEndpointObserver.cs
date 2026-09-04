@@ -13,24 +13,24 @@ public class TestReceiveEndpointObserver :
         _publishObserver = publishObserver ?? throw new ArgumentNullException(nameof(publishObserver));
     }
 
-    public Task Ready(ReceiveEndpointReady ready)
+    public Task ReadyAsync(ReceiveEndpointReady ready)
     {
         ready.ReceiveEndpoint.ConnectPublishObserver(_publishObserver);
 
         return Task.CompletedTask;
     }
 
-    public Task Stopping(ReceiveEndpointStopping stopping)
+    public Task StoppingAsync(ReceiveEndpointStopping stopping)
     {
         return Task.CompletedTask;
     }
 
-    public Task Completed(ReceiveEndpointCompleted completed)
+    public Task CompletedAsync(ReceiveEndpointCompleted completed)
     {
         return Task.CompletedTask;
     }
 
-    public Task Faulted(ReceiveEndpointFaulted faulted)
+    public Task FaultedAsync(ReceiveEndpointFaulted faulted)
     {
         return Task.CompletedTask;
     }

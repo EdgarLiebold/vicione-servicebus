@@ -15,7 +15,7 @@ public interface ReceiveSettings :
 
     int ConcurrentMessageLimit { get; }
 
-    string Selector { get; }
+    string? Selector { get; }
 
     /// <summary>
     /// Get the input address for the transport on the specified host

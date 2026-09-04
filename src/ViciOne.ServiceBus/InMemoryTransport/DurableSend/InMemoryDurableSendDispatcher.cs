@@ -33,15 +33,15 @@ internal sealed class InMemoryDurableSendDispatcher<TBus> : IDurableSendDispatch
             DurableSenderComposition.RequireExactlyOne<IMessageContractCatalog, TBus>(
                 _contractCatalogs,
                 "message-contract catalog");
-        if (!contractCatalog.TryGetMessageType(message.ContractIdentity, out Type messageType))
+        if (!contractCatalog.TryGetMessageType(message.ContractIdentity, out Type? messageType))
         {
             throw new MessageContractException(
                 $"Durable send contract identity '{message.ContractIdentity}' is not registered in the immutable message contract catalog.");
         }
 
-        ISendEndpoint endpoint = await _bus.GetSendEndpoint(message.DestinationAddress).ConfigureAwait(false);
+        ISendEndpoint endpoint = await _bus.GetSendEndpointAsync(message.DestinationAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
         var pipe = new InMemoryDurableSendPipe(message, messageType, context);
-        await endpoint.Send(new SerializedMessageBody(), pipe, cancellationToken).ConfigureAwait(false);
+        await endpoint.SendAsync(new SerializedMessageBody(), pipe, cancellationToken).ConfigureAwait(false);
         return DurableSendDispatchResult.AwaitConsumerCompletion;
     }
 
@@ -61,7 +61,7 @@ internal sealed class InMemoryDurableSendDispatcher<TBus> : IDurableSendDispatch
             _dispatchContext = dispatchContext;
         }
 
-        public Task Send(SendContext<SerializedMessageBody> context)
+        public Task SendAsync(SendContext<SerializedMessageBody> context)
         {
             var contentType = new ContentType(_message.ContentType);
             context.Serializer = new CopyBodySerializer(contentType, new MemoryMessageBody(_message.Body));

@@ -15,7 +15,7 @@ public class ConsumeSendPipeAdapter<TMessage> :
     {
     }
 
-    internal ConsumeSendPipeAdapter(ConsumeContext consumeContext, IPipe<SendContext<TMessage>> pipe, Guid? requestId,
+    internal ConsumeSendPipeAdapter(ConsumeContext consumeContext, IPipe<SendContext<TMessage>>? pipe, Guid? requestId,
         bool inheritRequestTimeToLive)
         : base(pipe)
     {

@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,13 +18,15 @@ public abstract class BaseReceiveContext :
     readonly Lazy<IPublishEndpointProvider> _publishEndpointProvider;
     readonly ReceiveEndpointContext _receiveEndpointContext;
     readonly PendingTaskCollection _receiveTasks;
-    readonly Stopwatch _receiveTimer;
+    readonly long _receiveStartedAt;
     readonly Lazy<ISendEndpointProvider> _sendEndpointProvider;
+    readonly TimeProvider _timeProvider;
 
     protected BaseReceiveContext(bool redelivered, ReceiveEndpointContext receiveEndpointContext, params object[] payloads)
         : base(receiveEndpointContext, payloads)
     {
-        _receiveTimer = Stopwatch.StartNew();
+        _timeProvider = receiveEndpointContext.GetTimeProvider();
+        _receiveStartedAt = _timeProvider.GetTimestamp();
 
         _cancellationTokenSource = new CancellationTokenSource();
         _receiveEndpointContext = receiveEndpointContext;
@@ -60,7 +61,7 @@ public abstract class BaseReceiveContext :
     public ISendEndpointProvider SendEndpointProvider => _sendEndpointProvider.Value;
     public IPublishEndpointProvider PublishEndpointProvider => _publishEndpointProvider.Value;
 
-    public Task ReceiveCompleted => _receiveTasks.Completed(CancellationToken);
+    public Task ReceiveCompleted => _receiveTasks.CompletedAsync(CancellationToken);
 
     public void AddReceiveTask(Task task)
     {
@@ -70,20 +71,20 @@ public abstract class BaseReceiveContext :
     public bool Redelivered { get; }
     public Headers TransportHeaders => _headers.Value;
 
-    public virtual Task NotifyConsumed<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
+    public virtual Task NotifyConsumedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
         where T : class
     {
-        IsDelivered = true;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); IsDelivered = true;
 
         context.LogConsumed(duration, consumerType);
 
-        return _receiveEndpointContext.ReceiveObservers.PostConsume(context, duration, consumerType);
+        return _receiveEndpointContext.ReceiveObservers.PostConsumeAsync(context, duration, consumerType);
     }
 
-    public virtual Task NotifyFaulted<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
+    public virtual Task NotifyFaultedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
         where T : class
     {
-        IsFaulted = true;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); IsFaulted = true;
 
         switch (exception)
         {
@@ -98,19 +99,19 @@ public abstract class BaseReceiveContext :
 
         GetOrAddPayload<ConsumerFaultContext>(() => new FaultContext(TypeCache<T>.ShortName, consumerType));
 
-        return _receiveEndpointContext.ReceiveObservers.ConsumeFault(context, duration, consumerType, exception);
+        return _receiveEndpointContext.ReceiveObservers.ConsumeFaultAsync(context, duration, consumerType, exception);
     }
 
-    public virtual Task NotifyFaulted(Exception exception)
+    public virtual Task NotifyFaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {
-        IsFaulted = true;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); IsFaulted = true;
 
         this.LogFaulted(exception);
 
-        return _receiveEndpointContext.ReceiveObservers.ReceiveFault(this, exception);
+        return _receiveEndpointContext.ReceiveObservers.ReceiveFaultAsync(this, exception);
     }
 
-    public TimeSpan ElapsedTime => _receiveTimer.Elapsed;
+    public TimeSpan ElapsedTime => _timeProvider.GetElapsedTime(_receiveStartedAt);
     public Uri InputAddress { get; protected set; }
     public ContentType ContentType => _contentType.Value;
 
@@ -131,11 +132,11 @@ public abstract class BaseReceiveContext :
             if (contentTypeHeader is ContentType contentType)
                 return contentType;
 
-            if (contentTypeHeader is string contentTypeString)
-                return ConvertToContentType(contentTypeString);
+            if (contentTypeHeader is string contentTypeString && ConvertToContentType(contentTypeString) is { } parsedContentType)
+                return parsedContentType;
         }
 
-        return default;
+        return _receiveEndpointContext.Serialization.DefaultContentType;
     }
 
     public void Cancel()
@@ -143,7 +144,7 @@ public abstract class BaseReceiveContext :
         _cancellationTokenSource.Cancel();
     }
 
-    protected static ContentType ConvertToContentType(string text)
+    protected static ContentType? ConvertToContentType(string text)
     {
         try
         {

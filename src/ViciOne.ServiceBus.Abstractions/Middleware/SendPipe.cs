@@ -29,17 +29,17 @@ public class SendPipe :
 
     [DebuggerNonUserCode]
     [DebuggerStepThrough]
-    public Task Send<T>(SendContext<T> context)
+    public Task SendAsync<T>(SendContext<T> context, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _outputPipes.GetOrAdd(typeof(T), x => new MessagePipe<T>(_specification.GetMessageSpecification<T>())).Send(context);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return _outputPipes.GetOrAdd(typeof(T), x => new MessagePipe<T>(_specification.GetMessageSpecification<T>())).SendAsync(context);
     }
 
 
     interface IMessagePipe :
         IProbeSite
     {
-        Task Send<T>(SendContext<T> context)
+        Task SendAsync<T>(SendContext<T> context)
             where T : class;
     }
 
@@ -58,10 +58,10 @@ public class SendPipe :
             _output = new Lazy<IMessageSendPipe<TMessage>>(CreateMessagePipe);
         }
 
-        public Task Send<T>(SendContext<T> context)
+        public Task SendAsync<T>(SendContext<T> context)
             where T : class
         {
-            return _output.Value.Send((SendContext<TMessage>)context);
+            return _output.Value.SendAsync((SendContext<TMessage>)context);
         }
 
         public void Probe(ProbeContext context)

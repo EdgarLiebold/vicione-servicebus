@@ -15,5 +15,6 @@ public interface IJobDistributionStrategy
     /// <param name="context"></param>
     /// <param name="jobTypeInfo"></param>
     /// <returns>An <see cref="ActiveJob"/> if the job can be assigned to a job consumer instance, or null</returns>
-    Task<ActiveJob?> IsJobSlotAvailable(ConsumeContext<AllocateJobSlot> context, JobTypeInfo jobTypeInfo);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<ActiveJob?> IsJobSlotAvailableAsync(ConsumeContext<AllocateJobSlot> context, JobTypeInfo jobTypeInfo, CancellationToken cancellationToken = default);
 }

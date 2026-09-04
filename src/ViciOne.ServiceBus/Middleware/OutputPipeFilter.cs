@@ -37,15 +37,15 @@ public class OutputPipeFilter<TInput, TOutput> :
         _output.Probe(scope);
     }
 
-    Task IFilter<TInput>.Send(TInput context, IPipe<TInput> next)
+    Task IFilter<TInput>.SendAsync(TInput context, IPipe<TInput> next)
     {
         if (!_contextConverter.TryConvert(context, out var pipeContext))
-            return next.Send(context);
+            return next.SendAsync(context);
 
         if (pipeContext == null)
             throw new InvalidOperationException($"The context converter returned success with a null {TypeCache<TOutput>.ShortName} context.");
 
-        return SendToOutput(next, pipeContext);
+        return SendToOutputAsync(next, pipeContext);
     }
 
     ConnectHandle IFilterObserverConnector<TOutput>.ConnectObserver(IFilterObserver<TOutput> observer)
@@ -58,36 +58,36 @@ public class OutputPipeFilter<TInput, TOutput> :
         return _output.ConnectPipe(pipe);
     }
 
-    async Task SendToOutput(IPipe<TInput> next, TOutput pipeContext)
+    async Task SendToOutputAsync(IPipe<TInput> next, TOutput pipeContext)
     {
         if (_observers.Count > 0)
         {
-            var preSendTask = _observers.PreSend(pipeContext);
+            var preSendTask = _observers.PreSendAsync(pipeContext);
             if (preSendTask.Status != TaskStatus.RanToCompletion)
                 await preSendTask.ConfigureAwait(false);
         }
 
         if (_outerObservers.Count > 0)
         {
-            var preSendTask = _outerObservers.PreSend(pipeContext);
+            var preSendTask = _outerObservers.PreSendAsync(pipeContext);
             if (preSendTask.Status != TaskStatus.RanToCompletion)
                 await preSendTask.ConfigureAwait(false);
         }
 
         try
         {
-            await _output.Send(pipeContext, next).ConfigureAwait(false);
+            await _output.SendAsync(pipeContext, next).ConfigureAwait(false);
 
             if (_observers.Count > 0)
             {
-                var postSendTask = _observers.PostSend(pipeContext);
+                var postSendTask = _observers.PostSendAsync(pipeContext);
                 if (postSendTask.Status != TaskStatus.RanToCompletion)
                     await postSendTask.ConfigureAwait(false);
             }
 
             if (_outerObservers.Count > 0)
             {
-                var postSendTask = _outerObservers.PostSend(pipeContext);
+                var postSendTask = _outerObservers.PostSendAsync(pipeContext);
                 if (postSendTask.Status != TaskStatus.RanToCompletion)
                     await postSendTask.ConfigureAwait(false);
             }
@@ -96,14 +96,14 @@ public class OutputPipeFilter<TInput, TOutput> :
         {
             if (_observers.Count > 0)
             {
-                var sendFaultTask = _observers.SendFault(pipeContext, ex);
+                var sendFaultTask = _observers.SendFaultAsync(pipeContext, ex);
                 if (sendFaultTask.Status != TaskStatus.RanToCompletion)
                     await sendFaultTask.ConfigureAwait(false);
             }
 
             if (_outerObservers.Count > 0)
             {
-                var sendFaultTask = _outerObservers.SendFault(pipeContext, ex);
+                var sendFaultTask = _outerObservers.SendFaultAsync(pipeContext, ex);
                 if (sendFaultTask.Status != TaskStatus.RanToCompletion)
                     await sendFaultTask.ConfigureAwait(false);
             }
@@ -119,6 +119,7 @@ public class OutputPipeFilter<TInput, TOutput, TKey> :
     IOutputPipeFilter<TInput, TOutput, TKey>
     where TInput : class, PipeContext
     where TOutput : class, PipeContext, TInput
+    where TKey : notnull
 {
     readonly ITeeFilter<TOutput, TKey> _outputFilter;
 

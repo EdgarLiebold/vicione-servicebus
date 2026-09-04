@@ -2,7 +2,7 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Testing;
 
 internal static class QuartzJobServiceTestBus
 {
-    public static Task<QuartzTestBus> Start<TJob, TConsumer>(
+    public static Task<QuartzTestBus> StartAsync<TJob, TConsumer>(
         TimeSpan timeout,
         TConsumer consumer,
         Action<JobOptions<TJob>> configureJob,
@@ -12,7 +12,7 @@ internal static class QuartzJobServiceTestBus
         where TJob : class
         where TConsumer : class, IJobConsumer<TJob>
     {
-        return QuartzTestBus.Start(timeout, configure: configurator =>
+        return QuartzTestBus.StartAsync(timeout, configure: configurator =>
         {
             configureAdditionalEndpoints?.Invoke(configurator);
 

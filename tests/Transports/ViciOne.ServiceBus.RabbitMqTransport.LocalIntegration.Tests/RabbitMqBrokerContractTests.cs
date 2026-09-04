@@ -10,7 +10,7 @@ public sealed class RabbitMqBrokerContractTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-BROKER", "exclusive-queue-refusal-is-peer-405-and-recoverable")]
-    public async Task ExclusiveQueue_RefusesOnlyTheContenderWithPeer405ThenTransfersOwnership()
+    public async Task ExclusiveQueue_RefusesOnlyTheContenderWithPeer405ThenTransfersOwnershipAsync()
     {
         using RabbitMqBroker fixture = RabbitMqBroker.Create("exclusive");
         string queue = fixture.Name("owned");
@@ -53,7 +53,7 @@ public sealed class RabbitMqBrokerContractTests
         await holderChannel.CloseAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
         await holder.CloseAsync(200, "exclusive-owner-complete", cancellationToken)
             .WaitAsync(fixture.OperationTimeout, cancellationToken);
-        await fixture.WaitUntilQueueIsReleased(queue, cancellationToken);
+        await fixture.WaitUntilQueueIsReleasedAsync(queue, cancellationToken);
         await using IChannel successor = await contender.CreateChannelAsync(cancellationToken: cancellationToken)
             .WaitAsync(fixture.OperationTimeout, cancellationToken);
         QueueDeclareOk acquired = await successor.QueueDeclareAsync(

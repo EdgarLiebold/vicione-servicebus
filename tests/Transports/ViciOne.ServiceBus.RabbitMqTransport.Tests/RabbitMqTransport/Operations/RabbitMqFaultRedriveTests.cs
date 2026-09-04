@@ -71,7 +71,7 @@ public sealed class RabbitMqFaultRedriveTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-FAULT-REDRIVE", "bounded-scan-and-redrive")]
-    public async Task Loop_SkipsNonmatchesAndStopsExactlyAtTheRedriveLimit()
+    public async Task Loop_SkipsNonmatchesAndStopsExactlyAtTheRedriveLimitAsync()
     {
         Guid expected = Guid.Parse("23413ed8-f70b-4aca-bd41-939cc7b02752");
         var channel = new RecordingChannel(
@@ -87,7 +87,7 @@ public sealed class RabbitMqFaultRedriveTests
             MessageId = expected,
         };
 
-        RabbitMqFaultRedriveResult result = await RabbitMqFaultRedriveLoop.Execute(
+        RabbitMqFaultRedriveResult result = await RabbitMqFaultRedriveLoop.ExecuteAsync(
             channel,
             request,
             "orders_error",
@@ -104,7 +104,7 @@ public sealed class RabbitMqFaultRedriveTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-FAULT-REDRIVE", "scan-limit-and-unmatched-retention")]
-    public async Task Loop_ReportsTheScanLimitWithoutAcknowledgingUnmatchedMessages()
+    public async Task Loop_ReportsTheScanLimitWithoutAcknowledgingUnmatchedMessagesAsync()
     {
         Guid expected = Guid.Parse("25d7db48-d7d8-43a8-b5e4-3d5eb663867d");
         var channel = new RecordingChannel(
@@ -119,7 +119,7 @@ public sealed class RabbitMqFaultRedriveTests
             MessageId = expected,
         };
 
-        RabbitMqFaultRedriveResult result = await RabbitMqFaultRedriveLoop.Execute(
+        RabbitMqFaultRedriveResult result = await RabbitMqFaultRedriveLoop.ExecuteAsync(
             channel,
             request,
             "orders_error",
@@ -135,7 +135,7 @@ public sealed class RabbitMqFaultRedriveTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-FAULT-REDRIVE", "source-exhaustion-result")]
-    public async Task Loop_ReportsSourceExhaustionAfterTheLastAvailableMessage()
+    public async Task Loop_ReportsSourceExhaustionAfterTheLastAvailableMessageAsync()
     {
         var channel = new RecordingChannel(Delivery(7));
         var request = new RabbitMqFaultRedriveRequest("orders")
@@ -144,7 +144,7 @@ public sealed class RabbitMqFaultRedriveTests
             MaxScanCount = 2,
         };
 
-        RabbitMqFaultRedriveResult result = await RabbitMqFaultRedriveLoop.Execute(
+        RabbitMqFaultRedriveResult result = await RabbitMqFaultRedriveLoop.ExecuteAsync(
             channel,
             request,
             "orders_error",
@@ -158,7 +158,7 @@ public sealed class RabbitMqFaultRedriveTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-FAULT-REDRIVE", "confirm-before-source-ack")]
-    public async Task Loop_AcknowledgesOnlyAfterTheTargetPublishCompletes()
+    public async Task Loop_AcknowledgesOnlyAfterTheTargetPublishCompletesAsync()
     {
         var channel = new RecordingChannel(Delivery(9));
         var request = new RabbitMqFaultRedriveRequest("orders")
@@ -167,7 +167,7 @@ public sealed class RabbitMqFaultRedriveTests
             MaxScanCount = 1,
         };
 
-        await RabbitMqFaultRedriveLoop.Execute(
+        await RabbitMqFaultRedriveLoop.ExecuteAsync(
             channel,
             request,
             "orders_error",
@@ -178,7 +178,7 @@ public sealed class RabbitMqFaultRedriveTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-FAULT-REDRIVE", "publish-failure-retains-source")]
-    public async Task PublishFailure_PropagatesWithoutAcknowledgingTheSource()
+    public async Task PublishFailure_PropagatesWithoutAcknowledgingTheSourceAsync()
     {
         var expected = new IOException("mandatory publish rejected");
         var channel = new RecordingChannel(Delivery(11)) { PublishFailure = expected };
@@ -188,7 +188,7 @@ public sealed class RabbitMqFaultRedriveTests
             MaxScanCount = 1,
         };
 
-        IOException actual = await Assert.ThrowsAsync<IOException>(() => RabbitMqFaultRedriveLoop.Execute(
+        IOException actual = await Assert.ThrowsAsync<IOException>(() => RabbitMqFaultRedriveLoop.ExecuteAsync(
             channel,
             request,
             "orders_error",
@@ -201,7 +201,7 @@ public sealed class RabbitMqFaultRedriveTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-FAULT-REDRIVE", "post-confirm-ack-failure-is-at-least-once")]
-    public async Task AckFailure_PropagatesAfterConfirmationAndLeavesTheAtLeastOnceWindowVisible()
+    public async Task AckFailure_PropagatesAfterConfirmationAndLeavesTheAtLeastOnceWindowVisibleAsync()
     {
         var expected = new IOException("connection lost before source ack");
         var channel = new RecordingChannel(Delivery(13)) { AcknowledgeFailure = expected };
@@ -211,7 +211,7 @@ public sealed class RabbitMqFaultRedriveTests
             MaxScanCount = 1,
         };
 
-        IOException actual = await Assert.ThrowsAsync<IOException>(() => RabbitMqFaultRedriveLoop.Execute(
+        IOException actual = await Assert.ThrowsAsync<IOException>(() => RabbitMqFaultRedriveLoop.ExecuteAsync(
             channel,
             request,
             "orders_error",
@@ -277,7 +277,7 @@ public sealed class RabbitMqFaultRedriveTests
         public List<ulong> Acknowledged { get; } = [];
         public List<string> Operations { get; } = [];
 
-        public Task<RabbitMqFaultRedriveDelivery?> Get(string queueName, CancellationToken cancellationToken)
+        public Task<RabbitMqFaultRedriveDelivery?> GetAsync(string queueName, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             Assert.Equal("orders_error", queueName);
@@ -285,7 +285,7 @@ public sealed class RabbitMqFaultRedriveTests
             return Task.FromResult(_deliveries.TryDequeue(out RabbitMqFaultRedriveDelivery? delivery) ? delivery : null);
         }
 
-        public Task Publish(
+        public Task PublishAsync(
             string exchangeName,
             string routingKey,
             BasicProperties properties,
@@ -303,7 +303,7 @@ public sealed class RabbitMqFaultRedriveTests
             return Task.CompletedTask;
         }
 
-        public Task Acknowledge(ulong deliveryTag, CancellationToken cancellationToken)
+        public Task AcknowledgeAsync(ulong deliveryTag, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             Operations.Add($"ack:{deliveryTag}");

@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
 public static class TimeSpanSchedulePublishExtensions
 {
@@ -15,13 +15,13 @@ public static class TimeSpanSchedulePublishExtensions
     /// <param name="delay">The time at which the message should be delivered to the queue</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> SchedulePublish<T>(this IMessageScheduler scheduler, TimeSpan delay, T message,
+    public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, TimeSpan delay, T message,
         CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.SchedulePublish(scheduledTime, message, cancellationToken);
+        return scheduler.Advanced().SchedulePublishAsync(dueAt, message, cancellationToken);
     }
 
     /// <summary>
@@ -34,13 +34,13 @@ public static class TimeSpanSchedulePublishExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> SchedulePublish<T>(this IMessageScheduler scheduler, TimeSpan delay, T message,
+    public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, TimeSpan delay, T message,
         IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.SchedulePublish(scheduledTime, message, pipe, cancellationToken);
+        return scheduler.Advanced().SchedulePublishAsync(dueAt, message, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -53,13 +53,13 @@ public static class TimeSpanSchedulePublishExtensions
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> SchedulePublish<T>(this IMessageScheduler scheduler, TimeSpan delay, T message,
+    public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, TimeSpan delay, T message,
         Action<SendContext<T>> callback, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.SchedulePublish(scheduledTime, message, callback.ToPipe(), cancellationToken);
+        return scheduler.Advanced().SchedulePublishAsync(dueAt, message, callback.ToPipe(), cancellationToken);
     }
 
     /// <summary>
@@ -72,13 +72,13 @@ public static class TimeSpanSchedulePublishExtensions
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> SchedulePublish<T>(this IMessageScheduler scheduler, TimeSpan delay, T message,
+    public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, TimeSpan delay, T message,
         Func<SendContext<T>, Task> callback, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.SchedulePublish(scheduledTime, message, callback.ToPipe(), cancellationToken);
+        return scheduler.Advanced().SchedulePublishAsync(dueAt, message, callback.ToPipe(), cancellationToken);
     }
 
     /// <summary>
@@ -91,13 +91,13 @@ public static class TimeSpanSchedulePublishExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> SchedulePublish<T>(this IMessageScheduler scheduler, TimeSpan delay, T message,
+    public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, TimeSpan delay, T message,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.SchedulePublish(scheduledTime, message, pipe, cancellationToken);
+        return scheduler.Advanced().SchedulePublishAsync(dueAt, message, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -110,13 +110,13 @@ public static class TimeSpanSchedulePublishExtensions
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> SchedulePublish<T>(this IMessageScheduler scheduler, TimeSpan delay, T message,
+    public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, TimeSpan delay, T message,
         Action<SendContext> callback, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.SchedulePublish(scheduledTime, message, callback.ToPipe(), cancellationToken);
+        return scheduler.Advanced().SchedulePublishAsync(dueAt, message, callback.ToPipe(), cancellationToken);
     }
 
     /// <summary>
@@ -129,13 +129,13 @@ public static class TimeSpanSchedulePublishExtensions
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> SchedulePublish<T>(this IMessageScheduler scheduler, TimeSpan delay, T message,
+    public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, TimeSpan delay, T message,
         Func<SendContext, Task> callback, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.SchedulePublish(scheduledTime, message, callback.ToPipe(), cancellationToken);
+        return scheduler.Advanced().SchedulePublishAsync(dueAt, message, callback.ToPipe(), cancellationToken);
     }
 
     /// <summary>
@@ -146,12 +146,12 @@ public static class TimeSpanSchedulePublishExtensions
     /// <param name="delay">The time at which the message should be delivered to the queue</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> SchedulePublish(this IMessageScheduler scheduler, TimeSpan delay, object message,
+    public static Task<ScheduledMessage> SchedulePublishAsync(this IMessageScheduler scheduler, TimeSpan delay, object message,
         CancellationToken cancellationToken = default)
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.SchedulePublish(scheduledTime, message, cancellationToken);
+        return scheduler.Advanced().SchedulePublishAsync(dueAt, message, cancellationToken);
     }
 
     /// <summary>
@@ -164,12 +164,12 @@ public static class TimeSpanSchedulePublishExtensions
     /// <param name="delay">The time at which the message should be delivered to the queue</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> SchedulePublish(this IMessageScheduler scheduler, TimeSpan delay, object message,
+    public static Task<ScheduledMessage> SchedulePublishAsync(this IMessageScheduler scheduler, TimeSpan delay, object message,
         Type messageType, CancellationToken cancellationToken = default)
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.SchedulePublish(scheduledTime, message, messageType, cancellationToken);
+        return scheduler.Advanced().SchedulePublishAsync(dueAt, message, messageType, cancellationToken);
     }
 
     /// <summary>
@@ -181,12 +181,12 @@ public static class TimeSpanSchedulePublishExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> SchedulePublish(this IMessageScheduler scheduler, TimeSpan delay, object message,
+    public static Task<ScheduledMessage> SchedulePublishAsync(this IMessageScheduler scheduler, TimeSpan delay, object message,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.SchedulePublish(scheduledTime, message, pipe, cancellationToken);
+        return scheduler.Advanced().SchedulePublishAsync(dueAt, message, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -198,12 +198,12 @@ public static class TimeSpanSchedulePublishExtensions
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> SchedulePublish(this IMessageScheduler scheduler, TimeSpan delay, object message,
+    public static Task<ScheduledMessage> SchedulePublishAsync(this IMessageScheduler scheduler, TimeSpan delay, object message,
         Action<SendContext> callback, CancellationToken cancellationToken = default)
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.SchedulePublish(scheduledTime, message, callback.ToPipe(), cancellationToken);
+        return scheduler.Advanced().SchedulePublishAsync(dueAt, message, callback.ToPipe(), cancellationToken);
     }
 
     /// <summary>
@@ -215,12 +215,12 @@ public static class TimeSpanSchedulePublishExtensions
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> SchedulePublish(this IMessageScheduler scheduler, TimeSpan delay, object message,
+    public static Task<ScheduledMessage> SchedulePublishAsync(this IMessageScheduler scheduler, TimeSpan delay, object message,
         Func<SendContext, Task> callback, CancellationToken cancellationToken = default)
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.SchedulePublish(scheduledTime, message, callback.ToPipe(), cancellationToken);
+        return scheduler.Advanced().SchedulePublishAsync(dueAt, message, callback.ToPipe(), cancellationToken);
     }
 
     /// <summary>
@@ -234,12 +234,12 @@ public static class TimeSpanSchedulePublishExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> SchedulePublish(this IMessageScheduler scheduler, TimeSpan delay, object message,
+    public static Task<ScheduledMessage> SchedulePublishAsync(this IMessageScheduler scheduler, TimeSpan delay, object message,
         Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.SchedulePublish(scheduledTime, message, messageType, pipe, cancellationToken);
+        return scheduler.Advanced().SchedulePublishAsync(dueAt, message, messageType, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -253,12 +253,12 @@ public static class TimeSpanSchedulePublishExtensions
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> SchedulePublish(this IMessageScheduler scheduler, TimeSpan delay, object message,
+    public static Task<ScheduledMessage> SchedulePublishAsync(this IMessageScheduler scheduler, TimeSpan delay, object message,
         Type messageType, Action<SendContext> callback, CancellationToken cancellationToken = default)
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.SchedulePublish(scheduledTime, message, messageType, callback.ToPipe(), cancellationToken);
+        return scheduler.Advanced().SchedulePublishAsync(dueAt, message, messageType, callback.ToPipe(), cancellationToken);
     }
 
     /// <summary>
@@ -272,12 +272,12 @@ public static class TimeSpanSchedulePublishExtensions
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> SchedulePublish(this IMessageScheduler scheduler, TimeSpan delay, object message,
+    public static Task<ScheduledMessage> SchedulePublishAsync(this IMessageScheduler scheduler, TimeSpan delay, object message,
         Type messageType, Func<SendContext, Task> callback, CancellationToken cancellationToken = default)
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.SchedulePublish(scheduledTime, message, messageType, callback.ToPipe(), cancellationToken);
+        return scheduler.Advanced().SchedulePublishAsync(dueAt, message, messageType, callback.ToPipe(), cancellationToken);
     }
 
     /// <summary>
@@ -290,13 +290,13 @@ public static class TimeSpanSchedulePublishExtensions
     /// <param name="delay">The time at which the message should be delivered to the queue</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> SchedulePublish<T>(this IMessageScheduler scheduler, TimeSpan delay, object values,
+    public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, TimeSpan delay, object values,
         CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.SchedulePublish<T>(scheduledTime, values, cancellationToken);
+        return scheduler.Advanced().SchedulePublishAsync<T>(dueAt, values, cancellationToken);
     }
 
     /// <summary>
@@ -310,13 +310,13 @@ public static class TimeSpanSchedulePublishExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> SchedulePublish<T>(this IMessageScheduler scheduler, TimeSpan delay, object values,
+    public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, TimeSpan delay, object values,
         IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.SchedulePublish(scheduledTime, values, pipe, cancellationToken);
+        return scheduler.Advanced().SchedulePublishAsync(dueAt, values, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -330,13 +330,13 @@ public static class TimeSpanSchedulePublishExtensions
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> SchedulePublish<T>(this IMessageScheduler scheduler, TimeSpan delay, object values,
+    public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, TimeSpan delay, object values,
         Action<SendContext<T>> callback, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.SchedulePublish(scheduledTime, values, callback.ToPipe(), cancellationToken);
+        return scheduler.Advanced().SchedulePublishAsync(dueAt, values, callback.ToPipe(), cancellationToken);
     }
 
     /// <summary>
@@ -350,13 +350,13 @@ public static class TimeSpanSchedulePublishExtensions
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> SchedulePublish<T>(this IMessageScheduler scheduler, TimeSpan delay, object values,
+    public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, TimeSpan delay, object values,
         Func<SendContext<T>, Task> callback, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.SchedulePublish(scheduledTime, values, callback.ToPipe(), cancellationToken);
+        return scheduler.Advanced().SchedulePublishAsync(dueAt, values, callback.ToPipe(), cancellationToken);
     }
 
     /// <summary>
@@ -370,13 +370,13 @@ public static class TimeSpanSchedulePublishExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> SchedulePublish<T>(this IMessageScheduler scheduler, TimeSpan delay, object values,
+    public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, TimeSpan delay, object values,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.SchedulePublish<T>(scheduledTime, values, pipe, cancellationToken);
+        return scheduler.Advanced().SchedulePublishAsync<T>(dueAt, values, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -390,13 +390,13 @@ public static class TimeSpanSchedulePublishExtensions
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> SchedulePublish<T>(this IMessageScheduler scheduler, TimeSpan delay, object values,
+    public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, TimeSpan delay, object values,
         Action<SendContext> callback, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.SchedulePublish<T>(scheduledTime, values, callback.ToPipe(), cancellationToken);
+        return scheduler.Advanced().SchedulePublishAsync<T>(dueAt, values, callback.ToPipe(), cancellationToken);
     }
 
     /// <summary>
@@ -410,12 +410,12 @@ public static class TimeSpanSchedulePublishExtensions
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> SchedulePublish<T>(this IMessageScheduler scheduler, TimeSpan delay, object values,
+    public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, TimeSpan delay, object values,
         Func<SendContext, Task> callback, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = scheduler.TimeProvider.GetUtcNow().UtcDateTime + delay;
+        var dueAt = scheduler.Advanced().TimeProvider.GetUtcNow() + delay;
 
-        return scheduler.SchedulePublish<T>(scheduledTime, values, callback.ToPipe(), cancellationToken);
+        return scheduler.Advanced().SchedulePublishAsync<T>(dueAt, values, callback.ToPipe(), cancellationToken);
     }
 }

@@ -10,14 +10,14 @@ public sealed class BatchFutureIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-BATCH-FUTURE", "all-success-results-preserve-input-order")]
-    public async Task AllSuccessfulJobs_CompleteWithEveryProcessedJobInInputOrder()
+    public async Task AllSuccessfulJobs_CompleteWithEveryProcessedJobInInputOrderAsync()
     {
-        await using BatchFutureFixture fixture = await BatchFutureFixture.Start();
+        await using BatchFutureFixture fixture = await BatchFutureFixture.StartAsync();
         string[] jobs = ["C12345", "C54321"];
 
-        Response<BatchCompleted> response = await fixture.Client.GetResponse<BatchCompleted>(
+        Response<BatchCompleted> response = await fixture.Client.Advanced().GetResponseAsync<BatchCompleted>(
             new BatchRequestMessage(NewId.NextGuid(), null, jobs),
-            fixture.CancellationToken).WaitAsync(fixture.Timeout, fixture.CancellationToken);
+            cancellationToken: fixture.CancellationToken).WaitAsync(fixture.Timeout, fixture.CancellationToken);
 
         Assert.Equal(jobs, response.Message.ProcessedJobsNumbers);
         Assert.Single(fixture.Harness.Sent.Select<BatchCompleted>(SnapshotOnlyToken()));
@@ -26,14 +26,14 @@ public sealed class BatchFutureIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-BATCH-FUTURE", "partial-failure-reports-only-successful-jobs")]
-    public async Task PartiallyFaultedBatch_ReturnsOnlyTheSuccessfulJobNumbersExactlyOnce()
+    public async Task PartiallyFaultedBatch_ReturnsOnlyTheSuccessfulJobNumbersExactlyOnceAsync()
     {
-        await using BatchFutureFixture fixture = await BatchFutureFixture.Start();
+        await using BatchFutureFixture fixture = await BatchFutureFixture.StartAsync();
         string[] jobs = ["C12345", "Error", "C54321", "Error", "C33454"];
 
-        Response<BatchCompleted, BatchFaulted> response = await fixture.Client.GetResponse<BatchCompleted, BatchFaulted>(
+        Response<BatchCompleted, BatchFaulted> response = await fixture.Client.Advanced().GetResponseAsync<BatchCompleted, BatchFaulted>(
             new BatchRequestMessage(NewId.NextGuid(), null, jobs),
-            fixture.CancellationToken).WaitAsync(fixture.Timeout, fixture.CancellationToken);
+            cancellationToken: fixture.CancellationToken).WaitAsync(fixture.Timeout, fixture.CancellationToken);
 
         Assert.True(response.Is(out Response<BatchFaulted>? faulted));
         Assert.NotNull(faulted);
@@ -44,14 +44,14 @@ public sealed class BatchFutureIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-BATCH-FUTURE", "held-job-prevents-terminal-response-until-release")]
-    public async Task HeldJob_CompletesOnlyAfterTheTestOwnedReleaseAndPreservesResultOrder()
+    public async Task HeldJob_CompletesOnlyAfterTheTestOwnedReleaseAndPreservesResultOrderAsync()
     {
         var observation = new BatchWorkObservation();
-        await using BatchFutureFixture fixture = await BatchFutureFixture.Start(observation);
+        await using BatchFutureFixture fixture = await BatchFutureFixture.StartAsync(observation);
         string[] jobs = ["C12345", "Delay"];
-        Task<Response<BatchCompleted>> pending = fixture.Client.GetResponse<BatchCompleted>(
+        Task<Response<BatchCompleted>> pending = fixture.Client.Advanced().GetResponseAsync<BatchCompleted>(
             new BatchRequestMessage(NewId.NextGuid(), null, jobs),
-            fixture.CancellationToken);
+            cancellationToken: fixture.CancellationToken);
 
         await observation.DelayedEntered.Task.WaitAsync(fixture.Timeout, fixture.CancellationToken);
         Assert.False(pending.IsCompleted);
@@ -65,20 +65,20 @@ public sealed class BatchFutureIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-BATCH-FUTURE", "completed-result-is-durable-without-reexecuting-fanout")]
-    public async Task CompletedFuture_ReplaysTheDurableResultWithoutRepeatingAnyChildRequest()
+    public async Task CompletedFuture_ReplaysTheDurableResultWithoutRepeatingAnyChildRequestAsync()
     {
         var observation = new BatchWorkObservation();
-        await using BatchFutureFixture fixture = await BatchFutureFixture.Start(observation);
+        await using BatchFutureFixture fixture = await BatchFutureFixture.StartAsync(observation);
         Guid correlationId = NewId.NextGuid();
         string[] jobs = ["First", "Second", "Third"];
         var command = new BatchRequestMessage(correlationId, null, jobs);
 
-        Response<BatchCompleted> first = await fixture.Client.GetResponse<BatchCompleted>(
+        Response<BatchCompleted> first = await fixture.Client.Advanced().GetResponseAsync<BatchCompleted>(
             command,
-            fixture.CancellationToken).WaitAsync(fixture.Timeout, fixture.CancellationToken);
-        Response<BatchCompleted> replay = await fixture.Client.GetResponse<BatchCompleted>(
+            cancellationToken: fixture.CancellationToken).WaitAsync(fixture.Timeout, fixture.CancellationToken);
+        Response<BatchCompleted> replay = await fixture.Client.Advanced().GetResponseAsync<BatchCompleted>(
             command,
-            fixture.CancellationToken).WaitAsync(fixture.Timeout, fixture.CancellationToken);
+            cancellationToken: fixture.CancellationToken).WaitAsync(fixture.Timeout, fixture.CancellationToken);
 
         Assert.Equal(jobs, first.Message.ProcessedJobsNumbers);
         Assert.Equal(jobs, replay.Message.ProcessedJobsNumbers);
@@ -89,20 +89,20 @@ public sealed class BatchFutureIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-BATCH-FUTURE", "faulted-result-is-durable-without-reexecuting-fanout")]
-    public async Task FaultedFuture_ReplaysTheDurableFaultWithoutRepeatingAnyChildRequest()
+    public async Task FaultedFuture_ReplaysTheDurableFaultWithoutRepeatingAnyChildRequestAsync()
     {
         var observation = new BatchWorkObservation();
-        await using BatchFutureFixture fixture = await BatchFutureFixture.Start(observation);
+        await using BatchFutureFixture fixture = await BatchFutureFixture.StartAsync(observation);
         Guid correlationId = NewId.NextGuid();
         string[] jobs = ["First", "Error", "Third"];
         var command = new BatchRequestMessage(correlationId, null, jobs);
 
-        Response<BatchCompleted, BatchFaulted> first = await fixture.Client.GetResponse<BatchCompleted, BatchFaulted>(
+        Response<BatchCompleted, BatchFaulted> first = await fixture.Client.Advanced().GetResponseAsync<BatchCompleted, BatchFaulted>(
             command,
-            fixture.CancellationToken).WaitAsync(fixture.Timeout, fixture.CancellationToken);
-        Response<BatchCompleted, BatchFaulted> replay = await fixture.Client.GetResponse<BatchCompleted, BatchFaulted>(
+            cancellationToken: fixture.CancellationToken).WaitAsync(fixture.Timeout, fixture.CancellationToken);
+        Response<BatchCompleted, BatchFaulted> replay = await fixture.Client.Advanced().GetResponseAsync<BatchCompleted, BatchFaulted>(
             command,
-            fixture.CancellationToken).WaitAsync(fixture.Timeout, fixture.CancellationToken);
+            cancellationToken: fixture.CancellationToken).WaitAsync(fixture.Timeout, fixture.CancellationToken);
 
         Assert.True(first.Is(out Response<BatchFaulted>? firstFault));
         Assert.True(replay.Is(out Response<BatchFaulted>? replayFault));
@@ -176,7 +176,8 @@ public sealed class BatchFutureIntegrationTests
 
         private static object MapResponse(BehaviorContext<FutureState> context)
         {
-            BatchRequest command = context.GetCommand<BatchRequest>();
+            BatchRequest command = context.GetCommand<BatchRequest>()
+                ?? throw new Xunit.Sdk.XunitException("Expected the future batch command to be available.");
             HashSet<string> processed = context.SelectResults<ProcessBatchItemCompleted>()
                 .Select(result => result.JobNumber)
                 .ToHashSet(StringComparer.Ordinal);
@@ -216,7 +217,7 @@ public sealed class BatchFutureIntegrationTests
 
     public sealed class ProcessBatchItemConsumer(BatchWorkObservation observation) : IConsumer<ProcessBatchItem>
     {
-        public async Task Consume(ConsumeContext<ProcessBatchItem> context)
+        public async Task ConsumeAsync(ConsumeContext<ProcessBatchItem> context)
         {
             observation.Record(context.Message.JobNumber);
             if (context.Message.JobNumber == "Error")
@@ -227,7 +228,7 @@ public sealed class BatchFutureIntegrationTests
                 await observation.ReleaseDelayed.Task.WaitAsync(context.CancellationToken);
             }
 
-            await context.RespondAsync<ProcessBatchItemCompleted>(new
+            await context.Advanced().RespondAsync<ProcessBatchItemCompleted>(new
             {
                 context.Message.CorrelationId,
                 context.Message.JobNumber,
@@ -260,7 +261,7 @@ public sealed class BatchFutureIntegrationTests
 
         public TimeSpan Timeout { get; }
 
-        public static async Task<BatchFutureFixture> Start(BatchWorkObservation? observation = null)
+        public static async Task<BatchFutureFixture> StartAsync(BatchWorkObservation? observation = null)
         {
             TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
                 .GetValidatedOptions().OperationTimeout!.Value;
@@ -276,7 +277,7 @@ public sealed class BatchFutureIntegrationTests
                 .BuildServiceProvider(validateScopes: true);
             try
             {
-                ITestHarness harness = await provider.StartTestHarness()
+                ITestHarness harness = await provider.StartTestHarnessAsync()
                     .WaitAsync(timeout, TestContext.Current.CancellationToken);
                 return new BatchFutureFixture(provider, harness, timeout);
             }
@@ -291,7 +292,7 @@ public sealed class BatchFutureIntegrationTests
         {
             try
             {
-                await Harness.Stop(CancellationToken.None).WaitAsync(Timeout, CancellationToken.None);
+                await Harness.StopAsync(CancellationToken.None).WaitAsync(Timeout, CancellationToken.None);
             }
             finally
             {

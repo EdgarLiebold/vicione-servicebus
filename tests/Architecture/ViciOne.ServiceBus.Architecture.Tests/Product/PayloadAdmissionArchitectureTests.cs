@@ -15,8 +15,8 @@ public sealed class PayloadAdmissionArchitectureTests
         Assert.True(admission >= 0, "The common physical send boundary must apply payload admission.");
 
         int activity = source.IndexOf("StartSendActivity", admission, StringComparison.Ordinal);
-        int observer = source.IndexOf("SendObservers.PreSend(sendContext)", admission, StringComparison.Ordinal);
-        int provider = source.IndexOf("_sendTransportContext.Send(context, sendContext)", admission, StringComparison.Ordinal);
+        int observer = source.IndexOf("SendObservers.PreSendAsync(sendContext)", admission, StringComparison.Ordinal);
+        int provider = source.IndexOf("_sendTransportContext.SendAsync(context, sendContext)", admission, StringComparison.Ordinal);
 
         Assert.True(activity > admission);
         Assert.True(observer > activity);
@@ -36,16 +36,16 @@ public sealed class PayloadAdmissionArchitectureTests
 
         string single = source[singleStart..batchStart];
         int singleAdmission = single.IndexOf("transportContext.ApplyPayloadAdmission(sendContext)", StringComparison.Ordinal);
-        int singleObserver = single.IndexOf("SendObservers.PreSend(sendContext)", StringComparison.Ordinal);
-        int singleProvider = single.IndexOf("_context.Send(context, sendContext)", StringComparison.Ordinal);
+        int singleObserver = single.IndexOf("SendObservers.PreSendAsync(sendContext)", StringComparison.Ordinal);
+        int singleProvider = single.IndexOf("_context.SendAsync(context, sendContext)", StringComparison.Ordinal);
         Assert.True(singleAdmission >= 0);
         Assert.True(singleObserver > singleAdmission);
         Assert.True(singleProvider > singleObserver);
 
         string batch = source[batchStart..];
         int batchAdmission = batch.IndexOf("transportContext.ApplyPayloadAdmission(candidate)", StringComparison.Ordinal);
-        int batchObserver = batch.IndexOf("SendObservers.PreSend(c)", StringComparison.Ordinal);
-        int batchProvider = batch.IndexOf("_context.Send(context, contexts)", StringComparison.Ordinal);
+        int batchObserver = batch.IndexOf("SendObservers.PreSendAsync(c)", StringComparison.Ordinal);
+        int batchProvider = batch.IndexOf("_context.SendAsync(context, contexts)", StringComparison.Ordinal);
         Assert.True(batchAdmission >= 0);
         Assert.True(batchObserver > batchAdmission);
         Assert.True(batchProvider > batchObserver);

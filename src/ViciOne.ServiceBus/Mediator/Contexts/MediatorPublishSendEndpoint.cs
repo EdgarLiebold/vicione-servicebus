@@ -27,7 +27,7 @@ public class MediatorPublishSendEndpoint :
         return _observers.Connect(observer);
     }
 
-    protected override IPipe<SendContext<T>> GetPipeProxy<T>(IPipe<SendContext<T>> pipe = default)
+    protected override IPipe<SendContext<T>> GetPipeProxy<T>(IPipe<SendContext<T>>? pipe = default)
     {
         return new PublishPipeAdapter<T>(_publishPipe, pipe);
     }
@@ -37,10 +37,10 @@ public class MediatorPublishSendEndpoint :
         IPipe<SendContext<T>>
         where T : class
     {
-        readonly IPipe<SendContext<T>> _pipe;
+        readonly IPipe<SendContext<T>>? _pipe;
         readonly IPublishPipe _publishPipe;
 
-        public PublishPipeAdapter(IPublishPipe publishPipe, IPipe<SendContext<T>> pipe)
+        public PublishPipeAdapter(IPublishPipe publishPipe, IPipe<SendContext<T>>? pipe)
         {
             _publishPipe = publishPipe;
             _pipe = pipe;
@@ -48,10 +48,10 @@ public class MediatorPublishSendEndpoint :
 
         void IProbeSite.Probe(ProbeContext context)
         {
-            _pipe.Probe(context);
+            _pipe?.Probe(context);
         }
 
-        public async Task Send(SendContext<T> context)
+        public async Task SendAsync(SendContext<T> context)
         {
             var publishContext = context.GetPayload<MessageSendContext<T>>();
 
@@ -59,12 +59,12 @@ public class MediatorPublishSendEndpoint :
 
             // ReSharper disable once SuspiciousTypeConversion.Global
             if (_pipe is ISendContextPipe sendContextPipe)
-                await sendContextPipe.Send(context).ConfigureAwait(false);
+                await sendContextPipe.SendAsync(context).ConfigureAwait(false);
 
-            await _publishPipe.Send(publishContext).ConfigureAwait(false);
+            await _publishPipe.SendAsync(publishContext).ConfigureAwait(false);
 
-            if (_pipe.IsNotEmpty())
-                await _pipe.Send(context).ConfigureAwait(false);
+            if (_pipe != null && _pipe.IsNotEmpty())
+                await _pipe.SendAsync(context).ConfigureAwait(false);
         }
     }
 }

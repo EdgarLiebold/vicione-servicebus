@@ -9,15 +9,15 @@ namespace ViciOne.ServiceBus.Configuration;
 public class InMemoryOutboxHandlerConfigurationObserver :
     IHandlerConfigurationObserver
 {
-    readonly Action<IOutboxConfigurator> _configure;
-    readonly ISetScopedConsumeContext _setter;
+    readonly Action<IOutboxConfigurator>? _configure;
+    readonly ISetScopedConsumeContext? _setter;
 
-    public InMemoryOutboxHandlerConfigurationObserver(IRegistrationContext context, Action<IOutboxConfigurator> configure)
+    public InMemoryOutboxHandlerConfigurationObserver(IRegistrationContext context, Action<IOutboxConfigurator>? configure)
         : this(context as ISetScopedConsumeContext ?? throw new ArgumentException(nameof(context)), configure)
     {
     }
 
-    public InMemoryOutboxHandlerConfigurationObserver(ISetScopedConsumeContext setter, Action<IOutboxConfigurator> configure)
+    public InMemoryOutboxHandlerConfigurationObserver(ISetScopedConsumeContext? setter, Action<IOutboxConfigurator>? configure)
     {
         _setter = setter;
         _configure = configure;

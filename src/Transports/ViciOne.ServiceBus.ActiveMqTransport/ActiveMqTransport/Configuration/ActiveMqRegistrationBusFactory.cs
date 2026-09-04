@@ -11,15 +11,15 @@ public class ActiveMqRegistrationBusFactory :
     TransportRegistrationBusFactory<IActiveMqReceiveEndpointConfigurator>
 {
     readonly ActiveMqBusConfiguration _busConfiguration;
-    readonly Action<IBusRegistrationContext, IActiveMqBusFactoryConfigurator> _configure;
+    readonly Action<IBusRegistrationContext, IActiveMqBusFactoryConfigurator>? _configure;
 
-    public ActiveMqRegistrationBusFactory(Action<IBusRegistrationContext, IActiveMqBusFactoryConfigurator> configure)
+    public ActiveMqRegistrationBusFactory(Action<IBusRegistrationContext, IActiveMqBusFactoryConfigurator>? configure)
         : this(new ActiveMqBusConfiguration(new ActiveMqTopologyConfiguration(ActiveMqBusFactory.CreateMessageTopology())), configure)
     {
     }
 
     ActiveMqRegistrationBusFactory(ActiveMqBusConfiguration busConfiguration,
-        Action<IBusRegistrationContext, IActiveMqBusFactoryConfigurator> configure)
+        Action<IBusRegistrationContext, IActiveMqBusFactoryConfigurator>? configure)
         : base(busConfiguration.HostConfiguration)
     {
         _configure = configure;
@@ -32,7 +32,7 @@ public class ActiveMqRegistrationBusFactory :
         var configurator = new ActiveMqBusFactoryConfigurator(_busConfiguration);
 
         var options = context.GetRequiredService<IOptionsMonitor<ActiveMqTransportOptions>>().Get(busName);
-        Uri hostAddress = GetHostAddress(options);
+        Uri? hostAddress = GetHostAddress(options);
 
         if (hostAddress != null)
         {
@@ -51,7 +51,7 @@ public class ActiveMqRegistrationBusFactory :
         return CreateBus(configurator, context, _configure, specifications);
     }
 
-    internal static Uri GetHostAddress(ActiveMqTransportOptions options)
+    internal static Uri? GetHostAddress(ActiveMqTransportOptions options)
     {
         ArgumentNullException.ThrowIfNull(options);
 
@@ -66,7 +66,7 @@ public class ActiveMqRegistrationBusFactory :
         if (!hasAnyConfiguration)
             return null;
 
-        if (!hasHost)
+        if (!hasHost || options.Host == null)
             throw new ActiveMqTransportConfigurationException("The ActiveMQ host must be configured when transport options are present.");
         if (!options.Protocol.HasValue)
             throw new ActiveMqTransportConfigurationException("The ActiveMQ protocol must be configured explicitly.");

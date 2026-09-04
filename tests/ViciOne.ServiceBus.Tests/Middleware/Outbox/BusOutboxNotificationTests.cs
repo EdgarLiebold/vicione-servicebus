@@ -14,11 +14,11 @@ public sealed class BusOutboxNotificationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-OUTBOX-NOTIFICATION", "delivery-signal-bypasses-poll-delay")]
-    public async Task Delivered_WakesTheWaiterWithoutAdvancingTheConfiguredClock()
+    public async Task Delivered_WakesTheWaiterWithoutAdvancingTheConfiguredClockAsync()
     {
         var timeProvider = new FakeTimeProvider(Now);
         var notification = CreateNotification(timeProvider);
-        Task wait = notification.WaitForDelivery(TestContext.Current.CancellationToken);
+        Task wait = notification.WaitForDeliveryAsync(TestContext.Current.CancellationToken);
 
         notification.Delivered();
         await wait.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
@@ -28,13 +28,13 @@ public sealed class BusOutboxNotificationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-OUTBOX-NOTIFICATION", "delivery-signal-before-wait-is-retained")]
-    public async Task DeliveredBeforeWait_IsConsumedWithoutAdvancingTheConfiguredClock()
+    public async Task DeliveredBeforeWait_IsConsumedWithoutAdvancingTheConfiguredClockAsync()
     {
         var timeProvider = new FakeTimeProvider(Now);
         var notification = CreateNotification(timeProvider);
 
         notification.Delivered();
-        await notification.WaitForDelivery(TestContext.Current.CancellationToken)
+        await notification.WaitForDeliveryAsync(TestContext.Current.CancellationToken)
             .WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
 
         Assert.Equal(Now, timeProvider.GetUtcNow());
@@ -42,11 +42,11 @@ public sealed class BusOutboxNotificationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-OUTBOX-NOTIFICATION", "poll-delay-uses-injected-clock")]
-    public async Task PollDelay_CompletesOnlyAfterTheInjectedClockReachesTheDeadline()
+    public async Task PollDelay_CompletesOnlyAfterTheInjectedClockReachesTheDeadlineAsync()
     {
         var timeProvider = new FakeTimeProvider(Now);
         var notification = CreateNotification(timeProvider);
-        Task wait = notification.WaitForDelivery(TestContext.Current.CancellationToken);
+        Task wait = notification.WaitForDeliveryAsync(TestContext.Current.CancellationToken);
 
         timeProvider.Advance(TimeSpan.FromMinutes(10) - TimeSpan.FromTicks(1));
         Assert.False(wait.IsCompleted);
@@ -58,13 +58,13 @@ public sealed class BusOutboxNotificationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUS-OUTBOX-NOTIFICATION", "second-waiter-fails-closed")]
-    public async Task ConcurrentWaiter_IsRejectedWithoutReplacingTheActiveSignal()
+    public async Task ConcurrentWaiter_IsRejectedWithoutReplacingTheActiveSignalAsync()
     {
         var notification = CreateNotification(new FakeTimeProvider(Now));
-        Task firstWait = notification.WaitForDelivery(TestContext.Current.CancellationToken);
+        Task firstWait = notification.WaitForDeliveryAsync(TestContext.Current.CancellationToken);
 
         InvalidOperationException rejected = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            notification.WaitForDelivery(TestContext.Current.CancellationToken));
+            notification.WaitForDeliveryAsync(TestContext.Current.CancellationToken));
         notification.Delivered();
         await firstWait.WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
 

@@ -26,7 +26,7 @@ public class ActiveMqConsumerFilter :
     {
     }
 
-    async Task IFilter<SessionContext>.Send(SessionContext context, IPipe<SessionContext> next)
+    async Task IFilter<SessionContext>.SendAsync(SessionContext context, IPipe<SessionContext> next)
     {
         var receiveSettings = context.GetPayload<ReceiveSettings>();
 
@@ -34,17 +34,22 @@ public class ActiveMqConsumerFilter :
 
         var consumers = new List<Task<ActiveMqConsumer>>
         {
-            CreateConsumer(context, new QueueEntity(0, GetReceiveEntityName(receiveSettings), receiveSettings.Durable,
+            CreateConsumerAsync(context, new QueueEntity(0, GetReceiveEntityName(receiveSettings), receiveSettings.Durable,
                 receiveSettings.AutoDelete), receiveSettings.Selector, executor)
         };
 
         consumers.AddRange(_context.BrokerTopology.Consumers.Where(x => x.Destination == null).Select(x =>
-            CreateConsumer(context, new TopicEntity(0, GetReceiveEntityName(receiveSettings, x.Source.EntityName), x.Source.Durable,
+            CreateConsumerAsync(context, new TopicEntity(0, GetReceiveEntityName(receiveSettings, x.Source.EntityName), x.Source.Durable,
                 x.Source.AutoDelete), x.Selector, x.ConsumerName, x.IsShared, receiveSettings.Durable, executor)));
 
         consumers.AddRange(_context.BrokerTopology.Consumers.Where(x => x.Destination != null).Select(x =>
-            CreateConsumer(context, new QueueEntity(0, GetReceiveEntityName(receiveSettings, x.Destination.EntityName), x.Destination.Durable,
-                x.Destination.AutoDelete), x.Selector, executor)));
+        {
+            Queue destination = x.Destination
+                ?? throw new InvalidOperationException("An ActiveMQ queue consumer must reference a queue.");
+            return CreateConsumerAsync(context,
+                new QueueEntity(0, GetReceiveEntityName(receiveSettings, destination.EntityName), destination.Durable, destination.AutoDelete),
+                x.Selector, executor);
+        }));
 
         ActiveMqConsumer[] actualConsumers = await Task.WhenAll(consumers).ConfigureAwait(false);
 
@@ -56,7 +61,7 @@ public class ActiveMqConsumerFilter :
 
         _context.AddConsumeAgent(supervisor);
 
-        await _context.TransportObservers.NotifyReady(_context.InputAddress).ConfigureAwait(false);
+        await _context.TransportObservers.NotifyReadyAsync(_context.InputAddress).ConfigureAwait(false);
 
         try
         {
@@ -69,7 +74,7 @@ public class ActiveMqConsumerFilter :
             DeliveryMetrics metrics = new CombinedDeliveryMetrics(consumerMetrics.Sum(x => x.DeliveryCount),
                 consumerMetrics.Max(x => x.ConcurrentDeliveryCount));
 
-            await _context.TransportObservers.NotifyCompleted(_context.InputAddress, metrics).ConfigureAwait(false);
+            await _context.TransportObservers.NotifyCompletedAsync(_context.InputAddress, metrics).ConfigureAwait(false);
 
             _context.LogConsumerCompleted(metrics.DeliveryCount, metrics.ConcurrentDeliveryCount);
 
@@ -77,7 +82,7 @@ public class ActiveMqConsumerFilter :
         }
     }
 
-    string GetReceiveEntityName(ReceiveSettings settings, string entityName = null)
+    string GetReceiveEntityName(ReceiveSettings settings, string? entityName = null)
     {
         return settings.AutoDelete
             ? entityName ?? settings.EntityName
@@ -89,24 +94,24 @@ public class ActiveMqConsumerFilter :
         var supervisor = new ConsumerSupervisor(actualConsumers);
 
         var connectionStopLock = new object();
-        Task connectionStopTask = null;
+        Task? connectionStopTask = null;
 
         void HandleException(Exception exception)
         {
             lock (connectionStopLock)
             {
                 if (connectionStopTask == null || connectionStopTask.IsCompleted)
-                    connectionStopTask = StopAfterConnectionException(exception);
+                    connectionStopTask = StopAfterConnectionExceptionAsync(exception);
             }
         }
 
-        async Task StopAfterConnectionException(Exception exception)
+        async Task StopAfterConnectionExceptionAsync(Exception exception)
         {
             await Task.Yield();
 
             try
             {
-                await supervisor.Stop(exception.Message).ConfigureAwait(false);
+                await supervisor.StopAsync(exception.Message).ConfigureAwait(false);
             }
             catch (Exception stopException)
             {
@@ -124,12 +129,12 @@ public class ActiveMqConsumerFilter :
         return supervisor;
     }
 
-    async Task<ActiveMqConsumer> CreateConsumer(SessionContext context, Queue entity, string selector,
+    async Task<ActiveMqConsumer> CreateConsumerAsync(SessionContext context, Queue entity, string? selector,
         TaskExecutor executor)
     {
-        var queue = await context.GetQueue(entity).ConfigureAwait(false);
+        var queue = await context.GetQueueAsync(entity).ConfigureAwait(false);
 
-        var messageConsumer = await context.CreateMessageConsumer(queue, selector, false).ConfigureAwait(false);
+        var messageConsumer = await context.CreateMessageConsumerAsync(queue, selector, false).ConfigureAwait(false);
 
         LogContext.Debug?.Log("Created consumer for {InputAddress}: {Queue}", _context.InputAddress, entity.EntityName);
 
@@ -138,12 +143,12 @@ public class ActiveMqConsumerFilter :
         return consumer;
     }
 
-    async Task<ActiveMqConsumer> CreateConsumer(SessionContext context, Topic entity, string selector,
-        string consumerName, bool shared, bool durable, TaskExecutor executor)
+    async Task<ActiveMqConsumer> CreateConsumerAsync(SessionContext context, Topic entity, string? selector,
+        string? consumerName, bool shared, bool durable, TaskExecutor executor)
     {
-        var topic = await context.GetTopic(entity).ConfigureAwait(false);
+        var topic = await context.GetTopicAsync(entity).ConfigureAwait(false);
 
-        var messageConsumer = await context.CreateMessageConsumer(topic, selector, false, consumerName, shared, durable).ConfigureAwait(false);
+        var messageConsumer = await context.CreateMessageConsumerAsync(topic, selector, false, consumerName, shared, durable).ConfigureAwait(false);
 
         LogContext.Debug?.Log("Created consumer for {InputAddress}: {Topic}", _context.InputAddress, entity.EntityName);
 
@@ -163,19 +168,19 @@ public class ActiveMqConsumerFilter :
                 if (IsStopping)
                     return;
 
-                _ = ObserveConsumerCompletion(consumer);
+                _ = ObserveConsumerCompletionAsync(consumer);
                 Add(consumer);
             }
         }
 
-        async Task ObserveConsumerCompletion(ActiveMqConsumer consumer)
+        async Task ObserveConsumerCompletionAsync(ActiveMqConsumer consumer)
         {
             try
             {
                 await consumer.Completed.ConfigureAwait(false);
 
                 if (!IsStopping)
-                    await this.Stop("Consumer stopped, stopping supervisor").ConfigureAwait(false);
+                    await this.StopAsync("Consumer stopped, stopping supervisor").ConfigureAwait(false);
             }
             catch (Exception exception)
             {

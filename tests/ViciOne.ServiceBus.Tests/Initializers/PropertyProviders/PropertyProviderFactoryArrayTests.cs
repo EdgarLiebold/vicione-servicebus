@@ -7,7 +7,7 @@ public sealed class PropertyProviderFactoryArrayTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-PROPERTY-PROVIDER-ARRAY", "exact-converted-and-nullable-targets")]
-    public async Task ArraySource_SupportsExactConvertedNullableAndStringTargets()
+    public async Task ArraySource_SupportsExactConvertedNullableAndStringTargetsAsync()
     {
         var valuesReader = PropertyProviderTestContext.For(new IntArrayInput([1, 2, 3]));
         var nullableReader = PropertyProviderTestContext.For(new NullableIntArrayInput([1, 2, 3]));
@@ -27,7 +27,7 @@ public sealed class PropertyProviderFactoryArrayTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PROPERTY-PROVIDER-ARRAY", "nullable-element-and-enumerable-source")]
-    public async Task StringAndEnumerableSources_PreserveNullableAndExactSequenceBoundaries()
+    public async Task StringAndEnumerableSources_PreserveNullableAndExactSequenceBoundariesAsync()
     {
         var stringsReader = PropertyProviderTestContext.For(new StringArrayInput(["1", "2", "", "3"]));
         var enumerableReader = PropertyProviderTestContext.For(

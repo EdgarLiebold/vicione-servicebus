@@ -343,12 +343,7 @@ public static class LogContextInstrumentationExtensions
     private static double ElapsedSeconds(TimeProvider timeProvider, long started) =>
         Math.Max(0, timeProvider.GetElapsedTime(started).TotalSeconds);
 
-    private static DateTimeOffset AsUtc(DateTime value) => value.Kind switch
-    {
-        DateTimeKind.Local => new DateTimeOffset(value.ToUniversalTime()),
-        DateTimeKind.Utc => new DateTimeOffset(value),
-        _ => new DateTimeOffset(DateTime.SpecifyKind(value, DateTimeKind.Utc)),
-    };
+    private static DateTimeOffset AsUtc(DateTimeOffset value) => value.ToUniversalTime();
 
     private static string SystemName(Uri? address) =>
         NormalizeSystem(address?.Scheme);

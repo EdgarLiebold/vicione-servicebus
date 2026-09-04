@@ -8,11 +8,11 @@ public sealed class ExceptionTypeConverterTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-INITIALIZER-EXCEPTION-CONVERSION", "exception-info")]
-    public async Task ExceptionInput_ProducesObservableExceptionInformation()
+    public async Task ExceptionInput_ProducesObservableExceptionInformationAsync()
     {
         var exception = new InvalidOperationException("Expected failure");
 
-        InitializeContext<ExceptionMessage> context = await MessageInitializerCache<ExceptionMessage>.Initialize(
+        InitializeContext<ExceptionMessage> context = await MessageInitializerCache<ExceptionMessage>.InitializeAsync(
             new { Exception = exception },
             TestContext.Current.CancellationToken);
 

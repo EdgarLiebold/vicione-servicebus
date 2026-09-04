@@ -40,9 +40,9 @@ public class FutureResultConfigurator<TCommand, TResult, TInput> :
         if (valueProvider == null)
             throw new ArgumentNullException(nameof(valueProvider));
 
-        Task<SendTuple<TResult>> Factory(BehaviorContext<FutureState, TInput> context)
+        Task<SendTuple<TResult>> FactoryAsync(BehaviorContext<FutureState, TInput> context)
         {
-            return MessageInitializerCache<TResult>.InitializeMessage(context, valueProvider(context), new object[]
+            return MessageInitializerCache<TResult>.InitializeMessageAsync(context, valueProvider(context), new object?[]
             {
                 new
                 {
@@ -56,7 +56,7 @@ public class FutureResultConfigurator<TCommand, TResult, TInput> :
             });
         }
 
-        _result.Factory = MessageFactory<TResult>.Create((Func<BehaviorContext<FutureState, TInput>, Task<SendTuple<TResult>>>)Factory);
+        _result.Factory = MessageFactory<TResult>.Create((Func<BehaviorContext<FutureState, TInput>, Task<SendTuple<TResult>>>)FactoryAsync);
     }
 }
 
@@ -94,9 +94,9 @@ public class FutureResultConfigurator<TCommand, TResult> :
         if (valueProvider == null)
             throw new ArgumentNullException(nameof(valueProvider));
 
-        Task<SendTuple<TResult>> Factory(BehaviorContext<FutureState> context)
+        Task<SendTuple<TResult>> FactoryAsync(BehaviorContext<FutureState> context)
         {
-            return MessageInitializerCache<TResult>.InitializeMessage(context, valueProvider(context), new object[]
+            return MessageInitializerCache<TResult>.InitializeMessageAsync(context, valueProvider(context), new object?[]
             {
                 new
                 {
@@ -109,6 +109,6 @@ public class FutureResultConfigurator<TCommand, TResult> :
             });
         }
 
-        _result.Factory = MessageFactory<TResult>.Create((Func<BehaviorContext<FutureState>, Task<SendTuple<TResult>>>)Factory);
+        _result.Factory = MessageFactory<TResult>.Create((Func<BehaviorContext<FutureState>, Task<SendTuple<TResult>>>)FactoryAsync);
     }
 }

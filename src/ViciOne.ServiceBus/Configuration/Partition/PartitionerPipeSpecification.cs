@@ -9,7 +9,7 @@ public class PartitionerPipeSpecification<T> :
 {
     readonly PartitionKeyProvider<T> _keyProvider;
     readonly int _partitionCount;
-    readonly IPartitioner _partitioner;
+    readonly IPartitioner _partitioner = null!;
 
     public PartitionerPipeSpecification(PartitionKeyProvider<T> keyProvider, int partitionCount)
     {

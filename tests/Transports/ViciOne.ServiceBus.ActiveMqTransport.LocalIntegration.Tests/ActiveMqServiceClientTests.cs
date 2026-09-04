@@ -10,7 +10,7 @@ public sealed class ActiveMqServiceClientTests
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-SERVICE-INSTANCE", "registered-service-instance-completes-default-request-routing")]
-    public async Task RegisteredServiceInstance_ConnectsAndCompletesRequest(string flavor)
+    public async Task RegisteredServiceInstance_ConnectsAndCompletesRequestAsync(string flavor)
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(flavor, "service-instance");
         string serviceEndpoint = fixture.Name("service");
@@ -45,7 +45,7 @@ public sealed class ActiveMqServiceClientTests
             IRequestClient<ServiceRequest> client = bus.CreateRequestClient<ServiceRequest>(
                 RequestTimeout.After(ms: checked((int)fixture.OperationTimeout.TotalMilliseconds)));
             Guid correlationId = Guid.NewGuid();
-            Response<ServiceResponse> response = await client.GetResponse<ServiceResponse>(
+            Response<ServiceResponse> response = await client.GetResponseAsync<ServiceResponse>(
                     new ServiceRequest(correlationId, "Bogey"),
                     cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);

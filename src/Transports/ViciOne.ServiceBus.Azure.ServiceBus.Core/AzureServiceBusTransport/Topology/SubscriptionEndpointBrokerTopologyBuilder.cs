@@ -4,5 +4,5 @@ public class SubscriptionEndpointBrokerTopologyBuilder :
     BrokerTopologyBuilder,
     ISubscriptionEndpointBrokerTopologyBuilder
 {
-    public TopicHandle Topic { get; set; }
+    public TopicHandle Topic { get; set; } = null!;
 }

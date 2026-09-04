@@ -11,15 +11,15 @@ namespace ViciOne.ServiceBus.MessageData.Values;
 public class StoredMessageData<T> :
     MessageData<T>
 {
-    public StoredMessageData(Uri address, T value)
+    public StoredMessageData(Uri? address, T value)
     {
         Address = address;
-        Value = Task.FromResult(value);
+        Value = Task.FromResult<T?>(value);
     }
 
-    public Uri Address { get; }
+    public Uri? Address { get; }
 
     public bool HasValue => true;
 
-    public Task<T> Value { get; }
+    public Task<T?> Value { get; }
 }

@@ -15,7 +15,7 @@ public class MediatorRequestSendEndpoint<TRequest> :
         _endpoint = endpoint;
     }
 
-    protected override Task<ISendEndpoint> GetSendEndpoint()
+    protected override Task<ISendEndpoint> GetSendEndpointAsync()
     {
         return Task.FromResult(_endpoint);
     }

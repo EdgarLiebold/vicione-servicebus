@@ -98,12 +98,12 @@ internal sealed class BusOutboxDeliveryService<TBus, TDbContext> :
             {
                 await _busControl.WaitForHealthStatusAsync(BusHealthStatus.Healthy, stoppingToken).ConfigureAwait(false);
 
-                var count = await _operationalRetryPolicy.Retry(() => algorithm.Run(DeliverOutbox, stoppingToken), stoppingToken)
+                var count = await _operationalRetryPolicy.RetryAsync(() => algorithm.RunAsync(DeliverOutboxAsync, stoppingToken), stoppingToken)
                     .ConfigureAwait(false);
                 if (count > 0)
                     continue;
 
-                await _notification.WaitForDelivery(stoppingToken).ConfigureAwait(false);
+                await _notification.WaitForDeliveryAsync(stoppingToken).ConfigureAwait(false);
             }
             catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
             {
@@ -120,14 +120,14 @@ internal sealed class BusOutboxDeliveryService<TBus, TDbContext> :
         }
     }
 
-    async Task<int> DeliverOutbox(int resultLimit, CancellationToken cancellationToken)
+    async Task<int> DeliverOutboxAsync(int resultLimit, CancellationToken cancellationToken)
     {
         await using var scope = _provider.CreateAsyncScope();
         await using var dbContext = scope.ServiceProvider.GetRequiredService<TDbContext>();
 
         _getOutboxIdStatement ??= _lockStatementProvider.GetOutboxStatement(dbContext);
 
-        async Task<int> Execute()
+        async Task<int> ExecuteAsync()
         {
             using var timeoutToken = new CancellationTokenSource(_options.QueryTimeout, _timeProvider);
             using var linkedToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutToken.Token);
@@ -161,18 +161,18 @@ internal sealed class BusOutboxDeliveryService<TBus, TDbContext> :
                 int progress;
                 if (outboxState.Status == OutboxDeliveryStatus.Delivered)
                 {
-                    await RemoveOutbox(dbContext, outboxState, linkedToken.Token).ConfigureAwait(false);
+                    await RemoveOutboxAsync(dbContext, outboxState, linkedToken.Token).ConfigureAwait(false);
                     progress = 1;
                 }
                 else
-                    progress = await DeliverOutboxMessages(dbContext, outboxState, linkedToken.Token).ConfigureAwait(false);
+                    progress = await DeliverOutboxMessagesAsync(dbContext, outboxState, linkedToken.Token).ConfigureAwait(false);
 
                 await transaction.CommitAsync(linkedToken.Token).ConfigureAwait(false);
                 return progress;
             }
             catch
             {
-                await RollbackTransaction(transaction).ConfigureAwait(false);
+                await RollbackTransactionAsync(transaction).ConfigureAwait(false);
                 throw;
             }
         }
@@ -181,7 +181,7 @@ internal sealed class BusOutboxDeliveryService<TBus, TDbContext> :
         var messageCount = 0;
         while (messageCount < resultLimit)
         {
-            var executeResult = await EntityFrameworkExecutionStrategy.ExecuteAsync(dbContext, executionStrategy, Execute, cancellationToken)
+            var executeResult = await EntityFrameworkExecutionStrategy.ExecuteAsync(dbContext, executionStrategy, ExecuteAsync, cancellationToken)
                 .ConfigureAwait(false);
             if (executeResult <= 0)
                 break;
@@ -192,7 +192,7 @@ internal sealed class BusOutboxDeliveryService<TBus, TDbContext> :
         return messageCount;
     }
 
-    static async Task RemoveOutbox(TDbContext dbContext, OutboxState outboxState, CancellationToken cancellationToken)
+    static async Task RemoveOutboxAsync(TDbContext dbContext, OutboxState outboxState, CancellationToken cancellationToken)
     {
         List<OutboxMessage> messages = await dbContext.Set<OutboxMessage>()
             .Where(x => x.OutboxId == outboxState.OutboxId)
@@ -206,7 +206,7 @@ internal sealed class BusOutboxDeliveryService<TBus, TDbContext> :
         LogContext.Debug?.Log("Outbox removed {Count} messages: {OutboxId}", messages.Count, outboxState.OutboxId);
     }
 
-    internal async Task<int> DeliverOutboxMessages(TDbContext dbContext, OutboxState outboxState, CancellationToken cancellationToken)
+    internal async Task<int> DeliverOutboxMessagesAsync(TDbContext dbContext, OutboxState outboxState, CancellationToken cancellationToken)
     {
         int messageLimit = Math.Max(1, _options.MessageDeliveryLimit);
         bool hasLastSequenceNumber = outboxState.LastSequenceNumber.HasValue;
@@ -254,13 +254,13 @@ internal sealed class BusOutboxDeliveryService<TBus, TDbContext> :
                 using var sendToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, sendTimeout.Token);
 
                 var pipe = new OutboxMessageSendPipe(message, message.DestinationAddress);
-                var endpoint = await _bus.GetSendEndpoint(message.DestinationAddress).ConfigureAwait(false);
+                var endpoint = await _bus.GetSendEndpointAsync(message.DestinationAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
                 StartedActivity? activity = LogContext.Current?.StartOutboxDeliverActivity(message);
                 var instrument = LogContext.Current?.StartOutboxDeliveryInstrument();
 
                 try
                 {
-                    await endpoint.Send(new SerializedMessageBody(), pipe, sendToken.Token).ConfigureAwait(false);
+                    await endpoint.SendAsync(new SerializedMessageBody(), pipe, sendToken.Token).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -468,7 +468,7 @@ internal sealed class BusOutboxDeliveryService<TBus, TDbContext> :
         }
     }
 
-    static async Task RollbackTransaction(IDbContextTransaction transaction)
+    static async Task RollbackTransactionAsync(IDbContextTransaction transaction)
     {
         try
         {

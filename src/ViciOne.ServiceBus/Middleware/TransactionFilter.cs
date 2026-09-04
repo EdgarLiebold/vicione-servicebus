@@ -43,12 +43,12 @@ public class TransactionFilter<T> :
     }
 
     [DebuggerNonUserCode]
-    public async Task Send(T context, IPipe<T> next)
+    public async Task SendAsync(T context, IPipe<T> next)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(next);
 
-        IManagedTransactionContext managedTransactionContext = null;
+        IManagedTransactionContext? managedTransactionContext = null;
 
         TransactionContext CreateManagedTransactionContext()
         {
@@ -66,10 +66,10 @@ public class TransactionFilter<T> :
 
         try
         {
-            await next.Send(context).ConfigureAwait(false);
+            await next.SendAsync(context).ConfigureAwait(false);
 
             if (managedTransactionContext != null)
-                await managedTransactionContext.Commit().ConfigureAwait(false);
+                await managedTransactionContext.CommitAsync().ConfigureAwait(false);
         }
         catch (Exception ex)
         {

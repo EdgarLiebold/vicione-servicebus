@@ -25,33 +25,33 @@ public class FaultedProduceActivity<TSaga, TException, TMessage> :
         inspector.Visit(this);
     }
 
-    public Task Execute(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
-        return next.Execute(context);
+        return next.ExecuteAsync(context);
     }
 
-    public Task Execute<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+    public Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
-        return next.Execute(context);
+        return next.ExecuteAsync(context);
     }
 
-    public async Task Faulted<T>(BehaviorExceptionContext<TSaga, T> context, IBehavior<TSaga> next)
+    public async Task FaultedAsync<T>(BehaviorExceptionContext<TSaga, T> context, IBehavior<TSaga> next)
         where T : Exception
     {
-        await Faulted(context).ConfigureAwait(false);
+        await FaultedAsync(context).ConfigureAwait(false);
 
-        await next.Faulted(context).ConfigureAwait(false);
+        await next.FaultedAsync(context).ConfigureAwait(false);
     }
 
-    public async Task Faulted<T, TOtherException>(BehaviorExceptionContext<TSaga, T, TOtherException> context,
+    public async Task FaultedAsync<T, TOtherException>(BehaviorExceptionContext<TSaga, T, TOtherException> context,
         IBehavior<TSaga, T> next)
         where T : class
         where TOtherException : Exception
     {
-        await Faulted(context).ConfigureAwait(false);
+        await FaultedAsync(context).ConfigureAwait(false);
 
-        await next.Faulted(context).ConfigureAwait(false);
+        await next.FaultedAsync(context).ConfigureAwait(false);
     }
 
     public void Probe(ProbeContext context)
@@ -59,15 +59,15 @@ public class FaultedProduceActivity<TSaga, TException, TMessage> :
         context.CreateScope("produce-faulted");
     }
 
-    Task Faulted(BehaviorContext<TSaga> context)
+    Task FaultedAsync(BehaviorContext<TSaga> context)
     {
         if (context is BehaviorExceptionContext<TSaga, TException> exceptionContext)
         {
-            return _messageFactory.Use(exceptionContext, async (ctx, s) =>
+            return _messageFactory.UseAsync(exceptionContext, async (ctx, s) =>
             {
-                var producer = await ctx.GetProducer(ctx, _nameProvider(ctx)).ConfigureAwait(false);
+                var producer = await ctx.GetProducerAsync(ctx, _nameProvider(ctx)).ConfigureAwait(false);
 
-                await producer.Produce(s.Message, s.Pipe, ctx.CancellationToken).ConfigureAwait(false);
+                await producer.ProduceAsync(s.Message, s.Pipe, ctx.CancellationToken).ConfigureAwait(false);
             });
         }
 
@@ -103,25 +103,25 @@ public class FaultedProduceActivity<TSaga, TData, TException, TMessage> :
         context.CreateScope("produce-faulted");
     }
 
-    public Task Execute(BehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
+    public Task ExecuteAsync(BehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
     {
-        return next.Execute(context);
+        return next.ExecuteAsync(context);
     }
 
-    public async Task Faulted<T>(BehaviorExceptionContext<TSaga, TData, T> context,
+    public async Task FaultedAsync<T>(BehaviorExceptionContext<TSaga, TData, T> context,
         IBehavior<TSaga, TData> next)
         where T : Exception
     {
         if (context is BehaviorExceptionContext<TSaga, TData, TException> exceptionContext)
         {
-            await _messageFactory.Use(exceptionContext, async (ctx, s) =>
+            await _messageFactory.UseAsync(exceptionContext, async (ctx, s) =>
             {
-                var producer = await ctx.GetProducer(ctx, _nameProvider(ctx)).ConfigureAwait(false);
+                var producer = await ctx.GetProducerAsync(ctx, _nameProvider(ctx)).ConfigureAwait(false);
 
-                await producer.Produce(s.Message, s.Pipe, ctx.CancellationToken).ConfigureAwait(false);
+                await producer.ProduceAsync(s.Message, s.Pipe, ctx.CancellationToken).ConfigureAwait(false);
             }).ConfigureAwait(false);
         }
 
-        await next.Faulted(context).ConfigureAwait(false);
+        await next.FaultedAsync(context).ConfigureAwait(false);
     }
 }

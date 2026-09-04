@@ -8,17 +8,19 @@ public class ServiceBusSendTopology :
     SendTopology,
     IServiceBusSendTopologyConfigurator
 {
-    public Action<IServiceBusEntityConfigurator> ConfigureErrorSettings { get; set; }
-    public Action<IServiceBusEntityConfigurator> ConfigureDeadLetterSettings { get; set; }
+    public Action<IServiceBusEntityConfigurator>? ConfigureErrorSettings { get; set; }
+    public Action<IServiceBusEntityConfigurator>? ConfigureDeadLetterSettings { get; set; }
 
     IServiceBusMessageSendTopology<T> IServiceBusSendTopology.GetMessageTopology<T>()
     {
-        return GetMessageTopology<T>() as IServiceBusMessageSendTopologyConfigurator<T>;
+        return GetMessageTopology<T>() as IServiceBusMessageSendTopologyConfigurator<T>
+            ?? throw new InvalidOperationException($"The send topology for {typeof(T).FullName} is not an Azure Service Bus topology.");
     }
 
     IServiceBusMessageSendTopologyConfigurator<T> IServiceBusSendTopologyConfigurator.GetMessageTopology<T>()
     {
-        return GetMessageTopology<T>() as IServiceBusMessageSendTopologyConfigurator<T>;
+        return GetMessageTopology<T>() as IServiceBusMessageSendTopologyConfigurator<T>
+            ?? throw new InvalidOperationException($"The send topology for {typeof(T).FullName} is not an Azure Service Bus topology.");
     }
 
     public SendSettings GetSendSettings(ServiceBusEndpointAddress address)

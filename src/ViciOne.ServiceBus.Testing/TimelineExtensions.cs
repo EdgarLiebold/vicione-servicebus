@@ -18,7 +18,8 @@ public static class TimelineExtensions
     /// <param name="textWriter"></param>
     /// <param name="configure">Configure the timeout output options</param>
     /// <exception cref="ArgumentNullException"></exception>
-    public static async Task OutputTimeline(this IBaseTestHarness harness, TextWriter textWriter, Action<OutputTimelineOptions> configure = default)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static async Task OutputTimelineAsync(this IBaseTestHarness harness, TextWriter textWriter, Action<OutputTimelineOptions>? configure = default, CancellationToken cancellationToken = default)
     {
         if (harness == null)
             throw new ArgumentNullException(nameof(harness));
@@ -34,18 +35,18 @@ public static class TimelineExtensions
 
         var produced = new List<Message>();
 
-        await foreach (var message in harness.Published.SelectAsync(_ => true).ConfigureAwait(false))
+        await foreach (var message in harness.Published.SelectAsync(_ => true, cancellationToken: cancellationToken).ConfigureAwait(false))
             produced.Add(new Message(message));
 
-        await foreach (var message in harness.Sent.SelectAsync(_ => true).ConfigureAwait(false))
+        await foreach (var message in harness.Sent.SelectAsync(_ => true, cancellationToken: cancellationToken).ConfigureAwait(false))
             produced.Add(new Message(message));
 
         var consumed = new List<Message>();
 
-        await foreach (var message in harness.Consumed.SelectAsync(_ => true).ConfigureAwait(false))
+        await foreach (var message in harness.Consumed.SelectAsync(_ => true, cancellationToken: cancellationToken).ConfigureAwait(false))
             consumed.Add(new Message(message));
 
-        Dictionary<Guid?, ConversationThread> conversations = produced.GroupBy(m => m.ConversationId).Select(x =>
+        Dictionary<Guid, ConversationThread> conversations = produced.GroupBy(m => m.ConversationId ?? m.MessageId ?? m.CorrelationId ?? Guid.Empty).Select(x =>
         {
             List<Message> messages = x.OrderBy(m => m.StartTime).ToList();
 
@@ -73,7 +74,7 @@ public static class TimelineExtensions
             }
 
             return initiatorThread;
-        }).ToDictionary(x => x.Message.ConversationId);
+        }).ToDictionary(x => x.Message.ConversationId ?? x.Message.MessageId ?? x.Message.CorrelationId ?? Guid.Empty);
 
         var chart = new ChartTable();
 
@@ -82,7 +83,7 @@ public static class TimelineExtensions
             var whitespace = new string(' ', (conversation.Depth - 1) * 2);
             var conversationLine = $"{whitespace}{conversation.Message.EventType} {options.MessageType(conversation.Message)}";
 
-            chart.Add(conversationLine, conversation.Message.StartTime, conversation.Message.ElapsedTime, conversation.Message.Address);
+            chart.Add(conversationLine, conversation.Message.StartTime, conversation.Message.ElapsedTime, conversation.Message.Address ?? string.Empty);
 
             AddConsumers(conversation, chart, options);
 
@@ -94,7 +95,7 @@ public static class TimelineExtensions
                 whitespace = new string(' ', (current.Depth - 1) * 2);
                 var line = $"{whitespace}{current.Message.EventType} {options.MessageType(current.Message)}";
 
-                chart.Add(line, current.Message.StartTime, current.Message.ElapsedTime, current.Message.Address);
+                chart.Add(line, current.Message.StartTime, current.Message.ElapsedTime, current.Message.Address ?? string.Empty);
 
                 AddConsumers(current, chart, options);
 
@@ -123,7 +124,7 @@ public static class TimelineExtensions
             sb.Append("Consume ");
             sb.Append(options.MessageType(consumer.Message));
 
-            chart.Add(sb.ToString(), consumer.Message.StartTime, consumer.Message.ElapsedTime, consumer.Message.Address);
+            chart.Add(sb.ToString(), consumer.Message.StartTime, consumer.Message.ElapsedTime, consumer.Message.Address ?? string.Empty);
         }
     }
 
@@ -293,7 +294,7 @@ public static class TimelineExtensions
 
             Address = context.DestinationAddress.GetEndpointName();
 
-            if (context.TryGetPayload(out ConsumeContext consumeContext))
+            if (context.TryGetPayload(out ConsumeContext? consumeContext) && consumeContext != null)
                 ParentMessageId = consumeContext.MessageId;
         }
 
@@ -308,7 +309,7 @@ public static class TimelineExtensions
             Address = context.ReceiveContext.InputAddress.GetEndpointName();
         }
 
-        public DateTime StartTime { get; }
+        public DateTimeOffset StartTime { get; }
         public TimeSpan? ElapsedTime { get; }
 
         public Guid? MessageId { get; }
@@ -316,12 +317,12 @@ public static class TimelineExtensions
         public Guid? CorrelationId { get; }
         public Guid? InitiatorId { get; }
         public Guid? RequestId { get; }
-        public Type MessageType { get; }
-        public string ShortTypeName { get; }
-        public string EventType { get; }
+        public Type MessageType { get; } = typeof(object);
+        public string ShortTypeName { get; } = string.Empty;
+        public string EventType { get; } = string.Empty;
 
         public Guid? ParentMessageId { get; }
-        public string Address { get; }
+        public string? Address { get; }
 
 
         public static class MessageEventType

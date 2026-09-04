@@ -23,33 +23,33 @@ public class SendQuerySagaPipe<TSaga, T> :
     {
     }
 
-    public async Task Send(SagaRepositoryQueryContext<TSaga, T> context)
+    public async Task SendAsync(SagaRepositoryQueryContext<TSaga, T> context)
     {
         if (context.Count > 0)
         {
-            async Task SendToInstance(Guid correlationId)
+            async Task SendToInstanceAsync(Guid correlationId)
             {
-                SagaConsumeContext<TSaga, T> sagaConsumeContext = await context.Load(correlationId).ConfigureAwait(false);
+                SagaConsumeContext<TSaga, T>? sagaConsumeContext = await context.LoadAsync(correlationId).ConfigureAwait(false);
                 if (sagaConsumeContext != null)
                 {
                     sagaConsumeContext.LogUsed();
 
                     try
                     {
-                        await _policy.Existing(sagaConsumeContext, _next).ConfigureAwait(false);
+                        await _policy.ExistingAsync(sagaConsumeContext, _next).ConfigureAwait(false);
 
                         if (_policy.IsReadOnly)
-                            await context.Undo(sagaConsumeContext).ConfigureAwait(false);
+                            await context.UndoAsync(sagaConsumeContext).ConfigureAwait(false);
                         else
                         {
                             if (sagaConsumeContext.IsCompleted)
                             {
-                                await context.Delete(sagaConsumeContext).ConfigureAwait(false);
+                                await context.DeleteAsync(sagaConsumeContext).ConfigureAwait(false);
 
                                 sagaConsumeContext.LogRemoved();
                             }
                             else
-                                await context.Update(sagaConsumeContext).ConfigureAwait(false);
+                                await context.UpdateAsync(sagaConsumeContext).ConfigureAwait(false);
                         }
                     }
                     finally
@@ -68,13 +68,13 @@ public class SendQuerySagaPipe<TSaga, T> :
             }
 
             foreach (var correlationId in context)
-                await SendToInstance(correlationId).ConfigureAwait(false);
+                await SendToInstanceAsync(correlationId).ConfigureAwait(false);
         }
         else
         {
             var missingPipe = new MissingSagaPipe<TSaga, T>(context, _next);
 
-            await _policy.Missing(context, missingPipe).ConfigureAwait(false);
+            await _policy.MissingAsync(context, missingPipe).ConfigureAwait(false);
         }
     }
 }

@@ -18,10 +18,10 @@ public class PublishSendPipeAdapter<T> :
         _pipe.Probe(context);
     }
 
-    public Task Send(SendContext<T> context)
+    public Task SendAsync(SendContext<T> context)
     {
         var publishContext = context.GetPayload<PublishContext<T>>();
 
-        return _pipe.Send(publishContext);
+        return _pipe.SendAsync(publishContext);
     }
 }

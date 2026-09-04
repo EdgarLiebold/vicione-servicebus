@@ -20,7 +20,7 @@ public interface ActivityLog
     /// <summary>
     /// The timestamp when the activity started
     /// </summary>
-    DateTime Timestamp { get; }
+    DateTimeOffset Timestamp { get; }
 
     /// <summary>
     /// The duration of the activity execution

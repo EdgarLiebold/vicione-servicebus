@@ -8,7 +8,7 @@ public sealed class AmazonSqsTopicEndpointTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0246", "explicit-topic-send-reaches-only-its-subscribed-queue")]
-    public async Task SendToTopicEndpoint_ReachesTheSubscribedQueue()
+    public async Task SendToTopicEndpoint_ReachesTheSubscribedQueueAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("topicendpoint");
         string queueName = fixture.Name("input");
@@ -41,13 +41,12 @@ public sealed class AmazonSqsTopicEndpointTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint topic = await bus.GetSendEndpoint(new Uri($"topic:{topicName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await topic.Send(new TopicMessage(messageId), cancellationToken)
+            ISendEndpoint topic = await bus.GetSendEndpointAsync(new Uri($"topic:{topicName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await topic.SendAsync(new TopicMessage(messageId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             Assert.Equal(messageId, await consumed.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
-            Assert.Equal([physicalTopicName], await fixture.ListOwnedTopicNames(cancellationToken));
+            Assert.Equal([physicalTopicName], await fixture.ListOwnedTopicNamesAsync(cancellationToken));
         }
         finally
         {

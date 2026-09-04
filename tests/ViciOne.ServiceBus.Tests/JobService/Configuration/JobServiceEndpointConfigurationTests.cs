@@ -31,7 +31,7 @@ public sealed class JobServiceEndpointConfigurationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-JOB-ENDPOINT-CONFIGURATION", "registration-context-outbox-on-all-job-sagas")]
-    public async Task RegistrationContext_AppliesTheOutboxToEveryJobSagaEndpoint()
+    public async Task RegistrationContext_AppliesTheOutboxToEveryJobSagaEndpointAsync()
     {
         await using ServiceProvider provider = new ServiceCollection()
             .AddViciOneServiceBus(configuration =>

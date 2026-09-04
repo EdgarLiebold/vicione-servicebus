@@ -8,9 +8,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 {
     class StateAccessorIndex
     {
-        readonly State<TInstance>[] _assignedStates;
+        readonly State<TInstance>?[] _assignedStates;
         readonly StateMachine<TInstance> _stateMachine;
-        readonly Lazy<State<TInstance>[]> _states;
+        readonly Lazy<State<TInstance>?[]> _states;
 
         public StateAccessorIndex(StateMachine<TInstance> stateMachine, State<TInstance> initial, State<TInstance> final, State[] states)
         {
@@ -18,7 +18,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
             _assignedStates = new[] { null, initial, final }.Concat(states.Cast<State<TInstance>>()).ToArray();
 
-            _states = new Lazy<State<TInstance>[]>(CreateStateArray);
+            _states = new Lazy<State<TInstance>?[]>(CreateStateArray);
         }
 
         public int this[string name]
@@ -30,7 +30,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
                 for (var i = 1; i < _states.Value.Length; i++)
                 {
-                    if (_states.Value[i].Name.Equals(name))
+                    if (_states.Value[i]?.Name.Equals(name) == true)
                         return i;
                 }
 
@@ -38,7 +38,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             }
         }
 
-        public State<TInstance> this[int index]
+        public State<TInstance>? this[int index]
         {
             get
             {
@@ -49,7 +49,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             }
         }
 
-        State<TInstance>[] CreateStateArray()
+        State<TInstance>?[] CreateStateArray()
         {
             return _assignedStates.Concat(_stateMachine.States.Cast<State<TInstance>>()).Distinct().ToArray();
         }

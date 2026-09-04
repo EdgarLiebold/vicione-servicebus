@@ -100,7 +100,7 @@ internal static class EntityFrameworkExecutionStrategy
             {
                 try
                 {
-                    await outboxContext!.DiscardPendingActions(checkpoint).ConfigureAwait(false);
+                    await outboxContext!.DiscardPendingActionsAsync(checkpoint).ConfigureAwait(false);
                 }
                 catch (Exception cleanupException)
                 {

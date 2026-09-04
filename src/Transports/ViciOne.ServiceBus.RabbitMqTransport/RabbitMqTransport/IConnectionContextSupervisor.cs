@@ -9,9 +9,9 @@ public interface IConnectionContextSupervisor :
 {
     Uri NormalizeAddress(Uri address);
 
-    Task<ISendTransport> CreateSendTransport(RabbitMqReceiveEndpointContext receiveEndpointContext, IChannelContextSupervisor channelContextSupervisor,
-        Uri address);
+    Task<ISendTransport> CreateSendTransportAsync(RabbitMqReceiveEndpointContext receiveEndpointContext, IChannelContextSupervisor channelContextSupervisor,
+        Uri address, CancellationToken cancellationToken = default);
 
-    Task<ISendTransport> CreatePublishTransport<T>(RabbitMqReceiveEndpointContext receiveEndpointContext, IChannelContextSupervisor channelContextSupervisor)
+    Task<ISendTransport> CreatePublishTransportAsync<T>(RabbitMqReceiveEndpointContext receiveEndpointContext, IChannelContextSupervisor channelContextSupervisor, CancellationToken cancellationToken = default)
         where T : class;
 }

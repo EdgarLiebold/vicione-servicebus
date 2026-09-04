@@ -30,7 +30,7 @@ public class BindContextProxy<TLeft, TRight> :
         return payloadType.IsInstanceOfType(Right) || Left.HasPayloadType(payloadType);
     }
 
-    public bool TryGetPayload<T>(out T payload)
+    public bool TryGetPayload<T>([NotNullWhen(true)] out T? payload)
         where T : class
     {
         if (Right is T context)

@@ -10,7 +10,7 @@ public interface JobFaulted
 {
     Guid JobId { get; }
 
-    DateTime Timestamp { get; }
+    DateTimeOffset Timestamp { get; }
 
     TimeSpan? Duration { get; }
 

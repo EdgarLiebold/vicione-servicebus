@@ -12,7 +12,7 @@ public sealed class AmazonSqsRedeliveryTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0186", "three-delayed-redeliveries-with-one-immediate-retry-stop-exactly")]
-    public async Task DelayedRedelivery_StopsAtTheConfiguredLimit()
+    public async Task DelayedRedelivery_StopsAtTheConfiguredLimitAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("redelivery");
         string inputQueue = fixture.Name("input");
@@ -59,7 +59,7 @@ public sealed class AmazonSqsRedeliveryTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            await bus.Publish(new AlwaysFails(correlationId), cancellationToken)
+            await bus.PublishAsync(new AlwaysFails(correlationId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             FaultObservation actual = await faulted.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);

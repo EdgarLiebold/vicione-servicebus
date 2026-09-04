@@ -9,7 +9,7 @@ public sealed class RabbitMqFaultTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-FAULT", "retry-fault-and-error-move-are-terminal-and-exact")]
-    public async Task RetryExhaustion_MovesOneEnvelopeAndPublishesOneCorrelatedFault()
+    public async Task RetryExhaustion_MovesOneEnvelopeAndPublishesOneCorrelatedFaultAsync()
     {
         const string failureMessage = "intentional RabbitMQ consumer failure";
         using RabbitMqBroker fixture = RabbitMqBroker.Create("fault");
@@ -73,9 +73,8 @@ public sealed class RabbitMqFaultTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queue}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await endpoint.Send(
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queue}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await endpoint.SendAsync(
                     new FailureMessage("must-move"),
                     context =>
                     {
@@ -94,9 +93,9 @@ public sealed class RabbitMqFaultTests
             Assert.Equal(conversationId, movedContext.ConversationId);
             Assert.Equal("exact-marker", movedContext.Headers.Get<string>("fault-marker"));
             Assert.Equal(failureMessage,
-                movedContext.ReceiveContext.TransportHeaders.Get(MessageHeaders.FaultMessage, default(string)));
+                movedContext.Advanced().ReceiveContext.TransportHeaders.Get(MessageHeaders.FaultMessage, default(string)));
             Assert.Equal("fault",
-                movedContext.ReceiveContext.TransportHeaders.Get(MessageHeaders.Reason, default(string)));
+                movedContext.Advanced().ReceiveContext.TransportHeaders.Get(MessageHeaders.Reason, default(string)));
             Assert.Equal(correlationId, faultContext.CorrelationId);
             Assert.Equal(conversationId, faultContext.ConversationId);
             Assert.Equal("must-move", faultContext.Message.Message.Value);
@@ -105,9 +104,9 @@ public sealed class RabbitMqFaultTests
             await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
             started = false;
             Assert.Equal((3, 1, 1), (sourceEntries, movedEntries, faultEntries));
-            Assert.Equal(0, (await fixture.Queue(queue, cancellationToken)).Messages);
-            Assert.Equal(0, (await fixture.Queue(errorQueue, cancellationToken)).Messages);
-            Assert.Equal(0, (await fixture.Queue(faultQueue, cancellationToken)).Messages);
+            Assert.Equal(0, (await fixture.QueueAsync(queue, cancellationToken)).Messages);
+            Assert.Equal(0, (await fixture.QueueAsync(errorQueue, cancellationToken)).Messages);
+            Assert.Equal(0, (await fixture.QueueAsync(faultQueue, cancellationToken)).Messages);
         }
         finally
         {

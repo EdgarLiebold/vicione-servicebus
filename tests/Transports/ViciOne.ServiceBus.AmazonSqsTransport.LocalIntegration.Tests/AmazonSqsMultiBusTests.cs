@@ -13,7 +13,7 @@ public sealed class AmazonSqsMultiBusTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0226", "two-buses-keep-independent-entity-name-formatters")]
-    public async Task TwoBuses_KeepIndependentEntityNameFormatters()
+    public async Task TwoBuses_KeepIndependentEntityNameFormattersAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("multibus");
         string firstQueueName = fixture.Name("first");
@@ -36,8 +36,8 @@ public sealed class AmazonSqsMultiBusTests
                 fixture.ConfigureHost(configurator);
                 configurator.ReceiveEndpoint(firstQueueName, endpoint =>
                 {
-                    endpoint.Handler<EndpointProbe>(firstDeliveries.ObserveProbe);
-                    endpoint.Handler<MultiBusMessage>(firstDeliveries.Observe);
+                    endpoint.Handler<EndpointProbe>(firstDeliveries.ObserveProbeAsync);
+                    endpoint.Handler<MultiBusMessage>(firstDeliveries.ObserveAsync);
                 });
             }))
             .AddViciOneServiceBus<ISecondBus>(registration => registration.UsingAmazonSqs((_, configurator) =>
@@ -46,8 +46,8 @@ public sealed class AmazonSqsMultiBusTests
                 fixture.ConfigureHost(configurator);
                 configurator.ReceiveEndpoint(secondQueueName, endpoint =>
                 {
-                    endpoint.Handler<EndpointProbe>(secondDeliveries.ObserveProbe);
-                    endpoint.Handler<MultiBusMessage>(secondDeliveries.Observe);
+                    endpoint.Handler<EndpointProbe>(secondDeliveries.ObserveProbeAsync);
+                    endpoint.Handler<MultiBusMessage>(secondDeliveries.ObserveAsync);
                 });
             }));
         await using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions
@@ -87,24 +87,22 @@ public sealed class AmazonSqsMultiBusTests
             using var secondPublishObserver = new PublishDestinationObserver();
             using ConnectHandle firstObserverHandle = firstBus.ConnectPublishObserver(firstPublishObserver);
             using ConnectHandle secondObserverHandle = secondBus.ConnectPublishObserver(secondPublishObserver);
-            ISendEndpoint firstEndpoint = await firstBus.GetSendEndpoint(new Uri($"queue:{firstQueueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            ISendEndpoint secondEndpoint = await secondBus.GetSendEndpoint(new Uri($"queue:{secondQueueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            ISendEndpoint firstEndpoint = await firstBus.GetSendEndpointAsync(new Uri($"queue:{firstQueueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            ISendEndpoint secondEndpoint = await secondBus.GetSendEndpointAsync(new Uri($"queue:{secondQueueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             Guid firstProbeId = Guid.NewGuid();
             Guid secondProbeId = Guid.NewGuid();
-            await firstEndpoint.Send(new EndpointProbe(firstProbeId), cancellationToken)
+            await firstEndpoint.SendAsync(new EndpointProbe(firstProbeId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await secondEndpoint.Send(new EndpointProbe(secondProbeId), cancellationToken)
+            await secondEndpoint.SendAsync(new EndpointProbe(secondProbeId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.Equal(firstProbeId, await firstDeliveries.Probe.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
             Assert.Equal(secondProbeId, await secondDeliveries.Probe.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
 
             Guid firstId = Guid.NewGuid();
             Guid secondId = Guid.NewGuid();
-            await firstBus.Publish(new MultiBusMessage(firstId, 1), cancellationToken)
+            await firstBus.PublishAsync(new MultiBusMessage(firstId, 1), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await secondBus.Publish(new MultiBusMessage(secondId, 2), cancellationToken)
+            await secondBus.PublishAsync(new MultiBusMessage(secondId, 2), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             Assert.Equal([firstAddress], firstPublishObserver.Destinations);
@@ -148,14 +146,14 @@ public sealed class AmazonSqsMultiBusTests
         public TaskCompletionSource<Guid> Probe { get; } =
             new(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        public Task Observe(ConsumeContext<MultiBusMessage> context)
+        public Task ObserveAsync(ConsumeContext<MultiBusMessage> context)
         {
             Deliveries.Enqueue(context.Message);
             First.TrySetResult(context.Message.CorrelationId);
             return Task.CompletedTask;
         }
 
-        public Task ObserveProbe(ConsumeContext<EndpointProbe> context)
+        public Task ObserveProbeAsync(ConsumeContext<EndpointProbe> context)
         {
             Probe.TrySetResult(context.Message.CorrelationId);
             return Task.CompletedTask;
@@ -166,7 +164,7 @@ public sealed class AmazonSqsMultiBusTests
     {
         public ConcurrentQueue<Uri?> Destinations { get; } = [];
 
-        public Task PrePublish<T>(PublishContext<T> context)
+        public Task PrePublishAsync<T>(PublishContext<T> context)
             where T : class
         {
             if (context.Message is MultiBusMessage)
@@ -174,10 +172,10 @@ public sealed class AmazonSqsMultiBusTests
             return Task.CompletedTask;
         }
 
-        public Task PostPublish<T>(PublishContext<T> context)
+        public Task PostPublishAsync<T>(PublishContext<T> context)
             where T : class => Task.CompletedTask;
 
-        public Task PublishFault<T>(PublishContext<T> context, Exception exception)
+        public Task PublishFaultAsync<T>(PublishContext<T> context, Exception exception)
             where T : class => Task.CompletedTask;
 
         public void Dispose()

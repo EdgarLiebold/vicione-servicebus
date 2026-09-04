@@ -16,9 +16,12 @@ public readonly struct EventHubEndpointAddress
 
     public EventHubEndpointAddress(Uri hostAddress, Uri address)
     {
-        Host = default;
-        EventHubName = default;
-        Scheme = default;
+        ArgumentNullException.ThrowIfNull(hostAddress);
+        ArgumentNullException.ThrowIfNull(address);
+
+        Host = null!;
+        EventHubName = null!;
+        Scheme = null!;
         Port = default;
 
         var scheme = address.Scheme.ToLowerInvariant();
@@ -45,6 +48,10 @@ public readonly struct EventHubEndpointAddress
 
     public EventHubEndpointAddress(Uri hostAddress, string eventHubName)
     {
+        ArgumentNullException.ThrowIfNull(hostAddress);
+        if (string.IsNullOrWhiteSpace(eventHubName))
+            throw new ArgumentException("The Event Hub name must not be empty.", nameof(eventHubName));
+
         ParseLeft(hostAddress, out Scheme, out Host, out Port);
 
         EventHubName = eventHubName;

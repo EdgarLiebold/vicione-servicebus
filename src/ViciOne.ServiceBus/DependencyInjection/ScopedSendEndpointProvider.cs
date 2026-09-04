@@ -23,9 +23,9 @@ public class ScopedSendEndpointProvider :
 
     IMessageRouteTable IMessageRouteProvider.MessageRoutes => EndpointConvention.GetMessageRoutes(_provider);
 
-    async Task<ISendEndpoint> ISendEndpointProvider.GetSendEndpoint(Uri address)
+    async Task<ISendEndpoint> ISendEndpointProvider.GetSendEndpointAsync(Uri address, CancellationToken cancellationToken)
     {
-        var endpoint = await _provider.GetSendEndpoint(address).ConfigureAwait(false);
+        var endpoint = await _provider.GetSendEndpointAsync(address, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         return new ScopedSendEndpoint(endpoint, _serviceProvider);
     }

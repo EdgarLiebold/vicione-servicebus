@@ -22,7 +22,7 @@ public class RawMessageContext :
     Guid? _messageId;
     Guid? _requestId;
     Uri? _responseAddress;
-    DateTime? _sentTime;
+    DateTimeOffset? _sentTime;
     Uri? _sourceAddress;
 
     public RawMessageContext(Headers headers, Uri? destinationAddress, RawSerializerOptions options)
@@ -37,23 +37,23 @@ public class RawMessageContext :
     public Guid? CorrelationId => _correlationId ??= _transportHeaders.GetCorrelationId();
     public Guid? ConversationId => _conversationId ??= _transportHeaders.GetConversationId();
     public Guid? InitiatorId => _initiatorId ??= _transportHeaders.GetInitiatorId();
-    public DateTime? ExpirationTime { get; } = default;
+    public DateTimeOffset? ExpirationTime { get; } = default;
     public Uri? SourceAddress => _sourceAddress ??= _transportHeaders.GetSourceAddress();
     public Uri? DestinationAddress { get; }
     public Uri? ResponseAddress => _responseAddress ??= _transportHeaders.GetResponseAddress();
     public Uri? FaultAddress => _faultAddress ??= _transportHeaders.GetFaultAddress();
 
-    public DateTime? SentTime => _sentTime ??= GetSentTime();
+    public DateTimeOffset? SentTime => _sentTime ??= GetSentTime();
 
     public Headers Headers => _headers ??= new TransportHeaderFilter(_transportHeaders, _options);
 
     public HostInfo Host => _host ??= GetHostInfo();
 
-    DateTime? GetSentTime()
+    DateTimeOffset? GetSentTime()
     {
         try
         {
-            DateTime? sentTime = MessageId?.ToNewId().Timestamp;
+            DateTimeOffset? sentTime = MessageId?.ToNewId().Timestamp;
 
             return sentTime > DateTimeConstants.Epoch ? sentTime : default;
         }
@@ -120,12 +120,12 @@ public class RawMessageContext :
             }
         }
 
-        public bool TryGetHeader(string key, out object value)
+        public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
         {
             return _headers.TryGetHeader(key, out value);
         }
 
-        public T Get<T>(string key, T defaultValue = default)
+        public T? Get<T>(string key, T? defaultValue = default)
             where T : class
         {
             return _headers.Get(key, defaultValue);

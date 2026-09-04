@@ -19,10 +19,10 @@ public class InstanceConsumerFactory<TConsumer> :
         _consumer = consumer;
     }
 
-    public Task Send<TMessage>(ConsumeContext<TMessage> context, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)
+    public Task SendAsync<TMessage>(ConsumeContext<TMessage> context, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)
         where TMessage : class
     {
-        return next.Send(new ConsumerConsumeContextScope<TConsumer, TMessage>(context, _consumer));
+        return next.SendAsync(new ConsumerConsumeContextScope<TConsumer, TMessage>(context, _consumer));
     }
 
     void IProbeSite.Probe(ProbeContext context)

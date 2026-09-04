@@ -13,7 +13,7 @@ public sealed class EntityFrameworkExecutionStrategyTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-EXECUTION-STRATEGY", "successful-attempt-preserves-tracked-state")]
-    public async Task SuccessfulAttempt_PreservesTrackedState()
+    public async Task SuccessfulAttempt_PreservesTrackedStateAsync()
     {
         await using var dbContext = CreateDbContext();
         var strategy = new RetryOnceExecutionStrategy(dbContext);
@@ -35,7 +35,7 @@ public sealed class EntityFrameworkExecutionStrategyTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-EXECUTION-STRATEGY", "generic-retry-starts-with-an-empty-change-tracker")]
-    public async Task GenericRetry_DiscardsTrackedStateFromTheFailedAttempt()
+    public async Task GenericRetry_DiscardsTrackedStateFromTheFailedAttemptAsync()
     {
         await using var dbContext = CreateDbContext();
         var strategy = new RetryOnceExecutionStrategy(dbContext);
@@ -62,7 +62,7 @@ public sealed class EntityFrameworkExecutionStrategyTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-EXECUTION-STRATEGY", "non-generic-retry-starts-with-an-empty-change-tracker")]
-    public async Task NonGenericRetry_DiscardsTrackedStateFromTheFailedAttempt()
+    public async Task NonGenericRetry_DiscardsTrackedStateFromTheFailedAttemptAsync()
     {
         await using var dbContext = CreateDbContext();
         var strategy = new RetryOnceExecutionStrategy(dbContext);
@@ -88,13 +88,13 @@ public sealed class EntityFrameworkExecutionStrategyTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-EXECUTION-STRATEGY", "failed-outbox-rollback-blocks-business-retry")]
-    public async Task FailedOutboxRollback_BlocksASecondBusinessAttemptAndPreservesTheOriginalFailure()
+    public async Task FailedOutboxRollback_BlocksASecondBusinessAttemptAndPreservesTheOriginalFailureAsync()
     {
         await using var dbContext = CreateDbContext();
         var strategy = new WrappingRetryEveryExceptionExecutionStrategy(dbContext);
         var operationFailure = new RetryRequestedException();
         var cleanupFailure = new InvalidOperationException("The outbox rollback failed.");
-        var scheduler = DispatchProxy.Create<IMessageScheduler, FailingCancellationSchedulerProxy>();
+        var scheduler = DispatchProxy.Create<Advanced.IAdvancedMessageScheduler, FailingCancellationSchedulerProxy>();
         var schedulerProxy = (FailingCancellationSchedulerProxy)(object)scheduler;
         schedulerProxy.EnqueueCancellationFailure(cleanupFailure);
         ConsumeContext<RetryMessage> consumeContext = InMemoryOutboxTestContextFactory.Create(
@@ -102,7 +102,8 @@ public sealed class EntityFrameworkExecutionStrategyTests
             TestContext.Current.CancellationToken,
             scheduler);
         var outboxContext = new InMemoryOutboxConsumeContext<RetryMessage>(consumeContext);
-        Assert.True(outboxContext.TryGetPayload(out MessageSchedulerContext schedulerContext));
+        if (!outboxContext.TryGetPayload(out MessageSchedulerContext? schedulerContext) || schedulerContext is null)
+            throw new Xunit.Sdk.XunitException("Expected the outbox scheduler context payload to be available.");
         var attempts = 0;
 
         Exception actual = await Assert.ThrowsAsync<RetryRequestedException>(() =>
@@ -113,7 +114,7 @@ public sealed class EntityFrameworkExecutionStrategyTests
                 async () =>
                 {
                     attempts++;
-                    await schedulerContext.SchedulePublish(
+                    await schedulerContext.SchedulePublishAsync(
                         new DateTime(2030, 1, 2, 3, 4, 5, DateTimeKind.Utc),
                         new RetryMessage(),
                         typeof(RetryMessage),
@@ -129,14 +130,14 @@ public sealed class EntityFrameworkExecutionStrategyTests
         Assert.Equal(1, schedulerProxy.ScheduledCount);
         Assert.Equal(1, schedulerProxy.CancellationCount);
 
-        await outboxContext.DiscardPendingActions();
+        await outboxContext.DiscardPendingActionsAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(2, schedulerProxy.CancellationCount);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-EXECUTION-STRATEGY", "failed-outbox-rollback-blocks-canceled-business-retry")]
-    public async Task FailedOutboxRollback_AfterCallerCancellationDoesNotReenterTheBusinessAttempt()
+    public async Task FailedOutboxRollback_AfterCallerCancellationDoesNotReenterTheBusinessAttemptAsync()
     {
         await using var dbContext = CreateDbContext();
         var strategy = new WrappingRetryEveryExceptionExecutionStrategy(dbContext);
@@ -170,7 +171,7 @@ public sealed class EntityFrameworkExecutionStrategyTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-EXECUTION-STRATEGY", "consumed-rollback-stop-still-propagates-original-failure")]
-    public async Task FailedOutboxRollback_CannotBeTurnedIntoSuccessByAConsumingStrategy()
+    public async Task FailedOutboxRollback_CannotBeTurnedIntoSuccessByAConsumingStrategyAsync()
     {
         await using var dbContext = CreateDbContext();
         var strategy = new ConsumingFailureExecutionStrategy(dbContext);
@@ -229,9 +230,9 @@ public sealed class EntityFrameworkExecutionStrategyTests
 
         public int RollbackCount { get; private set; }
 
-        public override Task DiscardPendingActions(OutboxCheckpoint checkpoint)
+        public override Task DiscardPendingActionsAsync(OutboxCheckpoint checkpoint, CancellationToken cancellationToken = default)
         {
-            RollbackCount++;
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); RollbackCount++;
             return Task.FromException(CleanupFailure);
         }
     }
@@ -255,19 +256,19 @@ public sealed class EntityFrameworkExecutionStrategyTests
             ArgumentNullException.ThrowIfNull(targetMethod);
             ArgumentNullException.ThrowIfNull(args);
 
-            if (targetMethod.Name == nameof(IMessageScheduler.SchedulePublish)
+            if (targetMethod.Name == nameof(IMessageScheduler.SchedulePublishAsync)
                 && targetMethod.ReturnType == typeof(Task<ScheduledMessage>))
             {
                 ScheduledCount++;
                 var scheduledMessage = new ScheduledMessageHandle<object>(
                     NewId.NextGuid(),
-                    (DateTime)args[0]!,
+                    (DateTimeOffset)args[0]!,
                     new Uri("loopback://localhost/scheduled"),
                     args[1]!);
                 return Task.FromResult<ScheduledMessage>(scheduledMessage);
             }
 
-            if (targetMethod.Name == nameof(IMessageScheduler.CancelScheduledSend))
+            if (targetMethod.Name == nameof(IMessageScheduler.CancelScheduledSendAsync))
             {
                 CancellationCount++;
                 return _cancellationFailures.TryDequeue(out Exception? failure)

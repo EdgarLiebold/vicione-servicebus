@@ -6,7 +6,8 @@ using ViciOne.ServiceBus.Transports;
 namespace ViciOne.ServiceBus.Transactions;
 
 internal abstract class DeferredBus :
-    IBus
+    IBus,
+    Advanced.IAdvancedPublishEndpoint
 {
     readonly IBus _bus;
     readonly IPublishEndpoint _publishEndpoint;
@@ -25,66 +26,68 @@ internal abstract class DeferredBus :
         return _bus.ConnectPublishObserver(observer);
     }
 
-    public Task<ISendEndpoint> GetPublishSendEndpoint<T>()
+    public Task<ISendEndpoint> GetPublishSendEndpointAsync<T>(CancellationToken cancellationToken = default)
         where T : class
     {
-        return _publishEndpointProvider.GetPublishSendEndpoint<T>();
+        return _publishEndpointProvider.GetPublishSendEndpointAsync<T>(cancellationToken: cancellationToken);
     }
 
-    public Task Publish<T>(T message, CancellationToken cancellationToken = default)
+    public Task PublishAsync<T>(T message, CancellationToken cancellationToken = default)
         where T : class
     {
-        return Add(token => _publishEndpoint.Publish(message, token), cancellationToken);
+        return AddAsync(token => _publishEndpoint.PublishAsync(message, token), cancellationToken);
     }
 
-    public Task Publish<T>(T message, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken = default)
+    public Task PublishAsync<T>(T message, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        return Add(token => _publishEndpoint.Publish(message, publishPipe, token), cancellationToken);
+        return AddAsync(token => _publishEndpoint.PublishAsync(message, publishPipe, token), cancellationToken);
     }
 
-    public Task Publish<T>(T message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
+    public Task PublishAsync<T>(T message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        return Add(token => _publishEndpoint.Publish(message, publishPipe, token), cancellationToken);
+        return AddAsync(token => _publishEndpoint.PublishAsync(message, publishPipe, token), cancellationToken);
     }
 
-    public Task Publish(object message, CancellationToken cancellationToken = default)
+    public Task PublishAsync(object message, CancellationToken cancellationToken = default)
     {
-        return Add(token => _publishEndpoint.Publish(message, token), cancellationToken);
+        ArgumentNullException.ThrowIfNull(message);
+        return AddAsync(token => _publishEndpoint.Advanced().PublishAsync(message, message.GetType(), token), cancellationToken);
     }
 
-    public Task Publish(object message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
+    public Task PublishAsync(object message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
     {
-        return Add(token => _publishEndpoint.Publish(message, publishPipe, token), cancellationToken);
+        ArgumentNullException.ThrowIfNull(message);
+        return AddAsync(token => _publishEndpoint.Advanced().PublishAsync(message, message.GetType(), publishPipe, token), cancellationToken);
     }
 
-    public Task Publish(object message, Type messageType, CancellationToken cancellationToken = default)
+    public Task PublishAsync(object message, Type messageType, CancellationToken cancellationToken = default)
     {
-        return Add(token => _publishEndpoint.Publish(message, messageType, token), cancellationToken);
+        return AddAsync(token => _publishEndpoint.PublishAsync(message, messageType, token), cancellationToken);
     }
 
-    public Task Publish(object message, Type messageType, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
+    public Task PublishAsync(object message, Type messageType, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
     {
-        return Add(token => _publishEndpoint.Publish(message, messageType, publishPipe, token), cancellationToken);
+        return AddAsync(token => _publishEndpoint.PublishAsync(message, messageType, publishPipe, token), cancellationToken);
     }
 
-    public Task Publish<T>(object values, CancellationToken cancellationToken = default)
+    public Task PublishAsync<T>(object values, CancellationToken cancellationToken = default)
         where T : class
     {
-        return Add(token => _publishEndpoint.Publish<T>(values, token), cancellationToken);
+        return AddAsync(token => _publishEndpoint.PublishAsync<T>(values, token), cancellationToken);
     }
 
-    public Task Publish<T>(object values, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken = default)
+    public Task PublishAsync<T>(object values, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        return Add(token => _publishEndpoint.Publish(values, publishPipe, token), cancellationToken);
+        return AddAsync(token => _publishEndpoint.PublishAsync(values, publishPipe, token), cancellationToken);
     }
 
-    public Task Publish<T>(object values, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
+    public Task PublishAsync<T>(object values, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        return Add(token => _publishEndpoint.Publish<T>(values, publishPipe, token), cancellationToken);
+        return AddAsync(token => _publishEndpoint.PublishAsync<T>(values, publishPipe, token), cancellationToken);
     }
 
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
@@ -92,9 +95,9 @@ internal abstract class DeferredBus :
         return _bus.ConnectSendObserver(observer);
     }
 
-    public async Task<ISendEndpoint> GetSendEndpoint(Uri address)
+    public async Task<ISendEndpoint> GetSendEndpointAsync(Uri address, CancellationToken cancellationToken = default)
     {
-        ISendEndpoint endpoint = await _bus.GetSendEndpoint(address).ConfigureAwait(false);
+        ISendEndpoint endpoint = await _bus.GetSendEndpointAsync(address, cancellationToken: cancellationToken).ConfigureAwait(false);
         return new DeferredBusSendEndpoint(this, endpoint);
     }
 
@@ -142,13 +145,13 @@ internal abstract class DeferredBus :
         return _bus.ConnectEndpointConfigurationObserver(observer);
     }
 
-    public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
-        Action<IReceiveEndpointConfigurator> configureEndpoint = null)
+    public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
+        Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
         return _bus.ConnectReceiveEndpoint(definition, endpointNameFormatter, configureEndpoint);
     }
 
-    public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator> configureEndpoint)
+    public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint)
     {
         return _bus.ConnectReceiveEndpoint(queueName, configureEndpoint);
     }
@@ -161,5 +164,5 @@ internal abstract class DeferredBus :
     public Uri Address => _bus.Address;
     public IBusTopology Topology => _bus.Topology;
 
-    internal abstract Task Add(Func<CancellationToken, Task> action, CancellationToken cancellationToken);
+    internal abstract Task AddAsync(Func<CancellationToken, Task> action, CancellationToken cancellationToken);
 }

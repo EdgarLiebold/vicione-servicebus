@@ -5,7 +5,7 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.AzureTable.Saga;
 
-public class EntityPropertyTypeConverter :
+internal class EntityPropertyTypeConverter :
     ITypeConverter<object, bool>,
     ITypeConverter<object, bool?>,
     ITypeConverter<bool, object>,
@@ -54,7 +54,7 @@ public class EntityPropertyTypeConverter :
     {
     }
 
-    public bool TryConvert(object input, out bool result)
+    public bool TryConvert(object? input, out bool result)
     {
         if (input is bool value)
         {
@@ -66,7 +66,7 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(object input, out bool? result)
+    public bool TryConvert(object? input, out bool? result)
     {
         if (input is bool value)
         {
@@ -78,7 +78,7 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(object input, out byte[] result)
+    public bool TryConvert(object? input, out byte[]? result)
     {
         if (input is byte[] value)
         {
@@ -90,7 +90,7 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(object input, out DateTime result)
+    public bool TryConvert(object? input, out DateTime result)
     {
         if (input is DateTime dt)
         {
@@ -108,7 +108,7 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(object input, out DateTime? result)
+    public bool TryConvert(object? input, out DateTime? result)
     {
         if (input is DateTime dt)
         {
@@ -127,7 +127,7 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(object input, out DateTimeOffset result)
+    public bool TryConvert(object? input, out DateTimeOffset result)
     {
         if (input is DateTimeOffset dto)
         {
@@ -139,7 +139,7 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(object input, out DateTimeOffset? result)
+    public bool TryConvert(object? input, out DateTimeOffset? result)
     {
         if (input is DateTimeOffset dto)
         {
@@ -151,7 +151,7 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(object input, out double result)
+    public bool TryConvert(object? input, out double result)
     {
         if (input is double)
         {
@@ -163,7 +163,7 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(object input, out double? result)
+    public bool TryConvert(object? input, out double? result)
     {
         if (input is double value)
         {
@@ -175,7 +175,7 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(object input, out Guid result)
+    public bool TryConvert(object? input, out Guid result)
     {
         if (input is Guid)
         {
@@ -187,7 +187,7 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(object input, out Guid? result)
+    public bool TryConvert(object? input, out Guid? result)
     {
         if (input is Guid value)
         {
@@ -199,7 +199,7 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(object input, out int result)
+    public bool TryConvert(object? input, out int result)
     {
         if (input is int)
         {
@@ -211,7 +211,7 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(object input, out int? result)
+    public bool TryConvert(object? input, out int? result)
     {
         if (input is int value)
         {
@@ -223,7 +223,7 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(object input, out long result)
+    public bool TryConvert(object? input, out long result)
     {
         if (input is long)
         {
@@ -235,7 +235,7 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(object input, out long? result)
+    public bool TryConvert(object? input, out long? result)
     {
         if (input is long value)
         {
@@ -247,7 +247,7 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(bool? input, out object result)
+    public bool TryConvert(bool? input, out object? result)
     {
         if (input.HasValue)
         {
@@ -259,13 +259,13 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(bool input, out object result)
+    public bool TryConvert(bool input, out object? result)
     {
         result = input;
         return true;
     }
 
-    public bool TryConvert(byte[] input, out object result)
+    public bool TryConvert(byte[]? input, out object? result)
     {
         if (input != null)
         {
@@ -277,7 +277,7 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(DateTime? input, out object result)
+    public bool TryConvert(DateTime? input, out object? result)
     {
         if (input.HasValue)
         {
@@ -289,13 +289,13 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(DateTime input, out object result)
+    public bool TryConvert(DateTime input, out object? result)
     {
         result = input;
         return true;
     }
 
-    public bool TryConvert(DateTimeOffset? input, out object result)
+    public bool TryConvert(DateTimeOffset? input, out object? result)
     {
         if (input.HasValue)
         {
@@ -307,13 +307,13 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(DateTimeOffset input, out object result)
+    public bool TryConvert(DateTimeOffset input, out object? result)
     {
         result = input;
         return true;
     }
 
-    public bool TryConvert(double? input, out object result)
+    public bool TryConvert(double? input, out object? result)
     {
         if (input.HasValue)
         {
@@ -325,13 +325,13 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(double input, out object result)
+    public bool TryConvert(double input, out object? result)
     {
         result = input;
         return true;
     }
 
-    public bool TryConvert(Guid? input, out object result)
+    public bool TryConvert(Guid? input, out object? result)
     {
         if (input.HasValue)
         {
@@ -343,13 +343,13 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(Guid input, out object result)
+    public bool TryConvert(Guid input, out object? result)
     {
         result = input;
         return true;
     }
 
-    public bool TryConvert(int? input, out object result)
+    public bool TryConvert(int? input, out object? result)
     {
         if (input.HasValue)
         {
@@ -361,13 +361,13 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(int input, out object result)
+    public bool TryConvert(int input, out object? result)
     {
         result = input;
         return true;
     }
 
-    public bool TryConvert(long? input, out object result)
+    public bool TryConvert(long? input, out object? result)
     {
         if (input.HasValue)
         {
@@ -379,19 +379,19 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(long input, out object result)
+    public bool TryConvert(long input, out object? result)
     {
         result = input;
         return true;
     }
 
-    public bool TryConvert(string input, out object result)
+    public bool TryConvert(string? input, out object? result)
     {
         result = input;
-        return true;
+        return input != null;
     }
 
-    public bool TryConvert(TimeSpan? input, out object result)
+    public bool TryConvert(TimeSpan? input, out object? result)
     {
         if (input.HasValue && _timeSpanConverter.TryConvert(input.Value, out var text))
         {
@@ -403,7 +403,7 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(TimeSpan input, out object result)
+    public bool TryConvert(TimeSpan input, out object? result)
     {
         if (_timeSpanConverter.TryConvert(input, out var text))
         {
@@ -415,7 +415,7 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(Uri input, out object result)
+    public bool TryConvert(Uri? input, out object? result)
     {
         if (input != null)
         {
@@ -427,7 +427,7 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(Version input, out object result)
+    public bool TryConvert(Version? input, out object? result)
     {
         if (input != null)
         {
@@ -439,7 +439,7 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(object input, out string result)
+    public bool TryConvert(object? input, out string? result)
     {
         if (input is string value
             && input.ToString() != null)
@@ -452,7 +452,7 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(object input, out TimeSpan result)
+    public bool TryConvert(object? input, out TimeSpan result)
     {
         if (input is string text
             && !string.IsNullOrWhiteSpace(text)
@@ -466,7 +466,7 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(object input, out TimeSpan? result)
+    public bool TryConvert(object? input, out TimeSpan? result)
     {
         if (input is string text
             && !string.IsNullOrWhiteSpace(text)
@@ -480,13 +480,12 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(object input, out Uri result)
+    public bool TryConvert(object? input, out Uri? result)
     {
-        if (input is string
-            && input.ToString() != null
-            && Uri.IsWellFormedUriString(input.ToString(), UriKind.RelativeOrAbsolute))
+        if (input is string text
+            && Uri.IsWellFormedUriString(text, UriKind.RelativeOrAbsolute))
         {
-            result = new Uri(input.ToString());
+            result = new Uri(text, UriKind.RelativeOrAbsolute);
             return true;
         }
 
@@ -494,7 +493,7 @@ public class EntityPropertyTypeConverter :
         return false;
     }
 
-    public bool TryConvert(object input, out Version result)
+    public bool TryConvert(object? input, out Version? result)
     {
         if (input is string
             && input.ToString() != null

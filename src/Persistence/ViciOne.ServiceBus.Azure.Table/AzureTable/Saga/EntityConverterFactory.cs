@@ -22,17 +22,23 @@ public static class EntityConverterFactory
     {
         if (EntityPropertyTypeConverter.IsSupported(propertyInfo.PropertyType))
         {
-            return (IEntityPropertyConverter<T>)Activator.CreateInstance(
-                typeof(EntityPropertyConverter<,>).MakeGenericType(typeof(T), propertyInfo.PropertyType), propertyInfo.Name);
+            return CreatePropertyConverter<T>(typeof(EntityPropertyConverter<,>), propertyInfo);
         }
 
         if (propertyInfo.PropertyType.IsValueType)
         {
-            return (IEntityPropertyConverter<T>)Activator.CreateInstance(
-                typeof(ValueTypeEntityPropertyConverter<,>).MakeGenericType(typeof(T), propertyInfo.PropertyType), propertyInfo.Name);
+            return CreatePropertyConverter<T>(typeof(ValueTypeEntityPropertyConverter<,>), propertyInfo);
         }
 
-        return (IEntityPropertyConverter<T>)Activator.CreateInstance(
-            typeof(ObjectEntityPropertyConverter<,>).MakeGenericType(typeof(T), propertyInfo.PropertyType), propertyInfo.Name);
+        return CreatePropertyConverter<T>(typeof(ObjectEntityPropertyConverter<,>), propertyInfo);
+    }
+
+    static IEntityPropertyConverter<T> CreatePropertyConverter<T>(Type openConverterType, PropertyInfo propertyInfo)
+        where T : class
+    {
+        Type converterType = openConverterType.MakeGenericType(typeof(T), propertyInfo.PropertyType);
+        return Activator.CreateInstance(converterType, propertyInfo.Name) as IEntityPropertyConverter<T>
+            ?? throw new InvalidOperationException(
+                $"Unable to create Azure Table converter {converterType.FullName} for property {typeof(T).FullName}.{propertyInfo.Name}.");
     }
 }

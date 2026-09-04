@@ -11,7 +11,7 @@ public sealed class ContainerSagaIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-SAGA", "three-message-container-repository-lifecycle")]
-    public async Task ContainerSaga_ConsumesTheInitiatingOrchestratedAndObservedMessagesExactlyOnce()
+    public async Task ContainerSaga_ConsumesTheInitiatingOrchestratedAndObservedMessagesExactlyOnceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -22,7 +22,7 @@ public sealed class ContainerSagaIntegrationTests
                 configuration.AddSaga<ContainerLifecycleSaga>().InMemoryRepository();
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         bool started = true;
 
         try
@@ -34,18 +34,18 @@ public sealed class ContainerSagaIntegrationTests
             ISagaTestHarness<ContainerLifecycleSaga> sagaHarness =
                 harness.GetSagaHarness<ContainerLifecycleSaga>();
 
-            await harness.Bus.Publish(first, cancellationToken);
+            await harness.Bus.PublishAsync(first, cancellationToken);
             await sagaHarness.Consumed.SelectAsync<SagaFirst>(cancellationToken)
-                .First().WaitAsync(timeout, cancellationToken);
-            await harness.Bus.Publish(second, cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
+            await harness.Bus.PublishAsync(second, cancellationToken);
             await sagaHarness.Consumed.SelectAsync<SagaSecond>(cancellationToken)
-                .First().WaitAsync(timeout, cancellationToken);
-            await harness.Bus.Publish(third, cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
+            await harness.Bus.PublishAsync(third, cancellationToken);
             await sagaHarness.Consumed.SelectAsync<SagaThird>(cancellationToken)
-                .First().WaitAsync(timeout, cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
-            ContainerLifecycleSaga instance = sagaHarness.Sagas.Contains(correlationId);
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            ContainerLifecycleSaga? instance = sagaHarness.Sagas.Contains(correlationId);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
             started = false;
 
             Assert.NotNull(instance);
@@ -58,13 +58,13 @@ public sealed class ContainerSagaIntegrationTests
         finally
         {
             if (started)
-                await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+                await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-SAGA", "inline-name-and-definition-name-precedence")]
-    public async Task SagaEndpointOverrides_RouteToTheInlineAndDefinitionOwnedAddresses()
+    public async Task SagaEndpointOverrides_RouteToTheInlineAndDefinitionOwnedAddressesAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -80,36 +80,34 @@ public sealed class ContainerSagaIntegrationTests
                     .InMemoryRepository();
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Guid inlineId = NewId.NextGuid();
             Guid definitionId = NewId.NextGuid();
-            ISendEndpoint inline = await harness.Bus.GetSendEndpoint(new Uri("queue:custom-container-saga"))
-                .WaitAsync(timeout, cancellationToken);
-            ISendEndpoint definition = await harness.Bus.GetSendEndpoint(new Uri("queue:custom-definition-saga"))
-                .WaitAsync(timeout, cancellationToken);
+            ISendEndpoint inline = await harness.Bus.GetSendEndpointAsync(new Uri("queue:custom-container-saga"), TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
+            ISendEndpoint definition = await harness.Bus.GetSendEndpointAsync(new Uri("queue:custom-definition-saga"), TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
-            await inline.Send(new InlineSagaStart(inlineId), cancellationToken);
-            await definition.Send(new DefinitionSagaStart(definitionId), cancellationToken);
+            await inline.SendAsync(new InlineSagaStart(inlineId), cancellationToken);
+            await definition.SendAsync(new DefinitionSagaStart(definitionId), cancellationToken);
 
             ISagaTestHarness<InlineEndpointSaga> inlineHarness = harness.GetSagaHarness<InlineEndpointSaga>();
             ISagaTestHarness<DefinitionEndpointSaga> definitionHarness =
                 harness.GetSagaHarness<DefinitionEndpointSaga>();
             IReceivedMessage<InlineSagaStart> inlineReceived = await inlineHarness.Consumed
-                .SelectAsync<InlineSagaStart>(cancellationToken).First().WaitAsync(timeout, cancellationToken);
+                .SelectAsync<InlineSagaStart>(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
             IReceivedMessage<DefinitionSagaStart> definitionReceived = await definitionHarness.Consumed
-                .SelectAsync<DefinitionSagaStart>(cancellationToken).First().WaitAsync(timeout, cancellationToken);
+                .SelectAsync<DefinitionSagaStart>(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
-            Assert.Equal(inlineId, inlineHarness.Sagas.Contains(inlineId).CorrelationId);
-            Assert.Equal(definitionId, definitionHarness.Sagas.Contains(definitionId).CorrelationId);
-            Assert.Equal("custom-container-saga", inlineReceived.Context.ReceiveContext.InputAddress.AbsolutePath.Trim('/'));
-            Assert.Equal("custom-definition-saga", definitionReceived.Context.ReceiveContext.InputAddress.AbsolutePath.Trim('/'));
+            Assert.Equal(inlineId, Assert.IsType<InlineEndpointSaga>(inlineHarness.Sagas.Contains(inlineId)).CorrelationId);
+            Assert.Equal(definitionId, Assert.IsType<DefinitionEndpointSaga>(definitionHarness.Sagas.Contains(definitionId)).CorrelationId);
+            Assert.Equal("custom-container-saga", inlineReceived.Context.Advanced().ReceiveContext.InputAddress.AbsolutePath.Trim('/'));
+            Assert.Equal("custom-definition-saga", definitionReceived.Context.Advanced().ReceiveContext.InputAddress.AbsolutePath.Trim('/'));
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -138,19 +136,19 @@ public sealed class ContainerSagaIntegrationTests
 
         public List<string> Values { get; private set; } = [];
 
-        public Task Consume(ConsumeContext<SagaFirst> context)
+        public Task ConsumeAsync(ConsumeContext<SagaFirst> context)
         {
             Values.Add(context.Message.Value);
             return Task.CompletedTask;
         }
 
-        public Task Consume(ConsumeContext<SagaSecond> context)
+        public Task ConsumeAsync(ConsumeContext<SagaSecond> context)
         {
             Values.Add(context.Message.Value);
             return Task.CompletedTask;
         }
 
-        public Task Consume(ConsumeContext<SagaThird> context)
+        public Task ConsumeAsync(ConsumeContext<SagaThird> context)
         {
             Values.Add(context.Message.Value);
             return Task.CompletedTask;
@@ -167,7 +165,7 @@ public sealed class ContainerSagaIntegrationTests
     {
         public Guid CorrelationId { get; set; } = correlationId;
 
-        public Task Consume(ConsumeContext<InlineSagaStart> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<InlineSagaStart> context) => Task.CompletedTask;
     }
 
     public sealed record DefinitionSagaStart(Guid CorrelationId) : CorrelatedBy<Guid>;
@@ -176,7 +174,7 @@ public sealed class ContainerSagaIntegrationTests
     {
         public Guid CorrelationId { get; set; } = correlationId;
 
-        public Task Consume(ConsumeContext<DefinitionSagaStart> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<DefinitionSagaStart> context) => Task.CompletedTask;
     }
 
     public sealed class DefinitionEndpointSagaDefinition : SagaDefinition<DefinitionEndpointSaga>

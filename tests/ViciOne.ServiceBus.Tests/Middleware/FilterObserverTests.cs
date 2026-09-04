@@ -9,7 +9,7 @@ public sealed class FilterObserverTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-FILTER-OBSERVERS", "typed-and-untyped-success-order")]
-    public async Task Observers_ReceiveTheSameContextInExactSuccessOrder()
+    public async Task Observers_ReceiveTheSameContextInExactSuccessOrderAsync()
     {
         var trace = new List<string>();
         var router = new PipeRouter();
@@ -25,7 +25,7 @@ public sealed class FilterObserverTests
         observerConnector.ConnectObserver(typed);
         observerConnector.ConnectObserver(untyped);
 
-        await router.SetConcurrencyLimit(32);
+        await router.SetConcurrencyLimitAsync(32, cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal(["typed-pre", "untyped-pre", "body", "typed-post", "untyped-post"], trace);
         Assert.Same(bodyContext, typed.Context);
@@ -36,7 +36,7 @@ public sealed class FilterObserverTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-FILTER-OBSERVERS", "typed-and-untyped-fault-order")]
-    public async Task Observers_ReceiveTheExactFailureAndNeverReportPostSend()
+    public async Task Observers_ReceiveTheExactFailureAndNeverReportPostSendAsync()
     {
         var trace = new List<string>();
         var expected = new DispatchException("dispatch failed");
@@ -54,7 +54,7 @@ public sealed class FilterObserverTests
         observerConnector.ConnectObserver(typed);
         observerConnector.ConnectObserver(untyped);
 
-        DispatchException actual = await Assert.ThrowsAsync<DispatchException>(() => router.SetConcurrencyLimit(32));
+        DispatchException actual = await Assert.ThrowsAsync<DispatchException>(() => router.SetConcurrencyLimitAsync(32, cancellationToken: TestContext.Current.CancellationToken));
 
         Assert.Equal(["typed-pre", "untyped-pre", "body", "typed-fault", "untyped-fault"], trace);
         Assert.Same(expected, actual);
@@ -70,21 +70,21 @@ public sealed class FilterObserverTests
 
         public Exception? Failure { get; private set; }
 
-        public Task PreSend(CommandContext<SetConcurrencyLimit> context)
+        public Task PreSendAsync(CommandContext<SetConcurrencyLimit> context)
         {
             Context = context;
             trace.Add("typed-pre");
             return Task.CompletedTask;
         }
 
-        public Task PostSend(CommandContext<SetConcurrencyLimit> context)
+        public Task PostSendAsync(CommandContext<SetConcurrencyLimit> context)
         {
             Assert.Same(Context, context);
             trace.Add("typed-post");
             return Task.CompletedTask;
         }
 
-        public Task SendFault(CommandContext<SetConcurrencyLimit> context, Exception exception)
+        public Task SendFaultAsync(CommandContext<SetConcurrencyLimit> context, Exception exception)
         {
             Assert.Same(Context, context);
             Failure = exception;
@@ -99,7 +99,7 @@ public sealed class FilterObserverTests
 
         public Exception? Failure { get; private set; }
 
-        public Task PreSend<T>(T context)
+        public Task PreSendAsync<T>(T context)
             where T : class, PipeContext
         {
             Context = Assert.IsAssignableFrom<CommandContext>(context);
@@ -107,7 +107,7 @@ public sealed class FilterObserverTests
             return Task.CompletedTask;
         }
 
-        public Task PostSend<T>(T context)
+        public Task PostSendAsync<T>(T context)
             where T : class, PipeContext
         {
             Assert.Same(Context, context);
@@ -115,7 +115,7 @@ public sealed class FilterObserverTests
             return Task.CompletedTask;
         }
 
-        public Task SendFault<T>(T context, Exception exception)
+        public Task SendFaultAsync<T>(T context, Exception exception)
             where T : class, PipeContext
         {
             Assert.Same(Context, context);

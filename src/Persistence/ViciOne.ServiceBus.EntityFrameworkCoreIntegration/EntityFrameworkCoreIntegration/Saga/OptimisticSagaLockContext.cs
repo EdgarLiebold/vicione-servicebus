@@ -29,9 +29,9 @@ public class OptimisticSagaLockContext<TSaga> :
         _queryCustomization = queryCustomization;
     }
 
-    public async Task<IList<TSaga>> Load()
+    public async Task<IList<TSaga>> LoadAsync(CancellationToken cancellationToken = default)
     {
-        IQueryable<TSaga> queryable = SagaQueryCustomization.Apply(_context.Set<TSaga>(), _queryCustomization);
+        cancellationToken.ThrowIfCancellationRequested(); IQueryable<TSaga> queryable = SagaQueryCustomization.Apply(_context.Set<TSaga>(), _queryCustomization);
 
         List<TSaga> instances = await queryable.AsTracking()
             .Where(_query.FilterExpression)

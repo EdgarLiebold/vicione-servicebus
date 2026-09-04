@@ -34,9 +34,10 @@ public class TopicSendTransportContext :
     public override string EntityName { get; }
     public override string ActivitySystem => "aws_sqs";
 
-    public Task Send(IPipe<ClientContext> pipe, CancellationToken cancellationToken = default)
+    public Task SendAsync(IPipe<ClientContext> pipe, CancellationToken cancellationToken = default)
     {
-        return _hostConfiguration.Retry(() => _supervisor.Send(pipe, cancellationToken), cancellationToken, _supervisor.SendStopping);
+        return _hostConfiguration.RetryAsync(() => _supervisor.SendAsync(pipe, cancellationToken),
+            stoppingToken: _supervisor.SendStopping, cancellationToken: cancellationToken);
     }
 
     public void Probe(ProbeContext context)
@@ -44,11 +45,11 @@ public class TopicSendTransportContext :
         _supervisor.Probe(context);
     }
 
-    public override async Task<SendContext<T>> CreateSendContext<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    public override async Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
     {
         var sendContext = new AmazonSqsMessageSendContext<T>(message, cancellationToken);
 
-        await pipe.Send(sendContext).ConfigureAwait(false);
+        await pipe.SendAsync(sendContext).ConfigureAwait(false);
 
         return sendContext;
     }
@@ -58,24 +59,24 @@ public class TopicSendTransportContext :
         return new IAgent[] { _supervisor };
     }
 
-    public Task<SendContext<T>> CreateSendContext<T>(ClientContext context, T message, IPipe<SendContext<T>> pipe,
+    public Task<SendContext<T>> CreateSendContextAsync<T>(ClientContext context, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
-        return CreateSendContext(message, pipe, cancellationToken);
+        return CreateSendContextAsync(message, pipe, cancellationToken);
     }
 
-    public async Task Send<T>(ClientContext transportContext, SendContext<T> sendContext)
+    public async Task SendAsync<T>(ClientContext transportContext, SendContext<T> sendContext, CancellationToken cancellationToken = default)
         where T : class
     {
-        AmazonSqsMessageSendContext<T> context = sendContext as AmazonSqsMessageSendContext<T>
-            ?? throw new ArgumentException("Invalid SendContext<T> type", nameof(sendContext));
+        cancellationToken.ThrowIfCancellationRequested(); AmazonSqsMessageSendContext<T> context = sendContext as AmazonSqsMessageSendContext<T>
+                    ?? throw new ArgumentException("Invalid SendContext<T> type", nameof(sendContext));
 
         sendContext.CancellationToken.ThrowIfCancellationRequested();
 
         AmazonSqsDelay.EnsureNotSetForTopic(context.Delay);
 
-        await _configureTopologyPipe.Send(transportContext).ConfigureAwait(false);
+        await _configureTopologyPipe.SendAsync(transportContext).ConfigureAwait(false);
 
         sendContext.CancellationToken.ThrowIfCancellationRequested();
 
@@ -95,6 +96,6 @@ public class TopicSendTransportContext :
         if (!string.IsNullOrEmpty(context.GroupId))
             request.MessageGroupId = context.GroupId;
 
-        await transportContext.Publish(EntityName, request, context.CancellationToken).ConfigureAwait(false);
+        await transportContext.PublishAsync(EntityName, request, context.CancellationToken).ConfigureAwait(false);
     }
 }

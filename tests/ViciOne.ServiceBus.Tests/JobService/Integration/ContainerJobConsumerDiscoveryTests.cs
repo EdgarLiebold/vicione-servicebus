@@ -11,7 +11,7 @@ public sealed class ContainerJobConsumerDiscoveryTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-JOB-CONSUMER", "namespace-discovery-and-service-instance-submission")]
-    public async Task DiscoveredJobConsumer_AcceptsAndExecutesThroughItsKebabServiceEndpoint()
+    public async Task DiscoveredJobConsumer_AcceptsAndExecutesThroughItsKebabServiceEndpointAsync()
     {
         TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions().OperationTimeout!.Value;
@@ -33,7 +33,7 @@ public sealed class ContainerJobConsumerDiscoveryTests
                 });
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
@@ -42,15 +42,14 @@ public sealed class ContainerJobConsumerDiscoveryTests
                 .GetRequiredService<IRequestClient<ContainerJobDiscovery.CrunchNumbers>>();
             var request = new ContainerJobDiscovery.CrunchNumbers(NewId.NextGuid(), 41);
 
-            Response<JobSubmissionAccepted> accepted = await client.GetResponse<JobSubmissionAccepted>(
+            Response<JobSubmissionAccepted> accepted = await client.GetResponseAsync<JobSubmissionAccepted>(
                 request,
                 cancellationToken);
             ContainerJobDiscovery.JobSnapshot executed = await observation.Executed.Task
                 .WaitAsync(timeout, cancellationToken);
             IPublishedMessage<JobCompleted<ContainerJobDiscovery.CrunchNumbers>> completed = await harness.Published
                 .SelectAsync<JobCompleted<ContainerJobDiscovery.CrunchNumbers>>(cancellationToken)
-                .First()
-                .WaitAsync(timeout, cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(request.CorrelationId, executed.CorrelationId);
             Assert.Equal(41, executed.Value);
@@ -64,7 +63,7 @@ public sealed class ContainerJobConsumerDiscoveryTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 }

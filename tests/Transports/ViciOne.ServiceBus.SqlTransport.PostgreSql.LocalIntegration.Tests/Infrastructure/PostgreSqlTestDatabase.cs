@@ -111,17 +111,17 @@ internal sealed class PostgreSqlTestDatabase : IAsyncDisposable
 
         _databaseCreated = false;
         using var timeout = new CancellationTokenSource(OperationTimeout);
-        await _migrator.DeleteDatabase(Options, timeout.Token);
+        await _migrator.DeleteDatabaseAsync(Options, timeout.Token);
     }
 
     private async Task ProvisionAsync(CancellationToken cancellationToken)
     {
         using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         timeout.CancelAfter(OperationTimeout);
-        await _migrator.CreateDatabase(Options, timeout.Token);
+        await _migrator.CreateDatabaseAsync(Options, timeout.Token);
         _databaseCreated = true;
-        await _migrator.CreateSchemaIfNotExist(Options, timeout.Token);
-        await _migrator.CreateInfrastructure(Options, timeout.Token);
+        await _migrator.CreateSchemaIfNotExistAsync(Options, timeout.Token);
+        await _migrator.CreateInfrastructureAsync(Options, timeout.Token);
     }
 
     private static string NamePart(string value)

@@ -20,9 +20,9 @@ public class DefaultSagaConsumeContext<TSaga, TMessage> :
     public TSaga Saga { get; }
     public bool IsCompleted { get; private set; }
 
-    public Task SetCompleted()
+    public Task SetCompletedAsync(CancellationToken cancellationToken = default)
     {
-        IsCompleted = true;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); IsCompleted = true;
 
         return Task.CompletedTask;
     }

@@ -13,7 +13,7 @@ public sealed class TransportLifetimeTests
     [InlineData("channel")]
     [InlineData("connection")]
     [RequirementCoverage("REQ-VSB-RABBITMQ-TRANSPORT-LIFETIME", "lease-invalidation-and-exact-disposal")]
-    public async Task Invalidation_RefusesNewLeasesPreservesTheBrokerReasonAndDisposesExactlyOnce(
+    public async Task Invalidation_RefusesNewLeasesPreservesTheBrokerReasonAndDisposesExactlyOnceAsync(
         string subject)
     {
         var disposed = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -62,7 +62,7 @@ public sealed class TransportLifetimeTests
     [InlineData("channel")]
     [InlineData("connection")]
     [RequirementCoverage("REQ-VSB-RABBITMQ-TRANSPORT-LIFETIME", "local-close-reason")]
-    public async Task OwnerDisposal_UsesTheLocalReasonAndWaitsForTheLastIdempotentLease(string subject)
+    public async Task OwnerDisposal_UsesTheLocalReasonAndWaitsForTheLastIdempotentLeaseAsync(string subject)
     {
         var disposed = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var lifetime = new TransportLifetime(subject, () =>
@@ -92,16 +92,16 @@ public sealed class TransportLifetimeTests
     [InlineData("channel")]
     [InlineData("connection")]
     [RequirementCoverage("REQ-VSB-RABBITMQ-TRANSPORT-LIFETIME", "disposal-failure-identity-and-stack")]
-    public async Task DisposalFailure_PreservesItsExactInstanceAndOriginalStack(string subject)
+    public async Task DisposalFailure_PreservesItsExactInstanceAndOriginalStackAsync(string subject)
     {
         var failure = new InvalidOperationException("the socket was already gone");
-        var lifetime = new TransportLifetime(subject, () => ThrowDisposalFailure(failure));
+        var lifetime = new TransportLifetime(subject, () => ThrowDisposalFailureAsync(failure));
 
         InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(
             () => lifetime.DisposeAsync().AsTask());
 
         Assert.Same(failure, actual);
-        Assert.Contains(nameof(ThrowDisposalFailure), actual.StackTrace, StringComparison.Ordinal);
+        Assert.Contains(nameof(ThrowDisposalFailureAsync), actual.StackTrace, StringComparison.Ordinal);
     }
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
@@ -116,7 +116,7 @@ public sealed class TransportLifetimeTests
         10);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private static async Task ThrowDisposalFailure(Exception failure)
+    private static async Task ThrowDisposalFailureAsync(Exception failure)
     {
         await Task.Yield();
         throw failure;

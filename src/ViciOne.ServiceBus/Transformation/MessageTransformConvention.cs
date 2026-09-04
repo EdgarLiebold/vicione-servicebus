@@ -21,7 +21,8 @@ public class MessageTransformConvention<TMessage> :
 
     public int Count => _initializers.Count;
 
-    public bool TryGetPropertyInitializer<T, TInput, TProperty>(PropertyInfo propertyInfo, out IPropertyInitializer<T, TInput> initializer)
+    public bool TryGetPropertyInitializer<T, TInput, TProperty>(PropertyInfo propertyInfo,
+        [NotNullWhen(true)] out IPropertyInitializer<T, TInput>? initializer)
         where T : class
         where TInput : class
     {
@@ -32,7 +33,8 @@ public class MessageTransformConvention<TMessage> :
         return false;
     }
 
-    public bool TryGetHeaderInitializer<T, TInput, TProperty>(PropertyInfo propertyInfo, out IHeaderInitializer<T, TInput> initializer)
+    public bool TryGetHeaderInitializer<T, TInput, TProperty>(PropertyInfo propertyInfo,
+        [NotNullWhen(true)] out IHeaderInitializer<T, TInput>? initializer)
         where T : class
         where TInput : class
     {
@@ -43,7 +45,8 @@ public class MessageTransformConvention<TMessage> :
         return false;
     }
 
-    public bool TryGetHeadersInitializer<T, TInput, TProperty>(PropertyInfo propertyInfo, out IHeaderInitializer<T, TInput> initializer)
+    public bool TryGetHeadersInitializer<T, TInput, TProperty>(PropertyInfo propertyInfo,
+        [NotNullWhen(true)] out IHeaderInitializer<T, TInput>? initializer)
         where T : class
         where TInput : class
     {
@@ -54,7 +57,8 @@ public class MessageTransformConvention<TMessage> :
         return false;
     }
 
-    public bool TryGetPropertyInitializer<TProperty>(PropertyInfo propertyInfo, out IPropertyInitializer<TMessage, TMessage> initializer)
+    public bool TryGetPropertyInitializer<TProperty>(PropertyInfo propertyInfo,
+        [NotNullWhen(true)] out IPropertyInitializer<TMessage, TMessage>? initializer)
     {
         if (_initializers.TryGetValue(propertyInfo.Name, out initializer))
             return true;
@@ -63,20 +67,22 @@ public class MessageTransformConvention<TMessage> :
         return false;
     }
 
-    public bool TryGetHeaderInitializer<TProperty>(PropertyInfo propertyInfo, out IHeaderInitializer<TMessage, TMessage> initializer)
+    public bool TryGetHeaderInitializer<TProperty>(PropertyInfo propertyInfo,
+        [NotNullWhen(true)] out IHeaderInitializer<TMessage, TMessage>? initializer)
     {
         initializer = default;
         return false;
     }
 
-    public bool TryGetHeadersInitializer<TProperty>(PropertyInfo propertyInfo, out IHeaderInitializer<TMessage, TMessage> initializer)
+    public bool TryGetHeadersInitializer<TProperty>(PropertyInfo propertyInfo,
+        [NotNullWhen(true)] out IHeaderInitializer<TMessage, TMessage>? initializer)
     {
         initializer = default;
         return false;
     }
 
     public bool TryGetPropertyInitializer<TInput, TProperty>(PropertyInfo propertyInfo,
-        out IPropertyInitializer<TMessage, TInput> initializer)
+        [NotNullWhen(true)] out IPropertyInitializer<TMessage, TInput>? initializer)
         where TInput : class
     {
         if (this is IInitializerConvention<TMessage, TInput> convention)
@@ -87,7 +93,7 @@ public class MessageTransformConvention<TMessage> :
     }
 
     public bool TryGetHeaderInitializer<TInput, TProperty>(PropertyInfo propertyInfo,
-        out IHeaderInitializer<TMessage, TInput> initializer)
+        [NotNullWhen(true)] out IHeaderInitializer<TMessage, TInput>? initializer)
         where TInput : class
     {
         if (this is IInitializerConvention<TMessage, TInput> convention)
@@ -98,7 +104,7 @@ public class MessageTransformConvention<TMessage> :
     }
 
     public bool TryGetHeadersInitializer<TInput, TProperty>(PropertyInfo propertyInfo,
-        out IHeaderInitializer<TMessage, TInput> initializer)
+        [NotNullWhen(true)] out IHeaderInitializer<TMessage, TInput>? initializer)
         where TInput : class
     {
         if (this is IInitializerConvention<TMessage, TInput> convention)

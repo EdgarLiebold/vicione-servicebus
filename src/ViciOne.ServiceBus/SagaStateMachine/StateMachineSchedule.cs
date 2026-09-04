@@ -28,9 +28,8 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         }
 
         string Schedule<TInstance>.Name => _name;
-        public Event<TMessage> Received { get; set; }
-        public Event<TMessage> AnyReceived { get; set; }
-
+        public Event<TMessage> Received { get; set; } = null!;
+        public Event<TMessage> AnyReceived { get; set; } = null!;
         public TimeSpan GetDelay(BehaviorContext<TInstance> context)
         {
             return _settings.DelayProvider(context);

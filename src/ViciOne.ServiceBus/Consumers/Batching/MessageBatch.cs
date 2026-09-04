@@ -11,7 +11,7 @@ public class MessageBatch<TMessage> :
 {
     readonly IReadOnlyList<ConsumeContext<TMessage>> _messages;
 
-    public MessageBatch(DateTime firstMessageReceived, DateTime lastMessageReceived, BatchCompletionMode mode,
+    public MessageBatch(DateTimeOffset firstMessageReceived, DateTimeOffset lastMessageReceived, BatchCompletionMode mode,
         IReadOnlyList<ConsumeContext<TMessage>> messages)
     {
         FirstMessageReceived = firstMessageReceived;
@@ -21,8 +21,8 @@ public class MessageBatch<TMessage> :
     }
 
     public BatchCompletionMode Mode { get; set; }
-    public DateTime FirstMessageReceived { get; set; }
-    public DateTime LastMessageReceived { get; set; }
+    public DateTimeOffset FirstMessageReceived { get; set; }
+    public DateTimeOffset LastMessageReceived { get; set; }
 
     public ConsumeContext<TMessage> this[int index] => _messages[index];
 

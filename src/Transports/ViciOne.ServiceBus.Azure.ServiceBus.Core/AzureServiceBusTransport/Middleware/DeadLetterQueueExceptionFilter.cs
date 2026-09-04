@@ -13,13 +13,13 @@ public class DeadLetterQueueExceptionFilter :
         context.CreateFilterScope("dead-letter-queue");
     }
 
-    async Task IFilter<ExceptionReceiveContext>.Send(ExceptionReceiveContext context, IPipe<ExceptionReceiveContext> next)
+    async Task IFilter<ExceptionReceiveContext>.SendAsync(ExceptionReceiveContext context, IPipe<ExceptionReceiveContext> next)
     {
-        if (!context.TryGetPayload(out MessageLockContext lockContext))
+        if (!context.TryGetPayload(out MessageLockContext? lockContext))
             throw new TransportException(context.InputAddress, $"The {nameof(MessageLockContext)} was not available on the {nameof(ReceiveContext)}.");
 
-        await lockContext.DeadLetter(context.Exception).ConfigureAwait(false);
+        await lockContext.DeadLetterAsync(context.Exception).ConfigureAwait(false);
 
-        await next.Send(context).ConfigureAwait(false);
+        await next.SendAsync(context).ConfigureAwait(false);
     }
 }

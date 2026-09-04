@@ -13,7 +13,7 @@ public sealed class BufferedBusTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-BUFFERED-BUS", "registered-scoped-publish-uses-buffered-capability")]
-    public async Task Registration_RoutesScopedPublishEndpointThroughBufferedContract()
+    public async Task Registration_RoutesScopedPublishEndpointThroughBufferedContractAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -29,7 +29,7 @@ public sealed class BufferedBusTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         IConsumerTestHarness<TransactionalMessageConsumer> consumer = harness.GetConsumerHarness<TransactionalMessageConsumer>();
         var message = new TransactionalMessage(NewId.NextGuid(), "registered");
 
@@ -38,14 +38,14 @@ public sealed class BufferedBusTests
             IServiceProvider scopedProvider = harness.Scope.ServiceProvider;
             IPublishEndpoint publishEndpoint = scopedProvider.GetRequiredService<IPublishEndpoint>();
             IBufferedBus bufferedBus = scopedProvider.GetRequiredService<IBufferedBus>();
-            await publishEndpoint.Publish(message, cancellationToken);
+            await publishEndpoint.PublishAsync(message, cancellationToken);
 
             Assert.Empty(harness.Published.Select<TransactionalMessage>(SnapshotOnlyToken()));
 
             await bufferedBus.FlushAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
             IReceivedMessage<TransactionalMessage> received = await consumer.Consumed
                 .SelectAsync<TransactionalMessage>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             await bufferedBus.FlushAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(message, received.Context.Message);
@@ -53,13 +53,13 @@ public sealed class BufferedBusTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUFFERED-BUS", "consumer-scope-retains-buffered-boundary")]
-    public async Task ConsumerScope_RoutesScopedPublishEndpointThroughBufferedContract()
+    public async Task ConsumerScope_RoutesScopedPublishEndpointThroughBufferedContractAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -78,12 +78,12 @@ public sealed class BufferedBusTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         var trigger = new BufferedConsumerTrigger(NewId.NextGuid());
 
         try
         {
-            await harness.Bus.Publish(trigger, cancellationToken);
+            await harness.Bus.PublishAsync(trigger, cancellationToken);
             await coordinator.Buffered.Task.WaitAsync(timeout, cancellationToken);
 
             Assert.Empty(harness.Published.Select<BufferedConsumerResult>(SnapshotOnlyToken()));
@@ -104,33 +104,33 @@ public sealed class BufferedBusTests
         finally
         {
             coordinator.Release.TrySetResult();
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUFFERED-BUS", "publish-flush-exactly-once")]
-    public async Task BufferedPublish_FlushesExactlyOnce()
+    public async Task BufferedPublish_FlushesExactlyOnceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout, "buffered-publish");
         HandlerTestHarness<TransactionalMessage> handler = harness.Handler<TransactionalMessage>();
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             var driver = new BufferedBusTestDriver(harness.Bus);
             var message = new TransactionalMessage(NewId.NextGuid(), "publish");
 
-            await driver.Bus.Publish(message, cancellationToken);
+            await driver.Bus.PublishAsync(message, cancellationToken);
 
             Assert.Empty(harness.Published.Select<TransactionalMessage>(SnapshotOnlyToken()));
 
             await driver.Bus.FlushAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
             IReceivedMessage<TransactionalMessage> received = await handler.Consumed
                 .SelectAsync(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             await driver.Bus.FlushAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(message, received.Context.Message);
@@ -138,34 +138,34 @@ public sealed class BufferedBusTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUFFERED-BUS", "publish-send-endpoint-flushes-once")]
-    public async Task PublishSendEndpoint_UsesTheSameSingleFlushBoundary()
+    public async Task PublishSendEndpoint_UsesTheSameSingleFlushBoundaryAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout, "buffered-publish-send-endpoint");
         HandlerTestHarness<TransactionalMessage> handler = harness.Handler<TransactionalMessage>();
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             var driver = new BufferedBusTestDriver(harness.Bus);
-            ISendEndpoint endpoint = await driver.Bus.GetPublishSendEndpoint<TransactionalMessage>();
+            ISendEndpoint endpoint = await driver.Bus.GetPublishSendEndpointAsync<TransactionalMessage>(TestContext.Current.CancellationToken);
             var message = new TransactionalMessage(NewId.NextGuid(), "publish-send-endpoint");
 
-            await endpoint.Send(message, cancellationToken);
+            await endpoint.SendAsync(message, cancellationToken);
 
             Assert.Empty(harness.Published.Select<TransactionalMessage>(SnapshotOnlyToken()));
 
             await driver.Bus.FlushAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
             IReceivedMessage<TransactionalMessage> received = await handler.Consumed
                 .SelectAsync(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             await driver.Bus.FlushAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(message, received.Context.Message);
@@ -173,19 +173,19 @@ public sealed class BufferedBusTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUFFERED-BUS", "every-publish-overload-shares-one-buffer")]
-    public async Task EveryPublishOverload_UsesTheSameBufferedBoundary()
+    public async Task EveryPublishOverload_UsesTheSameBufferedBoundaryAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout, "buffered-publish-overloads");
         HandlerTestHarness<TransactionalMessage> handler = harness.Handler<TransactionalMessage>();
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             var driver = new BufferedBusTestDriver(harness.Bus);
@@ -195,16 +195,16 @@ public sealed class BufferedBusTests
             IPipe<PublishContext<TransactionalMessage>> typedPipe = Pipe.Empty<PublishContext<TransactionalMessage>>();
             IPipe<PublishContext> untypedPipe = Pipe.Empty<PublishContext>();
 
-            await driver.Bus.Publish(expected[0], cancellationToken);
-            await driver.Bus.Publish(expected[1], typedPipe, cancellationToken);
-            await driver.Bus.Publish(expected[2], untypedPipe, cancellationToken);
-            await driver.Bus.Publish((object)expected[3], cancellationToken);
-            await driver.Bus.Publish((object)expected[4], untypedPipe, cancellationToken);
-            await driver.Bus.Publish((object)expected[5], typeof(TransactionalMessage), cancellationToken);
-            await driver.Bus.Publish((object)expected[6], typeof(TransactionalMessage), untypedPipe, cancellationToken);
-            await driver.Bus.Publish<TransactionalMessage>(Values(expected[7]), cancellationToken);
-            await driver.Bus.Publish<TransactionalMessage>(Values(expected[8]), typedPipe, cancellationToken);
-            await driver.Bus.Publish<TransactionalMessage>(Values(expected[9]), untypedPipe, cancellationToken);
+            await driver.Bus.PublishAsync(expected[0], cancellationToken);
+            await driver.Bus.PublishAsync(expected[1], typedPipe, cancellationToken);
+            await driver.Bus.PublishAsync(expected[2], untypedPipe, cancellationToken);
+            await driver.Bus.Advanced().PublishAsync((object)expected[3], cancellationToken);
+            await driver.Bus.Advanced().PublishAsync((object)expected[4], untypedPipe, cancellationToken);
+            await driver.Bus.Advanced().PublishAsync((object)expected[5], typeof(TransactionalMessage), cancellationToken);
+            await driver.Bus.Advanced().PublishAsync((object)expected[6], typeof(TransactionalMessage), untypedPipe, cancellationToken);
+            await driver.Bus.PublishAsync<TransactionalMessage>(Values(expected[7]), cancellationToken);
+            await driver.Bus.PublishAsync<TransactionalMessage>(Values(expected[8]), typedPipe, cancellationToken);
+            await driver.Bus.PublishAsync<TransactionalMessage>(Values(expected[9]), untypedPipe, cancellationToken);
 
             Assert.Empty(harness.Published.Select<TransactionalMessage>(SnapshotOnlyToken()));
 
@@ -212,7 +212,7 @@ public sealed class BufferedBusTests
             await handler.Consumed.SelectAsync(
                     observation => observation.Context.Message.CorrelationId == expected[^1].CorrelationId,
                     cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             Assert.Equal(expected, harness.Published
                 .Select<TransactionalMessage>(SnapshotOnlyToken())
@@ -220,34 +220,34 @@ public sealed class BufferedBusTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUFFERED-BUS", "send-flush-exactly-once")]
-    public async Task BufferedSend_FlushesExactlyOnce()
+    public async Task BufferedSend_FlushesExactlyOnceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout, "buffered-send");
         HandlerTestHarness<TransactionalMessage> handler = harness.Handler<TransactionalMessage>();
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             var driver = new BufferedBusTestDriver(harness.Bus);
-            ISendEndpoint endpoint = await driver.Bus.GetSendEndpoint(harness.InputQueueAddress);
+            ISendEndpoint endpoint = await driver.Bus.GetSendEndpointAsync(harness.InputQueueAddress, TestContext.Current.CancellationToken);
             var message = new TransactionalMessage(NewId.NextGuid(), "send");
 
-            await endpoint.Send(message, cancellationToken);
+            await endpoint.SendAsync(message, cancellationToken);
 
             Assert.Empty(harness.Sent.Select<TransactionalMessage>(SnapshotOnlyToken()));
 
             await driver.Bus.FlushAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
             IReceivedMessage<TransactionalMessage> received = await handler.Consumed
                 .SelectAsync(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             await driver.Bus.FlushAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(message, received.Context.Message);
@@ -255,39 +255,39 @@ public sealed class BufferedBusTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUFFERED-BUS", "every-send-overload-shares-one-buffer")]
-    public async Task EverySendOverload_UsesTheSameBufferedBoundary()
+    public async Task EverySendOverload_UsesTheSameBufferedBoundaryAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout, "buffered-send-overloads");
         HandlerTestHarness<TransactionalMessage> handler = harness.Handler<TransactionalMessage>();
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             var driver = new BufferedBusTestDriver(harness.Bus);
-            ISendEndpoint endpoint = await driver.Bus.GetSendEndpoint(harness.InputQueueAddress);
+            ISendEndpoint endpoint = await driver.Bus.GetSendEndpointAsync(harness.InputQueueAddress, TestContext.Current.CancellationToken);
             TransactionalMessage[] expected = Enumerable.Range(0, 10)
                 .Select(index => new TransactionalMessage(NewId.NextGuid(), $"send-{index}"))
                 .ToArray();
             IPipe<SendContext<TransactionalMessage>> typedPipe = Pipe.Empty<SendContext<TransactionalMessage>>();
             IPipe<SendContext> untypedPipe = Pipe.Empty<SendContext>();
 
-            await endpoint.Send(expected[0], cancellationToken);
-            await endpoint.Send(expected[1], typedPipe, cancellationToken);
-            await endpoint.Send(expected[2], untypedPipe, cancellationToken);
-            await endpoint.Send((object)expected[3], cancellationToken);
-            await endpoint.Send((object)expected[4], typeof(TransactionalMessage), cancellationToken);
-            await endpoint.Send((object)expected[5], untypedPipe, cancellationToken);
-            await endpoint.Send((object)expected[6], typeof(TransactionalMessage), untypedPipe, cancellationToken);
-            await endpoint.Send<TransactionalMessage>(Values(expected[7]), cancellationToken);
-            await endpoint.Send<TransactionalMessage>(Values(expected[8]), typedPipe, cancellationToken);
-            await endpoint.Send<TransactionalMessage>(Values(expected[9]), untypedPipe, cancellationToken);
+            await endpoint.SendAsync(expected[0], cancellationToken);
+            await endpoint.SendAsync(expected[1], typedPipe, cancellationToken);
+            await endpoint.SendAsync(expected[2], untypedPipe, cancellationToken);
+            await endpoint.Advanced().SendAsync((object)expected[3], cancellationToken);
+            await endpoint.Advanced().SendAsync((object)expected[4], typeof(TransactionalMessage), cancellationToken);
+            await endpoint.Advanced().SendAsync((object)expected[5], untypedPipe, cancellationToken);
+            await endpoint.Advanced().SendAsync((object)expected[6], typeof(TransactionalMessage), untypedPipe, cancellationToken);
+            await endpoint.SendAsync<TransactionalMessage>(Values(expected[7]), cancellationToken);
+            await endpoint.SendAsync<TransactionalMessage>(Values(expected[8]), typedPipe, cancellationToken);
+            await endpoint.SendAsync<TransactionalMessage>(Values(expected[9]), untypedPipe, cancellationToken);
 
             Assert.Empty(harness.Sent.Select<TransactionalMessage>(SnapshotOnlyToken()));
 
@@ -295,7 +295,7 @@ public sealed class BufferedBusTests
             await handler.Consumed.SelectAsync(
                     observation => observation.Context.Message.CorrelationId == expected[^1].CorrelationId,
                     cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             Assert.Equal(expected, harness.Sent
                 .Select<TransactionalMessage>(SnapshotOnlyToken())
@@ -303,13 +303,13 @@ public sealed class BufferedBusTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUFFERED-BUS", "fifo-single-drain-and-next-snapshot")]
-    public async Task ConcurrentFlushes_AreSerializedAndActionsAddedDuringDrainUseTheNextSnapshot()
+    public async Task ConcurrentFlushes_AreSerializedAndActionsAddedDuringDrainUseTheNextSnapshotAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -321,7 +321,7 @@ public sealed class BufferedBusTests
         var active = 0;
         var maximumActive = 0;
 
-        await driver.Enqueue(async token =>
+        await driver.EnqueueAsync(async token =>
         {
             int current = Interlocked.Increment(ref active);
             InterlockedExtensions.Max(ref maximumActive, current);
@@ -343,7 +343,7 @@ public sealed class BufferedBusTests
 
         try
         {
-            await driver.Enqueue(token =>
+            await driver.EnqueueAsync(token =>
             {
                 int current = Interlocked.Increment(ref active);
                 InterlockedExtensions.Max(ref maximumActive, current);
@@ -370,7 +370,7 @@ public sealed class BufferedBusTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUFFERED-BUS", "same-instance-reentrant-flush-fails-fast")]
-    public async Task ReentrantFlush_FailsFastAndLeavesTheLockAndUnattemptedTailUsable()
+    public async Task ReentrantFlush_FailsFastAndLeavesTheLockAndUnattemptedTailUsableAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -379,7 +379,7 @@ public sealed class BufferedBusTests
         var order = new List<string>();
         Task capturedFlush = Task.CompletedTask;
 
-        await driver.Enqueue(async _ =>
+        await driver.EnqueueAsync(async _ =>
         {
             order.Add("reentrant");
             capturedFlush = Task.Run(async () =>
@@ -389,27 +389,26 @@ public sealed class BufferedBusTests
             }, cancellationToken);
             await driver.Bus.FlushAsync(CancellationToken.None);
         }, cancellationToken);
-        await driver.Enqueue(_ =>
+        await driver.EnqueueAsync(_ =>
         {
             order.Add("tail");
             return Task.CompletedTask;
         }, cancellationToken);
 
-        InvalidOperationException actual;
         try
         {
-            actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
                 driver.Bus.FlushAsync(cancellationToken).WaitAsync(timeout, cancellationToken));
+
+            Assert.Equal(
+                "FlushAsync cannot be called recursively from an action being flushed by the same buffered bus.",
+                actual.Message);
+            Assert.Equal(["reentrant"], order);
         }
         finally
         {
             releaseCapturedFlush.TrySetResult();
         }
-
-        Assert.Equal(
-            "FlushAsync cannot be called recursively from an action being flushed by the same buffered bus.",
-            actual.Message);
-        Assert.Equal(["reentrant"], order);
 
         await capturedFlush.WaitAsync(timeout, cancellationToken);
 
@@ -418,7 +417,7 @@ public sealed class BufferedBusTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUFFERED-BUS", "failure-preserves-unattempted-tail")]
-    public async Task DispatchFailure_PreservesItsIdentityAndOnlyTheUnattemptedTail()
+    public async Task DispatchFailure_PreservesItsIdentityAndOnlyTheUnattemptedTailAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -428,19 +427,19 @@ public sealed class BufferedBusTests
         var releaseFailure = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var order = new List<string>();
 
-        await driver.Enqueue(_ => Record("first"), cancellationToken);
-        await driver.Enqueue(async token =>
+        await driver.EnqueueAsync(_ => RecordAsync("first"), cancellationToken);
+        await driver.EnqueueAsync(async token =>
         {
             order.Add("failed");
             failureEntered.TrySetResult();
             await releaseFailure.Task.WaitAsync(timeout, token);
             throw expected;
         }, cancellationToken);
-        await driver.Enqueue(_ => Record("third"), cancellationToken);
+        await driver.EnqueueAsync(_ => RecordAsync("third"), cancellationToken);
 
         Task flush = driver.Bus.FlushAsync(cancellationToken);
         await failureEntered.Task.WaitAsync(timeout, cancellationToken);
-        await driver.Enqueue(_ => Record("added-during-failure"), cancellationToken);
+        await driver.EnqueueAsync(_ => RecordAsync("added-during-failure"), cancellationToken);
         releaseFailure.TrySetResult();
 
         ExpectedDispatchException actual;
@@ -461,7 +460,7 @@ public sealed class BufferedBusTests
 
         Assert.Equal(["first", "failed", "third", "added-during-failure"], order);
 
-        Task Record(string value)
+        Task RecordAsync(string value)
         {
             order.Add(value);
             return Task.CompletedTask;
@@ -470,7 +469,7 @@ public sealed class BufferedBusTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUFFERED-BUS", "enqueue-cancellation-does-not-create-work")]
-    public async Task RequestedEnqueueCancellation_IsPreservedWithoutAddingTheAction()
+    public async Task RequestedEnqueueCancellation_IsPreservedWithoutAddingTheActionAsync()
     {
         var driver = new BufferedBusTestDriver();
         using var source = new CancellationTokenSource();
@@ -478,7 +477,7 @@ public sealed class BufferedBusTests
         var dispatchCount = 0;
 
         OperationCanceledException actual = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
-            driver.Enqueue(_ =>
+            driver.EnqueueAsync(_ =>
             {
                 Interlocked.Increment(ref dispatchCount);
                 return Task.CompletedTask;
@@ -492,17 +491,17 @@ public sealed class BufferedBusTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUFFERED-BUS", "flush-cancellation-retains-unattempted-work")]
-    public async Task RequestedFlushCancellation_RetainsWorkAndPreservesTheFlushToken()
+    public async Task RequestedFlushCancellation_RetainsWorkAndPreservesTheFlushTokenAsync()
     {
         var driver = new BufferedBusTestDriver();
         using var source = new CancellationTokenSource();
         var order = new List<string>();
-        await driver.Enqueue(_ =>
+        await driver.EnqueueAsync(_ =>
         {
             order.Add("first");
             return Task.CompletedTask;
         }, TestContext.Current.CancellationToken);
-        await driver.Enqueue(_ =>
+        await driver.EnqueueAsync(_ =>
         {
             order.Add("second");
             return Task.CompletedTask;
@@ -522,14 +521,14 @@ public sealed class BufferedBusTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUFFERED-BUS", "flush-token-owns-dispatch")]
-    public async Task Flush_UsesItsOwnTokenAfterTheEnqueueTokenLifetimeEnds()
+    public async Task Flush_UsesItsOwnTokenAfterTheEnqueueTokenLifetimeEndsAsync()
     {
         var driver = new BufferedBusTestDriver();
         using var enqueueSource = new CancellationTokenSource();
         using var flushSource = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
         CancellationToken observed = default;
 
-        await driver.Enqueue(token =>
+        await driver.EnqueueAsync(token =>
         {
             observed = token;
             return Task.CompletedTask;
@@ -544,7 +543,7 @@ public sealed class BufferedBusTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUFFERED-BUS", "mid-dispatch-cancellation-preserves-tail")]
-    public async Task CancellationDuringDispatch_DoesNotRetryTheAttemptedActionAndPreservesTheTail()
+    public async Task CancellationDuringDispatch_DoesNotRetryTheAttemptedActionAndPreservesTheTailAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -554,7 +553,7 @@ public sealed class BufferedBusTests
         var order = new List<string>();
         var firstAttempts = 0;
 
-        await driver.Enqueue(async token =>
+        await driver.EnqueueAsync(async token =>
         {
             Interlocked.Increment(ref firstAttempts);
             order.Add("first");
@@ -563,7 +562,7 @@ public sealed class BufferedBusTests
             using CancellationTokenRegistration registration = token.Register(() => canceled.TrySetCanceled(token));
             await canceled.Task;
         }, cancellationToken);
-        await driver.Enqueue(_ =>
+        await driver.EnqueueAsync(_ =>
         {
             order.Add("second");
             return Task.CompletedTask;
@@ -585,7 +584,7 @@ public sealed class BufferedBusTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUFFERED-BUS-BACKPRESSURE", "capacity-release-and-next-snapshot")]
-    public async Task Capacity_BlocksTheNextWriterUntilFlushReleasesAReservationIntoTheNextSnapshot()
+    public async Task Capacity_BlocksTheNextWriterUntilFlushReleasesAReservationIntoTheNextSnapshotAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -594,19 +593,19 @@ public sealed class BufferedBusTests
         var releaseFirst = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var order = new List<string>();
 
-        await driver.Enqueue(async token =>
+        await driver.EnqueueAsync(async token =>
         {
             order.Add("first");
             firstEntered.TrySetResult();
             await releaseFirst.Task.WaitAsync(timeout, token);
         }, cancellationToken);
-        await driver.Enqueue(_ =>
+        await driver.EnqueueAsync(_ =>
         {
             order.Add("second");
             return Task.CompletedTask;
         }, cancellationToken);
 
-        Task thirdAdmission = driver.Enqueue(_ =>
+        Task thirdAdmission = driver.EnqueueAsync(_ =>
         {
             order.Add("third");
             return Task.CompletedTask;
@@ -635,18 +634,18 @@ public sealed class BufferedBusTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BUFFERED-BUS-BACKPRESSURE", "blocked-admission-preserves-cancellation")]
-    public async Task CapacityWait_PreservesTheRequestTokenAndDoesNotEnqueueCanceledWork()
+    public async Task CapacityWait_PreservesTheRequestTokenAndDoesNotEnqueueCanceledWorkAsync()
     {
         var driver = new BufferedBusTestDriver(capacity: 1);
         var order = new List<string>();
-        await driver.Enqueue(_ =>
+        await driver.EnqueueAsync(_ =>
         {
             order.Add("accepted");
             return Task.CompletedTask;
         }, TestContext.Current.CancellationToken);
         using var source = new CancellationTokenSource();
 
-        Task blocked = driver.Enqueue(_ =>
+        Task blocked = driver.EnqueueAsync(_ =>
         {
             order.Add("canceled");
             return Task.CompletedTask;
@@ -718,7 +717,7 @@ public sealed class BufferedBusTests
 
     private sealed class TransactionalMessageConsumer : IConsumer<TransactionalMessage>
     {
-        public Task Consume(ConsumeContext<TransactionalMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<TransactionalMessage> context) => Task.CompletedTask;
     }
 
     private sealed class BufferedConsumer(
@@ -727,14 +726,14 @@ public sealed class BufferedBusTests
         IBufferedBus bufferedBus,
         BufferedConsumerCoordinator coordinator) : IConsumer<BufferedConsumerTrigger>
     {
-        public async Task Consume(ConsumeContext<BufferedConsumerTrigger> context)
+        public async Task ConsumeAsync(ConsumeContext<BufferedConsumerTrigger> context)
         {
             try
             {
-                await publishEndpoint.Publish(new BufferedConsumerResult(context.Message.CorrelationId), context.CancellationToken);
-                ISendEndpoint endpoint = await sendEndpointProvider.GetSendEndpoint(
+                await publishEndpoint.PublishAsync(new BufferedConsumerResult(context.Message.CorrelationId), context.CancellationToken);
+                ISendEndpoint endpoint = await sendEndpointProvider.GetSendEndpointAsync(
                     new Uri($"loopback://localhost/buffered-consumer-send-{context.Message.CorrelationId:N}"));
-                await endpoint.Send(new BufferedConsumerSendResult(context.Message.CorrelationId), context.CancellationToken);
+                await endpoint.SendAsync(new BufferedConsumerSendResult(context.Message.CorrelationId), context.CancellationToken);
                 coordinator.Buffered.TrySetResult();
                 await coordinator.Release.Task.WaitAsync(coordinator.Timeout, context.CancellationToken);
                 await bufferedBus.FlushAsync(context.CancellationToken);

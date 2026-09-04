@@ -17,17 +17,20 @@ public class InMemoryPublishTopology :
 
     IInMemoryMessagePublishTopology<T> IInMemoryPublishTopology.GetMessageTopology<T>()
     {
-        return GetMessageTopology<T>() as IInMemoryMessagePublishTopology<T>;
+        return GetMessageTopology<T>() as IInMemoryMessagePublishTopology<T>
+            ?? throw new InvalidOperationException($"The publish topology for {TypeCache<T>.ShortName} is not an in-memory topology.");
     }
 
     IInMemoryMessagePublishTopologyConfigurator<T> IInMemoryPublishTopologyConfigurator.GetMessageTopology<T>()
     {
-        return GetMessageTopology<T>() as IInMemoryMessagePublishTopologyConfigurator<T>;
+        return GetMessageTopology<T>() as IInMemoryMessagePublishTopologyConfigurator<T>
+            ?? throw new InvalidOperationException($"The publish topology for {TypeCache<T>.ShortName} is not configurable.");
     }
 
     IInMemoryMessagePublishTopologyConfigurator IInMemoryPublishTopologyConfigurator.GetMessageTopology(Type messageType)
     {
-        return GetMessageTopology(messageType) as IInMemoryMessagePublishTopologyConfigurator;
+        return GetMessageTopology(messageType) as IInMemoryMessagePublishTopologyConfigurator
+            ?? throw new InvalidOperationException($"The publish topology for {TypeCache.GetShortName(messageType)} is not configurable.");
     }
 
     protected override IMessagePublishTopologyConfigurator CreateMessageTopology<T>()

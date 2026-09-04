@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Context;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced.Initializers;
 
 public static class PublishEndpointExtensions
 {
@@ -17,9 +17,9 @@ public static class PublishEndpointExtensions
     /// </param>
     /// <param name="cancellationToken"></param>
     /// <param name="publishEndpoint"></param>
-    public static Task Publish(this IPublishEndpoint publishEndpoint, Type messageType, object values, CancellationToken cancellationToken = default)
+    public static Task PublishAsync(this IPublishEndpoint publishEndpoint, Type messageType, object values, CancellationToken cancellationToken = default)
     {
-        return PublishEndpointConverterCache.PublishInitializer(publishEndpoint, messageType, values, cancellationToken);
+        return PublishEndpointConverterCache.PublishInitializerAsync(publishEndpoint, messageType, values, cancellationToken);
     }
 
     /// <summary>
@@ -33,9 +33,9 @@ public static class PublishEndpointExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <param name="publishEndpoint"></param>
-    public static Task Publish(this IPublishEndpoint publishEndpoint, Type messageType, object values, IPipe<PublishContext> pipe,
+    public static Task PublishAsync(this IPublishEndpoint publishEndpoint, Type messageType, object values, IPipe<PublishContext> pipe,
         CancellationToken cancellationToken = default)
     {
-        return PublishEndpointConverterCache.PublishInitializer(publishEndpoint, messageType, values, pipe, cancellationToken);
+        return PublishEndpointConverterCache.PublishInitializerAsync(publishEndpoint, messageType, values, pipe, cancellationToken);
     }
 }

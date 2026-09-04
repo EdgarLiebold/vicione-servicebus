@@ -13,12 +13,12 @@ public class ScopeConsumerFactory<TConsumer> :
         _scopeProvider = scopeProvider;
     }
 
-    public async Task Send<TMessage>(ConsumeContext<TMessage> context, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)
+    public async Task SendAsync<TMessage>(ConsumeContext<TMessage> context, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)
         where TMessage : class
     {
-        await using IConsumerConsumeScopeContext<TConsumer, TMessage> scope = await _scopeProvider.GetScope<TConsumer, TMessage>(context);
+        await using IConsumerConsumeScopeContext<TConsumer, TMessage> scope = await _scopeProvider.GetScopeAsync<TConsumer, TMessage>(context);
 
-        await next.Send(scope.Context).ConfigureAwait(false);
+        await next.SendAsync(scope.Context).ConfigureAwait(false);
     }
 
     void IProbeSite.Probe(ProbeContext context)

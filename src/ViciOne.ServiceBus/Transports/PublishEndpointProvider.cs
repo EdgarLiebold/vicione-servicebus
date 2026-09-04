@@ -30,10 +30,10 @@ public class PublishEndpointProvider :
         _cache = new SendEndpointCache<Type>();
     }
 
-    public Task<ISendEndpoint> GetPublishSendEndpoint<T>()
+    public Task<ISendEndpoint> GetPublishSendEndpointAsync<T>(CancellationToken cancellationToken = default)
         where T : class
     {
-        return _cache.GetSendEndpoint(typeof(T), type => CreateSendEndpoint<T>());
+        return _cache.GetSendEndpointAsync(typeof(T), type => CreateSendEndpointAsync<T>(), cancellationToken: cancellationToken);
     }
 
     public ValueTask DisposeAsync()
@@ -46,7 +46,7 @@ public class PublishEndpointProvider :
         return _publishObservers.Connect(observer);
     }
 
-    Task<ISendEndpoint> CreateSendEndpoint<T>()
+    Task<ISendEndpoint> CreateSendEndpointAsync<T>()
         where T : class
     {
         IMessagePublishTopology<T> messageTopology = _publishTopology.GetMessageTopology<T>();
@@ -54,7 +54,7 @@ public class PublishEndpointProvider :
         if (!messageTopology.TryGetPublishAddress(_hostAddress, out var publishAddress))
             throw new PublishException($"An address for publishing message type {TypeCache<T>.ShortName} was not found.");
 
-        Task<ISendTransport> sendTransportTask = _transportProvider.GetPublishTransport<T>(publishAddress);
+        Task<ISendTransport> sendTransportTask = _transportProvider.GetPublishTransportAsync<T>(publishAddress);
         if (sendTransportTask.Status == TaskStatus.RanToCompletion)
         {
             var sendTransport = sendTransportTask.Result;
@@ -85,12 +85,12 @@ public class PublishEndpointProvider :
             _publishPipe = publishPipe;
         }
 
-        public Task Send<T>(SendContext<T> context)
+        public Task SendAsync<T>(SendContext<T> context, CancellationToken cancellationToken)
             where T : class
         {
             var publishContext = context.GetPayload<PublishContext<T>>();
 
-            return _publishPipe.Send(publishContext);
+            return _publishPipe.SendAsync(publishContext, cancellationToken);
         }
 
         public void Probe(ProbeContext context)

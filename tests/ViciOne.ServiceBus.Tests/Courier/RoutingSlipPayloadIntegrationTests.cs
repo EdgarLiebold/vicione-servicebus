@@ -13,7 +13,7 @@ public sealed class RoutingSlipPayloadIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-PAYLOAD", "message-data-overrides-variable")]
-    public async Task MessageDataArgument_IsLoadedAndOverridesTheExistingVariable()
+    public async Task MessageDataArgument_IsLoadedAndOverridesTheExistingVariableAsync()
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -28,22 +28,22 @@ public sealed class RoutingSlipPayloadIntegrationTests
         using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
         activityCompleted.Configure(harness);
         completed.Configure(harness);
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
             Guid trackingNumber = NewId.NextGuid();
-            MessageData<string> storedValue = await repository.PutString("Frank", cancellationToken);
+            MessageData<string> storedValue = await repository.PutStringAsync("Frank", cancellationToken);
             var builder = new RoutingSlipBuilder(trackingNumber);
             builder.AddVariable("Name", "variable");
             builder.AddActivity(activity.Name, activity.ExecuteAddress, new { Key = "Name", Value = storedValue });
 
-            await harness.Bus.Execute(builder.Build(), cancellationToken);
+            await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
             await Task.WhenAll(
                 observed.Task.WaitAsync(timeout, cancellationToken),
-                activityCompleted.Wait(timeout, cancellationToken),
-                completed.Wait(timeout, cancellationToken));
-            await harness.Stop();
+                activityCompleted.WaitAsync(timeout, cancellationToken),
+                completed.WaitAsync(timeout, cancellationToken));
+            await harness.StopAsync(TestContext.Current.CancellationToken);
 
             Assert.Equal("Frank", await observed.Task);
             Assert.Equal(trackingNumber, Assert.Single(activityCompleted.Messages).Message.TrackingNumber);
@@ -51,13 +51,13 @@ public sealed class RoutingSlipPayloadIntegrationTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-PAYLOAD", "nested-object-graph-and-dictionary-keys")]
-    public async Task NestedObjectGraphAndDictionaryKeys_RoundTripWithoutShapeLoss()
+    public async Task NestedObjectGraphAndDictionaryKeys_RoundTripWithoutShapeLossAsync()
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -68,7 +68,7 @@ public sealed class RoutingSlipPayloadIntegrationTests
             ObjectGraphArguments>(_ => new ObjectGraphActivity(observed));
         using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
         completed.Configure(harness);
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
@@ -89,11 +89,11 @@ public sealed class RoutingSlipPayloadIntegrationTests
                 argumentsDictionary));
             builder.AddVariable("ArgumentsDictionary", variableDictionary);
 
-            await harness.Bus.Execute(builder.Build(), cancellationToken);
+            await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
             await Task.WhenAll(
                 observed.Task.WaitAsync(timeout, cancellationToken),
-                completed.Wait(timeout, cancellationToken));
-            await harness.Stop();
+                completed.WaitAsync(timeout, cancellationToken));
+            await harness.StopAsync(TestContext.Current.CancellationToken);
 
             ObjectGraphSnapshot actual = await observed.Task;
             Assert.Equal(27, actual.IntValue);
@@ -110,13 +110,13 @@ public sealed class RoutingSlipPayloadIntegrationTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-PAYLOAD", "nullable-enum-default-value")]
-    public async Task NullableEnum_DefaultValueRemainsPresentWhenNullsAreIgnored()
+    public async Task NullableEnum_DefaultValueRemainsPresentWhenNullsAreIgnoredAsync()
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -132,7 +132,7 @@ public sealed class RoutingSlipPayloadIntegrationTests
             NullableEnumArguments>(_ => new NullableEnumActivity(observed));
         using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
         completed.Configure(harness);
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
@@ -140,24 +140,24 @@ public sealed class RoutingSlipPayloadIntegrationTests
             builder.AddActivity(activity.Name, activity.ExecuteAddress, new NullableEnumArguments(
                 [new NullableEnumItem(PayloadEnumeration.DefaultValue)]));
 
-            await harness.Bus.Execute(builder.Build(), cancellationToken);
+            await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
             await Task.WhenAll(
                 observed.Task.WaitAsync(timeout, cancellationToken),
-                completed.Wait(timeout, cancellationToken));
-            await harness.Stop();
+                completed.WaitAsync(timeout, cancellationToken));
+            await harness.StopAsync(TestContext.Current.CancellationToken);
 
             Assert.Equal(PayloadEnumeration.DefaultValue, await observed.Task);
             Assert.Single(completed.Messages);
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-PAYLOAD", "uri-argument-log-and-compensation")]
-    public async Task UriVariable_RoundTripsThroughActivityLogAndCompensation()
+    public async Task UriVariable_RoundTripsThroughActivityLogAndCompensationAsync()
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -177,7 +177,7 @@ public sealed class RoutingSlipPayloadIntegrationTests
         completed.Configure(harness);
         compensated.Configure(harness);
         faulted.Configure(harness);
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
@@ -191,14 +191,14 @@ public sealed class RoutingSlipPayloadIntegrationTests
             failure.AddActivity(activity.Name, activity.ExecuteAddress);
             failure.AddActivity(failing.Name, failing.ExecuteAddress, new FaultingCourierArguments("force-compensation"));
 
-            await harness.Bus.Execute(success.Build(), cancellationToken);
-            await completed.Wait(timeout, cancellationToken);
-            await harness.Bus.Execute(failure.Build(), cancellationToken);
+            await harness.Bus.ExecuteAsync(success.Build(), cancellationToken);
+            await completed.WaitAsync(timeout, cancellationToken);
+            await harness.Bus.ExecuteAsync(failure.Build(), cancellationToken);
             await Task.WhenAll(
-                activityCompleted.Wait(timeout, cancellationToken),
-                compensated.Wait(timeout, cancellationToken),
-                faulted.Wait(timeout, cancellationToken));
-            await harness.Stop();
+                activityCompleted.WaitAsync(timeout, cancellationToken),
+                compensated.WaitAsync(timeout, cancellationToken),
+                faulted.WaitAsync(timeout, cancellationToken));
+            await harness.StopAsync(TestContext.Current.CancellationToken);
 
             Assert.Equal(2, activityCompleted.Count);
             Assert.All(activityCompleted.Messages,
@@ -210,13 +210,13 @@ public sealed class RoutingSlipPayloadIntegrationTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-COURIER-PAYLOAD", "custom-json-converter-is-used")]
-    public async Task OpaqueDoublePayload_UsesTheConfiguredJsonConverter()
+    public async Task OpaqueDoublePayload_UsesTheConfiguredJsonConverterAsync()
     {
         TimeSpan timeout = CourierTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -232,7 +232,7 @@ public sealed class RoutingSlipPayloadIntegrationTests
             OpaquePointArguments>(_ => new OpaquePointActivity(observed));
         using var completed = new CourierMessageRecorder<RoutingSlipCompleted>(1);
         completed.Configure(harness);
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
 
         try
         {
@@ -240,18 +240,18 @@ public sealed class RoutingSlipPayloadIntegrationTests
             builder.AddActivity(activity.Name, activity.ExecuteAddress,
                 new OpaquePointArguments(new OpaquePoint(1.2, 2.3)));
 
-            await harness.Bus.Execute(builder.Build(), cancellationToken);
+            await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
             await Task.WhenAll(
                 observed.Task.WaitAsync(timeout, cancellationToken),
-                completed.Wait(timeout, cancellationToken));
-            await harness.Stop();
+                completed.WaitAsync(timeout, cancellationToken));
+            await harness.StopAsync(TestContext.Current.CancellationToken);
 
             Assert.Equal(new OpaquePointSnapshot(1.2, 2.3), await observed.Task);
             Assert.Single(completed.Messages);
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
@@ -260,9 +260,10 @@ public sealed class RoutingSlipPayloadIntegrationTests
     public sealed class MessageDataActivity(TaskCompletionSource<string> observed) :
         IExecuteActivity<MessageDataArguments>
     {
-        public async Task<ExecutionResult> Execute(ExecuteContext<MessageDataArguments> context)
+        public async Task<ExecutionResult> ExecuteAsync(ExecuteContext<MessageDataArguments> context)
         {
-            string value = await context.Arguments.Value.Value;
+            string value = await context.Arguments.Value.Value
+                ?? throw new Xunit.Sdk.XunitException("Expected the activity message-data value to be non-null.");
             observed.TrySetResult(value);
             return context.CompletedWithVariables(new Dictionary<string, object>
             {
@@ -288,7 +289,7 @@ public sealed class RoutingSlipPayloadIntegrationTests
     public sealed class ObjectGraphActivity(TaskCompletionSource<ObjectGraphSnapshot> observed) :
         IExecuteActivity<ObjectGraphArguments>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<ObjectGraphArguments> context)
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<ObjectGraphArguments> context)
         {
             observed.TrySetResult(new ObjectGraphSnapshot(
                 context.Arguments.Outer.IntValue,
@@ -313,7 +314,7 @@ public sealed class RoutingSlipPayloadIntegrationTests
     public sealed class NullableEnumActivity(TaskCompletionSource<PayloadEnumeration?> observed) :
         IExecuteActivity<NullableEnumArguments>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<NullableEnumArguments> context)
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<NullableEnumArguments> context)
         {
             PayloadEnumeration? value = Assert.Single(context.Arguments.Payload).Enumeration;
             observed.TrySetResult(value);
@@ -327,10 +328,10 @@ public sealed class RoutingSlipPayloadIntegrationTests
 
     public sealed class UriActivity : IActivity<UriArguments, UriLog>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<UriArguments> context) =>
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<UriArguments> context) =>
             Task.FromResult(context.Completed(new UriLog(context.Arguments.Address)));
 
-        public Task<CompensationResult> Compensate(CompensateContext<UriLog> context) =>
+        public Task<CompensationResult> CompensateAsync(CompensateContext<UriLog> context) =>
             Task.FromResult(context.Compensated());
     }
 
@@ -361,7 +362,7 @@ public sealed class RoutingSlipPayloadIntegrationTests
     public sealed class OpaquePointActivity(TaskCompletionSource<OpaquePointSnapshot> observed) :
         IExecuteActivity<OpaquePointArguments>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<OpaquePointArguments> context)
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<OpaquePointArguments> context)
         {
             observed.TrySetResult(new OpaquePointSnapshot(
                 context.Arguments.Point.GetX(),

@@ -9,45 +9,45 @@ public class PublishObservable :
     IPublishObserver,
     ISendObserver
 {
-    public Task PrePublish<T>(PublishContext<T> context)
+    public Task PrePublishAsync<T>(PublishContext<T> context)
         where T : class
     {
-        return ForEachAsync(x => x.PrePublish(context));
+        return ForEachAsync(x => x.PrePublishAsync(context));
     }
 
-    public Task PostPublish<T>(PublishContext<T> context)
+    public Task PostPublishAsync<T>(PublishContext<T> context)
         where T : class
     {
-        return ForEachAsync(x => x.PostPublish(context));
+        return ForEachAsync(x => x.PostPublishAsync(context));
     }
 
-    public Task PublishFault<T>(PublishContext<T> context, Exception exception)
+    public Task PublishFaultAsync<T>(PublishContext<T> context, Exception exception)
         where T : class
     {
-        return ForEachAsync(x => x.PublishFault(context, exception));
+        return ForEachAsync(x => x.PublishFaultAsync(context, exception));
     }
 
-    public Task PreSend<T>(SendContext<T> context)
+    public Task PreSendAsync<T>(SendContext<T> context)
         where T : class
     {
         var publishContext = context.GetPayload<PublishContext<T>>();
 
-        return ForEachAsync(x => x.PrePublish(publishContext));
+        return ForEachAsync(x => x.PrePublishAsync(publishContext));
     }
 
-    public Task PostSend<T>(SendContext<T> context)
+    public Task PostSendAsync<T>(SendContext<T> context)
         where T : class
     {
         var publishContext = context.GetPayload<PublishContext<T>>();
 
-        return ForEachAsync(x => x.PostPublish(publishContext));
+        return ForEachAsync(x => x.PostPublishAsync(publishContext));
     }
 
-    public Task SendFault<T>(SendContext<T> context, Exception exception)
+    public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
         where T : class
     {
         var publishContext = context.GetPayload<PublishContext<T>>();
 
-        return ForEachAsync(x => x.PublishFault(publishContext, exception));
+        return ForEachAsync(x => x.PublishFaultAsync(publishContext, exception));
     }
 }

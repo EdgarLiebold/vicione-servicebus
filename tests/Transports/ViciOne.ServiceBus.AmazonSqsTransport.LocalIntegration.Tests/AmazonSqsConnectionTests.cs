@@ -30,7 +30,7 @@ public sealed class AmazonSqsConnectionTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0177", "run-scoped-localstack-sqs-and-sns-ready")]
-    public async Task RunScopedLocalStackHost_StartsAndReportsReady()
+    public async Task RunScopedLocalStackHost_StartsAndReportsReadyAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("providerready");
         using AmazonSQSClient sqs = fixture.CreateSqsClient();
@@ -50,7 +50,7 @@ public sealed class AmazonSqsConnectionTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0178", "test-owned-resources-are-removed-by-fixture-teardown")]
-    public async Task TestOwnedFixture_StartsStopsAndCleansItsResources()
+    public async Task TestOwnedFixture_StartsStopsAndCleansItsResourcesAsync()
     {
         AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("cleanup");
         using AmazonSQSClient sqs = fixture.CreateSqsClient();
@@ -66,21 +66,21 @@ public sealed class AmazonSqsConnectionTests
             await sns.CreateTopicAsync(new CreateTopicRequest(topicName), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
-            Assert.Equal([queueName], await ListOwnedQueueNames(sqs, fixture.Prefix, fixture.OperationTimeout, cancellationToken));
-            Assert.Equal([topicName], await ListOwnedTopicNames(sns, fixture.Prefix, fixture.OperationTimeout, cancellationToken));
+            Assert.Equal([queueName], await ListOwnedQueueNamesAsync(sqs, fixture.Prefix, fixture.OperationTimeout, cancellationToken));
+            Assert.Equal([topicName], await ListOwnedTopicNamesAsync(sns, fixture.Prefix, fixture.OperationTimeout, cancellationToken));
         }
         finally
         {
             await fixture.DisposeAsync();
         }
 
-        Assert.Empty(await ListOwnedQueueNames(sqs, fixture.Prefix, fixture.OperationTimeout, cancellationToken));
-        Assert.Empty(await ListOwnedTopicNames(sns, fixture.Prefix, fixture.OperationTimeout, cancellationToken));
+        Assert.Empty(await ListOwnedQueueNamesAsync(sqs, fixture.Prefix, fixture.OperationTimeout, cancellationToken));
+        Assert.Empty(await ListOwnedTopicNamesAsync(sns, fixture.Prefix, fixture.OperationTimeout, cancellationToken));
     }
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0179", "publish-without-consumer-creates-one-unsubscribed-topic")]
-    public async Task PublishWithoutConsumer_CreatesOnlyTheExpectedTopic()
+    public async Task PublishWithoutConsumer_CreatesOnlyTheExpectedTopicAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("unconsumed");
         using AmazonSQSClient sqs = fixture.CreateSqsClient();
@@ -94,13 +94,13 @@ public sealed class AmazonSqsConnectionTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            await bus.Publish(new UnconsumedEvent(flowId), cancellationToken)
+            await bus.PublishAsync(new UnconsumedEvent(flowId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
-            string[] topicNames = await ListOwnedTopicNames(sns, fixture.Prefix, fixture.OperationTimeout, cancellationToken);
+            string[] topicNames = await ListOwnedTopicNamesAsync(sns, fixture.Prefix, fixture.OperationTimeout, cancellationToken);
             string topicName = Assert.Single(topicNames);
             Assert.Contains(nameof(UnconsumedEvent), topicName, StringComparison.Ordinal);
-            Assert.Empty(await ListOwnedQueueNames(sqs, fixture.Prefix, fixture.OperationTimeout, cancellationToken));
+            Assert.Empty(await ListOwnedQueueNamesAsync(sqs, fixture.Prefix, fixture.OperationTimeout, cancellationToken));
 
             ListTopicsResponse topics = await sns.ListTopicsAsync(new ListTopicsRequest(), cancellationToken);
             Topic topic = Assert.Single(topics.Topics, candidate => candidate.TopicArn.EndsWith(':' + topicName, StringComparison.Ordinal));
@@ -117,7 +117,7 @@ public sealed class AmazonSqsConnectionTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0181", "explicit-credential-object-signs-local-provider-requests")]
-    public async Task ExplicitCredentialsObject_ConnectsToTheConfiguredEndpoint()
+    public async Task ExplicitCredentialsObject_ConnectsToTheConfiguredEndpointAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("credentials");
         var credentials = new TrackingCredentials(AmazonSqsLocalStack.CreateRunCredentials());
@@ -145,9 +145,8 @@ public sealed class AmazonSqsConnectionTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await endpoint.Send(new CredentialMessage(expected), cancellationToken)
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await endpoint.SendAsync(new CredentialMessage(expected), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             Assert.Equal(expected, await received.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
@@ -162,7 +161,7 @@ public sealed class AmazonSqsConnectionTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0184", "valid-configuration-ready-healthy-and-delivering")]
-    public async Task ValidConfiguration_ReachesReadyAndHealthy()
+    public async Task ValidConfiguration_ReachesReadyAndHealthyAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("ready");
         string queueName = fixture.Name("input");
@@ -191,9 +190,8 @@ public sealed class AmazonSqsConnectionTests
             started = true;
             Assert.Equal(BusHealthStatus.Healthy, bus.CheckHealth().Status);
 
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await endpoint.Send(new ReadyMessage(expected), cancellationToken)
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await endpoint.SendAsync(new ReadyMessage(expected), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             Assert.Equal(expected, await received.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
@@ -222,7 +220,7 @@ public sealed class AmazonSqsConnectionTests
         }
     }
 
-    private static async Task<string[]> ListOwnedQueueNames(
+    private static async Task<string[]> ListOwnedQueueNamesAsync(
         IAmazonSQS sqs,
         string prefix,
         TimeSpan timeout,
@@ -243,7 +241,7 @@ public sealed class AmazonSqsConnectionTests
         return names.Order(StringComparer.Ordinal).ToArray();
     }
 
-    private static async Task<string[]> ListOwnedTopicNames(
+    private static async Task<string[]> ListOwnedTopicNamesAsync(
         IAmazonSimpleNotificationService sns,
         string prefix,
         TimeSpan timeout,

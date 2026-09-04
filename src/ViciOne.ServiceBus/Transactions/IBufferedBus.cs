@@ -18,5 +18,6 @@ public interface IBufferedBus :
     /// <exception cref="System.InvalidOperationException">
     /// The call was made recursively from an action currently being flushed by this buffered bus.
     /// </exception>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     Task FlushAsync(CancellationToken cancellationToken = default);
 }

@@ -47,7 +47,7 @@ public class PendingConfirmation :
         _source.TrySetCanceled(cancellationToken);
     }
 
-    public Task Checkpoint(CancellationToken cancellationToken)
+    public Task CheckpointAsync(CancellationToken cancellationToken)
     {
         return _eventArgs.UpdateCheckpointAsync(cancellationToken);
     }

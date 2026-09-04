@@ -23,7 +23,7 @@ public class RequestStateMessagePipe :
     {
     }
 
-    public async Task Send(SendContext context)
+    public async Task SendAsync(SendContext context)
     {
         context.DestinationAddress = _context.Saga.ResponseAddress;
         context.SourceAddress = _context.Saga.SagaAddress;

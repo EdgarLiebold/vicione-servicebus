@@ -13,7 +13,7 @@ public sealed class InMemoryFaultPublicationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONSUME-CONTEXT-PUBLISH", "four-distinct-events-exactly-once")]
-    public async Task ConsumerPublishesAllFourEventsExactlyOnce()
+    public async Task ConsumerPublishesAllFourEventsExactlyOnceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -25,26 +25,26 @@ public sealed class InMemoryFaultPublicationTests
             endpoint.Handler<EventCommand>(async context =>
             {
                 Guid correlationId = context.Message.CorrelationId;
-                await context.Publish(new FirstEvent(correlationId, timestamp), context.CancellationToken);
-                await context.Publish(new SecondEvent(correlationId, timestamp.AddMinutes(1)), context.CancellationToken);
-                await context.Publish(new ThirdEvent(correlationId, timestamp.AddMinutes(2)), context.CancellationToken);
-                await context.Publish(new FourthEvent(correlationId, timestamp.AddMinutes(3)), context.CancellationToken);
+                await context.Advanced().PublishAsync(new FirstEvent(correlationId, timestamp), context.CancellationToken);
+                await context.Advanced().PublishAsync(new SecondEvent(correlationId, timestamp.AddMinutes(1)), context.CancellationToken);
+                await context.Advanced().PublishAsync(new ThirdEvent(correlationId, timestamp.AddMinutes(2)), context.CancellationToken);
+                await context.Advanced().PublishAsync(new FourthEvent(correlationId, timestamp.AddMinutes(3)), context.CancellationToken);
             });
-            endpoint.Handler<FirstEvent>(recorder.Record);
-            endpoint.Handler<SecondEvent>(recorder.Record);
-            endpoint.Handler<ThirdEvent>(recorder.Record);
-            endpoint.Handler<FourthEvent>(recorder.Record);
+            endpoint.Handler<FirstEvent>(recorder.RecordAsync);
+            endpoint.Handler<SecondEvent>(recorder.RecordAsync);
+            endpoint.Handler<ThirdEvent>(recorder.RecordAsync);
+            endpoint.Handler<FourthEvent>(recorder.RecordAsync);
         };
         var command = new EventCommand(Guid.Parse("e2e1bffa-a03a-43c3-ad97-82fef0e147df"));
         bool started = false;
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+            await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
             started = true;
-            await harness.InputQueueSendEndpoint.Send(command, cancellationToken).WaitAsync(timeout, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(command, cancellationToken).WaitAsync(timeout, cancellationToken);
             await recorder.Completed.WaitAsync(timeout, cancellationToken);
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
             started = false;
 
             EventObservation[] observations = recorder.Observations;
@@ -59,13 +59,13 @@ public sealed class InMemoryFaultPublicationTests
         finally
         {
             if (started)
-                await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+                await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-FAULT-STORM", "five-hundred-messages-produce-five-hundred-exact-faults")]
-    public async Task FaultStorm_PublishesExactlyOneFaultPerMessage()
+    public async Task FaultStorm_PublishesExactlyOneFaultPerMessageAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -76,20 +76,20 @@ public sealed class InMemoryFaultPublicationTests
             endpoint.PrefetchCount = ConcurrentDeliveries;
             endpoint.ConcurrentMessageLimit = ConcurrentDeliveries;
             endpoint.Consumer<StormConsumer>();
-            endpoint.Handler<Fault<StormMessage>>(context => recorder.Record(context.Message));
+            endpoint.Handler<Fault<StormMessage>>(context => recorder.RecordAsync(context.Message));
         };
         bool started = false;
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+            await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
             started = true;
             Task[] sends = Enumerable.Range(0, StormSize)
-                .Select(index => harness.InputQueueSendEndpoint.Send(new StormMessage(index), cancellationToken))
+                .Select(index => harness.InputQueueSendEndpoint.SendAsync(new StormMessage(index), cancellationToken))
                 .ToArray();
             await Task.WhenAll(sends).WaitAsync(timeout, cancellationToken);
             await recorder.Completed.WaitAsync(timeout, cancellationToken);
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
             started = false;
 
             using var completed = new CancellationTokenSource();
@@ -112,7 +112,7 @@ public sealed class InMemoryFaultPublicationTests
         finally
         {
             if (started)
-                await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+                await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -171,7 +171,7 @@ public sealed class InMemoryFaultPublicationTests
 
         public EventObservation[] Observations => _observations.ToArray();
 
-        public Task Record<T>(ConsumeContext<T> context)
+        public Task RecordAsync<T>(ConsumeContext<T> context)
             where T : class, ConsumerEvent
         {
             _observations.Enqueue(new EventObservation(
@@ -189,7 +189,7 @@ public sealed class InMemoryFaultPublicationTests
 
     private sealed class StormConsumer : IConsumer<StormMessage>
     {
-        public Task Consume(ConsumeContext<StormMessage> context) =>
+        public Task ConsumeAsync(ConsumeContext<StormMessage> context) =>
             Task.FromException(new StormFailureException());
     }
 
@@ -214,7 +214,7 @@ public sealed class InMemoryFaultPublicationTests
 
         public Fault<StormMessage>[] Faults => _observed.ToArray();
 
-        public Task Record(Fault<StormMessage> fault)
+        public Task RecordAsync(Fault<StormMessage> fault)
         {
             _observed.Enqueue(fault);
             if (_faults.TryAdd(fault.Message.Sequence, fault) && _faults.Count == expectedCount)

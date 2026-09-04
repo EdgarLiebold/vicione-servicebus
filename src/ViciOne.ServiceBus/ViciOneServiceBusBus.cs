@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.Advanced;
+using ViciOne.ServiceBus.Advanced.Initializers;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Events;
 using ViciOne.ServiceBus.Internals;
@@ -14,6 +16,7 @@ namespace ViciOne.ServiceBus;
 
 public class ViciOneServiceBusBus :
     IBusControl,
+    Advanced.IAdvancedPublishEndpoint,
     IMessageRouteProvider
 {
     /// <summary>
@@ -43,7 +46,7 @@ public class ViciOneServiceBusBus :
     {
         Address = endpointConfiguration.InputAddress;
         _consumePipe = endpointConfiguration.ConsumePipe;
-        _host = host;
+        _host = host ?? throw new ArgumentNullException(nameof(host));
         _busObservable = busObservable;
         _receiveEndpoint = endpointConfiguration.ReceiveEndpoint;
         _timeProvider = timeProvider ?? TimeProvider.System;
@@ -227,7 +230,7 @@ public class ViciOneServiceBusBus :
             }
         }
 
-        async Task IReceiveEndpointObserver.Faulted(ReceiveEndpointFaulted faulted)
+        async Task IReceiveEndpointObserver.FaultedAsync(ReceiveEndpointFaulted faulted)
         {
             CancellationTokenSource[] waiting;
 
@@ -245,17 +248,17 @@ public class ViciOneServiceBusBus :
             await CancelWaitersAsync(waiting).ConfigureAwait(false);
         }
 
-        Task IReceiveEndpointObserver.Ready(ReceiveEndpointReady ready)
+        Task IReceiveEndpointObserver.ReadyAsync(ReceiveEndpointReady ready)
         {
             return Task.CompletedTask;
         }
 
-        Task IReceiveEndpointObserver.Stopping(ReceiveEndpointStopping stopping)
+        Task IReceiveEndpointObserver.StoppingAsync(ReceiveEndpointStopping stopping)
         {
             return Task.CompletedTask;
         }
 
-        Task IReceiveEndpointObserver.Completed(ReceiveEndpointCompleted completed)
+        Task IReceiveEndpointObserver.CompletedAsync(ReceiveEndpointCompleted completed)
         {
             return Task.CompletedTask;
         }
@@ -307,74 +310,79 @@ public class ViciOneServiceBusBus :
         return WaitForBusEndpoint(_consumePipe.ConnectRequestPipe(requestId, pipe));
     }
 
-    Task IPublishEndpoint.Publish<T>(T message, CancellationToken cancellationToken)
+    Task IPublishEndpoint.PublishAsync<T>(T message, CancellationToken cancellationToken)
     {
         LogContext.SetCurrentIfNull(_logContext);
 
-        return _publishEndpoint.Publish(message, cancellationToken);
+        return _publishEndpoint.PublishAsync(message, cancellationToken);
     }
 
-    Task IPublishEndpoint.Publish<T>(T message, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken)
+    Task Advanced.IAdvancedPublishEndpoint.PublishAsync<T>(T message, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken)
     {
         LogContext.SetCurrentIfNull(_logContext);
 
-        return _publishEndpoint.Publish(message, publishPipe, cancellationToken);
+        return _publishEndpoint.PublishAsync(message, publishPipe, cancellationToken);
     }
 
-    Task IPublishEndpoint.Publish<T>(T message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
+    Task Advanced.IAdvancedPublishEndpoint.PublishAsync<T>(T message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
     {
         LogContext.SetCurrentIfNull(_logContext);
 
-        return _publishEndpoint.Publish(message, publishPipe, cancellationToken);
+        return _publishEndpoint.PublishAsync(message, publishPipe, cancellationToken);
     }
 
-    Task IPublishEndpoint.Publish(object message, CancellationToken cancellationToken)
+    Task Advanced.IAdvancedPublishEndpoint.PublishAsync(object message, CancellationToken cancellationToken)
     {
         LogContext.SetCurrentIfNull(_logContext);
 
-        return _publishEndpoint.Publish(message, cancellationToken);
+        ArgumentNullException.ThrowIfNull(message);
+        return _publishEndpoint.PublishAsync(message, message.GetType(), cancellationToken);
     }
 
-    Task IPublishEndpoint.Publish(object message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
+    Task Advanced.IAdvancedPublishEndpoint.PublishAsync(object message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
     {
         LogContext.SetCurrentIfNull(_logContext);
 
-        return _publishEndpoint.Publish(message, publishPipe, cancellationToken);
+        ArgumentNullException.ThrowIfNull(message);
+        return _publishEndpoint.PublishAsync(message, message.GetType(), publishPipe, cancellationToken);
     }
 
-    Task IPublishEndpoint.Publish(object message, Type messageType, CancellationToken cancellationToken)
+    Task Advanced.IAdvancedPublishEndpoint.PublishAsync(object message, Type messageType, CancellationToken cancellationToken)
     {
         LogContext.SetCurrentIfNull(_logContext);
 
-        return _publishEndpoint.Publish(message, messageType, cancellationToken);
+        return _publishEndpoint.PublishAsync(message, messageType, cancellationToken);
     }
 
-    Task IPublishEndpoint.Publish(object message, Type messageType, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
+    Task Advanced.IAdvancedPublishEndpoint.PublishAsync(object message, Type messageType, IPipe<PublishContext> publishPipe,
+        CancellationToken cancellationToken)
     {
         LogContext.SetCurrentIfNull(_logContext);
 
-        return _publishEndpoint.Publish(message, messageType, publishPipe, cancellationToken);
+        return _publishEndpoint.PublishAsync(message, messageType, publishPipe, cancellationToken);
     }
 
-    Task IPublishEndpoint.Publish<T>(object values, CancellationToken cancellationToken)
+    Task Advanced.IAdvancedPublishEndpoint.PublishAsync<T>(object values, CancellationToken cancellationToken)
     {
         LogContext.SetCurrentIfNull(_logContext);
 
-        return _publishEndpoint.Publish<T>(values, cancellationToken);
+        return _publishEndpoint.PublishAsync<T>(values, cancellationToken);
     }
 
-    Task IPublishEndpoint.Publish<T>(object values, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken)
+    Task Advanced.IAdvancedPublishEndpoint.PublishAsync<T>(object values, IPipe<PublishContext<T>> publishPipe,
+        CancellationToken cancellationToken)
     {
         LogContext.SetCurrentIfNull(_logContext);
 
-        return _publishEndpoint.Publish(values, publishPipe, cancellationToken);
+        return _publishEndpoint.PublishAsync(values, publishPipe, cancellationToken);
     }
 
-    Task IPublishEndpoint.Publish<T>(object values, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
+    Task Advanced.IAdvancedPublishEndpoint.PublishAsync<T>(object values, IPipe<PublishContext> publishPipe,
+        CancellationToken cancellationToken)
     {
         LogContext.SetCurrentIfNull(_logContext);
 
-        return _publishEndpoint.Publish<T>(values, publishPipe, cancellationToken);
+        return _publishEndpoint.PublishAsync<T>(values, publishPipe, cancellationToken);
     }
 
     public Uri Address { get; }
@@ -383,11 +391,11 @@ public class ViciOneServiceBusBus :
 
     public IBusTopology Topology { get; }
 
-    Task<ISendEndpoint> ISendEndpointProvider.GetSendEndpoint(Uri address)
+    Task<ISendEndpoint> ISendEndpointProvider.GetSendEndpointAsync(Uri address, CancellationToken cancellationToken)
     {
         LogContext.SetCurrentIfNull(_logContext);
 
-        return _receiveEndpoint.GetSendEndpoint(address);
+        return _receiveEndpoint.GetSendEndpointAsync(address, cancellationToken: cancellationToken);
     }
 
     public async Task<BusHandle> StartAsync(CancellationToken cancellationToken)
@@ -400,7 +408,7 @@ public class ViciOneServiceBusBus :
             return _busHandle;
         }
 
-        await _busObservable.PreStart(this).ConfigureAwait(false);
+        await _busObservable.PreStartAsync(this).ConfigureAwait(false);
 
         Handle? busHandle = null;
 
@@ -419,7 +427,7 @@ public class ViciOneServiceBusBus :
 
             try
             {
-                await busHandle.Ready.OrCanceled(cancellationToken).ConfigureAwait(false);
+                await busHandle.Ready.OrCanceledAsync(cancellationToken).ConfigureAwait(false);
             }
             catch (OperationCanceledException exception) when (exception.CancellationToken == cancellationToken)
             {
@@ -427,7 +435,7 @@ public class ViciOneServiceBusBus :
 
                 try
                 {
-                    await busHandle.StopAsync(TimeSpan.FromSeconds(30)).ConfigureAwait(false);
+                    await busHandle.StopAsync(TimeSpan.FromSeconds(30), cancellationToken: cancellationToken).ConfigureAwait(false);
                 }
                 catch (Exception stopException)
                 {
@@ -437,7 +445,7 @@ public class ViciOneServiceBusBus :
                 await busHandle.Ready.ConfigureAwait(false);
             }
 
-            await _busObservable.PostStart(this, busHandle.Ready).ConfigureAwait(false);
+            await _busObservable.PostStartAsync(this, busHandle.Ready).ConfigureAwait(false);
 
             _busHandle = busHandle;
 
@@ -473,7 +481,7 @@ public class ViciOneServiceBusBus :
             _busState = BusState.Faulted;
             _healthMessage = $"start faulted: {ex.Message}";
 
-            await _busObservable.StartFaulted(this, ex).ConfigureAwait(false);
+            await _busObservable.StartFaultedAsync(this, ex).ConfigureAwait(false);
 
             throw;
         }
@@ -550,12 +558,12 @@ public class ViciOneServiceBusBus :
         return _host.ConnectPublishObserver(observer);
     }
 
-    public Task<ISendEndpoint> GetPublishSendEndpoint<T>()
+    public Task<ISendEndpoint> GetPublishSendEndpointAsync<T>(CancellationToken cancellationToken = default)
         where T : class
     {
         LogContext.SetCurrentIfNull(_logContext);
 
-        return _receiveEndpoint.GetPublishSendEndpoint<T>();
+        return _receiveEndpoint.GetPublishSendEndpointAsync<T>(cancellationToken: cancellationToken);
     }
 
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
@@ -597,7 +605,7 @@ public class ViciOneServiceBusBus :
     {
         readonly ViciOneServiceBusBus _bus;
         readonly IBusObserver _busObserver;
-        readonly IHost _host;
+        readonly IHost _host = null!;
         readonly HostHandle _hostHandle;
         readonly ILogContext _logContext;
         bool _stopped;
@@ -610,7 +618,7 @@ public class ViciOneServiceBusBus :
             _logContext = logContext;
             _hostHandle = hostHandle;
 
-            Ready = ReadyOrNot(hostHandle.Ready);
+            Ready = ReadyOrNotAsync(hostHandle.Ready);
         }
 
         public Task<BusReady> Ready { get; }
@@ -622,20 +630,20 @@ public class ViciOneServiceBusBus :
             if (_stopped)
                 return;
 
-            await _busObserver.PreStop(_bus).ConfigureAwait(false);
+            await _busObserver.PreStopAsync(_bus).ConfigureAwait(false);
 
             try
             {
-                await _hostHandle.Stop(cancellationToken).ConfigureAwait(false);
+                await _hostHandle.StopAsync(cancellationToken).ConfigureAwait(false);
 
-                await _busObserver.PostStop(_bus).ConfigureAwait(false);
+                await _busObserver.PostStopAsync(_bus).ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
             }
             catch (Exception exception)
             {
-                await _busObserver.StopFaulted(_bus, exception).ConfigureAwait(false);
+                await _busObserver.StopFaultedAsync(_bus, exception).ConfigureAwait(false);
 
                 LogContext.Warning?.Log(exception, "Bus stop faulted: {HostAddress}", _host.Address);
 
@@ -653,7 +661,7 @@ public class ViciOneServiceBusBus :
             _bus._healthMessage = "stopped";
         }
 
-        async Task<BusReady> ReadyOrNot(Task<HostReady> ready)
+        async Task<BusReady> ReadyOrNotAsync(Task<HostReady> ready)
         {
             var hostReady = await ready.ConfigureAwait(false);
 

@@ -14,9 +14,9 @@ public class ConcurrencyLimitPipeSpecification<T> :
 {
     readonly int _concurrencyLimit;
 
-    readonly IPipeRouter _router;
+    readonly IPipeRouter? _router = null!;
 
-    public ConcurrencyLimitPipeSpecification(int concurrencyLimit, IPipeRouter router = null)
+    public ConcurrencyLimitPipeSpecification(int concurrencyLimit, IPipeRouter? router = null)
     {
         _concurrencyLimit = concurrencyLimit;
 

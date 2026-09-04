@@ -25,13 +25,13 @@ public sealed class MessagePipelineMetricsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-OBSERVABILITY-INSTRUMENTS", "exact-types-units-descriptions-and-version")]
-    public async Task BareContainer_PublishesTheExactInstrumentContractThroughItsOwnFactory()
+    public async Task BareContainer_PublishesTheExactInstrumentContractThroughItsOwnFactoryAsync()
     {
         TimeSpan timeout = OperationTimeout();
         await using ServiceProvider provider = CreateProvider<ObservedMessage>(static _ => Task.CompletedTask, timeout);
         IMeterFactory factory = provider.GetRequiredService<IMeterFactory>();
         using var observations = new MetricObservationSession(factory);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, TestCancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, TestCancellationToken);
 
         try
         {
@@ -75,24 +75,24 @@ public sealed class MessagePipelineMetricsTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-OBSERVABILITY-METRICS", "successful-send-receive-process-exact-tags")]
-    public async Task SuccessfulMessage_EmitsSendReceiveAndProcessMetricsWithOnlyBoundedTags()
+    public async Task SuccessfulMessage_EmitsSendReceiveAndProcessMetricsWithOnlyBoundedTagsAsync()
     {
         TimeSpan timeout = OperationTimeout();
         await using ServiceProvider provider = CreateProvider<ObservedMessage>(static _ => Task.CompletedTask, timeout);
         IMeterFactory factory = provider.GetRequiredService<IMeterFactory>();
         using var observations = new MetricObservationSession(factory);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, TestCancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, TestCancellationToken);
 
         try
         {
-            await harness.Bus.Publish(new ObservedMessage("ok"), TestCancellationToken);
-            Assert.True(await harness.Consumed.Any<ObservedMessage>(TestCancellationToken));
+            await harness.Bus.PublishAsync(new ObservedMessage("ok"), TestCancellationToken);
+            Assert.True(await harness.Consumed.AnyAsync<ObservedMessage>(TestCancellationToken));
             await observations.WaitForCountAsync(
                 measurement => measurement.Name == ServiceBusTelemetry.Metrics.ProcessDuration,
                 1,
@@ -138,13 +138,13 @@ public sealed class MessagePipelineMetricsTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-OBSERVABILITY-METRICS", "processor-kind-uses-explicit-semantic-contract")]
-    public async Task ConsumerClassification_UsesTheExplicitAdapterContractInsteadOfTypeNames()
+    public async Task ConsumerClassification_UsesTheExplicitAdapterContractInsteadOfTypeNamesAsync()
     {
         TimeSpan timeout = OperationTimeout();
         await using ServiceProvider provider = new ServiceCollection()
@@ -156,12 +156,12 @@ public sealed class MessagePipelineMetricsTests
             })
             .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
         using var observations = new MetricObservationSession(provider.GetRequiredService<IMeterFactory>());
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, TestCancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, TestCancellationToken);
 
         try
         {
-            await harness.Bus.Publish(new OrdinaryConsumerMessage("consumer"), TestCancellationToken);
-            await harness.Bus.Publish(new ActualHandlerMessage("handler"), TestCancellationToken);
+            await harness.Bus.PublishAsync(new OrdinaryConsumerMessage("consumer"), TestCancellationToken);
+            await harness.Bus.PublishAsync(new ActualHandlerMessage("handler"), TestCancellationToken);
             await observations.WaitForCountAsync(
                 measurement => measurement.Name == ServiceBusTelemetry.Metrics.ProcessDuration,
                 2,
@@ -179,13 +179,13 @@ public sealed class MessagePipelineMetricsTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-OBSERVABILITY-METRICS", "fault-uses-fully-qualified-error-type")]
-    public async Task FaultedHandler_RecordsTheFullyQualifiedErrorTypeOnItsDuration()
+    public async Task FaultedHandler_RecordsTheFullyQualifiedErrorTypeOnItsDurationAsync()
     {
         TimeSpan timeout = OperationTimeout();
         await using ServiceProvider provider = CreateProvider<FaultedMessage>(
@@ -193,12 +193,12 @@ public sealed class MessagePipelineMetricsTests
             timeout);
         IMeterFactory factory = provider.GetRequiredService<IMeterFactory>();
         using var observations = new MetricObservationSession(factory);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, TestCancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, TestCancellationToken);
 
         try
         {
-            await harness.Bus.Publish(new FaultedMessage("fault"), TestCancellationToken);
-            Assert.True(await harness.Consumed.Any<FaultedMessage>(TestCancellationToken));
+            await harness.Bus.PublishAsync(new FaultedMessage("fault"), TestCancellationToken);
+            Assert.True(await harness.Consumed.AnyAsync<FaultedMessage>(TestCancellationToken));
             await observations.WaitForCountAsync(
                 measurement => measurement.Name == ServiceBusTelemetry.Metrics.ProcessDuration
                     && Equals(measurement.Tag(ServiceBusTelemetry.Attributes.ErrorType), typeof(ExpectedHandlerException).FullName),
@@ -214,23 +214,23 @@ public sealed class MessagePipelineMetricsTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-OBSERVABILITY-METRICS", "failed-send-remains-an-attempt-with-exact-error-type")]
-    public async Task FaultedSend_RecordsTheAttemptAndItsFullyQualifiedErrorType()
+    public async Task FaultedSend_RecordsTheAttemptAndItsFullyQualifiedErrorTypeAsync()
     {
         TimeSpan timeout = OperationTimeout();
         await using ServiceProvider provider = CreateProvider<ObservedMessage>(static _ => Task.CompletedTask, timeout);
         using var observations = new MetricObservationSession(provider.GetRequiredService<IMeterFactory>());
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, TestCancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, TestCancellationToken);
 
         try
         {
-            ISendEndpoint endpoint = await harness.GetHandlerEndpoint<ObservedMessage>().WaitAsync(timeout, TestCancellationToken);
-            await Assert.ThrowsAsync<SerializationException>(() => endpoint.Send(
+            ISendEndpoint endpoint = await harness.GetHandlerEndpointAsync<ObservedMessage>(TestContext.Current.CancellationToken).WaitAsync(timeout, TestCancellationToken);
+            await Assert.ThrowsAsync<SerializationException>(() => endpoint.SendAsync(
                 new ObservedMessage("faulted-send"),
                 context => context.Serializer = null!,
                 TestCancellationToken));
@@ -253,13 +253,13 @@ public sealed class MessagePipelineMetricsTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-OBSERVABILITY-METRICS", "retry-counted-on-the-retried-attempt")]
-    public async Task RetriedHandler_EmitsOneRetryMeasurementAndTwoProcessingDurations()
+    public async Task RetriedHandler_EmitsOneRetryMeasurementAndTwoProcessingDurationsAsync()
     {
         TimeSpan timeout = OperationTimeout();
         var attempts = new AttemptCounter();
@@ -278,12 +278,12 @@ public sealed class MessagePipelineMetricsTests
             .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
         IMeterFactory factory = provider.GetRequiredService<IMeterFactory>();
         using var observations = new MetricObservationSession(factory);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, TestCancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, TestCancellationToken);
 
         try
         {
-            await harness.Bus.Publish(new RetryMessage("retry"), TestCancellationToken);
-            Assert.True(await harness.Consumed.Any<RetryMessage>(TestCancellationToken));
+            await harness.Bus.PublishAsync(new RetryMessage("retry"), TestCancellationToken);
+            Assert.True(await harness.Consumed.AnyAsync<RetryMessage>(TestCancellationToken));
             await observations.WaitForCountAsync(
                 measurement => measurement.Name == ServiceBusTelemetry.Metrics.ProcessDuration,
                 2,
@@ -299,13 +299,13 @@ public sealed class MessagePipelineMetricsTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-OBSERVABILITY-TIME", "duration-uses-context-time-provider")]
-    public async Task ProcessingDuration_UsesTheContextTimeProviderInsteadOfWallClockTime()
+    public async Task ProcessingDuration_UsesTheContextTimeProviderInsteadOfWallClockTimeAsync()
     {
         TimeSpan timeout = OperationTimeout();
         var timeProvider = new FakeTimeProvider(ObservationTime);
@@ -325,12 +325,12 @@ public sealed class MessagePipelineMetricsTests
             .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
         IMeterFactory factory = provider.GetRequiredService<IMeterFactory>();
         using var observations = new MetricObservationSession(factory);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, TestCancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, TestCancellationToken);
 
         try
         {
-            await harness.Bus.Publish(new TimedMessage("time"), TestCancellationToken);
-            Assert.True(await harness.Consumed.Any<TimedMessage>(TestCancellationToken));
+            await harness.Bus.PublishAsync(new TimedMessage("time"), TestCancellationToken);
+            Assert.True(await harness.Consumed.AnyAsync<TimedMessage>(TestCancellationToken));
             await observations.WaitForCountAsync(
                 measurement => measurement.Name == ServiceBusTelemetry.Metrics.ProcessDuration,
                 1,
@@ -343,13 +343,13 @@ public sealed class MessagePipelineMetricsTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-OBSERVABILITY-METRICS", "active-processing-brackets-the-real-operation-lifetime")]
-    public async Task ActiveOperations_BracketTheActualProcessingLifetime()
+    public async Task ActiveOperations_BracketTheActualProcessingLifetimeAsync()
     {
         TimeSpan timeout = OperationTimeout();
         var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -360,18 +360,18 @@ public sealed class MessagePipelineMetricsTests
             await release.Task.WaitAsync(timeout, context.CancellationToken);
         }, timeout);
         using var observations = new MetricObservationSession(provider.GetRequiredService<IMeterFactory>());
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, TestCancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, TestCancellationToken);
 
         try
         {
-            await harness.Bus.Publish(new GatedMessage("gated"), TestCancellationToken);
+            await harness.Bus.PublishAsync(new GatedMessage("gated"), TestCancellationToken);
             await entered.Task.WaitAsync(timeout, TestCancellationToken);
             await observations.WaitForCountAsync(IsProcessActivity, 1, timeout, TestCancellationToken);
 
             Assert.Equal([1d], observations.Measurements.Where(IsProcessActivity).Select(item => item.Value));
 
             release.TrySetResult();
-            Assert.True(await harness.Consumed.Any<GatedMessage>(TestCancellationToken));
+            Assert.True(await harness.Consumed.AnyAsync<GatedMessage>(TestCancellationToken));
             await observations.WaitForCountAsync(IsProcessActivity, 2, timeout, TestCancellationToken);
 
             Assert.Equal([1d, -1d], observations.Measurements.Where(IsProcessActivity).Select(item => item.Value));
@@ -379,7 +379,7 @@ public sealed class MessagePipelineMetricsTests
         finally
         {
             release.TrySetResult();
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
         static bool IsProcessActivity(MetricMeasurement measurement) =>
@@ -389,7 +389,7 @@ public sealed class MessagePipelineMetricsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-OBSERVABILITY-ISOLATION", "throwing-listener-cannot-change-message-flow")]
-    public async Task ThrowingMeterListener_CannotChangeSuccessfulMessageDelivery()
+    public async Task ThrowingMeterListener_CannotChangeSuccessfulMessageDeliveryAsync()
     {
         TimeSpan timeout = OperationTimeout();
         await using ServiceProvider provider = CreateProvider<ObservedMessage>(static _ => Task.CompletedTask, timeout);
@@ -404,28 +404,27 @@ public sealed class MessagePipelineMetricsTests
         listener.SetMeasurementEventCallback<long>(static (_, _, _, _) => throw new ExpectedListenerException());
         listener.SetMeasurementEventCallback<double>(static (_, _, _, _) => throw new ExpectedListenerException());
         listener.Start();
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, TestCancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, TestCancellationToken);
 
         try
         {
-            await harness.Bus.Publish(new ObservedMessage("still-delivered"), TestCancellationToken);
+            await harness.Bus.PublishAsync(new ObservedMessage("still-delivered"), TestCancellationToken);
             IReceivedMessage<ObservedMessage> consumed = await harness.Consumed
                 .SelectAsync<ObservedMessage>(TestCancellationToken)
-                .First()
-                .WaitAsync(timeout, TestCancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, TestCancellationToken);
 
             Assert.Equal("still-delivered", consumed.Context.Message.Value);
             Assert.Null(consumed.Exception);
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-OBSERVABILITY-DI", "application-meter-factory-preserved-and-failure-contained")]
-    public async Task ApplicationMeterFactory_IsPreservedAndItsFailureCannotPreventDelivery()
+    public async Task ApplicationMeterFactory_IsPreservedAndItsFailureCannotPreventDeliveryAsync()
     {
         TimeSpan timeout = OperationTimeout();
         var factory = new ThrowingMeterFactory();
@@ -439,27 +438,27 @@ public sealed class MessagePipelineMetricsTests
             .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
 
         Assert.Same(factory, provider.GetRequiredService<IMeterFactory>());
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, TestCancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, TestCancellationToken);
         try
         {
-            await harness.Bus.Publish(new ObservedMessage("factory-failed"), TestCancellationToken);
-            Assert.True(await harness.Consumed.Any<ObservedMessage>(TestCancellationToken));
+            await harness.Bus.PublishAsync(new ObservedMessage("factory-failed"), TestCancellationToken);
+            Assert.True(await harness.Consumed.AnyAsync<ObservedMessage>(TestCancellationToken));
             Assert.True(factory.CreateAttempts > 0);
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-OBSERVABILITY-ISOLATION", "failed-factory-cannot-reuse-prior-provider-scope")]
-    public async Task FailedMeterFactory_CannotLeakMeasurementsIntoAnEarlierProvider()
+    public async Task FailedMeterFactory_CannotLeakMeasurementsIntoAnEarlierProviderAsync()
     {
         TimeSpan timeout = OperationTimeout();
         await using ServiceProvider healthyProvider = CreateProvider<ProviderAMessage>(static _ => Task.CompletedTask, timeout);
         using var healthyObservations = new MetricObservationSession(healthyProvider.GetRequiredService<IMeterFactory>());
-        ITestHarness healthyHarness = await healthyProvider.StartTestHarness().WaitAsync(timeout, TestCancellationToken);
+        ITestHarness healthyHarness = await healthyProvider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, TestCancellationToken);
 
         var failedFactory = new ThrowingMeterFactory();
         await using ServiceProvider failedProvider = new ServiceCollection()
@@ -470,20 +469,20 @@ public sealed class MessagePipelineMetricsTests
                 configuration.AddHandler<ProviderBMessage>(static (ConsumeContext<ProviderBMessage> _) => Task.CompletedTask);
             })
             .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
-        ITestHarness failedHarness = await failedProvider.StartTestHarness().WaitAsync(timeout, TestCancellationToken);
+        ITestHarness failedHarness = await failedProvider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, TestCancellationToken);
 
         try
         {
-            await healthyHarness.Bus.Publish(new ProviderAMessage("healthy"), TestCancellationToken);
-            Assert.True(await healthyHarness.Consumed.Any<ProviderAMessage>(TestCancellationToken));
+            await healthyHarness.Bus.PublishAsync(new ProviderAMessage("healthy"), TestCancellationToken);
+            Assert.True(await healthyHarness.Consumed.AnyAsync<ProviderAMessage>(TestCancellationToken));
             await healthyObservations.WaitForCountAsync(
                 measurement => measurement.Name == ServiceBusTelemetry.Metrics.SentMessages,
                 1,
                 timeout,
                 TestCancellationToken);
 
-            await failedHarness.Bus.Publish(new ProviderBMessage("unobserved"), TestCancellationToken);
-            Assert.True(await failedHarness.Consumed.Any<ProviderBMessage>(TestCancellationToken));
+            await failedHarness.Bus.PublishAsync(new ProviderBMessage("unobserved"), TestCancellationToken);
+            Assert.True(await failedHarness.Consumed.AnyAsync<ProviderBMessage>(TestCancellationToken));
 
             Assert.Equal(1, healthyObservations.Measurements.Count(
                 measurement => measurement.Name == ServiceBusTelemetry.Metrics.SentMessages));
@@ -491,27 +490,27 @@ public sealed class MessagePipelineMetricsTests
         }
         finally
         {
-            await failedHarness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
-            await healthyHarness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await failedHarness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await healthyHarness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-OBSERVABILITY-DI", "independent-providers-have-independent-meter-scopes")]
-    public async Task IndependentServiceProviders_EmitOnlyThroughTheirOwnMeterFactories()
+    public async Task IndependentServiceProviders_EmitOnlyThroughTheirOwnMeterFactoriesAsync()
     {
         TimeSpan timeout = OperationTimeout();
         await using ServiceProvider providerA = CreateProvider<ProviderAMessage>(static _ => Task.CompletedTask, timeout);
         await using ServiceProvider providerB = CreateProvider<ProviderBMessage>(static _ => Task.CompletedTask, timeout);
         using var observationsA = new MetricObservationSession(providerA.GetRequiredService<IMeterFactory>());
         using var observationsB = new MetricObservationSession(providerB.GetRequiredService<IMeterFactory>());
-        ITestHarness harnessA = await providerA.StartTestHarness().WaitAsync(timeout, TestCancellationToken);
-        ITestHarness harnessB = await providerB.StartTestHarness().WaitAsync(timeout, TestCancellationToken);
+        ITestHarness harnessA = await providerA.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, TestCancellationToken);
+        ITestHarness harnessB = await providerB.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, TestCancellationToken);
 
         try
         {
-            await harnessA.Bus.Publish(new ProviderAMessage("a"), TestCancellationToken);
-            Assert.True(await harnessA.Consumed.Any<ProviderAMessage>(TestCancellationToken));
+            await harnessA.Bus.PublishAsync(new ProviderAMessage("a"), TestCancellationToken);
+            Assert.True(await harnessA.Consumed.AnyAsync<ProviderAMessage>(TestCancellationToken));
             await observationsA.WaitForCountAsync(
                 measurement => measurement.Name == ServiceBusTelemetry.Metrics.ProcessDuration,
                 1,
@@ -519,8 +518,8 @@ public sealed class MessagePipelineMetricsTests
                 TestCancellationToken);
             Assert.Empty(observationsB.Measurements);
 
-            await harnessB.Bus.Publish(new ProviderBMessage("b"), TestCancellationToken);
-            Assert.True(await harnessB.Consumed.Any<ProviderBMessage>(TestCancellationToken));
+            await harnessB.Bus.PublishAsync(new ProviderBMessage("b"), TestCancellationToken);
+            Assert.True(await harnessB.Consumed.AnyAsync<ProviderBMessage>(TestCancellationToken));
             await observationsB.WaitForCountAsync(
                 measurement => measurement.Name == ServiceBusTelemetry.Metrics.ProcessDuration,
                 1,
@@ -531,31 +530,31 @@ public sealed class MessagePipelineMetricsTests
         }
         finally
         {
-            await harnessB.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
-            await harnessA.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harnessB.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harnessA.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-OBSERVABILITY-ISOLATION", "disposing-one-provider-does-not-disable-another")]
-    public async Task DisposingOneProvider_DoesNotDisableAnotherProvidersMetrics()
+    public async Task DisposingOneProvider_DoesNotDisableAnotherProvidersMetricsAsync()
     {
         TimeSpan timeout = OperationTimeout();
         ServiceProvider providerA = CreateProvider<ProviderAMessage>(static _ => Task.CompletedTask, timeout);
         await using ServiceProvider providerB = CreateProvider<ProviderBMessage>(static _ => Task.CompletedTask, timeout);
         using var observationsB = new MetricObservationSession(providerB.GetRequiredService<IMeterFactory>());
-        ITestHarness harnessA = await providerA.StartTestHarness().WaitAsync(timeout, TestCancellationToken);
-        ITestHarness harnessB = await providerB.StartTestHarness().WaitAsync(timeout, TestCancellationToken);
+        ITestHarness harnessA = await providerA.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, TestCancellationToken);
+        ITestHarness harnessB = await providerB.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, TestCancellationToken);
         bool providerADisposed = false;
 
         try
         {
-            await harnessA.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harnessA.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
             await providerA.DisposeAsync();
             providerADisposed = true;
 
-            await harnessB.Bus.Publish(new ProviderBMessage("still-observed"), TestCancellationToken);
-            Assert.True(await harnessB.Consumed.Any<ProviderBMessage>(TestCancellationToken));
+            await harnessB.Bus.PublishAsync(new ProviderBMessage("still-observed"), TestCancellationToken);
+            Assert.True(await harnessB.Consumed.AnyAsync<ProviderBMessage>(TestCancellationToken));
             await observationsB.WaitForCountAsync(
                 measurement => measurement.Name == ServiceBusTelemetry.Metrics.ProcessDuration,
                 1,
@@ -569,17 +568,17 @@ public sealed class MessagePipelineMetricsTests
         {
             if (!providerADisposed)
             {
-                await harnessA.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+                await harnessA.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
                 await providerA.DisposeAsync();
             }
 
-            await harnessB.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harnessB.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-OBSERVABILITY-DI", "multiple-buses-share-provider-meter-factory")]
-    public async Task MultipleBusesInOneProvider_EmitThroughTheSameMeterFactory()
+    public async Task MultipleBusesInOneProvider_EmitThroughTheSameMeterFactoryAsync()
     {
         TimeSpan timeout = OperationTimeout();
         await using ServiceProvider provider = new ServiceCollection()
@@ -588,12 +587,12 @@ public sealed class MessagePipelineMetricsTests
                 bus.Host(new Uri("loopback://localhost/observability-secondary"))))
             .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
         using var observations = new MetricObservationSession(provider.GetRequiredService<IMeterFactory>());
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, TestCancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, TestCancellationToken);
 
         try
         {
-            await harness.Bus.Publish(new ObservedMessage("default"), TestCancellationToken);
-            await provider.GetRequiredService<IObservedBus>().Publish(
+            await harness.Bus.PublishAsync(new ObservedMessage("default"), TestCancellationToken);
+            await provider.GetRequiredService<IObservedBus>().PublishAsync(
                 new ObservedMessage("secondary"),
                 TestCancellationToken);
             await observations.WaitForCountAsync(
@@ -607,7 +606,7 @@ public sealed class MessagePipelineMetricsTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -625,7 +624,7 @@ public sealed class MessagePipelineMetricsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-OBSERVABILITY-NON-DI", "explicit-activation-emits-through-process-meter")]
-    public async Task ExplicitNonDiActivation_EmitsThroughItsOwnProcessMeter()
+    public async Task ExplicitNonDiActivation_EmitsThroughItsOwnProcessMeterAsync()
     {
         TimeSpan timeout = OperationTimeout();
         ILogContext? previous = LogContext.Current;
@@ -642,7 +641,7 @@ public sealed class MessagePipelineMetricsTests
             });
             await bus.StartAsync(TestCancellationToken).WaitAsync(timeout, TestCancellationToken);
 
-            await bus.Publish(new NonDiMessage("explicit"), TestCancellationToken);
+            await bus.PublishAsync(new NonDiMessage("explicit"), TestCancellationToken);
             await observations.WaitForCountAsync(
                 measurement => measurement.Name == ServiceBusTelemetry.Metrics.ProcessDuration,
                 1,
@@ -664,14 +663,14 @@ public sealed class MessagePipelineMetricsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-OBSERVABILITY-ISOLATION", "di-and-explicit-non-di-meter-scopes-remain-independent")]
-    public async Task DependencyInjectionAndExplicitActivation_UseIndependentMeterScopes()
+    public async Task DependencyInjectionAndExplicitActivation_UseIndependentMeterScopesAsync()
     {
         TimeSpan timeout = OperationTimeout();
         ILogContext? previous = LogContext.Current;
         await using ServiceProvider provider = CreateProvider<ProviderAMessage>(static _ => Task.CompletedTask, timeout);
         using var providerObservations = new MetricObservationSession(provider.GetRequiredService<IMeterFactory>());
         using var processObservations = new MetricObservationSession(meterScope: null);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, TestCancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, TestCancellationToken);
         IBusControl? explicitBus = null;
 
         try
@@ -684,8 +683,8 @@ public sealed class MessagePipelineMetricsTests
             });
             await explicitBus.StartAsync(TestCancellationToken).WaitAsync(timeout, TestCancellationToken);
 
-            await harness.Bus.Publish(new ProviderAMessage("provider"), TestCancellationToken);
-            Assert.True(await harness.Consumed.Any<ProviderAMessage>(TestCancellationToken));
+            await harness.Bus.PublishAsync(new ProviderAMessage("provider"), TestCancellationToken);
+            Assert.True(await harness.Consumed.AnyAsync<ProviderAMessage>(TestCancellationToken));
             await providerObservations.WaitForCountAsync(
                 measurement => measurement.Name == ServiceBusTelemetry.Metrics.ProcessDuration,
                 1,
@@ -693,7 +692,7 @@ public sealed class MessagePipelineMetricsTests
                 TestCancellationToken);
             Assert.Empty(processObservations.Measurements);
 
-            await explicitBus.Publish(new NonDiMessage("process"), TestCancellationToken);
+            await explicitBus.PublishAsync(new NonDiMessage("process"), TestCancellationToken);
             await processObservations.WaitForCountAsync(
                 measurement => measurement.Name == ServiceBusTelemetry.Metrics.ProcessDuration,
                 1,
@@ -709,25 +708,26 @@ public sealed class MessagePipelineMetricsTests
         {
             if (explicitBus is not null)
                 await explicitBus.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
             LogContext.Current = previous!;
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-OBSERVABILITY-ISOLATION", "application-log-context-remains-unbound-to-provider-scopes")]
-    public async Task ApplicationOwnedLogContext_IsNeverBoundToAProviderMeterScope()
+    public async Task ApplicationOwnedLogContext_IsNeverBoundToAProviderMeterScopeAsync()
     {
         TimeSpan timeout = OperationTimeout();
         ILogContext? previous = LogContext.Current;
         LogContext.ConfigureCurrentLogContext(NullLoggerFactory.Instance);
-        ILogContext applicationLogContext = LogContext.Current;
+        ILogContext applicationLogContext = LogContext.Current
+            ?? throw new Xunit.Sdk.XunitException("Expected the configured application log context to be available.");
         await using ServiceProvider providerA = CreateProvider<ProviderAMessage>(static _ => Task.CompletedTask, timeout);
         await using ServiceProvider providerB = CreateProvider<ProviderBMessage>(static _ => Task.CompletedTask, timeout);
         using var observationsA = new MetricObservationSession(providerA.GetRequiredService<IMeterFactory>());
         using var observationsB = new MetricObservationSession(providerB.GetRequiredService<IMeterFactory>());
-        ITestHarness harnessA = await providerA.StartTestHarness().WaitAsync(timeout, TestCancellationToken);
-        ITestHarness harnessB = await providerB.StartTestHarness().WaitAsync(timeout, TestCancellationToken);
+        ITestHarness harnessA = await providerA.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, TestCancellationToken);
+        ITestHarness harnessB = await providerB.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, TestCancellationToken);
 
         try
         {
@@ -740,15 +740,15 @@ public sealed class MessagePipelineMetricsTests
         }
         finally
         {
-            await harnessB.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
-            await harnessA.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harnessB.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harnessA.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
             LogContext.Current = previous!;
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-OBSERVABILITY-NON-DI", "unbound-log-context-cannot-reach-fallback-meter")]
-    public async Task UnboundLogContext_CannotReachTheExplicitNonDiMeter()
+    public async Task UnboundLogContext_CannotReachTheExplicitNonDiMeterAsync()
     {
         TimeSpan timeout = OperationTimeout();
         ILogContext? previous = LogContext.Current;
@@ -769,7 +769,7 @@ public sealed class MessagePipelineMetricsTests
                     })));
             await bus.StartAsync(TestCancellationToken).WaitAsync(timeout, TestCancellationToken);
 
-            await bus.Publish(new UnboundMessage("unbound"), TestCancellationToken);
+            await bus.PublishAsync(new UnboundMessage("unbound"), TestCancellationToken);
             await handled.Task.WaitAsync(timeout, TestCancellationToken);
 
             Assert.Empty(observations.Measurements);
@@ -784,21 +784,22 @@ public sealed class MessagePipelineMetricsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-OBSERVABILITY-OUTBOX", "metric-operation-is-idempotent-and-first-failure-wins")]
-    public async Task MetricOperation_CompletesOnceAndPreservesTheFirstObservedException()
+    public async Task MetricOperation_CompletesOnceAndPreservesTheFirstObservedExceptionAsync()
     {
         TimeSpan timeout = OperationTimeout();
         var entered = new TaskCompletionSource<ILogContext>(TaskCreationOptions.RunContinuationsAsynchronously);
         await using ServiceProvider provider = CreateProvider<ObservedMessage>(_ =>
         {
-            entered.TrySetResult(LogContext.Current);
+            entered.TrySetResult(LogContext.Current
+                ?? throw new Xunit.Sdk.XunitException("Expected the consumer log context to be available."));
             return Task.CompletedTask;
         }, timeout);
         using var observations = new MetricObservationSession(provider.GetRequiredService<IMeterFactory>());
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, TestCancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, TestCancellationToken);
 
         try
         {
-            await harness.Bus.Publish(new ObservedMessage("capture-context"), TestCancellationToken);
+            await harness.Bus.PublishAsync(new ObservedMessage("capture-context"), TestCancellationToken);
             ILogContext logContext = await entered.Task.WaitAsync(timeout, TestCancellationToken);
             OutboxTelemetryTestDriver.RecordDeliveryTwice(
                 logContext,
@@ -813,13 +814,13 @@ public sealed class MessagePipelineMetricsTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-OBSERVABILITY-OUTBOX", "enqueue-and-deliver-have-distinct-bounded-outcomes")]
-    public async Task InMemoryOutbox_EmitsDistinctEnqueueAndDeliveryOutcomes()
+    public async Task InMemoryOutbox_EmitsDistinctEnqueueAndDeliveryOutcomesAsync()
     {
         TimeSpan timeout = OperationTimeout();
         await using ServiceProvider provider = new ServiceCollection()
@@ -829,16 +830,16 @@ public sealed class MessagePipelineMetricsTests
                 configuration.AddHandler<OutboxResult>(static (ConsumeContext<OutboxResult> _) => Task.CompletedTask);
                 configuration.AddConfigureEndpointsCallback((_, endpoint) => endpoint.UseInMemoryOutbox());
                 configuration.AddHandler<OutboxRequest>((ConsumeContext<OutboxRequest> context) =>
-                    context.Publish(new OutboxResult(context.Message.Value), context.CancellationToken));
+                    context.Advanced().PublishAsync(new OutboxResult(context.Message.Value), context.CancellationToken));
             })
             .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
         using var observations = new MetricObservationSession(provider.GetRequiredService<IMeterFactory>());
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, TestCancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, TestCancellationToken);
 
         try
         {
-            await harness.Bus.Publish(new OutboxRequest("deferred"), TestCancellationToken);
-            Assert.True(await harness.Consumed.Any<OutboxResult>(TestCancellationToken));
+            await harness.Bus.PublishAsync(new OutboxRequest("deferred"), TestCancellationToken);
+            Assert.True(await harness.Consumed.AnyAsync<OutboxResult>(TestCancellationToken));
             await observations.WaitForCountAsync(
                 measurement => measurement.Name == ServiceBusTelemetry.Metrics.OutboxMessages,
                 2,
@@ -861,13 +862,13 @@ public sealed class MessagePipelineMetricsTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-OBSERVABILITY-OUTBOX", "delivery-failure-does-not-rewrite-successful-enqueue")]
-    public async Task InMemoryOutbox_DeliveryFailurePreservesTheSuccessfulEnqueueOutcome()
+    public async Task InMemoryOutbox_DeliveryFailurePreservesTheSuccessfulEnqueueOutcomeAsync()
     {
         TimeSpan timeout = OperationTimeout();
         await using ServiceProvider provider = new ServiceCollection()
@@ -877,18 +878,18 @@ public sealed class MessagePipelineMetricsTests
                 configuration.AddConfigureEndpointsCallback((_, endpoint) => endpoint.UseInMemoryOutbox());
                 configuration.AddHandler<OutboxResult>(static (ConsumeContext<OutboxResult> _) => Task.CompletedTask);
                 configuration.AddHandler<OutboxFaultRequest>((ConsumeContext<OutboxFaultRequest> context) =>
-                    context.Publish(
+                    context.Advanced().PublishAsync(
                         new OutboxResult(context.Message.Value),
                         sendContext => sendContext.Serializer = null!,
                         context.CancellationToken));
             })
             .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
         using var observations = new MetricObservationSession(provider.GetRequiredService<IMeterFactory>());
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, TestCancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, TestCancellationToken);
 
         try
         {
-            await harness.Bus.Publish(new OutboxFaultRequest("faulted-delivery"), TestCancellationToken);
+            await harness.Bus.PublishAsync(new OutboxFaultRequest("faulted-delivery"), TestCancellationToken);
             await observations.WaitForCountAsync(
                 measurement => measurement.Name == ServiceBusTelemetry.Metrics.OutboxMessages,
                 2,
@@ -916,7 +917,7 @@ public sealed class MessagePipelineMetricsTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -959,7 +960,7 @@ public sealed class MessagePipelineMetricsTests
 
     public sealed class MessageHandlerConsumerLookalike : IConsumer<OrdinaryConsumerMessage>
     {
-        public Task Consume(ConsumeContext<OrdinaryConsumerMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<OrdinaryConsumerMessage> context) => Task.CompletedTask;
     }
 
     private sealed class AttemptCounter

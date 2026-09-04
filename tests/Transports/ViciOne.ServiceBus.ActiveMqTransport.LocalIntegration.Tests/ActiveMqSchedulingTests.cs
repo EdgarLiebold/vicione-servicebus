@@ -15,22 +15,22 @@ public sealed class ActiveMqSchedulingTests
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [InlineData(ActiveMqBroker.ArtemisFlavor)]
     [RequirementCoverage("OBL-R0-BRK-0457", "scheduled-send-reaches-destination-exactly-once")]
-    public Task ScheduledSend_ReachesDestinationExactlyOnce(string flavor) =>
-        AssertScheduledDelivery(flavor, publish: false);
+    public Task ScheduledSend_ReachesDestinationExactlyOnceAsync(string flavor) =>
+        AssertScheduledDeliveryAsync(flavor, publish: false);
 
     [Theory]
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [InlineData(ActiveMqBroker.ArtemisFlavor)]
     [RequirementCoverage("OBL-R0-BRK-0458", "scheduled-publish-reaches-subscriber-exactly-once")]
-    public Task ScheduledPublish_ReachesSubscriberExactlyOnce(string flavor) =>
-        AssertScheduledDelivery(flavor, publish: true);
+    public Task ScheduledPublish_ReachesSubscriberExactlyOnceAsync(string flavor) =>
+        AssertScheduledDeliveryAsync(flavor, publish: true);
 
     [Theory]
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [RequirementCoverage("OBL-R0-BRK-0460", "completed-schedule-does-not-delay-next-message")]
-    public async Task CompletedSchedule_DoesNotCarryIntoTheNextMessage(string flavor)
+    public async Task CompletedSchedule_DoesNotCarryIntoTheNextMessageAsync(string flavor)
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(flavor, "schedule-reset");
         string queueName = fixture.Name("input");
@@ -65,20 +65,19 @@ public sealed class ActiveMqSchedulingTests
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
             IMessageScheduler scheduler = bus.CreateDelayedMessageScheduler();
-            DateTime scheduledTime = TimeProvider.System.GetUtcNow().UtcDateTime.Add(BrokerDelay);
-            ScheduledMessage schedule = await scheduler.ScheduleSend(
+            DateTimeOffset dueAt = TimeProvider.System.GetUtcNow().UtcDateTime.Add(BrokerDelay);
+            ScheduledMessage schedule = await scheduler.ScheduleSendAsync(
                     new Uri($"queue:{queueName}"),
-                    scheduledTime,
+                    dueAt,
                     new ScheduledDelivery(firstId),
                     cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            Assert.Equal(scheduledTime, schedule.ScheduledTime);
+            Assert.Equal(dueAt, schedule.DueAt);
             await observer.Scheduled.WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.Equal(firstId, await firstDelivered.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
 
-            ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await input.Send(new ScheduledDelivery(secondId), cancellationToken)
+            ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await input.SendAsync(new ScheduledDelivery(secondId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             Guid[] actual = await delivered.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
             await receives.Completed.WaitAsync(fixture.OperationTimeout, cancellationToken);
@@ -92,7 +91,7 @@ public sealed class ActiveMqSchedulingTests
             Assert.Equal(2, receives.CompletedCount);
             Assert.Equal(
                 new ActiveMqBroker.BrokerQueueStatistics(2, 2, 0, 0, 0),
-                await fixture.GetQueueStatistics(queueName, cancellationToken));
+                await fixture.GetQueueStatisticsAsync(queueName, cancellationToken));
         }
         finally
         {
@@ -106,7 +105,7 @@ public sealed class ActiveMqSchedulingTests
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [InlineData(ActiveMqBroker.ArtemisFlavor)]
     [RequirementCoverage("OBL-R0-BRK-0461", "future-schedule-is-provider-owned-before-exact-delivery")]
-    public async Task FutureSchedule_IsInvisibleUntilDueThenDelivered(string flavor)
+    public async Task FutureSchedule_IsInvisibleUntilDueThenDeliveredAsync(string flavor)
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(flavor, "schedule-future");
         string queueName = fixture.Name("input");
@@ -136,18 +135,18 @@ public sealed class ActiveMqSchedulingTests
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
             IMessageScheduler scheduler = bus.CreateDelayedMessageScheduler();
-            DateTime scheduledTime = TimeProvider.System.GetUtcNow().UtcDateTime.Add(FutureDelay);
-            ScheduledMessage schedule = await scheduler.ScheduleSend(
+            DateTimeOffset dueAt = TimeProvider.System.GetUtcNow().UtcDateTime.Add(FutureDelay);
+            ScheduledMessage schedule = await scheduler.ScheduleSendAsync(
                     new Uri($"queue:{queueName}"),
-                    scheduledTime,
+                    dueAt,
                     new ScheduledDelivery(flowId),
                     cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
-            Assert.Equal(scheduledTime, schedule.ScheduledTime);
+            Assert.Equal(dueAt, schedule.DueAt);
             await observer.Scheduled.WaitAsync(fixture.OperationTimeout, cancellationToken);
             AssertSinglePositiveDelay(FutureDelay, observer.DelaysFor<ScheduledDelivery>());
-            Assert.Equal(1, await fixture.GetScheduledMessageCount(queueName, cancellationToken));
+            Assert.Equal(1, await fixture.GetScheduledMessageCountAsync(queueName, cancellationToken));
             Assert.Equal(flowId, await delivered.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
             await receives.Completed.WaitAsync(fixture.OperationTimeout, cancellationToken);
 
@@ -156,10 +155,10 @@ public sealed class ActiveMqSchedulingTests
 
             Assert.Equal(1, Volatile.Read(ref deliveryCount));
             Assert.Equal(1, receives.CompletedCount);
-            Assert.Equal(0, await fixture.GetScheduledMessageCount(queueName, cancellationToken));
+            Assert.Equal(0, await fixture.GetScheduledMessageCountAsync(queueName, cancellationToken));
             Assert.Equal(
                 new ActiveMqBroker.BrokerQueueStatistics(1, 1, 0, 0, 0),
-                await fixture.GetQueueStatistics(queueName, cancellationToken));
+                await fixture.GetQueueStatisticsAsync(queueName, cancellationToken));
         }
         finally
         {
@@ -168,7 +167,7 @@ public sealed class ActiveMqSchedulingTests
         }
     }
 
-    private static async Task AssertScheduledDelivery(string flavor, bool publish)
+    private static async Task AssertScheduledDeliveryAsync(string flavor, bool publish)
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(flavor, publish ? "schedule-publish" : "schedule-send");
         string queueName = fixture.Name("input");
@@ -203,22 +202,22 @@ public sealed class ActiveMqSchedulingTests
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
             IMessageScheduler scheduler = bus.CreateDelayedMessageScheduler();
-            DateTime scheduledTime = TimeProvider.System.GetUtcNow().UtcDateTime.Add(BrokerDelay);
+            DateTimeOffset dueAt = TimeProvider.System.GetUtcNow().UtcDateTime.Add(BrokerDelay);
             ScheduledMessage schedule;
             if (publish)
-                schedule = await scheduler.SchedulePublish(scheduledTime, new ScheduledDelivery(flowId), cancellationToken)
+                schedule = await scheduler.SchedulePublishAsync(dueAt, new ScheduledDelivery(flowId), cancellationToken)
                     .WaitAsync(fixture.OperationTimeout, cancellationToken);
             else
             {
-                schedule = await scheduler.ScheduleSend(
+                schedule = await scheduler.ScheduleSendAsync(
                         new Uri($"queue:{queueName}"),
-                        scheduledTime,
+                        dueAt,
                         new ScheduledDelivery(flowId),
                         cancellationToken)
                     .WaitAsync(fixture.OperationTimeout, cancellationToken);
             }
 
-            Assert.Equal(scheduledTime, schedule.ScheduledTime);
+            Assert.Equal(dueAt, schedule.DueAt);
             await observer.Scheduled.WaitAsync(fixture.OperationTimeout, cancellationToken);
             AssertSinglePositiveDelay(BrokerDelay, observer.DelaysFor<ScheduledDelivery>());
             Assert.Equal(flowId, await delivered.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
@@ -231,7 +230,7 @@ public sealed class ActiveMqSchedulingTests
             Assert.Equal(1, receives.CompletedCount);
             Assert.Equal(
                 new ActiveMqBroker.BrokerQueueStatistics(1, 1, 0, 0, 0),
-                await fixture.GetQueueStatistics(brokerQueueName, cancellationToken));
+                await fixture.GetQueueStatisticsAsync(brokerQueueName, cancellationToken));
         }
         finally
         {
@@ -267,9 +266,9 @@ public sealed class ActiveMqSchedulingTests
         public int SendCountFor<TMessage>() where TMessage : class =>
             _sends.Count(item => item.MessageType == typeof(TMessage));
 
-        public Task PreSend<T>(SendContext<T> context) where T : class => Task.CompletedTask;
+        public Task PreSendAsync<T>(SendContext<T> context) where T : class => Task.CompletedTask;
 
-        public Task PostSend<T>(SendContext<T> context) where T : class
+        public Task PostSendAsync<T>(SendContext<T> context) where T : class
         {
             _sends.Enqueue((typeof(T), context.Delay));
             if (context.Delay.HasValue)
@@ -277,7 +276,7 @@ public sealed class ActiveMqSchedulingTests
             return Task.CompletedTask;
         }
 
-        public Task SendFault<T>(SendContext<T> context, Exception exception) where T : class
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception) where T : class
         {
             if (context.Delay.HasValue)
                 _scheduled.TrySetException(exception);

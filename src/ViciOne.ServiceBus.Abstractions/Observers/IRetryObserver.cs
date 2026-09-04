@@ -9,7 +9,7 @@ public interface IRetryObserver
     /// </summary>
     /// <param name="context">The consume context</param>
     /// <returns></returns>
-    Task PostCreate<T>(RetryPolicyContext<T> context)
+    Task PostCreateAsync<T>(RetryPolicyContext<T> context)
         where T : class, PipeContext;
 
     /// <summary>
@@ -17,7 +17,7 @@ public interface IRetryObserver
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    Task PostFault<T>(RetryContext<T> context)
+    Task PostFaultAsync<T>(RetryContext<T> context)
         where T : class, PipeContext;
 
     /// <summary>
@@ -25,7 +25,7 @@ public interface IRetryObserver
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    Task PreRetry<T>(RetryContext<T> context)
+    Task PreRetryAsync<T>(RetryContext<T> context)
         where T : class, PipeContext;
 
     /// <summary>
@@ -33,7 +33,7 @@ public interface IRetryObserver
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    Task RetryFault<T>(RetryContext<T> context)
+    Task RetryFaultAsync<T>(RetryContext<T> context)
         where T : class, PipeContext;
 
     /// <summary>
@@ -42,6 +42,6 @@ public interface IRetryObserver
     /// <param name="context"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    Task RetryComplete<T>(RetryContext<T> context)
+    Task RetryCompleteAsync<T>(RetryContext<T> context)
         where T : class, PipeContext;
 }

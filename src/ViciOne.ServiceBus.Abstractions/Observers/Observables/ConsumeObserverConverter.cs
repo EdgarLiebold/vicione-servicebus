@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus.Observables;
@@ -11,8 +12,9 @@ public class ConsumeObserverConverter<T> :
     IConsumeObserverConverter
     where T : class
 {
-    Task IConsumeObserverConverter.PreConsume(IConsumeObserver observer, object context)
+    Task IConsumeObserverConverter.PreConsumeAsync(IConsumeObserver observer, object context, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         if (observer == null)
             throw new ArgumentNullException(nameof(observer));
         if (context == null)
@@ -22,11 +24,12 @@ public class ConsumeObserverConverter<T> :
         if (consumeContext == null)
             throw new ArgumentException("Unexpected context type: " + TypeCache.GetShortName(context.GetType()));
 
-        return observer.PreConsume(consumeContext);
+        return observer.PreConsumeAsync(consumeContext);
     }
 
-    Task IConsumeObserverConverter.PostConsume(IConsumeObserver observer, object context)
+    Task IConsumeObserverConverter.PostConsumeAsync(IConsumeObserver observer, object context, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         if (observer == null)
             throw new ArgumentNullException(nameof(observer));
         if (context == null)
@@ -36,11 +39,12 @@ public class ConsumeObserverConverter<T> :
         if (consumeContext == null)
             throw new ArgumentException("Unexpected context type: " + TypeCache.GetShortName(context.GetType()));
 
-        return observer.PostConsume(consumeContext);
+        return observer.PostConsumeAsync(consumeContext);
     }
 
-    Task IConsumeObserverConverter.ConsumeFault(IConsumeObserver observer, object context, Exception exception)
+    Task IConsumeObserverConverter.ConsumeFaultAsync(IConsumeObserver observer, object context, Exception exception, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         if (observer == null)
             throw new ArgumentNullException(nameof(observer));
         if (context == null)
@@ -50,6 +54,6 @@ public class ConsumeObserverConverter<T> :
         if (consumeContext == null)
             throw new ArgumentException("Unexpected context type: " + TypeCache.GetShortName(context.GetType()));
 
-        return observer.ConsumeFault(consumeContext, exception);
+        return observer.ConsumeFaultAsync(consumeContext, exception);
     }
 }

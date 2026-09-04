@@ -20,11 +20,11 @@ public sealed class SerializationContractIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SYSTEM-TEXT-JSON-CHALLENGING-CONTRACTS", "complete-shape-set")]
-    public async Task SystemTextJson_ChallengingContractsRoundTripEveryValue()
+    public async Task SystemTextJson_ChallengingContractsRoundTripEveryValueAsync()
     {
         byte[] bytes = [0x56, 0x34, 0xF3];
         var binary = SystemTextJsonRoundTrip.Execute(new BinaryMessage { Contents = bytes });
-        InitializeContext<BinaryContract> initialized = await MessageInitializerCache<BinaryContract>.Initialize(
+        InitializeContext<BinaryContract> initialized = await MessageInitializerCache<BinaryContract>.InitializeAsync(
             new { Contents = bytes },
             TestContext.Current.CancellationToken);
         BinaryContract binaryContract = SystemTextJsonRoundTrip.Execute(initialized.Message);
@@ -72,7 +72,7 @@ public sealed class SerializationContractIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SYSTEM-TEXT-JSON-INTERFACES", "proxy-and-in-memory-dispatch")]
-    public async Task SystemTextJson_InterfaceContractDispatchesEveryAccessorShape()
+    public async Task SystemTextJson_InterfaceContractDispatchesEveryAccessorShapeAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -86,8 +86,8 @@ public sealed class SerializationContractIntegrationTests
                     return Task.CompletedTask;
                 }))
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
-        InitializeContext<ComplaintContract> initialized = await MessageInitializerCache<ComplaintContract>.Initialize(
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
+        InitializeContext<ComplaintContract> initialized = await MessageInitializerCache<ComplaintContract>.InitializeAsync(
             new
             {
                 Id = 27,
@@ -102,11 +102,11 @@ public sealed class SerializationContractIntegrationTests
         bool stopped = false;
         try
         {
-            await harness.Bus.Publish(initialized.Message, cancellationToken)
+            await harness.Bus.PublishAsync(initialized.Message, cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
             ConsumeContext<ComplaintContract> context = await received.Task.WaitAsync(timeout, cancellationToken);
 
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
             stopped = true;
 
             Assert.Equal(27, context.Message.Id);
@@ -122,15 +122,15 @@ public sealed class SerializationContractIntegrationTests
         finally
         {
             if (!stopped)
-                await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+                await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SYSTEM-TEXT-JSON-JOBS", "nested-interface-job-payload")]
-    public async Task SystemTextJson_JobPayloadRestoresNestedInterfaceList()
+    public async Task SystemTextJson_JobPayloadRestoresNestedInterfaceListAsync()
     {
-        InitializeContext<ConvertVideo> initialized = await MessageInitializerCache<ConvertVideo>.Initialize(
+        InitializeContext<ConvertVideo> initialized = await MessageInitializerCache<ConvertVideo>.InitializeAsync(
             new
             {
                 Path = "input.mp4",
@@ -165,12 +165,12 @@ public sealed class SerializationContractIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SYSTEM-TEXT-JSON-MESSAGE-DATA", "external-reference")]
-    public async Task SystemTextJson_MessageDataPreservesExternalReference()
+    public async Task SystemTextJson_MessageDataPreservesExternalReferenceAsync()
     {
         var repository = new InMemoryMessageDataRepository();
         var source = new MessageDataContainer
         {
-            Value = await repository.PutString(
+            Value = await repository.PutStringAsync(
                 new string('*', MessageDataPolicy.Default.Threshold + 100),
                 TestContext.Current.CancellationToken),
         };
@@ -213,7 +213,7 @@ public sealed class SerializationContractIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SYSTEM-TEXT-JSON-RAW-REDELIVERY", "type-id-and-message-id")]
-    public async Task RawSystemTextJson_RedeliveryPreservesTypeAndReplacesMessageId()
+    public async Task RawSystemTextJson_RedeliveryPreservesTypeAndReplacesMessageIdAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -237,7 +237,7 @@ public sealed class SerializationContractIntegrationTests
                     }
 
                     second.TrySetResult(delivery);
-                    await context.Publish(new RawRetryCompleted(context.Message.Value), context.CancellationToken);
+                    await context.Advanced().PublishAsync(new RawRetryCompleted(context.Message.Value), context.CancellationToken);
                 });
                 configuration.AddHandler<RawRetryCompleted>(context =>
                 {
@@ -259,7 +259,7 @@ public sealed class SerializationContractIntegrationTests
                 });
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         var scheduled = new RawScheduledObserver();
         using ConnectHandle observerHandle = harness.Bus.ConnectSendObserver(scheduled);
         Guid originalMessageId = Guid.Parse("568c2bd0-68be-4ef5-9ee5-3ee80629af43");
@@ -270,7 +270,7 @@ public sealed class SerializationContractIntegrationTests
 
         try
         {
-            await harness.Bus.Publish(
+            await harness.Bus.PublishAsync(
                     new RawRetryMessage("preserved"),
                     context => context.MessageId = originalMessageId,
                     cancellationToken)
@@ -283,13 +283,13 @@ public sealed class SerializationContractIntegrationTests
 
             secondDelivery = await second.Task.WaitAsync(timeout, cancellationToken);
             completion = await completed.Task.WaitAsync(timeout, cancellationToken);
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
             stopped = true;
         }
         finally
         {
             if (!stopped)
-                await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+                await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
         string messageUrn = MessageUrn.ForTypeString<RawRetryMessage>();
@@ -309,7 +309,7 @@ public sealed class SerializationContractIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SYSTEM-TEXT-JSON-RAW-INTERFACES", "concrete-to-requested-interface")]
-    public async Task RawSystemTextJson_ConcreteMessageDispatchesAsRequestedInterface()
+    public async Task RawSystemTextJson_ConcreteMessageDispatchesAsRequestedInterfaceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -341,20 +341,20 @@ public sealed class SerializationContractIntegrationTests
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
-            await harness.InputQueueSendEndpoint.Send(source, cancellationToken)
+            await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(source, cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
             context = await received.Task.WaitAsync(timeout, cancellationToken);
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Equal(1, Volatile.Read(ref receiveCount));
         Assert.Equal(source.CommandId, context.Message.CommandId);
         Assert.Equal(source.ItemNumber, context.Message.ItemNumber);
-        Assert.Equal("application/json", context.ReceiveContext.ContentType.MediaType);
+        Assert.Equal("application/json", context.Advanced().ReceiveContext.ContentType.MediaType);
     }
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
@@ -492,9 +492,9 @@ public sealed class SerializationContractIntegrationTests
     {
         public static RawDelivery From(ConsumeContext<RawRetryMessage> context) => new(
             context.MessageId,
-            context.GetRedeliveryCount(),
-            context.ReceiveContext.ContentType.MediaType,
-            [.. context.SupportedMessageTypes]);
+            context.Advanced().GetRedeliveryCount(),
+            context.Advanced().ReceiveContext.ContentType.MediaType,
+            [.. context.Advanced().SupportedMessageTypes]);
     }
 
     private sealed class RawScheduledObserver : ISendObserver
@@ -504,10 +504,10 @@ public sealed class SerializationContractIntegrationTests
 
         public Task<SendContext> Scheduled => _scheduled.Task;
 
-        public Task PreSend<T>(SendContext<T> context)
+        public Task PreSendAsync<T>(SendContext<T> context)
             where T : class => Task.CompletedTask;
 
-        public Task PostSend<T>(SendContext<T> context)
+        public Task PostSendAsync<T>(SendContext<T> context)
             where T : class
         {
             if (typeof(T) == typeof(RawRetryMessage) && context.Delay.HasValue)
@@ -516,7 +516,7 @@ public sealed class SerializationContractIntegrationTests
             return Task.CompletedTask;
         }
 
-        public Task SendFault<T>(SendContext<T> context, Exception exception)
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
             where T : class
         {
             if (typeof(T) == typeof(RawRetryMessage) && context.Delay.HasValue)

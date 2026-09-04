@@ -23,7 +23,7 @@ public sealed class SqlMessageReceiver :
     readonly ReceiveSettings _receiveSettings;
     readonly TimeProvider _timeProvider;
     readonly TimeSpan? _touchQueueInterval;
-    CancellationTokenSource _cancellationTokenSource;
+    CancellationTokenSource? _cancellationTokenSource;
     DateTime? _lastMaintenance;
     DateTime? _lastTouched;
 
@@ -46,17 +46,17 @@ public sealed class SqlMessageReceiver :
 
         _executorPool = new OrderedPartitionedTaskExecutor(_receiveSettings);
 
-        TrySetConsumeTask(Consume());
+        TrySetConsumeTask(ConsumeAsync());
     }
 
-    protected override async Task ActiveAndActualAgentsCompleted(StopContext context)
+    protected override async Task ActiveAndActualAgentsCompletedAsync(StopContext context)
     {
-        await base.ActiveAndActualAgentsCompleted(context).ConfigureAwait(false);
+        await base.ActiveAndActualAgentsCompletedAsync(context).ConfigureAwait(false);
 
         await _executorPool.DisposeAsync().ConfigureAwait(false);
     }
 
-    async Task Consume()
+    async Task ConsumeAsync()
     {
         using var algorithm = new RequestRateAlgorithm(new RequestRateAlgorithmOptions
         {
@@ -67,19 +67,19 @@ public sealed class SqlMessageReceiver :
 
         SetReady();
 
-        Task Handle(SqlTransportMessage message, CancellationToken cancellationToken)
+        Task HandleAsync(SqlTransportMessage message, CancellationToken cancellationToken)
         {
             var lockContext = new SqlReceiveLockContext(_context.InputAddress, message, _receiveSettings, _client, _timeProvider);
 
             return _receiveSettings.ReceiveMode == SqlReceiveMode.Normal
-                ? HandleMessage(message, lockContext)
-                : _executorPool.ExecuteAsync(message, () => HandleMessage(message, lockContext), cancellationToken);
+                ? HandleMessageAsync(message, lockContext)
+                : _executorPool.ExecuteAsync(message, () => HandleMessageAsync(message, lockContext), cancellationToken);
         }
 
         try
         {
             while (!IsStopping)
-                await algorithm.Run((messageLimit, token) => ReceiveMessages(messageLimit, token), (m, c) => Handle(m, c), Stopping).ConfigureAwait(false);
+                await algorithm.RunAsync((messageLimit, token) => ReceiveMessagesAsync(messageLimit, token), (m, c) => HandleAsync(m, c), Stopping).ConfigureAwait(false);
         }
         catch (OperationCanceledException exception) when (exception.CancellationToken == Stopping)
         {
@@ -90,7 +90,7 @@ public sealed class SqlMessageReceiver :
         }
     }
 
-    async Task HandleMessage(SqlTransportMessage message, SqlReceiveLockContext lockContext)
+    async Task HandleMessageAsync(SqlTransportMessage message, SqlReceiveLockContext lockContext)
     {
         if (IsStopping)
             return;
@@ -98,16 +98,16 @@ public sealed class SqlMessageReceiver :
         if (message.ExpirationTime.HasValue && message.ExpirationTime.Value < _timeProvider.GetUtcNow().UtcDateTime)
         {
             if (_receiveSettings.DeadLetterExpiredMessages)
-                await lockContext.Expired().ConfigureAwait(false);
+                await lockContext.ExpiredAsync().ConfigureAwait(false);
             else
-                await lockContext.Complete().ConfigureAwait(false);
+                await lockContext.CompleteAsync().ConfigureAwait(false);
         }
         else
         {
             var context = new SqlReceiveContext(message, _context, _receiveSettings, _client, _client.ConnectionContext, lockContext);
             try
             {
-                await Dispatch(message.TransportMessageId, context, lockContext).ConfigureAwait(false);
+                await DispatchAsync(message.TransportMessageId, context, lockContext).ConfigureAwait(false);
             }
             catch (Exception exception)
             {
@@ -122,12 +122,12 @@ public sealed class SqlMessageReceiver :
         }
     }
 
-    async Task<IEnumerable<SqlTransportMessage>> ReceiveMessages(int messageLimit, CancellationToken cancellationToken)
+    async Task<IEnumerable<SqlTransportMessage>> ReceiveMessagesAsync(int messageLimit, CancellationToken cancellationToken)
     {
         try
         {
-            IList<SqlTransportMessage> messages = (await _client.ReceiveMessages(_receiveSettings.EntityName, _receiveSettings.ReceiveMode, messageLimit,
-                _receiveSettings.ConcurrentDeliveryLimit, _receiveSettings.LockDuration).ConfigureAwait(false)).ToList();
+            IList<SqlTransportMessage> messages = (await _client.ReceiveMessagesAsync(_receiveSettings.EntityName, _receiveSettings.ReceiveMode, messageLimit,
+                _receiveSettings.ConcurrentDeliveryLimit, _receiveSettings.LockDuration, cancellationToken: cancellationToken).ConfigureAwait(false)).ToList();
 
             if (messages.Count > 0)
                 return messages;
@@ -140,7 +140,7 @@ public sealed class SqlMessageReceiver :
 
                 if (_lastMaintenance.HasValue == false || _lastMaintenance.Value + TimeSpan.FromSeconds(30) < utcNow)
                 {
-                    count = await _client.DeadLetterQueue(_receiveSettings.QueueName, _receiveSettings.MaintenanceBatchSize).ConfigureAwait(false);
+                    count = await _client.DeadLetterQueueAsync(_receiveSettings.QueueName, _receiveSettings.MaintenanceBatchSize, cancellationToken: cancellationToken).ConfigureAwait(false);
 
                     if (count < _receiveSettings.MaintenanceBatchSize)
                         _lastMaintenance = utcNow;
@@ -150,7 +150,7 @@ public sealed class SqlMessageReceiver :
                 {
                     if (_lastTouched.HasValue == false || _lastTouched.Value + _touchQueueInterval.Value < utcNow)
                     {
-                        await _client.TouchQueue(_receiveSettings.EntityName).ConfigureAwait(false);
+                        await _client.TouchQueueAsync(_receiveSettings.EntityName, cancellationToken: cancellationToken).ConfigureAwait(false);
 
                         _lastTouched = utcNow;
                     }
@@ -167,7 +167,7 @@ public sealed class SqlMessageReceiver :
             }
 
 
-            await WaitForPollingIntervalOrMessageHandled(cancellationToken).ConfigureAwait(false);
+            await WaitForPollingIntervalOrMessageHandledAsync(cancellationToken).ConfigureAwait(false);
 
             return messages;
         }
@@ -177,17 +177,19 @@ public sealed class SqlMessageReceiver :
         }
     }
 
-    async Task WaitForPollingIntervalOrMessageHandled(CancellationToken cancellationToken)
+    async Task WaitForPollingIntervalOrMessageHandledAsync(CancellationToken cancellationToken)
     {
+        var cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+
         lock (_lock)
-            _cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            _cancellationTokenSource = cancellationTokenSource;
 
         try
         {
             var delayTask = _receiveSettings.QueueId.HasValue
-                ? _client.ConnectionContext.DelayUntilMessageReady(_receiveSettings.QueueId.Value, _receiveSettings.PollingInterval,
-                    _timeProvider, _cancellationTokenSource.Token)
-                : Task.Delay(_receiveSettings.PollingInterval, _timeProvider, _cancellationTokenSource.Token);
+                ? _client.ConnectionContext.DelayUntilMessageReadyAsync(_receiveSettings.QueueId.Value, _receiveSettings.PollingInterval,
+                    _timeProvider, cancellationTokenSource.Token)
+                : Task.Delay(_receiveSettings.PollingInterval, _timeProvider, cancellationTokenSource.Token);
 
             await delayTask.ConfigureAwait(false);
         }
@@ -198,9 +200,11 @@ public sealed class SqlMessageReceiver :
         {
             lock (_lock)
             {
-                _cancellationTokenSource.Dispose();
-                _cancellationTokenSource = null;
+                if (ReferenceEquals(_cancellationTokenSource, cancellationTokenSource))
+                    _cancellationTokenSource = null;
             }
+
+            cancellationTokenSource.Dispose();
         }
     }
 

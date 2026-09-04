@@ -9,15 +9,15 @@ public sealed class AmazonSqsSchedulingTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0236", "zero-delay-scheduled-send-reaches-source-queue")]
-    public Task ImmediateScheduledSend_ReachesSourceQueue() => AssertImmediateSchedule(publish: false);
+    public Task ImmediateScheduledSend_ReachesSourceQueueAsync() => AssertImmediateScheduleAsync(publish: false);
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0237", "zero-delay-scheduled-publish-reaches-subscriber")]
-    public Task ImmediateScheduledPublish_ReachesSubscriber() => AssertImmediateSchedule(publish: true);
+    public Task ImmediateScheduledPublish_ReachesSubscriberAsync() => AssertImmediateScheduleAsync(publish: true);
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0240", "two-second-native-delay-is-invisible-before-due-and-then-delivers")]
-    public async Task FutureScheduledSend_IsInvisibleUntilDue()
+    public async Task FutureScheduledSend_IsInvisibleUntilDueAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("futureschedule");
         string queueName = fixture.Name("input");
@@ -39,7 +39,7 @@ public sealed class AmazonSqsSchedulingTests
                     {
                         long startedAt = Stopwatch.GetTimestamp();
                         scheduleStarted.TrySetResult(startedAt);
-                        await context.ScheduleSend(TimeSpan.FromSeconds(2), new ScheduledDelivery(context.Message.FlowId),
+                        await context.Advanced().ScheduleSendAsync(TimeSpan.FromSeconds(2), new ScheduledDelivery(context.Message.FlowId),
                             context.CancellationToken);
                     }
                     catch (Exception exception)
@@ -63,9 +63,8 @@ public sealed class AmazonSqsSchedulingTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await input.Send(new ScheduleTrigger(flowId), cancellationToken)
+            ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await input.SendAsync(new ScheduleTrigger(flowId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             long startedAt = await scheduleStarted.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
@@ -80,7 +79,7 @@ public sealed class AmazonSqsSchedulingTests
         }
     }
 
-    private static async Task AssertImmediateSchedule(bool publish)
+    private static async Task AssertImmediateScheduleAsync(bool publish)
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create(publish ? "schedulepublish" : "schedulesend");
         string queueName = fixture.Name("input");
@@ -101,9 +100,9 @@ public sealed class AmazonSqsSchedulingTests
                     try
                     {
                         if (publish)
-                            await context.SchedulePublish(TimeSpan.Zero, new ScheduledDelivery(context.Message.FlowId), context.CancellationToken);
+                            await context.Advanced().SchedulePublishAsync(TimeSpan.Zero, new ScheduledDelivery(context.Message.FlowId), context.CancellationToken);
                         else
-                            await context.ScheduleSend(TimeSpan.Zero, new ScheduledDelivery(context.Message.FlowId), context.CancellationToken);
+                            await context.Advanced().ScheduleSendAsync(TimeSpan.Zero, new ScheduledDelivery(context.Message.FlowId), context.CancellationToken);
 
                         triggerHandled.TrySetResult(context.Message.FlowId);
                     }
@@ -128,9 +127,9 @@ public sealed class AmazonSqsSchedulingTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
+            ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"))
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await input.Send(new ScheduleTrigger(flowId), cancellationToken)
+            await input.SendAsync(new ScheduleTrigger(flowId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             Assert.Equal(flowId, await triggerHandled.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));

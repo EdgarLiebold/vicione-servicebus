@@ -18,11 +18,13 @@ public interface UnhandledEventContext<TSaga> :
     /// <summary>
     /// Returns a Task that ignores the unhandled event
     /// </summary>
-    Task Ignore();
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task IgnoreAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Returns a thrown exception task for the unhandled event
     /// </summary>
     /// <returns></returns>
-    Task Throw();
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task ThrowAsync(CancellationToken cancellationToken = default);
 }

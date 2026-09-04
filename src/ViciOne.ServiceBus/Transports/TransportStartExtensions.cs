@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.Transports;
 
 public static class TransportStartExtensions
 {
-    public static async Task OnTransportStartup<T>(this ReceiveEndpointContext context, ITransportSupervisor<T> supervisor,
+    public static async Task OnTransportStartupAsync<T>(this ReceiveEndpointContext context, ITransportSupervisor<T> supervisor,
         CancellationToken cancellationToken)
         where T : class, PipeContext
     {
@@ -15,7 +15,7 @@ public static class TransportStartExtensions
 
         var pipe = new WaitForConnectionPipe<T>(context, tokenSource.Token);
 
-        await supervisor.Send(pipe, cancellationToken).ConfigureAwait(false);
+        await supervisor.SendAsync(pipe, cancellationToken).ConfigureAwait(false);
     }
 
 
@@ -32,17 +32,17 @@ public static class TransportStartExtensions
             _stopping = stopping;
         }
 
-        public async Task Send(T context)
+        public async Task SendAsync(T context)
         {
-            await _context.TransportObservers.NotifyReady(_context.InputAddress, false).ConfigureAwait(false);
+            await _context.TransportObservers.NotifyReadyAsync(_context.InputAddress, false).ConfigureAwait(false);
 
             try
             {
-                await _context.ReceivePipe.Connected.OrCanceled(_stopping).ConfigureAwait(false);
+                await _context.ReceivePipe.Connected.OrCanceledAsync(_stopping).ConfigureAwait(false);
             }
             catch (OperationCanceledException ex) when (ex.CancellationToken == _stopping)
             {
-                await _context.TransportObservers.NotifyCompleted(_context.InputAddress, Metrics.None).ConfigureAwait(false);
+                await _context.TransportObservers.NotifyCompletedAsync(_context.InputAddress, Metrics.None).ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {

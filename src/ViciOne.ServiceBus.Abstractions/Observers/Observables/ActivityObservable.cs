@@ -8,45 +8,45 @@ public class ActivityObservable :
     Connectable<IActivityObserver>,
     IActivityObserver
 {
-    public Task PreExecute<TActivity, TArguments>(ExecuteActivityContext<TActivity, TArguments> context)
+    public Task PreExecuteAsync<TActivity, TArguments>(ExecuteActivityContext<TActivity, TArguments> context)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
-        return ForEachAsync(x => x.PreExecute(context));
+        return ForEachAsync(x => x.PreExecuteAsync(context));
     }
 
-    public Task PostExecute<TActivity, TArguments>(ExecuteActivityContext<TActivity, TArguments> context)
+    public Task PostExecuteAsync<TActivity, TArguments>(ExecuteActivityContext<TActivity, TArguments> context)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
-        return ForEachAsync(x => x.PostExecute(context));
+        return ForEachAsync(x => x.PostExecuteAsync(context));
     }
 
-    public Task ExecuteFault<TActivity, TArguments>(ExecuteActivityContext<TActivity, TArguments> context, Exception exception)
+    public Task ExecuteFaultAsync<TActivity, TArguments>(ExecuteActivityContext<TActivity, TArguments> context, Exception exception)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
-        return ForEachAsync(x => x.ExecuteFault(context, exception));
+        return ForEachAsync(x => x.ExecuteFaultAsync(context, exception));
     }
 
-    public Task PreCompensate<TActivity, TLog>(CompensateActivityContext<TActivity, TLog> context)
+    public Task PreCompensateAsync<TActivity, TLog>(CompensateActivityContext<TActivity, TLog> context)
         where TActivity : class, ICompensateActivity<TLog>
         where TLog : class
     {
-        return ForEachAsync(x => x.PreCompensate(context));
+        return ForEachAsync(x => x.PreCompensateAsync(context));
     }
 
-    public Task PostCompensate<TActivity, TLog>(CompensateActivityContext<TActivity, TLog> context)
+    public Task PostCompensateAsync<TActivity, TLog>(CompensateActivityContext<TActivity, TLog> context)
         where TActivity : class, ICompensateActivity<TLog>
         where TLog : class
     {
-        return ForEachAsync(x => x.PostCompensate(context));
+        return ForEachAsync(x => x.PostCompensateAsync(context));
     }
 
-    public Task CompensateFail<TActivity, TLog>(CompensateActivityContext<TActivity, TLog> context, Exception exception)
+    public Task CompensateFailAsync<TActivity, TLog>(CompensateActivityContext<TActivity, TLog> context, Exception exception)
         where TActivity : class, ICompensateActivity<TLog>
         where TLog : class
     {
-        return ForEachAsync(x => x.CompensateFail(context, exception));
+        return ForEachAsync(x => x.CompensateFailAsync(context, exception));
     }
 }

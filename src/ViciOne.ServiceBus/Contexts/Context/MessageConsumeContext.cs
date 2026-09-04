@@ -7,7 +7,8 @@ using ViciOne.ServiceBus.Initializers;
 namespace ViciOne.ServiceBus.Context;
 
 public class MessageConsumeContext<TMessage> :
-    ConsumeContext<TMessage>
+    ConsumeContext<TMessage>,
+    ConsumeContext
     where TMessage : class
 {
     readonly ConsumeContext _context;
@@ -21,14 +22,14 @@ public class MessageConsumeContext<TMessage> :
 
     public TMessage Message { get; }
 
-    public Task NotifyConsumed(TimeSpan duration, string consumerType)
+    public Task NotifyConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
     {
-        return _context.NotifyConsumed(this, duration, consumerType);
+        return _context.NotifyConsumedAsync(this, duration, consumerType, cancellationToken: cancellationToken);
     }
 
-    public Task NotifyFaulted(TimeSpan duration, string consumerType, Exception exception)
+    public Task NotifyFaultedAsync(TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
     {
-        return _context.NotifyFaulted(this, duration, consumerType, exception);
+        return _context.NotifyFaultedAsync(this, duration, consumerType, exception, cancellationToken: cancellationToken);
     }
 
     public bool HasPayloadType(Type payloadType)
@@ -36,7 +37,7 @@ public class MessageConsumeContext<TMessage> :
         return payloadType.IsInstanceOfType(this) || _context.HasPayloadType(payloadType);
     }
 
-    public bool TryGetPayload<T>(out T payload)
+    public bool TryGetPayload<T>([NotNullWhen(true)] out T? payload)
         where T : class
     {
         if (this is T context)
@@ -78,17 +79,17 @@ public class MessageConsumeContext<TMessage> :
 
     public Guid? InitiatorId => _context.InitiatorId;
 
-    public DateTime? ExpirationTime => _context.ExpirationTime;
+    public DateTimeOffset? ExpirationTime => _context.ExpirationTime;
 
-    public Uri SourceAddress => _context.SourceAddress;
+    public Uri? SourceAddress => _context.SourceAddress;
 
-    public Uri DestinationAddress => _context.DestinationAddress;
+    public Uri? DestinationAddress => _context.DestinationAddress;
 
-    public Uri ResponseAddress => _context.ResponseAddress;
+    public Uri? ResponseAddress => _context.ResponseAddress;
 
-    public Uri FaultAddress => _context.FaultAddress;
+    public Uri? FaultAddress => _context.FaultAddress;
 
-    public DateTime? SentTime => _context.SentTime;
+    public DateTimeOffset? SentTime => _context.SentTime;
 
     public Headers Headers => _context.Headers;
 
@@ -99,60 +100,60 @@ public class MessageConsumeContext<TMessage> :
         return _context.ConnectPublishObserver(observer);
     }
 
-    public Task Publish<T>(T message, CancellationToken cancellationToken)
+    public Task PublishAsync<T>(T message, CancellationToken cancellationToken)
         where T : class
     {
-        return _context.Publish(message, cancellationToken);
+        return _context.PublishAsync(message, cancellationToken);
     }
 
-    public Task Publish<T>(T message, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken)
+    public Task PublishAsync<T>(T message, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken)
         where T : class
     {
-        return _context.Publish(message, publishPipe, cancellationToken);
+        return _context.PublishAsync(message, publishPipe, cancellationToken);
     }
 
-    public Task Publish<T>(T message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
+    public Task PublishAsync<T>(T message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
         where T : class
     {
-        return _context.Publish(message, publishPipe, cancellationToken);
+        return _context.PublishAsync(message, publishPipe, cancellationToken);
     }
 
-    public Task Publish(object message, CancellationToken cancellationToken)
+    public Task PublishAsync(object message, CancellationToken cancellationToken)
     {
-        return _context.Publish(message, cancellationToken);
+        return _context.PublishAsync(message, cancellationToken);
     }
 
-    public Task Publish(object message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
+    public Task PublishAsync(object message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
     {
-        return _context.Publish(message, publishPipe, cancellationToken);
+        return _context.PublishAsync(message, publishPipe, cancellationToken);
     }
 
-    public Task Publish(object message, Type messageType, CancellationToken cancellationToken)
+    public Task PublishAsync(object message, Type messageType, CancellationToken cancellationToken)
     {
-        return _context.Publish(message, messageType, cancellationToken);
+        return _context.PublishAsync(message, messageType, cancellationToken);
     }
 
-    public Task Publish(object message, Type messageType, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
+    public Task PublishAsync(object message, Type messageType, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
     {
-        return _context.Publish(message, messageType, publishPipe, cancellationToken);
+        return _context.PublishAsync(message, messageType, publishPipe, cancellationToken);
     }
 
-    public Task Publish<T>(object values, CancellationToken cancellationToken)
+    public Task PublishAsync<T>(object values, CancellationToken cancellationToken)
         where T : class
     {
-        return _context.Publish<T>(values, cancellationToken);
+        return _context.PublishAsync<T>(values, cancellationToken);
     }
 
-    public Task Publish<T>(object values, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken)
+    public Task PublishAsync<T>(object values, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken)
         where T : class
     {
-        return _context.Publish(values, publishPipe, cancellationToken);
+        return _context.PublishAsync(values, publishPipe, cancellationToken);
     }
 
-    public Task Publish<T>(object values, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
+    public Task PublishAsync<T>(object values, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
         where T : class
     {
-        return _context.Publish<T>(values, publishPipe, cancellationToken);
+        return _context.PublishAsync<T>(values, publishPipe, cancellationToken);
     }
 
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
@@ -160,9 +161,9 @@ public class MessageConsumeContext<TMessage> :
         return _context.ConnectSendObserver(observer);
     }
 
-    public Task<ISendEndpoint> GetSendEndpoint(Uri address)
+    public Task<ISendEndpoint> GetSendEndpointAsync(Uri address, CancellationToken cancellationToken = default)
     {
-        return _context.GetSendEndpoint(address);
+        return _context.GetSendEndpointAsync(address, cancellationToken: cancellationToken);
     }
 
     public ReceiveContext ReceiveContext => _context.ReceiveContext;
@@ -177,7 +178,7 @@ public class MessageConsumeContext<TMessage> :
         return _context.HasMessageType(messageType);
     }
 
-    public bool TryGetMessage<T>(out ConsumeContext<T> consumeContext)
+    public bool TryGetMessage<T>([NotNullWhen(true)] out ConsumeContext<T>? consumeContext)
         where T : class
     {
         return _context.TryGetMessage(out consumeContext);
@@ -229,58 +230,58 @@ public class MessageConsumeContext<TMessage> :
     public Task RespondAsync<T>(object values)
         where T : class
     {
-        return ResponseAsyncWithMessage<T>(values);
+        return ResponseAsyncWithMessageAsync<T>(values);
     }
 
     public Task RespondAsync<T>(object values, IPipe<SendContext<T>> sendPipe)
         where T : class
     {
-        return ResponseAsyncWithMessage(values, sendPipe);
+        return ResponseAsyncWithMessageAsync(values, sendPipe);
     }
 
     public Task RespondAsync<T>(object values, IPipe<SendContext> sendPipe)
         where T : class
     {
-        return ResponseAsyncWithMessage<T>(values, sendPipe);
+        return ResponseAsyncWithMessageAsync<T>(values, sendPipe);
     }
 
-    public void Respond<T>(T message)
+    public void DeferResponse<T>(T message)
         where T : class
     {
-        _context.Respond(message);
+        _context.DeferResponse(message);
     }
 
-    public Task NotifyConsumed<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
+    public Task NotifyConsumedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _context.NotifyConsumed(context, duration, consumerType);
+        return _context.NotifyConsumedAsync(context, duration, consumerType, cancellationToken: cancellationToken);
     }
 
-    public Task NotifyFaulted<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
+    public Task NotifyFaultedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _context.NotifyFaulted(context, duration, consumerType, exception);
+        return _context.NotifyFaultedAsync(context, duration, consumerType, exception, cancellationToken: cancellationToken);
     }
 
     /// <summary>
     /// Initializes the response with the request message, and then uses the initializer to initialize the
     /// remaining properties using the <paramref name="values" /> parameter.
     /// </summary>
-    async Task ResponseAsyncWithMessage<T>(object values, IPipe<SendContext<T>> responsePipe = default)
+    async Task ResponseAsyncWithMessageAsync<T>(object values, IPipe<SendContext<T>>? responsePipe = default)
         where T : class
     {
         if (values == null)
             throw new ArgumentNullException(nameof(values));
 
-        var responseEndpoint = await this.GetResponseEndpoint<T>().ConfigureAwait(false);
+        var responseEndpoint = await this.GetResponseEndpointAsync<T>().ConfigureAwait(false);
 
         (var message, IPipe<SendContext<T>> sendPipe) =
-            await MessageInitializerCache<T>.InitializeMessage(_context, values, new object[] { Message }, responsePipe).ConfigureAwait(false);
+            await MessageInitializerCache<T>.InitializeMessageAsync(_context, values, new object[] { Message }, responsePipe).ConfigureAwait(false);
 
-        await ConsumeTask(responseEndpoint.Send(message, sendPipe, _context.CancellationToken)).ConfigureAwait(false);
+        await ConsumeTaskAsync(responseEndpoint.SendAsync(message, sendPipe, _context.CancellationToken)).ConfigureAwait(false);
     }
 
-    Task ConsumeTask(Task task)
+    Task ConsumeTaskAsync(Task task)
     {
         _context.AddConsumeTask(task);
 

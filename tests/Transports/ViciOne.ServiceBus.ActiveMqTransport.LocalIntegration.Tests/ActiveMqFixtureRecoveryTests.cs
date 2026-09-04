@@ -14,7 +14,7 @@ public sealed class ActiveMqFixtureRecoveryTests
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-BROKER-RECOVERY", "run-scoped-outage-recovers-the-configured-endpoint")]
-    public async Task RunScopedOutageControl_RestoresStableEndpoints(string flavor)
+    public async Task RunScopedOutageControl_RestoresStableEndpointsAsync(string flavor)
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(flavor, "broker-recovery");
         string queueName = fixture.Name("input");
@@ -66,9 +66,8 @@ public sealed class ActiveMqFixtureRecoveryTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await input.Send(new RecoveryMessage(before), cancellationToken)
+            ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await input.SendAsync(new RecoveryMessage(before), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.True(await beforeObserved.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
             await firstReceiveCompleted.Completed.WaitAsync(fixture.OperationTimeout, cancellationToken);
@@ -87,9 +86,9 @@ public sealed class ActiveMqFixtureRecoveryTests
                 .WaitAsync(TimeSpan.FromMinutes(2), cancellationToken);
             Assert.Equal(fault.InputAddress, recovered.InputAddress);
 
-            await input.Send(new RecoveryMessage(after), cancellationToken)
+            await input.SendAsync(new RecoveryMessage(after), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await input.Send(new RecoveryMessage(barrier), cancellationToken)
+            await input.SendAsync(new RecoveryMessage(barrier), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.True(await afterObserved.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
             Assert.True(await barrierEntered.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
@@ -101,7 +100,7 @@ public sealed class ActiveMqFixtureRecoveryTests
             // at zero. Application-level exact-once counts below span both broker lifetimes; these
             // management counts deliberately describe only the recovered broker.
             ActiveMqBroker.ClassicQueueStatistics expectedQueue = new(2, 2, 0);
-            ActiveMqBroker.ClassicQueueStatistics queue = await fixture.GetClassicQueueStatistics(queueName, cancellationToken);
+            ActiveMqBroker.ClassicQueueStatistics queue = await fixture.GetClassicQueueStatisticsAsync(queueName, cancellationToken);
             Assert.Equal(expectedQueue, queue);
             Assert.Equal(1, received[before]);
             Assert.Equal(1, received[after]);

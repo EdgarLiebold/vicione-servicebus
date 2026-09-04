@@ -20,20 +20,20 @@ public class MissingInstanceRedeliveryPipe<TSaga, TMessage> :
         _options = options;
     }
 
-    public Task Send(ConsumeContext<TMessage> context)
+    public Task SendAsync(ConsumeContext<TMessage> context)
     {
         using RetryPolicyContext<ConsumeContext<TMessage>> policyContext = _retryPolicy.CreatePolicyContext(context);
 
         var exception = new SagaException("An existing saga instance was not found", typeof(TSaga), typeof(TMessage), context.CorrelationId ?? Guid.Empty);
 
         if (!policyContext.CanRetry(exception, out RetryContext<ConsumeContext<TMessage>> retryContext))
-            return _finalPipe.Send(context);
+            return _finalPipe.SendAsync(context);
 
-        var previousDeliveryCount = context.GetRedeliveryCount();
+        var previousDeliveryCount = context.Advanced().GetRedeliveryCount();
         for (var retryIndex = 0; retryIndex < previousDeliveryCount; retryIndex++)
         {
             if (!retryContext.CanRetry(exception, out retryContext))
-                return _finalPipe.Send(context);
+                return _finalPipe.SendAsync(context);
         }
 
         var redeliveryContext = _options.HasFlag(RedeliveryOptions.UseMessageScheduler)
@@ -42,7 +42,7 @@ public class MissingInstanceRedeliveryPipe<TSaga, TMessage> :
 
         var delay = retryContext.Delay ?? TimeSpan.Zero;
 
-        return redeliveryContext.ScheduleRedelivery(delay);
+        return redeliveryContext.ScheduleRedeliveryAsync(delay);
     }
 
     public void Probe(ProbeContext context)

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using ViciOne.ServiceBus.Courier.Contracts;
@@ -110,13 +109,13 @@ public static class LogContextActivityExtensions
         if (!ActivityObservation.TryStart(activity))
             return null;
 
-        return new StartedActivity(activity);
+        return new StartedActivity(activity, context.GetTimeProvider());
     }
 
     public static StartedActivity? StartConsumerActivity<TConsumer, T>(this ILogContext logContext, ConsumeContext<T> context)
         where T : class
     {
-        return StartActivity(context, activity =>
+        return StartActivity((ConsumeContext)context, activity =>
         {
             ActivityObservation.TrySetTag(activity, DiagnosticHeaders.ConsumerType, TypeCache<TConsumer>.ShortName);
             ActivityObservation.TrySetTag(activity, DiagnosticHeaders.PeerAddress, MessageTypeCache<T>.DiagnosticAddress);
@@ -126,7 +125,7 @@ public static class LogContextActivityExtensions
     public static StartedActivity? StartHandlerActivity<T>(this ILogContext logContext, ConsumeContext<T> context)
         where T : class
     {
-        return StartActivity(context, activity =>
+        return StartActivity((ConsumeContext)context, activity =>
         {
             ActivityObservation.TrySetTag(activity, DiagnosticHeaders.ConsumerType, "Handler");
             ActivityObservation.TrySetTag(activity, DiagnosticHeaders.PeerAddress, MessageTypeCache<T>.DiagnosticAddress);
@@ -137,7 +136,7 @@ public static class LogContextActivityExtensions
         where TSaga : class, ISaga
         where T : class
     {
-        return StartActivity(context, activity =>
+        return StartActivity((ConsumeContext)context, activity =>
         {
             ActivityObservation.TrySetTag(activity, DiagnosticHeaders.SagaId, context.Saga.CorrelationId.ToString("D"));
             ActivityObservation.TrySetTag(activity, DiagnosticHeaders.ConsumerType, TypeCache<TSaga>.ShortName);
@@ -149,7 +148,7 @@ public static class LogContextActivityExtensions
         where TSaga : class, SagaStateMachineInstance
         where T : class
     {
-        return StartActivity(context, activity =>
+        return StartActivity((ConsumeContext)context, activity =>
         {
             ActivityObservation.TrySetTag(activity, DiagnosticHeaders.SagaId, context.Saga.CorrelationId.ToString("D"));
             ActivityObservation.TrySetTag(activity, DiagnosticHeaders.ConsumerType, context.StateMachine.Name);
@@ -161,7 +160,7 @@ public static class LogContextActivityExtensions
         where TActivity : IExecuteActivity<TArguments>
         where TArguments : class
     {
-        return StartActivity(context, activity =>
+        return StartActivity(context.Advanced(), activity =>
         {
             ActivityObservation.TrySetTag(activity, DiagnosticHeaders.TrackingNumber, context.Message.TrackingNumber.ToString("D"));
             ActivityObservation.TrySetTag(activity, DiagnosticHeaders.ConsumerType, TypeCache<TActivity>.ShortName);
@@ -173,7 +172,7 @@ public static class LogContextActivityExtensions
         where TActivity : ICompensateActivity<TLog>
         where TLog : class
     {
-        return StartActivity(context, activity =>
+        return StartActivity(context.Advanced(), activity =>
         {
             ActivityObservation.TrySetTag(activity, DiagnosticHeaders.TrackingNumber, context.Message.TrackingNumber.ToString("D"));
             ActivityObservation.TrySetTag(activity, DiagnosticHeaders.ConsumerType, TypeCache<TActivity>.ShortName);
@@ -259,7 +258,7 @@ public static class LogContextActivityExtensions
         if (baggage != null)
             context.Headers.Set(DiagnosticHeaders.ActivityCorrelationContext, baggage);
 
-        return new StartedActivity(activity);
+        return new StartedActivity(activity, context.GetTimeProvider());
     }
 
     static void PropagateActivity(SendContext context, System.Diagnostics.Activity? activity)
@@ -315,15 +314,7 @@ public static class LogContextActivityExtensions
         if (currentActivity == null)
             return null;
 
-        var operationName = Cached.OperationNames.GetOrAdd(currentActivity.OperationName, add =>
-        {
-            if (add.EndsWith(" receive"))
-                return add.Substring(0, add.Length - 8) + " process";
-            if (add.EndsWith(" process"))
-                return add;
-
-            return currentActivity.OperationName;
-        });
+        string operationName = GetProcessOperationName(currentActivity.OperationName);
 
         var activity = ActivityObservation.TryCreate(Cached.Source, operationName, ActivityKind.Consumer);
         if (activity == null)
@@ -360,7 +351,17 @@ public static class LogContextActivityExtensions
         if (!ActivityObservation.TryStart(activity))
             return null;
 
-        return new StartedActivity(activity);
+        return new StartedActivity(activity, context.GetTimeProvider());
+    }
+
+    static string GetProcessOperationName(string operationName)
+    {
+        const string receiveSuffix = " receive";
+
+        if (operationName.EndsWith(receiveSuffix, StringComparison.Ordinal))
+            return string.Concat(operationName.AsSpan(0, operationName.Length - receiveSuffix.Length), " process");
+
+        return operationName;
     }
 
 
@@ -369,6 +370,5 @@ public static class LogContextActivityExtensions
         internal static readonly Lazy<ActivitySource> Source = new Lazy<ActivitySource>(() =>
             new ActivitySource(DiagnosticHeaders.DefaultListenerName, HostMetadataCache.Host.ViciOneServiceBusVersion));
 
-        internal static readonly ConcurrentDictionary<string, string> OperationNames = new ConcurrentDictionary<string, string>(StringComparer.Ordinal);
     }
 }

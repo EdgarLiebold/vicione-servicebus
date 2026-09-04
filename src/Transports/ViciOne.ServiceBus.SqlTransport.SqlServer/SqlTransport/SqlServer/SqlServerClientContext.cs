@@ -58,9 +58,9 @@ public class SqlServerClientContext :
         _deleteScheduledMessageSql = $"{_context.Schema}.DeleteScheduledMessage";
     }
 
-    public override async Task<long> CreateQueue(Queue queue)
+    public override async Task<long> CreateQueueAsync(Queue queue, CancellationToken cancellationToken = default)
     {
-        var result = await Execute<long>(_createQueueSql, new
+        cancellationToken.ThrowIfCancellationRequested(); var result = await ExecuteAsync<long>(_createQueueSql, new
         {
             queueName = queue.QueueName,
             autoDelete = (int?)queue.AutoDeleteOnIdle?.TotalSeconds,
@@ -70,16 +70,16 @@ public class SqlServerClientContext :
         return result ?? throw new SqlTopologyException("Create queue failed");
     }
 
-    public override async Task<long> CreateTopic(Topic topic)
+    public override async Task<long> CreateTopicAsync(Topic topic, CancellationToken cancellationToken = default)
     {
-        var result = await Execute<long>(_createTopicSql, new { topicName = topic.TopicName });
+        cancellationToken.ThrowIfCancellationRequested(); var result = await ExecuteAsync<long>(_createTopicSql, new { topicName = topic.TopicName });
 
         return result ?? throw new SqlTopologyException("Create topic failed");
     }
 
-    public override async Task<long> CreateTopicSubscription(TopicToTopicSubscription subscription)
+    public override async Task<long> CreateTopicSubscriptionAsync(TopicToTopicSubscription subscription, CancellationToken cancellationToken = default)
     {
-        var result = await Execute<long>(_createTopicSubscriptionSql, new
+        cancellationToken.ThrowIfCancellationRequested(); var result = await ExecuteAsync<long>(_createTopicSubscriptionSql, new
         {
             SourceTopicName = subscription.Source.TopicName,
             DestinationTopicName = subscription.Destination.TopicName,
@@ -91,9 +91,9 @@ public class SqlServerClientContext :
         return result ?? throw new SqlTopologyException("Create topic subscription failed");
     }
 
-    public override async Task<long> CreateQueueSubscription(TopicToQueueSubscription subscription)
+    public override async Task<long> CreateQueueSubscriptionAsync(TopicToQueueSubscription subscription, CancellationToken cancellationToken = default)
     {
-        var result = await Execute<long>(_createQueueSubscriptionSql, new
+        cancellationToken.ThrowIfCancellationRequested(); var result = await ExecuteAsync<long>(_createQueueSubscriptionSql, new
         {
             SourceTopicName = subscription.Source.TopicName,
             DestinationQueueName = subscription.Destination.QueueName,
@@ -105,21 +105,21 @@ public class SqlServerClientContext :
         return result ?? throw new SqlTopologyException("Create queue subscription failed");
     }
 
-    public override async Task<long> PurgeQueue(string queueName, CancellationToken cancellationToken)
+    public override async Task<long> PurgeQueueAsync(string queueName, CancellationToken cancellationToken = default)
     {
-        var result = await Execute<long>(_purgeQueueSql, new { QueueName = queueName });
+        cancellationToken.ThrowIfCancellationRequested(); var result = await ExecuteAsync<long>(_purgeQueueSql, new { QueueName = queueName });
 
         return result ?? throw new SqlTopologyException("Purge queue failed");
     }
 
-    public override async Task<IEnumerable<SqlTransportMessage>> ReceiveMessages(string queueName, SqlReceiveMode mode, int messageLimit,
-        int concurrentLimit, TimeSpan lockDuration)
+    public override async Task<IEnumerable<SqlTransportMessage>> ReceiveMessagesAsync(string queueName, SqlReceiveMode mode, int messageLimit,
+        int concurrentLimit, TimeSpan lockDuration, CancellationToken cancellationToken = default)
     {
-        try
+        cancellationToken.ThrowIfCancellationRequested(); try
         {
             if (mode == SqlReceiveMode.Normal)
             {
-                return await Query<SqlTransportMessage>(_receiveSql, new
+                return await QueryAsync<SqlTransportMessage>(_receiveSql, new
                 {
                     queueName,
                     consumerId = _consumerId,
@@ -136,7 +136,7 @@ public class SqlServerClientContext :
                 _ => 0
             };
 
-            return await Query<SqlTransportMessage>(_receivePartitionedSql, new
+            return await QueryAsync<SqlTransportMessage>(_receivePartitionedSql, new
             {
                 queueName,
                 consumerId = _consumerId,
@@ -153,19 +153,19 @@ public class SqlServerClientContext :
         }
     }
 
-    public override Task TouchQueue(string queueName)
+    public override Task TouchQueueAsync(string queueName, CancellationToken cancellationToken = default)
     {
-        return Execute<long>(_touchQueueSql, new { queueName });
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return ExecuteAsync<long>(_touchQueueSql, new { queueName });
     }
 
-    public override Task<int?> DeadLetterQueue(string queueName, int messageCount)
+    public override Task<int?> DeadLetterQueueAsync(string queueName, int messageCount, CancellationToken cancellationToken = default)
     {
-        return Execute<int>(_deadLetterMessagesSql, new { queueName, messageCount });
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<int?>(cancellationToken); return ExecuteAsync<int>(_deadLetterMessagesSql, new { queueName, messageCount });
     }
 
-    public override Task Send<T>(string queueName, SqlMessageSendContext<T> context)
+    public override Task SendAsync<T>(string queueName, SqlMessageSendContext<T> context, CancellationToken cancellationToken = default)
     {
-        IEnumerable<KeyValuePair<string, object>> headers = context.Headers.GetAll().ToList();
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); IEnumerable<KeyValuePair<string, object>> headers = context.Headers.GetAll().ToList();
         var headersAsJson = headers.Any() ? JsonSerializer.Serialize(headers, ServiceBusMetadataJson.Options) : null;
 
         Guid? schedulingTokenId = context.Headers.Get<Guid>(MessageHeaders.SchedulingTokenId);
@@ -173,7 +173,7 @@ public class SqlServerClientContext :
             ? context.GetTimeProvider().GetUtcNow().UtcDateTime + context.TimeToLive.Value
             : null;
 
-        return Execute<long>(_sendSql, new
+        return ExecuteAsync<long>(_sendSql, new
         {
             entityName = queueName,
             priority = (int)(context.Priority ?? 100),
@@ -202,9 +202,9 @@ public class SqlServerClientContext :
         });
     }
 
-    public override Task Publish<T>(string topicName, SqlMessageSendContext<T> context)
+    public override Task PublishAsync<T>(string topicName, SqlMessageSendContext<T> context, CancellationToken cancellationToken = default)
     {
-        IEnumerable<KeyValuePair<string, object>> headers = context.Headers.GetAll().ToList();
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); IEnumerable<KeyValuePair<string, object>> headers = context.Headers.GetAll().ToList();
         var headersAsJson = headers.Any() ? JsonSerializer.Serialize(headers, ServiceBusMetadataJson.Options) : null;
 
         Guid? schedulingTokenId = context.Headers.Get<Guid>(MessageHeaders.SchedulingTokenId);
@@ -212,7 +212,7 @@ public class SqlServerClientContext :
             ? context.GetTimeProvider().GetUtcNow().UtcDateTime + context.TimeToLive.Value
             : null;
 
-        return Execute<long>(_publishSql, new
+        return ExecuteAsync<long>(_publishSql, new
         {
             entityName = topicName,
             priority = (int)(context.Priority ?? 100),
@@ -241,9 +241,9 @@ public class SqlServerClientContext :
         });
     }
 
-    public override async Task<bool> DeleteMessage(Guid lockId, long messageDeliveryId)
+    public override async Task<bool> DeleteMessageAsync(Guid lockId, long messageDeliveryId, CancellationToken cancellationToken = default)
     {
-        var result = await Execute<long>(_deleteMessageSql, new
+        cancellationToken.ThrowIfCancellationRequested(); var result = await ExecuteAsync<long>(_deleteMessageSql, new
         {
             messageDeliveryId,
             lockId,
@@ -252,9 +252,9 @@ public class SqlServerClientContext :
         return result == messageDeliveryId;
     }
 
-    public override async Task<bool> DeleteScheduledMessage(Guid tokenId, CancellationToken cancellationToken)
+    public override async Task<bool> DeleteScheduledMessageAsync(Guid tokenId, CancellationToken cancellationToken = default)
     {
-        IEnumerable<SqlTransportMessage> result = await Query<SqlTransportMessage>(_deleteScheduledMessageSql, new
+        IEnumerable<SqlTransportMessage> result = await QueryAsync<SqlTransportMessage>(_deleteScheduledMessageSql, new
         {
             tokenId,
         }, cancellationToken).ConfigureAwait(false);
@@ -262,13 +262,13 @@ public class SqlServerClientContext :
         return result.Any();
     }
 
-    public override async Task<bool> MoveMessage(Guid lockId, long messageDeliveryId, string queueName, SqlQueueType queueType,
-        DateTime? expirationTime, SendHeaders sendHeaders)
+    public override async Task<bool> MoveMessageAsync(Guid lockId, long messageDeliveryId, string queueName, SqlQueueType queueType,
+        DateTimeOffset? expirationTime, SendHeaders sendHeaders, CancellationToken cancellationToken = default)
     {
-        IEnumerable<KeyValuePair<string, object>> headers = sendHeaders.GetAll().ToList();
+        cancellationToken.ThrowIfCancellationRequested(); IEnumerable<KeyValuePair<string, object>> headers = sendHeaders.GetAll().ToList();
         var headersAsJson = headers.Any() ? JsonSerializer.Serialize(headers, ServiceBusMetadataJson.Options) : null;
 
-        var result = await Execute<long>(_moveMessageTypeSql, new
+        var result = await ExecuteAsync<long>(_moveMessageTypeSql, new
         {
             messageDeliveryId,
             lockId,
@@ -281,9 +281,9 @@ public class SqlServerClientContext :
         return result == messageDeliveryId;
     }
 
-    public override async Task<bool> RenewLock(Guid lockId, long messageDeliveryId, TimeSpan duration)
+    public override async Task<bool> RenewLockAsync(Guid lockId, long messageDeliveryId, TimeSpan duration, CancellationToken cancellationToken = default)
     {
-        var result = await Execute<long>(_renewMessageLockSql, new
+        cancellationToken.ThrowIfCancellationRequested(); var result = await ExecuteAsync<long>(_renewMessageLockSql, new
         {
             messageDeliveryId,
             lockId,
@@ -293,12 +293,12 @@ public class SqlServerClientContext :
         return result == messageDeliveryId;
     }
 
-    public override async Task<bool> Unlock(Guid lockId, long messageDeliveryId, TimeSpan delay, SendHeaders sendHeaders)
+    public override async Task<bool> UnlockAsync(Guid lockId, long messageDeliveryId, TimeSpan delay, SendHeaders sendHeaders, CancellationToken cancellationToken = default)
     {
-        IEnumerable<KeyValuePair<string, object>> headers = sendHeaders.GetAll().ToList();
+        cancellationToken.ThrowIfCancellationRequested(); IEnumerable<KeyValuePair<string, object>> headers = sendHeaders.GetAll().ToList();
         var headersAsJson = headers.Any() ? JsonSerializer.Serialize(headers, ServiceBusMetadataJson.Options) : null;
 
-        var result = await Execute<long>(_unlockSql, new
+        var result = await ExecuteAsync<long>(_unlockSql, new
         {
             messageDeliveryId,
             lockId,
@@ -309,31 +309,31 @@ public class SqlServerClientContext :
         return result == messageDeliveryId;
     }
 
-    Task<T?> Execute<T>(string functionName, object values)
+    Task<T?> ExecuteAsync<T>(string functionName, object values)
         where T : struct
     {
-        return _context.Query((connection, transaction) => connection
+        return _context.QueryAsync((connection, transaction) => connection
             .ExecuteScalarAsync<T?>(functionName, values, transaction, commandType: CommandType.StoredProcedure), CancellationToken);
     }
 
-    Task<T?> QuerySingle<T>(string functionName, object values)
+    Task<T?> QuerySingleAsync<T>(string functionName, object values)
         where T : class
     {
-        return _context.Query((connection, transaction) => connection
+        return _context.QueryAsync((connection, transaction) => connection
             .QuerySingleAsync<T?>(functionName, values, transaction, commandType: CommandType.StoredProcedure), CancellationToken);
     }
 
-    Task<IEnumerable<T>> Query<T>(string functionName, object values)
+    Task<IEnumerable<T>> QueryAsync<T>(string functionName, object values)
         where T : class
     {
-        return _context.Query((connection, transaction) => connection
+        return _context.QueryAsync((connection, transaction) => connection
             .QueryAsync<T>(functionName, values, transaction, commandType: CommandType.StoredProcedure), CancellationToken);
     }
 
-    Task<IEnumerable<T>> Query<T>(string functionName, object values, CancellationToken cancellationToken)
+    Task<IEnumerable<T>> QueryAsync<T>(string functionName, object values, CancellationToken cancellationToken)
         where T : class
     {
-        return _context.Query((connection, transaction) => connection
+        return _context.QueryAsync((connection, transaction) => connection
             .QueryAsync<T>(functionName, values, transaction, commandType: CommandType.StoredProcedure), cancellationToken);
     }
 }

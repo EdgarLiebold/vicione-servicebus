@@ -9,15 +9,15 @@ internal sealed class ScheduledMessageCapture(string payloadTypeName) : IConsume
 
     public Task<ScheduledMessageSnapshot> Scheduled => _scheduled.Task;
 
-    public Task PreConsume<T>(ConsumeContext<T> context) where T : class => Task.CompletedTask;
+    public Task PreConsumeAsync<T>(ConsumeContext<T> context) where T : class => Task.CompletedTask;
 
-    public Task PostConsume<T>(ConsumeContext<T> context) where T : class
+    public Task PostConsumeAsync<T>(ConsumeContext<T> context) where T : class
     {
         if (context.Message is ScheduleMessage schedule && IsRequestedPayload(schedule.PayloadType))
         {
             _scheduled.TrySetResult(new ScheduledMessageSnapshot(
                 schedule.TokenId,
-                schedule.ScheduledTime,
+                schedule.DueAt,
                 schedule.Destination,
                 [.. schedule.PayloadType]));
         }
@@ -25,7 +25,7 @@ internal sealed class ScheduledMessageCapture(string payloadTypeName) : IConsume
         return Task.CompletedTask;
     }
 
-    public Task ConsumeFault<T>(ConsumeContext<T> context, Exception exception) where T : class
+    public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, Exception exception) where T : class
     {
         if (context.Message is ScheduleMessage schedule && IsRequestedPayload(schedule.PayloadType))
             _scheduled.TrySetException(exception);
@@ -39,6 +39,6 @@ internal sealed class ScheduledMessageCapture(string payloadTypeName) : IConsume
 
 internal sealed record ScheduledMessageSnapshot(
     Guid TokenId,
-    DateTime ScheduledTime,
+    DateTimeOffset DueAt,
     Uri Destination,
     string[] PayloadTypes);

@@ -18,30 +18,30 @@ public class BusTestReceiveObserver :
         StartTimer(inactivityTimout);
     }
 
-    public Task PreReceive(ReceiveContext context)
+    public Task PreReceiveAsync(ReceiveContext context)
     {
-        return RestartTimer();
+        return RestartTimerAsync();
     }
 
-    public Task PostReceive(ReceiveContext context)
+    public Task PostReceiveAsync(ReceiveContext context)
     {
-        return RestartTimer(false);
+        return RestartTimerAsync(false);
     }
 
-    public Task PostConsume<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
+    public Task PostConsumeAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
         where T : class
     {
         return Task.CompletedTask;
     }
 
-    public Task ConsumeFault<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
+    public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
         where T : class
     {
         return Task.CompletedTask;
     }
 
-    public Task ReceiveFault(ReceiveContext context, Exception exception)
+    public Task ReceiveFaultAsync(ReceiveContext context, Exception exception)
     {
-        return RestartTimer(false);
+        return RestartTimerAsync(false);
     }
 }

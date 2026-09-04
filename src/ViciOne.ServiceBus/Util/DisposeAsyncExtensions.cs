@@ -14,11 +14,12 @@ public static class DisposeAsyncExtensions
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
     /// <exception cref="ViciOneServiceBusException"></exception>
-    public static ValueTask<T> DisposeAsync<T>(this Exception exception, Func<Task> disposeCallback)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static ValueTask<T> DisposeAsync<T>(this Exception exception, Func<Task> disposeCallback, CancellationToken cancellationToken = default)
     {
-        var dispatchInfo = ExceptionDispatchInfo.Capture(exception.GetBaseException());
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled<T>(cancellationToken); var dispatchInfo = ExceptionDispatchInfo.Capture(exception.GetBaseException());
 
-        async ValueTask<T> Faulted()
+        async ValueTask<T> FaultedAsync()
         {
             await disposeCallback().ConfigureAwait(false);
 
@@ -27,7 +28,7 @@ public static class DisposeAsyncExtensions
             throw new ViciOneServiceBusException("DisposeAsync", exception);
         }
 
-        return Faulted();
+        return FaultedAsync();
     }
 
     /// <summary>
@@ -38,11 +39,12 @@ public static class DisposeAsyncExtensions
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
     /// <exception cref="ViciOneServiceBusException"></exception>
-    public static ValueTask<T> DisposeAsync<T>(this Exception exception, Func<ValueTask> disposeCallback)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static ValueTask<T> DisposeAsync<T>(this Exception exception, Func<ValueTask> disposeCallback, CancellationToken cancellationToken = default)
     {
-        var dispatchInfo = ExceptionDispatchInfo.Capture(exception.GetBaseException());
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled<T>(cancellationToken); var dispatchInfo = ExceptionDispatchInfo.Capture(exception.GetBaseException());
 
-        async ValueTask<T> Faulted()
+        async ValueTask<T> FaultedAsync()
         {
             await disposeCallback().ConfigureAwait(false);
 
@@ -51,6 +53,6 @@ public static class DisposeAsyncExtensions
             throw new ViciOneServiceBusException("DisposeAsync", exception);
         }
 
-        return Faulted();
+        return FaultedAsync();
     }
 }

@@ -15,7 +15,7 @@ public class CompensateContextRedeliveryPipeSpecification<TLog> :
     where TLog : class
 {
     readonly RetryObservable _observers;
-    RetryPolicyFactory _policyFactory;
+    RetryPolicyFactory _policyFactory = null!;
 
     public CompensateContextRedeliveryPipeSpecification()
     {
@@ -49,7 +49,7 @@ public class CompensateContextRedeliveryPipeSpecification<TLog> :
 
     public bool ReplaceMessageId { get; set; }
 
-    static RetryCompensateContext<TLog> Factory(CompensateContext<TLog> context, IRetryPolicy retryPolicy, RetryContext retryContext)
+    static RetryCompensateContext<TLog> Factory(CompensateContext<TLog> context, IRetryPolicy retryPolicy, RetryContext? retryContext)
     {
         return new RetryCompensateContext<TLog>(context, retryPolicy, retryContext);
     }

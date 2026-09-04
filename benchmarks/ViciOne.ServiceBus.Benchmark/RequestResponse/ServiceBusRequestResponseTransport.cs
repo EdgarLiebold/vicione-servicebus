@@ -20,7 +20,7 @@ public class ServiceBusRequestResponseTransport :
         _settings = settings;
     }
 
-    public Task<IRequestClient<T>> GetRequestClient<T>(TimeSpan settingsRequestTimeout)
+    public Task<IRequestClient<T>> GetRequestClientAsync<T>(TimeSpan settingsRequestTimeout)
         where T : class
     {
         return Task.FromResult(_clientFactory.CreateRequestClient<T>(_targetEndpointAddress, settingsRequestTimeout));

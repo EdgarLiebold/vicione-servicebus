@@ -29,8 +29,8 @@ public class RabbitMqChannelContext :
     /// </summary>
     readonly TransportLifetime _lifetime;
 
-    Task _faultStopTask;
-    CancellationTokenSource _tokenSource;
+    Task? _faultStopTask;
+    CancellationTokenSource? _tokenSource;
 
     public RabbitMqChannelContext(ConnectionContext connectionContext, IChannel channel, IAgent agent, CancellationToken cancellationToken)
         : base(connectionContext)
@@ -38,7 +38,7 @@ public class RabbitMqChannelContext :
         ConnectionContext = connectionContext;
 
         _channel = channel;
-        _lifetime = new TransportLifetime("channel", () => channel.Cleanup(200, "ChannelContext Disposed"));
+        _lifetime = new TransportLifetime("channel", () => channel.CleanupAsync(200, "ChannelContext Disposed"));
         _agent = agent;
 
         _cancellationToken = cancellationToken;
@@ -75,7 +75,7 @@ public class RabbitMqChannelContext :
             throw;
         }
 
-        async Task PublishAndRelease()
+        async Task PublishAndReleaseAsync()
         {
             try
             {
@@ -95,7 +95,7 @@ public class RabbitMqChannelContext :
             }
         }
 
-        var published = PublishAndRelease();
+        var published = PublishAndReleaseAsync();
 
         if (awaitAck)
             return published;
@@ -106,7 +106,7 @@ public class RabbitMqChannelContext :
     }
 
 
-    public async Task ExchangeBind(string destination, string source, string routingKey, IDictionary<string, object> arguments,
+    public async Task ExchangeBindAsync(string destination, string source, string routingKey, IDictionary<string, object?> arguments,
         CancellationToken cancellationToken)
     {
         using var lease = Lease();
@@ -114,7 +114,7 @@ public class RabbitMqChannelContext :
         await _channel.ExchangeBindAsync(destination, source, routingKey, arguments, false, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task ExchangeDeclare(string exchange, string type, bool durable, bool autoDelete, IDictionary<string, object> arguments,
+    public async Task ExchangeDeclareAsync(string exchange, string type, bool durable, bool autoDelete, IDictionary<string, object?> arguments,
         CancellationToken cancellationToken)
     {
         using var lease = Lease();
@@ -122,50 +122,50 @@ public class RabbitMqChannelContext :
         await _channel.ExchangeDeclareAsync(exchange, type, durable, autoDelete, arguments, false, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task ExchangeDeclarePassive(string exchange, CancellationToken cancellationToken)
+    public async Task ExchangeDeclarePassiveAsync(string exchange, CancellationToken cancellationToken)
     {
         using var lease = Lease();
 
         await _channel.ExchangeDeclarePassiveAsync(exchange, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task QueueBind(string queue, string exchange, string routingKey, IDictionary<string, object> arguments, CancellationToken cancellationToken)
+    public async Task QueueBindAsync(string queue, string exchange, string routingKey, IDictionary<string, object?> arguments, CancellationToken cancellationToken)
     {
         using var lease = Lease();
 
         await _channel.QueueBindAsync(queue, exchange, routingKey, arguments, false, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<QueueDeclareOk> QueueDeclare(string queue, bool durable, bool exclusive, bool autoDelete,
-        IDictionary<string, object> arguments, CancellationToken cancellationToken)
+    public async Task<QueueDeclareOk> QueueDeclareAsync(string queue, bool durable, bool exclusive, bool autoDelete,
+        IDictionary<string, object?> arguments, CancellationToken cancellationToken)
     {
         using var lease = Lease();
 
         return await _channel.QueueDeclareAsync(queue, durable, exclusive, autoDelete, arguments, false, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<QueueDeclareOk> QueueDeclarePassive(string queue, CancellationToken cancellationToken)
+    public async Task<QueueDeclareOk> QueueDeclarePassiveAsync(string queue, CancellationToken cancellationToken)
     {
         using var lease = Lease();
 
         return await _channel.QueueDeclarePassiveAsync(queue, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<uint> QueuePurge(string queue, CancellationToken cancellationToken)
+    public async Task<uint> QueuePurgeAsync(string queue, CancellationToken cancellationToken)
     {
         using var lease = Lease();
 
         return await _channel.QueuePurgeAsync(queue, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task BasicQos(uint prefetchSize, ushort prefetchCount, bool global, CancellationToken cancellationToken)
+    public async Task BasicQosAsync(uint prefetchSize, ushort prefetchCount, bool global, CancellationToken cancellationToken)
     {
         using var lease = Lease();
 
         await _channel.BasicQosAsync(prefetchSize, prefetchCount, global, cancellationToken).ConfigureAwait(false);
     }
 
-    public async ValueTask BasicAck(ulong deliveryTag, bool multiple, CancellationToken cancellationToken)
+    public async ValueTask BasicAckAsync(ulong deliveryTag, bool multiple, CancellationToken cancellationToken)
     {
         // Preserve the broker or transport exception so the caller receives the authoritative
         // acknowledgement failure.
@@ -174,7 +174,7 @@ public class RabbitMqChannelContext :
         await _channel.BasicAckAsync(deliveryTag, multiple, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task BasicNack(ulong deliveryTag, bool multiple, bool requeue, CancellationToken cancellationToken)
+    public async Task BasicNackAsync(ulong deliveryTag, bool multiple, bool requeue, CancellationToken cancellationToken)
     {
         // A nack on a channel that is finished is not an error: shutting down, the broker requeues
         // the prefetched messages anyway. So the refused lease is answered with silence here, unlike
@@ -194,7 +194,7 @@ public class RabbitMqChannelContext :
         }
     }
 
-    public async Task<string> BasicConsume(string queue, bool noAck, bool exclusive, IDictionary<string, object> arguments,
+    public async Task<string> BasicConsumeAsync(string queue, bool noAck, bool exclusive, IDictionary<string, object?> arguments,
         IAsyncBasicConsumer consumer, string consumerTag, CancellationToken cancellationToken)
     {
         using var lease = Lease();
@@ -203,7 +203,7 @@ public class RabbitMqChannelContext :
             .ConfigureAwait(false);
     }
 
-    public async Task BasicCancel(string consumerTag, CancellationToken cancellationToken)
+    public async Task BasicCancelAsync(string consumerTag, CancellationToken cancellationToken)
     {
         using var lease = Lease();
 
@@ -215,17 +215,17 @@ public class RabbitMqChannelContext :
         lock (_faultStopLock)
         {
             if (_faultStopTask == null || _faultStopTask.IsCompleted)
-                _faultStopTask = StopAfterCallback(inputAddress);
+                _faultStopTask = StopAfterCallbackAsync(inputAddress);
         }
     }
 
-    async Task StopAfterCallback(Uri inputAddress)
+    async Task StopAfterCallbackAsync(Uri inputAddress)
     {
         await Task.Yield();
 
         try
         {
-            await _agent.Stop($"Unrecoverable exception on {inputAddress.GetEndpointName()}", CancellationToken.None).ConfigureAwait(false);
+            await _agent.StopAsync($"Unrecoverable exception on {inputAddress.GetEndpointName()}", CancellationToken.None).ConfigureAwait(false);
         }
         catch (Exception stopException)
         {

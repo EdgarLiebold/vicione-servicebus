@@ -21,5 +21,5 @@ public interface IReceiveEndpointBrokerTopologyBuilder :
     /// <summary>
     /// A handle to an exchange bound to the receive endpoint exchange
     /// </summary>
-    ExchangeHandle BoundExchange { get; set; }
+    ExchangeHandle? BoundExchange { get; set; }
 }

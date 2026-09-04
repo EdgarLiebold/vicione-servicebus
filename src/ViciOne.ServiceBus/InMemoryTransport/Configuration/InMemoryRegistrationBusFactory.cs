@@ -9,15 +9,15 @@ public class InMemoryRegistrationBusFactory :
     TransportRegistrationBusFactory<IInMemoryReceiveEndpointConfigurator>
 {
     readonly InMemoryBusConfiguration _busConfiguration;
-    readonly Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator> _configure;
+    readonly Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator>? _configure = null!;
 
-    public InMemoryRegistrationBusFactory(Uri baseAddress, Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator> configure)
+    public InMemoryRegistrationBusFactory(Uri? baseAddress, Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator>? configure)
         : this(new InMemoryBusConfiguration(new InMemoryTopologyConfiguration(InMemoryBus.CreateMessageTopology()), baseAddress), configure)
     {
     }
 
     InMemoryRegistrationBusFactory(InMemoryBusConfiguration busConfiguration,
-        Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator> configure)
+        Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator>? configure)
         : base(busConfiguration.HostConfiguration)
     {
         _configure = configure;

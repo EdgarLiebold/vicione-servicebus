@@ -22,7 +22,7 @@ public interface DeliveryContext<T>
     /// <summary>
     /// Optional enqueue time, which can be used to delay messages
     /// </summary>
-    DateTime? EnqueueTime { get; }
+    DateTimeOffset? EnqueueTime { get; }
 
     /// <summary>
     /// If specified, targets a specific receiver in the message fabric

@@ -16,7 +16,7 @@ public class EventHubProducerSpecification :
     readonly IHostSettings _hostSettings;
     readonly SendObservable _sendObservers;
     readonly ISerializationConfiguration _serializationConfiguration;
-    Action<EventHubProducerClientOptions> _configureOptions;
+    Action<EventHubProducerClientOptions>? _configureOptions;
 
     public EventHubProducerSpecification(IEventHubHostConfiguration hostConfiguration, IHostSettings hostSettings)
     {
@@ -37,7 +37,7 @@ public class EventHubProducerSpecification :
         _configureSend.Add(callback ?? throw new ArgumentNullException(nameof(callback)));
     }
 
-    public Action<EventHubProducerClientOptions> ConfigureOptions
+    public Action<EventHubProducerClientOptions>? ConfigureOptions
     {
         set => _configureOptions = value ?? throw new ArgumentNullException(nameof(value));
         get => _configureOptions;

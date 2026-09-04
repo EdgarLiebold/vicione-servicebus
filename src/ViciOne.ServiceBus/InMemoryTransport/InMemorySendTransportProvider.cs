@@ -21,8 +21,8 @@ public class InMemorySendTransportProvider :
         return _transportProvider.NormalizeAddress(address);
     }
 
-    public Task<ISendTransport> GetSendTransport(Uri address)
+    public Task<ISendTransport> GetSendTransportAsync(Uri address, CancellationToken cancellationToken = default)
     {
-        return _transportProvider.CreateSendTransport(_context, address);
+        return _transportProvider.CreateSendTransportAsync(_context, address, cancellationToken: cancellationToken);
     }
 }

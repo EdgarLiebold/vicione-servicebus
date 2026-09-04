@@ -14,9 +14,9 @@ public sealed class QuartzCourierRedeliveryIntegrationTests
     [InlineData(RetryMode.InMemory)]
     [InlineData(RetryMode.Quartz)]
     [RequirementCoverage("REQ-VSB-QUARTZ-COURIER", "permanent-fault-compensates")]
-    public async Task PermanentActivityFailure_FaultsTheSlipAndCompensatesTheCompletedActivity(RetryMode retryMode)
+    public async Task PermanentActivityFailure_FaultsTheSlipAndCompensatesTheCompletedActivityAsync(RetryMode retryMode)
     {
-        CourierExecutionResult result = await ExecuteRoutingSlip(retryMode, FailureMode.Permanent);
+        CourierExecutionResult result = await ExecuteRoutingSlipAsync(retryMode, FailureMode.Permanent);
 
         Assert.Equal(3, result.FailureAttempts);
         Assert.Equal(1, result.RecordingExecutions);
@@ -31,9 +31,9 @@ public sealed class QuartzCourierRedeliveryIntegrationTests
     [InlineData(RetryMode.InMemory)]
     [InlineData(RetryMode.Quartz)]
     [RequirementCoverage("REQ-VSB-QUARTZ-COURIER", "transient-fault-recovers")]
-    public async Task TransientActivityFailure_RetriesAndCompletesTheSlip(RetryMode retryMode)
+    public async Task TransientActivityFailure_RetriesAndCompletesTheSlipAsync(RetryMode retryMode)
     {
-        CourierExecutionResult result = await ExecuteRoutingSlip(retryMode, FailureMode.Transient);
+        CourierExecutionResult result = await ExecuteRoutingSlipAsync(retryMode, FailureMode.Transient);
 
         Assert.Equal(2, result.FailureAttempts);
         Assert.Equal(1, result.RecordingExecutions);
@@ -42,7 +42,7 @@ public sealed class QuartzCourierRedeliveryIntegrationTests
         Assert.Equal(retryMode == RetryMode.Quartz ? 1 : 0, result.ScheduledCommandCount);
     }
 
-    private static async Task<CourierExecutionResult> ExecuteRoutingSlip(RetryMode retryMode, FailureMode failureMode)
+    private static async Task<CourierExecutionResult> ExecuteRoutingSlipAsync(RetryMode retryMode, FailureMode failureMode)
     {
         TimeSpan timeout = OperationTimeout();
         var probe = new CourierProbe();
@@ -57,7 +57,7 @@ public sealed class QuartzCourierRedeliveryIntegrationTests
         int expectedScheduledCommands = failureMode == FailureMode.Permanent ? 2 : 1;
         var scheduledCommands = new ConsumeCompletionObserver<ScheduleMessage>(_ => true, expectedScheduledCommands);
 
-        await using QuartzTestBus fixture = await QuartzTestBus.Start(
+        await using QuartzTestBus fixture = await QuartzTestBus.StartAsync(
             timeout,
             configure: configurator =>
             {
@@ -100,7 +100,7 @@ public sealed class QuartzCourierRedeliveryIntegrationTests
         builder.AddActivity(RecordingActivityName, recordingExecuteAddress, new RecordingArguments("payload"));
         builder.AddActivity(FailingActivityName, failingAddress, new FailingArguments("failure"));
 
-        await fixture.Bus.Execute(builder.Build());
+        await fixture.Bus.ExecuteAsync(builder.Build());
 
         Guid? faultedTrackingNumber = null;
         (Guid TrackingNumber, string ActivityName)? compensated = null;
@@ -187,13 +187,13 @@ public sealed class QuartzCourierRedeliveryIntegrationTests
 
     private sealed class RecordingActivity(CourierProbe probe) : IActivity<RecordingArguments, RecordingLog>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<RecordingArguments> context)
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<RecordingArguments> context)
         {
             probe.RecordExecution();
             return Task.FromResult(context.Completed(new RecordingLog(context.Arguments.Value)));
         }
 
-        public Task<CompensationResult> Compensate(CompensateContext<RecordingLog> context)
+        public Task<CompensationResult> CompensateAsync(CompensateContext<RecordingLog> context)
         {
             probe.RecordCompensation();
             return Task.FromResult(context.Compensated());
@@ -202,7 +202,7 @@ public sealed class QuartzCourierRedeliveryIntegrationTests
 
     private sealed class FailingActivity(CourierProbe probe, FailureMode failureMode) : IExecuteActivity<FailingArguments>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<FailingArguments> context)
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<FailingArguments> context)
         {
             int attempt = probe.RecordFailureAttempt();
             if (failureMode == FailureMode.Permanent || attempt == 1)

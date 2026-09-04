@@ -22,33 +22,33 @@ public sealed class RemoveAutoDeleteAgent :
         SetReady();
     }
 
-    protected override async Task StopAgent(StopContext context)
+    protected override async Task StopAgentAsync(StopContext context)
     {
         var failures = new ActiveMqCleanupFailures();
-        await failures.Capture(
-            () => _connectionContextSupervisor.Send(
+        await failures.CaptureAsync(
+            () => _connectionContextSupervisor.SendAsync(
                 Pipe.ExecuteAsync<ConnectionContext>(async connectionContext =>
                 {
                     // Topology setup runs through a scoped session which is released as soon as that
                     // operation completes. Resolve the current connection at stop time: after broker
                     // recovery, the setup connection may already have been released and must never be
                     // reused for cleanup.
-                    var session = await connectionContext.CreateSession(context.CancellationToken).ConfigureAwait(false);
+                    var session = await connectionContext.CreateSessionAsync(context.CancellationToken).ConfigureAwait(false);
                     await using var sessionContext = new ActiveMqSessionContext(connectionContext, session, context.CancellationToken);
-                    await DeleteAutoDelete(sessionContext, failures).ConfigureAwait(false);
+                    await DeleteAutoDeleteAsync(sessionContext, failures).ConfigureAwait(false);
                 }),
                 context.CancellationToken),
             LogCleanupFailure)
             .ConfigureAwait(false);
 
-        await failures.Capture(() => base.StopAgent(context), LogCleanupFailure).ConfigureAwait(false);
+        await failures.CaptureAsync(() => base.StopAgentAsync(context), LogCleanupFailure).ConfigureAwait(false);
         failures.ThrowIfAny("One or more ActiveMQ auto-delete cleanup stages failed.");
     }
 
-    async Task DeleteAutoDelete(SessionContext context, ActiveMqCleanupFailures failures)
+    async Task DeleteAutoDeleteAsync(SessionContext context, ActiveMqCleanupFailures failures)
     {
         foreach (Func<SessionContext, Task> delete in GetUniqueAutoDeleteOperations())
-            await failures.Capture(() => delete(context), LogCleanupFailure).ConfigureAwait(false);
+            await failures.CaptureAsync(() => delete(context), LogCleanupFailure).ConfigureAwait(false);
     }
 
     IEnumerable<Func<SessionContext, Task>> GetUniqueAutoDeleteOperations()
@@ -57,21 +57,22 @@ public sealed class RemoveAutoDeleteAgent :
 
         foreach (var consumer in _brokerTopology.Consumers.Where(x => x.Destination is not null && x.Destination.AutoDelete))
         {
-            var queue = consumer.Destination;
+            var queue = consumer.Destination
+                ?? throw new InvalidOperationException("An auto-delete ActiveMQ consumer must reference a queue.");
             if (seen.Add($"queue\0{queue.EntityName}"))
-                yield return context => Delete(context, queue);
+                yield return context => DeleteAsync(context, queue);
         }
 
         foreach (var topic in _brokerTopology.Topics.Where(x => x.AutoDelete))
         {
             if (seen.Add($"topic\0{topic.EntityName}"))
-                yield return context => Delete(context, topic);
+                yield return context => DeleteAsync(context, topic);
         }
 
         foreach (var queue in _brokerTopology.Queues.Where(x => x.AutoDelete))
         {
             if (seen.Add($"queue\0{queue.EntityName}"))
-                yield return context => Delete(context, queue);
+                yield return context => DeleteAsync(context, queue);
         }
     }
 
@@ -87,13 +88,13 @@ public sealed class RemoveAutoDeleteAgent :
         }
     }
 
-    Task Delete(SessionContext context, Topic topic)
+    Task DeleteAsync(SessionContext context, Topic topic)
     {
-        return context.DeleteTopic(topic.EntityName);
+        return context.DeleteTopicAsync(topic.EntityName);
     }
 
-    Task Delete(SessionContext context, Queue queue)
+    Task DeleteAsync(SessionContext context, Queue queue)
     {
-        return context.DeleteQueue(queue.EntityName);
+        return context.DeleteQueueAsync(queue.EntityName);
     }
 }

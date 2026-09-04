@@ -15,7 +15,7 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-SAGA-CANCELLATION", "load-propagates-caller-cancellation-token-and-instance")]
-    public async Task Load_PropagatesCallerCancellationWithTheExactTokenAndException()
+    public async Task Load_PropagatesCallerCancellationWithTheExactTokenAndExceptionAsync()
     {
         using var caller = new CancellationTokenSource();
         caller.Cancel();
@@ -28,7 +28,7 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
         Guid correlationId = Guid.Parse("018cc251-f400-7000-8000-000000000301");
 
         OperationCanceledException actual = await Assert.ThrowsAsync<OperationCanceledException>(
-            () => context.Load(correlationId));
+            () => context.LoadAsync(correlationId, TestContext.Current.CancellationToken));
 
         Assert.Same(expected, actual);
         Assert.Equal(caller.Token, actual.CancellationToken);
@@ -39,20 +39,20 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-SAGA-FACTORY", "null-client-from-factory-fails-before-repository-operation")]
-    public async Task Repository_FailsBeforeNetworkUseWhenTheClientFactoryReturnsNull()
+    public async Task Repository_FailsBeforeNetworkUseWhenTheClientFactoryReturnsNullAsync()
     {
         ISagaRepository<BoundarySaga> repository = AzureTableSagaRepository<BoundarySaga>.Create(() => null!);
         var loadRepository = Assert.IsAssignableFrom<ILoadSagaRepository<BoundarySaga>>(repository);
 
         InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(
-            () => loadRepository.Load(Guid.Parse("018cc251-f400-7000-8000-000000000302")));
+            () => loadRepository.LoadAsync(Guid.Parse("018cc251-f400-7000-8000-000000000302"), TestContext.Current.CancellationToken));
 
         Assert.Equal("The Azure Table client factory returned null.", failure.Message);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-SAGA-INSERT", "non-conflict-storage-failure-preserves-identity")]
-    public async Task Insert_PropagatesANonConflictStorageFailureUnchanged()
+    public async Task Insert_PropagatesANonConflictStorageFailureUnchangedAsync()
     {
         Guid correlationId = Guid.Parse("018cc251-f400-7000-8000-000000000307");
         var expected = new RequestFailedException(500, "test-owned service failure");
@@ -63,7 +63,7 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
             correlationId);
 
         RequestFailedException actual = await Assert.ThrowsAsync<RequestFailedException>(() =>
-            context.Insert(new BoundarySaga { CorrelationId = correlationId }));
+            context.InsertAsync(new BoundarySaga { CorrelationId = correlationId }, TestContext.Current.CancellationToken));
 
         Assert.Same(expected, actual);
         Assert.Equal(500, actual.Status);
@@ -71,7 +71,7 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-SAGA-INSERT", "actual-conflict-returns-no-inserted-context")]
-    public async Task Insert_ReturnsNoContextOnlyForAnActualStorageConflict()
+    public async Task Insert_ReturnsNoContextOnlyForAnActualStorageConflictAsync()
     {
         Guid correlationId = Guid.Parse("018cc251-f400-7000-8000-000000000303");
         var table = new FailingWriteTableClient(insertFailure: new RequestFailedException(409, "test-owned conflict"));
@@ -80,8 +80,8 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
             CancellationToken.None,
             correlationId);
 
-        SagaConsumeContext<BoundarySaga, BoundaryMessage> actual = await context.Insert(
-            new BoundarySaga { CorrelationId = correlationId });
+        SagaConsumeContext<BoundarySaga, BoundaryMessage>? actual = await context.InsertAsync(
+            new BoundarySaga { CorrelationId = correlationId }, TestContext.Current.CancellationToken);
 
         Assert.Null(actual);
     }
@@ -94,7 +94,7 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
     [InlineData(WriteOperation.Update, DependencyCancellationToken.Linked)]
     [InlineData(WriteOperation.Delete, DependencyCancellationToken.Linked)]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-SAGA-CANCELLATION", "write-propagates-caller-cancellation-token-and-instance")]
-    public async Task Write_PropagatesCallerCancellationWithTheExactTokenAndException(
+    public async Task Write_PropagatesCallerCancellationWithTheExactTokenAndExceptionAsync(
         WriteOperation operation,
         DependencyCancellationToken dependencyToken)
     {
@@ -113,13 +113,12 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
         AzureTableSagaRepositoryContext<BoundarySaga, BoundaryMessage> context = CreateRepositoryContext(
             table,
             caller.Token);
-        SagaConsumeContext<BoundarySaga, BoundaryMessage> sagaContext = await context.Add(
-            new BoundarySaga { CorrelationId = Guid.NewGuid() });
+        SagaConsumeContext<BoundarySaga, BoundaryMessage> sagaContext = await context.AddAsync(new BoundarySaga { CorrelationId = Guid.NewGuid() }, TestContext.Current.CancellationToken);
         var eTag = new SagaETag("W/\"test-etag\"");
         sagaContext.AddOrUpdatePayload(() => eTag, _ => eTag);
 
         OperationCanceledException actual = await Assert.ThrowsAsync<OperationCanceledException>(() =>
-            ExecuteWrite(context, sagaContext, operation));
+            ExecuteWriteAsync(context, sagaContext, operation));
 
         Assert.Same(expected, actual);
         Assert.Equal(exceptionToken, actual.CancellationToken);
@@ -132,7 +131,7 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
     [InlineData(WriteOperation.Update)]
     [InlineData(WriteOperation.Delete)]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-SAGA-CANCELLATION", "non-requested-dependency-cancellation-remains-a-write-failure")]
-    public async Task Write_DoesNotMisclassifyANonRequestedDependencyCancellationAsCallerCancellation(WriteOperation operation)
+    public async Task Write_DoesNotMisclassifyANonRequestedDependencyCancellationAsCallerCancellationAsync(WriteOperation operation)
     {
         using var caller = new CancellationTokenSource();
         var expected = new OperationCanceledException("dependency canceled", innerException: null, caller.Token);
@@ -140,13 +139,12 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
         AzureTableSagaRepositoryContext<BoundarySaga, BoundaryMessage> context = CreateRepositoryContext(
             table,
             caller.Token);
-        SagaConsumeContext<BoundarySaga, BoundaryMessage> sagaContext = await context.Add(
-            new BoundarySaga { CorrelationId = Guid.Parse("018cc251-f400-7000-8000-000000000304") });
+        SagaConsumeContext<BoundarySaga, BoundaryMessage> sagaContext = await context.AddAsync(new BoundarySaga { CorrelationId = Guid.Parse("018cc251-f400-7000-8000-000000000304") }, TestContext.Current.CancellationToken);
         var eTag = new SagaETag("W/\"test-etag\"");
         sagaContext.AddOrUpdatePayload(() => eTag, _ => eTag);
 
         SagaException actual = await Assert.ThrowsAsync<SagaException>(() =>
-            ExecuteWrite(context, sagaContext, operation));
+            ExecuteWriteAsync(context, sagaContext, operation));
 
         Assert.False(caller.IsCancellationRequested);
         Assert.Same(expected, actual.InnerException);
@@ -157,7 +155,7 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
     [InlineData(WriteOperation.Update)]
     [InlineData(WriteOperation.Delete)]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-SAGA-CONCURRENCY", "stale-etag-maps-to-typed-retryable-concurrency")]
-    public async Task Write_MapsAStaleEtagToTypedConcurrencyWithTheOriginalStorageError(WriteOperation operation)
+    public async Task Write_MapsAStaleEtagToTypedConcurrencyWithTheOriginalStorageErrorAsync(WriteOperation operation)
     {
         var expected = new RequestFailedException(412, "test-owned stale ETag");
         var table = new FailingWriteTableClient(updateFailure: expected, deleteFailure: expected);
@@ -165,13 +163,12 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
             table,
             TestContext.Current.CancellationToken);
         Guid correlationId = Guid.Parse("018cc251-f400-7000-8000-000000000305");
-        SagaConsumeContext<BoundarySaga, BoundaryMessage> sagaContext = await context.Add(
-            new BoundarySaga { CorrelationId = correlationId });
+        SagaConsumeContext<BoundarySaga, BoundaryMessage> sagaContext = await context.AddAsync(new BoundarySaga { CorrelationId = correlationId }, TestContext.Current.CancellationToken);
         var eTag = new SagaETag("W/\"stale-etag\"");
         sagaContext.AddOrUpdatePayload(() => eTag, _ => eTag);
 
         ConcurrencyException actual = await Assert.ThrowsAsync<ConcurrencyException>(() =>
-            ExecuteWrite(context, sagaContext, operation));
+            ExecuteWriteAsync(context, sagaContext, operation));
 
         Assert.Same(expected, actual.InnerException);
         Assert.Equal(typeof(BoundarySaga), actual.SagaType);
@@ -186,20 +183,19 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
     [InlineData(WriteOperation.Delete, 400)]
     [InlineData(WriteOperation.Delete, 500)]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-SAGA-CONCURRENCY", "non-concurrency-storage-errors-remain-unclassified-saga-failures")]
-    public async Task Write_DoesNotPromoteOtherStorageFailuresToConcurrency(WriteOperation operation, int status)
+    public async Task Write_DoesNotPromoteOtherStorageFailuresToConcurrencyAsync(WriteOperation operation, int status)
     {
         var expected = new RequestFailedException(status, "test-owned non-concurrency failure");
         var table = new FailingWriteTableClient(updateFailure: expected, deleteFailure: expected);
         AzureTableSagaRepositoryContext<BoundarySaga, BoundaryMessage> context = CreateRepositoryContext(
             table,
             TestContext.Current.CancellationToken);
-        SagaConsumeContext<BoundarySaga, BoundaryMessage> sagaContext = await context.Add(
-            new BoundarySaga { CorrelationId = Guid.Parse("018cc251-f400-7000-8000-000000000307") });
+        SagaConsumeContext<BoundarySaga, BoundaryMessage> sagaContext = await context.AddAsync(new BoundarySaga { CorrelationId = Guid.Parse("018cc251-f400-7000-8000-000000000307") }, TestContext.Current.CancellationToken);
         var eTag = new SagaETag("W/\"non-concurrency-etag\"");
         sagaContext.AddOrUpdatePayload(() => eTag, _ => eTag);
 
         SagaException actual = await Assert.ThrowsAsync<SagaException>(() =>
-            ExecuteWrite(context, sagaContext, operation));
+            ExecuteWriteAsync(context, sagaContext, operation));
 
         Assert.IsNotType<ConcurrencyException>(actual);
         Assert.Same(expected, actual.InnerException);
@@ -210,18 +206,17 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
     [InlineData(WriteOperation.Update)]
     [InlineData(WriteOperation.Delete)]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-SAGA-CONCURRENCY", "missing-etag-fails-before-network-use")]
-    public async Task Write_RejectsAMissingEtagBeforeCallingTheTableClient(WriteOperation operation)
+    public async Task Write_RejectsAMissingEtagBeforeCallingTheTableClientAsync(WriteOperation operation)
     {
         var table = new FailingWriteTableClient();
         AzureTableSagaRepositoryContext<BoundarySaga, BoundaryMessage> context = CreateRepositoryContext(
             table,
             TestContext.Current.CancellationToken);
         Guid correlationId = Guid.Parse("018cc251-f400-7000-8000-000000000306");
-        SagaConsumeContext<BoundarySaga, BoundaryMessage> sagaContext = await context.Add(
-            new BoundarySaga { CorrelationId = correlationId });
+        SagaConsumeContext<BoundarySaga, BoundaryMessage> sagaContext = await context.AddAsync(new BoundarySaga { CorrelationId = correlationId }, TestContext.Current.CancellationToken);
 
         SagaException actual = await Assert.ThrowsAsync<SagaException>(() =>
-            ExecuteWrite(context, sagaContext, operation));
+            ExecuteWriteAsync(context, sagaContext, operation));
 
         Assert.IsType<PayloadNotFoundException>(actual.InnerException);
         Assert.Equal(typeof(BoundarySaga), actual.SagaType);
@@ -231,7 +226,7 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-SAGA-BOUNDARY", "repository-context-rejects-missing-runtime-dependencies")]
-    public async Task RepositoryContext_RejectsMissingRuntimeDependenciesAndSaga()
+    public async Task RepositoryContext_RejectsMissingRuntimeDependenciesAndSagaAsync()
     {
         var table = new FailingWriteTableClient();
         var database = new AzureTableDatabaseContext<BoundarySaga>(
@@ -253,7 +248,7 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
             database,
             consumeContext,
             factory);
-        ArgumentNullException nullSaga = await Assert.ThrowsAsync<ArgumentNullException>(() => context.Insert(null!));
+        ArgumentNullException nullSaga = await Assert.ThrowsAsync<ArgumentNullException>(() => context.InsertAsync(null!, TestContext.Current.CancellationToken));
         Assert.Equal("instance", nullSaga.ParamName);
     }
 
@@ -277,13 +272,13 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
             new SagaConsumeContextFactory<DatabaseContext<BoundarySaga>, BoundarySaga>());
     }
 
-    private static Task ExecuteWrite(
+    private static Task ExecuteWriteAsync(
         AzureTableSagaRepositoryContext<BoundarySaga, BoundaryMessage> context,
         SagaConsumeContext<BoundarySaga, BoundaryMessage> sagaContext,
         WriteOperation operation) => operation switch
         {
-            WriteOperation.Update => context.Update(sagaContext),
-            WriteOperation.Delete => context.Delete(sagaContext),
+            WriteOperation.Update => context.UpdateAsync(sagaContext),
+            WriteOperation.Delete => context.DeleteAsync(sagaContext),
             _ => throw new ArgumentOutOfRangeException(nameof(operation), operation, null),
         };
 
@@ -296,8 +291,8 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
             ConsumeContext<BoundaryMessage> inner,
             Guid correlationId)
         {
-            ConsumeContext<BoundaryMessage> proxy =
-                DispatchProxy.Create<ConsumeContext<BoundaryMessage>, CorrelatedConsumeContextProxy>();
+            BoundaryConsumeContext proxy =
+                DispatchProxy.Create<BoundaryConsumeContext, CorrelatedConsumeContextProxy>();
             var implementation = (CorrelatedConsumeContextProxy)(object)proxy;
             implementation._inner = inner;
             implementation._correlationId = correlationId;
@@ -322,6 +317,10 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
             }
         }
     }
+
+    private interface BoundaryConsumeContext :
+        ConsumeContext<BoundaryMessage>,
+        ConsumeContext;
 
     public sealed class BoundarySaga : ISaga
     {

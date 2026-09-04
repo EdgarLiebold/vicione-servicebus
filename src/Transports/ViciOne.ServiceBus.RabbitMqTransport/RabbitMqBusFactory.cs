@@ -13,7 +13,7 @@ public static class RabbitMqBusFactory
     /// </summary>
     /// <param name="configure">The configuration callback to configure the bus</param>
     /// <returns></returns>
-    public static IBusControl Create(Action<IRabbitMqBusFactoryConfigurator> configure = null)
+    public static IBusControl Create(Action<IRabbitMqBusFactoryConfigurator>? configure = null)
     {
         var topologyConfiguration = new RabbitMqTopologyConfiguration(CreateMessageTopology());
         var busConfiguration = new RabbitMqBusConfiguration(topologyConfiguration);

@@ -130,9 +130,9 @@ public class RabbitMqOptionSet :
     public ICredentialsProvider CredentialsProvider { get; set; }
     public uint? RequestedFrameMax { get; set; }
 
-    public Task Refresh(ConnectionFactory connectionFactory)
+    public Task RefreshAsync(ConnectionFactory connectionFactory, CancellationToken cancellationToken = default)
     {
-        return Task.CompletedTask;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
     }
 
     Uri FormatHostAddress()

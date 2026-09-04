@@ -20,13 +20,13 @@ public sealed class TransactionalOutboxRequestSagaTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-SAGA-REQUEST", "failed-request-surfaces-original-saga-fault")]
-    public async Task FailedSagaRequest_ReturnsARequestFaultWithTheOriginalException()
+    public async Task FailedSagaRequest_ReturnsARequestFaultWithTheOriginalExceptionAsync()
     {
         await using RequestSagaFixture fixture = await RequestSagaFixture.CreateAsync();
         var request = new StartRequestSaga(Guid.NewGuid(), Fail: true);
 
         RequestFaultException exception = await Assert.ThrowsAsync<RequestFaultException>(() =>
-            fixture.Client.GetResponse<RequestSagaStarted>(request, fixture.CancellationToken));
+            fixture.Client.GetResponseAsync<RequestSagaStarted>(request, fixture.CancellationToken));
         Fault<StartRequestSaga> fault = Assert.IsAssignableFrom<Fault<StartRequestSaga>>(exception.Fault);
 
         ExceptionInfo outer = Assert.Single(fault.Exceptions);
@@ -40,13 +40,13 @@ public sealed class TransactionalOutboxRequestSagaTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-SAGA-FAULT", "retries-emit-one-terminal-fault")]
-    public async Task RetriedSagaFailure_EmitsOneTerminalFaultAfterAllAttempts()
+    public async Task RetriedSagaFailure_EmitsOneTerminalFaultAfterAllAttemptsAsync()
     {
         await using RequestSagaFixture fixture = await RequestSagaFixture.CreateAsync();
         var request = new StartRequestSaga(Guid.NewGuid(), Fail: true);
 
         await Assert.ThrowsAsync<RequestFaultException>(() =>
-            fixture.Client.GetResponse<RequestSagaStarted>(request, fixture.CancellationToken));
+            fixture.Client.GetResponseAsync<RequestSagaStarted>(request, fixture.CancellationToken));
         using var snapshot = new CancellationTokenSource();
         snapshot.Cancel();
         ISentMessage<Fault<StartRequestSaga>>[] faults = fixture.Harness.Sent
@@ -61,7 +61,7 @@ public sealed class TransactionalOutboxRequestSagaTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-SAGA-OBSERVABILITY", "successful-request-emits-saga-activity")]
-    public async Task SuccessfulSagaRequest_RespondsUnderTheExactOpenTelemetrySagaActivity()
+    public async Task SuccessfulSagaRequest_RespondsUnderTheExactOpenTelemetrySagaActivityAsync()
     {
         var activities = new ConcurrentQueue<ActivitySnapshot>();
         using var listener = new ActivityListener
@@ -77,7 +77,7 @@ public sealed class TransactionalOutboxRequestSagaTests
         await using RequestSagaFixture fixture = await RequestSagaFixture.CreateAsync();
         var request = new StartRequestSaga(Guid.NewGuid(), Fail: false);
 
-        Response<RequestSagaStarted> response = await fixture.Client.GetResponse<RequestSagaStarted>(
+        Response<RequestSagaStarted> response = await fixture.Client.GetResponseAsync<RequestSagaStarted>(
             request,
             fixture.CancellationToken);
         ActivitySnapshot sagaActivity = Assert.Single(activities, activity =>
@@ -93,12 +93,12 @@ public sealed class TransactionalOutboxRequestSagaTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-SAGA-SCOPE", "state-machine-activity-receives-correlation-proxies")]
-    public async Task SuccessfulSagaRequest_ProvidesCorrelationScopedEndpointsToTheStateMachineActivity()
+    public async Task SuccessfulSagaRequest_ProvidesCorrelationScopedEndpointsToTheStateMachineActivityAsync()
     {
         await using RequestSagaFixture fixture = await RequestSagaFixture.CreateAsync();
         var request = new StartRequestSaga(Guid.NewGuid(), Fail: false);
 
-        Response<RequestSagaStarted> response = await fixture.Client.GetResponse<RequestSagaStarted>(
+        Response<RequestSagaStarted> response = await fixture.Client.GetResponseAsync<RequestSagaStarted>(
             request,
             fixture.CancellationToken);
         ScopeProxyObservation observation = await fixture.ScopeProxies.ReadAsync(
@@ -113,17 +113,17 @@ public sealed class TransactionalOutboxRequestSagaTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-SAGA-QUERY", "query-correlation-reuses-the-outbox-transaction")]
-    public async Task QueryCorrelatedSaga_ReusesTheEntityFrameworkOutboxTransaction()
+    public async Task QueryCorrelatedSaga_ReusesTheEntityFrameworkOutboxTransactionAsync()
     {
         await using RequestSagaFixture fixture = await RequestSagaFixture.CreateAsync();
         Guid sagaId = Guid.NewGuid();
         string lookupKey = $"request-{sagaId:N}";
 
-        Response<RequestSagaStarted> started = await fixture.Client.GetResponse<RequestSagaStarted>(
+        Response<RequestSagaStarted> started = await fixture.Client.GetResponseAsync<RequestSagaStarted>(
             new StartRequestSaga(sagaId, Fail: false, LookupKey: lookupKey),
             fixture.CancellationToken);
         IRequestClient<QueryRequestSaga> queryClient = fixture.Harness.GetRequestClient<QueryRequestSaga>();
-        Response<RequestSagaFound> found = await queryClient.GetResponse<RequestSagaFound>(
+        Response<RequestSagaFound> found = await queryClient.GetResponseAsync<RequestSagaFound>(
             new QueryRequestSaga(lookupKey),
             fixture.CancellationToken);
 
@@ -134,20 +134,19 @@ public sealed class TransactionalOutboxRequestSagaTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-SAGA-SCHEDULE", "delayed-response-preserves-response-address-and-request-id")]
-    public async Task DelayedSagaResponse_PreservesTheRequestIdentityAcrossTheOutboxSchedule()
+    public async Task DelayedSagaResponse_PreservesTheRequestIdentityAcrossTheOutboxScheduleAsync()
     {
         await using RequestSagaFixture fixture = await RequestSagaFixture.CreateAsync();
         TimeSpan delay = TimeSpan.FromHours(2);
         var request = new StartRequestSaga(Guid.NewGuid(), Fail: false, Delay: delay);
-        Task<Response<RequestSagaStarted>> responseTask = fixture.Client.GetResponse<RequestSagaStarted>(
+        Task<Response<RequestSagaStarted>> responseTask = fixture.Client.GetResponseAsync<RequestSagaStarted>(
             request,
             fixture.CancellationToken);
         IReceivedMessage<StartRequestSaga> consumed = await fixture.Harness.Consumed
             .SelectAsync<StartRequestSaga>(
                 context => context.Context.Message.CorrelationId == request.CorrelationId,
                 fixture.CancellationToken)
-            .First()
-            .WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
+            .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, fixture.CancellationToken);
         IInMemoryDelayProvider delayProvider = fixture.Services.GetRequiredService<IInMemoryDelayProvider>();
 
         Assert.False(responseTask.IsCompleted);
@@ -289,7 +288,7 @@ public sealed class TransactionalOutboxRequestSagaTests
         ISendEndpointProvider sendEndpointProvider,
         ScopeProxyProbe observations) : IStateMachineActivity<RequestSagaState, StartRequestSaga>
     {
-        public Task Execute(
+        public Task ExecuteAsync(
             BehaviorContext<RequestSagaState, StartRequestSaga> context,
             IBehavior<RequestSagaState, StartRequestSaga> next)
         {
@@ -297,13 +296,13 @@ public sealed class TransactionalOutboxRequestSagaTests
                 context.Message.CorrelationId,
                 publishEndpoint.GetType(),
                 sendEndpointProvider.GetType()));
-            return next.Execute(context);
+            return next.ExecuteAsync(context);
         }
 
-        public Task Faulted<TException>(
+        public Task FaultedAsync<TException>(
             BehaviorExceptionContext<RequestSagaState, StartRequestSaga, TException> context,
             IBehavior<RequestSagaState, StartRequestSaga> next)
-            where TException : Exception => next.Faulted(context);
+            where TException : Exception => next.FaultedAsync(context);
 
         public void Probe(ProbeContext context) => context.CreateScope("scopeProxyActivity");
 
@@ -483,7 +482,7 @@ public sealed class TransactionalOutboxRequestSagaTests
                     ValidateOnBuild = true,
                     ValidateScopes = true,
                 });
-                ITestHarness harness = await provider.StartTestHarness().WaitAsync(operationTimeout, cancellationToken);
+                ITestHarness harness = await provider.StartTestHarnessAsync().WaitAsync(operationTimeout, cancellationToken);
                 return new RequestSagaFixture(
                     database,
                     provider,
@@ -504,7 +503,7 @@ public sealed class TransactionalOutboxRequestSagaTests
 
         public async ValueTask DisposeAsync()
         {
-            await Harness.Stop(CancellationToken.None).WaitAsync(OperationTimeout, CancellationToken.None);
+            await Harness.StopAsync(CancellationToken.None).WaitAsync(OperationTimeout, CancellationToken.None);
             await Services.DisposeAsync();
             await _database.DisposeAsync();
         }

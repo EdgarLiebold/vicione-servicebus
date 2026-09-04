@@ -9,9 +9,9 @@ public class RequestState :
     public int CurrentState { get; set; }
 
     public Guid? ConversationId { get; set; }
-    public Uri ResponseAddress { get; set; }
-    public Uri FaultAddress { get; set; }
-    public DateTime? ExpirationTime { get; set; }
+    public Uri ResponseAddress { get; set; } = null!;
+    public Uri FaultAddress { get; set; } = null!;
+    public DateTimeOffset? ExpirationTime { get; set; }
 
     /// <summary>
     /// The correlationId of the original saga instance
@@ -21,8 +21,7 @@ public class RequestState :
     /// <summary>
     /// The saga address where the request should be redelivered
     /// </summary>
-    public Uri SagaAddress { get; set; }
-
+    public Uri SagaAddress { get; set; } = null!;
     public int Version { get; set; }
 
     /// <summary>

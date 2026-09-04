@@ -29,7 +29,7 @@ class FaultedExecutionResult<TArguments> :
             Context.Timestamp, _elapsed, _exceptionInfo);
     }
 
-    public override async Task Evaluate()
+    public override async Task EvaluateAsync(CancellationToken cancellationToken = default)
     {
         var builder = CreateRoutingSlipBuilder(RoutingSlip);
 
@@ -37,21 +37,25 @@ class FaultedExecutionResult<TArguments> :
 
         var routingSlip = builder.Build();
 
-        await Publisher.PublishRoutingSlipActivityFaulted(Context.ActivityName, Context.ExecutionId, Context.Timestamp,
-            _elapsed, _exceptionInfo, routingSlip.Variables, Activity.Arguments).ConfigureAwait(false);
+        await Publisher.PublishRoutingSlipActivityFaultedAsync(Context.ActivityName, Context.ExecutionId, Context.Timestamp,
+            _elapsed, _exceptionInfo, routingSlip.Variables, Activity.Arguments, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (HasCompensationLogs(routingSlip))
-            await Context.Forward(routingSlip.GetNextCompensateAddress(), routingSlip).ConfigureAwait(false);
+        {
+            var compensateAddress = routingSlip.GetNextCompensateAddress()
+                ?? throw new RoutingSlipException("The next compensation address was not specified.");
+            await Context.ForwardAsync(compensateAddress, routingSlip).ConfigureAwait(false);
+        }
         else
         {
             var faultedTimestamp = Context.Timestamp + _elapsed;
             var faultedDuration = faultedTimestamp - routingSlip.CreateTimestamp;
 
-            await Publisher.PublishRoutingSlipFaulted(faultedTimestamp, faultedDuration, routingSlip.Variables, _activityException).ConfigureAwait(false);
+            await Publisher.PublishRoutingSlipFaultedAsync(faultedTimestamp, faultedDuration, routingSlip.Variables, [_activityException], cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 
-    public override bool IsFaulted(out Exception exception)
+    public override bool IsFaulted([NotNullWhen(true)] out Exception? exception)
     {
         exception = _exception;
         return true;

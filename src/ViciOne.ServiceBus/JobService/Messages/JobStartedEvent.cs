@@ -10,7 +10,7 @@ public class JobStartedEvent :
     public Guid JobId { get; set; }
     public Guid AttemptId { get; set; }
     public int RetryAttempt { get; set; }
-    public DateTime Timestamp { get; set; }
+    public DateTimeOffset Timestamp { get; set; }
 }
 
 
@@ -21,5 +21,5 @@ public class JobStartedEvent<T> :
     public Guid JobId { get; set; }
     public Guid AttemptId { get; set; }
     public int RetryAttempt { get; set; }
-    public DateTime Timestamp { get; set; }
+    public DateTimeOffset Timestamp { get; set; }
 }

@@ -26,18 +26,18 @@ public class JobConsumerMessageFilter<TConsumer, TJob> :
         scope.Add("method", $"Consume(ConsumeContext<{TypeCache<TJob>.ShortName}> context)");
     }
 
-    public Task Send(ConsumerConsumeContext<TConsumer, TJob> context,
+    public Task SendAsync(ConsumerConsumeContext<TConsumer, TJob> context,
         IPipe<ConsumerConsumeContext<TConsumer, TJob>> next)
     {
         if (context.Consumer is IJobConsumer<TJob> messageConsumer)
-            return RunJob(context, messageConsumer);
+            return RunJobAsync(context, messageConsumer);
 
         var message = $"Consumer type {TypeCache<TConsumer>.ShortName} is not a consumer of job type {TypeCache<TJob>.ShortName}";
 
         throw new ConsumerMessageException(message);
     }
 
-    async Task RunJob(PipeContext context, IJobConsumer<TJob> jobConsumer)
+    async Task RunJobAsync(PipeContext context, IJobConsumer<TJob> jobConsumer)
     {
         var jobContext = context.GetPayload<JobContext<TJob>>();
         var notifyJobContext = context.GetPayload<INotifyJobContext>();
@@ -46,15 +46,15 @@ public class JobConsumerMessageFilter<TConsumer, TJob> :
 
         try
         {
-            await notifyJobContext.NotifyStarted().ConfigureAwait(false);
+            await notifyJobContext.NotifyStartedAsync().ConfigureAwait(false);
 
-            await jobConsumer.Run(jobContext).ConfigureAwait(false);
+            await jobConsumer.RunAsync(jobContext).ConfigureAwait(false);
 
-            await notifyJobContext.NotifyCompleted().ConfigureAwait(false);
+            await notifyJobContext.NotifyCompletedAsync().ConfigureAwait(false);
         }
         catch (OperationCanceledException exception) when (jobContext.CancellationToken == exception.CancellationToken)
         {
-            await notifyJobContext.NotifyCanceled().ConfigureAwait(false);
+            await notifyJobContext.NotifyCanceledAsync().ConfigureAwait(false);
         }
         catch (Exception exception)
         {
@@ -64,10 +64,10 @@ public class JobConsumerMessageFilter<TConsumer, TJob> :
                 {
                     context.GetOrAddPayload(() => retryContext);
 
-                    await retryContext.RetryFaulted(exception).ConfigureAwait(false);
+                    await retryContext.RetryFaultedAsync(exception).ConfigureAwait(false);
                 }
 
-                await notifyJobContext.NotifyFaulted(exception).ConfigureAwait(false);
+                await notifyJobContext.NotifyFaultedAsync(exception).ConfigureAwait(false);
                 return;
             }
 
@@ -80,17 +80,17 @@ public class JobConsumerMessageFilter<TConsumer, TJob> :
                     {
                         context.GetOrAddPayload(() => retryContext);
 
-                        await retryContext.RetryFaulted(exception).ConfigureAwait(false);
+                        await retryContext.RetryFaultedAsync(exception).ConfigureAwait(false);
                     }
 
-                    await notifyJobContext.NotifyFaulted(exception).ConfigureAwait(false);
+                    await notifyJobContext.NotifyFaultedAsync(exception).ConfigureAwait(false);
                     return;
                 }
             }
 
             var delay = retryContext.Delay ?? TimeSpan.Zero;
 
-            await notifyJobContext.NotifyFaulted(exception, delay).ConfigureAwait(false);
+            await notifyJobContext.NotifyFaultedAsync(exception, delay).ConfigureAwait(false);
         }
         finally
         {

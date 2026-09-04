@@ -14,7 +14,7 @@ public sealed class PostgreSqlBusOutboxTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0060", "postgresql-native-owner")]
-    public async Task SerializableTransaction_DefersTheExactEnvelopeUntilCommit()
+    public async Task SerializableTransaction_DefersTheExactEnvelopeUntilCommitAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase database = await PostgreSqlTestDatabase.CreateAsync(
@@ -54,8 +54,7 @@ public sealed class PostgreSqlBusOutboxTests
                 schema.Database.GenerateCreateScript(),
                 cancellationToken);
         }
-        ITestHarness harness = await provider.StartTestHarness()
-            .WaitAsync(database.OperationTimeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(database.OperationTimeout, cancellationToken);
 
         try
         {
@@ -69,7 +68,7 @@ public sealed class PostgreSqlBusOutboxTests
                     IsolationLevel.Serializable,
                     cancellationToken);
 
-                await publishEndpoint.Publish(
+                await publishEndpoint.PublishAsync(
                     new OutboxProbe("committed"),
                     context =>
                     {
@@ -82,10 +81,10 @@ public sealed class PostgreSqlBusOutboxTests
                 Assert.Equal(EntityState.Added, dbContext.Entry(pending).State);
                 Assert.Equal(messageId, pending.MessageId);
                 Assert.Equal(conversationId, pending.ConversationId);
-                Assert.Equal(0, await TransportMessageCount(database, messageId, cancellationToken));
+                Assert.Equal(0, await TransportMessageCountAsync(database, messageId, cancellationToken));
 
                 await dbContext.SaveChangesAsync(cancellationToken);
-                Assert.Equal(0, await TransportMessageCount(database, messageId, cancellationToken));
+                Assert.Equal(0, await TransportMessageCountAsync(database, messageId, cancellationToken));
                 await using var independent = new OutboxDbContext(
                     new DbContextOptionsBuilder<OutboxDbContext>().UseNpgsql(database.ConnectionString).Options);
                 Assert.Empty(await independent.Set<OutboxMessage>().AsNoTracking().ToListAsync(cancellationToken));
@@ -102,7 +101,7 @@ public sealed class PostgreSqlBusOutboxTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None)
+            await harness.StopAsync(CancellationToken.None)
                 .WaitAsync(database.OperationTimeout, CancellationToken.None);
         }
 
@@ -113,7 +112,7 @@ public sealed class PostgreSqlBusOutboxTests
 
     public sealed class OutboxMessageConsumer(DeliveryProbe delivery) : IConsumer<OutboxProbe>
     {
-        public Task Consume(ConsumeContext<OutboxProbe> context)
+        public Task ConsumeAsync(ConsumeContext<OutboxProbe> context)
         {
             delivery.Record(context);
             return Task.CompletedTask;
@@ -145,7 +144,7 @@ public sealed class PostgreSqlBusOutboxTests
         }
     }
 
-    private static async Task<long> TransportMessageCount(
+    private static async Task<long> TransportMessageCountAsync(
         PostgreSqlTestDatabase database,
         Guid messageId,
         CancellationToken cancellationToken)

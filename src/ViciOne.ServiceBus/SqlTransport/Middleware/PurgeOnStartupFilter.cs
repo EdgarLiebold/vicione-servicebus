@@ -21,18 +21,18 @@ public class PurgeOnStartupFilter :
         context.CreateFilterScope("purgeOnStartup");
     }
 
-    async Task IFilter<ClientContext>.Send(ClientContext context, IPipe<ClientContext> next)
+    async Task IFilter<ClientContext>.SendAsync(ClientContext context, IPipe<ClientContext> next)
     {
-        await PurgeIfRequested(context, _queueName).ConfigureAwait(false);
+        await PurgeIfRequestedAsync(context, _queueName).ConfigureAwait(false);
 
-        await next.Send(context).ConfigureAwait(false);
+        await next.SendAsync(context).ConfigureAwait(false);
     }
 
-    async Task PurgeIfRequested(ClientContext context, string queueName)
+    async Task PurgeIfRequestedAsync(ClientContext context, string queueName)
     {
         if (!_queueAlreadyPurged)
         {
-            await context.PurgeQueue(queueName, context.CancellationToken).ConfigureAwait(false);
+            await context.PurgeQueueAsync(queueName, context.CancellationToken).ConfigureAwait(false);
 
             LogContext.Debug?.Log("Purged queue {QueueName}", queueName);
 

@@ -52,6 +52,7 @@ public sealed class BrokerOutageControlClient
     }
 
     /// <summary>Returns only after the runner has observed the broker stopped or absent.</summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public Task InterruptAsync(CancellationToken cancellationToken = default) =>
         RequestAsync("interrupt", DefaultBudget, cancellationToken);
 

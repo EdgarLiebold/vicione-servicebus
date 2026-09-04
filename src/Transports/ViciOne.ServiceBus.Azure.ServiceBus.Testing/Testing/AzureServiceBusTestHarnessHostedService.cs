@@ -27,16 +27,16 @@ public class AzureServiceBusTestHarnessHostedService :
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        if (_testOptions.CleanNamespace)
-            await Clean();
+        cancellationToken.ThrowIfCancellationRequested(); if (_testOptions.CleanNamespace)
+            await CleanAsync();
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        return Task.CompletedTask;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
     }
 
-    async Task Clean()
+    async Task CleanAsync()
     {
         var managementClient = new ServiceBusAdministrationClient(_transportOptions.ConnectionString);
 

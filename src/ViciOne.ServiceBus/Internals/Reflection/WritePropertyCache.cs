@@ -47,7 +47,7 @@ internal class WritePropertyCache<T> :
         return GetWriteProperty<TProperty>(name);
     }
 
-    IWriteProperty<T, TProperty> IWritePropertyCache<T>.GetProperty<TProperty>(PropertyInfo propertyInfo)
+    IWriteProperty<T, TProperty> IWritePropertyCache<T>.GetProperty<TProperty>(PropertyInfo? propertyInfo)
     {
         var name = propertyInfo?.Name ?? throw new ArgumentNullException(nameof(propertyInfo));
 
@@ -58,8 +58,12 @@ internal class WritePropertyCache<T> :
     {
         lock (_properties)
         {
-            if (_properties.TryGetValue(name, out IWriteProperty<T> property))
-                return property as IWriteProperty<T, TProperty>;
+            if (_properties.TryGetValue(name, out IWriteProperty<T>? property))
+            {
+                return property as IWriteProperty<T, TProperty>
+                    ?? throw new InvalidOperationException(
+                        $"The cached property {name} on {TypeCache<T>.ShortName} is not writable as {TypeCache<TProperty>.ShortName}.");
+            }
 
             if (_propertyIndex.TryGetValue(name, out var propertyInfo))
             {
@@ -85,7 +89,7 @@ internal class WritePropertyCache<T> :
         return Cached.PropertyCache.Value.GetProperty<TProperty>(name);
     }
 
-    public static IWriteProperty<T, TProperty> GetProperty<TProperty>(PropertyInfo propertyInfo)
+    public static IWriteProperty<T, TProperty> GetProperty<TProperty>(PropertyInfo? propertyInfo)
     {
         return Cached.PropertyCache.Value.GetProperty<TProperty>(propertyInfo);
     }

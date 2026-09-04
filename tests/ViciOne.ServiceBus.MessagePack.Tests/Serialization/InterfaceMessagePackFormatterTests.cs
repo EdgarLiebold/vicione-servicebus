@@ -46,7 +46,7 @@ public sealed class InterfaceMessagePackFormatterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-FORMATTER-CACHE", "concurrent-cold-cache")]
-    public async Task ConcurrentColdCache_CompilesOneSharedEntry()
+    public async Task ConcurrentColdCache_CompilesOneSharedEntryAsync()
     {
         var cache = new ConcreteFormatterCache<ICached>();
         var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);

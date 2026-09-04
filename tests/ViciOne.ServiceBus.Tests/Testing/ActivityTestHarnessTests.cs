@@ -10,7 +10,7 @@ public sealed class ActivityTestHarnessTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-COURIER", "execute-compensate-fault-lifecycle")]
-    public async Task ActivityHarness_ExecutesThenCompensatesWithExactAddressesNamesAndLog()
+    public async Task ActivityHarness_ExecutesThenCompensatesWithExactAddressesNamesAndLogAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -31,19 +31,19 @@ public sealed class ActivityTestHarnessTests
         activity.OnConfigureExecuteReceiveEndpoint += _ => Interlocked.Increment(ref executeConfigured);
         activity.OnConfigureCompensateReceiveEndpoint += _ => Interlocked.Increment(ref compensateConfigured);
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            Task<ConsumeContext<RoutingSlipFaulted>> faulted = harness.SubscribeHandler<RoutingSlipFaulted>();
+            Task<ConsumeContext<RoutingSlipFaulted>> faulted = harness.SubscribeHandlerAsync<RoutingSlipFaulted>(TestContext.Current.CancellationToken);
             Task<ConsumeContext<RoutingSlipActivityCompensated>> activityCompensated =
-                harness.SubscribeHandler<RoutingSlipActivityCompensated>();
+                harness.SubscribeHandlerAsync<RoutingSlipActivityCompensated>(TestContext.Current.CancellationToken);
             Guid trackingNumber = NewId.NextGuid();
             var builder = new RoutingSlipBuilder(trackingNumber);
             builder.AddSubscription(harness.BusAddress, RoutingSlipEvents.All);
             builder.AddActivity(activity.Name, activity.ExecuteAddress, new RecordingArguments("original"));
             builder.AddActivity(failure.Name, failure.ExecuteAddress, new FailingArguments("fail"));
 
-            await harness.Bus.Execute(builder.Build());
+            await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken: TestContext.Current.CancellationToken);
 
             ConsumeContext<RoutingSlipFaulted> fault = await faulted.WaitAsync(timeout, cancellationToken);
             ConsumeContext<RoutingSlipActivityCompensated> compensation =
@@ -70,13 +70,13 @@ public sealed class ActivityTestHarnessTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-COURIER", "execute-only-success-lifecycle")]
-    public async Task ExecuteActivityHarness_CompletesARoutingSlipAndExposesItsExactEndpoint()
+    public async Task ExecuteActivityHarness_CompletesARoutingSlipAndExposesItsExactEndpointAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -88,16 +88,16 @@ public sealed class ActivityTestHarnessTests
         var executeConfigured = 0;
         activity.OnConfigureExecuteReceiveEndpoint += _ => Interlocked.Increment(ref executeConfigured);
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            Task<ConsumeContext<RoutingSlipCompleted>> completed = harness.SubscribeHandler<RoutingSlipCompleted>();
+            Task<ConsumeContext<RoutingSlipCompleted>> completed = harness.SubscribeHandlerAsync<RoutingSlipCompleted>(TestContext.Current.CancellationToken);
             Guid trackingNumber = NewId.NextGuid();
             var builder = new RoutingSlipBuilder(trackingNumber);
             builder.AddSubscription(harness.BusAddress, RoutingSlipEvents.All);
             builder.AddActivity(activity.Name, activity.ExecuteAddress, new ExecuteOnlyArguments(42));
 
-            await harness.Bus.Execute(builder.Build());
+            await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken: TestContext.Current.CancellationToken);
 
             ConsumeContext<RoutingSlipCompleted> completion = await completed.WaitAsync(timeout, cancellationToken);
             int value = await executed.Task.WaitAsync(timeout, cancellationToken);
@@ -111,7 +111,7 @@ public sealed class ActivityTestHarnessTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
@@ -134,13 +134,13 @@ public sealed class ActivityTestHarnessTests
         TaskCompletionSource<string> executed,
         TaskCompletionSource<string> compensated) : IActivity<RecordingArguments, RecordingLog>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<RecordingArguments> context)
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<RecordingArguments> context)
         {
             executed.TrySetResult(context.Arguments.Value);
             return Task.FromResult(context.Completed(new RecordingLog(context.Arguments.Value)));
         }
 
-        public Task<CompensationResult> Compensate(CompensateContext<RecordingLog> context)
+        public Task<CompensationResult> CompensateAsync(CompensateContext<RecordingLog> context)
         {
             compensated.TrySetResult(context.Log.OriginalValue);
             return Task.FromResult(context.Compensated());
@@ -151,7 +151,7 @@ public sealed class ActivityTestHarnessTests
 
     public sealed class FailingActivity : IExecuteActivity<FailingArguments>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<FailingArguments> context) =>
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<FailingArguments> context) =>
             Task.FromException<ExecutionResult>(new ExpectedActivityException(context.Arguments.Value));
     }
 
@@ -159,7 +159,7 @@ public sealed class ActivityTestHarnessTests
 
     public sealed class ExecuteOnlyActivity(TaskCompletionSource<int> executed) : IExecuteActivity<ExecuteOnlyArguments>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<ExecuteOnlyArguments> context)
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<ExecuteOnlyArguments> context)
         {
             executed.TrySetResult(context.Arguments.Value);
             return Task.FromResult(context.Completed());

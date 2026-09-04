@@ -37,12 +37,12 @@ public abstract class BaseSerializerContext :
     public Guid? CorrelationId => _correlationId ??= _context.CorrelationId;
     public Guid? ConversationId => _conversationId ??= _context.ConversationId;
     public Guid? InitiatorId => _initiatorId ??= _context.InitiatorId;
-    public DateTime? ExpirationTime => _context.ExpirationTime;
+    public DateTimeOffset? ExpirationTime => _context.ExpirationTime;
     public Uri? SourceAddress => _sourceAddress ??= _context.SourceAddress;
     public Uri? DestinationAddress => _destinationAddress ??= _context.DestinationAddress;
     public Uri? ResponseAddress => _responseAddress ??= _context.ResponseAddress;
     public Uri? FaultAddress => _faultAddress ??= _context.FaultAddress;
-    public DateTime? SentTime => _context.SentTime;
+    public DateTimeOffset? SentTime => _context.SentTime;
     public Headers Headers => _headers ??= _context.Headers;
     public HostInfo Host => _context.Host;
 
@@ -65,7 +65,7 @@ public abstract class BaseSerializerContext :
         return _deserializer.SerializeObject(value);
     }
 
-    public abstract bool TryGetMessage<T>(out T? message)
+    public abstract bool TryGetMessage<T>([NotNullWhen(true)] out T? message)
         where T : class;
 
     public abstract bool TryGetMessage(Type messageType, [NotNullWhen(true)] out object? message);

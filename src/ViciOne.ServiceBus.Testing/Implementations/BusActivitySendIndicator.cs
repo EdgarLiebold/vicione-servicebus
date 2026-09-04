@@ -14,21 +14,21 @@ public class BusActivitySendIndicator : BaseBusActivityIndicatorConnectable,
     ISendObserver
 {
     readonly RollingTimer _receiveIdleTimer;
-    readonly ISignalResource _signalResource;
+    readonly ISignalResource? _signalResource;
     int _activityStarted;
 
-    public BusActivitySendIndicator(ISignalResource signalResource, TimeSpan receiveIdleTimeout)
+    public BusActivitySendIndicator(ISignalResource? signalResource, TimeSpan receiveIdleTimeout)
         : this(signalResource, receiveIdleTimeout, TimeProvider.System)
     {
     }
 
-    public BusActivitySendIndicator(ISignalResource signalResource, TimeSpan receiveIdleTimeout, TimeProvider timeProvider)
+    public BusActivitySendIndicator(ISignalResource? signalResource, TimeSpan receiveIdleTimeout, TimeProvider timeProvider)
     {
         _signalResource = signalResource;
         _receiveIdleTimer = new RollingTimer(SignalInactivity, receiveIdleTimeout, null, timeProvider);
     }
 
-    public BusActivitySendIndicator(ISignalResource signalResource)
+    public BusActivitySendIndicator(ISignalResource? signalResource)
         :
         this(signalResource, TimeSpan.FromSeconds(5))
     {
@@ -60,7 +60,7 @@ public class BusActivitySendIndicator : BaseBusActivityIndicatorConnectable,
         _receiveIdleTimer.Dispose();
     }
 
-    public Task PreSend<T>(SendContext<T> context)
+    public Task PreSendAsync<T>(SendContext<T> context)
         where T : class
     {
         Interlocked.CompareExchange(ref _activityStarted, 1, 0);
@@ -68,24 +68,24 @@ public class BusActivitySendIndicator : BaseBusActivityIndicatorConnectable,
         return Task.CompletedTask;
     }
 
-    public Task PostSend<T>(SendContext<T> context)
+    public Task PostSendAsync<T>(SendContext<T> context)
         where T : class
     {
         _receiveIdleTimer.Restart();
         return Task.CompletedTask;
     }
 
-    public Task SendFault<T>(SendContext<T> context, Exception exception)
+    public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
         where T : class
     {
         _receiveIdleTimer.Restart();
         return Task.CompletedTask;
     }
 
-    void SignalInactivity(object state)
+    void SignalInactivity(object? state)
     {
         _signalResource?.Signal();
-        ConditionUpdated();
+        ConditionUpdatedAsync();
         Interlocked.CompareExchange(ref _activityStarted, 0, 1);
         _receiveIdleTimer.Stop();
     }

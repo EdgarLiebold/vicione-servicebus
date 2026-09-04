@@ -10,7 +10,7 @@ public interface SetConcurrencyLimit
     /// <summary>
     /// The timestamp at which the adjustment command was sent
     /// </summary>
-    DateTime? Timestamp { get; }
+    DateTimeOffset? Timestamp { get; }
 
     /// <summary>
     /// The identifier of the concurrency limit to set (optional)

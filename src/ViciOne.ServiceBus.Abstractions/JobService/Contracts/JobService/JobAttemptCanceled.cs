@@ -6,6 +6,6 @@ public interface JobAttemptCanceled
 {
     Guid JobId { get; }
     Guid AttemptId { get; }
-    DateTime Timestamp { get; }
+    DateTimeOffset Timestamp { get; }
     string Reason { get; }
 }

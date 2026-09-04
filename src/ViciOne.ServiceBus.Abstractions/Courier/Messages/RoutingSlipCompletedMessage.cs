@@ -12,7 +12,7 @@ public class RoutingSlipCompletedMessage :
     {
     }
 
-    public RoutingSlipCompletedMessage(Guid trackingNumber, DateTime timestamp, TimeSpan duration, IDictionary<string, object> variables)
+    public RoutingSlipCompletedMessage(Guid trackingNumber, DateTimeOffset timestamp, TimeSpan duration, IDictionary<string, object> variables)
     {
         Duration = duration;
         Timestamp = timestamp;
@@ -22,7 +22,7 @@ public class RoutingSlipCompletedMessage :
     }
 
     public Guid TrackingNumber { get; set; }
-    public DateTime Timestamp { get; set; }
+    public DateTimeOffset Timestamp { get; set; }
     public TimeSpan Duration { get; set; }
     public IDictionary<string, object> Variables { get; set; } = null!;
 }

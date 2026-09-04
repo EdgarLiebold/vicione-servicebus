@@ -7,5 +7,5 @@ namespace ViciOne.ServiceBus.AmazonSqsTransport;
 public interface IBatcher<in TEntry> :
     IAsyncDisposable
 {
-    Task Execute(TEntry entry, CancellationToken cancellationToken = default);
+    Task ExecuteAsync(TEntry entry, CancellationToken cancellationToken = default);
 }

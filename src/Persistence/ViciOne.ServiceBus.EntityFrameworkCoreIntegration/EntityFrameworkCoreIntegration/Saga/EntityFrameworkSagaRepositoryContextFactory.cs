@@ -27,16 +27,16 @@ public class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
         _lockStrategy = lockStrategy;
     }
 
-    public Task<T> Execute<T>(Func<LoadSagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken = default)
+    public Task<T?> ExecuteAsync<T>(Func<LoadSagaRepositoryContext<TSaga>, Task<T?>> asyncMethod, CancellationToken cancellationToken = default)
         where T : class
     {
-        return ExecuteAsyncMethod(asyncMethod, cancellationToken);
+        return ExecuteNullableAsyncMethodAsync(asyncMethod, cancellationToken);
     }
 
-    public Task<T> Execute<T>(Func<QuerySagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken = default)
+    public Task<T> ExecuteAsync<T>(Func<QuerySagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken = default)
         where T : class
     {
-        return ExecuteAsyncMethod(asyncMethod, cancellationToken);
+        return ExecuteAsyncMethodAsync(asyncMethod, cancellationToken);
     }
 
     public void Probe(ProbeContext context)
@@ -53,21 +53,21 @@ public class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
         }
     }
 
-    public async Task Send<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
+    public async Task SendAsync<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
         where T : class
     {
         var dbContext = _dbContextFactory.CreateScoped(context);
         try
         {
-            async Task SendAsyncCallback()
+            async Task SendCallbackAsync()
             {
                 using var repositoryContext = new DbContextSagaRepositoryContext<TSaga, T>(dbContext, context, _consumeContextFactory, _lockStrategy);
 
-                await next.Send(repositoryContext).ConfigureAwait(false);
+                await next.SendAsync(repositoryContext).ConfigureAwait(false);
             }
 
-            if (context.TryGetPayload(out DbTransactionContext _))
-                await SendAsyncCallback().ConfigureAwait(false);
+            if (context.TryGetPayload(out DbTransactionContext? _))
+                await SendCallbackAsync().ConfigureAwait(false);
             else
             {
                 var executionStrategy = dbContext.Database.CreateExecutionStrategy();
@@ -75,7 +75,7 @@ public class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
                         dbContext,
                         executionStrategy,
                         context,
-                        () => WithinTransaction(dbContext, context.CancellationToken, SendAsyncCallback))
+                        () => WithinTransactionAsync(dbContext, context.CancellationToken, SendCallbackAsync))
                     .ConfigureAwait(false);
             }
         }
@@ -85,36 +85,36 @@ public class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
         }
     }
 
-    public async Task SendQuery<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
+    public async Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
         where T : class
     {
         var dbContext = _dbContextFactory.CreateScoped(context);
         try
         {
-            async Task SendQueryAsyncCallback(SagaLockContext<TSaga> lockContext, SagaRepositoryContext<TSaga, T> repositoryContext)
+            async Task SendQueryCallbackAsync(SagaLockContext<TSaga> lockContext, SagaRepositoryContext<TSaga, T> repositoryContext)
             {
-                IList<TSaga> instances = await lockContext.Load().ConfigureAwait(false);
+                IList<TSaga> instances = await lockContext.LoadAsync().ConfigureAwait(false);
 
                 var queryContext = new LoadedSagaRepositoryQueryContext<TSaga, T>(repositoryContext, instances);
 
-                await next.Send(queryContext).ConfigureAwait(false);
+                await next.SendAsync(queryContext).ConfigureAwait(false);
             }
 
-            var hasOuterTransaction = context.TryGetPayload(out DbTransactionContext _);
+            var hasOuterTransaction = context.TryGetPayload(out DbTransactionContext? _);
 
             async Task SendQueryAsync()
             {
                 SagaLockContext<TSaga> lockContext =
-                    await _lockStrategy.CreateLockContext(dbContext, query, context.CancellationToken).ConfigureAwait(false);
+                    await _lockStrategy.CreateLockContextAsync(dbContext, query, context.CancellationToken).ConfigureAwait(false);
 
                 using var repositoryContext = new DbContextSagaRepositoryContext<TSaga, T>(dbContext, context, _consumeContextFactory, _lockStrategy);
 
                 if (hasOuterTransaction)
-                    await SendQueryAsyncCallback(lockContext, repositoryContext).ConfigureAwait(false);
+                    await SendQueryCallbackAsync(lockContext, repositoryContext).ConfigureAwait(false);
                 else
                 {
                     // ReSharper disable once AccessToDisposedClosure
-                    await WithinTransaction(dbContext, context.CancellationToken, () => SendQueryAsyncCallback(lockContext, repositoryContext))
+                    await WithinTransactionAsync(dbContext, context.CancellationToken, () => SendQueryCallbackAsync(lockContext, repositoryContext))
                         .ConfigureAwait(false);
                 }
             }
@@ -133,7 +133,7 @@ public class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
         }
     }
 
-    async Task<T> ExecuteAsyncMethod<T>(Func<DbContextSagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken)
+    async Task<T> ExecuteAsyncMethodAsync<T>(Func<DbContextSagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken)
         where T : class
     {
         var dbContext = _dbContextFactory.Create();
@@ -141,7 +141,7 @@ public class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
         {
             Task<T> ExecuteAsync()
             {
-                return WithinTransaction(dbContext, cancellationToken, () =>
+                return WithinTransactionAsync(dbContext, cancellationToken, () =>
                 {
                     var sagaRepositoryContext = new DbContextSagaRepositoryContext<TSaga>(dbContext, _lockStrategy, cancellationToken);
 
@@ -159,32 +159,63 @@ public class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
         }
         finally
         {
-            await _dbContextFactory.ReleaseAsync(dbContext).ConfigureAwait(false);
+            await _dbContextFactory.ReleaseAsync(dbContext, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 
-    Task WithinTransaction(DbContext context, CancellationToken cancellationToken, Func<Task> callback)
+    async Task<T?> ExecuteNullableAsyncMethodAsync<T>(Func<DbContextSagaRepositoryContext<TSaga>, Task<T?>> asyncMethod,
+        CancellationToken cancellationToken)
+        where T : class
+    {
+        var dbContext = _dbContextFactory.Create();
+        try
+        {
+            Task<T?> ExecuteAsync()
+            {
+                return WithinTransactionAsync(dbContext, cancellationToken, () =>
+                {
+                    var sagaRepositoryContext = new DbContextSagaRepositoryContext<TSaga>(dbContext, _lockStrategy, cancellationToken);
+
+                    return asyncMethod(sagaRepositoryContext);
+                });
+            }
+
+            var executionStrategy = dbContext.Database.CreateExecutionStrategy();
+            return await EntityFrameworkExecutionStrategy.ExecuteAsync(
+                    dbContext,
+                    executionStrategy,
+                    ExecuteAsync,
+                    cancellationToken)
+                .ConfigureAwait(false);
+        }
+        finally
+        {
+            await _dbContextFactory.ReleaseAsync(dbContext, cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    Task WithinTransactionAsync(DbContext context, CancellationToken cancellationToken, Func<Task> callback)
     {
         if (!_lockStrategy.IsTransactionEnabled)
             return callback();
 
-        async Task<bool> Create()
+        async Task<bool> CreateAsync()
         {
             await callback().ConfigureAwait(false);
             return true;
         }
 
-        return WithinTransaction(context, cancellationToken, Create);
+        return WithinTransactionAsync(context, cancellationToken, CreateAsync);
     }
 
-    async Task<T> WithinTransaction<T>(DbContext context, CancellationToken cancellationToken, Func<Task<T>> callback)
+    async Task<T> WithinTransactionAsync<T>(DbContext context, CancellationToken cancellationToken, Func<Task<T>> callback)
     {
         if (!_lockStrategy.IsTransactionEnabled)
             return await callback().ConfigureAwait(false);
 
         await using var transaction = await context.Database.BeginTransactionAsync(_lockStrategy.IsolationLevel, cancellationToken).ConfigureAwait(false);
 
-        static async Task Rollback(IDbContextTransaction transaction)
+        static async Task RollbackAsync(IDbContextTransaction transaction)
         {
             try
             {
@@ -206,17 +237,17 @@ public class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
         }
         catch (DbUpdateConcurrencyException)
         {
-            await Rollback(transaction).ConfigureAwait(false);
+            await RollbackAsync(transaction).ConfigureAwait(false);
             throw;
         }
         catch (DbUpdateException)
         {
-            await Rollback(transaction).ConfigureAwait(false);
+            await RollbackAsync(transaction).ConfigureAwait(false);
             throw;
         }
         catch (Exception)
         {
-            await Rollback(transaction).ConfigureAwait(false);
+            await RollbackAsync(transaction).ConfigureAwait(false);
             throw;
         }
     }

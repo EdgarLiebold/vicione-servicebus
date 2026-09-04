@@ -39,23 +39,23 @@ public class ScheduleMessageConsumer :
         _timeZoneResolver = timeZoneResolver;
     }
 
-    public async Task Consume(ConsumeContext<ScheduleMessage> context)
+    public async Task ConsumeAsync(ConsumeContext<ScheduleMessage> context)
     {
         ArgumentNullException.ThrowIfNull(context);
-        var jobKey = await EnsureJobExists(context.CancellationToken).ConfigureAwait(false);
+        var jobKey = await EnsureJobExistsAsync(context.CancellationToken).ConfigureAwait(false);
 
-        var messageBody = context.SerializerContext.GetMessageSerializer(context.Message.Payload, context.Message.PayloadType)
+        var messageBody = context.Advanced().SerializerContext.GetMessageSerializer(context.Message.Payload, context.Message.PayloadType)
             .GetMessageBody(new MessageSendContext<ScheduleMessage>(context.Message));
 
         var triggerKey = new TriggerKey(context.Message.TokenId.ToString("N"));
 
         var builder = TriggerBuilder.Create()
             .ForJob(jobKey)
-            .StartAt(context.Message.ScheduledTime)
+            .StartAt(context.Message.DueAt)
             .WithSchedule(SimpleScheduleBuilder.Create().WithMisfireInstruction(SimpleTriggerMisfireInstruction.FireNow))
             .WithIdentity(triggerKey);
 
-        var trigger = PopulateTrigger(context, builder, messageBody, context.Message.Destination, context.Message.PayloadType, messageId: context.MessageId,
+        var trigger = PopulateTrigger(context.Advanced(), builder, messageBody, context.Message.Destination, context.Message.PayloadType, messageId: context.MessageId,
             tokenId: context.Message.TokenId);
 
         var scheduler = await _schedulerFactory.GetScheduler(context.CancellationToken).ConfigureAwait(false);
@@ -68,12 +68,12 @@ public class ScheduleMessageConsumer :
         LogContext.Debug?.Log("Scheduled: {Key} {Schedule}", trigger.Key, trigger.NextFireTimeUtc);
     }
 
-    public async Task Consume(ConsumeContext<ScheduleRecurringMessage> context)
+    public async Task ConsumeAsync(ConsumeContext<ScheduleRecurringMessage> context)
     {
         ArgumentNullException.ThrowIfNull(context);
-        var jobKey = await EnsureJobExists(context.CancellationToken).ConfigureAwait(false);
+        var jobKey = await EnsureJobExistsAsync(context.CancellationToken).ConfigureAwait(false);
 
-        var messageBody = context.SerializerContext.GetMessageSerializer(context.Message.Payload, context.Message.PayloadType)
+        var messageBody = context.Advanced().SerializerContext.GetMessageSerializer(context.Message.Payload, context.Message.PayloadType)
             .GetMessageBody(new MessageSendContext<ScheduleRecurringMessage>(context.Message));
 
         var schedule = context.Message.Schedule;
@@ -106,7 +106,7 @@ public class ScheduleMessageConsumer :
         if (schedule.EndTime.HasValue)
             triggerBuilder.EndAt(schedule.EndTime);
 
-        var trigger = PopulateTrigger(context, triggerBuilder, messageBody, context.Message.Destination, context.Message.PayloadType,
+        var trigger = PopulateTrigger(context.Advanced(), triggerBuilder, messageBody, context.Message.Destination, context.Message.PayloadType,
             messageId: default);
 
         var scheduler = await _schedulerFactory.GetScheduler(context.CancellationToken).ConfigureAwait(false);
@@ -189,7 +189,7 @@ public class ScheduleMessageConsumer :
             destination.Add(new KeyValuePair<string, object>(key, value));
     }
 
-    async Task<JobKey> EnsureJobExists(CancellationToken cancellationToken)
+    async Task<JobKey> EnsureJobExistsAsync(CancellationToken cancellationToken)
     {
         var jobKey = new JobKey(ScheduleMessageJobId);
 

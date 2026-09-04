@@ -1,6 +1,6 @@
-namespace ViciOne.ServiceBus.Samples.DeveloperJourneys;
-
 using Microsoft.Extensions.DependencyInjection;
+
+namespace ViciOne.ServiceBus.Samples.DeveloperJourneys;
 
 public static class Journey09MultiBus
 {
@@ -8,9 +8,9 @@ public static class Journey09MultiBus
         .AddViciOneServiceBus<IOrdersBus>("orders-v1", configuration => configuration.UsingInMemory())
         .AddViciOneServiceBus<IBillingBus>("billing-v1", configuration => configuration.UsingInMemory());
 
-    public static Task PublishOnOrdersBus(
+    public static Task PublishOnOrdersBusAsync(
         IOrdersBus bus,
         OrderSubmitted message,
-        CancellationToken cancellationToken) =>
-        bus.Publish(message, cancellationToken);
+        CancellationToken cancellationToken = default) =>
+        bus.PublishAsync(message, cancellationToken);
 }

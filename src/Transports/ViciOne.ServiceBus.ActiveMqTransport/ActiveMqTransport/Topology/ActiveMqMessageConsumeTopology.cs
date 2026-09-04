@@ -31,7 +31,7 @@ public class ActiveMqMessageConsumeTopology<TMessage> :
             specification.Apply(builder);
     }
 
-    public void Bind(Action<IActiveMqTopicBindingConfigurator> configure = null)
+    public void Bind(Action<IActiveMqTopicBindingConfigurator>? configure = null)
     {
         if (!IsBindableMessageType)
         {

@@ -14,7 +14,7 @@ public sealed class RateAndConcurrencyLimitTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RATE-LIMIT", "virtual-time-replenishment")]
-    public async Task RateLimit_ReplenishesExactlyWhenTheConfiguredTimeProviderAdvances()
+    public async Task RateLimit_ReplenishesExactlyWhenTheConfiguredTimeProviderAdvancesAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
         var count = 0;
@@ -26,9 +26,9 @@ public sealed class RateAndConcurrencyLimitTests
         });
         Assert.Equal(1, timeProvider.TimerCount);
 
-        await pipe.Send(new LimitContext());
-        await pipe.Send(new LimitContext());
-        Task held = pipe.Send(new LimitContext());
+        await pipe.SendAsync(new LimitContext());
+        await pipe.SendAsync(new LimitContext());
+        Task held = pipe.SendAsync(new LimitContext());
         Assert.False(held.IsCompleted);
 
         timeProvider.Advance(interval);
@@ -39,7 +39,7 @@ public sealed class RateAndConcurrencyLimitTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RATE-LIMIT", "faults-consume-permits")]
-    public async Task RateLimit_CountsFaultedAndSuccessfulAttemptsEqually()
+    public async Task RateLimit_CountsFaultedAndSuccessfulAttemptsEquallyAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
         var count = 0;
@@ -57,8 +57,8 @@ public sealed class RateAndConcurrencyLimitTests
         Assert.Equal(1, timeProvider.TimerCount);
 
         LimitedOperationException actual = await Assert.ThrowsAsync<LimitedOperationException>(() =>
-            pipe.Send(new LimitContext()));
-        Task held = pipe.Send(new LimitContext());
+            pipe.SendAsync(new LimitContext()));
+        Task held = pipe.SendAsync(new LimitContext());
         Assert.False(held.IsCompleted);
 
         timeProvider.Advance(interval);
@@ -70,7 +70,7 @@ public sealed class RateAndConcurrencyLimitTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RATE-LIMIT", "dynamic-down-up-and-down")]
-    public async Task RateLimit_AppliesRepeatedDynamicChangesInBothDirections()
+    public async Task RateLimit_AppliesRepeatedDynamicChangesInBothDirectionsAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
         var router = new PipeRouter();
@@ -82,19 +82,19 @@ public sealed class RateAndConcurrencyLimitTests
             configuration.UseExecute(_ => Interlocked.Increment(ref count));
         });
 
-        await router.SetRateLimit(1);
-        await pipe.Send(new LimitContext());
-        Task heldAtOne = pipe.Send(new LimitContext());
+        await router.SetRateLimitAsync(1, cancellationToken: TestContext.Current.CancellationToken);
+        await pipe.SendAsync(new LimitContext());
+        Task heldAtOne = pipe.SendAsync(new LimitContext());
         Assert.False(heldAtOne.IsCompleted);
 
-        await router.SetRateLimit(2);
+        await router.SetRateLimitAsync(2, cancellationToken: TestContext.Current.CancellationToken);
         await heldAtOne;
         timeProvider.Advance(interval);
 
-        await router.SetRateLimit(1);
-        await pipe.Send(new LimitContext());
+        await router.SetRateLimitAsync(1, cancellationToken: TestContext.Current.CancellationToken);
+        await pipe.SendAsync(new LimitContext());
         using var cancellation = new CancellationTokenSource();
-        Task heldAfterSecondDecrease = pipe.Send(new LimitContext(cancellation.Token));
+        Task heldAfterSecondDecrease = pipe.SendAsync(new LimitContext(cancellation.Token));
         Assert.False(heldAfterSecondDecrease.IsCompleted);
         cancellation.Cancel();
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => heldAfterSecondDecrease);
@@ -104,24 +104,24 @@ public sealed class RateAndConcurrencyLimitTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RATE-LIMIT", "canceled-adjustment-rolls-back")]
-    public async Task RateLimit_CanceledDecreaseReturnsEveryPermitAndKeepsThePreviousLimit()
+    public async Task RateLimit_CanceledDecreaseReturnsEveryPermitAndKeepsThePreviousLimitAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
         using var filter = new RateLimitFilter<LimitContext>(3, TimeSpan.FromHours(1), timeProvider);
         var count = 0;
         IPipe<LimitContext> next = Pipe.Execute<LimitContext>(_ => Interlocked.Increment(ref count));
-        await filter.Send(new LimitContext(), next);
-        await filter.Send(new LimitContext(), next);
+        await filter.SendAsync(new LimitContext(), next);
+        await filter.SendAsync(new LimitContext(), next);
         using var adjustmentCancellation = new CancellationTokenSource();
-        Task adjustment = filter.Send(new RateCommandContext(1, adjustmentCancellation.Token));
+        Task adjustment = filter.SendAsync(new RateCommandContext(1, adjustmentCancellation.Token));
         Assert.False(adjustment.IsCompleted);
 
         adjustmentCancellation.Cancel();
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => adjustment);
-        await filter.Send(new LimitContext(), next);
+        await filter.SendAsync(new LimitContext(), next);
 
         using var heldCancellation = new CancellationTokenSource();
-        Task held = filter.Send(new LimitContext(heldCancellation.Token), next);
+        Task held = filter.SendAsync(new LimitContext(heldCancellation.Token), next);
         Assert.False(held.IsCompleted);
         heldCancellation.Cancel();
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => held);
@@ -131,7 +131,7 @@ public sealed class RateAndConcurrencyLimitTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONCURRENCY-LIMIT", "dynamic-down-up")]
-    public async Task ConcurrencyLimit_AppliesADecreaseFollowedByAnIncreaseToTheRunningPipe()
+    public async Task ConcurrencyLimit_AppliesADecreaseFollowedByAnIncreaseToTheRunningPipeAsync()
     {
         var router = new PipeRouter();
         TaskCompletionSource[] entered = [NewSignal(), NewSignal(), NewSignal()];
@@ -146,18 +146,18 @@ public sealed class RateAndConcurrencyLimitTests
             });
         });
 
-        Task first = pipe.Send(new IndexedLimitContext(0));
-        Task second = pipe.Send(new IndexedLimitContext(1));
+        Task first = pipe.SendAsync(new IndexedLimitContext(0));
+        Task second = pipe.SendAsync(new IndexedLimitContext(1));
         await Task.WhenAll(entered[0].Task, entered[1].Task);
 
-        Task decrease = router.SetConcurrencyLimit(1);
+        Task decrease = router.SetConcurrencyLimitAsync(1, cancellationToken: TestContext.Current.CancellationToken);
         Assert.False(decrease.IsCompleted);
         release[0].SetResult();
         await Task.WhenAll(first, decrease);
 
-        Task third = pipe.Send(new IndexedLimitContext(2));
+        Task third = pipe.SendAsync(new IndexedLimitContext(2));
         Assert.False(entered[2].Task.IsCompleted);
-        await router.SetConcurrencyLimit(2);
+        await router.SetConcurrencyLimitAsync(2, cancellationToken: TestContext.Current.CancellationToken);
         await entered[2].Task;
 
         release[1].SetResult();
@@ -169,7 +169,7 @@ public sealed class RateAndConcurrencyLimitTests
     [InlineData(1)]
     [InlineData(32)]
     [RequirementCoverage("REQ-VSB-CONCURRENCY-LIMIT", "exact-configured-maximum")]
-    public async Task ConcurrencyLimit_AdmitsExactlyTheConfiguredMaximumAndQueuesTheRemainder(int limit)
+    public async Task ConcurrencyLimit_AdmitsExactlyTheConfiguredMaximumAndQueuesTheRemainderAsync(int limit)
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -198,7 +198,7 @@ public sealed class RateAndConcurrencyLimitTests
         });
 
         Task[] sends = Enumerable.Range(0, limit + 2)
-            .Select(_ => pipe.Send(new LimitContext()))
+            .Select(_ => pipe.SendAsync(new LimitContext()))
             .ToArray();
         try
         {
@@ -223,7 +223,7 @@ public sealed class RateAndConcurrencyLimitTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONCURRENCY-LIMIT", "canceled-adjustment-rolls-back")]
-    public async Task ConcurrencyLimit_CanceledDecreaseReturnsAcquiredSlotsAndKeepsThePreviousLimit()
+    public async Task ConcurrencyLimit_CanceledDecreaseReturnsAcquiredSlotsAndKeepsThePreviousLimitAsync()
     {
         using var filter = new ConcurrencyLimitFilter<IndexedLimitContext>(3);
         TaskCompletionSource[] entered = [NewSignal(), NewSignal(), NewSignal()];
@@ -233,17 +233,17 @@ public sealed class RateAndConcurrencyLimitTests
             entered[context.Index].SetResult();
             await release.Task;
         });
-        Task first = filter.Send(new IndexedLimitContext(0), next);
-        Task second = filter.Send(new IndexedLimitContext(1), next);
+        Task first = filter.SendAsync(new IndexedLimitContext(0), next);
+        Task second = filter.SendAsync(new IndexedLimitContext(1), next);
         await Task.WhenAll(entered[0].Task, entered[1].Task);
 
         using var adjustmentCancellation = new CancellationTokenSource();
-        Task adjustment = filter.Send(new ConcurrencyCommandContext(1, adjustmentCancellation.Token));
+        Task adjustment = filter.SendAsync(new ConcurrencyCommandContext(1, adjustmentCancellation.Token));
         Assert.False(adjustment.IsCompleted);
         adjustmentCancellation.Cancel();
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => adjustment);
 
-        Task third = filter.Send(new IndexedLimitContext(2), next);
+        Task third = filter.SendAsync(new IndexedLimitContext(2), next);
         await entered[2].Task;
         release.SetResult();
         await Task.WhenAll(first, second, third);
@@ -299,7 +299,7 @@ public sealed class RateAndConcurrencyLimitTests
     private sealed class RateCommandContext(int rateLimit, CancellationToken cancellationToken)
         : BasePipeContext(cancellationToken), CommandContext<SetRateLimit>
     {
-        public DateTime Timestamp { get; } = StartTime.UtcDateTime;
+        public DateTimeOffset Timestamp { get; } = StartTime;
 
         public SetRateLimit Command { get; } = new RateLimitCommand(rateLimit);
     }
@@ -307,7 +307,7 @@ public sealed class RateAndConcurrencyLimitTests
     private sealed class ConcurrencyCommandContext(int concurrencyLimit, CancellationToken cancellationToken)
         : BasePipeContext(cancellationToken), CommandContext<SetConcurrencyLimit>
     {
-        public DateTime Timestamp { get; } = StartTime.UtcDateTime;
+        public DateTimeOffset Timestamp { get; } = StartTime;
 
         public SetConcurrencyLimit Command { get; } = new ConcurrencyLimitCommand(concurrencyLimit);
     }
@@ -316,7 +316,7 @@ public sealed class RateAndConcurrencyLimitTests
 
     private sealed record ConcurrencyLimitCommand(int ConcurrencyLimit) : SetConcurrencyLimit
     {
-        public DateTime? Timestamp => null;
+        public DateTimeOffset? Timestamp => null;
 
         public string? Id => null;
     }

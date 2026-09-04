@@ -6,10 +6,10 @@ namespace ViciOne.ServiceBus.Middleware;
 public class RethrowErrorTransportFilter :
     IFilter<ExceptionReceiveContext>
 {
-    public async Task Send(ExceptionReceiveContext context, IPipe<ExceptionReceiveContext> next)
+    public async Task SendAsync(ExceptionReceiveContext context, IPipe<ExceptionReceiveContext> next)
     {
         if (!context.IsFaulted)
-            await context.NotifyFaulted(context.Exception).ConfigureAwait(false);
+            await context.NotifyFaultedAsync(context.Exception).ConfigureAwait(false);
 
         context.Exception.Rethrow();
     }

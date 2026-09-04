@@ -13,7 +13,7 @@ public sealed class RequestRateAlgorithmTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-RATE-RUN", "process-every-result")]
-    public async Task Run_RequestsConfiguredLimitAndProcessesEveryResult()
+    public async Task Run_RequestsConfiguredLimitAndProcessesEveryResultAsync()
     {
         using var algorithm = CreateAlgorithm(prefetchCount: 100, requestResultLimit: 10);
         using var timeout = new CancellationTokenSource(CompletionTimeout);
@@ -22,14 +22,14 @@ public sealed class RequestRateAlgorithmTests
         var processingCompleted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var callbackCount = 0;
 
-        Task<IEnumerable<int>> Request(int resultLimit, CancellationToken cancellationToken)
+        Task<IEnumerable<int>> RequestAsync(int resultLimit, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             requestedLimits.Enqueue(resultLimit);
             return Task.FromResult<IEnumerable<int>>(Enumerable.Range(0, resultLimit).ToArray());
         }
 
-        Task Process(int result, CancellationToken cancellationToken)
+        Task ProcessAsync(int result, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             processedResults.TryAdd(result, 0);
@@ -39,7 +39,7 @@ public sealed class RequestRateAlgorithmTests
             return Task.CompletedTask;
         }
 
-        var resultCount = await algorithm.Run(Request, Process, timeout.Token);
+        var resultCount = await algorithm.RunAsync(RequestAsync, ProcessAsync, timeout.Token);
         await processingCompleted.Task.WaitAsync(timeout.Token);
 
         Assert.Equal(10, resultCount);
@@ -51,7 +51,7 @@ public sealed class RequestRateAlgorithmTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-RATE-GROUPED-RUN", "deterministic-request-overlap")]
-    public async Task GroupedRun_RepeatedFullBatchesReachConfiguredRequestConcurrency()
+    public async Task GroupedRun_RepeatedFullBatchesReachConfiguredRequestConcurrencyAsync()
     {
         using var algorithm = CreateAlgorithm(prefetchCount: 100, requestResultLimit: 10, concurrentResultLimit: 1_000);
         using var timeout = new CancellationTokenSource(CompletionTimeout);
@@ -68,7 +68,7 @@ public sealed class RequestRateAlgorithmTests
             var requestSequence = 0;
             var processedResultCount = 0;
 
-            async Task<IEnumerable<GroupedMessage>> Request(int resultLimit, CancellationToken cancellationToken)
+            async Task<IEnumerable<GroupedMessage>> RequestAsync(int resultLimit, CancellationToken cancellationToken)
             {
                 var sequence = Interlocked.Increment(ref requestSequence);
                 if (Interlocked.Increment(ref arrivedRequestCount) == expectedRequestCount)
@@ -81,7 +81,7 @@ public sealed class RequestRateAlgorithmTests
                     .ToArray();
             }
 
-            Task Process(GroupedMessage result, CancellationToken cancellationToken)
+            Task ProcessAsync(GroupedMessage result, CancellationToken cancellationToken)
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 if (Interlocked.Increment(ref processedResultCount) == expectedResultCount)
@@ -102,7 +102,7 @@ public sealed class RequestRateAlgorithmTests
                 return results.OrderBy(message => message.SequenceNumber);
             }
 
-            var resultCount = await algorithm.Run(Request, Process, Group, Order, timeout.Token);
+            var resultCount = await algorithm.RunAsync(RequestAsync, ProcessAsync, Group, Order, timeout.Token);
             await processingCompleted.Task.WaitAsync(timeout.Token);
 
             Assert.Equal(expectedRequestCount, arrivedRequestCount);
@@ -119,17 +119,17 @@ public sealed class RequestRateAlgorithmTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-RATE-SCALING", "full-batch-growth-curve")]
-    public async Task FullBatches_IncreaseRequestCountAlongStableCurve()
+    public async Task FullBatches_IncreaseRequestCountAlongStableCurveAsync()
     {
         using var algorithm = CreateAlgorithm(prefetchCount: 100, requestResultLimit: 10);
         var observedRequestCounts = new List<int> { algorithm.RequestCount };
 
         for (var index = 0; index < 5; index++)
         {
-            using var request = await algorithm.BeginRequest(TestContext.Current.CancellationToken);
+            using var request = await algorithm.BeginRequestAsync(TestContext.Current.CancellationToken);
             Assert.Equal(10, request.ResultLimit);
 
-            await request.Complete(request.ResultLimit, TestContext.Current.CancellationToken);
+            await request.CompleteAsync(request.ResultLimit, TestContext.Current.CancellationToken);
             observedRequestCounts.Add(algorithm.RequestCount);
         }
 
@@ -139,7 +139,7 @@ public sealed class RequestRateAlgorithmTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-RATE-SCALING", "concurrent-full-batches-do-not-deadlock")]
-    public async Task RepeatedConcurrentFullBatches_CompleteWhileRequestCountGrows()
+    public async Task RepeatedConcurrentFullBatches_CompleteWhileRequestCountGrowsAsync()
     {
         using var algorithm = CreateAlgorithm(prefetchCount: 100, requestResultLimit: 10);
         using var timeout = new CancellationTokenSource(CompletionTimeout);
@@ -151,7 +151,7 @@ public sealed class RequestRateAlgorithmTests
             var allRequestsStarted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
             var arrivedRequestCount = 0;
 
-            async Task<int> Request(int resultLimit, CancellationToken cancellationToken)
+            async Task<int> RequestAsync(int resultLimit, CancellationToken cancellationToken)
             {
                 if (Interlocked.Increment(ref arrivedRequestCount) == expectedRequestCount)
                     allRequestsStarted.TrySetResult();
@@ -160,7 +160,7 @@ public sealed class RequestRateAlgorithmTests
                 return resultLimit;
             }
 
-            int resultCount = await algorithm.Run(Request, timeout.Token).WaitAsync(timeout.Token);
+            int resultCount = await algorithm.RunAsync(RequestAsync, timeout.Token).WaitAsync(timeout.Token);
 
             Assert.Equal(expectedRequestCount * algorithm.ResultLimit, resultCount);
             Assert.Equal(expectedRequestCount, arrivedRequestCount);
@@ -185,15 +185,15 @@ public sealed class RequestRateAlgorithmTests
     [InlineData(100)]
     [InlineData(0)]
     [RequirementCoverage("REQ-VSB-REQUEST-RATE-LIMITS", "single-request-full-and-empty-results")]
-    public async Task EqualPrefetchAndResultLimits_RemainSingleRequestAfterCompletion(int completedResultCount)
+    public async Task EqualPrefetchAndResultLimits_RemainSingleRequestAfterCompletionAsync(int completedResultCount)
     {
         using var algorithm = CreateAlgorithm(prefetchCount: 100, requestResultLimit: 100);
 
         Assert.Equal(1, algorithm.RequestCount);
         Assert.Equal(100, algorithm.ResultLimit);
 
-        using var request = await algorithm.BeginRequest(TestContext.Current.CancellationToken);
-        await request.Complete(completedResultCount, TestContext.Current.CancellationToken);
+        using var request = await algorithm.BeginRequestAsync(TestContext.Current.CancellationToken);
+        await request.CompleteAsync(completedResultCount, TestContext.Current.CancellationToken);
 
         Assert.Equal(1, algorithm.RequestCount);
         Assert.Equal(100, algorithm.ResultLimit);
@@ -202,7 +202,7 @@ public sealed class RequestRateAlgorithmTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-RATE-CLOCK", "rate-window-exact-boundary")]
-    public async Task RateLimitWindow_ReopensOnlyWhenTheConfiguredClockReachesTheExactInterval()
+    public async Task RateLimitWindow_ReopensOnlyWhenTheConfiguredClockReachesTheExactIntervalAsync()
     {
         TimeSpan interval = TimeSpan.FromMinutes(1);
         var clock = new FakeTimeProvider(new DateTimeOffset(2035, 6, 7, 8, 9, 10, TimeSpan.Zero));
@@ -214,10 +214,10 @@ public sealed class RequestRateAlgorithmTests
             RequestRateInterval = interval,
         }, clock);
 
-        using (ActiveRequest first = await algorithm.BeginRequest(TestContext.Current.CancellationToken))
-            await first.Complete(0, TestContext.Current.CancellationToken);
+        using (ActiveRequest first = await algorithm.BeginRequestAsync(TestContext.Current.CancellationToken))
+            await first.CompleteAsync(0, TestContext.Current.CancellationToken);
 
-        Task<ActiveRequest> nextRequest = algorithm.BeginRequest(TestContext.Current.CancellationToken);
+        Task<ActiveRequest> nextRequest = algorithm.BeginRequestAsync(TestContext.Current.CancellationToken);
         await Task.Yield();
         Assert.False(nextRequest.IsCompleted);
 
@@ -235,7 +235,7 @@ public sealed class RequestRateAlgorithmTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-RATE-CLOCK", "active-request-cancellation-grace")]
-    public async Task ParentCancellation_CancelsAnActiveRequestAtTheConfiguredClockBoundary()
+    public async Task ParentCancellation_CancelsAnActiveRequestAtTheConfiguredClockBoundaryAsync()
     {
         TimeSpan grace = TimeSpan.FromSeconds(30);
         var clock = new FakeTimeProvider(new DateTimeOffset(2036, 7, 8, 9, 10, 11, TimeSpan.Zero));
@@ -246,7 +246,7 @@ public sealed class RequestRateAlgorithmTests
             RequestCancellationTimeout = grace,
         }, clock);
         using var parent = new CancellationTokenSource();
-        using ActiveRequest request = await algorithm.BeginRequest(parent.Token);
+        using ActiveRequest request = await algorithm.BeginRequestAsync(parent.Token);
 
         parent.Cancel();
         Assert.False(request.CancellationToken.IsCancellationRequested);

@@ -13,9 +13,11 @@ public readonly struct ServiceBusHostAddress
 
     public ServiceBusHostAddress(Uri address)
     {
-        Scheme = default;
-        Host = default;
-        Scope = default;
+        ArgumentNullException.ThrowIfNull(address);
+
+        Scheme = null!;
+        Host = null!;
+        Scope = null!;
 
         var scheme = address.Scheme.ToLowerInvariant();
         switch (scheme)

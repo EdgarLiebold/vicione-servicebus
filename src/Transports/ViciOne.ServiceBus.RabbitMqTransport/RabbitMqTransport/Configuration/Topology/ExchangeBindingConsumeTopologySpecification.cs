@@ -43,7 +43,7 @@ public class ExchangeBindingConsumeTopologySpecification :
             specification.Apply(builder);
     }
 
-    public void Bind(string exchangeName, Action<IRabbitMqExchangeToExchangeBindingConfigurator> configure)
+    public void Bind(string exchangeName, Action<IRabbitMqExchangeToExchangeBindingConfigurator>? configure)
     {
         if (string.IsNullOrWhiteSpace(exchangeName))
             throw new ArgumentException("Value cannot be null or whitespace.", nameof(exchangeName));

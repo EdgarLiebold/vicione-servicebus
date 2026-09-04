@@ -16,7 +16,7 @@ public class InputPropertyProvider<TInput, TProperty> :
 {
     readonly IReadProperty<TInput, TProperty> _inputProperty;
 
-    public InputPropertyProvider(PropertyInfo propertyInfo)
+    public InputPropertyProvider(PropertyInfo? propertyInfo)
     {
         if (propertyInfo == null)
             throw new ArgumentNullException(nameof(propertyInfo));
@@ -24,11 +24,11 @@ public class InputPropertyProvider<TInput, TProperty> :
         _inputProperty = ReadPropertyCache<TInput>.GetProperty<TProperty>(propertyInfo);
     }
 
-    public Task<TProperty> GetProperty<T>(InitializeContext<T, TInput> context)
+    public Task<TProperty?> GetPropertyAsync<T>(InitializeContext<T, TInput> context, CancellationToken cancellationToken = default)
         where T : class
     {
-        return Task.FromResult(context.HasInput
-            ? _inputProperty.Get(context.Input)
-            : default);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<TProperty?>(cancellationToken); return Task.FromResult(context.HasInput
+                    ? _inputProperty.Get(context.Input)
+                    : default);
     }
 }

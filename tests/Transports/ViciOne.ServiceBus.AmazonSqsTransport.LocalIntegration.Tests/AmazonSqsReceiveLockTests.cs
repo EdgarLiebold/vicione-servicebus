@@ -12,7 +12,7 @@ public sealed class AmazonSqsReceiveLockTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0235", "one-completion-does-not-cancel-another-in-flight-renewal")]
-    public async Task ReleasingOneLock_DoesNotReleaseSubsequentMessages()
+    public async Task ReleasingOneLock_DoesNotReleaseSubsequentMessagesAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("receivelocks");
         string queueName = fixture.Name("input");
@@ -43,7 +43,7 @@ public sealed class AmazonSqsReceiveLockTests
                 {
                     if (context.Message.Id == completedId)
                     {
-                        completedReceive.TrySetResult(context.ReceiveContext.ReceiveCompleted);
+                        completedReceive.TrySetResult(context.Advanced().ReceiveContext.ReceiveCompleted);
                         completedEntered.TrySetResult();
                         await heldEntered.Task.WaitAsync(fixture.OperationTimeout, context.CancellationToken);
                         return;
@@ -54,7 +54,7 @@ public sealed class AmazonSqsReceiveLockTests
 
                     if (Interlocked.Increment(ref heldDeliveryCount) == 1)
                     {
-                        heldReceive.TrySetResult(context.ReceiveContext.ReceiveCompleted);
+                        heldReceive.TrySetResult(context.Advanced().ReceiveContext.ReceiveCompleted);
                         heldEntered.TrySetResult();
                     }
 
@@ -69,10 +69,9 @@ public sealed class AmazonSqsReceiveLockTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await input.Send(new LockProbe(completedId), cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await input.Send(new LockProbe(heldId), cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await input.SendAsync(new LockProbe(completedId), cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await input.SendAsync(new LockProbe(heldId), cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             await completedEntered.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
             await heldEntered.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
@@ -81,7 +80,7 @@ public sealed class AmazonSqsReceiveLockTests
 
             int completedRenewals = visibilityRenewals.SuccessfulRenewalCount;
             ChangeMessageVisibilityRequest renewal = await visibilityRenewals
-                .WaitForSuccessfulRenewalAfter(completedRenewals, fixture.OperationTimeout, cancellationToken);
+                .WaitForSuccessfulRenewalAfterAsync(completedRenewals, fixture.OperationTimeout, cancellationToken);
 
             Assert.Contains(queueName, renewal.QueueUrl, StringComparison.Ordinal);
             Assert.False(string.IsNullOrWhiteSpace(renewal.ReceiptHandle));
@@ -124,7 +123,7 @@ public sealed class AmazonSqsReceiveLockTests
             }
         }
 
-        public async Task<ChangeMessageVisibilityRequest> WaitForSuccessfulRenewalAfter(
+        public async Task<ChangeMessageVisibilityRequest> WaitForSuccessfulRenewalAfterAsync(
             int observedCount,
             TimeSpan timeout,
             CancellationToken cancellationToken)
@@ -162,12 +161,12 @@ public sealed class AmazonSqsReceiveLockTests
             if (targetMethod.Name == nameof(IAmazonSQS.ChangeMessageVisibilityAsync)
                 && args is [ChangeMessageVisibilityRequest request, CancellationToken]
                 && result is Task<ChangeMessageVisibilityResponse> response)
-                return ObserveSuccessfulRenewal(response, request);
+                return ObserveSuccessfulRenewalAsync(response, request);
 
             return result;
         }
 
-        private async Task<ChangeMessageVisibilityResponse> ObserveSuccessfulRenewal(
+        private async Task<ChangeMessageVisibilityResponse> ObserveSuccessfulRenewalAsync(
             Task<ChangeMessageVisibilityResponse> response,
             ChangeMessageVisibilityRequest request)
         {

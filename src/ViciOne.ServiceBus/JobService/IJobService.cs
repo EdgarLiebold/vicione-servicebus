@@ -19,23 +19,25 @@ public interface IJobService
     /// <param name="jobPipe">The pipe which executes the job</param>
     /// <param name="jobOptions">The job options</param>
     /// <returns>The newly created job's handle</returns>
-    Task StartJob<T>(ConsumeContext<StartJob> context, T job, IPipe<ConsumeContext<T>> jobPipe, JobOptions<T> jobOptions)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task StartJobAsync<T>(ConsumeContext<StartJob> context, T job, IPipe<ConsumeContext<T>> jobPipe, JobOptions<T> jobOptions, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>
     /// Shut town the job service, cancelling any pending jobs
     /// </summary>
     /// <param name="publishEndpoint"></param>
-    Task Stop(IPublishEndpoint publishEndpoint);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task StopAsync(IPublishEndpoint publishEndpoint, CancellationToken cancellationToken = default);
 
-    bool TryGetJob(Guid jobId, out JobHandle jobReference);
+    bool TryGetJob(Guid jobId, [NotNullWhen(true)] out JobHandle? jobReference);
 
     /// <summary>
     /// Remove the job from the roster
     /// </summary>
     /// <param name="jobId"></param>
     /// <param name="jobHandle"></param>
-    bool TryRemoveJob(Guid jobId, out JobHandle jobHandle);
+    bool TryRemoveJob(Guid jobId, [NotNullWhen(true)] out JobHandle? jobHandle);
 
     /// <summary>
     /// Registers a job type at bus configuration time so that the options can be announced when the bus is started/stopped
@@ -48,7 +50,7 @@ public interface IJobService
     void RegisterJobType<T>(IReceiveEndpointConfigurator configurator, JobOptions<T> options, Guid jobTypeId, string jobTypeName)
         where T : class;
 
-    Task BusStarted(IPublishEndpoint publishEndpoint);
+    Task BusStartedAsync(IPublishEndpoint publishEndpoint, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Return the registered JobTypeId for the job type

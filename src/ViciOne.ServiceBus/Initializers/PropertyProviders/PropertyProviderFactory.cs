@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Initializers.PropertyConverters;
@@ -25,12 +26,13 @@ public class PropertyProviderFactory<TInput> :
     /// <param name="provider"></param>
     /// <typeparam name="TResult"></typeparam>
     /// <returns></returns>
-    public bool TryGetPropertyProvider<TResult>(PropertyInfo propertyInfo, out IPropertyProvider<TInput, TResult> provider)
+    public bool TryGetPropertyProvider<TResult>(PropertyInfo propertyInfo,
+        [NotNullWhen(true)] out IPropertyProvider<TInput, TResult>? provider)
     {
         return CreateProviderFactory<TResult>(propertyInfo.PropertyType).TryGetProvider(propertyInfo, out provider);
     }
 
-    public bool TryGetPropertyConverter<T, TProperty>(out IPropertyConverter<T, TProperty> converter)
+    public bool TryGetPropertyConverter<T, TProperty>([NotNullWhen(true)] out IPropertyConverter<T, TProperty>? converter)
     {
         return CreateProviderFactory<T>(typeof(TProperty)).TryGetConverter(out converter);
     }
@@ -43,69 +45,72 @@ public class PropertyProviderFactory<TInput> :
             return new Matching<T>();
 
         if (type.TryGetTaskResultType(out var taskType))
-            return (IProviderFactory)Activator.CreateInstance(typeof(TaskResult<>).MakeGenericType(typeof(TInput), taskType), this);
+            return Activate(typeof(TaskResult<>).MakeGenericType(typeof(TInput), taskType!), this);
 
         if (propertyType.TryGetTaskResultType(out taskType))
-            return (IProviderFactory)Activator.CreateInstance(typeof(TaskProperty<>).MakeGenericType(typeof(TInput), taskType), this);
+            return Activate(typeof(TaskProperty<>).MakeGenericType(typeof(TInput), taskType!), this);
 
         if (type.IsNullable(out var underlyingType))
-            return (IProviderFactory)Activator.CreateInstance(typeof(NullableResult<>).MakeGenericType(typeof(TInput), underlyingType), this);
+            return Activate(typeof(NullableResult<>).MakeGenericType(typeof(TInput), underlyingType!), this);
 
         if (type.TryGetSingleClosedGenericArguments(typeof(MessageData<>), out Type[] types))
-            return (IProviderFactory)Activator.CreateInstance(typeof(MessageDataResult<,>).MakeGenericType(typeof(TInput), propertyType, types[0]), this);
+            return Activate(typeof(MessageDataResult<,>).MakeGenericType(typeof(TInput), propertyType, types[0]), this);
 
         if (propertyType.IsNullable(out underlyingType))
-            return (IProviderFactory)Activator.CreateInstance(typeof(NullableProperty<>).MakeGenericType(typeof(TInput), underlyingType), this);
+            return Activate(typeof(NullableProperty<>).MakeGenericType(typeof(TInput), underlyingType!), this);
 
         if (propertyType.TryGetSingleClosedGenericArguments(typeof(IInitializerVariable<>), out types))
-            return (IProviderFactory)Activator.CreateInstance(typeof(VariableProperty<,>).MakeGenericType(typeof(TInput), propertyType, types[0]), this);
+            return Activate(typeof(VariableProperty<,>).MakeGenericType(typeof(TInput), propertyType, types[0]), this);
 
         if (propertyType.TryGetSingleClosedGenericArguments(typeof(State<>), out types))
-            return (IProviderFactory)Activator.CreateInstance(typeof(StateProperty<>).MakeGenericType(typeof(TInput), types[0]), this);
+            return Activate(typeof(StateProperty<>).MakeGenericType(typeof(TInput), types[0]), this);
 
         if (propertyType.IsValueTypeOrObject())
-            return (IProviderFactory)Activator.CreateInstance(typeof(Convert<,>).MakeGenericType(typeof(TInput), type, propertyType), this);
+            return Activate(typeof(Convert<,>).MakeGenericType(typeof(TInput), type, propertyType), this);
 
         if (propertyType.TryGetSingleClosedGenericArguments(typeof(IDictionary<,>), out types) || propertyType.TryGetSingleClosedGenericArguments(typeof(IReadOnlyDictionary<,>), out types))
         {
-            return (IProviderFactory)Activator.CreateInstance(typeof(DictionaryProperty<,,>).MakeGenericType(typeof(TInput), propertyType, types[0],
-                types[1]), this);
+            return Activate(typeof(DictionaryProperty<,,>).MakeGenericType(typeof(TInput), propertyType, types[0], types[1]), this);
         }
 
         if (propertyType.IsArray)
         {
-            return (IProviderFactory)Activator.CreateInstance(typeof(ArrayProperty<,>).MakeGenericType(typeof(TInput), propertyType,
-                propertyType.GetElementType()), this);
+            return Activate(typeof(ArrayProperty<,>).MakeGenericType(typeof(TInput), propertyType,
+                propertyType.GetElementType()!), this);
         }
 
         if (propertyType.TryGetSingleClosedGenericArguments(typeof(IEnumerable<>), out Type[] enumerableTypes))
         {
             if (enumerableTypes[0].TryGetSingleClosedGenericArguments(typeof(KeyValuePair<,>), out types))
             {
-                return (IProviderFactory)Activator.CreateInstance(typeof(DictionaryProperty<,,>).MakeGenericType(typeof(TInput), propertyType, types[0],
-                    types[1]), this);
+                return Activate(typeof(DictionaryProperty<,,>).MakeGenericType(typeof(TInput), propertyType, types[0], types[1]), this);
             }
 
-            return (IProviderFactory)Activator.CreateInstance(typeof(ArrayProperty<,>).MakeGenericType(typeof(TInput), propertyType, enumerableTypes[0]),
-                this);
+            return Activate(typeof(ArrayProperty<,>).MakeGenericType(typeof(TInput), propertyType, enumerableTypes[0]), this);
         }
 
-        return (IProviderFactory)Activator.CreateInstance(typeof(Convert<,>).MakeGenericType(typeof(TInput), type, propertyType), this);
+        return Activate(typeof(Convert<,>).MakeGenericType(typeof(TInput), type, propertyType), this);
+    }
+
+    static IProviderFactory Activate(Type type, params object[] arguments)
+    {
+        return Activator.CreateInstance(type, arguments) as IProviderFactory
+            ?? throw new InvalidOperationException($"Unable to create property-provider factory '{type}'.");
     }
 
 
     interface IProviderFactory
     {
-        bool TryGetProvider<T>(PropertyInfo propertyInfo, out IPropertyProvider<TInput, T> provider);
+        bool TryGetProvider<T>(PropertyInfo propertyInfo, [NotNullWhen(true)] out IPropertyProvider<TInput, T>? provider);
 
-        bool TryGetConverter<T, TProperty>(out IPropertyConverter<T, TProperty> converter);
+        bool TryGetConverter<T, TProperty>([NotNullWhen(true)] out IPropertyConverter<T, TProperty>? converter);
     }
 
 
     class Matching<TResult> :
         IProviderFactory
     {
-        bool IProviderFactory.TryGetProvider<T>(PropertyInfo propertyInfo, out IPropertyProvider<TInput, T> provider)
+        bool IProviderFactory.TryGetProvider<T>(PropertyInfo propertyInfo, [NotNullWhen(true)] out IPropertyProvider<TInput, T>? provider)
         {
             if (typeof(T) == typeof(TResult))
             {
@@ -117,7 +122,7 @@ public class PropertyProviderFactory<TInput> :
             return false;
         }
 
-        public bool TryGetConverter<T, TProperty>(out IPropertyConverter<T, TProperty> converter)
+        public bool TryGetConverter<T, TProperty>([NotNullWhen(true)] out IPropertyConverter<T, TProperty>? converter)
         {
             converter = default;
             return false;
@@ -135,10 +140,10 @@ public class PropertyProviderFactory<TInput> :
             _factory = factory;
         }
 
-        bool IProviderFactory.TryGetProvider<T>(PropertyInfo propertyInfo, out IPropertyProvider<TInput, T> provider)
+        bool IProviderFactory.TryGetProvider<T>(PropertyInfo propertyInfo, [NotNullWhen(true)] out IPropertyProvider<TInput, T>? provider)
         {
-            if (TryGetConverter(out IPropertyConverter<T, TInputProperty> propertyConverter)
-                && _factory.TryGetPropertyProvider(propertyInfo, out IPropertyProvider<TInput, TInputProperty> inputFactory))
+            if (TryGetConverter(out IPropertyConverter<T, TInputProperty>? propertyConverter)
+                && _factory.TryGetPropertyProvider(propertyInfo, out IPropertyProvider<TInput, TInputProperty>? inputFactory))
             {
                 provider = new PropertyConverterPropertyProvider<TInput, T, TInputProperty>(propertyConverter, inputFactory);
                 return true;
@@ -148,7 +153,7 @@ public class PropertyProviderFactory<TInput> :
             return false;
         }
 
-        public bool TryGetConverter<T, TProperty>(out IPropertyConverter<T, TProperty> converter)
+        public bool TryGetConverter<T, TProperty>([NotNullWhen(true)] out IPropertyConverter<T, TProperty>? converter)
         {
             if (typeof(T) == typeof(TResult))
             {
@@ -158,7 +163,7 @@ public class PropertyProviderFactory<TInput> :
                     return converter != default;
                 }
 
-                if (TypeConverterCache.TryGetTypeConverter(out ITypeConverter<T, TProperty> typeConverter))
+                if (TypeConverterCache.TryGetTypeConverter(out ITypeConverter<T, TProperty>? typeConverter))
                 {
                     converter = new TypePropertyConverter<T, TProperty>(typeConverter);
                     return true;
@@ -170,8 +175,8 @@ public class PropertyProviderFactory<TInput> :
                         ? typeof(InitializePropertyConverter<>).MakeGenericType(typeof(T))
                         : typeof(InitializePropertyConverter<,>).MakeGenericType(typeof(T), typeof(TProperty));
 
-                    converter = (IPropertyConverter<T, TProperty>)Activator.CreateInstance(converterType);
-                    return true;
+                    converter = Activator.CreateInstance(converterType) as IPropertyConverter<T, TProperty>;
+                    return converter != null;
                 }
             }
 
@@ -195,17 +200,17 @@ public class PropertyProviderFactory<TInput> :
             _factory = factory;
         }
 
-        bool IProviderFactory.TryGetProvider<T>(PropertyInfo propertyInfo, out IPropertyProvider<TInput, T> provider)
+        bool IProviderFactory.TryGetProvider<T>(PropertyInfo propertyInfo, [NotNullWhen(true)] out IPropertyProvider<TInput, T>? provider)
         {
             if (typeof(T) == typeof(TTask))
             {
-                provider = new AsyncPropertyProvider<TInput, T>(new InputPropertyProvider<TInput, Task<T>>(propertyInfo));
+                provider = new AsyncPropertyProvider<TInput, T>(new InputPropertyProvider<TInput, Task<T?>>(propertyInfo));
                 return true;
             }
 
-            if (_factory.TryGetPropertyConverter(out IPropertyConverter<T, TTask> converter))
+            if (_factory.TryGetPropertyConverter(out IPropertyConverter<T, TTask>? converter))
             {
-                var inputValuePropertyProvider = new InputPropertyProvider<TInput, Task<TTask>>(propertyInfo);
+                var inputValuePropertyProvider = new InputPropertyProvider<TInput, Task<TTask?>>(propertyInfo);
 
                 provider = new AsyncPropertyProvider<TInput, T, TTask>(inputValuePropertyProvider, converter);
                 return true;
@@ -215,7 +220,7 @@ public class PropertyProviderFactory<TInput> :
             return false;
         }
 
-        public bool TryGetConverter<T, TProperty>(out IPropertyConverter<T, TProperty> converter)
+        public bool TryGetConverter<T, TProperty>([NotNullWhen(true)] out IPropertyConverter<T, TProperty>? converter)
         {
             if (typeof(T) == typeof(TTask))
             {
@@ -223,7 +228,7 @@ public class PropertyProviderFactory<TInput> :
                 return converter != default;
             }
 
-            if (_factory.TryGetPropertyConverter(out IPropertyConverter<T, TTask> taskConverter))
+            if (_factory.TryGetPropertyConverter(out IPropertyConverter<T, TTask>? taskConverter))
             {
                 converter = new TaskPropertyConverter<T, TTask>(taskConverter) as IPropertyConverter<T, TProperty>;
                 return converter != default;
@@ -245,11 +250,11 @@ public class PropertyProviderFactory<TInput> :
             _factory = factory;
         }
 
-        bool IProviderFactory.TryGetProvider<T>(PropertyInfo propertyInfo, out IPropertyProvider<TInput, T> provider)
+        bool IProviderFactory.TryGetProvider<T>(PropertyInfo propertyInfo, [NotNullWhen(true)] out IPropertyProvider<TInput, T>? provider)
         {
             if (typeof(T).TryGetTaskResultType(out var taskType) && taskType == typeof(TTask))
             {
-                if (_factory.TryGetPropertyProvider(propertyInfo, out IPropertyProvider<TInput, TTask> providerFactory))
+                if (_factory.TryGetPropertyProvider(propertyInfo, out IPropertyProvider<TInput, TTask>? providerFactory))
                 {
                     provider = new TaskPropertyProvider<TInput, TTask>(providerFactory) as IPropertyProvider<TInput, T>;
                     return provider != null;
@@ -260,7 +265,7 @@ public class PropertyProviderFactory<TInput> :
             return false;
         }
 
-        public bool TryGetConverter<T, TProperty>(out IPropertyConverter<T, TProperty> converter)
+        public bool TryGetConverter<T, TProperty>([NotNullWhen(true)] out IPropertyConverter<T, TProperty>? converter)
         {
             if (typeof(T) == typeof(TTask))
             {
@@ -268,7 +273,7 @@ public class PropertyProviderFactory<TInput> :
                 return converter != default;
             }
 
-            if (_factory.TryGetPropertyConverter(out IPropertyConverter<T, TTask> taskConverter))
+            if (_factory.TryGetPropertyConverter(out IPropertyConverter<T, TTask>? taskConverter))
             {
                 converter = new TaskPropertyConverter<T, TTask>(taskConverter) as IPropertyConverter<T, TProperty>;
                 return converter != default;
@@ -291,11 +296,11 @@ public class PropertyProviderFactory<TInput> :
             _factory = factory;
         }
 
-        bool IProviderFactory.TryGetProvider<T>(PropertyInfo propertyInfo, out IPropertyProvider<TInput, T> provider)
+        bool IProviderFactory.TryGetProvider<T>(PropertyInfo propertyInfo, [NotNullWhen(true)] out IPropertyProvider<TInput, T>? provider)
         {
             if (typeof(T).IsNullable(out var underlyingType) && underlyingType == typeof(TValue))
             {
-                if (_factory.TryGetPropertyProvider(propertyInfo, out IPropertyProvider<TInput, TValue> providerFactory))
+                if (_factory.TryGetPropertyProvider(propertyInfo, out IPropertyProvider<TInput, TValue>? providerFactory))
                 {
                     provider = new ToNullablePropertyProvider<TInput, TValue>(providerFactory) as IPropertyProvider<TInput, T>;
                     return provider != null;
@@ -306,7 +311,7 @@ public class PropertyProviderFactory<TInput> :
             return false;
         }
 
-        public bool TryGetConverter<T, TProperty>(out IPropertyConverter<T, TProperty> converter)
+        public bool TryGetConverter<T, TProperty>([NotNullWhen(true)] out IPropertyConverter<T, TProperty>? converter)
         {
             if (typeof(T).IsNullable(out var underlyingType) && underlyingType == typeof(TValue))
             {
@@ -316,13 +321,13 @@ public class PropertyProviderFactory<TInput> :
                     return converter != default;
                 }
 
-                if (TypeConverterCache.TryGetTypeConverter(out ITypeConverter<T, TProperty> typeConverter))
+                if (TypeConverterCache.TryGetTypeConverter(out ITypeConverter<T, TProperty>? typeConverter))
                 {
                     converter = new TypePropertyConverter<T, TProperty>(typeConverter);
                     return true;
                 }
 
-                if (_factory.TryGetPropertyConverter(out IPropertyConverter<TValue, TProperty> propertyConverter))
+                if (_factory.TryGetPropertyConverter(out IPropertyConverter<TValue, TProperty>? propertyConverter))
                 {
                     converter = new ToNullablePropertyConverter<TValue, TProperty>(propertyConverter) as IPropertyConverter<T, TProperty>;
                     return converter != default;
@@ -345,9 +350,9 @@ public class PropertyProviderFactory<TInput> :
             _factory = factory;
         }
 
-        bool IProviderFactory.TryGetProvider<T>(PropertyInfo propertyInfo, out IPropertyProvider<TInput, T> provider)
+        bool IProviderFactory.TryGetProvider<T>(PropertyInfo propertyInfo, [NotNullWhen(true)] out IPropertyProvider<TInput, T>? provider)
         {
-            if (TryGetConverter(out IPropertyConverter<T, TSource> propertyConverter))
+            if (TryGetConverter(out IPropertyConverter<T, TSource>? propertyConverter))
             {
                 var inputValuePropertyProvider = new InputPropertyProvider<TInput, TSource>(propertyInfo);
 
@@ -359,7 +364,7 @@ public class PropertyProviderFactory<TInput> :
             return false;
         }
 
-        public bool TryGetConverter<T, TProperty>(out IPropertyConverter<T, TProperty> converter)
+        public bool TryGetConverter<T, TProperty>([NotNullWhen(true)] out IPropertyConverter<T, TProperty>? converter)
         {
             if (typeof(T).TryGetSingleClosedGenericArguments(typeof(MessageData<>), out Type[] types))
             {
@@ -396,7 +401,7 @@ public class PropertyProviderFactory<TInput> :
             _factory = factory;
         }
 
-        bool IProviderFactory.TryGetProvider<T>(PropertyInfo propertyInfo, out IPropertyProvider<TInput, T> provider)
+        bool IProviderFactory.TryGetProvider<T>(PropertyInfo propertyInfo, [NotNullWhen(true)] out IPropertyProvider<TInput, T>? provider)
         {
             if (typeof(T) == typeof(TValue))
             {
@@ -406,7 +411,7 @@ public class PropertyProviderFactory<TInput> :
                 return provider != null;
             }
 
-            if (TryGetConverter(out IPropertyConverter<T, TValue?> converter))
+            if (TryGetConverter(out IPropertyConverter<T, TValue?>? converter))
             {
                 var inputProvider = new InputPropertyProvider<TInput, TValue?>(propertyInfo);
 
@@ -418,7 +423,7 @@ public class PropertyProviderFactory<TInput> :
             return false;
         }
 
-        public bool TryGetConverter<T, TProperty>(out IPropertyConverter<T, TProperty> converter)
+        public bool TryGetConverter<T, TProperty>([NotNullWhen(true)] out IPropertyConverter<T, TProperty>? converter)
         {
             if (typeof(TProperty).IsNullable(out var underlyingType) && underlyingType == typeof(TValue))
             {
@@ -428,14 +433,14 @@ public class PropertyProviderFactory<TInput> :
                     return converter != default;
                 }
 
-                if (TypeConverterCache.TryGetTypeConverter(out ITypeConverter<T, TValue> typeConverter))
+                if (TypeConverterCache.TryGetTypeConverter(out ITypeConverter<T, TValue>? typeConverter))
                 {
                     var typePropertyConverter = new TypePropertyConverter<T, TValue>(typeConverter);
                     converter = new FromNullablePropertyConverter<T, TValue>(typePropertyConverter) as IPropertyConverter<T, TProperty>;
-                    return true;
+                    return converter != null;
                 }
 
-                if (_factory.TryGetPropertyConverter(out IPropertyConverter<TValue, TProperty> propertyConverter))
+                if (_factory.TryGetPropertyConverter(out IPropertyConverter<TValue, TProperty>? propertyConverter))
                 {
                     converter = new ToNullablePropertyConverter<TValue, TProperty>(propertyConverter) as IPropertyConverter<T, TProperty>;
                     return converter != default;
@@ -460,9 +465,9 @@ public class PropertyProviderFactory<TInput> :
             _factory = factory;
         }
 
-        bool IProviderFactory.TryGetProvider<T>(PropertyInfo propertyInfo, out IPropertyProvider<TInput, T> provider)
+        bool IProviderFactory.TryGetProvider<T>(PropertyInfo propertyInfo, [NotNullWhen(true)] out IPropertyProvider<TInput, T>? provider)
         {
-            if (TryGetConverter(out IPropertyConverter<T, TVariable> propertyConverter))
+            if (TryGetConverter(out IPropertyConverter<T, TVariable>? propertyConverter))
             {
                 var inputValuePropertyProvider = new InputPropertyProvider<TInput, TVariable>(propertyInfo);
 
@@ -474,7 +479,7 @@ public class PropertyProviderFactory<TInput> :
             return false;
         }
 
-        public bool TryGetConverter<T, TProperty>(out IPropertyConverter<T, TProperty> converter)
+        public bool TryGetConverter<T, TProperty>([NotNullWhen(true)] out IPropertyConverter<T, TProperty>? converter)
         {
             if (typeof(T) == typeof(TValue))
             {
@@ -482,7 +487,7 @@ public class PropertyProviderFactory<TInput> :
                 return converter != null;
             }
 
-            if (_factory.TryGetPropertyConverter(out IPropertyConverter<T, TValue> elementConverter))
+            if (_factory.TryGetPropertyConverter(out IPropertyConverter<T, TValue>? elementConverter))
             {
                 converter = new VariablePropertyConverter<T, TVariable, TValue>(elementConverter) as IPropertyConverter<T, TProperty>;
                 return converter != null;
@@ -505,9 +510,9 @@ public class PropertyProviderFactory<TInput> :
             _factory = factory;
         }
 
-        bool IProviderFactory.TryGetProvider<T>(PropertyInfo propertyInfo, out IPropertyProvider<TInput, T> provider)
+        bool IProviderFactory.TryGetProvider<T>(PropertyInfo propertyInfo, [NotNullWhen(true)] out IPropertyProvider<TInput, T>? provider)
         {
-            if (TryGetConverter(out IPropertyConverter<T, TInstance> propertyConverter))
+            if (TryGetConverter(out IPropertyConverter<T, TInstance>? propertyConverter))
             {
                 var inputValuePropertyProvider = new InputPropertyProvider<TInput, TInstance>(propertyInfo);
 
@@ -519,7 +524,7 @@ public class PropertyProviderFactory<TInput> :
             return false;
         }
 
-        public bool TryGetConverter<T, TProperty>(out IPropertyConverter<T, TProperty> converter)
+        public bool TryGetConverter<T, TProperty>([NotNullWhen(true)] out IPropertyConverter<T, TProperty>? converter)
         {
             if (typeof(T) == typeof(string))
             {
@@ -527,7 +532,7 @@ public class PropertyProviderFactory<TInput> :
                 return converter != null;
             }
 
-            if (_factory.TryGetPropertyConverter(out IPropertyConverter<T, string> elementConverter))
+            if (_factory.TryGetPropertyConverter(out IPropertyConverter<T, string>? elementConverter))
             {
                 converter = new StatePropertyConverter<T, TInstance>(elementConverter) as IPropertyConverter<T, TProperty>;
                 return converter != null;
@@ -549,7 +554,7 @@ public class PropertyProviderFactory<TInput> :
             _factory = factory;
         }
 
-        public bool TryGetProvider<T>(PropertyInfo propertyInfo, out IPropertyProvider<TInput, T> provider)
+        public bool TryGetProvider<T>(PropertyInfo propertyInfo, [NotNullWhen(true)] out IPropertyProvider<TInput, T>? provider)
         {
             if (IsSupportedType(typeof(T), out var providerFactory))
                 return providerFactory.TryGetProvider(propertyInfo, out provider);
@@ -558,7 +563,7 @@ public class PropertyProviderFactory<TInput> :
             return false;
         }
 
-        public bool TryGetConverter<T, TProperty>(out IPropertyConverter<T, TProperty> converter)
+        public bool TryGetConverter<T, TProperty>([NotNullWhen(true)] out IPropertyConverter<T, TProperty>? converter)
         {
             if (IsSupportedType(typeof(T), out var providerFactory))
                 return providerFactory.TryGetConverter(out converter);
@@ -567,14 +572,14 @@ public class PropertyProviderFactory<TInput> :
             return false;
         }
 
-        bool IsSupportedType(Type type, out IProviderFactory providerFactory)
+        bool IsSupportedType(Type type, [NotNullWhen(true)] out IProviderFactory? providerFactory)
         {
             if (type.IsArray)
             {
                 var factoryType = typeof(ArrayResult<>).MakeGenericType(typeof(TInput), typeof(TInputProperty), typeof(TInputElement),
-                    type.GetElementType());
+                    type.GetElementType()!);
 
-                providerFactory = (IProviderFactory)Activator.CreateInstance(factoryType, _factory);
+                providerFactory = Activate(factoryType, _factory);
                 return true;
             }
 
@@ -582,7 +587,7 @@ public class PropertyProviderFactory<TInput> :
             {
                 var factoryType = typeof(ListResult<>).MakeGenericType(typeof(TInput), typeof(TInputProperty), typeof(TInputElement), types[0]);
 
-                providerFactory = (IProviderFactory)Activator.CreateInstance(factoryType, _factory);
+                providerFactory = Activate(factoryType, _factory);
                 return true;
             }
 
@@ -601,9 +606,9 @@ public class PropertyProviderFactory<TInput> :
                 _factory = factory;
             }
 
-            public bool TryGetProvider<T>(PropertyInfo propertyInfo, out IPropertyProvider<TInput, T> provider)
+            public bool TryGetProvider<T>(PropertyInfo propertyInfo, [NotNullWhen(true)] out IPropertyProvider<TInput, T>? provider)
             {
-                if (TryGetConverter(out IPropertyConverter<T, TInputProperty> propertyConverter))
+                if (TryGetConverter(out IPropertyConverter<T, TInputProperty>? propertyConverter))
                 {
                     var inputProvider = new InputPropertyProvider<TInput, TInputProperty>(propertyInfo);
 
@@ -615,7 +620,7 @@ public class PropertyProviderFactory<TInput> :
                 return false;
             }
 
-            public bool TryGetConverter<T, TProperty>(out IPropertyConverter<T, TProperty> converter)
+            public bool TryGetConverter<T, TProperty>([NotNullWhen(true)] out IPropertyConverter<T, TProperty>? converter)
             {
                 if (typeof(TInputElement) == typeof(TElement))
                 {
@@ -623,7 +628,7 @@ public class PropertyProviderFactory<TInput> :
                     return converter != null;
                 }
 
-                if (_factory.TryGetPropertyConverter(out IPropertyConverter<TElement, TInputElement> elementConverter))
+                if (_factory.TryGetPropertyConverter(out IPropertyConverter<TElement, TInputElement>? elementConverter))
                 {
                     converter = new ArrayPropertyConverter<TElement, TInputElement>(elementConverter) as IPropertyConverter<T, TProperty>;
                     return converter != null;
@@ -645,9 +650,9 @@ public class PropertyProviderFactory<TInput> :
                 _factory = factory;
             }
 
-            public bool TryGetProvider<T>(PropertyInfo propertyInfo, out IPropertyProvider<TInput, T> provider)
+            public bool TryGetProvider<T>(PropertyInfo propertyInfo, [NotNullWhen(true)] out IPropertyProvider<TInput, T>? provider)
             {
-                if (TryGetConverter(out IPropertyConverter<T, TInputProperty> propertyConverter))
+                if (TryGetConverter(out IPropertyConverter<T, TInputProperty>? propertyConverter))
                 {
                     var inputProvider = new InputPropertyProvider<TInput, TInputProperty>(propertyInfo);
 
@@ -659,7 +664,7 @@ public class PropertyProviderFactory<TInput> :
                 return false;
             }
 
-            public bool TryGetConverter<T, TProperty>(out IPropertyConverter<T, TProperty> converter)
+            public bool TryGetConverter<T, TProperty>([NotNullWhen(true)] out IPropertyConverter<T, TProperty>? converter)
             {
                 if (typeof(TInputElement) == typeof(TElement))
                 {
@@ -667,7 +672,7 @@ public class PropertyProviderFactory<TInput> :
                     return converter != null;
                 }
 
-                if (_factory.TryGetPropertyConverter(out IPropertyConverter<TElement, TInputElement> elementConverter))
+                if (_factory.TryGetPropertyConverter(out IPropertyConverter<TElement, TInputElement>? elementConverter))
                 {
                     converter = new ListPropertyConverter<TElement, TInputElement>(elementConverter) as IPropertyConverter<T, TProperty>;
                     return converter != null;
@@ -690,7 +695,7 @@ public class PropertyProviderFactory<TInput> :
             _factory = factory;
         }
 
-        public bool TryGetProvider<T>(PropertyInfo propertyInfo, out IPropertyProvider<TInput, T> provider)
+        public bool TryGetProvider<T>(PropertyInfo propertyInfo, [NotNullWhen(true)] out IPropertyProvider<TInput, T>? provider)
         {
             if (IsSupportedType(typeof(T), out var providerFactory))
                 return providerFactory.TryGetProvider(propertyInfo, out provider);
@@ -699,7 +704,7 @@ public class PropertyProviderFactory<TInput> :
             return false;
         }
 
-        public bool TryGetConverter<T, TProperty>(out IPropertyConverter<T, TProperty> converter)
+        public bool TryGetConverter<T, TProperty>([NotNullWhen(true)] out IPropertyConverter<T, TProperty>? converter)
         {
             if (IsSupportedType(typeof(T), out var providerFactory))
                 return providerFactory.TryGetConverter(out converter);
@@ -708,7 +713,7 @@ public class PropertyProviderFactory<TInput> :
             return false;
         }
 
-        bool IsSupportedType(Type type, out IProviderFactory providerFactory)
+        bool IsSupportedType(Type type, [NotNullWhen(true)] out IProviderFactory? providerFactory)
         {
             if (type.TryGetSingleClosedGenericArguments(typeof(IDictionary<,>), out Type[] types)
                 || type.TryGetSingleClosedGenericArguments(typeof(IReadOnlyDictionary<,>), out types)
@@ -718,7 +723,7 @@ public class PropertyProviderFactory<TInput> :
                 var factoryType = typeof(DictionaryResult<,>).MakeGenericType(typeof(TInput), typeof(TInputProperty), typeof(TInputKey),
                     typeof(TInputValue), types[0], types[1]);
 
-                providerFactory = (IProviderFactory)Activator.CreateInstance(factoryType, _factory);
+                providerFactory = Activate(factoryType, _factory);
                 return true;
             }
 
@@ -727,7 +732,7 @@ public class PropertyProviderFactory<TInput> :
                 var factoryType = typeof(InitializerResult<>).MakeGenericType(typeof(TInput), typeof(TInputProperty), typeof(TInputKey),
                     typeof(TInputValue), type);
 
-                providerFactory = (IProviderFactory)Activator.CreateInstance(factoryType);
+                providerFactory = Activate(factoryType);
                 return true;
             }
 
@@ -738,6 +743,7 @@ public class PropertyProviderFactory<TInput> :
 
         class DictionaryResult<TKey, TValue> :
             IProviderFactory
+            where TKey : notnull
         {
             readonly IPropertyProviderFactory<TInput> _factory;
 
@@ -746,9 +752,9 @@ public class PropertyProviderFactory<TInput> :
                 _factory = factory;
             }
 
-            public bool TryGetProvider<T>(PropertyInfo propertyInfo, out IPropertyProvider<TInput, T> provider)
+            public bool TryGetProvider<T>(PropertyInfo propertyInfo, [NotNullWhen(true)] out IPropertyProvider<TInput, T>? provider)
             {
-                if (TryGetConverter(out IPropertyConverter<T, TInputProperty> propertyConverter))
+                if (TryGetConverter(out IPropertyConverter<T, TInputProperty>? propertyConverter))
                 {
                     var inputProvider = new InputPropertyProvider<TInput, TInputProperty>(propertyInfo);
 
@@ -760,7 +766,7 @@ public class PropertyProviderFactory<TInput> :
                 return false;
             }
 
-            public bool TryGetConverter<T, TProperty>(out IPropertyConverter<T, TProperty> converter)
+            public bool TryGetConverter<T, TProperty>([NotNullWhen(true)] out IPropertyConverter<T, TProperty>? converter)
             {
                 if (typeof(TKey) == typeof(TInputKey))
                 {
@@ -770,13 +776,13 @@ public class PropertyProviderFactory<TInput> :
                         return converter != default;
                     }
 
-                    if (_factory.TryGetPropertyConverter(out IPropertyConverter<TValue, TInputValue> propertyConverter))
+                    if (_factory.TryGetPropertyConverter(out IPropertyConverter<TValue, TInputValue>? propertyConverter))
                     {
                         converter = new DictionaryPropertyConverter<TKey, TValue, TInputValue>(propertyConverter) as IPropertyConverter<T, TProperty>;
                         return converter != default;
                     }
                 }
-                else if (_factory.TryGetPropertyConverter(out IPropertyConverter<TKey, TInputKey> keyConverter))
+                else if (_factory.TryGetPropertyConverter(out IPropertyConverter<TKey, TInputKey>? keyConverter))
                 {
                     if (typeof(TValue) == typeof(TInputValue))
                     {
@@ -784,7 +790,7 @@ public class PropertyProviderFactory<TInput> :
                         return converter != default;
                     }
 
-                    if (_factory.TryGetPropertyConverter(out IPropertyConverter<TValue, TInputValue> propertyConverter))
+                    if (_factory.TryGetPropertyConverter(out IPropertyConverter<TValue, TInputValue>? propertyConverter))
                     {
                         converter = new DictionaryPropertyConverter<TKey, TValue, TInputKey, TInputValue>(keyConverter, propertyConverter)
                             as IPropertyConverter<T, TProperty>;
@@ -802,9 +808,9 @@ public class PropertyProviderFactory<TInput> :
         class InitializerResult<TObject> :
             IProviderFactory
         {
-            public bool TryGetProvider<T>(PropertyInfo propertyInfo, out IPropertyProvider<TInput, T> provider)
+            public bool TryGetProvider<T>(PropertyInfo propertyInfo, [NotNullWhen(true)] out IPropertyProvider<TInput, T>? provider)
             {
-                if (TryGetConverter(out IPropertyConverter<T, TInputProperty> propertyConverter))
+                if (TryGetConverter(out IPropertyConverter<T, TInputProperty>? propertyConverter))
                 {
                     var inputProvider = new InputPropertyProvider<TInput, TInputProperty>(propertyInfo);
 
@@ -816,14 +822,14 @@ public class PropertyProviderFactory<TInput> :
                 return false;
             }
 
-            public bool TryGetConverter<T, TProperty>(out IPropertyConverter<T, TProperty> converter)
+            public bool TryGetConverter<T, TProperty>([NotNullWhen(true)] out IPropertyConverter<T, TProperty>? converter)
             {
                 if (typeof(T) == typeof(TObject) && typeof(T).IsInterface && MessageTypeCache<T>.IsValidMessageType)
                 {
                     var converterType = typeof(InitializePropertyConverter<,>).MakeGenericType(typeof(T), typeof(TProperty));
 
-                    converter = (IPropertyConverter<T, TProperty>)Activator.CreateInstance(converterType);
-                    return true;
+                    converter = Activator.CreateInstance(converterType) as IPropertyConverter<T, TProperty>;
+                    return converter != null;
                 }
 
                 converter = default;

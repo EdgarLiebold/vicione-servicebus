@@ -23,9 +23,9 @@ public class PendingFaultCollection
             _pendingFaults.Add(pendingFault);
     }
 
-    public async Task Notify(ConsumeContext consumeContext)
+    public async Task NotifyAsync(ConsumeContext consumeContext, CancellationToken cancellationToken = default)
     {
-        IPendingFault[] pendingFaults;
+        cancellationToken.ThrowIfCancellationRequested(); IPendingFault[] pendingFaults;
         do
         {
             lock (_pendingFaults)
@@ -38,7 +38,7 @@ public class PendingFaultCollection
                 _pendingFaults.Clear();
             }
 
-            await Task.WhenAll(pendingFaults.Select(x => x.Notify(consumeContext))).ConfigureAwait(false);
+            await Task.WhenAll(pendingFaults.Select(x => x.NotifyAsync(consumeContext))).ConfigureAwait(false);
         }
         while (pendingFaults.Length > 0);
     }
@@ -46,7 +46,7 @@ public class PendingFaultCollection
 
     interface IPendingFault
     {
-        Task Notify(ConsumeContext context);
+        Task NotifyAsync(ConsumeContext context);
     }
 
 
@@ -67,9 +67,9 @@ public class PendingFaultCollection
             _exception = exception;
         }
 
-        public Task Notify(ConsumeContext context)
+        public Task NotifyAsync(ConsumeContext context)
         {
-            return context.NotifyFaulted(_context, _elapsed, _consumerType, _exception);
+            return context.NotifyFaultedAsync(_context, _elapsed, _consumerType, _exception);
         }
     }
 }

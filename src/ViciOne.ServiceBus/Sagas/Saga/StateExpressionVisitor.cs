@@ -38,7 +38,7 @@ public class StateExpressionVisitor<TInstance> :
 
     protected override Expression VisitParameter(ParameterExpression node)
     {
-        if (node != null && node.Type == typeof(TInstance))
+        if (node.Type == typeof(TInstance))
             return _instanceParameter;
 
         return base.VisitParameter(node);

@@ -28,7 +28,7 @@ public class DeleteBatcher :
         return 0;
     }
 
-    protected override async Task SendBatch(IList<BatchEntry<DeleteMessageBatchRequestEntry>> batch)
+    protected override async Task SendBatchAsync(IList<BatchEntry<DeleteMessageBatchRequestEntry>> batch)
     {
         var batchRequest = new DeleteMessageBatchRequest(_queueUrl, batch.Select(x => x.Entry).ToList());
 

@@ -53,7 +53,7 @@ public partial class PipeConfigurator<TContext>
         IPipe<TContext>
     {
         [DebuggerNonUserCode]
-        Task IPipe<TContext>.Send(TContext context)
+        Task IPipe<TContext>.SendAsync(TContext context)
         {
             return Task.CompletedTask;
         }
@@ -83,9 +83,9 @@ public partial class PipeConfigurator<TContext>
         }
 
         [DebuggerStepThrough]
-        public Task Send(TContext context)
+        public Task SendAsync(TContext context)
         {
-            return _filter.Send(context, _next);
+            return _filter.SendAsync(context, _next);
         }
     }
 
@@ -109,9 +109,9 @@ public partial class PipeConfigurator<TContext>
         }
 
         [DebuggerStepThrough]
-        public Task Send(TContext context)
+        public Task SendAsync(TContext context)
         {
-            return _filter.Send(context, Cache.LastPipe);
+            return _filter.SendAsync(context, Cache.LastPipe);
         }
     }
 
@@ -123,7 +123,7 @@ public partial class PipeConfigurator<TContext>
         {
         }
 
-        public Task Send(TContext context)
+        public Task SendAsync(TContext context)
         {
             return Task.CompletedTask;
         }

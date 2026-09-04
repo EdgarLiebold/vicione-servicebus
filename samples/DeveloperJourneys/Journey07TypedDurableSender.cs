@@ -1,6 +1,6 @@
-namespace ViciOne.ServiceBus.Samples.DeveloperJourneys;
-
 using Microsoft.Extensions.DependencyInjection;
+
+namespace ViciOne.ServiceBus.Samples.DeveloperJourneys;
 
 public static class Journey07TypedDurableSender
 {
@@ -12,10 +12,10 @@ public static class Journey07TypedDurableSender
             configuration.UseDurableSender(durable => durable.UseInMemoryStore());
         });
 
-    public static Task<DurableSendReceipt> Send(
+    public static Task<DurableSendReceipt> SendAsync(
         IDurableSender<IOrdersBus> sender,
         SubmitOrder command,
-        CancellationToken cancellationToken) =>
+        CancellationToken cancellationToken = default) =>
         sender.SendAsync(
             new Uri("loopback://orders/submit"),
             command,

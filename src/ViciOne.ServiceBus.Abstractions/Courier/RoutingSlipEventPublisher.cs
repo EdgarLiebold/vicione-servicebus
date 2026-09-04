@@ -43,153 +43,153 @@ public class RoutingSlipEventPublisher :
 
     static IDictionary<string, object> EmptyObject => _emptyObject ??= new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
-    public Task PublishRoutingSlipCompleted(DateTime timestamp, TimeSpan duration, IDictionary<string, object> variables)
+    public Task PublishRoutingSlipCompletedAsync(DateTimeOffset timestamp, TimeSpan duration, IDictionary<string, object> variables, CancellationToken cancellationToken = default)
     {
-        return PublishEvent<RoutingSlipCompleted>(RoutingSlipEvents.Completed, contents => new RoutingSlipCompletedMessage(
-            _routingSlip.TrackingNumber,
-            timestamp,
-            duration,
-            contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Variables)
-                ? variables
-                : EmptyObject
-        ));
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return PublishEventAsync<RoutingSlipCompleted>(RoutingSlipEvents.Completed, contents => new RoutingSlipCompletedMessage(
+                    _routingSlip.TrackingNumber,
+                    timestamp,
+                    duration,
+                    contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Variables)
+                        ? variables
+                        : EmptyObject
+                ));
     }
 
-    public Task PublishRoutingSlipFaulted(DateTime timestamp, TimeSpan duration, IDictionary<string, object> variables,
-        params ActivityException[] exceptions)
+    public Task PublishRoutingSlipFaultedAsync(DateTimeOffset timestamp, TimeSpan duration, IDictionary<string, object> variables,
+        IReadOnlyCollection<ActivityException> exceptions, CancellationToken cancellationToken = default)
     {
-        return PublishEvent<RoutingSlipFaulted>(RoutingSlipEvents.Faulted, contents => new RoutingSlipFaultedMessage(
-            _routingSlip.TrackingNumber,
-            timestamp,
-            duration,
-            exceptions,
-            contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Variables)
-                ? variables
-                : EmptyObject
-        ));
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return PublishEventAsync<RoutingSlipFaulted>(RoutingSlipEvents.Faulted, contents => new RoutingSlipFaultedMessage(
+                    _routingSlip.TrackingNumber,
+                    timestamp,
+                    duration,
+                    exceptions,
+                    contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Variables)
+                        ? variables
+                        : EmptyObject
+                ));
     }
 
-    public Task PublishRoutingSlipActivityCompleted(string activityName, Guid executionId,
-        DateTime timestamp, TimeSpan duration, IDictionary<string, object> variables, IDictionary<string, object> arguments,
-        IDictionary<string, object> data)
+    public Task PublishRoutingSlipActivityCompletedAsync(string activityName, Guid executionId,
+        DateTimeOffset timestamp, TimeSpan duration, IDictionary<string, object> variables, IDictionary<string, object> arguments,
+        IDictionary<string, object> data, CancellationToken cancellationToken = default)
     {
-        return PublishEvent<RoutingSlipActivityCompleted>(RoutingSlipEvents.ActivityCompleted, contents => new RoutingSlipActivityCompletedMessage(
-            _host,
-            _routingSlip.TrackingNumber,
-            activityName,
-            executionId,
-            timestamp,
-            duration,
-            contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Variables)
-                ? variables
-                : EmptyObject,
-            contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Arguments)
-                ? arguments
-                : EmptyObject,
-            contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Data)
-                ? data
-                : EmptyObject));
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return PublishEventAsync<RoutingSlipActivityCompleted>(RoutingSlipEvents.ActivityCompleted, contents => new RoutingSlipActivityCompletedMessage(
+                    _host,
+                    _routingSlip.TrackingNumber,
+                    activityName,
+                    executionId,
+                    timestamp,
+                    duration,
+                    contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Variables)
+                        ? variables
+                        : EmptyObject,
+                    contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Arguments)
+                        ? arguments
+                        : EmptyObject,
+                    contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Data)
+                        ? data
+                        : EmptyObject));
     }
 
-    public Task PublishRoutingSlipActivityFaulted(string activityName, Guid executionId, DateTime timestamp, TimeSpan duration, ExceptionInfo exceptionInfo,
-        IDictionary<string, object> variables, IDictionary<string, object> arguments)
+    public Task PublishRoutingSlipActivityFaultedAsync(string activityName, Guid executionId, DateTimeOffset timestamp, TimeSpan duration, ExceptionInfo exceptionInfo,
+        IDictionary<string, object> variables, IDictionary<string, object> arguments, CancellationToken cancellationToken = default)
     {
-        return PublishEvent<RoutingSlipActivityFaulted>(RoutingSlipEvents.ActivityFaulted, contents => new RoutingSlipActivityFaultedMessage(
-            _host,
-            _routingSlip.TrackingNumber,
-            activityName,
-            executionId,
-            timestamp,
-            duration,
-            exceptionInfo,
-            contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Variables)
-                ? variables
-                : EmptyObject,
-            contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Arguments)
-                ? arguments
-                : EmptyObject));
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return PublishEventAsync<RoutingSlipActivityFaulted>(RoutingSlipEvents.ActivityFaulted, contents => new RoutingSlipActivityFaultedMessage(
+                    _host,
+                    _routingSlip.TrackingNumber,
+                    activityName,
+                    executionId,
+                    timestamp,
+                    duration,
+                    exceptionInfo,
+                    contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Variables)
+                        ? variables
+                        : EmptyObject,
+                    contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Arguments)
+                        ? arguments
+                        : EmptyObject));
     }
 
-    public Task PublishRoutingSlipActivityCompensated(string activityName, Guid executionId, DateTime timestamp, TimeSpan duration,
-        IDictionary<string, object> variables, IDictionary<string, object> data)
+    public Task PublishRoutingSlipActivityCompensatedAsync(string activityName, Guid executionId, DateTimeOffset timestamp, TimeSpan duration,
+        IDictionary<string, object> variables, IDictionary<string, object> data, CancellationToken cancellationToken = default)
     {
-        return PublishEvent<RoutingSlipActivityCompensated>(RoutingSlipEvents.ActivityCompensated, contents => new RoutingSlipActivityCompensatedMessage(
-            _host,
-            _routingSlip.TrackingNumber,
-            activityName,
-            executionId,
-            timestamp,
-            duration,
-            contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Variables)
-                ? variables
-                : EmptyObject,
-            contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Arguments)
-                ? data
-                : EmptyObject));
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return PublishEventAsync<RoutingSlipActivityCompensated>(RoutingSlipEvents.ActivityCompensated, contents => new RoutingSlipActivityCompensatedMessage(
+                    _host,
+                    _routingSlip.TrackingNumber,
+                    activityName,
+                    executionId,
+                    timestamp,
+                    duration,
+                    contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Variables)
+                        ? variables
+                        : EmptyObject,
+                    contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Arguments)
+                        ? data
+                        : EmptyObject));
     }
 
-    public Task PublishRoutingSlipRevised(string activityName, Guid executionId, DateTime timestamp, TimeSpan duration,
+    public Task PublishRoutingSlipRevisedAsync(string activityName, Guid executionId, DateTimeOffset timestamp, TimeSpan duration,
         IDictionary<string, object> variables,
-        IList<Activity> itinerary, IList<Activity> previousItinerary)
+        IList<Activity> itinerary, IList<Activity> previousItinerary, CancellationToken cancellationToken = default)
     {
-        return PublishEvent<RoutingSlipRevised>(RoutingSlipEvents.Revised, contents => new RoutingSlipRevisedMessage(
-            _host,
-            _routingSlip.TrackingNumber,
-            activityName,
-            executionId,
-            timestamp,
-            duration,
-            contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Variables)
-                ? variables
-                : EmptyObject,
-            contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Itinerary)
-                ? itinerary
-                : Enumerable.Empty<Activity>(),
-            contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Itinerary)
-                ? previousItinerary
-                : Enumerable.Empty<Activity>()));
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return PublishEventAsync<RoutingSlipRevised>(RoutingSlipEvents.Revised, contents => new RoutingSlipRevisedMessage(
+                    _host,
+                    _routingSlip.TrackingNumber,
+                    activityName,
+                    executionId,
+                    timestamp,
+                    duration,
+                    contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Variables)
+                        ? variables
+                        : EmptyObject,
+                    contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Itinerary)
+                        ? itinerary
+                        : Enumerable.Empty<Activity>(),
+                    contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Itinerary)
+                        ? previousItinerary
+                        : Enumerable.Empty<Activity>()));
     }
 
-    public Task PublishRoutingSlipTerminated(string activityName, Guid executionId, DateTime timestamp, TimeSpan duration,
+    public Task PublishRoutingSlipTerminatedAsync(string activityName, Guid executionId, DateTimeOffset timestamp, TimeSpan duration,
         IDictionary<string, object> variables,
-        IList<Activity> previousItinerary)
+        IList<Activity> previousItinerary, CancellationToken cancellationToken = default)
     {
-        return PublishEvent<RoutingSlipTerminated>(RoutingSlipEvents.Terminated, contents => new RoutingSlipTerminatedMessage(
-            _host,
-            _routingSlip.TrackingNumber,
-            activityName,
-            executionId,
-            timestamp,
-            duration,
-            contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Variables)
-                ? variables
-                : EmptyObject,
-            contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Itinerary)
-                ? previousItinerary
-                : Enumerable.Empty<Activity>()));
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return PublishEventAsync<RoutingSlipTerminated>(RoutingSlipEvents.Terminated, contents => new RoutingSlipTerminatedMessage(
+                    _host,
+                    _routingSlip.TrackingNumber,
+                    activityName,
+                    executionId,
+                    timestamp,
+                    duration,
+                    contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Variables)
+                        ? variables
+                        : EmptyObject,
+                    contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Itinerary)
+                        ? previousItinerary
+                        : Enumerable.Empty<Activity>()));
     }
 
-    public Task PublishRoutingSlipActivityCompensationFailed(string activityName, Guid executionId,
-        DateTime timestamp, TimeSpan duration, DateTime failureTimestamp, TimeSpan routingSlipDuration,
-        ExceptionInfo exceptionInfo, IDictionary<string, object> variables, IDictionary<string, object> data)
+    public Task PublishRoutingSlipActivityCompensationFailedAsync(string activityName, Guid executionId,
+        DateTimeOffset timestamp, TimeSpan duration, DateTimeOffset failureTimestamp, TimeSpan routingSlipDuration,
+        ExceptionInfo exceptionInfo, IDictionary<string, object> variables, IDictionary<string, object> data, CancellationToken cancellationToken = default)
     {
-        var activityTask = PublishEvent<RoutingSlipActivityCompensationFailed>(RoutingSlipEvents.ActivityCompensationFailed,
-            contents => new RoutingSlipActivityCompensationFailedMessage(
-                _host,
-                _routingSlip.TrackingNumber,
-                activityName,
-                executionId,
-                timestamp,
-                duration,
-                exceptionInfo,
-                contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Variables)
-                    ? variables
-                    : EmptyObject,
-                contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Data)
-                    ? data
-                    : EmptyObject));
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); var activityTask = PublishEventAsync<RoutingSlipActivityCompensationFailed>(RoutingSlipEvents.ActivityCompensationFailed,
+                    contents => new RoutingSlipActivityCompensationFailedMessage(
+                        _host,
+                        _routingSlip.TrackingNumber,
+                        activityName,
+                        executionId,
+                        timestamp,
+                        duration,
+                        exceptionInfo,
+                        contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Variables)
+                            ? variables
+                            : EmptyObject,
+                        contents == RoutingSlipEventContents.All || contents.HasFlag(RoutingSlipEventContents.Data)
+                            ? data
+                            : EmptyObject));
 
-        var slipTask = PublishEvent<RoutingSlipCompensationFailed>(RoutingSlipEvents.CompensationFailed,
+        var slipTask = PublishEventAsync<RoutingSlipCompensationFailed>(RoutingSlipEvents.CompensationFailed,
             contents => new RoutingSlipCompensationFailedMessage(
                 _host,
                 _routingSlip.TrackingNumber,
@@ -203,17 +203,17 @@ public class RoutingSlipEventPublisher :
         return Task.WhenAll(activityTask, slipTask);
     }
 
-    async Task PublishEvent<T>(RoutingSlipEvents eventFlag, Func<RoutingSlipEventContents, T> messageFactory)
+    async Task PublishEventAsync<T>(RoutingSlipEvents eventFlag, Func<RoutingSlipEventContents, T> messageFactory)
         where T : class
     {
         foreach (var subscription in _routingSlip.Subscriptions)
-            await PublishSubscriptionEvent(eventFlag, messageFactory, subscription).ConfigureAwait(false);
+            await PublishSubscriptionEventAsync(eventFlag, messageFactory, subscription).ConfigureAwait(false);
 
         if (_routingSlip.Subscriptions.All(sub => sub.Events.HasFlag(RoutingSlipEvents.Supplemental)))
-            await _publishEndpoint.Publish(messageFactory(RoutingSlipEventContents.All), _cancellationToken).ConfigureAwait(false);
+            await _publishEndpoint.PublishAsync(messageFactory(RoutingSlipEventContents.All), _cancellationToken).ConfigureAwait(false);
     }
 
-    async Task PublishSubscriptionEvent<T>(RoutingSlipEvents eventFlag, Func<RoutingSlipEventContents, T> messageFactory, Subscription subscription)
+    async Task PublishSubscriptionEventAsync<T>(RoutingSlipEvents eventFlag, Func<RoutingSlipEventContents, T> messageFactory, Subscription subscription)
         where T : class
     {
         if ((subscription.Events & RoutingSlipEvents.EventMask) == RoutingSlipEvents.All || subscription.Events.HasFlag(eventFlag))
@@ -222,18 +222,19 @@ public class RoutingSlipEventPublisher :
             if (string.IsNullOrWhiteSpace(activityName) || string.IsNullOrWhiteSpace(subscription.ActivityName)
                 || activityName!.Equals(subscription.ActivityName, StringComparison.OrdinalIgnoreCase))
             {
-                var endpoint = await _sendEndpointProvider.GetSendEndpoint(subscription.Address).ConfigureAwait(false);
+                var endpoint = await _sendEndpointProvider.GetSendEndpointAsync(subscription.Address).ConfigureAwait(false);
 
                 var message = messageFactory(subscription.Include);
 
-                if (subscription.Message != null && _context?.SerializerContext != null)
+                SerializerContext? serializerContext = (_context as ConsumeContext)?.SerializerContext;
+                if (subscription.Message != null && serializerContext != null)
                 {
-                    var adapter = new MessageEnvelopeContextAdapter<T>(_context.SerializerContext, subscription.Message);
+                    var adapter = new MessageEnvelopeContextAdapter<T>(serializerContext, subscription.Message);
 
-                    await endpoint.Send(message, adapter, _cancellationToken).ConfigureAwait(false);
+                    await endpoint.SendAsync(message, adapter, _cancellationToken).ConfigureAwait(false);
                 }
                 else
-                    await endpoint.Send(message, _cancellationToken).ConfigureAwait(false);
+                    await endpoint.SendAsync(message, _cancellationToken).ConfigureAwait(false);
             }
         }
     }
@@ -252,7 +253,7 @@ public class RoutingSlipEventPublisher :
             _envelope = envelope;
         }
 
-        public Task Send(SendContext<T> context)
+        public Task SendAsync(SendContext<T> context)
         {
             context.Serializer = _context.GetMessageSerializer(_envelope, context.Message);
 

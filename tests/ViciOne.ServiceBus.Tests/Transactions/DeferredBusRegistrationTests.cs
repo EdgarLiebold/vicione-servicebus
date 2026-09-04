@@ -132,7 +132,7 @@ public sealed class DeferredBusRegistrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DEFERRED-BUS-DI", "cross-bus-consumer-scope-retains-capability")]
-    public async Task SecondaryBufferedBus_RetainsItsBoundaryInsideADefaultBusConsumerScope()
+    public async Task SecondaryBufferedBus_RetainsItsBoundaryInsideADefaultBusConsumerScopeAsync()
     {
         TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -157,7 +157,7 @@ public sealed class DeferredBusRegistrationTests
             ValidateOnBuild = true,
             ValidateScopes = true,
         });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         Bind<ISecondaryBus, IBufferedBus> secondary = harness.Scope.ServiceProvider
             .GetRequiredService<Bind<ISecondaryBus, IBufferedBus>>();
         var observer = new RecordingPublishObserver();
@@ -166,7 +166,7 @@ public sealed class DeferredBusRegistrationTests
 
         try
         {
-            await harness.Bus.Publish(trigger, cancellationToken);
+            await harness.Bus.PublishAsync(trigger, cancellationToken);
             await coordinator.Buffered.Task.WaitAsync(timeout, cancellationToken);
 
             Assert.Empty(observer.Events);
@@ -181,13 +181,13 @@ public sealed class DeferredBusRegistrationTests
         finally
         {
             coordinator.Release.TrySetResult();
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DEFERRED-BUS-DI", "multibus-capabilities-are-owner-bound")]
-    public async Task MultiBusRegistration_BindsEachCapabilityOnlyToItsOwningBus()
+    public async Task MultiBusRegistration_BindsEachCapabilityOnlyToItsOwningBusAsync()
     {
         var services = new ServiceCollection();
         services
@@ -355,7 +355,7 @@ public sealed class DeferredBusRegistrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DEFERRED-BUS-DI", "resolved-lifetimes-share-owner-bound-instance")]
-    public async Task ResolvedCapabilities_MatchTheirOwnerBindingAndConfiguredLifetime()
+    public async Task ResolvedCapabilities_MatchTheirOwnerBindingAndConfiguredLifetimeAsync()
     {
         await using ServiceProvider ambientProvider = new ServiceCollection()
             .AddViciOneServiceBusTestHarness(configuration => configuration.AddAmbientTransactionBus())
@@ -394,11 +394,11 @@ public sealed class DeferredBusRegistrationTests
         Bind<ISecondaryBus, IBufferedBus> bufferedBus,
         CrossBusBufferedCoordinator coordinator) : IConsumer<CrossBusBufferedTrigger>
     {
-        public async Task Consume(ConsumeContext<CrossBusBufferedTrigger> context)
+        public async Task ConsumeAsync(ConsumeContext<CrossBusBufferedTrigger> context)
         {
             try
             {
-                await publishEndpoint.Value.Publish(
+                await publishEndpoint.Value.PublishAsync(
                     new CrossBusBufferedResult(context.Message.CorrelationId),
                     context.CancellationToken);
                 coordinator.Buffered.TrySetResult();
@@ -429,21 +429,21 @@ public sealed class DeferredBusRegistrationTests
 
         public PublishObservation[] Events => _events.ToArray();
 
-        public Task PrePublish<T>(PublishContext<T> context)
+        public Task PrePublishAsync<T>(PublishContext<T> context)
             where T : class
         {
             _events.Enqueue(new PublishObservation("Pre", context.Message));
             return Task.CompletedTask;
         }
 
-        public Task PostPublish<T>(PublishContext<T> context)
+        public Task PostPublishAsync<T>(PublishContext<T> context)
             where T : class
         {
             _events.Enqueue(new PublishObservation("Post", context.Message));
             return Task.CompletedTask;
         }
 
-        public Task PublishFault<T>(PublishContext<T> context, Exception exception)
+        public Task PublishFaultAsync<T>(PublishContext<T> context, Exception exception)
             where T : class
         {
             _events.Enqueue(new PublishObservation("Fault", context.Message));

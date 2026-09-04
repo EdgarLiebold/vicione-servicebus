@@ -23,16 +23,16 @@ public class ServiceBusSessionMessageLockContext :
         _cancellationToken = cancellationToken;
     }
 
-    public Task Complete()
+    public Task CompleteAsync(CancellationToken cancellationToken = default)
     {
-        return _deadLettered
-            ? Task.CompletedTask
-            : _session.CompleteMessageAsync(_message, _cancellationToken);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return _deadLettered
+                    ? Task.CompletedTask
+                    : _session.CompleteMessageAsync(_message, _cancellationToken);
     }
 
-    public Task Abandon(Exception exception)
+    public Task AbandonAsync(Exception exception, CancellationToken cancellationToken = default)
     {
-        if (_deadLettered)
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (_deadLettered)
             return Task.CompletedTask;
 
         (Dictionary<string, object> dictionary, _) = ExceptionUtil.GetExceptionHeaderDetail(exception, ServiceBusSendTransportContext.Adapter);
@@ -40,7 +40,7 @@ public class ServiceBusSessionMessageLockContext :
         return _session.AbandonMessageAsync(_message, dictionary, _cancellationToken);
     }
 
-    public async Task DeadLetter()
+    public async Task DeadLetterAsync(CancellationToken cancellationToken = default)
     {
         const string reason = "dead-letter";
 
@@ -51,9 +51,9 @@ public class ServiceBusSessionMessageLockContext :
         _deadLettered = true;
     }
 
-    public async Task DeadLetter(Exception exception)
+    public async Task DeadLetterAsync(Exception exception, CancellationToken cancellationToken = default)
     {
-        const string reason = "fault";
+        cancellationToken.ThrowIfCancellationRequested(); const string reason = "fault";
 
         (Dictionary<string, object> dictionary, var message) = ExceptionUtil.GetExceptionHeaderDetail(exception, ServiceBusSendTransportContext.Adapter);
 

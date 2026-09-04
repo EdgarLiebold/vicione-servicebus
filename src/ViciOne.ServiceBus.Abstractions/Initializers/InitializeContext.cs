@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ViciOne.ServiceBus.Initializers;
 
@@ -54,7 +55,7 @@ public interface InitializeContext :
     /// the parent initialize context, which is valid if the type is being initialized
     /// within another type
     /// </summary>
-    InitializeContext Parent { get; }
+    InitializeContext? Parent { get; }
 
     /// <summary>
     /// Return the closest parent context for the specified type, if present
@@ -62,7 +63,7 @@ public interface InitializeContext :
     /// <param name="parentContext"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    bool TryGetParent<T>(out InitializeContext<T> parentContext)
+    bool TryGetParent<T>([NotNullWhen(true)] out InitializeContext<T>? parentContext)
         where T : class;
 
     InitializeContext<T> CreateMessageContext<T>(T message)

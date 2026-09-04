@@ -25,13 +25,13 @@ public interface IRabbitMqReceiveEndpointConfigurator :
     /// </summary>
     /// <param name="exchangeName">The exchange name</param>
     /// <param name="callback">Configure the exchange and binding</param>
-    void Bind(string exchangeName, Action<IRabbitMqExchangeToExchangeBindingConfigurator> callback = null);
+    void Bind(string exchangeName, Action<IRabbitMqExchangeToExchangeBindingConfigurator>? callback = null);
 
     /// <summary>
     /// Bind an exchange to the receive endpoint exchange
     /// </summary>
     /// <param name="callback">Configure the exchange and binding</param>
-    void Bind<T>(Action<IRabbitMqExchangeBindingConfigurator> callback = null)
+    void Bind<T>(Action<IRabbitMqExchangeBindingConfigurator>? callback = null)
         where T : class;
 
     /// <summary>
@@ -40,7 +40,7 @@ public interface IRabbitMqReceiveEndpointConfigurator :
     /// <param name="exchangeName"></param>
     /// <param name="queueName"></param>
     /// <param name="configure"></param>
-    void BindDeadLetterQueue(string exchangeName, string queueName = null, Action<IRabbitMqQueueBindingConfigurator> configure = null);
+    void BindDeadLetterQueue(string exchangeName, string? queueName = null, Action<IRabbitMqQueueBindingConfigurator>? configure = null);
 
     /// <summary>
     /// Add middleware to the channel pipe
@@ -65,14 +65,14 @@ public interface IRabbitMqReceiveEndpointConfigurator :
     /// Configure receive endpoint to use a stream
     /// </summary>
     /// <param name="callback"></param>
-    void Stream(Action<IRabbitMqStreamConfigurator> callback = null);
+    void Stream(Action<IRabbitMqStreamConfigurator>? callback = null);
 
     /// <summary>
     /// Configure receive endpoint to use a stream
     /// </summary>
     /// <param name="consumerTag">Overrides the default consumer tag with the specified name</param>
     /// <param name="callback"></param>
-    void Stream(string consumerTag, Action<IRabbitMqStreamConfigurator> callback = null);
+    void Stream(string consumerTag, Action<IRabbitMqStreamConfigurator>? callback = null);
 
     /// <summary>
     /// Configure the RabbitMQ delivery acknowledgement timeout for this queue explicitly. This is entirely optional,

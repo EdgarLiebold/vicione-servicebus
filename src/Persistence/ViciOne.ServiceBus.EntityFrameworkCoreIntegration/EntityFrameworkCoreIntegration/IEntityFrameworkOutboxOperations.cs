@@ -21,10 +21,10 @@ public interface IEntityFrameworkOutboxOperations<TBus, TDbContext>
 
 public sealed record OutboxQuarantineEntry(
     Guid OutboxId,
-    DateTime Created,
+    DateTimeOffset Created,
     int DeliveryAttempts,
     OutboxFailureKind FailureKind,
-    DateTime? FailureTime,
+    DateTimeOffset? FailureTime,
     string? Failure,
     long? FailedSequenceNumber,
     Guid? FailedMessageId);

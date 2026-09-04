@@ -5,16 +5,16 @@ public partial class StateMachineInterfaceType<TInstance, TData>
     public class StateMachineSagaMessageConnector :
         SagaConnector<TInstance, TData>.SagaMessageConnector
     {
-        readonly IFilter<ConsumeContext<TData>> _messageFilter;
+        readonly IFilter<ConsumeContext<TData>>? _messageFilter;
         readonly ISagaPolicy<TInstance, TData> _policy;
-        readonly SagaFilterFactory<TInstance, TData> _sagaFilterFactory;
+        readonly SagaFilterFactory<TInstance, TData>? _sagaFilterFactory;
 
-        public StateMachineSagaMessageConnector(IFilter<SagaConsumeContext<TInstance, TData>> consumeFilter, ISagaPolicy<TInstance, TData> policy,
-            SagaFilterFactory<TInstance, TData> sagaFilterFactory, IFilter<ConsumeContext<TData>> messageFilter, bool configureConsumeTopology)
+        public StateMachineSagaMessageConnector(IFilter<SagaConsumeContext<TInstance, TData>> consumeFilter, ISagaPolicy<TInstance, TData>? policy,
+            SagaFilterFactory<TInstance, TData>? sagaFilterFactory, IFilter<ConsumeContext<TData>>? messageFilter, bool configureConsumeTopology)
             : base(consumeFilter)
         {
             ConfigureConsumeTopology = configureConsumeTopology;
-            _policy = policy;
+            _policy = policy ?? throw new ConfigurationException("The saga event correlation did not provide a repository policy.");
             _sagaFilterFactory = sagaFilterFactory;
             _messageFilter = messageFilter;
         }

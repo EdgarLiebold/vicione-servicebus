@@ -12,7 +12,7 @@ public static class RabbitMqHostConfigurationExtensions
     /// <param name="hostAddress">The URI host address of the RabbitMQ host (rabbitmq://host:port/vhost)</param>
     /// <param name="configure"></param>
     public static void Host(this IRabbitMqBusFactoryConfigurator configurator, Uri hostAddress,
-        Action<IRabbitMqHostConfigurator> configure = null)
+        Action<IRabbitMqHostConfigurator>? configure = null)
     {
         configurator.Host(hostAddress, null, configure);
     }
@@ -24,7 +24,7 @@ public static class RabbitMqHostConfigurationExtensions
     /// <param name="host">The host name of the broker, or a well-formed URI host address</param>
     /// <param name="configure">The configuration callback</param>
     public static void Host(this IRabbitMqBusFactoryConfigurator configurator, string host,
-        Action<IRabbitMqHostConfigurator> configure = null)
+        Action<IRabbitMqHostConfigurator>? configure = null)
     {
         if (Uri.IsWellFormedUriString(host, UriKind.Absolute))
             configurator.Host(new Uri(host), null, configure);
@@ -39,8 +39,8 @@ public static class RabbitMqHostConfigurationExtensions
     /// <param name="hostAddress">The URI host address of the RabbitMQ host (rabbitmq://host:port/vhost)</param>
     /// <param name="connectionName">The client-provided connection name</param>
     /// <param name="configure"></param>
-    public static void Host(this IRabbitMqBusFactoryConfigurator configurator, Uri hostAddress, string connectionName,
-        Action<IRabbitMqHostConfigurator> configure = null)
+    public static void Host(this IRabbitMqBusFactoryConfigurator configurator, Uri hostAddress, string? connectionName,
+        Action<IRabbitMqHostConfigurator>? configure = null)
     {
         var hostConfigurator = new RabbitMqHostConfigurator(hostAddress, connectionName);
 
@@ -57,7 +57,7 @@ public static class RabbitMqHostConfigurationExtensions
     /// <param name="virtualHost">The virtual host to use</param>
     /// <param name="configure">The configuration callback</param>
     public static void Host(this IRabbitMqBusFactoryConfigurator configurator, string host, string virtualHost,
-        Action<IRabbitMqHostConfigurator> configure = null)
+        Action<IRabbitMqHostConfigurator>? configure = null)
     {
         configurator.Host(host, virtualHost, null, configure);
     }
@@ -70,8 +70,8 @@ public static class RabbitMqHostConfigurationExtensions
     /// <param name="virtualHost">The virtual host to use</param>
     /// <param name="connectionName">The client-provided connection name</param>
     /// <param name="configure">The configuration callback</param>
-    public static void Host(this IRabbitMqBusFactoryConfigurator configurator, string host, string virtualHost, string connectionName,
-        Action<IRabbitMqHostConfigurator> configure = null)
+    public static void Host(this IRabbitMqBusFactoryConfigurator configurator, string host, string virtualHost, string? connectionName,
+        Action<IRabbitMqHostConfigurator>? configure = null)
     {
         if (host == null)
             throw new ArgumentNullException(nameof(host));
@@ -109,7 +109,7 @@ public static class RabbitMqHostConfigurationExtensions
     /// <param name="connectionName">The client-provided connection name</param>
     /// <param name="configure">The configuration callback</param>
     public static void Host(this IRabbitMqBusFactoryConfigurator configurator, string host, ushort port, string virtualHost,
-        string connectionName, Action<IRabbitMqHostConfigurator> configure = null)
+        string? connectionName, Action<IRabbitMqHostConfigurator>? configure = null)
     {
         if (host == null)
             throw new ArgumentNullException(nameof(host));
@@ -130,7 +130,7 @@ public static class RabbitMqHostConfigurationExtensions
     /// </summary>
     /// <param name="configurator"></param>
     /// <param name="configure"></param>
-    public static void ReceiveEndpoint(this IRabbitMqBusFactoryConfigurator configurator, Action<IRabbitMqReceiveEndpointConfigurator> configure = null)
+    public static void ReceiveEndpoint(this IRabbitMqBusFactoryConfigurator configurator, Action<IRabbitMqReceiveEndpointConfigurator>? configure = null)
     {
         configurator.ReceiveEndpoint(new TemporaryEndpointDefinition(), DefaultEndpointNameFormatter.Instance, configure);
     }
@@ -142,7 +142,7 @@ public static class RabbitMqHostConfigurationExtensions
     /// <param name="definition"></param>
     /// <param name="configure"></param>
     public static void ReceiveEndpoint(this IRabbitMqBusFactoryConfigurator configurator, IEndpointDefinition definition,
-        Action<IRabbitMqReceiveEndpointConfigurator> configure = null)
+        Action<IRabbitMqReceiveEndpointConfigurator>? configure = null)
     {
         configurator.ReceiveEndpoint(definition, DefaultEndpointNameFormatter.Instance, configure);
     }

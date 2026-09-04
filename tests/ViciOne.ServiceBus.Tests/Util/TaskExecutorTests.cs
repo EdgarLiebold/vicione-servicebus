@@ -11,7 +11,7 @@ public sealed class TaskExecutorTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-EXECUTOR-EXECUTE", "action")]
-    public async Task ExecuteAction_CompletesOnlyAfterTheActionExecuted()
+    public async Task ExecuteAction_CompletesOnlyAfterTheActionExecutedAsync()
     {
         await using var executor = new TaskExecutor();
         var executed = false;
@@ -24,7 +24,7 @@ public sealed class TaskExecutorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-EXECUTOR-EXECUTE", "task")]
-    public async Task ExecuteTask_CompletesOnlyAfterTheAwaitedWorkCompleted()
+    public async Task ExecuteTask_CompletesOnlyAfterTheAwaitedWorkCompletedAsync()
     {
         await using var executor = new TaskExecutor();
         var started = NewCompletionSource();
@@ -57,7 +57,7 @@ public sealed class TaskExecutorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-EXECUTOR-EXECUTE", "value-task")]
-    public async Task ExecuteValueTask_CompletesOnlyAfterTheAwaitedWorkCompleted()
+    public async Task ExecuteValueTask_CompletesOnlyAfterTheAwaitedWorkCompletedAsync()
     {
         await using var executor = new TaskExecutor();
         var started = NewCompletionSource();
@@ -90,7 +90,7 @@ public sealed class TaskExecutorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-EXECUTOR-RESULT", "sync-task-and-value-task")]
-    public async Task ResultOverloads_ReturnTheExecutedDelegateResults()
+    public async Task ResultOverloads_ReturnTheExecutedDelegateResultsAsync()
     {
         await using var executor = new TaskExecutor();
 
@@ -123,7 +123,7 @@ public sealed class TaskExecutorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-EXECUTOR-CONCURRENCY", "maximum-active-work")]
-    public async Task ConcurrencyLimit_BoundsSimultaneouslyActiveWork()
+    public async Task ConcurrencyLimit_BoundsSimultaneouslyActiveWorkAsync()
     {
         const int concurrencyLimit = 2;
         await using var executor = new TaskExecutor(concurrencyLimit);
@@ -164,7 +164,7 @@ public sealed class TaskExecutorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-EXECUTOR-BACKPRESSURE", "bounded-capacity")]
-    public async Task BoundedExecutor_BlocksTheNextWriterWhileCapacityIsOccupied()
+    public async Task BoundedExecutor_BlocksTheNextWriterWhileCapacityIsOccupiedAsync()
     {
         await using var executor = new TaskExecutor(capacity: 1, concurrencyLimit: 1);
         var started = NewCompletionSource();
@@ -204,7 +204,7 @@ public sealed class TaskExecutorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-EXECUTOR-BACKPRESSURE", "bounded-default-capacity")]
-    public async Task DefaultExecutor_HasAHardBoundedAdmissionCapacity()
+    public async Task DefaultExecutor_HasAHardBoundedAdmissionCapacityAsync()
     {
         await using var executor = new TaskExecutor(concurrencyLimit: 1);
         var started = NewCompletionSource();
@@ -245,7 +245,7 @@ public sealed class TaskExecutorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-EXECUTOR-CANCELLATION", "queued-work")]
-    public async Task CancellationAfterEnqueue_CancelsTheResultWithoutInvokingTheDelegate()
+    public async Task CancellationAfterEnqueue_CancelsTheResultWithoutInvokingTheDelegateAsync()
     {
         await using var executor = new TaskExecutor();
         var started = NewCompletionSource();
@@ -276,7 +276,7 @@ public sealed class TaskExecutorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-EXECUTOR-CANCELLATION", "queued-fire-and-forget-work")]
-    public async Task CancellationAfterQueuedAdmission_SkipsFireAndForgetWork()
+    public async Task CancellationAfterQueuedAdmission_SkipsFireAndForgetWorkAsync()
     {
         await using var executor = new TaskExecutor();
         var started = NewCompletionSource();
@@ -304,7 +304,7 @@ public sealed class TaskExecutorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-EXECUTOR-CANCELLATION", "bounded-admission")]
-    public async Task CancellationWhileWaitingForCapacity_CancelsAdmissionWithoutInvokingTheDelegate()
+    public async Task CancellationWhileWaitingForCapacity_CancelsAdmissionWithoutInvokingTheDelegateAsync()
     {
         await using var executor = new TaskExecutor(capacity: 1, concurrencyLimit: 1);
         var started = NewCompletionSource();
@@ -346,7 +346,7 @@ public sealed class TaskExecutorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-EXECUTOR-FAULT", "unwrapped-exception")]
-    public async Task DelegateFault_IsPropagatedWithoutAnAggregateWrapper()
+    public async Task DelegateFault_IsPropagatedWithoutAnAggregateWrapperAsync()
     {
         await using var executor = new TaskExecutor();
 
@@ -360,7 +360,7 @@ public sealed class TaskExecutorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-EXECUTOR-CANCELLATION", "delegate-cancellation")]
-    public async Task DelegateCancellation_PreservesTheCancellationTokenAndTaskState()
+    public async Task DelegateCancellation_PreservesTheCancellationTokenAndTaskStateAsync()
     {
         await using var executor = new TaskExecutor();
         using var cancellation = new CancellationTokenSource();
@@ -376,7 +376,7 @@ public sealed class TaskExecutorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-EXECUTOR-ENQUEUE", "dispose-drains-work")]
-    public async Task Enqueue_ReturnsAfterEnqueueAndDisposeWaitsForTheWork()
+    public async Task Enqueue_ReturnsAfterEnqueueAndDisposeWaitsForTheWorkAsync()
     {
         var executor = new TaskExecutor();
         var started = NewCompletionSource();
@@ -411,7 +411,7 @@ public sealed class TaskExecutorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-EXECUTOR-ENQUEUE", "value-task-dispose-drains-work")]
-    public async Task EnqueueValueTask_ReturnsAfterEnqueueAndDisposeWaitsForWork()
+    public async Task EnqueueValueTask_ReturnsAfterEnqueueAndDisposeWaitsForWorkAsync()
     {
         var executor = new TaskExecutor();
         var started = NewCompletionSource();
@@ -446,7 +446,7 @@ public sealed class TaskExecutorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-EXECUTOR-DISPOSAL", "concurrent-idempotent-and-closed")]
-    public async Task ConcurrentDisposal_DrainsAcceptedWorkAndRejectsNewWork()
+    public async Task ConcurrentDisposal_DrainsAcceptedWorkAndRejectsNewWorkAsync()
     {
         var executor = new TaskExecutor();
         var started = NewCompletionSource();
@@ -482,9 +482,9 @@ public sealed class TaskExecutorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-EXECUTOR-FAULT", "queued-fault-and-secondary-logger")]
-    public async Task QueuedFaultAndSecondaryLoggerFault_DoNotTerminateTheWorker()
+    public async Task QueuedFaultAndSecondaryLoggerFault_DoNotTerminateTheWorkerAsync()
     {
-        ILogContext previousLogContext = LogContext.Current;
+        ILogContext? previousLogContext = LogContext.Current;
         var logger = new ThrowingLogger();
         LogContext.ConfigureCurrentLogContext(logger);
         var executor = new TaskExecutor(capacity: 1, concurrencyLimit: 1);
@@ -519,7 +519,7 @@ public sealed class TaskExecutorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-EXECUTOR-BACKPRESSURE", "blocking-callback-admission")]
-    public async Task EnqueueBlocking_BlocksOnlyUntilBoundedCapacityIsAvailable()
+    public async Task EnqueueBlocking_BlocksOnlyUntilBoundedCapacityIsAvailableAsync()
     {
         await using var executor = new TaskExecutor(capacity: 1, concurrencyLimit: 1);
         var firstStarted = NewCompletionSource();
@@ -572,7 +572,7 @@ public sealed class TaskExecutorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-EXECUTOR-CANCELLATION", "blocking-admission")]
-    public async Task EnqueueBlocking_CancelsWhileWaitingForBoundedCapacity()
+    public async Task EnqueueBlocking_CancelsWhileWaitingForBoundedCapacityAsync()
     {
         await using var executor = new TaskExecutor(capacity: 1, concurrencyLimit: 1);
         var firstStarted = NewCompletionSource();
@@ -634,7 +634,7 @@ public sealed class TaskExecutorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-EXECUTOR-DISPOSAL", "blocking-admission-closed")]
-    public async Task EnqueueBlocking_RejectsWorkAfterDisposal()
+    public async Task EnqueueBlocking_RejectsWorkAfterDisposalAsync()
     {
         var executor = new TaskExecutor();
         await executor.DisposeAsync();
@@ -647,7 +647,7 @@ public sealed class TaskExecutorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-EXECUTOR-VALIDATION", "null-delegates")]
-    public async Task PublicExecutionMethods_RejectNullDelegates()
+    public async Task PublicExecutionMethods_RejectNullDelegatesAsync()
     {
         await using var executor = new TaskExecutor();
 

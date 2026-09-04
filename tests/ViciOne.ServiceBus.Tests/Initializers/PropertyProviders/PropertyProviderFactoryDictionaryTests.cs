@@ -7,7 +7,7 @@ public sealed class PropertyProviderFactoryDictionaryTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-PROPERTY-PROVIDER-DICTIONARY", "exact-key-and-value-conversion")]
-    public async Task DictionarySource_SupportsExactAndIndependentKeyValueConversions()
+    public async Task DictionarySource_SupportsExactAndIndependentKeyValueConversionsAsync()
     {
         var reader = PropertyProviderTestContext.For(
             new StringDictionaryInput(new Dictionary<string, string>
@@ -36,7 +36,7 @@ public sealed class PropertyProviderFactoryDictionaryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PROPERTY-PROVIDER-DICTIONARY", "enumerable-and-nested-contract-values")]
-    public async Task KeyValueEnumerableAndObjectDictionary_CreateExactDictionariesAndNestedContracts()
+    public async Task KeyValueEnumerableAndObjectDictionary_CreateExactDictionariesAndNestedContractsAsync()
     {
         IEnumerable<KeyValuePair<string, string>> pairs = new Dictionary<string, string>
         {

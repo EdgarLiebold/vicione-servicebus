@@ -63,7 +63,7 @@ public class DynamicFilter<TInput> :
 
     [DebuggerNonUserCode]
     [DebuggerStepThrough]
-    public Task Send(TInput context, IPipe<TInput> next)
+    public Task SendAsync(TInput context, IPipe<TInput> next)
     {
         IOutputFilter[] outputPipes = _outputPipeArray;
 
@@ -71,14 +71,14 @@ public class DynamicFilter<TInput> :
             return Task.CompletedTask;
 
         if (outputPipes.Length == 1)
-            return outputPipes[0].Send(context, next);
+            return outputPipes[0].SendAsync(context, next);
 
         async Task SendAsync()
         {
             var outputTasks = new List<Task>(outputPipes.Length);
             for (var i = 0; i < outputPipes.Length; i++)
             {
-                var outputTask = outputPipes[i].Send(context, _empty);
+                var outputTask = outputPipes[i].SendAsync(context, _empty);
                 if (outputTask.Status == TaskStatus.RanToCompletion)
                     continue;
 
@@ -86,7 +86,7 @@ public class DynamicFilter<TInput> :
             }
 
             await Task.WhenAll(outputTasks).ConfigureAwait(false);
-            await next.Send(context).ConfigureAwait(false);
+            await next.SendAsync(context).ConfigureAwait(false);
         }
 
         return SendAsync();
@@ -169,7 +169,8 @@ public class DynamicFilter<TInput> :
 
         TResult IOutputFilter.As<TResult>()
         {
-            return Filter as TResult;
+            return Filter as TResult
+                ?? throw new InvalidOperationException($"The output filter does not implement {TypeCache<TResult>.ShortName}.");
         }
 
         ConnectHandle IFilterObserverConnector.ConnectObserver<T>(IFilterObserver<T> observer)
@@ -185,9 +186,9 @@ public class DynamicFilter<TInput> :
             return Observers.Connect(observer);
         }
 
-        public Task Send(TInput context, IPipe<TInput> next)
+        public Task SendAsync(TInput context, IPipe<TInput> next)
         {
-            return Filter.Send(context, next);
+            return Filter.SendAsync(context, next);
         }
 
         public void Probe(ProbeContext context)
@@ -202,6 +203,7 @@ public class DynamicFilter<TInput, TKey> :
     DynamicFilter<TInput>,
     IDynamicFilter<TInput, TKey>
     where TInput : class, PipeContext
+    where TKey : notnull
 {
     readonly KeyAccessor<TInput, TKey> _keyAccessor;
 

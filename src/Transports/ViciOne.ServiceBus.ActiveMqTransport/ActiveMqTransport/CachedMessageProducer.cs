@@ -227,5 +227,5 @@ public class CachedMessageProducer :
         set => _producer.DeliveryDelay = value;
     }
 
-    public event Action Used;
+    public event Action? Used;
 }

@@ -8,7 +8,7 @@ public sealed class ActiveMqCompressionTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-OPENWIRE-COMPRESSION", "configured-compression-roundtrips-the-exact-broker-payload")]
-    public async Task OpenWireCompression_RoundTripsExactPayloadAcrossBroker()
+    public async Task OpenWireCompression_RoundTripsExactPayloadAcrossBrokerAsync()
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(ActiveMqBroker.OpenWireFlavor, "compression");
         string queueName = fixture.Name("input");
@@ -35,10 +35,9 @@ public sealed class ActiveMqCompressionTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             Guid correlationId = Guid.NewGuid();
-            await input.Send(new CompressedPayload(correlationId, expected), cancellationToken)
+            await input.SendAsync(new CompressedPayload(correlationId, expected), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             CompressedPayload actual = await received.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);

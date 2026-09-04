@@ -18,7 +18,7 @@ public sealed class PayloadAdmissionTransportIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-RUNTIME", "json-body-rejection-before-observers-and-provider")]
-    public async Task JsonBodyLimit_RejectsBeforeUserObserversAndProviderDelivery()
+    public async Task JsonBodyLimit_RejectsBeforeUserObserversAndProviderDeliveryAsync()
     {
         var converter = new CountingPayloadConverter();
         var observer = new BodyReadingObserver();
@@ -38,7 +38,7 @@ public sealed class PayloadAdmissionTransportIntegrationTests
         try
         {
             PayloadAdmissionException exception = await Assert.ThrowsAsync<PayloadAdmissionException>(
-                () => SendJson(bus, new CountingPayload("body-rejection")));
+                () => SendJsonAsync(bus, new CountingPayload("body-rejection")));
 
             Assert.Equal(PayloadAdmissionStage.SerializedBody, exception.Stage);
             Assert.Equal(1, converter.WriteCalls);
@@ -53,7 +53,7 @@ public sealed class PayloadAdmissionTransportIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-RUNTIME", "json-envelope-rejection-single-body-pass")]
-    public async Task JsonEnvelopeLimit_RejectsAfterOneBodySerializationAndBeforeUserObservers()
+    public async Task JsonEnvelopeLimit_RejectsAfterOneBodySerializationAndBeforeUserObserversAsync()
     {
         var converter = new CountingPayloadConverter();
         var observer = new BodyReadingObserver();
@@ -73,7 +73,7 @@ public sealed class PayloadAdmissionTransportIntegrationTests
         try
         {
             PayloadAdmissionException exception = await Assert.ThrowsAsync<PayloadAdmissionException>(
-                () => SendJson(bus, new CountingPayload("envelope-rejection")));
+                () => SendJsonAsync(bus, new CountingPayload("envelope-rejection")));
 
             Assert.Equal(PayloadAdmissionStage.TransportEnvelope, exception.Stage);
             Assert.Equal(1, converter.WriteCalls);
@@ -88,7 +88,7 @@ public sealed class PayloadAdmissionTransportIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-RUNTIME", "json-success-single-pass-and-cache")]
-    public async Task JsonAdmission_SerializesTheApplicationOnceAndSharesTheAdmittedBody()
+    public async Task JsonAdmission_SerializesTheApplicationOnceAndSharesTheAdmittedBodyAsync()
     {
         var converter = new CountingPayloadConverter();
         var observer = new BodyReadingObserver();
@@ -107,7 +107,7 @@ public sealed class PayloadAdmissionTransportIntegrationTests
         await bus.StartAsync(TestContext.Current.CancellationToken).WaitAsync(Timeout, TestContext.Current.CancellationToken);
         try
         {
-            await SendJson(bus, new CountingPayload("accepted"));
+            await SendJsonAsync(bus, new CountingPayload("accepted"));
 
             Assert.Equal("accepted", await received.Task.WaitAsync(Timeout, TestContext.Current.CancellationToken));
             Assert.Equal(1, converter.WriteCalls);
@@ -126,7 +126,7 @@ public sealed class PayloadAdmissionTransportIntegrationTests
     [InlineData(0, false)]
     [InlineData(1, true)]
     [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-RUNTIME", "json-body-exact-boundaries")]
-    public async Task JsonBodyLimit_EnforcesExactBoundariesOnTheRealSerializer(
+    public async Task JsonBodyLimit_EnforcesExactBoundariesOnTheRealSerializerAsync(
         int bytesOverLimit,
         bool rejected)
     {
@@ -148,7 +148,7 @@ public sealed class PayloadAdmissionTransportIntegrationTests
         await bus.StartAsync(TestContext.Current.CancellationToken).WaitAsync(Timeout, TestContext.Current.CancellationToken);
         try
         {
-            Task send = SendJson(bus, message);
+            Task send = SendJsonAsync(bus, message);
             if (rejected)
             {
                 PayloadAdmissionException exception = await Assert.ThrowsAsync<PayloadAdmissionException>(() => send);
@@ -195,7 +195,7 @@ public sealed class PayloadAdmissionTransportIntegrationTests
     [InlineData(0, false)]
     [InlineData(1, true)]
     [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-RUNTIME", "raw-json-body-exact-boundaries")]
-    public async Task RawJsonBodyLimit_EnforcesExactBoundariesWithoutReserializing(
+    public async Task RawJsonBodyLimit_EnforcesExactBoundariesWithoutReserializingAsync(
         int bytesOverLimit,
         bool rejected)
     {
@@ -217,7 +217,7 @@ public sealed class PayloadAdmissionTransportIntegrationTests
         await bus.StartAsync(TestContext.Current.CancellationToken).WaitAsync(Timeout, TestContext.Current.CancellationToken);
         try
         {
-            Task send = SendRawJson(bus, message);
+            Task send = SendRawJsonAsync(bus, message);
             if (rejected)
             {
                 PayloadAdmissionException exception = await Assert.ThrowsAsync<PayloadAdmissionException>(() => send);
@@ -246,7 +246,7 @@ public sealed class PayloadAdmissionTransportIntegrationTests
     [InlineData(0, false)]
     [InlineData(1, true)]
     [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-RUNTIME", "raw-json-envelope-exact-boundaries")]
-    public async Task RawJsonEnvelopeLimit_EnforcesExactBoundariesWithoutReserializing(
+    public async Task RawJsonEnvelopeLimit_EnforcesExactBoundariesWithoutReserializingAsync(
         int bytesOverLimit,
         bool rejected)
     {
@@ -268,7 +268,7 @@ public sealed class PayloadAdmissionTransportIntegrationTests
         await bus.StartAsync(TestContext.Current.CancellationToken).WaitAsync(Timeout, TestContext.Current.CancellationToken);
         try
         {
-            Task send = SendRawJson(bus, message);
+            Task send = SendRawJsonAsync(bus, message);
             if (rejected)
             {
                 PayloadAdmissionException exception = await Assert.ThrowsAsync<PayloadAdmissionException>(() => send);
@@ -294,7 +294,7 @@ public sealed class PayloadAdmissionTransportIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-MESSAGE-DATA", "existing-owner-evidence-allows-admission")]
-    public async Task ExistingMessageDataOwner_ProvidesAdmissionEvidenceOnlyAfterAStoredReferenceExists()
+    public async Task ExistingMessageDataOwner_ProvidesAdmissionEvidenceOnlyAfterAStoredReferenceExistsAsync()
     {
         var repository = new InMemoryMessageDataRepository();
         var received = new TaskCompletionSource<MessageDataSnapshot>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -305,12 +305,12 @@ public sealed class PayloadAdmissionTransportIntegrationTests
         await bus.StartAsync(TestContext.Current.CancellationToken).WaitAsync(Timeout, TestContext.Current.CancellationToken);
         try
         {
-            await bus.Publish<MessageDataPayload>(new { Value = expected }, TestContext.Current.CancellationToken);
+            await bus.PublishAsync<MessageDataPayload>(new { Value = expected }, TestContext.Current.CancellationToken);
             MessageDataSnapshot snapshot = await received.Task.WaitAsync(Timeout, TestContext.Current.CancellationToken);
 
             Assert.NotNull(snapshot.Address);
             Assert.Equal(expected, snapshot.Value);
-            Assert.Equal(expected, await (await repository.GetString(snapshot.Address, TestContext.Current.CancellationToken)).Value);
+            Assert.Equal(expected, await (await repository.GetStringAsync(snapshot.Address, TestContext.Current.CancellationToken)).Value);
         }
         finally
         {
@@ -320,7 +320,7 @@ public sealed class PayloadAdmissionTransportIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-MESSAGE-DATA", "configured-owner-without-offload-fails")]
-    public async Task ConfiguredMessageDataRepository_WithoutAnActualStoredReferenceDoesNotFakeOffload()
+    public async Task ConfiguredMessageDataRepository_WithoutAnActualStoredReferenceDoesNotFakeOffloadAsync()
     {
         var repository = new InMemoryMessageDataRepository();
         var delivered = 0;
@@ -349,7 +349,7 @@ public sealed class PayloadAdmissionTransportIntegrationTests
         try
         {
             PayloadAdmissionException exception = await Assert.ThrowsAsync<PayloadAdmissionException>(
-                () => control.Publish<MessageDataPayload>(new { Value = "inline" }, TestContext.Current.CancellationToken));
+                () => control.PublishAsync<MessageDataPayload>(new { Value = "inline" }, TestContext.Current.CancellationToken));
 
             Assert.Equal(PayloadAdmissionStage.MessageData, exception.Stage);
             Assert.Equal(0, Volatile.Read(ref delivered));
@@ -362,7 +362,7 @@ public sealed class PayloadAdmissionTransportIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-MULTIBUS", "typed-policies-are-isolated")]
-    public async Task TypedBuses_ApplyOnlyTheirOwnPayloadAdmissionPolicy()
+    public async Task TypedBuses_ApplyOnlyTheirOwnPayloadAdmissionPolicyAsync()
     {
         var secondaryReceived = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
         var services = BaseServices();
@@ -399,8 +399,8 @@ public sealed class PayloadAdmissionTransportIntegrationTests
         try
         {
             PayloadAdmissionException rejected = await Assert.ThrowsAsync<PayloadAdmissionException>(
-                () => defaultBus.Publish(new PlainPayload("default"), TestContext.Current.CancellationToken));
-            await secondaryBus.Publish(new PlainPayload("secondary"), TestContext.Current.CancellationToken);
+                () => defaultBus.PublishAsync(new PlainPayload("default"), TestContext.Current.CancellationToken));
+            await secondaryBus.PublishAsync(new PlainPayload("secondary"), TestContext.Current.CancellationToken);
 
             Assert.Equal(PayloadAdmissionStage.SerializedBody, rejected.Stage);
             Assert.Equal("secondary", await secondaryReceived.Task.WaitAsync(Timeout, TestContext.Current.CancellationToken));
@@ -494,22 +494,22 @@ public sealed class PayloadAdmissionTransportIntegrationTests
             new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
     }
 
-    private static async Task SendJson(IBus bus, CountingPayload message)
+    private static async Task SendJsonAsync(IBus bus, CountingPayload message)
     {
-        ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri("loopback://payload-json/payload-json-input"));
-        await endpoint.Send(message, TestContext.Current.CancellationToken);
+        ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri("loopback://payload-json/payload-json-input"));
+        await endpoint.SendAsync(message, TestContext.Current.CancellationToken);
     }
 
-    private static async Task SendJson(IBus bus, BoundaryPayload message)
+    private static async Task SendJsonAsync(IBus bus, BoundaryPayload message)
     {
-        ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri("loopback://payload-json-boundary/payload-json-boundary-input"));
-        await endpoint.Send(message, TestContext.Current.CancellationToken);
+        ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri("loopback://payload-json-boundary/payload-json-boundary-input"));
+        await endpoint.SendAsync(message, TestContext.Current.CancellationToken);
     }
 
-    private static async Task SendRawJson(IBus bus, BoundaryPayload message)
+    private static async Task SendRawJsonAsync(IBus bus, BoundaryPayload message)
     {
-        ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri("loopback://payload-raw-json/payload-raw-json-input"));
-        await endpoint.Send(message, TestContext.Current.CancellationToken);
+        ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri("loopback://payload-raw-json/payload-raw-json-input"));
+        await endpoint.SendAsync(message, TestContext.Current.CancellationToken);
     }
 
     private static ServiceProvider BuildMessageDataProvider(
@@ -530,8 +530,10 @@ public sealed class PayloadAdmissionTransportIntegrationTests
             bus.ReceiveEndpoint("payload-message-data-input", endpoint => endpoint.Handler<MessageDataPayload>(async context =>
             {
                 received.TrySetResult(new MessageDataSnapshot(
-                    context.Message.Value.Address,
-                    await context.Message.Value.Value));
+                    context.Message.Value.Address
+                    ?? throw new Xunit.Sdk.XunitException("Expected the offloaded message-data address to be available."),
+                    await context.Message.Value.Value
+                    ?? throw new Xunit.Sdk.XunitException("Expected the offloaded message-data value to be available.")));
             }));
         }));
         return services.BuildServiceProvider(
@@ -722,7 +724,7 @@ public sealed class PayloadAdmissionTransportIntegrationTests
 
         public long? SecondBodyLength { get; private set; }
 
-        public Task PreSend<T>(SendContext<T> context)
+        public Task PreSendAsync<T>(SendContext<T> context)
             where T : class
         {
             Interlocked.Increment(ref _preSendCalls);
@@ -734,11 +736,11 @@ public sealed class PayloadAdmissionTransportIntegrationTests
             return Task.CompletedTask;
         }
 
-        public Task PostSend<T>(SendContext<T> context)
+        public Task PostSendAsync<T>(SendContext<T> context)
             where T : class
             => Task.CompletedTask;
 
-        public Task SendFault<T>(SendContext<T> context, Exception exception)
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
             where T : class
             => Task.CompletedTask;
     }

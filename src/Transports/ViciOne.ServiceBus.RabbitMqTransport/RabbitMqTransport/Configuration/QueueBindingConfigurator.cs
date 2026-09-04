@@ -10,13 +10,13 @@ public class QueueBindingConfigurator :
     protected QueueBindingConfigurator(string queueName, string exchangeType, bool durable, bool autoDelete)
         : base(queueName, exchangeType, durable, autoDelete)
     {
-        BindingArguments = new Dictionary<string, object>();
+        BindingArguments = new Dictionary<string, object?>();
         RoutingKey = "";
     }
 
-    public IDictionary<string, object> BindingArguments { get; }
+    public IDictionary<string, object?> BindingArguments { get; }
 
-    public void SetBindingArgument(string key, object value)
+    public void SetBindingArgument(string key, object? value)
     {
         if (key == null)
             throw new ArgumentNullException(nameof(key));

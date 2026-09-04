@@ -18,48 +18,48 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             _observer = observer;
         }
 
-        public Task PreExecute(BehaviorContext<TInstance> context)
+        public Task PreExecuteAsync(BehaviorContext<TInstance> context)
         {
             return _event.Equals(context.Event)
-                ? _observer.PreExecute(context)
+                ? _observer.PreExecuteAsync(context)
                 : Task.CompletedTask;
         }
 
-        public Task PreExecute<T>(BehaviorContext<TInstance, T> context)
+        public Task PreExecuteAsync<T>(BehaviorContext<TInstance, T> context)
             where T : class
         {
             return _event.Equals(context.Event)
-                ? _observer.PreExecute(context)
+                ? _observer.PreExecuteAsync(context)
                 : Task.CompletedTask;
         }
 
-        public Task PostExecute(BehaviorContext<TInstance> context)
+        public Task PostExecuteAsync(BehaviorContext<TInstance> context)
         {
             return _event.Equals(context.Event)
-                ? _observer.PostExecute(context)
+                ? _observer.PostExecuteAsync(context)
                 : Task.CompletedTask;
         }
 
-        public Task PostExecute<T>(BehaviorContext<TInstance, T> context)
+        public Task PostExecuteAsync<T>(BehaviorContext<TInstance, T> context)
             where T : class
         {
             return _event.Equals(context.Event)
-                ? _observer.PostExecute(context)
+                ? _observer.PostExecuteAsync(context)
                 : Task.CompletedTask;
         }
 
-        public Task ExecuteFault(BehaviorContext<TInstance> context, Exception exception)
+        public Task ExecuteFaultAsync(BehaviorContext<TInstance> context, Exception exception)
         {
             return _event.Equals(context.Event)
-                ? _observer.ExecuteFault(context, exception)
+                ? _observer.ExecuteFaultAsync(context, exception)
                 : Task.CompletedTask;
         }
 
-        public Task ExecuteFault<T>(BehaviorContext<TInstance, T> context, Exception exception)
+        public Task ExecuteFaultAsync<T>(BehaviorContext<TInstance, T> context, Exception exception)
             where T : class
         {
             return _event.Equals(context.Event)
-                ? _observer.ExecuteFault(context, exception)
+                ? _observer.ExecuteFaultAsync(context, exception)
                 : Task.CompletedTask;
         }
     }

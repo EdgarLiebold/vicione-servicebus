@@ -18,12 +18,12 @@ public class SetSerializerFilter<T> :
         _contentType = contentType;
     }
 
-    public Task Send(SendContext<T> context, IPipe<SendContext<T>> next)
+    public Task SendAsync(SendContext<T> context, IPipe<SendContext<T>> next)
     {
         if (context.Serialization.TryGetMessageSerializer(_contentType, out var serializer))
             context.Serializer = serializer;
 
-        return next.Send(context);
+        return next.SendAsync(context);
     }
 
     public void Probe(ProbeContext context)

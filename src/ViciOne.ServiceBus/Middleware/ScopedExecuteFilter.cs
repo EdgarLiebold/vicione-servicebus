@@ -17,13 +17,13 @@ public class ScopedExecuteFilter<TActivity, TArguments, TFilter> :
         _scopeProvider = scopeProvider;
     }
 
-    public async Task Send(ExecuteContext<TArguments> context, IPipe<ExecuteContext<TArguments>> next)
+    public async Task SendAsync(ExecuteContext<TArguments> context, IPipe<ExecuteContext<TArguments>> next)
     {
-        await using IExecuteScopeContext<TArguments> scope = await _scopeProvider.GetScope(context).ConfigureAwait(false);
+        await using IExecuteScopeContext<TArguments> scope = await _scopeProvider.GetScopeAsync(context).ConfigureAwait(false);
 
         var filter = scope.GetService<TFilter>();
 
-        await filter.Send(scope.Context, next).ConfigureAwait(false);
+        await filter.SendAsync(scope.Context, next).ConfigureAwait(false);
     }
 
     public void Probe(ProbeContext context)

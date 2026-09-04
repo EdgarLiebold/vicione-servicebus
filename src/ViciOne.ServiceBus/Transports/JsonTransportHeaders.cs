@@ -26,7 +26,7 @@ public class JsonTransportHeaders :
         return _provider.GetAll();
     }
 
-    public bool TryGetHeader(string key, out object value)
+    public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
     {
         if (key == null)
             throw new ArgumentNullException(nameof(key));
@@ -34,7 +34,7 @@ public class JsonTransportHeaders :
         return _provider.TryGetHeader(key, out value);
     }
 
-    public T Get<T>(string key, T defaultValue)
+    public T? Get<T>(string key, T? defaultValue)
         where T : class
     {
         return ServiceBusMetadataJson.ObjectDeserializer.GetValue(_provider, key, defaultValue);

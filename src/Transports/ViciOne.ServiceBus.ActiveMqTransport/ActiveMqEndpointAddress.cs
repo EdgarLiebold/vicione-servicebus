@@ -41,10 +41,11 @@ public readonly struct ActiveMqEndpointAddress
         ArgumentNullException.ThrowIfNull(hostAddress);
         ArgumentNullException.ThrowIfNull(address);
 
-        Scheme = default;
-        Host = default;
+        Scheme = null!;
+        Host = null!;
         Port = default;
-        VirtualHost = default;
+        VirtualHost = null!;
+        Name = null!;
 
         Durable = true;
         AutoDelete = false;
@@ -188,7 +189,7 @@ public readonly struct ActiveMqEndpointAddress
         }
     }
 
-    static bool ParseBoolean(string key, string value)
+    static bool ParseBoolean(string key, string? value)
     {
         if (bool.TryParse(value, out var result))
             return result;
@@ -196,7 +197,7 @@ public readonly struct ActiveMqEndpointAddress
         throw new ActiveMqTransportConfigurationException($"The ActiveMQ address option '{key}' must be either true or false.");
     }
 
-    static AddressType ParseAddressType(string key, string value)
+    static AddressType ParseAddressType(string key, string? value)
     {
         if (!string.IsNullOrWhiteSpace(value) && _parseConverter.TryConvert(value, out var result))
             return result;

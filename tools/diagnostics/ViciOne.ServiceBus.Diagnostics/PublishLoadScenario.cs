@@ -41,10 +41,10 @@ static class PublishLoadScenario
     /// <summary>How long the bounded stop is given to bring the consumer to a standstill.</summary>
     public static readonly TimeSpan QuiescenceBudget = TimeSpan.FromSeconds(30);
 
-    public static async Task<object> Run(int messages, int concurrencyLimit, int prefetchCount,
+    public static async Task<object> RunAsync(int messages, int concurrencyLimit, int prefetchCount,
         TimeSpan completionLimit, CancellationToken cancellationToken)
     {
-        await RunScopedBroker.CreateVirtualHost("test", cancellationToken);
+        await RunScopedBroker.CreateVirtualHostAsync("test", cancellationToken);
 
         (var host, var port, var username, var password) = RunScopedBroker.Read();
 
@@ -85,7 +85,7 @@ static class PublishLoadScenario
 
             var publishers = new Task[messages];
             for (var index = 0; index < messages; index++)
-                publishers[index] = bus.Publish(new LoadPing { Sequence = index }, cancellationToken);
+                publishers[index] = bus.PublishAsync(new LoadPing { Sequence = index }, cancellationToken);
 
             var handedOver = elapsed.Elapsed;
 
@@ -93,10 +93,10 @@ static class PublishLoadScenario
 
             var published = elapsed.Elapsed;
 
-            var allSeen = await ledger.WaitForAllExpected(completionLimit, cancellationToken);
+            var allSeen = await ledger.WaitForAllExpectedAsync(completionLimit, cancellationToken);
             var completedAt = elapsed.Elapsed;
 
-            (var quiesced, MessageSequenceLedger.Snapshot snapshot) = await ObserveThenQuiesceThenRead(
+            (var quiesced, MessageSequenceLedger.Snapshot snapshot) = await ObserveThenQuiesceThenReadAsync(
                 ledger, token => bus.StopAsync(token), DrainWindow, QuiescenceBudget, cancellationToken);
             alreadyStopped = true;
 
@@ -153,14 +153,20 @@ static class PublishLoadScenario
     /// statements in a row that happen to be written down in that sequence today.
     /// </para>
     /// </summary>
-    internal static async Task<(bool Quiesced, MessageSequenceLedger.Snapshot Snapshot)> ObserveThenQuiesceThenRead(
+    /// <param name="ledger">The ledger used by the operation.</param>
+    /// <param name="stop">The stop used by the operation.</param>
+    /// <param name="window">The window used by the operation.</param>
+    /// <param name="budget">The budget used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="timeProvider">The time source used by the operation.</param>
+    internal static async Task<(bool Quiesced, MessageSequenceLedger.Snapshot Snapshot)> ObserveThenQuiesceThenReadAsync(
         MessageSequenceLedger ledger, Func<CancellationToken, Task> stop, TimeSpan window, TimeSpan budget,
         CancellationToken cancellationToken, TimeProvider? timeProvider = null)
     {
         timeProvider ??= TimeProvider.System;
         await Task.Delay(window, timeProvider, cancellationToken).ConfigureAwait(false);
 
-        var quiesced = await Quiesce(stop, budget, timeProvider).ConfigureAwait(false);
+        var quiesced = await QuiesceAsync(stop, budget, timeProvider).ConfigureAwait(false);
 
         return (quiesced, ledger.Read());
     }
@@ -182,7 +188,7 @@ static class PublishLoadScenario
     /// so it is reported as not quiesced instead of being counted as one.
     /// </para>
     /// </summary>
-    internal static async Task<bool> Quiesce(Func<CancellationToken, Task> stop, TimeSpan budget,
+    internal static async Task<bool> QuiesceAsync(Func<CancellationToken, Task> stop, TimeSpan budget,
         TimeProvider? timeProvider = null)
     {
         timeProvider ??= TimeProvider.System;

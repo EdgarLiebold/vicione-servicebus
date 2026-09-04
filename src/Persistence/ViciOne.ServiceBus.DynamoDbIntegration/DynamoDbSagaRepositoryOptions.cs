@@ -17,7 +17,7 @@ public sealed class DynamoDbSagaRepositoryOptions<TSaga>
 
     public DynamoDbSagaRepositoryOptions(string tableName, TimeSpan? expiration, TimeProvider timeProvider,
         bool consistentRead = true, bool isEmptyStringValueEnabled = true, bool retrieveDateTimeInUtc = true,
-        DynamoDBEntryConversion conversion = null)
+        DynamoDBEntryConversion? conversion = null)
     {
         if (!IsValidTableName(tableName))
             throw new ArgumentException(TableNameValidationMessage, nameof(tableName));

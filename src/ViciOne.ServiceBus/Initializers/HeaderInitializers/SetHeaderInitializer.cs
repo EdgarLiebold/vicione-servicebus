@@ -26,9 +26,9 @@ public class SetHeaderInitializer<TMessage, TInput, THeader> :
         _provider = provider;
     }
 
-    public Task Apply(InitializeContext<TMessage, TInput> context, SendContext sendContext)
+    public Task ApplyAsync(InitializeContext<TMessage, TInput> context, SendContext sendContext, CancellationToken cancellationToken = default)
     {
-        Task<THeader> propertyTask = _provider.GetProperty(context);
+        Task<THeader?> propertyTask = _provider.GetPropertyAsync(context, cancellationToken: cancellationToken);
         if (propertyTask.IsCompleted)
         {
             sendContext.Headers.Set(_headerName, propertyTask.Result);

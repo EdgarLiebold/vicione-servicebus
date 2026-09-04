@@ -11,7 +11,7 @@ public sealed class MessageContextFlowTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-CONTEXT", "addressed-send-envelope")]
-    public async Task AddressedSend_PreservesTheCompleteExpectedContext()
+    public async Task AddressedSend_PreservesTheCompleteExpectedContextAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -19,15 +19,15 @@ public sealed class MessageContextFlowTests
         HandlerTestHarness<ContextMessage> handler = harness.Handler<ContextMessage>();
         Guid correlationId = Guid.Parse("18c63967-6284-4db6-97ac-720fd842ff7f");
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.InputQueueSendEndpoint.SendAsync(
                 new ContextMessage(correlationId, "sent"),
                 context => context.Headers.Set("One", "1"),
                 cancellationToken);
             ConsumeContext<ContextMessage> context =
-                (await handler.Consumed.SelectAsync(cancellationToken).First()).Context;
+                (await handler.Consumed.SelectAsync(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken)).Context;
 
             Assert.Equal(new ContextMessage(correlationId, "sent"), context.Message);
             Assert.NotNull(context.MessageId);
@@ -46,13 +46,13 @@ public sealed class MessageContextFlowTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-CONTEXT", "addressed-request-response-envelope")]
-    public async Task AddressedRequestAndResponse_PreserveCausationAddressesAndAcceptedTypes()
+    public async Task AddressedRequestAndResponse_PreserveCausationAddressesAndAcceptedTypesAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -67,20 +67,20 @@ public sealed class MessageContextFlowTests
         Guid correlationId = Guid.Parse("fba2a449-ebd3-435c-a6e5-4725a6cc13e6");
         Guid conversationId = Guid.Parse("45e030ae-2d81-4bf1-9860-77bb17299366");
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            Task<ConsumeContext<AcceptedResponse>> subscriber = harness.SubscribeHandler<AcceptedResponse>();
+            Task<ConsumeContext<AcceptedResponse>> subscriber = harness.SubscribeHandlerAsync<AcceptedResponse>(TestContext.Current.CancellationToken);
             IRequestClient<RequestMessage> client =
                 harness.Bus.CreateRequestClient<RequestMessage>(harness.InputQueueAddress, timeout);
-            Response<AcceptedResponse> response = await client.GetResponse<AcceptedResponse>(
+            Response<AcceptedResponse> response = await client.Advanced().GetResponseAsync<AcceptedResponse>(
                 new RequestMessage(correlationId, "request"),
-                handle => handle.UseExecute(context => context.ConversationId = conversationId),
-                cancellationToken);
+                callback: handle => handle.UseExecute(context => context.ConversationId = conversationId),
+                cancellationToken: cancellationToken);
             ConsumeContext<RequestMessage> request = await requestSeen.Task.WaitAsync(timeout, cancellationToken);
             ConsumeContext<AcceptedResponse> subscribedResponse =
                 await subscriber.WaitAsync(timeout, cancellationToken);
-            IList<string> acceptedTypes = request.GetHeader<IList<string>>(MessageHeaders.Request.Accept)!;
+            IList<string> acceptedTypes = request.Advanced().GetHeader<IList<string>>(MessageHeaders.Request.Accept)!;
 
             Assert.Equal(correlationId, request.CorrelationId);
             Assert.NotNull(request.RequestId);
@@ -110,13 +110,13 @@ public sealed class MessageContextFlowTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-CONTEXT", "published-request-response")]
-    public async Task PublishedRequest_ReceivesTheExactHandlerResponse()
+    public async Task PublishedRequest_ReceivesTheExactHandlerResponseAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -130,13 +130,13 @@ public sealed class MessageContextFlowTests
         });
         Guid correlationId = Guid.Parse("12ad3fe6-2a11-4eb8-b4e7-94897a3eac6f");
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             IRequestClient<RequestMessage> client = harness.Bus.CreateRequestClient<RequestMessage>(timeout);
-            Response<AcceptedResponse> response = await client.GetResponse<AcceptedResponse>(
+            Response<AcceptedResponse> response = await client.Advanced().GetResponseAsync<AcceptedResponse>(
                 new RequestMessage(correlationId, "publish"),
-                cancellationToken);
+                cancellationToken: cancellationToken);
             ConsumeContext<RequestMessage> request = await requestSeen.Task.WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(new AcceptedResponse(correlationId, "published"), response.Message);
@@ -148,13 +148,13 @@ public sealed class MessageContextFlowTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-CONTEXT", "multiple-response-terminal-branch")]
-    public async Task MultipleAcceptedResponses_CompleteOnlyTheProducedBranch()
+    public async Task MultipleAcceptedResponses_CompleteOnlyTheProducedBranchAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -163,15 +163,15 @@ public sealed class MessageContextFlowTests
             context.RespondAsync(new RejectedResponse(context.Message.CorrelationId, "not-supported")));
         Guid correlationId = Guid.Parse("22d12caf-c8ec-461b-a4c4-6acfa7e02a51");
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             IRequestClient<RequestMessage> client =
                 harness.Bus.CreateRequestClient<RequestMessage>(harness.InputQueueAddress, timeout);
             Response<AcceptedResponse, RejectedResponse> response =
-                await client.GetResponse<AcceptedResponse, RejectedResponse>(
+                await client.Advanced().GetResponseAsync<AcceptedResponse, RejectedResponse>(
                     new RequestMessage(correlationId, "two-types"),
-                    cancellationToken);
+                    cancellationToken: cancellationToken);
             (Task<Response<AcceptedResponse>> acceptedTask, Task<Response<RejectedResponse>> rejectedTask) = response;
 
             Assert.False(response.Is(out Response<AcceptedResponse>? accepted));
@@ -181,19 +181,19 @@ public sealed class MessageContextFlowTests
             Assert.Equal(rejected.Message, (await rejectedTask).Message);
             await Assert.ThrowsAsync<TaskCanceledException>(() => acceptedTask);
 
-            ISendEndpoint busEndpoint = await harness.Bus.GetSendEndpoint(harness.BusAddress);
-            await busEndpoint.Send(new AcceptedResponse(correlationId, "late"), cancellationToken);
+            ISendEndpoint busEndpoint = await harness.Bus.GetSendEndpointAsync(harness.BusAddress, TestContext.Current.CancellationToken);
+            await busEndpoint.SendAsync(new AcceptedResponse(correlationId, "late"), cancellationToken);
             await Assert.ThrowsAsync<TaskCanceledException>(() => acceptedTask);
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-CONTEXT", "unanswered-request-timeout")]
-    public async Task UnansweredRequest_ThrowsTheExactTimeoutForItsRequestIdentifier()
+    public async Task UnansweredRequest_ThrowsTheExactTimeoutForItsRequestIdentifierAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -201,7 +201,7 @@ public sealed class MessageContextFlowTests
         var timeProvider = new ObservableTimeProvider(
             new DateTimeOffset(2030, 1, 2, 3, 4, 5, TimeSpan.Zero));
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             var clientFactory = new ClientFactory(new BusClientFactoryContext(
@@ -214,18 +214,18 @@ public sealed class MessageContextFlowTests
             var requestMessage = new RequestMessage(
                 Guid.Parse("2f651398-caa1-45c6-b23d-48133e00709f"),
                 "unanswered");
-            using RequestHandle<RequestMessage> request = client.Create(
+            using RequestHandle<RequestMessage> request = client.Advanced().Create(
                 requestMessage,
                 cancellationToken);
             var concreteRequest = Assert.IsType<ClientRequestHandle<RequestMessage>>(request);
-            Task<Response<AcceptedResponse>> response = request.GetResponse<AcceptedResponse>();
+            Task<Response<AcceptedResponse>> response = request.GetResponseAsync<AcceptedResponse>(cancellationToken: TestContext.Current.CancellationToken);
 
             // Message represents completion of the request send callback. Establish that causal
             // boundary before advancing the virtual timeout; otherwise the timeout may race the
             // send callback and fault Message even though this test is about response timeout.
             Assert.Same(requestMessage, await request.Message.WaitAsync(timeout, cancellationToken));
 
-            await timeProvider.WaitForTimerCount(1).WaitAsync(cancellationToken);
+            await timeProvider.WaitForTimerCountAsync(1).WaitAsync(cancellationToken);
             timeProvider.Advance(TimeSpan.FromMinutes(1));
 
             RequestTimeoutException exception =
@@ -238,17 +238,17 @@ public sealed class MessageContextFlowTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-CONTEXT", "caller-cancellation")]
-    public async Task CanceledRequest_ReportsCancellationInsteadOfTimeout()
+    public async Task CanceledRequest_ReportsCancellationInsteadOfTimeoutAsync()
     {
         TimeSpan timeout = OperationTimeout();
         using var harness = CreateHarness(timeout);
-        await harness.Start(TestContext.Current.CancellationToken);
+        await harness.StartAsync(TestContext.Current.CancellationToken);
         using var cancellation = new CancellationTokenSource();
         cancellation.Cancel();
 
@@ -257,15 +257,15 @@ public sealed class MessageContextFlowTests
             IRequestClient<RequestMessage> client =
                 harness.Bus.CreateRequestClient<RequestMessage>(harness.InputQueueAddress, timeout);
 
-            TaskCanceledException exception = await Assert.ThrowsAsync<TaskCanceledException>(() => client.GetResponse<AcceptedResponse>(
+            TaskCanceledException exception = await Assert.ThrowsAsync<TaskCanceledException>(() => client.Advanced().GetResponseAsync<AcceptedResponse>(
                 new RequestMessage(Guid.Parse("acff2021-8c44-440d-9d8d-c77f172ed296"), "canceled"),
-                cancellation.Token));
+                cancellationToken: cancellation.Token));
 
             Assert.Equal(cancellation.Token, exception.CancellationToken);
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 

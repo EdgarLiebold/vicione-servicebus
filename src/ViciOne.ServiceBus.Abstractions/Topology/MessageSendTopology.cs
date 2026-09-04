@@ -40,7 +40,7 @@ public class MessageSendTopology<TMessage> :
 
         for (var i = 0; i < _conventions.Count; i++)
         {
-            if (_conventions[i].TryGetMessageSendTopology(out IMessageSendTopology<TMessage> topology))
+            if (_conventions[i].TryGetMessageSendTopology(out IMessageSendTopology<TMessage>? topology))
                 topology.Apply(builder);
         }
 
@@ -78,7 +78,7 @@ public class MessageSendTopology<TMessage> :
 
     public bool TryAddConvention(ISendTopologyConvention convention)
     {
-        return convention.TryGetMessageSendTopologyConvention(out IMessageSendTopologyConvention<TMessage> messageSendTopologyConvention)
+        return convention.TryGetMessageSendTopologyConvention(out IMessageSendTopologyConvention<TMessage>? messageSendTopologyConvention)
             && TryAddConvention(messageSendTopologyConvention);
     }
 

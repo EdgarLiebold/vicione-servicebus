@@ -13,8 +13,8 @@ public abstract class BaseBusActivityIndicatorConnectable : Connectable<IConditi
 
     public abstract bool IsMet { get; }
 
-    protected Task ConditionUpdated()
+    protected Task ConditionUpdatedAsync()
     {
-        return ForEachAsync(x => x.ConditionUpdated());
+        return ForEachAsync(x => x.ConditionUpdatedAsync());
     }
 }

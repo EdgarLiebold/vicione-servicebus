@@ -18,7 +18,7 @@ public sealed class MessageContractScenarioTests
     [Theory]
     [MemberData(nameof(Cases))]
     [RequirementCoverage("REQ-VSB-MESSAGE-CONTRACT-ANALYZER", "canonical-scenario-catalog")]
-    public async Task MessageSource_ProducesItsExactContractDiagnostic(
+    public async Task MessageSource_ProducesItsExactContractDiagnosticAsync(
         string scenarioKey,
         MessageSourceForm form)
     {

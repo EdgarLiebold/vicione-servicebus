@@ -99,16 +99,16 @@ public class MessageFabric<TContext, T> :
         return _observers.Connect(observer);
     }
 
-    protected override async Task StopSupervisor(StopSupervisorContext context)
+    protected override async Task StopSupervisorAsync(StopSupervisorContext context)
     {
-        await base.StopSupervisor(context).ConfigureAwait(false);
+        await base.StopSupervisorAsync(context).ConfigureAwait(false);
 
         await _delayProvider.DisposeAsync().ConfigureAwait(false);
     }
 
     IMessageQueue<TContext, T> GetOrAddQueue(TContext context, string name)
     {
-        MessageQueue<TContext, T> created = null;
+        MessageQueue<TContext, T>? created = null;
         IMessageQueue<TContext, T> queue = _queues.GetOrAdd(name, x =>
         {
             created = new MessageQueue<TContext, T>(_observers, name, _delayProvider, _queueCapacity);
@@ -128,7 +128,7 @@ public class MessageFabric<TContext, T> :
 
     IMessageExchange<T> GetOrAddExchange(TContext context, string name, ExchangeType exchangeType)
     {
-        IMessageExchange<T> created = null;
+        IMessageExchange<T>? created = null;
         IMessageExchange<T> exchange = _exchanges.GetOrAdd(name, x =>
         {
             created = exchangeType switch

@@ -98,7 +98,7 @@ public class RabbitMqHostConfiguration :
     }
 
     public IRabbitMqReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
-        Action<IRabbitMqReceiveEndpointConfigurator> configure)
+        Action<IRabbitMqReceiveEndpointConfigurator>? configure)
     {
         var endpointConfiguration = _busConfiguration.CreateEndpointConfiguration();
         var settings = new RabbitMqReceiveSettings(endpointConfiguration, queueName,
@@ -108,7 +108,7 @@ public class RabbitMqHostConfiguration :
     }
 
     public IRabbitMqReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(RabbitMqReceiveSettings settings,
-        IRabbitMqEndpointConfiguration endpointConfiguration, Action<IRabbitMqReceiveEndpointConfigurator> configure)
+        IRabbitMqEndpointConfiguration endpointConfiguration, Action<IRabbitMqReceiveEndpointConfigurator>? configure)
     {
         if (settings == null)
             throw new ArgumentNullException(nameof(settings));
@@ -126,8 +126,8 @@ public class RabbitMqHostConfiguration :
         return configuration;
     }
 
-    public override void ReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
-        Action<IRabbitMqReceiveEndpointConfigurator> configureEndpoint = null)
+    public override void ReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
+        Action<IRabbitMqReceiveEndpointConfigurator>? configureEndpoint = null)
     {
         var queueName = definition.GetEndpointName(endpointNameFormatter ?? DefaultEndpointNameFormatter.Instance);
 
@@ -162,7 +162,7 @@ public class RabbitMqHostConfiguration :
     }
 
     public override IReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
-        Action<IReceiveEndpointConfigurator> configure = null)
+        Action<IReceiveEndpointConfigurator>? configure = null)
     {
         return CreateReceiveEndpointConfiguration(queueName, configure);
     }

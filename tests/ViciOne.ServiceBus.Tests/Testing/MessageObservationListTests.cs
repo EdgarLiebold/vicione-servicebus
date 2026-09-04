@@ -15,7 +15,7 @@ public sealed class MessageObservationListTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-OBSERVATION-LIST", "sent-query-surface")]
-    public async Task SentList_QuerySurfaceAppliesTypePredicatesAndConfiguredFiltersExactly()
+    public async Task SentList_QuerySurfaceAppliesTypePredicatesAndConfiguredFiltersExactlyAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -26,15 +26,15 @@ public sealed class MessageObservationListTests
             configurator.Handler<OtherMessage>(_ => Task.CompletedTask);
         };
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             var expected = new ObservedMessage(NewId.NextGuid(), "expected");
             var other = new OtherMessage(NewId.NextGuid(), "other");
-            await harness.InputQueueSendEndpoint.Send(expected, cancellationToken);
-            await harness.InputQueueSendEndpoint.Send(other, cancellationToken);
-            Assert.True(await harness.Consumed.Any<ObservedMessage>(cancellationToken));
-            Assert.True(await harness.Consumed.Any<OtherMessage>(cancellationToken));
+            await harness.InputQueueSendEndpoint.SendAsync(expected, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(other, cancellationToken);
+            Assert.True(await harness.Consumed.AnyAsync<ObservedMessage>(cancellationToken));
+            Assert.True(await harness.Consumed.AnyAsync<OtherMessage>(cancellationToken));
 
             CancellationToken snapshotOnly = new(canceled: true);
             Assert.Equal(expected, Assert.Single(harness.Sent.Select<ObservedMessage>(snapshotOnly)).Context.Message);
@@ -44,40 +44,40 @@ public sealed class MessageObservationListTests
             {
                 filter.Includes.Add<ObservedMessage>();
                 filter.Excludes.Add<OtherMessage>();
-            }, cancellationToken).First()).MessageObject);
-            Assert.Equal(expected, (await harness.Sent.SelectAsync<ObservedMessage>(cancellationToken).First()).Context.Message);
+            }, cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken)).MessageObject);
+            Assert.Equal(expected, (await harness.Sent.SelectAsync<ObservedMessage>(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken)).Context.Message);
             Assert.Equal(expected, (await harness.Sent.SelectAsync<ObservedMessage>(
-                message => message.Context.Message.CorrelationId == expected.CorrelationId, cancellationToken).First()).Context.Message);
-            Assert.True(await harness.Sent.Any(filter =>
+                message => message.Context.Message.CorrelationId == expected.CorrelationId, cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken)).Context.Message);
+            Assert.True(await harness.Sent.AnyAsync(filter =>
             {
                 filter.Includes.Add<ObservedMessage>();
                 filter.Excludes.Add<OtherMessage>();
             }, cancellationToken));
-            Assert.True(await harness.Sent.Any<ObservedMessage>(cancellationToken));
-            Assert.True(await harness.Sent.Any<ObservedMessage>(
+            Assert.True(await harness.Sent.AnyAsync<ObservedMessage>(cancellationToken));
+            Assert.True(await harness.Sent.AnyAsync<ObservedMessage>(
                 message => message.Context.Message.Value == "expected", cancellationToken));
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-OBSERVATION-LIST", "published-query-surface")]
-    public async Task PublishedList_QuerySurfaceAppliesTypePredicatesAndConfiguredFiltersExactly()
+    public async Task PublishedList_QuerySurfaceAppliesTypePredicatesAndConfiguredFiltersExactlyAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout);
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             var expected = new ObservedMessage(NewId.NextGuid(), "expected");
             var other = new OtherMessage(NewId.NextGuid(), "other");
-            await harness.Bus.Publish(expected, cancellationToken);
-            await harness.Bus.Publish(other, cancellationToken);
+            await harness.Bus.PublishAsync(expected, cancellationToken);
+            await harness.Bus.PublishAsync(other, cancellationToken);
 
             CancellationToken snapshotOnly = new(canceled: true);
             Assert.Equal(expected, Assert.Single(harness.Published.Select<ObservedMessage>(snapshotOnly)).Context.Message);
@@ -87,28 +87,28 @@ public sealed class MessageObservationListTests
             {
                 filter.Includes.Add<ObservedMessage>();
                 filter.Excludes.Add<OtherMessage>();
-            }, cancellationToken).First()).MessageObject);
-            Assert.Equal(expected, (await harness.Published.SelectAsync<ObservedMessage>(cancellationToken).First()).Context.Message);
+            }, cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken)).MessageObject);
+            Assert.Equal(expected, (await harness.Published.SelectAsync<ObservedMessage>(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken)).Context.Message);
             Assert.Equal(expected, (await harness.Published.SelectAsync<ObservedMessage>(
-                message => message.Context.Message.CorrelationId == expected.CorrelationId, cancellationToken).First()).Context.Message);
-            Assert.True(await harness.Published.Any(filter =>
+                message => message.Context.Message.CorrelationId == expected.CorrelationId, cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken)).Context.Message);
+            Assert.True(await harness.Published.AnyAsync(filter =>
             {
                 filter.Includes.Add<ObservedMessage>();
                 filter.Excludes.Add<OtherMessage>();
             }, cancellationToken));
-            Assert.True(await harness.Published.Any<ObservedMessage>(cancellationToken));
-            Assert.True(await harness.Published.Any<ObservedMessage>(
+            Assert.True(await harness.Published.AnyAsync<ObservedMessage>(cancellationToken));
+            Assert.True(await harness.Published.AnyAsync<ObservedMessage>(
                 message => message.Context.Message.Value == "expected", cancellationToken));
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-OBSERVATION-LIST", "received-query-surface-and-typed-facade")]
-    public async Task ReceivedLists_QuerySurfaceAndTypedFacadePreserveTheExactConsumeContext()
+    public async Task ReceivedLists_QuerySurfaceAndTypedFacadePreserveTheExactConsumeContextAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -125,15 +125,15 @@ public sealed class MessageObservationListTests
             configurator.Handler<OtherMessage>(_ => Task.CompletedTask);
         };
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             var expected = new ObservedMessage(NewId.NextGuid(), "expected");
             var other = new OtherMessage(NewId.NextGuid(), "other");
-            await harness.InputQueueSendEndpoint.Send(expected, cancellationToken);
-            await harness.InputQueueSendEndpoint.Send(other, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(expected, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(other, cancellationToken);
             ConsumeContext<ObservedMessage> expectedContext = await consumed.Task.WaitAsync(timeout, cancellationToken);
-            Assert.True(await harness.Consumed.Any<OtherMessage>(cancellationToken));
+            Assert.True(await harness.Consumed.AnyAsync<OtherMessage>(cancellationToken));
 
             CancellationToken snapshotOnly = new(canceled: true);
             Assert.Same(expectedContext, Assert.Single(harness.Consumed.Select<ObservedMessage>(snapshotOnly)).Context);
@@ -143,35 +143,35 @@ public sealed class MessageObservationListTests
             {
                 filter.Includes.Add<ObservedMessage>();
                 filter.Excludes.Add<OtherMessage>();
-            }, cancellationToken).First()).Context);
-            Assert.Same(expectedContext, (await harness.Consumed.SelectAsync<ObservedMessage>(cancellationToken).First()).Context);
+            }, cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken)).Context);
+            Assert.Same(expectedContext, (await harness.Consumed.SelectAsync<ObservedMessage>(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken)).Context);
             Assert.Same(expectedContext, (await harness.Consumed.SelectAsync<ObservedMessage>(
-                message => message.Context.Message.CorrelationId == expected.CorrelationId, cancellationToken).First()).Context);
-            Assert.True(await harness.Consumed.Any(filter =>
+                message => message.Context.Message.CorrelationId == expected.CorrelationId, cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken)).Context);
+            Assert.True(await harness.Consumed.AnyAsync(filter =>
             {
                 filter.Includes.Add<ObservedMessage>();
                 filter.Excludes.Add<OtherMessage>();
             }, cancellationToken));
-            Assert.True(await harness.Consumed.Any<ObservedMessage>(cancellationToken));
-            Assert.True(await harness.Consumed.Any<ObservedMessage>(
+            Assert.True(await harness.Consumed.AnyAsync<ObservedMessage>(cancellationToken));
+            Assert.True(await harness.Consumed.AnyAsync<ObservedMessage>(
                 message => message.Context.Message.Value == "expected", cancellationToken));
 
             var typed = new ReceivedMessageList<ObservedMessage>(timeout, snapshotOnly, new FakeTimeProvider(ObservationTime));
             typed.Add(expectedContext);
 
             Assert.Same(expectedContext, Assert.Single(typed.Select(snapshotOnly)).Context);
-            Assert.Same(expectedContext, (await typed.SelectAsync(cancellationToken).First()).Context);
-            Assert.True(await typed.Any(cancellationToken));
+            Assert.Same(expectedContext, (await typed.SelectAsync(cancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken)).Context);
+            Assert.True(await typed.AnyAsync(cancellationToken));
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-OBSERVATION-LIST", "observer-success-fault-and-clock")]
-    public async Task SendAndPublishObservers_RecordExactSuccessFaultAndConfiguredTime()
+    public async Task SendAndPublishObservers_RecordExactSuccessFaultAndConfiguredTimeAsync()
     {
         TimeSpan timeout = OperationTimeout();
         var success = new ObservedMessage(NewId.NextGuid(), "success");
@@ -181,22 +181,22 @@ public sealed class MessageObservationListTests
         var sendFault = CreateSendContext(failure);
         var publishSuccess = CreatePublishContext(success);
         var publishFault = CreatePublishContext(failure);
-        var timeProvider = new FakeTimeProvider(ToUtcOffset(sendSuccess.SentTime!.Value));
+        var timeProvider = new FakeTimeProvider(sendSuccess.SentTime!.Value);
         using var sendObserver = new BusTestSendObserver(timeout, timeout, CancellationToken.None, timeProvider);
         using var publishObserver = new BusTestPublishObserver(timeout, timeout, CancellationToken.None, timeProvider);
         ISendObserver send = sendObserver;
         IPublishObserver publish = publishObserver;
 
-        timeProvider.SetUtcNow(ToUtcOffset(sendSuccess.SentTime!.Value) + TimeSpan.FromSeconds(1));
-        await send.PreSend(sendSuccess);
-        await send.PostSend(sendSuccess);
-        timeProvider.SetUtcNow(ToUtcOffset(sendFault.SentTime!.Value) + TimeSpan.FromSeconds(2));
-        await send.SendFault(sendFault, expectedFailure);
-        timeProvider.SetUtcNow(ToUtcOffset(publishSuccess.SentTime!.Value) + TimeSpan.FromSeconds(3));
-        await publish.PrePublish(publishSuccess);
-        await publish.PostPublish(publishSuccess);
-        timeProvider.SetUtcNow(ToUtcOffset(publishFault.SentTime!.Value) + TimeSpan.FromSeconds(4));
-        await publish.PublishFault(publishFault, expectedFailure);
+        timeProvider.SetUtcNow(sendSuccess.SentTime!.Value + TimeSpan.FromSeconds(1));
+        await send.PreSendAsync(sendSuccess);
+        await send.PostSendAsync(sendSuccess);
+        timeProvider.SetUtcNow(sendFault.SentTime!.Value + TimeSpan.FromSeconds(2));
+        await send.SendFaultAsync(sendFault, expectedFailure);
+        timeProvider.SetUtcNow(publishSuccess.SentTime!.Value + TimeSpan.FromSeconds(3));
+        await publish.PrePublishAsync(publishSuccess);
+        await publish.PostPublishAsync(publishSuccess);
+        timeProvider.SetUtcNow(publishFault.SentTime!.Value + TimeSpan.FromSeconds(4));
+        await publish.PublishFaultAsync(publishFault, expectedFailure);
 
         CancellationToken snapshotOnly = new(canceled: true);
         ISentMessage<ObservedMessage>[] sent = sendObserver.Messages.Select<ObservedMessage>(snapshotOnly).ToArray();
@@ -236,7 +236,7 @@ public sealed class MessageObservationListTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASYNC-ELEMENT-LIST", "filter-failure-propagation-and-recovery")]
-    public async Task AsyncElementList_PropagatesFilterFailureAndRemainsUsableAfterward()
+    public async Task AsyncElementList_PropagatesFilterFailureAndRemainsUsableAfterwardAsync()
     {
         Guid expectedId = NewId.NextGuid();
         var list = new TestElementList(CancellationToken.None);
@@ -244,8 +244,8 @@ public sealed class MessageObservationListTests
 
         var expected = new InvalidOperationException("filter failed");
         InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            list.SelectAsync(_ => throw expected, TestContext.Current.CancellationToken).First());
-        TestElement recovered = await list.SelectAsync(_ => true, TestContext.Current.CancellationToken).First();
+            list.SelectAsync(_ => throw expected, TestContext.Current.CancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken));
+        TestElement recovered = await list.SelectAsync(_ => true, TestContext.Current.CancellationToken).FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Same(expected, actual);
         Assert.Equal(expectedId, recovered.ElementId);
@@ -254,15 +254,15 @@ public sealed class MessageObservationListTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASYNC-ELEMENT-LIST", "empty-async-extension-contract")]
-    public async Task EmptyAsyncSequence_ExtensionsReturnExactEmptyResults()
+    public async Task EmptyAsyncSequence_ExtensionsReturnExactEmptyResultsAsync()
     {
         InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            Empty<TestElement>().First());
+            Empty<TestElement>().FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken));
 
         Assert.Equal("Message List was empty, or timed out", exception.Message);
-        Assert.Null(await Empty<TestElement>().FirstOrDefault());
-        Assert.Equal(0, await Empty<TestElement>().Count());
-        Assert.False(await Empty<TestElement>().Any());
+        Assert.Null(await Empty<TestElement>().FirstObservedOrDefaultAsync(TestContext.Current.CancellationToken));
+        Assert.Equal(0, await Empty<TestElement>().CountObservedAsync(TestContext.Current.CancellationToken));
+        Assert.False(await Empty<TestElement>().AnyObservedAsync(TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -286,13 +286,13 @@ public sealed class MessageObservationListTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-OBSERVATION-LIST", "dynamic-endpoint-publish-observation")]
-    public async Task ReceiveEndpointObserver_RecordsPublicationsFromADynamicallyConnectedEndpoint()
+    public async Task ReceiveEndpointObserver_RecordsPublicationsFromADynamicallyConnectedEndpointAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         using var harness = CreateHarness(timeout);
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             var endpointPublished = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -307,7 +307,7 @@ public sealed class MessageObservationListTests
                 $"observed-endpoint-{NewId.NextGuid():N}",
                 configurator => configurator.Handler<EndpointRequest>(async context =>
                 {
-                    await context.Publish(new EndpointEvent(context.Message.CorrelationId), context.CancellationToken);
+                    await context.Advanced().PublishAsync(new EndpointEvent(context.Message.CorrelationId), context.CancellationToken);
                     endpointPublished.TrySetResult(true);
                 }));
             ReceiveEndpointReady ready = await endpoint.Ready.WaitAsync(timeout, cancellationToken);
@@ -315,9 +315,9 @@ public sealed class MessageObservationListTests
             try
             {
                 var request = new EndpointRequest(NewId.NextGuid());
-                ISendEndpoint sendEndpoint = await harness.GetSendEndpoint(ready.InputAddress);
+                ISendEndpoint sendEndpoint = await harness.GetSendEndpointAsync(ready.InputAddress, TestContext.Current.CancellationToken);
 
-                await sendEndpoint.Send(request, cancellationToken);
+                await sendEndpoint.SendAsync(request, cancellationToken);
                 await endpointPublished.Task.WaitAsync(timeout, cancellationToken);
 
                 IPublishedMessage<EndpointEvent> observation = Assert.Single(
@@ -333,7 +333,7 @@ public sealed class MessageObservationListTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
@@ -375,9 +375,6 @@ public sealed class MessageObservationListTests
         {
             MessageId = NewId.NextGuid(),
         };
-
-    private static DateTimeOffset ToUtcOffset(DateTime value) =>
-        new(DateTime.SpecifyKind(value, DateTimeKind.Utc));
 
     private static async IAsyncEnumerable<T> Empty<T>()
         where T : class

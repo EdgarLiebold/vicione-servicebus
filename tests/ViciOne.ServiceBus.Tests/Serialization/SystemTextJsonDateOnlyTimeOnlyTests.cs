@@ -38,7 +38,7 @@ public sealed class SystemTextJsonDateOnlyTimeOnlyTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SYSTEM-TEXT-JSON-DATEONLY-TIMEONLY", "in-memory-transport-roundtrip")]
-    public async Task InMemoryTransport_ConsumesExactTemporalValuesWithoutCustomConverters()
+    public async Task InMemoryTransport_ConsumesExactTemporalValuesWithoutCustomConvertersAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -59,31 +59,31 @@ public sealed class SystemTextJsonDateOnlyTimeOnlyTests
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
-            await harness.Bus.Publish(source, cancellationToken).WaitAsync(timeout, cancellationToken);
+            await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
+            await harness.Bus.PublishAsync(source, cancellationToken).WaitAsync(timeout, cancellationToken);
 
             ConsumeContext<TemporalTransportMessage> context = await received.Task.WaitAsync(
                 timeout,
                 cancellationToken);
             IReceivedMessage<TemporalTransportMessage> observation = await harness.Consumed
                 .SelectAsync<TemporalTransportMessage>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             Assert.Equal(source, context.Message);
             Assert.Equal(source, observation.Context.Message);
-            Assert.Equal(SystemTextJsonMessageSerializer.JsonContentType, context.ReceiveContext.ContentType);
+            Assert.Equal(SystemTextJsonMessageSerializer.JsonContentType, context.Advanced().ReceiveContext.ContentType);
             Assert.Null(observation.Exception);
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SYSTEM-TEXT-JSON-DATEONLY-TIMEONLY", "malformed-date-receive-fault")]
-    public Task MalformedDate_PublishesAReceiveFaultWithoutDispatching() =>
-        AssertMalformedTemporalInputProducesReceiveFault(
+    public Task MalformedDate_PublishesAReceiveFaultWithoutDispatchingAsync() =>
+        AssertMalformedTemporalInputProducesReceiveFaultAsync(
             "2024-02-30",
             "12:34:56.7890123",
             "System.DateOnly",
@@ -91,14 +91,14 @@ public sealed class SystemTextJsonDateOnlyTimeOnlyTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SYSTEM-TEXT-JSON-DATEONLY-TIMEONLY", "malformed-time-receive-fault")]
-    public Task MalformedTime_PublishesAReceiveFaultWithoutDispatching() =>
-        AssertMalformedTemporalInputProducesReceiveFault(
+    public Task MalformedTime_PublishesAReceiveFaultWithoutDispatchingAsync() =>
+        AssertMalformedTemporalInputProducesReceiveFaultAsync(
             "2024-02-29",
             "24:00:00",
             "System.TimeOnly",
             "$.time");
 
-    private static async Task AssertMalformedTemporalInputProducesReceiveFault(
+    private static async Task AssertMalformedTemporalInputProducesReceiveFaultAsync(
         string date,
         string time,
         string expectedType,
@@ -129,8 +129,8 @@ public sealed class SystemTextJsonDateOnlyTimeOnlyTests
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
-            await harness.InputQueueSendEndpoint.Send<TemporalTransportMessage>(
+            await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync<TemporalTransportMessage>(
                     new { Date = DateOnly.MinValue, Time = TimeOnly.MinValue },
                     context =>
                     {
@@ -155,7 +155,7 @@ public sealed class SystemTextJsonDateOnlyTimeOnlyTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync().WaitAsync(timeout, CancellationToken.None);
         }
     }
 

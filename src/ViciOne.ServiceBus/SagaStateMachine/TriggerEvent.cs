@@ -26,9 +26,9 @@ public class TriggerEvent :
         context.Add("name", _name);
     }
 
-    public int CompareTo(Event other)
+    public int CompareTo(Event? other)
     {
-        return string.Compare(_name, other.Name, StringComparison.Ordinal);
+        return other == null ? 1 : string.Compare(_name, other.Name, StringComparison.Ordinal);
     }
 
     public bool Equals(TriggerEvent other)
@@ -40,7 +40,7 @@ public class TriggerEvent :
         return Equals(other._name, _name);
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (ReferenceEquals(null, obj))
             return false;

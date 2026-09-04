@@ -102,7 +102,7 @@ public static class DependencyInjectionTransactionExtensions
     static void EnsureBufferedCapacity<TBus>(IServiceCollection services, int capacity)
         where TBus : class, IBus
     {
-        ServiceDescriptor existing = services.FirstOrDefault(descriptor =>
+        ServiceDescriptor? existing = services.FirstOrDefault(descriptor =>
             descriptor.ServiceType == typeof(BufferedCapacity<TBus>));
         if (existing?.ImplementationInstance is BufferedCapacity<TBus> configured)
         {
@@ -137,7 +137,7 @@ public static class DependencyInjectionTransactionExtensions
         Type defaultProvider = typeof(ScopedBusContextProvider<TBus>);
         Type capabilityProvider = typeof(TCapabilityProvider);
 
-        ServiceDescriptor conflicting = services.FirstOrDefault(descriptor =>
+        ServiceDescriptor? conflicting = services.FirstOrDefault(descriptor =>
             descriptor.ServiceType == serviceType
             && descriptor.ImplementationType != defaultProvider
             && descriptor.ImplementationType != capabilityProvider);

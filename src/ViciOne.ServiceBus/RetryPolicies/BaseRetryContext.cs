@@ -32,13 +32,13 @@ public class BaseRetryContext<TContext> :
 
     Type RetryContext.ContextType => typeof(TContext);
 
-    public virtual Task PreRetry()
+    public virtual Task PreRetryAsync(CancellationToken cancellationToken = default)
     {
-        return Task.CompletedTask;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
     }
 
-    public virtual Task RetryFaulted(Exception exception)
+    public virtual Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {
-        return Task.CompletedTask;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
     }
 }

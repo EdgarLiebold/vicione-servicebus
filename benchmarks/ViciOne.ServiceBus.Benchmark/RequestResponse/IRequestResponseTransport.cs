@@ -7,7 +7,7 @@ namespace ViciOneServiceBusBenchmark.RequestResponse;
 public interface IRequestResponseTransport :
     IDisposable
 {
-    Task<IRequestClient<T>> GetRequestClient<T>(TimeSpan settingsRequestTimeout)
+    Task<IRequestClient<T>> GetRequestClientAsync<T>(TimeSpan settingsRequestTimeout)
         where T : class;
 
     void GetBusControl(Action<IReceiveEndpointConfigurator> callback);

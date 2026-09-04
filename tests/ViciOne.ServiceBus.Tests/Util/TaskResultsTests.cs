@@ -9,27 +9,31 @@ public sealed class TaskResultsTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-RESULTS-CACHED", "completed-values")]
-    public async Task CachedTasks_ExposeTheirDeclaredCompletedValuesAndStableIdentity()
+    public async Task CachedTasks_ExposeTheirDeclaredCompletedValuesAndStableIdentityAsync()
     {
         Assert.Same(Task.CompletedTask, TaskResults.Completed);
         Assert.Same(TaskResults.True, TaskResults.True);
         Assert.Same(TaskResults.False, TaskResults.False);
-        Assert.Same(TaskResults.Default<string>(), TaskResults.Default<string>());
-        Assert.Same(TaskResults.Canceled<int>(), TaskResults.Canceled<int>());
+        Assert.Same(
+            TaskResults.DefaultAsync<string>(TestContext.Current.CancellationToken),
+            TaskResults.DefaultAsync<string>(TestContext.Current.CancellationToken));
+        Assert.Same(
+            TaskResults.CanceledAsync<int>(TestContext.Current.CancellationToken),
+            TaskResults.CanceledAsync<int>(TestContext.Current.CancellationToken));
         Assert.True(TaskResults.Completed.IsCompletedSuccessfully);
         Assert.True(await TaskResults.True);
         Assert.False(await TaskResults.False);
-        Assert.Null(await TaskResults.Default<string>());
-        Assert.Equal(0, await TaskResults.Default<int>());
+        Assert.Null(await TaskResults.DefaultAsync<string>(TestContext.Current.CancellationToken));
+        Assert.Equal(0, await TaskResults.DefaultAsync<int>(TestContext.Current.CancellationToken));
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-RESULTS-FAULT", "exact-exception")]
-    public async Task Faulted_PreservesTheExactException()
+    public async Task Faulted_PreservesTheExactExceptionAsync()
     {
         var expected = new ExpectedTaskResultException("expected fault");
 
-        Task<int> task = TaskResults.Faulted<int>(expected);
+        Task<int> task = TaskResults.FaultedAsync<int>(expected, TestContext.Current.CancellationToken);
         ExpectedTaskResultException actual =
             await Assert.ThrowsAsync<ExpectedTaskResultException>(() => task);
 
@@ -39,9 +43,9 @@ public sealed class TaskResultsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-RESULTS-CANCELLATION", "cached-task")]
-    public async Task Canceled_ExposesACanceledTaskWithACanceledToken()
+    public async Task Canceled_ExposesACanceledTaskWithACanceledTokenAsync()
     {
-        Task<int> task = TaskResults.Canceled<int>();
+        Task<int> task = TaskResults.CanceledAsync<int>(TestContext.Current.CancellationToken);
 
         OperationCanceledException exception =
             await Assert.ThrowsAnyAsync<OperationCanceledException>(() => task);
@@ -56,7 +60,7 @@ public sealed class TaskResultsTests
     {
         ArgumentNullException exception = Assert.Throws<ArgumentNullException>(() =>
         {
-            _ = TaskResults.Faulted<int>(null!);
+            _ = TaskResults.FaultedAsync<int>(null!, TestContext.Current.CancellationToken);
         });
 
         Assert.Equal("exception", exception.ParamName);

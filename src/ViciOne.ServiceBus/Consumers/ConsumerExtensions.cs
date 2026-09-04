@@ -16,7 +16,7 @@ public static class ConsumerExtensions
     /// <param name="configure">Optional, configure the consumer</param>
     /// <returns></returns>
     public static void Consumer<TConsumer>(this IReceiveEndpointConfigurator configurator, IConsumerFactory<TConsumer> consumerFactory,
-        Action<IConsumerConfigurator<TConsumer>> configure = null)
+        Action<IConsumerConfigurator<TConsumer>>? configure = null)
         where TConsumer : class, IConsumer
     {
         if (configurator == null)
@@ -66,7 +66,7 @@ public static class ConsumerExtensions
     /// <param name="configurator"></param>
     /// <param name="configure"></param>
     /// <returns></returns>
-    public static void Consumer<TConsumer>(this IReceiveEndpointConfigurator configurator, Action<IConsumerConfigurator<TConsumer>> configure = null)
+    public static void Consumer<TConsumer>(this IReceiveEndpointConfigurator configurator, Action<IConsumerConfigurator<TConsumer>>? configure = null)
         where TConsumer : class, IConsumer, new()
     {
         if (configurator == null)
@@ -111,7 +111,7 @@ public static class ConsumerExtensions
     /// <param name="configure"></param>
     /// <returns></returns>
     public static void Consumer<TConsumer>(this IReceiveEndpointConfigurator configurator, Func<TConsumer> consumerFactoryMethod,
-        Action<IConsumerConfigurator<TConsumer>> configure = null)
+        Action<IConsumerConfigurator<TConsumer>>? configure = null)
         where TConsumer : class, IConsumer
     {
         if (configurator == null)
@@ -174,7 +174,7 @@ public static class ConsumerExtensions
             TypeCache.GetShortName(consumerType));
 
         var configuratorType = typeof(UntypedConsumerConfigurator<>).MakeGenericType(consumerType);
-        var consumerConfigurator = (IReceiveEndpointSpecification)Activator.CreateInstance(configuratorType, consumerFactory, configurator);
+        var consumerConfigurator = (IReceiveEndpointSpecification)(Activator.CreateInstance(configuratorType, consumerFactory, configurator) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
         configurator.AddEndpointSpecification(consumerConfigurator);
     }

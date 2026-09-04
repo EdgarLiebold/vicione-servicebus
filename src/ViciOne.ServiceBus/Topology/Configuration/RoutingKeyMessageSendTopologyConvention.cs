@@ -6,15 +6,16 @@ public class RoutingKeyMessageSendTopologyConvention<TMessage> :
     IRoutingKeyMessageSendTopologyConvention<TMessage>
     where TMessage : class
 {
-    IMessageRoutingKeyFormatter<TMessage> _formatter;
+    IMessageRoutingKeyFormatter<TMessage>? _formatter;
 
-    public RoutingKeyMessageSendTopologyConvention(IRoutingKeyFormatter formatter)
+    public RoutingKeyMessageSendTopologyConvention(IRoutingKeyFormatter? formatter)
     {
         if (formatter != null)
             SetFormatter(formatter);
     }
 
-    bool IMessageSendTopologyConvention<TMessage>.TryGetMessageSendTopology(out IMessageSendTopology<TMessage> messageSendTopology)
+    bool IMessageSendTopologyConvention<TMessage>.TryGetMessageSendTopology(
+        [NotNullWhen(true)] out IMessageSendTopology<TMessage>? messageSendTopology)
     {
         if (_formatter != null)
         {
@@ -26,7 +27,7 @@ public class RoutingKeyMessageSendTopologyConvention<TMessage> :
         return false;
     }
 
-    bool IMessageSendTopologyConvention.TryGetMessageSendTopologyConvention<T>(out IMessageSendTopologyConvention<T> convention)
+    bool IMessageSendTopologyConvention.TryGetMessageSendTopologyConvention<T>([NotNullWhen(true)] out IMessageSendTopologyConvention<T>? convention)
     {
         convention = this as IMessageSendTopologyConvention<T>;
 

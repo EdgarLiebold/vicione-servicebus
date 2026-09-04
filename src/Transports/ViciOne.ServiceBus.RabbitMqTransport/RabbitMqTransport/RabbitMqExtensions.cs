@@ -16,7 +16,7 @@ public static class RabbitMqExtensions
     /// <param name="replyCode"></param>
     /// <param name="message">Message for channel closure</param>
     /// <param name="cancellationToken"></param>
-    public static async Task Cleanup(this IChannel channel, ushort replyCode = 200, string message = "Unknown",
+    public static async Task CleanupAsync(this IChannel channel, ushort replyCode = 200, string message = "Unknown",
         CancellationToken cancellationToken = default)
     {
         if (channel != null)
@@ -56,19 +56,19 @@ public static class RabbitMqExtensions
     /// <param name="replyCode"></param>
     /// <param name="message">Message for channel closure</param>
     /// <param name="cancellationToken"></param>
-    public static async Task Cleanup(this IConnection connection, ushort replyCode = 200, string message = "Unknown",
+    public static async Task CleanupAsync(this IConnection? connection, ushort replyCode = 200, string message = "Unknown",
         CancellationToken cancellationToken = default)
     {
-        if (connection != null)
+        if (connection == null)
+            return;
+
+        try
         {
-            try
-            {
-                if (connection.IsOpen)
-                    await connection.CloseAsync(replyCode, message, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception)
-            {
-            }
+            if (connection.IsOpen)
+                await connection.CloseAsync(replyCode, message, cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception)
+        {
         }
 
         await connection.DisposeAsync().ConfigureAwait(false);

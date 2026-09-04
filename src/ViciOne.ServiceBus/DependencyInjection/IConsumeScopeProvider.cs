@@ -8,12 +8,12 @@ namespace ViciOne.ServiceBus.DependencyInjection;
 public interface IConsumeScopeProvider :
     IProbeSite
 {
-    ValueTask<IConsumeScopeContext> GetScope(ConsumeContext context);
+    ValueTask<IConsumeScopeContext> GetScopeAsync(ConsumeContext context, CancellationToken cancellationToken = default);
 
-    ValueTask<IConsumeScopeContext<T>> GetScope<T>(ConsumeContext<T> context)
+    ValueTask<IConsumeScopeContext<T>> GetScopeAsync<T>(ConsumeContext<T> context, CancellationToken cancellationToken = default)
         where T : class;
 
-    ValueTask<IConsumerConsumeScopeContext<TConsumer, T>> GetScope<TConsumer, T>(ConsumeContext<T> context)
+    ValueTask<IConsumerConsumeScopeContext<TConsumer, T>> GetScopeAsync<TConsumer, T>(ConsumeContext<T> context, CancellationToken cancellationToken = default)
         where TConsumer : class
         where T : class;
 }

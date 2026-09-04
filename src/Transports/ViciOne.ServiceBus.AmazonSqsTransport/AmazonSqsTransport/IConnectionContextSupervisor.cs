@@ -9,9 +9,9 @@ public interface IConnectionContextSupervisor :
 {
     Uri NormalizeAddress(Uri address);
 
-    Task<ISendTransport> CreateSendTransport(SqsReceiveEndpointContext receiveEndpointContext, IClientContextSupervisor clientContextSupervisor,
-        Uri address);
+    Task<ISendTransport> CreateSendTransportAsync(SqsReceiveEndpointContext receiveEndpointContext, IClientContextSupervisor clientContextSupervisor,
+        Uri address, CancellationToken cancellationToken = default);
 
-    Task<ISendTransport> CreatePublishTransport<T>(SqsReceiveEndpointContext receiveEndpointContext, IClientContextSupervisor clientContextSupervisor)
+    Task<ISendTransport> CreatePublishTransportAsync<T>(SqsReceiveEndpointContext receiveEndpointContext, IClientContextSupervisor clientContextSupervisor, CancellationToken cancellationToken = default)
         where T : class;
 }

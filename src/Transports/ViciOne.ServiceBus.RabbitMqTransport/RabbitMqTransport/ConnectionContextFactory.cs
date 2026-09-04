@@ -27,11 +27,11 @@ public class ConnectionContextFactory :
 
     public IPipeContextAgent<ConnectionContext> CreateContext(ISupervisor supervisor)
     {
-        Task<ConnectionContext> context = CreateConnection(supervisor);
+        Task<ConnectionContext> context = CreateConnectionAsync(supervisor);
 
         IPipeContextAgent<ConnectionContext> contextHandle = supervisor.AddContext(context);
 
-        Task HandleShutdown(object sender, ShutdownEventArgs args)
+        Task HandleShutdownAsync(object sender, ShutdownEventArgs args)
         {
             // Invalidate before stopping, and never dispose from inside this notification: an operation
             // that is still unwinding — a channel creation, say — has to finish touching the connection
@@ -43,7 +43,7 @@ public class ConnectionContextFactory :
                 connectionContext.Lifetime.Invalidate(args);
             }
 
-            return contextHandle.Stop(args.ReplyText);
+            return contextHandle.StopAsync(args.ReplyText);
         }
 
         context.GetAwaiter().OnCompleted(() =>
@@ -53,13 +53,13 @@ public class ConnectionContextFactory :
 
             var connectionContext = context.Result;
 
-            connectionContext.Connection.ConnectionShutdownAsync += HandleShutdown;
+            connectionContext.Connection.ConnectionShutdownAsync += HandleShutdownAsync;
 
             void RemoveHandler()
             {
                 try
                 {
-                    connectionContext.Connection.ConnectionShutdownAsync -= HandleShutdown;
+                    connectionContext.Connection.ConnectionShutdownAsync -= HandleShutdownAsync;
                 }
                 catch (ObjectDisposedException)
                 {
@@ -75,14 +75,14 @@ public class ConnectionContextFactory :
     public IActivePipeContextAgent<ConnectionContext> CreateActiveContext(ISupervisor supervisor, PipeContextHandle<ConnectionContext> context,
         CancellationToken cancellationToken)
     {
-        return supervisor.AddActiveContext(context, CreateSharedConnection(context.Context, cancellationToken));
+        return supervisor.AddActiveContext(context, CreateSharedConnectionAsync(context.Context, cancellationToken));
     }
 
-    static async Task<ConnectionContext> CreateSharedConnection(Task<ConnectionContext> contextTask, CancellationToken cancellationToken)
+    static async Task<ConnectionContext> CreateSharedConnectionAsync(Task<ConnectionContext> contextTask, CancellationToken cancellationToken)
     {
         var context = contextTask.Status == TaskStatus.RanToCompletion
             ? contextTask.Result
-            : await contextTask.OrCanceled(cancellationToken).ConfigureAwait(false);
+            : await contextTask.OrCanceledAsync(cancellationToken).ConfigureAwait(false);
 
         if (!context.Connection.IsOpen)
         {
@@ -96,16 +96,16 @@ public class ConnectionContextFactory :
         return new SharedConnectionContext(context, cancellationToken);
     }
 
-    async Task<ConnectionContext> CreateConnection(ISupervisor supervisor)
+    async Task<ConnectionContext> CreateConnectionAsync(ISupervisor supervisor)
     {
-        await _hostConfiguration.Settings.Refresh(_connectionFactory.Value).ConfigureAwait(false);
+        await _hostConfiguration.Settings.RefreshAsync(_connectionFactory.Value).ConfigureAwait(false);
 
         var description = _hostConfiguration.Settings.ToDescription(_connectionFactory.Value);
 
         if (supervisor.Stopping.IsCancellationRequested)
             throw RabbitMqConnectionException.Stopping(description);
 
-        IConnection connection = null;
+        IConnection? connection = null;
         try
         {
             TransportLogMessages.ConnectHost(description);
@@ -117,7 +117,9 @@ public class ConnectionContextFactory :
             }
             else
             {
-                List<string> hostNames = [_hostConfiguration.Settings.Host];
+                var hostName = _hostConfiguration.Settings.Host
+                    ?? throw new ConfigurationException("A RabbitMQ host name is required when no endpoint resolver is configured.");
+                List<string> hostNames = [hostName];
 
                 connection = await _connectionFactory.Value.CreateConnectionAsync(hostNames, _hostConfiguration.Settings.ClientProvidedName)
                     .ConfigureAwait(false);

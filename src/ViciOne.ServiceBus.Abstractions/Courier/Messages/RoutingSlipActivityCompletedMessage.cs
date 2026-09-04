@@ -13,7 +13,7 @@ public class RoutingSlipActivityCompletedMessage :
     }
 
     public RoutingSlipActivityCompletedMessage(HostInfo host, Guid trackingNumber, string activityName, Guid executionId,
-        DateTime timestamp, TimeSpan duration, IDictionary<string, object> variables, IDictionary<string, object> arguments,
+        DateTimeOffset timestamp, TimeSpan duration, IDictionary<string, object> variables, IDictionary<string, object> arguments,
         IDictionary<string, object> data)
     {
         Host = host;
@@ -29,7 +29,7 @@ public class RoutingSlipActivityCompletedMessage :
     }
 
     public Guid TrackingNumber { get; set; }
-    public DateTime Timestamp { get; set; }
+    public DateTimeOffset Timestamp { get; set; }
     public TimeSpan Duration { get; set; }
     public Guid ExecutionId { get; set; }
     public string ActivityName { get; set; } = null!;

@@ -20,7 +20,7 @@ public sealed class ConfigureEndpointExclusionTests
     [InlineData(ExclusionShape.StateMachineExplicit)]
     [InlineData(ExclusionShape.StateMachineInstanceAttribute)]
     [RequirementCoverage("REQ-VSB-DI-CONFIGURE-ENDPOINTS", "consumer-saga-and-state-machine-exclusion-matrix")]
-    public async Task ExcludedRegistrationNeverCreatesAnEndpointOrConsumesItsMessage(
+    public async Task ExcludedRegistrationNeverCreatesAnEndpointOrConsumesItsMessageAsync(
         ExclusionShape shape)
     {
         TimeSpan timeout = OperationTimeout();
@@ -38,7 +38,7 @@ public sealed class ConfigureEndpointExclusionTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
@@ -47,18 +47,17 @@ public sealed class ConfigureEndpointExclusionTests
             Assert.Equal([ControlEndpointName], NonBusEndpointNames(probe));
 
             Guid correlationId = NewId.NextGuid();
-            await harness.Bus.Publish(new ExcludedMessage(correlationId), cancellationToken);
-            await harness.Bus.Publish(new ControlMessage(correlationId), cancellationToken);
+            await harness.Bus.PublishAsync(new ExcludedMessage(correlationId), cancellationToken);
+            await harness.Bus.PublishAsync(new ControlMessage(correlationId), cancellationToken);
             IReceivedMessage<ControlMessage> control = await harness.Consumed
                 .SelectAsync<ControlMessage>(cancellationToken)
-                .First()
-                .WaitAsync(timeout, cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
             Assert.Equal(correlationId, control.Context.Message.CorrelationId);
             Assert.Null(control.Exception);
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Single(harness.Consumed.Select<ControlMessage>(SnapshotOnlyToken()));
@@ -155,25 +154,25 @@ public sealed class ConfigureEndpointExclusionTests
 
     private sealed class ControlConsumer : IConsumer<ControlMessage>
     {
-        public Task Consume(ConsumeContext<ControlMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<ControlMessage> context) => Task.CompletedTask;
     }
 
     private sealed class ExplicitlyExcludedConsumer : IConsumer<ExcludedMessage>
     {
-        public Task Consume(ConsumeContext<ExcludedMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<ExcludedMessage> context) => Task.CompletedTask;
     }
 
     [ExcludeFromConfigureEndpoints]
     private sealed class AttributedExcludedConsumer : IConsumer<ExcludedMessage>
     {
-        public Task Consume(ConsumeContext<ExcludedMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<ExcludedMessage> context) => Task.CompletedTask;
     }
 
     private sealed class ExplicitlyExcludedSaga : ISaga, InitiatedBy<ExcludedMessage>
     {
         public Guid CorrelationId { get; set; }
 
-        public Task Consume(ConsumeContext<ExcludedMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<ExcludedMessage> context) => Task.CompletedTask;
     }
 
     [ExcludeFromConfigureEndpoints]
@@ -181,7 +180,7 @@ public sealed class ConfigureEndpointExclusionTests
     {
         public Guid CorrelationId { get; set; }
 
-        public Task Consume(ConsumeContext<ExcludedMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<ExcludedMessage> context) => Task.CompletedTask;
     }
 
     private sealed class ExplicitlyExcludedState : SagaStateMachineInstance

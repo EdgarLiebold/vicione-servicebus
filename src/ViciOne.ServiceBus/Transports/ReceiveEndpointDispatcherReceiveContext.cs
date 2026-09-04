@@ -35,7 +35,7 @@ public sealed class ReceiveEndpointDispatcherReceiveContext :
     {
         readonly IReadOnlyDictionary<string, object> _headers;
 
-        public ReadOnlyDictionaryHeaderProvider(IReadOnlyDictionary<string, object> headers = default)
+        public ReadOnlyDictionaryHeaderProvider(IReadOnlyDictionary<string, object>? headers = default)
         {
             _headers = headers ?? new Dictionary<string, object>();
         }
@@ -45,7 +45,7 @@ public sealed class ReceiveEndpointDispatcherReceiveContext :
             return _headers;
         }
 
-        public bool TryGetHeader(string key, out object value)
+        public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
         {
             return _headers.TryGetValue(key, out value);
         }

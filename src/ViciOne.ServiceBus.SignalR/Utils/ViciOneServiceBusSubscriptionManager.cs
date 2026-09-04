@@ -8,7 +8,7 @@ public class ViciOneServiceBusSubscriptionManager
 {
     readonly ConcurrentDictionary<string, HubConnectionStore> _subscriptions = new ConcurrentDictionary<string, HubConnectionStore>(StringComparer.Ordinal);
 
-    public HubConnectionStore this[string identifier]
+    public HubConnectionStore? this[string identifier]
     {
         get
         {

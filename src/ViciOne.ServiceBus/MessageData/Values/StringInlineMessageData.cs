@@ -14,7 +14,7 @@ public class StringInlineMessageData :
         Address = address;
         _value = value;
 
-        Value = Task.FromResult(value);
+        Value = Task.FromResult<string?>(value);
     }
 
     public void Set(IMessageDataReference reference)
@@ -27,5 +27,5 @@ public class StringInlineMessageData :
 
     public bool HasValue => true;
 
-    public Task<string> Value { get; }
+    public Task<string?> Value { get; }
 }

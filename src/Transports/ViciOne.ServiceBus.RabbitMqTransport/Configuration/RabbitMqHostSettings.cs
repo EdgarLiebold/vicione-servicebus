@@ -163,5 +163,6 @@ public interface RabbitMqHostSettings
     /// </summary>
     /// <param name="connectionFactory"></param>
     /// <returns></returns>
-    Task Refresh(ConnectionFactory connectionFactory);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task RefreshAsync(ConnectionFactory connectionFactory, CancellationToken cancellationToken = default);
 }

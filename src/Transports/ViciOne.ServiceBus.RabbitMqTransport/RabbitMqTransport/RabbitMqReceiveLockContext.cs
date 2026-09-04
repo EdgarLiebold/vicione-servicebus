@@ -22,9 +22,9 @@ public class RabbitMqReceiveLockContext :
         _cancellationToken = cancellationToken;
     }
 
-    public async Task Complete()
+    public async Task CompleteAsync(CancellationToken cancellationToken = default)
     {
-        if (_channel.Channel.IsClosed)
+        cancellationToken.ThrowIfCancellationRequested(); if (_channel.Channel.IsClosed)
         {
             // Channel.IsClosed and Channel.CloseReason are read-only diagnostics and safe to read at
             // any time; the operations themselves go through the owning context and its lease. The
@@ -41,7 +41,7 @@ public class RabbitMqReceiveLockContext :
 
         try
         {
-            await _channel.BasicAck(_deliveryTag, false, _cancellationToken).ConfigureAwait(false);
+            await _channel.BasicAckAsync(_deliveryTag, false, _cancellationToken).ConfigureAwait(false);
         }
         catch (Exception exception)
         {
@@ -49,14 +49,14 @@ public class RabbitMqReceiveLockContext :
         }
     }
 
-    public async Task Faulted(Exception exception)
+    public async Task FaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {
-        if (_channel.Channel.IsClosed || _cancellationToken.IsCancellationRequested)
+        cancellationToken.ThrowIfCancellationRequested(); if (_channel.Channel.IsClosed || _cancellationToken.IsCancellationRequested)
             return;
 
         try
         {
-            await _channel.BasicNack(_deliveryTag, false, true, _cancellationToken).ConfigureAwait(false);
+            await _channel.BasicNackAsync(_deliveryTag, false, true, _cancellationToken).ConfigureAwait(false);
         }
         catch (Exception ackEx)
         {
@@ -64,9 +64,9 @@ public class RabbitMqReceiveLockContext :
         }
     }
 
-    public Task ValidateLockStatus()
+    public Task ValidateLockStatusAsync(CancellationToken cancellationToken = default)
     {
-        if (_channel.Channel.IsClosed)
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); if (_channel.Channel.IsClosed)
         {
             // Channel.IsClosed and Channel.CloseReason are read-only diagnostics and safe to read at
             // any time; the operations themselves go through the owning context and its lease. The

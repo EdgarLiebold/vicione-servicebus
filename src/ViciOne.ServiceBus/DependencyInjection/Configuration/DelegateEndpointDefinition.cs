@@ -21,7 +21,7 @@ public class DelegateEndpointDefinition :
         return _endpointName;
     }
 
-    public void Configure<T>(T configurator, IRegistrationContext context)
+    public void Configure<T>(T configurator, IRegistrationContext? context)
         where T : IReceiveEndpointConfigurator
     {
         _endpointDefinition?.Configure(configurator, context);

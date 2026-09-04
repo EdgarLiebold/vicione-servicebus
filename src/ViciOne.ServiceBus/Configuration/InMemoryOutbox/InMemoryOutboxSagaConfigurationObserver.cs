@@ -7,17 +7,17 @@ public class InMemoryOutboxSagaConfigurationObserver<TSaga> :
     where TSaga : class, ISaga
 {
     readonly ISagaConfigurator<TSaga> _configurator;
-    readonly Action<IOutboxConfigurator> _configure;
-    readonly ISetScopedConsumeContext _setter;
+    readonly Action<IOutboxConfigurator>? _configure;
+    readonly ISetScopedConsumeContext? _setter;
 
     public InMemoryOutboxSagaConfigurationObserver(IRegistrationContext context, ISagaConfigurator<TSaga> configurator,
-        Action<IOutboxConfigurator> configure)
+        Action<IOutboxConfigurator>? configure)
         : this(context as ISetScopedConsumeContext ?? throw new ArgumentException(nameof(context)), configurator, configure)
     {
     }
 
-    public InMemoryOutboxSagaConfigurationObserver(ISetScopedConsumeContext setter, ISagaConfigurator<TSaga> configurator,
-        Action<IOutboxConfigurator> configure)
+    public InMemoryOutboxSagaConfigurationObserver(ISetScopedConsumeContext? setter, ISagaConfigurator<TSaga> configurator,
+        Action<IOutboxConfigurator>? configure)
     {
         _setter = setter;
         _configurator = configurator;

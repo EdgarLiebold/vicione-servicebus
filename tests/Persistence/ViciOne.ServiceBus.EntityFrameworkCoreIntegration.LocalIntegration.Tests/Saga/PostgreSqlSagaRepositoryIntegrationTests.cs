@@ -15,14 +15,14 @@ public sealed class PostgreSqlSagaRepositoryIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-SAGA-LIFECYCLE", "pessimistic-correlated-lifecycle-persists-on-serializable-transaction")]
-    public async Task PessimisticRepository_PersistsTheCorrelatedLifecycleOnASerializableTransaction()
+    public async Task PessimisticRepository_PersistsTheCorrelatedLifecycleOnASerializableTransactionAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         TimeSpan timeout = OperationTimeout();
         await using PostgreSqlTestDatabase database = await PostgreSqlTestDatabase.CreateAsync(
             "saga-lifecycle",
             cancellationToken);
-        await CreatePersistentSagaSchema(database.ConnectionString, cancellationToken);
+        await CreatePersistentSagaSchemaAsync(database.ConnectionString, cancellationToken);
         var transactions = new TransactionProbe();
         await using ServiceProvider provider = CreatePersistentSagaProvider(
             database.ConnectionString,
@@ -32,25 +32,25 @@ public sealed class PostgreSqlSagaRepositoryIntegrationTests
             {
                 repository.UsePostgres();
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Guid sagaId = Guid.NewGuid();
-            ISendEndpoint endpoint = await harness.GetSagaEndpoint<PersistentSaga>();
+            ISendEndpoint endpoint = await harness.GetSagaEndpointAsync<PersistentSaga>(TestContext.Current.CancellationToken);
 
-            await endpoint.Send(new StartPersistentSaga(sagaId, "created"), cancellationToken);
+            await endpoint.SendAsync(new StartPersistentSaga(sagaId, "created"), cancellationToken);
             IPublishedMessage<PersistentSagaStarted> started = await harness.Published
                 .SelectAsync<PersistentSagaStarted>(
                     observation => observation.Context.Message.CorrelationId == sagaId,
                     cancellationToken)
-                .First();
-            await endpoint.Send(new CompletePersistentSaga(sagaId, "completed"), cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
+            await endpoint.SendAsync(new CompletePersistentSaga(sagaId, "completed"), cancellationToken);
             IPublishedMessage<PersistentSagaCompleted> completed = await harness.Published
                 .SelectAsync<PersistentSagaCompleted>(
                     observation => observation.Context.Message.CorrelationId == sagaId,
                     cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             await using var verification = CreatePersistentSagaDbContext(database.ConnectionString);
             PersistentSaga persisted = await verification.Sagas.AsNoTracking()
@@ -66,44 +66,44 @@ public sealed class PostgreSqlSagaRepositoryIntegrationTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-SAGA-TRANSACTION", "optimistic-default-uses-read-committed-on-real-provider")]
-    public async Task OptimisticRepository_DefaultsToAReadCommittedTransaction()
+    public async Task OptimisticRepository_DefaultsToAReadCommittedTransactionAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         TimeSpan timeout = OperationTimeout();
         await using PostgreSqlTestDatabase database = await PostgreSqlTestDatabase.CreateAsync(
             "saga-optimistic-transaction",
             cancellationToken);
-        await CreatePersistentSagaSchema(database.ConnectionString, cancellationToken);
+        await CreatePersistentSagaSchemaAsync(database.ConnectionString, cancellationToken);
         var transactions = new TransactionProbe();
         await using ServiceProvider provider = CreatePersistentSagaProvider(
             database.ConnectionString,
             timeout,
             transactions,
             configureRepository: repository => repository.SetOptimisticConcurrency());
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Guid sagaId = Guid.NewGuid();
-            ISendEndpoint endpoint = await harness.GetSagaEndpoint<PersistentSaga>();
-            await endpoint.Send(new StartPersistentSaga(sagaId, "created"), cancellationToken);
+            ISendEndpoint endpoint = await harness.GetSagaEndpointAsync<PersistentSaga>(TestContext.Current.CancellationToken);
+            await endpoint.SendAsync(new StartPersistentSaga(sagaId, "created"), cancellationToken);
             await harness.Published
                 .SelectAsync<PersistentSagaStarted>(
                     observation => observation.Context.Message.CorrelationId == sagaId,
                     cancellationToken)
-                .First();
-            await endpoint.Send(new CompletePersistentSaga(sagaId, "completed"), cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
+            await endpoint.SendAsync(new CompletePersistentSaga(sagaId, "completed"), cancellationToken);
             await harness.Published
                 .SelectAsync<PersistentSagaCompleted>(
                     observation => observation.Context.Message.CorrelationId == sagaId,
                     cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             await using var verification = CreatePersistentSagaDbContext(database.ConnectionString);
             PersistentSaga persisted = await verification.Sagas.AsNoTracking()
@@ -117,45 +117,45 @@ public sealed class PostgreSqlSagaRepositoryIntegrationTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-SAGA-TRANSACTION", "optimistic-transaction-disable-reaches-real-provider")]
-    public async Task OptimisticRepository_ExecutesWithoutATransactionWhenExplicitlyDisabled()
+    public async Task OptimisticRepository_ExecutesWithoutATransactionWhenExplicitlyDisabledAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         TimeSpan timeout = OperationTimeout();
         await using PostgreSqlTestDatabase database = await PostgreSqlTestDatabase.CreateAsync(
             "saga-no-transaction",
             cancellationToken);
-        await CreatePersistentSagaSchema(database.ConnectionString, cancellationToken);
+        await CreatePersistentSagaSchemaAsync(database.ConnectionString, cancellationToken);
         var transactions = new TransactionProbe();
         await using ServiceProvider provider = CreatePersistentSagaProvider(
             database.ConnectionString,
             timeout,
             transactions,
             configureRepository: repository => repository.SetOptimisticConcurrency(useTransaction: false));
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Guid sagaId = Guid.NewGuid();
-            ISendEndpoint endpoint = await harness.GetSagaEndpoint<PersistentSaga>();
+            ISendEndpoint endpoint = await harness.GetSagaEndpointAsync<PersistentSaga>(TestContext.Current.CancellationToken);
 
-            await endpoint.Send(new StartPersistentSaga(sagaId, "created"), cancellationToken);
+            await endpoint.SendAsync(new StartPersistentSaga(sagaId, "created"), cancellationToken);
             await harness.Published
                 .SelectAsync<PersistentSagaStarted>(
                     observation => observation.Context.Message.CorrelationId == sagaId,
                     cancellationToken)
-                .First();
-            await endpoint.Send(new CompletePersistentSaga(sagaId, "completed"), cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
+            await endpoint.SendAsync(new CompletePersistentSaga(sagaId, "completed"), cancellationToken);
             await harness.Published
                 .SelectAsync<PersistentSagaCompleted>(
                     observation => observation.Context.Message.CorrelationId == sagaId,
                     cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             await using var verification = CreatePersistentSagaDbContext(database.ConnectionString);
             PersistentSaga persisted = await verification.Sagas.AsNoTracking()
@@ -167,55 +167,55 @@ public sealed class PostgreSqlSagaRepositoryIntegrationTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-SAGA-TRANSACTION", "transactionless-optimistic-instances-remain-independent")]
-    public async Task TransactionlessOptimisticRepository_PersistsIndependentSagaInstances()
+    public async Task TransactionlessOptimisticRepository_PersistsIndependentSagaInstancesAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         TimeSpan timeout = OperationTimeout();
         await using PostgreSqlTestDatabase database = await PostgreSqlTestDatabase.CreateAsync(
             "saga-no-transaction-multiple",
             cancellationToken);
-        await CreatePersistentSagaSchema(database.ConnectionString, cancellationToken);
+        await CreatePersistentSagaSchemaAsync(database.ConnectionString, cancellationToken);
         var transactions = new TransactionProbe();
         await using ServiceProvider provider = CreatePersistentSagaProvider(
             database.ConnectionString,
             timeout,
             transactions,
             configureRepository: repository => repository.SetOptimisticConcurrency(useTransaction: false));
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             Guid firstId = Guid.NewGuid();
             Guid secondId = Guid.NewGuid();
-            ISendEndpoint endpoint = await harness.GetSagaEndpoint<PersistentSaga>();
+            ISendEndpoint endpoint = await harness.GetSagaEndpointAsync<PersistentSaga>(TestContext.Current.CancellationToken);
             await Task.WhenAll(
-                endpoint.Send(new StartPersistentSaga(firstId, "first-created"), cancellationToken),
-                endpoint.Send(new StartPersistentSaga(secondId, "second-created"), cancellationToken));
+                endpoint.SendAsync(new StartPersistentSaga(firstId, "first-created"), cancellationToken),
+                endpoint.SendAsync(new StartPersistentSaga(secondId, "second-created"), cancellationToken));
             await harness.Published.SelectAsync<PersistentSagaStarted>(
                     observation => observation.Context.Message.CorrelationId == firstId,
                     cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             await harness.Published.SelectAsync<PersistentSagaStarted>(
                     observation => observation.Context.Message.CorrelationId == secondId,
                     cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             await Task.WhenAll(
-                endpoint.Send(new CompletePersistentSaga(firstId, "first-completed"), cancellationToken),
-                endpoint.Send(new CompletePersistentSaga(secondId, "second-completed"), cancellationToken));
+                endpoint.SendAsync(new CompletePersistentSaga(firstId, "first-completed"), cancellationToken),
+                endpoint.SendAsync(new CompletePersistentSaga(secondId, "second-completed"), cancellationToken));
             await harness.Published.SelectAsync<PersistentSagaCompleted>(
                     observation => observation.Context.Message.CorrelationId == firstId,
                     cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             await harness.Published.SelectAsync<PersistentSagaCompleted>(
                     observation => observation.Context.Message.CorrelationId == secondId,
                     cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             await using var verification = CreatePersistentSagaDbContext(database.ConnectionString);
             PersistentSaga[] persisted = await verification.Sagas.AsNoTracking()
@@ -240,7 +240,7 @@ public sealed class PostgreSqlSagaRepositoryIntegrationTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -248,7 +248,7 @@ public sealed class PostgreSqlSagaRepositoryIntegrationTests
         .GetValidatedOptions()
         .OperationTimeout!.Value;
 
-    private static async Task CreatePersistentSagaSchema(string connectionString, CancellationToken cancellationToken)
+    private static async Task CreatePersistentSagaSchemaAsync(string connectionString, CancellationToken cancellationToken)
     {
         await using var context = CreatePersistentSagaDbContext(connectionString);
         await context.Database.EnsureCreatedAsync(cancellationToken);
@@ -301,17 +301,17 @@ public sealed class PostgreSqlSagaRepositoryIntegrationTests
 
         public string Value { get; set; } = string.Empty;
 
-        public Task Consume(ConsumeContext<StartPersistentSaga> context)
+        public Task ConsumeAsync(ConsumeContext<StartPersistentSaga> context)
         {
             Value = context.Message.Value;
-            return context.Publish(new PersistentSagaStarted(CorrelationId, Value), context.CancellationToken);
+            return context.Advanced().PublishAsync(new PersistentSagaStarted(CorrelationId, Value), context.CancellationToken);
         }
 
-        public Task Consume(ConsumeContext<CompletePersistentSaga> context)
+        public Task ConsumeAsync(ConsumeContext<CompletePersistentSaga> context)
         {
             Value = context.Message.Value;
             IsCompleted = true;
-            return context.Publish(new PersistentSagaCompleted(CorrelationId, Value), context.CancellationToken);
+            return context.Advanced().PublishAsync(new PersistentSagaCompleted(CorrelationId, Value), context.CancellationToken);
         }
     }
 
@@ -368,7 +368,7 @@ public sealed class PostgreSqlSagaRepositoryIntegrationTests
             DbTransaction result,
             CancellationToken cancellationToken = default)
         {
-            Record(result.IsolationLevel);
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled<global::System.Data.Common.DbTransaction>(cancellationToken); Record(result.IsolationLevel);
             return ValueTask.FromResult(result);
         }
 

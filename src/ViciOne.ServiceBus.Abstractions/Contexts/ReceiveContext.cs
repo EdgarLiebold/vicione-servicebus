@@ -76,7 +76,8 @@ public interface ReceiveContext :
     /// <param name="context">The consume context of the message</param>
     /// <param name="duration">The time spent by the consumer</param>
     /// <param name="consumerType">The consumer type</param>
-    Task NotifyConsumed<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task NotifyConsumedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>
@@ -86,14 +87,16 @@ public interface ReceiveContext :
     /// <param name="duration">The time spent by the consumer</param>
     /// <param name="consumerType">The message consumer type that faulted</param>
     /// <param name="exception">The exception that occurred</param>
-    Task NotifyFaulted<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task NotifyFaultedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>
     /// Notify that a message receive faulted outside of the message consumer
     /// </summary>
     /// <param name="exception">The exception that occurred</param>
-    Task NotifyFaulted(Exception exception);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task NotifyFaultedAsync(Exception exception, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Adds a pending Task to the completion of the message receiver

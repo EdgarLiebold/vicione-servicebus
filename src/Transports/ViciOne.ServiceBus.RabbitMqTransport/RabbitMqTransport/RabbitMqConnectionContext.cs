@@ -31,7 +31,7 @@ public class RabbitMqConnectionContext :
 
         StopTimeout = TimeSpan.FromSeconds(30);
 
-        _lifetime = new TransportLifetime("connection", () => connection.Cleanup(200, "Connection Disposed"));
+        _lifetime = new TransportLifetime("connection", () => connection.CleanupAsync(200, "Connection Disposed"));
     }
 
     readonly TransportLifetime _lifetime;
@@ -58,7 +58,7 @@ public class RabbitMqConnectionContext :
     public IRabbitMqBusTopology Topology { get; }
     public RabbitMqTopologyEntityCache TopologyEntityCache { get; }
 
-    public async Task<IChannel> CreateChannel(ushort? concurrentMessageLimit, CancellationToken cancellationToken)
+    public async Task<IChannel> CreateChannelAsync(ushort? concurrentMessageLimit, CancellationToken cancellationToken)
     {
         using var lease = Lease();
 
@@ -71,11 +71,11 @@ public class RabbitMqConnectionContext :
         return channel;
     }
 
-    public async Task<ChannelContext> CreateChannelContext(IAgent agent, ushort? concurrentMessageLimit, CancellationToken cancellationToken)
+    public async Task<ChannelContext> CreateChannelContextAsync(IAgent agent, ushort? concurrentMessageLimit, CancellationToken cancellationToken)
     {
         using var lease = Lease();
 
-        var channel = await CreateChannel(concurrentMessageLimit, cancellationToken).ConfigureAwait(false);
+        var channel = await CreateChannelAsync(concurrentMessageLimit, cancellationToken).ConfigureAwait(false);
 
         return new RabbitMqChannelContext(this, channel, agent, cancellationToken);
     }

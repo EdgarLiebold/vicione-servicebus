@@ -25,18 +25,18 @@ public class ConfigureSqlTopologyFilter<TSettings> :
         _context = context;
     }
 
-    public async Task Send(ClientContext context, IPipe<ClientContext> next)
+    public async Task SendAsync(ClientContext context, IPipe<ClientContext> next)
     {
-        OneTimeContext<ConfigureTopologyContext<TSettings>> oneTimeContext = await context.OneTimeSetup<ConfigureTopologyContext<TSettings>>(() =>
+        OneTimeContext<ConfigureTopologyContext<TSettings>> oneTimeContext = await context.OneTimeSetupAsync<ConfigureTopologyContext<TSettings>>(() =>
         {
             context.GetOrAddPayload(() => _settings);
 
-            return ConfigureTopology(context);
+            return ConfigureTopologyAsync(context);
         }).ConfigureAwait(false);
 
         try
         {
-            await next.Send(context).ConfigureAwait(false);
+            await next.SendAsync(context).ConfigureAwait(false);
         }
         catch (Exception)
         {
@@ -53,50 +53,50 @@ public class ConfigureSqlTopologyFilter<TSettings> :
         _brokerTopology.Probe(scope);
     }
 
-    async Task ConfigureTopology(ClientContext context)
+    async Task ConfigureTopologyAsync(ClientContext context)
     {
         foreach (var queue in _brokerTopology.Queues)
         {
-            var queueId = await CreateQueue(context, queue).ConfigureAwait(false);
+            var queueId = await CreateQueueAsync(context, queue).ConfigureAwait(false);
             if (queue.QueueName == _context?.InputAddress.GetEndpointName() && _settings is SqlReceiveSettings settings)
                 settings.QueueId = queueId;
         }
 
         foreach (var topic in _brokerTopology.Topics)
-            await CreateTopic(context, topic).ConfigureAwait(false);
+            await CreateTopicAsync(context, topic).ConfigureAwait(false);
 
         foreach (var topicSubscription in _brokerTopology.TopicSubscriptions)
-            await CreateTopicSubscription(context, topicSubscription).ConfigureAwait(false);
+            await CreateTopicSubscriptionAsync(context, topicSubscription).ConfigureAwait(false);
 
         foreach (var queueSubscription in _brokerTopology.QueueSubscriptions)
-            await CreateQueueSubscription(context, queueSubscription).ConfigureAwait(false);
+            await CreateQueueSubscriptionAsync(context, queueSubscription).ConfigureAwait(false);
     }
 
-    static Task CreateTopic(ClientContext context, Topic topic)
+    static Task CreateTopicAsync(ClientContext context, Topic topic)
     {
         SqlLogMessages.CreateTopic(topic);
 
-        return context.CreateTopic(topic);
+        return context.CreateTopicAsync(topic);
     }
 
-    static Task CreateQueueSubscription(ClientContext context, TopicToQueueSubscription subscription)
+    static Task CreateQueueSubscriptionAsync(ClientContext context, TopicToQueueSubscription subscription)
     {
         SqlLogMessages.CreateQueueSubscription(subscription);
 
-        return context.CreateQueueSubscription(subscription);
+        return context.CreateQueueSubscriptionAsync(subscription);
     }
 
-    static Task CreateTopicSubscription(ClientContext context, TopicToTopicSubscription subscription)
+    static Task CreateTopicSubscriptionAsync(ClientContext context, TopicToTopicSubscription subscription)
     {
         SqlLogMessages.CreateTopicSubscription(subscription);
 
-        return context.CreateTopicSubscription(subscription);
+        return context.CreateTopicSubscriptionAsync(subscription);
     }
 
-    static Task<long> CreateQueue(ClientContext context, Queue queue)
+    static Task<long> CreateQueueAsync(ClientContext context, Queue queue)
     {
         SqlLogMessages.CreateQueue(queue);
 
-        return context.CreateQueue(queue);
+        return context.CreateQueueAsync(queue);
     }
 }

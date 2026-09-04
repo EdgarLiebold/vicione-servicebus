@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.Configuration;
 public static class DependencyInjectionEndpointRegistrationExtensions
 {
     public static IEndpointRegistration RegisterEndpoint<TDefinition, T>(this IServiceCollection collection, IRegistration registration,
-        IEndpointSettings<IEndpointDefinition<T>> settings = null)
+        IEndpointSettings<IEndpointDefinition<T>>? settings = null)
         where TDefinition : class, IEndpointDefinition<T>
         where T : class
     {
@@ -16,7 +16,7 @@ public static class DependencyInjectionEndpointRegistrationExtensions
     }
 
     public static IEndpointRegistration RegisterEndpoint<TDefinition, T>(this IServiceCollection collection, IContainerRegistrar registrar,
-        IRegistration registration, IEndpointSettings<IEndpointDefinition<T>> settings = null)
+        IRegistration registration, IEndpointSettings<IEndpointDefinition<T>>? settings = null)
         where T : class
         where TDefinition : class, IEndpointDefinition<T>
     {
@@ -33,7 +33,7 @@ public static class DependencyInjectionEndpointRegistrationExtensions
         if (!endpointDefinitionType.TryGetSingleClosedGenericArguments(typeof(IEndpointDefinition<>), out Type[] types))
             throw new ArgumentException($"{TypeCache.GetShortName(endpointDefinitionType)} is not an endpoint definition", nameof(endpointDefinitionType));
 
-        var register = (IEndpointRegistrar)Activator.CreateInstance(typeof(EndpointRegistrar<,>).MakeGenericType(endpointDefinitionType, types[0]));
+        var register = (IEndpointRegistrar)(Activator.CreateInstance(typeof(EndpointRegistrar<,>).MakeGenericType(endpointDefinitionType, types[0])) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
         return register.Register(registrar);
     }
@@ -64,7 +64,7 @@ public static class DependencyInjectionEndpointRegistrationExtensions
             return registrar.GetOrAddRegistration<IEndpointRegistration>(typeof(T), _ => new EndpointRegistration<T>(_registration, registrar));
         }
 
-        public IEndpointRegistration Register(IContainerRegistrar registrar, IEndpointSettings<IEndpointDefinition<T>> settings)
+        public IEndpointRegistration Register(IContainerRegistrar registrar, IEndpointSettings<IEndpointDefinition<T>>? settings)
         {
             registrar.AddEndpointDefinition<T, TDefinition>(settings);
 

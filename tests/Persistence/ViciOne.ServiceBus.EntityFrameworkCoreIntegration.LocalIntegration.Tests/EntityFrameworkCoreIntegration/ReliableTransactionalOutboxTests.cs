@@ -16,12 +16,12 @@ public sealed class ReliableTransactionalOutboxTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-RELIABLE-CONSUMER", "successful-consume-commits-complete-event-set-once")]
-    public async Task ReliableConsumer_SuccessCommitsTheCompleteEventSetExactlyOnce()
+    public async Task ReliableConsumer_SuccessCommitsTheCompleteEventSetExactlyOnceAsync()
     {
         await using ReliableOutboxFixture fixture = await ReliableOutboxFixture.CreateAsync();
         var command = new ReliableCommand(NewId.NextGuid(), FailFirstAttempt: false);
 
-        await fixture.Harness.Bus.Publish(command, fixture.CancellationToken);
+        await fixture.Harness.Bus.PublishAsync(command, fixture.CancellationToken);
         ReliableEvent first = await fixture.Deliveries.ReadAsync(fixture.OperationTimeout, fixture.CancellationToken);
         ReliableEvent second = await fixture.Deliveries.ReadAsync(fixture.OperationTimeout, fixture.CancellationToken);
         ReliableEventSnapshot[] events = fixture.Deliveries.For(command.CorrelationId);
@@ -35,12 +35,12 @@ public sealed class ReliableTransactionalOutboxTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-RELIABLE-CONSUMER", "failed-attempt-rolls-back-before-complete-retry-event-set")]
-    public async Task ReliableConsumer_FirstFailureRollsBackBeforeTheRetryCommitsEachEventOnce()
+    public async Task ReliableConsumer_FirstFailureRollsBackBeforeTheRetryCommitsEachEventOnceAsync()
     {
         await using ReliableOutboxFixture fixture = await ReliableOutboxFixture.CreateAsync();
         var command = new ReliableCommand(NewId.NextGuid(), FailFirstAttempt: true);
 
-        await fixture.Harness.Bus.Publish(command, fixture.CancellationToken);
+        await fixture.Harness.Bus.PublishAsync(command, fixture.CancellationToken);
         ReliableEvent first = await fixture.Deliveries.ReadAsync(fixture.OperationTimeout, fixture.CancellationToken);
         ReliableEvent second = await fixture.Deliveries.ReadAsync(fixture.OperationTimeout, fixture.CancellationToken);
         ReliableEventSnapshot[] events = fixture.Deliveries.For(command.CorrelationId);
@@ -54,12 +54,12 @@ public sealed class ReliableTransactionalOutboxTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-RELIABLE-SAGA", "self-addressed-message-commits-terminal-state")]
-    public async Task ReliableSaga_CommitsItsSelfAddressedMessageAndTerminalState()
+    public async Task ReliableSaga_CommitsItsSelfAddressedMessageAndTerminalStateAsync()
     {
         await using ReliableOutboxFixture fixture = await ReliableOutboxFixture.CreateAsync();
         var command = new CreateReliableState(NewId.NextGuid(), FailFirstAttempt: false);
 
-        await fixture.Harness.Bus.Publish(command, fixture.CancellationToken);
+        await fixture.Harness.Bus.PublishAsync(command, fixture.CancellationToken);
         IReceivedMessage<CreateReliableState> created = await fixture.ConsumedAsync(
             command.CorrelationId,
             fixture.CancellationToken);
@@ -70,7 +70,7 @@ public sealed class ReliableTransactionalOutboxTests
 
         Assert.Null(created.Exception);
         Assert.Null(verified.Exception);
-        Assert.Equal(created.Context.ReceiveContext.InputAddress, verified.Context.ReceiveContext.InputAddress);
+        Assert.Equal(created.Context.Advanced().ReceiveContext.InputAddress, verified.Context.Advanced().ReceiveContext.InputAddress);
         Assert.Equal(ReliableStateMachine.VerifiedStateName, state.CurrentState);
         Assert.Equal(1, fixture.SagaAttempts.For(command.CorrelationId));
         Assert.Single(fixture.VerifiedSnapshot(command.CorrelationId));
@@ -78,12 +78,12 @@ public sealed class ReliableTransactionalOutboxTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-RELIABLE-SAGA", "failed-first-attempt-rolls-back-before-terminal-retry")]
-    public async Task ReliableSaga_FirstAttemptFailureRollsBackBeforeOneTerminalRetry()
+    public async Task ReliableSaga_FirstAttemptFailureRollsBackBeforeOneTerminalRetryAsync()
     {
         await using ReliableOutboxFixture fixture = await ReliableOutboxFixture.CreateAsync();
         var command = new CreateReliableState(NewId.NextGuid(), FailFirstAttempt: true);
 
-        await fixture.Harness.Bus.Publish(command, fixture.CancellationToken);
+        await fixture.Harness.Bus.PublishAsync(command, fixture.CancellationToken);
         IReceivedMessage<StateVerified> verified = await fixture.VerifiedAsync(
             command.CorrelationId,
             fixture.CancellationToken);
@@ -97,12 +97,12 @@ public sealed class ReliableTransactionalOutboxTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-DELIVERY-RECOVERY", "real-send-pipeline-failure-retries-without-duplicate")]
-    public async Task TransportSendFailure_RetriesTheCommittedOutboxWithoutDuplicatingTheMessage()
+    public async Task TransportSendFailure_RetriesTheCommittedOutboxWithoutDuplicatingTheMessageAsync()
     {
         await using ReliableOutboxFixture fixture = await ReliableOutboxFixture.CreateAsync(failFirstOutboxDelivery: true);
         var command = new CreateReliableState(NewId.NextGuid(), FailFirstAttempt: false);
 
-        await fixture.Harness.Bus.Publish(command, fixture.CancellationToken);
+        await fixture.Harness.Bus.PublishAsync(command, fixture.CancellationToken);
         IReceivedMessage<StateVerified> verified = await fixture.VerifiedAsync(
             command.CorrelationId,
             fixture.CancellationToken);
@@ -117,12 +117,12 @@ public sealed class ReliableTransactionalOutboxTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-TRANSPORT-PROPERTIES", "routing-key-round-trips-through-persistence")]
-    public async Task RoutingKeys_RoundTripThroughThePersistentOutbox()
+    public async Task RoutingKeys_RoundTripThroughThePersistentOutboxAsync()
     {
         await using ReliableOutboxFixture fixture = await ReliableOutboxFixture.CreateAsync();
         var command = new ReliableCommand(NewId.NextGuid(), FailFirstAttempt: false);
 
-        await fixture.Harness.Bus.Publish(command, fixture.CancellationToken);
+        await fixture.Harness.Bus.PublishAsync(command, fixture.CancellationToken);
         await fixture.Deliveries.ReadAsync(fixture.OperationTimeout, fixture.CancellationToken);
         await fixture.Deliveries.ReadAsync(fixture.OperationTimeout, fixture.CancellationToken);
         ReliableEventSnapshot[] events = fixture.Deliveries.For(command.CorrelationId);
@@ -149,14 +149,14 @@ public sealed class ReliableTransactionalOutboxTests
         IPublishEndpoint publishEndpoint,
         ConsumerAttemptProbe attempts) : IConsumer<ReliableCommand>
     {
-        public async Task Consume(ConsumeContext<ReliableCommand> context)
+        public async Task ConsumeAsync(ConsumeContext<ReliableCommand> context)
         {
             int attempt = attempts.Increment(context.Message.CorrelationId);
-            await context.Publish(
+            await context.Advanced().PublishAsync(
                 new ReliableEvent(context.Message.CorrelationId, "First"),
                 send => send.SetRoutingKey("alpha"),
                 context.CancellationToken);
-            await publishEndpoint.Publish(
+            await publishEndpoint.PublishAsync(
                 new ReliableEvent(context.Message.CorrelationId, "Second"),
                 send => send.SetRoutingKey("beta"),
                 context.CancellationToken);
@@ -168,9 +168,9 @@ public sealed class ReliableTransactionalOutboxTests
 
     public sealed class ReliableEventConsumer(ReliableEventDeliveryProbe deliveries) : IConsumer<ReliableEvent>
     {
-        public Task Consume(ConsumeContext<ReliableEvent> context)
+        public Task ConsumeAsync(ConsumeContext<ReliableEvent> context)
         {
-            deliveries.Record(new ReliableEventSnapshot(context.Message, context.RoutingKey()));
+            deliveries.Record(new ReliableEventSnapshot(context.Message, context.Advanced().RoutingKey()));
             return Task.CompletedTask;
         }
     }
@@ -313,7 +313,7 @@ public sealed class ReliableTransactionalOutboxTests
 
         public int AttemptCount => Volatile.Read(ref _attemptCount);
 
-        public Task PreSend<T>(SendContext<T> context) where T : class
+        public Task PreSendAsync<T>(SendContext<T> context) where T : class
         {
             if (enabled && context.Message is SerializedMessageBody
                 && Interlocked.Increment(ref _attemptCount) == 1)
@@ -324,10 +324,10 @@ public sealed class ReliableTransactionalOutboxTests
             return Task.CompletedTask;
         }
 
-        public Task PostSend<T>(SendContext<T> context) where T : class
+        public Task PostSendAsync<T>(SendContext<T> context) where T : class
             => Task.CompletedTask;
 
-        public Task SendFault<T>(SendContext<T> context, Exception exception) where T : class => Task.CompletedTask;
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception) where T : class => Task.CompletedTask;
     }
 
     public sealed record ReliableEventSnapshot(ReliableEvent Message, string? RoutingKey);
@@ -461,7 +461,7 @@ public sealed class ReliableTransactionalOutboxTests
                     ValidateOnBuild = true,
                     ValidateScopes = true,
                 });
-                ITestHarness harness = await provider.StartTestHarness().WaitAsync(operationTimeout, cancellationToken);
+                ITestHarness harness = await provider.StartTestHarnessAsync().WaitAsync(operationTimeout, cancellationToken);
                 ConnectHandle deliveryFailureObserverHandle = harness.Bus.ConnectSendObserver(deliveryFailures);
                 return new ReliableOutboxFixture(
                     database,
@@ -490,7 +490,7 @@ public sealed class ReliableTransactionalOutboxTests
             .SelectAsync<CreateReliableState>(
                 context => context.Context.Message.CorrelationId == correlationId && context.Exception is null,
                 cancellationToken)
-            .First()
+            .FirstObservedAsync(cancellationToken: cancellationToken)
             .WaitAsync(OperationTimeout, cancellationToken);
 
         public async Task<ReliableState> ReadStateAsync(Guid correlationId)
@@ -507,7 +507,7 @@ public sealed class ReliableTransactionalOutboxTests
             .SelectAsync<StateVerified>(
                 context => context.Context.Message.CorrelationId == correlationId && context.Exception is null,
                 cancellationToken)
-            .First()
+            .FirstObservedAsync(cancellationToken: cancellationToken)
             .WaitAsync(OperationTimeout, cancellationToken);
 
         public IReceivedMessage<StateVerified>[] VerifiedSnapshot(Guid correlationId)
@@ -522,7 +522,7 @@ public sealed class ReliableTransactionalOutboxTests
         public async ValueTask DisposeAsync()
         {
             _deliveryFailureObserverHandle.Dispose();
-            await Harness.Stop(CancellationToken.None).WaitAsync(OperationTimeout, CancellationToken.None);
+            await Harness.StopAsync(CancellationToken.None).WaitAsync(OperationTimeout, CancellationToken.None);
             await Services.DisposeAsync();
             await _database.DisposeAsync();
         }

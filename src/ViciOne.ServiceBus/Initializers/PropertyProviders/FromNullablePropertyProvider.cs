@@ -15,13 +15,13 @@ public class FromNullablePropertyProvider<TInput, TProperty> :
         _provider = provider;
     }
 
-    public Task<TProperty> GetProperty<T>(InitializeContext<T, TInput> context)
+    public Task<TProperty> GetPropertyAsync<T>(InitializeContext<T, TInput> context, CancellationToken cancellationToken = default)
         where T : class
     {
         if (!context.HasInput)
-            return TaskResults.Default<TProperty>();
+            return TaskResults.DefaultAsync<TProperty>(cancellationToken: cancellationToken);
 
-        Task<TProperty?> propertyTask = _provider.GetProperty(context);
+        Task<TProperty?> propertyTask = _provider.GetPropertyAsync(context, cancellationToken: cancellationToken);
         if (propertyTask.Status == TaskStatus.RanToCompletion)
             return Task.FromResult(propertyTask.Result ?? default);
 

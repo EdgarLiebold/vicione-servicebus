@@ -14,5 +14,5 @@ public interface IRoutingSlipSendEndpointTarget
     /// <param name="contents">The contents of the routing slip event</param>
     /// <param name="activityName"></param>
     /// <param name="message">The custom message to be sent</param>
-    void AddSubscription(Uri address, RoutingSlipEvents events, RoutingSlipEventContents contents, string activityName, MessageEnvelope message);
+    void AddSubscription(Uri address, RoutingSlipEvents events, RoutingSlipEventContents contents, string? activityName, MessageEnvelope message);
 }

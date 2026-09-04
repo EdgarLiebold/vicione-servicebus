@@ -143,7 +143,7 @@ public sealed class TestHarnessTimeProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-LIFECYCLE", "cancel-is-confined-to-current-scope")]
-    public async Task Cancel_CancelsOnlyTasksOwnedByTheCurrentScope()
+    public async Task Cancel_CancelsOnlyTasksOwnedByTheCurrentScopeAsync()
     {
         var timeProvider = new FakeTimeProvider(StartTime);
         using var harness = new InMemoryTestHarness(timeProvider)
@@ -196,7 +196,7 @@ public sealed class TestHarnessTimeProviderTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-LIFECYCLE", "expired-budget-does-not-stop-inactivity")]
-    public async Task ExpiredTestBudget_DoesNotStopHarnessLifetimeInactivity()
+    public async Task ExpiredTestBudget_DoesNotStopHarnessLifetimeInactivityAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
         using var harness = new InMemoryTestHarness(timeProvider)
@@ -208,7 +208,7 @@ public sealed class TestHarnessTimeProviderTests
         harness.BeginTestScope();
         CancellationToken firstBudget = harness.TestCancellationToken;
         Task inactivity = harness.InactivityTask;
-        await timeProvider.WaitForTimerCount(2);
+        await timeProvider.WaitForTimerCountAsync(2);
 
         timeProvider.Advance(TimeSpan.FromMinutes(1));
 

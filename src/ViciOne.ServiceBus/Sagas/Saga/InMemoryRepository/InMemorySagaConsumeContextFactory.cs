@@ -7,7 +7,7 @@ public class InMemorySagaConsumeContextFactory<TSaga> :
     ISagaConsumeContextFactory<IndexedSagaDictionary<TSaga>, TSaga>
     where TSaga : class, ISaga
 {
-    public async Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContext<T>(IndexedSagaDictionary<TSaga> context, ConsumeContext<T> consumeContext,
+    public async Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContextAsync<T>(IndexedSagaDictionary<TSaga> context, ConsumeContext<T> consumeContext,
         TSaga instance, SagaConsumeContextMode mode)
         where T : class
     {
@@ -18,15 +18,16 @@ public class InMemorySagaConsumeContextFactory<TSaga> :
             case SagaConsumeContextMode.Insert:
                 sagaInstance = new SagaInstance<TSaga>(instance);
 
-                await sagaInstance.MarkInUse(consumeContext.CancellationToken).ConfigureAwait(false);
+                await sagaInstance.MarkInUseAsync(consumeContext.CancellationToken).ConfigureAwait(false);
 
                 context.Add(sagaInstance);
                 break;
 
             case SagaConsumeContextMode.Load:
-                sagaInstance = context[instance.CorrelationId];
+                sagaInstance = context[instance.CorrelationId]
+                    ?? throw new InvalidOperationException($"Saga {instance.CorrelationId} was not found in the in-memory repository.");
 
-                await sagaInstance.MarkInUse(consumeContext.CancellationToken).ConfigureAwait(false);
+                await sagaInstance.MarkInUseAsync(consumeContext.CancellationToken).ConfigureAwait(false);
 
                 break;
 

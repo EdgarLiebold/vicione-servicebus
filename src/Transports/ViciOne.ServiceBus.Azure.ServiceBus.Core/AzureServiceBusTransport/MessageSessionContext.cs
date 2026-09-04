@@ -17,24 +17,28 @@ public interface MessageSessionContext
     /// <summary>
     /// The session is locked until...
     /// </summary>
-    DateTime LockedUntilUtc { get; }
+    DateTimeOffset LockedUntilUtc { get; }
 
     /// <summary>
     /// Returns the state as a stream
     /// </summary>
     /// <returns></returns>
-    Task<BinaryData> GetStateAsync();
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<BinaryData?> GetStateAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Writes the message state from the specified stream
     /// </summary>
     /// <param name="state"></param>
     /// <returns></returns>
-    Task SetStateAsync(BinaryData state);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task SetStateAsync(BinaryData? state, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Renews the session lock
     /// </summary>
     /// <returns></returns>
-    Task RenewLockAsync(ServiceBusReceivedMessage message);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="message">The message processed by the operation.</param>
+    Task RenewLockAsync(ServiceBusReceivedMessage message, CancellationToken cancellationToken = default);
 }

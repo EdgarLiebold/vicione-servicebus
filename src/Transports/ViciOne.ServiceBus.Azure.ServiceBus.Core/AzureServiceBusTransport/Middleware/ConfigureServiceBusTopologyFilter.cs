@@ -12,12 +12,12 @@ public class ConfigureServiceBusTopologyFilter<TSettings> :
     where TSettings : class
 {
     readonly BrokerTopology _brokerTopology;
-    readonly ServiceBusReceiveEndpointContext _context;
+    readonly ServiceBusReceiveEndpointContext? _context;
     readonly bool _removeSubscriptions;
     readonly TSettings _settings;
 
     public ConfigureServiceBusTopologyFilter(TSettings settings, BrokerTopology brokerTopology, bool removeSubscriptions = false,
-        ServiceBusReceiveEndpointContext context = null)
+        ServiceBusReceiveEndpointContext? context = null)
     {
         _settings = settings;
         _brokerTopology = brokerTopology;
@@ -32,13 +32,13 @@ public class ConfigureServiceBusTopologyFilter<TSettings> :
         _brokerTopology.Probe(scope);
     }
 
-    public async Task Send(ClientContext context, IPipe<ClientContext> next)
+    public async Task SendAsync(ClientContext context, IPipe<ClientContext> next)
     {
-        OneTimeContext<ConfigureTopologyContext<TSettings>> oneTimeContext = await Configure(context, context.CancellationToken).ConfigureAwait(false);
+        OneTimeContext<ConfigureTopologyContext<TSettings>> oneTimeContext = await ConfigureAsync(context, context.CancellationToken).ConfigureAwait(false);
 
         try
         {
-            await next.Send(context).ConfigureAwait(false);
+            await next.SendAsync(context).ConfigureAwait(false);
         }
         catch (Exception)
         {
@@ -48,37 +48,37 @@ public class ConfigureServiceBusTopologyFilter<TSettings> :
         }
     }
 
-    public async Task<OneTimeContext<ConfigureTopologyContext<TSettings>>> Configure(NamespaceContext context, CancellationToken cancellationToken)
+    public async Task<OneTimeContext<ConfigureTopologyContext<TSettings>>> ConfigureAsync(NamespaceContext context, CancellationToken cancellationToken)
     {
-        OneTimeContext<ConfigureTopologyContext<TSettings>> oneTimeContext = await context.OneTimeSetup<ConfigureTopologyContext<TSettings>>(() =>
+        OneTimeContext<ConfigureTopologyContext<TSettings>> oneTimeContext = await context.OneTimeSetupAsync<ConfigureTopologyContext<TSettings>>(() =>
         {
             context.GetOrAddPayload(() => _settings);
 
             if (_context != null && _removeSubscriptions)
                 _context.AddSendAgent(new RemoveServiceBusTopologyAgent(context.ConnectionContext, _brokerTopology));
 
-            return ConfigureTopology(context.ConnectionContext, cancellationToken);
-        }).ConfigureAwait(false);
+            return ConfigureTopologyAsync(context.ConnectionContext, cancellationToken);
+        }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         return oneTimeContext;
     }
 
-    async Task ConfigureTopology(ConnectionContext context, CancellationToken cancellationToken)
+    async Task ConfigureTopologyAsync(ConnectionContext context, CancellationToken cancellationToken)
     {
         StartedActivity? activity = LogContext.Current?.StartGenericActivity("Configure Topology");
         try
         {
-            await Task.WhenAll(_brokerTopology.Topics.Select(topic => Create(context, topic, cancellationToken))).ConfigureAwait(false);
+            await Task.WhenAll(_brokerTopology.Topics.Select(topic => CreateAsync(context, topic, cancellationToken))).ConfigureAwait(false);
 
-            await Task.WhenAll(_brokerTopology.Queues.Select(queue => Create(context, queue, cancellationToken))).ConfigureAwait(false);
+            await Task.WhenAll(_brokerTopology.Queues.Select(queue => CreateAsync(context, queue, cancellationToken))).ConfigureAwait(false);
 
-            await Task.WhenAll(_brokerTopology.Subscriptions.Select(subscription => Create(context, subscription, cancellationToken)))
+            await Task.WhenAll(_brokerTopology.Subscriptions.Select(subscription => CreateAsync(context, subscription, cancellationToken)))
                 .ConfigureAwait(false);
 
-            await Task.WhenAll(_brokerTopology.QueueSubscriptions.Select(subscription => Create(context, subscription, cancellationToken)))
+            await Task.WhenAll(_brokerTopology.QueueSubscriptions.Select(subscription => CreateAsync(context, subscription, cancellationToken)))
                 .ConfigureAwait(false);
 
-            await Task.WhenAll(_brokerTopology.TopicSubscriptions.Select(subscription => Create(context, subscription, cancellationToken)))
+            await Task.WhenAll(_brokerTopology.TopicSubscriptions.Select(subscription => CreateAsync(context, subscription, cancellationToken)))
                 .ConfigureAwait(false);
         }
         finally
@@ -87,35 +87,35 @@ public class ConfigureServiceBusTopologyFilter<TSettings> :
         }
     }
 
-    Task Create(ConnectionContext context, Topic topic, CancellationToken cancellationToken)
+    Task CreateAsync(ConnectionContext context, Topic topic, CancellationToken cancellationToken)
     {
-        return context.CreateTopic(topic.CreateTopicOptions, cancellationToken);
+        return context.CreateTopicAsync(topic.CreateTopicOptions, cancellationToken);
     }
 
-    Task Create(ConnectionContext context, Queue queue, CancellationToken cancellationToken)
+    Task CreateAsync(ConnectionContext context, Queue queue, CancellationToken cancellationToken)
     {
-        return context.CreateQueue(queue.CreateQueueOptions, cancellationToken);
+        return context.CreateQueueAsync(queue.CreateQueueOptions, cancellationToken);
     }
 
-    Task Create(ConnectionContext context, Subscription subscription, CancellationToken cancellationToken)
+    Task CreateAsync(ConnectionContext context, Subscription subscription, CancellationToken cancellationToken)
     {
-        return context.CreateTopicSubscription(subscription.CreateSubscriptionOptions, subscription.Rule, subscription.Filter, cancellationToken);
+        return context.CreateTopicSubscriptionAsync(subscription.CreateSubscriptionOptions, subscription.Rule, subscription.Filter, cancellationToken);
     }
 
-    Task Create(ConnectionContext context, QueueSubscription subscription, CancellationToken cancellationToken)
+    Task CreateAsync(ConnectionContext context, QueueSubscription subscription, CancellationToken cancellationToken)
     {
-        return context.CreateTopicSubscription(subscription.Subscription.CreateSubscriptionOptions, subscription.Subscription.Rule,
+        return context.CreateTopicSubscriptionAsync(subscription.Subscription.CreateSubscriptionOptions, subscription.Subscription.Rule,
             subscription.Subscription.Filter, cancellationToken);
     }
 
-    Task Delete(ConnectionContext context, QueueSubscription subscription, CancellationToken cancellationToken)
+    Task DeleteAsync(ConnectionContext context, QueueSubscription subscription, CancellationToken cancellationToken)
     {
-        return context.DeleteTopicSubscription(subscription.Subscription.CreateSubscriptionOptions, cancellationToken);
+        return context.DeleteTopicSubscriptionAsync(subscription.Subscription.CreateSubscriptionOptions, cancellationToken);
     }
 
-    Task Create(ConnectionContext context, TopicSubscription subscription, CancellationToken cancellationToken)
+    Task CreateAsync(ConnectionContext context, TopicSubscription subscription, CancellationToken cancellationToken)
     {
-        return context.CreateTopicSubscription(subscription.Subscription.CreateSubscriptionOptions, subscription.Subscription.Rule,
+        return context.CreateTopicSubscriptionAsync(subscription.Subscription.CreateSubscriptionOptions, subscription.Subscription.Rule,
             subscription.Subscription.Filter, cancellationToken);
     }
 }

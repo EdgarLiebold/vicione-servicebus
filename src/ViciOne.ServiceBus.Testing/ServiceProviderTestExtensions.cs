@@ -7,9 +7,9 @@ namespace ViciOne.ServiceBus.Testing;
 
 public static class ServiceProviderTestExtensions
 {
-    public static Task<T> GetTask<T>(this IServiceProvider provider)
+    public static Task<T> GetTaskAsync<T>(this IServiceProvider provider, CancellationToken cancellationToken = default)
     {
-        var taskCompletionSource = provider.GetRequiredService<TaskCompletionSource<T>>();
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<T>(cancellationToken); var taskCompletionSource = provider.GetRequiredService<TaskCompletionSource<T>>();
         return taskCompletionSource.Task;
     }
 

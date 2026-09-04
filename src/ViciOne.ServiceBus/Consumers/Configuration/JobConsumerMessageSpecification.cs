@@ -49,7 +49,7 @@ public class JobConsumerMessageSpecification<TConsumer, TJob> :
 
     public Type MessageType => typeof(TJob);
 
-    public bool TryGetMessageSpecification<TC, T>(out IConsumerMessageSpecification<TC, T> specification)
+    public bool TryGetMessageSpecification<TC, T>([NotNullWhen(true)] out IConsumerMessageSpecification<TC, T>? specification)
         where T : class
         where TC : class
     {

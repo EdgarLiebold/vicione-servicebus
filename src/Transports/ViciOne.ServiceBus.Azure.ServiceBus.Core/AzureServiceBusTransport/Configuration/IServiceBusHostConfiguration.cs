@@ -24,15 +24,15 @@ public interface IServiceBusHostConfiguration :
     void ApplyEndpointDefinition(IServiceBusReceiveEndpointConfigurator configurator, IEndpointDefinition definition);
 
     IServiceBusReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
-        Action<IServiceBusReceiveEndpointConfigurator> configure = null);
+        Action<IServiceBusReceiveEndpointConfigurator>? configure = null);
 
     IServiceBusReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(ReceiveEndpointSettings settings, IServiceBusEndpointConfiguration
-        endpointConfiguration, Action<IServiceBusReceiveEndpointConfigurator> configure = null);
+        endpointConfiguration, Action<IServiceBusReceiveEndpointConfigurator>? configure = null);
 
-    void SubscriptionEndpoint<T>(string subscriptionName, Action<IServiceBusSubscriptionEndpointConfigurator> configure)
+    void SubscriptionEndpoint<T>(string subscriptionName, Action<IServiceBusSubscriptionEndpointConfigurator>? configure)
         where T : class;
 
-    void SubscriptionEndpoint(string subscriptionName, string topicPath, Action<IServiceBusSubscriptionEndpointConfigurator> configure);
+    void SubscriptionEndpoint(string subscriptionName, string topicPath, Action<IServiceBusSubscriptionEndpointConfigurator>? configure);
 
     void SetNamespaceSeparatorToTilde();
 
@@ -41,9 +41,9 @@ public interface IServiceBusHostConfiguration :
     void SetNamespaceSeparatorTo(string separator);
 
     IServiceBusSubscriptionEndpointConfiguration CreateSubscriptionEndpointConfiguration<T>(string subscriptionName,
-        Action<IServiceBusSubscriptionEndpointConfigurator> configure)
+        Action<IServiceBusSubscriptionEndpointConfigurator>? configure)
         where T : class;
 
     IServiceBusSubscriptionEndpointConfiguration CreateSubscriptionEndpointConfiguration(string subscriptionName, string topicPath,
-        Action<IServiceBusSubscriptionEndpointConfigurator> configure);
+        Action<IServiceBusSubscriptionEndpointConfigurator>? configure);
 }

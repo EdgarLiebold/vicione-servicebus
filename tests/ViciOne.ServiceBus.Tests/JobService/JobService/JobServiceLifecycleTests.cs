@@ -14,7 +14,7 @@ public sealed class JobServiceLifecycleTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-JOB-SERVICE-LIFECYCLE", "bidirectional-transition-serialization")]
-    public async Task StartAndStopTransitions_AreSerializedInBothDirections()
+    public async Task StartAndStopTransitions_AreSerializedInBothDirectionsAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -23,24 +23,24 @@ public sealed class JobServiceLifecycleTests
         PublicationGate stopped = stopFirstEndpoint.BlockNext(ConcurrentLimitKind.Stopped);
         RuntimeJobService stopFirstService = NewService(TimeSpan.FromDays(1));
 
-        Task stopping = stopFirstService.Stop(stopFirstEndpoint);
+        Task stopping = stopFirstService.StopAsync(stopFirstEndpoint, TestContext.Current.CancellationToken);
         await stopped.Entered.WaitAsync(timeout, cancellationToken);
-        Task starting = stopFirstService.BusStarted(stopFirstEndpoint);
+        Task starting = stopFirstService.BusStartedAsync(stopFirstEndpoint, TestContext.Current.CancellationToken);
 
         Assert.False(starting.IsCompleted);
         Assert.Equal(0, stopFirstEndpoint.Count(ConcurrentLimitKind.Configured));
 
         stopped.Release();
         await Task.WhenAll(stopping, starting).WaitAsync(timeout, cancellationToken);
-        await stopFirstService.Stop(stopFirstEndpoint).WaitAsync(timeout, cancellationToken);
+        await stopFirstService.StopAsync(stopFirstEndpoint, TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         var startFirstEndpoint = new ControlledPublishEndpoint();
         PublicationGate configured = startFirstEndpoint.BlockNext(ConcurrentLimitKind.Configured);
         RuntimeJobService startFirstService = NewService(TimeSpan.FromDays(1));
 
-        starting = startFirstService.BusStarted(startFirstEndpoint);
+        starting = startFirstService.BusStartedAsync(startFirstEndpoint, TestContext.Current.CancellationToken);
         await configured.Entered.WaitAsync(timeout, cancellationToken);
-        stopping = startFirstService.Stop(startFirstEndpoint);
+        stopping = startFirstService.StopAsync(startFirstEndpoint, TestContext.Current.CancellationToken);
 
         Assert.False(stopping.IsCompleted);
         Assert.Equal(0, startFirstEndpoint.Count(ConcurrentLimitKind.Stopped));
@@ -51,7 +51,7 @@ public sealed class JobServiceLifecycleTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-JOB-SERVICE-LIFECYCLE", "stop-drains-heartbeat-and-leaves-no-generation")]
-    public async Task Stop_DrainsTheExactHeartbeatGenerationBeforeReturning()
+    public async Task Stop_DrainsTheExactHeartbeatGenerationBeforeReturningAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -59,10 +59,10 @@ public sealed class JobServiceLifecycleTests
         PublicationGate heartbeat = endpoint.BlockNext(ConcurrentLimitKind.Heartbeat);
         RuntimeJobService service = NewService(TimeSpan.Zero);
 
-        await service.BusStarted(endpoint).WaitAsync(timeout, cancellationToken);
+        await service.BusStartedAsync(endpoint, TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         await heartbeat.Entered.WaitAsync(timeout, cancellationToken);
 
-        Task stopping = service.Stop(endpoint);
+        Task stopping = service.StopAsync(endpoint, TestContext.Current.CancellationToken);
 
         Assert.False(stopping.IsCompleted);
         Assert.Equal(0, endpoint.Count(ConcurrentLimitKind.Stopped));
@@ -78,7 +78,7 @@ public sealed class JobServiceLifecycleTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-JOB-SERVICE-LIFECYCLE", "repeated-start-replaces-heartbeat-generation")]
-    public async Task RepeatedStarts_ReplaceRatherThanOverlapHeartbeatGenerations()
+    public async Task RepeatedStarts_ReplaceRatherThanOverlapHeartbeatGenerationsAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -86,24 +86,24 @@ public sealed class JobServiceLifecycleTests
         RuntimeJobService service = NewService(TimeSpan.Zero);
 
         PublicationGate first = endpoint.BlockNext(ConcurrentLimitKind.Heartbeat);
-        await service.BusStarted(endpoint).WaitAsync(timeout, cancellationToken);
+        await service.BusStartedAsync(endpoint, TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         await first.Entered.WaitAsync(timeout, cancellationToken);
 
         PublicationGate second = endpoint.BlockNext(ConcurrentLimitKind.Heartbeat);
-        Task secondStart = service.BusStarted(endpoint);
+        Task secondStart = service.BusStartedAsync(endpoint, TestContext.Current.CancellationToken);
         Assert.False(secondStart.IsCompleted);
         first.Release();
         await secondStart.WaitAsync(timeout, cancellationToken);
         await second.Entered.WaitAsync(timeout, cancellationToken);
 
         PublicationGate third = endpoint.BlockNext(ConcurrentLimitKind.Heartbeat);
-        Task thirdStart = service.BusStarted(endpoint);
+        Task thirdStart = service.BusStartedAsync(endpoint, TestContext.Current.CancellationToken);
         Assert.False(thirdStart.IsCompleted);
         second.Release();
         await thirdStart.WaitAsync(timeout, cancellationToken);
         await third.Entered.WaitAsync(timeout, cancellationToken);
 
-        Task stopping = service.Stop(endpoint);
+        Task stopping = service.StopAsync(endpoint, TestContext.Current.CancellationToken);
         Assert.False(stopping.IsCompleted);
         third.Release();
         await stopping.WaitAsync(timeout, cancellationToken);
@@ -117,7 +117,7 @@ public sealed class JobServiceLifecycleTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-JOB-SERVICE-LIFECYCLE", "failed-start-has-no-heartbeat-and-recovers")]
-    public async Task FailedStart_LeavesNoHeartbeatAndDoesNotStrandTheLifecycleGate()
+    public async Task FailedStart_LeavesNoHeartbeatAndDoesNotStrandTheLifecycleGateAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -126,15 +126,15 @@ public sealed class JobServiceLifecycleTests
         var expected = new InvalidOperationException("configured announcement refused");
         endpoint.FailNext(ConcurrentLimitKind.Configured, expected);
 
-        Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(() => service.BusStarted(endpoint));
+        Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(() => service.BusStartedAsync(endpoint, TestContext.Current.CancellationToken));
 
         Assert.Same(expected, actual);
         Assert.Equal(0, endpoint.Count(ConcurrentLimitKind.Heartbeat));
 
         PublicationGate heartbeat = endpoint.BlockNext(ConcurrentLimitKind.Heartbeat);
-        await service.BusStarted(endpoint).WaitAsync(timeout, cancellationToken);
+        await service.BusStartedAsync(endpoint, TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         await heartbeat.Entered.WaitAsync(timeout, cancellationToken);
-        Task stopping = service.Stop(endpoint);
+        Task stopping = service.StopAsync(endpoint, TestContext.Current.CancellationToken);
         heartbeat.Release();
         await stopping.WaitAsync(timeout, cancellationToken);
 
@@ -145,57 +145,57 @@ public sealed class JobServiceLifecycleTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-JOB-SERVICE-ADMISSION", "complete-start-stop-failure-admission-contract")]
-    public async Task Admission_FollowsTheCompleteSuccessfulAndFailedLifecycleSequence()
+    public async Task Admission_FollowsTheCompleteSuccessfulAndFailedLifecycleSequenceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        await using AdmissionFixture fixture = await AdmissionFixture.Start(timeout, cancellationToken);
+        await using AdmissionFixture fixture = await AdmissionFixture.StartAsync(timeout, cancellationToken);
         var endpoint = new ControlledPublishEndpoint();
 
-        await fixture.Service.Stop(endpoint).WaitAsync(timeout, cancellationToken);
+        await fixture.Service.StopAsync(endpoint, TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         var failedStart = new InvalidOperationException("first start refused");
         endpoint.FailNext(ConcurrentLimitKind.Configured, failedStart);
-        Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(() => fixture.Service.BusStarted(endpoint));
+        Exception actual = await Assert.ThrowsAsync<InvalidOperationException>(() => fixture.Service.BusStartedAsync(endpoint, TestContext.Current.CancellationToken));
         Assert.Same(failedStart, actual);
-        Assert.False(await fixture.Submit(cancellationToken));
+        Assert.False(await fixture.SubmitAsync(cancellationToken));
 
-        await fixture.Service.BusStarted(endpoint).WaitAsync(timeout, cancellationToken);
-        Assert.True(await fixture.Submit(cancellationToken));
+        await fixture.Service.BusStartedAsync(endpoint, TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
+        Assert.True(await fixture.SubmitAsync(cancellationToken));
 
         PublicationGate stopped = endpoint.BlockNext(ConcurrentLimitKind.Stopped);
-        Task stopping = fixture.Service.Stop(endpoint);
+        Task stopping = fixture.Service.StopAsync(endpoint, TestContext.Current.CancellationToken);
         await stopped.Entered.WaitAsync(timeout, cancellationToken);
-        Assert.False(await fixture.Submit(cancellationToken));
+        Assert.False(await fixture.SubmitAsync(cancellationToken));
         stopped.Release();
         await stopping.WaitAsync(timeout, cancellationToken);
-        Assert.False(await fixture.Submit(cancellationToken));
+        Assert.False(await fixture.SubmitAsync(cancellationToken));
 
-        await fixture.Service.BusStarted(endpoint).WaitAsync(timeout, cancellationToken);
-        Assert.True(await fixture.Submit(cancellationToken));
+        await fixture.Service.BusStartedAsync(endpoint, TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
+        Assert.True(await fixture.SubmitAsync(cancellationToken));
         var failedRestart = new InvalidOperationException("restart refused");
         endpoint.FailNext(ConcurrentLimitKind.Configured, failedRestart);
-        actual = await Assert.ThrowsAsync<InvalidOperationException>(() => fixture.Service.BusStarted(endpoint));
+        actual = await Assert.ThrowsAsync<InvalidOperationException>(() => fixture.Service.BusStartedAsync(endpoint, TestContext.Current.CancellationToken));
         Assert.Same(failedRestart, actual);
-        Assert.False(await fixture.Submit(cancellationToken));
+        Assert.False(await fixture.SubmitAsync(cancellationToken));
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-JOB-SERVICE-ADMISSION", "stop-waits-for-admitted-job-registration")]
-    public async Task Stop_WaitsForAnAdmittedJobUntilItsHandleIsRegistered()
+    public async Task Stop_WaitsForAnAdmittedJobUntilItsHandleIsRegisteredAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        await using AdmissionFixture fixture = await AdmissionFixture.Start(timeout, cancellationToken);
+        await using AdmissionFixture fixture = await AdmissionFixture.StartAsync(timeout, cancellationToken);
         var endpoint = new ControlledPublishEndpoint();
-        await fixture.Service.Stop(endpoint).WaitAsync(timeout, cancellationToken);
-        await fixture.Service.BusStarted(endpoint).WaitAsync(timeout, cancellationToken);
-        Assert.True(await fixture.Submit(cancellationToken));
+        await fixture.Service.StopAsync(endpoint, TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
+        await fixture.Service.BusStartedAsync(endpoint, TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
+        Assert.True(await fixture.SubmitAsync(cancellationToken));
 
         fixture.JobPipe.HoldNext();
-        Task<bool> submitting = fixture.Submit(cancellationToken);
+        Task<bool> submitting = fixture.SubmitAsync(cancellationToken);
         await fixture.JobPipe.Entered.WaitAsync(timeout, cancellationToken);
 
-        Task stopping = fixture.Service.Stop(endpoint);
+        Task stopping = fixture.Service.StopAsync(endpoint, TestContext.Current.CancellationToken);
 
         Assert.False(stopping.IsCompleted);
 
@@ -255,7 +255,7 @@ public sealed class JobServiceLifecycleTests
         public RuntimeJobService Service { get; }
         public CountingJobPipe JobPipe { get; }
 
-        public static async Task<AdmissionFixture> Start(TimeSpan timeout, CancellationToken cancellationToken)
+        public static async Task<AdmissionFixture> StartAsync(TimeSpan timeout, CancellationToken cancellationToken)
         {
             RuntimeJobService service = NewService(TimeSpan.FromDays(1));
             var jobPipe = new CountingJobPipe();
@@ -268,7 +268,7 @@ public sealed class JobServiceLifecycleTests
                     TaskCompletionSource? handled = jobPipe.Handled;
                     try
                     {
-                        await service.StartJob(context, new LifecycleJob(), jobPipe, new JobOptions<LifecycleJob>());
+                        await service.StartJobAsync(context, new LifecycleJob(), jobPipe, new JobOptions<LifecycleJob>(), cancellationToken: cancellationToken);
                     }
                     finally
                     {
@@ -283,7 +283,7 @@ public sealed class JobServiceLifecycleTests
             });
             try
             {
-                ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+                ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: cancellationToken).WaitAsync(timeout, cancellationToken);
                 return new AdmissionFixture(provider, harness, service, jobPipe, timeout);
             }
             catch
@@ -294,13 +294,13 @@ public sealed class JobServiceLifecycleTests
             }
         }
 
-        public async Task<bool> Submit(CancellationToken cancellationToken)
+        public async Task<bool> SubmitAsync(CancellationToken cancellationToken)
         {
             int before = JobPipe.Count;
             var handled = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
             JobPipe.Handled = handled;
-            ISendEndpoint handlerEndpoint = await _harness.GetHandlerEndpoint<StartJob>();
-            await handlerEndpoint.Send<StartJob>(new
+            ISendEndpoint handlerEndpoint = await _harness.GetHandlerEndpointAsync<StartJob>(cancellationToken: cancellationToken);
+            await handlerEndpoint.SendAsync<StartJob>(new
             {
                 JobId = NewId.NextGuid(),
                 AttemptId = NewId.NextGuid(),
@@ -318,7 +318,7 @@ public sealed class JobServiceLifecycleTests
             try
             {
                 JobPipe.Release();
-                await _harness.Stop(CancellationToken.None).WaitAsync(_timeout, CancellationToken.None);
+                await _harness.StopAsync(CancellationToken.None).WaitAsync(_timeout, CancellationToken.None);
             }
             finally
             {
@@ -357,7 +357,7 @@ public sealed class JobServiceLifecycleTests
                 _release?.Set();
         }
 
-        public Task Send(ConsumeContext<LifecycleJob> context)
+        public Task SendAsync(ConsumeContext<LifecycleJob> context)
         {
             Interlocked.Increment(ref _count);
             if (Interlocked.Exchange(ref _armed, 0) == 1)
@@ -414,7 +414,7 @@ public sealed class JobServiceLifecycleTests
                 return _counts.GetValueOrDefault(kind);
         }
 
-        public async Task Publish<T>(T message, CancellationToken cancellationToken = default)
+        public async Task PublishAsync<T>(T message, CancellationToken cancellationToken = default)
             where T : class
         {
             if (message is not SetConcurrentJobLimit limit)
@@ -450,7 +450,7 @@ public sealed class JobServiceLifecycleTests
                 if (control?.Gate is not null)
                 {
                     control.Gate.SignalEntered();
-                    await control.Gate.WaitForRelease(cancellationToken);
+                    await control.Gate.WaitForReleaseAsync(cancellationToken);
                 }
             }
             finally
@@ -460,33 +460,33 @@ public sealed class JobServiceLifecycleTests
             }
         }
 
-        public Task Publish<T>(T message, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken = default)
-            where T : class => Publish(message, cancellationToken);
+        public Task PublishAsync<T>(T message, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken = default)
+            where T : class => PublishAsync(message, cancellationToken);
 
-        public Task Publish<T>(T message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
-            where T : class => Publish(message, cancellationToken);
+        public Task PublishAsync<T>(T message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
+            where T : class => PublishAsync(message, cancellationToken);
 
-        public Task Publish(object message, CancellationToken cancellationToken = default) =>
-            Publish<object>(message, cancellationToken);
+        public Task PublishAsync(object message, CancellationToken cancellationToken = default) =>
+            PublishAsync<object>(message, cancellationToken);
 
-        public Task Publish(object message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default) =>
-            Publish<object>(message, cancellationToken);
+        public Task PublishAsync(object message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default) =>
+            PublishAsync<object>(message, cancellationToken);
 
-        public Task Publish(object message, Type messageType, CancellationToken cancellationToken = default) =>
-            Publish<object>(message, cancellationToken);
+        public Task PublishAsync(object message, Type messageType, CancellationToken cancellationToken = default) =>
+            PublishAsync<object>(message, cancellationToken);
 
-        public Task Publish(object message, Type messageType, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default) =>
-            Publish<object>(message, cancellationToken);
+        public Task PublishAsync(object message, Type messageType, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default) =>
+            PublishAsync<object>(message, cancellationToken);
 
-        public Task Publish<T>(object values, CancellationToken cancellationToken = default)
-            where T : class => throw new NotSupportedException("The lifecycle service publishes typed messages.");
-
-        public Task Publish<T>(object values, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken = default)
-            where T : class => throw new NotSupportedException("The lifecycle service publishes typed messages.");
-
-        public Task Publish<T>(object values, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
-            where T : class => throw new NotSupportedException("The lifecycle service publishes typed messages.");
-
+        public Task PublishAsync<T>(object values, CancellationToken cancellationToken = default)
+            where T : class
+        { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); throw new NotSupportedException("The lifecycle service publishes typed messages."); }
+        public Task PublishAsync<T>(object values, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken = default)
+            where T : class
+        { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); throw new NotSupportedException("The lifecycle service publishes typed messages."); }
+        public Task PublishAsync<T>(object values, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
+            where T : class
+        { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); throw new NotSupportedException("The lifecycle service publishes typed messages."); }
         public ConnectHandle ConnectPublishObserver(IPublishObserver observer) =>
             throw new NotSupportedException("The test endpoint records publications directly.");
 
@@ -511,6 +511,6 @@ public sealed class JobServiceLifecycleTests
         public Task Entered => _entered.Task;
         public void Release() => _release.TrySetResult();
         public void SignalEntered() => _entered.TrySetResult();
-        public Task WaitForRelease(CancellationToken cancellationToken) => _release.Task.WaitAsync(cancellationToken);
+        public Task WaitForReleaseAsync(CancellationToken cancellationToken) => _release.Task.WaitAsync(cancellationToken);
     }
 }

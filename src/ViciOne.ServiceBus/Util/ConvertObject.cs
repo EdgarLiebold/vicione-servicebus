@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.Util;
 
 public static class ConvertObject
 {
-    public static Dictionary<string, object> ToDictionary(object values)
+    public static Dictionary<string, object> ToDictionary(object? values)
     {
         if (values == null)
             throw new ArgumentNullException(nameof(values));
@@ -17,7 +17,7 @@ public static class ConvertObject
 
         IEnumerable<PropertyInfo> properties = MessageTypeCache
             .GetProperties(values.GetType())
-            .Where(x => x.CanRead && x.GetMethod.IsPublic);
+            .Where(x => x.CanRead && x.GetMethod is { IsPublic: true });
 
         foreach (var property in properties)
             AddPropertyToDictionary(property, values, dictionary);
@@ -38,6 +38,6 @@ public static class ConvertObject
             key = new string(chars);
         }
 
-        dictionary.Add(key, value);
+        dictionary.Add(key, value!);
     }
 }

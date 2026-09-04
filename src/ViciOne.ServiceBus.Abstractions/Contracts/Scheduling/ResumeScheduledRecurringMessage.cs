@@ -7,7 +7,7 @@ public interface ResumeScheduledRecurringMessage
     /// <summary>
     /// The date/time this message was created
     /// </summary>
-    DateTime Timestamp { get; }
+    DateTimeOffset Timestamp { get; }
 
     string ScheduleId { get; }
 

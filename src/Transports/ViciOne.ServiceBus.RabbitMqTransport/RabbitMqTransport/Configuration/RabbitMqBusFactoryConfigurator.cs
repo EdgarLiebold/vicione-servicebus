@@ -92,7 +92,7 @@ public class RabbitMqBusFactoryConfigurator :
         set => _settings.SingleActiveConsumer = value;
     }
 
-    public void SetQueueArgument(string key, object value)
+    public void SetQueueArgument(string key, object? value)
     {
         _settings.SetQueueArgument(key, value);
     }
@@ -102,7 +102,7 @@ public class RabbitMqBusFactoryConfigurator :
         _settings.SetQueueArgument(key, value);
     }
 
-    public void SetExchangeArgument(string key, object value)
+    public void SetExchangeArgument(string key, object? value)
     {
         _settings.SetExchangeArgument(key, value);
     }

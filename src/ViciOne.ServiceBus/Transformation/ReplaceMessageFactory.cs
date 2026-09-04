@@ -9,7 +9,7 @@ public class ReplaceMessageFactory<TMessage> :
 {
     public InitializeContext<TMessage> Create(InitializeContext context)
     {
-        if (context.TryGetPayload(out TransformContext<TMessage> transformContext) && transformContext.HasInput)
+        if (context.TryGetPayload(out TransformContext<TMessage>? transformContext) && transformContext.HasInput)
             return context.CreateMessageContext(transformContext.Input);
 
         throw new InvalidOperationException("The original message context was not available.");

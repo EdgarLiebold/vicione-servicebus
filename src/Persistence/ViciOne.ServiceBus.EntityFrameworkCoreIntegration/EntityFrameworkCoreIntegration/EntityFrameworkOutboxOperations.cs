@@ -41,11 +41,18 @@ internal sealed class EntityFrameworkOutboxOperations<TBus, TDbContext> : IEntit
                 $"Limit must not exceed {MaximumQuarantinePageSize}.");
         }
 
-        return await _dbContext.Set<OutboxState>()
+        IQueryable<OutboxState> query = _dbContext.Set<OutboxState>()
             .AsNoTracking()
-            .Where(x => x.BusKey == _busKey && x.Status == OutboxDeliveryStatus.Quarantined)
-            .OrderBy(x => x.Created)
-            .ThenBy(x => x.OutboxId)
+            .Where(x => x.BusKey == _busKey && x.Status == OutboxDeliveryStatus.Quarantined);
+
+        // SQLite persists the UTC-normalized value as canonical text and rejects ordering by a
+        // DateTimeOffset expression. Ordering by that representation keeps the query bounded in
+        // the database instead of materializing every quarantined entry for client-side sorting.
+        IOrderedQueryable<OutboxState> orderedQuery = _dbContext.Database.ProviderName == "Microsoft.EntityFrameworkCore.Sqlite"
+            ? query.OrderBy(x => x.Created.ToString()).ThenBy(x => x.OutboxId)
+            : query.OrderBy(x => x.Created).ThenBy(x => x.OutboxId);
+
+        return await orderedQuery
             .Take(limit)
             .Select(x => new OutboxQuarantineEntry(
                 x.OutboxId,
@@ -65,7 +72,7 @@ internal sealed class EntityFrameworkOutboxOperations<TBus, TDbContext> : IEntit
         if (outboxId == Guid.Empty)
             throw new ArgumentException("OutboxId must not be empty.", nameof(outboxId));
 
-        var state = await GetOwnedState(outboxId, cancellationToken).ConfigureAwait(false);
+        var state = await GetOwnedStateAsync(outboxId, cancellationToken).ConfigureAwait(false);
         if (state.Status != OutboxDeliveryStatus.Quarantined)
             throw new InvalidOperationException($"Outbox {outboxId} is not quarantined and cannot be requeued.");
 
@@ -88,7 +95,7 @@ internal sealed class EntityFrameworkOutboxOperations<TBus, TDbContext> : IEntit
         if (outboxId == Guid.Empty)
             throw new ArgumentException("OutboxId must not be empty.", nameof(outboxId));
 
-        var state = await GetOwnedState(outboxId, cancellationToken).ConfigureAwait(false);
+        var state = await GetOwnedStateAsync(outboxId, cancellationToken).ConfigureAwait(false);
         if (state.Status != OutboxDeliveryStatus.Quarantined)
             throw new InvalidOperationException($"Outbox {outboxId} is not quarantined and cannot be discarded.");
 
@@ -102,7 +109,7 @@ internal sealed class EntityFrameworkOutboxOperations<TBus, TDbContext> : IEntit
         await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    async Task<OutboxState> GetOwnedState(Guid outboxId, CancellationToken cancellationToken)
+    async Task<OutboxState> GetOwnedStateAsync(Guid outboxId, CancellationToken cancellationToken)
     {
         var state = await _dbContext.Set<OutboxState>()
             .SingleOrDefaultAsync(x => x.OutboxId == outboxId && x.BusKey == _busKey, cancellationToken)

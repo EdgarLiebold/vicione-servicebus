@@ -77,12 +77,13 @@ internal static class DictionaryExtensions
         return dictionary;
     }
 
-    public static Dictionary<string, object> SetValues(this Dictionary<string, object> dictionary, IEnumerable<KeyValuePair<string, object?>>? properties,
+    public static Dictionary<string, object> SetValues<TValue>(this Dictionary<string, object> dictionary,
+        IEnumerable<KeyValuePair<string, TValue>>? properties,
         bool overwrite = true)
     {
         if (properties != null)
         {
-            foreach (KeyValuePair<string, object?> header in properties)
+            foreach (KeyValuePair<string, TValue> header in properties)
                 SetValue(dictionary, header.Key, header.Value, overwrite);
         }
 

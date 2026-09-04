@@ -17,12 +17,12 @@ internal sealed class CircuitBreakerFilter<TContext> : IFilter<TContext>
         _stateMachine = new CircuitBreakerStateMachine(settings);
     }
 
-    public async Task Send(TContext context, IPipe<TContext> next)
+    public async Task SendAsync(TContext context, IPipe<TContext> next)
     {
         CircuitBreakerLease lease = _stateMachine.Acquire();
         try
         {
-            await next.Send(context).ConfigureAwait(false);
+            await next.SendAsync(context).ConfigureAwait(false);
             _stateMachine.RecordSuccess(lease);
         }
         catch (Exception exception)

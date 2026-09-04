@@ -15,13 +15,13 @@ public class ActiveMqErrorTransport :
     {
     }
 
-    public Task Send(ExceptionReceiveContext context)
+    public Task SendAsync(ExceptionReceiveContext context, CancellationToken cancellationToken = default)
     {
-        void PreSend(IMessage message, SendHeaders headers)
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); void PreSend(IMessage message, SendHeaders headers)
         {
             headers.CopyFrom(context.ExceptionHeaders);
         }
 
-        return Move(context, PreSend);
+        return MoveAsync(context, PreSend);
     }
 }

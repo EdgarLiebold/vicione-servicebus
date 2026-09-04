@@ -16,10 +16,10 @@ public static class ConsumeContextActivatorExtensions
     public static T GetServiceOrCreateInstance<T>(this ConsumeContext context)
         where T : class
     {
-        if (context.TryGetPayload(out IServiceScope serviceScope))
+        if (context.TryGetPayload(out IServiceScope? serviceScope))
             return ActivatorUtilities.GetServiceOrCreateInstance<T>(serviceScope.ServiceProvider);
 
-        if (context.TryGetPayload(out IServiceProvider serviceProvider))
+        if (context.TryGetPayload(out IServiceProvider? serviceProvider))
             return ActivatorUtilities.GetServiceOrCreateInstance<T>(serviceProvider);
 
         return ActivatorUtilities.CreateInstance<T>(Provider.Empty);
@@ -37,10 +37,10 @@ public static class ConsumeContextActivatorExtensions
     public static T CreateInstance<T>(this ConsumeContext context, params object[] arguments)
         where T : class
     {
-        if (context.TryGetPayload(out IServiceScope serviceScope))
+        if (context.TryGetPayload(out IServiceScope? serviceScope))
             return ActivatorUtilities.CreateInstance<T>(serviceScope.ServiceProvider, arguments);
 
-        if (context.TryGetPayload(out IServiceProvider serviceProvider))
+        if (context.TryGetPayload(out IServiceProvider? serviceProvider))
             return ActivatorUtilities.CreateInstance<T>(serviceProvider, arguments);
 
         return ActivatorUtilities.CreateInstance<T>(Provider.Empty);
@@ -55,7 +55,7 @@ public static class ConsumeContextActivatorExtensions
         class EmptyServiceProvider :
             IServiceProvider
         {
-            public object GetService(Type serviceType)
+            public object? GetService(Type serviceType)
             {
                 return null;
             }

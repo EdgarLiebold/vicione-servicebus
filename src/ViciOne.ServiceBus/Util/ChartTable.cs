@@ -16,7 +16,7 @@ public class ChartTable
         _lines = new List<Line>();
     }
 
-    public ChartTable Add(string text, DateTime startTime, TimeSpan? duration, params object[] columns)
+    public ChartTable Add(string text, DateTimeOffset startTime, TimeSpan? duration, params object[] columns)
     {
         _lines.Add(new Line(text, startTime, duration, columns));
 
@@ -46,7 +46,7 @@ public class ChartTable
         }
     }
 
-    public (DateTime low, DateTime high) CalculateRange()
+    public (DateTimeOffset low, DateTimeOffset high) CalculateRange()
     {
         var low = _lines.Min(x => x.StartTime);
         var high = _lines.Max(x => x.EndTime);
@@ -57,7 +57,7 @@ public class ChartTable
 
     public class Line
     {
-        public Line(string text, DateTime startTime, TimeSpan? duration, object[] columns)
+        public Line(string text, DateTimeOffset startTime, TimeSpan? duration, object[] columns)
         {
             Text = text;
             StartTime = startTime;
@@ -66,11 +66,11 @@ public class ChartTable
         }
 
         public string Text { get; }
-        public DateTime StartTime { get; }
+        public DateTimeOffset StartTime { get; }
         public TimeSpan Duration { get; }
         public object[] Columns { get; }
 
-        public DateTime EndTime => StartTime + Duration;
+        public DateTimeOffset EndTime => StartTime + Duration;
     }
 }
 

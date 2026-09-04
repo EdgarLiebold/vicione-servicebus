@@ -50,32 +50,32 @@ public class SharedConnectionContext :
         return _context.CreateMessageSender(entityPath);
     }
 
-    public Task<QueueProperties> CreateQueue(CreateQueueOptions createQueueOptions, CancellationToken cancellationToken)
+    public Task<QueueProperties> CreateQueueAsync(CreateQueueOptions createQueueOptions, CancellationToken cancellationToken)
     {
         using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
 
-        return _context.CreateQueue(createQueueOptions, tokenSource.Token);
+        return _context.CreateQueueAsync(createQueueOptions, tokenSource.Token);
     }
 
-    public Task<TopicProperties> CreateTopic(CreateTopicOptions createTopicOptions, CancellationToken cancellationToken)
+    public Task<TopicProperties> CreateTopicAsync(CreateTopicOptions createTopicOptions, CancellationToken cancellationToken)
     {
         using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
 
-        return _context.CreateTopic(createTopicOptions, tokenSource.Token);
+        return _context.CreateTopicAsync(createTopicOptions, tokenSource.Token);
     }
 
-    public Task<SubscriptionProperties> CreateTopicSubscription(CreateSubscriptionOptions createSubscriptionOptions, CreateRuleOptions rule,
-        RuleFilter filter, CancellationToken cancellationToken)
+    public Task<SubscriptionProperties> CreateTopicSubscriptionAsync(CreateSubscriptionOptions createSubscriptionOptions, CreateRuleOptions? rule,
+        RuleFilter? filter, CancellationToken cancellationToken)
     {
         using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
 
-        return _context.CreateTopicSubscription(createSubscriptionOptions, rule, filter, tokenSource.Token);
+        return _context.CreateTopicSubscriptionAsync(createSubscriptionOptions, rule, filter, tokenSource.Token);
     }
 
-    public Task DeleteTopicSubscription(CreateSubscriptionOptions subscriptionOptions, CancellationToken cancellationToken)
+    public Task DeleteTopicSubscriptionAsync(CreateSubscriptionOptions subscriptionOptions, CancellationToken cancellationToken)
     {
         using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken, cancellationToken);
 
-        return _context.DeleteTopicSubscription(subscriptionOptions, tokenSource.Token);
+        return _context.DeleteTopicSubscriptionAsync(subscriptionOptions, tokenSource.Token);
     }
 }

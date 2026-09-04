@@ -21,7 +21,7 @@ public class SagaInstance<TSaga> :
 
     public bool IsRemoved { get; set; }
 
-    public bool Equals(SagaInstance<TSaga> other)
+    public bool Equals(SagaInstance<TSaga>? other)
     {
         if (ReferenceEquals(null, other))
             return false;
@@ -32,7 +32,7 @@ public class SagaInstance<TSaga> :
         return EqualityComparer<TSaga>.Default.Equals(Instance, other.Instance);
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (ReferenceEquals(null, obj))
             return false;
@@ -51,7 +51,7 @@ public class SagaInstance<TSaga> :
         return EqualityComparer<TSaga>.Default.GetHashCode(Instance);
     }
 
-    public Task MarkInUse(CancellationToken cancellationToken)
+    public Task MarkInUseAsync(CancellationToken cancellationToken)
     {
         if (IsRemoved)
             throw new InvalidOperationException($"The saga instance was removed: {TypeCache<TSaga>.ShortName}: {Instance.CorrelationId}");

@@ -34,7 +34,7 @@ public class QueueEntity :
 
     sealed class QueueEntityEqualityComparer : IEqualityComparer<QueueEntity>
     {
-        public bool Equals(QueueEntity x, QueueEntity y)
+        public bool Equals(QueueEntity? x, QueueEntity? y)
         {
             if (ReferenceEquals(x, y))
                 return true;
@@ -62,7 +62,7 @@ public class QueueEntity :
 
     sealed class NameEqualityComparer : IEqualityComparer<QueueEntity>
     {
-        public bool Equals(QueueEntity x, QueueEntity y)
+        public bool Equals(QueueEntity? x, QueueEntity? y)
         {
             if (ReferenceEquals(x, y))
                 return true;

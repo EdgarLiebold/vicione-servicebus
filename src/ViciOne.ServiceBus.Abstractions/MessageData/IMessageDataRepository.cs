@@ -18,7 +18,7 @@ public interface IMessageDataRepository
     /// <param name="address">The data address</param>
     /// <param name="cancellationToken">A cancellation token for the request</param>
     /// <returns></returns>
-    Task<Stream> Get(Uri address, CancellationToken cancellationToken = default);
+    Task<Stream> GetAsync(Uri address, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Puts message data into the repository
@@ -27,5 +27,5 @@ public interface IMessageDataRepository
     /// <param name="timeToLive"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Uri> Put(Stream stream, TimeSpan? timeToLive = default, CancellationToken cancellationToken = default);
+    Task<Uri> PutAsync(Stream stream, TimeSpan? timeToLive = default, CancellationToken cancellationToken = default);
 }

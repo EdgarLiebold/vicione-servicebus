@@ -15,7 +15,7 @@ public class BatchConsumerInterfaceType :
         MessageType = batchMessageType;
 
         _consumeConnectorFactory = new Lazy<IMessageConnectorFactory>(() => (IMessageConnectorFactory)
-            Activator.CreateInstance(typeof(BatchMessageConnectorFactory<,>).MakeGenericType(consumerType, messageType)));
+            (Activator.CreateInstance(typeof(BatchMessageConnectorFactory<,>).MakeGenericType(consumerType, messageType)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated.")));
     }
 
     public Type MessageType { get; }

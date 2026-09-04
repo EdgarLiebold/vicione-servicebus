@@ -53,7 +53,7 @@ public class ScopedFilterSpecificationObserver :
 
         var scopeProviderType = typeof(FilterScopeProvider<,>).MakeGenericType(filterType, typeof(TContext));
 
-        var scopeProvider = (IFilterScopeProvider<TContext>)Activator.CreateInstance(scopeProviderType, _provider);
+        var scopeProvider = (IFilterScopeProvider<TContext>)(Activator.CreateInstance(scopeProviderType, _provider) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
         var filter = new ScopedFilter<TContext>(scopeProvider);
         var specification = new FilterPipeSpecification<TContext>(filter);

@@ -14,7 +14,7 @@ public sealed class ContainerActivityRegistrationTests
     [InlineData(ActivityRegistrationShape.CustomExecuteEndpoint)]
     [InlineData(ActivityRegistrationShape.CustomExecuteAndCompensateEndpoints)]
     [RequirementCoverage("REQ-VSB-CONTAINER-COURIER-ACTIVITY", "manual-and-registration-owned-endpoint-matrix")]
-    public async Task ContainerRegisteredActivity_ExecutesAtItsExactOwnedEndpoint(ActivityRegistrationShape shape)
+    public async Task ContainerRegisteredActivity_ExecutesAtItsExactOwnedEndpointAsync(ActivityRegistrationShape shape)
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -48,7 +48,7 @@ public sealed class ContainerActivityRegistrationTests
                 }
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
@@ -56,15 +56,13 @@ public sealed class ContainerActivityRegistrationTests
             var builder = new RoutingSlipBuilder(trackingNumber);
             builder.AddActivity("ContainerActivity", new Uri($"queue:{executeName}"), new CourierArguments("expected"));
 
-            await harness.Bus.Execute(builder.Build(), cancellationToken);
+            await harness.Bus.ExecuteAsync(builder.Build(), cancellationToken);
             IPublishedMessage<RoutingSlipActivityCompleted> activity = await harness.Published
                 .SelectAsync<RoutingSlipActivityCompleted>(cancellationToken)
-                .First()
-                .WaitAsync(timeout, cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
             IPublishedMessage<RoutingSlipCompleted> completed = await harness.Published
                 .SelectAsync<RoutingSlipCompleted>(cancellationToken)
-                .First()
-                .WaitAsync(timeout, cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(trackingNumber, activity.Context.Message.TrackingNumber);
             Assert.Equal(trackingNumber, completed.Context.Message.TrackingNumber);
@@ -74,7 +72,7 @@ public sealed class ContainerActivityRegistrationTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -90,7 +88,7 @@ public sealed class ContainerActivityRegistrationTests
 
     internal sealed class ContainerExecuteActivity : IExecuteActivity<CourierArguments>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<CourierArguments> context) =>
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<CourierArguments> context) =>
             Task.FromResult(context.Completed());
     }
 }

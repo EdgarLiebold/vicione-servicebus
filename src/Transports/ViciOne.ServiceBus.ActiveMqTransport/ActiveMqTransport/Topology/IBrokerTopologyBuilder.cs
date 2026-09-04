@@ -29,5 +29,5 @@ public interface IBrokerTopologyBuilder
     /// <param name="consumerName"></param>
     /// <param name="shared"></param>
     /// <returns></returns>
-    ConsumerHandle BindConsumer(TopicHandle topic, QueueHandle queue, string selector, string consumerName = null, bool shared = false);
+    ConsumerHandle BindConsumer(TopicHandle topic, QueueHandle? queue, string? selector, string? consumerName = null, bool shared = false);
 }

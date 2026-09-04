@@ -8,18 +8,18 @@ public sealed class ObservationBoundaryTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-DIAGNOSTICS-OBSERVATION", "completed-stop")]
-    public async Task CompletedStopReportsQuiescence()
+    public async Task CompletedStopReportsQuiescenceAsync()
     {
-        Assert.True(await PublishLoadScenario.Quiesce(_ => Task.CompletedTask, TimeSpan.FromMinutes(1)));
+        Assert.True(await PublishLoadScenario.QuiesceAsync(_ => Task.CompletedTask, TimeSpan.FromMinutes(1)));
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DIAGNOSTICS-OBSERVATION", "swallowed-budget-cancellation")]
-    public async Task SwallowedBudgetCancellationIsNotQuiescence()
+    public async Task SwallowedBudgetCancellationIsNotQuiescenceAsync()
     {
         var time = new FakeTimeProvider();
         var stopFinished = new TaskCompletionSource();
-        Task<bool> quiescing = PublishLoadScenario.Quiesce(token =>
+        Task<bool> quiescing = PublishLoadScenario.QuiesceAsync(token =>
         {
             token.Register(() => stopFinished.TrySetResult());
             return stopFinished.Task;
@@ -33,10 +33,10 @@ public sealed class ObservationBoundaryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DIAGNOSTICS-OBSERVATION", "raised-budget-cancellation")]
-    public async Task RaisedBudgetCancellationIsNotQuiescence()
+    public async Task RaisedBudgetCancellationIsNotQuiescenceAsync()
     {
         var time = new FakeTimeProvider();
-        Task<bool> quiescing = PublishLoadScenario.Quiesce(
+        Task<bool> quiescing = PublishLoadScenario.QuiesceAsync(
             token => Task.Delay(Timeout.InfiniteTimeSpan, time, token), TimeSpan.FromMinutes(1), time);
 
         time.Advance(TimeSpan.FromMinutes(1));
@@ -49,11 +49,11 @@ public sealed class ObservationBoundaryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DIAGNOSTICS-OBSERVATION", "bounded-stop-token")]
-    public async Task StopReceivesBoundedToken()
+    public async Task StopReceivesBoundedTokenAsync()
     {
         CancellationToken handed = CancellationToken.None;
 
-        bool quiesced = await PublishLoadScenario.Quiesce(token =>
+        bool quiesced = await PublishLoadScenario.QuiesceAsync(token =>
         {
             handed = token;
             return Task.CompletedTask;
@@ -65,13 +65,13 @@ public sealed class ObservationBoundaryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DIAGNOSTICS-OBSERVATION", "snapshot-after-stop")]
-    public async Task SnapshotIsReadAfterStopCompletes()
+    public async Task SnapshotIsReadAfterStopCompletesAsync()
     {
         var ledger = new MessageSequenceLedger(2);
         ledger.Observed(0);
 
         (bool quiesced, MessageSequenceLedger.Snapshot snapshot) =
-            await PublishLoadScenario.ObserveThenQuiesceThenRead(ledger, _ =>
+            await PublishLoadScenario.ObserveThenQuiesceThenReadAsync(ledger, _ =>
             {
                 ledger.Observed(1);
                 return Task.CompletedTask;
@@ -83,11 +83,11 @@ public sealed class ObservationBoundaryTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DIAGNOSTICS-OBSERVATION", "whole-observation-window")]
-    public async Task ObservationWindowCompletesBeforeStop()
+    public async Task ObservationWindowCompletesBeforeStopAsync()
     {
         var time = new FakeTimeProvider();
         var stopCalled = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-        Task observing = PublishLoadScenario.ObserveThenQuiesceThenRead(new MessageSequenceLedger(1), _ =>
+        Task observing = PublishLoadScenario.ObserveThenQuiesceThenReadAsync(new MessageSequenceLedger(1), _ =>
         {
             stopCalled.TrySetResult();
             return Task.CompletedTask;

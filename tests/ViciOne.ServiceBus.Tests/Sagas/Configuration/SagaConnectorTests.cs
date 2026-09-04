@@ -31,7 +31,7 @@ public sealed class SagaConnectorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SAGA-DUPLICATE-ROLE-INSTANCE", "initiated-by-precedence-and-guid-constructor")]
-    public async Task DuplicateInitiatedAndOrchestratedRole_CreatesTheMissingSagaOnce()
+    public async Task DuplicateInitiatedAndOrchestratedRole_CreatesTheMissingSagaOnceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -39,14 +39,14 @@ public sealed class SagaConnectorTests
         using var harness = CreateHarness(timeout);
         SagaTestHarness<DuplicateRoleSaga> sagaHarness = harness.Saga<DuplicateRoleSaga>();
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(new DuplicateRoleMessage(correlationId), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new DuplicateRoleMessage(correlationId), cancellationToken);
 
-            Assert.True(await sagaHarness.Consumed.Any<DuplicateRoleMessage>(cancellationToken));
-            Guid? createdId = await sagaHarness.Exists(correlationId, timeout);
-            DuplicateRoleSaga created = sagaHarness.Created.Contains(correlationId);
+            Assert.True(await sagaHarness.Consumed.AnyAsync<DuplicateRoleMessage>(cancellationToken));
+            Guid? createdId = await sagaHarness.ExistsAsync(correlationId, timeout, TestContext.Current.CancellationToken);
+            DuplicateRoleSaga? created = sagaHarness.Created.Contains(correlationId);
 
             Assert.Equal(correlationId, createdId);
             Assert.NotNull(created);
@@ -55,13 +55,13 @@ public sealed class SagaConnectorTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SAGA-INSTANCE-FACTORY", "parameterless-constructor-and-writable-correlation-id")]
-    public async Task WritableCorrelationIdSaga_ReceivesTheMessageCorrelationIdBeforeConsumption()
+    public async Task WritableCorrelationIdSaga_ReceivesTheMessageCorrelationIdBeforeConsumptionAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -69,14 +69,14 @@ public sealed class SagaConnectorTests
         using var harness = CreateHarness(timeout);
         SagaTestHarness<PropertySaga> sagaHarness = harness.Saga<PropertySaga>();
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(new PropertySagaMessage(correlationId), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new PropertySagaMessage(correlationId), cancellationToken);
 
-            Assert.True(await sagaHarness.Consumed.Any<PropertySagaMessage>(cancellationToken));
-            Guid? createdId = await sagaHarness.Exists(correlationId, timeout);
-            PropertySaga created = sagaHarness.Created.Contains(correlationId);
+            Assert.True(await sagaHarness.Consumed.AnyAsync<PropertySagaMessage>(cancellationToken));
+            Guid? createdId = await sagaHarness.ExistsAsync(correlationId, timeout, TestContext.Current.CancellationToken);
+            PropertySaga? created = sagaHarness.Created.Contains(correlationId);
 
             Assert.Equal(correlationId, createdId);
             Assert.NotNull(created);
@@ -85,7 +85,7 @@ public sealed class SagaConnectorTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
@@ -167,17 +167,17 @@ public sealed class SagaConnectorTests
         public Expression<Func<OrderedSaga, ObservedMessage, bool>> CorrelationExpression =>
             (saga, message) => saga.Key == message.Key;
 
-        public Task Consume(ConsumeContext<AlphaInitiated> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<AlphaInitiated> context) => Task.CompletedTask;
 
-        public Task Consume(ConsumeContext<ZuluInitiated> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<ZuluInitiated> context) => Task.CompletedTask;
 
-        public Task Consume(ConsumeContext<AlphaOrchestrated> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<AlphaOrchestrated> context) => Task.CompletedTask;
 
-        public Task Consume(ConsumeContext<ZuluOrchestrated> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<ZuluOrchestrated> context) => Task.CompletedTask;
 
-        public Task Consume(ConsumeContext<CombinedMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<CombinedMessage> context) => Task.CompletedTask;
 
-        public Task Consume(ConsumeContext<ObservedMessage> context)
+        public Task ConsumeAsync(ConsumeContext<ObservedMessage> context)
         {
             Key = context.Message.Key;
             return Task.CompletedTask;
@@ -200,7 +200,7 @@ public sealed class SagaConnectorTests
 
         public int ConsumeCount { get; private set; }
 
-        public Task Consume(ConsumeContext<DuplicateRoleMessage> context)
+        public Task ConsumeAsync(ConsumeContext<DuplicateRoleMessage> context)
         {
             ConsumeCount++;
             return Task.CompletedTask;
@@ -217,7 +217,7 @@ public sealed class SagaConnectorTests
 
         public Guid CorrelationIdObservedDuringConsume { get; private set; }
 
-        public Task Consume(ConsumeContext<PropertySagaMessage> context)
+        public Task ConsumeAsync(ConsumeContext<PropertySagaMessage> context)
         {
             CorrelationIdObservedDuringConsume = CorrelationId;
             return Task.CompletedTask;
@@ -238,7 +238,7 @@ public sealed class SagaConnectorTests
 
         public Guid CorrelationId { get; set; }
 
-        public Task Consume(ConsumeContext<CorrelatedBy<Guid>> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<CorrelatedBy<Guid>> context) => Task.CompletedTask;
     }
 
     public sealed class UnsupportedConstructorSaga : ISaga, InitiatedBy<PropertySagaMessage>
@@ -250,6 +250,6 @@ public sealed class SagaConnectorTests
 
         public Guid CorrelationId { get; set; }
 
-        public Task Consume(ConsumeContext<PropertySagaMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<PropertySagaMessage> context) => Task.CompletedTask;
     }
 }

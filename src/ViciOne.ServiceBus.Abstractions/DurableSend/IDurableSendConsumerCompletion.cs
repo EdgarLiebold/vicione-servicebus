@@ -21,5 +21,6 @@ public interface IDurableSendConsumerCompletion
     /// bound to one persisted intent generation, so a later successful logical completion is allowed to resolve an
     /// overlapping retry/quarantine race for that generation without affecting a future re-admission.
     /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     ValueTask<bool> CompleteAsync(CancellationToken cancellationToken = default);
 }

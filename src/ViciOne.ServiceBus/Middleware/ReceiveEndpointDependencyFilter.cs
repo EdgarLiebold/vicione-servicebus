@@ -15,11 +15,11 @@ public class ReceiveEndpointDependencyFilter<TContext> :
         _context = context;
     }
 
-    public async Task Send(TContext context, IPipe<TContext> next)
+    public async Task SendAsync(TContext context, IPipe<TContext> next)
     {
-        await _context.DependenciesReady.OrCanceled(context.CancellationToken).ConfigureAwait(false);
+        await _context.DependenciesReady.OrCanceledAsync(context.CancellationToken).ConfigureAwait(false);
 
-        await next.Send(context).ConfigureAwait(false);
+        await next.SendAsync(context).ConfigureAwait(false);
     }
 
     public void Probe(ProbeContext context)

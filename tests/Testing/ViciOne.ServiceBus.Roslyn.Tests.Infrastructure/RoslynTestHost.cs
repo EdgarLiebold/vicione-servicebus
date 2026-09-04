@@ -24,6 +24,9 @@ public static class RoslynTestHost
     private const string ProjectName = "AnalyzerFixture";
 
     /// <summary>Validates that one or more fixture sources form a binding compilation.</summary>
+    /// <param name="sources">The sources used by the operation.</param>
+    /// <param name="referenceRoots">The reference roots used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public static async Task ValidateCompilationAsync(
         IReadOnlyList<string> sources,
         IReadOnlyCollection<Assembly>? referenceRoots = null,
@@ -37,6 +40,9 @@ public static class RoslynTestHost
     }
 
     /// <summary>Validates that one fixture source forms a binding compilation.</summary>
+    /// <param name="source">The source used by the operation.</param>
+    /// <param name="referenceRoots">The reference roots used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public static Task ValidateCompilationAsync(
         string source,
         IReadOnlyCollection<Assembly>? referenceRoots = null,
@@ -44,6 +50,10 @@ public static class RoslynTestHost
         ValidateCompilationAsync([source], referenceRoots, cancellationToken);
 
     /// <summary>Runs one analyzer over one or more source documents.</summary>
+    /// <param name="sources">The sources used by the operation.</param>
+    /// <param name="analyzer">The analyzer used by the operation.</param>
+    /// <param name="referenceRoots">The reference roots used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public static async Task<IReadOnlyList<DiagnosticObservation>> AnalyzeAsync(
         IReadOnlyList<string> sources,
         DiagnosticAnalyzer analyzer,
@@ -61,6 +71,10 @@ public static class RoslynTestHost
     }
 
     /// <summary>Runs one analyzer over one source document.</summary>
+    /// <param name="source">The source used by the operation.</param>
+    /// <param name="analyzer">The analyzer used by the operation.</param>
+    /// <param name="referenceRoots">The reference roots used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public static Task<IReadOnlyList<DiagnosticObservation>> AnalyzeAsync(
         string source,
         DiagnosticAnalyzer analyzer,
@@ -71,6 +85,11 @@ public static class RoslynTestHost
     /// <summary>
     /// Applies the first registered fix repeatedly until the selected analyzer has no diagnostic.
     /// </summary>
+    /// <param name="source">The source used by the operation.</param>
+    /// <param name="analyzer">The analyzer used by the operation.</param>
+    /// <param name="codeFixProvider">The code fix provider used by the operation.</param>
+    /// <param name="referenceRoots">The reference roots used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public static async Task<string> ApplyAllFixesAsync(
         string source,
         DiagnosticAnalyzer analyzer,
@@ -136,7 +155,7 @@ public static class RoslynTestHost
         var formatted = Formatter.Format(
             root,
             Formatter.Annotation,
-            simplified.Project.Solution.Workspace);
+            simplified.Project.Solution.Workspace, cancellationToken: cancellationToken);
 
         return NormalizeLineEndings(formatted.GetText().ToString());
     }

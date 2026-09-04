@@ -21,212 +21,212 @@ public class ConsumeMessageSchedulerContext :
 
     public MessageSchedulerFactory SchedulerFactory { get; }
 
-    public TimeProvider TimeProvider => _scheduler.Value.TimeProvider;
+    public TimeProvider TimeProvider => _scheduler.Value.Advanced().TimeProvider;
 
-    public Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, T message,
+    public Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, T message,
         CancellationToken cancellationToken)
         where T : class
     {
-        return _scheduler.Value.ScheduleSend(destinationAddress, scheduledTime, message, cancellationToken);
+        return _scheduler.Value.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, cancellationToken);
     }
 
-    public Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, T message, IPipe<SendContext<T>> pipe,
+    public Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
-        return _scheduler.Value.ScheduleSend(destinationAddress, scheduledTime, message, pipe, cancellationToken);
+        return _scheduler.Value.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, pipe, cancellationToken);
     }
 
-    public Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, T message, IPipe<SendContext> pipe,
+    public Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, T message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
-        return _scheduler.Value.ScheduleSend(destinationAddress, scheduledTime, message, pipe, cancellationToken);
+        return _scheduler.Value.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, pipe, cancellationToken);
     }
 
-    public Task<ScheduledMessage> ScheduleSend(Uri destinationAddress, DateTime scheduledTime, object message,
+    public Task<ScheduledMessage> ScheduleSendAsync(Uri destinationAddress, DateTimeOffset dueAt, object message,
         CancellationToken cancellationToken)
     {
-        return _scheduler.Value.ScheduleSend(destinationAddress, scheduledTime, message, cancellationToken);
+        return _scheduler.Value.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, cancellationToken);
     }
 
-    public Task<ScheduledMessage> ScheduleSend(Uri destinationAddress, DateTime scheduledTime, object message, Type messageType,
+    public Task<ScheduledMessage> ScheduleSendAsync(Uri destinationAddress, DateTimeOffset dueAt, object message, Type messageType,
         CancellationToken cancellationToken)
     {
-        return _scheduler.Value.ScheduleSend(destinationAddress, scheduledTime, message, messageType, cancellationToken);
+        return _scheduler.Value.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, messageType, cancellationToken);
     }
 
-    public Task<ScheduledMessage> ScheduleSend(Uri destinationAddress, DateTime scheduledTime, object message, IPipe<SendContext> pipe,
+    public Task<ScheduledMessage> ScheduleSendAsync(Uri destinationAddress, DateTimeOffset dueAt, object message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
     {
-        return _scheduler.Value.ScheduleSend(destinationAddress, scheduledTime, message, pipe, cancellationToken);
+        return _scheduler.Value.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, pipe, cancellationToken);
     }
 
-    public Task<ScheduledMessage> ScheduleSend(Uri destinationAddress, DateTime scheduledTime, object message, Type messageType,
+    public Task<ScheduledMessage> ScheduleSendAsync(Uri destinationAddress, DateTimeOffset dueAt, object message, Type messageType,
         IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
-        return _scheduler.Value.ScheduleSend(destinationAddress, scheduledTime, message, messageType, pipe, cancellationToken);
+        return _scheduler.Value.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, messageType, pipe, cancellationToken);
     }
 
-    public Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, object values,
+    public Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, object values,
         CancellationToken cancellationToken)
         where T : class
     {
-        return _scheduler.Value.ScheduleSend<T>(destinationAddress, scheduledTime, values, cancellationToken);
+        return _scheduler.Value.Advanced().ScheduleSendAsync<T>(destinationAddress, dueAt, values, cancellationToken);
     }
 
-    public Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, object values, IPipe<SendContext<T>> pipe,
+    public Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, object values, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
-        return _scheduler.Value.ScheduleSend(destinationAddress, scheduledTime, values, pipe, cancellationToken);
+        return _scheduler.Value.Advanced().ScheduleSendAsync(destinationAddress, dueAt, values, pipe, cancellationToken);
     }
 
-    public Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, object values, IPipe<SendContext> pipe,
+    public Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, object values, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
-        return _scheduler.Value.ScheduleSend<T>(destinationAddress, scheduledTime, values, pipe, cancellationToken);
+        return _scheduler.Value.Advanced().ScheduleSendAsync<T>(destinationAddress, dueAt, values, pipe, cancellationToken);
     }
 
-    public Task<ScheduledMessage<T>> ScheduleSend<T>(DateTime scheduledTime, T message, CancellationToken cancellationToken)
+    public Task<ScheduledMessage<T>> ScheduleSendAsync<T>(DateTimeOffset dueAt, T message, CancellationToken cancellationToken)
         where T : class
     {
-        return _scheduler.Value.ScheduleSend(_inputAddress, scheduledTime, message, cancellationToken);
+        return _scheduler.Value.Advanced().ScheduleSendAsync(_inputAddress, dueAt, message, cancellationToken);
     }
 
-    public Task<ScheduledMessage<T>> ScheduleSend<T>(DateTime scheduledTime, T message, IPipe<SendContext<T>> pipe,
+    public Task<ScheduledMessage<T>> ScheduleSendAsync<T>(DateTimeOffset dueAt, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
-        return _scheduler.Value.ScheduleSend(_inputAddress, scheduledTime, message, pipe, cancellationToken);
+        return _scheduler.Value.Advanced().ScheduleSendAsync(_inputAddress, dueAt, message, pipe, cancellationToken);
     }
 
-    public Task<ScheduledMessage<T>> ScheduleSend<T>(DateTime scheduledTime, T message, IPipe<SendContext> pipe,
+    public Task<ScheduledMessage<T>> ScheduleSendAsync<T>(DateTimeOffset dueAt, T message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
-        return _scheduler.Value.ScheduleSend(_inputAddress, scheduledTime, message, pipe, cancellationToken);
+        return _scheduler.Value.Advanced().ScheduleSendAsync(_inputAddress, dueAt, message, pipe, cancellationToken);
     }
 
-    public Task<ScheduledMessage> ScheduleSend(DateTime scheduledTime, object message, CancellationToken cancellationToken)
+    public Task<ScheduledMessage> ScheduleSendAsync(DateTimeOffset dueAt, object message, CancellationToken cancellationToken)
     {
-        return _scheduler.Value.ScheduleSend(_inputAddress, scheduledTime, message, cancellationToken);
+        return _scheduler.Value.Advanced().ScheduleSendAsync(_inputAddress, dueAt, message, cancellationToken);
     }
 
-    public Task<ScheduledMessage> ScheduleSend(DateTime scheduledTime, object message, Type messageType,
+    public Task<ScheduledMessage> ScheduleSendAsync(DateTimeOffset dueAt, object message, Type messageType,
         CancellationToken cancellationToken)
     {
-        return _scheduler.Value.ScheduleSend(_inputAddress, scheduledTime, message, messageType, cancellationToken);
+        return _scheduler.Value.Advanced().ScheduleSendAsync(_inputAddress, dueAt, message, messageType, cancellationToken);
     }
 
-    public Task<ScheduledMessage> ScheduleSend(DateTime scheduledTime, object message, IPipe<SendContext> pipe,
+    public Task<ScheduledMessage> ScheduleSendAsync(DateTimeOffset dueAt, object message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
     {
-        return _scheduler.Value.ScheduleSend(_inputAddress, scheduledTime, message, pipe, cancellationToken);
+        return _scheduler.Value.Advanced().ScheduleSendAsync(_inputAddress, dueAt, message, pipe, cancellationToken);
     }
 
-    public Task<ScheduledMessage> ScheduleSend(DateTime scheduledTime, object message, Type messageType, IPipe<SendContext> pipe,
+    public Task<ScheduledMessage> ScheduleSendAsync(DateTimeOffset dueAt, object message, Type messageType, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
     {
-        return _scheduler.Value.ScheduleSend(_inputAddress, scheduledTime, message, messageType, pipe, cancellationToken);
+        return _scheduler.Value.Advanced().ScheduleSendAsync(_inputAddress, dueAt, message, messageType, pipe, cancellationToken);
     }
 
-    public Task<ScheduledMessage<T>> ScheduleSend<T>(DateTime scheduledTime, object values, CancellationToken cancellationToken)
+    public Task<ScheduledMessage<T>> ScheduleSendAsync<T>(DateTimeOffset dueAt, object values, CancellationToken cancellationToken)
         where T : class
     {
-        return _scheduler.Value.ScheduleSend<T>(_inputAddress, scheduledTime, values, cancellationToken);
+        return _scheduler.Value.Advanced().ScheduleSendAsync<T>(_inputAddress, dueAt, values, cancellationToken);
     }
 
-    public Task<ScheduledMessage<T>> ScheduleSend<T>(DateTime scheduledTime, object values, IPipe<SendContext<T>> pipe,
-        CancellationToken cancellationToken)
-        where T : class
-    {
-        return _scheduler.Value.ScheduleSend(_inputAddress, scheduledTime, values, pipe, cancellationToken);
-    }
-
-    public Task<ScheduledMessage<T>> ScheduleSend<T>(DateTime scheduledTime, object values, IPipe<SendContext> pipe,
+    public Task<ScheduledMessage<T>> ScheduleSendAsync<T>(DateTimeOffset dueAt, object values, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
-        return _scheduler.Value.ScheduleSend<T>(_inputAddress, scheduledTime, values, pipe, cancellationToken);
+        return _scheduler.Value.Advanced().ScheduleSendAsync(_inputAddress, dueAt, values, pipe, cancellationToken);
     }
 
-    Task IMessageScheduler.CancelScheduledSend(Uri destinationAddress, Guid tokenId, CancellationToken cancellationToken)
-    {
-        return _scheduler.Value.CancelScheduledSend(destinationAddress, tokenId, cancellationToken);
-    }
-
-    public Task<ScheduledMessage<T>> SchedulePublish<T>(DateTime scheduledTime, T message, CancellationToken cancellationToken)
-        where T : class
-    {
-        return _scheduler.Value.SchedulePublish(scheduledTime, message, cancellationToken);
-    }
-
-    public Task<ScheduledMessage<T>> SchedulePublish<T>(DateTime scheduledTime, T message, IPipe<SendContext<T>> pipe,
+    public Task<ScheduledMessage<T>> ScheduleSendAsync<T>(DateTimeOffset dueAt, object values, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
-        return _scheduler.Value.SchedulePublish(scheduledTime, message, pipe, cancellationToken);
+        return _scheduler.Value.Advanced().ScheduleSendAsync<T>(_inputAddress, dueAt, values, pipe, cancellationToken);
     }
 
-    public Task<ScheduledMessage<T>> SchedulePublish<T>(DateTime scheduledTime, T message, IPipe<SendContext> pipe,
+    Task Advanced.IAdvancedMessageScheduler.CancelScheduledSendAsync(Uri destinationAddress, Guid tokenId, CancellationToken cancellationToken)
+    {
+        return _scheduler.Value.Advanced().CancelScheduledSendAsync(destinationAddress, tokenId, cancellationToken);
+    }
+
+    public Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, T message, CancellationToken cancellationToken)
+        where T : class
+    {
+        return _scheduler.Value.Advanced().SchedulePublishAsync(dueAt, message, cancellationToken);
+    }
+
+    public Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
-        return _scheduler.Value.SchedulePublish(scheduledTime, message, pipe, cancellationToken);
+        return _scheduler.Value.Advanced().SchedulePublishAsync(dueAt, message, pipe, cancellationToken);
     }
 
-    public Task<ScheduledMessage> SchedulePublish(DateTime scheduledTime, object message, CancellationToken cancellationToken)
-    {
-        return _scheduler.Value.SchedulePublish(scheduledTime, message, cancellationToken);
-    }
-
-    public Task<ScheduledMessage> SchedulePublish(DateTime scheduledTime, object message, Type messageType, CancellationToken cancellationToken)
-    {
-        return _scheduler.Value.SchedulePublish(scheduledTime, message, messageType, cancellationToken);
-    }
-
-    public Task<ScheduledMessage> SchedulePublish(DateTime scheduledTime, object message, IPipe<SendContext> pipe,
-        CancellationToken cancellationToken)
-    {
-        return _scheduler.Value.SchedulePublish(scheduledTime, message, pipe, cancellationToken);
-    }
-
-    public Task<ScheduledMessage> SchedulePublish(DateTime scheduledTime, object message, Type messageType, IPipe<SendContext> pipe,
-        CancellationToken cancellationToken)
-    {
-        return _scheduler.Value.SchedulePublish(scheduledTime, message, messageType, pipe, cancellationToken);
-    }
-
-    public Task<ScheduledMessage<T>> SchedulePublish<T>(DateTime scheduledTime, object values, CancellationToken cancellationToken)
-        where T : class
-    {
-        return _scheduler.Value.SchedulePublish<T>(scheduledTime, values, cancellationToken);
-    }
-
-    public Task<ScheduledMessage<T>> SchedulePublish<T>(DateTime scheduledTime, object values, IPipe<SendContext<T>> pipe,
+    public Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, T message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
-        return _scheduler.Value.SchedulePublish(scheduledTime, values, pipe, cancellationToken);
+        return _scheduler.Value.Advanced().SchedulePublishAsync(dueAt, message, pipe, cancellationToken);
     }
 
-    public Task<ScheduledMessage<T>> SchedulePublish<T>(DateTime scheduledTime, object values, IPipe<SendContext> pipe,
+    public Task<ScheduledMessage> SchedulePublishAsync(DateTimeOffset dueAt, object message, CancellationToken cancellationToken)
+    {
+        return _scheduler.Value.Advanced().SchedulePublishAsync(dueAt, message, cancellationToken);
+    }
+
+    public Task<ScheduledMessage> SchedulePublishAsync(DateTimeOffset dueAt, object message, Type messageType, CancellationToken cancellationToken)
+    {
+        return _scheduler.Value.Advanced().SchedulePublishAsync(dueAt, message, messageType, cancellationToken);
+    }
+
+    public Task<ScheduledMessage> SchedulePublishAsync(DateTimeOffset dueAt, object message, IPipe<SendContext> pipe,
+        CancellationToken cancellationToken)
+    {
+        return _scheduler.Value.Advanced().SchedulePublishAsync(dueAt, message, pipe, cancellationToken);
+    }
+
+    public Task<ScheduledMessage> SchedulePublishAsync(DateTimeOffset dueAt, object message, Type messageType, IPipe<SendContext> pipe,
+        CancellationToken cancellationToken)
+    {
+        return _scheduler.Value.Advanced().SchedulePublishAsync(dueAt, message, messageType, pipe, cancellationToken);
+    }
+
+    public Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, object values, CancellationToken cancellationToken)
+        where T : class
+    {
+        return _scheduler.Value.Advanced().SchedulePublishAsync<T>(dueAt, values, cancellationToken);
+    }
+
+    public Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, object values, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
-        return _scheduler.Value.SchedulePublish<T>(scheduledTime, values, pipe, cancellationToken);
+        return _scheduler.Value.Advanced().SchedulePublishAsync(dueAt, values, pipe, cancellationToken);
     }
 
-    public Task CancelScheduledPublish<T>(Guid tokenId, CancellationToken cancellationToken)
+    public Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, object values, IPipe<SendContext> pipe,
+        CancellationToken cancellationToken)
         where T : class
     {
-        return _scheduler.Value.CancelScheduledPublish<T>(tokenId, cancellationToken);
+        return _scheduler.Value.Advanced().SchedulePublishAsync<T>(dueAt, values, pipe, cancellationToken);
     }
 
-    public Task CancelScheduledPublish(Type messageType, Guid tokenId, CancellationToken cancellationToken)
+    public Task CancelScheduledPublishAsync<T>(Guid tokenId, CancellationToken cancellationToken)
+        where T : class
     {
-        return _scheduler.Value.CancelScheduledPublish(messageType, tokenId, cancellationToken);
+        return _scheduler.Value.Advanced().CancelScheduledPublishAsync<T>(tokenId, cancellationToken);
+    }
+
+    public Task CancelScheduledPublishAsync(Type messageType, Guid tokenId, CancellationToken cancellationToken)
+    {
+        return _scheduler.Value.Advanced().CancelScheduledPublishAsync(messageType, tokenId, cancellationToken);
     }
 }

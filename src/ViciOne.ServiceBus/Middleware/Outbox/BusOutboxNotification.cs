@@ -23,7 +23,7 @@ public class BusOutboxNotification<TScope> :
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
     }
 
-    public async Task WaitForDelivery(CancellationToken cancellationToken)
+    public async Task WaitForDeliveryAsync(CancellationToken cancellationToken)
     {
         CancellationTokenSource signal;
         lock (_lock)

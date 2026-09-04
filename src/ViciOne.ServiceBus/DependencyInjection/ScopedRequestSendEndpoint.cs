@@ -17,13 +17,13 @@ public class ScopedRequestSendEndpoint<TRequest> :
         _serviceProvider = serviceProvider;
     }
 
-    public Task<TRequest> Send(Guid requestId, object values, IPipe<SendContext<TRequest>> pipe, CancellationToken cancellationToken)
+    public Task<TRequest> SendAsync(Guid requestId, object values, IPipe<SendContext<TRequest>> pipe, CancellationToken cancellationToken)
     {
-        return _endpoint.Send(requestId, values, new ScopedSendPipeAdapter<TRequest>(_serviceProvider, pipe), cancellationToken);
+        return _endpoint.SendAsync(requestId, values, new ScopedSendPipeAdapter<TRequest>(_serviceProvider, pipe), cancellationToken);
     }
 
-    public Task Send(Guid requestId, TRequest message, IPipe<SendContext<TRequest>> pipe, CancellationToken cancellationToken)
+    public Task SendAsync(Guid requestId, TRequest message, IPipe<SendContext<TRequest>> pipe, CancellationToken cancellationToken)
     {
-        return _endpoint.Send(requestId, message, new ScopedSendPipeAdapter<TRequest>(_serviceProvider, pipe), cancellationToken);
+        return _endpoint.SendAsync(requestId, message, new ScopedSendPipeAdapter<TRequest>(_serviceProvider, pipe), cancellationToken);
     }
 }

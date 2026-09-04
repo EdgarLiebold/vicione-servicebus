@@ -20,7 +20,8 @@ public class InputHeaderInitializerInspector<TMessage, TInput, TProperty> :
         if (builder.IsInputPropertyUsed(_propertyInfo.Name))
             return false;
 
-        if (convention.TryGetHeadersInitializer<TMessage, TInput, TProperty>(_propertyInfo, out IHeaderInitializer<TMessage, TInput> initializer))
+        if (convention.TryGetHeadersInitializer<TMessage, TInput, TProperty>(_propertyInfo,
+                out IHeaderInitializer<TMessage, TInput>? initializer))
         {
             builder.Add(initializer);
 

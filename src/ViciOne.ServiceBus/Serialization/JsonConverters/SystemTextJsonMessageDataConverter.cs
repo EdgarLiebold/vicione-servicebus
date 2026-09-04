@@ -18,7 +18,7 @@ public class SystemTextJsonMessageDataConverter :
         return typeToConvert.ClosesGenericType(typeof(MessageData<>));
     }
 
-    public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
+    public override JsonConverter? CreateConverter(Type typeToConvert, JsonSerializerOptions options)
     {
         if (!typeToConvert.TryGetSingleClosedGenericArguments(typeof(MessageData<>), out Type[] types))
             return null;
@@ -28,10 +28,10 @@ public class SystemTextJsonMessageDataConverter :
         if (elementType == typeof(string)
             || elementType == typeof(byte[])
             || elementType == typeof(Stream))
-            return (JsonConverter)Activator.CreateInstance(typeof(MessageDataConverter<>).MakeGenericType(types));
+            return (JsonConverter)(Activator.CreateInstance(typeof(MessageDataConverter<>).MakeGenericType(types)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
         if (TypeMetadataCache.IsValidMessageDataType(elementType))
-            return (JsonConverter)Activator.CreateInstance(typeof(MessageDataObjectConverter<>).MakeGenericType(types));
+            return (JsonConverter)(Activator.CreateInstance(typeof(MessageDataObjectConverter<>).MakeGenericType(types)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
         throw new MessageDataException("The message data type is not supported: " + TypeCache.GetShortName(elementType));
     }

@@ -11,7 +11,7 @@ public interface IHeaderInitializer<in TMessage, in TInput>
     where TMessage : class
     where TInput : class
 {
-    Task Apply(InitializeContext<TMessage, TInput> context, SendContext sendContext);
+    Task ApplyAsync(InitializeContext<TMessage, TInput> context, SendContext sendContext, CancellationToken cancellationToken = default);
 }
 
 
@@ -22,5 +22,5 @@ public interface IHeaderInitializer<in TMessage, in TInput>
 public interface IHeaderInitializer<in TMessage>
     where TMessage : class
 {
-    Task Apply(InitializeContext<TMessage> context, SendContext sendContext);
+    Task ApplyAsync(InitializeContext<TMessage> context, SendContext sendContext, CancellationToken cancellationToken = default);
 }

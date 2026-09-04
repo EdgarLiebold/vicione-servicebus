@@ -8,7 +8,7 @@ public sealed class ListPropertyConverterTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-INITIALIZER-LIST-CONVERSION", "enumerable-and-array")]
-    public async Task ListProperties_PreserveEnumerableAndArrayValuesInOrder()
+    public async Task ListProperties_PreserveEnumerableAndArrayValuesInOrderAsync()
     {
         var source = new
         {
@@ -16,7 +16,7 @@ public sealed class ListPropertyConverterTests
             Names = new[] { "Frank", "Estelle" },
         };
 
-        InitializeContext<ListMessage> context = await MessageInitializerCache<ListMessage>.Initialize(
+        InitializeContext<ListMessage> context = await MessageInitializerCache<ListMessage>.InitializeAsync(
             source,
             TestContext.Current.CancellationToken);
 

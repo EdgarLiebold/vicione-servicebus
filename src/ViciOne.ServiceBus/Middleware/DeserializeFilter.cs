@@ -29,16 +29,16 @@ public class DeserializeFilter :
     }
 
     [DebuggerNonUserCode]
-    public async Task Send(ReceiveContext context, IPipe<ReceiveContext> next)
+    public async Task SendAsync(ReceiveContext context, IPipe<ReceiveContext> next)
     {
-        if (!context.TryGetPayload(out ConsumeContext consumeContext))
+        if (!context.TryGetPayload(out ConsumeContext? consumeContext))
             consumeContext = _serializers.GetMessageDeserializer(context.ContentType).Deserialize(context);
 
         Activity.Current?.AddConsumeContextTags(consumeContext);
 
-        await _output.Send(consumeContext).ConfigureAwait(false);
+        await _output.SendAsync(consumeContext).ConfigureAwait(false);
 
-        await next.Send(context).ConfigureAwait(false);
+        await next.SendAsync(context).ConfigureAwait(false);
 
         await consumeContext.ConsumeCompleted.ConfigureAwait(false);
     }

@@ -63,7 +63,7 @@ public abstract class BaseSendTransportContext :
         PayloadAdmissionTransportBoundary.Apply(_hostConfiguration, context);
     }
 
-    public abstract Task<SendContext<T>> CreateSendContext<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    public abstract Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class;
 
     public ConnectHandle ConnectSendObserver(ISendObserver observer)

@@ -22,32 +22,32 @@ public class ServiceBusScheduleMessageProvider :
         _sendEndpointProvider = context;
     }
 
-    public async Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, T message, IPipe<SendContext<T>> pipe,
+    public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
         if (!MessageTypeCache<T>.IsValidMessageType)
             throw new ArgumentException(MessageTypeCache<T>.InvalidMessageTypeReason, nameof(T));
 
-        var scheduleMessagePipe = new ScheduleSendPipe<T>(pipe, scheduledTime);
+        var scheduleMessagePipe = new ScheduleSendPipe<T>(pipe, dueAt);
 
-        var endpoint = await _sendEndpointProvider.GetSendEndpoint(destinationAddress).ConfigureAwait(false);
+        var endpoint = await _sendEndpointProvider.GetSendEndpointAsync(destinationAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        await endpoint.Send(message, scheduleMessagePipe, cancellationToken).ConfigureAwait(false);
+        await endpoint.SendAsync(message, scheduleMessagePipe, cancellationToken).ConfigureAwait(false);
 
-        return new ScheduledMessageHandle<T>(scheduleMessagePipe.ScheduledMessageId ?? NewId.NextGuid(), scheduledTime, destinationAddress, message);
+        return new ScheduledMessageHandle<T>(scheduleMessagePipe.ScheduledMessageId ?? NewId.NextGuid(), dueAt, destinationAddress, message);
     }
 
-    public Task CancelScheduledSend(Guid tokenId, CancellationToken cancellationToken)
+    public Task CancelScheduledSendAsync(Guid tokenId, CancellationToken cancellationToken)
     {
-        return Task.CompletedTask;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
     }
 
-    public async Task CancelScheduledSend(Uri destinationAddress, Guid tokenId, CancellationToken cancellationToken)
+    public async Task CancelScheduledSendAsync(Uri destinationAddress, Guid tokenId, CancellationToken cancellationToken)
     {
-        var endpoint = await _sendEndpointProvider.GetSendEndpoint(destinationAddress).ConfigureAwait(false);
+        var endpoint = await _sendEndpointProvider.GetSendEndpointAsync(destinationAddress, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        await endpoint.Send<CancelScheduledMessage>(new
+        await endpoint.SendAsync<CancelScheduledMessage>(new
         {
             InVar.Timestamp,
             TokenId = tokenId

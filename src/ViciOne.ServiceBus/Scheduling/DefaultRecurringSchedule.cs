@@ -11,7 +11,8 @@ public abstract class DefaultRecurringSchedule :
         timeProvider ??= TimeProvider.System;
 
         ScheduleId = TypeCache.GetShortName(GetType());
-        ScheduleGroup = GetType().Assembly.FullName.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)[0];
+        ScheduleGroup = GetType().Assembly.GetName().Name
+            ?? throw new InvalidOperationException("The schedule assembly name is not available.");
 
         TimeZoneId = timeProvider.LocalTimeZone.Id;
         StartTime = timeProvider.GetLocalNow();
@@ -23,6 +24,6 @@ public abstract class DefaultRecurringSchedule :
     public DateTimeOffset? EndTime { get; protected set; }
     public string ScheduleId { get; protected set; }
     public string ScheduleGroup { get; protected set; }
-    public string CronExpression { get; protected set; }
-    public string Description { get; protected set; }
+    public string CronExpression { get; protected set; } = null!;
+    public string Description { get; protected set; } = null!;
 }

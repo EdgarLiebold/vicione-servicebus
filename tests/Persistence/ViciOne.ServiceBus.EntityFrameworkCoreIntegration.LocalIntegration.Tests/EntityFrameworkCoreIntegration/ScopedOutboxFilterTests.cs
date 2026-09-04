@@ -14,12 +14,12 @@ public sealed class ScopedOutboxFilterTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-SCOPED-FILTER", "consume-outbox-publish-filter-retains-originating-scope")]
-    public async Task ConsumeOutboxPublishFilter_UsesTheExactConsumerScope()
+    public async Task ConsumeOutboxPublishFilter_UsesTheExactConsumerScopeAsync()
     {
         await using ScopedOutboxFixture fixture = await ScopedOutboxFixture.CreateAsync();
         Guid correlationId = Guid.NewGuid();
 
-        await fixture.Harness.Bus.Publish(
+        await fixture.Harness.Bus.PublishAsync(
             new PublishFromConsumeScope(correlationId),
             context => context.MessageId = Guid.NewGuid(),
             fixture.CancellationToken);
@@ -42,7 +42,7 @@ public sealed class ScopedOutboxFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-SCOPED-FILTER", "bus-outbox-send-filter-retains-originating-scope")]
-    public async Task BusOutboxSendFilter_UsesTheExactApplicationScope()
+    public async Task BusOutboxSendFilter_UsesTheExactApplicationScopeAsync()
     {
         await using ScopedOutboxFixture fixture = await ScopedOutboxFixture.CreateAsync();
         Guid correlationId = Guid.NewGuid();
@@ -54,9 +54,9 @@ public sealed class ScopedOutboxFilterTests
             var dbContext = scope.ServiceProvider.GetRequiredService<ScopedOutboxDbContext>();
             var endpointProvider = scope.ServiceProvider.GetRequiredService<ISendEndpointProvider>();
             Uri destination = fixture.Harness.GetConsumerAddress<ScopedSendConsumer>();
-            ISendEndpoint endpoint = await endpointProvider.GetSendEndpoint(destination);
+            ISendEndpoint endpoint = await endpointProvider.GetSendEndpointAsync(destination, TestContext.Current.CancellationToken);
 
-            await endpoint.Send(
+            await endpoint.SendAsync(
                 new ScopedSendCommand(correlationId, expectedScopeId),
                 context => context.MessageId = Guid.NewGuid(),
                 fixture.CancellationToken);
@@ -90,14 +90,14 @@ public sealed class ScopedOutboxFilterTests
 
     public sealed class PublishFromOutboxConsumer(ScopeIdentity scopeIdentity) : IConsumer<PublishFromConsumeScope>
     {
-        public Task Consume(ConsumeContext<PublishFromConsumeScope> context) => context.Publish(
+        public Task ConsumeAsync(ConsumeContext<PublishFromConsumeScope> context) => context.Advanced().PublishAsync(
             new ScopedPublishedEvent(context.Message.CorrelationId, scopeIdentity.Value),
             context.CancellationToken);
     }
 
     public sealed class ScopedPublishedEventConsumer(ScopedDeliveryProbe deliveries) : IConsumer<ScopedPublishedEvent>
     {
-        public Task Consume(ConsumeContext<ScopedPublishedEvent> context)
+        public Task ConsumeAsync(ConsumeContext<ScopedPublishedEvent> context)
         {
             deliveries.RecordPublished(context.Message);
             return Task.CompletedTask;
@@ -106,7 +106,7 @@ public sealed class ScopedOutboxFilterTests
 
     public sealed class ScopedSendConsumer(ScopedDeliveryProbe deliveries) : IConsumer<ScopedSendCommand>
     {
-        public Task Consume(ConsumeContext<ScopedSendCommand> context)
+        public Task ConsumeAsync(ConsumeContext<ScopedSendCommand> context)
         {
             deliveries.RecordSent(context.Message);
             return Task.CompletedTask;
@@ -127,7 +127,7 @@ public sealed class ScopedOutboxFilterTests
         ScopedFilterProbe filters) : IFilter<PublishContext<T>>
         where T : class
     {
-        public Task Send(PublishContext<T> context, IPipe<PublishContext<T>> next)
+        public Task SendAsync(PublishContext<T> context, IPipe<PublishContext<T>> next)
         {
             if (context.Message is ScopedPublishedEvent message)
             {
@@ -138,7 +138,7 @@ public sealed class ScopedOutboxFilterTests
                     consumeContextProvider.HasContext));
             }
 
-            return next.Send(context);
+            return next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("scopedOutboxPublishFilter");
@@ -150,7 +150,7 @@ public sealed class ScopedOutboxFilterTests
         ScopedFilterProbe filters) : IFilter<SendContext<T>>
         where T : class
     {
-        public Task Send(SendContext<T> context, IPipe<SendContext<T>> next)
+        public Task SendAsync(SendContext<T> context, IPipe<SendContext<T>> next)
         {
             if (context.Message is ScopedSendCommand message)
             {
@@ -161,7 +161,7 @@ public sealed class ScopedOutboxFilterTests
                     consumeContextProvider.HasContext));
             }
 
-            return next.Send(context);
+            return next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("scopedOutboxSendFilter");
@@ -337,7 +337,7 @@ public sealed class ScopedOutboxFilterTests
                     ValidateOnBuild = true,
                     ValidateScopes = true,
                 });
-                ITestHarness harness = await provider.StartTestHarness().WaitAsync(operationTimeout, cancellationToken);
+                ITestHarness harness = await provider.StartTestHarnessAsync().WaitAsync(operationTimeout, cancellationToken);
                 return new ScopedOutboxFixture(
                     database,
                     provider,
@@ -358,7 +358,7 @@ public sealed class ScopedOutboxFilterTests
 
         public async ValueTask DisposeAsync()
         {
-            await Harness.Stop(CancellationToken.None).WaitAsync(OperationTimeout, CancellationToken.None);
+            await Harness.StopAsync(CancellationToken.None).WaitAsync(OperationTimeout, CancellationToken.None);
             await Services.DisposeAsync();
             await _database.DisposeAsync();
         }

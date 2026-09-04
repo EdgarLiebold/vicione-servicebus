@@ -17,5 +17,5 @@ public interface TransformPropertyContext<out TProperty, out TMessage> :
     /// <summary>
     /// The value
     /// </summary>
-    TProperty Value { get; }
+    TProperty? Value { get; }
 }

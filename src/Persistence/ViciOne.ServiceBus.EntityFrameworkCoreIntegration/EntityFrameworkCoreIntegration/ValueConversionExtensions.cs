@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
 public static class ValueConversionExtensions
 {
     public static PropertyBuilder<T> HasJsonConversion<T>(this PropertyBuilder<T> builder)
-        where T : class
+        where T : class?
     {
         var converter = new JsonValueConverter<T>();
         var comparer = new JsonValueComparer<T>();

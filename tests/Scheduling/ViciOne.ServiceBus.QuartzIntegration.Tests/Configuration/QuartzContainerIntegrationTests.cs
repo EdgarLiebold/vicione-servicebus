@@ -12,13 +12,13 @@ namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Configuration;
 [Collection(QuartzIntegrationCollection.Name)]
 public sealed class QuartzContainerIntegrationTests
 {
-    private static readonly DateTime ScheduledTime = new(2100, 2, 3, 4, 5, 6, DateTimeKind.Utc);
+    private static readonly DateTimeOffset DueAt = new(2100, 2, 3, 4, 5, 6, TimeSpan.Zero);
 
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("REQ-VSB-QUARTZ-CONTAINER", "native-di-composition-and-serializer-roundtrip")]
-    public async Task RegisteredQuartzScheduler_DeliversThroughTheConfiguredBus(bool useRawJson)
+    public async Task RegisteredQuartzScheduler_DeliversThroughTheConfiguredBusAsync(bool useRawJson)
     {
         TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -59,8 +59,8 @@ public sealed class QuartzContainerIntegrationTests
             await using AsyncServiceScope scope = provider.CreateAsyncScope();
             IMessageScheduler scheduler = scope.ServiceProvider.GetRequiredService<IMessageScheduler>();
 
-            ScheduledMessage<ContainerPayload> scheduled = await scheduler.SchedulePublish(
-                    ScheduledTime,
+            ScheduledMessage<ContainerPayload> scheduled = await scheduler.SchedulePublishAsync(
+                    DueAt,
                     new ContainerPayload("container-delivery"),
                     Pipe.Execute<SendContext<ContainerPayload>>(context =>
                         context.Headers.Set("tenant", "factory-a")),
@@ -94,7 +94,7 @@ public sealed class QuartzContainerIntegrationTests
 
     public sealed class ContainerPayloadConsumer(ContainerDeliveryProbe probe) : IConsumer<ContainerPayload>
     {
-        public Task Consume(ConsumeContext<ContainerPayload> context)
+        public Task ConsumeAsync(ConsumeContext<ContainerPayload> context)
         {
             probe.Complete(context);
             return Task.CompletedTask;

@@ -13,22 +13,22 @@ public sealed class QuartzJobServiceSuspectAttemptIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-JOB-SERVICE-SUSPECT", "silent-attempt-faults-without-retry")]
-    public async Task SilentAttempt_UsesQuartzStatusChecksAndFaultsWithoutASuspectRetry()
+    public async Task SilentAttempt_UsesQuartzStatusChecksAndFaultsWithoutASuspectRetryAsync()
     {
-        await using SuspectAttemptFixture fixture = await SuspectAttemptFixture.Start(suspectRetryCount: 0);
+        await using SuspectAttemptFixture fixture = await SuspectAttemptFixture.StartAsync(suspectRetryCount: 0);
 
-        Guid acceptedJobId = await fixture.Submit();
+        Guid acceptedJobId = await fixture.SubmitAsync();
         JobAttemptSnapshot firstAttempt = await fixture.Consumer.FirstAttempt
             .WaitAsync(fixture.Timeout, TestContext.Current.CancellationToken);
         SuppressedAttemptFault suppressed = await fixture.Suppression.Completed
             .WaitAsync(fixture.Timeout, TestContext.Current.CancellationToken);
 
-        await fixture.TriggerAllStatusChecks();
+        await fixture.TriggerAllStatusChecksAsync();
 
         JobFaultSnapshot faulted = await fixture.Events.Faulted
             .WaitAsync(fixture.Timeout, TestContext.Current.CancellationToken);
         await fixture.StatusChecks.Completed.WaitAsync(fixture.Timeout, TestContext.Current.CancellationToken);
-        JobState state = await fixture.GetState();
+        JobState state = await fixture.GetStateAsync();
 
         Assert.Equal(fixture.JobId, acceptedJobId);
         Assert.Equal(fixture.JobId, firstAttempt.JobId);
@@ -51,26 +51,26 @@ public sealed class QuartzJobServiceSuspectAttemptIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-JOB-SERVICE-SUSPECT", "retry-ignores-stale-attempt-and-completes")]
-    public async Task SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttempt()
+    public async Task SuspectRetry_IgnoresThePreviousAttemptCompletionAndCompletesTheCurrentAttemptAsync()
     {
-        await using SuspectAttemptFixture fixture = await SuspectAttemptFixture.Start(suspectRetryCount: 1);
+        await using SuspectAttemptFixture fixture = await SuspectAttemptFixture.StartAsync(suspectRetryCount: 1);
 
-        Guid acceptedJobId = await fixture.Submit();
+        Guid acceptedJobId = await fixture.SubmitAsync();
         JobAttemptSnapshot firstAttempt = await fixture.Consumer.FirstAttempt
             .WaitAsync(fixture.Timeout, TestContext.Current.CancellationToken);
         SuppressedAttemptFault suppressed = await fixture.Suppression.Completed
             .WaitAsync(fixture.Timeout, TestContext.Current.CancellationToken);
 
-        await fixture.TriggerAllStatusChecks();
+        await fixture.TriggerAllStatusChecksAsync();
 
         ScheduledMessageSnapshot retrySchedule = await fixture.RetrySchedule.Scheduled
             .WaitAsync(fixture.Timeout, TestContext.Current.CancellationToken);
-        await fixture.Trigger(retrySchedule);
+        await fixture.TriggerAsync(retrySchedule);
         JobAttemptSnapshot retryAttempt = await fixture.Consumer.RetryAttempt
             .WaitAsync(fixture.Timeout, TestContext.Current.CancellationToken);
 
-        await fixture.SendStaleCompletion(firstAttempt);
-        JobState stateWhileRetryRuns = await fixture.GetState();
+        await fixture.SendStaleCompletionAsync(firstAttempt);
+        JobState stateWhileRetryRuns = await fixture.GetStateAsync();
 
         Assert.Equal(fixture.JobId, acceptedJobId);
         Assert.Equal(firstAttempt.AttemptId, suppressed.AttemptId);
@@ -143,7 +143,7 @@ public sealed class QuartzJobServiceSuspectAttemptIntegrationTests
         public ScheduledMessageCapture RetrySchedule { get; }
         public ConsumeCompletionObserver<GetJobAttemptStatus> StatusChecks { get; }
 
-        public static async Task<SuspectAttemptFixture> Start(int suspectRetryCount)
+        public static async Task<SuspectAttemptFixture> StartAsync(int suspectRetryCount)
         {
             TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
                 .GetValidatedOptions()
@@ -153,7 +153,7 @@ public sealed class QuartzJobServiceSuspectAttemptIntegrationTests
             var suppression = new AttemptFaultSuppression(jobId);
             var events = new SuspectTerminalProbe(jobId);
 
-            QuartzTestBus bus = await QuartzJobServiceTestBus.Start<SuspectJob, SilentAttemptConsumer>(
+            QuartzTestBus bus = await QuartzJobServiceTestBus.StartAsync<SuspectJob, SilentAttemptConsumer>(
                 timeout,
                 consumer,
                 static options => options.SetJobTimeout(TimeSpan.FromMinutes(1)),
@@ -190,27 +190,27 @@ public sealed class QuartzJobServiceSuspectAttemptIntegrationTests
                 statusObserver);
         }
 
-        public async Task<Guid> Submit()
+        public async Task<Guid> SubmitAsync()
         {
             IRequestClient<SubmitJob<SuspectJob>> client = _bus.Bus.CreateRequestClient<SubmitJob<SuspectJob>>();
-            return await client.SubmitJob(
+            return await client.SubmitJobAsync(
                     JobId,
                     new SuspectJob("silent-worker"),
                     cancellationToken: TestContext.Current.CancellationToken)
                 .WaitAsync(Timeout, TestContext.Current.CancellationToken);
         }
 
-        public async Task TriggerAllStatusChecks()
+        public async Task TriggerAllStatusChecksAsync()
         {
             for (int index = 0; index < 3; index++)
             {
-                ScheduledMessageSnapshot schedule = await StatusSchedules.At(index)
+                ScheduledMessageSnapshot schedule = await StatusSchedules.AtAsync(index)
                     .WaitAsync(Timeout, TestContext.Current.CancellationToken);
-                await Trigger(schedule);
+                await TriggerAsync(schedule);
             }
         }
 
-        public async Task Trigger(ScheduledMessageSnapshot schedule)
+        public async Task TriggerAsync(ScheduledMessageSnapshot schedule)
         {
             ITrigger trigger = Assert.IsAssignableFrom<ITrigger>(await _bus.Scheduler.GetTrigger(
                 new TriggerKey(schedule.TokenId.ToString("N")),
@@ -218,17 +218,17 @@ public sealed class QuartzJobServiceSuspectAttemptIntegrationTests
             await _bus.Scheduler.TriggerJob(trigger.JobKey, trigger.JobDataMap, TestContext.Current.CancellationToken);
         }
 
-        public async Task<JobState> GetState()
+        public async Task<JobState> GetStateAsync()
         {
             IRequestClient<GetJobState> client = _bus.Bus.CreateRequestClient<GetJobState>();
-            return await client.GetJobState(JobId).WaitAsync(Timeout, TestContext.Current.CancellationToken);
+            return await client.GetJobStateAsync(JobId).WaitAsync(Timeout, TestContext.Current.CancellationToken);
         }
 
-        public async Task SendStaleCompletion(JobAttemptSnapshot attempt)
+        public async Task SendStaleCompletionAsync(JobAttemptSnapshot attempt)
         {
-            ISendEndpoint endpoint = await _bus.Bus.GetSendEndpoint(new Uri("loopback://localhost/job"))
+            ISendEndpoint endpoint = await _bus.Bus.GetSendEndpointAsync(new Uri("loopback://localhost/job"))
                 .WaitAsync(Timeout, TestContext.Current.CancellationToken);
-            await endpoint.Send<JobAttemptCompleted>(new
+            await endpoint.SendAsync<JobAttemptCompleted>(new
             {
                 JobId,
                 AttemptId = attempt.AttemptId,
@@ -265,7 +265,7 @@ public sealed class QuartzJobServiceSuspectAttemptIntegrationTests
 
         public void ReleaseRetry() => _retryRelease.TrySetResult();
 
-        public Task Run(JobContext<SuspectJob> context)
+        public Task RunAsync(JobContext<SuspectJob> context)
         {
             Interlocked.Increment(ref _attemptCount);
             var snapshot = new JobAttemptSnapshot(context.JobId, context.AttemptId, context.RetryAttempt);
@@ -292,13 +292,13 @@ public sealed class QuartzJobServiceSuspectAttemptIntegrationTests
 
         public Task<SuppressedAttemptFault> Completed => _completed.Task;
 
-        public Task Send(ConsumeContext<JobAttemptFaulted> context, IPipe<ConsumeContext<JobAttemptFaulted>> next)
+        public Task SendAsync(ConsumeContext<JobAttemptFaulted> context, IPipe<ConsumeContext<JobAttemptFaulted>> next)
         {
-            string endpoint = context.ReceiveContext.InputAddress.AbsolutePath.Trim('/');
+            string endpoint = context.Advanced().ReceiveContext.InputAddress.AbsolutePath.Trim('/');
             if (TrySuppress(context, endpoint))
                 return Task.CompletedTask;
 
-            return next.Send(context);
+            return next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateScope("job-attempt-fault-suppression");

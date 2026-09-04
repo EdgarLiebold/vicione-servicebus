@@ -10,11 +10,13 @@ public class TextWriterLoggerFactory :
     ILoggerFactory
 {
     readonly TextWriterLoggerOptions _options;
+    readonly TimeProvider _timeProvider;
 
-    public TextWriterLoggerFactory(TextWriter textWriter, IOptions<TextWriterLoggerOptions> options)
+    public TextWriterLoggerFactory(TextWriter textWriter, IOptions<TextWriterLoggerOptions> options, TimeProvider? timeProvider = null)
     {
         Writer = textWriter;
         _options = options.Value;
+        _timeProvider = timeProvider ?? TimeProvider.System;
     }
 
     public TextWriter Writer { get; }
@@ -22,7 +24,7 @@ public class TextWriterLoggerFactory :
     public ILogger CreateLogger(string name)
     {
         if (_options.IsEnabled(name))
-            return new TextWriterLogger(this, _options.LogLevel);
+            return new TextWriterLogger(this, _options.LogLevel, _timeProvider);
 
         return NullLogger.Instance;
     }

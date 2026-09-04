@@ -19,7 +19,7 @@ public sealed class CancellationTokenExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-CANCELLATION-REGISTRATION", "completion-signal")]
-    public async Task RegisterTask_CompletesItsSignalWhenCancellationIsRequested()
+    public async Task RegisterTask_CompletesItsSignalWhenCancellationIsRequestedAsync()
     {
         using var cancellation = new CancellationTokenSource();
         using CancellationTokenRegistration registration =
@@ -34,7 +34,7 @@ public sealed class CancellationTokenExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-CANCELLATION-REGISTRATION", "already-canceled-token")]
-    public async Task RegisterTask_ImmediatelySignalsAnAlreadyCanceledToken()
+    public async Task RegisterTask_ImmediatelySignalsAnAlreadyCanceledTokenAsync()
     {
         using var cancellation = new CancellationTokenSource();
         cancellation.Cancel();

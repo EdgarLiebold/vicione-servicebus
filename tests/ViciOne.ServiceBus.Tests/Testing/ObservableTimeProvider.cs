@@ -81,7 +81,7 @@ internal sealed class ObservableTimeProvider(DateTimeOffset startTime) : TimePro
 
     public void Advance(TimeSpan elapsed) => _inner.Advance(elapsed);
 
-    public Task WaitForTimerCount(int count)
+    public Task WaitForTimerCountAsync(int count)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count);
 
@@ -100,7 +100,7 @@ internal sealed class ObservableTimeProvider(DateTimeOffset startTime) : TimePro
         }
     }
 
-    public Task WaitForChangeCount(int count)
+    public Task WaitForChangeCountAsync(int count)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count);
 

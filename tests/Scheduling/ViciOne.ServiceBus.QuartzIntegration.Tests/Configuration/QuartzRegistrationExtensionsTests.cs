@@ -10,7 +10,7 @@ public sealed class QuartzRegistrationExtensionsTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-REGISTRATION", "default-services-and-configured-endpoint")]
-    public async Task AddQuartzConsumers_RegistersOneClockAndTheConfiguredEndpointOptions()
+    public async Task AddQuartzConsumers_RegistersOneClockAndTheConfiguredEndpointOptionsAsync()
     {
         var services = new ServiceCollection();
         services.AddViciOneServiceBus(configuration =>
@@ -25,7 +25,7 @@ public sealed class QuartzRegistrationExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-REGISTRATION", "application-clock-is-preserved")]
-    public async Task AddQuartzConsumers_PreservesAnApplicationOwnedTimeProvider()
+    public async Task AddQuartzConsumers_PreservesAnApplicationOwnedTimeProviderAsync()
     {
         var timeProvider = new FakeTimeProvider(new DateTimeOffset(2042, 2, 3, 4, 5, 6, TimeSpan.Zero));
         var services = new ServiceCollection();

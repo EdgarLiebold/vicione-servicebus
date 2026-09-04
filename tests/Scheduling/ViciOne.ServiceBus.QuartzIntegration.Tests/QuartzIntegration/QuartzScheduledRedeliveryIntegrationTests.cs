@@ -14,13 +14,13 @@ public sealed class QuartzScheduledRedeliveryIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-REDELIVERY-CANCELLATION", "nonrequested-dependency-cancellation-is-redelivered")]
-    public async Task NonrequestedDependencyCancellation_IsClassifiedAndRedelivered()
+    public async Task NonrequestedDependencyCancellation_IsClassifiedAndRedeliveredAsync()
     {
         TimeSpan timeout = OperationTimeout();
         var delivered = new TaskCompletionSource<RedeliveryObservation>(
             TaskCreationOptions.RunContinuationsAsynchronously);
         var attempts = 0;
-        await using QuartzTestBus fixture = await QuartzTestBus.Start(
+        await using QuartzTestBus fixture = await QuartzTestBus.StartAsync(
             timeout,
             configure: configurator => configurator.ReceiveEndpoint("quartz-redelivery-input", endpoint =>
             {
@@ -34,17 +34,16 @@ public sealed class QuartzScheduledRedeliveryIntegrationTests
                 endpoint.Handler<RedeliveryPayload>(context =>
                 {
                     delivered.TrySetResult(new RedeliveryObservation(
-                        context.GetRedeliveryCount(),
+                        context.Advanced().GetRedeliveryCount(),
                         context.CancellationToken.IsCancellationRequested));
                     return Task.CompletedTask;
                 });
             }));
         var scheduledCommand = new ConsumeCompletionObserver<ScheduleMessage>(_ => true);
         using ConnectHandle observer = fixture.Bus.ConnectConsumeObserver(scheduledCommand);
-        ISendEndpoint input = await fixture.Bus.GetSendEndpoint(InputAddress)
-            .WaitAsync(timeout, TestContext.Current.CancellationToken);
+        ISendEndpoint input = await fixture.Bus.GetSendEndpointAsync(InputAddress, TestContext.Current.CancellationToken).WaitAsync(timeout, TestContext.Current.CancellationToken);
 
-        await input.Send(new RedeliveryPayload("redeliver"), TestContext.Current.CancellationToken);
+        await input.SendAsync(new RedeliveryPayload("redeliver"), TestContext.Current.CancellationToken);
         await scheduledCommand.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
         RedeliveryObservation received = await delivered.Task
             .WaitAsync(timeout, TestContext.Current.CancellationToken);
@@ -56,7 +55,7 @@ public sealed class QuartzScheduledRedeliveryIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-REDELIVERY-INTERVALS", "configured-sequence-is-scheduled-in-order")]
-    public async Task ScheduledRedelivery_UsesEveryConfiguredIntervalInOrder()
+    public async Task ScheduledRedelivery_UsesEveryConfiguredIntervalInOrderAsync()
     {
         TimeSpan timeout = OperationTimeout();
         TimeSpan[] intervals = [
@@ -64,36 +63,35 @@ public sealed class QuartzScheduledRedeliveryIntegrationTests
             TimeSpan.FromSeconds(2),
             TimeSpan.FromSeconds(5),
         ];
-        var attemptTimes = new ConcurrentQueue<DateTime>();
+        var attemptTimes = new ConcurrentQueue<DateTimeOffset>();
         var delivered = new TaskCompletionSource<int>(
             TaskCreationOptions.RunContinuationsAsynchronously);
         var attempts = 0;
-        await using QuartzTestBus fixture = await QuartzTestBus.Start(
+        await using QuartzTestBus fixture = await QuartzTestBus.StartAsync(
             timeout,
             configure: configurator => configurator.ReceiveEndpoint("quartz-redelivery-input", endpoint =>
             {
                 endpoint.UseScheduledRedelivery(redelivery => redelivery.Intervals(intervals));
                 endpoint.Handler<RedeliveryPayload>(context =>
                 {
-                    attemptTimes.Enqueue(TimeProvider.System.GetUtcNow().UtcDateTime);
+                    attemptTimes.Enqueue(TimeProvider.System.GetUtcNow());
                     if (Interlocked.Increment(ref attempts) <= intervals.Length)
                         throw new ExpectedRedeliveryException();
 
-                    delivered.TrySetResult(context.GetRedeliveryCount());
+                    delivered.TrySetResult(context.Advanced().GetRedeliveryCount());
                     return Task.CompletedTask;
                 });
             }));
         var schedules = new ScheduledSequenceObserver(intervals.Length);
         using ConnectHandle observer = fixture.Bus.ConnectConsumeObserver(schedules);
-        ISendEndpoint input = await fixture.Bus.GetSendEndpoint(InputAddress)
-            .WaitAsync(timeout, TestContext.Current.CancellationToken);
+        ISendEndpoint input = await fixture.Bus.GetSendEndpointAsync(InputAddress, TestContext.Current.CancellationToken).WaitAsync(timeout, TestContext.Current.CancellationToken);
 
-        await input.Send(new RedeliveryPayload("intervals"), TestContext.Current.CancellationToken);
+        await input.SendAsync(new RedeliveryPayload("intervals"), TestContext.Current.CancellationToken);
         await schedules.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);
         int receivedRedeliveryCount = await delivered.Task
             .WaitAsync(timeout, TestContext.Current.CancellationToken);
-        DateTime[] attemptsSnapshot = attemptTimes.ToArray();
-        DateTime[] scheduledTimes = schedules.ScheduledTimes;
+        DateTimeOffset[] attemptsSnapshot = attemptTimes.ToArray();
+        DateTimeOffset[] scheduledTimes = schedules.ScheduledTimes;
 
         Assert.Equal(intervals.Length + 1, attemptsSnapshot.Length);
         Assert.Equal(intervals.Length, scheduledTimes.Length);
@@ -111,19 +109,19 @@ public sealed class QuartzScheduledRedeliveryIntegrationTests
 
     private sealed class ScheduledSequenceObserver(int expectedCount) : IConsumeObserver
     {
-        private readonly ConcurrentQueue<DateTime> _scheduledTimes = new();
+        private readonly ConcurrentQueue<DateTimeOffset> _scheduledTimes = new();
         private readonly TaskCompletionSource _completed = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
         public Task Completed => _completed.Task;
-        public DateTime[] ScheduledTimes => _scheduledTimes.ToArray();
+        public DateTimeOffset[] ScheduledTimes => _scheduledTimes.ToArray();
 
-        public Task PreConsume<T>(ConsumeContext<T> context) where T : class => Task.CompletedTask;
+        public Task PreConsumeAsync<T>(ConsumeContext<T> context) where T : class => Task.CompletedTask;
 
-        public Task PostConsume<T>(ConsumeContext<T> context) where T : class
+        public Task PostConsumeAsync<T>(ConsumeContext<T> context) where T : class
         {
             if (context.Message is ScheduleMessage message)
             {
-                _scheduledTimes.Enqueue(message.ScheduledTime);
+                _scheduledTimes.Enqueue(message.DueAt);
                 if (_scheduledTimes.Count == expectedCount)
                     _completed.TrySetResult();
             }
@@ -131,7 +129,7 @@ public sealed class QuartzScheduledRedeliveryIntegrationTests
             return Task.CompletedTask;
         }
 
-        public Task ConsumeFault<T>(ConsumeContext<T> context, Exception exception) where T : class
+        public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, Exception exception) where T : class
         {
             if (context.Message is ScheduleMessage)
                 _completed.TrySetException(exception);

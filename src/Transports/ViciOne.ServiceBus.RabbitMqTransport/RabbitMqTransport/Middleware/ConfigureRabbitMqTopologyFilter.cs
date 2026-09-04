@@ -26,13 +26,13 @@ public class ConfigureRabbitMqTopologyFilter<TSettings> :
         _brokerTopology = brokerTopology;
     }
 
-    public async Task Send(ChannelContext context, IPipe<ChannelContext> next)
+    public async Task SendAsync(ChannelContext context, IPipe<ChannelContext> next)
     {
-        OneTimeContext<ConfigureTopologyContext<TSettings>> oneTimeContext = await Configure(context, context.CancellationToken);
+        OneTimeContext<ConfigureTopologyContext<TSettings>> oneTimeContext = await ConfigureAsync(context, context.CancellationToken);
 
         try
         {
-            await next.Send(context).ConfigureAwait(false);
+            await next.SendAsync(context).ConfigureAwait(false);
         }
         catch (Exception)
         {
@@ -50,13 +50,13 @@ public class ConfigureRabbitMqTopologyFilter<TSettings> :
         _brokerTopology.Probe(scope);
     }
 
-    public async Task<OneTimeContext<ConfigureTopologyContext<TSettings>>> Configure(ChannelContext context, CancellationToken cancellationToken)
+    public async Task<OneTimeContext<ConfigureTopologyContext<TSettings>>> ConfigureAsync(ChannelContext context, CancellationToken cancellationToken)
     {
-        return await context.OneTimeSetup<ConfigureTopologyContext<TSettings>>(() =>
+        return await context.OneTimeSetupAsync<ConfigureTopologyContext<TSettings>>(() =>
         {
             context.GetOrAddPayload(() => _settings);
-            return ConfigureTopology(context, cancellationToken);
-        }).ConfigureAwait(false);
+            return ConfigureTopologyAsync(context, cancellationToken);
+        }, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -74,27 +74,29 @@ public class ConfigureRabbitMqTopologyFilter<TSettings> :
     /// holds a lease, so the channel is not disposed underneath it.
     /// </para>
     /// </summary>
-    async Task ConfigureTopology(ChannelContext context, CancellationToken cancellationToken)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="context">The context for the operation.</param>
+    async Task ConfigureTopologyAsync(ChannelContext context, CancellationToken cancellationToken)
     {
         foreach (var queue in _brokerTopology.Queues)
-            await Declare(context, queue, cancellationToken).ConfigureAwait(false);
+            await DeclareAsync(context, queue, cancellationToken).ConfigureAwait(false);
 
         foreach (var exchange in _brokerTopology.Exchanges)
-            await Declare(context, exchange, cancellationToken).ConfigureAwait(false);
+            await DeclareAsync(context, exchange, cancellationToken).ConfigureAwait(false);
 
         foreach (var binding in _brokerTopology.QueueBindings)
-            await Bind(context, binding, cancellationToken).ConfigureAwait(false);
+            await BindAsync(context, binding, cancellationToken).ConfigureAwait(false);
 
         foreach (var binding in _brokerTopology.ExchangeBindings)
-            await Bind(context, binding, cancellationToken).ConfigureAwait(false);
+            await BindAsync(context, binding, cancellationToken).ConfigureAwait(false);
     }
 
-    static Task Declare(ChannelContext context, Exchange exchange, CancellationToken cancellationToken)
+    static Task DeclareAsync(ChannelContext context, Exchange exchange, CancellationToken cancellationToken)
     {
-        return context.ConnectionContext.TopologyEntityCache.DeclareExchange(exchange, async declarationToken =>
+        return context.ConnectionContext.TopologyEntityCache.DeclareExchangeAsync(exchange, async declarationToken =>
         {
             RabbitMqLogMessages.DeclareExchange(exchange);
-            await context.ExchangeDeclare(
+            await context.ExchangeDeclareAsync(
                 exchange.ExchangeName,
                 exchange.ExchangeType,
                 exchange.Durable,
@@ -104,14 +106,14 @@ public class ConfigureRabbitMqTopologyFilter<TSettings> :
         }, cancellationToken);
     }
 
-    static async Task Declare(ChannelContext context, Queue queue, CancellationToken cancellationToken)
+    static async Task DeclareAsync(ChannelContext context, Queue queue, CancellationToken cancellationToken)
     {
 
         try
         {
-            await context.ConnectionContext.TopologyEntityCache.DeclareQueue(queue, async declarationToken =>
+            await context.ConnectionContext.TopologyEntityCache.DeclareQueueAsync(queue, async declarationToken =>
             {
-                var ok = await context.QueueDeclare(
+                var ok = await context.QueueDeclareAsync(
                     queue.QueueName,
                     queue.Durable,
                     queue.Exclusive,
@@ -133,12 +135,12 @@ public class ConfigureRabbitMqTopologyFilter<TSettings> :
         }
     }
 
-    static async Task Bind(ChannelContext context, ExchangeToExchangeBinding binding, CancellationToken cancellationToken)
+    static async Task BindAsync(ChannelContext context, ExchangeToExchangeBinding binding, CancellationToken cancellationToken)
     {
         RabbitMqLogMessages.BindToExchange(binding);
 
-        await context.ConnectionContext.TopologyEntityCache.Bind(binding,
-            declarationToken => context.ExchangeBind(
+        await context.ConnectionContext.TopologyEntityCache.BindAsync(binding,
+            declarationToken => context.ExchangeBindAsync(
                 binding.Destination.ExchangeName,
                 binding.Source.ExchangeName,
                 binding.RoutingKey,
@@ -146,12 +148,12 @@ public class ConfigureRabbitMqTopologyFilter<TSettings> :
                 declarationToken), cancellationToken).ConfigureAwait(false);
     }
 
-    static async Task Bind(ChannelContext context, ExchangeToQueueBinding binding, CancellationToken cancellationToken)
+    static async Task BindAsync(ChannelContext context, ExchangeToQueueBinding binding, CancellationToken cancellationToken)
     {
         RabbitMqLogMessages.BindToQueue(binding);
 
-        await context.ConnectionContext.TopologyEntityCache.Bind(binding,
-            declarationToken => context.QueueBind(
+        await context.ConnectionContext.TopologyEntityCache.BindAsync(binding,
+            declarationToken => context.QueueBindAsync(
                 binding.Destination.QueueName,
                 binding.Source.ExchangeName,
                 binding.RoutingKey,

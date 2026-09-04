@@ -10,7 +10,7 @@ public sealed class TransactionFilterTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-TRANSACTION-SCOPE", "completed-scope-commits-across-await")]
-    public async Task CompletedScope_CommitsAndFlowsAcrossAnAsyncContinuation()
+    public async Task CompletedScope_CommitsAndFlowsAcrossAnAsyncContinuationAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -29,7 +29,7 @@ public sealed class TransactionFilterTests
             });
         });
 
-        await pipe.Send(new TestPipeContext()).WaitAsync(timeout, cancellationToken);
+        await pipe.SendAsync(new TestPipeContext()).WaitAsync(timeout, cancellationToken);
 
         Assert.NotNull(beforeAwait);
         Assert.Same(beforeAwait, afterAwait);
@@ -37,7 +37,7 @@ public sealed class TransactionFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TRANSACTION-SCOPE", "incomplete-scope-aborts")]
-    public async Task IncompleteScope_AbortsTheOwnedTransaction()
+    public async Task IncompleteScope_AbortsTheOwnedTransactionAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -52,12 +52,12 @@ public sealed class TransactionFilterTests
         });
 
         await Assert.ThrowsAsync<TransactionAbortedException>(() =>
-            pipe.Send(new TestPipeContext()).WaitAsync(timeout, cancellationToken));
+            pipe.SendAsync(new TestPipeContext()).WaitAsync(timeout, cancellationToken));
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TRANSACTION-SCOPE", "downstream-failure-identity")]
-    public async Task DownstreamFailure_IsRethrownWithoutReplacement()
+    public async Task DownstreamFailure_IsRethrownWithoutReplacementAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -74,14 +74,14 @@ public sealed class TransactionFilterTests
         });
 
         InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            pipe.Send(new TestPipeContext()).WaitAsync(timeout, cancellationToken));
+            pipe.SendAsync(new TestPipeContext()).WaitAsync(timeout, cancellationToken));
 
         Assert.Same(expected, actual);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TRANSACTION-RETRY", "fresh-owned-context-per-attempt")]
-    public async Task Retry_CreatesAFreshTransactionContextForEveryAttempt()
+    public async Task Retry_CreatesAFreshTransactionContextForEveryAttemptAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -99,7 +99,7 @@ public sealed class TransactionFilterTests
         });
 
         TransactionRetryException actual = await Assert.ThrowsAsync<TransactionRetryException>(() =>
-            pipe.Send(new TestPipeContext()).WaitAsync(timeout, cancellationToken));
+            pipe.SendAsync(new TestPipeContext()).WaitAsync(timeout, cancellationToken));
 
         Assert.Same(expected, actual);
         Assert.Equal(2, contexts.Count);
@@ -108,16 +108,16 @@ public sealed class TransactionFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TRANSACTION-CONFIGURATION", "invalid-runtime-collaborators")]
-    public async Task Filter_RejectsNullRuntimeCollaboratorsAtTheirExactBoundaries()
+    public async Task Filter_RejectsNullRuntimeCollaboratorsAtTheirExactBoundariesAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var filter = new TransactionFilter<TestPipeContext>();
 
         Assert.Equal("context", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            filter.Send(null!, Pipe.Empty<TestPipeContext>()).WaitAsync(timeout, cancellationToken))).ParamName);
+            filter.SendAsync(null!, Pipe.Empty<TestPipeContext>()).WaitAsync(timeout, cancellationToken))).ParamName);
         Assert.Equal("next", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            filter.Send(new TestPipeContext(), null!).WaitAsync(timeout, cancellationToken))).ParamName);
+            filter.SendAsync(new TestPipeContext(), null!).WaitAsync(timeout, cancellationToken))).ParamName);
         Assert.Equal("context", Assert.Throws<ArgumentNullException>(() =>
             ((IProbeSite)filter).Probe(null!)).ParamName);
     }

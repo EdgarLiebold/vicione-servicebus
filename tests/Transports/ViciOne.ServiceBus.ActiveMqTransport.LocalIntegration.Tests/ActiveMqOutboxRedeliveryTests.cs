@@ -17,7 +17,7 @@ public sealed class ActiveMqOutboxRedeliveryTests
     [InlineData(ActiveMqBroker.OpenWireFlavor, OutboxMode.EndpointScopedPublish)]
     [InlineData(ActiveMqBroker.AmqpFlavor, OutboxMode.EndpointScopedPublish)]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-OUTBOX-REDELIVERY", "failed-attempts-discard-and-success-releases-exactly-once")]
-    public async Task DelayedRedelivery_PublishesAndSendsExactlyOnce(string flavor, OutboxMode mode)
+    public async Task DelayedRedelivery_PublishesAndSendsExactlyOnceAsync(string flavor, OutboxMode mode)
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(flavor, "outbox-redelivery");
         string queueName = fixture.Name("input");
@@ -40,15 +40,15 @@ public sealed class ActiveMqOutboxRedeliveryTests
                 endpoint.Handler<OutboxCommand>(async context =>
                 {
                     int attempt = Interlocked.Increment(ref attemptCount) - 1;
-                    attempts.Enqueue(new AttemptObservation(context.GetRedeliveryCount(), context.GetRetryAttempt()));
+                    attempts.Enqueue(new AttemptObservation(context.Advanced().GetRedeliveryCount(), context.Advanced().GetRetryAttempt()));
                     if (mode == OutboxMode.MessageScopedSend)
                     {
-                        await context.Send(
-                            context.ReceiveContext.InputAddress,
+                        await context.Advanced().SendAsync(
+                            context.Advanced().ReceiveContext.InputAddress,
                             new OutboxSent(context.Message.CorrelationId));
                     }
                     else
-                        await context.Publish(new OutboxPublished(context.Message.CorrelationId), context.CancellationToken);
+                        await context.Advanced().PublishAsync(new OutboxPublished(context.Message.CorrelationId), context.CancellationToken);
 
                     if (attempt < 2)
                         throw new IntentionalOutboxFailureException(attempt);
@@ -57,8 +57,8 @@ public sealed class ActiveMqOutboxRedeliveryTests
                     if (mode != OutboxMode.EndpointScopedPublish)
                         ConfigureOutbox(handler);
                 });
-                endpoint.Handler<OutboxPublished>(published.Observe);
-                endpoint.Handler<OutboxSent>(sent.Observe);
+                endpoint.Handler<OutboxPublished>(published.ObserveAsync);
+                endpoint.Handler<OutboxSent>(sent.ObserveAsync);
             });
         });
         using ConnectHandle sendObserver = bus.ConnectSendObserver(observer);
@@ -70,7 +70,7 @@ public sealed class ActiveMqOutboxRedeliveryTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            await bus.Publish(new OutboxCommand(correlationId), cancellationToken)
+            await bus.PublishAsync(new OutboxCommand(correlationId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             Guid actual = mode == OutboxMode.MessageScopedSend
@@ -135,7 +135,7 @@ public sealed class ActiveMqOutboxRedeliveryTests
         public TaskCompletionSource<Guid> Received { get; } =
             new(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        public Task Observe(ConsumeContext<T> context)
+        public Task ObserveAsync(ConsumeContext<T> context)
         {
             Guid correlationId = context.Message switch
             {
@@ -159,7 +159,7 @@ public sealed class ActiveMqOutboxRedeliveryTests
         public int PublishCount => Volatile.Read(ref _publishCount);
         public int SendCount => Volatile.Read(ref _sendCount);
 
-        public Task PreSend<T>(SendContext<T> context)
+        public Task PreSendAsync<T>(SendContext<T> context)
             where T : class
         {
             if (context.Message is OutboxSent)
@@ -167,10 +167,10 @@ public sealed class ActiveMqOutboxRedeliveryTests
             return Task.CompletedTask;
         }
 
-        public Task PostSend<T>(SendContext<T> context)
+        public Task PostSendAsync<T>(SendContext<T> context)
             where T : class => Task.CompletedTask;
 
-        public Task SendFault<T>(SendContext<T> context, Exception exception)
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
             where T : class
         {
             if (context.Message is OutboxSent)
@@ -178,7 +178,7 @@ public sealed class ActiveMqOutboxRedeliveryTests
             return Task.CompletedTask;
         }
 
-        public Task PrePublish<T>(PublishContext<T> context)
+        public Task PrePublishAsync<T>(PublishContext<T> context)
             where T : class
         {
             if (context.Message is OutboxPublished)
@@ -186,10 +186,10 @@ public sealed class ActiveMqOutboxRedeliveryTests
             return Task.CompletedTask;
         }
 
-        public Task PostPublish<T>(PublishContext<T> context)
+        public Task PostPublishAsync<T>(PublishContext<T> context)
             where T : class => Task.CompletedTask;
 
-        public Task PublishFault<T>(PublishContext<T> context, Exception exception)
+        public Task PublishFaultAsync<T>(PublishContext<T> context, Exception exception)
             where T : class
         {
             if (context.Message is OutboxPublished)

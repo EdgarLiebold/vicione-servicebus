@@ -11,33 +11,33 @@ public sealed class ActiveMqRecoveryObserverTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-RECOVERY", "fault-before-ready-current-watch-and-target-endpoint")]
-    public async Task RecoveryStateMachine_RejectsStaleForeignAndOutOfOrderSignals()
+    public async Task RecoveryStateMachine_RejectsStaleForeignAndOutOfOrderSignalsAsync()
     {
         var observer = new ReceiveEndpointRecoveryObserver(TargetEndpoint);
 
-        await observer.Faulted(new EndpointFaulted(TargetEndpoint));
-        await observer.Ready(new EndpointReady(TargetEndpoint));
+        await observer.FaultedAsync(new EndpointFaulted(TargetEndpoint));
+        await observer.ReadyAsync(new EndpointReady(TargetEndpoint));
         Assert.Equal(new ReceiveEndpointRecoverySnapshot(false, false, false), observer.Snapshot);
 
         observer.Watch();
-        await observer.Ready(new EndpointReady(TargetEndpoint));
-        await observer.Faulted(new EndpointFaulted(ForeignEndpoint));
+        await observer.ReadyAsync(new EndpointReady(TargetEndpoint));
+        await observer.FaultedAsync(new EndpointFaulted(ForeignEndpoint));
         Assert.Equal(new ReceiveEndpointRecoverySnapshot(true, false, false), observer.Snapshot);
 
-        await observer.Faulted(new EndpointFaulted(TargetEndpoint));
+        await observer.FaultedAsync(new EndpointFaulted(TargetEndpoint));
         Assert.Equal(new ReceiveEndpointRecoverySnapshot(true, true, false), observer.Snapshot);
 
-        await observer.Ready(new EndpointReady(ForeignEndpoint));
+        await observer.ReadyAsync(new EndpointReady(ForeignEndpoint));
         Assert.Equal(new ReceiveEndpointRecoverySnapshot(true, true, false), observer.Snapshot);
 
-        await observer.Ready(new EndpointReady(TargetEndpoint));
+        await observer.ReadyAsync(new EndpointReady(TargetEndpoint));
         Assert.Equal(new ReceiveEndpointRecoverySnapshot(true, true, true), observer.Snapshot);
 
         observer.Watch();
-        await observer.Ready(new EndpointReady(TargetEndpoint));
+        await observer.ReadyAsync(new EndpointReady(TargetEndpoint));
         Assert.Equal(new ReceiveEndpointRecoverySnapshot(true, false, false), observer.Snapshot);
 
-        await observer.Faulted(new EndpointFaulted(TargetEndpoint));
+        await observer.FaultedAsync(new EndpointFaulted(TargetEndpoint));
         Assert.Equal(new ReceiveEndpointRecoverySnapshot(true, true, false), observer.Snapshot);
     }
 

@@ -40,30 +40,30 @@ public sealed class RabbitMqReceiveContext :
     public string RoutingKey { get; }
     public IReadOnlyBasicProperties Properties { get; }
 
-    public IDictionary<string, object> GetTransportProperties()
+    public IDictionary<string, object>? GetTransportProperties()
     {
         var properties = new Lazy<Dictionary<string, object>>(() => new Dictionary<string, object>());
 
         if (!string.IsNullOrWhiteSpace(RoutingKey))
             properties.Value[RabbitMqTransportPropertyNames.RoutingKey] = RoutingKey;
 
-        if (Properties.IsAppIdPresent())
-            properties.Value[RabbitMqTransportPropertyNames.AppId] = Properties.AppId;
+        if (Properties.IsAppIdPresent() && Properties.AppId is { } appId)
+            properties.Value[RabbitMqTransportPropertyNames.AppId] = appId;
         if (Properties.IsPriorityPresent())
             properties.Value[RabbitMqTransportPropertyNames.Priority] = Properties.Priority;
-        if (Properties.IsReplyToPresent())
-            properties.Value[RabbitMqTransportPropertyNames.ReplyTo] = Properties.ReplyTo;
-        if (Properties.IsTypePresent())
-            properties.Value[RabbitMqTransportPropertyNames.Type] = Properties.Type;
-        if (Properties.IsUserIdPresent())
-            properties.Value[RabbitMqTransportPropertyNames.UserId] = Properties.UserId;
+        if (Properties.IsReplyToPresent() && Properties.ReplyTo is { } replyTo)
+            properties.Value[RabbitMqTransportPropertyNames.ReplyTo] = replyTo;
+        if (Properties.IsTypePresent() && Properties.Type is { } type)
+            properties.Value[RabbitMqTransportPropertyNames.Type] = type;
+        if (Properties.IsUserIdPresent() && Properties.UserId is { } userId)
+            properties.Value[RabbitMqTransportPropertyNames.UserId] = userId;
 
         return properties.IsValueCreated ? properties.Value : null;
     }
 
     protected override ContentType GetContentType()
     {
-        ContentType contentType = default;
+        ContentType? contentType = default;
         if (!string.IsNullOrWhiteSpace(Properties.ContentType))
             contentType = ConvertToContentType(Properties.ContentType);
 
@@ -98,9 +98,9 @@ public sealed class RabbitMqReceiveContext :
             return _sendEndpointProvider.ConnectSendObserver(observer);
         }
 
-        public async Task<ISendEndpoint> GetSendEndpoint(Uri address)
+        public async Task<ISendEndpoint> GetSendEndpointAsync(Uri address, CancellationToken cancellationToken = default)
         {
-            var endpoint = await _sendEndpointProvider.GetSendEndpoint(address).ConfigureAwait(false);
+            var endpoint = await _sendEndpointProvider.GetSendEndpointAsync(address, cancellationToken: cancellationToken).ConfigureAwait(false);
 
             return address.IsReplyToAddress()
                 ? new ReplyToSendEndpoint(endpoint, _replyTo)

@@ -77,14 +77,14 @@ public class TestHarnessRegistrationConfigurator :
         set => _configurator[index] = value;
     }
 
-    public IConsumerRegistrationConfigurator<T> AddConsumer<T>(Action<IRegistrationContext, IConsumerConfigurator<T>> configure = null)
+    public IConsumerRegistrationConfigurator<T> AddConsumer<T>(Action<IRegistrationContext, IConsumerConfigurator<T>>? configure = null)
         where T : class, IConsumer
     {
         return AddConsumer(null, configure);
     }
 
-    public IConsumerRegistrationConfigurator<T> AddConsumer<T>(Type consumerDefinitionType,
-        Action<IRegistrationContext, IConsumerConfigurator<T>> configure = null)
+    public IConsumerRegistrationConfigurator<T> AddConsumer<T>(Type? consumerDefinitionType,
+        Action<IRegistrationContext, IConsumerConfigurator<T>>? configure = null)
         where T : class, IConsumer
     {
         IConsumerRegistrationConfigurator<T> registrationConfigurator = _configurator.AddConsumer(consumerDefinitionType, configure);
@@ -94,13 +94,13 @@ public class TestHarnessRegistrationConfigurator :
         return registrationConfigurator;
     }
 
-    public ISagaRegistrationConfigurator<T> AddSaga<T>(Action<IRegistrationContext, ISagaConfigurator<T>> configure = null)
+    public ISagaRegistrationConfigurator<T> AddSaga<T>(Action<IRegistrationContext, ISagaConfigurator<T>>? configure = null)
         where T : class, ISaga
     {
         return AddSaga(null, configure);
     }
 
-    public ISagaRegistrationConfigurator<T> AddSaga<T>(Type sagaDefinitionType, Action<IRegistrationContext, ISagaConfigurator<T>> configure = null)
+    public ISagaRegistrationConfigurator<T> AddSaga<T>(Type? sagaDefinitionType, Action<IRegistrationContext, ISagaConfigurator<T>>? configure = null)
         where T : class, ISaga
     {
         ISagaRegistrationConfigurator<T> registrationConfigurator = _configurator.AddSaga(sagaDefinitionType, configure);
@@ -110,15 +110,15 @@ public class TestHarnessRegistrationConfigurator :
         return registrationConfigurator;
     }
 
-    public ISagaRegistrationConfigurator<T> AddSagaStateMachine<TStateMachine, T>(Action<IRegistrationContext, ISagaConfigurator<T>> configure = null)
+    public ISagaRegistrationConfigurator<T> AddSagaStateMachine<TStateMachine, T>(Action<IRegistrationContext, ISagaConfigurator<T>>? configure = null)
         where TStateMachine : class, SagaStateMachine<T>
         where T : class, SagaStateMachineInstance
     {
         return AddSagaStateMachine<TStateMachine, T>(null, configure);
     }
 
-    public ISagaRegistrationConfigurator<T> AddSagaStateMachine<TStateMachine, T>(Type sagaDefinitionType,
-        Action<IRegistrationContext, ISagaConfigurator<T>> configure = null)
+    public ISagaRegistrationConfigurator<T> AddSagaStateMachine<TStateMachine, T>(Type? sagaDefinitionType,
+        Action<IRegistrationContext, ISagaConfigurator<T>>? configure = null)
         where TStateMachine : class, SagaStateMachine<T>
         where T : class, SagaStateMachineInstance
     {
@@ -130,15 +130,15 @@ public class TestHarnessRegistrationConfigurator :
     }
 
     public IExecuteActivityRegistrationConfigurator<TActivity, TArguments> AddExecuteActivity<TActivity, TArguments>(
-        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>> configure = null)
+        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
         return _configurator.AddExecuteActivity(configure);
     }
 
-    public IExecuteActivityRegistrationConfigurator<TActivity, TArguments> AddExecuteActivity<TActivity, TArguments>(Type executeActivityDefinitionType,
-        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>> configure = null)
+    public IExecuteActivityRegistrationConfigurator<TActivity, TArguments> AddExecuteActivity<TActivity, TArguments>(Type? executeActivityDefinitionType,
+        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
@@ -146,8 +146,8 @@ public class TestHarnessRegistrationConfigurator :
     }
 
     public IActivityRegistrationConfigurator<TActivity, TArguments, TLog> AddActivity<TActivity, TArguments, TLog>(
-        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>> configureExecute = null,
-        Action<IRegistrationContext, ICompensateActivityConfigurator<TActivity, TLog>> configureCompensate = null)
+        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configureExecute = null,
+        Action<IRegistrationContext, ICompensateActivityConfigurator<TActivity, TLog>>? configureCompensate = null)
         where TActivity : class, IActivity<TArguments, TLog>
         where TArguments : class
         where TLog : class
@@ -155,9 +155,9 @@ public class TestHarnessRegistrationConfigurator :
         return _configurator.AddActivity(configureExecute, configureCompensate);
     }
 
-    public IActivityRegistrationConfigurator<TActivity, TArguments, TLog> AddActivity<TActivity, TArguments, TLog>(Type activityDefinitionType,
-        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>> configureExecute = null,
-        Action<IRegistrationContext, ICompensateActivityConfigurator<TActivity, TLog>> configureCompensate = null)
+    public IActivityRegistrationConfigurator<TActivity, TArguments, TLog> AddActivity<TActivity, TArguments, TLog>(Type? activityDefinitionType,
+        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configureExecute = null,
+        Action<IRegistrationContext, ICompensateActivityConfigurator<TActivity, TLog>>? configureCompensate = null)
         where TActivity : class, IActivity<TArguments, TLog>
         where TArguments : class
         where TLog : class
@@ -170,7 +170,7 @@ public class TestHarnessRegistrationConfigurator :
         _configurator.AddEndpoint(endpointDefinition);
     }
 
-    public void AddEndpoint<TDefinition, T>(IRegistration registration, IEndpointSettings<IEndpointDefinition<T>> settings = null)
+    public void AddEndpoint<TDefinition, T>(IRegistration registration, IEndpointSettings<IEndpointDefinition<T>>? settings = null)
         where TDefinition : class, IEndpointDefinition<T>
         where T : class
     {
@@ -228,7 +228,7 @@ public class TestHarnessRegistrationConfigurator :
         _configurator.SetSagaRepositoryProvider(provider);
     }
 
-    public IFutureRegistrationConfigurator<TFuture> AddFuture<TFuture>(Type futureDefinitionType = null)
+    public IFutureRegistrationConfigurator<TFuture> AddFuture<TFuture>(Type? futureDefinitionType = null)
         where TFuture : class, SagaStateMachine<FutureState>
     {
         return _configurator.AddFuture<TFuture>(futureDefinitionType);

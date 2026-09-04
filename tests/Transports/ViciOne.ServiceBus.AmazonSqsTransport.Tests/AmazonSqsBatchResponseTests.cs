@@ -12,7 +12,7 @@ public sealed class AmazonSqsBatchResponseTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-SQS-BATCH", "every-request-entry-accounted-for")]
-    public async Task PartialBatchResponse_FaultsEveryUnaccountedRequest()
+    public async Task PartialBatchResponse_FaultsEveryUnaccountedRequestAsync()
     {
         using var client = new PartialResponseSqsClient();
         await using var batcher = new SendBatcher(
@@ -21,8 +21,8 @@ public sealed class AmazonSqsBatchResponseTests
             TestContext.Current.CancellationToken,
             new FixedBatchSettings());
 
-        Task first = batcher.Execute(new SendMessageBatchRequestEntry("", "first"), TestContext.Current.CancellationToken);
-        Task second = batcher.Execute(new SendMessageBatchRequestEntry("", "second"), TestContext.Current.CancellationToken);
+        Task first = batcher.ExecuteAsync(new SendMessageBatchRequestEntry("", "first"), TestContext.Current.CancellationToken);
+        Task second = batcher.ExecuteAsync(new SendMessageBatchRequestEntry("", "second"), TestContext.Current.CancellationToken);
 
         AmazonSqsTransportException firstFailure = await Assert.ThrowsAsync<AmazonSqsTransportException>(() => first);
         AmazonSqsTransportException secondFailure = await Assert.ThrowsAsync<AmazonSqsTransportException>(() => second);
@@ -78,7 +78,7 @@ public sealed class AmazonSqsBatchResponseTests
             SendMessageBatchRequest request,
             CancellationToken cancellationToken = default)
         {
-            RequestEntryCount = request.Entries.Count;
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::Amazon.SQS.Model.SendMessageBatchResponse>(cancellationToken); RequestEntryCount = request.Entries.Count;
             return Task.FromResult(new SendMessageBatchResponse
             {
                 HttpStatusCode = HttpStatusCode.OK,

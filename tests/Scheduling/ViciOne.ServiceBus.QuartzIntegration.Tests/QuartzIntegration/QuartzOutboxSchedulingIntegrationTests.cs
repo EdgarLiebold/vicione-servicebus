@@ -14,7 +14,7 @@ public sealed class QuartzOutboxSchedulingIntegrationTests
     [InlineData(true)]
     [InlineData(false)]
     [RequirementCoverage("REQ-VSB-QUARTZ-OUTBOX", "rollback-versus-no-outbox")]
-    public async Task FaultingConsumer_CancelsTheQuartzTriggerOnlyWhenTheOutboxOwnsTheSchedule(bool useOutbox)
+    public async Task FaultingConsumer_CancelsTheQuartzTriggerOnlyWhenTheOutboxOwnsTheScheduleAsync(bool useOutbox)
     {
         TimeSpan timeout = OperationTimeout();
         string queueName = $"quartz-outbox-{NewId.NextGuid():N}";
@@ -23,7 +23,7 @@ public sealed class QuartzOutboxSchedulingIntegrationTests
         var scheduled = new TaskCompletionSource<ScheduledMessage<DeferredPayload>>(
             TaskCreationOptions.RunContinuationsAsynchronously);
         var faulted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-        await using QuartzTestBus fixture = await QuartzTestBus.Start(
+        await using QuartzTestBus fixture = await QuartzTestBus.StartAsync(
             timeout,
             configure: configurator =>
             {
@@ -34,7 +34,7 @@ public sealed class QuartzOutboxSchedulingIntegrationTests
 
                     endpoint.Handler<StartDeferredSchedule>(async context =>
                     {
-                        ScheduledMessage<DeferredPayload> handle = await context.ScheduleSend(
+                        ScheduledMessage<DeferredPayload> handle = await context.Advanced().ScheduleSendAsync(
                             new DateTime(2100, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                             new DeferredPayload(context.Message.CorrelationId),
                             context.CancellationToken);
@@ -53,10 +53,9 @@ public sealed class QuartzOutboxSchedulingIntegrationTests
         var cancellationCommands = new ConsumeCompletionObserver<CancelScheduledMessage>(_ => true);
         using ConnectHandle scheduleObserver = fixture.Bus.ConnectConsumeObserver(scheduledCommands);
         using ConnectHandle cancellationObserver = fixture.Bus.ConnectConsumeObserver(cancellationCommands);
-        ISendEndpoint input = await fixture.Bus.GetSendEndpoint(inputAddress)
-            .WaitAsync(timeout, TestContext.Current.CancellationToken);
+        ISendEndpoint input = await fixture.Bus.GetSendEndpointAsync(inputAddress, TestContext.Current.CancellationToken).WaitAsync(timeout, TestContext.Current.CancellationToken);
 
-        await input.Send(new StartDeferredSchedule(NewId.NextGuid()), TestContext.Current.CancellationToken);
+        await input.SendAsync(new StartDeferredSchedule(NewId.NextGuid()), TestContext.Current.CancellationToken);
         ScheduledMessage<DeferredPayload> handle = await scheduled.Task
             .WaitAsync(timeout, TestContext.Current.CancellationToken);
         await scheduledCommands.Completed.WaitAsync(timeout, TestContext.Current.CancellationToken);

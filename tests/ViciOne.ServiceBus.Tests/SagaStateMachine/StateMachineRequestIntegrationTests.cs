@@ -13,7 +13,7 @@ public sealed class StateMachineRequestIntegrationTests
     [InlineData(CompositeOutcome.SurnameRejected, "Peter", "Parker", "Invalid Surname", "Peter", "REJECTED!")]
     [InlineData(CompositeOutcome.BothRejected, "Bruce", "Wayne", "Invalid ID", "REJECTED!", "REJECTED!")]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-REQUEST", "parallel-request-composite-outcome-matrix")]
-    public async Task ParallelRequests_ProduceTheExactCompositeOutcome(
+    public async Task ParallelRequests_ProduceTheExactCompositeOutcomeAsync(
         CompositeOutcome outcome,
         string name,
         string surname,
@@ -32,30 +32,30 @@ public sealed class StateMachineRequestIntegrationTests
             serviceEndpointName,
             endpoint =>
             {
-                endpoint.Handler<ValidateName>(context => HandleValidateName(context, outcome));
-                endpoint.Handler<ValidateSurname>(context => HandleValidateSurname(context, outcome));
+                endpoint.Handler<ValidateName>(context => HandleValidateNameAsync(context, outcome));
+                endpoint.Handler<ValidateSurname>(context => HandleValidateSurnameAsync(context, outcome));
             });
         ISagaStateMachineTestHarness<CompositeRequestMachine, CompositeRequestState> sagaHarness =
             harness.StateMachineSaga<CompositeRequestState, CompositeRequestMachine>(machine);
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             Guid memberId = NewId.NextGuid();
             Task<IPublishedMessage<MemberRegistrationResult>> published = harness.Published
                 .SelectAsync<MemberRegistrationResult>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             Task<IReceivedMessage<ValidateName>> nameRequest = harness.Consumed
                 .SelectAsync<ValidateName>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             Task<IReceivedMessage<ValidateSurname>> surnameRequest = harness.Consumed
                 .SelectAsync<ValidateSurname>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             Task<IReceivedMessage<RegisterMember>> start = sagaHarness.Consumed
                 .SelectAsync<RegisterMember>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.InputQueueSendEndpoint.SendAsync(
                 new RegisterMember(memberId, name, surname),
                 cancellationToken);
 
@@ -72,8 +72,8 @@ public sealed class StateMachineRequestIntegrationTests
                 $"surname:{surname}");
             MemberRegistrationResult result = (await published.WaitAsync(timeout, cancellationToken)).Context.Message;
             State expectedState = outcome == CompositeOutcome.Success ? machine.Registered : machine.Rejected;
-            Guid? located = await sagaHarness.Exists(memberId, expectedState, timeout);
-            CompositeRequestState instance = sagaHarness.Sagas.Contains(memberId);
+            Guid? located = await sagaHarness.ExistsAsync(memberId, expectedState, timeout, TestContext.Current.CancellationToken);
+            CompositeRequestState? instance = sagaHarness.Sagas.Contains(memberId);
 
             Assert.Equal(memberId, located);
             Assert.NotNull(instance);
@@ -89,7 +89,7 @@ public sealed class StateMachineRequestIntegrationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Single(harness.Published.Select<MemberRegistrationResult>(SnapshotOnlyToken()));
@@ -99,7 +99,7 @@ public sealed class StateMachineRequestIntegrationTests
     [InlineData(MultiResponseKind.Second, "invalid")]
     [InlineData(MultiResponseKind.Third, "duplicate")]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-REQUEST", "second-and-third-response-routes")]
-    public async Task MultiResponseRequest_RoutesTheSecondAndThirdAcceptedTypesExactly(
+    public async Task MultiResponseRequest_RoutesTheSecondAndThirdAcceptedTypesExactlyAsync(
         MultiResponseKind responseKind,
         string expectedReason)
     {
@@ -120,21 +120,21 @@ public sealed class StateMachineRequestIntegrationTests
         ISagaStateMachineTestHarness<MultiResponseMachine, MultiResponseState> sagaHarness =
             harness.StateMachineSaga<MultiResponseState, MultiResponseMachine>(machine);
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             Guid correlationId = NewId.NextGuid();
             Task<IPublishedMessage<MemberRejected>> published = harness.Published
                 .SelectAsync<MemberRejected>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             Task<IReceivedMessage<ValidateMember>> request = harness.Consumed
                 .SelectAsync<ValidateMember>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             Task<IReceivedMessage<BeginMemberValidation>> start = sagaHarness.Consumed
                 .SelectAsync<BeginMemberValidation>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
-            await harness.InputQueueSendEndpoint.Send(new BeginMemberValidation(correlationId), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new BeginMemberValidation(correlationId), cancellationToken);
 
             Assert.Null((await start.WaitAsync(timeout, cancellationToken)).Exception);
             ISentMessage<ValidateMember> sentRequest = Assert.Single(
@@ -152,8 +152,8 @@ public sealed class StateMachineRequestIntegrationTests
                 acceptedTypes);
             await request.WaitAsync(timeout, cancellationToken);
             MemberRejected rejected = (await published.WaitAsync(timeout, cancellationToken)).Context.Message;
-            Guid? registered = await sagaHarness.Exists(correlationId, machine.Registered, timeout);
-            MultiResponseState instance = sagaHarness.Sagas.Contains(correlationId);
+            Guid? registered = await sagaHarness.ExistsAsync(correlationId, machine.Registered, timeout, TestContext.Current.CancellationToken);
+            MultiResponseState? instance = sagaHarness.Sagas.Contains(correlationId);
 
             Assert.Equal(correlationId, registered);
             Assert.NotNull(instance);
@@ -164,18 +164,18 @@ public sealed class StateMachineRequestIntegrationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Single(harness.Published.Select<MemberRejected>(SnapshotOnlyToken()));
     }
 
-    private static Task HandleValidateName(ConsumeContext<ValidateName> context, CompositeOutcome outcome) =>
+    private static Task HandleValidateNameAsync(ConsumeContext<ValidateName> context, CompositeOutcome outcome) =>
         outcome is CompositeOutcome.NameRejected or CompositeOutcome.BothRejected
             ? Task.FromException(new ExpectedValidationException($"name:{context.Message.Name}"))
             : context.RespondAsync(new NameValidated(context.Message.CorrelationId, context.Message.Name));
 
-    private static Task HandleValidateSurname(ConsumeContext<ValidateSurname> context, CompositeOutcome outcome) =>
+    private static Task HandleValidateSurnameAsync(ConsumeContext<ValidateSurname> context, CompositeOutcome outcome) =>
         outcome is CompositeOutcome.SurnameRejected or CompositeOutcome.BothRejected
             ? Task.FromException(new ExpectedValidationException($"surname:{context.Message.Surname}"))
             : context.RespondAsync(new SurnameValidated(context.Message.CorrelationId, context.Message.Surname));
@@ -312,12 +312,12 @@ public sealed class StateMachineRequestIntegrationTests
                         context.Saga.Name = context.Message.Name;
                         context.Saga.Surname = context.Message.Surname;
                     })
-                    .Request(NameRequest, context => context.Init<ValidateName>(new
+                    .Request(NameRequest, context => context.InitAsync<ValidateName>(new
                     {
                         context.Saga.CorrelationId,
                         context.Saga.Name,
                     }))
-                    .Request(SurnameRequest, context => context.Init<ValidateSurname>(new
+                    .Request(SurnameRequest, context => context.InitAsync<ValidateSurname>(new
                     {
                         context.Saga.CorrelationId,
                         context.Saga.Surname,
@@ -428,7 +428,7 @@ public sealed class StateMachineRequestIntegrationTests
 
             Initially(
                 When(Begin)
-                    .Request(Validation, context => context.Init<ValidateMember>(new
+                    .Request(Validation, context => context.InitAsync<ValidateMember>(new
                     {
                         context.Saga.CorrelationId,
                     }))

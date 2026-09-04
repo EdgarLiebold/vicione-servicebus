@@ -95,13 +95,15 @@ public interface StateMachine<TSaga> :
     /// </summary>
     /// <param name="context"></param>
     /// <returns>Task for the instance once completed</returns>
-    Task RaiseEvent(BehaviorContext<TSaga> context);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task RaiseEventAsync(BehaviorContext<TSaga> context, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Raise a data event on the state machine instance
     /// </summary>
     /// <param name="context"></param>
-    Task RaiseEvent<T>(BehaviorContext<TSaga, T> context)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task RaiseEventAsync<T>(BehaviorContext<TSaga, T> context, CancellationToken cancellationToken = default)
         where T : class;
 
     IDisposable ConnectEventObserver(IEventObserver<TSaga> observer);

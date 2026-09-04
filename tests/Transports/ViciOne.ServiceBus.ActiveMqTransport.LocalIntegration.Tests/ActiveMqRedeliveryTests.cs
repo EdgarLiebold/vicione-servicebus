@@ -14,7 +14,7 @@ public sealed class ActiveMqRedeliveryTests
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [InlineData(ActiveMqBroker.ArtemisFlavor)]
     [RequirementCoverage("OBL-R0-BRK-0396", "delayed-redelivery-routes-each-message-type-and-stops-at-configured-limit")]
-    public async Task DelayedRedelivery_RoutesEachMessageTypeAndStopsAtConfiguredLimit(string flavor)
+    public async Task DelayedRedelivery_RoutesEachMessageTypeAndStopsAtConfiguredLimitAsync(string flavor)
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(flavor, "redelivery-limit");
         string queueName = fixture.Name("input");
@@ -36,13 +36,13 @@ public sealed class ActiveMqRedeliveryTests
                 endpoint.Handler<FirstAttemptMessage>(context =>
                 {
                     Interlocked.Increment(ref firstAttempts);
-                    firstRedeliveryCounts.Enqueue(context.GetRedeliveryCount());
+                    firstRedeliveryCounts.Enqueue(context.Advanced().GetRedeliveryCount());
                     throw new IntentionalFailure();
                 });
                 endpoint.Handler<SecondAttemptMessage>(context =>
                 {
                     Interlocked.Increment(ref secondAttempts);
-                    secondRedeliveryCounts.Enqueue(context.GetRedeliveryCount());
+                    secondRedeliveryCounts.Enqueue(context.Advanced().GetRedeliveryCount());
                     throw new IntentionalFailure();
                 });
             });
@@ -66,14 +66,13 @@ public sealed class ActiveMqRedeliveryTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await input.Send(
+            ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await input.SendAsync(
                     new FirstAttemptMessage(correlationId),
                     context => context.FaultAddress = bus.Address,
                     cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await input.Send(
+            await input.SendAsync(
                     new SecondAttemptMessage(correlationId),
                     context => context.FaultAddress = bus.Address,
                     cancellationToken)
@@ -102,9 +101,9 @@ public sealed class ActiveMqRedeliveryTests
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [RequirementCoverage("OBL-R0-BRK-0397", "handler-delayed-redelivery-stops-at-configured-limit")]
-    public async Task DelayedRetry_StopsAtTheConfiguredLimit(string flavor)
+    public async Task DelayedRetry_StopsAtTheConfiguredLimitAsync(string flavor)
     {
-        FaultRun result = await RunFaultingMessage(
+        FaultRun result = await RunFaultingMessageAsync(
             flavor,
             "handler-redelivery",
             configureEndpoint: null,
@@ -119,10 +118,10 @@ public sealed class ActiveMqRedeliveryTests
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [RequirementCoverage("OBL-R0-BRK-0398", "no-redelivery-policy-faults-after-one-attempt")]
-    public async Task NoRetryPolicy_FaultsWithoutBrokerDelay(string flavor)
+    public async Task NoRetryPolicy_FaultsWithoutBrokerDelayAsync(string flavor)
     {
         var observer = new ScheduledSendObserver<AttemptMessage>(expectedCount: 1);
-        FaultRun result = await RunFaultingMessage(
+        FaultRun result = await RunFaultingMessageAsync(
             flavor,
             "no-redelivery",
             configureEndpoint: null,
@@ -139,7 +138,7 @@ public sealed class ActiveMqRedeliveryTests
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [RequirementCoverage("OBL-R0-BRK-0399", "explicit-defer-reaches-the-third-delivery")]
-    public async Task ExplicitDefer_ReachesTheThirdDelivery(string flavor)
+    public async Task ExplicitDefer_ReachesTheThirdDeliveryAsync(string flavor)
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(flavor, "explicit-defer");
         string queueName = fixture.Name("input");
@@ -158,7 +157,7 @@ public sealed class ActiveMqRedeliveryTests
                 {
                     if (Interlocked.Increment(ref attempts) <= 2)
                     {
-                        await context.Defer(BrokerDelay);
+                        await context.DeferAsync(BrokerDelay);
                         return;
                     }
 
@@ -174,9 +173,8 @@ public sealed class ActiveMqRedeliveryTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await input.Send(new AttemptMessage(correlationId), cancellationToken)
+            ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await input.SendAsync(new AttemptMessage(correlationId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             await scheduled.Completion.WaitAsync(fixture.OperationTimeout, cancellationToken);
@@ -184,7 +182,7 @@ public sealed class ActiveMqRedeliveryTests
 
             Assert.Equal([BrokerDelay, BrokerDelay], scheduled.Delays);
             Assert.Equal(correlationId, actual.Message.CorrelationId);
-            Assert.Equal(2, actual.GetRedeliveryCount());
+            Assert.Equal(2, actual.Advanced().GetRedeliveryCount());
             Assert.Equal(3, attempts);
         }
         finally
@@ -198,10 +196,10 @@ public sealed class ActiveMqRedeliveryTests
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [RequirementCoverage("OBL-R0-BRK-0400", "interval-retry-stops-at-configured-limit")]
-    public async Task IntervalRetry_StopsAtTheConfiguredLimit(string flavor)
+    public async Task IntervalRetry_StopsAtTheConfiguredLimitAsync(string flavor)
     {
         var retryObserver = new RetryDelayObserver();
-        FaultRun result = await RunFaultingMessage(
+        FaultRun result = await RunFaultingMessageAsync(
             flavor,
             "interval-retry",
             endpoint => endpoint.UseMessageRetry(policy =>
@@ -221,9 +219,9 @@ public sealed class ActiveMqRedeliveryTests
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [RequirementCoverage("OBL-R0-BRK-0402", "retry-and-redelivery-compose-exact-attempt-counts")]
-    public async Task RetryAndDelayedRedelivery_ComposeExactAttemptCounts(string flavor)
+    public async Task RetryAndDelayedRedelivery_ComposeExactAttemptCountsAsync(string flavor)
     {
-        FaultRun result = await RunFaultingMessage(
+        FaultRun result = await RunFaultingMessageAsync(
             flavor,
             "retry-redelivery",
             endpoint =>
@@ -241,14 +239,14 @@ public sealed class ActiveMqRedeliveryTests
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [RequirementCoverage("OBL-R0-BRK-0403", "each-broker-delay-follows-its-causal-schedule-signal")]
-    public async Task BrokerDelay_RedeliversAfterEachCausalScheduleSignal(string flavor)
+    public async Task BrokerDelay_RedeliversAfterEachCausalScheduleSignalAsync(string flavor)
     {
         var observer = new ScheduledSendObserver<AttemptMessage>(expectedCount: 2);
         TaskCompletionSource<int> thirdDelivery = NewObservation<int>();
         var redeliveryCounts = new ConcurrentQueue<int>();
         int attempts = 0;
 
-        await RunSuccessfulRedelivery(
+        await RunSuccessfulRedeliveryAsync(
             flavor,
             "causal-delay",
             observer,
@@ -256,11 +254,11 @@ public sealed class ActiveMqRedeliveryTests
             context =>
             {
                 int attempt = Interlocked.Increment(ref attempts);
-                redeliveryCounts.Enqueue(context.GetRedeliveryCount());
+                redeliveryCounts.Enqueue(context.Advanced().GetRedeliveryCount());
                 if (attempt <= 2)
                     throw new IntentionalFailure();
 
-                thirdDelivery.TrySetResult(context.GetRedeliveryCount());
+                thirdDelivery.TrySetResult(context.Advanced().GetRedeliveryCount());
                 return Task.CompletedTask;
             });
 
@@ -275,7 +273,7 @@ public sealed class ActiveMqRedeliveryTests
     [InlineData(ActiveMqBroker.OpenWireFlavor)]
     [InlineData(ActiveMqBroker.AmqpFlavor)]
     [RequirementCoverage("OBL-R0-BRK-0404", "defer-callback-executes-on-each-defer-before-third-delivery")]
-    public async Task DeferCallback_ExecutesOnEachDeferBeforeThirdDelivery(string flavor)
+    public async Task DeferCallback_ExecutesOnEachDeferBeforeThirdDeliveryAsync(string flavor)
     {
         using ActiveMqBroker fixture = ActiveMqBroker.Create(flavor, "defer-callback");
         string queueName = fixture.Name("input");
@@ -294,11 +292,11 @@ public sealed class ActiveMqRedeliveryTests
                 {
                     if (Interlocked.Increment(ref attempts) <= 2)
                     {
-                        await context.Defer(BrokerDelay, (_, _) => Interlocked.Increment(ref callbackCount));
+                        await context.DeferAsync(BrokerDelay, (_, _) => Interlocked.Increment(ref callbackCount));
                         return;
                     }
 
-                    delivered.TrySetResult((context.GetRedeliveryCount(), Volatile.Read(ref callbackCount)));
+                    delivered.TrySetResult((context.Advanced().GetRedeliveryCount(), Volatile.Read(ref callbackCount)));
                 });
             });
         });
@@ -310,9 +308,8 @@ public sealed class ActiveMqRedeliveryTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await input.Send(new AttemptMessage(Guid.NewGuid()), cancellationToken)
+            ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await input.SendAsync(new AttemptMessage(Guid.NewGuid()), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
             await scheduled.Completion.WaitAsync(fixture.OperationTimeout, cancellationToken);
@@ -333,7 +330,7 @@ public sealed class ActiveMqRedeliveryTests
         }
     }
 
-    private static async Task<FaultRun> RunFaultingMessage(
+    private static async Task<FaultRun> RunFaultingMessageAsync(
         string flavor,
         string purpose,
         Action<IActiveMqReceiveEndpointConfigurator>? configureEndpoint,
@@ -354,17 +351,17 @@ public sealed class ActiveMqRedeliveryTests
                 endpoint.Durable = false;
                 endpoint.AutoDelete = true;
                 configureEndpoint?.Invoke(endpoint);
-                Task Handler(ConsumeContext<AttemptMessage> context)
+                Task HandlerAsync(ConsumeContext<AttemptMessage> context)
                 {
                     Interlocked.Increment(ref attempts);
-                    counts.Enqueue(context.GetRedeliveryCount());
+                    counts.Enqueue(context.Advanced().GetRedeliveryCount());
                     throw new IntentionalFailure();
                 }
 
                 if (configureHandler is null)
-                    endpoint.Handler<AttemptMessage>(Handler);
+                    endpoint.Handler<AttemptMessage>(HandlerAsync);
                 else
-                    endpoint.Handler<AttemptMessage>(Handler, configureHandler);
+                    endpoint.Handler<AttemptMessage>(HandlerAsync, configureHandler);
             });
         });
         using ConnectHandle faultHandle = bus.ConnectHandler<Fault<AttemptMessage>>(context =>
@@ -381,9 +378,9 @@ public sealed class ActiveMqRedeliveryTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
+            ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"))
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await input.Send(
+            await input.SendAsync(
                     new AttemptMessage(correlationId),
                     context => context.FaultAddress = bus.Address,
                     cancellationToken)
@@ -399,7 +396,7 @@ public sealed class ActiveMqRedeliveryTests
         }
     }
 
-    private static async Task RunSuccessfulRedelivery(
+    private static async Task RunSuccessfulRedeliveryAsync(
         string flavor,
         string purpose,
         ScheduledSendObserver<AttemptMessage> observer,
@@ -428,9 +425,9 @@ public sealed class ActiveMqRedeliveryTests
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
             observer.OperationTimeout = fixture.OperationTimeout;
-            ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
+            ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"))
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await input.Send(new AttemptMessage(Guid.NewGuid()), cancellationToken)
+            await input.SendAsync(new AttemptMessage(Guid.NewGuid()), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             await observer.Completion.WaitAsync(fixture.OperationTimeout, cancellationToken);
             await completion.WaitAsync(fixture.OperationTimeout, cancellationToken);
@@ -459,27 +456,27 @@ public sealed class ActiveMqRedeliveryTests
         public TimeSpan?[] Delays => _delays.ToArray();
         public int TerminalFaultCount => Volatile.Read(ref _terminalFaultCount);
 
-        public Task PostCreate<T>(RetryPolicyContext<T> context)
+        public Task PostCreateAsync<T>(RetryPolicyContext<T> context)
             where T : class, PipeContext => Task.CompletedTask;
 
-        public Task PostFault<T>(RetryContext<T> context)
+        public Task PostFaultAsync<T>(RetryContext<T> context)
             where T : class, PipeContext => Task.CompletedTask;
 
-        public Task PreRetry<T>(RetryContext<T> context)
+        public Task PreRetryAsync<T>(RetryContext<T> context)
             where T : class, PipeContext
         {
             _delays.Enqueue(context.Delay);
             return Task.CompletedTask;
         }
 
-        public Task RetryFault<T>(RetryContext<T> context)
+        public Task RetryFaultAsync<T>(RetryContext<T> context)
             where T : class, PipeContext
         {
             Interlocked.Increment(ref _terminalFaultCount);
             return Task.CompletedTask;
         }
 
-        public Task RetryComplete<T>(RetryContext<T> context)
+        public Task RetryCompleteAsync<T>(RetryContext<T> context)
             where T : class, PipeContext => Task.CompletedTask;
     }
 
@@ -502,10 +499,10 @@ public sealed class ActiveMqRedeliveryTests
         public TimeSpan[] Delays => _delays.ToArray();
         public TimeSpan OperationTimeout { get; set; }
 
-        public Task PreSend<T>(SendContext<T> context)
+        public Task PreSendAsync<T>(SendContext<T> context)
             where T : class => Task.CompletedTask;
 
-        public Task PostSend<T>(SendContext<T> context)
+        public Task PostSendAsync<T>(SendContext<T> context)
             where T : class
         {
             if (typeof(T) == typeof(TMessage) && context.Delay is { } delay)
@@ -518,7 +515,7 @@ public sealed class ActiveMqRedeliveryTests
             return Task.CompletedTask;
         }
 
-        public Task SendFault<T>(SendContext<T> context, Exception exception)
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
             where T : class
         {
             if (typeof(T) == typeof(TMessage) && context.Delay.HasValue)

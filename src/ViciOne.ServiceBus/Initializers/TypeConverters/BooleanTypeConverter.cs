@@ -33,7 +33,7 @@ public class BooleanTypeConverter :
         return true;
     }
 
-    public bool TryConvert(object input, out bool result)
+    public bool TryConvert(object? input, out bool result)
     {
         if (input != null)
         {
@@ -57,7 +57,7 @@ public class BooleanTypeConverter :
         return true;
     }
 
-    public bool TryConvert(string input, out bool result)
+    public bool TryConvert(string? input, out bool result)
     {
         return bool.TryParse(input, out result);
     }

@@ -18,20 +18,20 @@ public class ServiceBusInstance :
     }
 
     public HostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(string subscriptionName,
-        Action<IServiceBusSubscriptionEndpointConfigurator> configure = null)
+        Action<IServiceBusSubscriptionEndpointConfigurator>? configure = null)
         where T : class
     {
         return _host.ConnectSubscriptionEndpoint<T>(subscriptionName, configure);
     }
 
     public HostReceiveEndpointHandle ConnectSubscriptionEndpoint(string subscriptionName, string topicName,
-        Action<IServiceBusSubscriptionEndpointConfigurator> configure = null)
+        Action<IServiceBusSubscriptionEndpointConfigurator>? configure = null)
     {
         return _host.ConnectSubscriptionEndpoint(subscriptionName, topicName, configure);
     }
 
     public HostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(string subscriptionName,
-        Action<IBusRegistrationContext, IServiceBusSubscriptionEndpointConfigurator> configure = null)
+        Action<IBusRegistrationContext, IServiceBusSubscriptionEndpointConfigurator>? configure = null)
         where T : class
     {
         return _host.ConnectSubscriptionEndpoint<T>(subscriptionName, configurator =>
@@ -43,7 +43,7 @@ public class ServiceBusInstance :
     }
 
     public HostReceiveEndpointHandle ConnectSubscriptionEndpoint(string subscriptionName, string topicName,
-        Action<IBusRegistrationContext, IServiceBusSubscriptionEndpointConfigurator> configure = null)
+        Action<IBusRegistrationContext, IServiceBusSubscriptionEndpointConfigurator>? configure = null)
     {
         return _host.ConnectSubscriptionEndpoint(subscriptionName, topicName, configurator =>
         {

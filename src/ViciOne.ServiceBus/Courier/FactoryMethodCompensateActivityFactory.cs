@@ -15,16 +15,16 @@ public class FactoryMethodCompensateActivityFactory<TActivity, TLog> :
         _compensateFactory = compensateFactory;
     }
 
-    public async Task Compensate(CompensateContext<TLog> context, IPipe<CompensateActivityContext<TActivity, TLog>> next)
+    public async Task CompensateAsync(CompensateContext<TLog> context, IPipe<CompensateActivityContext<TActivity, TLog>> next, CancellationToken cancellationToken = default)
     {
-        TActivity activity = null;
+        cancellationToken.ThrowIfCancellationRequested(); TActivity? activity = null;
         try
         {
             activity = _compensateFactory(context.Log);
 
             CompensateActivityContext<TActivity, TLog> activityContext = context.CreateActivityContext(activity);
 
-            await next.Send(activityContext).ConfigureAwait(false);
+            await next.SendAsync(activityContext).ConfigureAwait(false);
         }
         finally
         {

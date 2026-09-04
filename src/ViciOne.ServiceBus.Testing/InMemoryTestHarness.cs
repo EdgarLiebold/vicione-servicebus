@@ -14,22 +14,22 @@ public class InMemoryTestHarness :
     readonly string _inputQueueName;
     readonly IEnumerable<IBusInstanceSpecification> _specifications;
 
-    public InMemoryTestHarness(string virtualHost = null)
+    public InMemoryTestHarness(string? virtualHost = null)
         : this(virtualHost, Enumerable.Empty<IBusInstanceSpecification>())
     {
     }
 
-    public InMemoryTestHarness(TimeProvider timeProvider, string virtualHost = null)
+    public InMemoryTestHarness(TimeProvider timeProvider, string? virtualHost = null)
         : this(virtualHost, Enumerable.Empty<IBusInstanceSpecification>(), timeProvider)
     {
     }
 
-    public InMemoryTestHarness(string virtualHost, IEnumerable<IBusInstanceSpecification> specifications)
+    public InMemoryTestHarness(string? virtualHost, IEnumerable<IBusInstanceSpecification> specifications)
         : this(virtualHost, specifications, TimeProvider.System)
     {
     }
 
-    public InMemoryTestHarness(string virtualHost, IEnumerable<IBusInstanceSpecification> specifications, TimeProvider timeProvider)
+    public InMemoryTestHarness(string? virtualHost, IEnumerable<IBusInstanceSpecification> specifications, TimeProvider timeProvider)
         : base(timeProvider)
     {
         BaseAddress = new Uri("loopback://localhost/");
@@ -38,7 +38,7 @@ public class InMemoryTestHarness :
 
         _inputQueueName = "input_queue";
         _busConfiguration = new InMemoryBusConfiguration(new InMemoryTopologyConfiguration(InMemoryBus.CreateMessageTopology()), BaseAddress);
-        _specifications = specifications;
+        _specifications = specifications ?? throw new ArgumentNullException(nameof(specifications));
 
         InputQueueAddress = new Uri(BaseAddress, _inputQueueName);
     }
@@ -48,11 +48,11 @@ public class InMemoryTestHarness :
     public override Uri InputQueueAddress { get; }
     public override string InputQueueName => _inputQueueName;
 
-    internal IHostConfiguration HostConfiguration => _busConfiguration?.HostConfiguration;
+    internal IHostConfiguration HostConfiguration => _busConfiguration.HostConfiguration;
 
-    public event Action<IInMemoryBusFactoryConfigurator> OnConfigureInMemoryBus;
-    public event Action<IInMemoryReceiveEndpointConfigurator> OnConfigureInMemoryReceiveEndpoint;
-    public event Action<IInMemoryBusFactoryConfigurator> OnInMemoryBusConfigured;
+    public event Action<IInMemoryBusFactoryConfigurator>? OnConfigureInMemoryBus;
+    public event Action<IInMemoryReceiveEndpointConfigurator>? OnConfigureInMemoryReceiveEndpoint;
+    public event Action<IInMemoryBusFactoryConfigurator>? OnInMemoryBusConfigured;
 
     protected virtual void ConfigureInMemoryBus(IInMemoryBusFactoryConfigurator configurator)
     {
@@ -69,19 +69,19 @@ public class InMemoryTestHarness :
         OnInMemoryBusConfigured?.Invoke(configurator);
     }
 
-    public virtual Task<IRequestClient<TRequest>> ConnectRequestClient<TRequest>()
+    public virtual Task<IRequestClient<TRequest>> ConnectRequestClientAsync<TRequest>(CancellationToken cancellationToken = default)
         where TRequest : class
     {
-        return ConnectRequestClient<TRequest>(InputQueueAddress);
+        return ConnectRequestClientAsync<TRequest>(InputQueueAddress, cancellationToken: cancellationToken);
     }
 
-    public virtual Task<IRequestClient<TRequest>> ConnectRequestClient<TRequest>(Uri destinationAddress)
+    public virtual Task<IRequestClient<TRequest>> ConnectRequestClientAsync<TRequest>(Uri destinationAddress, CancellationToken cancellationToken = default)
         where TRequest : class
     {
-        return Task.FromResult(Bus.CreateRequestClient<TRequest>(destinationAddress, TestTimeout));
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.IRequestClient<TRequest>>(cancellationToken); return Task.FromResult(Bus.CreateRequestClient<TRequest>(destinationAddress, TestTimeout));
     }
 
-    protected override async Task<IBusControl> CreateBus()
+    protected override async Task<IBusControl> CreateBusAsync()
     {
         var configurator = new InMemoryBusFactoryConfigurator(_busConfiguration);
 
@@ -100,6 +100,6 @@ public class InMemoryTestHarness :
 
         InMemoryBusConfigured(configurator);
 
-        return configurator.Build(_busConfiguration, _specifications ?? Enumerable.Empty<ISpecification>());
+        return configurator.Build(_busConfiguration, _specifications);
     }
 }

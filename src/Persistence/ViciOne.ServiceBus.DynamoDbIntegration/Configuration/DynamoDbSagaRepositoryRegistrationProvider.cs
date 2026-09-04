@@ -18,7 +18,8 @@ public class DynamoDbSagaRepositoryRegistrationProvider :
     {
         if (typeof(TSaga).ImplementsInterface<ISagaVersion>())
         {
-            var proxy = (IProxy)Activator.CreateInstance(typeof(Proxy<>).MakeGenericType(typeof(TSaga)), configurator);
+            var proxy = Activator.CreateInstance(typeof(Proxy<>).MakeGenericType(typeof(TSaga)), configurator) as IProxy
+                ?? throw new InvalidOperationException($"Unable to create a DynamoDB saga repository proxy for {typeof(TSaga).FullName}.");
 
             proxy.Configure(this);
         }

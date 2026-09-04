@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
 public static class SchedulePublishExtensions
 {
@@ -11,17 +11,17 @@ public static class SchedulePublishExtensions
     /// </summary>
     /// <typeparam name="T">The message type</typeparam>
     /// <param name="context">The consume context</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
     /// <param name="message">The message</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> SchedulePublish<T>(this ConsumeContext context, DateTime scheduledTime, T message,
+    public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this ConsumeContext context, DateTimeOffset dueAt, T message,
         CancellationToken cancellationToken = default)
         where T : class
     {
         var scheduler = context.GetPayload<MessageSchedulerContext>();
 
-        return scheduler.SchedulePublish(scheduledTime, message, cancellationToken);
+        return scheduler.SchedulePublishAsync(dueAt, message, cancellationToken);
     }
 
     /// <summary>
@@ -29,18 +29,18 @@ public static class SchedulePublishExtensions
     /// </summary>
     /// <typeparam name="T">The message type</typeparam>
     /// <param name="context">The consume context</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
     /// <param name="message">The message</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> SchedulePublish<T>(this ConsumeContext context, DateTime scheduledTime, T message, IPipe<SendContext<T>> pipe,
+    public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this ConsumeContext context, DateTimeOffset dueAt, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken = default)
         where T : class
     {
         var scheduler = context.GetPayload<MessageSchedulerContext>();
 
-        return scheduler.SchedulePublish(scheduledTime, message, pipe, cancellationToken);
+        return scheduler.SchedulePublishAsync(dueAt, message, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -48,29 +48,29 @@ public static class SchedulePublishExtensions
     /// </summary>
     /// <typeparam name="T">The message type</typeparam>
     /// <param name="context">The consume context</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
     /// <param name="message">The message</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> SchedulePublish<T>(this ConsumeContext context, DateTime scheduledTime, T message, IPipe<SendContext> pipe,
+    public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this ConsumeContext context, DateTimeOffset dueAt, T message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
         where T : class
     {
         var scheduler = context.GetPayload<MessageSchedulerContext>();
 
-        return scheduler.SchedulePublish(scheduledTime, message, pipe, cancellationToken);
+        return scheduler.SchedulePublishAsync(dueAt, message, pipe, cancellationToken);
     }
 
     /// <summary>
     /// Sends an object as a message, using the type of the message instance.
     /// </summary>
     /// <param name="context">The consume context</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
     /// <param name="message">The message object</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> SchedulePublish(this ConsumeContext context, DateTime scheduledTime, object message,
+    public static Task<ScheduledMessage> SchedulePublishAsync(this ConsumeContext context, DateTimeOffset dueAt, object message,
         CancellationToken cancellationToken = default)
     {
         if (message == null)
@@ -80,7 +80,7 @@ public static class SchedulePublishExtensions
 
         var scheduler = context.GetPayload<MessageSchedulerContext>();
 
-        return scheduler.SchedulePublish(scheduledTime, message, messageType, cancellationToken);
+        return scheduler.SchedulePublishAsync(dueAt, message, messageType, cancellationToken);
     }
 
     /// <summary>
@@ -88,12 +88,12 @@ public static class SchedulePublishExtensions
     /// to the specified message type, an exception will be thrown.
     /// </summary>
     /// <param name="context">The consume context</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
     /// <param name="message">The message object</param>
     /// <param name="messageType">The type of the message (use message.GetType() if desired)</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> SchedulePublish(this ConsumeContext context, DateTime scheduledTime, object message, Type messageType,
+    public static Task<ScheduledMessage> SchedulePublishAsync(this ConsumeContext context, DateTimeOffset dueAt, object message, Type messageType,
         CancellationToken cancellationToken = default)
     {
         if (messageType == null)
@@ -101,19 +101,19 @@ public static class SchedulePublishExtensions
 
         var scheduler = context.GetPayload<MessageSchedulerContext>();
 
-        return scheduler.SchedulePublish(scheduledTime, message, messageType, cancellationToken);
+        return scheduler.SchedulePublishAsync(dueAt, message, messageType, cancellationToken);
     }
 
     /// <summary>
     /// Sends an object as a message.
     /// </summary>
     /// <param name="context">The consume context</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
     /// <param name="message">The message object</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> SchedulePublish(this ConsumeContext context, DateTime scheduledTime, object message, IPipe<SendContext> pipe,
+    public static Task<ScheduledMessage> SchedulePublishAsync(this ConsumeContext context, DateTimeOffset dueAt, object message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
     {
         if (message == null)
@@ -121,7 +121,7 @@ public static class SchedulePublishExtensions
 
         var scheduler = context.GetPayload<MessageSchedulerContext>();
 
-        return scheduler.SchedulePublish(scheduledTime, message, pipe, cancellationToken);
+        return scheduler.SchedulePublishAsync(dueAt, message, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -129,18 +129,18 @@ public static class SchedulePublishExtensions
     /// to the specified message type, an exception will be thrown.
     /// </summary>
     /// <param name="context">The consume context</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
     /// <param name="message">The message object</param>
     /// <param name="messageType">The type of the message (use message.GetType() if desired)</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> SchedulePublish(this ConsumeContext context, DateTime scheduledTime, object message, Type messageType,
+    public static Task<ScheduledMessage> SchedulePublishAsync(this ConsumeContext context, DateTimeOffset dueAt, object message, Type messageType,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
         var scheduler = context.GetPayload<MessageSchedulerContext>();
 
-        return scheduler.SchedulePublish(scheduledTime, message, messageType, pipe, cancellationToken);
+        return scheduler.SchedulePublishAsync(dueAt, message, messageType, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -149,11 +149,11 @@ public static class SchedulePublishExtensions
     /// </summary>
     /// <typeparam name="T">The interface type to send</typeparam>
     /// <param name="context">The consume context</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
     /// <param name="values">The property values to initialize on the interface</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> SchedulePublish<T>(this ConsumeContext context, DateTime scheduledTime, object values,
+    public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this ConsumeContext context, DateTimeOffset dueAt, object values,
         CancellationToken cancellationToken = default)
         where T : class
     {
@@ -163,7 +163,7 @@ public static class SchedulePublishExtensions
 
         var scheduler = context.GetPayload<MessageSchedulerContext>();
 
-        return scheduler.SchedulePublish<T>(scheduledTime, values, cancellationToken);
+        return scheduler.SchedulePublishAsync<T>(dueAt, values, cancellationToken);
     }
 
     /// <summary>
@@ -172,12 +172,12 @@ public static class SchedulePublishExtensions
     /// </summary>
     /// <typeparam name="T">The interface type to send</typeparam>
     /// <param name="context">The consume context</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
     /// <param name="values">The property values to initialize on the interface</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> SchedulePublish<T>(this ConsumeContext context, DateTime scheduledTime, object values,
+    public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this ConsumeContext context, DateTimeOffset dueAt, object values,
         IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -186,7 +186,7 @@ public static class SchedulePublishExtensions
 
         var scheduler = context.GetPayload<MessageSchedulerContext>();
 
-        return scheduler.SchedulePublish(scheduledTime, values, pipe, cancellationToken);
+        return scheduler.SchedulePublishAsync(dueAt, values, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -195,12 +195,12 @@ public static class SchedulePublishExtensions
     /// </summary>
     /// <typeparam name="T">The interface type to send</typeparam>
     /// <param name="context">The consume context</param>
-    /// <param name="scheduledTime">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
     /// <param name="values">The property values to initialize on the interface</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> SchedulePublish<T>(this ConsumeContext context, DateTime scheduledTime, object values, IPipe<SendContext> pipe,
+    public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this ConsumeContext context, DateTimeOffset dueAt, object values, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
         where T : class
     {
@@ -209,7 +209,7 @@ public static class SchedulePublishExtensions
 
         var scheduler = context.GetPayload<MessageSchedulerContext>();
 
-        return scheduler.SchedulePublish<T>(scheduledTime, values, pipe, cancellationToken);
+        return scheduler.SchedulePublishAsync<T>(dueAt, values, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -221,13 +221,13 @@ public static class SchedulePublishExtensions
     /// <param name="message">The message</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> SchedulePublish<T>(this ConsumeContext context, TimeSpan delay, T message,
+    public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this ConsumeContext context, TimeSpan delay, T message,
         CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = context.GetTimeProvider().GetUtcNow().UtcDateTime + delay;
+        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
 
-        return SchedulePublish(context, scheduledTime, message, cancellationToken);
+        return SchedulePublishAsync(context, dueAt, message, cancellationToken);
     }
 
     /// <summary>
@@ -240,13 +240,13 @@ public static class SchedulePublishExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> SchedulePublish<T>(this ConsumeContext context, TimeSpan delay, T message,
+    public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this ConsumeContext context, TimeSpan delay, T message,
         IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = context.GetTimeProvider().GetUtcNow().UtcDateTime + delay;
+        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
 
-        return SchedulePublish(context, scheduledTime, message, pipe, cancellationToken);
+        return SchedulePublishAsync(context, dueAt, message, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -259,13 +259,13 @@ public static class SchedulePublishExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> SchedulePublish<T>(this ConsumeContext context, TimeSpan delay, T message,
+    public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this ConsumeContext context, TimeSpan delay, T message,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = context.GetTimeProvider().GetUtcNow().UtcDateTime + delay;
+        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
 
-        return SchedulePublish(context, scheduledTime, message, pipe, cancellationToken);
+        return SchedulePublishAsync(context, dueAt, message, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -276,12 +276,12 @@ public static class SchedulePublishExtensions
     /// <param name="delay">The time at which the message should be delivered to the queue</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> SchedulePublish(this ConsumeContext context, TimeSpan delay, object message,
+    public static Task<ScheduledMessage> SchedulePublishAsync(this ConsumeContext context, TimeSpan delay, object message,
         CancellationToken cancellationToken = default)
     {
-        var scheduledTime = context.GetTimeProvider().GetUtcNow().UtcDateTime + delay;
+        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
 
-        return SchedulePublish(context, scheduledTime, message, cancellationToken);
+        return SchedulePublishAsync(context, dueAt, message, cancellationToken);
     }
 
     /// <summary>
@@ -294,12 +294,12 @@ public static class SchedulePublishExtensions
     /// <param name="delay">The time at which the message should be delivered to the queue</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> SchedulePublish(this ConsumeContext context, TimeSpan delay, object message, Type messageType,
+    public static Task<ScheduledMessage> SchedulePublishAsync(this ConsumeContext context, TimeSpan delay, object message, Type messageType,
         CancellationToken cancellationToken = default)
     {
-        var scheduledTime = context.GetTimeProvider().GetUtcNow().UtcDateTime + delay;
+        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
 
-        return SchedulePublish(context, scheduledTime, message, messageType, cancellationToken);
+        return SchedulePublishAsync(context, dueAt, message, messageType, cancellationToken);
     }
 
     /// <summary>
@@ -311,12 +311,12 @@ public static class SchedulePublishExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> SchedulePublish(this ConsumeContext context, TimeSpan delay, object message,
+    public static Task<ScheduledMessage> SchedulePublishAsync(this ConsumeContext context, TimeSpan delay, object message,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
-        var scheduledTime = context.GetTimeProvider().GetUtcNow().UtcDateTime + delay;
+        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
 
-        return SchedulePublish(context, scheduledTime, message, pipe, cancellationToken);
+        return SchedulePublishAsync(context, dueAt, message, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -330,12 +330,12 @@ public static class SchedulePublishExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage> SchedulePublish(this ConsumeContext context, TimeSpan delay, object message, Type messageType,
+    public static Task<ScheduledMessage> SchedulePublishAsync(this ConsumeContext context, TimeSpan delay, object message, Type messageType,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
-        var scheduledTime = context.GetTimeProvider().GetUtcNow().UtcDateTime + delay;
+        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
 
-        return SchedulePublish(context, scheduledTime, message, messageType, pipe, cancellationToken);
+        return SchedulePublishAsync(context, dueAt, message, messageType, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -348,13 +348,13 @@ public static class SchedulePublishExtensions
     /// <param name="delay">The time at which the message should be delivered to the queue</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> SchedulePublish<T>(this ConsumeContext context, TimeSpan delay, object values,
+    public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this ConsumeContext context, TimeSpan delay, object values,
         CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = context.GetTimeProvider().GetUtcNow().UtcDateTime + delay;
+        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
 
-        return SchedulePublish<T>(context, scheduledTime, values, cancellationToken);
+        return SchedulePublishAsync<T>(context, dueAt, values, cancellationToken);
     }
 
     /// <summary>
@@ -368,13 +368,13 @@ public static class SchedulePublishExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> SchedulePublish<T>(this ConsumeContext context, TimeSpan delay, object values,
+    public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this ConsumeContext context, TimeSpan delay, object values,
         IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = context.GetTimeProvider().GetUtcNow().UtcDateTime + delay;
+        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
 
-        return SchedulePublish(context, scheduledTime, values, pipe, cancellationToken);
+        return SchedulePublishAsync(context, dueAt, values, pipe, cancellationToken);
     }
 
     /// <summary>
@@ -388,12 +388,12 @@ public static class SchedulePublishExtensions
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    public static Task<ScheduledMessage<T>> SchedulePublish<T>(this ConsumeContext context, TimeSpan delay, object values,
+    public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this ConsumeContext context, TimeSpan delay, object values,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        var scheduledTime = context.GetTimeProvider().GetUtcNow().UtcDateTime + delay;
+        var dueAt = context.GetTimeProvider().GetUtcNow() + delay;
 
-        return SchedulePublish<T>(context, scheduledTime, values, pipe, cancellationToken);
+        return SchedulePublishAsync<T>(context, dueAt, values, pipe, cancellationToken);
     }
 }

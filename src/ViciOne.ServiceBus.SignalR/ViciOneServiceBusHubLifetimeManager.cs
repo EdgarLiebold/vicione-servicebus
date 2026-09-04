@@ -52,7 +52,7 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
             Users.RemoveSubscription(connection.UserIdentifier, connection);
 
         // Also unsubscribe from any groups
-        ConcurrentHashSet<string> groups = connection.Features.Get<IViciOneServiceBusFeature>().Groups;
+        ConcurrentHashSet<string>? groups = connection.Features.Get<IViciOneServiceBusFeature>()?.Groups;
 
         if (groups != null)
         {
@@ -64,27 +64,27 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
         return Task.CompletedTask;
     }
 
-    public override async Task SendAllAsync(string methodName, object[] args, CancellationToken cancellationToken = default)
+    public override async Task SendAllAsync(string methodName, object?[] args, CancellationToken cancellationToken = default)
     {
         await using IHubLifetimeScope<THub> scope = _scopeProvider.CreateScope<THub>();
         LogContext.Info?.Log("Publishing All<THub> message to ViciOne.ServiceBus.");
-        await scope.PublishEndpoint.Publish<All<THub>>(
+        await scope.PublishEndpoint.PublishAsync<All<THub>>(
             new { Messages = Protocols.ToProtocolDictionary(methodName, args) }, cancellationToken);
     }
 
-    public override async Task SendAllExceptAsync(string methodName, object[] args, IReadOnlyList<string> excludedConnectionIds,
+    public override async Task SendAllExceptAsync(string methodName, object?[] args, IReadOnlyList<string> excludedConnectionIds,
         CancellationToken cancellationToken = default)
     {
         await using IHubLifetimeScope<THub> scope = _scopeProvider.CreateScope<THub>();
         LogContext.Info?.Log("Publishing All<THub> message to ViciOne.ServiceBus, with exceptions.");
-        await scope.PublishEndpoint.Publish<All<THub>>(new
+        await scope.PublishEndpoint.PublishAsync<All<THub>>(new
         {
             Messages = Protocols.ToProtocolDictionary(methodName, args),
             ExcludedConnectionIds = excludedConnectionIds.ToArray()
         }, cancellationToken);
     }
 
-    public override async Task SendConnectionAsync(string connectionId, string methodName, object[] args, CancellationToken cancellationToken = default)
+    public override async Task SendConnectionAsync(string connectionId, string methodName, object?[] args, CancellationToken cancellationToken = default)
     {
         if (connectionId == null)
             throw new ArgumentNullException(nameof(connectionId));
@@ -101,7 +101,7 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
 
         await using IHubLifetimeScope<THub> scope = _scopeProvider.CreateScope<THub>();
         LogContext.Info?.Log("Publishing Connection<THub> message to ViciOne.ServiceBus.");
-        await scope.PublishEndpoint.Publish<Connection<THub>>(new
+        await scope.PublishEndpoint.PublishAsync<Connection<THub>>(new
         {
             ConnectionId = connectionId,
             Messages = Protocols.ToProtocolDictionary(methodName, args)
@@ -109,7 +109,7 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
             cancellationToken);
     }
 
-    public override async Task SendConnectionsAsync(IReadOnlyList<string> connectionIds, string methodName, object[] args,
+    public override async Task SendConnectionsAsync(IReadOnlyList<string> connectionIds, string methodName, object?[] args,
         CancellationToken cancellationToken = default)
     {
         if (connectionIds == null)
@@ -120,7 +120,7 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
             await using IHubLifetimeScope<THub> scope = _scopeProvider.CreateScope<THub>();
             IReadOnlyDictionary<string, byte[]> protocolDictionary = Protocols.ToProtocolDictionary(methodName, args);
             IEnumerable<Task> publishTasks = connectionIds.Select(connectionId =>
-                scope.PublishEndpoint.Publish<Connection<THub>>(new
+                scope.PublishEndpoint.PublishAsync<Connection<THub>>(new
                 {
                     ConnectionId = connectionId,
                     Messages = protocolDictionary
@@ -131,14 +131,14 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
         }
     }
 
-    public override async Task SendGroupAsync(string groupName, string methodName, object[] args, CancellationToken cancellationToken = default)
+    public override async Task SendGroupAsync(string groupName, string methodName, object?[] args, CancellationToken cancellationToken = default)
     {
         if (groupName == null)
             throw new ArgumentNullException(nameof(groupName));
 
         await using IHubLifetimeScope<THub> scope = _scopeProvider.CreateScope<THub>();
         LogContext.Info?.Log("Publishing Group<THub> message to ViciOne.ServiceBus.");
-        await scope.PublishEndpoint.Publish<Group<THub>>(new
+        await scope.PublishEndpoint.PublishAsync<Group<THub>>(new
         {
             GroupName = groupName,
             Messages = Protocols.ToProtocolDictionary(methodName, args)
@@ -146,7 +146,7 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
             cancellationToken);
     }
 
-    public override async Task SendGroupExceptAsync(string groupName, string methodName, object[] args, IReadOnlyList<string> excludedConnectionIds,
+    public override async Task SendGroupExceptAsync(string groupName, string methodName, object?[] args, IReadOnlyList<string> excludedConnectionIds,
         CancellationToken cancellationToken = default)
     {
         if (groupName == null)
@@ -154,7 +154,7 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
 
         await using IHubLifetimeScope<THub> scope = _scopeProvider.CreateScope<THub>();
         LogContext.Info?.Log("Publishing Group<THub> message to ViciOne.ServiceBus, with exceptions.");
-        await scope.PublishEndpoint.Publish<Group<THub>>(new
+        await scope.PublishEndpoint.PublishAsync<Group<THub>>(new
         {
             GroupName = groupName,
             Messages = Protocols.ToProtocolDictionary(methodName, args),
@@ -162,7 +162,7 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
         }, cancellationToken);
     }
 
-    public override async Task SendGroupsAsync(IReadOnlyList<string> groupNames, string methodName, object[] args,
+    public override async Task SendGroupsAsync(IReadOnlyList<string> groupNames, string methodName, object?[] args,
         CancellationToken cancellationToken = default)
     {
         if (groupNames == null)
@@ -173,7 +173,7 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
             await using IHubLifetimeScope<THub> scope = _scopeProvider.CreateScope<THub>();
             IReadOnlyDictionary<string, byte[]> protocolDictionary = Protocols.ToProtocolDictionary(methodName, args);
             IEnumerable<Task> publishTasks = groupNames.Where(x => !string.IsNullOrEmpty(x)).Select(groupName =>
-                scope.PublishEndpoint.Publish<Group<THub>>(new
+                scope.PublishEndpoint.PublishAsync<Group<THub>>(new
                 {
                     GroupName = groupName,
                     Messages = protocolDictionary
@@ -184,18 +184,18 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
         }
     }
 
-    public override async Task SendUserAsync(string userId, string methodName, object[] args, CancellationToken cancellationToken = default)
+    public override async Task SendUserAsync(string userId, string methodName, object?[] args, CancellationToken cancellationToken = default)
     {
         await using IHubLifetimeScope<THub> scope = _scopeProvider.CreateScope<THub>();
         LogContext.Info?.Log("Publishing User<THub> message to ViciOne.ServiceBus.");
-        await scope.PublishEndpoint.Publish<User<THub>>(new
+        await scope.PublishEndpoint.PublishAsync<User<THub>>(new
         {
             UserId = userId,
             Messages = Protocols.ToProtocolDictionary(methodName, args)
         }, cancellationToken);
     }
 
-    public override async Task SendUsersAsync(IReadOnlyList<string> userIds, string methodName, object[] args,
+    public override async Task SendUsersAsync(IReadOnlyList<string> userIds, string methodName, object?[] args,
         CancellationToken cancellationToken = default)
     {
         if (userIds == null)
@@ -205,7 +205,7 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
         {
             await using IHubLifetimeScope<THub> scope = _scopeProvider.CreateScope<THub>();
             IReadOnlyDictionary<string, byte[]> protocolDictionary = Protocols.ToProtocolDictionary(methodName, args);
-            IEnumerable<Task> publishTasks = userIds.Select(userId => scope.PublishEndpoint.Publish<User<THub>>(new
+            IEnumerable<Task> publishTasks = userIds.Select(userId => scope.PublishEndpoint.PublishAsync<User<THub>>(new
             {
                 UserId = userId,
                 Messages = protocolDictionary
@@ -247,7 +247,7 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
             },
                 cancellationToken);
 
-            Response<Ack<THub>> ack = await request.GetResponse<Ack<THub>>();
+            Response<Ack<THub>> ack = await request.GetResponseAsync<Ack<THub>>(cancellationToken: cancellationToken);
             LogContext.Info?.Log($"Request Received for add GroupManagement<THub> from {ack.Message.ServerName}.");
         }
         catch (RequestTimeoutException e)
@@ -288,7 +288,7 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
             },
                 cancellationToken);
 
-            Response<Ack<THub>> ack = await request.GetResponse<Ack<THub>>();
+            Response<Ack<THub>> ack = await request.GetResponseAsync<Ack<THub>>(cancellationToken: cancellationToken);
             LogContext.Info?.Log($"Request Received for remove GroupManagement<THub> from {ack.Message.ServerName}.");
         }
         catch (RequestTimeoutException e)
@@ -300,7 +300,8 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
 
     public void AddGroupAsyncCore(HubConnectionContext connection, string groupName)
     {
-        var feature = connection.Features.Get<IViciOneServiceBusFeature>();
+        var feature = connection.Features.Get<IViciOneServiceBusFeature>()
+            ?? throw new InvalidOperationException("The ViciOne ServiceBus connection feature was not initialized.");
         feature.Groups.Add(groupName);
 
         Groups.AddSubscription(groupName, connection);
@@ -310,7 +311,8 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
     {
         Groups.RemoveSubscription(groupName, connection);
 
-        var feature = connection.Features.Get<IViciOneServiceBusFeature>();
+        var feature = connection.Features.Get<IViciOneServiceBusFeature>()
+            ?? throw new InvalidOperationException("The ViciOne ServiceBus connection feature was not initialized.");
         feature.Groups.Remove(groupName);
     }
 }

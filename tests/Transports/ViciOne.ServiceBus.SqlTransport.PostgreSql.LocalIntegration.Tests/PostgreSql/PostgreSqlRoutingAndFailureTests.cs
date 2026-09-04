@@ -9,14 +9,14 @@ public sealed class PostgreSqlRoutingAndFailureTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0055", "postgresql-native-owner")]
-    public async Task RoutingKeySubscription_DeliversOnlyTheExactKey()
+    public async Task RoutingKeySubscription_DeliversOnlyTheExactKeyAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase fixture = await PostgreSqlTestDatabase.CreateAsync(
             "routing-key",
             cancellationToken);
         string queueName = fixture.Name("routing-input");
-        await DeclareSubscriptions(
+        await DeclareSubscriptionsAsync(
             fixture,
             queueName,
             SqlSubscriptionType.RoutingKey,
@@ -26,7 +26,7 @@ public sealed class PostgreSqlRoutingAndFailureTests
         var rejected = new UpdatedEvent(Guid.NewGuid());
         var accepted = new DeletedEvent(Guid.NewGuid());
 
-        await PublishWithRoutingKeys(
+        await PublishWithRoutingKeysAsync(
             fixture,
             rejected,
             "11223344",
@@ -34,7 +34,7 @@ public sealed class PostgreSqlRoutingAndFailureTests
             "655321",
             cancellationToken);
 
-        await AssertOnlyAcceptedDelivery(
+        await AssertOnlyAcceptedDeliveryAsync(
             fixture,
             queueName,
             rejected.Id,
@@ -44,14 +44,14 @@ public sealed class PostgreSqlRoutingAndFailureTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0056", "postgresql-native-owner")]
-    public async Task PatternSubscription_UsesPostgreSqlAnchoredRegularExpressions()
+    public async Task PatternSubscription_UsesPostgreSqlAnchoredRegularExpressionsAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase fixture = await PostgreSqlTestDatabase.CreateAsync(
             "routing-pattern",
             cancellationToken);
         string queueName = fixture.Name("pattern-input");
-        await DeclareSubscriptions(
+        await DeclareSubscriptionsAsync(
             fixture,
             queueName,
             SqlSubscriptionType.Pattern,
@@ -61,7 +61,7 @@ public sealed class PostgreSqlRoutingAndFailureTests
         var rejected = new UpdatedEvent(Guid.NewGuid());
         var accepted = new DeletedEvent(Guid.NewGuid());
 
-        await PublishWithRoutingKeys(
+        await PublishWithRoutingKeysAsync(
             fixture,
             rejected,
             "11223344",
@@ -69,7 +69,7 @@ public sealed class PostgreSqlRoutingAndFailureTests
             "655321",
             cancellationToken);
 
-        await AssertOnlyAcceptedDelivery(
+        await AssertOnlyAcceptedDeliveryAsync(
             fixture,
             queueName,
             rejected.Id,
@@ -79,7 +79,7 @@ public sealed class PostgreSqlRoutingAndFailureTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0057", "postgresql-native-owner")]
-    public async Task UnhandledMessage_IsAcknowledgedIntoTheEndpointDeadLetterQueue()
+    public async Task UnhandledMessage_IsAcknowledgedIntoTheEndpointDeadLetterQueueAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase fixture = await PostgreSqlTestDatabase.CreateAsync(
@@ -99,9 +99,8 @@ public sealed class PostgreSqlRoutingAndFailureTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await endpoint.Send(new UnhandledMessage(Guid.NewGuid()), cancellationToken)
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await endpoint.SendAsync(new UnhandledMessage(Guid.NewGuid()), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             await observer.Completed.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
         }
@@ -112,14 +111,14 @@ public sealed class PostgreSqlRoutingAndFailureTests
         }
 
         await using NpgsqlConnection connection = fixture.CreateConnection();
-        await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
-        Assert.Equal(0, await connection.DeliveryCount(fixture.Schema, queueName, 1, cancellationToken));
-        Assert.Equal(1, await connection.DeliveryCount(fixture.Schema, queueName, 3, cancellationToken));
+        await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
+        Assert.Equal(0, await connection.DeliveryCountAsync(fixture.Schema, queueName, 1, cancellationToken));
+        Assert.Equal(1, await connection.DeliveryCountAsync(fixture.Schema, queueName, 3, cancellationToken));
     }
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0058", "postgresql-native-owner")]
-    public async Task ThrowingHandler_PublishesFaultAndMovesDeliveryToTheEndpointErrorQueue()
+    public async Task ThrowingHandler_PublishesFaultAndMovesDeliveryToTheEndpointErrorQueueAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase fixture = await PostgreSqlTestDatabase.CreateAsync(
@@ -146,10 +145,9 @@ public sealed class PostgreSqlRoutingAndFailureTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             var message = new FailingMessage(Guid.NewGuid());
-            await endpoint.Send(message, cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await endpoint.SendAsync(message, cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             ConsumeContext<Fault<FailingMessage>> fault = await faulted.Task
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
@@ -164,12 +162,12 @@ public sealed class PostgreSqlRoutingAndFailureTests
         }
 
         await using NpgsqlConnection connection = fixture.CreateConnection();
-        await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
-        Assert.Equal(0, await connection.DeliveryCount(fixture.Schema, queueName, 1, cancellationToken));
-        Assert.Equal(1, await connection.DeliveryCount(fixture.Schema, queueName, 2, cancellationToken));
+        await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
+        Assert.Equal(0, await connection.DeliveryCountAsync(fixture.Schema, queueName, 1, cancellationToken));
+        Assert.Equal(1, await connection.DeliveryCountAsync(fixture.Schema, queueName, 2, cancellationToken));
     }
 
-    private static async Task DeclareSubscriptions(
+    private static async Task DeclareSubscriptionsAsync(
         PostgreSqlTestDatabase fixture,
         string queueName,
         SqlSubscriptionType subscriptionType,
@@ -199,7 +197,7 @@ public sealed class PostgreSqlRoutingAndFailureTests
         await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
     }
 
-    private static async Task PublishWithRoutingKeys(
+    private static async Task PublishWithRoutingKeysAsync(
         PostgreSqlTestDatabase fixture,
         UpdatedEvent rejected,
         string rejectedRoutingKey,
@@ -213,7 +211,7 @@ public sealed class PostgreSqlRoutingAndFailureTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            await bus.Publish(
+            await bus.PublishAsync(
                     rejected,
                     context =>
                     {
@@ -222,7 +220,7 @@ public sealed class PostgreSqlRoutingAndFailureTests
                     },
                     cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await bus.Publish(
+            await bus.PublishAsync(
                     accepted,
                     context =>
                     {
@@ -239,7 +237,7 @@ public sealed class PostgreSqlRoutingAndFailureTests
         }
     }
 
-    private static async Task AssertOnlyAcceptedDelivery(
+    private static async Task AssertOnlyAcceptedDeliveryAsync(
         PostgreSqlTestDatabase fixture,
         string queueName,
         Guid rejectedId,
@@ -247,13 +245,13 @@ public sealed class PostgreSqlRoutingAndFailureTests
         CancellationToken cancellationToken)
     {
         await using NpgsqlConnection connection = fixture.CreateConnection();
-        await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
+        await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
 
-        Assert.Equal(0, await connection.MessageCount(fixture.Schema, rejectedId, cancellationToken));
-        Assert.Equal(0, await connection.DeliveryCountForMessage(fixture.Schema, rejectedId, cancellationToken));
-        Assert.Equal(1, await connection.MessageCount(fixture.Schema, acceptedId, cancellationToken));
-        Assert.Equal(1, await connection.DeliveryCountForMessage(fixture.Schema, acceptedId, cancellationToken));
-        Assert.Equal(1, await connection.DeliveryCount(fixture.Schema, queueName, 1, cancellationToken));
+        Assert.Equal(0, await connection.MessageCountAsync(fixture.Schema, rejectedId, cancellationToken));
+        Assert.Equal(0, await connection.DeliveryCountForMessageAsync(fixture.Schema, rejectedId, cancellationToken));
+        Assert.Equal(1, await connection.MessageCountAsync(fixture.Schema, acceptedId, cancellationToken));
+        Assert.Equal(1, await connection.DeliveryCountForMessageAsync(fixture.Schema, acceptedId, cancellationToken));
+        Assert.Equal(1, await connection.DeliveryCountAsync(fixture.Schema, queueName, 1, cancellationToken));
     }
 
     private static TaskCompletionSource<T> NewObservation<T>() =>
@@ -264,25 +262,25 @@ public sealed class PostgreSqlRoutingAndFailureTests
         public TaskCompletionSource Completed { get; } =
             new(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        public Task PreReceive(ReceiveContext context) => Task.CompletedTask;
+        public Task PreReceiveAsync(ReceiveContext context) => Task.CompletedTask;
 
-        public Task PostReceive(ReceiveContext context)
+        public Task PostReceiveAsync(ReceiveContext context)
         {
             Completed.TrySetResult();
             return Task.CompletedTask;
         }
 
-        public Task PostConsume<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
+        public Task PostConsumeAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
             where T : class => Task.CompletedTask;
 
-        public Task ConsumeFault<T>(
+        public Task ConsumeFaultAsync<T>(
             ConsumeContext<T> context,
             TimeSpan duration,
             string consumerType,
             Exception exception)
             where T : class => Task.CompletedTask;
 
-        public Task ReceiveFault(ReceiveContext context, Exception exception)
+        public Task ReceiveFaultAsync(ReceiveContext context, Exception exception)
         {
             Completed.TrySetException(exception);
             return Task.CompletedTask;

@@ -11,7 +11,7 @@ public sealed class PostgreSqlConcurrencyAndPriorityTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0096", "postgresql-native-owner")]
-    public async Task PartitionedReceive_ThirtyMessagesPreserveOrderWithinBothKeysAtConcurrencyTen()
+    public async Task PartitionedReceive_ThirtyMessagesPreserveOrderWithinBothKeysAtConcurrencyTenAsync()
     {
         const int messageCount = 30;
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -32,7 +32,7 @@ public sealed class PostgreSqlConcurrencyAndPriorityTests
                 endpoint.SetReceiveMode(SqlReceiveMode.PartitionedOrdered);
                 endpoint.Handler<PartitionedMessage>(context =>
                 {
-                    string key = context.PartitionKey()
+                    string key = context.Advanced().PartitionKey()
                         ?? throw new InvalidOperationException("The PostgreSQL delivery lost its partition key.");
                     received.Enqueue((key, context.Message.Index));
                     if (Interlocked.Decrement(ref remaining) == 0)
@@ -47,12 +47,11 @@ public sealed class PostgreSqlConcurrencyAndPriorityTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             for (int index = 1; index <= messageCount; index++)
             {
                 string key = (index % 2).ToString();
-                await endpoint.Send(
+                await endpoint.SendAsync(
                         new PartitionedMessage(index),
                         context => context.SetPartitionKey(key),
                         cancellationToken)
@@ -76,7 +75,7 @@ public sealed class PostgreSqlConcurrencyAndPriorityTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0098", "postgresql-native-owner")]
-    public async Task ParallelPublish_OneThousandMessagesFromTenPublishersArriveExactlyOnce()
+    public async Task ParallelPublish_OneThousandMessagesFromTenPublishersArriveExactlyOnceAsync()
     {
         const int messageCount = 1000;
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -117,7 +116,7 @@ public sealed class PostgreSqlConcurrencyAndPriorityTests
                     MaxDegreeOfParallelism = 10,
                 },
                 async (id, token) =>
-                    await bus.Publish(new ParallelPublishMessage(id), token)
+                    await bus.PublishAsync(new ParallelPublishMessage(id), token)
                         .WaitAsync(fixture.OperationTimeout, token));
             await completed.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
         }
@@ -133,14 +132,14 @@ public sealed class PostgreSqlConcurrencyAndPriorityTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0132", "postgresql-native-owner")]
-    public async Task PrioritySend_PersistsBelowDefaultAndAboveValuesAndDeliversInAscendingOrder()
+    public async Task PrioritySend_PersistsBelowDefaultAndAboveValuesAndDeliversInAscendingOrderAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase fixture = await PostgreSqlTestDatabase.CreateAsync(
             "priority-order",
             cancellationToken);
         string queueName = fixture.Name("priority-input");
-        await CreateQueue(fixture, queueName, cancellationToken);
+        await CreateQueueAsync(fixture, queueName, cancellationToken);
 
         var messages = new[]
         {
@@ -154,11 +153,10 @@ public sealed class PostgreSqlConcurrencyAndPriorityTests
         {
             await sender.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             senderStarted = true;
-            ISendEndpoint endpoint = await sender.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            ISendEndpoint endpoint = await sender.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             foreach (PriorityMessage message in messages)
             {
-                await endpoint.Send(
+                await endpoint.SendAsync(
                         message,
                         context =>
                         {
@@ -177,8 +175,8 @@ public sealed class PostgreSqlConcurrencyAndPriorityTests
 
         await using (NpgsqlConnection connection = fixture.CreateConnection())
         {
-            await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
-            IReadOnlyDictionary<Guid, short> stored = await StoredPriorities(
+            await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
+            IReadOnlyDictionary<Guid, short> stored = await StoredPrioritiesAsync(
                 connection,
                 fixture.Schema,
                 messages.Select(message => message.Id).ToArray(),
@@ -234,7 +232,7 @@ public sealed class PostgreSqlConcurrencyAndPriorityTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0134", "postgresql-native-owner")]
-    public async Task TwoReceivers_ConsumeOneSharedQueueWithoutLossOrDuplicates()
+    public async Task TwoReceivers_ConsumeOneSharedQueueWithoutLossOrDuplicatesAsync()
     {
         const int messageCount = 100;
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -276,9 +274,8 @@ public sealed class PostgreSqlConcurrencyAndPriorityTests
         {
             await first.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             firstStarted = true;
-            ISendEndpoint endpoint = await first.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await endpoint.Send(new CompetingMessage(expected[0]), cancellationToken)
+            ISendEndpoint endpoint = await first.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await endpoint.SendAsync(new CompetingMessage(expected[0]), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             await firstReceiverEntered.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
 
@@ -286,7 +283,7 @@ public sealed class PostgreSqlConcurrencyAndPriorityTests
             secondStarted = true;
             for (int index = 1; index < expected.Length; index++)
             {
-                await endpoint.Send(new CompetingMessage(expected[index]), cancellationToken)
+                await endpoint.SendAsync(new CompetingMessage(expected[index]), cancellationToken)
                     .WaitAsync(fixture.OperationTimeout, cancellationToken);
             }
             await secondReceiverEntered.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
@@ -332,7 +329,7 @@ public sealed class PostgreSqlConcurrencyAndPriorityTests
             });
         });
 
-    private static async Task CreateQueue(
+    private static async Task CreateQueueAsync(
         PostgreSqlTestDatabase fixture,
         string queueName,
         CancellationToken cancellationToken)
@@ -350,7 +347,7 @@ public sealed class PostgreSqlConcurrencyAndPriorityTests
         await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
     }
 
-    private static async Task<IReadOnlyDictionary<Guid, short>> StoredPriorities(
+    private static async Task<IReadOnlyDictionary<Guid, short>> StoredPrioritiesAsync(
         NpgsqlConnection connection,
         string schema,
         Guid[] messageIds,

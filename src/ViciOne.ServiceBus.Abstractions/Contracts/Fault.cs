@@ -35,7 +35,7 @@ public interface Fault
     /// <summary>
     /// When the fault was produced
     /// </summary>
-    DateTime Timestamp { get; }
+    DateTimeOffset Timestamp { get; }
 
     /// <summary>
     /// The exception information that occurred

@@ -3,7 +3,6 @@
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -88,7 +87,7 @@ internal sealed partial class DurableSenderDeliveryService<TBus> : BackgroundSer
 
     async Task DeliverAsync(DurableSendDelivery delivery, CancellationToken cancellationToken)
     {
-        long started = Stopwatch.GetTimestamp();
+        long started = _timeProvider.GetTimestamp();
         using SafeActivityScope activity = _instrumentation.StartDurableDelivery(delivery);
 
         if (delivery.Status == DurableSendStatus.AwaitingConsumerCompletion
@@ -304,7 +303,7 @@ internal sealed partial class DurableSenderDeliveryService<TBus> : BackgroundSer
         _instrumentation.RecordDurableDelivery(
             outcome,
             failureKind,
-            Stopwatch.GetElapsedTime(started).TotalSeconds);
+            _timeProvider.GetElapsedTime(started).TotalSeconds);
     }
 
     void RecordCancelled(SafeActivityScope activity, long started)
@@ -330,7 +329,7 @@ internal sealed partial class DurableSenderDeliveryService<TBus> : BackgroundSer
         _instrumentation.RecordDurableDelivery(
             DurableSendDeliveryOutcome.StatePersistenceFailed,
             failureKind: null,
-            Stopwatch.GetElapsedTime(started).TotalSeconds);
+            _timeProvider.GetElapsedTime(started).TotalSeconds);
         TryLogStatePersistenceFailed(
             id.Value,
             dispatchOutcome,

@@ -19,7 +19,7 @@ public class ProviderPropertyInitializer<TMessage, TInput, TProperty> :
     readonly IWriteProperty<TMessage, TProperty> _messageProperty;
     readonly IPropertyProvider<TInput, TProperty> _propertyProvider;
 
-    public ProviderPropertyInitializer(IPropertyProvider<TInput, TProperty> propertyProvider, PropertyInfo propertyInfo)
+    public ProviderPropertyInitializer(IPropertyProvider<TInput, TProperty>? propertyProvider, PropertyInfo? propertyInfo)
     {
         if (propertyProvider == null)
             throw new ArgumentNullException(nameof(propertyProvider));
@@ -32,13 +32,13 @@ public class ProviderPropertyInitializer<TMessage, TInput, TProperty> :
         _messageProperty = WritePropertyCache<TMessage>.GetProperty<TProperty>(propertyInfo);
     }
 
-    public Task Apply(InitializeContext<TMessage, TInput> context)
+    public Task ApplyAsync(InitializeContext<TMessage, TInput> context, CancellationToken cancellationToken = default)
     {
-        Task<TProperty> propertyTask = _propertyProvider.GetProperty(context);
+        Task<TProperty?> propertyTask = _propertyProvider.GetPropertyAsync(context, cancellationToken: cancellationToken);
         if (propertyTask.IsCompleted)
         {
             if (_messageProperty.TargetType == context.MessageType)
-                _messageProperty.Set(context.Message, propertyTask.Result);
+                _messageProperty.Set(context.Message, propertyTask.Result!);
             return Task.CompletedTask;
         }
 
@@ -47,7 +47,7 @@ public class ProviderPropertyInitializer<TMessage, TInput, TProperty> :
             var propertyValue = await propertyTask.ConfigureAwait(false);
 
             if (_messageProperty.TargetType == context.MessageType)
-                _messageProperty.Set(context.Message, propertyValue);
+                _messageProperty.Set(context.Message, propertyValue!);
         }
 
         return ApplyAsync();

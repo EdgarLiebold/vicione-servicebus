@@ -30,5 +30,5 @@ public interface Exchange
     /// <summary>
     /// Additional exchange arguments
     /// </summary>
-    IDictionary<string, object> ExchangeArguments { get; }
+    IDictionary<string, object?> ExchangeArguments { get; }
 }

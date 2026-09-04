@@ -15,7 +15,7 @@ public interface JobCanceled
     /// <summary>
     /// The time the job was cancelled
     /// </summary>
-    DateTime Timestamp { get; }
+    DateTimeOffset Timestamp { get; }
 
     /// <summary>
     /// THe reason, if specified, the job was canceled

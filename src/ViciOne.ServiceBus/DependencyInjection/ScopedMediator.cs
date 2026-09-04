@@ -10,11 +10,12 @@ namespace ViciOne.ServiceBus.DependencyInjection;
 
 public class ScopedMediator :
     SendEndpointProxy,
-    IScopedMediator
+    IScopedMediator,
+    Advanced.IAdvancedPublishEndpoint
 {
     readonly IMediator _mediator;
     readonly IServiceProvider _provider;
-    IClientFactory _clientFactory;
+    IClientFactory _clientFactory = null!;
 
     public ScopedMediator(IMediator mediator, IServiceProvider provider)
         : base(mediator)
@@ -30,81 +31,81 @@ public class ScopedMediator :
         return _mediator.ConnectPublishObserver(observer);
     }
 
-    public async Task<ISendEndpoint> GetPublishSendEndpoint<T>()
+    public async Task<ISendEndpoint> GetPublishSendEndpointAsync<T>(CancellationToken cancellationToken = default)
         where T : class
     {
-        var endpoint = await _mediator.GetPublishSendEndpoint<T>().ConfigureAwait(false);
+        var endpoint = await _mediator.GetPublishSendEndpointAsync<T>(cancellationToken: cancellationToken).ConfigureAwait(false);
         return new ScopedSendEndpoint(endpoint, _provider);
     }
 
-    public Task Publish<T>(T message, CancellationToken cancellationToken = default)
+    public Task PublishAsync<T>(T message, CancellationToken cancellationToken = default)
         where T : class
     {
-        return PublishInternal(cancellationToken, message);
+        return PublishInternalAsync(cancellationToken, message);
     }
 
-    public Task Publish<T>(T message, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken = default)
+    public Task PublishAsync<T>(T message, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        return PublishInternal(cancellationToken, message, publishPipe);
+        return PublishInternalAsync(cancellationToken, message, publishPipe);
     }
 
-    public Task Publish<T>(T message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
+    public Task PublishAsync<T>(T message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        return PublishInternal(cancellationToken, message, publishPipe);
+        return PublishInternalAsync(cancellationToken, message, publishPipe);
     }
 
-    public Task Publish(object message, CancellationToken cancellationToken = default)
+    public Task PublishAsync(object message, CancellationToken cancellationToken = default)
     {
         if (message == null)
             throw new ArgumentNullException(nameof(message));
 
         var messageType = message.GetType();
-        return PublishEndpointConverterCache.Publish(this, message, messageType, cancellationToken);
+        return PublishEndpointConverterCache.PublishAsync(this, message, messageType, cancellationToken);
     }
 
-    public Task Publish(object message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
+    public Task PublishAsync(object message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
     {
         if (message == null)
             throw new ArgumentNullException(nameof(message));
 
         var messageType = message.GetType();
-        return PublishEndpointConverterCache.Publish(this, message, messageType, publishPipe, cancellationToken);
+        return PublishEndpointConverterCache.PublishAsync(this, message, messageType, publishPipe, cancellationToken);
     }
 
-    public Task Publish(object message, Type messageType, CancellationToken cancellationToken = default)
+    public Task PublishAsync(object message, Type messageType, CancellationToken cancellationToken = default)
     {
         if (message == null)
             throw new ArgumentNullException(nameof(message));
 
-        return PublishEndpointConverterCache.Publish(this, message, messageType, cancellationToken);
+        return PublishEndpointConverterCache.PublishAsync(this, message, messageType, cancellationToken);
     }
 
-    public Task Publish(object message, Type messageType, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
+    public Task PublishAsync(object message, Type messageType, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
     {
         if (message == null)
             throw new ArgumentNullException(nameof(message));
 
-        return PublishEndpointConverterCache.Publish(this, message, messageType, publishPipe, cancellationToken);
+        return PublishEndpointConverterCache.PublishAsync(this, message, messageType, publishPipe, cancellationToken);
     }
 
-    public Task Publish<T>(object values, CancellationToken cancellationToken = default)
+    public Task PublishAsync<T>(object values, CancellationToken cancellationToken = default)
         where T : class
     {
-        return PublishInternal<T>(cancellationToken, values);
+        return PublishInternalAsync<T>(cancellationToken, values);
     }
 
-    public Task Publish<T>(object values, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken = default)
+    public Task PublishAsync<T>(object values, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        return PublishInternal(cancellationToken, values, publishPipe);
+        return PublishInternalAsync(cancellationToken, values, publishPipe);
     }
 
-    public Task Publish<T>(object values, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
+    public Task PublishAsync<T>(object values, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        return PublishInternal<T>(cancellationToken, values, publishPipe);
+        return PublishInternalAsync<T>(cancellationToken, values, publishPipe);
     }
 
     public ClientFactoryContext Context => ClientFactory.Context;
@@ -171,7 +172,7 @@ public class ScopedMediator :
         return ClientFactory.CreateRequestClient<T>(timeout);
     }
 
-    public IRequestClient<T> CreateRequestClient<T>(ConsumeContext consumeContext, RequestTimeout timeout = default)
+    public IRequestClient<T> CreateRequestClient<T>(ConsumeContext? consumeContext, RequestTimeout timeout = default)
         where T : class
     {
         return ClientFactory.CreateRequestClient<T>(consumeContext, timeout);
@@ -183,7 +184,7 @@ public class ScopedMediator :
         return ClientFactory.CreateRequestClient<T>(destinationAddress, timeout);
     }
 
-    public IRequestClient<T> CreateRequestClient<T>(ConsumeContext consumeContext, Uri destinationAddress, RequestTimeout timeout = default)
+    public IRequestClient<T> CreateRequestClient<T>(ConsumeContext? consumeContext, Uri destinationAddress, RequestTimeout timeout = default)
         where T : class
     {
         return ClientFactory.CreateRequestClient<T>(consumeContext, destinationAddress, timeout);
@@ -218,22 +219,22 @@ public class ScopedMediator :
         return _mediator.ConnectConsumeMessageObserver(observer);
     }
 
-    protected override IPipe<SendContext<T>> GetPipeProxy<T>(IPipe<SendContext<T>> pipe = default)
+    protected override IPipe<SendContext<T>> GetPipeProxy<T>(IPipe<SendContext<T>>? pipe = default)
     {
         return new ScopedSendPipeAdapter<T>(_provider, pipe);
     }
 
-    Task PublishInternal<T>(CancellationToken cancellationToken, T message, IPipe<PublishContext<T>> pipe = null)
+    Task PublishInternalAsync<T>(CancellationToken cancellationToken, T message, IPipe<PublishContext<T>>? pipe = null)
         where T : class
     {
-        Task<ISendEndpoint> sendEndpointTask = GetPublishSendEndpoint<T>();
+        Task<ISendEndpoint> sendEndpointTask = GetPublishSendEndpointAsync<T>(cancellationToken: cancellationToken);
         if (sendEndpointTask.Status == TaskStatus.RanToCompletion)
         {
             var sendEndpoint = sendEndpointTask.Result;
 
             return pipe != null && pipe.IsNotEmpty()
-                ? sendEndpoint.Send(message, new PublishSendPipeAdapter<T>(pipe), cancellationToken)
-                : sendEndpoint.Send(message, cancellationToken);
+                ? sendEndpoint.SendAsync(message, new PublishSendPipeAdapter<T>(pipe), cancellationToken)
+                : sendEndpoint.SendAsync(message, cancellationToken);
         }
 
         async Task PublishAsync()
@@ -241,25 +242,25 @@ public class ScopedMediator :
             var sendEndpoint = await sendEndpointTask.ConfigureAwait(false);
 
             if (pipe != null && pipe.IsNotEmpty())
-                await sendEndpoint.Send(message, new PublishSendPipeAdapter<T>(pipe), cancellationToken).ConfigureAwait(false);
+                await sendEndpoint.SendAsync(message, new PublishSendPipeAdapter<T>(pipe), cancellationToken).ConfigureAwait(false);
             else
-                await sendEndpoint.Send(message, cancellationToken).ConfigureAwait(false);
+                await sendEndpoint.SendAsync(message, cancellationToken).ConfigureAwait(false);
         }
 
         return PublishAsync();
     }
 
-    Task PublishInternal<T>(CancellationToken cancellationToken, object values, IPipe<PublishContext<T>> pipe = null)
+    Task PublishInternalAsync<T>(CancellationToken cancellationToken, object values, IPipe<PublishContext<T>>? pipe = null)
         where T : class
     {
-        Task<ISendEndpoint> sendEndpointTask = GetPublishSendEndpoint<T>();
+        Task<ISendEndpoint> sendEndpointTask = GetPublishSendEndpointAsync<T>(cancellationToken: cancellationToken);
         if (sendEndpointTask.Status == TaskStatus.RanToCompletion)
         {
             var sendEndpoint = sendEndpointTask.Result;
 
             return pipe != null && pipe.IsNotEmpty()
-                ? sendEndpoint.Send(values, new PublishSendPipeAdapter<T>(pipe), cancellationToken)
-                : sendEndpoint.Send<T>(values, cancellationToken);
+                ? sendEndpoint.SendAsync(values, new PublishSendPipeAdapter<T>(pipe), cancellationToken)
+                : sendEndpoint.SendAsync<T>(values, cancellationToken);
         }
 
         async Task PublishAsync()
@@ -267,9 +268,9 @@ public class ScopedMediator :
             var sendEndpoint = await sendEndpointTask.ConfigureAwait(false);
 
             if (pipe != null && pipe.IsNotEmpty())
-                await sendEndpoint.Send(values, new PublishSendPipeAdapter<T>(pipe), cancellationToken).ConfigureAwait(false);
+                await sendEndpoint.SendAsync(values, new PublishSendPipeAdapter<T>(pipe), cancellationToken).ConfigureAwait(false);
             else
-                await sendEndpoint.Send<T>(values, cancellationToken).ConfigureAwait(false);
+                await sendEndpoint.SendAsync<T>(values, cancellationToken).ConfigureAwait(false);
         }
 
         return PublishAsync();

@@ -9,7 +9,7 @@ public sealed class AzureServiceBusEmulatorCapabilityTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-EMULATOR-CAPABILITY", "administration-queues-topics-subscriptions-rules-and-update")]
-    public async Task AdministrationClient_ManagesQueuesTopicsSubscriptionsAndRules()
+    public async Task AdministrationClient_ManagesQueuesTopicsSubscriptionsAndRulesAsync()
     {
         AzureServiceBusLocalFixture fixture = AzureServiceBusLocalFixture.Create();
         ServiceBusAdministrationClient admin = fixture.CreateAdministrationClient();
@@ -51,7 +51,7 @@ public sealed class AzureServiceBusEmulatorCapabilityTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-EMULATOR-CAPABILITY", "amqp-send-receive-complete")]
-    public async Task AmqpClient_SendsReceivesAndCompletesAnExactMessage()
+    public async Task AmqpClient_SendsReceivesAndCompletesAnExactMessageAsync()
     {
         AzureServiceBusLocalFixture fixture = AzureServiceBusLocalFixture.Create();
         ServiceBusAdministrationClient admin = fixture.CreateAdministrationClient();
@@ -85,7 +85,7 @@ public sealed class AzureServiceBusEmulatorCapabilityTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-EMULATOR-CAPABILITY", "sessions-and-session-state")]
-    public async Task Sessions_CarryIdentityAndMutableProviderState()
+    public async Task Sessions_CarryIdentityAndMutableProviderStateAsync()
     {
         AzureServiceBusLocalFixture fixture = AzureServiceBusLocalFixture.Create();
         ServiceBusAdministrationClient admin = fixture.CreateAdministrationClient();
@@ -123,7 +123,7 @@ public sealed class AzureServiceBusEmulatorCapabilityTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-EMULATOR-CAPABILITY", "provider-schedule-sequence-and-cancellation-acceptance")]
-    public async Task Scheduling_ReturnsAProviderSequenceAndAcceptsCancellation()
+    public async Task Scheduling_ReturnsAProviderSequenceAndAcceptsCancellationAsync()
     {
         AzureServiceBusLocalFixture fixture = AzureServiceBusLocalFixture.Create();
         ServiceBusAdministrationClient admin = fixture.CreateAdministrationClient();
@@ -152,7 +152,7 @@ public sealed class AzureServiceBusEmulatorCapabilityTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-EMULATOR-CAPABILITY", "duplicate-detection")]
-    public async Task DuplicateDetection_KeepsOneProviderMessageForOneMessageId()
+    public async Task DuplicateDetection_KeepsOneProviderMessageForOneMessageIdAsync()
     {
         AzureServiceBusLocalFixture fixture = AzureServiceBusLocalFixture.Create();
         ServiceBusAdministrationClient admin = fixture.CreateAdministrationClient();
@@ -189,7 +189,7 @@ public sealed class AzureServiceBusEmulatorCapabilityTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-EMULATOR-CAPABILITY", "dead-letter-reason-and-description")]
-    public async Task DeadLettering_PreservesTheExactReasonAndMessage()
+    public async Task DeadLettering_PreservesTheExactReasonAndMessageAsync()
     {
         AzureServiceBusLocalFixture fixture = AzureServiceBusLocalFixture.Create();
         ServiceBusAdministrationClient admin = fixture.CreateAdministrationClient();
@@ -230,7 +230,7 @@ public sealed class AzureServiceBusEmulatorCapabilityTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-EMULATOR-CAPABILITY", "forwarding")]
-    public async Task Forwarding_DeliversTheExactMessageToTheConfiguredDestination()
+    public async Task Forwarding_DeliversTheExactMessageToTheConfiguredDestinationAsync()
     {
         AzureServiceBusLocalFixture fixture = AzureServiceBusLocalFixture.Create();
         ServiceBusAdministrationClient admin = fixture.CreateAdministrationClient();

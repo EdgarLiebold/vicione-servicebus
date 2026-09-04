@@ -24,12 +24,12 @@ public class UriDictionarySystemTextJsonConverter<T, TValue> :
         writer.WriteEndObject();
     }
 
-    public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         return ReadInternal(ref reader, typeToConvert, options);
     }
 
-    protected T ReadInternal(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    protected T? ReadInternal(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         if (reader.TokenType != JsonTokenType.StartObject)
             throw new JsonException($"Expected StartObject, found: {reader.TokenType}");
@@ -52,7 +52,7 @@ public class UriDictionarySystemTextJsonConverter<T, TValue> :
 
             var key = new Uri(propertyName);
 
-            dictionary.Add(key, JsonSerializer.Deserialize<TValue>(ref reader, options));
+            dictionary.Add(key, JsonSerializer.Deserialize<TValue>(ref reader, options)!);
         }
 
         return dictionary as T;

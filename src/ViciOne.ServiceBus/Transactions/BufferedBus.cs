@@ -13,7 +13,7 @@ internal sealed class BufferedBus :
 
     readonly SemaphoreSlim _capacity;
     readonly SemaphoreSlim _flushLock;
-    readonly AsyncLocal<FlushFrame> _flushFrame;
+    readonly AsyncLocal<FlushFrame?> _flushFrame;
     readonly object _lock;
     readonly Queue<Func<CancellationToken, Task>> _pendingActions;
 
@@ -25,7 +25,7 @@ internal sealed class BufferedBus :
 
         _capacity = new SemaphoreSlim(capacity, capacity);
         _flushLock = new SemaphoreSlim(1, 1);
-        _flushFrame = new AsyncLocal<FlushFrame>();
+        _flushFrame = new AsyncLocal<FlushFrame?>();
         _lock = new object();
         _pendingActions = new Queue<Func<CancellationToken, Task>>();
     }
@@ -62,7 +62,7 @@ internal sealed class BufferedBus :
 
                 try
                 {
-                    FlushFrame inheritedFrame = _flushFrame.Value;
+                    FlushFrame? inheritedFrame = _flushFrame.Value;
                     var frame = new FlushFrame();
                     _flushFrame.Value = frame;
                     try
@@ -88,7 +88,7 @@ internal sealed class BufferedBus :
         }
     }
 
-    internal override async Task Add(Func<CancellationToken, Task> action, CancellationToken cancellationToken)
+    internal override async Task AddAsync(Func<CancellationToken, Task> action, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(action);
 

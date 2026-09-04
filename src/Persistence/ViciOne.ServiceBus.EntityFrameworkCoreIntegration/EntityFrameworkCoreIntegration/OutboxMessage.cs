@@ -16,9 +16,9 @@ public class OutboxMessage :
     /// <summary>
     /// When the message should be visible / ready to be delivered
     /// </summary>
-    public DateTime? EnqueueTime { get; set; }
+    public DateTimeOffset? EnqueueTime { get; set; }
 
-    public DateTime SentTime { get; set; }
+    public DateTimeOffset SentTime { get; set; }
 
     public string? Headers { get; set; }
 
@@ -62,10 +62,10 @@ public class OutboxMessage :
     /// <summary>
     /// If the message is not delivered to the transport within the expiration time, consider moving to a dead-letter queue instead
     /// </summary>
-    public DateTime? ExpirationTime { get; set; }
+    public DateTimeOffset? ExpirationTime { get; set; }
 
     Guid? MessageContext.MessageId => MessageId;
-    DateTime? MessageContext.SentTime => SentTime;
+    DateTimeOffset? MessageContext.SentTime => SentTime;
     Headers MessageContext.Headers => _headers ?? EmptyHeaders.Instance;
     HostInfo MessageContext.Host => HostMetadataCache.Host;
 

@@ -8,7 +8,7 @@ public sealed class ActiveMqHostEqualityComparer :
 {
     public static IEqualityComparer<ActiveMqHostSettings> Default { get; } = new ActiveMqHostEqualityComparer();
 
-    public bool Equals(ActiveMqHostSettings x, ActiveMqHostSettings y)
+    public bool Equals(ActiveMqHostSettings? x, ActiveMqHostSettings? y)
     {
         if (ReferenceEquals(x, y))
             return true;

@@ -17,7 +17,7 @@ public abstract class DeserializerConsumeContext :
         _consumeTasks = new PendingTaskCollection(4);
     }
 
-    public override Task ConsumeCompleted => _consumeTasks.Completed(CancellationToken);
+    public override Task ConsumeCompleted => _consumeTasks.CompletedAsync(CancellationToken);
 
     /// <summary>
     /// Returns true if the payload type is included with or supported by the context type

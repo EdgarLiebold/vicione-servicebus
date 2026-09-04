@@ -18,9 +18,9 @@ public class ForkFilter<TContext> :
         _pipe = pipe ?? throw new ArgumentNullException(nameof(pipe));
     }
 
-    Task IFilter<TContext>.Send(TContext context, IPipe<TContext> next)
+    Task IFilter<TContext>.SendAsync(TContext context, IPipe<TContext> next)
     {
-        return Task.WhenAll(_pipe.Send(context), next.Send(context));
+        return Task.WhenAll(_pipe.SendAsync(context), next.SendAsync(context));
     }
 
     void IProbeSite.Probe(ProbeContext context)

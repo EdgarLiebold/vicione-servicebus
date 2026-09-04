@@ -26,7 +26,7 @@ public class LongTypeConverter :
         return true;
     }
 
-    public bool TryConvert(object input, out long result)
+    public bool TryConvert(object? input, out long result)
     {
         if (input != null)
         {
@@ -50,7 +50,7 @@ public class LongTypeConverter :
         return true;
     }
 
-    public bool TryConvert(string input, out long result)
+    public bool TryConvert(string? input, out long result)
     {
         return long.TryParse(input, out result);
     }

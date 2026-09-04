@@ -17,8 +17,8 @@ public class StateMachineSagaTestHarness<TInstance, TStateMachine> :
     readonly IDisposable _stateObserverHandle;
 
     public StateMachineSagaTestHarness(BusTestHarness testHarness, ISagaRepository<TInstance> repository,
-        IQuerySagaRepository<TInstance> querySagaRepository, ILoadSagaRepository<TInstance> loadSagaRepository, TStateMachine stateMachine,
-        string queueName)
+        IQuerySagaRepository<TInstance>? querySagaRepository, ILoadSagaRepository<TInstance>? loadSagaRepository, TStateMachine stateMachine,
+        string? queueName)
         : base(testHarness, repository, querySagaRepository, loadSagaRepository, queueName)
     {
         StateMachine = stateMachine;
@@ -45,11 +45,12 @@ public class StateMachineSagaTestHarness<TInstance, TStateMachine> :
     /// <param name="stateSelector"></param>
     /// <param name="timeout"></param>
     /// <returns></returns>
-    public Task<Guid?> Exists(Guid correlationId, Func<TStateMachine, State> stateSelector, TimeSpan? timeout = default)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public Task<Guid?> ExistsAsync(Guid correlationId, Func<TStateMachine, State> stateSelector, TimeSpan? timeout = default, CancellationToken cancellationToken = default)
     {
         var state = stateSelector(StateMachine);
 
-        return Exists(correlationId, state, timeout);
+        return ExistsAsync(correlationId, state, timeout, cancellationToken: cancellationToken);
     }
 
     /// <summary>
@@ -59,7 +60,8 @@ public class StateMachineSagaTestHarness<TInstance, TStateMachine> :
     /// <param name="state">The expected state</param>
     /// <param name="timeout"></param>
     /// <returns></returns>
-    public async Task<Guid?> Exists(Guid correlationId, State state, TimeSpan? timeout = default)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public async Task<Guid?> ExistsAsync(Guid correlationId, State state, TimeSpan? timeout = default, CancellationToken cancellationToken = default)
     {
         if (QuerySagaRepository == null)
             throw new InvalidOperationException("The repository does not support Query operations");
@@ -67,7 +69,7 @@ public class StateMachineSagaTestHarness<TInstance, TStateMachine> :
         ISagaQuery<TInstance> query = StateMachine.CreateSagaQuery(x => x.CorrelationId == correlationId, state);
 
         return await PollAsync(
-            async () => (Guid?)(await QuerySagaRepository.Find(query).ConfigureAwait(false)).FirstOrDefault(),
+            async () => (Guid?)(await QuerySagaRepository.FindAsync(query, cancellationToken: cancellationToken).ConfigureAwait(false)).FirstOrDefault(),
             sagaId => sagaId.HasValue && sagaId.Value != Guid.Empty,
             default(Guid?),
             timeout).ConfigureAwait(false);
@@ -80,11 +82,12 @@ public class StateMachineSagaTestHarness<TInstance, TStateMachine> :
     /// <param name="stateSelector"></param>
     /// <param name="timeout"></param>
     /// <returns></returns>
-    public Task<IList<Guid>> Exists(Expression<Func<TInstance, bool>> expression, Func<TStateMachine, State> stateSelector, TimeSpan? timeout = default)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public Task<IList<Guid>> ExistsAsync(Expression<Func<TInstance, bool>> expression, Func<TStateMachine, State> stateSelector, TimeSpan? timeout = default, CancellationToken cancellationToken = default)
     {
         var state = stateSelector(StateMachine);
 
-        return Exists(expression, state, timeout);
+        return ExistsAsync(expression, state, timeout, cancellationToken: cancellationToken);
     }
 
     /// <summary>
@@ -94,7 +97,8 @@ public class StateMachineSagaTestHarness<TInstance, TStateMachine> :
     /// <param name="state">The expected state</param>
     /// <param name="timeout"></param>
     /// <returns></returns>
-    public async Task<IList<Guid>> Exists(Expression<Func<TInstance, bool>> expression, State state, TimeSpan? timeout = default)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public async Task<IList<Guid>> ExistsAsync(Expression<Func<TInstance, bool>> expression, State state, TimeSpan? timeout = default, CancellationToken cancellationToken = default)
     {
         if (QuerySagaRepository == null)
             throw new InvalidOperationException("The repository does not support Query operations");
@@ -102,9 +106,9 @@ public class StateMachineSagaTestHarness<TInstance, TStateMachine> :
         ISagaQuery<TInstance> query = StateMachine.CreateSagaQuery(expression, state);
 
         return await PollAsync(
-            async () => (IList<Guid>)(await QuerySagaRepository.Find(query).ConfigureAwait(false)).ToList(),
+            async () => (IList<Guid>)(await QuerySagaRepository.FindAsync(query, cancellationToken: cancellationToken).ConfigureAwait(false)).ToList(),
             sagas => sagas.Count > 0,
-            default(IList<Guid>),
+            new List<Guid>(),
             timeout).ConfigureAwait(false);
     }
 

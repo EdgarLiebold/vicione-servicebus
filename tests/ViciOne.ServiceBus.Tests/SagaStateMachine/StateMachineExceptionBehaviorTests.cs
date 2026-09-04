@@ -11,12 +11,12 @@ public sealed class StateMachineExceptionBehaviorTests
     [InlineData(ConstructionStyle.Declarative)]
     [InlineData(ConstructionStyle.Dynamic)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-EXCEPTION", "typed-catch-complete-sync-async-branch-pipeline")]
-    public async Task TypedCatch_ExecutesTheExactPipelineAndStopsTheFaultedBehavior(ConstructionStyle style)
+    public async Task TypedCatch_ExecutesTheExactPipelineAndStopsTheFaultedBehaviorAsync(ConstructionStyle style)
     {
         ExceptionScenario scenario = CreateTypedCatchScenario(style);
         var instance = new ExceptionInstance();
 
-        await Raise(scenario.Machine, instance, scenario.Event);
+        await RaiseAsync(scenario.Machine, instance, scenario.Event);
 
         Assert.Equal(
             ["before", "throw", "if-true", "if-async-true", "if-false-else", "if-async-false-else", "catch", "catch-async"],
@@ -33,12 +33,12 @@ public sealed class StateMachineExceptionBehaviorTests
     [InlineData(ConstructionStyle.Declarative)]
     [InlineData(ConstructionStyle.Dynamic)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-EXCEPTION", "base-catch-preserves-derived-exception")]
-    public async Task BaseCatch_PreservesTheDerivedExceptionAndTransitions(ConstructionStyle style)
+    public async Task BaseCatch_PreservesTheDerivedExceptionAndTransitionsAsync(ConstructionStyle style)
     {
         ExceptionScenario scenario = CreateBaseCatchScenario(style);
         var instance = new ExceptionInstance();
 
-        await Raise(scenario.Machine, instance, scenario.Event);
+        await RaiseAsync(scenario.Machine, instance, scenario.Event);
 
         Assert.Equal(["before", "throw", "base-catch"], instance.Markers);
         Assert.DoesNotContain("after-throw", instance.Markers);
@@ -51,12 +51,12 @@ public sealed class StateMachineExceptionBehaviorTests
     [InlineData(ConstructionStyle.Declarative)]
     [InlineData(ConstructionStyle.Dynamic)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-EXCEPTION", "empty-catch-continues-following-activity")]
-    public async Task EmptyCatch_ContinuesWithTheFollowingActivity(ConstructionStyle style)
+    public async Task EmptyCatch_ContinuesWithTheFollowingActivityAsync(ConstructionStyle style)
     {
         ExceptionScenario scenario = CreateEmptyCatchScenario(style);
         var instance = new ExceptionInstance();
 
-        await Raise(scenario.Machine, instance, scenario.Event);
+        await RaiseAsync(scenario.Machine, instance, scenario.Event);
 
         Assert.Equal(["throw", "after-catch"], instance.Markers);
         Assert.NotNull(instance.ThrownException);
@@ -67,12 +67,12 @@ public sealed class StateMachineExceptionBehaviorTests
     [InlineData(ConstructionStyle.Declarative)]
     [InlineData(ConstructionStyle.Dynamic)]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-EXCEPTION", "data-event-catch-complete-branch-pipeline")]
-    public async Task DataEventCatch_ExecutesTheExactPipelineAndStopsTheFaultedBehavior(ConstructionStyle style)
+    public async Task DataEventCatch_ExecutesTheExactPipelineAndStopsTheFaultedBehaviorAsync(ConstructionStyle style)
     {
         DataExceptionScenario scenario = CreateDataCatchScenario(style);
         var instance = new ExceptionInstance();
 
-        await Raise(scenario.Machine, instance, scenario.Event, new ExceptionData("payload"));
+        await RaiseAsync(scenario.Machine, instance, scenario.Event, new ExceptionData("payload"));
 
         Assert.Equal(
             ["before:payload", "throw", "if-true", "if-async-true", "if-false-else", "if-async-false-else", "catch"],
@@ -86,12 +86,12 @@ public sealed class StateMachineExceptionBehaviorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-EXCEPTION", "nested-else-catch-transitions-to-catch-target")]
-    public async Task NestedElseCatch_TransitionsToTheCatchTargetWithoutExecutingTheInterruptedTransition()
+    public async Task NestedElseCatch_TransitionsToTheCatchTargetWithoutExecutingTheInterruptedTransitionAsync()
     {
         var machine = new DeclarativeNestedElseCatchMachine();
         var instance = new ExceptionInstance();
 
-        await Raise(machine, instance, machine.Initialized);
+        await RaiseAsync(machine, instance, machine.Initialized);
 
         Assert.Equal(["else", "throw", "catch"], instance.Markers);
         Assert.Same(machine.Failed, instance.CurrentState);
@@ -100,12 +100,12 @@ public sealed class StateMachineExceptionBehaviorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-STATE-MACHINE-EXCEPTION", "catch-finalizes-data-event")]
-    public async Task Catch_CanFinalizeTheInstanceAfterADataEventFailure()
+    public async Task Catch_CanFinalizeTheInstanceAfterADataEventFailureAsync()
     {
         var machine = new DeclarativeFinalizeCatchMachine();
         var instance = new ExceptionInstance();
 
-        await Raise(machine, instance, machine.Initialized, new ExceptionData("finalize"));
+        await RaiseAsync(machine, instance, machine.Initialized, new ExceptionData("finalize"));
 
         Assert.Equal(["throw:finalize", "catch"], instance.Markers);
         Assert.Same(machine.Final, instance.CurrentState);
@@ -277,30 +277,30 @@ public sealed class StateMachineExceptionBehaviorTests
         instance.CaughtException = exception;
     }
 
-    private static async Task Raise(StateMachine<ExceptionInstance> machine, ExceptionInstance instance, Event @event)
+    private static async Task RaiseAsync(StateMachine<ExceptionInstance> machine, ExceptionInstance instance, Event @event)
     {
         var message = new ExceptionSignal();
         ConsumeContext<ExceptionSignal> consumeContext = InMemoryOutboxTestContextFactory.Create(message);
         var sagaInstance = new SagaInstance<ExceptionInstance>(instance);
-        await sagaInstance.MarkInUse(consumeContext.CancellationToken);
+        await sagaInstance.MarkInUseAsync(consumeContext.CancellationToken);
         using var sagaContext = new InMemorySagaConsumeContext<ExceptionInstance, ExceptionSignal>(consumeContext, sagaInstance);
         BehaviorContext<ExceptionInstance> behaviorContext =
             new ViciOneServiceBusStateMachine<ExceptionInstance>.BehaviorContextProxy(machine, sagaContext, @event);
 
-        await machine.RaiseEvent(behaviorContext);
+        await machine.RaiseEventAsync(behaviorContext);
     }
 
-    private static async Task Raise<T>(StateMachine<ExceptionInstance> machine, ExceptionInstance instance, Event<T> @event, T message)
+    private static async Task RaiseAsync<T>(StateMachine<ExceptionInstance> machine, ExceptionInstance instance, Event<T> @event, T message)
         where T : class
     {
         ConsumeContext<T> consumeContext = InMemoryOutboxTestContextFactory.Create(message);
         var sagaInstance = new SagaInstance<ExceptionInstance>(instance);
-        await sagaInstance.MarkInUse(consumeContext.CancellationToken);
+        await sagaInstance.MarkInUseAsync(consumeContext.CancellationToken);
         using var sagaContext = new InMemorySagaConsumeContext<ExceptionInstance, T>(consumeContext, sagaInstance);
         BehaviorContext<ExceptionInstance, T> behaviorContext =
             new ViciOneServiceBusStateMachine<ExceptionInstance>.BehaviorContextProxy<T>(machine, sagaContext, sagaContext, @event);
 
-        await machine.RaiseEvent(behaviorContext);
+        await machine.RaiseEventAsync(behaviorContext);
     }
 
     public enum ConstructionStyle

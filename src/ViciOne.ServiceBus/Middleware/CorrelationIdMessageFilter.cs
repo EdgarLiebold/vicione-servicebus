@@ -29,12 +29,12 @@ public class CorrelationIdMessageFilter<TMessage> :
         context.CreateFilterScope("correlationId");
     }
 
-    public Task Send(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
+    public Task SendAsync(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
     {
         var correlationId = _getCorrelationId(context);
 
         var proxy = new CorrelationIdConsumeContextProxy<TMessage>(context, correlationId);
 
-        return next.Send(proxy);
+        return next.SendAsync(proxy);
     }
 }

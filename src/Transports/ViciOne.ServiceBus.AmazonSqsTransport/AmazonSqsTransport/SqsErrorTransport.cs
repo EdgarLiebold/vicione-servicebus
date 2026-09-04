@@ -19,13 +19,13 @@ public class SqsErrorTransport :
         _headerAdapter = headerAdapter;
     }
 
-    public Task Send(ExceptionReceiveContext context)
+    public Task SendAsync(ExceptionReceiveContext context, CancellationToken cancellationToken = default)
     {
-        void PreSend(SendMessageBatchRequestEntry entry, IDictionary<string, MessageAttributeValue> headers)
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); void PreSend(SendMessageBatchRequestEntry entry, IDictionary<string, MessageAttributeValue> headers)
         {
             _headerAdapter.CopyFrom(headers, context.ExceptionHeaders);
         }
 
-        return Move(context, PreSend);
+        return MoveAsync(context, PreSend);
     }
 }

@@ -28,8 +28,8 @@ public interface IRabbitMqHostConfiguration :
     void ApplyEndpointDefinition(IRabbitMqReceiveEndpointConfigurator configurator, IEndpointDefinition definition);
 
     IRabbitMqReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
-        Action<IRabbitMqReceiveEndpointConfigurator> configure = null);
+        Action<IRabbitMqReceiveEndpointConfigurator>? configure = null);
 
     IRabbitMqReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(RabbitMqReceiveSettings settings,
-        IRabbitMqEndpointConfiguration endpointConfiguration, Action<IRabbitMqReceiveEndpointConfigurator> configure = null);
+        IRabbitMqEndpointConfiguration endpointConfiguration, Action<IRabbitMqReceiveEndpointConfigurator>? configure = null);
 }

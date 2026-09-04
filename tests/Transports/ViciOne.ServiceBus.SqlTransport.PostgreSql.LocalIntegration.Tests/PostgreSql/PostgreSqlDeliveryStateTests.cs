@@ -12,23 +12,23 @@ public sealed class PostgreSqlDeliveryStateTests
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("OBL-R0-SQL-0110", "postgresql-native-owner")]
-    public async Task ExpiredDelivery_IsDeletedOrDeadLetteredWithoutEnteringTheConsumer(bool deadLetterExpiredMessages)
+    public async Task ExpiredDelivery_IsDeletedOrDeadLetteredWithoutEnteringTheConsumerAsync(bool deadLetterExpiredMessages)
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase fixture = await PostgreSqlTestDatabase.CreateAsync(
             deadLetterExpiredMessages ? "expired-deadletter" : "expired-delete",
             cancellationToken);
         string queueName = fixture.Name("expired-input");
-        await DeclareQueue(fixture, queueName, cancellationToken);
+        await DeclareQueueAsync(fixture, queueName, cancellationToken);
         var message = new StateMessage(Guid.NewGuid(), "expired");
-        await Send(fixture, queueName, message, cancellationToken);
+        await SendAsync(fixture, queueName, message, cancellationToken);
         await using (NpgsqlConnection arrange = fixture.CreateConnection())
         {
-            await arrange.OpenWithin(fixture.OperationTimeout, cancellationToken);
-            Assert.Equal(1, await ExpireDelivery(arrange, fixture.Schema, message.Id, cancellationToken));
+            await arrange.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
+            Assert.Equal(1, await ExpireDeliveryAsync(arrange, fixture.Schema, message.Id, cancellationToken));
         }
         var control = new StateMessage(Guid.NewGuid(), "control");
-        await Send(fixture, queueName, control, cancellationToken);
+        await SendAsync(fixture, queueName, control, cancellationToken);
 
         var consumed = new ConcurrentQueue<Guid>();
         var controlDelivered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -64,16 +64,16 @@ public sealed class PostgreSqlDeliveryStateTests
         }
 
         await using NpgsqlConnection connection = fixture.CreateConnection();
-        await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
+        await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
         Assert.Equal([control.Id], consumed);
-        Assert.Equal(0, await connection.DeliveryCount(fixture.Schema, queueName, 1, cancellationToken));
+        Assert.Equal(0, await connection.DeliveryCountAsync(fixture.Schema, queueName, 1, cancellationToken));
         Assert.Equal(deadLetterExpiredMessages ? 1 : 0,
-            await connection.DeliveryCount(fixture.Schema, queueName, 3, cancellationToken));
+            await connection.DeliveryCountAsync(fixture.Schema, queueName, 3, cancellationToken));
         Assert.Equal(deadLetterExpiredMessages ? 1 : 0,
-            await connection.MessageCount(fixture.Schema, message.Id, cancellationToken));
+            await connection.MessageCountAsync(fixture.Schema, message.Id, cancellationToken));
         if (deadLetterExpiredMessages)
         {
-            string? headers = await connection.TransportHeadersForMessage(
+            string? headers = await connection.TransportHeadersForMessageAsync(
                 fixture.Schema,
                 message.Id,
                 cancellationToken);
@@ -83,14 +83,14 @@ public sealed class PostgreSqlDeliveryStateTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0114", "postgresql-native-owner")]
-    public async Task PurgeQueue_RemovesDeliveriesAndOrphanedMessagesAcrossAllThreeQueueTypes()
+    public async Task PurgeQueue_RemovesDeliveriesAndOrphanedMessagesAcrossAllThreeQueueTypesAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase fixture = await PostgreSqlTestDatabase.CreateAsync(
             "purge-all-types",
             cancellationToken);
         string queueName = fixture.Name("purge-input");
-        await DeclareQueue(fixture, queueName, cancellationToken);
+        await DeclareQueueAsync(fixture, queueName, cancellationToken);
         StateMessage[] messages =
         [
             new(Guid.NewGuid(), "queue"),
@@ -98,62 +98,62 @@ public sealed class PostgreSqlDeliveryStateTests
             new(Guid.NewGuid(), "dead-letter"),
         ];
         foreach (StateMessage message in messages)
-            await Send(fixture, queueName, message, cancellationToken);
+            await SendAsync(fixture, queueName, message, cancellationToken);
 
         await using NpgsqlConnection connection = fixture.CreateConnection();
-        await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
-        Assert.Equal(1, await MoveDeliveryToQueueType(
+        await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
+        Assert.Equal(1, await MoveDeliveryToQueueTypeAsync(
             connection,
             fixture.Schema,
             queueName,
             messages[1].Id,
             queueType: 2,
             cancellationToken));
-        Assert.Equal(1, await MoveDeliveryToQueueType(
+        Assert.Equal(1, await MoveDeliveryToQueueTypeAsync(
             connection,
             fixture.Schema,
             queueName,
             messages[2].Id,
             queueType: 3,
             cancellationToken));
-        Assert.Equal(1, await connection.DeliveryCount(fixture.Schema, queueName, 1, cancellationToken));
-        Assert.Equal(1, await connection.DeliveryCount(fixture.Schema, queueName, 2, cancellationToken));
-        Assert.Equal(1, await connection.DeliveryCount(fixture.Schema, queueName, 3, cancellationToken));
+        Assert.Equal(1, await connection.DeliveryCountAsync(fixture.Schema, queueName, 1, cancellationToken));
+        Assert.Equal(1, await connection.DeliveryCountAsync(fixture.Schema, queueName, 2, cancellationToken));
+        Assert.Equal(1, await connection.DeliveryCountAsync(fixture.Schema, queueName, 3, cancellationToken));
 
-        await Purge(connection, fixture.Schema, queueName, cancellationToken);
+        await PurgeAsync(connection, fixture.Schema, queueName, cancellationToken);
 
-        Assert.Equal(0, await connection.DeliveryCount(fixture.Schema, queueName, 1, cancellationToken));
-        Assert.Equal(0, await connection.DeliveryCount(fixture.Schema, queueName, 2, cancellationToken));
-        Assert.Equal(0, await connection.DeliveryCount(fixture.Schema, queueName, 3, cancellationToken));
+        Assert.Equal(0, await connection.DeliveryCountAsync(fixture.Schema, queueName, 1, cancellationToken));
+        Assert.Equal(0, await connection.DeliveryCountAsync(fixture.Schema, queueName, 2, cancellationToken));
+        Assert.Equal(0, await connection.DeliveryCountAsync(fixture.Schema, queueName, 3, cancellationToken));
         foreach (StateMessage message in messages)
-            Assert.Equal(0, await connection.MessageCount(fixture.Schema, message.Id, cancellationToken));
+            Assert.Equal(0, await connection.MessageCountAsync(fixture.Schema, message.Id, cancellationToken));
     }
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0135", "postgresql-native-owner")]
-    public async Task DeleteScheduledMessage_DeletesOnlyAnUndeliveredUnlockedDelivery()
+    public async Task DeleteScheduledMessage_DeletesOnlyAnUndeliveredUnlockedDeliveryAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase fixture = await PostgreSqlTestDatabase.CreateAsync(
             "scheduled-states",
             cancellationToken);
         string queueName = fixture.Name("scheduled-input");
-        await DeclareQueue(fixture, queueName, cancellationToken);
+        await DeclareQueueAsync(fixture, queueName, cancellationToken);
         var cancellable = new ScheduledState(Guid.NewGuid(), Guid.NewGuid(), "ready");
         var delivered = new ScheduledState(Guid.NewGuid(), Guid.NewGuid(), "delivered");
         var locked = new ScheduledState(Guid.NewGuid(), Guid.NewGuid(), "locked");
-        await SendScheduled(fixture, queueName, [cancellable, delivered, locked], cancellationToken);
+        await SendScheduledAsync(fixture, queueName, [cancellable, delivered, locked], cancellationToken);
 
         await using NpgsqlConnection connection = fixture.CreateConnection();
-        await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
-        Assert.Equal(1, await SetDeliveryState(
+        await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
+        Assert.Equal(1, await SetDeliveryStateAsync(
             connection,
             fixture.Schema,
             delivered.MessageId,
             deliveryCount: 1,
             lockId: null,
             cancellationToken));
-        Assert.Equal(1, await SetDeliveryState(
+        Assert.Equal(1, await SetDeliveryStateAsync(
             connection,
             fixture.Schema,
             locked.MessageId,
@@ -161,19 +161,19 @@ public sealed class PostgreSqlDeliveryStateTests
             lockId: Guid.NewGuid(),
             cancellationToken));
 
-        Assert.Equal(1, await DeleteScheduled(connection, fixture.Schema, cancellable.TokenId, cancellationToken));
-        Assert.Equal(0, await DeleteScheduled(connection, fixture.Schema, delivered.TokenId, cancellationToken));
-        Assert.Equal(0, await DeleteScheduled(connection, fixture.Schema, locked.TokenId, cancellationToken));
-        Assert.Equal(0, await connection.MessageCount(fixture.Schema, cancellable.MessageId, cancellationToken));
-        Assert.Equal(1, await connection.MessageCount(fixture.Schema, delivered.MessageId, cancellationToken));
-        Assert.Equal(1, await connection.MessageCount(fixture.Schema, locked.MessageId, cancellationToken));
+        Assert.Equal(1, await DeleteScheduledAsync(connection, fixture.Schema, cancellable.TokenId, cancellationToken));
+        Assert.Equal(0, await DeleteScheduledAsync(connection, fixture.Schema, delivered.TokenId, cancellationToken));
+        Assert.Equal(0, await DeleteScheduledAsync(connection, fixture.Schema, locked.TokenId, cancellationToken));
+        Assert.Equal(0, await connection.MessageCountAsync(fixture.Schema, cancellable.MessageId, cancellationToken));
+        Assert.Equal(1, await connection.MessageCountAsync(fixture.Schema, delivered.MessageId, cancellationToken));
+        Assert.Equal(1, await connection.MessageCountAsync(fixture.Schema, locked.MessageId, cancellationToken));
     }
 
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("OBL-R0-SQL-0133", "postgresql-native-owner")]
-    public async Task ErrorQueueMove_ResetsExistingExpirationToFourteenDaysAndKeepsMissingExpirationNull(bool hasTimeToLive)
+    public async Task ErrorQueueMove_ResetsExistingExpirationToFourteenDaysAndKeepsMissingExpirationNullAsync(bool hasTimeToLive)
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase fixture = await PostgreSqlTestDatabase.CreateAsync(
@@ -200,9 +200,8 @@ public sealed class PostgreSqlDeliveryStateTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await endpoint.Send(
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await endpoint.SendAsync(
                     message,
                     context =>
                     {
@@ -221,8 +220,8 @@ public sealed class PostgreSqlDeliveryStateTests
         }
 
         await using NpgsqlConnection connection = fixture.CreateConnection();
-        await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
-        ErrorExpiration stored = await ErrorExpirationForMessage(
+        await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
+        ErrorExpiration stored = await ErrorExpirationForMessageAsync(
             connection,
             fixture.Schema,
             message.Id,
@@ -240,7 +239,7 @@ public sealed class PostgreSqlDeliveryStateTests
             Assert.Null(stored.ExpirationTimeUtc);
     }
 
-    private static async Task DeclareQueue(
+    private static async Task DeclareQueueAsync(
         PostgreSqlTestDatabase fixture,
         string queueName,
         CancellationToken cancellationToken)
@@ -259,7 +258,7 @@ public sealed class PostgreSqlDeliveryStateTests
         await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
     }
 
-    private static async Task Send(
+    private static async Task SendAsync(
         PostgreSqlTestDatabase fixture,
         string queueName,
         StateMessage message,
@@ -271,9 +270,9 @@ public sealed class PostgreSqlDeliveryStateTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), cancellationToken: cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await endpoint.Send(
+            await endpoint.SendAsync(
                     message,
                     context =>
                     {
@@ -290,7 +289,7 @@ public sealed class PostgreSqlDeliveryStateTests
         }
     }
 
-    private static async Task SendScheduled(
+    private static async Task SendScheduledAsync(
         PostgreSqlTestDatabase fixture,
         string queueName,
         IReadOnlyList<ScheduledState> messages,
@@ -302,11 +301,11 @@ public sealed class PostgreSqlDeliveryStateTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queueName}"))
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queueName}"), cancellationToken: cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             foreach (ScheduledState message in messages)
             {
-                await endpoint.Send(
+                await endpoint.SendAsync(
                         message,
                         context =>
                         {
@@ -326,7 +325,7 @@ public sealed class PostgreSqlDeliveryStateTests
         }
     }
 
-    private static async Task<int> ExpireDelivery(
+    private static async Task<int> ExpireDeliveryAsync(
         NpgsqlConnection connection,
         string schema,
         Guid messageId,
@@ -341,7 +340,7 @@ public sealed class PostgreSqlDeliveryStateTests
         return await command.ExecuteNonQueryAsync(cancellationToken);
     }
 
-    private static async Task<int> MoveDeliveryToQueueType(
+    private static async Task<int> MoveDeliveryToQueueTypeAsync(
         NpgsqlConnection connection,
         string schema,
         string queueName,
@@ -361,7 +360,7 @@ public sealed class PostgreSqlDeliveryStateTests
         return await command.ExecuteNonQueryAsync(cancellationToken);
     }
 
-    private static async Task Purge(
+    private static async Task PurgeAsync(
         NpgsqlConnection connection,
         string schema,
         string queueName,
@@ -372,7 +371,7 @@ public sealed class PostgreSqlDeliveryStateTests
         await command.ExecuteScalarAsync(cancellationToken);
     }
 
-    private static async Task<int> SetDeliveryState(
+    private static async Task<int> SetDeliveryStateAsync(
         NpgsqlConnection connection,
         string schema,
         Guid messageId,
@@ -391,7 +390,7 @@ public sealed class PostgreSqlDeliveryStateTests
         return await command.ExecuteNonQueryAsync(cancellationToken);
     }
 
-    private static async Task<long> DeleteScheduled(
+    private static async Task<long> DeleteScheduledAsync(
         NpgsqlConnection connection,
         string schema,
         Guid tokenId,
@@ -404,7 +403,7 @@ public sealed class PostgreSqlDeliveryStateTests
         return Convert.ToInt64(await command.ExecuteScalarAsync(cancellationToken));
     }
 
-    private static async Task<ErrorExpiration> ErrorExpirationForMessage(
+    private static async Task<ErrorExpiration> ErrorExpirationForMessageAsync(
         NpgsqlConnection connection,
         string schema,
         Guid messageId,

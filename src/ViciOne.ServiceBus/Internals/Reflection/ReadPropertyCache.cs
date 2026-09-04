@@ -80,7 +80,7 @@ internal class ReadPropertyCache<T> :
         return Cached.PropertyCache.Value.TryGetProperty(name, out property);
     }
 
-    public static IReadProperty<T, TProperty> GetProperty<TProperty>(PropertyInfo propertyInfo)
+    public static IReadProperty<T, TProperty> GetProperty<TProperty>(PropertyInfo? propertyInfo)
     {
         return Cached.PropertyCache.Value.GetProperty<TProperty>(propertyInfo);
     }

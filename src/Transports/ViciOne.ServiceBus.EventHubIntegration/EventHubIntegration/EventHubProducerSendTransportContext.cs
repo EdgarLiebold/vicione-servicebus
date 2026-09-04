@@ -34,8 +34,8 @@ public class EventHubProducerSendTransportContext :
         return [_supervisor];
     }
 
-    public async Task<EventHubSendContext<T>> CreateContext<T>(T value, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken,
-        IPipe<SendContext<T>> initializerPipe = null)
+    public async Task<EventHubSendContext<T>> CreateContextAsync<T>(T value, IPipe<EventHubSendContext<T>> pipe,
+        IPipe<SendContext<T>>? initializerPipe = null, CancellationToken cancellationToken = default)
         where T : class
     {
         var context = new EventHubMessageSendContext<T>(value, cancellationToken)
@@ -45,26 +45,26 @@ public class EventHubProducerSendTransportContext :
         };
 
         if (pipe is ISendContextPipe sendPipe)
-            await sendPipe.Send(context).ConfigureAwait(false);
+            await sendPipe.SendAsync(context, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        await _sendPipe.Send(context).ConfigureAwait(false);
+        await _sendPipe.SendAsync(context, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        if (initializerPipe.IsNotEmpty())
-            await initializerPipe.Send(context).ConfigureAwait(false);
+        if (initializerPipe != null && initializerPipe.IsNotEmpty())
+            await initializerPipe.SendAsync(context).ConfigureAwait(false);
 
         if (pipe.IsNotEmpty())
-            await pipe.Send(context).ConfigureAwait(false);
+            await pipe.SendAsync(context).ConfigureAwait(false);
 
         context.SourceAddress ??= _configuration.HostAddress;
 
         return context;
     }
 
-    public Task Send<T>(ProducerContext producerContext, EventHubSendContext<T> sendContext)
+    public Task SendAsync<T>(ProducerContext producerContext, EventHubSendContext<T> sendContext, CancellationToken cancellationToken = default)
         where T : class
     {
-        EventHubMessageSendContext<T> context = sendContext as EventHubMessageSendContext<T>
-            ?? throw new ArgumentException("Invalid SendContext<T> type", nameof(sendContext));
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); EventHubMessageSendContext<T> context = sendContext as EventHubMessageSendContext<T>
+                    ?? throw new ArgumentException("Invalid SendContext<T> type", nameof(sendContext));
 
         context.ConversationId ??= NewId.NextGuid();
 
@@ -92,17 +92,18 @@ public class EventHubProducerSendTransportContext :
         if (context.CorrelationId.HasValue)
             eventData.CorrelationId = context.CorrelationId.Value.ToString("N");
 
-        eventData.ContentType = context.ContentType.ToString();
+        eventData.ContentType = (context.ContentType
+            ?? throw new InvalidOperationException("A content type is required before an Event Hub message can be sent.")).ToString();
 
         context.CancellationToken.ThrowIfCancellationRequested();
 
-        return producerContext.Produce([eventData], options, context.CancellationToken);
+        return producerContext.ProduceAsync([eventData], options, context.CancellationToken);
     }
 
-    public async Task Send<T>(ProducerContext producerContext, EventHubSendContext<T>[] sendContexts)
+    public async Task SendAsync<T>(ProducerContext producerContext, EventHubSendContext<T>[] sendContexts, CancellationToken cancellationToken = default)
         where T : class
     {
-        EventHubSendContext<T> sendContext = sendContexts[0];
+        cancellationToken.ThrowIfCancellationRequested(); EventHubSendContext<T> sendContext = sendContexts[0];
         var options = new CreateBatchOptions
         {
             PartitionId = sendContext.PartitionId,
@@ -117,7 +118,7 @@ public class EventHubProducerSendTransportContext :
 
         sendContext.CancellationToken.ThrowIfCancellationRequested();
 
-        var eventDataBatch = await producerContext.CreateBatch(options, sendContext.CancellationToken).ConfigureAwait(false);
+        var eventDataBatch = await producerContext.CreateBatchAsync(options, sendContext.CancellationToken).ConfigureAwait(false);
 
         async Task FlushAsync(EventDataBatch batch)
         {
@@ -125,7 +126,7 @@ public class EventHubProducerSendTransportContext :
             {
                 sendContext.CancellationToken.ThrowIfCancellationRequested();
 
-                await producerContext.Produce(batch, sendContext.CancellationToken).ConfigureAwait(false);
+                await producerContext.ProduceAsync(batch, sendContext.CancellationToken).ConfigureAwait(false);
             }
             finally
             {
@@ -150,7 +151,8 @@ public class EventHubProducerSendTransportContext :
             if (context.CorrelationId.HasValue)
                 eventData.CorrelationId = context.CorrelationId.Value.ToString("N");
 
-            eventData.ContentType = context.ContentType.ToString();
+            eventData.ContentType = (context.ContentType
+                ?? throw new InvalidOperationException("A content type is required before an Event Hub message can be sent.")).ToString();
 
             eventData.Properties.Set(context.Headers);
 
@@ -158,7 +160,7 @@ public class EventHubProducerSendTransportContext :
                 continue;
 
             await FlushAsync(eventDataBatch).ConfigureAwait(false);
-            eventDataBatch = await producerContext.CreateBatch(options, context.CancellationToken).ConfigureAwait(false);
+            eventDataBatch = await producerContext.CreateBatchAsync(options, context.CancellationToken).ConfigureAwait(false);
 
             if (!eventDataBatch.TryAdd(eventData))
                 throw new ApplicationException("Message can not be added to the empty EventDataBatch");
@@ -168,17 +170,18 @@ public class EventHubProducerSendTransportContext :
             await FlushAsync(eventDataBatch).ConfigureAwait(false);
     }
 
-    public Task Send(IPipe<ProducerContext> pipe, CancellationToken cancellationToken)
+    public Task SendAsync(IPipe<ProducerContext> pipe, CancellationToken cancellationToken)
     {
-        return _configuration.Retry(() => _supervisor.Send(pipe, cancellationToken), cancellationToken, _supervisor.SendStopping);
+        return _configuration.RetryAsync(() => _supervisor.SendAsync(pipe, cancellationToken),
+            stoppingToken: _supervisor.SendStopping, cancellationToken: cancellationToken);
     }
 
     public override string EntityName => _endpointAddress.EventHubName;
     public override string ActivitySystem => "eventhubs";
 
-    public override Task<SendContext<T>> CreateSendContext<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    public override Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedByDesignException("Event Hub is a producer, not an outbox compatible transport");
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.SendContext<T>>(cancellationToken); throw new NotImplementedByDesignException("Event Hub is a producer, not an outbox compatible transport");
     }
 
     public void Probe(ProbeContext context)

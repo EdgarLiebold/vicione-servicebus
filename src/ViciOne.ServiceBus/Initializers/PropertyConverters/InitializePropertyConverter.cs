@@ -15,18 +15,18 @@ public class InitializePropertyConverter<TProperty, TInput> :
         _initializer = MessageInitializerCache<TProperty>.GetInitializer(typeof(TInput));
     }
 
-    Task<TProperty> IPropertyConverter<TProperty, TInput>.Convert<TMessage>(InitializeContext<TMessage> context, TInput input)
+    Task<TProperty?> IPropertyConverter<TProperty, TInput>.ConvertAsync<TMessage>(InitializeContext<TMessage> context, TInput? input, CancellationToken cancellationToken)
     {
         if (input == null)
-            return TaskResults.Default<TProperty>();
+            return TaskResults.DefaultAsync<TProperty>(cancellationToken: cancellationToken);
 
         InitializeContext<TProperty> messageContext = MessageFactoryCache<TProperty>.Factory.Create(context);
 
-        Task<InitializeContext<TProperty>> initTask = _initializer.Initialize(messageContext, input);
+        Task<InitializeContext<TProperty>> initTask = _initializer.InitializeAsync(messageContext, input, cancellationToken: cancellationToken);
         if (initTask.Status == TaskStatus.RanToCompletion)
-            return Task.FromResult(initTask.Result.Message);
+            return Task.FromResult<TProperty?>(initTask.Result.Message);
 
-        async Task<TProperty> ConvertAsync()
+        async Task<TProperty?> ConvertAsync()
         {
             InitializeContext<TProperty> result = await initTask.ConfigureAwait(false);
 
@@ -42,20 +42,20 @@ public class InitializePropertyConverter<TProperty> :
     IPropertyConverter<TProperty, object>
     where TProperty : class
 {
-    Task<TProperty> IPropertyConverter<TProperty, object>.Convert<TMessage>(InitializeContext<TMessage> context, object input)
+    Task<TProperty?> IPropertyConverter<TProperty, object>.ConvertAsync<TMessage>(InitializeContext<TMessage> context, object? input, CancellationToken cancellationToken)
     {
         if (input == null)
-            return TaskResults.Default<TProperty>();
+            return TaskResults.DefaultAsync<TProperty>(cancellationToken: cancellationToken);
 
         InitializeContext<TProperty> messageContext = MessageFactoryCache<TProperty>.Factory.Create(context);
 
         IMessageInitializer<TProperty> initializer = MessageInitializerCache<TProperty>.GetInitializer(input.GetType());
 
-        Task<InitializeContext<TProperty>> initTask = initializer.Initialize(messageContext, input);
+        Task<InitializeContext<TProperty>> initTask = initializer.InitializeAsync(messageContext, input, cancellationToken: cancellationToken);
         if (initTask.Status == TaskStatus.RanToCompletion)
-            return Task.FromResult(initTask.Result.Message);
+            return Task.FromResult<TProperty?>(initTask.Result.Message);
 
-        async Task<TProperty> ConvertAsync()
+        async Task<TProperty?> ConvertAsync()
         {
             InitializeContext<TProperty> result = await initTask.ConfigureAwait(false);
 

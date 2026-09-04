@@ -8,7 +8,7 @@ public class SagaConsumeContextFactory<TContext, TSaga> :
     where TSaga : class, ISaga
     where TContext : class
 {
-    public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContext<T>(TContext context, ConsumeContext<T> consumeContext, TSaga instance,
+    public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContextAsync<T>(TContext context, ConsumeContext<T> consumeContext, TSaga instance,
         SagaConsumeContextMode mode)
         where T : class
     {

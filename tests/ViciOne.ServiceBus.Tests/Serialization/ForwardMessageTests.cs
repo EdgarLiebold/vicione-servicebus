@@ -32,7 +32,7 @@ public sealed class ForwardMessageTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-FORWARDING", "interface-to-concrete-json-envelope")]
-    public async Task ConsumedInterfaceMessage_ForwardsItsCompleteBodyAndMetadataExactlyOnce()
+    public async Task ConsumedInterfaceMessage_ForwardsItsCompleteBodyAndMetadataExactlyOnceAsync()
     {
         TimeSpan operationTimeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -59,7 +59,7 @@ public sealed class ForwardMessageTests
                 IPipe<SendContext<ForwardCommand>> projectionPipe = Pipe.Execute<SendContext<ForwardCommand>>(
                     sendContext => projectedContext.TrySetResult(ForwardContextProjection.Capture(sendContext)));
 
-                await context.Forward(forwardAddress, projectionPipe).ConfigureAwait(false);
+                await context.ForwardAsync(forwardAddress, projectionPipe).ConfigureAwait(false);
             });
         harness.OnConfigureInMemoryBus += configurator =>
             configurator.ReceiveEndpoint("forward", endpoint =>
@@ -72,7 +72,7 @@ public sealed class ForwardMessageTests
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
+            await harness.StartAsync(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
             var message = new ForwardMessage
             {
                 CommandId = Guid.Parse("eb229bb5-300f-41f7-97ad-1907aeb43bc6"),
@@ -80,7 +80,7 @@ public sealed class ForwardMessageTests
                 AdditionalValue = "complete-body",
             };
 
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.InputQueueSendEndpoint.SendAsync(
                     message,
                     context =>
                     {
@@ -111,7 +111,7 @@ public sealed class ForwardMessageTests
 
             Assert.Equal(message.CommandId, consumed.Message.CommandId);
             Assert.Equal(message.ItemNumber, consumed.Message.ItemNumber);
-            AssertProjectedContext(projected, consumed, forwardAddress);
+            AssertProjectedContext(projected, consumed.Advanced(), forwardAddress);
             AssertForwardedContext(forwarded, message);
             Assert.Null(consumed.ExpirationTime);
             Assert.Null(projected.TimeToLive);
@@ -120,23 +120,23 @@ public sealed class ForwardMessageTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(operationTimeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(operationTimeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-FORWARDING", "future-expiration-preserved")]
-    public async Task FutureExpiration_IsProjectedAsRemainingTimeAndPreservedByTheJsonEnvelope()
+    public async Task FutureExpiration_IsProjectedAsRemainingTimeAndPreservedByTheJsonEnvelopeAsync()
     {
         TimeSpan sourceTimeToLive = TimeSpan.FromMinutes(5);
 
-        ForwardExpirationObservation observation = await ObserveForwardedExpiration(
+        ForwardExpirationObservation observation = await ObserveForwardedExpirationAsync(
             sourceTimeToLive,
             forwardingOverride: null);
 
-        DateTime sourceExpiration = Assert.IsType<DateTime>(observation.SourceExpiration);
+        DateTimeOffset sourceExpiration = Assert.IsType<DateTimeOffset>(observation.SourceExpiration);
         TimeSpan projectedTimeToLive = Assert.IsType<TimeSpan>(observation.Projection.TimeToLive);
-        DateTime forwardedExpiration = Assert.IsType<DateTime>(observation.ForwardedExpiration);
+        DateTimeOffset forwardedExpiration = Assert.IsType<DateTimeOffset>(observation.ForwardedExpiration);
 
         Assert.True(projectedTimeToLive > TimeSpan.Zero);
         Assert.True(projectedTimeToLive <= sourceTimeToLive);
@@ -148,11 +148,11 @@ public sealed class ForwardMessageTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-FORWARDING", "expired-forward-discarded-before-transport")]
-    public async Task ExpiredMessage_IsObservedAndDiscardedBeforeTransportDispatch()
+    public async Task ExpiredMessage_IsObservedAndDiscardedBeforeTransportDispatchAsync()
     {
-        ExpiredForwardObservation observation = await ObserveExpiredForward();
+        ExpiredForwardObservation observation = await ObserveExpiredForwardAsync();
 
-        DateTime sourceExpiration = Assert.IsType<DateTime>(observation.SourceExpiration);
+        DateTimeOffset sourceExpiration = Assert.IsType<DateTimeOffset>(observation.SourceExpiration);
         TimeSpan projectedTimeToLive = Assert.IsType<TimeSpan>(observation.Projection.TimeToLive);
 
         Assert.True(sourceExpiration < observation.Projection.CapturedAtUtc);
@@ -177,27 +177,27 @@ public sealed class ForwardMessageTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-FORWARDING", "forwarding-pipe-expiration-override")]
-    public async Task ForwardingPipe_CanReplaceTheInheritedExpirationBeforeSerialization()
+    public async Task ForwardingPipe_CanReplaceTheInheritedExpirationBeforeSerializationAsync()
     {
         TimeSpan forwardingOverride = TimeSpan.FromMinutes(2);
 
-        ForwardExpirationObservation observation = await ObserveForwardedExpiration(
+        ForwardExpirationObservation observation = await ObserveForwardedExpirationAsync(
             TimeSpan.FromSeconds(-30),
             forwardingOverride);
 
-        Assert.True(Assert.IsType<DateTime>(observation.SourceExpiration) < observation.Projection.CapturedAtUtc);
+        Assert.True(Assert.IsType<DateTimeOffset>(observation.SourceExpiration) < observation.Projection.CapturedAtUtc);
         Assert.Equal(forwardingOverride, Assert.IsType<TimeSpan>(observation.Projection.TimeToLive));
         Assert.InRange(
-            Assert.IsType<DateTime>(observation.ForwardedExpiration),
+            Assert.IsType<DateTimeOffset>(observation.ForwardedExpiration),
             observation.ForwardStartedAtUtc + forwardingOverride,
             observation.ForwardCompletedAtUtc + forwardingOverride);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-FORWARDING", "expired-forward-requires-positive-override")]
-    public async Task ClearingTheInheritedExpiration_DoesNotReviveAnExpiredMessage()
+    public async Task ClearingTheInheritedExpiration_DoesNotReviveAnExpiredMessageAsync()
     {
-        ExpiredForwardObservation observation = await ObserveExpiredForward(clearTimeToLive: true);
+        ExpiredForwardObservation observation = await ObserveExpiredForwardAsync(clearTimeToLive: true);
 
         Assert.Null(observation.Projection.TimeToLive);
         Assert.Equal(0, observation.DestinationDeliveryCount);
@@ -208,7 +208,7 @@ public sealed class ForwardMessageTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-FORWARDING", "expired-replacement-discarded-before-transport")]
-    public async Task ExpiredReplacementMessage_IsDiscardedBeforeTransportDispatch()
+    public async Task ExpiredReplacementMessage_IsDiscardedBeforeTransportDispatchAsync()
     {
         TimeSpan operationTimeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -227,8 +227,8 @@ public sealed class ForwardMessageTests
         harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
             configurator.Handler<ForwardMessage>(async context =>
             {
-                ExpireConsumeContext(context);
-                await context.Forward(
+                ExpireConsumeContext(context.Advanced());
+                await context.Advanced().ForwardAsync(
                         forwardAddress,
                         new ForwardReplacement { Value = "must-not-be-delivered" })
                     .ConfigureAwait(false);
@@ -244,9 +244,9 @@ public sealed class ForwardMessageTests
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
+            await harness.StartAsync(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
             using ConnectHandle observerHandle = harness.Bus.ConnectSendObserver(observer);
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.InputQueueSendEndpoint.SendAsync(
                     new ForwardMessage { ItemNumber = "expired-replacement" },
                     context => context.TimeToLive = TimeSpan.FromMinutes(5),
                     cancellationToken)
@@ -260,11 +260,11 @@ public sealed class ForwardMessageTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(operationTimeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(operationTimeout, CancellationToken.None);
         }
     }
 
-    private static async Task<ExpiredForwardObservation> ObserveExpiredForward(bool clearTimeToLive = false)
+    private static async Task<ExpiredForwardObservation> ObserveExpiredForwardAsync(bool clearTimeToLive = false)
     {
         TimeSpan operationTimeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -290,8 +290,8 @@ public sealed class ForwardMessageTests
         harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
             configurator.Handler<ForwardMessage>(async context =>
             {
-                TimeProvider timeProvider = ExpireConsumeContext(context);
-                await context.Forward(
+                TimeProvider timeProvider = ExpireConsumeContext(context.Advanced());
+                await context.ForwardAsync(
                         forwardAddress,
                         Pipe.Execute<SendContext<ForwardMessage>>(sendContext =>
                         {
@@ -300,7 +300,7 @@ public sealed class ForwardMessageTests
 
                             projection.TrySetResult(new ForwardExpirationProjection(
                                 sendContext.TimeToLive,
-                                timeProvider.GetUtcNow().UtcDateTime));
+                                timeProvider.GetUtcNow()));
                         }))
                     .ConfigureAwait(false);
                 sourceCompleted.TrySetResult(context);
@@ -315,9 +315,9 @@ public sealed class ForwardMessageTests
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
+            await harness.StartAsync(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
             using ConnectHandle observerHandle = harness.Bus.ConnectSendObserver(observer);
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.InputQueueSendEndpoint.SendAsync(
                     new ForwardMessage { ItemNumber = "expired" },
                     context => context.TimeToLive = TimeSpan.FromMinutes(5),
                     cancellationToken)
@@ -340,12 +340,12 @@ public sealed class ForwardMessageTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(operationTimeout, CancellationToken.None);
+            await harness.StopAsync().WaitAsync(operationTimeout, CancellationToken.None);
             LogContext.Current = previousLogContext!;
         }
     }
 
-    private static async Task<ForwardExpirationObservation> ObserveForwardedExpiration(
+    private static async Task<ForwardExpirationObservation> ObserveForwardedExpirationAsync(
         TimeSpan? sourceTimeToLive,
         TimeSpan? forwardingOverride)
     {
@@ -373,7 +373,7 @@ public sealed class ForwardMessageTests
             configurator.Handler<ForwardMessage>(async context =>
             {
                 TimeProvider timeProvider = simulateExpiredInheritedExpiration
-                    ? ExpireConsumeContext(context)
+                    ? ExpireConsumeContext(context.Advanced())
                     : context.GetTimeProvider();
                 sourceDelivery.TrySetResult(context);
                 IPipe<SendContext<ForwardMessage>> forwardingPipe = Pipe.Execute<SendContext<ForwardMessage>>(
@@ -384,12 +384,12 @@ public sealed class ForwardMessageTests
 
                         projection.TrySetResult(new ForwardExpirationProjection(
                             sendContext.TimeToLive,
-                            timeProvider.GetUtcNow().UtcDateTime));
+                            timeProvider.GetUtcNow()));
                     });
 
-                DateTime startedAtUtc = timeProvider.GetUtcNow().UtcDateTime;
-                await context.Forward(forwardAddress, forwardingPipe).ConfigureAwait(false);
-                forwardWindow.TrySetResult(new ForwardTimeWindow(startedAtUtc, timeProvider.GetUtcNow().UtcDateTime));
+                DateTimeOffset startedAtUtc = timeProvider.GetUtcNow();
+                await context.ForwardAsync(forwardAddress, forwardingPipe).ConfigureAwait(false);
+                forwardWindow.TrySetResult(new ForwardTimeWindow(startedAtUtc, timeProvider.GetUtcNow()));
             });
         harness.OnConfigureInMemoryBus += configurator =>
             configurator.ReceiveEndpoint("expiration-forward", endpoint =>
@@ -401,8 +401,8 @@ public sealed class ForwardMessageTests
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.StartAsync(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(
                     new ForwardMessage { ItemNumber = "expiration-boundary" },
                     context =>
                     {
@@ -438,14 +438,14 @@ public sealed class ForwardMessageTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(operationTimeout, CancellationToken.None);
+            await harness.StopAsync().WaitAsync(operationTimeout, CancellationToken.None);
         }
     }
 
     private static FakeTimeProvider ExpireConsumeContext(ConsumeContext context)
     {
-        DateTime expiration = Assert.IsType<DateTime>(context.ExpirationTime).ToUniversalTime();
-        var timeProvider = new FakeTimeProvider(new DateTimeOffset(expiration).AddMinutes(1));
+        DateTimeOffset expiration = Assert.IsType<DateTimeOffset>(context.ExpirationTime).ToUniversalTime();
+        var timeProvider = new FakeTimeProvider(expiration.AddMinutes(1));
         context.SetTimeProvider(timeProvider);
         return timeProvider;
     }
@@ -465,7 +465,7 @@ public sealed class ForwardMessageTests
         Assert.Equal(ExpectedSourceAddress, context.SourceAddress);
         Assert.Equal(ExpectedResponseAddress, context.ResponseAddress);
         Assert.Equal(ExpectedFaultAddress, context.FaultAddress);
-        Assert.Equal(SystemTextJsonMessageSerializer.JsonContentType, context.ReceiveContext.ContentType);
+        Assert.Equal(SystemTextJsonMessageSerializer.JsonContentType, context.Advanced().ReceiveContext.ContentType);
         Assert.True(context.Headers.TryGetHeader(ExpectedHeaderName, out object? headerValue));
         Assert.Equal(ExpectedHeaderValue, Assert.IsType<string>(headerValue));
         Assert.True(context.Headers.TryGetHeader(MessageHeaders.OriginalMessageId, out object? originalMessageId));
@@ -534,21 +534,21 @@ public sealed class ForwardMessageTests
     }
 
     private sealed record ForwardExpirationObservation(
-        DateTime? SourceExpiration,
+        DateTimeOffset? SourceExpiration,
         ForwardExpirationProjection Projection,
-        DateTime? ForwardedExpiration,
-        DateTime ForwardStartedAtUtc,
-        DateTime ForwardCompletedAtUtc)
+        DateTimeOffset? ForwardedExpiration,
+        DateTimeOffset ForwardStartedAtUtc,
+        DateTimeOffset ForwardCompletedAtUtc)
     {
         public TimeSpan ForwardDuration => ForwardCompletedAtUtc - ForwardStartedAtUtc;
     }
 
     private sealed record ForwardExpirationProjection(
         TimeSpan? TimeToLive,
-        DateTime CapturedAtUtc);
+        DateTimeOffset CapturedAtUtc);
 
     private sealed record ExpiredForwardObservation(
-        DateTime? SourceExpiration,
+        DateTimeOffset? SourceExpiration,
         ForwardExpirationProjection Projection,
         Uri DestinationAddress,
         int DestinationDeliveryCount,
@@ -556,8 +556,8 @@ public sealed class ForwardMessageTests
         IReadOnlyList<ForwardingLogEntry> LogEntries);
 
     private sealed record ForwardTimeWindow(
-        DateTime StartedAtUtc,
-        DateTime CompletedAtUtc);
+        DateTimeOffset StartedAtUtc,
+        DateTimeOffset CompletedAtUtc);
 
     public interface ForwardCommand
     {
@@ -590,7 +590,7 @@ public sealed class ForwardMessageTests
         public int PreSendCount => Volatile.Read(ref _preSendCount);
         public int SendFaultCount => Volatile.Read(ref _sendFaultCount);
 
-        public Task PreSend<T>(SendContext<T> context)
+        public Task PreSendAsync<T>(SendContext<T> context)
             where T : class
         {
             if (IsTarget(context))
@@ -599,7 +599,7 @@ public sealed class ForwardMessageTests
             return Task.CompletedTask;
         }
 
-        public Task PostSend<T>(SendContext<T> context)
+        public Task PostSendAsync<T>(SendContext<T> context)
             where T : class
         {
             if (IsTarget(context))
@@ -608,7 +608,7 @@ public sealed class ForwardMessageTests
             return Task.CompletedTask;
         }
 
-        public Task SendFault<T>(SendContext<T> context, Exception exception)
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
             where T : class
         {
             if (IsTarget(context))

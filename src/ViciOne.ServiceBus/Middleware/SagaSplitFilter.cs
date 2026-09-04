@@ -28,10 +28,10 @@ public class SagaSplitFilter<TSaga, TMessage> :
         _next.Probe(scope);
     }
 
-    public Task Send(SagaConsumeContext<TSaga, TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
+    public Task SendAsync(SagaConsumeContext<TSaga, TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
     {
         var mergePipe = new SagaMergePipe<TSaga, TMessage>(next);
 
-        return _next.Send(context, mergePipe);
+        return _next.SendAsync(context, mergePipe);
     }
 }

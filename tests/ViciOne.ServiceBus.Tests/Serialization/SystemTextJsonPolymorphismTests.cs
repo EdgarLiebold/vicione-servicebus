@@ -11,9 +11,9 @@ public sealed class SystemTextJsonPolymorphismTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-SYSTEM-TEXT-JSON-POLYMORPHISM", "single-property")]
-    public async Task AbstractProperty_PreservesItsConcreteTypeAndValue()
+    public async Task AbstractProperty_PreservesItsConcreteTypeAndValueAsync()
     {
-        ISinglePayloadMessage actual = await RoundTrip<ISinglePayloadMessage>(
+        ISinglePayloadMessage actual = await RoundTripAsync<ISinglePayloadMessage>(
             new SinglePayloadMessage { Data = new DerivedPayload { Value = 27 } });
 
         var data = Assert.IsType<DerivedPayload>(actual.Data);
@@ -22,9 +22,9 @@ public sealed class SystemTextJsonPolymorphismTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SYSTEM-TEXT-JSON-POLYMORPHISM", "array-property")]
-    public async Task AbstractArrayProperty_PreservesConcreteTypesOrderAndValues()
+    public async Task AbstractArrayProperty_PreservesConcreteTypesOrderAndValuesAsync()
     {
-        IArrayPayloadMessage actual = await RoundTrip<IArrayPayloadMessage>(
+        IArrayPayloadMessage actual = await RoundTripAsync<IArrayPayloadMessage>(
             new ArrayPayloadMessage
             {
                 Data = [new DerivedPayload { Value = 27 }, new DerivedPayload { Value = 42 }],
@@ -37,9 +37,9 @@ public sealed class SystemTextJsonPolymorphismTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SYSTEM-TEXT-JSON-POLYMORPHISM", "list-property")]
-    public async Task AbstractListProperty_PreservesConcreteTypesOrderAndValues()
+    public async Task AbstractListProperty_PreservesConcreteTypesOrderAndValuesAsync()
     {
-        IListPayloadMessage actual = await RoundTrip<IListPayloadMessage>(
+        IListPayloadMessage actual = await RoundTripAsync<IListPayloadMessage>(
             new ListPayloadMessage
             {
                 Data = [new DerivedPayload { Value = 27 }, new DerivedPayload { Value = 42 }],
@@ -50,7 +50,7 @@ public sealed class SystemTextJsonPolymorphismTests
         Assert.Equal(42, Assert.IsType<DerivedPayload>(actual.Data[1]).Value);
     }
 
-    private static async Task<TMessage> RoundTrip<TMessage>(TMessage message)
+    private static async Task<TMessage> RoundTripAsync<TMessage>(TMessage message)
         where TMessage : class
     {
         TimeSpan operationTimeout = TestConfigurationProvider.ForCurrentTestRun()
@@ -82,8 +82,8 @@ public sealed class SystemTextJsonPolymorphismTests
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
-            await harness.InputQueueSendEndpoint.Send(message, cancellationToken)
+            await harness.StartAsync(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(message, cancellationToken)
                 .WaitAsync(operationTimeout, cancellationToken);
 
             Task completed = await Task.WhenAny(received.Task, faulted.Task)
@@ -96,13 +96,13 @@ public sealed class SystemTextJsonPolymorphismTests
             }
 
             ConsumeContext<TMessage> context = await received.Task;
-            Assert.Equal(SystemTextJsonMessageSerializer.JsonContentType, context.ReceiveContext.ContentType);
+            Assert.Equal(SystemTextJsonMessageSerializer.JsonContentType, context.Advanced().ReceiveContext.ContentType);
 
             return context.Message;
         }
         finally
         {
-            await harness.Stop().WaitAsync(operationTimeout, CancellationToken.None);
+            await harness.StopAsync().WaitAsync(operationTimeout, CancellationToken.None);
         }
     }
 

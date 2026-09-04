@@ -7,5 +7,5 @@ public interface ILoadSagaRepository<TSaga> :
     IProbeSite
     where TSaga : class, ISaga
 {
-    Task<TSaga> Load(Guid correlationId);
+    Task<TSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default);
 }

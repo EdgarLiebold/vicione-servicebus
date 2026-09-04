@@ -10,7 +10,7 @@ public sealed class PipeContextSupervisorTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-PIPE-CONTEXT-CACHE", "fault-invalidates-cache")]
-    public async Task PipelineFailure_DiscardsTheFaultedContextBeforeTheNextSend()
+    public async Task PipelineFailure_DiscardsTheFaultedContextBeforeTheNextSendAsync()
     {
         var factory = new TrackingContextFactory();
         var supervisor = new PipeContextSupervisor<TrackingContext>(factory);
@@ -26,13 +26,13 @@ public sealed class PipeContextSupervisorTests
 
         try
         {
-            await supervisor.Send(pipe, cancellationToken);
-            await Assert.ThrowsAsync<PipelineFailureException>(() => supervisor.Send(pipe, cancellationToken));
-            await supervisor.Send(pipe, cancellationToken);
+            await supervisor.SendAsync(pipe, cancellationToken);
+            await Assert.ThrowsAsync<PipelineFailureException>(() => supervisor.SendAsync(pipe, cancellationToken));
+            await supervisor.SendAsync(pipe, cancellationToken);
         }
         finally
         {
-            await supervisor.Stop(cancellationToken);
+            await supervisor.StopAsync(cancellationToken);
             await supervisor.Completed.WaitAsync(cancellationToken);
         }
 
@@ -44,7 +44,7 @@ public sealed class PipeContextSupervisorTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PIPE-CONTEXT-CACHE", "explicit-invalidation-recreates-context")]
-    public async Task ExplicitInvalidation_DiscardsTheContextBeforeTheNextSend()
+    public async Task ExplicitInvalidation_DiscardsTheContextBeforeTheNextSendAsync()
     {
         var factory = new TrackingContextFactory();
         var supervisor = new PipeContextSupervisor<TrackingContext>(factory);
@@ -60,13 +60,13 @@ public sealed class PipeContextSupervisorTests
 
         try
         {
-            await supervisor.Send(pipe, cancellationToken);
-            await supervisor.Send(pipe, cancellationToken);
-            await supervisor.Send(pipe, cancellationToken);
+            await supervisor.SendAsync(pipe, cancellationToken);
+            await supervisor.SendAsync(pipe, cancellationToken);
+            await supervisor.SendAsync(pipe, cancellationToken);
         }
         finally
         {
-            await supervisor.Stop(cancellationToken);
+            await supervisor.StopAsync(cancellationToken);
             await supervisor.Completed.WaitAsync(cancellationToken);
         }
 
@@ -97,7 +97,7 @@ public sealed class PipeContextSupervisorTests
             PipeContextHandle<TrackingContext> context,
             CancellationToken cancellationToken = default)
         {
-            return supervisor.AddActiveContext(context, context.Context);
+            cancellationToken.ThrowIfCancellationRequested(); return supervisor.AddActiveContext(context, context.Context);
         }
     }
 

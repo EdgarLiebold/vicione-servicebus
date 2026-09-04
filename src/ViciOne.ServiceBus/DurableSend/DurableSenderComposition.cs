@@ -50,5 +50,10 @@ internal sealed class DurableSenderStartupValidator<TBus> : IHostedService
         return Task.CompletedTask;
     }
 
-    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+    public Task StopAsync(CancellationToken cancellationToken)
+    {
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+        return Task.CompletedTask;
+    }
 }

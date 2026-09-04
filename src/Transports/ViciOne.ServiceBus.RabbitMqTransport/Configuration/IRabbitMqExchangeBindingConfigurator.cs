@@ -16,5 +16,5 @@ public interface IRabbitMqExchangeBindingConfigurator :
     /// </summary>
     /// <param name="key"></param>
     /// <param name="value"></param>
-    void SetBindingArgument(string key, object value);
+    void SetBindingArgument(string key, object? value);
 }

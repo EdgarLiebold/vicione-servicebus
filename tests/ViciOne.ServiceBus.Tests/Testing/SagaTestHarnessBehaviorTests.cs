@@ -10,7 +10,7 @@ public sealed class SagaTestHarnessBehaviorTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-SAGA", "creation-consumption-state-and-publication")]
-    public async Task ClassicSagaHarness_ObservesCreationStateConsumptionAndPublication()
+    public async Task ClassicSagaHarness_ObservesCreationStateConsumptionAndPublicationAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -18,40 +18,40 @@ public sealed class SagaTestHarnessBehaviorTests
         using var harness = CreateHarness(timeout);
         SagaTestHarness<ClassicSaga> sagaHarness = harness.Saga<ClassicSaga>();
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.InputQueueSendEndpoint.SendAsync(
                 new StartSaga(sagaId, "expected", [new SagaValue("first"), new SagaValue("second")]),
                 cancellationToken);
 
-            Guid? existing = await sagaHarness.Exists(sagaId, timeout);
-            ClassicSaga created = sagaHarness.Created.Contains(sagaId);
-            ClassicSaga observed = sagaHarness.Sagas.Contains(sagaId);
+            Guid? existing = await sagaHarness.ExistsAsync(sagaId, timeout, TestContext.Current.CancellationToken);
+            ClassicSaga? created = sagaHarness.Created.Contains(sagaId);
+            ClassicSaga? observed = sagaHarness.Sagas.Contains(sagaId);
             IPublishedMessage<SagaStarted> published = await harness.Published
                 .SelectAsync<SagaStarted>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             Assert.Equal(sagaId, existing);
             Assert.NotNull(created);
             Assert.Same(created, observed);
             Assert.Equal("expected", created.Value);
             Assert.Equal(["first", "second"], created.Values);
-            Assert.True(await harness.Sent.Any<StartSaga>(cancellationToken));
-            Assert.True(await harness.Consumed.Any<StartSaga>(cancellationToken));
-            Assert.True(await sagaHarness.Consumed.Any<StartSaga>(cancellationToken));
+            Assert.True(await harness.Sent.AnyAsync<StartSaga>(cancellationToken));
+            Assert.True(await harness.Consumed.AnyAsync<StartSaga>(cancellationToken));
+            Assert.True(await sagaHarness.Consumed.AnyAsync<StartSaga>(cancellationToken));
             Assert.Equal(sagaId, published.Context.Message.CorrelationId);
             Assert.Equal("expected", published.Context.Message.Value);
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-SAGA", "match-and-nonexistence")]
-    public async Task ClassicSagaHarness_MatchAndNotExistsExposeRepositoryStateExactly()
+    public async Task ClassicSagaHarness_MatchAndNotExistsExposeRepositoryStateExactlyAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -59,28 +59,28 @@ public sealed class SagaTestHarnessBehaviorTests
         using var harness = CreateHarness(timeout);
         SagaTestHarness<ClassicSaga> sagaHarness = harness.Saga<ClassicSaga>();
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.InputQueueSendEndpoint.SendAsync(
                 new StartSaga(sagaId, "match", [new SagaValue("value")]),
                 cancellationToken);
 
-            IList<Guid> matching = await sagaHarness.Match(x => x.Value == "match", timeout);
-            Guid? missing = await sagaHarness.NotExists(NewId.NextGuid(), timeout);
+            IList<Guid> matching = await sagaHarness.MatchAsync(x => x.Value == "match", timeout, TestContext.Current.CancellationToken);
+            Guid? missing = await sagaHarness.NotExistsAsync(NewId.NextGuid(), timeout, TestContext.Current.CancellationToken);
 
             Assert.Equal([sagaId], matching);
             Assert.Null(missing);
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-STATE-MACHINE", "request-fault-correlation-and-transition")]
-    public async Task StateMachineHarness_CorrelatesTheRequestFaultAndObservesTheResultingState()
+    public async Task StateMachineHarness_CorrelatesTheRequestFaultAndObservesTheResultingStateAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -98,21 +98,21 @@ public sealed class SagaTestHarnessBehaviorTests
         ISagaStateMachineTestHarness<RequestStateMachine, RequestState> sagaHarness =
             harness.StateMachineSaga<RequestState, RequestStateMachine>(machine);
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(new StartRequest(sagaId, "key"), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new StartRequest(sagaId, "key"), cancellationToken);
 
             IReceivedMessage<StartRequest> start = await harness.Consumed
                 .SelectAsync<StartRequest>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             Assert.Null(start.Exception);
             ConsumeContext<ExecuteRequest> request = await requestReceived.Task.WaitAsync(timeout, cancellationToken);
             IReceivedMessage<Fault<ExecuteRequest>> observedFault = await harness.Consumed
                 .SelectAsync<Fault<ExecuteRequest>>(cancellationToken)
-                .First();
-            Guid? failed = await sagaHarness.Exists(sagaId, machine.Failed, timeout);
-            RequestState state = sagaHarness.Sagas.Contains(sagaId);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
+            Guid? failed = await sagaHarness.ExistsAsync(sagaId, machine.Failed, timeout, TestContext.Current.CancellationToken);
+            RequestState? state = sagaHarness.Sagas.Contains(sagaId);
 
             Assert.Equal(harness.InputQueueAddress, request.ResponseAddress);
             Assert.NotNull(request.RequestId);
@@ -126,24 +126,24 @@ public sealed class SagaTestHarnessBehaviorTests
             Assert.NotEqual(Guid.Empty, observedFault.Context.Message.FaultId);
             Assert.NotEmpty(observedFault.Context.Message.FaultMessageTypes);
             Assert.NotEqual(default, observedFault.Context.Message.Timestamp);
-            Assert.Equal(DateTimeKind.Utc, observedFault.Context.Message.Timestamp.Kind);
+            Assert.Equal(TimeSpan.Zero, observedFault.Context.Message.Timestamp.Offset);
             Assert.Equal(request.Message.CorrelationId, observedFault.Context.Message.Message.CorrelationId);
             Assert.Equal(request.Message.Key, observedFault.Context.Message.Message.Key);
             Assert.Contains(observedFault.Context.Message.Exceptions, exception =>
                 exception.ExceptionType.EndsWith(nameof(ExpectedRequestException), StringComparison.Ordinal)
                 && exception.Message == "request failed");
-            Assert.True(await harness.Consumed.Any<StartRequest>(cancellationToken));
-            Assert.True(await harness.Consumed.Any<Fault<ExecuteRequest>>(cancellationToken));
+            Assert.True(await harness.Consumed.AnyAsync<StartRequest>(cancellationToken));
+            Assert.True(await harness.Consumed.AnyAsync<Fault<ExecuteRequest>>(cancellationToken));
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-STATE-MACHINE", "direct-request-response-and-state")]
-    public async Task DirectStateMachineHarness_RespondsAndRecordsTheExactResultingState()
+    public async Task DirectStateMachineHarness_RespondsAndRecordsTheExactResultingStateAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -153,16 +153,16 @@ public sealed class SagaTestHarnessBehaviorTests
         ISagaStateMachineTestHarness<ResponsiveStateMachine, ResponsiveState> sagaHarness =
             harness.StateMachineSaga<ResponsiveState, ResponsiveStateMachine>(machine);
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             IRequestClient<ResponsiveRequest> client = harness.CreateRequestClient<ResponsiveRequest>();
 
-            Response<ResponsiveResponse> response = await client.GetResponse<ResponsiveResponse>(
+            Response<ResponsiveResponse> response = await client.GetResponseAsync<ResponsiveResponse>(
                 new ResponsiveRequest(sagaId, "direct"),
                 cancellationToken);
-            Guid? responded = await sagaHarness.Exists(sagaId, machine.Responded, timeout);
-            ResponsiveState instance = sagaHarness.Sagas.Contains(sagaId);
+            Guid? responded = await sagaHarness.ExistsAsync(sagaId, machine.Responded, timeout, TestContext.Current.CancellationToken);
+            ResponsiveState? instance = sagaHarness.Sagas.Contains(sagaId);
 
             Assert.Equal(sagaId, response.Message.CorrelationId);
             Assert.Equal("response:direct", response.Message.Value);
@@ -170,17 +170,17 @@ public sealed class SagaTestHarnessBehaviorTests
             Assert.NotNull(instance);
             Assert.Equal("direct", instance.Value);
             Assert.Equal(machine.Responded.Name, instance.CurrentState);
-            Assert.True(await sagaHarness.Consumed.Any<ResponsiveRequest>(cancellationToken));
+            Assert.True(await sagaHarness.Consumed.AnyAsync<ResponsiveRequest>(cancellationToken));
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-STATE-MACHINE-OBSERVATION", "exact-event-lifecycle-and-transition")]
-    public async Task StateMachineObservations_RecordExactEventLifecycleAndTransition()
+    public async Task StateMachineObservations_RecordExactEventLifecycleAndTransitionAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -190,15 +190,15 @@ public sealed class SagaTestHarnessBehaviorTests
         ISagaStateMachineTestHarness<ResponsiveStateMachine, ResponsiveState> sagaHarness =
             harness.StateMachineSaga<ResponsiveState, ResponsiveStateMachine>(machine);
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             IRequestClient<ResponsiveRequest> client = harness.CreateRequestClient<ResponsiveRequest>();
-            Response<ResponsiveResponse> response = await client.GetResponse<ResponsiveResponse>(
+            Response<ResponsiveResponse> response = await client.GetResponseAsync<ResponsiveResponse>(
                 new ResponsiveRequest(sagaId, "observed"),
                 cancellationToken);
             Assert.Equal(sagaId, response.Message.CorrelationId);
-            Assert.Equal(sagaId, await sagaHarness.Exists(sagaId, machine.Responded, timeout));
+            Assert.Equal(sagaId, await sagaHarness.ExistsAsync(sagaId, machine.Responded, timeout, TestContext.Current.CancellationToken));
 
             Assert.Collection(
                 sagaHarness.Events.Where(observation => observation.SagaId == sagaId),
@@ -231,13 +231,13 @@ public sealed class SagaTestHarnessBehaviorTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-RETENTION", "bounded-saga-event-and-state-histories")]
-    public async Task BoundedRetention_AppliesToSagaAndStateMachineHistories()
+    public async Task BoundedRetention_AppliesToSagaAndStateMachineHistoriesAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -249,17 +249,17 @@ public sealed class SagaTestHarnessBehaviorTests
         ISagaStateMachineTestHarness<ResponsiveStateMachine, ResponsiveState> sagaHarness =
             harness.StateMachineSaga<ResponsiveState, ResponsiveStateMachine>(machine);
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             IRequestClient<ResponsiveRequest> client = harness.CreateRequestClient<ResponsiveRequest>();
             foreach ((Guid sagaId, int index) in sagaIds.Select((id, index) => (id, index)))
             {
-                Response<ResponsiveResponse> response = await client.GetResponse<ResponsiveResponse>(
+                Response<ResponsiveResponse> response = await client.GetResponseAsync<ResponsiveResponse>(
                     new ResponsiveRequest(sagaId, $"bounded-{index}"),
                     cancellationToken);
                 Assert.Equal(sagaId, response.Message.CorrelationId);
-                Assert.Equal(sagaId, await sagaHarness.Exists(sagaId, machine.Responded, timeout));
+                Assert.Equal(sagaId, await sagaHarness.ExistsAsync(sagaId, machine.Responded, timeout, TestContext.Current.CancellationToken));
             }
 
             Assert.Equal(sagaIds[1..], sagaHarness.Consumed.Snapshot()
@@ -299,13 +299,13 @@ public sealed class SagaTestHarnessBehaviorTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-STATE-MACHINE", "query-correlation-existing-and-missing")]
-    public async Task QueryCorrelatedStateMachineHarness_RecordsOnlyTheMatchedSagaAndItsResultingState()
+    public async Task QueryCorrelatedStateMachineHarness_RecordsOnlyTheMatchedSagaAndItsResultingStateAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -315,23 +315,23 @@ public sealed class SagaTestHarnessBehaviorTests
         ISagaStateMachineTestHarness<QueryCorrelationStateMachine, QueryCorrelationState> sagaHarness =
             harness.StateMachineSaga<QueryCorrelationState, QueryCorrelationStateMachine>(machine);
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.InputQueueSendEndpoint.SendAsync(
                 new StartQuerySaga(sagaId, "alpha"),
                 cancellationToken);
-            Guid? running = await sagaHarness.Exists(sagaId, machine.Running, timeout);
+            Guid? running = await sagaHarness.ExistsAsync(sagaId, machine.Running, timeout, TestContext.Current.CancellationToken);
             IRequestClient<CheckQuerySaga> client = harness.CreateRequestClient<CheckQuerySaga>();
 
-            Response<QuerySagaStatus> response = await client.GetResponse<QuerySagaStatus>(
+            Response<QuerySagaStatus> response = await client.GetResponseAsync<QuerySagaStatus>(
                 new CheckQuerySaga("alpha"),
                 cancellationToken);
-            await harness.InputQueueSendEndpoint.Send(new CheckQuerySaga("missing"), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new CheckQuerySaga("missing"), cancellationToken);
             IPublishedMessage<QuerySagaMissing> missing = await harness.Published
                 .SelectAsync<QuerySagaMissing>(cancellationToken)
-                .First();
-            QueryCorrelationState instance = sagaHarness.Sagas.Contains(sagaId);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
+            QueryCorrelationState? instance = sagaHarness.Sagas.Contains(sagaId);
             using var completed = new CancellationTokenSource();
             completed.Cancel();
             ISagaInstance<QueryCorrelationState>[] created = sagaHarness.Created
@@ -356,7 +356,7 @@ public sealed class SagaTestHarnessBehaviorTests
         }
         finally
         {
-            await harness.Stop();
+            await harness.StopAsync(TestContext.Current.CancellationToken);
         }
     }
 
@@ -392,11 +392,11 @@ public sealed class SagaTestHarnessBehaviorTests
 
         public IReadOnlyList<string> Values { get; private set; } = [];
 
-        public async Task Consume(ConsumeContext<StartSaga> context)
+        public async Task ConsumeAsync(ConsumeContext<StartSaga> context)
         {
             Value = context.Message.Value;
             Values = context.Message.Values.Select(value => value.Value).ToArray();
-            await context.Publish(new SagaStarted(CorrelationId, Value));
+            await context.Advanced().PublishAsync(new SagaStarted(CorrelationId, Value));
         }
     }
 
@@ -448,7 +448,7 @@ public sealed class SagaTestHarnessBehaviorTests
             Initially(
                 When(Start)
                     .Then(context => context.Saga.Key = context.Message.Key)
-                    .Request(Execute, context => context.Init<ExecuteRequest>(new
+                    .Request(Execute, context => context.InitAsync<ExecuteRequest>(new
                     {
                         context.Saga.CorrelationId,
                         context.Saga.Key,
@@ -539,7 +539,7 @@ public sealed class SagaTestHarnessBehaviorTests
             Event(() => Check, configuration => configuration
                 .CorrelateBy(instance => instance.Key, context => context.Message.Key)
                 .OnMissingInstance(missing => missing.ExecuteAsync(context =>
-                    context.Publish(new QuerySagaMissing(context.Message.Key), context.CancellationToken))));
+                    context.Advanced().PublishAsync(new QuerySagaMissing(context.Message.Key), context.CancellationToken))));
 
             Initially(
                 When(Start)

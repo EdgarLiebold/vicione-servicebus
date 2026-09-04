@@ -33,7 +33,8 @@ public interface IAgent
     /// be returned via this method, and not propagated to the <see cref="Completed"/> Task.
     /// </summary>
     /// <param name="context">The stop context</param>
-    Task Stop(StopContext context);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task StopAsync(StopContext context, CancellationToken cancellationToken = default);
 }
 
 

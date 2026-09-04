@@ -12,7 +12,7 @@ class HealthResultReceiveEndpointObserver :
         _endpoint = endpoint;
     }
 
-    public Task Ready(ReceiveEndpointReady ready)
+    public Task ReadyAsync(ReceiveEndpointReady ready)
     {
         if (_endpoint.CurrentState == ReceiveEndpoint.State.Initial
             || _endpoint.CurrentState == ReceiveEndpoint.State.Started
@@ -31,7 +31,7 @@ class HealthResultReceiveEndpointObserver :
         return Task.CompletedTask;
     }
 
-    public Task Stopping(ReceiveEndpointStopping stopping)
+    public Task StoppingAsync(ReceiveEndpointStopping stopping)
     {
         if (_endpoint.CurrentState == ReceiveEndpoint.State.Started
             || _endpoint.CurrentState == ReceiveEndpoint.State.Ready
@@ -46,7 +46,7 @@ class HealthResultReceiveEndpointObserver :
         return Task.CompletedTask;
     }
 
-    public Task Completed(ReceiveEndpointCompleted completed)
+    public Task CompletedAsync(ReceiveEndpointCompleted completed)
     {
         if (_endpoint.CurrentState == ReceiveEndpoint.State.Initial
             || _endpoint.CurrentState == ReceiveEndpoint.State.Started
@@ -65,7 +65,7 @@ class HealthResultReceiveEndpointObserver :
         return Task.CompletedTask;
     }
 
-    public Task Faulted(ReceiveEndpointFaulted faulted)
+    public Task FaultedAsync(ReceiveEndpointFaulted faulted)
     {
         if (_endpoint.CurrentState == ReceiveEndpoint.State.Initial
             || _endpoint.CurrentState == ReceiveEndpoint.State.Started

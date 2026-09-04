@@ -20,7 +20,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         readonly StateMachineUnhandledEventCallback<TInstance> _unhandledEventCallback;
 
         public StateMachineState(StateMachineUnhandledEventCallback<TInstance> unhandledEventCallback, string name, IEventObserver<TInstance> observer,
-            State<TInstance> superState = null)
+            State<TInstance>? superState = null)
         {
             _unhandledEventCallback = unhandledEventCallback;
             Name = name;
@@ -45,12 +45,12 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             superState?.AddSubstate(this);
         }
 
-        public bool Equals(State other)
+        public bool Equals(State? other)
         {
             return string.CompareOrdinal(Name, other?.Name ?? "") == 0;
         }
 
-        public State<TInstance> SuperState { get; }
+        public State<TInstance>? SuperState { get; }
         public string Name { get; }
 
         public Event Enter { get; }
@@ -101,18 +101,18 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             }
         }
 
-        async Task State<TInstance>.Raise(BehaviorContext<TInstance> context)
+        async Task State<TInstance>.RaiseAsync(BehaviorContext<TInstance> context, CancellationToken cancellationToken)
         {
-            if (!_behaviors.TryGetValue(context.Event, out ActivityBehaviorBuilder<TInstance> activities))
+            if (!_behaviors.TryGetValue(context.Event, out ActivityBehaviorBuilder<TInstance>? activities))
             {
-                if (_ignoredEvents.TryGetValue(context.Event, out IStateEventFilter<TInstance> filter) && filter.Filter(context))
+                if (_ignoredEvents.TryGetValue(context.Event, out IStateEventFilter<TInstance>? filter) && filter.Filter(context))
                     return;
 
                 if (SuperState != null)
                 {
                     try
                     {
-                        await SuperState.Raise(context).ConfigureAwait(false);
+                        await SuperState.RaiseAsync(context, cancellationToken: cancellationToken).ConfigureAwait(false);
                         return;
                     }
                     catch (UnhandledEventException)
@@ -127,32 +127,32 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
             try
             {
-                await _observer.PreExecute(context).ConfigureAwait(false);
+                await _observer.PreExecuteAsync(context).ConfigureAwait(false);
 
-                await activities.Behavior.Execute(context).ConfigureAwait(false);
+                await activities.Behavior.ExecuteAsync(context).ConfigureAwait(false);
 
-                await _observer.PostExecute(context).ConfigureAwait(false);
+                await _observer.PostExecuteAsync(context).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                await _observer.ExecuteFault(context, ex).ConfigureAwait(false);
+                await _observer.ExecuteFaultAsync(context, ex).ConfigureAwait(false);
 
                 throw;
             }
         }
 
-        async Task State<TInstance>.Raise<T>(BehaviorContext<TInstance, T> context)
+        async Task State<TInstance>.RaiseAsync<T>(BehaviorContext<TInstance, T> context, CancellationToken cancellationToken)
         {
-            if (!_behaviors.TryGetValue(context.Event, out ActivityBehaviorBuilder<TInstance> activities))
+            if (!_behaviors.TryGetValue(context.Event, out ActivityBehaviorBuilder<TInstance>? activities))
             {
-                if (_ignoredEvents.TryGetValue(context.Event, out IStateEventFilter<TInstance> filter) && filter.Filter(context))
+                if (_ignoredEvents.TryGetValue(context.Event, out IStateEventFilter<TInstance>? filter) && filter.Filter(context))
                     return;
 
                 if (SuperState != null)
                 {
                     try
                     {
-                        await SuperState.Raise(context).ConfigureAwait(false);
+                        await SuperState.RaiseAsync(context, cancellationToken: cancellationToken).ConfigureAwait(false);
                         return;
                     }
                     catch (UnhandledEventException)
@@ -167,15 +167,15 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
             try
             {
-                await _observer.PreExecute(context).ConfigureAwait(false);
+                await _observer.PreExecuteAsync(context).ConfigureAwait(false);
 
-                await activities.Behavior.Execute(context).ConfigureAwait(false);
+                await activities.Behavior.ExecuteAsync(context).ConfigureAwait(false);
 
-                await _observer.PostExecute(context).ConfigureAwait(false);
+                await _observer.PostExecuteAsync(context).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                await _observer.ExecuteFault(context, ex).ConfigureAwait(false);
+                await _observer.ExecuteFaultAsync(context, ex).ConfigureAwait(false);
 
                 throw;
             }
@@ -183,7 +183,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
         public void Bind(Event @event, IStateMachineActivity<TInstance> activity)
         {
-            if (!_behaviors.TryGetValue(@event, out ActivityBehaviorBuilder<TInstance> builder))
+            if (!_behaviors.TryGetValue(@event, out ActivityBehaviorBuilder<TInstance>? builder))
             {
                 builder = new ActivityBehaviorBuilder<TInstance>();
                 _behaviors.Add(@event, builder);
@@ -226,9 +226,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
 
         public IEnumerable<Event> Events => SuperState != null ? SuperState.Events.Union(GetStateEvents()).Distinct() : GetStateEvents();
 
-        public int CompareTo(State other)
+        public int CompareTo(State? other)
         {
-            return string.CompareOrdinal(Name, other.Name);
+            return other == null ? 1 : string.CompareOrdinal(Name, other.Name);
         }
 
         bool IsRealEvent(Event @event)
@@ -247,7 +247,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
                 .Distinct();
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj))
                 return false;

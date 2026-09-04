@@ -4,7 +4,7 @@ namespace ViciOne.ServiceBus.Testing;
 
 public static class SagaTestHarnessExtensions
 {
-    public static SagaTestHarness<T> Saga<T>(this BusTestHarness harness, string queueName = null)
+    public static SagaTestHarness<T> Saga<T>(this BusTestHarness harness, string? queueName = null)
         where T : class, ISaga
     {
         var repository = new InMemorySagaRepository<T>();
@@ -12,7 +12,7 @@ public static class SagaTestHarnessExtensions
         return new SagaTestHarness<T>(harness, repository, repository, repository, queueName);
     }
 
-    public static SagaTestHarness<T> Saga<T>(this BusTestHarness harness, ISagaRepository<T> repository, string queueName = null)
+    public static SagaTestHarness<T> Saga<T>(this BusTestHarness harness, ISagaRepository<T> repository, string? queueName = null)
         where T : class, ISaga
     {
         if (repository == null)

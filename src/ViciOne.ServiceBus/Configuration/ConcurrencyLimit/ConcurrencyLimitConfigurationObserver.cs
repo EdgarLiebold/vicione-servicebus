@@ -9,7 +9,7 @@ public class ConcurrencyLimitConfigurationObserver :
     ConfigurationObserver,
     IMessageConfigurationObserver
 {
-    public ConcurrencyLimitConfigurationObserver(IConsumePipeConfigurator configurator, int concurrentMessageLimit, string id = null)
+    public ConcurrencyLimitConfigurationObserver(IConsumePipeConfigurator configurator, int concurrentMessageLimit, string? id = null)
         : base(configurator)
     {
         Limiter = new ConcurrencyLimiter(concurrentMessageLimit, id);

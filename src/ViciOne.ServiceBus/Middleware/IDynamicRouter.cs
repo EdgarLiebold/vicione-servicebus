@@ -23,5 +23,6 @@ public interface IDynamicRouter<in TContext, in TKey> :
     IDynamicRouter<TContext>,
     IKeyPipeConnector<TKey>
     where TContext : class, PipeContext
+    where TKey : notnull
 {
 }

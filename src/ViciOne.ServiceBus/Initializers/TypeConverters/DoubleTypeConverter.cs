@@ -34,7 +34,7 @@ public class DoubleTypeConverter :
         return true;
     }
 
-    public bool TryConvert(object input, out double result)
+    public bool TryConvert(object? input, out double result)
     {
         if (input != null)
         {
@@ -58,7 +58,7 @@ public class DoubleTypeConverter :
         return true;
     }
 
-    public bool TryConvert(string input, out double result)
+    public bool TryConvert(string? input, out double result)
     {
         return double.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out result);
     }

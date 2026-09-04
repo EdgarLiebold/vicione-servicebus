@@ -21,7 +21,7 @@ public sealed class BusOutboxDeliveryTelemetryTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-OBSERVABILITY", "background-delivery-uses-own-provider-meter-scope")]
-    public async Task BackgroundDelivery_UsesItsOwnProviderMeterScope()
+    public async Task BackgroundDelivery_UsesItsOwnProviderMeterScopeAsync()
     {
         TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -49,7 +49,7 @@ public sealed class BusOutboxDeliveryTelemetryTests
             measurements.Enqueue(instrument.Meter.Scope));
         listener.Start();
 
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         var service = new BusOutboxDeliveryService<IBus, RecordingDbContext>(
             Options.Create(new OutboxDeliveryServiceOptions<EntityFrameworkBusOutboxScope<IBus, RecordingDbContext>>()),
             Options.Create(new EntityFrameworkOutboxOptions<RecordingDbContext>()),
@@ -72,7 +72,7 @@ public sealed class BusOutboxDeliveryTelemetryTests
         finally
         {
             await service.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -83,13 +83,14 @@ public sealed class BusOutboxDeliveryTelemetryTests
             TaskCompletionSource<ILogContext> entered)
             : base(options)
         {
-            entered.TrySetResult(LogContext.Current);
+            entered.TrySetResult(LogContext.Current
+                ?? throw new Xunit.Sdk.XunitException("Expected the outbox delivery log context to be available."));
         }
     }
 
     private sealed class NoNotification : IBusOutboxNotification<EntityFrameworkBusOutboxScope<IBus, RecordingDbContext>>
     {
-        public Task WaitForDelivery(CancellationToken cancellationToken) =>
+        public Task WaitForDeliveryAsync(CancellationToken cancellationToken) =>
             Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
 
         public void Delivered()

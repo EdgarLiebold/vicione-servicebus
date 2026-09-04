@@ -47,7 +47,8 @@ public sealed class JobStateMachine :
 
         Schedule(() => JobSlotWaitElapsed, instance => instance.JobSlotWaitToken, x =>
         {
-            x.DelayProvider = context => context.GetPayload<JobSagaSettings>().SlotWaitTime;
+            x.DelayProvider = context => (context.GetPayload<JobSagaSettings>()
+                ?? throw new InvalidOperationException("The job saga settings payload is required.")).SlotWaitTime;
             x.Received = r =>
             {
                 r.CorrelateById(context => context.Message.JobId);
@@ -163,7 +164,8 @@ public sealed class JobStateMachine :
                 .IfElse(context => context.Message.RetryDelay.HasValue,
                     retry => retry
                         .Schedule(JobRetryDelayElapsed, context => new JobRetryDelayElapsedEvent { JobId = context.Message.JobId },
-                            context => context.Message.RetryDelay.Value)
+                            context => context.Message.RetryDelay
+                                ?? throw new InvalidOperationException("A retry delay is required to schedule the retry event."))
                         .TransitionTo(WaitingToRetry),
                     fault => fault
                         .NotifyJobFaulted()
@@ -278,7 +280,7 @@ public sealed class JobStateMachine :
                     Faulted = context.Saga.Faulted,
                     Reason = context.Saga.Reason,
                     LastRetryAttempt = context.Saga.RetryAttempt,
-                    CurrentState = (await Accessor.Get(context).ConfigureAwait(false)).Name,
+                    CurrentState = (await Accessor.GetAsync(context).ConfigureAwait(false))?.Name ?? "(not initialized)",
                     ProgressValue = context.Saga.LastProgressValue,
                     ProgressLimit = context.Saga.LastProgressLimit,
                     JobState = context.Saga.JobState,
@@ -394,46 +396,38 @@ public sealed class JobStateMachine :
     //
     // ReSharper disable UnassignedGetOnlyAutoProperty
     // ReSharper disable MemberCanBePrivate.Global
-    public State Submitted { get; }
-    public State WaitingToStart { get; } // no longer used, but do not remove as it would change the CurrentState int values
-    public State WaitingToRetry { get; }
-    public State WaitingForSlot { get; }
-    public State Started { get; }
-    public State Completed { get; }
-    public State Canceled { get; }
-    public State Faulted { get; }
-    public State AllocatingJobSlot { get; }
-    public State StartingJobAttempt { get; }
-    public State CancellationPending { get; }
+    public State Submitted { get; } = null!;
+    public State WaitingToStart { get; } = null!; // no longer used, but do not remove as it would change the CurrentState int values
+    public State WaitingToRetry { get; } = null!;
+    public State WaitingForSlot { get; } = null!;
+    public State Started { get; } = null!;
+    public State Completed { get; } = null!;
+    public State Canceled { get; } = null!;
+    public State Faulted { get; } = null!;
+    public State AllocatingJobSlot { get; } = null!;
+    public State StartingJobAttempt { get; } = null!;
+    public State CancellationPending { get; } = null!;
 
-    public Event<JobSlotAllocated> JobSlotAllocated { get; }
-    public Event<JobSlotUnavailable> JobSlotUnavailable { get; }
-    public Event<Fault<AllocateJobSlot>> AllocateJobSlotFaulted { get; }
+    public Event<JobSlotAllocated> JobSlotAllocated { get; } = null!;
+    public Event<JobSlotUnavailable> JobSlotUnavailable { get; } = null!;
+    public Event<Fault<AllocateJobSlot>> AllocateJobSlotFaulted { get; } = null!;
+    public Event<Fault<StartJobAttempt>> StartJobAttemptFaulted { get; } = null!;
+    public Event<JobSubmitted> JobSubmitted { get; } = null!;
+    public Event<JobAttemptStarted> AttemptStarted { get; } = null!;
+    public Event<JobAttemptCompleted> AttemptCompleted { get; } = null!;
+    public Event<JobAttemptCanceled> AttemptCanceled { get; } = null!;
+    public Event<JobAttemptFaulted> AttemptFaulted { get; } = null!;
+    public Event<JobCompleted> JobCompleted { get; } = null!;
+    public Event<CancelJob> CancelJob { get; } = null!;
+    public Event<RetryJob> RetryJob { get; } = null!;
+    public Event<RunJob> RunJob { get; } = null!;
+    public Event<FinalizeJob> FinalizeJob { get; } = null!;
+    public Event<SetJobProgress> SetJobProgress { get; } = null!;
+    public Event<SaveJobState> SaveJobState { get; } = null!;
+    public Event<GetJobState> GetJobState { get; } = null!;
+    public Schedule<JobSaga, JobSlotWaitElapsed> JobSlotWaitElapsed { get; } = null!;
 
-    public Event<Fault<StartJobAttempt>> StartJobAttemptFaulted { get; }
-
-    public Event<JobSubmitted> JobSubmitted { get; }
-
-    public Event<JobAttemptStarted> AttemptStarted { get; }
-    public Event<JobAttemptCompleted> AttemptCompleted { get; }
-    public Event<JobAttemptCanceled> AttemptCanceled { get; }
-    public Event<JobAttemptFaulted> AttemptFaulted { get; }
-
-    public Event<JobCompleted> JobCompleted { get; }
-
-    public Event<CancelJob> CancelJob { get; }
-    public Event<RetryJob> RetryJob { get; }
-    public Event<RunJob> RunJob { get; }
-    public Event<FinalizeJob> FinalizeJob { get; }
-
-    public Event<SetJobProgress> SetJobProgress { get; }
-    public Event<SaveJobState> SaveJobState { get; }
-
-    public Event<GetJobState> GetJobState { get; }
-
-    public Schedule<JobSaga, JobSlotWaitElapsed> JobSlotWaitElapsed { get; }
-
-    public Schedule<JobSaga, JobRetryDelayElapsed> JobRetryDelayElapsed { get; }
+    public Schedule<JobSaga, JobRetryDelayElapsed> JobRetryDelayElapsed { get; } = null!;
 }
 
 
@@ -534,7 +528,8 @@ static class JobStateMachineBehaviorExtensions
             context.Saga.Submitted = context.Message.Timestamp;
 
             context.Saga.Job = context.Message.Job;
-            context.Saga.ServiceAddress = context.SourceAddress;
+            context.Saga.ServiceAddress = context.SourceAddress
+                ?? throw new InvalidOperationException("A source address is required when a job is submitted.");
             context.Saga.JobTimeout = context.Message.JobTimeout;
             context.Saga.JobTypeId = context.Message.JobTypeId;
 
@@ -657,11 +652,11 @@ static class JobStateMachineBehaviorExtensions
         {
             if (context.Saga.IncompleteAttempts is { Count: > 0 })
             {
-                var endpoint = await context.GetSendEndpoint(context.GetJobAttemptSagaAddress());
+                var endpoint = await context.GetSendEndpointAsync(context.GetJobAttemptSagaAddress());
 
                 foreach (var attemptId in context.Saga.IncompleteAttempts)
                 {
-                    await endpoint.Send<FinalizeJobAttempt>(new FinalizeJobAttemptCommand
+                    await endpoint.SendAsync<FinalizeJobAttempt>(new FinalizeJobAttemptCommand
                     {
                         JobId = context.Saga.CorrelationId,
                         AttemptId = attemptId
@@ -697,7 +692,8 @@ static class JobStateMachineBehaviorExtensions
         return binder
             .ClearJobState()
             .Schedule(machine.JobSlotWaitElapsed, context => new JobSlotWaitElapsedEvent { JobId = context.Saga.CorrelationId },
-                context => context.Saga.NextStartDate.Value.DateTime,
+                context => (context.Saga.NextStartDate
+                    ?? throw new InvalidOperationException("The next start date is required to schedule the job.")),
                 context => context.Headers.Set(DiagnosticHeaders.ActivityPropagation, "Link"))
             .TransitionTo(machine.WaitingForSlot);
     }
@@ -717,7 +713,7 @@ static class JobStateMachineBehaviorExtensions
         {
             JobId = context.Saga.CorrelationId,
             JobTypeId = context.Saga.JobTypeId,
-            Disposition = disposition == JobSlotDisposition.Faulted && context.Saga.Reason.Contains("(Suspect)")
+            Disposition = disposition == JobSlotDisposition.Faulted && context.Saga.Reason?.Contains("(Suspect)") == true
                 ? JobSlotDisposition.Suspect
                 : disposition
         });
@@ -731,7 +727,7 @@ static class JobStateMachineBehaviorExtensions
             {
                 JobId = context.Saga.CorrelationId,
                 JobTypeId = context.Saga.JobTypeId,
-                Disposition = disposition == JobSlotDisposition.Faulted && context.Saga.Reason.Contains("(Suspect)")
+                Disposition = disposition == JobSlotDisposition.Faulted && context.Saga.Reason?.Contains("(Suspect)") == true
                     ? JobSlotDisposition.Suspect
                     : disposition
             });
@@ -811,7 +807,8 @@ static class JobStateMachineBehaviorExtensions
             .Publish<JobSaga, T, JobCanceled>(context => new JobCanceledEvent
             {
                 JobId = context.Saga.CorrelationId,
-                Timestamp = context.Saga.Faulted.Value,
+                Timestamp = context.Saga.Faulted
+                    ?? throw new InvalidOperationException("The job fault timestamp must be set before publishing its cancellation."),
                 Reason = context.Saga.Reason
             });
     }
@@ -827,14 +824,16 @@ static class JobStateMachineBehaviorExtensions
                     JobTypeId = context.Saga.JobTypeId,
                     AttemptId = context.Saga.AttemptId,
                     RetryAttempt = context.Saga.RetryAttempt,
-                    Exceptions = context.Message.Exceptions?.FirstOrDefault(),
+                    Exceptions = context.Message.Exceptions.FirstOrDefault()
+                        ?? throw new InvalidOperationException("A job attempt start fault must include exception details."),
                     Duration = context.Message.Timestamp - context.Saga.Started
                 }, (context, sendContext) => sendContext.RequestId = context.Saga.CorrelationId)
             .Publish<JobSaga, Fault<StartJobAttempt>, JobFaulted>(context => new JobFaultedEvent
             {
                 JobId = context.Saga.CorrelationId,
                 Job = context.Saga.Job,
-                Exceptions = context.Message.Exceptions?.FirstOrDefault(),
+                Exceptions = context.Message.Exceptions.FirstOrDefault()
+                    ?? throw new InvalidOperationException("A job attempt start fault must include exception details."),
                 Timestamp = context.Message.Timestamp,
                 Duration = context.Message.Timestamp - context.Saga.Started
             });

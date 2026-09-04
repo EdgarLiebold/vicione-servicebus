@@ -29,102 +29,102 @@ public class TransitionActivity<TSaga> :
         scope.Add("toState", _toState.Name);
     }
 
-    public async Task Execute(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public async Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
-        await Transition(context).ConfigureAwait(false);
+        await TransitionAsync(context).ConfigureAwait(false);
 
-        await next.Execute(context).ConfigureAwait(false);
+        await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    public async Task Execute<TData>(BehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
+    public async Task ExecuteAsync<TData>(BehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
         where TData : class
     {
-        await Transition(context).ConfigureAwait(false);
+        await TransitionAsync(context).ConfigureAwait(false);
 
-        await next.Execute(context).ConfigureAwait(false);
+        await next.ExecuteAsync(context).ConfigureAwait(false);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
+    public Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception
     {
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 
-    public Task Faulted<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
+    public Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
         where T : class
         where TException : Exception
     {
-        return next.Faulted(context);
+        return next.FaultedAsync(context);
     }
 
-    async Task Transition(BehaviorContext<TSaga> context)
+    async Task TransitionAsync(BehaviorContext<TSaga> context)
     {
-        State<TSaga> currentState = await _currentStateAccessor.Get(context).ConfigureAwait(false);
+        State<TSaga>? currentState = await _currentStateAccessor.GetAsync(context).ConfigureAwait(false);
         if (_toState.Equals(currentState))
             return; // Homey don't play re-entry, at least not yet.
 
         if (currentState != null && !currentState.HasState(_toState))
-            await RaiseCurrentStateLeaveEvents(context, currentState, _toState).ConfigureAwait(false);
+            await RaiseCurrentStateLeaveEventsAsync(context, currentState, _toState).ConfigureAwait(false);
 
-        await RaiseBeforeEnterEvents(context, currentState, _toState).ConfigureAwait(false);
+        await RaiseBeforeEnterEventsAsync(context, currentState, _toState).ConfigureAwait(false);
 
-        await _currentStateAccessor.Set(context, _toState).ConfigureAwait(false);
+        await _currentStateAccessor.SetAsync(context, _toState).ConfigureAwait(false);
 
         if (currentState != null)
-            await RaiseAfterLeaveEvents(context, currentState, _toState).ConfigureAwait(false);
+            await RaiseAfterLeaveEventsAsync(context, currentState, _toState).ConfigureAwait(false);
 
         if (currentState == null || !_toState.HasState(currentState))
         {
-            State<TSaga> superState = _toState.SuperState;
+            State<TSaga>? superState = _toState.SuperState;
             while (superState != null && (currentState == null || !superState.HasState(currentState)))
             {
                 BehaviorContext<TSaga> superStateEnterContext = context.CreateProxy(superState.Enter);
-                await superState.Raise(superStateEnterContext).ConfigureAwait(false);
+                await superState.RaiseAsync(superStateEnterContext).ConfigureAwait(false);
 
                 superState = superState.SuperState;
             }
 
             BehaviorContext<TSaga> enterContext = context.CreateProxy(_toState.Enter);
-            await _toState.Raise(enterContext).ConfigureAwait(false);
+            await _toState.RaiseAsync(enterContext).ConfigureAwait(false);
         }
     }
 
-    static async Task RaiseBeforeEnterEvents(BehaviorContext<TSaga> context, State<TSaga> currentState, State<TSaga> toState)
+    static async Task RaiseBeforeEnterEventsAsync(BehaviorContext<TSaga> context, State<TSaga>? currentState, State<TSaga> toState)
     {
-        State<TSaga> superState = toState.SuperState;
+        State<TSaga>? superState = toState.SuperState;
         if (superState != null && (currentState == null || !superState.HasState(currentState)))
-            await RaiseBeforeEnterEvents(context, currentState, superState).ConfigureAwait(false);
+            await RaiseBeforeEnterEventsAsync(context, currentState, superState).ConfigureAwait(false);
 
         if (currentState != null && toState.HasState(currentState))
             return;
 
         BehaviorContext<TSaga, State> beforeContext = context.CreateProxy(toState.BeforeEnter, toState);
-        await toState.Raise(beforeContext).ConfigureAwait(false);
+        await toState.RaiseAsync(beforeContext).ConfigureAwait(false);
     }
 
-    static async Task RaiseAfterLeaveEvents(BehaviorContext<TSaga> context, State<TSaga> fromState, State<TSaga> toState)
+    static async Task RaiseAfterLeaveEventsAsync(BehaviorContext<TSaga> context, State<TSaga> fromState, State<TSaga> toState)
     {
         if (fromState.HasState(toState))
             return;
 
         BehaviorContext<TSaga, State> afterContext = context.CreateProxy(fromState.AfterLeave, fromState);
-        await fromState.Raise(afterContext).ConfigureAwait(false);
+        await fromState.RaiseAsync(afterContext).ConfigureAwait(false);
 
-        State<TSaga> superState = fromState.SuperState;
+        State<TSaga>? superState = fromState.SuperState;
         if (superState != null)
-            await RaiseAfterLeaveEvents(context, superState, toState).ConfigureAwait(false);
+            await RaiseAfterLeaveEventsAsync(context, superState, toState).ConfigureAwait(false);
     }
 
-    static async Task RaiseCurrentStateLeaveEvents(BehaviorContext<TSaga> context, State<TSaga> fromState, State<TSaga> toState)
+    static async Task RaiseCurrentStateLeaveEventsAsync(BehaviorContext<TSaga> context, State<TSaga> fromState, State<TSaga> toState)
     {
         BehaviorContext<TSaga> leaveContext = context.CreateProxy(fromState.Leave);
-        await fromState.Raise(leaveContext).ConfigureAwait(false);
+        await fromState.RaiseAsync(leaveContext).ConfigureAwait(false);
 
-        State<TSaga> superState = fromState.SuperState;
+        State<TSaga>? superState = fromState.SuperState;
         while (superState != null && !superState.HasState(toState))
         {
             BehaviorContext<TSaga> superStateLeaveContext = context.CreateProxy(superState.Leave);
-            await superState.Raise(superStateLeaveContext).ConfigureAwait(false);
+            await superState.RaiseAsync(superStateLeaveContext).ConfigureAwait(false);
 
             superState = superState.SuperState;
         }

@@ -34,13 +34,13 @@ public class ConsumerMessageMergePipe<TConsumer, TMessage> :
         _output.Probe(scope);
     }
 
-    public Task Send(ConsumeContext<TMessage> context)
+    public Task SendAsync(ConsumeContext<TMessage> context)
     {
         if (ReferenceEquals(context, _context))
-            return _output.Send(_context);
+            return _output.SendAsync(_context);
 
         return context is ConsumerConsumeContext<TConsumer, TMessage> consumerContext
-            ? _output.Send(consumerContext)
-            : _output.Send(new ConsumerConsumeContextScope<TConsumer, TMessage>(context, _context.Consumer));
+            ? _output.SendAsync(consumerContext)
+            : _output.SendAsync(new ConsumerConsumeContextScope<TConsumer, TMessage>(context, _context.Consumer));
     }
 }

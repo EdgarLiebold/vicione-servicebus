@@ -17,10 +17,10 @@ public class ReceiveEndpointSendRequestSendEndpoint<TRequest> :
         _destinationAddress = destinationAddress;
     }
 
-    protected override async Task<ISendEndpoint> GetSendEndpoint()
+    protected override async Task<ISendEndpoint> GetSendEndpointAsync()
     {
         var ready = await _handle.Ready.ConfigureAwait(false);
 
-        return await ready.ReceiveEndpoint.GetSendEndpoint(_destinationAddress).ConfigureAwait(false);
+        return await ready.ReceiveEndpoint.GetSendEndpointAsync(_destinationAddress).ConfigureAwait(false);
     }
 }

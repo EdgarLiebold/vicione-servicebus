@@ -12,15 +12,15 @@ public sealed class SystemTextJsonExtensionDataTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-SYSTEM-TEXT-JSON-EXTENSION-DATA", "envelope")]
-    public Task EnvelopeSerializer_PreservesEveryExtensionValue() =>
-        AssertExtensionDataRoundTrip(JsonTransportMode.Envelope);
+    public Task EnvelopeSerializer_PreservesEveryExtensionValueAsync() =>
+        AssertExtensionDataRoundTripAsync(JsonTransportMode.Envelope);
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SYSTEM-TEXT-JSON-EXTENSION-DATA", "raw")]
-    public Task RawSerializer_PreservesEveryExtensionValue() =>
-        AssertExtensionDataRoundTrip(JsonTransportMode.Raw);
+    public Task RawSerializer_PreservesEveryExtensionValueAsync() =>
+        AssertExtensionDataRoundTripAsync(JsonTransportMode.Raw);
 
-    private static async Task AssertExtensionDataRoundTrip(JsonTransportMode mode)
+    private static async Task AssertExtensionDataRoundTripAsync(JsonTransportMode mode)
     {
         TimeSpan operationTimeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -68,8 +68,8 @@ public sealed class SystemTextJsonExtensionDataTests
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
-            await harness.Bus.Publish(
+            await harness.StartAsync(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
+            await harness.Bus.PublishAsync(
                     new ExtensibleMessage
                     {
                         Extra = new Dictionary<string, object>
@@ -95,7 +95,7 @@ public sealed class SystemTextJsonExtensionDataTests
                 ? SystemTextJsonMessageSerializer.JsonContentType.MediaType
                 : SystemTextJsonRawMessageSerializer.JsonContentType.MediaType;
 
-            Assert.Equal(expectedMediaType, context.ReceiveContext.ContentType.MediaType);
+            Assert.Equal(expectedMediaType, context.Advanced().ReceiveContext.ContentType.MediaType);
             Assert.Equal(["number", "text"], context.Message.Extra.Keys.Order(StringComparer.Ordinal));
             JsonElement text = Assert.IsType<JsonElement>(context.Message.Extra["text"]);
             JsonElement number = Assert.IsType<JsonElement>(context.Message.Extra["number"]);
@@ -106,7 +106,7 @@ public sealed class SystemTextJsonExtensionDataTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(operationTimeout, CancellationToken.None);
+            await harness.StopAsync().WaitAsync(operationTimeout, CancellationToken.None);
         }
     }
 

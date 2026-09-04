@@ -26,7 +26,7 @@ public class Vertex :
 
     public string DebuggerDisplay => $"{VertexType.Name}({IsComposite}) {Title} -> {TargetType.Name}";
 
-    public bool Equals(Vertex other)
+    public bool Equals(Vertex? other)
     {
         if (ReferenceEquals(null, other))
             return false;
@@ -35,7 +35,7 @@ public class Vertex :
         return string.Equals(Title, other.Title) && VertexType == other.VertexType && TargetType == other.TargetType;
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (ReferenceEquals(null, obj))
             return false;

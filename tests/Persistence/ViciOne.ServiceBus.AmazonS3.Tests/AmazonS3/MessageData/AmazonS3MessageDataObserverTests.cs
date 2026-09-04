@@ -11,7 +11,7 @@ public sealed class AmazonS3MessageDataObserverTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-S3-OBSERVER", "lifecycle-no-op-and-prestart-fail-fast-boundary")]
-    public async Task BusObserverLifecycle_IsNoOpExceptFailFastPreStart()
+    public async Task BusObserverLifecycle_IsNoOpExceptFailFastPreStartAsync()
     {
         var client = DispatchProxy.Create<IAmazonS3, FailingS3DispatchProxy>();
         var clientProxy = (FailingS3DispatchProxy)(object)client;
@@ -25,14 +25,14 @@ public sealed class AmazonS3MessageDataObserverTests
 
         repository.PostCreate(bus);
         repository.CreateFaulted(failure);
-        await repository.PostStart(bus, Task.FromResult<BusReady>(null!));
-        await repository.StartFaulted(bus, failure);
-        await repository.PreStop(bus);
-        await repository.PostStop(bus);
-        await repository.StopFaulted(bus, failure);
+        await repository.PostStartAsync(bus, Task.FromResult<BusReady>(null!));
+        await repository.StartFaultedAsync(bus, failure);
+        await repository.PreStopAsync(bus);
+        await repository.PostStopAsync(bus);
+        await repository.StopFaultedAsync(bus, failure);
 
         InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(
-            () => repository.PreStart(bus));
+            () => repository.PreStartAsync(bus));
         Assert.Same(startupFailure, actual);
         Assert.Equal(CancellationToken.None, clientProxy.ObservedCancellationToken);
 
@@ -42,25 +42,25 @@ public sealed class AmazonS3MessageDataObserverTests
         clientProxy.Failure = cancellationFailure;
         OperationCanceledException actualCancellation =
             await Assert.ThrowsAnyAsync<OperationCanceledException>(
-                () => repository.EnsureReady(cancellation.Token));
+                () => repository.EnsureReadyAsync(cancellation.Token));
         Assert.Same(cancellationFailure, actualCancellation);
         Assert.Equal(cancellation.Token, clientProxy.ObservedCancellationToken);
 
         Assert.Throws<ArgumentNullException>(() => repository.PostCreate(null!));
         Assert.Throws<ArgumentNullException>(() => repository.CreateFaulted(null!));
-        await Assert.ThrowsAsync<ArgumentNullException>(() => repository.PreStart(null!));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => repository.PreStartAsync(null!));
         await Assert.ThrowsAsync<ArgumentNullException>(
-            () => repository.PostStart(null!, Task.FromResult<BusReady>(null!)));
-        await Assert.ThrowsAsync<ArgumentNullException>(() => repository.PostStart(bus, null!));
-        await Assert.ThrowsAsync<ArgumentNullException>(() => repository.StartFaulted(bus, null!));
-        await Assert.ThrowsAsync<ArgumentNullException>(() => repository.PreStop(null!));
-        await Assert.ThrowsAsync<ArgumentNullException>(() => repository.PostStop(null!));
-        await Assert.ThrowsAsync<ArgumentNullException>(() => repository.StopFaulted(bus, null!));
+            () => repository.PostStartAsync(null!, Task.FromResult<BusReady>(null!)));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => repository.PostStartAsync(bus, null!));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => repository.StartFaultedAsync(bus, null!));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => repository.PreStopAsync(null!));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => repository.PostStopAsync(null!));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => repository.StopFaultedAsync(bus, null!));
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-S3-LIFECYCLE", "owned-rule-is-canonical-and-foreign-rule-is-preserved")]
-    public async Task EnsureReady_CanonicalizesOnlyTheProductOwnedLifecycleRule()
+    public async Task EnsureReady_CanonicalizesOnlyTheProductOwnedLifecycleRuleAsync()
     {
         var foreignTransition = new LifecycleTransition
         {
@@ -111,7 +111,7 @@ public sealed class AmazonS3MessageDataObserverTests
             new AmazonS3MessageDataRepositoryOptions("canonical-lifecycle", lifecycleExpirationDays: 14));
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
 
-        await repository.EnsureReady(cancellationToken);
+        await repository.EnsureReadyAsync(cancellationToken);
 
         PutLifecycleConfigurationRequest request = Assert.IsType<PutLifecycleConfigurationRequest>(proxy.PutRequest);
         Assert.Equal(cancellationToken, proxy.ObservedCancellationToken);

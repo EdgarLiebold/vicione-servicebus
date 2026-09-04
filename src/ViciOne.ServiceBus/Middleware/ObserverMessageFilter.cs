@@ -31,22 +31,23 @@ public class ObserverMessageFilter<TMessage> :
     }
 
     [DebuggerNonUserCode]
-    async Task IFilter<ConsumeContext<TMessage>>.Send(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
+    async Task IFilter<ConsumeContext<TMessage>>.SendAsync(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
     {
-        var timer = Stopwatch.StartNew();
+        TimeProvider timeProvider = context.GetTimeProvider();
+        long startedAt = timeProvider.GetTimestamp();
         try
         {
             await Task.Yield();
 
             _observer.OnNext(context);
 
-            await context.NotifyConsumed(timer.Elapsed, _observerType).ConfigureAwait(false);
+            await context.NotifyConsumedAsync(timeProvider.GetElapsedTime(startedAt), _observerType).ConfigureAwait(false);
 
-            await next.Send(context).ConfigureAwait(false);
+            await next.SendAsync(context).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
-            await context.NotifyFaulted(timer.Elapsed, _observerType, ex).ConfigureAwait(false);
+            await context.NotifyFaultedAsync(timeProvider.GetElapsedTime(startedAt), _observerType, ex).ConfigureAwait(false);
 
             _observer.OnError(ex);
 

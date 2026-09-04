@@ -16,7 +16,7 @@ public interface RequestCompleted
     /// <summary>
     /// The timestamp when the request was completed
     /// </summary>
-    DateTime Timestamp { get; }
+    DateTimeOffset Timestamp { get; }
 
     /// <summary>
     /// The payload types supported by the payload

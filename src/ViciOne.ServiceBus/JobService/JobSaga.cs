@@ -12,31 +12,29 @@ public class JobSaga :
 {
     public int CurrentState { get; set; }
 
-    public DateTime? Submitted { get; set; }
-    public Uri ServiceAddress { get; set; }
+    public DateTimeOffset? Submitted { get; set; }
+    public Uri ServiceAddress { get; set; } = null!;
     public TimeSpan? JobTimeout { get; set; }
-    public Dictionary<string, object> Job { get; set; }
+    public Dictionary<string, object> Job { get; set; } = null!;
     public Guid JobTypeId { get; set; }
 
     public Guid AttemptId { get; set; }
     public int RetryAttempt { get; set; }
 
-    public DateTime? Started { get; set; }
+    public DateTimeOffset? Started { get; set; }
 
-    public DateTime? Completed { get; set; }
+    public DateTimeOffset? Completed { get; set; }
     public TimeSpan? Duration { get; set; }
 
-    public DateTime? Faulted { get; set; }
-    public string Reason { get; set; }
-
+    public DateTimeOffset? Faulted { get; set; }
+    public string? Reason { get; set; }
     public Guid? JobSlotWaitToken { get; set; }
     public Guid? JobRetryDelayToken { get; set; }
 
     /// <summary>
     /// If present, keeps track of any previously faulted attempts so that the faulted job attempt saga instances can be removed when finalized
     /// </summary>
-    public List<Guid> IncompleteAttempts { get; set; }
-
+    public List<Guid>? IncompleteAttempts { get; set; }
     /// <summary>
     /// If present, the last reported progress value
     /// </summary>
@@ -55,23 +53,19 @@ public class JobSaga :
     /// <summary>
     /// The job state, saved from a previous job attempt
     /// </summary>
-    public Dictionary<string, object> JobState { get; set; }
-
+    public Dictionary<string, object>? JobState { get; set; }
     /// <summary>
     /// The job properties, supplied by the submitted job
     /// </summary>
-    public Dictionary<string, object> JobProperties { get; set; }
-
+    public Dictionary<string, object> JobProperties { get; set; } = null!;
     /// <summary>
     /// For recurring jobs, the cron expression used to determine the next start date after the job has completed.
     /// </summary>
-    public string CronExpression { get; set; }
-
+    public string? CronExpression { get; set; }
     /// <summary>
     /// The time zone for the cron expression
     /// </summary>
-    public string TimeZoneId { get; set; }
-
+    public string? TimeZoneId { get; set; }
     /// <summary>
     /// If a state date is specified, the job won't start until after the start date.
     /// </summary>
@@ -87,8 +81,7 @@ public class JobSaga :
     /// </summary>
     public DateTimeOffset? NextStartDate { get; set; }
 
-    public byte[] RowVersion { get; set; }
-
+    public byte[] RowVersion { get; set; } = null!;
     public int Version { get; set; }
 
     public Guid CorrelationId { get; set; }

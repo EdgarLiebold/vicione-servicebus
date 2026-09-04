@@ -21,7 +21,7 @@ public class Bind<TKey, TValue> :
 
     public TValue Value { get; }
 
-    public bool Equals(Bind<TKey, TValue> other)
+    public bool Equals(Bind<TKey, TValue>? other)
     {
         if (ReferenceEquals(null, other))
             return false;
@@ -30,7 +30,7 @@ public class Bind<TKey, TValue> :
         return EqualityComparer<TValue>.Default.Equals(Value, other.Value);
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (ReferenceEquals(null, obj))
             return false;

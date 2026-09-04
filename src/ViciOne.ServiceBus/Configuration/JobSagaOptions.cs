@@ -8,9 +8,9 @@ public class JobSagaOptions :
     JobSagaSettingsConfigurator,
     ISpecification
 {
-    Uri _jobAttemptSagaEndpointAddress;
-    Uri _jobSagaEndpointAddress;
-    Uri _jobTypeSagaEndpointAddress;
+    Uri _jobAttemptSagaEndpointAddress = null!;
+    Uri _jobSagaEndpointAddress = null!;
+    Uri _jobTypeSagaEndpointAddress = null!;
 
     public JobSagaOptions()
     {
@@ -89,5 +89,5 @@ public class JobSagaOptions :
     /// Optional resolver for platform-specific or application-defined time zone identifiers.
     /// The resolver is owned by this job-service configuration instance.
     /// </summary>
-    public Func<string, TimeZoneInfo> TimeZoneResolver { get; set; }
+    public Func<string, TimeZoneInfo> TimeZoneResolver { get; set; } = null!;
 }

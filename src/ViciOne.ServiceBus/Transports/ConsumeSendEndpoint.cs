@@ -28,30 +28,30 @@ public class ConsumeSendEndpoint :
         _inheritRequestTimeToLive = inheritRequestTimeToLive;
     }
 
-    public override Task Send<T>(T message, CancellationToken cancellationToken)
+    public override Task SendAsync<T>(T message, CancellationToken cancellationToken = default)
         where T : class
     {
-        return ConsumeTask(base.Send(message, cancellationToken));
+        return ConsumeTaskAsync(base.SendAsync(message, cancellationToken));
     }
 
-    public override Task Send<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    public override Task SendAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        return ConsumeTask(base.Send(message, pipe, cancellationToken));
+        return ConsumeTaskAsync(base.SendAsync(message, pipe, cancellationToken));
     }
 
-    public override Task Send<T>(T message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
+    public override Task SendAsync<T>(T message, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        return ConsumeTask(base.Send(message, pipe, cancellationToken));
+        return ConsumeTaskAsync(base.SendAsync(message, pipe, cancellationToken));
     }
 
-    protected override IPipe<SendContext<T>> GetPipeProxy<T>(IPipe<SendContext<T>> pipe = default)
+    protected override IPipe<SendContext<T>> GetPipeProxy<T>(IPipe<SendContext<T>>? pipe = default)
     {
         return new ConsumeSendPipeAdapter<T>(_context, pipe, _requestId, _inheritRequestTimeToLive);
     }
 
-    Task ConsumeTask(Task task)
+    Task ConsumeTaskAsync(Task task)
     {
         _context.AddConsumeTask(task);
         return task;

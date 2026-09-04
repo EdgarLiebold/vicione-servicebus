@@ -121,7 +121,8 @@ public class ConsumeTopology :
         Lazy<IMessageConsumeTopologyConfigurator> specification = _messageTypes.GetOrAdd(typeof(T),
             _ => new Lazy<IMessageConsumeTopologyConfigurator>(() => CreateMessageTopology<T>()));
 
-        return specification.Value as IMessageConsumeTopologyConfigurator<T>;
+        return specification.Value as IMessageConsumeTopologyConfigurator<T>
+            ?? throw new InvalidOperationException($"The consume topology for {TypeCache<T>.ShortName} has an incompatible type.");
     }
 
     protected bool All(Func<IMessageConsumeTopologyConfigurator, bool> callback)
@@ -150,7 +151,7 @@ public class ConsumeTopology :
             return Enumerable.Empty<TResult>();
 
         if (configurators.Length == 1)
-            return selector(configurators[0] as T);
+            return selector((T)configurators[0]);
 
         return configurators.Cast<T>().SelectMany(selector);
     }
@@ -167,7 +168,7 @@ public class ConsumeTopology :
             case 0:
                 break;
             case 1:
-                callback(configurators[0] as T);
+                callback((T)configurators[0]);
                 break;
             default:
                 foreach (var configurator in configurators.Cast<T>())
@@ -201,7 +202,7 @@ public class ConsumeTopology :
 
         foreach (var convention in conventions)
         {
-            if (convention.TryGetMessageConsumeTopologyConvention(out IMessageConsumeTopologyConvention<T> messageConsumeTopologyConvention))
+            if (convention.TryGetMessageConsumeTopologyConvention(out IMessageConsumeTopologyConvention<T>? messageConsumeTopologyConvention))
                 messageTopology.TryAddConvention(messageConsumeTopologyConvention);
         }
     }

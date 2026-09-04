@@ -29,7 +29,7 @@ public class MessageEvent<TMessage> :
         context.Add("dataType", TypeCache<TMessage>.ShortName);
     }
 
-    public bool Equals(MessageEvent<TMessage> other)
+    public bool Equals(MessageEvent<TMessage>? other)
     {
         if (ReferenceEquals(null, other))
             return false;
@@ -43,7 +43,7 @@ public class MessageEvent<TMessage> :
         return $"{Name}<{typeof(TMessage).Name}> (Event)";
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (ReferenceEquals(null, obj))
             return false;

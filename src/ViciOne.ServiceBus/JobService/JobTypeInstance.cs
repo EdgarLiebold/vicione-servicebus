@@ -6,7 +6,7 @@ namespace ViciOne.ServiceBus;
 
 public class JobTypeInstance
 {
-    public DateTime? Updated { get; set; }
-    public DateTime? Used { get; set; }
+    public DateTimeOffset? Updated { get; set; }
+    public DateTimeOffset? Used { get; set; }
     public Dictionary<string, object>? Properties { get; set; }
 }

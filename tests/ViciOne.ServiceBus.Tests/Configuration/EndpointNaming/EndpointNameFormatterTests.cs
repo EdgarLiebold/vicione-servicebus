@@ -191,29 +191,29 @@ public sealed class EndpointNameFormatterTests
 
     private sealed class SomeReallyCoolConsumer : IConsumer<EndpointMessage>
     {
-        public Task Consume(ConsumeContext<EndpointMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<EndpointMessage> context) => Task.CompletedTask;
     }
 
     private sealed class SomeSuperIDFormatConsumer : IConsumer<EndpointMessage>
     {
-        public Task Consume(ConsumeContext<EndpointMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<EndpointMessage> context) => Task.CompletedTask;
     }
 
     private sealed class OneOr2MessageConsumer : IConsumer<EndpointMessage>
     {
-        public Task Consume(ConsumeContext<EndpointMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<EndpointMessage> context) => Task.CompletedTask;
     }
 
     private sealed class GenericConsumer<TMetadata, TMessage> : IConsumer<TMessage>
         where TMetadata : class
         where TMessage : class
     {
-        public Task Consume(ConsumeContext<TMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<TMessage> context) => Task.CompletedTask;
     }
 
     private sealed class Consumer : IConsumer<EndpointMessage>
     {
-        public Task Consume(ConsumeContext<EndpointMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<EndpointMessage> context) => Task.CompletedTask;
     }
 
     private sealed class Saga : ISaga
@@ -225,10 +225,10 @@ public sealed class EndpointNameFormatterTests
         IExecuteActivity<EndpointMessage>,
         ICompensateActivity<EndpointMessage>
     {
-        public Task<ExecutionResult> Execute(ExecuteContext<EndpointMessage> context) =>
+        public Task<ExecutionResult> ExecuteAsync(ExecuteContext<EndpointMessage> context) =>
             Task.FromResult(context.Completed());
 
-        public Task<CompensationResult> Compensate(CompensateContext<EndpointMessage> context) =>
+        public Task<CompensationResult> CompensateAsync(CompensateContext<EndpointMessage> context) =>
             Task.FromResult(context.Compensated());
     }
 }

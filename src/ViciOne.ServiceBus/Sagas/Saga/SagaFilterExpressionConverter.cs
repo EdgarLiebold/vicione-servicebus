@@ -16,9 +16,10 @@ public class SagaFilterExpressionConverter<TSaga, TMessage> :
 
     public Expression<Func<TSaga, bool>> Convert(Expression<Func<TSaga, TMessage, bool>> expression)
     {
-        var result = Visit(expression);
+        var result = Visit(expression) as LambdaExpression
+            ?? throw new InvalidOperationException("The saga filter expression could not be converted to a lambda expression.");
 
-        return RemoveMessageParameter(result as LambdaExpression);
+        return RemoveMessageParameter(result);
     }
 
     protected override Expression VisitMember(MemberExpression m)
@@ -38,7 +39,8 @@ public class SagaFilterExpressionConverter<TSaga, TMessage> :
 
     Expression EvaluateMemberAccess(MemberExpression exp)
     {
-        var parameter = exp.Expression as ParameterExpression;
+        var parameter = exp.Expression as ParameterExpression
+            ?? throw new InvalidOperationException("The message access must originate from a parameter expression.");
 
         var fn = Expression.Lambda(typeof(Func<,>).MakeGenericType(typeof(TMessage), exp.Type), exp, parameter).CompileFast();
 

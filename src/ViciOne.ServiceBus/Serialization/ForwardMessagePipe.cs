@@ -11,9 +11,9 @@ public class ForwardMessagePipe<TMessage> :
     where TMessage : class
 {
     readonly ConsumeContext<TMessage> _context;
-    readonly IPipe<SendContext<TMessage>> _pipe;
+    readonly IPipe<SendContext<TMessage>>? _pipe = null!;
 
-    public ForwardMessagePipe(ConsumeContext<TMessage> context, IPipe<SendContext<TMessage>> pipe = default)
+    public ForwardMessagePipe(ConsumeContext<TMessage> context, IPipe<SendContext<TMessage>>? pipe = default)
     {
         _context = context;
         _pipe = pipe;
@@ -24,7 +24,7 @@ public class ForwardMessagePipe<TMessage> :
         _pipe?.Probe(context);
     }
 
-    public async Task Send(SendContext<TMessage> context)
+    public async Task SendAsync(SendContext<TMessage> context)
     {
         context.MessageId = _context.MessageId;
         context.RequestId = _context.RequestId;
@@ -39,32 +39,32 @@ public class ForwardMessagePipe<TMessage> :
         context.SetTimeProvider(timeProvider);
 
         if (_context.ExpirationTime.HasValue)
-            context.TimeToLive = _context.ExpirationTime.Value.ToUniversalTime() - timeProvider.GetUtcNow().UtcDateTime;
+            context.TimeToLive = _context.ExpirationTime.Value.ToUniversalTime() - timeProvider.GetUtcNow();
 
         foreach (KeyValuePair<string, object> header in _context.Headers.GetAll())
             context.Headers.Set(header.Key, header.Value);
 
-        if (_pipe.IsNotEmpty())
-            await _pipe.Send(context).ConfigureAwait(false);
+        if (_pipe != null && _pipe.IsNotEmpty())
+            await _pipe.SendAsync(context).ConfigureAwait(false);
 
         if (ForwardingExpiration.MarkIfExpired(context, _context.ExpirationTime, timeProvider))
             return;
 
-        var forwarderAddress = _context.ReceiveContext.InputAddress ?? _context.DestinationAddress;
+        var forwarderAddress = _context.Advanced().ReceiveContext.InputAddress ?? _context.DestinationAddress;
         if (forwarderAddress != null && forwarderAddress != context.DestinationAddress)
             context.Headers.Set(MessageHeaders.ForwarderAddress, forwarderAddress.ToString());
 
-        if (_context.SerializerContext != null)
-            context.Serializer = _context.SerializerContext.GetMessageSerializer();
+        if (_context.Advanced().SerializerContext != null)
+            context.Serializer = _context.Advanced().SerializerContext.GetMessageSerializer();
         else
-            context.Serializer = new CopyBodySerializer(_context.ReceiveContext.ContentType, _context.ReceiveContext.Body);
+            context.Serializer = new CopyBodySerializer(_context.Advanced().ReceiveContext.ContentType, _context.Advanced().ReceiveContext.Body);
     }
 
-    public Task Send<T>(SendContext<T> context)
+    public Task SendAsync<T>(SendContext<T> context, CancellationToken cancellationToken = default)
         where T : class
     {
         return _pipe is ISendContextPipe sendContextPipe
-            ? sendContextPipe.Send(context)
+            ? sendContextPipe.SendAsync(context, cancellationToken: cancellationToken)
             : Task.CompletedTask;
     }
 }

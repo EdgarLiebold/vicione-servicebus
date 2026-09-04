@@ -13,21 +13,21 @@ public sealed class QuartzJobServiceFaultIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-JOB-SERVICE-FAULT", "unhandled-failure-faults-the-job")]
-    public async Task UnhandledConsumerFailure_PublishesOneTerminalJobFault()
+    public async Task UnhandledConsumerFailure_PublishesOneTerminalJobFaultAsync()
     {
         TimeSpan timeout = OperationTimeout();
         Guid jobId = NewId.NextGuid();
         var events = new JobTerminalProbe(jobId, expectedStarts: 1);
         var consumer = new PermanentlyFaultingJobConsumer();
 
-        await using QuartzTestBus fixture = await QuartzJobServiceTestBus.Start<FaultingJob, PermanentlyFaultingJobConsumer>(
+        await using QuartzTestBus fixture = await QuartzJobServiceTestBus.StartAsync<FaultingJob, PermanentlyFaultingJobConsumer>(
             timeout,
             consumer,
             static options => options.SetJobTimeout(TimeSpan.FromMinutes(1)),
             events.Configure);
         IRequestClient<SubmitJob<FaultingJob>> submitClient = fixture.Bus.CreateRequestClient<SubmitJob<FaultingJob>>();
 
-        Guid acceptedJobId = await submitClient.SubmitJob(
+        Guid acceptedJobId = await submitClient.SubmitJobAsync(
                 jobId,
                 new FaultingJob("permanent"),
                 cancellationToken: TestContext.Current.CancellationToken)
@@ -37,8 +37,7 @@ public sealed class QuartzJobServiceFaultIntegrationTests
         await events.ExpectedStartsObserved.WaitAsync(timeout, TestContext.Current.CancellationToken);
 
         IRequestClient<GetJobState> stateClient = fixture.Bus.CreateRequestClient<GetJobState>();
-        JobState state = await stateClient.GetJobState(jobId)
-            .WaitAsync(timeout, TestContext.Current.CancellationToken);
+        JobState state = await stateClient.GetJobStateAsync(jobId, cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, TestContext.Current.CancellationToken);
 
         Assert.Equal(jobId, acceptedJobId);
         Assert.Equal(new JobAttemptSnapshot(jobId, attempted.AttemptId, 0, "permanent"), attempted);
@@ -56,14 +55,14 @@ public sealed class QuartzJobServiceFaultIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-JOB-SERVICE-FAULT", "configured-retry-completes-through-quartz")]
-    public async Task ConfiguredRetry_IsScheduledThroughQuartzAndCompletesOnTheNextAttempt()
+    public async Task ConfiguredRetry_IsScheduledThroughQuartzAndCompletesOnTheNextAttemptAsync()
     {
         TimeSpan timeout = OperationTimeout();
         Guid jobId = NewId.NextGuid();
         var events = new JobTerminalProbe(jobId, expectedStarts: 2);
         var consumer = new TransientlyFaultingJobConsumer();
 
-        await using QuartzTestBus fixture = await QuartzJobServiceTestBus.Start<FaultingJob, TransientlyFaultingJobConsumer>(
+        await using QuartzTestBus fixture = await QuartzJobServiceTestBus.StartAsync<FaultingJob, TransientlyFaultingJobConsumer>(
             timeout,
             consumer,
             options => options
@@ -74,7 +73,7 @@ public sealed class QuartzJobServiceFaultIntegrationTests
         using ConnectHandle scheduleObserver = fixture.Bus.ConnectConsumeObserver(retrySchedule);
         IRequestClient<SubmitJob<FaultingJob>> submitClient = fixture.Bus.CreateRequestClient<SubmitJob<FaultingJob>>();
 
-        Guid acceptedJobId = await submitClient.SubmitJob(
+        Guid acceptedJobId = await submitClient.SubmitJobAsync(
                 jobId,
                 new FaultingJob("transient"),
                 cancellationToken: TestContext.Current.CancellationToken)
@@ -178,7 +177,7 @@ public sealed class QuartzJobServiceFaultIntegrationTests
 
         public Task<JobAttemptSnapshot> Attempted => _attempted.Task;
 
-        public Task Run(JobContext<FaultingJob> context)
+        public Task RunAsync(JobContext<FaultingJob> context)
         {
             _attempted.TrySetResult(Snapshot(context));
             return Task.FromException(new PermanentJobException("permanent failure"));
@@ -196,7 +195,7 @@ public sealed class QuartzJobServiceFaultIntegrationTests
         public Task<JobAttemptSnapshot> FirstAttempt => _firstAttempt.Task;
         public Task<JobAttemptSnapshot> SecondAttempt => _secondAttempt.Task;
 
-        public Task Run(JobContext<FaultingJob> context)
+        public Task RunAsync(JobContext<FaultingJob> context)
         {
             JobAttemptSnapshot snapshot = Snapshot(context);
             if (Interlocked.Increment(ref _attempts) == 1)

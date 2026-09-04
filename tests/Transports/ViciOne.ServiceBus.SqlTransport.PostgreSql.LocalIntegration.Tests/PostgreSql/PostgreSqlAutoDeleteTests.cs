@@ -11,7 +11,7 @@ public sealed class PostgreSqlAutoDeleteTests
     [InlineData(true, 300)]
     [InlineData(false, null)]
     [RequirementCoverage("OBL-R0-SQL-0115", "postgresql-native-owner")]
-    public async Task EndpointDefinition_PersistsTheTemporaryDefaultOrNoAutoDelete(
+    public async Task EndpointDefinition_PersistsTheTemporaryDefaultOrNoAutoDeleteAsync(
         bool isTemporary,
         int? expectedAutoDeleteSeconds)
     {
@@ -33,7 +33,7 @@ public sealed class PostgreSqlAutoDeleteTests
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
             await using NpgsqlConnection connection = fixture.CreateConnection();
-            await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
+            await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
             await using var command = new NpgsqlCommand(
                 $"SELECT auto_delete FROM \"{fixture.Schema}\".queue WHERE name = @queue AND type = 1",
                 connection);

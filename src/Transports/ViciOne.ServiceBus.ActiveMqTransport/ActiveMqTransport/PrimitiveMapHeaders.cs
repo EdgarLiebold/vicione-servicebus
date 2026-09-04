@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Apache.NMS;
 
 namespace ViciOne.ServiceBus.ActiveMqTransport;
@@ -15,7 +16,7 @@ public class PrimitiveMapHeaders :
         _properties = properties;
     }
 
-    public void Set(string key, string value)
+    public void Set(string key, string? value)
     {
         if (key == null)
             throw new ArgumentNullException(nameof(key));
@@ -26,7 +27,7 @@ public class PrimitiveMapHeaders :
             _properties[key] = value;
     }
 
-    public void Set(string key, object value, bool overwrite)
+    public void Set(string key, object? value, bool overwrite)
     {
         if (key == null)
             throw new ArgumentNullException(nameof(key));
@@ -38,17 +39,17 @@ public class PrimitiveMapHeaders :
             else
                 _properties[key] = value;
         }
-        else if (!_properties.Contains(key))
+        else if (value != null && !_properties.Contains(key))
             _properties[key] = value;
     }
 
-    public bool TryGetHeader(string key, out object value)
+    public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
     {
         var found = _properties.Contains(key);
         if (found)
         {
             value = _properties[key];
-            return true;
+            return value != null;
         }
 
         value = null;
@@ -61,11 +62,12 @@ public class PrimitiveMapHeaders :
         {
             var value = _properties[key];
 
-            yield return new KeyValuePair<string, object>(key, value);
+            if (value != null)
+                yield return new KeyValuePair<string, object>(key, value);
         }
     }
 
-    public T Get<T>(string key, T defaultValue)
+    public T Get<T>(string key, T? defaultValue)
         where T : class
     {
         throw new NotImplementedByDesignException("PrimitiveMapHeaders does not support object-based header retrieval");

@@ -10,7 +10,7 @@ public interface IConsumerMessageSpecification<TConsumer> :
 {
     Type MessageType { get; }
 
-    bool TryGetMessageSpecification<TC, T>(out IConsumerMessageSpecification<TC, T> specification)
+    bool TryGetMessageSpecification<TC, T>([NotNullWhen(true)] out IConsumerMessageSpecification<TC, T>? specification)
         where T : class
         where TC : class;
 }

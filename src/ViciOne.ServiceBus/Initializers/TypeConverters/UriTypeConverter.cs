@@ -7,14 +7,14 @@ public class UriTypeConverter :
     ITypeConverter<Uri, string>,
     ITypeConverter<Uri, object>
 {
-    public bool TryConvert(Uri input, out string result)
+    public bool TryConvert(Uri? input, out string? result)
     {
         result = input?.ToString();
 
         return true;
     }
 
-    public bool TryConvert(object input, out Uri result)
+    public bool TryConvert(object? input, out Uri? result)
     {
         switch (input)
         {
@@ -40,7 +40,7 @@ public class UriTypeConverter :
         }
     }
 
-    public bool TryConvert(string input, out Uri result)
+    public bool TryConvert(string? input, out Uri? result)
     {
         if (string.IsNullOrWhiteSpace(input))
         {

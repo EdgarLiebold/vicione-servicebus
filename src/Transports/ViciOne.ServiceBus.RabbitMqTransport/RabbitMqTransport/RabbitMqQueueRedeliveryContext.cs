@@ -21,12 +21,12 @@ public sealed class RabbitMqQueueRedeliveryContext<TMessage> : MessageRedelivery
         _plan = plan;
     }
 
-    public async Task ScheduleRedelivery(TimeSpan delay, Action<ConsumeContext, SendContext>? callback)
+    public async Task ScheduleRedeliveryAsync(TimeSpan delay, Action<ConsumeContext, SendContext>? callback, CancellationToken cancellationToken = default)
     {
         var routingKey = _plan.GetRoutingKey(delay);
         var channel = _context.GetPayload<ChannelContext>();
 
-        await _plan.Configure(channel, _context.CancellationToken).ConfigureAwait(false);
+        await _plan.ConfigureAsync(channel, _context.CancellationToken).ConfigureAwait(false);
 
         var address = channel.ConnectionContext.Topology.GetDestinationAddress(_plan.DelayExchangeName, exchange =>
         {
@@ -35,19 +35,19 @@ public sealed class RabbitMqQueueRedeliveryContext<TMessage> : MessageRedelivery
             exchange.AutoDelete = _plan.AutoDelete;
         });
 
-        var endpoint = await _context.GetSendEndpoint(address).ConfigureAwait(false);
+        var endpoint = await _context.Advanced().GetSendEndpointAsync(address, cancellationToken).ConfigureAwait(false);
 
         IPipe<SendContext<TMessage>> pipe = Pipe.Execute<SendContext<TMessage>>(sendContext =>
         {
-            sendContext.ApplyRedeliveryOptions(_context, _options);
+            sendContext.ApplyRedeliveryOptions(_context.Advanced(), _options);
             sendContext.SetRoutingKey(routingKey);
-            if (!string.IsNullOrEmpty(_context.RoutingKey()))
-                sendContext.Headers.Set(RabbitMqHeaders.RedeliveryRoutingKey, _context.RoutingKey());
+            if (!string.IsNullOrEmpty(_context.Advanced().RoutingKey()))
+                sendContext.Headers.Set(RabbitMqHeaders.RedeliveryRoutingKey, _context.Advanced().RoutingKey());
 
-            callback?.Invoke(_context, sendContext);
+            callback?.Invoke(_context.Advanced(), sendContext);
         });
 
         var messagePipe = new ForwardMessagePipe<TMessage>(_context, pipe);
-        await endpoint.Send(_context.Message, messagePipe, _context.CancellationToken).ConfigureAwait(false);
+        await endpoint.SendAsync(_context.Message, messagePipe, _context.CancellationToken).ConfigureAwait(false);
     }
 }

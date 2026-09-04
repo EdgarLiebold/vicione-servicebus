@@ -10,7 +10,7 @@ public sealed class ContainerRequestClientRegistrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-REQUEST-CLIENT", "generic-and-runtime-addressed-registration-preserve-causation")]
-    public async Task AddressedGenericAndRuntimeRegistrations_CompleteTheNestedRequestWithExactCausation()
+    public async Task AddressedGenericAndRuntimeRegistrations_CompleteTheNestedRequestWithExactCausationAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -30,7 +30,7 @@ public sealed class ContainerRequestClientRegistrationTests
                     new Uri("queue:container-subsequent-request"));
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
@@ -39,7 +39,7 @@ public sealed class ContainerRequestClientRegistrationTests
                 scope.ServiceProvider.GetRequiredService<IRequestClient<InitialRequest>>();
             Guid correlationId = NewId.NextGuid();
 
-            Response<InitialResponse> response = await client.GetResponse<InitialResponse>(
+            Response<InitialResponse> response = await client.GetResponseAsync<InitialResponse>(
                 new InitialRequest(correlationId, "World"),
                 cancellationToken);
             NestedRequestSnapshot nested = await observation.Seen.Task.WaitAsync(timeout, cancellationToken);
@@ -65,13 +65,13 @@ public sealed class ContainerRequestClientRegistrationTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-REQUEST-CLIENT", "open-generic-registration-resolves-without-explicit-client")]
-    public async Task OpenGenericRegistration_ResolvesAndCompletesWithoutAnExplicitRequestClient()
+    public async Task OpenGenericRegistration_ResolvesAndCompletesWithoutAnExplicitRequestClientAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -82,7 +82,7 @@ public sealed class ContainerRequestClientRegistrationTests
                 configuration.AddConsumer<OpenGenericConsumer>();
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
@@ -91,7 +91,7 @@ public sealed class ContainerRequestClientRegistrationTests
                 scope.ServiceProvider.GetRequiredService<IRequestClient<OpenGenericRequest>>();
             var request = new OpenGenericRequest(NewId.NextGuid(), "open");
 
-            Response<OpenGenericResponse> response = await client.GetResponse<OpenGenericResponse>(
+            Response<OpenGenericResponse> response = await client.GetResponseAsync<OpenGenericResponse>(
                 request,
                 cancellationToken);
 
@@ -102,13 +102,13 @@ public sealed class ContainerRequestClientRegistrationTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-REQUEST-CLIENT", "scoped-factory-created-client-stays-in-consumer-scope")]
-    public async Task ScopedClientFactory_UsesTheOwningConsumerScopeForTheNestedRoundTrip()
+    public async Task ScopedClientFactory_UsesTheOwningConsumerScopeForTheNestedRoundTripAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -129,7 +129,7 @@ public sealed class ContainerRequestClientRegistrationTests
                 });
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
@@ -137,7 +137,7 @@ public sealed class ContainerRequestClientRegistrationTests
                 harness.GetRequestClient<ScopedFactoryOuterRequest>();
             var request = new ScopedFactoryOuterRequest(NewId.NextGuid(), "scoped");
 
-            Response<ScopedFactoryOuterResponse> response = await client.GetResponse<ScopedFactoryOuterResponse>(
+            Response<ScopedFactoryOuterResponse> response = await client.GetResponseAsync<ScopedFactoryOuterResponse>(
                 request,
                 cancellationToken);
             ScopedFactorySnapshot snapshot = await observation.Seen.Task.WaitAsync(timeout, cancellationToken);
@@ -150,7 +150,7 @@ public sealed class ContainerRequestClientRegistrationTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -179,9 +179,9 @@ public sealed class ContainerRequestClientRegistrationTests
 
     public sealed class InitialConsumer(IRequestClient<SubsequentRequest> client) : IConsumer<InitialRequest>
     {
-        public async Task Consume(ConsumeContext<InitialRequest> context)
+        public async Task ConsumeAsync(ConsumeContext<InitialRequest> context)
         {
-            Response<SubsequentResponse> response = await client.GetResponse<SubsequentResponse>(
+            Response<SubsequentResponse> response = await client.GetResponseAsync<SubsequentResponse>(
                 new SubsequentRequest(context.Message.CorrelationId, context.Message.Value),
                 context.CancellationToken);
             await context.RespondAsync(
@@ -191,14 +191,14 @@ public sealed class ContainerRequestClientRegistrationTests
 
     public sealed class SubsequentConsumer(NestedRequestObservation observation) : IConsumer<SubsequentRequest>
     {
-        public async Task Consume(ConsumeContext<SubsequentRequest> context)
+        public async Task ConsumeAsync(ConsumeContext<SubsequentRequest> context)
         {
             observation.Seen.TrySetResult(new NestedRequestSnapshot(
                 context.Message.CorrelationId,
                 context.InitiatorId,
                 context.ConversationId,
                 context.RequestId,
-                context.ReceiveContext.InputAddress));
+                context.Advanced().ReceiveContext.InputAddress));
             await context.RespondAsync(new SubsequentResponse(
                 context.Message.CorrelationId,
                 $"Hello, {context.Message.Value}"));
@@ -210,7 +210,7 @@ public sealed class ContainerRequestClientRegistrationTests
 
     public sealed class OpenGenericConsumer : IConsumer<OpenGenericRequest>
     {
-        public Task Consume(ConsumeContext<OpenGenericRequest> context) => context.RespondAsync(
+        public Task ConsumeAsync(ConsumeContext<OpenGenericRequest> context) => context.RespondAsync(
             new OpenGenericResponse(context.Message.CorrelationId, context.Message.Value.ToUpperInvariant()));
     }
 
@@ -248,12 +248,12 @@ public sealed class ContainerRequestClientRegistrationTests
     {
         public void Probe(ProbeContext context) => context.CreateFilterScope("scopedFactory");
 
-        public async Task Send(PublishContext<T> context, IPipe<PublishContext<T>> next)
+        public async Task SendAsync(PublishContext<T> context, IPipe<PublishContext<T>> next)
         {
             if (context.Message is ScopedFactoryInnerRequest)
                 observation.FactoryScope.TrySetResult(scope);
 
-            await next.Send(context);
+            await next.SendAsync(context);
         }
     }
 
@@ -273,9 +273,9 @@ public sealed class ContainerRequestClientRegistrationTests
             _observation = observation;
         }
 
-        public async Task Consume(ConsumeContext<ScopedFactoryOuterRequest> context)
+        public async Task ConsumeAsync(ConsumeContext<ScopedFactoryOuterRequest> context)
         {
-            Response<ScopedFactoryInnerResponse> response = await _client.GetResponse<ScopedFactoryInnerResponse>(
+            Response<ScopedFactoryInnerResponse> response = await _client.GetResponseAsync<ScopedFactoryInnerResponse>(
                 new ScopedFactoryInnerRequest(context.Message.CorrelationId, context.Message.Value),
                 context.CancellationToken);
             ScopeMarker factoryScope = await _observation.FactoryScope.Task.WaitAsync(context.CancellationToken);
@@ -284,7 +284,7 @@ public sealed class ContainerRequestClientRegistrationTests
                 factoryScope,
                 _scope,
                 inner.Scope,
-                context.ReceiveContext.InputAddress,
+                context.Advanced().ReceiveContext.InputAddress,
                 inner.SourceAddress,
                 inner.InitiatorId));
             await context.RespondAsync(new ScopedFactoryOuterResponse(
@@ -302,7 +302,7 @@ public sealed class ContainerRequestClientRegistrationTests
         ScopeMarker scope,
         ScopedFactoryObservation observation) : IConsumer<ScopedFactoryInnerRequest>
     {
-        public async Task Consume(ConsumeContext<ScopedFactoryInnerRequest> context)
+        public async Task ConsumeAsync(ConsumeContext<ScopedFactoryInnerRequest> context)
         {
             observation.Inner.TrySetResult(new ScopedFactoryInnerSnapshot(
                 scope,

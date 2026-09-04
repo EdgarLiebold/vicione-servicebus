@@ -5,9 +5,9 @@ namespace ViciOne.ServiceBus;
 
 public static class RateLimitExtensions
 {
-    public static Task SetRateLimit(this IPipe<CommandContext> pipe, int rateLimit)
+    public static Task SetRateLimitAsync(this IPipe<CommandContext> pipe, int rateLimit, CancellationToken cancellationToken = default)
     {
-        return pipe.SendCommand<SetRateLimit>(new Limit(rateLimit));
+        return pipe.SendCommandAsync<SetRateLimit>(new Limit(rateLimit), cancellationToken: cancellationToken);
     }
 
 

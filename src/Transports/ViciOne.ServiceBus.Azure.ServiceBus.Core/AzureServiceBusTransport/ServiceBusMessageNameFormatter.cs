@@ -8,12 +8,12 @@ public class ServiceBusMessageNameFormatter :
 {
     readonly IMessageNameFormatter _formatter;
 
-    public ServiceBusMessageNameFormatter(string namespaceSeparator = null)
+    public ServiceBusMessageNameFormatter(string? namespaceSeparator = null)
         : this(true, namespaceSeparator)
     {
     }
 
-    public ServiceBusMessageNameFormatter(bool includeNamespace, string namespaceSeparator = null)
+    public ServiceBusMessageNameFormatter(bool includeNamespace, string? namespaceSeparator = null)
     {
         _formatter = string.IsNullOrWhiteSpace(namespaceSeparator)
             ? new DefaultMessageNameFormatter("---", "--", "/", "-", includeNamespace)

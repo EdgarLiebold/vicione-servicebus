@@ -14,16 +14,16 @@ public class TransportReadyFilter<T> :
         _context = context;
     }
 
-    public async Task Send(T context, IPipe<T> next)
+    public async Task SendAsync(T context, IPipe<T> next)
     {
-        await _context.TransportObservers.NotifyReady(_context.InputAddress).ConfigureAwait(false);
+        await _context.TransportObservers.NotifyReadyAsync(_context.InputAddress).ConfigureAwait(false);
 
         var agent = new Agent();
         agent.SetReady();
 
         _context.AddConsumeAgent(agent);
 
-        await next.Send(context).ConfigureAwait(false);
+        await next.SendAsync(context).ConfigureAwait(false);
 
         await agent.Completed.ConfigureAwait(false);
     }

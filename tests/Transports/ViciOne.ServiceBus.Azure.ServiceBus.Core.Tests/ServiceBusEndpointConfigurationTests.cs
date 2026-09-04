@@ -33,7 +33,7 @@ public sealed class ServiceBusEndpointConfigurationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-ENDPOINT-CONFIGURATION", "consumer-definition-and-endpoint-definition-precedence")]
-    public async Task ConsumerDefinitions_ProjectExactPrefetchAndConcurrency()
+    public async Task ConsumerDefinitions_ProjectExactPrefetchAndConcurrencyAsync()
     {
         await using ServiceProvider consumerProvider = CreateProvider<PingConsumerDefinition>();
         await using ServiceProvider endpointProvider = CreateProvider<EndpointPingConsumerDefinition>();
@@ -97,7 +97,7 @@ public sealed class ServiceBusEndpointConfigurationTests
 
     public sealed class PingConsumer : IConsumer<PingMessage>
     {
-        public Task Consume(ConsumeContext<PingMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<PingMessage> context) => Task.CompletedTask;
     }
 
     public sealed class PingConsumerDefinition : ConsumerDefinition<PingConsumer>

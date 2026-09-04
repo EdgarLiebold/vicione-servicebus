@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,7 +19,7 @@ public class EntityFrameworkOutboxContextFactory<TDbContext> :
     readonly ILockStatementProvider _lockStatementProvider;
     readonly IServiceProvider _provider;
     readonly TimeProvider _timeProvider;
-    string _lockStatement;
+    string? _lockStatement;
 
     public EntityFrameworkOutboxContextFactory(TDbContext dbContext, IServiceProvider provider, IOptions<EntityFrameworkOutboxOptions<TDbContext>> options,
         TimeProvider timeProvider)
@@ -32,7 +31,7 @@ public class EntityFrameworkOutboxContextFactory<TDbContext> :
         _isolationLevel = options.Value.IsolationLevel;
     }
 
-    public async Task Send<T>(ConsumeContext<T> context, OutboxConsumeOptions options, IPipe<OutboxConsumeContext<T>> next)
+    public async Task SendAsync<T>(ConsumeContext<T> context, OutboxConsumeOptions options, IPipe<OutboxConsumeContext<T>> next, CancellationToken cancellationToken = default)
         where T : class
     {
         var messageId = context.GetOriginalMessageId() ?? throw new MessageException(typeof(T), "MessageId required to use the outbox");
@@ -40,11 +39,11 @@ public class EntityFrameworkOutboxContextFactory<TDbContext> :
 
         _lockStatement ??= _lockStatementProvider.GetRowLockStatement<InboxState>(_dbContext, nameof(InboxState.MessageId), nameof(InboxState.ConsumerId));
 
-        async Task<bool> Execute()
+        async Task<bool> ExecuteAsync()
         {
             var lockId = NewId.NextGuid();
 
-            var timer = Stopwatch.StartNew();
+            long startedAt = _timeProvider.GetTimestamp();
 
             await using var transaction = await _dbContext.Database.BeginTransactionAsync(_isolationLevel, context.CancellationToken)
                 .ConfigureAwait(false);
@@ -87,7 +86,7 @@ public class EntityFrameworkOutboxContextFactory<TDbContext> :
                     var outboxContext = new DbContextOutboxConsumeContext<TDbContext, T>(context, options, _provider, _dbContext, transaction, inboxState,
                         _timeProvider);
 
-                    await next.Send(outboxContext).ConfigureAwait(false);
+                    await next.SendAsync(outboxContext).ConfigureAwait(false);
 
                     try
                     {
@@ -95,7 +94,7 @@ public class EntityFrameworkOutboxContextFactory<TDbContext> :
                     }
                     catch (Exception exception)
                     {
-                        await context.NotifyFaulted(timer.Elapsed, TypeCache<T>.ShortName, exception).ConfigureAwait(false);
+                        await context.NotifyFaultedAsync(_timeProvider.GetElapsedTime(startedAt), TypeCache<T>.ShortName, exception, cancellationToken: cancellationToken).ConfigureAwait(false);
 
                         throw;
                     }
@@ -109,7 +108,7 @@ public class EntityFrameworkOutboxContextFactory<TDbContext> :
                 }
                 catch (Exception exception)
                 {
-                    await context.NotifyFaulted(timer.Elapsed, TypeCache<T>.ShortName, exception).ConfigureAwait(false);
+                    await context.NotifyFaultedAsync(_timeProvider.GetElapsedTime(startedAt), TypeCache<T>.ShortName, exception, cancellationToken: cancellationToken).ConfigureAwait(false);
 
                     throw;
                 }
@@ -138,7 +137,7 @@ public class EntityFrameworkOutboxContextFactory<TDbContext> :
             continueProcessing = await EntityFrameworkExecutionStrategy.ExecuteAsync(
                     _dbContext,
                     executionStrategy,
-                    Execute,
+                    ExecuteAsync,
                     context.CancellationToken)
                 .ConfigureAwait(false);
             updateDeliveryCount = false;

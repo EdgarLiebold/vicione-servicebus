@@ -21,7 +21,7 @@ public class MessagePackMessageSerializerContext :
             throw new ArgumentException("Message cannot be null.", nameof(envelope));
     }
 
-    public override bool TryGetMessage<T>(out T? message)
+    public override bool TryGetMessage<T>([NotNullWhen(true)] out T? message)
         where T : class
     {
         if (!TryGetMessage(typeof(T), out var outMessage))

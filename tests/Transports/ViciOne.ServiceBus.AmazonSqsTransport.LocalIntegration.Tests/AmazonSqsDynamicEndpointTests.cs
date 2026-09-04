@@ -12,7 +12,7 @@ public sealed class AmazonSqsDynamicEndpointTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0185", "runtime-endpoint-receives-and-removes-provider-resources")]
-    public async Task ConnectedSubscriptionEndpoint_ReceivesAndStopsCleanly()
+    public async Task ConnectedSubscriptionEndpoint_ReceivesAndStopsCleanlyAsync()
     {
         await using AmazonSqsLocalStack fixture = AmazonSqsLocalStack.Create("dynamic");
         using AmazonSQSClient sqs = fixture.CreateSqsClient();
@@ -45,13 +45,13 @@ public sealed class AmazonSqsDynamicEndpointTests
             Assert.Equal(queueName, ready.InputAddress.Segments[^1].TrimEnd('/'));
 
             Guid messageId = Guid.NewGuid();
-            await bus.Publish(new DynamicEvent(expected), context => context.MessageId = messageId, cancellationToken)
+            await bus.PublishAsync(new DynamicEvent(expected), context => context.MessageId = messageId, cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.Equal(
                 new ObservedMessage(messageId, expected),
                 await received.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
-            Assert.Equal([queueName], await ListOwnedQueueNames(sqs, fixture.Prefix, fixture.OperationTimeout, cancellationToken));
-            Topic topic = Assert.Single(await ListOwnedTopics(sns, fixture.Prefix, fixture.OperationTimeout, cancellationToken));
+            Assert.Equal([queueName], await ListOwnedQueueNamesAsync(sqs, fixture.Prefix, fixture.OperationTimeout, cancellationToken));
+            Topic topic = Assert.Single(await ListOwnedTopicsAsync(sns, fixture.Prefix, fixture.OperationTimeout, cancellationToken));
             ListSubscriptionsByTopicResponse subscriptions = await sns.ListSubscriptionsByTopicAsync(
                     new ListSubscriptionsByTopicRequest { TopicArn = topic.TopicArn }, cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
@@ -60,8 +60,8 @@ public sealed class AmazonSqsDynamicEndpointTests
             await endpointHandle.StopAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             endpointStopped = true;
 
-            Assert.Empty(await ListOwnedQueueNames(sqs, fixture.Prefix, fixture.OperationTimeout, cancellationToken));
-            Assert.Empty(await ListOwnedTopics(sns, fixture.Prefix, fixture.OperationTimeout, cancellationToken));
+            Assert.Empty(await ListOwnedQueueNamesAsync(sqs, fixture.Prefix, fixture.OperationTimeout, cancellationToken));
+            Assert.Empty(await ListOwnedTopicsAsync(sns, fixture.Prefix, fixture.OperationTimeout, cancellationToken));
         }
         finally
         {
@@ -72,7 +72,7 @@ public sealed class AmazonSqsDynamicEndpointTests
         }
     }
 
-    private static async Task<string[]> ListOwnedQueueNames(
+    private static async Task<string[]> ListOwnedQueueNamesAsync(
         IAmazonSQS sqs,
         string prefix,
         TimeSpan timeout,
@@ -87,7 +87,7 @@ public sealed class AmazonSqsDynamicEndpointTests
             .ToArray();
     }
 
-    private static async Task<Topic[]> ListOwnedTopics(
+    private static async Task<Topic[]> ListOwnedTopicsAsync(
         IAmazonSimpleNotificationService sns,
         string prefix,
         TimeSpan timeout,

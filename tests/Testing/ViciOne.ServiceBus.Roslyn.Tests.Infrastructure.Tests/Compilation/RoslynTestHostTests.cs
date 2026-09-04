@@ -8,7 +8,7 @@ public sealed class RoslynTestHostTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-ROSLYN-TEST-HOST", "invalid-fixture-fails-closed")]
-    public async Task InvalidFixture_ThrowsBeforeAnalyzerExecution()
+    public async Task InvalidFixture_ThrowsBeforeAnalyzerExecutionAsync()
     {
         const string source = "class Fixture { ThisTypeDoesNotExistAnywhere Value { get; set; } }";
 
@@ -23,7 +23,7 @@ public sealed class RoslynTestHostTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ROSLYN-TEST-HOST", "valid-fixture-binds")]
-    public async Task ValidFixture_ProducesNoCompilationFailure()
+    public async Task ValidFixture_ProducesNoCompilationFailureAsync()
     {
         const string source = "using System; class Fixture { Uri Value { get; } = new(\"urn:test\"); }";
 
@@ -34,7 +34,7 @@ public sealed class RoslynTestHostTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ROSLYN-TEST-HOST", "trusted-platform-closure")]
-    public async Task SharedFrameworkFacades_AreAvailableToFixtures()
+    public async Task SharedFrameworkFacades_AreAvailableToFixturesAsync()
     {
         const string source = """
             using System;

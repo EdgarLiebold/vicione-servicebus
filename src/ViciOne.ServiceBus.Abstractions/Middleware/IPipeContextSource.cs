@@ -16,7 +16,7 @@ public interface IPipeContextSource<out TContext> :
     /// </summary>
     /// <param name="pipe">The destination pipe</param>
     /// <param name="cancellationToken">The cancellationToken, which should be included in the context</param>
-    Task Send(IPipe<TContext> pipe, CancellationToken cancellationToken = default);
+    Task SendAsync(IPipe<TContext> pipe, CancellationToken cancellationToken = default);
 }
 
 
@@ -36,5 +36,6 @@ public interface IPipeContextSource<out TContext, in TInput> :
     /// <param name="context"></param>
     /// <param name="pipe"></param>
     /// <returns></returns>
-    Task Send(TInput context, IPipe<TContext> pipe);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task SendAsync(TInput context, IPipe<TContext> pipe, CancellationToken cancellationToken = default);
 }

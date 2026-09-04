@@ -29,7 +29,7 @@ public class PublishEndpointBrokerTopologyBuilder :
     /// <summary>
     /// The topic where the published message is sent
     /// </summary>
-    public TopicHandle Topic { get; set; }
+    public TopicHandle? Topic { get; set; }
 
     public IPublishEndpointBrokerTopologyBuilder CreateImplementedBuilder()
     {
@@ -46,7 +46,7 @@ public class PublishEndpointBrokerTopologyBuilder :
         readonly IPublishEndpointBrokerTopologyBuilder _builder;
         readonly Options _options;
         readonly IServiceBusPublishTopology _topology;
-        TopicHandle _topic;
+        TopicHandle? _topic;
 
         public ImplementedBuilder(IPublishEndpointBrokerTopologyBuilder builder, IServiceBusPublishTopology topology, Options options)
         {
@@ -55,20 +55,20 @@ public class PublishEndpointBrokerTopologyBuilder :
             _options = options;
         }
 
-        public TopicHandle Topic
+        public TopicHandle? Topic
         {
             get => _topic;
             set
             {
                 _topic = value;
-                if (_builder.Topic != null)
+                if (value != null && _builder.Topic is { } parentTopic)
                 {
                     var subscriptionName = string.Join("-", value.Topic.CreateTopicOptions.Name.Split('/').Reverse());
-                    var createSubscriptionOptions = new CreateSubscriptionOptions(_builder.Topic.Topic.CreateTopicOptions.Name,
+                    var createSubscriptionOptions = new CreateSubscriptionOptions(parentTopic.Topic.CreateTopicOptions.Name,
                         _topology.FormatSubscriptionName(subscriptionName))
                     { ForwardTo = value.Topic.CreateTopicOptions.Name };
 
-                    _builder.CreateTopicSubscription(_builder.Topic, _topic, createSubscriptionOptions);
+                    _builder.CreateTopicSubscription(parentTopic, value, createSubscriptionOptions);
                 }
             }
         }
@@ -83,8 +83,8 @@ public class PublishEndpointBrokerTopologyBuilder :
             return _builder.CreateTopic(createTopicOptions);
         }
 
-        public SubscriptionHandle CreateSubscription(TopicHandle topic, CreateSubscriptionOptions createSubscriptionOptions, CreateRuleOptions rule,
-            RuleFilter filter)
+        public SubscriptionHandle CreateSubscription(TopicHandle topic, CreateSubscriptionOptions createSubscriptionOptions, CreateRuleOptions? rule,
+            RuleFilter? filter)
         {
             return _builder.CreateSubscription(topic, createSubscriptionOptions, rule, filter);
         }
@@ -101,8 +101,8 @@ public class PublishEndpointBrokerTopologyBuilder :
         }
 
         public QueueSubscriptionHandle CreateQueueSubscription(TopicHandle exchange, QueueHandle queue, CreateSubscriptionOptions createSubscriptionOptions,
-            CreateRuleOptions rule,
-            RuleFilter filter)
+            CreateRuleOptions? rule,
+            RuleFilter? filter)
         {
             return _builder.CreateQueueSubscription(exchange, queue, createSubscriptionOptions, rule, filter);
         }

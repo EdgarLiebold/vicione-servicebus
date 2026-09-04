@@ -61,7 +61,7 @@ internal sealed class CourierMessageRecorder<T> : IDisposable
         harness.OnConfigureInMemoryReceiveEndpoint += _configure;
     }
 
-    public Task Wait(TimeSpan timeout, CancellationToken cancellationToken) =>
+    public Task WaitAsync(TimeSpan timeout, CancellationToken cancellationToken) =>
         _completed.Task.WaitAsync(timeout, cancellationToken);
 
     public void Dispose()
@@ -81,7 +81,7 @@ internal sealed record CourierLog(string OriginalValue);
 internal sealed class FirstCourierActivity(ConcurrentQueue<string>? compensationOrder = null) :
     IActivity<CourierArguments, CourierLog>
 {
-    public Task<ExecutionResult> Execute(ExecuteContext<CourierArguments> context) =>
+    public Task<ExecutionResult> ExecuteAsync(ExecuteContext<CourierArguments> context) =>
         Task.FromResult(context.Completed(
             new CourierLog(context.Arguments.Value),
             options => options.SetVariables(new
@@ -90,7 +90,7 @@ internal sealed class FirstCourierActivity(ConcurrentQueue<string>? compensation
                 RemovedBySecond = "present",
             })));
 
-    public Task<CompensationResult> Compensate(CompensateContext<CourierLog> context)
+    public Task<CompensationResult> CompensateAsync(CompensateContext<CourierLog> context)
     {
         compensationOrder?.Enqueue($"first:{context.Log.OriginalValue}");
         return Task.FromResult(context.Compensated());
@@ -100,7 +100,7 @@ internal sealed class FirstCourierActivity(ConcurrentQueue<string>? compensation
 internal sealed class SecondCourierActivity(ConcurrentQueue<string>? compensationOrder = null) :
     IActivity<CourierArguments, CourierLog>
 {
-    public Task<ExecutionResult> Execute(ExecuteContext<CourierArguments> context) =>
+    public Task<ExecutionResult> ExecuteAsync(ExecuteContext<CourierArguments> context) =>
         Task.FromResult(context.Completed(
             new CourierLog(context.Arguments.Value),
             options => options.SetVariables(new
@@ -109,7 +109,7 @@ internal sealed class SecondCourierActivity(ConcurrentQueue<string>? compensatio
                 RemovedBySecond = (string?)null,
             })));
 
-    public Task<CompensationResult> Compensate(CompensateContext<CourierLog> context)
+    public Task<CompensationResult> CompensateAsync(CompensateContext<CourierLog> context)
     {
         compensationOrder?.Enqueue($"second:{context.Log.OriginalValue}");
         return Task.FromResult(context.Compensated());
@@ -120,7 +120,7 @@ internal sealed record FaultingCourierArguments(string Reason);
 
 internal sealed class FaultingCourierActivity : IExecuteActivity<FaultingCourierArguments>
 {
-    public Task<ExecutionResult> Execute(ExecuteContext<FaultingCourierArguments> context) =>
+    public Task<ExecutionResult> ExecuteAsync(ExecuteContext<FaultingCourierArguments> context) =>
         Task.FromResult(context.FaultedWithVariables(
             new CourierExpectedException(context.Arguments.Reason),
             new { FaultVariable = "fault-output" }));
@@ -128,7 +128,7 @@ internal sealed class FaultingCourierActivity : IExecuteActivity<FaultingCourier
 
 internal sealed class ThrowingCourierActivity : IExecuteActivity<FaultingCourierArguments>
 {
-    public Task<ExecutionResult> Execute(ExecuteContext<FaultingCourierArguments> context) =>
+    public Task<ExecutionResult> ExecuteAsync(ExecuteContext<FaultingCourierArguments> context) =>
         throw new CourierExpectedException(context.Arguments.Reason);
 }
 

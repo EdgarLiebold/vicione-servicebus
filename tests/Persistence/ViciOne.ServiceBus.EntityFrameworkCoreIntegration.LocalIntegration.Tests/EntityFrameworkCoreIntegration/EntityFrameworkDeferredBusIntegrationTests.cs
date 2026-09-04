@@ -14,15 +14,15 @@ public sealed class EntityFrameworkDeferredBusIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-DEFERRED-BUS", "ambient-rollback-discards-database-and-publish")]
-    public async Task AmbientRollback_DiscardsTheDatabaseWriteAndBufferedPublish()
+    public async Task AmbientRollback_DiscardsTheDatabaseWriteAndBufferedPublishAsync()
     {
         await using DeferredBusFixture fixture = await DeferredBusFixture.StartAsync("deferred-bus-rollback");
         var message = new TransactionalMessage(NewId.NextGuid(), "rollback");
 
         using (fixture.CreateTransactionScope())
         {
-            await fixture.Insert(message, TestContext.Current.CancellationToken);
-            await fixture.EnlistedBus.Publish(message, TestContext.Current.CancellationToken);
+            await fixture.InsertAsync(message, TestContext.Current.CancellationToken);
+            await fixture.EnlistedBus.PublishAsync(message, TestContext.Current.CancellationToken);
 
             Assert.Empty(fixture.PublishObserver.Events);
             Assert.False(fixture.Received.IsCompleted);
@@ -30,20 +30,20 @@ public sealed class EntityFrameworkDeferredBusIntegrationTests
 
         Assert.Empty(fixture.PublishObserver.Events);
         Assert.False(fixture.Received.IsCompleted);
-        Assert.False(await fixture.Exists(message.CorrelationId, TestContext.Current.CancellationToken));
+        Assert.False(await fixture.ExistsAsync(message.CorrelationId, TestContext.Current.CancellationToken));
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-DEFERRED-BUS", "ambient-commit-persists-and-publishes-exactly-once")]
-    public async Task AmbientCommit_PersistsTheDatabaseWriteAndPublishesExactlyOnce()
+    public async Task AmbientCommit_PersistsTheDatabaseWriteAndPublishesExactlyOnceAsync()
     {
         await using DeferredBusFixture fixture = await DeferredBusFixture.StartAsync("deferred-bus-commit");
         var message = new TransactionalMessage(NewId.NextGuid(), "commit");
 
         using (TransactionScope transaction = fixture.CreateTransactionScope())
         {
-            await fixture.Insert(message, TestContext.Current.CancellationToken);
-            await fixture.EnlistedBus.Publish(message, TestContext.Current.CancellationToken);
+            await fixture.InsertAsync(message, TestContext.Current.CancellationToken);
+            await fixture.EnlistedBus.PublishAsync(message, TestContext.Current.CancellationToken);
 
             Assert.Empty(fixture.PublishObserver.Events);
             Assert.False(fixture.Received.IsCompleted);
@@ -57,19 +57,19 @@ public sealed class EntityFrameworkDeferredBusIntegrationTests
         Assert.Equal(message, received);
         Assert.Equal(["Pre", "Post"], fixture.PublishObserver.Events.Select(item => item.Stage));
         Assert.All(fixture.PublishObserver.Events, item => Assert.Same(message, item.Message));
-        Assert.True(await fixture.Exists(message.CorrelationId, TestContext.Current.CancellationToken));
+        Assert.True(await fixture.ExistsAsync(message.CorrelationId, TestContext.Current.CancellationToken));
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-DEFERRED-BUS", "explicit-flush-publishes-buffer-once")]
-    public async Task ExplicitFlush_PublishesTheBufferedMessageExactlyOnce()
+    public async Task ExplicitFlush_PublishesTheBufferedMessageExactlyOnceAsync()
     {
         await using DeferredBusFixture fixture = await DeferredBusFixture.StartAsync("deferred-bus-flush");
         var message = new TransactionalMessage(NewId.NextGuid(), "release");
         IBufferedBus bufferedBus = new BufferedBusTestDriver(fixture.Harness.Bus).Bus;
 
-        await fixture.Insert(message, TestContext.Current.CancellationToken);
-        await bufferedBus.Publish(message, TestContext.Current.CancellationToken);
+        await fixture.InsertAsync(message, TestContext.Current.CancellationToken);
+        await bufferedBus.PublishAsync(message, TestContext.Current.CancellationToken);
 
         Assert.Empty(fixture.PublishObserver.Events);
         Assert.False(fixture.Received.IsCompleted);
@@ -85,7 +85,7 @@ public sealed class EntityFrameworkDeferredBusIntegrationTests
         Assert.Equal(message, received);
         Assert.Equal(["Pre", "Post"], fixture.PublishObserver.Events.Select(item => item.Stage));
         Assert.All(fixture.PublishObserver.Events, item => Assert.Same(message, item.Message));
-        Assert.True(await fixture.Exists(message.CorrelationId, TestContext.Current.CancellationToken));
+        Assert.True(await fixture.ExistsAsync(message.CorrelationId, TestContext.Current.CancellationToken));
     }
 
     public sealed record TransactionalMessage(Guid CorrelationId, string Value);
@@ -165,14 +165,14 @@ public sealed class EntityFrameworkDeferredBusIntegrationTests
 
             try
             {
-                await harness.Start(cancellationToken);
+                await harness.StartAsync(cancellationToken);
                 var observer = new RecordingPublishObserver();
                 ConnectHandle handle = harness.Bus.ConnectPublishObserver(observer);
                 return new DeferredBusFixture(database, options, harness, observer, handle, received);
             }
             catch
             {
-                await harness.Stop();
+                await harness.StopAsync();
                 harness.Dispose();
                 await database.DisposeAsync();
                 throw;
@@ -192,7 +192,7 @@ public sealed class EntityFrameworkDeferredBusIntegrationTests
                 TransactionScopeAsyncFlowOption.Enabled);
         }
 
-        public async Task Insert(TransactionalMessage message, CancellationToken cancellationToken)
+        public async Task InsertAsync(TransactionalMessage message, CancellationToken cancellationToken)
         {
             await using var context = new TransactionalDbContext(_dbContextOptions);
             context.Records.Add(new TransactionalRecord
@@ -203,7 +203,7 @@ public sealed class EntityFrameworkDeferredBusIntegrationTests
             await context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<bool> Exists(Guid correlationId, CancellationToken cancellationToken)
+        public async Task<bool> ExistsAsync(Guid correlationId, CancellationToken cancellationToken)
         {
             await using var context = new TransactionalDbContext(_dbContextOptions);
             return await context.Records.AsNoTracking()
@@ -213,7 +213,7 @@ public sealed class EntityFrameworkDeferredBusIntegrationTests
         public async ValueTask DisposeAsync()
         {
             _publishObserverHandle.Dispose();
-            await Harness.Stop().WaitAsync(OperationTimeout, CancellationToken.None);
+            await Harness.StopAsync().WaitAsync(OperationTimeout, CancellationToken.None);
             Harness.Dispose();
             await _database.DisposeAsync();
         }
@@ -226,21 +226,21 @@ public sealed class EntityFrameworkDeferredBusIntegrationTests
 
         public PublishObservation[] Events => _events.ToArray();
 
-        public Task PrePublish<T>(PublishContext<T> context)
+        public Task PrePublishAsync<T>(PublishContext<T> context)
             where T : class
         {
             _events.Enqueue(new PublishObservation("Pre", context.Message));
             return Task.CompletedTask;
         }
 
-        public Task PostPublish<T>(PublishContext<T> context)
+        public Task PostPublishAsync<T>(PublishContext<T> context)
             where T : class
         {
             _events.Enqueue(new PublishObservation("Post", context.Message));
             return Task.CompletedTask;
         }
 
-        public Task PublishFault<T>(PublishContext<T> context, Exception exception)
+        public Task PublishFaultAsync<T>(PublishContext<T> context, Exception exception)
             where T : class
         {
             _events.Enqueue(new PublishObservation("Fault", context.Message));

@@ -10,7 +10,7 @@ public sealed class PipeSpecificationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-PIPE-SPECIFICATION", "selected-branch-and-following-segment")]
-    public async Task CustomSpecification_RunsItsSelectedBranchBeforeTheFollowingSegment()
+    public async Task CustomSpecification_RunsItsSelectedBranchBeforeTheFollowingSegmentAsync()
     {
         var trace = new List<string>();
         IPipe<RoutingContext> allowed = Pipe.Execute<RoutingContext>(_ => trace.Add("allowed"));
@@ -25,7 +25,7 @@ public sealed class PipeSpecificationTests
         context.GetOrAddPayload<IPrincipal>(
             () => new GenericPrincipal(new GenericIdentity("test-user"), ["operator"]));
 
-        await pipe.Send(context);
+        await pipe.SendAsync(context);
 
         Assert.Equal(["allowed", "next"], trace);
     }
@@ -79,18 +79,18 @@ public sealed class PipeSpecificationTests
         IReadOnlyCollection<string> allowedRoles) : IFilter<TContext>
         where TContext : class, PipeContext
     {
-        public async Task Send(TContext context, IPipe<TContext> next)
+        public async Task SendAsync(TContext context, IPipe<TContext> next)
         {
             if (context.TryGetPayload(out IPrincipal? principal)
                 && principal is not null
                 && allowedRoles.Any(principal.IsInRole))
             {
-                await allowed.Send(context);
+                await allowed.SendAsync(context);
             }
             else
-                await rejected.Send(context);
+                await rejected.SendAsync(context);
 
-            await next.Send(context);
+            await next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context)

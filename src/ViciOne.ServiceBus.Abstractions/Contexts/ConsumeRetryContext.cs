@@ -18,5 +18,5 @@ public interface ConsumeRetryContext
     TContext CreateNext<TContext>(RetryContext retryContext)
         where TContext : class, ConsumeRetryContext;
 
-    Task NotifyPendingFaults();
+    Task NotifyPendingFaultsAsync(CancellationToken cancellationToken = default);
 }

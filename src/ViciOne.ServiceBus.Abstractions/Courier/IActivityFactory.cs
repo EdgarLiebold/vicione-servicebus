@@ -27,7 +27,8 @@ public interface IActivityFactory :
     /// <param name="context"></param>
     /// <param name="next"></param>
     /// <returns></returns>
-    Task Execute<TActivity, TArguments>(ExecuteContext<TArguments> context, IPipe<ExecuteActivityContext<TActivity, TArguments>> next)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task ExecuteAsync<TActivity, TArguments>(ExecuteContext<TArguments> context, IPipe<ExecuteActivityContext<TActivity, TArguments>> next, CancellationToken cancellationToken = default)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class;
 
@@ -37,7 +38,8 @@ public interface IActivityFactory :
     /// <param name="compensateContext"></param>
     /// <param name="next"></param>
     /// <returns></returns>
-    Task Compensate<TActivity, TLog>(CompensateContext<TLog> compensateContext, IPipe<CompensateActivityContext<TActivity, TLog>> next)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task CompensateAsync<TActivity, TLog>(CompensateContext<TLog> compensateContext, IPipe<CompensateActivityContext<TActivity, TLog>> next, CancellationToken cancellationToken = default)
         where TActivity : class, ICompensateActivity<TLog>
         where TLog : class;
 }

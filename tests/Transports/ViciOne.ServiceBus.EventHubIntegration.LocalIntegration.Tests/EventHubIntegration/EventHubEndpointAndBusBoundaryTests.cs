@@ -15,7 +15,7 @@ public sealed class EventHubEndpointAndBusBoundaryTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0145", "event-produced-before-dynamic-endpoint-connect-is-delivered-with-complete-envelope")]
-    public async Task DynamicEndpoint_ReceivesTheExactEventProducedBeforeItWasConnected()
+    public async Task DynamicEndpoint_ReceivesTheExactEventProducedBeforeItWasConnectedAsync()
     {
         const string eventHubName = "envelope-eh";
         var state = new DynamicEndpointState(NewId.NextGuid());
@@ -47,9 +47,9 @@ public sealed class EventHubEndpointAndBusBoundaryTests
             started = true;
             await using AsyncServiceScope scope = provider.CreateAsyncScope();
             IEventHubProducer producer = await scope.ServiceProvider.GetRequiredService<IEventHubProducerProvider>()
-                .GetProducer(eventHubName).WaitAsync(fixture.OperationTimeout, cancellationToken);
+                .GetProducerAsync(eventHubName, cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
 
-            await producer.Produce<IDynamicEndpointMessage>(
+            await producer.ProduceAsync<IDynamicEndpointMessage>(
                     new DynamicEndpointMessage(state.Marker, "before-connect"),
                     Pipe.Execute<SendContext>(context =>
                     {
@@ -97,7 +97,7 @@ public sealed class EventHubEndpointAndBusBoundaryTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0150", "two-bound-riders-route-first-consume-through-second-provider-without-cross-talk")]
-    public async Task TwoBoundRiders_ConsumeOnTheFirstAndProduceThroughTheSecondWithoutCrossTalk()
+    public async Task TwoBoundRiders_ConsumeOnTheFirstAndProduceThroughTheSecondWithoutCrossTalkAsync()
     {
         await using EventHubLocalFixture fixture = EventHubLocalFixture.Create("multibus");
         var state = new MultiBusState(NewId.NextGuid());
@@ -158,10 +158,9 @@ public sealed class EventHubEndpointAndBusBoundaryTests
             await using AsyncServiceScope scope = provider.CreateAsyncScope();
             IEventHubProducerProvider firstProvider = scope.ServiceProvider
                 .GetRequiredService<Bind<IFirstEventHubBus, IEventHubProducerProvider>>().Value;
-            IEventHubProducer firstProducer = await firstProvider.GetProducer("multibus-eh1")
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
+            IEventHubProducer firstProducer = await firstProvider.GetProducerAsync("multibus-eh1", cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
 
-            await firstProducer.Produce(new FirstBusMessage(state.RunId), cancellationToken)
+            await firstProducer.ProduceAsync(new FirstBusMessage(state.RunId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             FirstBusObservation first = await state.First.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
             SecondBusObservation second = await state.Second.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
@@ -181,7 +180,7 @@ public sealed class EventHubEndpointAndBusBoundaryTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0151", "eventhub-inbox-outbox-carries-identifiers-through-bus-default-serializer-once")]
-    public async Task RiderInboxOutbox_PublishesOnceThroughTheBusSerializerWithIncomingIdentifiers()
+    public async Task RiderInboxOutbox_PublishesOnceThroughTheBusSerializerWithIncomingIdentifiersAsync()
     {
         const string eventHubName = "raw-eh";
         var state = new OutboxState(NewId.NextGuid());
@@ -222,8 +221,8 @@ public sealed class EventHubEndpointAndBusBoundaryTests
             started = true;
             await using AsyncServiceScope scope = provider.CreateAsyncScope();
             IEventHubProducer producer = await scope.ServiceProvider.GetRequiredService<IEventHubProducerProvider>()
-                .GetProducer(eventHubName).WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await producer.Produce<IOutboxRiderMessage>(
+                .GetProducerAsync(eventHubName, cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await producer.ProduceAsync<IOutboxRiderMessage>(
                     new OutboxRiderMessage(state.RunId),
                     Pipe.Execute<SendContext>(context =>
                     {
@@ -240,7 +239,7 @@ public sealed class EventHubEndpointAndBusBoundaryTests
             Assert.Equal(state.RunId, actual.Message.RunId);
             Assert.Equal(messageId, actual.Message.OriginalMessageId);
             Assert.Equal(correlationId, actual.Message.OriginalCorrelationId);
-            Assert.Equal(SystemTextJsonMessageSerializer.JsonContentType, actual.ReceiveContext.ContentType);
+            Assert.Equal(SystemTextJsonMessageSerializer.JsonContentType, actual.Advanced().ReceiveContext.ContentType);
             Assert.Single(state.Deliveries);
         }
         finally
@@ -252,7 +251,7 @@ public sealed class EventHubEndpointAndBusBoundaryTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-CLOUD-0152", "send-filter-sees-typed-and-untyped-eventhub-payloads-and-continues-delivery")]
-    public async Task SendFilter_SeesBothEventHubPayloadShapesAndContinuesTheProviderPipeline()
+    public async Task SendFilter_SeesBothEventHubPayloadShapesAndContinuesTheProviderPipelineAsync()
     {
         const string eventHubName = "config-eh";
         var state = new FilterState(NewId.NextGuid());
@@ -290,9 +289,9 @@ public sealed class EventHubEndpointAndBusBoundaryTests
             started = true;
             await using AsyncServiceScope scope = provider.CreateAsyncScope();
             IEventHubProducer producer = await scope.ServiceProvider.GetRequiredService<IEventHubProducerProvider>()
-                .GetProducer(eventHubName).WaitAsync(fixture.OperationTimeout, cancellationToken);
+                .GetProducerAsync(eventHubName, cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
 
-            await producer.Produce<IFilterMessage>(new FilterMessage(state.RunId), cancellationToken)
+            await producer.ProduceAsync<IFilterMessage>(new FilterMessage(state.RunId), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             FilterObservation filterObservation = await state.Filtered.Task
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
@@ -337,7 +336,7 @@ public sealed class EventHubEndpointAndBusBoundaryTests
 
     private sealed class DynamicEndpointConsumer(DynamicEndpointState state) : IConsumer<IDynamicEndpointMessage>
     {
-        public Task Consume(ConsumeContext<IDynamicEndpointMessage> context)
+        public Task ConsumeAsync(ConsumeContext<IDynamicEndpointMessage> context)
         {
             if (context.Message.Marker == state.Marker)
                 state.Received.TrySetResult(context);
@@ -364,20 +363,20 @@ public sealed class EventHubEndpointAndBusBoundaryTests
         MultiBusState state,
         Bind<ISecondEventHubBus, IEventHubProducerProvider> secondProvider) : IConsumer<FirstBusMessage>
     {
-        public async Task Consume(ConsumeContext<FirstBusMessage> context)
+        public async Task ConsumeAsync(ConsumeContext<FirstBusMessage> context)
         {
             if (context.Message.RunId != state.RunId)
                 return;
 
             state.First.TrySetResult(new FirstBusObservation(context.Message.RunId, context.MessageId, context.DestinationAddress));
-            IEventHubProducer producer = await secondProvider.Value.GetProducer("multibus-eh2");
-            await producer.Produce(new SecondBusMessage(context.Message.RunId, context.MessageId), context.CancellationToken);
+            IEventHubProducer producer = await secondProvider.Value.GetProducerAsync("multibus-eh2");
+            await producer.ProduceAsync(new SecondBusMessage(context.Message.RunId, context.MessageId), context.CancellationToken);
         }
     }
 
     private sealed class SecondBusConsumer(MultiBusState state) : IConsumer<SecondBusMessage>
     {
-        public Task Consume(ConsumeContext<SecondBusMessage> context)
+        public Task ConsumeAsync(ConsumeContext<SecondBusMessage> context)
         {
             if (context.Message.RunId == state.RunId)
                 state.Second.TrySetResult(new SecondBusObservation(
@@ -406,14 +405,14 @@ public sealed class EventHubEndpointAndBusBoundaryTests
 
     private sealed class OutboxRiderConsumer : IConsumer<IOutboxRiderMessage>
     {
-        public Task Consume(ConsumeContext<IOutboxRiderMessage> context) => context.Publish(
+        public Task ConsumeAsync(ConsumeContext<IOutboxRiderMessage> context) => context.Advanced().PublishAsync(
             new OutboxBusMessage(context.Message.RunId, context.MessageId, context.CorrelationId),
             context.CancellationToken);
     }
 
     private sealed class OutboxBusConsumer(OutboxState state) : IConsumer<OutboxBusMessage>
     {
-        public Task Consume(ConsumeContext<OutboxBusMessage> context)
+        public Task ConsumeAsync(ConsumeContext<OutboxBusMessage> context)
         {
             if (context.Message.RunId == state.RunId)
             {
@@ -441,12 +440,12 @@ public sealed class EventHubEndpointAndBusBoundaryTests
 
     private sealed class EventHubSendFilter(FilterState state) : IFilter<SendContext>
     {
-        public async Task Send(SendContext context, IPipe<SendContext> next)
+        public async Task SendAsync(SendContext context, IPipe<SendContext> next)
         {
             bool untyped = context.TryGetPayload<EventHubSendContext>(out _);
             bool typed = context.TryGetPayload<EventHubSendContext<IFilterMessage>>(out _);
             Uri? destinationAddress = context.DestinationAddress;
-            await next.Send(context);
+            await next.SendAsync(context);
             state.Filtered.TrySetResult(new FilterObservation(untyped, typed, destinationAddress, NextCompleted: true));
         }
 
@@ -455,7 +454,7 @@ public sealed class EventHubEndpointAndBusBoundaryTests
 
     private sealed class FilterMessageConsumer(FilterState state) : IConsumer<IFilterMessage>
     {
-        public Task Consume(ConsumeContext<IFilterMessage> context)
+        public Task ConsumeAsync(ConsumeContext<IFilterMessage> context)
         {
             if (context.Message.RunId == state.RunId)
                 state.Delivered.TrySetResult(context.Message.RunId);

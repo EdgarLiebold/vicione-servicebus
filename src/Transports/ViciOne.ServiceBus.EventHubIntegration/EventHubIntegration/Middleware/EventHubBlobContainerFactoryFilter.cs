@@ -16,15 +16,15 @@ public class EventHubBlobContainerFactoryFilter :
         _blockClient = blockClient;
     }
 
-    public async Task Send(ProcessorContext context, IPipe<ProcessorContext> next)
+    public async Task SendAsync(ProcessorContext context, IPipe<ProcessorContext> next)
     {
         OneTimeContext<EventHubBlobContainerFactoryFilter> oneTimeContext = await context
-            .OneTimeSetup<EventHubBlobContainerFactoryFilter>(() => CreateBlobIfNotExistsAsync(context.CancellationToken))
+            .OneTimeSetupAsync<EventHubBlobContainerFactoryFilter>(() => CreateBlobIfNotExistsAsync(context.CancellationToken))
             .ConfigureAwait(false);
 
         try
         {
-            await next.Send(context).ConfigureAwait(false);
+            await next.SendAsync(context).ConfigureAwait(false);
         }
         catch (Exception)
         {

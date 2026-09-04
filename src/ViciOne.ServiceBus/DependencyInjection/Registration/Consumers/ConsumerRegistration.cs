@@ -19,7 +19,7 @@ public class ConsumerRegistration<TConsumer> :
 {
     readonly List<Action<IRegistrationContext, IConsumerConfigurator<TConsumer>>> _configureActions;
     readonly IContainerSelector _selector;
-    IConsumerDefinition<TConsumer> _definition;
+    IConsumerDefinition<TConsumer> _definition = null!;
 
     public ConsumerRegistration(IContainerSelector selector)
     {
@@ -32,7 +32,7 @@ public class ConsumerRegistration<TConsumer> :
 
     public bool IncludeInConfigureEndpoints { get; set; }
 
-    void IConsumerRegistration.AddConfigureAction<T>(Action<IRegistrationContext, IConsumerConfigurator<T>> configure)
+    void IConsumerRegistration.AddConfigureAction<T>(Action<IRegistrationContext, IConsumerConfigurator<T>>? configure)
     {
         if (configure is Action<IRegistrationContext, IConsumerConfigurator<TConsumer>> action)
             _configureActions.Add(action);
@@ -82,7 +82,7 @@ public class ConsumerRegistration<TConsumer> :
 
         _definition = _selector.GetDefinition<IConsumerDefinition<TConsumer>>(provider) ?? new DefaultConsumerDefinition<TConsumer>();
 
-        IEndpointDefinition<TConsumer> endpointDefinition = _selector.GetEndpointDefinition<TConsumer>(provider);
+        IEndpointDefinition<TConsumer>? endpointDefinition = _selector.GetEndpointDefinition<TConsumer>(provider);
         if (endpointDefinition != null)
             _definition.EndpointDefinition = endpointDefinition;
 

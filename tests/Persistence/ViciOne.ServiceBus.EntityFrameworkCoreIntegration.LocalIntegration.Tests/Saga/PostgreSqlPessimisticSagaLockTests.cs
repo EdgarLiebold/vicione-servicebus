@@ -12,7 +12,7 @@ public sealed class PostgreSqlPessimisticSagaLockTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-POSTGRES-PESSIMISTIC-LOCK", "competing-session-blocks-until-owner-releases")]
-    public async Task RowLock_BlocksACompetingSessionAndReleasesWithTheOwningTransaction()
+    public async Task RowLock_BlocksACompetingSessionAndReleasesWithTheOwningTransactionAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase database = await PostgreSqlTestDatabase.CreateAsync(
@@ -38,7 +38,7 @@ public sealed class PostgreSqlPessimisticSagaLockTests
             IsolationLevel.ReadCommitted,
             cancellationToken);
         PessimisticSaga ownedSaga = Assert.IsType<PessimisticSaga>(
-            await executor.Load(owner, sagaId, cancellationToken));
+            await executor.LoadAsync(owner, sagaId, cancellationToken));
 
         InvalidOperationException blocked;
         await using (var competitor = new PessimisticSagaDbContext(options))
@@ -53,7 +53,7 @@ public sealed class PostgreSqlPessimisticSagaLockTests
             await competitor.Database.ExecuteSqlRawAsync("SET LOCAL lock_timeout = '500ms'", cancellationToken);
 
             blocked = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                executor.Load(competitor, sagaId, cancellationToken));
+                executor.LoadAsync(competitor, sagaId, cancellationToken));
         }
 
         PostgresException providerFailure = Assert.IsType<PostgresException>(blocked.InnerException);
@@ -67,7 +67,7 @@ public sealed class PostgreSqlPessimisticSagaLockTests
             IsolationLevel.ReadCommitted,
             cancellationToken);
         PessimisticSaga releasedSaga = Assert.IsType<PessimisticSaga>(
-            await executor.Load(afterRelease, sagaId, cancellationToken));
+            await executor.LoadAsync(afterRelease, sagaId, cancellationToken));
 
         Assert.Equal(sagaId, releasedSaga.CorrelationId);
         Assert.Equal(7, releasedSaga.Value);

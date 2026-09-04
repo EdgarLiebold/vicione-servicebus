@@ -9,7 +9,7 @@ public interface ScheduleMessage
     /// <summary>
     /// The time at which the message should be published, should be in UTC
     /// </summary>
-    DateTime ScheduledTime { get; }
+    DateTimeOffset DueAt { get; }
 
     /// <summary>
     /// The message types implemented by the message

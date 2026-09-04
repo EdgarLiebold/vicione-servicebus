@@ -7,29 +7,29 @@ namespace ViciOne.ServiceBus.Courier;
 
 public interface IRoutingSlipEventPublisher
 {
-    Task PublishRoutingSlipCompleted(DateTime timestamp, TimeSpan duration, IDictionary<string, object> variables);
+    Task PublishRoutingSlipCompletedAsync(DateTimeOffset timestamp, TimeSpan duration, IDictionary<string, object> variables, CancellationToken cancellationToken = default);
 
-    Task PublishRoutingSlipFaulted(DateTime timestamp, TimeSpan duration, IDictionary<string, object> variables,
-        params ActivityException[] exceptions);
+    Task PublishRoutingSlipFaultedAsync(DateTimeOffset timestamp, TimeSpan duration, IDictionary<string, object> variables,
+        IReadOnlyCollection<ActivityException> exceptions, CancellationToken cancellationToken = default);
 
-    Task PublishRoutingSlipActivityCompleted(string activityName, Guid executionId,
-        DateTime timestamp, TimeSpan duration, IDictionary<string, object> variables, IDictionary<string, object> arguments,
-        IDictionary<string, object> data);
+    Task PublishRoutingSlipActivityCompletedAsync(string activityName, Guid executionId,
+        DateTimeOffset timestamp, TimeSpan duration, IDictionary<string, object> variables, IDictionary<string, object> arguments,
+        IDictionary<string, object> data, CancellationToken cancellationToken = default);
 
-    Task PublishRoutingSlipActivityFaulted(string activityName, Guid executionId, DateTime timestamp, TimeSpan duration, ExceptionInfo exceptionInfo,
-        IDictionary<string, object> variables, IDictionary<string, object> arguments);
+    Task PublishRoutingSlipActivityFaultedAsync(string activityName, Guid executionId, DateTimeOffset timestamp, TimeSpan duration, ExceptionInfo exceptionInfo,
+        IDictionary<string, object> variables, IDictionary<string, object> arguments, CancellationToken cancellationToken = default);
 
-    Task PublishRoutingSlipActivityCompensationFailed(string activityName, Guid executionId,
-        DateTime timestamp, TimeSpan duration, DateTime failureTimestamp, TimeSpan routingSlipDuration,
-        ExceptionInfo exceptionInfo, IDictionary<string, object> variables, IDictionary<string, object> data);
+    Task PublishRoutingSlipActivityCompensationFailedAsync(string activityName, Guid executionId,
+        DateTimeOffset timestamp, TimeSpan duration, DateTimeOffset failureTimestamp, TimeSpan routingSlipDuration,
+        ExceptionInfo exceptionInfo, IDictionary<string, object> variables, IDictionary<string, object> data, CancellationToken cancellationToken = default);
 
-    Task PublishRoutingSlipActivityCompensated(string activityName, Guid executionId, DateTime timestamp, TimeSpan duration,
-        IDictionary<string, object> variables, IDictionary<string, object> data);
+    Task PublishRoutingSlipActivityCompensatedAsync(string activityName, Guid executionId, DateTimeOffset timestamp, TimeSpan duration,
+        IDictionary<string, object> variables, IDictionary<string, object> data, CancellationToken cancellationToken = default);
 
-    Task PublishRoutingSlipRevised(string activityName, Guid executionId, DateTime timestamp, TimeSpan duration, IDictionary<string, object> variables,
+    Task PublishRoutingSlipRevisedAsync(string activityName, Guid executionId, DateTimeOffset timestamp, TimeSpan duration, IDictionary<string, object> variables,
         IList<Activity> itinerary,
-        IList<Activity> previousItinerary);
+        IList<Activity> previousItinerary, CancellationToken cancellationToken = default);
 
-    Task PublishRoutingSlipTerminated(string activityName, Guid executionId, DateTime timestamp, TimeSpan duration, IDictionary<string, object> variables,
-        IList<Activity> previousItinerary);
+    Task PublishRoutingSlipTerminatedAsync(string activityName, Guid executionId, DateTimeOffset timestamp, TimeSpan duration, IDictionary<string, object> variables,
+        IList<Activity> previousItinerary, CancellationToken cancellationToken = default);
 }

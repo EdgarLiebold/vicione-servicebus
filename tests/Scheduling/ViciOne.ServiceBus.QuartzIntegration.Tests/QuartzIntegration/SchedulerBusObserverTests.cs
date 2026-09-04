@@ -11,7 +11,7 @@ public sealed class SchedulerBusObserverTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE", "starts-and-stops-with-bus")]
-    public async Task EnabledScheduler_StartsAndStopsWithTheBus()
+    public async Task EnabledScheduler_StartsAndStopsWithTheBusAsync()
     {
         TimeSpan timeout = OperationTimeout();
         ISchedulerFactory schedulerFactory = CreateSchedulerFactory();
@@ -47,7 +47,7 @@ public sealed class SchedulerBusObserverTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE", "initializes-without-starting")]
-    public async Task DisabledScheduler_IsInitializedButNotStarted()
+    public async Task DisabledScheduler_IsInitializedButNotStartedAsync()
     {
         TimeSpan timeout = OperationTimeout();
         ISchedulerFactory schedulerFactory = CreateSchedulerFactory();
@@ -88,7 +88,7 @@ public sealed class SchedulerBusObserverTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-QUARTZ-SCHEDULER-LIFECYCLE", "standalone-context-receives-snapshotted-clock")]
-    public async Task StandaloneContext_ReceivesTheConfiguredBusAndTimeProvider()
+    public async Task StandaloneContext_ReceivesTheConfiguredBusAndTimeProviderAsync()
     {
         TimeSpan timeout = OperationTimeout();
         ISchedulerFactory schedulerFactory = CreateSchedulerFactory();

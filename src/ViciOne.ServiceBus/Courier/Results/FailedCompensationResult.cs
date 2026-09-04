@@ -27,17 +27,17 @@ class FailedCompensationResult<TLog> :
         _duration = _compensateContext.Elapsed;
     }
 
-    public Task Evaluate()
+    public Task EvaluateAsync(CancellationToken cancellationToken = default)
     {
         var faultedTimestamp = _compensateContext.Timestamp + _duration;
         var faultedDuration = faultedTimestamp - _routingSlip.CreateTimestamp;
 
-        return _publisher.PublishRoutingSlipActivityCompensationFailed(_compensateContext.ActivityName, _compensateContext.ExecutionId,
+        return _publisher.PublishRoutingSlipActivityCompensationFailedAsync(_compensateContext.ActivityName, _compensateContext.ExecutionId,
             _compensateContext.Timestamp, _duration, faultedTimestamp, faultedDuration, new FaultExceptionInfo(_exception), _routingSlip.Variables,
-            _compensateLog.Data);
+            _compensateLog.Data, cancellationToken: cancellationToken);
     }
 
-    public bool IsFailed(out Exception exception)
+    public bool IsFailed([NotNullWhen(true)] out Exception? exception)
     {
         exception = _exception;
         return true;

@@ -6,7 +6,7 @@ public class RedeliveryRetryConsumeContext<T> :
     RetryConsumeContext<T>
     where T : class
 {
-    public RedeliveryRetryConsumeContext(ConsumeContext<T> context, IRetryPolicy retryPolicy, RetryContext retryContext)
+    public RedeliveryRetryConsumeContext(ConsumeContext<T> context, IRetryPolicy retryPolicy, RetryContext? retryContext)
         : base(context, retryPolicy, retryContext)
     {
     }

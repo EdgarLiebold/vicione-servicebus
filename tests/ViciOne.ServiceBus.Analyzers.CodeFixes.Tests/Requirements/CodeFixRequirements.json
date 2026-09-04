@@ -4,27 +4,27 @@
     "variantKey": "task-delay-overload",
     "testAssembly": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
     "testType": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.CancellationTokenOverloadMethodFixerTests",
-    "testMethod": "TaskDelayFix_AddsTheContextCancellationToken"
+    "testMethod": "TaskDelayFix_AddsTheContextCancellationTokenAsync"
   },
   {
     "requirementId": "REQ-VSB-CANCELLATION-TOKEN-CODEFIX",
     "variantKey": "state-machine-activity-overloads",
     "testAssembly": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
     "testType": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.CancellationTokenOverloadMethodFixerTests",
-    "testMethod": "ActivityFix_AddsEachMatchingBehaviorContextToken"
+    "testMethod": "ActivityFix_AddsEachMatchingBehaviorContextTokenAsync"
   },
   {
     "requirementId": "REQ-VSB-CANCELLATION-TOKEN-CODEFIX",
     "variantKey": "later-task-run-overload",
     "testAssembly": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
     "testType": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.CancellationTokenOverloadMethodFixerTests",
-    "testMethod": "TaskRunFix_PreservesExistingTokenUseAndAddsTheMissingOne"
+    "testMethod": "TaskRunFix_PreservesExistingTokenUseAndAddsTheMissingOneAsync"
   },
   {
     "requirementId": "REQ-VSB-MESSAGE-CONTRACT-CODEFIX",
     "variantKey": "canonical-scenario-catalog",
     "testAssembly": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests",
     "testType": "ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.MessageContractCodeFixProvider.MessageContractCodeFixScenarioTests",
-    "testMethod": "MissingPropertiesFix_AddsOnlyTheRequiredLeafInitializers"
+    "testMethod": "MissingPropertiesFix_AddsOnlyTheRequiredLeafInitializersAsync"
   }
 ]

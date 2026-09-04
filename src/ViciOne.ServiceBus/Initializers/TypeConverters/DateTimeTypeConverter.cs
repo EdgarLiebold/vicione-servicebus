@@ -4,7 +4,7 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Initializers.TypeConverters;
 
-public class DateTimeTypeConverter :
+internal class DateTimeTypeConverter :
     ITypeConverter<string, DateTime>,
     ITypeConverter<int, DateTime>,
     ITypeConverter<long, DateTime>,
@@ -14,6 +14,8 @@ public class DateTimeTypeConverter :
     ITypeConverter<DateTime, int>,
     ITypeConverter<DateTime, long>
 {
+    static DateTime Epoch => DateTimeConstants.Epoch.UtcDateTime;
+
     public bool TryConvert(DateTimeOffset input, out DateTime result)
     {
         result = input.UtcDateTime;
@@ -22,17 +24,17 @@ public class DateTimeTypeConverter :
 
     public bool TryConvert(int input, out DateTime result)
     {
-        result = DateTimeConstants.Epoch + TimeSpan.FromMilliseconds(input);
+        result = Epoch + TimeSpan.FromMilliseconds(input);
         return true;
     }
 
     public bool TryConvert(long input, out DateTime result)
     {
-        result = DateTimeConstants.Epoch + TimeSpan.FromMilliseconds(input);
+        result = Epoch + TimeSpan.FromMilliseconds(input);
         return true;
     }
 
-    public bool TryConvert(object input, out DateTime result)
+    public bool TryConvert(object? input, out DateTime result)
     {
         switch (input)
         {
@@ -53,7 +55,7 @@ public class DateTimeTypeConverter :
         }
     }
 
-    public bool TryConvert(string input, out DateTime result)
+    public bool TryConvert(string? input, out DateTime result)
     {
         if (DateTimeOffset.TryParse(input, null, DateTimeStyles.AssumeUniversal, out var value))
         {
@@ -67,9 +69,9 @@ public class DateTimeTypeConverter :
 
     public bool TryConvert(DateTime input, out int result)
     {
-        if (input >= DateTimeConstants.Epoch)
+        if (input >= Epoch)
         {
-            var timeSpan = input - DateTimeConstants.Epoch;
+            var timeSpan = input - Epoch;
             if (timeSpan.TotalMilliseconds <= int.MaxValue)
             {
                 result = (int)timeSpan.TotalMilliseconds;
@@ -83,9 +85,9 @@ public class DateTimeTypeConverter :
 
     public bool TryConvert(DateTime input, out long result)
     {
-        if (input >= DateTimeConstants.Epoch)
+        if (input >= Epoch)
         {
-            var timeSpan = input - DateTimeConstants.Epoch;
+            var timeSpan = input - Epoch;
             if (timeSpan.TotalMilliseconds <= long.MaxValue)
             {
                 result = (long)timeSpan.TotalMilliseconds;

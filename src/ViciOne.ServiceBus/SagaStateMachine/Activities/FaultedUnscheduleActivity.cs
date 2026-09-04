@@ -24,42 +24,42 @@ public class FaultedUnscheduleActivity<TSaga> :
         context.CreateScope("unschedule-faulted");
     }
 
-    public Task Execute(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    public Task ExecuteAsync(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
     {
-        return next.Execute(context);
+        return next.ExecuteAsync(context);
     }
 
-    public Task Execute<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+    public Task ExecuteAsync<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
         where T : class
     {
-        return next.Execute(context);
+        return next.ExecuteAsync(context);
     }
 
-    public async Task Faulted<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
+    public async Task FaultedAsync<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
         where TException : Exception
     {
-        await Faulted(context).ConfigureAwait(false);
+        await FaultedAsync(context).ConfigureAwait(false);
 
-        await next.Faulted(context).ConfigureAwait(false);
+        await next.FaultedAsync(context).ConfigureAwait(false);
     }
 
-    public async Task Faulted<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
+    public async Task FaultedAsync<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
         where T : class
         where TException : Exception
     {
-        await Faulted(context).ConfigureAwait(false);
+        await FaultedAsync(context).ConfigureAwait(false);
 
-        await next.Faulted(context).ConfigureAwait(false);
+        await next.FaultedAsync(context).ConfigureAwait(false);
     }
 
-    async Task Faulted(SagaConsumeContext<TSaga> context)
+    async Task FaultedAsync(SagaConsumeContext<TSaga> context)
     {
         var schedulerContext = context.GetPayload<MessageSchedulerContext>();
 
         Guid? previousTokenId = _schedule.GetTokenId(context.Saga);
         if (previousTokenId.HasValue)
         {
-            await schedulerContext.CancelScheduledSend(context.ReceiveContext.InputAddress, previousTokenId.Value, context.CancellationToken)
+            await schedulerContext.CancelScheduledSendAsync(context.ReceiveContext.InputAddress, previousTokenId.Value, context.CancellationToken)
                 .ConfigureAwait(false);
 
             _schedule.SetTokenId(context.Saga, null);

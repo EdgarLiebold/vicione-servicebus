@@ -68,14 +68,14 @@ public static class RegistrationServiceCollectionExtensions
             _loadSagaRepository = loadSagaRepository;
         }
 
-        public Task<TSaga> Load(Guid correlationId)
+        public Task<TSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
         {
-            return _loadSagaRepository.Load(correlationId);
+            return _loadSagaRepository.LoadAsync(correlationId, cancellationToken: cancellationToken);
         }
 
-        public Task<IEnumerable<Guid>> Find(ISagaQuery<TSaga> query)
+        public Task<IEnumerable<Guid>> FindAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken = default)
         {
-            return _querySagaRepository.Find(query);
+            return _querySagaRepository.FindAsync(query, cancellationToken: cancellationToken);
         }
 
         public void Probe(ProbeContext context)
@@ -86,13 +86,13 @@ public static class RegistrationServiceCollectionExtensions
             _loadSagaRepository.Probe(scope);
         }
 
-        public Task Send<T>(ConsumeContext<T> context, ISagaPolicy<TSaga, T> policy, IPipe<SagaConsumeContext<TSaga, T>> next)
+        public Task SendAsync<T>(ConsumeContext<T> context, ISagaPolicy<TSaga, T> policy, IPipe<SagaConsumeContext<TSaga, T>> next)
             where T : class
         {
             throw new NotSupportedException(SendSagaIsNotAvailableInIocAnymore);
         }
 
-        public Task SendQuery<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, ISagaPolicy<TSaga, T> policy, IPipe<SagaConsumeContext<TSaga, T>> next)
+        public Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, ISagaPolicy<TSaga, T> policy, IPipe<SagaConsumeContext<TSaga, T>> next)
             where T : class
         {
             throw new NotSupportedException(SendSagaIsNotAvailableInIocAnymore);
@@ -111,14 +111,14 @@ public static class RegistrationServiceCollectionExtensions
         static readonly string LoadErrorMessage =
             $"Load-based saga correlation is not available when using current saga repository implementation: {TypeCache<TSaga>.ShortName}";
 
-        public Task<TSaga> Load(Guid correlationId)
+        public Task<TSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
         {
-            throw new NotSupportedException(LoadErrorMessage);
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<TSaga?>(cancellationToken); throw new NotSupportedException(LoadErrorMessage);
         }
 
-        public Task<IEnumerable<Guid>> Find(ISagaQuery<TSaga> query)
+        public Task<IEnumerable<Guid>> FindAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken = default)
         {
-            throw new NotSupportedException(QueryErrorMessage);
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::System.Collections.Generic.IEnumerable<global::System.Guid>>(cancellationToken); throw new NotSupportedException(QueryErrorMessage);
         }
 
         public void Probe(ProbeContext context)

@@ -13,7 +13,7 @@ public interface IBrokerTopologyBuilder
     /// <param name="autoDelete">Automatically delete if the broker connection is closed</param>
     /// <param name="arguments">The exchange arguments</param>
     /// <returns>An entity handle used to reference the exchange in subsequent calls</returns>
-    ExchangeHandle ExchangeDeclare(string name, string type, bool durable, bool autoDelete, IDictionary<string, object> arguments);
+    ExchangeHandle ExchangeDeclare(string name, string type, bool durable, bool autoDelete, IDictionary<string, object?> arguments);
 
     /// <summary>
     /// Bind an exchange to an exchange, with the specified routing key and arguments
@@ -23,7 +23,7 @@ public interface IBrokerTopologyBuilder
     /// <param name="routingKey">The binding routing key</param>
     /// <param name="arguments">The binging arguments</param>
     /// <returns>An entity handle used to reference the binding in subsequent calls</returns>
-    ExchangeBindingHandle ExchangeBind(ExchangeHandle source, ExchangeHandle destination, string routingKey, IDictionary<string, object> arguments);
+    ExchangeBindingHandle ExchangeBind(ExchangeHandle source, ExchangeHandle destination, string routingKey, IDictionary<string, object?> arguments);
 
     /// <summary>
     /// Declares a queue
@@ -34,7 +34,7 @@ public interface IBrokerTopologyBuilder
     /// <param name="exclusive"></param>
     /// <param name="arguments"></param>
     /// <returns></returns>
-    QueueHandle QueueDeclare(string name, bool durable, bool autoDelete, bool exclusive, IDictionary<string, object> arguments);
+    QueueHandle QueueDeclare(string name, bool durable, bool autoDelete, bool exclusive, IDictionary<string, object?> arguments);
 
     /// <summary>
     /// Binds an exchange to a queue, with the specified routing key and arguments
@@ -44,5 +44,5 @@ public interface IBrokerTopologyBuilder
     /// <param name="routingKey"></param>
     /// <param name="arguments"></param>
     /// <returns></returns>
-    QueueBindingHandle QueueBind(ExchangeHandle exchange, QueueHandle queue, string routingKey, IDictionary<string, object> arguments);
+    QueueBindingHandle QueueBind(ExchangeHandle exchange, QueueHandle queue, string routingKey, IDictionary<string, object?> arguments);
 }

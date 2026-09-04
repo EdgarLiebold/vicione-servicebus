@@ -26,7 +26,8 @@ public class DependencyInjectionLoadSagaRepository<TSaga> :
             _serviceProvider = serviceProvider;
         }
 
-        public async Task<T> Execute<T>(Func<LoadSagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken = default)
+        public async Task<T?> ExecuteAsync<T>(Func<LoadSagaRepositoryContext<TSaga>, Task<T?>> asyncMethod,
+            CancellationToken cancellationToken = default)
             where T : class
         {
             var serviceScope = _serviceProvider.CreateScope();
@@ -35,7 +36,7 @@ public class DependencyInjectionLoadSagaRepository<TSaga> :
             {
                 var factory = serviceScope.ServiceProvider.GetRequiredService<ILoadSagaRepositoryContextFactory<TSaga>>();
 
-                return await factory.Execute(asyncMethod, cancellationToken).ConfigureAwait(false);
+                return await factory.ExecuteAsync(asyncMethod, cancellationToken).ConfigureAwait(false);
             }
             finally
             {

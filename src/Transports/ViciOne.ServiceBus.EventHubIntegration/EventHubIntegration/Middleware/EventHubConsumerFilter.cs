@@ -13,7 +13,7 @@ public class EventHubConsumerFilter :
         _context = context;
     }
 
-    public async Task Send(ProcessorContext context, IPipe<ProcessorContext> next)
+    public async Task SendAsync(ProcessorContext context, IPipe<ProcessorContext> next)
     {
         var receiveSettings = _context.GetPayload<ReceiveSettings>();
 
@@ -23,7 +23,7 @@ public class EventHubConsumerFilter :
 
         _context.AddConsumeAgent(receiver);
 
-        await _context.TransportObservers.NotifyReady(_context.InputAddress).ConfigureAwait(false);
+        await _context.TransportObservers.NotifyReadyAsync(_context.InputAddress).ConfigureAwait(false);
 
         try
         {
@@ -33,12 +33,12 @@ public class EventHubConsumerFilter :
         {
             DeliveryMetrics metrics = receiver;
 
-            await _context.TransportObservers.NotifyCompleted(_context.InputAddress, metrics).ConfigureAwait(false);
+            await _context.TransportObservers.NotifyCompletedAsync(_context.InputAddress, metrics).ConfigureAwait(false);
 
             _context.LogConsumerCompleted(metrics.DeliveryCount, metrics.ConcurrentDeliveryCount);
         }
 
-        await next.Send(context).ConfigureAwait(false);
+        await next.SendAsync(context).ConfigureAwait(false);
     }
 
     public void Probe(ProbeContext context)

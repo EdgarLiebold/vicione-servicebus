@@ -25,7 +25,7 @@ public static class DependencyInjectionRegistrationExtensions
     /// </summary>
     /// <param name="collection"></param>
     /// <param name="configure"></param>
-    public static IServiceCollection AddViciOneServiceBus(this IServiceCollection collection, Action<IBusRegistrationConfigurator> configure = null)
+    public static IServiceCollection AddViciOneServiceBus(this IServiceCollection collection, Action<IBusRegistrationConfigurator>? configure = null)
     {
         if (collection.Any(d => d.ServiceType == typeof(IBus)))
         {
@@ -53,8 +53,8 @@ public static class DependencyInjectionRegistrationExtensions
     /// <param name="collection"></param>
     /// <param name="configure"></param>
     /// <param name="baseAddress"></param>
-    public static IServiceCollection AddMediator(this IServiceCollection collection, Uri baseAddress,
-        Action<IMediatorRegistrationConfigurator> configure = null)
+    public static IServiceCollection AddMediator(this IServiceCollection collection, Uri? baseAddress,
+        Action<IMediatorRegistrationConfigurator>? configure = null)
     {
         if (collection.Any(d => d.ServiceType == typeof(IMediator)))
             throw new ConfigurationException("AddMediator() was already called and may only be called once per container.");
@@ -76,7 +76,7 @@ public static class DependencyInjectionRegistrationExtensions
     /// </summary>
     /// <param name="collection"></param>
     /// <param name="configure"></param>
-    public static IServiceCollection AddMediator(this IServiceCollection collection, Action<IMediatorRegistrationConfigurator> configure = null)
+    public static IServiceCollection AddMediator(this IServiceCollection collection, Action<IMediatorRegistrationConfigurator>? configure = null)
     {
         return AddMediator(collection, null, configure);
     }

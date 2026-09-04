@@ -10,13 +10,13 @@ public interface IScheduleMessageProvider
     /// Schedule a message to be sent
     /// </summary>
     /// <param name="destinationAddress"></param>
-    /// <param name="scheduledTime"></param>
+    /// <param name="dueAt"></param>
     /// <param name="message"></param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, T message, IPipe<SendContext<T>> pipe,
+    Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class;
 
@@ -25,7 +25,7 @@ public interface IScheduleMessageProvider
     /// </summary>
     /// <param name="tokenId">The tokenId of the scheduled message</param>
     /// <param name="cancellationToken"></param>
-    Task CancelScheduledSend(Guid tokenId, CancellationToken cancellationToken);
+    Task CancelScheduledSendAsync(Guid tokenId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Cancel a scheduled message by TokenId
@@ -33,5 +33,5 @@ public interface IScheduleMessageProvider
     /// <param name="destinationAddress">The destination address of the scheduled message</param>
     /// <param name="tokenId">The tokenId of the scheduled message</param>
     /// <param name="cancellationToken"></param>
-    Task CancelScheduledSend(Uri destinationAddress, Guid tokenId, CancellationToken cancellationToken);
+    Task CancelScheduledSendAsync(Uri destinationAddress, Guid tokenId, CancellationToken cancellationToken);
 }

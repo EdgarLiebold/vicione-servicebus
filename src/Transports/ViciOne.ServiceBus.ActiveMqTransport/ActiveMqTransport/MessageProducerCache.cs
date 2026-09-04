@@ -22,15 +22,15 @@ public class MessageProducerCache :
         _cache = new KeyedResourceCache<IDestination, CachedMessageProducer>(x => x.Destination, options);
     }
 
-    public async Task<IMessageProducer> GetMessageProducer(IDestination key, MessageProducerFactory factory)
+    public async Task<IMessageProducer> GetMessageProducerAsync(IDestination key, MessageProducerFactory factory, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(factory);
 
         return await _cache.GetOrAddAsync(key,
-            async (destination, _) => new CachedMessageProducer(destination, await factory(destination).ConfigureAwait(false))).ConfigureAwait(false);
+            async (destination, _) => new CachedMessageProducer(destination, await factory(destination).ConfigureAwait(false)), cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    protected override async Task StopAgent(StopContext context)
+    protected override async Task StopAgentAsync(StopContext context)
     {
         await _cache.DisposeAsync().ConfigureAwait(false);
     }

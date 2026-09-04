@@ -10,9 +10,9 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
         Connectable<IStateObserver<TInstance>>,
         IStateObserver<TInstance>
     {
-        public Task StateChanged(BehaviorContext<TInstance> context, State currentState, State previousState)
+        public Task StateChangedAsync(BehaviorContext<TInstance> context, State currentState, State? previousState)
         {
-            return ForEachAsync(x => x.StateChanged(context, currentState, previousState));
+            return ForEachAsync(x => x.StateChangedAsync(context, currentState, previousState));
         }
     }
 }

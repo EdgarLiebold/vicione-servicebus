@@ -35,9 +35,10 @@ public static class BusHandleExtensions
     /// </summary>
     /// <param name="handle">The bus handle</param>
     /// <param name="stopTimeout">The wait time before throwing an exception</param>
-    public static async Task StopAsync(this BusHandle handle, TimeSpan stopTimeout)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static async Task StopAsync(this BusHandle handle, TimeSpan stopTimeout, CancellationToken cancellationToken = default)
     {
-        using var cancellationTokenSource = new CancellationTokenSource(stopTimeout);
+        cancellationToken.ThrowIfCancellationRequested(); using var cancellationTokenSource = new CancellationTokenSource(stopTimeout);
 
         await handle.StopAsync(cancellationTokenSource.Token).ConfigureAwait(false);
     }

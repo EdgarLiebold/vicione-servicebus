@@ -15,26 +15,26 @@ public class PublishEndpointConverterCache
 
     IPublishEndpointConverter this[Type type] => _types.GetOrAdd(type, CreateTypeConverter).Value;
 
-    public static Task Publish(IPublishEndpoint endpoint, object message, Type messageType, CancellationToken cancellationToken = default)
+    public static Task PublishAsync(IPublishEndpoint endpoint, object message, Type messageType, CancellationToken cancellationToken = default)
     {
-        return Cached.Converters.Value[messageType].Publish(endpoint, message, cancellationToken);
+        return Cached.Converters.Value[messageType].PublishAsync(endpoint, message, cancellationToken);
     }
 
-    public static Task Publish(IPublishEndpoint endpoint, object message, Type messageType, IPipe<PublishContext> pipe,
+    public static Task PublishAsync(IPublishEndpoint endpoint, object message, Type messageType, IPipe<PublishContext> pipe,
         CancellationToken cancellationToken = default)
     {
-        return Cached.Converters.Value[messageType].Publish(endpoint, message, pipe, cancellationToken);
+        return Cached.Converters.Value[messageType].PublishAsync(endpoint, message, pipe, cancellationToken);
     }
 
-    public static Task PublishInitializer(IPublishEndpoint endpoint, Type messageType, object values, CancellationToken cancellationToken = default)
+    public static Task PublishInitializerAsync(IPublishEndpoint endpoint, Type messageType, object values, CancellationToken cancellationToken = default)
     {
-        return Cached.Converters.Value[messageType].PublishInitializer(endpoint, values, cancellationToken);
+        return Cached.Converters.Value[messageType].PublishInitializerAsync(endpoint, values, cancellationToken);
     }
 
-    public static Task PublishInitializer(IPublishEndpoint endpoint, Type messageType, object values, IPipe<PublishContext> pipe,
+    public static Task PublishInitializerAsync(IPublishEndpoint endpoint, Type messageType, object values, IPipe<PublishContext> pipe,
         CancellationToken cancellationToken = default)
     {
-        return Cached.Converters.Value[messageType].PublishInitializer(endpoint, values, pipe, cancellationToken);
+        return Cached.Converters.Value[messageType].PublishInitializerAsync(endpoint, values, pipe, cancellationToken);
     }
 
     static Lazy<IPublishEndpointConverter> CreateTypeConverter(Type type)
@@ -54,13 +54,13 @@ public class PublishEndpointConverterCache
     /// </summary>
     public interface IPublishEndpointConverter
     {
-        Task Publish(IPublishEndpoint endpoint, object message, CancellationToken cancellationToken = default);
+        Task PublishAsync(IPublishEndpoint endpoint, object message, CancellationToken cancellationToken = default);
 
-        Task Publish(IPublishEndpoint endpoint, object message, IPipe<PublishContext> pipe, CancellationToken cancellationToken = default);
+        Task PublishAsync(IPublishEndpoint endpoint, object message, IPipe<PublishContext> pipe, CancellationToken cancellationToken = default);
 
-        Task PublishInitializer(IPublishEndpoint endpoint, object values, CancellationToken cancellationToken = default);
+        Task PublishInitializerAsync(IPublishEndpoint endpoint, object values, CancellationToken cancellationToken = default);
 
-        Task PublishInitializer(IPublishEndpoint endpoint, object values, IPipe<PublishContext> pipe, CancellationToken cancellationToken = default);
+        Task PublishInitializerAsync(IPublishEndpoint endpoint, object values, IPipe<PublishContext> pipe, CancellationToken cancellationToken = default);
     }
 
 
@@ -72,7 +72,7 @@ public class PublishEndpointConverterCache
         IPublishEndpointConverter
         where T : class
     {
-        public Task Publish(IPublishEndpoint endpoint, object message, CancellationToken cancellationToken)
+        public Task PublishAsync(IPublishEndpoint endpoint, object message, CancellationToken cancellationToken)
         {
             if (endpoint == null)
                 throw new ArgumentNullException(nameof(endpoint));
@@ -80,12 +80,12 @@ public class PublishEndpointConverterCache
                 throw new ArgumentNullException(nameof(message));
 
             if (message is T msg)
-                return endpoint.Publish(msg, cancellationToken);
+                return endpoint.PublishAsync(msg, cancellationToken);
 
             throw new ArgumentException("Unexpected message type: " + TypeCache.GetShortName(message.GetType()));
         }
 
-        public Task Publish(IPublishEndpoint endpoint, object message, IPipe<PublishContext> pipe, CancellationToken cancellationToken)
+        public Task PublishAsync(IPublishEndpoint endpoint, object message, IPipe<PublishContext> pipe, CancellationToken cancellationToken)
         {
             if (endpoint == null)
                 throw new ArgumentNullException(nameof(endpoint));
@@ -95,22 +95,22 @@ public class PublishEndpointConverterCache
                 throw new ArgumentNullException(nameof(pipe));
 
             if (message is T msg)
-                return endpoint.Publish(msg, pipe, cancellationToken);
+                return endpoint.PublishAsync(msg, pipe, cancellationToken);
 
             throw new ArgumentException("Unexpected message type: " + TypeCache.GetShortName(message.GetType()));
         }
 
-        public Task PublishInitializer(IPublishEndpoint endpoint, object values, CancellationToken cancellationToken)
+        public Task PublishInitializerAsync(IPublishEndpoint endpoint, object values, CancellationToken cancellationToken)
         {
             if (endpoint == null)
                 throw new ArgumentNullException(nameof(endpoint));
             if (values == null)
                 throw new ArgumentNullException(nameof(values));
 
-            return endpoint.Publish<T>(values, cancellationToken);
+            return endpoint.PublishAsync<T>(values, cancellationToken);
         }
 
-        public Task PublishInitializer(IPublishEndpoint endpoint, object values, IPipe<PublishContext> pipe, CancellationToken cancellationToken)
+        public Task PublishInitializerAsync(IPublishEndpoint endpoint, object values, IPipe<PublishContext> pipe, CancellationToken cancellationToken)
         {
             if (endpoint == null)
                 throw new ArgumentNullException(nameof(endpoint));
@@ -119,7 +119,7 @@ public class PublishEndpointConverterCache
             if (pipe == null)
                 throw new ArgumentNullException(nameof(pipe));
 
-            return endpoint.Publish<T>(values, pipe, cancellationToken);
+            return endpoint.PublishAsync<T>(values, pipe, cancellationToken);
         }
     }
 

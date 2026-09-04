@@ -45,7 +45,7 @@ public class StateMachineSagaMessageFilter<TInstance, TMessage> :
         _machine.Probe(context);
     }
 
-    public async Task Send(SagaConsumeContext<TInstance, TMessage> context, IPipe<SagaConsumeContext<TInstance, TMessage>> next)
+    public async Task SendAsync(SagaConsumeContext<TInstance, TMessage> context, IPipe<SagaConsumeContext<TInstance, TMessage>> next)
     {
         BehaviorContext<TInstance, TMessage> behaviorContext =
             new ViciOneServiceBusStateMachine<TInstance>.BehaviorContextProxy<TMessage>(_machine, context, context, _event);
@@ -57,22 +57,22 @@ public class StateMachineSagaMessageFilter<TInstance, TMessage> :
         {
             if (activity is { Activity: { IsAllDataRequested: true } })
             {
-                State<TInstance> beginState = await behaviorContext.StateMachine.Accessor.Get(behaviorContext).ConfigureAwait(false);
+                State<TInstance>? beginState = await behaviorContext.StateMachine.Accessor.GetAsync(behaviorContext).ConfigureAwait(false);
                 if (beginState != null)
                     activity?.SetTag(DiagnosticHeaders.BeginState, beginState.Name);
             }
 
-            await _machine.RaiseEvent(behaviorContext).ConfigureAwait(false);
+            await _machine.RaiseEventAsync(behaviorContext).ConfigureAwait(false);
 
-            if (await _machine.IsCompleted(behaviorContext).ConfigureAwait(false))
-                await context.SetCompleted().ConfigureAwait(false);
+            if (await _machine.IsCompletedAsync(behaviorContext).ConfigureAwait(false))
+                await context.SetCompletedAsync().ConfigureAwait(false);
         }
         catch (UnhandledEventException ex)
         {
-            State<TInstance> currentState = await _machine.Accessor.Get(behaviorContext).ConfigureAwait(false);
+            State<TInstance>? currentState = await _machine.Accessor.GetAsync(behaviorContext).ConfigureAwait(false);
 
             var stateMachineException = new NotAcceptedStateMachineException(typeof(TInstance), typeof(TMessage),
-                context.CorrelationId ?? Guid.Empty, currentState.Name, ex);
+                context.CorrelationId ?? Guid.Empty, currentState?.Name ?? "(not initialized)", ex);
 
             activity?.AddExceptionEvent(stateMachineException);
             instrument?.RecordException(ex);
@@ -88,16 +88,16 @@ public class StateMachineSagaMessageFilter<TInstance, TMessage> :
         }
         finally
         {
-            if (activity != null)
+            if (activity is { } startedActivity)
             {
-                if (activity.Value.Activity.IsAllDataRequested)
+                if (startedActivity.Activity.IsAllDataRequested)
                 {
-                    State<TInstance> endState = await behaviorContext.StateMachine.Accessor.Get(behaviorContext).ConfigureAwait(false);
+                    State<TInstance>? endState = await behaviorContext.StateMachine.Accessor.GetAsync(behaviorContext).ConfigureAwait(false);
                     if (endState != null)
-                        activity?.SetTag(DiagnosticHeaders.EndState, endState.Name);
+                        startedActivity.SetTag(DiagnosticHeaders.EndState, endState.Name);
                 }
 
-                activity.Value.Stop();
+                startedActivity.Stop();
             }
 
             instrument?.Complete();

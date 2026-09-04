@@ -30,15 +30,16 @@ internal sealed class PropertyProviderReader<TInput>
         PropertyInfo? property = typeof(TInput).GetProperty(propertyName);
 
         Assert.NotNull(property);
-        bool found = _factory.TryGetPropertyProvider(property, out IPropertyProvider<TInput, TResult> provider);
-        Assert.True(found);
-        Assert.NotNull(provider);
+        bool found = _factory.TryGetPropertyProvider(property, out IPropertyProvider<TInput, TResult>? provider);
+        if (!found || provider is null)
+            throw new Xunit.Sdk.XunitException($"No property provider was found for '{propertyName}'.");
 
         var baseContext = new BaseInitializeContext(_cancellationToken);
         InitializeContext<TestMessage> messageContext = baseContext.CreateMessageContext(new TestMessage());
         InitializeContext<TestMessage, TInput> inputContext = messageContext.CreateInputContext(_input);
 
-        return await provider.GetProperty(inputContext);
+        return await provider.GetPropertyAsync(inputContext)
+            ?? throw new Xunit.Sdk.XunitException($"The property provider returned null for '{propertyName}'.");
     }
 
     private sealed class TestMessage

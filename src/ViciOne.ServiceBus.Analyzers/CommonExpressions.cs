@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -10,40 +11,47 @@ namespace ViciOne.ServiceBus.Analyzers;
 public static class CommonExpressions
 {
     static readonly IReadOnlyDictionary<string, int> _producerMethods = InitializeProducerMethods();
-    static readonly string _taskNamespace = typeof(Task).Namespace;
+    const string TaskNamespace = "System.Threading.Tasks";
 
     static IReadOnlyDictionary<string, int> InitializeProducerMethods()
     {
         return new Dictionary<string, int>
         {
-            { "ViciOne.ServiceBus.BehaviorContext.Init", 0 },
+            { "ViciOne.ServiceBus.BehaviorContext.InitAsync", 0 },
             { "ViciOne.ServiceBus.ConsumeContext.RespondAsync", 0 },
-            { "ViciOne.ServiceBus.ConsumeContextSelfSchedulerExtensions.ScheduleSend", 0 },
-            { "ViciOne.ServiceBus.EndpointConventionExtensions.Send", 0 },
-            { "ViciOne.ServiceBus.ForwardExtensions.Forward", 0 },
+            { "ViciOne.ServiceBus.ConsumeContextSelfSchedulerExtensions.ScheduleSendAsync", 0 },
+            { "ViciOne.ServiceBus.EndpointConventionExtensions.SendAsync", 0 },
+            { "ViciOne.ServiceBus.ForwardExtensions.ForwardAsync", 0 },
             { "ViciOne.ServiceBus.IClientFactory.CreateRequest", 0 },
-            { "ViciOne.ServiceBus.IMessageScheduler.ScheduleSend", 0 },
-            { "ViciOne.ServiceBus.IMessageScheduler.SchedulePublish", 0 },
-            { "ViciOne.ServiceBus.IPublishEndpoint.Publish", 0 },
-            { "ViciOne.ServiceBus.IRecurringMessageScheduler.ScheduleRecurringSend", 0 },
+            { "ViciOne.ServiceBus.IMessageScheduler.ScheduleSendAsync", 0 },
+            { "ViciOne.ServiceBus.IMessageScheduler.SchedulePublishAsync", 0 },
+            { "ViciOne.ServiceBus.IPublishEndpoint.PublishAsync", 0 },
+            { "ViciOne.ServiceBus.IRecurringMessageScheduler.ScheduleRecurringSendAsync", 0 },
             { "ViciOne.ServiceBus.IRequestClient.Create", -1 },
-            { "ViciOne.ServiceBus.IRequestClient.GetResponse", -1 },
-            { "ViciOne.ServiceBus.ISendEndpoint.Send", 0 },
-            { "ViciOne.ServiceBus.Initializers.MessageInitializerCache.Initialize", -1 },
-            { "ViciOne.ServiceBus.Initializers.MessageInitializerCache.InitializeMessage", -1 },
-            { "ViciOne.ServiceBus.PublishExecuteExtensions.Publish", 0 },
-            { "ViciOne.ServiceBus.PublishEndpointRecurringSchedulerExtensions.ScheduleRecurringSend", 0 },
-            { "ViciOne.ServiceBus.RequestExtensions.Request", 0 },
+            { "ViciOne.ServiceBus.IRequestClient.GetResponseAsync", -1 },
+            { "ViciOne.ServiceBus.ISendEndpoint.SendAsync", 0 },
+            { "ViciOne.ServiceBus.Initializers.MessageInitializerCache.InitializeAsync", -1 },
+            { "ViciOne.ServiceBus.Initializers.MessageInitializerCache.InitializeMessageAsync", -1 },
+            { "ViciOne.ServiceBus.PublishExecuteExtensions.PublishAsync", 0 },
+            { "ViciOne.ServiceBus.PublishEndpointRecurringSchedulerExtensions.ScheduleRecurringSendAsync", 0 },
+            { "ViciOne.ServiceBus.RequestExtensions.RequestAsync", 0 },
             { "ViciOne.ServiceBus.RespondAsyncExecuteExtensions.RespondAsync", 0 },
-            { "ViciOne.ServiceBus.SchedulePublishExtensions.SchedulePublish", 0 },
-            { "ViciOne.ServiceBus.SendConsumeContextExecuteExtensions.Send", 0 },
-            { "ViciOne.ServiceBus.SendConsumeContextExtensions.Send", 0 },
-            { "ViciOne.ServiceBus.SendExecuteExtensions.Send", 0 },
-            { "ViciOne.ServiceBus.SendEndpointRecurringSchedulerExtensions.ScheduleRecurringSend", 0 },
-            { "ViciOne.ServiceBus.SendEndpointSchedulerExtensions.ScheduleSend", 0 },
-            { "ViciOne.ServiceBus.TimeSpanContextScheduleExtensions.ScheduleSend", 0 },
-            { "ViciOne.ServiceBus.TimeSpanScheduleExtensions.ScheduleSend", 0 },
-            { "ViciOne.ServiceBus.TimeSpanSchedulePublishExtensions.SchedulePublish", 0 }
+            { "ViciOne.ServiceBus.SchedulePublishExtensions.SchedulePublishAsync", 0 },
+            { "ViciOne.ServiceBus.SendConsumeContextExecuteExtensions.SendAsync", 0 },
+            { "ViciOne.ServiceBus.SendConsumeContextExtensions.SendAsync", 0 },
+            { "ViciOne.ServiceBus.SendExecuteExtensions.SendAsync", 0 },
+            { "ViciOne.ServiceBus.SendEndpointRecurringSchedulerExtensions.ScheduleRecurringSendAsync", 0 },
+            { "ViciOne.ServiceBus.SendEndpointSchedulerExtensions.ScheduleSendAsync", 0 },
+            { "ViciOne.ServiceBus.TimeSpanContextScheduleExtensions.ScheduleSendAsync", 0 },
+            { "ViciOne.ServiceBus.TimeSpanScheduleExtensions.ScheduleSendAsync", 0 },
+            { "ViciOne.ServiceBus.TimeSpanSchedulePublishExtensions.SchedulePublishAsync", 0 },
+            { "ViciOne.ServiceBus.Advanced.Initializers.AdvancedMessageInitializerExtensions.SendAsync", 0 },
+            { "ViciOne.ServiceBus.Advanced.Initializers.AdvancedMessageInitializerExtensions.PublishAsync", 0 },
+            { "ViciOne.ServiceBus.Advanced.Initializers.AdvancedRequestInitializerExtensions.Create", -1 },
+            { "ViciOne.ServiceBus.Advanced.Initializers.AdvancedRequestInitializerExtensions.GetResponseAsync", -1 },
+            { "ViciOne.ServiceBus.Advanced.Initializers.AdvancedScheduleInitializerExtensions.ScheduleSendAsync", 0 },
+            { "ViciOne.ServiceBus.Advanced.Initializers.AdvancedScheduleInitializerExtensions.SchedulePublishAsync", 0 },
+            { "ViciOne.ServiceBus.Advanced.IAdvancedRequestClient.GetResponseAsync", -1 }
         };
     }
 
@@ -52,7 +60,8 @@ public static class CommonExpressions
         return _producerMethods.TryGetValue($"{method.ContainingNamespace}.{method.ContainingType.Name}.{method.Name}", out index);
     }
 
-    public static bool IsActivator(this ArgumentSyntax argumentSyntax, SemanticModel semanticModel, out ITypeSymbol typeArgument)
+    public static bool IsActivator(this ArgumentSyntax? argumentSyntax, SemanticModel semanticModel,
+        [NotNullWhen(true)] out ITypeSymbol? typeArgument)
     {
         if (argumentSyntax != null
             && argumentSyntax.Parent is ArgumentListSyntax argumentListSyntax
@@ -79,7 +88,7 @@ public static class CommonExpressions
         return false;
     }
 
-    public static bool HasMessageContract(this ITypeSymbol typeArgument, out ITypeSymbol contractType)
+    public static bool HasMessageContract(this ITypeSymbol typeArgument, [NotNullWhen(true)] out ITypeSymbol? contractType)
     {
         if (typeArgument.TypeKind.IsClassOrInterface())
         {
@@ -100,7 +109,7 @@ public static class CommonExpressions
         return false;
     }
 
-    public static bool IsImmutableArray(this ITypeSymbol type, out ITypeSymbol typeArgument)
+    public static bool IsImmutableArray(this ITypeSymbol type, [NotNullWhen(true)] out ITypeSymbol? typeArgument)
     {
         if (type.TypeKind == TypeKind.Struct &&
             type.Name == "ImmutableArray" &&
@@ -117,7 +126,7 @@ public static class CommonExpressions
         return false;
     }
 
-    public static bool IsCollection(this ITypeSymbol type, out ITypeSymbol typeArgument)
+    public static bool IsCollection(this ITypeSymbol type, [NotNullWhen(true)] out ITypeSymbol? typeArgument)
     {
         if (type.TypeKind == TypeKind.Interface &&
             type.Name == "ICollection" &&
@@ -134,7 +143,7 @@ public static class CommonExpressions
         return false;
     }
 
-    public static bool IsEnumerable(this ITypeSymbol type, out ITypeSymbol typeArgument)
+    public static bool IsEnumerable(this ITypeSymbol type, [NotNullWhen(true)] out ITypeSymbol? typeArgument)
     {
         if (type.TypeKind == TypeKind.Interface &&
             type.Name == "IEnumerable" &&
@@ -151,7 +160,7 @@ public static class CommonExpressions
         return false;
     }
 
-    public static bool IsList(this ITypeSymbol type, out ITypeSymbol typeArgument)
+    public static bool IsList(this ITypeSymbol type, [NotNullWhen(true)] out ITypeSymbol? typeArgument)
     {
         if ((type.TypeKind == TypeKind.Class && type.Name == "List"
                 || type.TypeKind.IsClassOrInterface() && type.Name == "IReadOnlyList"
@@ -181,7 +190,8 @@ public static class CommonExpressions
             .ToList();
     }
 
-    public static bool IsDictionary(this ITypeSymbol type, out ITypeSymbol keyType, out ITypeSymbol valueType)
+    public static bool IsDictionary(this ITypeSymbol type, [NotNullWhen(true)] out ITypeSymbol? keyType,
+        [NotNullWhen(true)] out ITypeSymbol? valueType)
     {
         if ((type.TypeKind == TypeKind.Class && type.Name == "Dictionary"
                 || type.TypeKind.IsClassOrInterface() && type.Name == "IReadOnlyDictionary"
@@ -201,7 +211,7 @@ public static class CommonExpressions
         return false;
     }
 
-    public static bool IsNullable(this ITypeSymbol type, out ITypeSymbol typeArgument)
+    public static bool IsNullable(this ITypeSymbol type, [NotNullWhen(true)] out ITypeSymbol? typeArgument)
     {
         if (type.TypeKind == TypeKind.Struct &&
             type.Name == "Nullable" &&
@@ -218,7 +228,7 @@ public static class CommonExpressions
         return false;
     }
 
-    public static bool IsArray(this ITypeSymbol type, out ITypeSymbol elementType)
+    public static bool IsArray(this ITypeSymbol type, [NotNullWhen(true)] out ITypeSymbol? elementType)
     {
         if (type.TypeKind == TypeKind.Array &&
             type is IArrayTypeSymbol arrayTypeSymbol)
@@ -231,7 +241,7 @@ public static class CommonExpressions
         return false;
     }
 
-    public static bool IsInVar(this ITypeSymbol type, out ITypeSymbol inVarType)
+    public static bool IsInVar(this ITypeSymbol type, [NotNullWhen(true)] out ITypeSymbol? inVarType)
     {
         if (type.TypeKind == TypeKind.Class
             && type.ContainingNamespace.Name == "Variables"
@@ -254,7 +264,7 @@ public static class CommonExpressions
 
     public static bool ReturnsTask(this IMethodSymbol method)
     {
-        return method.ReturnType.Name == nameof(Task) && method.ReturnType.ContainingNamespace.ToString() == _taskNamespace;
+        return method.ReturnType.Name == nameof(Task) && method.ReturnType.ContainingNamespace.ToString() == TaskNamespace;
     }
 
     public static IEnumerable<INamedTypeSymbol> GetAllInterfaces(this ITypeSymbol type)

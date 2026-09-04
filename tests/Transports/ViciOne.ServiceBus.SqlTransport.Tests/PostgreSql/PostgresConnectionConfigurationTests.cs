@@ -44,7 +44,7 @@ public sealed class PostgresConnectionConfigurationTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0026", "native-owner")]
-    public async Task ConnectionOptions_ParseAndProjectAdminConnectionAndAzurePrincipal()
+    public async Task ConnectionOptions_ParseAndProjectAdminConnectionAndAzurePrincipalAsync()
     {
         string[] connectionStrings =
         [
@@ -71,7 +71,7 @@ public sealed class PostgresConnectionConfigurationTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0027", "native-owner")]
-    public async Task HostSettings_PreserveMultipleHostsAndUseFirstBusHost()
+    public async Task HostSettings_PreserveMultipleHostsAndUseFirstBusHostAsync()
     {
         var settings = new PostgresSqlHostSettings(Options("local,remote"));
         await using NpgsqlDataSource dataSource = settings.GetDataSource();
@@ -84,7 +84,7 @@ public sealed class PostgresConnectionConfigurationTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0028", "native-owner")]
-    public async Task HostSettings_ApplyExplicitPortToMultipleHosts()
+    public async Task HostSettings_ApplyExplicitPortToMultipleHostsAsync()
     {
         SqlTransportOptions options = Options("local,remote");
         options.Port = 1234;
@@ -99,7 +99,7 @@ public sealed class PostgresConnectionConfigurationTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0029", "native-owner")]
-    public async Task HostSettings_PreservePerHostPortsAndProjectFirstHost()
+    public async Task HostSettings_PreservePerHostPortsAndProjectFirstHostAsync()
     {
         var settings = new PostgresSqlHostSettings(Options("local:1234,remote:5678"));
         await using NpgsqlDataSource dataSource = settings.GetDataSource();

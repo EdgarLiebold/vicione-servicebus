@@ -12,6 +12,7 @@ namespace ViciOne.ServiceBus;
 // ReSharper disable once UnusedTypeParameter
 public abstract class BusInstance<TBus> :
     IBusControl,
+    Advanced.IAdvancedPublishEndpoint,
     IMessageRouteProvider
     where TBus : class, IBus
 {
@@ -27,66 +28,68 @@ public abstract class BusInstance<TBus> :
         return _busControl.ConnectPublishObserver(observer);
     }
 
-    public Task Publish<T>(T message, CancellationToken cancellationToken = default)
+    public Task PublishAsync<T>(T message, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _busControl.Publish(message, cancellationToken);
+        return _busControl.PublishAsync(message, cancellationToken);
     }
 
-    public Task Publish<T>(T message, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken = default)
+    public Task PublishAsync<T>(T message, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _busControl.Publish(message, publishPipe, cancellationToken);
+        return _busControl.PublishAsync(message, publishPipe, cancellationToken);
     }
 
-    public Task Publish<T>(T message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
+    public Task PublishAsync<T>(T message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _busControl.Publish(message, publishPipe, cancellationToken);
+        return _busControl.PublishAsync(message, publishPipe, cancellationToken);
     }
 
-    public Task Publish(object message, CancellationToken cancellationToken = default)
+    public Task PublishAsync(object message, CancellationToken cancellationToken = default)
     {
-        return _busControl.Publish(message, cancellationToken);
+        ArgumentNullException.ThrowIfNull(message);
+        return _busControl.Advanced().PublishAsync(message, message.GetType(), cancellationToken);
     }
 
-    public Task Publish(object message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
+    public Task PublishAsync(object message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
     {
-        return _busControl.Publish(message, publishPipe, cancellationToken);
+        ArgumentNullException.ThrowIfNull(message);
+        return _busControl.Advanced().PublishAsync(message, message.GetType(), publishPipe, cancellationToken);
     }
 
-    public Task Publish(object message, Type messageType, CancellationToken cancellationToken = default)
+    public Task PublishAsync(object message, Type messageType, CancellationToken cancellationToken = default)
     {
-        return _busControl.Publish(message, messageType, cancellationToken);
+        return _busControl.PublishAsync(message, messageType, cancellationToken);
     }
 
-    public Task Publish(object message, Type messageType, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
+    public Task PublishAsync(object message, Type messageType, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
     {
-        return _busControl.Publish(message, messageType, publishPipe, cancellationToken);
+        return _busControl.PublishAsync(message, messageType, publishPipe, cancellationToken);
     }
 
-    public Task Publish<T>(object values, CancellationToken cancellationToken = default)
+    public Task PublishAsync<T>(object values, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _busControl.Publish<T>(values, cancellationToken);
+        return _busControl.PublishAsync<T>(values, cancellationToken);
     }
 
-    public Task Publish<T>(object values, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken = default)
+    public Task PublishAsync<T>(object values, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _busControl.Publish(values, publishPipe, cancellationToken);
+        return _busControl.PublishAsync(values, publishPipe, cancellationToken);
     }
 
-    public Task Publish<T>(object values, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
+    public Task PublishAsync<T>(object values, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken = default)
         where T : class
     {
-        return _busControl.Publish<T>(values, publishPipe, cancellationToken);
+        return _busControl.PublishAsync<T>(values, publishPipe, cancellationToken);
     }
 
-    public Task<ISendEndpoint> GetPublishSendEndpoint<T>()
+    public Task<ISendEndpoint> GetPublishSendEndpointAsync<T>(CancellationToken cancellationToken = default)
         where T : class
     {
-        return _busControl.GetPublishSendEndpoint<T>();
+        return _busControl.GetPublishSendEndpointAsync<T>(cancellationToken: cancellationToken);
     }
 
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
@@ -94,9 +97,9 @@ public abstract class BusInstance<TBus> :
         return _busControl.ConnectSendObserver(observer);
     }
 
-    public Task<ISendEndpoint> GetSendEndpoint(Uri address)
+    public Task<ISendEndpoint> GetSendEndpointAsync(Uri address, CancellationToken cancellationToken = default)
     {
-        return _busControl.GetSendEndpoint(address);
+        return _busControl.GetSendEndpointAsync(address, cancellationToken: cancellationToken);
     }
 
     public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)

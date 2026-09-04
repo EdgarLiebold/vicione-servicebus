@@ -18,12 +18,13 @@ public static class RedeliverExtensions
     /// </param>
     /// <param name="callback">Operation which is executed before the message is delivered.</param>
     /// <returns></returns>
-    public static Task Redeliver<T>(this ConsumeContext<T> context, TimeSpan delay, Action<ConsumeContext, SendContext> callback = null)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static Task RedeliverAsync<T>(this ConsumeContext<T> context, TimeSpan delay, Action<ConsumeContext, SendContext>? callback = null, CancellationToken cancellationToken = default)
         where T : class
     {
-        if (!context.TryGetPayload(out MessageRedeliveryContext redeliveryContext))
+        if (!context.TryGetPayload(out MessageRedeliveryContext? redeliveryContext))
             redeliveryContext = new ScheduleMessageRedeliveryContext<T>(context, RedeliveryOptions.ReplaceMessageId);
 
-        return redeliveryContext.ScheduleRedelivery(delay, callback);
+        return redeliveryContext.ScheduleRedeliveryAsync(delay, callback, cancellationToken: cancellationToken);
     }
 }

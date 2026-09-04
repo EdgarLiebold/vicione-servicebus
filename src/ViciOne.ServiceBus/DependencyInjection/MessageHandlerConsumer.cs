@@ -15,7 +15,7 @@ public class MessageHandlerConsumer<T> :
         _handler = method.Handler;
     }
 
-    public Task Consume(ConsumeContext<T> context)
+    public Task ConsumeAsync(ConsumeContext<T> context)
     {
         return _handler(context);
     }
@@ -38,7 +38,7 @@ public class MessageHandlerConsumer<T, T1> :
         _arg1 = arg1;
     }
 
-    public Task Consume(ConsumeContext<T> context)
+    public Task ConsumeAsync(ConsumeContext<T> context)
     {
         return _handler(context, _arg1);
     }
@@ -64,7 +64,7 @@ public class MessageHandlerConsumer<T, T1, T2> :
         _arg2 = arg2;
     }
 
-    public Task Consume(ConsumeContext<T> context)
+    public Task ConsumeAsync(ConsumeContext<T> context)
     {
         return _handler(context, _arg1, _arg2);
     }
@@ -93,7 +93,7 @@ public class MessageHandlerConsumer<T, T1, T2, T3> :
         _arg3 = arg3;
     }
 
-    public Task Consume(ConsumeContext<T> context)
+    public Task ConsumeAsync(ConsumeContext<T> context)
     {
         return _handler(context, _arg1, _arg2, _arg3);
     }

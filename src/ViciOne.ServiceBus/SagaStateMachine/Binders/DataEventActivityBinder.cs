@@ -12,26 +12,26 @@ public class DataEventActivityBinder<TInstance, TData> :
 {
     readonly IActivityBinder<TInstance>[] _activities;
     readonly Event<TData> _event;
-    readonly StateMachineCondition<TInstance, TData> _filter;
+    readonly StateMachineCondition<TInstance, TData>? _filter = null!;
     readonly StateMachine<TInstance> _machine;
 
     public DataEventActivityBinder(StateMachine<TInstance> machine, Event<TData> @event, params IActivityBinder<TInstance>[] activities)
     {
-        _event = @event;
+        _event = @event ?? throw new ArgumentNullException(nameof(@event));
         _activities = activities ?? [];
         _machine = machine;
     }
 
-    public DataEventActivityBinder(StateMachine<TInstance> machine, Event<TData> @event, StateMachineCondition<TInstance, TData> filter,
+    public DataEventActivityBinder(StateMachine<TInstance> machine, Event<TData> @event, StateMachineCondition<TInstance, TData>? filter,
         params IActivityBinder<TInstance>[] activities)
     {
-        _event = @event;
+        _event = @event ?? throw new ArgumentNullException(nameof(@event));
         _activities = activities ?? [];
         _machine = machine;
         _filter = filter;
     }
 
-    DataEventActivityBinder(StateMachine<TInstance> machine, Event<TData> @event, StateMachineCondition<TInstance, TData> filter,
+    DataEventActivityBinder(StateMachine<TInstance> machine, Event<TData> @event, StateMachineCondition<TInstance, TData>? filter,
         IActivityBinder<TInstance>[] activities, params IActivityBinder<TInstance>[] appendActivity)
     {
         _activities = new IActivityBinder<TInstance>[activities.Length + appendActivity.Length];
@@ -151,6 +151,7 @@ public class DataEventActivityBinder<TInstance, TData> :
         EventActivityBinder<TInstance, TData> thenBinder = new DataEventActivityBinder<TInstance, TData>(_machine, _event, _activities);
         EventActivityBinder<TInstance, TData> elseBinder = new DataEventActivityBinder<TInstance, TData>(_machine, _event);
 
-        return new ConditionalActivityBinder<TInstance, TData>(_event, context => _filter(context), thenBinder, elseBinder);
+        var filter = _filter ?? throw new InvalidOperationException("A conditional activity requires a filter.");
+        return new ConditionalActivityBinder<TInstance, TData>(_event, context => filter(context), thenBinder, elseBinder);
     }
 }

@@ -10,15 +10,15 @@ public sealed class PostgreSqlBuiltInRedeliveryTests
 {
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0059", "postgresql-native-owner")]
-    public async Task BuiltInRedelivery_PersistsThreeOneSecondSchedulesBeforeTheFinalFault()
+    public async Task BuiltInRedelivery_PersistsThreeOneSecondSchedulesBeforeTheFinalFaultAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using PostgreSqlTestDatabase fixture = await PostgreSqlTestDatabase.CreateAsync(
             "built-in-redelivery",
             cancellationToken);
         await using NpgsqlConnection inspection = fixture.CreateConnection();
-        await inspection.OpenWithin(fixture.OperationTimeout, cancellationToken);
-        await CreateRedeliveryAudit(inspection, fixture.Schema, cancellationToken);
+        await inspection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
+        await CreateRedeliveryAuditAsync(inspection, fixture.Schema, cancellationToken);
         string inputQueue = fixture.Name("faulting-input");
         string faultQueue = fixture.Name("fault-output");
         var attempts = new ConcurrentQueue<int>();
@@ -33,7 +33,7 @@ public sealed class PostgreSqlBuiltInRedeliveryTests
                     redelivery.Interval(3, TimeSpan.FromSeconds(1)));
                 endpoint.Handler<RedeliveryMessage>(context =>
                 {
-                    attempts.Enqueue(context.GetRedeliveryCount());
+                    attempts.Enqueue(context.Advanced().GetRedeliveryCount());
                     throw new ExpectedRedeliveryException(context.Message.Id);
                 });
             });
@@ -51,9 +51,8 @@ public sealed class PostgreSqlBuiltInRedeliveryTests
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
             var message = new RedeliveryMessage(Guid.NewGuid());
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{inputQueue}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await endpoint.Send(message, cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{inputQueue}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await endpoint.SendAsync(message, cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             ConsumeContext<Fault<RedeliveryMessage>> fault = await faulted.Task
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
 
@@ -70,7 +69,7 @@ public sealed class PostgreSqlBuiltInRedeliveryTests
                 await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
         }
 
-        (int[] deliveryAttempts, TimeSpan[] delays) = await RedeliveryAudit(
+        (int[] deliveryAttempts, TimeSpan[] delays) = await RedeliveryAuditAsync(
             inspection,
             fixture.Schema,
             cancellationToken);
@@ -79,11 +78,11 @@ public sealed class PostgreSqlBuiltInRedeliveryTests
         Assert.Equal(
             [TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1)],
             delays);
-        Assert.Equal(0, await inspection.DeliveryCount(fixture.Schema, inputQueue, 1, cancellationToken));
-        Assert.Equal(1, await inspection.DeliveryCount(fixture.Schema, inputQueue, 2, cancellationToken));
+        Assert.Equal(0, await inspection.DeliveryCountAsync(fixture.Schema, inputQueue, 1, cancellationToken));
+        Assert.Equal(1, await inspection.DeliveryCountAsync(fixture.Schema, inputQueue, 2, cancellationToken));
     }
 
-    private static async Task CreateRedeliveryAudit(
+    private static async Task CreateRedeliveryAuditAsync(
         NpgsqlConnection connection,
         string schema,
         CancellationToken cancellationToken)
@@ -121,7 +120,7 @@ public sealed class PostgreSqlBuiltInRedeliveryTests
         await command.ExecuteNonQueryAsync(cancellationToken);
     }
 
-    private static async Task<(int[] DeliveryAttempts, TimeSpan[] Delays)> RedeliveryAudit(
+    private static async Task<(int[] DeliveryAttempts, TimeSpan[] Delays)> RedeliveryAuditAsync(
         NpgsqlConnection connection,
         string schema,
         CancellationToken cancellationToken)

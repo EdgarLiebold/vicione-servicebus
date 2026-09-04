@@ -12,7 +12,7 @@ public interface IEventHubProducer :
     /// </summary>
     /// <param name="message">The message value</param>
     /// <param name="cancellationToken"></param>
-    Task Produce<T>(T message, CancellationToken cancellationToken = default)
+    Task ProduceAsync<T>(T message, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>
@@ -20,7 +20,7 @@ public interface IEventHubProducer :
     /// </summary>
     /// <param name="messages">The message values</param>
     /// <param name="cancellationToken"></param>
-    Task Produce<T>(IEnumerable<T> messages, CancellationToken cancellationToken = default)
+    Task ProduceAsync<T>(IEnumerable<T> messages, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>
@@ -29,7 +29,7 @@ public interface IEventHubProducer :
     /// <param name="message">The message value</param>
     /// <param name="pipe">A pipe which is called to customize the produced message context</param>
     /// <param name="cancellationToken"></param>
-    Task Produce<T>(T message, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken = default)
+    Task ProduceAsync<T>(T message, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>
@@ -38,7 +38,7 @@ public interface IEventHubProducer :
     /// <param name="messages">The message values</param>
     /// <param name="pipe">A pipe which is called to customize the produced message context</param>
     /// <param name="cancellationToken"></param>
-    Task Produce<T>(IEnumerable<T> messages, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken = default)
+    Task ProduceAsync<T>(IEnumerable<T> messages, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>
@@ -46,7 +46,7 @@ public interface IEventHubProducer :
     /// </summary>
     /// <param name="values">An object which is used to initialize the message</param>
     /// <param name="cancellationToken"></param>
-    Task Produce<T>(object values, CancellationToken cancellationToken = default)
+    Task ProduceAsync<T>(object values, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>
@@ -54,7 +54,7 @@ public interface IEventHubProducer :
     /// </summary>
     /// <param name="values">The message values</param>
     /// <param name="cancellationToken"></param>
-    Task Produce<T>(IEnumerable<object> values, CancellationToken cancellationToken = default)
+    Task ProduceAsync<T>(IEnumerable<object> values, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>
@@ -63,7 +63,7 @@ public interface IEventHubProducer :
     /// <param name="values">An object which is used to initialize the message</param>
     /// <param name="pipe">A pipe which is called to customize the produced message context</param>
     /// <param name="cancellationToken"></param>
-    Task Produce<T>(object values, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken = default)
+    Task ProduceAsync<T>(object values, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>
@@ -72,6 +72,6 @@ public interface IEventHubProducer :
     /// <param name="values">The message values</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
-    Task Produce<T>(IEnumerable<object> values, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken = default)
+    Task ProduceAsync<T>(IEnumerable<object> values, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class;
 }

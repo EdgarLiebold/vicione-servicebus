@@ -44,8 +44,8 @@ public class JsonMessageEnvelope :
     public string? FaultAddress { get; set; }
     public string[]? MessageType { get; set; }
     public object? Message { get; set; }
-    public DateTime? ExpirationTime { get; set; }
-    public DateTime? SentTime { get; set; }
+    public DateTimeOffset? ExpirationTime { get; set; }
+    public DateTimeOffset? SentTime { get; set; }
 
     public Dictionary<string, object?> Headers
     {

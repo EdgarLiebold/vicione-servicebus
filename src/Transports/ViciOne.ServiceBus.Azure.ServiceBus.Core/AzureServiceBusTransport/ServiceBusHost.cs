@@ -19,19 +19,21 @@ public class ServiceBusHost :
 
     public new IServiceBusBusTopology Topology { get; }
 
-    public override HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
-        Action<IReceiveEndpointConfigurator> configureEndpoint = null)
+    public override HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
+        Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
-        return ConnectReceiveEndpoint(definition, endpointNameFormatter, configureEndpoint);
+        return ConnectReceiveEndpoint(definition, endpointNameFormatter,
+            configureEndpoint == null ? null : endpoint => configureEndpoint(endpoint));
     }
 
-    public override HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator> configureEndpoint = null)
+    public override HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
     {
-        return ConnectReceiveEndpoint(queueName, configureEndpoint);
+        return ConnectReceiveEndpoint(queueName,
+            configureEndpoint == null ? null : endpoint => configureEndpoint(endpoint));
     }
 
-    public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter = null,
-        Action<IServiceBusReceiveEndpointConfigurator> configureEndpoint = null)
+    public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter = null,
+        Action<IServiceBusReceiveEndpointConfigurator>? configureEndpoint = null)
     {
         var queueName = definition.GetEndpointName(endpointNameFormatter ?? DefaultEndpointNameFormatter.Instance);
 
@@ -42,7 +44,7 @@ public class ServiceBusHost :
         });
     }
 
-    public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IServiceBusReceiveEndpointConfigurator> configure = null)
+    public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IServiceBusReceiveEndpointConfigurator>? configure = null)
     {
         LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
 
@@ -58,7 +60,7 @@ public class ServiceBusHost :
     }
 
     public HostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(string subscriptionName,
-        Action<IServiceBusSubscriptionEndpointConfigurator> configure = null)
+        Action<IServiceBusSubscriptionEndpointConfigurator>? configure = null)
         where T : class
     {
         LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
@@ -69,7 +71,7 @@ public class ServiceBusHost :
     }
 
     public HostReceiveEndpointHandle ConnectSubscriptionEndpoint(string subscriptionName, string topicName,
-        Action<IServiceBusSubscriptionEndpointConfigurator> configure = null)
+        Action<IServiceBusSubscriptionEndpointConfigurator>? configure = null)
     {
         LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
 

@@ -12,7 +12,7 @@ public sealed class TransactionConfigurationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-TRANSACTION-CONFIGURATION", "exact-options-and-lifecycle")]
-    public async Task Filter_UsesTheExactConfiguredOptionsAndOwnsCommitAndDisposal()
+    public async Task Filter_UsesTheExactConfiguredOptionsAndOwnsCommitAndDisposalAsync()
     {
         TimeSpan operationTimeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -20,7 +20,7 @@ public sealed class TransactionConfigurationTests
         var driver = new TransactionFilterTestDriver(IsolationLevel.Serializable, timeout);
         TransactionContext? observed = null;
 
-        await driver.Execute(context =>
+        await driver.ExecuteAsync(context =>
         {
             observed = context;
             return Task.CompletedTask;
@@ -33,7 +33,7 @@ public sealed class TransactionConfigurationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TRANSACTION-CONFIGURATION", "failure-rolls-back-and-preserves-identity")]
-    public async Task Filter_RollsBackAndDisposesBeforeRethrowingTheExactFailure()
+    public async Task Filter_RollsBackAndDisposesBeforeRethrowingTheExactFailureAsync()
     {
         TimeSpan operationTimeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -41,7 +41,7 @@ public sealed class TransactionConfigurationTests
         var expected = new InvalidOperationException("expected transaction failure");
 
         InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            driver.Execute(_ => Task.FromException(expected)).WaitAsync(operationTimeout, cancellationToken));
+            driver.ExecuteAsync(_ => Task.FromException(expected)).WaitAsync(operationTimeout, cancellationToken));
 
         Assert.Same(expected, actual);
         Assert.Equal(new TransactionLifecycleSnapshot(0, 1, 1, expected), driver.Lifecycle);
@@ -49,13 +49,13 @@ public sealed class TransactionConfigurationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TRANSACTION-CONFIGURATION", "nested-filter-reuses-active-context")]
-    public async Task NestedFilters_ReuseTheActiveTransactionWithoutTakingDuplicateOwnership()
+    public async Task NestedFilters_ReuseTheActiveTransactionWithoutTakingDuplicateOwnershipAsync()
     {
         TimeSpan operationTimeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var driver = new TransactionFilterTestDriver(IsolationLevel.ReadCommitted, TimeSpan.FromSeconds(5));
 
-        await driver.ExecuteNested(_ => Task.CompletedTask).WaitAsync(operationTimeout, cancellationToken);
+        await driver.ExecuteNestedAsync(_ => Task.CompletedTask).WaitAsync(operationTimeout, cancellationToken);
 
         Assert.Equal(1, driver.CreatedContextCount);
         Assert.Equal(new TransactionLifecycleSnapshot(1, 0, 1, null), driver.Lifecycle);
@@ -63,7 +63,7 @@ public sealed class TransactionConfigurationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TRANSACTION-CONFIGURATION", "existing-context-remains-externally-owned")]
-    public async Task ExistingTransactionContext_IsReusedWithoutTakingOwnership()
+    public async Task ExistingTransactionContext_IsReusedWithoutTakingOwnershipAsync()
     {
         TimeSpan operationTimeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -71,7 +71,7 @@ public sealed class TransactionConfigurationTests
         using var existing = new RecordingExternalTransactionContext();
         TransactionContext? observed = null;
 
-        await driver.ExecuteWithExisting(existing, context =>
+        await driver.ExecuteWithExistingAsync(existing, context =>
         {
             observed = context;
             return Task.CompletedTask;
@@ -102,7 +102,7 @@ public sealed class TransactionConfigurationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-TRANSACTION-CONFIGURATION", "internal-factory-fails-closed")]
-    public async Task InternalFactoryBoundary_RejectsNullFactoryAndNullFactoryResult()
+    public async Task InternalFactoryBoundary_RejectsNullFactoryAndNullFactoryResultAsync()
     {
         TimeSpan operationTimeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -110,7 +110,7 @@ public sealed class TransactionConfigurationTests
             TransactionFilterTestDriver.CreateWithNullFactory).ParamName);
 
         InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(
-            () => TransactionFilterTestDriver.ExecuteWithNullFactoryResult()
+            () => TransactionFilterTestDriver.ExecuteWithNullFactoryResultAsync()
                 .WaitAsync(operationTimeout, cancellationToken));
         Assert.Equal("The transaction context factory returned null.", actual.Message);
     }
@@ -133,9 +133,9 @@ public sealed class TransactionConfigurationTests
 
         public Transaction Transaction => _transaction;
 
-        public Task Commit()
+        public Task CommitAsync(CancellationToken cancellationToken = default)
         {
-            CommitCount++;
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); CommitCount++;
             return Task.CompletedTask;
         }
 

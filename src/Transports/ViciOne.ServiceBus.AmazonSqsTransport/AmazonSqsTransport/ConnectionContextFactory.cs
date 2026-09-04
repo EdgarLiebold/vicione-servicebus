@@ -21,7 +21,7 @@ public class ConnectionContextFactory :
 
     public IPipeContextAgent<ConnectionContext> CreateContext(ISupervisor supervisor)
     {
-        Task<ConnectionContext> context = Task.Run(() => CreateConnection(supervisor), supervisor.Stopped);
+        Task<ConnectionContext> context = Task.Run(() => CreateConnectionAsync(supervisor), supervisor.Stopped);
 
         IPipeContextAgent<ConnectionContext> contextHandle = supervisor.AddContext(context);
 
@@ -31,19 +31,19 @@ public class ConnectionContextFactory :
     public IActivePipeContextAgent<ConnectionContext> CreateActiveContext(ISupervisor supervisor,
         PipeContextHandle<ConnectionContext> context, CancellationToken cancellationToken)
     {
-        return supervisor.AddActiveContext(context, CreateSharedConnection(context.Context, cancellationToken));
+        return supervisor.AddActiveContext(context, CreateSharedConnectionAsync(context.Context, cancellationToken));
     }
 
-    static async Task<ConnectionContext> CreateSharedConnection(Task<ConnectionContext> context, CancellationToken cancellationToken)
+    static async Task<ConnectionContext> CreateSharedConnectionAsync(Task<ConnectionContext> context, CancellationToken cancellationToken)
     {
         return context.IsCompletedSuccessfully()
             ? new SharedConnectionContext(context.Result, cancellationToken)
-            : new SharedConnectionContext(await context.OrCanceled(cancellationToken).ConfigureAwait(false), cancellationToken);
+            : new SharedConnectionContext(await context.OrCanceledAsync(cancellationToken).ConfigureAwait(false), cancellationToken);
     }
 
-    async Task<ConnectionContext> CreateConnection(ISupervisor supervisor)
+    async Task<ConnectionContext> CreateConnectionAsync(ISupervisor supervisor)
     {
-        return await _hostConfiguration.ReceiveTransportRetryPolicy.Retry(async () =>
+        return await _hostConfiguration.ReceiveTransportRetryPolicy.RetryAsync(async () =>
         {
             if (supervisor.Stopping.IsCancellationRequested)
                 throw new AmazonSqsConnectionException($"The connection is stopping and cannot be used: {_hostConfiguration.HostAddress}");

@@ -9,7 +9,7 @@ public sealed class RabbitMqMessageFlowTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-FLOW", "send-preserves-envelope-and-provider-properties-exactly-once")]
-    public async Task Send_PreservesEnvelopeAndProviderPropertiesExactlyOnce()
+    public async Task Send_PreservesEnvelopeAndProviderPropertiesExactlyOnceAsync()
     {
         using RabbitMqBroker fixture = RabbitMqBroker.Create("flow");
         string queue = fixture.Name("input");
@@ -44,9 +44,8 @@ public sealed class RabbitMqMessageFlowTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint input = await bus.GetSendEndpoint(new Uri($"queue:{queue}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await input.Send(
+            ISendEndpoint input = await bus.GetSendEndpointAsync(new Uri($"queue:{queue}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await input.SendAsync(
                     new FlowMessage("exact-payload"),
                     context =>
                     {
@@ -73,11 +72,11 @@ public sealed class RabbitMqMessageFlowTests
             Assert.Equal(queue, provider.Exchange);
             Assert.Equal("exact-route", provider.RoutingKey);
             Assert.Equal((byte)7, provider.Properties.Priority);
-            Assert.False(actual.ReceiveContext.Redelivered);
+            Assert.False(actual.Advanced().ReceiveContext.Redelivered);
 
             await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
             started = false;
-            RabbitMqBroker.QueueState state = await fixture.Queue(queue, cancellationToken);
+            RabbitMqBroker.QueueState state = await fixture.QueueAsync(queue, cancellationToken);
             Assert.True(state.Exists);
             Assert.True(state.Durable);
             Assert.False(state.AutoDelete);
@@ -96,7 +95,7 @@ public sealed class RabbitMqMessageFlowTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-PUBLISH", "hierarchy-bindings-and-exact-delivery")]
-    public async Task PublishHierarchy_DeclaresProviderBindingsAndDeliversExactlyOnce()
+    public async Task PublishHierarchy_DeclaresProviderBindingsAndDeliversExactlyOnceAsync()
     {
         using RabbitMqBroker fixture = RabbitMqBroker.Create("hierarchy");
         string queue = fixture.Name("input");
@@ -131,17 +130,17 @@ public sealed class RabbitMqMessageFlowTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            await bus.Publish<IDerivedContract>(new { CorrelationId = expected }, cancellationToken)
+            await bus.PublishAsync<IDerivedContract>(new { CorrelationId = expected }, cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.Equal(expected, await received.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
 
-            RabbitMqBroker.ExchangeState baseState = await fixture.Exchange(baseExchange, cancellationToken);
-            RabbitMqBroker.ExchangeState derivedState = await fixture.Exchange(derivedExchange, cancellationToken);
+            RabbitMqBroker.ExchangeState baseState = await fixture.ExchangeAsync(baseExchange, cancellationToken);
+            RabbitMqBroker.ExchangeState derivedState = await fixture.ExchangeAsync(derivedExchange, cancellationToken);
             Assert.True(baseState.Exists);
             Assert.True(derivedState.Exists);
             Assert.Equal("fanout", baseState.Type);
             Assert.Equal("fanout", derivedState.Type);
-            IReadOnlyList<RabbitMqBroker.BindingState> bindings = await fixture.Bindings(cancellationToken);
+            IReadOnlyList<RabbitMqBroker.BindingState> bindings = await fixture.BindingsAsync(cancellationToken);
             Assert.Contains(
                 bindings,
                 binding => binding.Source == derivedExchange
@@ -155,7 +154,7 @@ public sealed class RabbitMqMessageFlowTests
 
             await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
             started = false;
-            RabbitMqBroker.QueueState terminal = await fixture.Queue(queue, cancellationToken);
+            RabbitMqBroker.QueueState terminal = await fixture.QueueAsync(queue, cancellationToken);
             Assert.Equal(0, terminal.Messages);
             Assert.Equal(1, entries);
         }

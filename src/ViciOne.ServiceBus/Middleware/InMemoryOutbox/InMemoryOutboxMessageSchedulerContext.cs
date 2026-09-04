@@ -31,7 +31,7 @@ public class InMemoryOutboxMessageSchedulerContext :
 
     public MessageSchedulerFactory SchedulerFactory { get; }
 
-    public TimeProvider TimeProvider => _scheduler.Value.TimeProvider;
+    public TimeProvider TimeProvider => _scheduler.Value.Advanced().TimeProvider;
 
     internal readonly record struct Checkpoint(int ScheduledMessageCount, int CancelMessageCount);
 
@@ -41,7 +41,7 @@ public class InMemoryOutboxMessageSchedulerContext :
             return new Checkpoint(_scheduledMessages.Count, _cancelMessages.CreateCheckpoint());
     }
 
-    internal async Task DiscardSince(Checkpoint checkpoint)
+    internal async Task DiscardSinceAsync(Checkpoint checkpoint)
     {
         ScheduledMessage[] scheduledMessages;
         lock (_listLock)
@@ -55,20 +55,20 @@ public class InMemoryOutboxMessageSchedulerContext :
                 : _scheduledMessages.GetRange(checkpoint.ScheduledMessageCount, count).ToArray();
         }
 
-        await _cancelMessages.DiscardSince(checkpoint.CancelMessageCount).ConfigureAwait(false);
+        await _cancelMessages.DiscardSinceAsync(checkpoint.CancelMessageCount).ConfigureAwait(false);
 
         if (scheduledMessages.Length == 0)
             return;
 
         var tasks = new PendingTaskCollection(scheduledMessages.Length);
         foreach (var scheduledMessage in scheduledMessages)
-            tasks.Add(CancelScheduledMessage(scheduledMessage));
+            tasks.Add(CancelScheduledMessageAsync(scheduledMessage));
 
-        await tasks.Completed().ConfigureAwait(false);
+        await tasks.CompletedAsync().ConfigureAwait(false);
 
-        async Task CancelScheduledMessage(ScheduledMessage scheduledMessage)
+        async Task CancelScheduledMessageAsync(ScheduledMessage scheduledMessage)
         {
-            await _scheduler.Value.CancelScheduledSend(scheduledMessage.Destination, scheduledMessage.TokenId).ConfigureAwait(false);
+            await _scheduler.Value.Advanced().CancelScheduledSendAsync(scheduledMessage.Destination, scheduledMessage.TokenId).ConfigureAwait(false);
 
             lock (_listLock)
             {
@@ -79,77 +79,77 @@ public class InMemoryOutboxMessageSchedulerContext :
         }
     }
 
-    public async Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, T message, CancellationToken cancellationToken)
+    public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, T message, CancellationToken cancellationToken)
         where T : class
     {
         ScheduledMessage<T> scheduledMessage =
-            await _scheduler.Value.ScheduleSend(destinationAddress, scheduledTime, message, cancellationToken).ConfigureAwait(false);
+            await _scheduler.Value.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, cancellationToken).ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
 
         return scheduledMessage;
     }
 
-    public async Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, T message, IPipe<SendContext<T>> pipe,
+    public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
         ScheduledMessage<T> scheduledMessage =
-            await _scheduler.Value.ScheduleSend(destinationAddress, scheduledTime, message, pipe, cancellationToken).ConfigureAwait(false);
+            await _scheduler.Value.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, pipe, cancellationToken).ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
 
         return scheduledMessage;
     }
 
-    public async Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, T message, IPipe<SendContext> pipe,
+    public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, T message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
         ScheduledMessage<T> scheduledMessage =
-            await _scheduler.Value.ScheduleSend(destinationAddress, scheduledTime, message, pipe, cancellationToken).ConfigureAwait(false);
+            await _scheduler.Value.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, pipe, cancellationToken).ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
 
         return scheduledMessage;
     }
 
-    public async Task<ScheduledMessage> ScheduleSend(Uri destinationAddress, DateTime scheduledTime, object message,
+    public async Task<ScheduledMessage> ScheduleSendAsync(Uri destinationAddress, DateTimeOffset dueAt, object message,
         CancellationToken cancellationToken)
     {
-        var scheduledMessage = await _scheduler.Value.ScheduleSend(destinationAddress, scheduledTime, message, cancellationToken).ConfigureAwait(false);
+        var scheduledMessage = await _scheduler.Value.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, cancellationToken).ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
 
         return scheduledMessage;
     }
 
-    public async Task<ScheduledMessage> ScheduleSend(Uri destinationAddress, DateTime scheduledTime, object message, Type messageType,
+    public async Task<ScheduledMessage> ScheduleSendAsync(Uri destinationAddress, DateTimeOffset dueAt, object message, Type messageType,
         CancellationToken cancellationToken)
     {
         var scheduledMessage =
-            await _scheduler.Value.ScheduleSend(destinationAddress, scheduledTime, message, messageType, cancellationToken).ConfigureAwait(false);
+            await _scheduler.Value.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, messageType, cancellationToken).ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
 
         return scheduledMessage;
     }
 
-    public async Task<ScheduledMessage> ScheduleSend(Uri destinationAddress, DateTime scheduledTime, object message, IPipe<SendContext> pipe,
+    public async Task<ScheduledMessage> ScheduleSendAsync(Uri destinationAddress, DateTimeOffset dueAt, object message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
     {
         var scheduledMessage =
-            await _scheduler.Value.ScheduleSend(destinationAddress, scheduledTime, message, pipe, cancellationToken).ConfigureAwait(false);
+            await _scheduler.Value.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, pipe, cancellationToken).ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
 
         return scheduledMessage;
     }
 
-    public async Task<ScheduledMessage> ScheduleSend(Uri destinationAddress, DateTime scheduledTime, object message, Type messageType,
+    public async Task<ScheduledMessage> ScheduleSendAsync(Uri destinationAddress, DateTimeOffset dueAt, object message, Type messageType,
         IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
-        var scheduledMessage = await _scheduler.Value.ScheduleSend(destinationAddress, scheduledTime, message, messageType, pipe, cancellationToken)
+        var scheduledMessage = await _scheduler.Value.Advanced().ScheduleSendAsync(destinationAddress, dueAt, message, messageType, pipe, cancellationToken)
             .ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
@@ -157,92 +157,92 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    public async Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, object values,
+    public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, object values,
         CancellationToken cancellationToken)
         where T : class
     {
         ScheduledMessage<T> scheduledMessage =
-            await _scheduler.Value.ScheduleSend<T>(destinationAddress, scheduledTime, values, cancellationToken).ConfigureAwait(false);
+            await _scheduler.Value.Advanced().ScheduleSendAsync<T>(destinationAddress, dueAt, values, cancellationToken).ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
 
         return scheduledMessage;
     }
 
-    public async Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, object values,
+    public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, object values,
         IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
         ScheduledMessage<T> scheduledMessage =
-            await _scheduler.Value.ScheduleSend(destinationAddress, scheduledTime, values, pipe, cancellationToken).ConfigureAwait(false);
+            await _scheduler.Value.Advanced().ScheduleSendAsync(destinationAddress, dueAt, values, pipe, cancellationToken).ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
 
         return scheduledMessage;
     }
 
-    public async Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, object values,
+    public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(Uri destinationAddress, DateTimeOffset dueAt, object values,
         IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
         ScheduledMessage<T> scheduledMessage =
-            await _scheduler.Value.ScheduleSend<T>(destinationAddress, scheduledTime, values, pipe, cancellationToken).ConfigureAwait(false);
+            await _scheduler.Value.Advanced().ScheduleSendAsync<T>(destinationAddress, dueAt, values, pipe, cancellationToken).ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
 
         return scheduledMessage;
     }
 
-    public async Task<ScheduledMessage<T>> ScheduleSend<T>(DateTime scheduledTime, T message, CancellationToken cancellationToken)
+    public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(DateTimeOffset dueAt, T message, CancellationToken cancellationToken)
         where T : class
     {
         ScheduledMessage<T> scheduledMessage =
-            await _scheduler.Value.ScheduleSend(_inputAddress, scheduledTime, message, cancellationToken).ConfigureAwait(false);
+            await _scheduler.Value.Advanced().ScheduleSendAsync(_inputAddress, dueAt, message, cancellationToken).ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
 
         return scheduledMessage;
     }
 
-    public async Task<ScheduledMessage<T>> ScheduleSend<T>(DateTime scheduledTime, T message, IPipe<SendContext<T>> pipe,
+    public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(DateTimeOffset dueAt, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
         ScheduledMessage<T> scheduledMessage =
-            await _scheduler.Value.ScheduleSend(_inputAddress, scheduledTime, message, pipe, cancellationToken).ConfigureAwait(false);
+            await _scheduler.Value.Advanced().ScheduleSendAsync(_inputAddress, dueAt, message, pipe, cancellationToken).ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
 
         return scheduledMessage;
     }
 
-    public async Task<ScheduledMessage<T>> ScheduleSend<T>(DateTime scheduledTime, T message, IPipe<SendContext> pipe,
+    public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(DateTimeOffset dueAt, T message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
         ScheduledMessage<T> scheduledMessage =
-            await _scheduler.Value.ScheduleSend(_inputAddress, scheduledTime, message, pipe, cancellationToken).ConfigureAwait(false);
+            await _scheduler.Value.Advanced().ScheduleSendAsync(_inputAddress, dueAt, message, pipe, cancellationToken).ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
 
         return scheduledMessage;
     }
 
-    public async Task<ScheduledMessage> ScheduleSend(DateTime scheduledTime, object message, CancellationToken cancellationToken)
+    public async Task<ScheduledMessage> ScheduleSendAsync(DateTimeOffset dueAt, object message, CancellationToken cancellationToken)
     {
-        var scheduledMessage = await _scheduler.Value.ScheduleSend(_inputAddress, scheduledTime, message, cancellationToken).ConfigureAwait(false);
+        var scheduledMessage = await _scheduler.Value.Advanced().ScheduleSendAsync(_inputAddress, dueAt, message, cancellationToken).ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
 
         return scheduledMessage;
     }
 
-    public async Task<ScheduledMessage> ScheduleSend(DateTime scheduledTime, object message, Type messageType,
+    public async Task<ScheduledMessage> ScheduleSendAsync(DateTimeOffset dueAt, object message, Type messageType,
         CancellationToken cancellationToken)
     {
-        var scheduledMessage = await _scheduler.Value.ScheduleSend(_inputAddress, scheduledTime, message, messageType, cancellationToken)
+        var scheduledMessage = await _scheduler.Value.Advanced().ScheduleSendAsync(_inputAddress, dueAt, message, messageType, cancellationToken)
             .ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
@@ -250,20 +250,20 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    public async Task<ScheduledMessage> ScheduleSend(DateTime scheduledTime, object message, IPipe<SendContext> pipe,
+    public async Task<ScheduledMessage> ScheduleSendAsync(DateTimeOffset dueAt, object message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
     {
-        var scheduledMessage = await _scheduler.Value.ScheduleSend(_inputAddress, scheduledTime, message, pipe, cancellationToken).ConfigureAwait(false);
+        var scheduledMessage = await _scheduler.Value.Advanced().ScheduleSendAsync(_inputAddress, dueAt, message, pipe, cancellationToken).ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
 
         return scheduledMessage;
     }
 
-    public async Task<ScheduledMessage> ScheduleSend(DateTime scheduledTime, object message, Type messageType, IPipe<SendContext> pipe,
+    public async Task<ScheduledMessage> ScheduleSendAsync(DateTimeOffset dueAt, object message, Type messageType, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
     {
-        var scheduledMessage = await _scheduler.Value.ScheduleSend(_inputAddress, scheduledTime, message, messageType, pipe, cancellationToken)
+        var scheduledMessage = await _scheduler.Value.Advanced().ScheduleSendAsync(_inputAddress, dueAt, message, messageType, pipe, cancellationToken)
             .ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
@@ -271,161 +271,161 @@ public class InMemoryOutboxMessageSchedulerContext :
         return scheduledMessage;
     }
 
-    public async Task<ScheduledMessage<T>> ScheduleSend<T>(DateTime scheduledTime, object values, CancellationToken cancellationToken)
+    public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(DateTimeOffset dueAt, object values, CancellationToken cancellationToken)
         where T : class
     {
         ScheduledMessage<T> scheduledMessage =
-            await _scheduler.Value.ScheduleSend<T>(_inputAddress, scheduledTime, values, cancellationToken).ConfigureAwait(false);
+            await _scheduler.Value.Advanced().ScheduleSendAsync<T>(_inputAddress, dueAt, values, cancellationToken).ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
 
         return scheduledMessage;
     }
 
-    public async Task<ScheduledMessage<T>> ScheduleSend<T>(DateTime scheduledTime, object values, IPipe<SendContext<T>> pipe,
-        CancellationToken cancellationToken)
-        where T : class
-    {
-        ScheduledMessage<T> scheduledMessage =
-            await _scheduler.Value.ScheduleSend(_inputAddress, scheduledTime, values, pipe, cancellationToken).ConfigureAwait(false);
-
-        AddScheduledMessage(scheduledMessage);
-
-        return scheduledMessage;
-    }
-
-    public async Task<ScheduledMessage<T>> ScheduleSend<T>(DateTime scheduledTime, object values, IPipe<SendContext> pipe,
+    public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(DateTimeOffset dueAt, object values, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
         ScheduledMessage<T> scheduledMessage =
-            await _scheduler.Value.ScheduleSend<T>(_inputAddress, scheduledTime, values, pipe, cancellationToken).ConfigureAwait(false);
+            await _scheduler.Value.Advanced().ScheduleSendAsync(_inputAddress, dueAt, values, pipe, cancellationToken).ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
 
         return scheduledMessage;
     }
 
-    public async Task<ScheduledMessage<T>> SchedulePublish<T>(DateTime scheduledTime, T message, CancellationToken cancellationToken)
-        where T : class
-    {
-        ScheduledMessage<T> scheduledMessage = await _scheduler.Value.SchedulePublish(scheduledTime, message, cancellationToken).ConfigureAwait(false);
-
-        AddScheduledMessage(scheduledMessage);
-
-        return scheduledMessage;
-    }
-
-    public async Task<ScheduledMessage<T>> SchedulePublish<T>(DateTime scheduledTime, T message, IPipe<SendContext<T>> pipe,
+    public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(DateTimeOffset dueAt, object values, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
         ScheduledMessage<T> scheduledMessage =
-            await _scheduler.Value.SchedulePublish(scheduledTime, message, pipe, cancellationToken).ConfigureAwait(false);
+            await _scheduler.Value.Advanced().ScheduleSendAsync<T>(_inputAddress, dueAt, values, pipe, cancellationToken).ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
 
         return scheduledMessage;
     }
 
-    public async Task<ScheduledMessage<T>> SchedulePublish<T>(DateTime scheduledTime, T message, IPipe<SendContext> pipe,
+    public async Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, T message, CancellationToken cancellationToken)
+        where T : class
+    {
+        ScheduledMessage<T> scheduledMessage = await _scheduler.Value.Advanced().SchedulePublishAsync(dueAt, message, cancellationToken).ConfigureAwait(false);
+
+        AddScheduledMessage(scheduledMessage);
+
+        return scheduledMessage;
+    }
+
+    public async Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
         ScheduledMessage<T> scheduledMessage =
-            await _scheduler.Value.SchedulePublish(scheduledTime, message, pipe, cancellationToken).ConfigureAwait(false);
+            await _scheduler.Value.Advanced().SchedulePublishAsync(dueAt, message, pipe, cancellationToken).ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
 
         return scheduledMessage;
     }
 
-    public async Task<ScheduledMessage> SchedulePublish(DateTime scheduledTime, object message, CancellationToken cancellationToken)
-    {
-        var scheduledMessage = await _scheduler.Value.SchedulePublish(scheduledTime, message, cancellationToken).ConfigureAwait(false);
-
-        AddScheduledMessage(scheduledMessage);
-
-        return scheduledMessage;
-    }
-
-    public async Task<ScheduledMessage> SchedulePublish(DateTime scheduledTime, object message, Type messageType,
-        CancellationToken cancellationToken)
-    {
-        var scheduledMessage = await _scheduler.Value.SchedulePublish(scheduledTime, message, messageType, cancellationToken).ConfigureAwait(false);
-
-        AddScheduledMessage(scheduledMessage);
-
-        return scheduledMessage;
-    }
-
-    public async Task<ScheduledMessage> SchedulePublish(DateTime scheduledTime, object message, IPipe<SendContext> pipe,
-        CancellationToken cancellationToken)
-    {
-        var scheduledMessage = await _scheduler.Value.SchedulePublish(scheduledTime, message, pipe, cancellationToken).ConfigureAwait(false);
-
-        AddScheduledMessage(scheduledMessage);
-
-        return scheduledMessage;
-    }
-
-    public async Task<ScheduledMessage> SchedulePublish(DateTime scheduledTime, object message, Type messageType, IPipe<SendContext> pipe,
-        CancellationToken cancellationToken)
-    {
-        var scheduledMessage = await _scheduler.Value.SchedulePublish(scheduledTime, message, messageType, pipe, cancellationToken).ConfigureAwait(false);
-
-        AddScheduledMessage(scheduledMessage);
-
-        return scheduledMessage;
-    }
-
-    public async Task<ScheduledMessage<T>> SchedulePublish<T>(DateTime scheduledTime, object values, CancellationToken cancellationToken)
-        where T : class
-    {
-        ScheduledMessage<T> scheduledMessage = await _scheduler.Value.SchedulePublish<T>(scheduledTime, values, cancellationToken).ConfigureAwait(false);
-
-        AddScheduledMessage(scheduledMessage);
-
-        return scheduledMessage;
-    }
-
-    public async Task<ScheduledMessage<T>> SchedulePublish<T>(DateTime scheduledTime, object values, IPipe<SendContext<T>> pipe,
-        CancellationToken cancellationToken)
-        where T : class
-    {
-        ScheduledMessage<T> scheduledMessage = await _scheduler.Value.SchedulePublish(scheduledTime, values, pipe, cancellationToken).ConfigureAwait(false);
-
-        AddScheduledMessage(scheduledMessage);
-
-        return scheduledMessage;
-    }
-
-    public async Task<ScheduledMessage<T>> SchedulePublish<T>(DateTime scheduledTime, object values, IPipe<SendContext> pipe,
+    public async Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, T message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
         ScheduledMessage<T> scheduledMessage =
-            await _scheduler.Value.SchedulePublish<T>(scheduledTime, values, pipe, cancellationToken).ConfigureAwait(false);
+            await _scheduler.Value.Advanced().SchedulePublishAsync(dueAt, message, pipe, cancellationToken).ConfigureAwait(false);
 
         AddScheduledMessage(scheduledMessage);
 
         return scheduledMessage;
     }
 
-    public Task CancelScheduledPublish<T>(Guid tokenId, CancellationToken cancellationToken)
+    public async Task<ScheduledMessage> SchedulePublishAsync(DateTimeOffset dueAt, object message, CancellationToken cancellationToken)
+    {
+        var scheduledMessage = await _scheduler.Value.Advanced().SchedulePublishAsync(dueAt, message, cancellationToken).ConfigureAwait(false);
+
+        AddScheduledMessage(scheduledMessage);
+
+        return scheduledMessage;
+    }
+
+    public async Task<ScheduledMessage> SchedulePublishAsync(DateTimeOffset dueAt, object message, Type messageType,
+        CancellationToken cancellationToken)
+    {
+        var scheduledMessage = await _scheduler.Value.Advanced().SchedulePublishAsync(dueAt, message, messageType, cancellationToken).ConfigureAwait(false);
+
+        AddScheduledMessage(scheduledMessage);
+
+        return scheduledMessage;
+    }
+
+    public async Task<ScheduledMessage> SchedulePublishAsync(DateTimeOffset dueAt, object message, IPipe<SendContext> pipe,
+        CancellationToken cancellationToken)
+    {
+        var scheduledMessage = await _scheduler.Value.Advanced().SchedulePublishAsync(dueAt, message, pipe, cancellationToken).ConfigureAwait(false);
+
+        AddScheduledMessage(scheduledMessage);
+
+        return scheduledMessage;
+    }
+
+    public async Task<ScheduledMessage> SchedulePublishAsync(DateTimeOffset dueAt, object message, Type messageType, IPipe<SendContext> pipe,
+        CancellationToken cancellationToken)
+    {
+        var scheduledMessage = await _scheduler.Value.Advanced().SchedulePublishAsync(dueAt, message, messageType, pipe, cancellationToken).ConfigureAwait(false);
+
+        AddScheduledMessage(scheduledMessage);
+
+        return scheduledMessage;
+    }
+
+    public async Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, object values, CancellationToken cancellationToken)
         where T : class
     {
-        return AddCancelMessage(() => _scheduler.Value.CancelScheduledPublish<T>(tokenId, cancellationToken));
+        ScheduledMessage<T> scheduledMessage = await _scheduler.Value.Advanced().SchedulePublishAsync<T>(dueAt, values, cancellationToken).ConfigureAwait(false);
+
+        AddScheduledMessage(scheduledMessage);
+
+        return scheduledMessage;
     }
 
-    public Task CancelScheduledPublish(Type messageType, Guid tokenId, CancellationToken cancellationToken)
+    public async Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, object values, IPipe<SendContext<T>> pipe,
+        CancellationToken cancellationToken)
+        where T : class
     {
-        return AddCancelMessage(() => _scheduler.Value.CancelScheduledPublish(messageType, tokenId, cancellationToken));
+        ScheduledMessage<T> scheduledMessage = await _scheduler.Value.Advanced().SchedulePublishAsync(dueAt, values, pipe, cancellationToken).ConfigureAwait(false);
+
+        AddScheduledMessage(scheduledMessage);
+
+        return scheduledMessage;
     }
 
-    public Task CancelScheduledSend(Uri destinationAddress, Guid tokenId, CancellationToken cancellationToken)
+    public async Task<ScheduledMessage<T>> SchedulePublishAsync<T>(DateTimeOffset dueAt, object values, IPipe<SendContext> pipe,
+        CancellationToken cancellationToken)
+        where T : class
     {
-        return AddCancelMessage(() => _scheduler.Value.CancelScheduledSend(destinationAddress, tokenId, cancellationToken));
+        ScheduledMessage<T> scheduledMessage =
+            await _scheduler.Value.Advanced().SchedulePublishAsync<T>(dueAt, values, pipe, cancellationToken).ConfigureAwait(false);
+
+        AddScheduledMessage(scheduledMessage);
+
+        return scheduledMessage;
+    }
+
+    public Task CancelScheduledPublishAsync<T>(Guid tokenId, CancellationToken cancellationToken)
+        where T : class
+    {
+        return AddCancelMessageAsync(() => _scheduler.Value.Advanced().CancelScheduledPublishAsync<T>(tokenId, cancellationToken));
+    }
+
+    public Task CancelScheduledPublishAsync(Type messageType, Guid tokenId, CancellationToken cancellationToken)
+    {
+        return AddCancelMessageAsync(() => _scheduler.Value.Advanced().CancelScheduledPublishAsync(messageType, tokenId, cancellationToken));
+    }
+
+    public Task CancelScheduledSendAsync(Uri destinationAddress, Guid tokenId, CancellationToken cancellationToken)
+    {
+        return AddCancelMessageAsync(() => _scheduler.Value.Advanced().CancelScheduledSendAsync(destinationAddress, tokenId, cancellationToken));
     }
 
     void AddScheduledMessage(ScheduledMessage scheduledMessage)
@@ -437,18 +437,18 @@ public class InMemoryOutboxMessageSchedulerContext :
             _scheduledMessages.Add(scheduledMessage);
     }
 
-    Task AddCancelMessage(Func<Task> cancel)
+    Task AddCancelMessageAsync(Func<Task> cancel)
     {
         if (_clearToSend.IsCompleted)
             return cancel();
 
         lock (_listLock)
-            _cancelMessages.Add(cancel);
+            _cancelMessages.AddAsync(cancel);
 
         return Task.CompletedTask;
     }
 
-    public Task CancelAllScheduledMessages()
+    public Task CancelAllScheduledMessagesAsync(CancellationToken cancellationToken = default)
     {
         ScheduledMessage[] scheduledMessages;
 
@@ -462,13 +462,13 @@ public class InMemoryOutboxMessageSchedulerContext :
 
         var tasks = new PendingTaskCollection(scheduledMessages.Length);
         foreach (var scheduledMessage in scheduledMessages)
-            tasks.Add(_scheduler.Value.CancelScheduledSend(scheduledMessage.Destination, scheduledMessage.TokenId));
+            tasks.Add(_scheduler.Value.Advanced().CancelScheduledSendAsync(scheduledMessage.Destination, scheduledMessage.TokenId, cancellationToken: cancellationToken));
 
-        return tasks.Completed();
+        return tasks.CompletedAsync(cancellationToken: cancellationToken);
     }
 
-    public Task ExecutePendingActions()
+    public Task ExecutePendingActionsAsync(CancellationToken cancellationToken = default)
     {
-        return _cancelMessages.Execute(true);
+        return _cancelMessages.ExecuteAsync(true, cancellationToken: cancellationToken);
     }
 }

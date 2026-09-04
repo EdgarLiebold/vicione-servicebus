@@ -6,7 +6,7 @@ internal interface IWriteProperty<in T, in TProperty> :
     IWriteProperty<T>
     where T : class
 {
-    void Set(T entity, TProperty value);
+    void Set(T entity, TProperty? value);
 }
 
 

@@ -33,68 +33,68 @@ public class OutboxSendEndpoint :
         return _endpoint.ConnectSendObserver(observer);
     }
 
-    public Task<SendContext<T>> CreateSendContext<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    public Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
-        return _endpoint.CreateSendContext(message, pipe, cancellationToken);
+        return _endpoint.CreateSendContextAsync(message, pipe, cancellationToken);
     }
 
-    Task ISendEndpoint.Send<T>(T message, CancellationToken cancellationToken)
+    Task ISendEndpoint.SendAsync<T>(T message, CancellationToken cancellationToken)
     {
-        return Defer(() => _endpoint.Send(message, cancellationToken));
+        return DeferAsync(() => _endpoint.SendAsync(message, cancellationToken));
     }
 
-    Task ISendEndpoint.Send<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    Task Advanced.IAdvancedSendEndpoint.SendAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
     {
-        return Defer(() => _endpoint.Send(message, pipe, cancellationToken));
+        return DeferAsync(() => _endpoint.SendAsync(message, pipe, cancellationToken));
     }
 
-    Task ISendEndpoint.Send<T>(T message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
+    Task Advanced.IAdvancedSendEndpoint.SendAsync<T>(T message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
-        return Defer(() => _endpoint.Send(message, pipe, cancellationToken));
+        return DeferAsync(() => _endpoint.SendAsync(message, pipe, cancellationToken));
     }
 
-    Task ISendEndpoint.Send(object message, CancellationToken cancellationToken)
+    Task Advanced.IAdvancedSendEndpoint.SendAsync(object message, CancellationToken cancellationToken)
     {
-        return Defer(() => _endpoint.Send(message, cancellationToken));
+        return DeferAsync(() => _endpoint.SendAsync(message, cancellationToken));
     }
 
-    Task ISendEndpoint.Send(object message, Type messageType, CancellationToken cancellationToken)
+    Task Advanced.IAdvancedSendEndpoint.SendAsync(object message, Type messageType, CancellationToken cancellationToken)
     {
-        return Defer(() => _endpoint.Send(message, messageType, cancellationToken));
+        return DeferAsync(() => _endpoint.SendAsync(message, messageType, cancellationToken));
     }
 
-    Task ISendEndpoint.Send(object message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
+    Task Advanced.IAdvancedSendEndpoint.SendAsync(object message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
-        return Defer(() => _endpoint.Send(message, pipe, cancellationToken));
+        return DeferAsync(() => _endpoint.SendAsync(message, pipe, cancellationToken));
     }
 
-    Task ISendEndpoint.Send(object message, Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken)
+    Task Advanced.IAdvancedSendEndpoint.SendAsync(object message, Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
-        return Defer(() => _endpoint.Send(message, messageType, pipe, cancellationToken));
+        return DeferAsync(() => _endpoint.SendAsync(message, messageType, pipe, cancellationToken));
     }
 
-    Task ISendEndpoint.Send<T>(object values, CancellationToken cancellationToken)
+    Task Advanced.IAdvancedSendEndpoint.SendAsync<T>(object values, CancellationToken cancellationToken)
     {
-        return Defer(() => _endpoint.Send<T>(values, cancellationToken));
+        return DeferAsync(() => _endpoint.SendAsync<T>(values, cancellationToken));
     }
 
-    Task ISendEndpoint.Send<T>(object values, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    Task Advanced.IAdvancedSendEndpoint.SendAsync<T>(object values, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
     {
-        return Defer(() => _endpoint.Send(values, pipe, cancellationToken));
+        return DeferAsync(() => _endpoint.SendAsync(values, pipe, cancellationToken));
     }
 
-    Task ISendEndpoint.Send<T>(object values, IPipe<SendContext> pipe, CancellationToken cancellationToken)
+    Task Advanced.IAdvancedSendEndpoint.SendAsync<T>(object values, IPipe<SendContext> pipe, CancellationToken cancellationToken)
     {
-        return Defer(() => _endpoint.Send<T>(values, pipe, cancellationToken));
+        return DeferAsync(() => _endpoint.SendAsync<T>(values, pipe, cancellationToken));
     }
 
-    Task Defer(Func<Task> send)
+    Task DeferAsync(Func<Task> send)
     {
         var enqueue = LogContext.Current?.StartOutboxEnqueueInstrument();
         try
         {
-            Task pendingDelivery = _outboxContext.Add(() => Deliver(send));
+            Task pendingDelivery = _outboxContext.AddAsync(() => DeliverAsync(send));
             enqueue?.Complete();
             return pendingDelivery;
         }
@@ -106,7 +106,7 @@ public class OutboxSendEndpoint :
         }
     }
 
-    static async Task Deliver(Func<Task> send)
+    static async Task DeliverAsync(Func<Task> send)
     {
         var delivery = LogContext.Current?.StartOutboxDeliveryInstrument();
         try

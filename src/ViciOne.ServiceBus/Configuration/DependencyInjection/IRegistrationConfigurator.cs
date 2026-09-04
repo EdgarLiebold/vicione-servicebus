@@ -12,7 +12,7 @@ public interface IRegistrationConfigurator :
     /// </summary>
     /// <param name="configure"></param>
     /// <typeparam name="T">The consumer type</typeparam>
-    IConsumerRegistrationConfigurator<T> AddConsumer<T>(Action<IRegistrationContext, IConsumerConfigurator<T>> configure = null)
+    IConsumerRegistrationConfigurator<T> AddConsumer<T>(Action<IRegistrationContext, IConsumerConfigurator<T>>? configure = null)
         where T : class, IConsumer;
 
     /// <summary>
@@ -21,8 +21,8 @@ public interface IRegistrationConfigurator :
     /// <param name="consumerDefinitionType">The consumer definition type</param>
     /// <param name="configure"></param>
     /// <typeparam name="T">The consumer type</typeparam>
-    IConsumerRegistrationConfigurator<T> AddConsumer<T>(Type consumerDefinitionType,
-        Action<IRegistrationContext, IConsumerConfigurator<T>> configure = null)
+    IConsumerRegistrationConfigurator<T> AddConsumer<T>(Type? consumerDefinitionType,
+        Action<IRegistrationContext, IConsumerConfigurator<T>>? configure = null)
         where T : class, IConsumer;
 
     /// <summary>
@@ -31,7 +31,7 @@ public interface IRegistrationConfigurator :
     /// </summary>
     /// <param name="configure"></param>
     /// <typeparam name="T">The saga type</typeparam>
-    ISagaRegistrationConfigurator<T> AddSaga<T>(Action<IRegistrationContext, ISagaConfigurator<T>> configure = null)
+    ISagaRegistrationConfigurator<T> AddSaga<T>(Action<IRegistrationContext, ISagaConfigurator<T>>? configure = null)
         where T : class, ISaga;
 
     /// <summary>
@@ -41,7 +41,7 @@ public interface IRegistrationConfigurator :
     /// <param name="sagaDefinitionType">The saga definition type</param>
     /// <param name="configure"></param>
     /// <typeparam name="T">The saga type</typeparam>
-    ISagaRegistrationConfigurator<T> AddSaga<T>(Type sagaDefinitionType, Action<IRegistrationContext, ISagaConfigurator<T>> configure = null)
+    ISagaRegistrationConfigurator<T> AddSaga<T>(Type? sagaDefinitionType, Action<IRegistrationContext, ISagaConfigurator<T>>? configure = null)
         where T : class, ISaga;
 
     /// <summary>
@@ -51,7 +51,7 @@ public interface IRegistrationConfigurator :
     /// <param name="configure"></param>
     /// <typeparam name="TStateMachine"></typeparam>
     /// <typeparam name="T"></typeparam>
-    ISagaRegistrationConfigurator<T> AddSagaStateMachine<TStateMachine, T>(Action<IRegistrationContext, ISagaConfigurator<T>> configure = null)
+    ISagaRegistrationConfigurator<T> AddSagaStateMachine<TStateMachine, T>(Action<IRegistrationContext, ISagaConfigurator<T>>? configure = null)
         where TStateMachine : class, SagaStateMachine<T>
         where T : class, SagaStateMachineInstance;
 
@@ -63,8 +63,8 @@ public interface IRegistrationConfigurator :
     /// <param name="configure"></param>
     /// <typeparam name="TStateMachine"></typeparam>
     /// <typeparam name="T"></typeparam>
-    ISagaRegistrationConfigurator<T> AddSagaStateMachine<TStateMachine, T>(Type sagaDefinitionType,
-        Action<IRegistrationContext, ISagaConfigurator<T>> configure = null)
+    ISagaRegistrationConfigurator<T> AddSagaStateMachine<TStateMachine, T>(Type? sagaDefinitionType,
+        Action<IRegistrationContext, ISagaConfigurator<T>>? configure = null)
         where TStateMachine : class, SagaStateMachine<T>
         where T : class, SagaStateMachineInstance;
 
@@ -75,7 +75,7 @@ public interface IRegistrationConfigurator :
     /// <typeparam name="TActivity">The activity type</typeparam>
     /// <typeparam name="TArguments">The argument type</typeparam>
     IExecuteActivityRegistrationConfigurator<TActivity, TArguments> AddExecuteActivity<TActivity, TArguments>(
-        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>> configure = null)
+        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class;
 
@@ -86,8 +86,8 @@ public interface IRegistrationConfigurator :
     /// <param name="configure"></param>
     /// <typeparam name="TActivity">The activity type</typeparam>
     /// <typeparam name="TArguments">The argument type</typeparam>
-    IExecuteActivityRegistrationConfigurator<TActivity, TArguments> AddExecuteActivity<TActivity, TArguments>(Type executeActivityDefinitionType,
-        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>> configure = null)
+    IExecuteActivityRegistrationConfigurator<TActivity, TArguments> AddExecuteActivity<TActivity, TArguments>(Type? executeActivityDefinitionType,
+        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class;
 
@@ -100,8 +100,8 @@ public interface IRegistrationConfigurator :
     /// <typeparam name="TArguments">The argument type</typeparam>
     /// <typeparam name="TLog">The log type</typeparam>
     IActivityRegistrationConfigurator<TActivity, TArguments, TLog> AddActivity<TActivity, TArguments, TLog>(
-        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>> configureExecute = null,
-        Action<IRegistrationContext, ICompensateActivityConfigurator<TActivity, TLog>> configureCompensate = null)
+        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configureExecute = null,
+        Action<IRegistrationContext, ICompensateActivityConfigurator<TActivity, TLog>>? configureCompensate = null)
         where TActivity : class, IActivity<TArguments, TLog>
         where TLog : class
         where TArguments : class;
@@ -115,9 +115,9 @@ public interface IRegistrationConfigurator :
     /// <typeparam name="TActivity">The activity type</typeparam>
     /// <typeparam name="TArguments">The argument type</typeparam>
     /// <typeparam name="TLog">The log type</typeparam>
-    IActivityRegistrationConfigurator<TActivity, TArguments, TLog> AddActivity<TActivity, TArguments, TLog>(Type activityDefinitionType,
-        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>> configureExecute = null,
-        Action<IRegistrationContext, ICompensateActivityConfigurator<TActivity, TLog>> configureCompensate = null)
+    IActivityRegistrationConfigurator<TActivity, TArguments, TLog> AddActivity<TActivity, TArguments, TLog>(Type? activityDefinitionType,
+        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configureExecute = null,
+        Action<IRegistrationContext, ICompensateActivityConfigurator<TActivity, TLog>>? configureCompensate = null)
         where TActivity : class, IActivity<TArguments, TLog>
         where TLog : class
         where TArguments : class;
@@ -130,7 +130,7 @@ public interface IRegistrationConfigurator :
     /// <param name="endpointDefinition">The endpoint definition to add</param>
     void AddEndpoint(Type endpointDefinition);
 
-    void AddEndpoint<TDefinition, T>(IRegistration registration, IEndpointSettings<IEndpointDefinition<T>> settings = null)
+    void AddEndpoint<TDefinition, T>(IRegistration registration, IEndpointSettings<IEndpointDefinition<T>>? settings = null)
         where TDefinition : class, IEndpointDefinition<T>
         where T : class;
 
@@ -215,6 +215,6 @@ public interface IRegistrationConfigurator :
     /// </summary>
     /// <param name="futureDefinitionType">The future definition type</param>
     /// <typeparam name="TFuture"></typeparam>
-    IFutureRegistrationConfigurator<TFuture> AddFuture<TFuture>(Type futureDefinitionType = null)
+    IFutureRegistrationConfigurator<TFuture> AddFuture<TFuture>(Type? futureDefinitionType = null)
         where TFuture : class, SagaStateMachine<FutureState>;
 }

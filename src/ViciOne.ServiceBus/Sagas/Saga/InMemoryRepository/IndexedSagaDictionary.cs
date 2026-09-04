@@ -26,7 +26,7 @@ public class IndexedSagaDictionary<TSaga>
         _indexById = _indices["CorrelationId"];
     }
 
-    public SagaInstance<TSaga> this[Guid sagaId]
+    public SagaInstance<TSaga>? this[Guid sagaId]
     {
         get
         {
@@ -44,7 +44,7 @@ public class IndexedSagaDictionary<TSaga>
         }
     }
 
-    public Task MarkInUse(CancellationToken cancellationToken)
+    public Task MarkInUseAsync(CancellationToken cancellationToken)
     {
         return _inUse.WaitAsync(cancellationToken);
     }
@@ -76,11 +76,13 @@ public class IndexedSagaDictionary<TSaga>
     {
         lock (_lock)
         {
-            IIndexedSagaProperty<TSaga> index = HasIndexFor(query.FilterExpression);
+            IIndexedSagaProperty<TSaga>? index = HasIndexFor(query.FilterExpression);
             if (index == null)
                 return _indexById.Where(query.GetFilter()).ToList();
 
             var rightValue = GetRightValue(query.FilterExpression);
+            if (rightValue == null)
+                return _indexById.Where(query.GetFilter()).ToList();
 
             return index.Where(rightValue, query.GetFilter()).ToList();
         }
@@ -92,7 +94,7 @@ public class IndexedSagaDictionary<TSaga>
             return _indexById.Select(transformer);
     }
 
-    IIndexedSagaProperty<TSaga> HasIndexFor(Expression<Func<TSaga, bool>> expression)
+    IIndexedSagaProperty<TSaga>? HasIndexFor(Expression<Func<TSaga, bool>> expression)
     {
         if (expression.Body.NodeType == ExpressionType.MemberAccess)
         {
@@ -101,7 +103,7 @@ public class IndexedSagaDictionary<TSaga>
             if (propertyInfo == null)
                 return null;
 
-            if (_indices.TryGetValue(propertyInfo.Name, out IIndexedSagaProperty<TSaga> result))
+            if (_indices.TryGetValue(propertyInfo.Name, out IIndexedSagaProperty<TSaga>? result))
                 return result;
         }
 
@@ -117,11 +119,13 @@ public class IndexedSagaDictionary<TSaga>
         {
             var propertyType = typeof(IndexedSagaProperty<,>).MakeGenericType(typeof(TSaga), property.PropertyType);
 
-            _indices.Add(property.Name, (IIndexedSagaProperty<TSaga>)Activator.CreateInstance(propertyType, property));
+            var index = Activator.CreateInstance(propertyType, property) as IIndexedSagaProperty<TSaga>
+                ?? throw new InvalidOperationException($"Could not create a saga index for '{property.Name}'.");
+            _indices.Add(property.Name, index);
         }
     }
 
-    static object GetRightValue(Expression<Func<TSaga, bool>> right)
+    static object? GetRightValue(Expression<Func<TSaga, bool>> right)
     {
         switch (right.Body.NodeType)
         {

@@ -13,7 +13,7 @@ public sealed class ActiveMqConfigurationTests
     [InlineData(ActiveMqTransportProtocol.OpenWire, 61616, "activemq")]
     [InlineData(ActiveMqTransportProtocol.Amqp, 5672, "amqp")]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-CONFIGURATION", "dependency-injection-projects-selected-provider")]
-    public async Task RegisteredOptions_ProjectTheSelectedProtocolIntoTheBus(
+    public async Task RegisteredOptions_ProjectTheSelectedProtocolIntoTheBusAsync(
         ActiveMqTransportProtocol protocol,
         ushort port,
         string expectedScheme)

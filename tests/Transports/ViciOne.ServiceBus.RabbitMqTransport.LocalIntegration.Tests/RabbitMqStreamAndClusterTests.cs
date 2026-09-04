@@ -8,7 +8,7 @@ public sealed class RabbitMqStreamAndClusterTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-STREAM", "stream-retention-and-from-first-delivery")]
-    public async Task StreamQueue_DeclaresRetentionAndConsumesThePublishedMessageFromFirst()
+    public async Task StreamQueue_DeclaresRetentionAndConsumesThePublishedMessageFromFirstAsync()
     {
         using RabbitMqBroker fixture = RabbitMqBroker.Create("stream");
         string queue = fixture.Name("events");
@@ -42,11 +42,11 @@ public sealed class RabbitMqStreamAndClusterTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            RabbitMqBroker.QueueState state = await fixture.Queue(queue, cancellationToken);
+            RabbitMqBroker.QueueState state = await fixture.QueueAsync(queue, cancellationToken);
             Assert.Equal("stream", state.Arguments["x-queue-type"]);
             Assert.Equal("14D", state.Arguments["x-max-age"]);
 
-            await bus.Publish(new StreamMessage(expected), cancellationToken)
+            await bus.PublishAsync(new StreamMessage(expected), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.Equal(expected, await received.Task.WaitAsync(fixture.OperationTimeout, cancellationToken));
 
@@ -64,7 +64,7 @@ public sealed class RabbitMqStreamAndClusterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-CLUSTER", "logical-host-address-with-real-cluster-node")]
-    public async Task ClusterNode_ConnectsThroughTheRealNodeWhileMessagesKeepTheLogicalHost()
+    public async Task ClusterNode_ConnectsThroughTheRealNodeWhileMessagesKeepTheLogicalHostAsync()
     {
         using RabbitMqBroker fixture = RabbitMqBroker.Create("cluster");
         string queue = fixture.Name("input");
@@ -91,9 +91,8 @@ public sealed class RabbitMqStreamAndClusterTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queue}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await endpoint.Send(new ClusterMessage(expected), cancellationToken)
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queue}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await endpoint.SendAsync(new ClusterMessage(expected), cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             ConsumeContext<ClusterMessage> actual = await received.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
 
@@ -104,7 +103,7 @@ public sealed class RabbitMqStreamAndClusterTests
             await bus.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
             started = false;
             Assert.Equal(1, entries);
-            Assert.Equal(0, (await fixture.Queue(queue, cancellationToken)).Messages);
+            Assert.Equal(0, (await fixture.QueueAsync(queue, cancellationToken)).Messages);
         }
         finally
         {

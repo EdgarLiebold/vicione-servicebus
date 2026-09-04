@@ -13,15 +13,15 @@ public class OutboxState
     public string BusKey { get; set; } = null!;
     public Guid LockId { get; set; }
     public byte[]? RowVersion { get; set; }
-    public DateTime Created { get; set; }
+    public DateTimeOffset Created { get; set; }
     public OutboxDeliveryStatus Status { get; set; }
-    public DateTime? NextDeliveryTime { get; set; }
+    public DateTimeOffset? NextDeliveryTime { get; set; }
     public int DeliveryAttempts { get; set; }
     public OutboxFailureKind LastFailureKind { get; set; }
-    public DateTime? LastFailureTime { get; set; }
+    public DateTimeOffset? LastFailureTime { get; set; }
     public string? LastFailure { get; set; }
     public long? FailedSequenceNumber { get; set; }
     public Guid? FailedMessageId { get; set; }
-    public DateTime? Delivered { get; set; }
+    public DateTimeOffset? Delivered { get; set; }
     public long? LastSequenceNumber { get; set; }
 }

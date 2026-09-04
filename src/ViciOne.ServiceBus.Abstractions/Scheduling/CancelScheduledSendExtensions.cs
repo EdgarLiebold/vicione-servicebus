@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace ViciOne.ServiceBus;
+namespace ViciOne.ServiceBus.Advanced;
 
 public static class CancelScheduledSendExtensions
 {
@@ -12,7 +12,8 @@ public static class CancelScheduledSendExtensions
     /// <param name="scheduler">The message scheduler</param>
     /// <param name="message">The </param>
     /// <returns></returns>
-    public static Task CancelScheduledSend<T>(this IMessageScheduler scheduler, ScheduledMessage<T> message)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static Task CancelScheduledSendAsync<T>(this IMessageScheduler scheduler, ScheduledMessage<T> message, CancellationToken cancellationToken = default)
         where T : class
     {
         if (scheduler == null)
@@ -20,7 +21,7 @@ public static class CancelScheduledSendExtensions
         if (message == null)
             throw new ArgumentNullException(nameof(message));
 
-        return scheduler.CancelScheduledSend(message.Destination, message.TokenId);
+        return scheduler.CancelScheduledSendAsync(message, cancellationToken);
     }
 
     /// <summary>
@@ -30,7 +31,8 @@ public static class CancelScheduledSendExtensions
     /// <param name="context">The message scheduler</param>
     /// <param name="message">The </param>
     /// <returns></returns>
-    public static Task CancelScheduledSend<T>(this ConsumeContext context, ScheduledMessage<T> message)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static Task CancelScheduledSendAsync<T>(this ConsumeContext context, ScheduledMessage<T> message, CancellationToken cancellationToken = default)
         where T : class
     {
         if (context == null)
@@ -40,6 +42,6 @@ public static class CancelScheduledSendExtensions
 
         var scheduler = context.GetPayload<MessageSchedulerContext>();
 
-        return scheduler.CancelScheduledSend(message.Destination, message.TokenId);
+        return scheduler.CancelScheduledSendAsync(message, cancellationToken);
     }
 }

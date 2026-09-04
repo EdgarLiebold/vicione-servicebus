@@ -29,7 +29,7 @@ public class CachedSendEndpoint<TKey> :
         };
     }
 
-    public event Action Used;
+    public event Action? Used;
 
     public ConnectHandle ConnectSendObserver(ISendObserver observer)
     {
@@ -37,75 +37,75 @@ public class CachedSendEndpoint<TKey> :
         return _endpoint.ConnectSendObserver(observer);
     }
 
-    public Task<SendContext<T>> CreateSendContext<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    public Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class
     {
-        return _endpoint.CreateSendContext(message, pipe, cancellationToken);
+        return _endpoint.CreateSendContextAsync(message, pipe, cancellationToken);
     }
 
-    public Task Send<T>(T message, CancellationToken cancellationToken = new CancellationToken())
-        where T : class
-    {
-        Used?.Invoke();
-        return _endpoint.Send(message, cancellationToken);
-    }
-
-    public Task Send<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = new CancellationToken())
+    public Task SendAsync<T>(T message, CancellationToken cancellationToken = new CancellationToken())
         where T : class
     {
         Used?.Invoke();
-        return _endpoint.Send(message, pipe, cancellationToken);
+        return _endpoint.SendAsync(message, cancellationToken);
     }
 
-    public Task Send<T>(T message, IPipe<SendContext> pipe, CancellationToken cancellationToken = new CancellationToken())
+    public Task SendAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = new CancellationToken())
         where T : class
     {
         Used?.Invoke();
-        return _endpoint.Send(message, pipe, cancellationToken);
+        return _endpoint.SendAsync(message, pipe, cancellationToken);
     }
 
-    public Task Send(object message, CancellationToken cancellationToken = new CancellationToken())
-    {
-        Used?.Invoke();
-        return _endpoint.Send(message, cancellationToken);
-    }
-
-    public Task Send(object message, Type messageType, CancellationToken cancellationToken = new CancellationToken())
-    {
-        Used?.Invoke();
-        return _endpoint.Send(message, messageType, cancellationToken);
-    }
-
-    public Task Send(object message, IPipe<SendContext> pipe, CancellationToken cancellationToken = new CancellationToken())
-    {
-        Used?.Invoke();
-        return _endpoint.Send(message, pipe, cancellationToken);
-    }
-
-    public Task Send(object message, Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken = new CancellationToken())
-    {
-        Used?.Invoke();
-        return _endpoint.Send(message, messageType, pipe, cancellationToken);
-    }
-
-    public Task Send<T>(object values, CancellationToken cancellationToken = new CancellationToken())
+    public Task SendAsync<T>(T message, IPipe<SendContext> pipe, CancellationToken cancellationToken = new CancellationToken())
         where T : class
     {
         Used?.Invoke();
-        return _endpoint.Send<T>(values, cancellationToken);
+        return _endpoint.SendAsync(message, pipe, cancellationToken);
     }
 
-    public Task Send<T>(object values, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = new CancellationToken())
+    public Task SendAsync(object message, CancellationToken cancellationToken = new CancellationToken())
+    {
+        Used?.Invoke();
+        return _endpoint.SendAsync(message, cancellationToken);
+    }
+
+    public Task SendAsync(object message, Type messageType, CancellationToken cancellationToken = new CancellationToken())
+    {
+        Used?.Invoke();
+        return _endpoint.SendAsync(message, messageType, cancellationToken);
+    }
+
+    public Task SendAsync(object message, IPipe<SendContext> pipe, CancellationToken cancellationToken = new CancellationToken())
+    {
+        Used?.Invoke();
+        return _endpoint.SendAsync(message, pipe, cancellationToken);
+    }
+
+    public Task SendAsync(object message, Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken = new CancellationToken())
+    {
+        Used?.Invoke();
+        return _endpoint.SendAsync(message, messageType, pipe, cancellationToken);
+    }
+
+    public Task SendAsync<T>(object values, CancellationToken cancellationToken = new CancellationToken())
         where T : class
     {
         Used?.Invoke();
-        return _endpoint.Send(values, pipe, cancellationToken);
+        return _endpoint.SendAsync<T>(values, cancellationToken);
     }
 
-    public Task Send<T>(object values, IPipe<SendContext> pipe, CancellationToken cancellationToken = new CancellationToken())
+    public Task SendAsync<T>(object values, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = new CancellationToken())
         where T : class
     {
         Used?.Invoke();
-        return _endpoint.Send<T>(values, pipe, cancellationToken);
+        return _endpoint.SendAsync(values, pipe, cancellationToken);
+    }
+
+    public Task SendAsync<T>(object values, IPipe<SendContext> pipe, CancellationToken cancellationToken = new CancellationToken())
+        where T : class
+    {
+        Used?.Invoke();
+        return _endpoint.SendAsync<T>(values, pipe, cancellationToken);
     }
 }

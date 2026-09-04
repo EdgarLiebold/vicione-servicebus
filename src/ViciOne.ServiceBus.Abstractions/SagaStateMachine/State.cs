@@ -45,9 +45,9 @@ public interface State<TSaga> :
     /// <summary>
     /// Returns the superState of the state, if there is one
     /// </summary>
-    State<TSaga> SuperState { get; }
+    State<TSaga>? SuperState { get; }
 
-    Task Raise(BehaviorContext<TSaga> context);
+    Task RaiseAsync(BehaviorContext<TSaga> context, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Raise an event to the state, passing the instance
@@ -55,7 +55,8 @@ public interface State<TSaga> :
     /// <typeparam name="T">The event data type</typeparam>
     /// <param name="context">The event context</param>
     /// <returns></returns>
-    Task Raise<T>(BehaviorContext<TSaga, T> context)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task RaiseAsync<T>(BehaviorContext<TSaga, T> context, CancellationToken cancellationToken = default)
         where T : class;
 
     /// <summary>

@@ -10,9 +10,9 @@ public class RetryFaultObserverCache
 
     IRetryFaultObserver this[Type type] => _types.GetOrAdd(type, CreateTypeConverter).Value;
 
-    public static Task RetryFault(IRetryObserver observer, RetryContext context, Type contextType)
+    public static Task RetryFaultAsync(IRetryObserver observer, RetryContext context, Type contextType, CancellationToken cancellationToken = default)
     {
-        return Cached.Converters.Value[contextType].RetryFault(observer, context);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Cached.Converters.Value[contextType].RetryFaultAsync(observer, context);
     }
 
     static Lazy<IRetryFaultObserver> CreateTypeConverter(Type type)
@@ -31,7 +31,7 @@ public class RetryFaultObserverCache
 
     interface IRetryFaultObserver
     {
-        Task RetryFault(IRetryObserver observer, RetryContext context);
+        Task RetryFaultAsync(IRetryObserver observer, RetryContext context);
     }
 
 
@@ -39,12 +39,12 @@ public class RetryFaultObserverCache
         IRetryFaultObserver
         where T : class, PipeContext
     {
-        public Task RetryFault(IRetryObserver observer, RetryContext context)
+        public Task RetryFaultAsync(IRetryObserver observer, RetryContext context)
         {
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
 
-            return observer.RetryFault((RetryContext<T>)context);
+            return observer.RetryFaultAsync((RetryContext<T>)context);
         }
     }
 

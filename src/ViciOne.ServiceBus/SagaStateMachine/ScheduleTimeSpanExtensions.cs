@@ -7,26 +7,26 @@ namespace ViciOne.ServiceBus;
 public static class ScheduleTimeSpanExtensions
 {
     public static EventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this EventActivityBinder<TSaga> source,
-        Schedule<TSaga, TMessage> schedule, TMessage message, Action<SendContext<TMessage>> callback = null)
+        Schedule<TSaga, TMessage> schedule, TMessage message, Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorContext<TSaga> context)
+        DateTimeOffset TimeProvider(BehaviorContext<TSaga> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
+            return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
 
         return source.Add(new ScheduleActivity<TSaga, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(message, callback)));
     }
 
     public static EventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this EventActivityBinder<TSaga> source,
-        Schedule<TSaga, TMessage> schedule, Task<TMessage> message, Action<SendContext<TMessage>> callback = null)
+        Schedule<TSaga, TMessage> schedule, Task<TMessage> message, Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorContext<TSaga> context)
+        DateTimeOffset TimeProvider(BehaviorContext<TSaga> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
+            return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
 
         return source.Add(new ScheduleActivity<TSaga, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(message, callback)));
@@ -34,13 +34,13 @@ public static class ScheduleTimeSpanExtensions
 
     public static EventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this EventActivityBinder<TSaga> source,
         Schedule<TSaga, TMessage> schedule, TMessage message, ScheduleDelayProvider<TSaga> delayProvider,
-        Action<SendContext<TMessage>> callback = null)
+        Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorContext<TSaga> context)
+        DateTimeOffset TimeProvider(BehaviorContext<TSaga> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
+            return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
 
         return source.Add(new ScheduleActivity<TSaga, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(message, callback)));
@@ -48,13 +48,13 @@ public static class ScheduleTimeSpanExtensions
 
     public static EventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this EventActivityBinder<TSaga> source,
         Schedule<TSaga, TMessage> schedule, Task<TMessage> message, ScheduleDelayProvider<TSaga> delayProvider,
-        Action<SendContext<TMessage>> callback = null)
+        Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorContext<TSaga> context)
+        DateTimeOffset TimeProvider(BehaviorContext<TSaga> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
+            return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
 
         return source.Add(new ScheduleActivity<TSaga, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(message, callback)));
@@ -62,13 +62,13 @@ public static class ScheduleTimeSpanExtensions
 
     public static EventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this EventActivityBinder<TSaga> source,
         Schedule<TSaga, TMessage> schedule, EventMessageFactory<TSaga, TMessage> messageFactory,
-        Action<SendContext<TMessage>> callback = null)
+        Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorContext<TSaga> context)
+        DateTimeOffset TimeProvider(BehaviorContext<TSaga> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
+            return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
 
         return source.Add(new ScheduleActivity<TSaga, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
@@ -76,13 +76,13 @@ public static class ScheduleTimeSpanExtensions
 
     public static EventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this EventActivityBinder<TSaga> source,
         Schedule<TSaga, TMessage> schedule, AsyncEventMessageFactory<TSaga, TMessage> messageFactory,
-        Action<SendContext<TMessage>> callback = null)
+        Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorContext<TSaga> context)
+        DateTimeOffset TimeProvider(BehaviorContext<TSaga> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
+            return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
 
         return source.Add(new ScheduleActivity<TSaga, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
@@ -90,13 +90,13 @@ public static class ScheduleTimeSpanExtensions
 
     public static EventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this EventActivityBinder<TSaga> source,
         Schedule<TSaga, TMessage> schedule, Func<BehaviorContext<TSaga>, Task<SendTuple<TMessage>>> messageFactory,
-        Action<SendContext<TMessage>> callback = null)
+        Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorContext<TSaga> context)
+        DateTimeOffset TimeProvider(BehaviorContext<TSaga> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
+            return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
 
         return source.Add(new ScheduleActivity<TSaga, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
@@ -104,13 +104,13 @@ public static class ScheduleTimeSpanExtensions
 
     public static EventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this EventActivityBinder<TSaga> source,
         Schedule<TSaga, TMessage> schedule, EventMessageFactory<TSaga, TMessage> messageFactory, ScheduleDelayProvider<TSaga> delayProvider,
-        Action<SendContext<TMessage>> callback = null)
+        Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorContext<TSaga> context)
+        DateTimeOffset TimeProvider(BehaviorContext<TSaga> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
+            return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
 
         return source.Add(new ScheduleActivity<TSaga, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
@@ -118,13 +118,13 @@ public static class ScheduleTimeSpanExtensions
 
     public static EventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this EventActivityBinder<TSaga> source,
         Schedule<TSaga, TMessage> schedule, AsyncEventMessageFactory<TSaga, TMessage> messageFactory,
-        ScheduleDelayProvider<TSaga> delayProvider, Action<SendContext<TMessage>> callback = null)
+        ScheduleDelayProvider<TSaga> delayProvider, Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorContext<TSaga> context)
+        DateTimeOffset TimeProvider(BehaviorContext<TSaga> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
+            return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
 
         return source.Add(new ScheduleActivity<TSaga, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
@@ -132,41 +132,41 @@ public static class ScheduleTimeSpanExtensions
 
     public static EventActivityBinder<TSaga> Schedule<TSaga, TMessage>(this EventActivityBinder<TSaga> source,
         Schedule<TSaga, TMessage> schedule, Func<BehaviorContext<TSaga>, Task<SendTuple<TMessage>>> messageFactory,
-        ScheduleDelayProvider<TSaga> delayProvider, Action<SendContext<TMessage>> callback = null)
+        ScheduleDelayProvider<TSaga> delayProvider, Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorContext<TSaga> context)
+        DateTimeOffset TimeProvider(BehaviorContext<TSaga> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
+            return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
 
         return source.Add(new ScheduleActivity<TSaga, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
     }
 
     public static EventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this EventActivityBinder<TSaga, TData> source,
-        Schedule<TSaga, TMessage> schedule, TMessage message, Action<SendContext<TMessage>> callback = null)
+        Schedule<TSaga, TMessage> schedule, TMessage message, Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorContext<TSaga, TData> context)
+        DateTimeOffset TimeProvider(BehaviorContext<TSaga, TData> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
+            return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
 
         return source.Add(new ScheduleActivity<TSaga, TData, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(message, callback)));
     }
 
     public static EventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this EventActivityBinder<TSaga, TData> source,
-        Schedule<TSaga, TMessage> schedule, Task<TMessage> message, Action<SendContext<TMessage>> callback = null)
+        Schedule<TSaga, TMessage> schedule, Task<TMessage> message, Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorContext<TSaga, TData> context)
+        DateTimeOffset TimeProvider(BehaviorContext<TSaga, TData> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
+            return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
 
         return source.Add(new ScheduleActivity<TSaga, TData, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(message, callback)));
@@ -174,14 +174,14 @@ public static class ScheduleTimeSpanExtensions
 
     public static EventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this EventActivityBinder<TSaga, TData> source,
         Schedule<TSaga, TMessage> schedule, TMessage message, ScheduleDelayProvider<TSaga, TData> delayProvider,
-        Action<SendContext<TMessage>> callback = null)
+        Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorContext<TSaga, TData> context)
+        DateTimeOffset TimeProvider(BehaviorContext<TSaga, TData> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
+            return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
 
         return source.Add(new ScheduleActivity<TSaga, TData, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(message, callback)));
@@ -189,14 +189,14 @@ public static class ScheduleTimeSpanExtensions
 
     public static EventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this EventActivityBinder<TSaga, TData> source,
         Schedule<TSaga, TMessage> schedule, Task<TMessage> message, ScheduleDelayProvider<TSaga, TData> delayProvider,
-        Action<SendContext<TMessage>> callback = null)
+        Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorContext<TSaga, TData> context)
+        DateTimeOffset TimeProvider(BehaviorContext<TSaga, TData> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
+            return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
 
         return source.Add(new ScheduleActivity<TSaga, TData, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(message, callback)));
@@ -204,14 +204,14 @@ public static class ScheduleTimeSpanExtensions
 
     public static EventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this EventActivityBinder<TSaga, TData> source,
         Schedule<TSaga, TMessage> schedule, EventMessageFactory<TSaga, TData, TMessage> messageFactory,
-        Action<SendContext<TMessage>> callback = null)
+        Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorContext<TSaga, TData> context)
+        DateTimeOffset TimeProvider(BehaviorContext<TSaga, TData> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
+            return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
 
         return source.Add(new ScheduleActivity<TSaga, TData, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
@@ -219,15 +219,15 @@ public static class ScheduleTimeSpanExtensions
 
     public static EventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this EventActivityBinder<TSaga, TData> source,
         Schedule<TSaga, TMessage> schedule, AsyncEventMessageFactory<TSaga, TData, TMessage> messageFactory,
-        Action<SendContext<TMessage>> callback =
+        Action<SendContext<TMessage>>? callback =
             null)
         where TSaga : class, SagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorContext<TSaga, TData> context)
+        DateTimeOffset TimeProvider(BehaviorContext<TSaga, TData> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
+            return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
 
         return source.Add(new ScheduleActivity<TSaga, TData, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
@@ -235,15 +235,15 @@ public static class ScheduleTimeSpanExtensions
 
     public static EventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this EventActivityBinder<TSaga, TData> source,
         Schedule<TSaga, TMessage> schedule, Func<BehaviorContext<TSaga, TData>, Task<SendTuple<TMessage>>> messageFactory,
-        Action<SendContext<TMessage>> callback =
+        Action<SendContext<TMessage>>? callback =
             null)
         where TSaga : class, SagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorContext<TSaga, TData> context)
+        DateTimeOffset TimeProvider(BehaviorContext<TSaga, TData> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
+            return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
 
         return source.Add(new ScheduleActivity<TSaga, TData, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
@@ -252,14 +252,14 @@ public static class ScheduleTimeSpanExtensions
     public static EventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this EventActivityBinder<TSaga, TData> source,
         Schedule<TSaga, TMessage> schedule,
         EventMessageFactory<TSaga, TData, TMessage> messageFactory,
-        ScheduleDelayProvider<TSaga, TData> delayProvider, Action<SendContext<TMessage>> callback = null)
+        ScheduleDelayProvider<TSaga, TData> delayProvider, Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorContext<TSaga, TData> context)
+        DateTimeOffset TimeProvider(BehaviorContext<TSaga, TData> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
+            return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
 
         return source.Add(new ScheduleActivity<TSaga, TData, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
@@ -268,14 +268,14 @@ public static class ScheduleTimeSpanExtensions
     public static EventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this EventActivityBinder<TSaga, TData> source,
         Schedule<TSaga, TMessage> schedule,
         AsyncEventMessageFactory<TSaga, TData, TMessage> messageFactory,
-        ScheduleDelayProvider<TSaga, TData> delayProvider, Action<SendContext<TMessage>> callback = null)
+        ScheduleDelayProvider<TSaga, TData> delayProvider, Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorContext<TSaga, TData> context)
+        DateTimeOffset TimeProvider(BehaviorContext<TSaga, TData> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
+            return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
 
         return source.Add(new ScheduleActivity<TSaga, TData, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
@@ -284,14 +284,14 @@ public static class ScheduleTimeSpanExtensions
     public static EventActivityBinder<TSaga, TData> Schedule<TSaga, TData, TMessage>(this EventActivityBinder<TSaga, TData> source,
         Schedule<TSaga, TMessage> schedule,
         Func<BehaviorContext<TSaga, TData>, Task<SendTuple<TMessage>>> messageFactory,
-        ScheduleDelayProvider<TSaga, TData> delayProvider, Action<SendContext<TMessage>> callback = null)
+        ScheduleDelayProvider<TSaga, TData> delayProvider, Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TData : class
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorContext<TSaga, TData> context)
+        DateTimeOffset TimeProvider(BehaviorContext<TSaga, TData> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
+            return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
 
         return source.Add(new ScheduleActivity<TSaga, TData, TMessage>(schedule, TimeProvider, MessageFactory<TMessage>.Create(messageFactory, callback)));
@@ -299,14 +299,14 @@ public static class ScheduleTimeSpanExtensions
 
     public static ExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this ExceptionActivityBinder<TSaga, TException> source,
         Schedule<TSaga, TMessage> schedule, TMessage message,
-        Action<SendContext<TMessage>> callback = null)
+        Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TException : Exception
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
+        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
+            return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
 
         return source.Add(new FaultedScheduleActivity<TSaga, TException, TMessage>(schedule, TimeProvider,
@@ -315,14 +315,14 @@ public static class ScheduleTimeSpanExtensions
 
     public static ExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this ExceptionActivityBinder<TSaga, TException> source,
         Schedule<TSaga, TMessage> schedule, Task<TMessage> message,
-        Action<SendContext<TMessage>> callback = null)
+        Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TException : Exception
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
+        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
+            return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
 
         return source.Add(new FaultedScheduleActivity<TSaga, TException, TMessage>(schedule, TimeProvider,
@@ -331,14 +331,14 @@ public static class ScheduleTimeSpanExtensions
 
     public static ExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this ExceptionActivityBinder<TSaga, TException> source,
         Schedule<TSaga, TMessage> schedule, TMessage message,
-        ScheduleDelayExceptionProvider<TSaga, TException> delayProvider, Action<SendContext<TMessage>> callback = null)
+        ScheduleDelayExceptionProvider<TSaga, TException> delayProvider, Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TException : Exception
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
+        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
+            return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
 
         return source.Add(new FaultedScheduleActivity<TSaga, TException, TMessage>(schedule, TimeProvider,
@@ -347,14 +347,14 @@ public static class ScheduleTimeSpanExtensions
 
     public static ExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this ExceptionActivityBinder<TSaga, TException> source,
         Schedule<TSaga, TMessage> schedule, Task<TMessage> message,
-        ScheduleDelayExceptionProvider<TSaga, TException> delayProvider, Action<SendContext<TMessage>> callback = null)
+        ScheduleDelayExceptionProvider<TSaga, TException> delayProvider, Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TException : Exception
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
+        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
+            return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
 
         return source.Add(new FaultedScheduleActivity<TSaga, TException, TMessage>(schedule, TimeProvider,
@@ -363,14 +363,14 @@ public static class ScheduleTimeSpanExtensions
 
     public static ExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this ExceptionActivityBinder<TSaga, TException> source,
         Schedule<TSaga, TMessage> schedule,
-        EventExceptionMessageFactory<TSaga, TException, TMessage> messageFactory, Action<SendContext<TMessage>> callback = null)
+        EventExceptionMessageFactory<TSaga, TException, TMessage> messageFactory, Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TException : Exception
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
+        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
+            return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
 
         return source.Add(new FaultedScheduleActivity<TSaga, TException, TMessage>(schedule, TimeProvider,
@@ -379,14 +379,14 @@ public static class ScheduleTimeSpanExtensions
 
     public static ExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this ExceptionActivityBinder<TSaga, TException> source,
         Schedule<TSaga, TMessage> schedule,
-        AsyncEventExceptionMessageFactory<TSaga, TException, TMessage> messageFactory, Action<SendContext<TMessage>> callback = null)
+        AsyncEventExceptionMessageFactory<TSaga, TException, TMessage> messageFactory, Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TException : Exception
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
+        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
+            return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
 
         return source.Add(new FaultedScheduleActivity<TSaga, TException, TMessage>(schedule, TimeProvider,
@@ -395,14 +395,14 @@ public static class ScheduleTimeSpanExtensions
 
     public static ExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this ExceptionActivityBinder<TSaga, TException> source,
         Schedule<TSaga, TMessage> schedule,
-        Func<BehaviorExceptionContext<TSaga, TException>, Task<SendTuple<TMessage>>> messageFactory, Action<SendContext<TMessage>> callback = null)
+        Func<BehaviorExceptionContext<TSaga, TException>, Task<SendTuple<TMessage>>> messageFactory, Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TException : Exception
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
+        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
+            return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
 
         return source.Add(new FaultedScheduleActivity<TSaga, TException, TMessage>(schedule, TimeProvider,
@@ -412,14 +412,14 @@ public static class ScheduleTimeSpanExtensions
     public static ExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this ExceptionActivityBinder<TSaga, TException> source,
         Schedule<TSaga, TMessage> schedule,
         EventExceptionMessageFactory<TSaga, TException, TMessage> messageFactory,
-        ScheduleDelayExceptionProvider<TSaga, TException> delayProvider, Action<SendContext<TMessage>> callback = null)
+        ScheduleDelayExceptionProvider<TSaga, TException> delayProvider, Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TException : Exception
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
+        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
+            return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
 
         return source.Add(new FaultedScheduleActivity<TSaga, TException, TMessage>(schedule, TimeProvider,
@@ -429,14 +429,14 @@ public static class ScheduleTimeSpanExtensions
     public static ExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this ExceptionActivityBinder<TSaga, TException> source,
         Schedule<TSaga, TMessage> schedule,
         AsyncEventExceptionMessageFactory<TSaga, TException, TMessage> messageFactory,
-        ScheduleDelayExceptionProvider<TSaga, TException> delayProvider, Action<SendContext<TMessage>> callback = null)
+        ScheduleDelayExceptionProvider<TSaga, TException> delayProvider, Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TException : Exception
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
+        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
+            return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
 
         return source.Add(new FaultedScheduleActivity<TSaga, TException, TMessage>(schedule, TimeProvider,
@@ -446,14 +446,14 @@ public static class ScheduleTimeSpanExtensions
     public static ExceptionActivityBinder<TSaga, TException> Schedule<TSaga, TException, TMessage>(this ExceptionActivityBinder<TSaga, TException> source,
         Schedule<TSaga, TMessage> schedule,
         Func<BehaviorExceptionContext<TSaga, TException>, Task<SendTuple<TMessage>>> messageFactory,
-        ScheduleDelayExceptionProvider<TSaga, TException> delayProvider, Action<SendContext<TMessage>> callback = null)
+        ScheduleDelayExceptionProvider<TSaga, TException> delayProvider, Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TException : Exception
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
+        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TException> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
+            return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
 
         return source.Add(new FaultedScheduleActivity<TSaga, TException, TMessage>(schedule, TimeProvider,
@@ -462,15 +462,15 @@ public static class ScheduleTimeSpanExtensions
 
     public static ExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
         this ExceptionActivityBinder<TSaga, TData, TException> source, Schedule<TSaga, TMessage> schedule, TMessage message,
-        Action<SendContext<TMessage>> callback = null)
+        Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TData : class
         where TException : Exception
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
+        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
+            return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
 
         return source.Add(new FaultedScheduleActivity<TSaga, TData, TException, TMessage>(schedule, TimeProvider,
@@ -479,15 +479,15 @@ public static class ScheduleTimeSpanExtensions
 
     public static ExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
         this ExceptionActivityBinder<TSaga, TData, TException> source, Schedule<TSaga, TMessage> schedule, Task<TMessage> message,
-        Action<SendContext<TMessage>> callback = null)
+        Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TData : class
         where TException : Exception
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
+        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
+            return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
 
         return source.Add(new FaultedScheduleActivity<TSaga, TData, TException, TMessage>(schedule, TimeProvider,
@@ -496,15 +496,15 @@ public static class ScheduleTimeSpanExtensions
 
     public static ExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
         this ExceptionActivityBinder<TSaga, TData, TException> source, Schedule<TSaga, TMessage> schedule, TMessage message,
-        ScheduleDelayExceptionProvider<TSaga, TData, TException> delayProvider, Action<SendContext<TMessage>> callback = null)
+        ScheduleDelayExceptionProvider<TSaga, TData, TException> delayProvider, Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TData : class
         where TException : Exception
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
+        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
+            return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
 
         return source.Add(new FaultedScheduleActivity<TSaga, TData, TException, TMessage>(schedule, TimeProvider,
@@ -513,15 +513,15 @@ public static class ScheduleTimeSpanExtensions
 
     public static ExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
         this ExceptionActivityBinder<TSaga, TData, TException> source, Schedule<TSaga, TMessage> schedule, Task<TMessage> message,
-        ScheduleDelayExceptionProvider<TSaga, TData, TException> delayProvider, Action<SendContext<TMessage>> callback = null)
+        ScheduleDelayExceptionProvider<TSaga, TData, TException> delayProvider, Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TData : class
         where TException : Exception
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
+        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
+            return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
 
         return source.Add(new FaultedScheduleActivity<TSaga, TData, TException, TMessage>(schedule, TimeProvider,
@@ -530,15 +530,15 @@ public static class ScheduleTimeSpanExtensions
 
     public static ExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
         this ExceptionActivityBinder<TSaga, TData, TException> source, Schedule<TSaga, TMessage> schedule,
-        EventExceptionMessageFactory<TSaga, TData, TException, TMessage> messageFactory, Action<SendContext<TMessage>> callback = null)
+        EventExceptionMessageFactory<TSaga, TData, TException, TMessage> messageFactory, Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TData : class
         where TException : Exception
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
+        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
+            return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
 
         return source.Add(new FaultedScheduleActivity<TSaga, TData, TException, TMessage>(schedule, TimeProvider,
@@ -547,15 +547,15 @@ public static class ScheduleTimeSpanExtensions
 
     public static ExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
         this ExceptionActivityBinder<TSaga, TData, TException> source, Schedule<TSaga, TMessage> schedule,
-        AsyncEventExceptionMessageFactory<TSaga, TData, TException, TMessage> messageFactory, Action<SendContext<TMessage>> callback = null)
+        AsyncEventExceptionMessageFactory<TSaga, TData, TException, TMessage> messageFactory, Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TData : class
         where TException : Exception
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
+        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
+            return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
 
         return source.Add(new FaultedScheduleActivity<TSaga, TData, TException, TMessage>(schedule, TimeProvider,
@@ -564,15 +564,15 @@ public static class ScheduleTimeSpanExtensions
 
     public static ExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
         this ExceptionActivityBinder<TSaga, TData, TException> source, Schedule<TSaga, TMessage> schedule,
-        Func<BehaviorExceptionContext<TSaga, TData, TException>, Task<SendTuple<TMessage>>> messageFactory, Action<SendContext<TMessage>> callback = null)
+        Func<BehaviorExceptionContext<TSaga, TData, TException>, Task<SendTuple<TMessage>>> messageFactory, Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TData : class
         where TException : Exception
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
+        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + schedule.GetDelay(context);
+            return context.GetTimeProvider().GetUtcNow() + schedule.GetDelay(context);
         }
 
         return source.Add(new FaultedScheduleActivity<TSaga, TData, TException, TMessage>(schedule, TimeProvider,
@@ -582,15 +582,15 @@ public static class ScheduleTimeSpanExtensions
     public static ExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
         this ExceptionActivityBinder<TSaga, TData, TException> source, Schedule<TSaga, TMessage> schedule,
         EventExceptionMessageFactory<TSaga, TData, TException, TMessage> messageFactory,
-        ScheduleDelayExceptionProvider<TSaga, TData, TException> delayProvider, Action<SendContext<TMessage>> callback = null)
+        ScheduleDelayExceptionProvider<TSaga, TData, TException> delayProvider, Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TData : class
         where TException : Exception
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
+        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
+            return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
 
         return source.Add(new FaultedScheduleActivity<TSaga, TData, TException, TMessage>(schedule, TimeProvider,
@@ -600,15 +600,15 @@ public static class ScheduleTimeSpanExtensions
     public static ExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
         this ExceptionActivityBinder<TSaga, TData, TException> source, Schedule<TSaga, TMessage> schedule,
         AsyncEventExceptionMessageFactory<TSaga, TData, TException, TMessage> messageFactory,
-        ScheduleDelayExceptionProvider<TSaga, TData, TException> delayProvider, Action<SendContext<TMessage>> callback = null)
+        ScheduleDelayExceptionProvider<TSaga, TData, TException> delayProvider, Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TData : class
         where TException : Exception
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
+        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
+            return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
 
         return source.Add(new FaultedScheduleActivity<TSaga, TData, TException, TMessage>(schedule, TimeProvider,
@@ -618,15 +618,15 @@ public static class ScheduleTimeSpanExtensions
     public static ExceptionActivityBinder<TSaga, TData, TException> Schedule<TSaga, TData, TException, TMessage>(
         this ExceptionActivityBinder<TSaga, TData, TException> source, Schedule<TSaga, TMessage> schedule,
         Func<BehaviorExceptionContext<TSaga, TData, TException>, Task<SendTuple<TMessage>>> messageFactory,
-        ScheduleDelayExceptionProvider<TSaga, TData, TException> delayProvider, Action<SendContext<TMessage>> callback = null)
+        ScheduleDelayExceptionProvider<TSaga, TData, TException> delayProvider, Action<SendContext<TMessage>>? callback = null)
         where TSaga : class, SagaStateMachineInstance
         where TData : class
         where TException : Exception
         where TMessage : class
     {
-        DateTime TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
+        DateTimeOffset TimeProvider(BehaviorExceptionContext<TSaga, TData, TException> context)
         {
-            return context.GetTimeProvider().GetUtcNow().UtcDateTime + delayProvider(context);
+            return context.GetTimeProvider().GetUtcNow() + delayProvider(context);
         }
 
         return source.Add(new FaultedScheduleActivity<TSaga, TData, TException, TMessage>(schedule, TimeProvider,

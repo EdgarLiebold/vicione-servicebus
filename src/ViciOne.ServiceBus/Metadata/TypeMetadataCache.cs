@@ -75,7 +75,7 @@ public class TypeMetadataCache<T> :
     public static string DiagnosticAddress => MessageTypeCache<T>.DiagnosticAddress;
     public static IEnumerable<PropertyInfo> Properties => MessageTypeCache<T>.Properties;
     public static bool IsValidMessageType => MessageTypeCache<T>.IsValidMessageType;
-    public static string InvalidMessageTypeReason => MessageTypeCache<T>.InvalidMessageTypeReason;
+    public static string? InvalidMessageTypeReason => MessageTypeCache<T>.InvalidMessageTypeReason;
     public static bool IsTemporaryMessageType => MessageTypeCache<T>.IsTemporaryMessageType;
     public static Type[] MessageTypes => MessageTypeCache<T>.MessageTypes;
     public static string[] MessageTypeNames => MessageTypeCache<T>.MessageTypeNames;

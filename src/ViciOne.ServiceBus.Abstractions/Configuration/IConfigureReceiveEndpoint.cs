@@ -11,5 +11,5 @@ public interface IConfigureReceiveEndpoint
     /// </summary>
     /// <param name="name"></param>
     /// <param name="configurator"></param>
-    void Configure(string name, IReceiveEndpointConfigurator configurator);
+    void Configure(string? name, IReceiveEndpointConfigurator configurator);
 }

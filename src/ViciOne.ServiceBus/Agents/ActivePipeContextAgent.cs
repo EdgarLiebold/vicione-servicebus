@@ -30,9 +30,9 @@ public class ActivePipeContextAgent<TContext> :
 
     Task<TContext> PipeContextHandle<TContext>.Context => _contextHandle.Context;
 
-    Task ActivePipeContextHandle<TContext>.Faulted(Exception exception)
+    Task ActivePipeContextHandle<TContext>.FaultedAsync(Exception exception, CancellationToken cancellationToken)
     {
-        return _contextHandle.Faulted(exception);
+        return _contextHandle.FaultedAsync(exception, cancellationToken: cancellationToken);
     }
 
     ValueTask IAsyncDisposable.DisposeAsync()
@@ -41,7 +41,7 @@ public class ActivePipeContextAgent<TContext> :
     }
 
     /// <inheritdoc />
-    protected override async Task StopAgent(StopContext context)
+    protected override async Task StopAgentAsync(StopContext context)
     {
         if (_contextHandle.Context.Status == TaskStatus.RanToCompletion)
             await _contextHandle.DisposeAsync().ConfigureAwait(false);

@@ -1,111 +1,32 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.Context;
 
 namespace ViciOne.ServiceBus;
 
+/// <summary>
+/// Sends messages to a specific destination using application-level options.
+/// </summary>
 public interface ISendEndpoint :
     ISendObserverConnector
 {
-    /// <summary>
-    /// Send a message
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="message">The message</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task Send<T>(T message, CancellationToken cancellationToken = default)
+    /// <summary>Sends a message to the endpoint.</summary>
+    /// <param name="message">The message processed by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task SendAsync<T>(T message, CancellationToken cancellationToken = default)
         where T : class;
 
-    /// <summary>
-    /// Send a message
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="message">The message</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task Send<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
-        where T : class;
+    /// <summary>Sends a message to the endpoint with application-level metadata.</summary>
+    /// <param name="message">The message processed by the operation.</param>
+    /// <param name="options">The options used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task SendAsync<T>(T message, SendOptions options, CancellationToken cancellationToken = default)
+        where T : class
+    {
+        ArgumentNullException.ThrowIfNull(options);
 
-    /// <summary>
-    /// Send a message
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    /// <param name="message">The message</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task Send<T>(T message, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
-        where T : class;
-
-    /// <summary>
-    /// Sends an object as a message, using the type of the message instance.
-    /// </summary>
-    /// <param name="message">The message object</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task Send(object message, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Sends an object as a message, using the message type specified. If the object cannot be cast
-    /// to the specified message type, an exception will be thrown.
-    /// </summary>
-    /// <param name="message">The message object</param>
-    /// <param name="messageType">The type of the message (use message.GetType() if desired)</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task Send(object message, Type messageType, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Sends an object as a message.
-    /// </summary>
-    /// <param name="message">The message object</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task Send(object message, IPipe<SendContext> pipe, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Sends an object as a message, using the message type specified. If the object cannot be cast
-    /// to the specified message type, an exception will be thrown.
-    /// </summary>
-    /// <param name="message">The message object</param>
-    /// <param name="messageType">The type of the message (use message.GetType() if desired)</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task Send(object message, Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Sends an interface message, initializing the properties of the interface using the anonymous object specified
-    /// </summary>
-    /// <typeparam name="T">The interface type to send</typeparam>
-    /// <param name="values">The property values to initialize on the interface</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task Send<T>(object values, CancellationToken cancellationToken = default)
-        where T : class;
-
-    /// <summary>
-    /// Sends an interface message, initializing the properties of the interface using the anonymous object specified
-    /// </summary>
-    /// <typeparam name="T">The interface type to send</typeparam>
-    /// <param name="values">The property values to initialize on the interface</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task Send<T>(object values, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
-        where T : class;
-
-    /// <summary>
-    /// Sends an interface message, initializing the properties of the interface using the anonymous object specified
-    /// </summary>
-    /// <typeparam name="T">The interface type to send</typeparam>
-    /// <param name="values">The property values to initialize on the interface</param>
-    /// <param name="pipe"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
-    Task Send<T>(object values, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
-        where T : class;
+        return this is Advanced.IAdvancedSendEndpoint advanced
+            ? advanced.SendAsync(message, new SendOptionsPipe<T>(options), cancellationToken)
+            : throw new NotSupportedException($"The send endpoint '{GetType().FullName}' does not support send options.");
+    }
 }

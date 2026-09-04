@@ -91,7 +91,8 @@ public interface IItineraryBuilder
     /// <param name="events"></param>
     /// <param name="callback"></param>
     /// <returns></returns>
-    Task AddSubscription(Uri address, RoutingSlipEvents events, Func<ISendEndpoint, Task> callback);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task AddSubscriptionAsync(Uri address, RoutingSlipEvents events, Func<ISendEndpoint, Task> callback, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Adds a message subscription to the routing slip that will be sent at the specified event points
@@ -101,7 +102,8 @@ public interface IItineraryBuilder
     /// <param name="contents"></param>
     /// <param name="callback"></param>
     /// <returns></returns>
-    Task AddSubscription(Uri address, RoutingSlipEvents events, RoutingSlipEventContents contents, Func<ISendEndpoint, Task> callback);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task AddSubscriptionAsync(Uri address, RoutingSlipEvents events, RoutingSlipEventContents contents, Func<ISendEndpoint, Task> callback, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Add an explicit subscription to the routing slip events
@@ -121,5 +123,6 @@ public interface IItineraryBuilder
     /// <param name="contents"></param>
     /// <param name="callback"></param>
     /// <returns></returns>
-    Task AddSubscription(Uri address, RoutingSlipEvents events, RoutingSlipEventContents contents, string activityName, Func<ISendEndpoint, Task> callback);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task AddSubscriptionAsync(Uri address, RoutingSlipEvents events, RoutingSlipEventContents contents, string activityName, Func<ISendEndpoint, Task> callback, CancellationToken cancellationToken = default);
 }

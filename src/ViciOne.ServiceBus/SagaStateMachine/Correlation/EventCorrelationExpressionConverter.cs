@@ -18,9 +18,10 @@ public class EventCorrelationExpressionConverter<TInstance, TMessage> :
 
     public Expression<Func<TInstance, bool>> Convert(Expression<Func<TInstance, ConsumeContext<TMessage>, bool>> expression)
     {
-        var result = Visit(expression);
+        var result = Visit(expression) as LambdaExpression
+            ?? throw new InvalidOperationException("The correlation expression could not be converted to a lambda expression.");
 
-        return RemoveMessageParameter(result as LambdaExpression);
+        return RemoveMessageParameter(result);
     }
 
     static Expression<Func<TInstance, bool>> RemoveMessageParameter(LambdaExpression lambda)
@@ -43,7 +44,8 @@ public class EventCorrelationExpressionConverter<TInstance, TMessage> :
 
     Expression EvaluateConsumeContextAccess(MemberExpression exp)
     {
-        var parameter = exp.Expression as ParameterExpression;
+        var parameter = exp.Expression as ParameterExpression
+            ?? throw new InvalidOperationException("The consume context access must originate from a parameter expression.");
 
         var fn = Expression.Lambda(typeof(Func<,>).MakeGenericType(typeof(ConsumeContext<TMessage>), exp.Type), exp, parameter).CompileFast();
 

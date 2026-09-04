@@ -7,7 +7,7 @@ public sealed class ConsumerConcurrencyGateTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-V5-CONSUMER-GATE", "serial-exclusion-and-release")]
-    public async Task SerialGate_ExcludesTheSecondInvocationUntilTheFirstCompletes()
+    public async Task SerialGate_ExcludesTheSecondInvocationUntilTheFirstCompletesAsync()
     {
         using ConsumerConcurrencyGate<Message> gate = new(ConsumerConcurrencyPolicy.Serial);
         var firstEntered = NewSignal();
@@ -35,7 +35,7 @@ public sealed class ConsumerConcurrencyGateTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-V5-CONSUMER-GATE", "parallel-exact-maximum")]
-    public async Task ParallelGate_AdmitsExactlyTheDeclaredMaximum()
+    public async Task ParallelGate_AdmitsExactlyTheDeclaredMaximumAsync()
     {
         using ConsumerConcurrencyGate<Message> gate = new(ConsumerConcurrencyPolicy.Parallel(2));
         var release = NewSignal();
@@ -45,7 +45,7 @@ public sealed class ConsumerConcurrencyGateTests
         int active = 0;
         int maximum = 0;
 
-        async ValueTask Hold(TaskCompletionSource signal, CancellationToken cancellationToken)
+        async ValueTask HoldAsync(TaskCompletionSource signal, CancellationToken cancellationToken)
         {
             int total = Interlocked.Increment(ref entered);
             int current = Interlocked.Increment(ref active);
@@ -66,11 +66,11 @@ public sealed class ConsumerConcurrencyGateTests
             }
         }
 
-        Task one = gate.ExecuteAsync(new Message(1), NewSignal(), Hold, TestContext.Current.CancellationToken).AsTask();
-        Task two = gate.ExecuteAsync(new Message(2), NewSignal(), Hold, TestContext.Current.CancellationToken).AsTask();
+        Task one = gate.ExecuteAsync(new Message(1), NewSignal(), HoldAsync, TestContext.Current.CancellationToken).AsTask();
+        Task two = gate.ExecuteAsync(new Message(2), NewSignal(), HoldAsync, TestContext.Current.CancellationToken).AsTask();
         await twoEntered.Task.WaitAsync(TestContext.Current.CancellationToken);
 
-        Task three = gate.ExecuteAsync(new Message(3), NewSignal(), Hold, TestContext.Current.CancellationToken).AsTask();
+        Task three = gate.ExecuteAsync(new Message(3), NewSignal(), HoldAsync, TestContext.Current.CancellationToken).AsTask();
         Assert.False(thirdEntered.Task.IsCompleted);
         Assert.Equal(2, Volatile.Read(ref maximum));
 
@@ -82,7 +82,7 @@ public sealed class ConsumerConcurrencyGateTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-V5-CONSUMER-GATE", "waiting-cancellation-preserves-token-and-capacity")]
-    public async Task CanceledWaiter_PreservesItsTokenAndConsumesNoSlot()
+    public async Task CanceledWaiter_PreservesItsTokenAndConsumesNoSlotAsync()
     {
         using ConsumerConcurrencyGate<Message> gate = new(ConsumerConcurrencyPolicy.Serial);
         var entered = NewSignal();
@@ -114,7 +114,7 @@ public sealed class ConsumerConcurrencyGateTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-V5-CONSUMER-GATE", "pipeline-fault-releases-capacity")]
-    public async Task PipelineFailure_ReleasesTheOwnedSlotAndPreservesTheExactFailure()
+    public async Task PipelineFailure_ReleasesTheOwnedSlotAndPreservesTheExactFailureAsync()
     {
         using ConsumerConcurrencyGate<Message> gate = new(ConsumerConcurrencyPolicy.Serial);
         var expected = new InvalidOperationException("consumer failed");
@@ -135,7 +135,7 @@ public sealed class ConsumerConcurrencyGateTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-V5-CONSUMER-PARTITION", "same-key-exclusion-different-key-parallelism")]
-    public async Task PartitionedGate_ExcludesTheSameKeyButAdmitsADifferentPartition()
+    public async Task PartitionedGate_ExcludesTheSameKeyButAdmitsADifferentPartitionAsync()
     {
         using PartitionedConsumerConcurrencyGate<Message, int> gate = new(8, static message => message.Key);
         var firstEntered = NewSignal();
@@ -172,7 +172,7 @@ public sealed class ConsumerConcurrencyGateTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-V5-CONSUMER-PARTITION", "null-key-and-hash-boundaries")]
-    public async Task PartitionedGate_RejectsNullKeysAndHandlesMinimumHashCodes()
+    public async Task PartitionedGate_RejectsNullKeysAndHandlesMinimumHashCodesAsync()
     {
         using PartitionedConsumerConcurrencyGate<NullableKeyMessage, string> nullGate = new(2, static message => message.Key!);
         InvalidOperationException nullFailure = await Assert.ThrowsAsync<InvalidOperationException>(() =>
@@ -192,7 +192,7 @@ public sealed class ConsumerConcurrencyGateTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-V5-CONSUMER-GATE", "dispose-closes-admission-and-drains-owned-work")]
-    public async Task Dispose_RejectsNewAdmissionButLetsAcceptedActiveAndWaitingWorkDrain()
+    public async Task Dispose_RejectsNewAdmissionButLetsAcceptedActiveAndWaitingWorkDrainAsync()
     {
         ConsumerConcurrencyGate<Message> gate = new(ConsumerConcurrencyPolicy.Serial);
         var firstEntered = NewSignal();

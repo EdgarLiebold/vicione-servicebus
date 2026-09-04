@@ -109,7 +109,8 @@ public static class DependencyInjectionTestingExtensions
     {
         services.AddOptions<TextWriterLoggerOptions>();
         services.TryAddSingleton<ILoggerFactory>(provider =>
-            new TextWriterLoggerFactory(textWriter ?? Console.Out, provider.GetRequiredService<IOptions<TextWriterLoggerOptions>>()));
+            new TextWriterLoggerFactory(textWriter ?? Console.Out, provider.GetRequiredService<IOptions<TextWriterLoggerOptions>>(),
+                provider.GetService<TimeProvider>()));
         services.TryAddSingleton(typeof(ILogger<>), typeof(Logger<>));
 
         return services;

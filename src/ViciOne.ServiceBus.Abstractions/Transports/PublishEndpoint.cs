@@ -9,7 +9,8 @@ namespace ViciOne.ServiceBus.Transports;
 /// The publish endpoint delivers messages to the topic/exchange/whatever based upon the publish topology of the broker, by message type.
 /// </summary>
 public class PublishEndpoint :
-    IPublishEndpoint
+    IPublishEndpoint,
+    Advanced.IAdvancedPublishEndpoint
 {
     public PublishEndpoint(IPublishEndpointProvider provider)
     {
@@ -18,79 +19,79 @@ public class PublishEndpoint :
 
     protected IPublishEndpointProvider PublishEndpointProvider { get; set; }
 
-    public Task Publish<T>(T message, CancellationToken cancellationToken)
+    public Task PublishAsync<T>(T message, CancellationToken cancellationToken)
         where T : class
     {
-        return PublishInternal(cancellationToken, message);
+        return PublishInternalAsync(cancellationToken, message);
     }
 
-    public Task Publish<T>(T message, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken)
+    public Task PublishAsync<T>(T message, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken)
         where T : class
     {
-        return PublishInternal(cancellationToken, message, publishPipe);
+        return PublishInternalAsync(cancellationToken, message, publishPipe);
     }
 
-    public Task Publish<T>(T message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
+    public Task PublishAsync<T>(T message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
         where T : class
     {
-        return PublishInternal(cancellationToken, message, publishPipe);
+        return PublishInternalAsync(cancellationToken, message, publishPipe);
     }
 
-    public Task Publish(object message, CancellationToken cancellationToken)
+    public Task PublishAsync(object message, CancellationToken cancellationToken)
     {
         if (message == null)
             throw new ArgumentNullException(nameof(message));
 
         var messageType = message.GetType();
 
-        return PublishEndpointConverterCache.Publish(this, message, messageType, cancellationToken);
+        return PublishEndpointConverterCache.PublishAsync(this, message, messageType, cancellationToken);
     }
 
-    public Task Publish(object message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
+    public Task PublishAsync(object message, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
     {
         if (message == null)
             throw new ArgumentNullException(nameof(message));
 
         var messageType = message.GetType();
 
-        return PublishEndpointConverterCache.Publish(this, message, messageType, publishPipe, cancellationToken);
+        return PublishEndpointConverterCache.PublishAsync(this, message, messageType, publishPipe, cancellationToken);
     }
 
-    public Task Publish(object message, Type messageType, CancellationToken cancellationToken)
+    public Task PublishAsync(object message, Type messageType, CancellationToken cancellationToken)
     {
-        return PublishEndpointConverterCache.Publish(this, message, messageType, cancellationToken);
+        return PublishEndpointConverterCache.PublishAsync(this, message, messageType, cancellationToken);
     }
 
-    public Task Publish(object message, Type messageType, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
+    public Task PublishAsync(object message, Type messageType, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
     {
-        return PublishEndpointConverterCache.Publish(this, message, messageType, publishPipe, cancellationToken);
+        return PublishEndpointConverterCache.PublishAsync(this, message, messageType, publishPipe, cancellationToken);
     }
 
-    public Task Publish<T>(object values, CancellationToken cancellationToken)
+    public Task PublishAsync<T>(object values, CancellationToken cancellationToken)
         where T : class
     {
         if (values == null)
             throw new ArgumentNullException(nameof(values));
 
-        return PublishInternal<T>(cancellationToken, values);
+        return PublishInternalAsync<T>(cancellationToken, values);
     }
 
-    public Task Publish<T>(object values, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken)
+    public Task PublishAsync<T>(object values, IPipe<PublishContext<T>> publishPipe, CancellationToken cancellationToken)
         where T : class
     {
         if (values == null)
             throw new ArgumentNullException(nameof(values));
 
-        return PublishInternal(cancellationToken, values, publishPipe);
+        return PublishInternalAsync(cancellationToken, values, publishPipe);
     }
 
-    public Task Publish<T>(object values, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
+    public Task PublishAsync<T>(object values, IPipe<PublishContext> publishPipe, CancellationToken cancellationToken)
         where T : class
     {
         if (values == null)
             throw new ArgumentNullException(nameof(values));
 
-        return PublishInternal<T>(cancellationToken, values, publishPipe);
+        return PublishInternalAsync<T>(cancellationToken, values, publishPipe);
     }
 
     public ConnectHandle ConnectPublishObserver(IPublishObserver observer)
@@ -98,23 +99,23 @@ public class PublishEndpoint :
         return PublishEndpointProvider.ConnectPublishObserver(observer);
     }
 
-    protected virtual Task<ISendEndpoint> GetPublishSendEndpoint<T>()
+    protected virtual Task<ISendEndpoint> GetPublishSendEndpointAsync<T>()
         where T : class
     {
-        return PublishEndpointProvider.GetPublishSendEndpoint<T>();
+        return PublishEndpointProvider.GetPublishSendEndpointAsync<T>();
     }
 
-    Task PublishInternal<T>(CancellationToken cancellationToken, T message, IPipe<PublishContext<T>>? pipe = null)
+    Task PublishInternalAsync<T>(CancellationToken cancellationToken, T message, IPipe<PublishContext<T>>? pipe = null)
         where T : class
     {
-        Task<ISendEndpoint> sendEndpointTask = GetPublishSendEndpoint<T>();
+        Task<ISendEndpoint> sendEndpointTask = GetPublishSendEndpointAsync<T>();
         if (sendEndpointTask.Status == TaskStatus.RanToCompletion)
         {
             var sendEndpoint = sendEndpointTask.Result;
 
             return pipe != null && pipe.IsNotEmpty()
-                ? sendEndpoint.Send(message, new PublishSendPipeAdapter<T>(pipe), cancellationToken)
-                : sendEndpoint.Send(message, cancellationToken);
+                ? sendEndpoint.SendAsync(message, new PublishSendPipeAdapter<T>(pipe), cancellationToken)
+                : sendEndpoint.SendAsync(message, cancellationToken);
         }
 
         async Task PublishAsync()
@@ -122,25 +123,25 @@ public class PublishEndpoint :
             var sendEndpoint = await sendEndpointTask.ConfigureAwait(false);
 
             if (pipe != null && pipe.IsNotEmpty())
-                await sendEndpoint.Send(message, new PublishSendPipeAdapter<T>(pipe), cancellationToken).ConfigureAwait(false);
+                await sendEndpoint.SendAsync(message, new PublishSendPipeAdapter<T>(pipe), cancellationToken).ConfigureAwait(false);
             else
-                await sendEndpoint.Send(message, cancellationToken).ConfigureAwait(false);
+                await sendEndpoint.SendAsync(message, cancellationToken).ConfigureAwait(false);
         }
 
         return PublishAsync();
     }
 
-    Task PublishInternal<T>(CancellationToken cancellationToken, object values, IPipe<PublishContext<T>>? pipe = null)
+    Task PublishInternalAsync<T>(CancellationToken cancellationToken, object values, IPipe<PublishContext<T>>? pipe = null)
         where T : class
     {
-        Task<ISendEndpoint> sendEndpointTask = GetPublishSendEndpoint<T>();
+        Task<ISendEndpoint> sendEndpointTask = GetPublishSendEndpointAsync<T>();
         if (sendEndpointTask.Status == TaskStatus.RanToCompletion)
         {
             var sendEndpoint = sendEndpointTask.Result;
 
             return pipe != null && pipe.IsNotEmpty()
-                ? sendEndpoint.Send(values, new PublishSendPipeAdapter<T>(pipe), cancellationToken)
-                : sendEndpoint.Send<T>(values, cancellationToken);
+                ? sendEndpoint.SendAsync(values, new PublishSendPipeAdapter<T>(pipe), cancellationToken)
+                : sendEndpoint.SendAsync<T>(values, cancellationToken);
         }
 
         async Task PublishAsync()
@@ -148,9 +149,9 @@ public class PublishEndpoint :
             var sendEndpoint = await sendEndpointTask.ConfigureAwait(false);
 
             if (pipe != null && pipe.IsNotEmpty())
-                await sendEndpoint.Send(values, new PublishSendPipeAdapter<T>(pipe), cancellationToken).ConfigureAwait(false);
+                await sendEndpoint.SendAsync(values, new PublishSendPipeAdapter<T>(pipe), cancellationToken).ConfigureAwait(false);
             else
-                await sendEndpoint.Send<T>(values, cancellationToken).ConfigureAwait(false);
+                await sendEndpoint.SendAsync<T>(values, cancellationToken).ConfigureAwait(false);
         }
 
         return PublishAsync();

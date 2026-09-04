@@ -11,7 +11,7 @@ public sealed class PartitionMessageConfigurationTests
     [InlineData(false)]
     [InlineData(true)]
     [RequirementCoverage("REQ-VSB-MESSAGE-PARTITION-CONVENTION", "explicit-and-convention-deliver-every-message")]
-    public async Task MessagePartitioner_DeliversEveryMessageWithExplicitAndConventionBasedKeys(bool explicitKey)
+    public async Task MessagePartitioner_DeliversEveryMessageWithExplicitAndConventionBasedKeysAsync(bool explicitKey)
     {
         const int messageCount = 16;
         TimeSpan timeout = OperationTimeout();
@@ -37,7 +37,7 @@ public sealed class PartitionMessageConfigurationTests
             }
         };
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             Guid[] correlationIds = Enumerable.Range(0, messageCount)
@@ -45,7 +45,7 @@ public sealed class PartitionMessageConfigurationTests
                 .ToArray();
 
             await Task.WhenAll(correlationIds.Select(correlationId =>
-                    harness.InputQueueSendEndpoint.Send(new PartitionedMessage(correlationId), cancellationToken)))
+                    harness.InputQueueSendEndpoint.SendAsync(new PartitionedMessage(correlationId), cancellationToken)))
                 .WaitAsync(timeout, cancellationToken);
             await consumer.Completed.Task.WaitAsync(timeout, cancellationToken);
 
@@ -54,7 +54,7 @@ public sealed class PartitionMessageConfigurationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -96,7 +96,7 @@ public sealed class PartitionMessageConfigurationTests
             }
         }
 
-        public Task Consume(ConsumeContext<PartitionedMessage> context)
+        public Task ConsumeAsync(ConsumeContext<PartitionedMessage> context)
         {
             lock (_lock)
             {
@@ -113,6 +113,6 @@ public sealed class PartitionMessageConfigurationTests
 
     private sealed class UnpartitionedConsumer : IConsumer<UnpartitionedMessage>
     {
-        public Task Consume(ConsumeContext<UnpartitionedMessage> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<UnpartitionedMessage> context) => Task.CompletedTask;
     }
 }

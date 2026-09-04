@@ -14,14 +14,15 @@ public sealed class InMemoryDurableSendIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-DURABLE-COMPLETION", "full-pipeline-success-only-process-local-capability")]
-    public async Task Dispatch_WaitsForFullLogicalConsumerCompletionWithoutSerializingTheCapability()
+    public async Task Dispatch_WaitsForFullLogicalConsumerCompletionWithoutSerializingTheCapabilityAsync()
     {
         TimeSpan timeout = TimeSpan.FromSeconds(15);
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var observation = new ConsumerObservation();
         await using ServiceProvider provider = BuildProvider(observation, shouldFail: false);
         IBus bus = provider.GetRequiredService<IBus>();
-        IDurableSendStore<IBus> store = DurableSenderTestFactory.CreateInMemoryStore<IBus>();
+        var store = new SignalingDurableSendStore(
+            DurableSenderTestFactory.CreateInMemoryStore<IBus>());
         IDurableSendDispatcher<IBus> dispatcher = provider.GetRequiredService<IDurableSendDispatcher<IBus>>();
         var time = new FakeTimeProvider(DateTimeOffset.Parse("2026-09-03T12:00:00+00:00"));
         using DurableSenderDeliveryTestDriver<IBus> driver = DurableSenderTestFactory.CreateDeliveryDriver(
@@ -39,7 +40,7 @@ public sealed class InMemoryDurableSendIntegrationTests
         await ((IBusControl)bus).StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
-            Task<bool> batch = driver.DeliverDueBatch(cancellationToken);
+            Task<bool> batch = driver.DeliverDueBatchAsync(cancellationToken);
             ConsumerSnapshot snapshot = await observation.Entered.Task.WaitAsync(timeout, cancellationToken);
             Assert.True(await batch.WaitAsync(timeout, cancellationToken));
 
@@ -54,7 +55,8 @@ public sealed class InMemoryDurableSendIntegrationTests
             Assert.DoesNotContain(message.Id.ToString(), Encoding.UTF8.GetString(snapshot.RawBody), StringComparison.Ordinal);
 
             observation.Release.TrySetResult();
-            await WaitForStoredCount(store, expected: 0, timeout, cancellationToken);
+            Assert.True(await store.ConsumerCompletionApplied.Task.WaitAsync(timeout, cancellationToken));
+            Assert.Equal(0, (await store.GetSnapshotAsync(cancellationToken)).StoredCount);
             Assert.Equal(0, (await store.GetSnapshotAsync(cancellationToken)).StoredBytes);
         }
         finally
@@ -66,14 +68,15 @@ public sealed class InMemoryDurableSendIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-DURABLE-COMPLETION", "consumer-failure-never-retires-intent")]
-    public async Task Dispatch_ConsumerFailureLeavesTheIntentAwaitingRecovery()
+    public async Task Dispatch_ConsumerFailureLeavesTheIntentAwaitingRecoveryAsync()
     {
         TimeSpan timeout = TimeSpan.FromSeconds(15);
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var observation = new ConsumerObservation();
         await using ServiceProvider provider = BuildProvider(observation, shouldFail: true);
         IBus bus = provider.GetRequiredService<IBus>();
-        IDurableSendStore<IBus> store = DurableSenderTestFactory.CreateInMemoryStore<IBus>();
+        var store = new SignalingDurableSendStore(
+            DurableSenderTestFactory.CreateInMemoryStore<IBus>());
         IDurableSendDispatcher<IBus> dispatcher = provider.GetRequiredService<IDurableSendDispatcher<IBus>>();
         var time = new FakeTimeProvider(DateTimeOffset.Parse("2026-09-03T12:00:00+00:00"));
         using DurableSenderDeliveryTestDriver<IBus> driver = DurableSenderTestFactory.CreateDeliveryDriver(
@@ -89,8 +92,9 @@ public sealed class InMemoryDurableSendIntegrationTests
         await ((IBusControl)bus).StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
-            Assert.True(await driver.DeliverDueBatch(cancellationToken).WaitAsync(timeout, cancellationToken));
+            Assert.True(await driver.DeliverDueBatchAsync(cancellationToken).WaitAsync(timeout, cancellationToken));
             await observation.Failed.Task.WaitAsync(timeout, cancellationToken);
+            Assert.True(await store.AwaitingConsumerCompletionPersisted.Task.WaitAsync(timeout, cancellationToken));
 
             DurableSendStoreSnapshot waiting = await store.GetSnapshotAsync(cancellationToken);
             Assert.Equal(1, waiting.StoredCount);
@@ -121,7 +125,7 @@ public sealed class InMemoryDurableSendIntegrationTests
             {
                 var snapshot = new ConsumerSnapshot(
                     context.Message.Value,
-                    context.ReceiveContext.Body.GetBytes(),
+                    context.Advanced().ReceiveContext.Body.GetBytes(),
                     context.Headers.GetAll().ToArray());
                 observation.Entered.TrySetResult(snapshot);
                 if (shouldFail)
@@ -130,7 +134,7 @@ public sealed class InMemoryDurableSendIntegrationTests
                     return Task.FromException(new ExpectedConsumerException());
                 }
 
-                context.AddConsumeTask(observation.Release.Task);
+                context.Advanced().AddConsumeTask(observation.Release.Task);
                 return Task.CompletedTask;
             }));
         }));
@@ -139,23 +143,6 @@ public sealed class InMemoryDurableSendIntegrationTests
             ValidateOnBuild = true,
             ValidateScopes = true,
         });
-    }
-
-    private static async Task WaitForStoredCount(
-        IDurableSendStore<IBus> store,
-        int expected,
-        TimeSpan timeout,
-        CancellationToken cancellationToken)
-    {
-        DateTimeOffset deadline = DateTimeOffset.UtcNow + timeout;
-        while (DateTimeOffset.UtcNow < deadline)
-        {
-            if ((await store.GetSnapshotAsync(cancellationToken)).StoredCount == expected)
-                return;
-            await Task.Delay(TimeSpan.FromMilliseconds(10), cancellationToken);
-        }
-
-        Assert.Equal(expected, (await store.GetSnapshotAsync(cancellationToken)).StoredCount);
     }
 
     private static SerializedDurableSend Message()
@@ -200,6 +187,125 @@ public sealed class InMemoryDurableSendIntegrationTests
             new(TaskCreationOptions.RunContinuationsAsynchronously);
         public TaskCompletionSource Release { get; } =
             new(TaskCreationOptions.RunContinuationsAsynchronously);
+    }
+
+    private sealed class SignalingDurableSendStore(IDurableSendStore<IBus> inner) : IDurableSendStore<IBus>
+    {
+        public TaskCompletionSource<bool> AwaitingConsumerCompletionPersisted { get; } =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public TaskCompletionSource<bool> ConsumerCompletionApplied { get; } =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public Task<DurableSendAdmissionResult> AdmitAsync(
+            SerializedDurableSend message,
+            DurableSendStoreLimits limits,
+            DateTimeOffset enqueuedAt,
+            CancellationToken cancellationToken = default) =>
+            inner.AdmitAsync(message, limits, enqueuedAt, cancellationToken);
+
+        public Task<IReadOnlyList<DurableSendDelivery>> ClaimDueAsync(
+            DateTimeOffset now,
+            int maximumCount,
+            TimeSpan leaseDuration,
+            CancellationToken cancellationToken = default) =>
+            inner.ClaimDueAsync(now, maximumCount, leaseDuration, cancellationToken);
+
+        public Task<bool> MarkDeliveredAsync(
+            DurableSendId id,
+            DurableSendLease lease,
+            DateTimeOffset deliveredAt,
+            CancellationToken cancellationToken = default) =>
+            inner.MarkDeliveredAsync(id, lease, deliveredAt, cancellationToken);
+
+        public async Task<bool> AwaitConsumerCompletionAsync(
+            DurableSendId id,
+            DurableSendLease lease,
+            int deliveryAttempts,
+            DateTimeOffset nextAttemptAt,
+            CancellationToken cancellationToken = default)
+        {
+            bool persisted = await inner.AwaitConsumerCompletionAsync(
+                    id,
+                    lease,
+                    deliveryAttempts,
+                    nextAttemptAt,
+                    cancellationToken)
+                .ConfigureAwait(false);
+            AwaitingConsumerCompletionPersisted.TrySetResult(persisted);
+            return persisted;
+        }
+
+        public async Task<bool> CompleteConsumerDeliveryAsync(
+            DurableSendId id,
+            Guid generationToken,
+            DateTimeOffset completedAt,
+            CancellationToken cancellationToken = default)
+        {
+            bool completed = await inner.CompleteConsumerDeliveryAsync(
+                    id,
+                    generationToken,
+                    completedAt,
+                    cancellationToken)
+                .ConfigureAwait(false);
+            ConsumerCompletionApplied.TrySetResult(completed);
+            return completed;
+        }
+
+        public Task<bool> ScheduleRetryAsync(
+            DurableSendId id,
+            DurableSendLease lease,
+            int deliveryAttempts,
+            DateTimeOffset nextAttemptAt,
+            DurableSendFailureKind failureKind,
+            string? failureType,
+            DateTimeOffset failedAt,
+            CancellationToken cancellationToken = default) =>
+            inner.ScheduleRetryAsync(
+                id,
+                lease,
+                deliveryAttempts,
+                nextAttemptAt,
+                failureKind,
+                failureType,
+                failedAt,
+                cancellationToken);
+
+        public Task<bool> QuarantineAsync(
+            DurableSendId id,
+            DurableSendLease lease,
+            int deliveryAttempts,
+            DurableSendFailureKind failureKind,
+            string? failureType,
+            DateTimeOffset quarantinedAt,
+            CancellationToken cancellationToken = default) =>
+            inner.QuarantineAsync(
+                id,
+                lease,
+                deliveryAttempts,
+                failureKind,
+                failureType,
+                quarantinedAt,
+                cancellationToken);
+
+        public Task<DurableSendStoreSnapshot> GetSnapshotAsync(CancellationToken cancellationToken = default) =>
+            inner.GetSnapshotAsync(cancellationToken);
+
+        public Task<DurableSendQuarantinePage> GetQuarantineAsync(
+            DurableSendQuarantineQuery query,
+            CancellationToken cancellationToken = default) =>
+            inner.GetQuarantineAsync(query, cancellationToken);
+
+        public Task<DurableSendOperationResult> RequeueAsync(
+            DurableSendId id,
+            DateTimeOffset dueAt,
+            CancellationToken cancellationToken = default) =>
+            inner.RequeueAsync(id, dueAt, cancellationToken);
+
+        public Task<DurableSendOperationResult> DiscardQuarantinedAsync(
+            DurableSendId id,
+            CancellationToken cancellationToken = default) =>
+            inner.DiscardQuarantinedAsync(id, cancellationToken);
     }
 
     private sealed class ExpectedConsumerException : Exception;

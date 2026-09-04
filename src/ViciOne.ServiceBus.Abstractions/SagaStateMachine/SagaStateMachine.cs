@@ -17,5 +17,6 @@ public interface SagaStateMachine<TSaga> :
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    Task<bool> IsCompleted(BehaviorContext<TSaga> context);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<bool> IsCompletedAsync(BehaviorContext<TSaga> context, CancellationToken cancellationToken = default);
 }

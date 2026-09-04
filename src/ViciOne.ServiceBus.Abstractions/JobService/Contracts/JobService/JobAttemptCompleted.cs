@@ -8,7 +8,7 @@ public interface JobAttemptCompleted
     Guid JobId { get; }
     Guid AttemptId { get; }
     int RetryAttempt { get; }
-    DateTime Timestamp { get; }
+    DateTimeOffset Timestamp { get; }
     TimeSpan Duration { get; }
     Dictionary<string, object>? InstanceProperties { get; }
     Dictionary<string, object>? JobTypeProperties { get; }

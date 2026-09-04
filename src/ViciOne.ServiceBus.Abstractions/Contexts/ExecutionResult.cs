@@ -1,11 +1,12 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus;
 
 public interface ExecutionResult
 {
-    Task Evaluate();
+    Task EvaluateAsync(CancellationToken cancellationToken = default);
 
-    bool IsFaulted(out Exception exception);
+    bool IsFaulted([NotNullWhen(true)] out Exception? exception);
 }

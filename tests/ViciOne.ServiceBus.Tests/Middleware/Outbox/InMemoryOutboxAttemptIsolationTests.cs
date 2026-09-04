@@ -10,7 +10,7 @@ public sealed class InMemoryOutboxAttemptIsolationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-OUTBOX-ATTEMPT", "delivery-failure-retains-undelivered-tail")]
-    public async Task TransportDeliveryFailure_RetainsOnlyTheUndeliveredTailAcrossImmediateRetry()
+    public async Task TransportDeliveryFailure_RetainsOnlyTheUndeliveredTailAcrossImmediateRetryAsync()
     {
         TimeSpan timeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions().OperationTimeout!.Value;
@@ -29,7 +29,7 @@ public sealed class InMemoryOutboxAttemptIsolationTests
                 ValidateOnBuild = true,
                 ValidateScopes = true,
             });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         Guid commandId = NewId.NextGuid();
         Guid messageId = NewId.NextGuid();
         var completion = new ReceiveCompletionObserver(messageId);
@@ -38,7 +38,7 @@ public sealed class InMemoryOutboxAttemptIsolationTests
 
         try
         {
-            await harness.Bus.Publish(
+            await harness.Bus.PublishAsync(
                 new DeliveryCommand(commandId),
                 context => context.MessageId = messageId,
                 cancellationToken);
@@ -46,7 +46,7 @@ public sealed class InMemoryOutboxAttemptIsolationTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Equal(1, observation.CommandExecutions);
@@ -64,11 +64,11 @@ public sealed class InMemoryOutboxAttemptIsolationTests
     private sealed class DeliveryConsumer(DeliveryObservation observation) :
         IConsumer<DeliveryCommand>
     {
-        public async Task Consume(ConsumeContext<DeliveryCommand> context)
+        public async Task ConsumeAsync(ConsumeContext<DeliveryCommand> context)
         {
             observation.RecordCommandExecution();
-            await context.Send(context.ReceiveContext.InputAddress, new FirstSideEffect(context.Message.Id));
-            await context.Send(context.ReceiveContext.InputAddress, new SecondSideEffect(context.Message.Id));
+            await context.Advanced().SendAsync(context.Advanced().ReceiveContext.InputAddress, new FirstSideEffect(context.Message.Id));
+            await context.Advanced().SendAsync(context.Advanced().ReceiveContext.InputAddress, new SecondSideEffect(context.Message.Id));
         }
 
     }
@@ -87,7 +87,7 @@ public sealed class InMemoryOutboxAttemptIsolationTests
 
     private sealed class FailFirstSecondSideEffectSendObserver(DeliveryObservation observation) : ISendObserver
     {
-        public Task PreSend<T>(SendContext<T> context)
+        public Task PreSendAsync<T>(SendContext<T> context)
             where T : class
         {
             if (context.SupportedMessageTypes.Contains(
@@ -99,14 +99,14 @@ public sealed class InMemoryOutboxAttemptIsolationTests
             return Task.CompletedTask;
         }
 
-        public Task PostSend<T>(SendContext<T> context)
+        public Task PostSendAsync<T>(SendContext<T> context)
             where T : class
         {
             observation.RecordSuccessfulSend(context.SupportedMessageTypes);
             return Task.CompletedTask;
         }
 
-        public Task SendFault<T>(SendContext<T> context, Exception exception)
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
             where T : class => Task.CompletedTask;
     }
 
@@ -117,9 +117,9 @@ public sealed class InMemoryOutboxAttemptIsolationTests
 
         public Task Completed => _completed.Task;
 
-        public Task PreReceive(ReceiveContext context) => Task.CompletedTask;
+        public Task PreReceiveAsync(ReceiveContext context) => Task.CompletedTask;
 
-        public Task PostReceive(ReceiveContext context)
+        public Task PostReceiveAsync(ReceiveContext context)
         {
             if (context.GetMessageId() == messageId)
                 _completed.TrySetResult();
@@ -127,13 +127,13 @@ public sealed class InMemoryOutboxAttemptIsolationTests
             return Task.CompletedTask;
         }
 
-        public Task PostConsume<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
+        public Task PostConsumeAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
             where T : class => Task.CompletedTask;
 
-        public Task ConsumeFault<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
+        public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
             where T : class => Task.CompletedTask;
 
-        public Task ReceiveFault(ReceiveContext context, Exception exception)
+        public Task ReceiveFaultAsync(ReceiveContext context, Exception exception)
         {
             if (context.GetMessageId() == messageId)
                 _completed.TrySetException(exception);

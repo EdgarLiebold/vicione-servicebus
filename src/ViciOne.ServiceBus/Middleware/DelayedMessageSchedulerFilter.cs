@@ -15,11 +15,11 @@ public class DelayedMessageSchedulerFilter :
     }
 
     [DebuggerNonUserCode]
-    public Task Send(ConsumeContext context, IPipe<ConsumeContext> next)
+    public Task SendAsync(ConsumeContext context, IPipe<ConsumeContext> next)
     {
         context.GetOrAddPayload<MessageSchedulerContext>(() => new ConsumeMessageSchedulerContext(context, SchedulerFactory));
 
-        return next.Send(context);
+        return next.SendAsync(context);
     }
 
     static IMessageScheduler SchedulerFactory(ConsumeContext context)

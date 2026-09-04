@@ -16,7 +16,7 @@ public class PublishEndpointBrokerTopologyBuilder :
     /// <summary>
     /// The exchange to which the published message is sent
     /// </summary>
-    public ExchangeHandle Exchange { get; set; }
+    public ExchangeHandle? Exchange { get; set; }
 
     public IPublishEndpointBrokerTopologyBuilder CreateImplementedBuilder()
     {
@@ -32,7 +32,7 @@ public class PublishEndpointBrokerTopologyBuilder :
     {
         readonly IPublishEndpointBrokerTopologyBuilder _builder;
         readonly PublishBrokerTopologyOptions _options;
-        ExchangeHandle _exchange;
+        ExchangeHandle? _exchange;
 
         public ImplementedBuilder(IPublishEndpointBrokerTopologyBuilder builder, PublishBrokerTopologyOptions options)
         {
@@ -40,14 +40,14 @@ public class PublishEndpointBrokerTopologyBuilder :
             _options = options;
         }
 
-        public ExchangeHandle Exchange
+        public ExchangeHandle? Exchange
         {
             get => _exchange;
             set
             {
                 _exchange = value;
-                if (_builder.Exchange != null)
-                    _builder.ExchangeBind(_builder.Exchange, _exchange, "", new Dictionary<string, object>());
+                if (_builder.Exchange is { } parentExchange && _exchange is { } exchange)
+                    _builder.ExchangeBind(parentExchange, exchange, "", new Dictionary<string, object?>());
             }
         }
 
@@ -59,23 +59,23 @@ public class PublishEndpointBrokerTopologyBuilder :
             return this;
         }
 
-        public ExchangeHandle ExchangeDeclare(string name, string type, bool durable, bool autoDelete, IDictionary<string, object> arguments)
+        public ExchangeHandle ExchangeDeclare(string name, string type, bool durable, bool autoDelete, IDictionary<string, object?> arguments)
         {
             return _builder.ExchangeDeclare(name, type, durable, autoDelete, arguments);
         }
 
         public ExchangeBindingHandle ExchangeBind(ExchangeHandle source, ExchangeHandle destination, string routingKey,
-            IDictionary<string, object> arguments)
+            IDictionary<string, object?> arguments)
         {
             return _builder.ExchangeBind(source, destination, routingKey, arguments);
         }
 
-        public QueueHandle QueueDeclare(string name, bool durable, bool autoDelete, bool exclusive, IDictionary<string, object> arguments)
+        public QueueHandle QueueDeclare(string name, bool durable, bool autoDelete, bool exclusive, IDictionary<string, object?> arguments)
         {
             return _builder.QueueDeclare(name, durable, autoDelete, exclusive, arguments);
         }
 
-        public QueueBindingHandle QueueBind(ExchangeHandle exchange, QueueHandle queue, string routingKey, IDictionary<string, object> arguments)
+        public QueueBindingHandle QueueBind(ExchangeHandle exchange, QueueHandle queue, string routingKey, IDictionary<string, object?> arguments)
         {
             return _builder.QueueBind(exchange, queue, routingKey, arguments);
         }

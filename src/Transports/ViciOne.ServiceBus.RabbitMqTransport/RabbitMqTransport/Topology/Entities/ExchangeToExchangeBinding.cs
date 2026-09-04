@@ -25,5 +25,5 @@ public interface ExchangeToExchangeBinding
     /// <summary>
     /// The arguments for the binding
     /// </summary>
-    IDictionary<string, object> Arguments { get; }
+    IDictionary<string, object?> Arguments { get; }
 }

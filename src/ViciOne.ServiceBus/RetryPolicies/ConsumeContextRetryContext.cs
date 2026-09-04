@@ -30,16 +30,16 @@ public class ConsumeContextRetryContext :
 
     public TimeSpan? Delay => _retryContext.Delay;
 
-    public async Task PreRetry()
+    public async Task PreRetryAsync(CancellationToken cancellationToken = default)
     {
-        await _retryContext.PreRetry().ConfigureAwait(false);
+        await _retryContext.PreRetryAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task RetryFaulted(Exception exception)
+    public async Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {
-        await _retryContext.RetryFaulted(exception).ConfigureAwait(false);
+        await _retryContext.RetryFaultedAsync(exception, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        await _context.NotifyPendingFaults().ConfigureAwait(false);
+        await _context.NotifyPendingFaultsAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
     public bool CanRetry(Exception exception, out RetryContext<ConsumeContext> retryContext)
@@ -55,7 +55,7 @@ public class ConsumeContextRetryContext :
 
 public class ConsumeContextRetryContext<TFilter, TContext> :
     RetryContext<TFilter>
-    where TFilter : class, ConsumeContext
+    where TFilter : class, PipeContext
     where TContext : class, TFilter, ConsumeRetryContext
 {
     readonly TContext _context;
@@ -81,16 +81,16 @@ public class ConsumeContextRetryContext<TFilter, TContext> :
 
     public TimeSpan? Delay => _retryContext.Delay;
 
-    public async Task PreRetry()
+    public async Task PreRetryAsync(CancellationToken cancellationToken = default)
     {
-        await _retryContext.PreRetry().ConfigureAwait(false);
+        await _retryContext.PreRetryAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task RetryFaulted(Exception exception)
+    public async Task RetryFaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {
-        await _retryContext.RetryFaulted(exception).ConfigureAwait(false);
+        await _retryContext.RetryFaultedAsync(exception, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        await _context.NotifyPendingFaults().ConfigureAwait(false);
+        await _context.NotifyPendingFaultsAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
     public bool CanRetry(Exception exception, out RetryContext<TFilter> retryContext)

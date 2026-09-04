@@ -10,7 +10,7 @@ public sealed class ContainerOutboxScopeTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-OUTBOX-PUBLISH-SCOPE", "consumer-and-outbox-publish-filter-share-scope")]
-    public async Task OutboxPublication_UsesTheProducingConsumerScopeAndFlushesExactlyOnce()
+    public async Task OutboxPublication_UsesTheProducingConsumerScopeAndFlushesExactlyOnceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -39,15 +39,14 @@ public sealed class ContainerOutboxScopeTests
                 });
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             var command = new OutboxProduce(NewId.NextGuid());
             ISendEndpoint endpoint = await harness.Bus
-                .GetSendEndpoint(new Uri("queue:container-outbox-producer"))
-                .WaitAsync(timeout, cancellationToken);
-            await endpoint.Send(command, cancellationToken);
+                .GetSendEndpointAsync(new Uri("queue:container-outbox-producer"), TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
+            await endpoint.SendAsync(command, cancellationToken);
             OutboxScopeSnapshot snapshot = await observation.Completed.Task.WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(command.CorrelationId, snapshot.CorrelationId);
@@ -58,7 +57,7 @@ public sealed class ContainerOutboxScopeTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Single(harness.Published.Select<OutboxPublished>(SnapshotOnlyToken()));
@@ -67,7 +66,7 @@ public sealed class ContainerOutboxScopeTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-CONTAINER-FAULT-PUBLISH-SCOPE", "fault-publication-bypasses-scoped-publish-filter")]
-    public async Task FaultPublication_DoesNotConstructAScopedPublishFilterAndStillArrivesExactlyOnce()
+    public async Task FaultPublication_DoesNotConstructAScopedPublishFilterAndStillArrivesExactlyOnceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -86,19 +85,17 @@ public sealed class ContainerOutboxScopeTests
                 });
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try
         {
             var command = new FaultingCommand(NewId.NextGuid());
             ISendEndpoint endpoint = await harness.Bus
-                .GetSendEndpoint(new Uri($"queue:{DefaultEndpointNameFormatter.Instance.Consumer<FaultingConsumer>()}"))
-                .WaitAsync(timeout, cancellationToken);
-            await endpoint.Send(command, cancellationToken);
+                .GetSendEndpointAsync(new Uri($"queue:{DefaultEndpointNameFormatter.Instance.Consumer<FaultingConsumer>()}"), TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
+            await endpoint.SendAsync(command, cancellationToken);
             IReceivedMessage<Fault<FaultingCommand>> fault = await harness.Consumed
                 .SelectAsync<Fault<FaultingCommand>>(cancellationToken)
-                .First()
-                .WaitAsync(timeout, cancellationToken);
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(command, fault.Context.Message.Message);
             Assert.Contains(fault.Context.Message.Exceptions, exception =>
@@ -107,7 +104,7 @@ public sealed class ContainerOutboxScopeTests
         }
         finally
         {
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Single(harness.Published.Select<Fault<FaultingCommand>>(SnapshotOnlyToken()));
@@ -195,16 +192,16 @@ public sealed class ContainerOutboxScopeTests
         ScopeMarker scope,
         OutboxScopeObservation observation) : IConsumer<OutboxProduce>
     {
-        public async Task Consume(ConsumeContext<OutboxProduce> context)
+        public async Task ConsumeAsync(ConsumeContext<OutboxProduce> context)
         {
             observation.RecordConsumer(context.Message.CorrelationId, scope);
-            await context.Publish(new OutboxPublished(context.Message.CorrelationId));
+            await context.Advanced().PublishAsync(new OutboxPublished(context.Message.CorrelationId));
         }
     }
 
     public sealed class OutboxPublishedConsumer(OutboxScopeObservation observation) : IConsumer<OutboxPublished>
     {
-        public Task Consume(ConsumeContext<OutboxPublished> context)
+        public Task ConsumeAsync(ConsumeContext<OutboxPublished> context)
         {
             observation.RecordDelivery();
             return Task.CompletedTask;
@@ -216,12 +213,12 @@ public sealed class ContainerOutboxScopeTests
         OutboxScopeObservation observation) : IFilter<PublishContext<T>>
         where T : class
     {
-        public async Task Send(PublishContext<T> context, IPipe<PublishContext<T>> next)
+        public async Task SendAsync(PublishContext<T> context, IPipe<PublishContext<T>> next)
         {
             if (context.Message is OutboxPublished)
                 observation.RecordFilter(scope);
 
-            await next.Send(context);
+            await next.SendAsync(context);
         }
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("outboxScopePublish");
@@ -233,10 +230,10 @@ public sealed class ContainerOutboxScopeTests
         IConsumer<FaultingCommand>,
         IConsumer<Fault<FaultingCommand>>
     {
-        public Task Consume(ConsumeContext<FaultingCommand> context) =>
+        public Task ConsumeAsync(ConsumeContext<FaultingCommand> context) =>
             throw new ExpectedConsumerFailure();
 
-        public Task Consume(ConsumeContext<Fault<FaultingCommand>> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<Fault<FaultingCommand>> context) => Task.CompletedTask;
     }
 
     public sealed class FaultFilterMarker
@@ -253,7 +250,7 @@ public sealed class ContainerOutboxScopeTests
     {
         public FaultScopePublishFilter(ScopeMarker _, FaultFilterMarker marker) => marker.Constructed();
 
-        public Task Send(PublishContext<T> context, IPipe<PublishContext<T>> next) => next.Send(context);
+        public Task SendAsync(PublishContext<T> context, IPipe<PublishContext<T>> next) => next.SendAsync(context);
 
         public void Probe(ProbeContext context) => context.CreateFilterScope("faultScopePublish");
     }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using ViciOne.ServiceBus.Internals;
 
@@ -35,7 +36,7 @@ public class TypeConverterCache :
         AddSupportedTypes(typeof(VersionTypeConverter));
     }
 
-    bool ITypeConverterCache.TryGetTypeConverter<TProperty, TInput>(out ITypeConverter<TProperty, TInput> typeConverter)
+    bool ITypeConverterCache.TryGetTypeConverter<TProperty, TInput>([NotNullWhen(true)] out ITypeConverter<TProperty, TInput>? typeConverter)
     {
         var neededType = typeof(ITypeConverter<TProperty, TInput>);
 
@@ -116,6 +117,9 @@ public class TypeConverterCache :
             try
             {
                 var converter = Activator.CreateInstance(converterType, args);
+                if (converter == null)
+                    return;
+
                 _converters.Add(converter);
 
                 foreach (var type in types)
@@ -128,7 +132,8 @@ public class TypeConverterCache :
         }
     }
 
-    public static bool TryGetTypeConverter<TProperty, TInputProperty>(out ITypeConverter<TProperty, TInputProperty> typeConverter)
+    public static bool TryGetTypeConverter<TProperty, TInputProperty>(
+        [NotNullWhen(true)] out ITypeConverter<TProperty, TInputProperty>? typeConverter)
     {
         return Cached.Cache.Value.TryGetTypeConverter(out typeConverter);
     }

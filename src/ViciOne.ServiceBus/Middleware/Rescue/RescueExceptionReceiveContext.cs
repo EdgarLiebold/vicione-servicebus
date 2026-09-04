@@ -10,13 +10,13 @@ public class RescueExceptionReceiveContext :
     ExceptionReceiveContext
 {
     readonly DictionarySendHeaders _headers;
-    ExceptionInfo _exceptionInfo;
+    ExceptionInfo _exceptionInfo = null!;
 
     public RescueExceptionReceiveContext(ReceiveContext context, Exception exception)
         : base(context)
     {
         Exception = exception;
-        ExceptionTimestamp = DateTime.UtcNow;
+        ExceptionTimestamp = context.GetTimeProvider().GetUtcNow().UtcDateTime;
 
         _headers = new DictionarySendHeaders();
 
@@ -24,7 +24,7 @@ public class RescueExceptionReceiveContext :
     }
 
     public Exception Exception { get; }
-    public DateTime ExceptionTimestamp { get; }
+    public DateTimeOffset ExceptionTimestamp { get; }
 
     public ExceptionInfo ExceptionInfo
     {

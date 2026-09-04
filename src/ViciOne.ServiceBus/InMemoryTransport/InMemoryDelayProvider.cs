@@ -47,7 +47,7 @@ public sealed class InMemoryDelayProvider :
         }
     }
 
-    public Task Delay(TimeSpan delay, CancellationToken cancellationToken = default)
+    public Task DelayAsync(TimeSpan delay, CancellationToken cancellationToken = default)
     {
         if (delay < TimeSpan.Zero)
             throw new ArgumentOutOfRangeException(nameof(delay), delay, "The delay cannot be negative.");
@@ -71,11 +71,11 @@ public sealed class InMemoryDelayProvider :
                 throw new ArgumentOutOfRangeException(nameof(delay), delay, "The delay exceeds the supported time range.");
             }
 
-            return Schedule(deadline, cancellationToken);
+            return ScheduleAsync(deadline, cancellationToken);
         }
     }
 
-    public Task Delay(DateTimeOffset delayUntil, CancellationToken cancellationToken = default)
+    public Task DelayAsync(DateTimeOffset delayUntil, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -86,7 +86,7 @@ public sealed class InMemoryDelayProvider :
             if (delayUntil <= GetUtcNow())
                 return Task.CompletedTask;
 
-            return Schedule(delayUntil, cancellationToken);
+            return ScheduleAsync(delayUntil, cancellationToken);
         }
     }
 
@@ -144,7 +144,7 @@ public sealed class InMemoryDelayProvider :
         _stopping.Dispose();
     }
 
-    Task Schedule(DateTimeOffset deadline, CancellationToken cancellationToken)
+    Task ScheduleAsync(DateTimeOffset deadline, CancellationToken cancellationToken)
     {
         var delay = new ScheduledDelay(this, deadline, ++_sequence, cancellationToken);
         _delays.Add(delay);
@@ -305,7 +305,7 @@ public sealed class InMemoryDelayProvider :
     {
         public static ScheduledDelayComparer Instance { get; } = new();
 
-        public int Compare(ScheduledDelay x, ScheduledDelay y)
+        public int Compare(ScheduledDelay? x, ScheduledDelay? y)
         {
             if (ReferenceEquals(x, y))
                 return 0;

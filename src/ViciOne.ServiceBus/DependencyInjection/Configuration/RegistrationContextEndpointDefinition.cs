@@ -19,7 +19,7 @@ public class RegistrationContextEndpointDefinition :
         return _endpointDefinition.GetEndpointName(formatter);
     }
 
-    public void Configure<T>(T configurator, IRegistrationContext context)
+    public void Configure<T>(T configurator, IRegistrationContext? context)
         where T : IReceiveEndpointConfigurator
     {
         _endpointDefinition.Configure(configurator, context ?? _context);

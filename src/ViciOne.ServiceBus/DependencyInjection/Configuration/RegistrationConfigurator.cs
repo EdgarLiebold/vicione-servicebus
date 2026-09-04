@@ -32,14 +32,14 @@ public abstract class RegistrationConfigurator :
 
     protected RequestTimeout DefaultRequestTimeout { get; private set; } = RequestTimeout.Default;
 
-    public IConsumerRegistrationConfigurator<T> AddConsumer<T>(Action<IRegistrationContext, IConsumerConfigurator<T>> configure = null)
+    public IConsumerRegistrationConfigurator<T> AddConsumer<T>(Action<IRegistrationContext, IConsumerConfigurator<T>>? configure = null)
         where T : class, IConsumer
     {
         return AddConsumer(null, configure);
     }
 
-    public IConsumerRegistrationConfigurator<T> AddConsumer<T>(Type consumerDefinitionType,
-        Action<IRegistrationContext, IConsumerConfigurator<T>> configure = null)
+    public IConsumerRegistrationConfigurator<T> AddConsumer<T>(Type? consumerDefinitionType,
+        Action<IRegistrationContext, IConsumerConfigurator<T>>? configure = null)
         where T : class, IConsumer
     {
         var registration = _collection.RegisterConsumer<T>(Registrar, consumerDefinitionType);
@@ -49,13 +49,13 @@ public abstract class RegistrationConfigurator :
         return new ConsumerRegistrationConfigurator<T>(this, registration);
     }
 
-    public ISagaRegistrationConfigurator<T> AddSaga<T>(Action<IRegistrationContext, ISagaConfigurator<T>> configure)
+    public ISagaRegistrationConfigurator<T> AddSaga<T>(Action<IRegistrationContext, ISagaConfigurator<T>>? configure)
         where T : class, ISaga
     {
         return AddSaga(null, configure);
     }
 
-    public ISagaRegistrationConfigurator<T> AddSaga<T>(Type sagaDefinitionType, Action<IRegistrationContext, ISagaConfigurator<T>> configure = null)
+    public ISagaRegistrationConfigurator<T> AddSaga<T>(Type? sagaDefinitionType, Action<IRegistrationContext, ISagaConfigurator<T>>? configure = null)
         where T : class, ISaga
     {
         if (typeof(T).ImplementsInterface<SagaStateMachineInstance>())
@@ -68,15 +68,15 @@ public abstract class RegistrationConfigurator :
         return new SagaRegistrationConfigurator<T>(this, registration);
     }
 
-    public ISagaRegistrationConfigurator<T> AddSagaStateMachine<TStateMachine, T>(Action<IRegistrationContext, ISagaConfigurator<T>> configure = null)
+    public ISagaRegistrationConfigurator<T> AddSagaStateMachine<TStateMachine, T>(Action<IRegistrationContext, ISagaConfigurator<T>>? configure = null)
         where TStateMachine : class, SagaStateMachine<T>
         where T : class, SagaStateMachineInstance
     {
         return AddSagaStateMachine<TStateMachine, T>(null, configure);
     }
 
-    public ISagaRegistrationConfigurator<T> AddSagaStateMachine<TStateMachine, T>(Type sagaDefinitionType,
-        Action<IRegistrationContext, ISagaConfigurator<T>> configure = null)
+    public ISagaRegistrationConfigurator<T> AddSagaStateMachine<TStateMachine, T>(Type? sagaDefinitionType,
+        Action<IRegistrationContext, ISagaConfigurator<T>>? configure = null)
         where TStateMachine : class, SagaStateMachine<T>
         where T : class, SagaStateMachineInstance
     {
@@ -88,15 +88,15 @@ public abstract class RegistrationConfigurator :
     }
 
     public IExecuteActivityRegistrationConfigurator<TActivity, TArguments> AddExecuteActivity<TActivity, TArguments>(
-        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>> configure)
+        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configure)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
         return AddExecuteActivity(null, configure);
     }
 
-    public IExecuteActivityRegistrationConfigurator<TActivity, TArguments> AddExecuteActivity<TActivity, TArguments>(Type executeActivityDefinitionType,
-        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>> configure = null)
+    public IExecuteActivityRegistrationConfigurator<TActivity, TArguments> AddExecuteActivity<TActivity, TArguments>(Type? executeActivityDefinitionType,
+        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
         where TActivity : class, IExecuteActivity<TArguments>
         where TArguments : class
     {
@@ -108,8 +108,8 @@ public abstract class RegistrationConfigurator :
     }
 
     public IActivityRegistrationConfigurator<TActivity, TArguments, TLog> AddActivity<TActivity, TArguments, TLog>(
-        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>> configureExecute,
-        Action<IRegistrationContext, ICompensateActivityConfigurator<TActivity, TLog>> configureCompensate)
+        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configureExecute,
+        Action<IRegistrationContext, ICompensateActivityConfigurator<TActivity, TLog>>? configureCompensate)
         where TActivity : class, IActivity<TArguments, TLog>
         where TArguments : class
         where TLog : class
@@ -117,9 +117,9 @@ public abstract class RegistrationConfigurator :
         return AddActivity(null, configureExecute, configureCompensate);
     }
 
-    public IActivityRegistrationConfigurator<TActivity, TArguments, TLog> AddActivity<TActivity, TArguments, TLog>(Type activityDefinitionType,
-        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>> configureExecute = null,
-        Action<IRegistrationContext, ICompensateActivityConfigurator<TActivity, TLog>> configureCompensate = null)
+    public IActivityRegistrationConfigurator<TActivity, TArguments, TLog> AddActivity<TActivity, TArguments, TLog>(Type? activityDefinitionType,
+        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configureExecute = null,
+        Action<IRegistrationContext, ICompensateActivityConfigurator<TActivity, TLog>>? configureCompensate = null)
         where TActivity : class, IActivity<TArguments, TLog>
         where TArguments : class
         where TLog : class
@@ -132,7 +132,7 @@ public abstract class RegistrationConfigurator :
         return new ActivityRegistrationConfigurator<TActivity, TArguments, TLog>(this, registration);
     }
 
-    public IFutureRegistrationConfigurator<TFuture> AddFuture<TFuture>(Type futureDefinitionType)
+    public IFutureRegistrationConfigurator<TFuture> AddFuture<TFuture>(Type? futureDefinitionType)
         where TFuture : class, SagaStateMachine<FutureState>
     {
         var registration = _collection.RegisterFuture<TFuture>(Registrar, futureDefinitionType);
@@ -145,7 +145,7 @@ public abstract class RegistrationConfigurator :
         _collection.RegisterEndpoint(Registrar, definitionType);
     }
 
-    public void AddEndpoint<TDefinition, T>(IRegistration registration, IEndpointSettings<IEndpointDefinition<T>> settings)
+    public void AddEndpoint<TDefinition, T>(IRegistration registration, IEndpointSettings<IEndpointDefinition<T>>? settings)
         where TDefinition : class, IEndpointDefinition<T>
         where T : class
     {
@@ -280,7 +280,7 @@ public abstract class RegistrationConfigurator :
                 if (_collection.Any(x => x.ServiceType == typeof(ISagaRepositoryContextFactory<>).MakeGenericType(registration.Type)))
                     continue;
 
-                var register = (IConfigureSagaRepository)Activator.CreateInstance(typeof(ConfigureSagaRepository<>).MakeGenericType(registration.Type));
+                var register = (IConfigureSagaRepository)(Activator.CreateInstance(typeof(ConfigureSagaRepository<>).MakeGenericType(registration.Type)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
                 register.Configure(this, _sagaRepositoryRegistrationProvider, registration);
             }
@@ -320,7 +320,7 @@ public abstract class RegistrationConfigurator :
         IConfigureSagaRepository
         where TSaga : class, ISaga
     {
-        public void Configure(IRegistrationConfigurator configurator, ISagaRepositoryRegistrationProvider provider, ISagaRegistration registration)
+        public void Configure(IRegistrationConfigurator configurator, ISagaRepositoryRegistrationProvider provider, ISagaRegistration? registration)
         {
             var registrationConfigurator = new SagaRegistrationConfigurator<TSaga>(configurator, registration);
 

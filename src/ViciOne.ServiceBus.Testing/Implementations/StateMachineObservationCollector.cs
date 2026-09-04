@@ -22,46 +22,46 @@ sealed class StateMachineObservationCollector<TInstance> :
     public IReadOnlyList<StateMachineEventObservation> Events => _events.Snapshot();
     public IReadOnlyList<StateMachineStateChange> StateChanges => _stateChanges.Snapshot();
 
-    public Task PreExecute(BehaviorContext<TInstance> context)
+    public Task PreExecuteAsync(BehaviorContext<TInstance> context)
     {
         AddEvent(context, null, StateMachineEventExecutionStatus.Started);
         return Task.CompletedTask;
     }
 
-    public Task PreExecute<T>(BehaviorContext<TInstance, T> context)
+    public Task PreExecuteAsync<T>(BehaviorContext<TInstance, T> context)
         where T : class
     {
         AddEvent(context, typeof(T), StateMachineEventExecutionStatus.Started);
         return Task.CompletedTask;
     }
 
-    public Task PostExecute(BehaviorContext<TInstance> context)
+    public Task PostExecuteAsync(BehaviorContext<TInstance> context)
     {
         AddEvent(context, null, StateMachineEventExecutionStatus.Completed);
         return Task.CompletedTask;
     }
 
-    public Task PostExecute<T>(BehaviorContext<TInstance, T> context)
+    public Task PostExecuteAsync<T>(BehaviorContext<TInstance, T> context)
         where T : class
     {
         AddEvent(context, typeof(T), StateMachineEventExecutionStatus.Completed);
         return Task.CompletedTask;
     }
 
-    public Task ExecuteFault(BehaviorContext<TInstance> context, Exception exception)
+    public Task ExecuteFaultAsync(BehaviorContext<TInstance> context, Exception exception)
     {
         AddEvent(context, null, StateMachineEventExecutionStatus.Faulted, exception);
         return Task.CompletedTask;
     }
 
-    public Task ExecuteFault<T>(BehaviorContext<TInstance, T> context, Exception exception)
+    public Task ExecuteFaultAsync<T>(BehaviorContext<TInstance, T> context, Exception exception)
         where T : class
     {
         AddEvent(context, typeof(T), StateMachineEventExecutionStatus.Faulted, exception);
         return Task.CompletedTask;
     }
 
-    public Task StateChanged(BehaviorContext<TInstance> context, State currentState, State previousState)
+    public Task StateChangedAsync(BehaviorContext<TInstance> context, State currentState, State? previousState)
     {
         _stateChanges.Add(new StateMachineStateChange(context.Saga.CorrelationId, previousState?.Name, currentState.Name));
         return Task.CompletedTask;

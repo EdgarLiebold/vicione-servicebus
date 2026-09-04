@@ -6,10 +6,10 @@ public class ToNullablePropertyConverter<TResult> :
     IPropertyConverter<TResult?, TResult>
     where TResult : struct
 {
-    public Task<TResult?> Convert<T>(InitializeContext<T> context, TResult input)
+    public Task<TResult?> ConvertAsync<T>(InitializeContext<T> context, TResult input, CancellationToken cancellationToken = default)
         where T : class
     {
-        return Task.FromResult<TResult?>(input);
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<TResult?>(cancellationToken); return Task.FromResult<TResult?>(input);
     }
 }
 
@@ -25,10 +25,10 @@ public class ToNullablePropertyConverter<TResult, TInput> :
         _converter = converter;
     }
 
-    public Task<TResult?> Convert<T>(InitializeContext<T> context, TInput input)
+    public Task<TResult?> ConvertAsync<T>(InitializeContext<T> context, TInput? input, CancellationToken cancellationToken = default)
         where T : class
     {
-        Task<TResult> resultTask = _converter.Convert(context, input);
+        Task<TResult> resultTask = _converter.ConvertAsync(context, input, cancellationToken: cancellationToken);
         if (resultTask.Status == TaskStatus.RanToCompletion)
             return Task.FromResult<TResult?>(resultTask.Result);
 

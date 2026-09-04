@@ -112,7 +112,7 @@ public class ActiveMqReceiveEndpointConfiguration :
         }
     }
 
-    public void Bind(string topicName, Action<IActiveMqTopicBindingConfigurator> configure = null)
+    public void Bind(string topicName, Action<IActiveMqTopicBindingConfigurator>? configure = null)
     {
         if (topicName == null)
             throw new ArgumentNullException(nameof(topicName));
@@ -120,7 +120,7 @@ public class ActiveMqReceiveEndpointConfiguration :
         _endpointConfiguration.Topology.Consume.Bind(topicName, configure);
     }
 
-    public void Bind<T>(Action<IActiveMqTopicBindingConfigurator> configure = null)
+    public void Bind<T>(Action<IActiveMqTopicBindingConfigurator>? configure = null)
         where T : class
     {
         _endpointConfiguration.Topology.Consume.GetMessageTopology<T>().Bind(configure);

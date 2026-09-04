@@ -45,9 +45,10 @@ public class RabbitMqSendTransportContext :
     public override string EntityName => _exchange;
     public override string ActivitySystem => "rabbitmq";
 
-    public Task Send(IPipe<ChannelContext> pipe, CancellationToken cancellationToken = default)
+    public Task SendAsync(IPipe<ChannelContext> pipe, CancellationToken cancellationToken = default)
     {
-        return _hostConfiguration.Retry(() => _supervisor.Send(pipe, cancellationToken), cancellationToken, _supervisor.SendStopping);
+        return _hostConfiguration.RetryAsync(() => _supervisor.SendAsync(pipe, cancellationToken),
+            stoppingToken: _supervisor.SendStopping, cancellationToken: cancellationToken);
     }
 
     public void Probe(ProbeContext context)
@@ -60,7 +61,7 @@ public class RabbitMqSendTransportContext :
         return [_supervisor];
     }
 
-    public async Task<SendContext<T>> CreateSendContext<T>(ChannelContext context, T message, IPipe<SendContext<T>> pipe,
+    public async Task<SendContext<T>> CreateSendContextAsync<T>(ChannelContext context, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken)
         where T : class
     {
@@ -68,43 +69,51 @@ public class RabbitMqSendTransportContext :
 
         var sendContext = new RabbitMqMessageSendContext<T>(properties, _exchange, message, cancellationToken);
 
-        await pipe.Send(sendContext).ConfigureAwait(false);
+        await pipe.SendAsync(sendContext).ConfigureAwait(false);
 
         CopyIncomingPropertiesIfPresent(sendContext);
 
         if (sendContext.Exchange.Equals(RabbitMqExchangeNames.ReplyTo) && string.IsNullOrWhiteSpace(sendContext.RoutingKey))
-            throw new TransportException(sendContext.DestinationAddress, "RoutingKey must be specified when sending to reply-to address");
+        {
+            var destinationAddress = sendContext.DestinationAddress
+                ?? throw new InvalidOperationException("The RabbitMQ send context does not have a destination address.");
+            throw new TransportException(destinationAddress, "RoutingKey must be specified when sending to reply-to address");
+        }
 
         return sendContext;
     }
 
-    public override async Task<SendContext<T>> CreateSendContext<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    public override async Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
         var properties = new BasicProperties();
 
         var sendContext = new RabbitMqMessageSendContext<T>(properties, _exchange, message, cancellationToken);
 
-        await pipe.Send(sendContext).ConfigureAwait(false);
+        await pipe.SendAsync(sendContext).ConfigureAwait(false);
 
         CopyIncomingPropertiesIfPresent(sendContext);
 
         if (sendContext.Exchange.Equals(RabbitMqExchangeNames.ReplyTo) && string.IsNullOrWhiteSpace(sendContext.RoutingKey))
-            throw new TransportException(sendContext.DestinationAddress, "RoutingKey must be specified when sending to reply-to address");
+        {
+            var destinationAddress = sendContext.DestinationAddress
+                ?? throw new InvalidOperationException("The RabbitMQ send context does not have a destination address.");
+            throw new TransportException(destinationAddress, "RoutingKey must be specified when sending to reply-to address");
+        }
 
         return sendContext;
     }
 
-    public async Task Send<T>(ChannelContext transportContext, SendContext<T> sendContext)
+    public async Task SendAsync<T>(ChannelContext transportContext, SendContext<T> sendContext, CancellationToken cancellationToken = default)
         where T : class
     {
-        RabbitMqMessageSendContext<T> context = sendContext as RabbitMqMessageSendContext<T>
-            ?? throw new ArgumentException("Invalid SendContext<T> type", nameof(sendContext));
+        cancellationToken.ThrowIfCancellationRequested(); RabbitMqMessageSendContext<T> context = sendContext as RabbitMqMessageSendContext<T>
+                    ?? throw new ArgumentException("Invalid SendContext<T> type", nameof(sendContext));
 
         sendContext.CancellationToken.ThrowIfCancellationRequested();
 
         OneTimeContext<ConfigureTopologyContext<SendSettings>> oneTimeContext =
-            await _configureTopologyFilter.Configure(transportContext, sendContext.CancellationToken).ConfigureAwait(false);
+            await _configureTopologyFilter.ConfigureAsync(transportContext, sendContext.CancellationToken).ConfigureAwait(false);
 
         sendContext.CancellationToken.ThrowIfCancellationRequested();
 
@@ -114,10 +123,10 @@ public class RabbitMqSendTransportContext :
 
         var body = context.Body.GetBytes();
 
-        if (context.TryGetPayload(out PublishContext publishContext))
+        if (context.TryGetPayload(out PublishContext? publishContext))
             context.Mandatory = context.Mandatory || publishContext.Mandatory;
 
-        context.BasicProperties.Headers ??= new Dictionary<string, object>();
+        context.BasicProperties.Headers ??= new Dictionary<string, object?>();
 
         context.BasicProperties.ContentType = context.ContentType?.ToString();
 
@@ -139,13 +148,13 @@ public class RabbitMqSendTransportContext :
                 .ToString("F0", CultureInfo.InvariantCulture);
         }
 
-        if (context.RequestId.HasValue && context.ResponseAddress.IsReplyToAddress())
+        if (context.RequestId.HasValue && context.ResponseAddress?.IsReplyToAddress() == true)
             context.BasicProperties.ReplyTo ??= RabbitMqExchangeNames.ReplyTo;
 
         var delay = context.Delay?.TotalMilliseconds;
         if (delay > 0 && exchange != "")
         {
-            await _delayConfigureTopologyPipe.Send(transportContext).ConfigureAwait(false);
+            await _delayConfigureTopologyPipe.SendAsync(transportContext).ConfigureAwait(false);
             context.SetTransportHeader("x-delay", (long)delay.Value);
 
             exchange = _delayExchange;
@@ -164,7 +173,7 @@ public class RabbitMqSendTransportContext :
 
         try
         {
-            await publishTask.OrCanceled(context.CancellationToken).ConfigureAwait(false);
+            await publishTask.OrCanceledAsync(context.CancellationToken).ConfigureAwait(false);
         }
         catch (OperationCanceledException)
         {
@@ -178,17 +187,10 @@ public class RabbitMqSendTransportContext :
         }
     }
 
-    static void SetHeaders(IDictionary<string, object> dictionary, SendHeaders headers)
+    static void SetHeaders(IDictionary<string, object?> dictionary, SendHeaders headers)
     {
         foreach (KeyValuePair<string, object> header in headers.GetAll())
         {
-            if (header.Value == null)
-            {
-                dictionary.Remove(header.Key);
-
-                continue;
-            }
-
             if (header.Key is RabbitMqHeaders.Exchange or RabbitMqHeaders.RoutingKey or RabbitMqHeaders.DeliveryTag or RabbitMqHeaders.ConsumerTag)
                 continue;
 
@@ -235,7 +237,7 @@ public class RabbitMqSendTransportContext :
                     if (header.Value.GetType().IsValueType)
                         dictionary[header.Key] = header.Value;
                     else
-                        dictionary[header.Key] = formatValue.ToString();
+                        dictionary[header.Key] = formatValue.ToString(null, CultureInfo.InvariantCulture);
                     break;
             }
         }
@@ -253,7 +255,7 @@ public class RabbitMqSendTransportContext :
                     context.TrySetPriority(basicConsumeContext.Properties.Priority);
             }
 
-            if (!string.IsNullOrWhiteSpace(basicConsumeContext.Properties.ReplyTo) && context.ResponseAddress.IsReplyToAddress())
+            if (!string.IsNullOrWhiteSpace(basicConsumeContext.Properties.ReplyTo) && context.ResponseAddress?.IsReplyToAddress() == true)
                 context.BasicProperties.ReplyTo = basicConsumeContext.Properties.ReplyTo;
         }
     }

@@ -16,7 +16,7 @@ public interface SerializerContext :
 
     bool IsSupportedMessageType(Type messageType);
 
-    bool TryGetMessage<T>(out T? message)
+    bool TryGetMessage<T>([NotNullWhen(true)] out T? message)
         where T : class;
 
     bool TryGetMessage(Type messageType, [NotNullWhen(true)] out object? message);

@@ -7,7 +7,7 @@ public interface IExecuteActivityScopeProvider<TActivity, TArguments> :
     where TActivity : class, IExecuteActivity<TArguments>
     where TArguments : class
 {
-    ValueTask<IExecuteScopeContext<TArguments>> GetScope(ExecuteContext<TArguments> context);
+    ValueTask<IExecuteScopeContext<TArguments>> GetScopeAsync(ExecuteContext<TArguments> context, CancellationToken cancellationToken = default);
 
-    ValueTask<IExecuteActivityScopeContext<TActivity, TArguments>> GetActivityScope(ExecuteContext<TArguments> context);
+    ValueTask<IExecuteActivityScopeContext<TActivity, TArguments>> GetActivityScopeAsync(ExecuteContext<TArguments> context, CancellationToken cancellationToken = default);
 }

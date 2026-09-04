@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus;
 /// </summary>
 public interface IRabbitMqQueueOperations
 {
-    Task<RabbitMqFaultRedriveResult> RedriveFaultedMessages(
+    Task<RabbitMqFaultRedriveResult> RedriveFaultedMessagesAsync(
         RabbitMqFaultRedriveRequest request,
         CancellationToken cancellationToken = default);
 }
@@ -20,7 +20,7 @@ public interface IRabbitMqQueueOperations
 public interface IRabbitMqQueueOperations<TBus>
     where TBus : class, IBus
 {
-    Task<RabbitMqFaultRedriveResult> RedriveFaultedMessages(
+    Task<RabbitMqFaultRedriveResult> RedriveFaultedMessagesAsync(
         RabbitMqFaultRedriveRequest request,
         CancellationToken cancellationToken = default);
 }

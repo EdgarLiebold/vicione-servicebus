@@ -9,23 +9,23 @@ public class PendingReceiveLockContext :
     ReceiveLockContext
 {
     Lock? _lockContext;
-    Queue<Lock> _pending;
+    Queue<Lock> _pending = null!;
 
     public bool IsEmpty => _lockContext == null && (_pending == null || _pending.Count == 0);
 
-    public Task Complete()
+    public Task CompleteAsync(CancellationToken cancellationToken = default)
     {
-        return Execute(context => context.Complete(), true);
+        return ExecuteAsync(context => context.CompleteAsync(cancellationToken: cancellationToken), true);
     }
 
-    public Task Faulted(Exception exception)
+    public Task FaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {
-        return Execute(context => context.Faulted(exception), true);
+        return ExecuteAsync(context => context.FaultedAsync(exception, cancellationToken: cancellationToken), true);
     }
 
-    public Task ValidateLockStatus()
+    public Task ValidateLockStatusAsync(CancellationToken cancellationToken = default)
     {
-        return Execute(context => context.ValidateLockStatus());
+        return ExecuteAsync(context => context.ValidateLockStatusAsync(cancellationToken: cancellationToken));
     }
 
     public bool Enqueue(BaseReceiveContext receiveContext, ReceiveLockContext receiveLockContext)
@@ -45,7 +45,7 @@ public class PendingReceiveLockContext :
         }
     }
 
-    async Task Execute(Func<ReceiveLockContext, Task> action, bool clearLockContext = false)
+    async Task ExecuteAsync(Func<ReceiveLockContext, Task> action, bool clearLockContext = false)
     {
         if (_lockContext == null)
         {
@@ -67,12 +67,14 @@ public class PendingReceiveLockContext :
         {
             try
             {
-                var lockContext = _lockContext.Value;
+                var lockContext = _lockContext;
+                if (!lockContext.HasValue)
+                    return;
 
                 if (clearLockContext)
                     _lockContext = null;
 
-                await action(lockContext.ReceiveLockContext).ConfigureAwait(false);
+                await action(lockContext.Value.ReceiveLockContext).ConfigureAwait(false);
 
                 return;
             }

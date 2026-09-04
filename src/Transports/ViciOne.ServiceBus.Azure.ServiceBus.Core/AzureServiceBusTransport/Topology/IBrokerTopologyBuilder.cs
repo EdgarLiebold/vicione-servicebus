@@ -19,8 +19,8 @@ public interface IBrokerTopologyBuilder
     /// <param name="rule"></param>
     /// <param name="filter"></param>
     /// <returns>An entity handle used to reference the binding in subsequent calls</returns>
-    SubscriptionHandle CreateSubscription(TopicHandle topic, CreateSubscriptionOptions createSubscriptionOptions, CreateRuleOptions rule,
-        RuleFilter filter);
+    SubscriptionHandle CreateSubscription(TopicHandle topic, CreateSubscriptionOptions createSubscriptionOptions, CreateRuleOptions? rule,
+        RuleFilter? filter);
 
     /// <summary>
     /// Creates a subscription which forwards to a different topic
@@ -48,5 +48,5 @@ public interface IBrokerTopologyBuilder
     /// <param name="filter"></param>
     /// <returns></returns>
     QueueSubscriptionHandle CreateQueueSubscription(TopicHandle exchange, QueueHandle queue, CreateSubscriptionOptions createSubscriptionOptions,
-        CreateRuleOptions rule, RuleFilter filter);
+        CreateRuleOptions? rule, RuleFilter? filter);
 }

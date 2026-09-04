@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Context;
@@ -24,9 +23,11 @@ public sealed class MediatorReceiveContext<TMessage> :
 {
     readonly MediatorConsumeContext<TMessage> _consumeContext;
     readonly MessageIdMessageHeader _headers;
+    readonly Uri _inputAddress;
     readonly IReceiveObserver _observers;
     readonly PendingTaskCollection _receiveTasks;
-    readonly Stopwatch _receiveTimer;
+    readonly long _receiveStartedAt;
+    readonly TimeProvider _timeProvider;
 
     public MediatorReceiveContext(SendContext<TMessage> sendContext, ISendEndpointProvider sendEndpointProvider,
         IPublishEndpointProvider publishEndpointProvider, IPublishTopology publishTopology, IReceiveObserver observers,
@@ -34,12 +35,15 @@ public sealed class MediatorReceiveContext<TMessage> :
         : base(sendContext)
     {
         _observers = observers;
+        _inputAddress = sendContext.DestinationAddress
+            ?? throw new ArgumentException("A mediator send context must have a destination address.", nameof(sendContext));
 
         SendEndpointProvider = sendEndpointProvider;
         PublishEndpointProvider = publishEndpointProvider;
         PublishTopology = publishTopology;
 
-        _receiveTimer = Stopwatch.StartNew();
+        _timeProvider = sendContext.GetTimeProvider();
+        _receiveStartedAt = _timeProvider.GetTimestamp();
 
         var messageId = sendContext.MessageId ?? throw new ArgumentNullException(nameof(MessageContext.MessageId));
 
@@ -65,7 +69,7 @@ public sealed class MediatorReceiveContext<TMessage> :
     public bool PublishFaults => false;
     public MessageBody Body => new NotSupportedMessageBody();
 
-    public Task ReceiveCompleted => _receiveTasks.Completed(CancellationToken);
+    public Task ReceiveCompleted => _receiveTasks.CompletedAsync(CancellationToken);
 
     public void AddReceiveTask(Task task)
     {
@@ -78,39 +82,39 @@ public sealed class MediatorReceiveContext<TMessage> :
     public bool Redelivered => false;
     public Headers TransportHeaders => _headers;
 
-    public Task NotifyConsumed<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
+    public Task NotifyConsumedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, CancellationToken cancellationToken = default)
         where T : class
     {
-        IsDelivered = true;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); IsDelivered = true;
 
         context.LogConsumed(duration, consumerType);
 
-        return _observers.PostConsume(context, duration, consumerType);
+        return _observers.PostConsumeAsync(context, duration, consumerType);
     }
 
-    public Task NotifyFaulted<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
+    public Task NotifyFaultedAsync<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception, CancellationToken cancellationToken = default)
         where T : class
     {
-        IsFaulted = true;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); IsFaulted = true;
 
         context.LogFaulted(duration, consumerType, exception);
 
         GetOrAddPayload<ConsumerFaultContext>(() => new FaultContext(TypeCache<T>.ShortName, consumerType));
 
-        return _observers.ConsumeFault(context, duration, consumerType, exception);
+        return _observers.ConsumeFaultAsync(context, duration, consumerType, exception);
     }
 
-    public Task NotifyFaulted(Exception exception)
+    public Task NotifyFaultedAsync(Exception exception, CancellationToken cancellationToken = default)
     {
-        IsFaulted = true;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); IsFaulted = true;
 
         this.LogFaulted(exception);
 
-        return _observers.ReceiveFault(this, exception);
+        return _observers.ReceiveFaultAsync(this, exception);
     }
 
-    public TimeSpan ElapsedTime => _receiveTimer.Elapsed;
-    public Uri InputAddress => _consumeContext.DestinationAddress;
+    public TimeSpan ElapsedTime => _timeProvider.GetElapsedTime(_receiveStartedAt);
+    public Uri InputAddress => _inputAddress;
     public ContentType ContentType => MediatorReceiveContext.ObjectContentType;
 
 

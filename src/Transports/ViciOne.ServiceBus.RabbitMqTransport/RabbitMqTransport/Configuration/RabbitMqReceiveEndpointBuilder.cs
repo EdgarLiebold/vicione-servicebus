@@ -72,7 +72,7 @@ public class RabbitMqReceiveEndpointBuilder :
         if (settings.QueueName.Equals(RabbitMqExchangeNames.ReplyTo, StringComparison.OrdinalIgnoreCase))
             return topologyBuilder.BuildBrokerTopology();
 
-        var queueArguments = new Dictionary<string, object>(settings.QueueArguments);
+        var queueArguments = new Dictionary<string, object?>(settings.QueueArguments);
 
         if (settings.QueueExpiration.HasValue)
             queueArguments[RabbitMQ.Client.Headers.XExpires] = (long)settings.QueueExpiration.Value.TotalMilliseconds;

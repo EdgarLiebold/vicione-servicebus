@@ -16,15 +16,15 @@ public class SuperviseJobConsumer :
         _jobService = jobService;
     }
 
-    public async Task Consume(ConsumeContext<CancelJobAttempt> context)
+    public async Task ConsumeAsync(ConsumeContext<CancelJobAttempt> context)
     {
         if (_jobService.TryGetJob(context.Message.JobId, out var handle))
         {
-            await handle.Cancel(context.Message.GetCancellationReason()).ConfigureAwait(false);
+            await handle.CancelAsync(context.Message.GetCancellationReason()).ConfigureAwait(false);
         }
     }
 
-    public Task Consume(ConsumeContext<GetJobAttemptStatus> context)
+    public Task ConsumeAsync(ConsumeContext<GetJobAttemptStatus> context)
     {
         if (_jobService.TryGetJob(context.Message.JobId, out var jobHandle))
         {

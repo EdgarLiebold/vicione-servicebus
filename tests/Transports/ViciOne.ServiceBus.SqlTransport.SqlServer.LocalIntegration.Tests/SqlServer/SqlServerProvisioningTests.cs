@@ -22,7 +22,7 @@ public sealed class SqlServerProvisioningTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0040", "sqlserver-native-owner")]
-    public async Task ExplicitInstanceAndPort_AreProjectedIntoConnectionAndBusAddresses()
+    public async Task ExplicitInstanceAndPort_AreProjectedIntoConnectionAndBusAddressesAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using SqlServerTestDatabase fixture = await SqlServerTestDatabase.CreateAsync(
@@ -62,7 +62,7 @@ public sealed class SqlServerProvisioningTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0041", "sqlserver-native-owner")]
-    public async Task InstanceWithoutPort_IsProjectedOnlyAsTheBusQueryOption()
+    public async Task InstanceWithoutPort_IsProjectedOnlyAsTheBusQueryOptionAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using SqlServerTestDatabase fixture = await SqlServerTestDatabase.CreateAsync(
@@ -100,17 +100,17 @@ public sealed class SqlServerProvisioningTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0045", "sqlserver-native-owner")]
-    public async Task Provisioning_CreatesEveryRequiredTableAndIndex()
+    public async Task Provisioning_CreatesEveryRequiredTableAndIndexAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using SqlServerTestDatabase fixture = await SqlServerTestDatabase.CreateAsync(
             "provision-schema",
             cancellationToken);
         await using SqlConnection connection = fixture.CreateConnection();
-        await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
+        await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
 
-        IReadOnlyList<string> tables = await connection.SchemaTables(fixture.Schema, cancellationToken);
-        IReadOnlyList<string> indices = await connection.SchemaIndices(fixture.Schema, cancellationToken);
+        IReadOnlyList<string> tables = await connection.SchemaTablesAsync(fixture.Schema, cancellationToken);
+        IReadOnlyList<string> indices = await connection.SchemaIndicesAsync(fixture.Schema, cancellationToken);
 
         Assert.Equal(RequiredTables, tables);
         Assert.Contains("ix_messagedelivery_fetch", indices);
@@ -120,25 +120,25 @@ public sealed class SqlServerProvisioningTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0046", "sqlserver-native-owner")]
-    public async Task Disposal_DropsTheRunScopedDatabaseEvenWithAnAttachedSession()
+    public async Task Disposal_DropsTheRunScopedDatabaseEvenWithAnAttachedSessionAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         SqlServerTestDatabase fixture = await SqlServerTestDatabase.CreateAsync("drop-database", cancellationToken);
         string database = fixture.Database;
         string serverConnectionString = fixture.ServerConnectionString;
         await using SqlConnection attached = fixture.CreateConnection();
-        await attached.OpenWithin(fixture.OperationTimeout, cancellationToken);
+        await attached.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
 
         await fixture.DisposeAsync();
         await using var server = new SqlConnection(serverConnectionString);
-        await server.OpenWithin(fixture.OperationTimeout, cancellationToken);
+        await server.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
 
-        Assert.False(await server.DatabaseExists(database, cancellationToken));
+        Assert.False(await server.DatabaseExistsAsync(database, cancellationToken));
     }
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0047", "sqlserver-native-owner")]
-    public async Task ReceiveEndpointWithoutTopology_CreatesItsThreeQueueRows()
+    public async Task ReceiveEndpointWithoutTopology_CreatesItsThreeQueueRowsAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using SqlServerTestDatabase fixture = await SqlServerTestDatabase.CreateAsync(
@@ -161,11 +161,11 @@ public sealed class SqlServerProvisioningTests
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
             await using SqlConnection connection = fixture.CreateConnection();
-            await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
+            await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
 
-            Assert.True(await connection.QueueExists(fixture.Schema, queueName, 1, cancellationToken));
-            Assert.True(await connection.QueueExists(fixture.Schema, queueName, 2, cancellationToken));
-            Assert.True(await connection.QueueExists(fixture.Schema, queueName, 3, cancellationToken));
+            Assert.True(await connection.QueueExistsAsync(fixture.Schema, queueName, 1, cancellationToken));
+            Assert.True(await connection.QueueExistsAsync(fixture.Schema, queueName, 2, cancellationToken));
+            Assert.True(await connection.QueueExistsAsync(fixture.Schema, queueName, 3, cancellationToken));
         }
         finally
         {
@@ -176,7 +176,7 @@ public sealed class SqlServerProvisioningTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0127", "sqlserver-native-owner")]
-    public async Task RunScopedHost_IsPreservedInTheProviderDataSource()
+    public async Task RunScopedHost_IsPreservedInTheProviderDataSourceAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using SqlServerTestDatabase fixture = await SqlServerTestDatabase.CreateAsync(
@@ -185,7 +185,7 @@ public sealed class SqlServerProvisioningTests
         await using SqlConnection connection = fixture.CreateConnection();
         var builder = new SqlConnectionStringBuilder(connection.ConnectionString);
 
-        await connection.OpenWithin(fixture.OperationTimeout, cancellationToken);
+        await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
 
         Assert.Equal($"{fixture.Options.Host},{fixture.Options.Port}", builder.DataSource);
         Assert.Equal(fixture.Database, builder.InitialCatalog);

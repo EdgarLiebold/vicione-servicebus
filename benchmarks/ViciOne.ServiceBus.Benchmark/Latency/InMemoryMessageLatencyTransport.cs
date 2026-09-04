@@ -18,9 +18,9 @@ class InMemoryMessageLatencyTransport : IMessageLatencyTransport
         _settings = settings;
     }
 
-    public Task Send(LatencyTestMessage message)
+    public Task SendAsync(LatencyTestMessage message)
     {
-        return _targetEndpoint.Send(message);
+        return _targetEndpoint.SendAsync(message);
     }
 
     public async ValueTask DisposeAsync()
@@ -28,7 +28,7 @@ class InMemoryMessageLatencyTransport : IMessageLatencyTransport
         await _busControl.StopAsync();
     }
 
-    public async Task Start(Action<IReceiveEndpointConfigurator> callback, IReportConsumerMetric reportConsumerMetric)
+    public async Task StartAsync(Action<IReceiveEndpointConfigurator> callback, IReportConsumerMetric reportConsumerMetric)
     {
         _busControl = Bus.Factory.CreateUsingInMemory(x =>
         {
@@ -43,6 +43,6 @@ class InMemoryMessageLatencyTransport : IMessageLatencyTransport
 
         await _busControl.StartAsync();
 
-        _targetEndpoint = await _busControl.GetSendEndpoint(_targetAddress);
+        _targetEndpoint = await _busControl.GetSendEndpointAsync(_targetAddress);
     }
 }

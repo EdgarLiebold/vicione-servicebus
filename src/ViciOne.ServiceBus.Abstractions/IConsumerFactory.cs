@@ -12,6 +12,6 @@ public interface IConsumerFactory<out TConsumer> :
     IProbeSite
     where TConsumer : class
 {
-    Task Send<T>(ConsumeContext<T> context, IPipe<ConsumerConsumeContext<TConsumer, T>> next)
+    Task SendAsync<T>(ConsumeContext<T> context, IPipe<ConsumerConsumeContext<TConsumer, T>> next)
         where T : class;
 }

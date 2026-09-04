@@ -16,15 +16,15 @@ public static class MediatorRequestExtensions
     /// <param name="timeout"></param>
     /// <typeparam name="T">The response type</typeparam>
     /// <returns>The response object</returns>
-    public static async Task<T> SendRequest<T>(this IMediator mediator, Request<T> request, CancellationToken cancellationToken = default,
-        RequestTimeout timeout = default)
+    public static async Task<T> SendRequestAsync<T>(this IMediator mediator, Request<T> request, RequestTimeout timeout = default,
+        CancellationToken cancellationToken = default)
         where T : class
     {
         try
         {
             using RequestHandle<Request<T>> handle = mediator.CreateRequest(request, cancellationToken, timeout);
 
-            Response<T> response = await handle.GetResponse<T>().ConfigureAwait(false);
+            Response<T> response = await handle.GetResponseAsync<T>(cancellationToken: cancellationToken).ConfigureAwait(false);
 
             return response.Message;
         }

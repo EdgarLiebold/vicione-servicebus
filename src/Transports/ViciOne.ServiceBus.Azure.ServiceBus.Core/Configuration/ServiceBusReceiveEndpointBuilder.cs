@@ -47,7 +47,8 @@ public class ServiceBusReceiveEndpointBuilder :
         var subscriptionName = _configuration.Settings.Name.Split(Separator, StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
         var hostScope = _configuration.HostAddress.AbsolutePath.Split(Separator, StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
 
-        return _configuration.Topology.Publish.GenerateSubscriptionName(subscriptionName, hostScope);
+        return _configuration.Topology.Publish.GenerateSubscriptionName(
+            subscriptionName ?? throw new ConfigurationException("The Azure Service Bus endpoint name is invalid."), hostScope);
     }
 
     BrokerTopology BuildTopology(ReceiveSettings settings)

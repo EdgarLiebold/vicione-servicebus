@@ -21,7 +21,7 @@ public class PessimisticLoadQueryExecutor<TSaga> :
         _queryCustomization = queryCustomization;
     }
 
-    public Task<TSaga?> Load(DbContext dbContext, Guid correlationId, CancellationToken cancellationToken)
+    public Task<TSaga?> LoadAsync(DbContext dbContext, Guid correlationId, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(dbContext);
 

@@ -13,5 +13,5 @@ public interface ReceiveTransportHandle
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task Stop(CancellationToken cancellationToken = default);
+    Task StopAsync(CancellationToken cancellationToken = default);
 }

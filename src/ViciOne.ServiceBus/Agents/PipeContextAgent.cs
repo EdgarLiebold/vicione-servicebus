@@ -16,16 +16,18 @@ public class PipeContextAgent<TContext> :
 {
     readonly Task<TContext> _context;
     readonly TaskCompletionSource<DateTime> _inactive;
+    readonly TimeProvider _timeProvider;
 
     public PipeContextAgent(TContext context)
-        : this(Task.FromResult(context))
+        : this(Task.FromResult(context), context.GetTimeProvider())
     {
     }
 
-    public PipeContextAgent(Task<TContext> context)
+    public PipeContextAgent(Task<TContext> context, TimeProvider? timeProvider = null)
     {
         _context = context;
         _inactive = TaskCompletionSources.Create<DateTime>();
+        _timeProvider = timeProvider ?? TimeProvider.System;
 
         SetReady(_context);
     }
@@ -38,7 +40,7 @@ public class PipeContextAgent<TContext> :
     public async ValueTask DisposeAsync()
     {
         // dispose only once
-        if (!_inactive.TrySetResult(DateTime.UtcNow))
+        if (!_inactive.TrySetResult(_timeProvider.GetUtcNow().UtcDateTime))
             return;
 
         if (_context.Status == TaskStatus.RanToCompletion)
@@ -58,7 +60,7 @@ public class PipeContextAgent<TContext> :
     }
 
     /// <inheritdoc />
-    protected override async Task StopAgent(StopContext context)
+    protected override async Task StopAgentAsync(StopContext context)
     {
         await DisposeAsync().ConfigureAwait(false);
     }

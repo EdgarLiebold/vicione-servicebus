@@ -15,7 +15,7 @@ public class PutMessageDataTransformSpecification<TMessage> :
     ISendTransformSpecification<TMessage>
     where TMessage : class
 {
-    public PutMessageDataTransformSpecification(IMessageDataRepository repository, MessageDataPolicy policy, IEnumerable<Type> knownTypes = null)
+    public PutMessageDataTransformSpecification(IMessageDataRepository repository, MessageDataPolicy policy, IEnumerable<Type>? knownTypes = null)
     {
         if (repository == null)
             throw new ArgumentNullException(nameof(repository));
@@ -39,7 +39,7 @@ public class PutMessageDataTransformSpecification<TMessage> :
         }
     }
 
-    public bool TryGetSendTopology(out IMessageSendTopology<TMessage> topology)
+    public bool TryGetSendTopology([NotNullWhen(true)] out IMessageSendTopology<TMessage>? topology)
     {
         if (Count > 0)
         {
@@ -53,7 +53,7 @@ public class PutMessageDataTransformSpecification<TMessage> :
         return false;
     }
 
-    public bool TryGetConverter(out IPropertyConverter<TMessage, TMessage> converter)
+    public bool TryGetConverter([NotNullWhen(true)] out IPropertyConverter<TMessage, TMessage>? converter)
     {
         if (Count > 0)
         {
@@ -78,21 +78,21 @@ public class PutMessageDataTransformSpecification<TMessage> :
 
                 var providerType = typeof(PutMessageDataObjectDictionaryTransformConfiguration<,,,>)
                     .MakeGenericType(typeof(TMessage), propertyType, keyType, valueType);
-                var configuration = (IMessageDataTransformConfiguration<TMessage>)Activator.CreateInstance(providerType, repository, policy, knownTypes,
-                    propertyInfo);
+                var configuration = (IMessageDataTransformConfiguration<TMessage>)(Activator.CreateInstance(providerType, repository, policy, knownTypes,
+                    propertyInfo) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
                 configuration.Apply(this);
             }
 
-            void ConfigureArray(Type elementType)
+            void ConfigureArray(Type? elementType)
             {
-                if (!IsUnknownObjectType(knownTypes, elementType))
+                if (elementType == null || !IsUnknownObjectType(knownTypes, elementType))
                     return;
 
                 var providerType = typeof(PutMessageDataObjectArrayTransformConfiguration<,,>)
                     .MakeGenericType(typeof(TMessage), propertyType, elementType);
-                var configuration = (IMessageDataTransformConfiguration<TMessage>)Activator.CreateInstance(providerType, repository, policy, knownTypes,
-                    propertyInfo);
+                var configuration = (IMessageDataTransformConfiguration<TMessage>)(Activator.CreateInstance(providerType, repository, policy, knownTypes,
+                    propertyInfo) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
                 configuration.Apply(this);
             }
@@ -100,7 +100,7 @@ public class PutMessageDataTransformSpecification<TMessage> :
             if (propertyType.TryGetSingleClosedGenericArguments(typeof(MessageData<>), out Type[] types))
             {
                 var providerType = typeof(PutMessageDataTransformConfiguration<,>).MakeGenericType(typeof(TMessage), types[0]);
-                var configuration = (IMessageDataTransformConfiguration<TMessage>)Activator.CreateInstance(providerType, repository, policy, propertyInfo);
+                var configuration = (IMessageDataTransformConfiguration<TMessage>)(Activator.CreateInstance(providerType, repository, policy, propertyInfo) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
                 configuration.Apply(this);
             }
@@ -124,8 +124,8 @@ public class PutMessageDataTransformSpecification<TMessage> :
             else if (IsUnknownObjectType(knownTypes, propertyType))
             {
                 var providerType = typeof(PutMessageDataObjectTransformConfiguration<,>).MakeGenericType(typeof(TMessage), propertyType);
-                var configuration = (IMessageDataTransformConfiguration<TMessage>)Activator.CreateInstance(providerType, repository, policy, knownTypes,
-                    propertyInfo);
+                var configuration = (IMessageDataTransformConfiguration<TMessage>)(Activator.CreateInstance(providerType, repository, policy, knownTypes,
+                    propertyInfo) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 
                 configuration.Apply(this);
             }

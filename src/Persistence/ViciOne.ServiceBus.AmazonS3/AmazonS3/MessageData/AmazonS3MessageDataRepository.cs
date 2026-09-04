@@ -38,46 +38,46 @@ public sealed class AmazonS3MessageDataRepository :
 
     public void CreateFaulted(Exception exception) => ArgumentNullException.ThrowIfNull(exception);
 
-    public Task PreStart(IBus bus)
+    public Task PreStartAsync(IBus bus)
     {
         ArgumentNullException.ThrowIfNull(bus);
-        return EnsureReady(CancellationToken.None);
+        return EnsureReadyAsync(CancellationToken.None);
     }
 
-    public Task PostStart(IBus bus, Task<BusReady> busReady)
+    public Task PostStartAsync(IBus bus, Task<BusReady> busReady)
     {
         ArgumentNullException.ThrowIfNull(bus);
         ArgumentNullException.ThrowIfNull(busReady);
         return Task.CompletedTask;
     }
 
-    public Task StartFaulted(IBus bus, Exception exception)
+    public Task StartFaultedAsync(IBus bus, Exception exception)
     {
         ArgumentNullException.ThrowIfNull(bus);
         ArgumentNullException.ThrowIfNull(exception);
         return Task.CompletedTask;
     }
 
-    public Task PreStop(IBus bus)
+    public Task PreStopAsync(IBus bus)
     {
         ArgumentNullException.ThrowIfNull(bus);
         return Task.CompletedTask;
     }
 
-    public Task PostStop(IBus bus)
+    public Task PostStopAsync(IBus bus)
     {
         ArgumentNullException.ThrowIfNull(bus);
         return Task.CompletedTask;
     }
 
-    public Task StopFaulted(IBus bus, Exception exception)
+    public Task StopFaultedAsync(IBus bus, Exception exception)
     {
         ArgumentNullException.ThrowIfNull(bus);
         ArgumentNullException.ThrowIfNull(exception);
         return Task.CompletedTask;
     }
 
-    public async Task<Stream> Get(Uri address, CancellationToken cancellationToken = default)
+    public async Task<Stream> GetAsync(Uri address, CancellationToken cancellationToken = default)
     {
         string objectKey = ParseObjectKey(address);
         using var transfer = new TransferUtility(_client);
@@ -87,7 +87,7 @@ public sealed class AmazonS3MessageDataRepository :
             .ConfigureAwait(false);
     }
 
-    public async Task<Uri> Put(
+    public async Task<Uri> PutAsync(
         Stream stream,
         TimeSpan? timeToLive = null,
         CancellationToken cancellationToken = default)
@@ -107,9 +107,9 @@ public sealed class AmazonS3MessageDataRepository :
         return new Uri($"urn:file:{objectKey}", UriKind.Absolute);
     }
 
-    internal async Task EnsureReady(CancellationToken cancellationToken)
+    internal async Task EnsureReadyAsync(CancellationToken cancellationToken)
     {
-        bool bucketExists = await BucketExists(cancellationToken).ConfigureAwait(false);
+        bool bucketExists = await BucketExistsAsync(cancellationToken).ConfigureAwait(false);
 
         if (!bucketExists)
         {
@@ -132,10 +132,10 @@ public sealed class AmazonS3MessageDataRepository :
         }
 
         if (_options.LifecycleExpirationDays is { } expirationDays)
-            await ReconcileOwnedLifecycleRule(expirationDays, cancellationToken).ConfigureAwait(false);
+            await ReconcileOwnedLifecycleRuleAsync(expirationDays, cancellationToken).ConfigureAwait(false);
     }
 
-    private async Task ReconcileOwnedLifecycleRule(
+    private async Task ReconcileOwnedLifecycleRuleAsync(
         int expirationDays,
         CancellationToken cancellationToken)
     {
@@ -209,7 +209,7 @@ public sealed class AmazonS3MessageDataRepository :
         filter is not null &&
         (filter.LifecycleFilterPredicate is null or LifecyclePrefixPredicate { Prefix: "" });
 
-    private async Task<bool> BucketExists(CancellationToken cancellationToken)
+    private async Task<bool> BucketExistsAsync(CancellationToken cancellationToken)
     {
         try
         {

@@ -13,7 +13,7 @@ public class RoutingSlipActivityFaultedMessage :
     }
 
     public RoutingSlipActivityFaultedMessage(HostInfo host, Guid trackingNumber, string activityName, Guid executionId,
-        DateTime timestamp, TimeSpan duration, ExceptionInfo exceptionInfo, IDictionary<string, object> variables,
+        DateTimeOffset timestamp, TimeSpan duration, ExceptionInfo exceptionInfo, IDictionary<string, object> variables,
         IDictionary<string, object> arguments)
     {
         Host = host;
@@ -28,7 +28,7 @@ public class RoutingSlipActivityFaultedMessage :
     }
 
     public Guid TrackingNumber { get; set; }
-    public DateTime Timestamp { get; set; }
+    public DateTimeOffset Timestamp { get; set; }
     public TimeSpan Duration { get; set; }
     public string ActivityName { get; set; } = null!;
     public HostInfo Host { get; set; } = null!;

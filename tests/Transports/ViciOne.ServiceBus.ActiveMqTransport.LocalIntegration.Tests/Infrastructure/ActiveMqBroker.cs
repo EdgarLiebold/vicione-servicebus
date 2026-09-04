@@ -165,7 +165,7 @@ internal sealed class ActiveMqBroker : IDisposable
         return settings.CreateConnection();
     }
 
-    public async Task<ClassicTopicStatistics> GetClassicTopicStatistics(
+    public async Task<ClassicTopicStatistics> GetClassicTopicStatisticsAsync(
         string topicName,
         CancellationToken cancellationToken)
     {
@@ -202,7 +202,7 @@ internal sealed class ActiveMqBroker : IDisposable
             value.GetProperty("ConsumerCount").GetInt32());
     }
 
-    public async Task<bool> ClassicTopicExists(string topicName, CancellationToken cancellationToken)
+    public async Task<bool> ClassicTopicExistsAsync(string topicName, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(topicName);
         HttpClient client = _managementClient
@@ -231,7 +231,7 @@ internal sealed class ActiveMqBroker : IDisposable
         };
     }
 
-    public async Task<ClassicQueueStatistics> GetClassicQueueStatistics(
+    public async Task<ClassicQueueStatistics> GetClassicQueueStatisticsAsync(
         string queueName,
         CancellationToken cancellationToken)
     {
@@ -269,13 +269,13 @@ internal sealed class ActiveMqBroker : IDisposable
             value.GetProperty("QueueSize").GetInt64());
     }
 
-    public async Task<BrokerQueueStatistics> GetQueueStatistics(
+    public async Task<BrokerQueueStatistics> GetQueueStatisticsAsync(
         string queueName,
         CancellationToken cancellationToken)
     {
         if (Flavor != ArtemisFlavor)
         {
-            ClassicQueueStatistics classic = await GetClassicQueueStatistics(queueName, cancellationToken);
+            ClassicQueueStatistics classic = await GetClassicQueueStatisticsAsync(queueName, cancellationToken);
             return new BrokerQueueStatistics(
                 classic.EnqueueCount,
                 classic.DequeueCount,
@@ -284,8 +284,8 @@ internal sealed class ActiveMqBroker : IDisposable
                 DeliveringCount: 0);
         }
 
-        string mbean = await GetArtemisQueueMBean(queueName, cancellationToken);
-        _ = await InvokeJolokia(
+        string mbean = await GetArtemisQueueMBeanAsync(queueName, cancellationToken);
+        _ = await InvokeJolokiaAsync(
             new
             {
                 type = "exec",
@@ -294,7 +294,7 @@ internal sealed class ActiveMqBroker : IDisposable
                 arguments = Array.Empty<object>(),
             },
             cancellationToken);
-        JsonElement value = await InvokeJolokia(
+        JsonElement value = await InvokeJolokiaAsync(
             new
             {
                 type = "read",
@@ -318,14 +318,14 @@ internal sealed class ActiveMqBroker : IDisposable
             value.GetProperty("DeliveringCount").GetInt64());
     }
 
-    public async Task<int> GetScheduledMessageCount(string queueName, CancellationToken cancellationToken)
+    public async Task<int> GetScheduledMessageCountAsync(string queueName, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(queueName);
 
         if (Flavor == ArtemisFlavor)
-            return checked((int)(await GetQueueStatistics(queueName, cancellationToken)).ScheduledCount);
+            return checked((int)(await GetQueueStatisticsAsync(queueName, cancellationToken)).ScheduledCount);
 
-        JsonElement jobs = await InvokeJolokia(
+        JsonElement jobs = await InvokeJolokiaAsync(
             new
             {
                 type = "exec",
@@ -337,9 +337,9 @@ internal sealed class ActiveMqBroker : IDisposable
         return CountScheduledDestinations(jobs, queueName);
     }
 
-    async Task<string> GetArtemisQueueMBean(string queueName, CancellationToken cancellationToken)
+    async Task<string> GetArtemisQueueMBeanAsync(string queueName, CancellationToken cancellationToken)
     {
-        JsonElement value = await InvokeJolokia(
+        JsonElement value = await InvokeJolokiaAsync(
             new
             {
                 type = "search",
@@ -366,7 +366,7 @@ internal sealed class ActiveMqBroker : IDisposable
                 + $"Available queue MBeans: {string.Join(", ", available)}");
     }
 
-    async Task<JsonElement> InvokeJolokia(object command, CancellationToken cancellationToken)
+    async Task<JsonElement> InvokeJolokiaAsync(object command, CancellationToken cancellationToken)
     {
         HttpClient client = _managementClient
             ?? throw new InvalidOperationException("Broker management is unavailable for this fixture.");
@@ -411,7 +411,7 @@ internal sealed class ActiveMqBroker : IDisposable
         return 0;
     }
 
-    public async Task<bool> ClassicQueueExists(string queueName, CancellationToken cancellationToken)
+    public async Task<bool> ClassicQueueExistsAsync(string queueName, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(queueName);
         HttpClient client = _managementClient
@@ -440,7 +440,7 @@ internal sealed class ActiveMqBroker : IDisposable
         };
     }
 
-    public async Task DeleteClassicQueue(string queueName, CancellationToken cancellationToken)
+    public async Task DeleteClassicQueueAsync(string queueName, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(queueName);
         HttpClient client = _managementClient

@@ -21,7 +21,7 @@ public static class InMemoryOutboxTestContextFactory
             new Uri("loopback://localhost/in-memory-outbox-test"),
             cancellationToken);
         SerializerContext serializerContext = DispatchProxy.Create<SerializerContext, UnsupportedInvocationProxy>();
-        ConsumeContext<T> consumeContext = DispatchProxy.Create<ConsumeContext<T>, ConsumeContextProxy>();
+        TestConsumeContext<T> consumeContext = DispatchProxy.Create<TestConsumeContext<T>, ConsumeContextProxy>();
         ((ConsumeContextProxy)(object)consumeContext).Configure(
             message,
             receiveContext,
@@ -30,6 +30,11 @@ public static class InMemoryOutboxTestContextFactory
             scheduler);
         return consumeContext;
     }
+
+    private interface TestConsumeContext<out T> :
+        ConsumeContext<T>,
+        ConsumeContext
+        where T : class;
 
     private class ConsumeContextProxy : DispatchProxy
     {

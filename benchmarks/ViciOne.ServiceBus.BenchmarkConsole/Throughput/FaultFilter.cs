@@ -6,7 +6,7 @@ namespace ViciOne.ServiceBus.BenchmarkConsole.Throughput;
 public class FaultFilter :
     IFilter<TestContext>
 {
-    public Task Send(TestContext context, IPipe<TestContext> next)
+    public Task SendAsync(TestContext context, IPipe<TestContext> next)
     {
         throw new InvalidOperationException();
     }

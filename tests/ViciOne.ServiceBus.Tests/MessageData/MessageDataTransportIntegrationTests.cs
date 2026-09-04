@@ -29,7 +29,7 @@ public sealed class MessageDataTransportIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-DATA-POLICY", "same-contract-isolated-across-two-buses")]
-    public async Task TwoBuses_ApplyOppositePoliciesToTheSameContractWithoutCrossTalk()
+    public async Task TwoBuses_ApplyOppositePoliciesToTheSameContractWithoutCrossTalkAsync()
     {
         TimeSpan timeout = MessageDataTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -58,26 +58,26 @@ public sealed class MessageDataTransportIntegrationTests
             return Task.CompletedTask;
         });
 
-        await inlineHarness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
-        await storedHarness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await inlineHarness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await storedHarness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
-            await inlineHarness.InputQueueSendEndpoint.Send<PolicyEnvelope>(new { Text = "small" }, cancellationToken);
-            await storedHarness.InputQueueSendEndpoint.Send<PolicyEnvelope>(new { Text = "small" }, cancellationToken);
+            await inlineHarness.InputQueueSendEndpoint.SendAsync<PolicyEnvelope>(new { Text = "small" }, cancellationToken);
+            await storedHarness.InputQueueSendEndpoint.SendAsync<PolicyEnvelope>(new { Text = "small" }, cancellationToken);
 
             Assert.Null(await inlineObserved.Task.WaitAsync(timeout, cancellationToken));
             Assert.NotNull(await storedObserved.Task.WaitAsync(timeout, cancellationToken));
         }
         finally
         {
-            await storedHarness.Stop().WaitAsync(timeout, CancellationToken.None);
-            await inlineHarness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await storedHarness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
+            await inlineHarness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-DATA-TRANSPORT", "inline-string-bytes-and-stored-stream")]
-    public async Task BelowThreshold_StringAndBytesStayInlineWhileStreamUsesTheRepository()
+    public async Task BelowThreshold_StringAndBytesStayInlineWhileStreamUsesTheRepositoryAsync()
     {
         TimeSpan timeout = MessageDataTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -86,32 +86,32 @@ public sealed class MessageDataTransportIntegrationTests
         var observed = new TaskCompletionSource<TransportSnapshot>(TaskCreationOptions.RunContinuationsAsynchronously);
         using var harness = CreateHarness("message-data-inline", timeout, repository, policy);
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<TransportEnvelope>(context =>
-            Observe(observed, async () =>
+            ObserveAsync(observed, async () =>
             {
-                await using Stream stream = await context.Message.Stream.Value;
+                await using Stream stream = MessageDataTestSupport.Require(await context.Message.Stream.Value, nameof(context.Message.Stream));
                 return new TransportSnapshot(
                     context.Message.Text.Address,
                     context.Message.Bytes.Address,
                     context.Message.Stream.Address,
-                    await context.Message.Text.Value,
-                    await context.Message.Bytes.Value,
-                    await ReadBytes(stream, context.CancellationToken));
+                    MessageDataTestSupport.Require(await context.Message.Text.Value, nameof(context.Message.Text)),
+                    MessageDataTestSupport.Require(await context.Message.Bytes.Value, nameof(context.Message.Bytes)),
+                    await ReadBytesAsync(stream, context.CancellationToken));
             }));
         byte[] bytes = [1, 2, 3, 4, 5];
         byte[] streamBytes = [6, 7, 8, 9];
         await using var source = new MemoryStream(streamBytes, writable: false);
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send<TransportEnvelope>(new
+            await harness.InputQueueSendEndpoint.SendAsync<TransportEnvelope>(new
             {
                 Text = "inline",
                 Bytes = bytes,
                 Stream = source,
             }, cancellationToken);
             TransportSnapshot actual = await observed.Task.WaitAsync(timeout, cancellationToken);
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
 
             Assert.Null(actual.TextAddress);
             Assert.Null(actual.BytesAddress);
@@ -122,13 +122,13 @@ public sealed class MessageDataTransportIntegrationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-DATA-TRANSPORT", "filesystem-stored-string-bytes-stream")]
-    public async Task AboveThreshold_FileSystemTransportRoundTripsStringBytesAndStreamExactly()
+    public async Task AboveThreshold_FileSystemTransportRoundTripsStringBytesAndStreamExactlyAsync()
     {
         TimeSpan timeout = MessageDataTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -138,16 +138,16 @@ public sealed class MessageDataTransportIntegrationTests
         var observed = new TaskCompletionSource<TransportSnapshot>(TaskCreationOptions.RunContinuationsAsynchronously);
         using var harness = CreateHarness("message-data-stored", timeout, repository, policy);
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<TransportEnvelope>(context =>
-            Observe(observed, async () =>
+            ObserveAsync(observed, async () =>
             {
-                await using Stream stream = await context.Message.Stream.Value;
+                await using Stream stream = MessageDataTestSupport.Require(await context.Message.Stream.Value, nameof(context.Message.Stream));
                 return new TransportSnapshot(
                     context.Message.Text.Address,
                     context.Message.Bytes.Address,
                     context.Message.Stream.Address,
-                    await context.Message.Text.Value,
-                    await context.Message.Bytes.Value,
-                    await ReadBytes(stream, context.CancellationToken));
+                    MessageDataTestSupport.Require(await context.Message.Text.Value, nameof(context.Message.Text)),
+                    MessageDataTestSupport.Require(await context.Message.Bytes.Value, nameof(context.Message.Bytes)),
+                    await ReadBytesAsync(stream, context.CancellationToken));
             }));
         string text = $"stored-{NewId.NextGuid():N}";
         byte[] bytes = Enumerable.Range(0, 129).Select(index => (byte)(index % 127)).ToArray();
@@ -156,15 +156,15 @@ public sealed class MessageDataTransportIntegrationTests
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
-            await harness.InputQueueSendEndpoint.Send<TransportEnvelope>(new
+            await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync<TransportEnvelope>(new
             {
                 Text = text,
                 Bytes = bytes,
                 Stream = source,
             }, cancellationToken);
             TransportSnapshot actual = await observed.Task.WaitAsync(timeout, cancellationToken);
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
 
             Assert.NotNull(actual.TextAddress);
             Assert.NotNull(actual.BytesAddress);
@@ -177,14 +177,14 @@ public sealed class MessageDataTransportIntegrationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
             Delete(directory);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-DATA-TRANSPORT", "encrypted-at-rest-string-bytes-stream")]
-    public async Task EncryptedFileSystemTransport_RoundTripsEveryTypeWithoutWritingPlaintext()
+    public async Task EncryptedFileSystemTransport_RoundTripsEveryTypeWithoutWritingPlaintextAsync()
     {
         TimeSpan timeout = MessageDataTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -196,16 +196,16 @@ public sealed class MessageDataTransportIntegrationTests
         var observed = new TaskCompletionSource<TransportSnapshot>(TaskCreationOptions.RunContinuationsAsynchronously);
         using var harness = CreateHarness("message-data-encrypted", timeout, repository, policy);
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<TransportEnvelope>(context =>
-            Observe(observed, async () =>
+            ObserveAsync(observed, async () =>
             {
-                await using Stream stream = await context.Message.Stream.Value;
+                await using Stream stream = MessageDataTestSupport.Require(await context.Message.Stream.Value, nameof(context.Message.Stream));
                 return new TransportSnapshot(
                     context.Message.Text.Address,
                     context.Message.Bytes.Address,
                     context.Message.Stream.Address,
-                    await context.Message.Text.Value,
-                    await context.Message.Bytes.Value,
-                    await ReadBytes(stream, context.CancellationToken));
+                    MessageDataTestSupport.Require(await context.Message.Text.Value, nameof(context.Message.Text)),
+                    MessageDataTestSupport.Require(await context.Message.Bytes.Value, nameof(context.Message.Bytes)),
+                    await ReadBytesAsync(stream, context.CancellationToken));
             }));
         string text = $"secret-{NewId.NextGuid():N}";
         byte[] textBytes = Encoding.UTF8.GetBytes(text);
@@ -215,15 +215,15 @@ public sealed class MessageDataTransportIntegrationTests
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
-            await harness.InputQueueSendEndpoint.Send<TransportEnvelope>(new
+            await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync<TransportEnvelope>(new
             {
                 Text = text,
                 Bytes = bytes,
                 Stream = source,
             }, cancellationToken);
             TransportSnapshot actual = await observed.Task.WaitAsync(timeout, cancellationToken);
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
 
             Assert.Equal(text, actual.Text);
             Assert.Equal(bytes, actual.Bytes);
@@ -238,14 +238,14 @@ public sealed class MessageDataTransportIntegrationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
             Delete(directory);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-DATA-TRANSPORT", "stored-reference-and-nested-collection-graph")]
-    public async Task StoredReferences_AreResolvedAcrossObjectArrayListDictionaryBytesAndStream()
+    public async Task StoredReferences_AreResolvedAcrossObjectArrayListDictionaryBytesAndStreamAsync()
     {
         TimeSpan timeout = MessageDataTestSupport.OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -253,25 +253,25 @@ public sealed class MessageDataTransportIntegrationTests
         var observed = new TaskCompletionSource<ReferenceSnapshot>(TaskCreationOptions.RunContinuationsAsynchronously);
         using var harness = CreateHarness("message-data-references", timeout, repository);
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<ReferenceEnvelope>(context =>
-            Observe(observed, async () =>
+            ObserveAsync(observed, async () =>
             {
-                await using Stream stream = await context.Message.Stream.Value;
+                await using Stream stream = MessageDataTestSupport.Require(await context.Message.Stream.Value, nameof(context.Message.Stream));
                 return new ReferenceSnapshot(
-                    await context.Message.Text.Value,
-                    await context.Message.Bytes.Value,
-                    await ReadBytes(stream, context.CancellationToken),
-                    await context.Message.Document.Body.Value,
-                    await context.Message.Documents[0].Body.Value,
-                    await context.Message.DocumentList[0].Body.Value,
-                    await context.Message.DocumentIndex["first"].Body.Value,
-                    await context.Message.DocumentIndex["second"].Body.Value);
+                    MessageDataTestSupport.Require(await context.Message.Text.Value, nameof(context.Message.Text)),
+                    MessageDataTestSupport.Require(await context.Message.Bytes.Value, nameof(context.Message.Bytes)),
+                    await ReadBytesAsync(stream, context.CancellationToken),
+                    MessageDataTestSupport.Require(await context.Message.Document.Body.Value, nameof(context.Message.Document)),
+                    MessageDataTestSupport.Require(await context.Message.Documents[0].Body.Value, nameof(context.Message.Documents)),
+                    MessageDataTestSupport.Require(await context.Message.DocumentList[0].Body.Value, nameof(context.Message.DocumentList)),
+                    MessageDataTestSupport.Require(await context.Message.DocumentIndex["first"].Body.Value, nameof(context.Message.DocumentIndex)),
+                    MessageDataTestSupport.Require(await context.Message.DocumentIndex["second"].Body.Value, nameof(context.Message.DocumentIndex)));
             }));
         Guid identity = Guid.Parse("82d15d34-acde-4d71-9cf0-6155c3a534d2");
         byte[] identityBytes = identity.ToByteArray();
-        MessageData<string> text = await repository.PutString(identity.ToString(), cancellationToken);
-        MessageData<byte[]> bytes = await repository.PutBytes(identityBytes, cancellationToken);
+        MessageData<string> text = await repository.PutStringAsync(identity.ToString(), cancellationToken);
+        MessageData<byte[]> bytes = await repository.PutBytesAsync(identityBytes, cancellationToken);
         await using var source = new MemoryStream(identityBytes, writable: false);
-        MessageData<Stream> stream = await repository.PutStream(source, cancellationToken);
+        MessageData<Stream> stream = await repository.PutStreamAsync(source, cancellationToken);
         var document = new NestedDocument("root", bytes);
         var message = new ReferenceEnvelope(
             text,
@@ -286,12 +286,12 @@ public sealed class MessageDataTransportIntegrationTests
                 ["second"] = new("dictionary-2", bytes),
             });
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(message, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(message, cancellationToken);
             ReferenceSnapshot actual = await observed.Task.WaitAsync(timeout, cancellationToken);
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
 
             Assert.Equal(identity.ToString(), actual.Text);
             Assert.All(actual.ByteValues, value => Assert.Equal(identityBytes, value));
@@ -299,7 +299,7 @@ public sealed class MessageDataTransportIntegrationTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -332,14 +332,14 @@ public sealed class MessageDataTransportIntegrationTests
         return harness;
     }
 
-    private static async Task<byte[]> ReadBytes(Stream stream, CancellationToken cancellationToken)
+    private static async Task<byte[]> ReadBytesAsync(Stream stream, CancellationToken cancellationToken)
     {
         using var copy = new MemoryStream();
         await stream.CopyToAsync(copy, cancellationToken);
         return copy.ToArray();
     }
 
-    private static async Task Observe<T>(TaskCompletionSource<T> observed, Func<Task<T>> createSnapshot)
+    private static async Task ObserveAsync<T>(TaskCompletionSource<T> observed, Func<Task<T>> createSnapshot)
     {
         try
         {

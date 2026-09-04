@@ -19,10 +19,10 @@ public class OutboxPublishEndpointProvider :
         return _publishEndpointProvider.ConnectPublishObserver(observer);
     }
 
-    public async Task<ISendEndpoint> GetPublishSendEndpoint<T>()
+    public async Task<ISendEndpoint> GetPublishSendEndpointAsync<T>(CancellationToken cancellationToken = default)
         where T : class
     {
-        var endpoint = await _publishEndpointProvider.GetPublishSendEndpoint<T>().ConfigureAwait(false);
+        var endpoint = await _publishEndpointProvider.GetPublishSendEndpointAsync<T>(cancellationToken: cancellationToken).ConfigureAwait(false);
 
         return new OutboxSendEndpoint(_context, endpoint);
     }

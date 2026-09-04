@@ -64,7 +64,7 @@ internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :
 
     public object? GetService(Type serviceType) => _provider.GetService(serviceType);
 
-    public Task AddSend<T>(SendContext<T> context)
+    public Task AddSendAsync<T>(SendContext<T> context, CancellationToken cancellationToken = default)
         where T : class
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -78,7 +78,7 @@ internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :
             var message = OutboxMessageFactory.Create(context, ServiceBusMetadataJson.ObjectDeserializer, _timeProvider, outboxId: _outboxId);
             _dbContext.Add(message);
             return Task.CompletedTask;
-        }, context.CancellationToken);
+        }, cancellationToken);
     }
 
     public Task CommitAsync(CancellationToken cancellationToken = default)

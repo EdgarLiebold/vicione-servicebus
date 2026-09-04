@@ -17,9 +17,9 @@ public class PartitionFilter<TContext> :
         _partitioner = partitioner.GetPartitioner(keyProvider);
     }
 
-    Task IFilter<TContext>.Send(TContext context, IPipe<TContext> next)
+    Task IFilter<TContext>.SendAsync(TContext context, IPipe<TContext> next)
     {
-        return _partitioner.Send(context, next);
+        return _partitioner.SendAsync(context, next);
     }
 
     void IProbeSite.Probe(ProbeContext context)

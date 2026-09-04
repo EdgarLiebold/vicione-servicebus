@@ -18,7 +18,7 @@ public static class ServiceBusBusFactoryConfiguratorExtensions
     /// <param name="configure">A callback to further configure the service bus</param>
     /// <returns>The service bus host</returns>
     public static void Host(this IServiceBusBusFactoryConfigurator configurator, Uri hostAddress,
-        Action<IServiceBusHostConfigurator> configure = null)
+        Action<IServiceBusHostConfigurator>? configure = null)
     {
         var hostConfigurator = new ServiceBusHostConfigurator(hostAddress);
 
@@ -52,7 +52,7 @@ public static class ServiceBusBusFactoryConfiguratorExtensions
     /// <param name="configure">A callback to further configure the service bus</param>
     /// <returns>The service bus host</returns>
     public static void Host(this IServiceBusBusFactoryConfigurator configurator, string connectionString,
-        Action<IServiceBusHostConfigurator> configure = null)
+        Action<IServiceBusHostConfigurator>? configure = null)
     {
         // in case they pass a URI by mistake (it happens)
         if (Uri.IsWellFormedUriString(connectionString, UriKind.Absolute))
@@ -98,7 +98,7 @@ public static class ServiceBusBusFactoryConfiguratorExtensions
     /// </summary>
     /// <param name="configurator"></param>
     /// <param name="configure"></param>
-    public static void ReceiveEndpoint(this IServiceBusBusFactoryConfigurator configurator, Action<IServiceBusReceiveEndpointConfigurator> configure = null)
+    public static void ReceiveEndpoint(this IServiceBusBusFactoryConfigurator configurator, Action<IServiceBusReceiveEndpointConfigurator>? configure = null)
     {
         configurator.ReceiveEndpoint(new TemporaryEndpointDefinition(), DefaultEndpointNameFormatter.Instance, configure);
     }
@@ -110,7 +110,7 @@ public static class ServiceBusBusFactoryConfiguratorExtensions
     /// <param name="definition"></param>
     /// <param name="configure"></param>
     public static void ReceiveEndpoint(this IServiceBusBusFactoryConfigurator configurator, IEndpointDefinition definition,
-        Action<IServiceBusReceiveEndpointConfigurator> configure = null)
+        Action<IServiceBusReceiveEndpointConfigurator>? configure = null)
     {
         configurator.ReceiveEndpoint(definition, DefaultEndpointNameFormatter.Instance, configure);
     }

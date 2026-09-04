@@ -18,8 +18,8 @@ public class MessageEventCorrelation<TSaga, TMessage> :
     readonly bool _readOnly;
     readonly ISagaFactory<TSaga, TMessage> _sagaFactory;
 
-    public MessageEventCorrelation(SagaStateMachine<TSaga> machine, Event<TMessage> @event, SagaFilterFactory<TSaga, TMessage> sagaFilterFactory,
-        IFilter<ConsumeContext<TMessage>> messageFilter, IPipe<ConsumeContext<TMessage>> missingPipe, ISagaFactory<TSaga, TMessage> sagaFactory,
+    public MessageEventCorrelation(SagaStateMachine<TSaga> machine, Event<TMessage> @event, SagaFilterFactory<TSaga, TMessage>? sagaFilterFactory,
+        IFilter<ConsumeContext<TMessage>>? messageFilter, IPipe<ConsumeContext<TMessage>> missingPipe, ISagaFactory<TSaga, TMessage> sagaFactory,
         bool insertOnInitial, bool readOnly, bool configureConsumeTopology)
     {
         Event = @event;
@@ -38,13 +38,13 @@ public class MessageEventCorrelation<TSaga, TMessage> :
 
     public bool ConfigureConsumeTopology { get; }
 
-    public SagaFilterFactory<TSaga, TMessage> FilterFactory { get; }
+    public SagaFilterFactory<TSaga, TMessage>? FilterFactory { get; }
 
     public Event<TMessage> Event { get; }
 
     public Type DataType => typeof(TMessage);
 
-    public IFilter<ConsumeContext<TMessage>> MessageFilter { get; }
+    public IFilter<ConsumeContext<TMessage>>? MessageFilter { get; }
 
     public ISagaPolicy<TSaga, TMessage> Policy => _policy.Value;
 

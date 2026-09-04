@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.Middleware;
 
 public sealed class TimeoutFilter<TContext, TResult> :
     IFilter<TContext>
-    where TContext : class, ConsumeContext
+    where TContext : class, PipeContext
     where TResult : TContext
 {
     readonly Func<TContext, CancellationToken, TResult> _contextFactory;
@@ -38,7 +38,7 @@ public sealed class TimeoutFilter<TContext, TResult> :
         _timeout = timeout;
     }
 
-    public async Task Send(TContext context, IPipe<TContext> next)
+    public async Task SendAsync(TContext context, IPipe<TContext> next)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(next);
@@ -52,9 +52,12 @@ public sealed class TimeoutFilter<TContext, TResult> :
             TResult timeoutContext = _contextFactory(context, linkedSource.Token)
                 ?? throw new InvalidOperationException("The timeout context factory returned null.");
 
-            await next.Send(timeoutContext).ConfigureAwait(false);
+            await next.SendAsync(timeoutContext).ConfigureAwait(false);
 
-            await timeoutContext.ConsumeCompleted.ConfigureAwait(false);
+            if (timeoutContext is not ConsumeContext consumeContext)
+                throw new InvalidOperationException("The timeout context does not expose consume completion state.");
+
+            await consumeContext.ConsumeCompleted.ConfigureAwait(false);
         }
         catch (OperationCanceledException exception) when (callerToken.IsCancellationRequested)
         {

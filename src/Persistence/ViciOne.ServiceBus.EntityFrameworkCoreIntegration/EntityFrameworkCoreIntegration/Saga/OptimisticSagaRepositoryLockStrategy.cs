@@ -34,12 +34,12 @@ public class OptimisticSagaRepositoryLockStrategy<TSaga> :
         return SagaQueryCustomization.Apply(query, _queryCustomization);
     }
 
-    public Task<TSaga?> Load(DbContext context, Guid correlationId, CancellationToken cancellationToken)
+    public Task<TSaga?> LoadAsync(DbContext context, Guid correlationId, CancellationToken cancellationToken)
     {
-        return _executor.Load(context, correlationId, cancellationToken);
+        return _executor.LoadAsync(context, correlationId, cancellationToken);
     }
 
-    public async Task<SagaLockContext<TSaga>> CreateLockContext(DbContext context, ISagaQuery<TSaga> query, CancellationToken cancellationToken)
+    public async Task<SagaLockContext<TSaga>> CreateLockContextAsync(DbContext context, ISagaQuery<TSaga> query, CancellationToken cancellationToken)
     {
         return new OptimisticSagaLockContext<TSaga>(context, query, cancellationToken, _queryCustomization);
     }

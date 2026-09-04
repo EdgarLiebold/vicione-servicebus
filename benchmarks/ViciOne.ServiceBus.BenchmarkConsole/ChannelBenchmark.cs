@@ -23,29 +23,29 @@ public class ChannelBenchmark :
     }
 
     [Benchmark(Baseline = true, Description = "Regular Method")]
-    public async Task RegularMethod()
+    public async Task RegularMethodAsync()
     {
-        await SubjectMethod().ConfigureAwait(false);
+        await SubjectMethodAsync().ConfigureAwait(false);
     }
 
     [Benchmark(Description = "Tight-capacity executor")]
-    public async Task TightCapacityExecutor()
+    public async Task TightCapacityExecutorAsync()
     {
-        await _tightCapacityExecutor.ExecuteAsync(SubjectMethod).ConfigureAwait(false);
+        await _tightCapacityExecutor.ExecuteAsync(SubjectMethodAsync).ConfigureAwait(false);
     }
 
     [Benchmark(Description = "Default-capacity executor")]
-    public async Task DefaultCapacityExecutor()
+    public async Task DefaultCapacityExecutorAsync()
     {
-        await _taskExecutor.ExecuteAsync(SubjectMethod).ConfigureAwait(false);
+        await _taskExecutor.ExecuteAsync(SubjectMethodAsync).ConfigureAwait(false);
     }
 
-    static async Task SubjectMethod()
+    static async Task SubjectMethodAsync()
     {
-        await SubjectChildMethod<long>().ConfigureAwait(false);
+        await SubjectChildMethodAsync<long>().ConfigureAwait(false);
     }
 
-    static async Task SubjectChildMethod<T>()
+    static async Task SubjectChildMethodAsync<T>()
     {
     }
 }
@@ -68,40 +68,40 @@ public class ConcurrentChannelBenchmark :
     }
 
     [Benchmark(Baseline = true, Description = "Regular Method", OperationsPerInvoke = 10)]
-    public async Task RegularMethod()
+    public async Task RegularMethodAsync()
     {
-        await Parallel.ForAsync(0, 10, async (n, token) => await SubjectMethod());
+        await Parallel.ForAsync(0, 10, async (n, token) => await SubjectMethodAsync());
     }
 
     [Benchmark(Description = "Tight-capacity executor", OperationsPerInvoke = 10)]
-    public async Task TightCapacityExecutor()
+    public async Task TightCapacityExecutorAsync()
     {
         await Parallel.ForAsync(0, 10,
-            async (n, token) => await _tightCapacityExecutor.ExecuteAsync(SubjectMethod, token));
+            async (n, token) => await _tightCapacityExecutor.ExecuteAsync(SubjectMethodAsync, token));
     }
 
     [Benchmark(Description = "Default-capacity executor", OperationsPerInvoke = 10)]
-    public async Task DefaultCapacityExecutor()
+    public async Task DefaultCapacityExecutorAsync()
     {
         await Parallel.ForAsync(0, 10,
-            async (n, token) => await _taskExecutor.ExecuteAsync(SubjectMethod, token));
+            async (n, token) => await _taskExecutor.ExecuteAsync(SubjectMethodAsync, token));
     }
 
-    static async Task SubjectMethod()
+    static async Task SubjectMethodAsync()
     {
-        await SubjectChildMethod<long>().ConfigureAwait(false);
+        await SubjectChildMethodAsync<long>().ConfigureAwait(false);
     }
 
-    static async Task SubjectChildMethod<T>()
+    static async Task SubjectChildMethodAsync<T>()
     {
     }
 
-    static async ValueTask SubjectMethodValue()
+    static async ValueTask SubjectMethodValueAsync()
     {
-        await SubjectChildMethodValue<long>().ConfigureAwait(false);
+        await SubjectChildMethodValueAsync<long>().ConfigureAwait(false);
     }
 
-    static async ValueTask SubjectChildMethodValue<T>()
+    static async ValueTask SubjectChildMethodValueAsync<T>()
     {
     }
 }
@@ -133,7 +133,7 @@ public class MessageTypeChannelReader<T> :
         return false;
     }
 
-    public override ValueTask<bool> WaitToReadAsync(CancellationToken cancellationToken = new())
+    public override ValueTask<bool> WaitToReadAsync(CancellationToken cancellationToken = default)
     {
         return _source.WaitToReadAsync(cancellationToken);
     }

@@ -20,14 +20,14 @@ internal sealed class AmbientTransactionBus :
 
     internal int PendingTransactionCount => _pendingActions.Count;
 
-    internal override Task Add(Func<CancellationToken, Task> action, CancellationToken cancellationToken)
+    internal override Task AddAsync(Func<CancellationToken, Task> action, CancellationToken cancellationToken = default)
     {
         if (action == null)
             throw new ArgumentNullException(nameof(action));
 
         cancellationToken.ThrowIfCancellationRequested();
 
-        Transaction transaction = Transaction.Current;
+        Transaction? transaction = Transaction.Current;
         if (transaction == null)
             return action(cancellationToken);
 
@@ -35,8 +35,11 @@ internal sealed class AmbientTransactionBus :
         return Task.CompletedTask;
     }
 
-    void ClearTransaction(Transaction transaction)
+    void ClearTransaction(Transaction? transaction)
     {
+        if (transaction == null)
+            return;
+
         if (_pendingActions.TryRemove(transaction, out _))
             transaction.TransactionCompleted -= TransactionCompleted;
     }
@@ -74,7 +77,7 @@ internal sealed class AmbientTransactionBus :
         }
     }
 
-    void TransactionCompleted(object sender, TransactionEventArgs e)
+    void TransactionCompleted(object? sender, TransactionEventArgs e)
     {
         ClearTransaction(e.Transaction);
     }

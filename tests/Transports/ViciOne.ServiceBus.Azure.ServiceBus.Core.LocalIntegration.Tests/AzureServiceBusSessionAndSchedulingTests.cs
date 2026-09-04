@@ -11,7 +11,7 @@ public sealed class AzureServiceBusSessionAndSchedulingTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-SESSIONS", "multiple-sessions-preserve-identity-order-and-terminal-count")]
-    public async Task MultipleSessions_PreserveIdentityOrderAndTerminalCount()
+    public async Task MultipleSessions_PreserveIdentityOrderAndTerminalCountAsync()
     {
         const int sessionCount = 3;
         const int messagesPerSession = 4;
@@ -52,9 +52,8 @@ public sealed class AzureServiceBusSessionAndSchedulingTests
         {
             await bus.StartAsync(cancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
             started = true;
-            ISendEndpoint endpoint = await bus.GetSendEndpoint(new Uri($"queue:{queue}"))
-                .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            await Task.WhenAll(sessionIds.Select(sessionId => SendSession(
+            ISendEndpoint endpoint = await bus.GetSendEndpointAsync(new Uri($"queue:{queue}"), TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
+            await Task.WhenAll(sessionIds.Select(sessionId => SendSessionAsync(
                     endpoint,
                     sessionId,
                     messagesPerSession,
@@ -81,7 +80,7 @@ public sealed class AzureServiceBusSessionAndSchedulingTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ASB-SCHEDULING", "provider-owned-schedule-delivery-and-cancel-acceptance")]
-    public async Task ProviderScheduling_ProvesAcceptedStateDeliveryAndCancelAcceptance()
+    public async Task ProviderScheduling_ProvesAcceptedStateDeliveryAndCancelAcceptanceAsync()
     {
         AzureServiceBusLocalFixture fixture = AzureServiceBusLocalFixture.Create("scheduling");
         ServiceBusAdministrationClient admin = fixture.CreateAdministrationClient();
@@ -119,7 +118,7 @@ public sealed class AzureServiceBusSessionAndSchedulingTests
             IMessageScheduler scheduler = bus.CreateServiceBusMessageScheduler();
             Uri destination = new($"queue:{queue}");
             DateTime cancellationDueTime = TimeProvider.System.GetUtcNow().UtcDateTime.AddHours(1);
-            ScheduledMessage<ScheduledDelivery> cancelled = await scheduler.ScheduleSend(
+            ScheduledMessage<ScheduledDelivery> cancelled = await scheduler.ScheduleSendAsync(
                     destination,
                     cancellationDueTime,
                     new ScheduledDelivery(cancelledId),
@@ -140,20 +139,20 @@ public sealed class AzureServiceBusSessionAndSchedulingTests
             Assert.Equal(
                 BitConverter.ToUInt64(new Guid("E25FC12B-FF28-4476-A6E1-DE45E154A675").ToByteArray(), 8),
                 BitConverter.ToUInt64(cancelled.TokenId.ToByteArray(), 8));
-            await scheduler.CancelScheduledSend(destination, cancelled.TokenId, cancellationToken)
+            await scheduler.CancelScheduledSendAsync(destination, cancelled.TokenId, cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.Empty(await providerReceiver.PeekMessagesAsync(10, cancellationToken: cancellationToken));
 
-            DateTime scheduledTime = TimeProvider.System.GetUtcNow().UtcDateTime.AddSeconds(5);
-            ScheduledMessage<ScheduledDelivery> accepted = await scheduler.ScheduleSend(
+            DateTimeOffset dueAt = TimeProvider.System.GetUtcNow().UtcDateTime.AddSeconds(5);
+            ScheduledMessage<ScheduledDelivery> accepted = await scheduler.ScheduleSendAsync(
                     destination,
-                    scheduledTime,
+                    dueAt,
                     new ScheduledDelivery(deliveredId),
                     Pipe.Execute<SendContext<ScheduledDelivery>>(context =>
                         ((ServiceBusSendContext<ScheduledDelivery>)context).PartitionKey = "2112"),
                     cancellationToken)
                 .WaitAsync(fixture.OperationTimeout, cancellationToken);
-            Assert.Equal(scheduledTime, accepted.ScheduledTime);
+            Assert.Equal(dueAt, accepted.DueAt);
             ConsumeContext<ScheduledDelivery> actual = await delivered.Task.WaitAsync(fixture.OperationTimeout, cancellationToken);
             Assert.Equal(deliveredId, actual.Message.Id);
             Assert.Equal("2112", actual.GetPayload<ServiceBusMessageContext>().PartitionKey);
@@ -173,7 +172,7 @@ public sealed class AzureServiceBusSessionAndSchedulingTests
         }
     }
 
-    static async Task SendSession(
+    static async Task SendSessionAsync(
         ISendEndpoint endpoint,
         string sessionId,
         int count,
@@ -182,7 +181,7 @@ public sealed class AzureServiceBusSessionAndSchedulingTests
     {
         for (int sequence = 0; sequence < count; sequence++)
         {
-            await endpoint.Send(
+            await endpoint.SendAsync(
                     new SessionMessage(sessionId, sequence),
                     context => ((ServiceBusSendContext<SessionMessage>)context).SessionId = sessionId,
                     cancellationToken)

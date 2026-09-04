@@ -27,8 +27,8 @@ public static class MessageFactoryCache<TMessage>
             if (implementationType.GetConstructor(parameterTypes) == null)
                 throw new ArgumentException("No default constructor available for message type", nameof(TMessage));
 
-            return (IMessageFactory<TMessage>)Activator.CreateInstance(typeof(DynamicMessageFactory<,>).MakeGenericType(typeof(TMessage),
-                implementationType));
+            return (IMessageFactory<TMessage>)(Activator.CreateInstance(typeof(DynamicMessageFactory<,>).MakeGenericType(typeof(TMessage),
+                implementationType)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
         }
     }
 }

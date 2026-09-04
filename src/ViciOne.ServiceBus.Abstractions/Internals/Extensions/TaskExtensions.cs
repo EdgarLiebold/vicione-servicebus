@@ -10,7 +10,7 @@ internal static class TaskExtensions
 {
     static readonly TimeSpan _defaultTimeout = new TimeSpan(0, 0, 0, 5, 0);
 
-    public static Task OrCanceled(this Task task, CancellationToken cancellationToken)
+    public static Task OrCanceledAsync(this Task task, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(task);
 
@@ -40,7 +40,7 @@ internal static class TaskExtensions
         return WaitAsync();
     }
 
-    public static Task<T> OrCanceled<T>(this Task<T> task, CancellationToken cancellationToken)
+    public static Task<T> OrCanceledAsync<T>(this Task<T> task, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(task);
 
@@ -70,30 +70,30 @@ internal static class TaskExtensions
         return WaitAsync();
     }
 
-    public static Task OrTimeout(this Task task, int ms = 0, int s = 0, int m = 0, int h = 0, int d = 0, CancellationToken cancellationToken = default,
+    public static Task OrTimeoutAsync(this Task task, int ms = 0, int s = 0, int m = 0, int h = 0, int d = 0, CancellationToken cancellationToken = default,
         [CallerMemberName] string? memberName = null, [CallerFilePath] string? filePath = null, [CallerLineNumber] int? lineNumber = null)
     {
         var timeout = new TimeSpan(d, h, m, s, ms);
         if (timeout == TimeSpan.Zero)
             timeout = _defaultTimeout;
 
-        return OrTimeoutInternal(task, timeout, TimeProvider.System, cancellationToken, memberName, filePath, lineNumber);
+        return OrTimeoutInternalAsync(task, timeout, TimeProvider.System, cancellationToken, memberName, filePath, lineNumber);
     }
 
-    public static Task OrTimeout(this Task task, TimeSpan timeout, CancellationToken cancellationToken = default,
+    public static Task OrTimeoutAsync(this Task task, TimeSpan timeout, CancellationToken cancellationToken = default,
         [CallerMemberName] string? memberName = null, [CallerFilePath] string? filePath = null, [CallerLineNumber] int? lineNumber = null)
     {
-        return OrTimeoutInternal(task, timeout, TimeProvider.System, cancellationToken, memberName, filePath, lineNumber);
+        return OrTimeoutInternalAsync(task, timeout, TimeProvider.System, cancellationToken, memberName, filePath, lineNumber);
     }
 
-    public static Task OrTimeout(this Task task, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken = default,
+    public static Task OrTimeoutAsync(this Task task, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken = default,
         [CallerMemberName] string? memberName = null, [CallerFilePath] string? filePath = null, [CallerLineNumber] int? lineNumber = null)
     {
         ArgumentNullException.ThrowIfNull(timeProvider);
-        return OrTimeoutInternal(task, timeout, timeProvider, cancellationToken, memberName, filePath, lineNumber);
+        return OrTimeoutInternalAsync(task, timeout, timeProvider, cancellationToken, memberName, filePath, lineNumber);
     }
 
-    static Task OrTimeoutInternal(this Task task, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken, string? memberName, string? filePath,
+    static Task OrTimeoutInternalAsync(this Task task, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken, string? memberName, string? filePath,
         int? lineNumber)
     {
         if (task.IsCompleted)
@@ -126,7 +126,7 @@ internal static class TaskExtensions
         return WaitAsync();
     }
 
-    public static Task<T> OrTimeout<T>(this Task<T> task, int ms = 0, int s = 0, int m = 0, int h = 0, int d = 0,
+    public static Task<T> OrTimeoutAsync<T>(this Task<T> task, int ms = 0, int s = 0, int m = 0, int h = 0, int d = 0,
         CancellationToken cancellationToken = default,
         [CallerMemberName] string? memberName = null, [CallerFilePath] string? filePath = null,
         [CallerLineNumber] int? lineNumber = null)
@@ -135,23 +135,23 @@ internal static class TaskExtensions
         if (timeout == TimeSpan.Zero)
             timeout = _defaultTimeout;
 
-        return OrTimeoutInternal(task, timeout, TimeProvider.System, cancellationToken, memberName, filePath, lineNumber);
+        return OrTimeoutInternalAsync(task, timeout, TimeProvider.System, cancellationToken, memberName, filePath, lineNumber);
     }
 
-    public static Task<T> OrTimeout<T>(this Task<T> task, TimeSpan timeout, CancellationToken cancellationToken = default,
+    public static Task<T> OrTimeoutAsync<T>(this Task<T> task, TimeSpan timeout, CancellationToken cancellationToken = default,
         [CallerMemberName] string? memberName = null, [CallerFilePath] string? filePath = null, [CallerLineNumber] int? lineNumber = null)
     {
-        return OrTimeoutInternal(task, timeout, TimeProvider.System, cancellationToken, memberName, filePath, lineNumber);
+        return OrTimeoutInternalAsync(task, timeout, TimeProvider.System, cancellationToken, memberName, filePath, lineNumber);
     }
 
-    public static Task<T> OrTimeout<T>(this Task<T> task, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken = default,
+    public static Task<T> OrTimeoutAsync<T>(this Task<T> task, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken = default,
         [CallerMemberName] string? memberName = null, [CallerFilePath] string? filePath = null, [CallerLineNumber] int? lineNumber = null)
     {
         ArgumentNullException.ThrowIfNull(timeProvider);
-        return OrTimeoutInternal(task, timeout, timeProvider, cancellationToken, memberName, filePath, lineNumber);
+        return OrTimeoutInternalAsync(task, timeout, timeProvider, cancellationToken, memberName, filePath, lineNumber);
     }
 
-    static Task<T> OrTimeoutInternal<T>(this Task<T> task, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken, string? memberName,
+    static Task<T> OrTimeoutInternalAsync<T>(this Task<T> task, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken, string? memberName,
         string? filePath,
         int? lineNumber)
     {

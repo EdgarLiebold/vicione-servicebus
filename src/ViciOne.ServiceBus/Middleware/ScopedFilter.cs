@@ -11,14 +11,14 @@ public class ScopedFilter<TContext> :
 
     public ScopedFilter(IFilterScopeProvider<TContext> scopeProvider)
     {
-        _scopeProvider = scopeProvider;
+        _scopeProvider = scopeProvider ?? throw new ArgumentNullException(nameof(scopeProvider));
     }
 
-    public async Task Send(TContext context, IPipe<TContext> next)
+    public async Task SendAsync(TContext context, IPipe<TContext> next)
     {
         await using IFilterScopeContext<TContext> scope = _scopeProvider.Create(context);
 
-        await scope.Filter.Send(scope.Context, next).ConfigureAwait(false);
+        await scope.Filter.SendAsync(scope.Context, next).ConfigureAwait(false);
     }
 
     public void Probe(ProbeContext context)

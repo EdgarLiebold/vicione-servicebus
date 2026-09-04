@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus;
@@ -17,7 +18,7 @@ public interface ISagaPolicy<TSaga, TMessage>
     /// <param name="context"></param>
     /// <param name="instance"></param>
     /// <returns>True if the instance should be inserted before invoking the message logic</returns>
-    bool PreInsertInstance(ConsumeContext<TMessage> context, out TSaga instance);
+    bool PreInsertInstance(ConsumeContext<TMessage> context, [NotNullWhen(true)] out TSaga? instance);
 
     /// <summary>
     /// The method invoked when an existing saga instance is present
@@ -25,7 +26,7 @@ public interface ISagaPolicy<TSaga, TMessage>
     /// <param name="context"></param>
     /// <param name="next"></param>
     /// <returns></returns>
-    Task Existing(SagaConsumeContext<TSaga, TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next);
+    Task ExistingAsync(SagaConsumeContext<TSaga, TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next);
 
     /// <summary>
     /// Invoked when there is not an existing saga instance available
@@ -33,5 +34,5 @@ public interface ISagaPolicy<TSaga, TMessage>
     /// <param name="context"></param>
     /// <param name="next"></param>
     /// <returns></returns>
-    Task Missing(ConsumeContext<TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next);
+    Task MissingAsync(ConsumeContext<TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next);
 }

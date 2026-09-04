@@ -12,7 +12,7 @@ public sealed class MessageProducerCacheTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "producer-cache-single-flight-and-stop-release")]
-    public async Task ConcurrentRequests_ShareOneProducerAndStoppingTheCacheReleasesItExactlyOnce()
+    public async Task ConcurrentRequests_ShareOneProducerAndStoppingTheCacheReleasesItExactlyOnceAsync()
     {
         var cache = new MessageProducerCache();
         IDestination destination = Destination();
@@ -28,19 +28,15 @@ public sealed class MessageProducerCacheTests
 
         try
         {
-            Task<IMessageProducer> first = cache.GetMessageProducer(
-                destination,
-                async _ =>
+            Task<IMessageProducer> first = cache.GetMessageProducerAsync(destination, async _ =>
                 {
                     Interlocked.Increment(ref factoryCalls);
                     factoryStarted.TrySetResult();
                     await releaseFactory.Task.WaitAsync(TestContext.Current.CancellationToken);
                     return producer;
-                });
+                }, TestContext.Current.CancellationToken);
             await factoryStarted.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
-            Task<IMessageProducer> second = cache.GetMessageProducer(
-                destination,
-                _ => throw new InvalidOperationException("A waiter must not invoke a second factory."));
+            Task<IMessageProducer> second = cache.GetMessageProducerAsync(destination, _ => throw new InvalidOperationException("A waiter must not invoke a second factory."), TestContext.Current.CancellationToken);
 
             releaseFactory.TrySetResult();
 
@@ -52,7 +48,7 @@ public sealed class MessageProducerCacheTests
         }
         finally
         {
-            await cache.Stop("test complete", TestContext.Current.CancellationToken);
+            await cache.StopAsync("test complete", TestContext.Current.CancellationToken);
         }
 
         Assert.Equal(1, Volatile.Read(ref disposalCalls));
@@ -60,7 +56,7 @@ public sealed class MessageProducerCacheTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "producer-cache-faulted-creation-is-retryable")]
-    public async Task FaultedProducerCreation_DoesNotPoisonTheDestinationKey()
+    public async Task FaultedProducerCreation_DoesNotPoisonTheDestinationKeyAsync()
     {
         var cache = new MessageProducerCache();
         IDestination destination = Destination();
@@ -70,20 +66,16 @@ public sealed class MessageProducerCacheTests
 
         try
         {
-            InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() => cache.GetMessageProducer(
-                destination,
-                _ =>
+            InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() => cache.GetMessageProducerAsync(destination, _ =>
                 {
                     Interlocked.Increment(ref factoryCalls);
                     return Task.FromException<IMessageProducer>(expectedFailure);
-                }));
-            IMessageProducer recovered = await cache.GetMessageProducer(
-                destination,
-                _ =>
+                }, TestContext.Current.CancellationToken));
+            IMessageProducer recovered = await cache.GetMessageProducerAsync(destination, _ =>
                 {
                     Interlocked.Increment(ref factoryCalls);
                     return Task.FromResult(producer);
-                });
+                }, TestContext.Current.CancellationToken);
 
             Assert.Same(expectedFailure, actual);
             Assert.NotSame(producer, recovered);
@@ -91,13 +83,13 @@ public sealed class MessageProducerCacheTests
         }
         finally
         {
-            await cache.Stop("test complete", TestContext.Current.CancellationToken);
+            await cache.StopAsync("test complete", TestContext.Current.CancellationToken);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "cached-producer-operations-refresh-resource-usage")]
-    public async Task ProducerOperations_RefreshUsageAndDelegateToTheOwnedProducer()
+    public async Task ProducerOperations_RefreshUsageAndDelegateToTheOwnedProducerAsync()
     {
         var delegatedCalls = 0;
         IMessage message = InterfaceProxy<IMessage>.Create((method, _) => Default(method.ReturnType));

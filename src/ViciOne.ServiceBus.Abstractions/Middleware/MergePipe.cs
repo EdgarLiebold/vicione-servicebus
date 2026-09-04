@@ -26,10 +26,10 @@ public class MergePipe<TInput, TSplit> :
         _next.Probe(scope);
     }
 
-    public Task Send(TSplit context)
+    public Task SendAsync(TSplit context)
     {
         var inputContext = _contextProvider(_input, context);
 
-        return _next.Send(inputContext);
+        return _next.SendAsync(inputContext);
     }
 }

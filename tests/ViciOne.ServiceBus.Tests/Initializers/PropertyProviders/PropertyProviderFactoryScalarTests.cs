@@ -7,7 +7,7 @@ public sealed class PropertyProviderFactoryScalarTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-PROPERTY-PROVIDER-SCALAR", "exact-converted-nullable-object-and-string")]
-    public async Task ScalarSource_SupportsExactConvertedNullableObjectAndStringTargets()
+    public async Task ScalarSource_SupportsExactConvertedNullableObjectAndStringTargetsAsync()
     {
         var reader = PropertyProviderTestContext.For(new IntInput(27));
         var nullableReader = PropertyProviderTestContext.For(new NullableIntInput(27));
@@ -33,7 +33,7 @@ public sealed class PropertyProviderFactoryScalarTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PROPERTY-PROVIDER-ENUM", "enum-int-long-and-string")]
-    public async Task EnumSources_FromEnumIntLongAndString_ConvergeOnTheSameValue()
+    public async Task EnumSources_FromEnumIntLongAndString_ConvergeOnTheSameValueAsync()
     {
         TaskStatus exact = await PropertyProviderTestContext.For(new EnumInput(TaskStatus.RanToCompletion))
             .ReadAsync<TaskStatus>(nameof(EnumInput.Value));
@@ -52,7 +52,7 @@ public sealed class PropertyProviderFactoryScalarTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-PROPERTY-PROVIDER-URI", "exact-and-bidirectional-string")]
-    public async Task UriAndStringSources_PreserveExactAddressMeaning()
+    public async Task UriAndStringSources_PreserveExactAddressMeaningAsync()
     {
         var expected = new Uri("https://service.example.test/");
         var stringReader = PropertyProviderTestContext.For(new StringInput(expected.AbsoluteUri));

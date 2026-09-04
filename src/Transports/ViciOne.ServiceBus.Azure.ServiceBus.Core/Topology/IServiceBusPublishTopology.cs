@@ -23,5 +23,5 @@ public interface IServiceBusPublishTopology :
     /// <param name="entityName">The entity name of the destination queue or topic</param>
     /// <param name="hostScope">The absolute path of the host, which is usually the scope</param>
     /// <returns></returns>
-    string GenerateSubscriptionName(string entityName, string hostScope = default);
+    string GenerateSubscriptionName(string entityName, string? hostScope = default);
 }

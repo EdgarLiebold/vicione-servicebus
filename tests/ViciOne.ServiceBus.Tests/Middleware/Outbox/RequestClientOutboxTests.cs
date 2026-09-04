@@ -13,7 +13,7 @@ public sealed class RequestClientOutboxTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-OUTBOX", "all-request-endpoints-bypass-deferred-delivery")]
-    public async Task RequestSendEndpoint_BypassesADeferredEndpointBeforeSending()
+    public async Task RequestSendEndpoint_BypassesADeferredEndpointBeforeSendingAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -31,7 +31,7 @@ public sealed class RequestClientOutboxTests
                 return Task.CompletedTask;
             });
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             var outbox = new RecordingOutboxContext();
@@ -41,7 +41,7 @@ public sealed class RequestClientOutboxTests
             var requestEndpoint = new FixedRequestSendEndpoint(deferredEndpoint);
             Guid correlationId = Guid.Parse("4ee2eaa1-3348-45ad-bb67-e76b3e4517d2");
 
-            await requestEndpoint.Send(
+            await requestEndpoint.SendAsync(
                 NewId.NextGuid(),
                 new InnerRequest(correlationId),
                 Pipe.Empty<SendContext<InnerRequest>>(),
@@ -54,13 +54,13 @@ public sealed class RequestClientOutboxTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-OUTBOX", "nested-request-bypasses-deferred-delivery")]
-    public async Task NestedRequest_BypassesTheOutboxWhileIndependentSideEffectsRemainDeferred()
+    public async Task NestedRequest_BypassesTheOutboxWhileIndependentSideEffectsRemainDeferredAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -85,14 +85,14 @@ public sealed class RequestClientOutboxTests
             });
         };
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             Guid correlationId = Guid.Parse("aed6e056-e9db-433b-af42-a048046b3912");
             IRequestClient<OuterRequest> client =
                 harness.Bus.CreateRequestClient<OuterRequest>(harness.InputQueueAddress, timeout);
 
-            Response<OuterResponse> response = await client.GetResponse<OuterResponse>(
+            Response<OuterResponse> response = await client.GetResponseAsync<OuterResponse>(
                 new OuterRequest(correlationId),
                 cancellationToken);
             ConsumeContext<DeferredSideEffect> sideEffect =
@@ -112,7 +112,7 @@ public sealed class RequestClientOutboxTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -133,7 +133,7 @@ public sealed class RequestClientOutboxTests
     private sealed class FixedRequestSendEndpoint(ISendEndpoint endpoint) :
         RequestSendEndpoint<InnerRequest>(consumeContext: null)
     {
-        protected override Task<ISendEndpoint> GetSendEndpoint() => Task.FromResult(endpoint);
+        protected override Task<ISendEndpoint> GetSendEndpointAsync() => Task.FromResult(endpoint);
     }
 
     private sealed class RecordingOutboxContext : OutboxContext
@@ -144,39 +144,36 @@ public sealed class RequestClientOutboxTests
 
         public Task ClearToSend => Task.CompletedTask;
 
-        public Task Add(Func<Task> method)
+        public Task AddAsync(Func<Task> method, CancellationToken cancellationToken = default)
         {
-            Interlocked.Increment(ref _deferredSendCount);
+            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); Interlocked.Increment(ref _deferredSendCount);
             return Task.CompletedTask;
         }
 
         public OutboxCheckpoint CreateCheckpoint() =>
             throw new NotSupportedException("This endpoint-bypass probe never checkpoints its recording outbox.");
 
-        public Task ExecutePendingActions(bool concurrentMessageDelivery) => Task.CompletedTask;
-
-        public Task DiscardPendingActions() => Task.CompletedTask;
-
-        public Task DiscardPendingActions(OutboxCheckpoint checkpoint) =>
-            throw new NotSupportedException("This endpoint-bypass probe never rolls back its recording outbox.");
+        public Task ExecutePendingActionsAsync(bool concurrentMessageDelivery, CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
+        public Task DiscardPendingActionsAsync(CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask; }
+        public Task DiscardPendingActionsAsync(OutboxCheckpoint checkpoint, CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); throw new NotSupportedException("This endpoint-bypass probe never rolls back its recording outbox."); }
     }
 
     private sealed class OuterConsumer(
         IBus bus,
         ConcurrentQueue<string> events) : IConsumer<OuterRequest>
     {
-        public async Task Consume(ConsumeContext<OuterRequest> context)
+        public async Task ConsumeAsync(ConsumeContext<OuterRequest> context)
         {
             events.Enqueue("outer-start");
-            await context.Publish(
+            await context.Advanced().PublishAsync(
                 new DeferredSideEffect(context.Message.CorrelationId),
                 context.CancellationToken);
 
-            IRequestClient<InnerRequest> client = context.CreateRequestClient<InnerRequest>(
+            IRequestClient<InnerRequest> client = context.Advanced().CreateRequestClient<InnerRequest>(
                 bus,
-                context.ReceiveContext.InputAddress,
+                context.Advanced().ReceiveContext.InputAddress,
                 RequestTimeout.After(s: 1));
-            Response<InnerResponse> inner = await client.GetResponse<InnerResponse>(
+            Response<InnerResponse> inner = await client.GetResponseAsync<InnerResponse>(
                 new InnerRequest(context.Message.CorrelationId),
                 context.CancellationToken);
 
@@ -190,7 +187,7 @@ public sealed class RequestClientOutboxTests
 
     private sealed class InnerConsumer(ConcurrentQueue<string> events) : IConsumer<InnerRequest>
     {
-        public async Task Consume(ConsumeContext<InnerRequest> context)
+        public async Task ConsumeAsync(ConsumeContext<InnerRequest> context)
         {
             events.Enqueue("inner-consumed");
             await context.RespondAsync(new InnerResponse(

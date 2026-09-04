@@ -8,7 +8,7 @@ public sealed class LatestFilterTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-LATEST-FILTER", "creation-first-value-and-latest-snapshot")]
-    public async Task Latest_TransitionsFromPendingToTheMostRecentlyObservedContext()
+    public async Task Latest_TransitionsFromPendingToTheMostRecentlyObservedContextAsync()
     {
         ILatestFilter<ObservedContext>? latest = null;
         var createdCount = 0;
@@ -26,13 +26,13 @@ public sealed class LatestFilterTests
         Assert.False(beforeFirst.IsCompleted);
 
         var first = new ObservedContext(1);
-        await pipe.Send(first);
+        await pipe.SendAsync(first);
         Assert.Same(first, await beforeFirst);
 
         var last = new ObservedContext(100);
         for (var value = 2; value < 100; value++)
-            await pipe.Send(new ObservedContext(value));
-        await pipe.Send(last);
+            await pipe.SendAsync(new ObservedContext(value));
+        await pipe.SendAsync(last);
 
         Assert.Same(last, await latest.Latest);
         Assert.Equal(1, createdCount);
@@ -40,7 +40,7 @@ public sealed class LatestFilterTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-LATEST-FILTER", "observed-entry-survives-downstream-fault")]
-    public async Task Latest_RetainsTheContextObservedBeforeADownstreamFailure()
+    public async Task Latest_RetainsTheContextObservedBeforeADownstreamFailureAsync()
     {
         ILatestFilter<ObservedContext>? latest = null;
         var expected = new DownstreamException("downstream failed");
@@ -53,10 +53,10 @@ public sealed class LatestFilterTests
                     throw expected;
             });
         });
-        await pipe.Send(new ObservedContext(1));
+        await pipe.SendAsync(new ObservedContext(1));
         var faulting = new ObservedContext(2);
 
-        DownstreamException actual = await Assert.ThrowsAsync<DownstreamException>(() => pipe.Send(faulting));
+        DownstreamException actual = await Assert.ThrowsAsync<DownstreamException>(() => pipe.SendAsync(faulting));
 
         Assert.Same(expected, actual);
         Assert.Same(faulting, await latest!.Latest);

@@ -20,7 +20,7 @@ public sealed class BatchDeliveryIntegrationTests
     [InlineData(SuccessMode.RetryingEndpointOutbox)]
     [InlineData(SuccessMode.MessageOutbox)]
     [RequirementCoverage("REQ-VSB-BATCH-DELIVERY", "limits-definition-retry-and-outbox-matrix")]
-    public async Task ConfiguredBatch_ProducesTheExactTerminalBatches(SuccessMode mode)
+    public async Task ConfiguredBatch_ProducesTheExactTerminalBatchesAsync(SuccessMode mode)
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -32,7 +32,7 @@ public sealed class BatchDeliveryIntegrationTests
         };
         int expectedResults = mode is SuccessMode.InlineFiveAndTail or SuccessMode.DefinitionFiveAndTail ? 2 : 1;
         await using ServiceProvider provider = BuildProvider(timeout, configuration => ConfigureSuccess(configuration, mode));
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         bool started = true;
 
         try
@@ -41,13 +41,13 @@ public sealed class BatchDeliveryIntegrationTests
                 .Select(index => new BatchItem(NewId.NextGuid(), index))
                 .ToArray();
 
-            await harness.Bus.PublishBatch(items, cancellationToken);
+            await harness.Bus.PublishBatchAsync(items, cancellationToken);
             Assert.Equal(expectedResults, await harness.Published
                 .SelectAsync<BatchResult>(cancellationToken)
                 .Take(expectedResults)
-                .Count());
+                .CountObservedAsync(TestContext.Current.CancellationToken));
 
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
             started = false;
 
             BatchResult[] results = Snapshot(token => harness.Published.Select<BatchResult>(token))
@@ -77,7 +77,7 @@ public sealed class BatchDeliveryIntegrationTests
         finally
         {
             if (started)
-                await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+                await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -89,12 +89,12 @@ public sealed class BatchDeliveryIntegrationTests
     [InlineData(FailureMode.ScheduledRedelivery)]
     [InlineData(FailureMode.OutboxRetry)]
     [RequirementCoverage("REQ-VSB-BATCH-FAULT-FANOUT", "one-terminal-fault-per-inner-message")]
-    public async Task FaultingBatch_PublishesOneTerminalFaultPerInnerMessage(FailureMode mode)
+    public async Task FaultingBatch_PublishesOneTerminalFaultPerInnerMessageAsync(FailureMode mode)
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using ServiceProvider provider = BuildProvider(timeout, configuration => ConfigureFailure(configuration, mode));
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         bool started = true;
 
         try
@@ -104,13 +104,13 @@ public sealed class BatchDeliveryIntegrationTests
                 new BatchItem(NewId.NextGuid(), 0),
                 new BatchItem(NewId.NextGuid(), 1),
             ];
-            await harness.Bus.PublishBatch(items, cancellationToken);
+            await harness.Bus.PublishBatchAsync(items, cancellationToken);
             Assert.Equal(2, await harness.Published
                 .SelectAsync<Fault<BatchItem>>(cancellationToken)
                 .Take(2)
-                .Count());
+                .CountObservedAsync(TestContext.Current.CancellationToken));
 
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
             started = false;
 
             Fault<BatchItem>[] faults = Snapshot(token => harness.Published.Select<Fault<BatchItem>>(token))
@@ -127,33 +127,33 @@ public sealed class BatchDeliveryIntegrationTests
         finally
         {
             if (started)
-                await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+                await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BATCH-DUPLICATE-SUPPRESSION", "same-message-id-is-consumed-once")]
-    public async Task DuplicateMessageId_ProducesOneSingleItemBatch()
+    public async Task DuplicateMessageId_ProducesOneSingleItemBatchAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using ServiceProvider provider = BuildProvider(timeout, configuration =>
             configuration.AddConsumer<BatchResultConsumer>(consumer => consumer.Options<BatchOptions>(options =>
                 options.SetMessageLimit(2).SetTimeLimit(TimeSpan.FromMilliseconds(50)))));
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         bool started = true;
 
         try
         {
             Guid messageId = NewId.NextGuid();
             var item = new BatchItem(NewId.NextGuid(), 0);
-            await harness.Bus.Publish(item, context => context.MessageId = messageId, cancellationToken);
-            await harness.Bus.Publish(item, context => context.MessageId = messageId, cancellationToken);
+            await harness.Bus.PublishAsync(item, context => context.MessageId = messageId, cancellationToken);
+            await harness.Bus.PublishAsync(item, context => context.MessageId = messageId, cancellationToken);
             IPublishedMessage<BatchResult> published = await harness.Published
                 .SelectAsync<BatchResult>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
             started = false;
 
             Assert.Equal(1, published.Context.Message.Count);
@@ -165,13 +165,13 @@ public sealed class BatchDeliveryIntegrationTests
         finally
         {
             if (started)
-                await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+                await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BATCH-OUTBOX", "failed-inner-publications-are-discarded")]
-    public async Task FailedBatch_DiscardsEveryInnerContextPublicationFromTheOutbox()
+    public async Task FailedBatch_DiscardsEveryInnerContextPublicationFromTheOutboxAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -181,21 +181,21 @@ public sealed class BatchDeliveryIntegrationTests
                 options.SetMessageLimit(2)));
             configuration.AddConfigureEndpointsCallback((context, _, endpoint) => endpoint.UseInMemoryOutbox(context));
         });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         bool started = true;
 
         try
         {
             IConsumerTestHarness<FailingOutboxBatchConsumer> consumer =
                 harness.GetConsumerHarness<FailingOutboxBatchConsumer>();
-            await harness.Bus.PublishBatch(
+            await harness.Bus.PublishBatchAsync(
                 [new BatchItem(NewId.NextGuid(), 0), new BatchItem(NewId.NextGuid(), 1)],
                 cancellationToken);
             IReceivedMessage<Batch<BatchItem>> failed = await consumer.Consumed
                 .SelectAsync<Batch<BatchItem>>(cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
             started = false;
 
             Assert.IsType<BatchFailureException>(failed.Exception);
@@ -204,7 +204,7 @@ public sealed class BatchDeliveryIntegrationTests
         finally
         {
             if (started)
-                await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+                await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -212,7 +212,7 @@ public sealed class BatchDeliveryIntegrationTests
     [InlineData(1)]
     [InlineData(2)]
     [RequirementCoverage("REQ-VSB-BATCH-ERROR-TRANSPORT", "size-and-time-closed-failures-move-each-message")]
-    public async Task FaultingSingleItemBatch_MovesTheOriginalMessageToTheErrorQueue(int messageLimit)
+    public async Task FaultingSingleItemBatch_MovesTheOriginalMessageToTheErrorQueueAsync(int messageLimit)
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -224,7 +224,7 @@ public sealed class BatchDeliveryIntegrationTests
         var moved = NewSignal<ConsumeContext<ErrorBatchItem>>();
         string errorQueue = $"{harness.InputQueueName}_error";
         harness.OnConfigureInMemoryBus += bus => bus.ReceiveEndpoint(errorQueue, endpoint =>
-            endpoint.Handler<ErrorBatchItem>(context => Complete(moved, context)));
+            endpoint.Handler<ErrorBatchItem>(context => CompleteAsync(moved, context)));
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Batch<ErrorBatchItem>(batch =>
         {
             batch.MessageLimit = messageLimit;
@@ -232,35 +232,35 @@ public sealed class BatchDeliveryIntegrationTests
             batch.Consumer(() => new ErrorBatchConsumer());
         });
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
         {
             var message = new ErrorBatchItem(NewId.NextGuid());
-            await harness.InputQueueSendEndpoint.Send(message, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(message, cancellationToken);
             ConsumeContext<ErrorBatchItem> error = await moved.Task.WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(message.CorrelationId, error.Message.CorrelationId);
-            Assert.Equal(new Uri(harness.BaseAddress, errorQueue), error.ReceiveContext.InputAddress);
+            Assert.Equal(new Uri(harness.BaseAddress, errorQueue), error.Advanced().ReceiveContext.InputAddress);
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BATCH-GROUPING", "guid-value-key-produces-three-exact-groups")]
-    public Task GuidGrouping_ProducesBatchesOfOneTwoAndThree() =>
-        RunGrouping(GroupKeyMode.Guid);
+    public Task GuidGrouping_ProducesBatchesOfOneTwoAndThreeAsync() =>
+        RunGroupingAsync(GroupKeyMode.Guid);
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BATCH-GROUPING", "nullable-string-key-produces-three-exact-groups")]
-    public Task StringGrouping_ProducesBatchesOfOneTwoAndThreeIncludingNull() =>
-        RunGrouping(GroupKeyMode.String);
+    public Task StringGrouping_ProducesBatchesOfOneTwoAndThreeIncludingNullAsync() =>
+        RunGroupingAsync(GroupKeyMode.String);
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MEDIATOR-BATCH", "four-messages-one-batch")]
-    public async Task Mediator_DefaultBatchConsumerReceivesFourMessagesTogether()
+    public async Task Mediator_DefaultBatchConsumerReceivesFourMessagesTogetherAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -272,7 +272,7 @@ public sealed class BatchDeliveryIntegrationTests
             .Select(index => new MediatorBatchItem(NewId.NextGuid(), index))
             .ToArray();
 
-        await Task.WhenAll(items.Select(item => mediator.Send(item, cancellationToken)));
+        await Task.WhenAll(items.Select(item => mediator.SendAsync(item, cancellationToken)));
         Batch<MediatorBatchItem> batch = await delivered.Task.WaitAsync(timeout, cancellationToken);
 
         Assert.Equal(4, batch.Length);
@@ -282,7 +282,7 @@ public sealed class BatchDeliveryIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-BATCH-CONCURRENCY", "one-thousand-exactly-once-with-overlap")]
-    public async Task ConcurrentBatches_DeliverOneThousandMessageIdentitiesExactlyOnce()
+    public async Task ConcurrentBatches_DeliverOneThousandMessageIdentitiesExactlyOnceAsync()
     {
         const int batchSize = 100;
         const int itemCount = 1000;
@@ -307,18 +307,18 @@ public sealed class BatchDeliveryIntegrationTests
         };
         Guid[] sent = Enumerable.Range(0, itemCount).Select(_ => NewId.NextGuid()).ToArray();
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         bool started = true;
         try
         {
-            Task[] sends = sent.Select(messageId => harness.InputQueueSendEndpoint.Send(
+            Task[] sends = sent.Select(messageId => harness.InputQueueSendEndpoint.SendAsync(
                     new ExactlyOnceItem(messageId),
                     context => context.MessageId = messageId,
                     cancellationToken))
                 .ToArray();
             await Task.WhenAll(sends).WaitAsync(timeout, cancellationToken);
             await probe.Completed.Task.WaitAsync(timeout, cancellationToken);
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
             started = false;
 
             Assert.True(probe.OverlapObserved);
@@ -330,7 +330,7 @@ public sealed class BatchDeliveryIntegrationTests
         {
             probe.Release.TrySetResult();
             if (started)
-                await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+                await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -429,7 +429,7 @@ public sealed class BatchDeliveryIntegrationTests
         }
     }
 
-    private static async Task RunGrouping(GroupKeyMode mode)
+    private static async Task RunGroupingAsync(GroupKeyMode mode)
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -450,7 +450,7 @@ public sealed class BatchDeliveryIntegrationTests
                     .GroupBy<GroupedItem, string>(context => context.Message.StringGroup!)));
             }
         });
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(timeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync().WaitAsync(timeout, cancellationToken);
         bool started = true;
 
         try
@@ -472,13 +472,13 @@ public sealed class BatchDeliveryIntegrationTests
                     new(NewId.NextGuid(), Guid.Empty, "three"), new(NewId.NextGuid(), Guid.Empty, "three"),
                     new(NewId.NextGuid(), Guid.Empty, "three"),
                 ];
-            await harness.Bus.PublishBatch(items, cancellationToken);
+            await harness.Bus.PublishBatchAsync(items, cancellationToken);
             Assert.Equal(3, await harness.Published
                 .SelectAsync<GroupBatchResult>(cancellationToken)
                 .Take(3)
-                .Count());
+                .CountObservedAsync(TestContext.Current.CancellationToken));
 
-            await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
             started = false;
             GroupBatchResult[] results = Snapshot(token => harness.Published.Select<GroupBatchResult>(token))
                 .Select(observation => observation.Context.Message)
@@ -495,7 +495,7 @@ public sealed class BatchDeliveryIntegrationTests
         finally
         {
             if (started)
-                await harness.Stop(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+                await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
@@ -519,7 +519,7 @@ public sealed class BatchDeliveryIntegrationTests
         return source(completed.Token).ToArray();
     }
 
-    private static Task Complete<T>(TaskCompletionSource<ConsumeContext<T>> signal, ConsumeContext<T> context)
+    private static Task CompleteAsync<T>(TaskCompletionSource<ConsumeContext<T>> signal, ConsumeContext<T> context)
         where T : class
     {
         signal.TrySetResult(context);
@@ -566,7 +566,7 @@ public sealed class BatchDeliveryIntegrationTests
 
     private sealed class BatchResultConsumer : IConsumer<Batch<BatchItem>>
     {
-        public Task Consume(ConsumeContext<Batch<BatchItem>> context) => PublishResult(context);
+        public Task ConsumeAsync(ConsumeContext<Batch<BatchItem>> context) => PublishResultAsync(context);
     }
 
     private sealed class BatchResultConsumerDefinition : ConsumerDefinition<BatchResultConsumer>
@@ -584,44 +584,44 @@ public sealed class BatchDeliveryIntegrationTests
 
     private sealed class OutboxBatchConsumer : IConsumer<Batch<BatchItem>>
     {
-        public Task Consume(ConsumeContext<Batch<BatchItem>> context)
+        public Task ConsumeAsync(ConsumeContext<Batch<BatchItem>> context)
         {
             Assert.True(context.TryGetPayload<InMemoryOutboxConsumeContext>(out _));
-            return PublishResult(context);
+            return PublishResultAsync(context);
         }
     }
 
     private sealed class RetryingOutboxBatchConsumer : IConsumer<Batch<BatchItem>>
     {
-        public Task Consume(ConsumeContext<Batch<BatchItem>> context)
+        public Task ConsumeAsync(ConsumeContext<Batch<BatchItem>> context)
         {
             Assert.True(context.TryGetPayload<InMemoryOutboxConsumeContext>(out _));
-            if (context.GetRetryCount() == 0)
+            if (context.Advanced().GetRetryCount() == 0)
                 throw new BatchFailureException("The first outbox attempt must be retried.");
 
-            return PublishResult(context);
+            return PublishResultAsync(context);
         }
     }
 
     private sealed class FailingBatchConsumer : IConsumer<Batch<BatchItem>>
     {
-        public Task Consume(ConsumeContext<Batch<BatchItem>> context) =>
+        public Task ConsumeAsync(ConsumeContext<Batch<BatchItem>> context) =>
             throw new BatchFailureException("The batch consumer failed.");
     }
 
     private sealed class FailingOutboxBatchConsumer : IConsumer<Batch<BatchItem>>
     {
-        public async Task Consume(ConsumeContext<Batch<BatchItem>> context)
+        public async Task ConsumeAsync(ConsumeContext<Batch<BatchItem>> context)
         {
             foreach (ConsumeContext<BatchItem> item in context.Message)
-                await item.Publish(CreateResult(context), item.CancellationToken);
+                await item.Advanced().PublishAsync(CreateResult(context), item.CancellationToken);
 
             throw new BatchFailureException("The batch and its buffered publications must fail together.");
         }
     }
 
-    private static Task PublishResult(ConsumeContext<Batch<BatchItem>> context) =>
-        context.Publish(CreateResult(context), context.CancellationToken);
+    private static Task PublishResultAsync(ConsumeContext<Batch<BatchItem>> context) =>
+        context.Advanced().PublishAsync(CreateResult(context), context.CancellationToken);
 
     private static BatchResult CreateResult(ConsumeContext<Batch<BatchItem>> context) =>
         new(
@@ -634,7 +634,7 @@ public sealed class BatchDeliveryIntegrationTests
 
     private sealed class ErrorBatchConsumer : IConsumer<Batch<ErrorBatchItem>>
     {
-        public Task Consume(ConsumeContext<Batch<ErrorBatchItem>> context) =>
+        public Task ConsumeAsync(ConsumeContext<Batch<ErrorBatchItem>> context) =>
             throw new BatchFailureException("Move this batch to the error transport.");
     }
 
@@ -644,7 +644,7 @@ public sealed class BatchDeliveryIntegrationTests
 
     private sealed class GuidGroupConsumer : IConsumer<Batch<GroupedItem>>
     {
-        public Task Consume(ConsumeContext<Batch<GroupedItem>> context) => context.Publish(new GroupBatchResult(
+        public Task ConsumeAsync(ConsumeContext<Batch<GroupedItem>> context) => context.Advanced().PublishAsync(new GroupBatchResult(
             context.Message.Select(item => item.Message.CorrelationId).ToArray(),
             context.Message.Length,
             context.Message.Mode,
@@ -654,7 +654,7 @@ public sealed class BatchDeliveryIntegrationTests
 
     private sealed class StringGroupConsumer : IConsumer<Batch<GroupedItem>>
     {
-        public Task Consume(ConsumeContext<Batch<GroupedItem>> context) => context.Publish(new GroupBatchResult(
+        public Task ConsumeAsync(ConsumeContext<Batch<GroupedItem>> context) => context.Advanced().PublishAsync(new GroupBatchResult(
             context.Message.Select(item => item.Message.CorrelationId).ToArray(),
             context.Message.Length,
             context.Message.Mode,
@@ -667,7 +667,7 @@ public sealed class BatchDeliveryIntegrationTests
     private sealed class MediatorBatchConsumer(TaskCompletionSource<Batch<MediatorBatchItem>> delivered) :
         IConsumer<Batch<MediatorBatchItem>>
     {
-        public Task Consume(ConsumeContext<Batch<MediatorBatchItem>> context)
+        public Task ConsumeAsync(ConsumeContext<Batch<MediatorBatchItem>> context)
         {
             delivered.TrySetResult(context.Message);
             return Task.CompletedTask;
@@ -678,9 +678,9 @@ public sealed class BatchDeliveryIntegrationTests
 
     private sealed class ExactlyOnceBatchConsumer(ExactlyOnceProbe probe) : IConsumer<Batch<ExactlyOnceItem>>
     {
-        public async Task Consume(ConsumeContext<Batch<ExactlyOnceItem>> context)
+        public async Task ConsumeAsync(ConsumeContext<Batch<ExactlyOnceItem>> context)
         {
-            await probe.Enter(context.CancellationToken);
+            await probe.EnterAsync(context.CancellationToken);
             probe.Record(context.Message);
         }
     }
@@ -719,7 +719,7 @@ public sealed class BatchDeliveryIntegrationTests
             }
         }
 
-        public async Task Enter(CancellationToken cancellationToken)
+        public async Task EnterAsync(CancellationToken cancellationToken)
         {
             int inside = Interlocked.Increment(ref _inside);
             UpdateMaximum(ref _maximumOverlap, inside);

@@ -13,7 +13,7 @@ public class SagaSpecification<TSaga> :
     readonly ConnectHandle[] _handles;
     readonly IReadOnlyDictionary<Type, ISagaMessageSpecification<TSaga>> _messageTypes;
     protected readonly SagaConfigurationObservable Observers;
-    IConcurrencyLimiter _concurrencyLimiter;
+    IConcurrencyLimiter _concurrencyLimiter = null!;
     readonly ConfigurationObserverNotification _configurationNotification = new ConfigurationObserverNotification();
 
     public SagaSpecification(IEnumerable<ISagaMessageSpecification<TSaga>> messageSpecifications)
@@ -51,7 +51,7 @@ public class SagaSpecification<TSaga> :
     public ISagaMessageSpecification<TSaga, T> GetMessageSpecification<T>()
         where T : class
     {
-        if (!_messageTypes.TryGetValue(typeof(T), out ISagaMessageSpecification<TSaga> specification))
+        if (!_messageTypes.TryGetValue(typeof(T), out ISagaMessageSpecification<TSaga>? specification))
             throw new ArgumentException($"MessageType {TypeCache<T>.ShortName} is not consumed by {TypeCache<TSaga>.ShortName}");
 
         return specification.GetMessageSpecification<T>();

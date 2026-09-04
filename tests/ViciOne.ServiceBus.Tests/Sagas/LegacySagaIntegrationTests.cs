@@ -13,7 +13,7 @@ public sealed class LegacySagaIntegrationTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-SAGA-PIPE-LAYERS", "saga-message-and-combined-filters-share-one-delivery")]
-    public async Task SagaConfiguration_InvokesAllThreePipeLayersWithTheSameSagaAndMessage()
+    public async Task SagaConfiguration_InvokesAllThreePipeLayersWithTheSameSagaAndMessageAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -31,20 +31,20 @@ public sealed class LegacySagaIntegrationTests
                 combinedLayer.TrySetResult((context.Saga.CorrelationId, context.Message.CorrelationId))));
         });
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         Guid correlationId = NewId.NextGuid();
         try
         {
-            await harness.InputQueueSendEndpoint.Send(new FilteredStart(correlationId), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new FilteredStart(correlationId), cancellationToken);
 
             Assert.Equal(correlationId, await sagaLayer.Task.WaitAsync(timeout, cancellationToken));
             Assert.Equal(correlationId, await messageLayer.Task.WaitAsync(timeout, cancellationToken));
             Assert.Equal((correlationId, correlationId), await combinedLayer.Task.WaitAsync(timeout, cancellationToken));
-            Assert.Equal(correlationId, await ((ISagaRepository<FilteredSaga>)repository).ShouldContainSaga(correlationId, timeout));
+            Assert.Equal(correlationId, await ((ISagaRepository<FilteredSaga>)repository).ShouldContainSagaAsync(correlationId, timeout, cancellationToken: TestContext.Current.CancellationToken));
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Single(harness.Consumed.Select<FilteredStart>(SnapshotOnlyToken()));
@@ -52,7 +52,7 @@ public sealed class LegacySagaIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SAGA-INITIATE-OR-ORCHESTRATE", "missing-and-existing-instance-matrix")]
-    public async Task InitiatedByOrOrchestrates_CreatesAMissingInstanceAndReusesAnExistingInstance()
+    public async Task InitiatedByOrOrchestrates_CreatesAMissingInstanceAndReusesAnExistingInstanceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -60,28 +60,22 @@ public sealed class LegacySagaIntegrationTests
         using var harness = CreateHarness("new-or-existing", timeout);
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Saga(repository);
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         Guid initiatedByEvent = NewId.NextGuid();
         Guid createdThenOrchestrated = NewId.NextGuid();
         try
         {
-            await harness.InputQueueSendEndpoint.Send(new EitherMessage(initiatedByEvent), cancellationToken);
-            Assert.Equal(initiatedByEvent, await ((ISagaRepository<NewOrExistingSaga>)repository).ShouldContainSaga(
-                saga => saga.CorrelationId == initiatedByEvent && saga.EventCount == 1 && saga.CreateCount == 0,
-                timeout));
+            await harness.InputQueueSendEndpoint.SendAsync(new EitherMessage(initiatedByEvent), cancellationToken);
+            Assert.Equal(initiatedByEvent, await ((ISagaRepository<NewOrExistingSaga>)repository).ShouldContainSagaAsync(saga => saga.CorrelationId == initiatedByEvent && saga.EventCount == 1 && saga.CreateCount == 0, timeout, cancellationToken: TestContext.Current.CancellationToken));
 
-            await harness.InputQueueSendEndpoint.Send(new CreateMessage(createdThenOrchestrated), cancellationToken);
-            Assert.Equal(createdThenOrchestrated, await ((ISagaRepository<NewOrExistingSaga>)repository).ShouldContainSaga(
-                saga => saga.CorrelationId == createdThenOrchestrated && saga.CreateCount == 1,
-                timeout));
-            await harness.InputQueueSendEndpoint.Send(new EitherMessage(createdThenOrchestrated), cancellationToken);
-            Assert.Equal(createdThenOrchestrated, await ((ISagaRepository<NewOrExistingSaga>)repository).ShouldContainSaga(
-                saga => saga.CorrelationId == createdThenOrchestrated && saga.CreateCount == 1 && saga.EventCount == 1,
-                timeout));
+            await harness.InputQueueSendEndpoint.SendAsync(new CreateMessage(createdThenOrchestrated), cancellationToken);
+            Assert.Equal(createdThenOrchestrated, await ((ISagaRepository<NewOrExistingSaga>)repository).ShouldContainSagaAsync(saga => saga.CorrelationId == createdThenOrchestrated && saga.CreateCount == 1, timeout, cancellationToken: TestContext.Current.CancellationToken));
+            await harness.InputQueueSendEndpoint.SendAsync(new EitherMessage(createdThenOrchestrated), cancellationToken);
+            Assert.Equal(createdThenOrchestrated, await ((ISagaRepository<NewOrExistingSaga>)repository).ShouldContainSagaAsync(saga => saga.CorrelationId == createdThenOrchestrated && saga.CreateCount == 1 && saga.EventCount == 1, timeout, cancellationToken: TestContext.Current.CancellationToken));
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Equal(2, harness.Consumed.Select<EitherMessage>(SnapshotOnlyToken()).Count());
@@ -91,7 +85,7 @@ public sealed class LegacySagaIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SAGA-PIPE-INJECTION", "dependency-assigned-before-consume")]
-    public async Task SagaExecuteFilter_AssignsTheExactDependencyBeforeTheInitiatingConsumeMethodRuns()
+    public async Task SagaExecuteFilter_AssignsTheExactDependencyBeforeTheInitiatingConsumeMethodRunsAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -102,18 +96,16 @@ public sealed class LegacySagaIntegrationTests
             repository,
             saga => saga.UseExecute(context => context.Saga.Dependency = dependency));
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         Guid correlationId = NewId.NextGuid();
         try
         {
-            await harness.InputQueueSendEndpoint.Send(new InjectedStart(correlationId), cancellationToken);
-            Assert.Equal(correlationId, await ((ISagaRepository<InjectedSaga>)repository).ShouldContainSaga(
-                saga => saga.CorrelationId == correlationId && saga.DependencyObserved == dependency.Id,
-                timeout));
+            await harness.InputQueueSendEndpoint.SendAsync(new InjectedStart(correlationId), cancellationToken);
+            Assert.Equal(correlationId, await ((ISagaRepository<InjectedSaga>)repository).ShouldContainSagaAsync(saga => saga.CorrelationId == correlationId && saga.DependencyObserved == dependency.Id, timeout, cancellationToken: TestContext.Current.CancellationToken));
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Single(harness.Consumed.Select<InjectedStart>(SnapshotOnlyToken()));
@@ -164,7 +156,7 @@ public sealed class LegacySagaIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SAGA-REPOSITORY-CONTEXT", "manual-create-destroy-finalize-lifecycle")]
-    public async Task HandAssembledRepository_CreatesRoutesAndRemovesTheStateMachineInstance()
+    public async Task HandAssembledRepository_CreatesRoutesAndRemovesTheStateMachineInstanceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -173,25 +165,25 @@ public sealed class LegacySagaIntegrationTests
         using var harness = CreateHarness("repository", timeout);
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.StateMachineSaga(machine, repository);
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         Guid correlationId = NewId.NextGuid();
         Task<IPublishedMessage<RepositoryCreated>> created = harness.Published
             .SelectAsync<RepositoryCreated>(message => message.Context.Message.CorrelationId == correlationId, cancellationToken)
-            .First();
+            .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
         Task<IPublishedMessage<RepositoryDestroyed>> destroyed = harness.Published
             .SelectAsync<RepositoryDestroyed>(message => message.Context.Message.CorrelationId == correlationId, cancellationToken)
-            .First();
+            .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(new RepositoryCreate(correlationId), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new RepositoryCreate(correlationId), cancellationToken);
             Assert.Equal(correlationId, (await created.WaitAsync(timeout, cancellationToken)).Context.Message.CorrelationId);
-            await harness.InputQueueSendEndpoint.Send(new RepositoryDestroy(correlationId), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new RepositoryDestroy(correlationId), cancellationToken);
             Assert.Equal(correlationId, (await destroyed.WaitAsync(timeout, cancellationToken)).Context.Message.CorrelationId);
-            Assert.Null(await repository.ShouldNotContainSaga(correlationId, timeout));
+            Assert.Null(await repository.ShouldNotContainSagaAsync(correlationId, timeout, cancellationToken: TestContext.Current.CancellationToken));
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Single(harness.Published.Select<RepositoryCreated>(SnapshotOnlyToken()));
@@ -200,7 +192,7 @@ public sealed class LegacySagaIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SAGA-REPOSITORY-CONTEXT", "insert-on-initial-factory-finally-repeat")]
-    public async Task HandAssembledInsertOnInitialRepository_FinalizesAndPublishesFinallyForEveryInstance()
+    public async Task HandAssembledInsertOnInitialRepository_FinalizesAndPublishesFinallyForEveryInstanceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -209,7 +201,7 @@ public sealed class LegacySagaIntegrationTests
         using var harness = CreateHarness("insert-on-initial", timeout);
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.StateMachineSaga(machine, repository);
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         Guid[] ids = [NewId.NextGuid(), NewId.NextGuid()];
         try
         {
@@ -217,21 +209,21 @@ public sealed class LegacySagaIntegrationTests
             {
                 Task<IPublishedMessage<RepositoryCreated>> created = harness.Published
                     .SelectAsync<RepositoryCreated>(message => message.Context.Message.CorrelationId == correlationId, cancellationToken)
-                    .First();
+                    .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
                 Task<IPublishedMessage<RepositoryFinally>> finalized = harness.Published
                     .SelectAsync<RepositoryFinally>(message => message.Context.Message.CorrelationId == correlationId, cancellationToken)
-                    .First();
+                    .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
-                await harness.InputQueueSendEndpoint.Send(new RepositoryCreate(correlationId), cancellationToken);
+                await harness.InputQueueSendEndpoint.SendAsync(new RepositoryCreate(correlationId), cancellationToken);
 
                 Assert.Equal(correlationId, (await created.WaitAsync(timeout, cancellationToken)).Context.Message.CorrelationId);
                 Assert.Equal(correlationId, (await finalized.WaitAsync(timeout, cancellationToken)).Context.Message.CorrelationId);
-                Assert.Null(await repository.ShouldNotContainSaga(correlationId, timeout));
+                Assert.Null(await repository.ShouldNotContainSagaAsync(correlationId, timeout, cancellationToken: TestContext.Current.CancellationToken));
             }
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Equal(2, harness.Published.Select<RepositoryCreated>(SnapshotOnlyToken()).Count());
@@ -240,7 +232,7 @@ public sealed class LegacySagaIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SAGA-NEW-POLICY", "duplicate-initiating-message-publishes-one-fault")]
-    public async Task DuplicateInitiatingMessage_PreservesTheInstanceAndPublishesOneTypedFault()
+    public async Task DuplicateInitiatingMessage_PreservesTheInstanceAndPublishesOneTypedFaultAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -248,26 +240,26 @@ public sealed class LegacySagaIntegrationTests
         using var harness = CreateHarness("duplicate", timeout);
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Saga(repository);
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         Guid correlationId = NewId.NextGuid();
         Task<IPublishedMessage<Fault<DuplicateStart>>> fault = harness.Published
             .SelectAsync<Fault<DuplicateStart>>(
                 message => message.Context.Message.Message.CorrelationId == correlationId,
                 cancellationToken)
-            .First();
+            .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
         try
         {
-            await harness.InputQueueSendEndpoint.Send(new DuplicateStart(correlationId), cancellationToken);
-            Assert.Equal(correlationId, await ((ISagaRepository<DuplicateSaga>)repository).ShouldContainSaga(correlationId, timeout));
-            await harness.InputQueueSendEndpoint.Send(new DuplicateStart(correlationId), cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(new DuplicateStart(correlationId), cancellationToken);
+            Assert.Equal(correlationId, await ((ISagaRepository<DuplicateSaga>)repository).ShouldContainSagaAsync(correlationId, timeout, cancellationToken: TestContext.Current.CancellationToken));
+            await harness.InputQueueSendEndpoint.SendAsync(new DuplicateStart(correlationId), cancellationToken);
 
             IPublishedMessage<Fault<DuplicateStart>> faultContext = await fault.WaitAsync(timeout, cancellationToken);
             Assert.Equal(correlationId, faultContext.Context.Message.Message.CorrelationId);
-            Assert.Equal(correlationId, await ((ISagaRepository<DuplicateSaga>)repository).ShouldContainSaga(correlationId, timeout));
+            Assert.Equal(correlationId, await ((ISagaRepository<DuplicateSaga>)repository).ShouldContainSagaAsync(correlationId, timeout, cancellationToken: TestContext.Current.CancellationToken));
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
         Assert.Single(harness.Published.Select<Fault<DuplicateStart>>(SnapshotOnlyToken()));
@@ -275,34 +267,34 @@ public sealed class LegacySagaIntegrationTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-SAGA-DIRECT-CONNECT", "duplicate-initiate-reports-typed-saga-exception")]
-    public async Task DirectBusSagaConnection_ReportsTheTypedSagaExceptionForAnExistingInstance()
+    public async Task DirectBusSagaConnection_ReportsTheTypedSagaExceptionForAnExistingInstanceAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var repository = new InMemorySagaRepository<DuplicateSaga>();
         using var harness = CreateHarness("direct-connect", timeout);
 
-        await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
+        await harness.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
         using ConnectHandle handle = harness.Bus.ConnectSaga(repository);
         Guid correlationId = NewId.NextGuid();
         try
         {
-            await harness.BusSendEndpoint.Send(new DuplicateStart(correlationId), cancellationToken)
+            await harness.BusSendEndpoint.SendAsync(new DuplicateStart(correlationId), cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
-            Assert.Equal(correlationId, await ((ISagaRepository<DuplicateSaga>)repository).ShouldContainSaga(correlationId, timeout));
+            Assert.Equal(correlationId, await ((ISagaRepository<DuplicateSaga>)repository).ShouldContainSagaAsync(correlationId, timeout, cancellationToken: TestContext.Current.CancellationToken));
 
-            await harness.BusSendEndpoint.Send(new DuplicateStart(correlationId), cancellationToken)
+            await harness.BusSendEndpoint.SendAsync(new DuplicateStart(correlationId), cancellationToken)
                 .WaitAsync(timeout, cancellationToken);
             int deliveryCount = await harness.Consumed.SelectAsync<DuplicateStart>(cancellationToken)
                 .Take(2)
-                .Count()
+                .CountObservedAsync(TestContext.Current.CancellationToken)
                 .WaitAsync(timeout, cancellationToken);
             Assert.Equal(2, deliveryCount);
-            Assert.Equal(correlationId, await ((ISagaRepository<DuplicateSaga>)repository).ShouldContainSaga(correlationId, timeout));
+            Assert.Equal(correlationId, await ((ISagaRepository<DuplicateSaga>)repository).ShouldContainSagaAsync(correlationId, timeout, cancellationToken: TestContext.Current.CancellationToken));
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
 
         IReceivedMessage<DuplicateStart>[] deliveries =
@@ -342,7 +334,7 @@ public sealed class LegacySagaIntegrationTests
     {
         public Guid CorrelationId { get; set; }
 
-        public Task Consume(ConsumeContext<FilteredStart> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<FilteredStart> context) => Task.CompletedTask;
     }
 
     public sealed record CreateMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
@@ -362,13 +354,13 @@ public sealed class LegacySagaIntegrationTests
 
         public int EventCount { get; private set; }
 
-        public Task Consume(ConsumeContext<CreateMessage> context)
+        public Task ConsumeAsync(ConsumeContext<CreateMessage> context)
         {
             CreateCount++;
             return Task.CompletedTask;
         }
 
-        public Task Consume(ConsumeContext<EitherMessage> context)
+        public Task ConsumeAsync(ConsumeContext<EitherMessage> context)
         {
             EventCount++;
             return Task.CompletedTask;
@@ -387,7 +379,7 @@ public sealed class LegacySagaIntegrationTests
 
         public Guid? DependencyObserved { get; private set; }
 
-        public Task Consume(ConsumeContext<InjectedStart> context)
+        public Task ConsumeAsync(ConsumeContext<InjectedStart> context)
         {
             DependencyObserved = Dependency?.Id;
             return Task.CompletedTask;
@@ -458,7 +450,7 @@ public sealed class LegacySagaIntegrationTests
             Initially(When(Created)
                 .Publish(context => new RepositoryCreated(context.Saga.CorrelationId))
                 .TransitionTo(Active)
-                .ThenAsync(context => context.Raise(Destroyed)));
+                .ThenAsync(context => context.RaiseAsync(Destroyed)));
             During(Active, When(Destroyed).Finalize());
             Finally(binder => binder.Publish(context => new RepositoryFinally(context.Saga.CorrelationId)));
         }
@@ -476,6 +468,6 @@ public sealed class LegacySagaIntegrationTests
     {
         public Guid CorrelationId { get; set; }
 
-        public Task Consume(ConsumeContext<DuplicateStart> context) => Task.CompletedTask;
+        public Task ConsumeAsync(ConsumeContext<DuplicateStart> context) => Task.CompletedTask;
     }
 }

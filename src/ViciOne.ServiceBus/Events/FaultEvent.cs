@@ -15,16 +15,18 @@ public class FaultEvent<T> :
     {
     }
 
-    public FaultEvent(T message, Guid? faultedMessageId, HostInfo host, Exception exception, string[] faultMessageTypes)
-        : this(message, faultedMessageId, host, GetExceptions(exception), faultMessageTypes)
+    public FaultEvent(T message, Guid? faultedMessageId, HostInfo host, Exception exception, string[] faultMessageTypes,
+        TimeProvider? timeProvider = null)
+        : this(message, faultedMessageId, host, GetExceptions(exception), faultMessageTypes, timeProvider)
     {
     }
 
-    public FaultEvent(T message, Guid? faultedMessageId, HostInfo host, IEnumerable<ExceptionInfo> exceptions, string[] faultMessageTypes)
+    public FaultEvent(T message, Guid? faultedMessageId, HostInfo host, IEnumerable<ExceptionInfo> exceptions, string[] faultMessageTypes,
+        TimeProvider? timeProvider = null)
     {
         ArgumentNullException.ThrowIfNull(exceptions);
 
-        Timestamp = DateTime.UtcNow;
+        Timestamp = (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime;
         FaultId = NewId.NextGuid();
 
         Message = message;
@@ -37,12 +39,11 @@ public class FaultEvent<T> :
 
     public Guid FaultId { get; set; }
     public Guid? FaultedMessageId { get; set; }
-    public DateTime Timestamp { get; set; }
-    public ExceptionInfo[] Exceptions { get; set; }
-    public HostInfo Host { get; set; }
-    public string[] FaultMessageTypes { get; set; }
-    public T Message { get; set; }
-
+    public DateTimeOffset Timestamp { get; set; }
+    public ExceptionInfo[] Exceptions { get; set; } = null!;
+    public HostInfo Host { get; set; } = null!;
+    public string[] FaultMessageTypes { get; set; } = null!;
+    public T Message { get; set; } = default!;
     static ExceptionInfo[] GetExceptions(Exception exception)
     {
         var aggregateException = exception as AggregateException;
@@ -60,8 +61,8 @@ public class FaultEvent :
 {
     public Guid FaultId { get; set; }
     public Guid? FaultedMessageId { get; set; }
-    public DateTime Timestamp { get; set; }
-    public ExceptionInfo[] Exceptions { get; set; }
-    public HostInfo Host { get; set; }
-    public string[] FaultMessageTypes { get; set; }
+    public DateTimeOffset Timestamp { get; set; }
+    public ExceptionInfo[] Exceptions { get; set; } = null!;
+    public HostInfo Host { get; set; } = null!;
+    public string[] FaultMessageTypes { get; set; } = null!;
 }

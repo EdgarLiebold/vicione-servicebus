@@ -8,5 +8,5 @@ public interface IQuerySagaRepository<TSaga> :
     IProbeSite
     where TSaga : class, ISaga
 {
-    Task<IEnumerable<Guid>> Find(ISagaQuery<TSaga> query);
+    Task<IEnumerable<Guid>> FindAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken = default);
 }

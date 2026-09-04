@@ -20,7 +20,7 @@ public sealed class MessageContractCodeFixScenarioTests
     [Theory]
     [MemberData(nameof(Cases))]
     [RequirementCoverage("REQ-VSB-MESSAGE-CONTRACT-CODEFIX", "canonical-scenario-catalog")]
-    public async Task MissingPropertiesFix_AddsOnlyTheRequiredLeafInitializers(
+    public async Task MissingPropertiesFix_AddsOnlyTheRequiredLeafInitializersAsync(
         string scenarioKey,
         MessageSourceForm form)
     {

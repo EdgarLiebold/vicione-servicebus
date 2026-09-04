@@ -12,7 +12,7 @@ public sealed class DynamoDbSagaConcurrencyTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-DYNAMODB-SAGA-CONCURRENCY", "one-winner-one-exact-conflict-and-version-restored")]
-    public async Task OptimisticConflict_PreservesOneWinnerAndOneExactConflict()
+    public async Task OptimisticConflict_PreservesOneWinnerAndOneExactConflictAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using DynamoDbTestTable fixture = await DynamoDbTestTable.CreateAsync("OptimisticConflict", cancellationToken);
@@ -20,22 +20,22 @@ public sealed class DynamoDbSagaConcurrencyTests
         Guid sagaId = Guid.NewGuid();
 
         using (var seed = new DynamoDbDatabaseContext<ConcurrentSaga>(fixture.CreateContext(), options))
-            await seed.Insert(new ConcurrentSaga { CorrelationId = sagaId, Value = "seed" }, cancellationToken);
+            await seed.InsertAsync(new ConcurrentSaga { CorrelationId = sagaId, Value = "seed" }, cancellationToken);
 
         ConcurrentSaga first;
         ConcurrentSaga second;
         using (var loader = new DynamoDbDatabaseContext<ConcurrentSaga>(fixture.CreateContext(), options))
         {
-            first = await loader.Load(sagaId, cancellationToken);
-            second = await loader.Load(sagaId, cancellationToken);
+            first = Assert.IsType<ConcurrentSaga>(await loader.LoadAsync(sagaId, cancellationToken));
+            second = Assert.IsType<ConcurrentSaga>(await loader.LoadAsync(sagaId, cancellationToken));
         }
 
         first.Value = "first";
         second.Value = "second";
         using var firstWriter = new DynamoDbDatabaseContext<ConcurrentSaga>(fixture.CreateContext(), options);
         using var secondWriter = new DynamoDbDatabaseContext<ConcurrentSaga>(fixture.CreateContext(), options);
-        Task<Exception?> firstAttempt = Capture(() => firstWriter.Update(first, cancellationToken));
-        Task<Exception?> secondAttempt = Capture(() => secondWriter.Update(second, cancellationToken));
+        Task<Exception?> firstAttempt = CaptureAsync(() => firstWriter.UpdateAsync(first, cancellationToken));
+        Task<Exception?> secondAttempt = CaptureAsync(() => secondWriter.UpdateAsync(second, cancellationToken));
         Exception?[] outcomes = await Task.WhenAll(firstAttempt, secondAttempt);
 
         Exception conflict = Assert.Single(outcomes, outcome => outcome is not null)!;
@@ -48,7 +48,7 @@ public sealed class DynamoDbSagaConcurrencyTests
         Assert.Equal(1, winningInstance.Version);
 
         using var verifier = new DynamoDbDatabaseContext<ConcurrentSaga>(fixture.CreateContext(), options);
-        ConcurrentSaga persisted = await verifier.Load(sagaId, cancellationToken);
+        ConcurrentSaga persisted = Assert.IsType<ConcurrentSaga>(await verifier.LoadAsync(sagaId, cancellationToken));
         Assert.Equal(1, persisted.Version);
         Assert.Equal(winningInstance.Value, persisted.Value);
         Assert.NotEqual(losingInstance.Value, persisted.Value);
@@ -56,7 +56,7 @@ public sealed class DynamoDbSagaConcurrencyTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-DYNAMODB-SAGA-CONCURRENCY", "conditional-write-failure-maps-to-exact-concurrency-error")]
-    public async Task ConditionalFailure_MapsToExactSagaConcurrencyException()
+    public async Task ConditionalFailure_MapsToExactSagaConcurrencyExceptionAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using DynamoDbTestTable fixture = await DynamoDbTestTable.CreateAsync("ConditionalFailure", cancellationToken);
@@ -64,9 +64,9 @@ public sealed class DynamoDbSagaConcurrencyTests
         Guid sagaId = Guid.NewGuid();
 
         using var context = new DynamoDbDatabaseContext<ConcurrentSaga>(fixture.CreateContext(), options);
-        await context.Insert(new ConcurrentSaga { CorrelationId = sagaId, Value = "first" }, cancellationToken);
+        await context.InsertAsync(new ConcurrentSaga { CorrelationId = sagaId, Value = "first" }, cancellationToken);
         DynamoDbSagaConcurrencyException actual = await Assert.ThrowsAsync<DynamoDbSagaConcurrencyException>(
-            () => context.Insert(new ConcurrentSaga { CorrelationId = sagaId, Value = "duplicate" }, cancellationToken));
+            () => context.InsertAsync(new ConcurrentSaga { CorrelationId = sagaId, Value = "duplicate" }, cancellationToken));
 
         Assert.Equal(sagaId, actual.CorrelationId);
         Assert.Equal(typeof(ConcurrentSaga), actual.SagaType);
@@ -78,7 +78,7 @@ public sealed class DynamoDbSagaConcurrencyTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-DYNAMODB-SAGA-CONCURRENCY", "stale-delete-cannot-remove-newer-saga-version")]
-    public async Task StaleDelete_PreservesTheNewerSagaVersion()
+    public async Task StaleDelete_PreservesTheNewerSagaVersionAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using DynamoDbTestTable fixture = await DynamoDbTestTable.CreateAsync("StaleDelete", cancellationToken);
@@ -86,29 +86,29 @@ public sealed class DynamoDbSagaConcurrencyTests
         Guid sagaId = Guid.NewGuid();
 
         using var context = new DynamoDbDatabaseContext<ConcurrentSaga>(fixture.CreateContext(), options);
-        await context.Insert(new ConcurrentSaga { CorrelationId = sagaId, Value = "seed" }, cancellationToken);
-        ConcurrentSaga stale = await context.Load(sagaId, cancellationToken);
-        ConcurrentSaga current = await context.Load(sagaId, cancellationToken);
+        await context.InsertAsync(new ConcurrentSaga { CorrelationId = sagaId, Value = "seed" }, cancellationToken);
+        ConcurrentSaga stale = Assert.IsType<ConcurrentSaga>(await context.LoadAsync(sagaId, cancellationToken));
+        ConcurrentSaga current = Assert.IsType<ConcurrentSaga>(await context.LoadAsync(sagaId, cancellationToken));
         current.Value = "newer";
-        await context.Update(current, cancellationToken);
+        await context.UpdateAsync(current, cancellationToken);
 
         DynamoDbSagaConcurrencyException conflict = await Assert.ThrowsAsync<DynamoDbSagaConcurrencyException>(
-            () => context.Delete(stale, cancellationToken));
+            () => context.DeleteAsync(stale, cancellationToken));
 
         Assert.Equal(sagaId, conflict.CorrelationId);
         Assert.Equal(typeof(ConcurrentSaga), conflict.SagaType);
         Assert.IsType<ConditionalCheckFailedException>(conflict.InnerException);
-        ConcurrentSaga persisted = await context.Load(sagaId, cancellationToken);
+        ConcurrentSaga persisted = Assert.IsType<ConcurrentSaga>(await context.LoadAsync(sagaId, cancellationToken));
         Assert.Equal(1, persisted.Version);
         Assert.Equal("newer", persisted.Value);
 
-        await context.Delete(current, cancellationToken);
+        await context.DeleteAsync(current, cancellationToken);
         Assert.Empty(await fixture.ScanAsync(cancellationToken));
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-AWS-DYNAMODB-SAGA-CONCURRENCY", "concurrent-choir-updates-persist-every-distinct-voice-once")]
-    public async Task ConcurrentChoirUpdates_PersistEveryDistinctVoiceOnce()
+    public async Task ConcurrentChoirUpdates_PersistEveryDistinctVoiceOnceAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using DynamoDbTestTable fixture = await DynamoDbTestTable.CreateAsync("ConcurrentChoir", cancellationToken);
@@ -126,32 +126,33 @@ public sealed class DynamoDbSagaConcurrencyTests
                     });
             })
             .BuildServiceProvider(validateScopes: true);
-        ITestHarness harness = await provider.StartTestHarness().WaitAsync(fixture.OperationTimeout, cancellationToken);
+        ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(fixture.OperationTimeout, cancellationToken);
 
         try
         {
             Guid sagaId = Guid.NewGuid();
-            ISendEndpoint endpoint = await harness.GetSagaEndpoint<ChoirSaga>();
-            await endpoint.Send(new BeginChoir(sagaId), cancellationToken);
+            ISendEndpoint endpoint = await harness.GetSagaEndpointAsync<ChoirSaga>(TestContext.Current.CancellationToken);
+            await endpoint.SendAsync(new BeginChoir(sagaId), cancellationToken);
             await harness.Published.SelectAsync<ChoirStarted>(
                     observed => observed.Context.Message.CorrelationId == sagaId,
                     cancellationToken)
-                .First();
+                .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             string[] voices = ["Bass", "Baritone", "Tenor", "Countertenor"];
-            await Task.WhenAll(voices.Select(voice => endpoint.Send(new AddChoirVoice(sagaId, voice), cancellationToken)));
+            await Task.WhenAll(voices.Select(voice => endpoint.SendAsync(new AddChoirVoice(sagaId, voice), cancellationToken)));
             await probe.InitialAttemptsEntered.WaitAsync(fixture.OperationTimeout, cancellationToken);
             foreach (string voice in voices)
             {
                 await harness.Published.SelectAsync<ChoirVoiceRecorded>(
                         observed => observed.Context.Message.CorrelationId == sagaId && observed.Context.Message.Voice == voice,
                         cancellationToken)
-                    .First();
+                    .FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken);
             }
 
             var repository = (ILoadSagaRepository<ChoirSaga>)DynamoDbSagaRepository<ChoirSaga>
                 .Create(fixture.CreateContext, fixture.TableName);
-            ChoirSaga persisted = await repository.Load(sagaId);
+            ChoirSaga persisted = Assert.IsType<ChoirSaga>(
+                await repository.LoadAsync(sagaId, TestContext.Current.CancellationToken));
             using var completed = new CancellationTokenSource();
             completed.Cancel();
             ChoirVoiceRecorded[] published = harness.Published
@@ -169,11 +170,11 @@ public sealed class DynamoDbSagaConcurrencyTests
         finally
         {
             probe.Release();
-            await harness.Stop(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
+            await harness.StopAsync(CancellationToken.None).WaitAsync(fixture.OperationTimeout, CancellationToken.None);
         }
     }
 
-    private static async Task<Exception?> Capture(Func<Task> action)
+    private static async Task<Exception?> CaptureAsync(Func<Task> action)
     {
         try
         {

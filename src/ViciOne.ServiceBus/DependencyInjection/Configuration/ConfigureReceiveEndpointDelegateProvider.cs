@@ -14,7 +14,7 @@ public class ConfigureReceiveEndpointDelegateProvider :
         _callback = callback ?? throw new ArgumentNullException(nameof(callback));
     }
 
-    public void Configure(string name, IReceiveEndpointConfigurator configurator)
+    public void Configure(string? name, IReceiveEndpointConfigurator configurator)
     {
         _callback(_context, name, configurator);
     }

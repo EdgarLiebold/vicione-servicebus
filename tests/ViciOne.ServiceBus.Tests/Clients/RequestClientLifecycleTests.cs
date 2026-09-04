@@ -14,24 +14,24 @@ public sealed class RequestClientLifecycleTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-LIFECYCLE", "transport-ttl-independent-from-client-deadline")]
-    public async Task DisabledTransportTimeToLive_DoesNotDisableTheClientDeadline()
+    public async Task DisabledTransportTimeToLive_DoesNotDisableTheClientDeadlineAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
         var context = new RecordingClientFactoryContext(timeProvider, RequestTimeout.After(m: 1));
         var request = new LifecycleRequest("no-transport-ttl");
         using var handle = new ClientRequestHandle<LifecycleRequest>(
             context,
-            SendRequest,
+            SendRequestAsync,
             timeout: RequestTimeout.After(m: 1),
             requestId: Guid.Parse("91d9c54e-7818-4327-b24f-aa55ee18871d"));
         handle.TimeToLive = RequestTimeout.None;
 
-        Task<Response<LifecycleResponse>> response = handle.GetResponse<LifecycleResponse>(true);
+        Task<Response<LifecycleResponse>> response = handle.GetResponseAsync<LifecycleResponse>(true, TestContext.Current.CancellationToken);
 
         Assert.Same(request, await handle.Message);
         Assert.NotNull(context.SentContext);
         Assert.Null(context.SentContext.TimeToLive);
-        await timeProvider.WaitForTimerCount(1);
+        await timeProvider.WaitForTimerCountAsync(1);
 
         timeProvider.Advance(TimeSpan.FromMinutes(1));
 
@@ -42,13 +42,13 @@ public sealed class RequestClientLifecycleTests
             exception.Message);
         return;
 
-        async Task<LifecycleRequest> SendRequest(
+        async Task<LifecycleRequest> SendRequestAsync(
             Guid _,
             IPipe<SendContext<LifecycleRequest>> pipe,
             CancellationToken cancellationToken)
         {
             var sendContext = new MessageSendContext<LifecycleRequest>(request, cancellationToken);
-            await pipe.Send(sendContext);
+            await pipe.SendAsync(sendContext);
             context.SentContext = sendContext;
             return request;
         }
@@ -58,7 +58,7 @@ public sealed class RequestClientLifecycleTests
     [InlineData(TerminalOutcome.CallerCancellation)]
     [InlineData(TerminalOutcome.ClientDeadline)]
     [RequirementCoverage("REQ-VSB-REQUEST-LIFECYCLE", "deterministic-cancellation-deadline-race")]
-    public async Task CancellationAndDeadline_FirstTerminalOutcomeWinsExactly(TerminalOutcome firstOutcome)
+    public async Task CancellationAndDeadline_FirstTerminalOutcomeWinsExactlyAsync(TerminalOutcome firstOutcome)
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
         var context = new RecordingClientFactoryContext(timeProvider, RequestTimeout.After(m: 1));
@@ -69,14 +69,14 @@ public sealed class RequestClientLifecycleTests
             async (_, pipe, cancellationToken) =>
             {
                 var sendContext = new MessageSendContext<LifecycleRequest>(request, cancellationToken);
-                await pipe.Send(sendContext);
+                await pipe.SendAsync(sendContext);
                 return request;
             },
             callerCancellation.Token,
             RequestTimeout.After(m: 1),
             Guid.Parse("2f79d87e-580b-4a1d-83c3-a4fb23ab393e"));
-        Task<Response<LifecycleResponse>> response = handle.GetResponse<LifecycleResponse>(true);
-        await timeProvider.WaitForTimerCount(1);
+        Task<Response<LifecycleResponse>> response = handle.GetResponseAsync<LifecycleResponse>(true, TestContext.Current.CancellationToken);
+        await timeProvider.WaitForTimerCountAsync(1);
         Assert.Same(request, await handle.Message);
 
         if (firstOutcome == TerminalOutcome.CallerCancellation)
@@ -108,7 +108,7 @@ public sealed class RequestClientLifecycleTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-LIFECYCLE", "one-handler-per-response-type")]
-    public async Task DuplicateResponseType_IsRejectedWithoutReplacingTheOriginalHandler()
+    public async Task DuplicateResponseType_IsRejectedWithoutReplacingTheOriginalHandlerAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
         var context = new RecordingClientFactoryContext(timeProvider, RequestTimeout.After(m: 1));
@@ -117,11 +117,11 @@ public sealed class RequestClientLifecycleTests
             context,
             (_, _, _) => Task.FromResult(request),
             timeout: RequestTimeout.After(m: 1));
-        Task<Response<LifecycleResponse>> original = handle.GetResponse<LifecycleResponse>(false);
+        Task<Response<LifecycleResponse>> original = handle.GetResponseAsync<LifecycleResponse>(false, TestContext.Current.CancellationToken);
 
         RequestException exception = Assert.Throws<RequestException>(() =>
         {
-            _ = handle.GetResponse<LifecycleResponse>(false);
+            _ = handle.GetResponseAsync<LifecycleResponse>(false, TestContext.Current.CancellationToken);
         });
 
         Assert.Equal(

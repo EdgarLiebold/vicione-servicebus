@@ -38,7 +38,7 @@ public class MessageMetricCapture :
     public Task<TimeSpan> RequestCompleted => _requestCompleted.Task;
     public Task<TimeSpan> ConsumeCompleted => _consumeCompleted.Task;
 
-    Task IReportConsumerMetric.Consumed<T>(Guid messageId)
+    Task IReportConsumerMetric.ConsumedAsync<T>(Guid messageId)
     {
         _consumedMessages.Add(new ConsumedMessage(messageId, _clock.ElapsedTicks));
 
@@ -49,7 +49,7 @@ public class MessageMetricCapture :
         return TaskResults.Completed;
     }
 
-    public async Task<T> ResponseReceived<T>(Guid messageId, Func<Task<T>> request)
+    public async Task<T> ResponseReceivedAsync<T>(Guid messageId, Func<Task<T>> request)
         where T : class
     {
         if (request == null)

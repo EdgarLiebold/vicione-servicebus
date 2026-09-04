@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.Samples.OrderWorkflow.Activities;
 public sealed class ProcessOrderActivity :
     IActivity<ProcessOrderArguments, ProcessOrderLog>
 {
-    public Task<ExecutionResult> Execute(ExecuteContext<ProcessOrderArguments> context)
+    public Task<ExecutionResult> ExecuteAsync(ExecuteContext<ProcessOrderArguments> context)
     {
         Guid shipmentId = NewId.NextGuid();
         return Task.FromResult(context.Completed<ProcessOrderLog>(new
@@ -15,6 +15,6 @@ public sealed class ProcessOrderActivity :
         }));
     }
 
-    public Task<CompensationResult> Compensate(CompensateContext<ProcessOrderLog> context) =>
+    public Task<CompensationResult> CompensateAsync(CompensateContext<ProcessOrderLog> context) =>
         Task.FromResult(context.Compensated());
 }

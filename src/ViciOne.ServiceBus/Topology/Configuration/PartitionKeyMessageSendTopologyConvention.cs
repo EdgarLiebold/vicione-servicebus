@@ -6,15 +6,15 @@ public class PartitionKeyMessageSendTopologyConvention<TMessage> :
     IPartitionKeyMessageSendTopologyConvention<TMessage>
     where TMessage : class
 {
-    IMessagePartitionKeyFormatter<TMessage> _formatter;
+    IMessagePartitionKeyFormatter<TMessage>? _formatter;
 
-    public PartitionKeyMessageSendTopologyConvention(IPartitionKeyFormatter formatter)
+    public PartitionKeyMessageSendTopologyConvention(IPartitionKeyFormatter? formatter)
     {
         if (formatter != null)
             SetFormatter(formatter);
     }
 
-    public bool TryGetMessageSendTopology(out IMessageSendTopology<TMessage> messageSendTopology)
+    public bool TryGetMessageSendTopology([NotNullWhen(true)] out IMessageSendTopology<TMessage>? messageSendTopology)
     {
         if (_formatter != null)
         {
@@ -26,7 +26,7 @@ public class PartitionKeyMessageSendTopologyConvention<TMessage> :
         return false;
     }
 
-    public bool TryGetMessageSendTopologyConvention<T>(out IMessageSendTopologyConvention<T> convention)
+    public bool TryGetMessageSendTopologyConvention<T>([NotNullWhen(true)] out IMessageSendTopologyConvention<T>? convention)
         where T : class
     {
         convention = this as IMessageSendTopologyConvention<T>;

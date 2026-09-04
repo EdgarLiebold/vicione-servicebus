@@ -39,12 +39,12 @@ public class FutureFaultConfigurator<TCommand, TFault, TInput> :
         if (valueProvider == null)
             throw new ArgumentNullException(nameof(valueProvider));
 
-        Task<SendTuple<TFault>> Factory(BehaviorContext<FutureState, TInput> context)
+        Task<SendTuple<TFault>> FactoryAsync(BehaviorContext<FutureState, TInput> context)
         {
-            return context.Init<TFault>(valueProvider(context));
+            return context.InitAsync<TFault>(valueProvider(context));
         }
 
-        _fault.Factory = MessageFactory<TFault>.Create((Func<BehaviorContext<FutureState, TInput>, Task<SendTuple<TFault>>>)Factory);
+        _fault.Factory = MessageFactory<TFault>.Create((Func<BehaviorContext<FutureState, TInput>, Task<SendTuple<TFault>>>)FactoryAsync);
     }
 }
 
@@ -81,11 +81,11 @@ public class FutureFaultConfigurator<TFault> :
         if (valueProvider == null)
             throw new ArgumentNullException(nameof(valueProvider));
 
-        Task<SendTuple<TFault>> Factory(BehaviorContext<FutureState> context)
+        Task<SendTuple<TFault>> FactoryAsync(BehaviorContext<FutureState> context)
         {
-            return context.Init<TFault>(valueProvider(context));
+            return context.InitAsync<TFault>(valueProvider(context));
         }
 
-        _fault.Factory = MessageFactory<TFault>.Create((Func<BehaviorContext<FutureState>, Task<SendTuple<TFault>>>)Factory);
+        _fault.Factory = MessageFactory<TFault>.Create((Func<BehaviorContext<FutureState>, Task<SendTuple<TFault>>>)FactoryAsync);
     }
 }

@@ -13,10 +13,10 @@ internal sealed class MessageJournalConsumeObserver : IConsumeObserver
         _writer = writer;
     }
 
-    public Task PreConsume<T>(ConsumeContext<T> context)
+    public Task PreConsumeAsync<T>(ConsumeContext<T> context)
         where T : class => Task.CompletedTask;
 
-    public Task PostConsume<T>(ConsumeContext<T> context)
+    public Task PostConsumeAsync<T>(ConsumeContext<T> context)
         where T : class => _writer.ObserveAsync(
             MessageJournalOperation.Consume,
             MessageJournalOutcome.Succeeded,
@@ -26,7 +26,7 @@ internal sealed class MessageJournalConsumeObserver : IConsumeObserver
                 MessageJournalOutcome.Succeeded,
                 exception: null));
 
-    public Task ConsumeFault<T>(ConsumeContext<T> context, Exception exception)
+    public Task ConsumeFaultAsync<T>(ConsumeContext<T> context, Exception exception)
         where T : class => _writer.ObserveAsync(
             MessageJournalOperation.Consume,
             MessageJournalOutcome.Faulted,

@@ -15,7 +15,7 @@ public class RabbitMqReceiveSettings :
     {
         _configuration = configuration;
 
-        ConsumeArguments = new Dictionary<string, object>();
+        ConsumeArguments = new Dictionary<string, object?>();
     }
 
     public int ConsumerPriority
@@ -35,9 +35,9 @@ public class RabbitMqReceiveSettings :
 
     public bool BindQueue { get; set; } = true;
 
-    public IDictionary<string, object> ConsumeArguments { get; }
+    public IDictionary<string, object?> ConsumeArguments { get; }
 
-    public string ConsumerTag { get; set; }
+    public string ConsumerTag { get; set; } = "";
 
     public Uri GetInputAddress(Uri hostAddress)
     {

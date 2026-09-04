@@ -14,7 +14,7 @@ public class RedeliveryRetryPipeSpecification<TMessage> :
 {
     readonly RetryObservable _observers;
     readonly IRedeliveryPipeSpecification _redeliveryPipeSpecification;
-    RetryPolicyFactory _policyFactory;
+    RetryPolicyFactory _policyFactory = null!;
 
     public RedeliveryRetryPipeSpecification(IRedeliveryPipeSpecification redeliveryPipeSpecification)
     {
@@ -58,7 +58,7 @@ public class RedeliveryRetryPipeSpecification<TMessage> :
         }
     }
 
-    static RetryConsumeContext<TMessage> Factory(ConsumeContext<TMessage> context, IRetryPolicy retryPolicy, RetryContext retryContext)
+    static RetryConsumeContext<TMessage> Factory(ConsumeContext<TMessage> context, IRetryPolicy retryPolicy, RetryContext? retryContext)
     {
         return new RedeliveryRetryConsumeContext<TMessage>(context, retryPolicy, retryContext);
     }

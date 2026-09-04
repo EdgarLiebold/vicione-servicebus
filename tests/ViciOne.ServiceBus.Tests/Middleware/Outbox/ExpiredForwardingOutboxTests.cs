@@ -12,7 +12,7 @@ public sealed class ExpiredForwardingOutboxTests
 {
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGE-FORWARDING", "expired-forward-discarded-before-persistent-outbox")]
-    public async Task ExpiredMessage_IsDiscardedBeforePersistentOutboxStorage()
+    public async Task ExpiredMessage_IsDiscardedBeforePersistentOutboxStorageAsync()
     {
         TimeSpan operationTimeout = TestConfigurationProvider.ForCurrentTestRun()
             .GetValidatedOptions()
@@ -30,19 +30,19 @@ public sealed class ExpiredForwardingOutboxTests
         harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
             configurator.Handler<ForwardMessage>(async context =>
             {
-                DateTime expiration = Assert.IsType<DateTime>(context.ExpirationTime).ToUniversalTime();
-                context.SetTimeProvider(new FakeTimeProvider(new DateTimeOffset(expiration).AddMinutes(1)));
-                ISendEndpoint endpoint = await context.GetSendEndpoint(forwardAddress).ConfigureAwait(false);
+                DateTimeOffset expiration = Assert.IsType<DateTimeOffset>(context.ExpirationTime).ToUniversalTime();
+                context.SetTimeProvider(new FakeTimeProvider(expiration.AddMinutes(1)));
+                ISendEndpoint endpoint = await context.Advanced().GetSendEndpointAsync(forwardAddress).ConfigureAwait(false);
                 var outboxEndpoint = new PersistentOutboxSendEndpoint(outbox, endpoint);
 
-                await context.Forward(outboxEndpoint).ConfigureAwait(false);
+                await context.ForwardAsync(outboxEndpoint).ConfigureAwait(false);
                 sourceCompleted.TrySetResult();
             });
 
         try
         {
-            await harness.Start(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
-            await harness.InputQueueSendEndpoint.Send(
+            await harness.StartAsync(cancellationToken).WaitAsync(operationTimeout, cancellationToken);
+            await harness.InputQueueSendEndpoint.SendAsync(
                     new ForwardMessage { Value = "expired-outbox" },
                     context => context.TimeToLive = TimeSpan.FromMinutes(5),
                     cancellationToken)
@@ -53,7 +53,7 @@ public sealed class ExpiredForwardingOutboxTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(operationTimeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(operationTimeout, CancellationToken.None);
         }
     }
 
@@ -63,9 +63,10 @@ public sealed class ExpiredForwardingOutboxTests
 
         public int AddSendCount => Volatile.Read(ref _addSendCount);
 
-        public Task AddSend<T>(SendContext<T> context)
+        public Task AddSendAsync<T>(SendContext<T> context, CancellationToken cancellationToken)
             where T : class
         {
+            cancellationToken.ThrowIfCancellationRequested();
             Interlocked.Increment(ref _addSendCount);
             return Task.CompletedTask;
         }

@@ -13,24 +13,24 @@ public class TaskMessageFactory<T>
         _messageFactory = messageFactory;
     }
 
-    public Task<SendTuple<T>> GetMessage()
+    public Task<SendTuple<T>> GetMessageAsync(CancellationToken cancellationToken = default)
     {
-        return _messageFactory;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.SendTuple<T>>(cancellationToken); return _messageFactory;
     }
 
-    public Task Use(Func<SendTuple<T>, Task> callback)
+    public Task UseAsync(Func<SendTuple<T>, Task> callback, CancellationToken cancellationToken = default)
     {
-        Task<SendTuple<T>> msgTask = _messageFactory;
+        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); Task<SendTuple<T>> msgTask = _messageFactory;
         if (msgTask.Status == TaskStatus.RanToCompletion)
             return callback(msgTask.GetAwaiter().GetResult());
 
-        async Task GetResult()
+        async Task GetResultAsync()
         {
             SendTuple<T> send = await msgTask.ConfigureAwait(false);
 
             await callback(send).ConfigureAwait(false);
         }
 
-        return GetResult();
+        return GetResultAsync();
     }
 }

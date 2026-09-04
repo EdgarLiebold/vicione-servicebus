@@ -6,16 +6,16 @@ public class InMemoryOutboxConfigurationObserver :
     ConfigurationObserver,
     IMessageConfigurationObserver
 {
-    readonly Action<IOutboxConfigurator> _configure;
-    readonly ISetScopedConsumeContext _setter;
+    readonly Action<IOutboxConfigurator>? _configure;
+    readonly ISetScopedConsumeContext? _setter;
 
-    public InMemoryOutboxConfigurationObserver(IRegistrationContext context, IConsumePipeConfigurator configurator, Action<IOutboxConfigurator> configure)
+    public InMemoryOutboxConfigurationObserver(IRegistrationContext context, IConsumePipeConfigurator configurator, Action<IOutboxConfigurator>? configure)
         : this(context as ISetScopedConsumeContext ?? throw new ArgumentException(nameof(context)), configurator, configure)
     {
     }
 
-    public InMemoryOutboxConfigurationObserver(ISetScopedConsumeContext setter, IConsumePipeConfigurator configurator,
-        Action<IOutboxConfigurator> configure)
+    public InMemoryOutboxConfigurationObserver(ISetScopedConsumeContext? setter, IConsumePipeConfigurator configurator,
+        Action<IOutboxConfigurator>? configure)
         : base(configurator)
     {
         _setter = setter;

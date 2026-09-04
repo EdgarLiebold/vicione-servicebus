@@ -12,8 +12,7 @@ public class OutboxConsumeOptions
     /// <summary>
     /// The display name of the consumer type
     /// </summary>
-    public string ConsumerType { get; set; }
-
+    public string ConsumerType { get; set; } = null!;
     /// <summary>
     /// The number of message to deliver at a time from the outbox
     /// </summary>

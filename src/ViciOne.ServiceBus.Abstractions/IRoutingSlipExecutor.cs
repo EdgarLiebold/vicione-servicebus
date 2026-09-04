@@ -12,5 +12,5 @@ public interface IRoutingSlipExecutor
     /// <param name="routingSlip"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task Execute(RoutingSlip routingSlip, CancellationToken cancellationToken = default);
+    Task ExecuteAsync(RoutingSlip routingSlip, CancellationToken cancellationToken = default);
 }

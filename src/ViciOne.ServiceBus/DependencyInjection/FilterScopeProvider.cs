@@ -37,13 +37,13 @@ public class FilterScopeProvider<TFilter, TContext> :
         IFilterScopeContext<TContext>
     {
         readonly IServiceScope _scope;
-        TFilter _filter;
+        TFilter _filter = null!;
 
         public DependencyInjectionFilterScopeContext(TContext context, IServiceProvider serviceProvider)
         {
             Context = context;
-            _scope = context.TryGetPayload(out IServiceProvider provider)
-                || (context.TryGetPayload(out ConsumeContext consumeContext) && consumeContext.TryGetPayload(out provider))
+            _scope = context.TryGetPayload(out IServiceProvider? provider)
+                || (context.TryGetPayload(out ConsumeContext? consumeContext) && consumeContext.TryGetPayload(out provider))
                     ? new NoopScope(provider)
                     : serviceProvider.CreateScope();
         }

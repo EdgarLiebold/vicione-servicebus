@@ -15,7 +15,8 @@ public interface SagaRepositoryContext<TSaga, TMessage> :
     /// </summary>
     /// <param name="instance"></param>
     /// <returns></returns>
-    Task<SagaConsumeContext<TSaga, TMessage>> Add(TSaga instance);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<SagaConsumeContext<TSaga, TMessage>> AddAsync(TSaga instance, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Insert the saga instance, if it does not already exist.
@@ -24,7 +25,8 @@ public interface SagaRepositoryContext<TSaga, TMessage> :
     /// <returns>
     /// A valid <see cref="SagaConsumeContext{TSaga,T}" /> if the instance inserted successfully, otherwise default
     /// </returns>
-    Task<SagaConsumeContext<TSaga, TMessage>> Insert(TSaga instance);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<SagaConsumeContext<TSaga, TMessage>?> InsertAsync(TSaga instance, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Load an existing saga instance
@@ -33,42 +35,48 @@ public interface SagaRepositoryContext<TSaga, TMessage> :
     /// <returns>
     /// A valid <see cref="SagaConsumeContext{TSaga,T}" /> if the instance loaded successfully, otherwise default
     /// </returns>
-    Task<SagaConsumeContext<TSaga, TMessage>> Load(Guid correlationId);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<SagaConsumeContext<TSaga, TMessage>?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Save the saga, called after an Add, without an insert
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    Task Save(SagaConsumeContext<TSaga> context);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task SaveAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Update the saga, called after a load or insert where the saga has not completed
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    Task Update(SagaConsumeContext<TSaga> context);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task UpdateAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Delete the saga, called after a Load when the saga is completed
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    Task Delete(SagaConsumeContext<TSaga> context);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task DeleteAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Discard the saga, called after an Add when the saga is completed within the same transaction
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    Task Discard(SagaConsumeContext<TSaga> context);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task DiscardAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Undo the changes for the saga
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    Task Undo(SagaConsumeContext<TSaga> context);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task UndoAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default);
 }
 
 
@@ -82,7 +90,7 @@ public interface QuerySagaRepositoryContext<TSaga> :
     /// <param name="query"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<SagaRepositoryQueryContext<TSaga>> Query(ISagaQuery<TSaga> query, CancellationToken cancellationToken = default);
+    Task<SagaRepositoryQueryContext<TSaga>> QueryAsync(ISagaQuery<TSaga> query, CancellationToken cancellationToken = default);
 }
 
 
@@ -95,5 +103,6 @@ public interface LoadSagaRepositoryContext<TSaga> :
     /// </summary>
     /// <param name="correlationId"></param>
     /// <returns>The saga, if found, or null</returns>
-    Task<TSaga> Load(Guid correlationId);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<TSaga?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default);
 }

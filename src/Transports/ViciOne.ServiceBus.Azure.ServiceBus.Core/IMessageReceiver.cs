@@ -18,7 +18,7 @@ public interface IMessageReceiver :
     /// <param name="message">The Service Bus message</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task Handle(string queueName, ServiceBusReceivedMessage message, CancellationToken cancellationToken);
+    Task HandleAsync(string queueName, ServiceBusReceivedMessage message, CancellationToken cancellationToken);
 
     /// <summary>
     /// Configure all registered consumers, sagas, and activities on the receiver and handle the message
@@ -28,7 +28,7 @@ public interface IMessageReceiver :
     /// <param name="message">The Service Bus message</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task Handle(string topicPath, string subscriptionName, ServiceBusReceivedMessage message, CancellationToken cancellationToken);
+    Task HandleAsync(string topicPath, string subscriptionName, ServiceBusReceivedMessage message, CancellationToken cancellationToken);
 
     /// <summary>
     /// Configure the specified consumer on the receiver and handle the message
@@ -37,7 +37,7 @@ public interface IMessageReceiver :
     /// <param name="message">The Service Bus message</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task HandleConsumer<TConsumer>(string queueName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
+    Task HandleConsumerAsync<TConsumer>(string queueName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
         where TConsumer : class, IConsumer;
 
     /// <summary>
@@ -48,7 +48,7 @@ public interface IMessageReceiver :
     /// <param name="message">The Service Bus message</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task HandleConsumer<TConsumer>(string topicPath, string subscriptionName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
+    Task HandleConsumerAsync<TConsumer>(string topicPath, string subscriptionName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
         where TConsumer : class, IConsumer;
 
     /// <summary>
@@ -58,7 +58,7 @@ public interface IMessageReceiver :
     /// <param name="message">The Service Bus message</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task HandleSaga<TSaga>(string queueName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
+    Task HandleSagaAsync<TSaga>(string queueName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
         where TSaga : class, ISaga;
 
     /// <summary>
@@ -69,7 +69,7 @@ public interface IMessageReceiver :
     /// <param name="message">The Service Bus message</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task HandleSaga<TSaga>(string topicPath, string subscriptionName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
+    Task HandleSagaAsync<TSaga>(string topicPath, string subscriptionName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
         where TSaga : class, ISaga;
 
     /// <summary>
@@ -79,6 +79,6 @@ public interface IMessageReceiver :
     /// <param name="message">The Service Bus message</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task HandleExecuteActivity<TActivity>(string queueName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
+    Task HandleExecuteActivityAsync<TActivity>(string queueName, ServiceBusReceivedMessage message, CancellationToken cancellationToken)
         where TActivity : class;
 }

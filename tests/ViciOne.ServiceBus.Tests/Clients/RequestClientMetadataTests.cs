@@ -12,7 +12,7 @@ public sealed class RequestClientMetadataTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-METADATA", "request-pipe-header-round-trip")]
-    public async Task RequestPipeHeader_IsPresentOnTheRequestAndReturnedResponse()
+    public async Task RequestPipeHeader_IsPresentOnTheRequestAndReturnedResponseAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -25,18 +25,18 @@ public sealed class RequestClientMetadataTests
             await context.RespondAsync(new MetadataResponse(context.Message.CorrelationId, "accepted"));
         });
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             Guid correlationId = Guid.Parse("f3b95cb8-b0be-4468-8b18-35d58000aa23");
             IRequestClient<MetadataRequest> client =
                 harness.Bus.CreateRequestClient<MetadataRequest>(harness.InputQueueAddress, timeout);
 
-            Response<MetadataResponse> response = await client.GetResponse<MetadataResponse>(
+            Response<MetadataResponse> response = await client.Advanced().GetResponseAsync<MetadataResponse>(
                 new MetadataRequest(correlationId, false),
-                configurator => configurator.UseExecute(context =>
+                callback: configurator => configurator.UseExecute(context =>
                     context.Headers.Set(TraceHeader, TraceValue)),
-                cancellationToken);
+                cancellationToken: cancellationToken);
             ConsumeContext<MetadataRequest> request = await requestSeen.Task.WaitAsync(timeout, cancellationToken);
 
             Assert.Equal(TraceValue, request.Headers.Get<string>(TraceHeader));
@@ -46,13 +46,13 @@ public sealed class RequestClientMetadataTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-METADATA", "deadline-applies-only-to-request-outcomes")]
-    public async Task RequestDeadline_IsInheritedByResponseButNotByIndependentConsumerWork()
+    public async Task RequestDeadline_IsInheritedByResponseButNotByIndependentConsumerWorkAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -67,9 +67,9 @@ public sealed class RequestClientMetadataTests
         harness.Handler<MetadataRequest>(async context =>
         {
             requestSeen.TrySetResult(context);
-            await context.Publish(new PublishedSideEffect(context.Message.CorrelationId), context.CancellationToken);
-            ISendEndpoint auditEndpoint = await context.GetSendEndpoint(auditAddress);
-            await auditEndpoint.Send(
+            await context.Advanced().PublishAsync(new PublishedSideEffect(context.Message.CorrelationId), context.CancellationToken);
+            ISendEndpoint auditEndpoint = await context.Advanced().GetSendEndpointAsync(auditAddress);
+            await auditEndpoint.SendAsync(
                 new SentSideEffect(context.Message.CorrelationId),
                 context.CancellationToken);
             await context.RespondAsync(new MetadataResponse(context.Message.CorrelationId, "completed"));
@@ -89,16 +89,16 @@ public sealed class RequestClientMetadataTests
                 });
             });
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             Guid correlationId = Guid.Parse("b7bdf9b1-2df2-43ce-a121-c58945e4fb36");
             IRequestClient<MetadataRequest> client =
                 harness.Bus.CreateRequestClient<MetadataRequest>(harness.InputQueueAddress, RequestTimeout.After(m: 5));
 
-            Response<MetadataResponse> response = await client.GetResponse<MetadataResponse>(
+            Response<MetadataResponse> response = await client.Advanced().GetResponseAsync<MetadataResponse>(
                 new MetadataRequest(correlationId, false),
-                cancellationToken);
+                cancellationToken: cancellationToken);
             ConsumeContext<MetadataRequest> request = await requestSeen.Task.WaitAsync(timeout, cancellationToken);
             ConsumeContext<PublishedSideEffect> published =
                 await publishedSeen.Task.WaitAsync(timeout, cancellationToken);
@@ -116,13 +116,13 @@ public sealed class RequestClientMetadataTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-FAULT", "multi-response-complete-fault-envelope")]
-    public async Task ConsumerFailure_FaultsAMultiResponseRequestWithTheCompleteTypedEnvelope()
+    public async Task ConsumerFailure_FaultsAMultiResponseRequestWithTheCompleteTypedEnvelopeAsync()
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
@@ -135,11 +135,11 @@ public sealed class RequestClientMetadataTests
             throw new ExpectedRequestFailure("request rejected");
         });
 
-        await harness.Start(cancellationToken);
+        await harness.StartAsync(cancellationToken);
         try
         {
             Task<ConsumeContext<Fault<MetadataRequest>>> faultSeen =
-                harness.SubscribeHandler<Fault<MetadataRequest>>();
+                harness.SubscribeHandlerAsync<Fault<MetadataRequest>>(TestContext.Current.CancellationToken);
             var requestMessage = new MetadataRequest(
                 Guid.Parse("6f56f140-cd81-4d10-b224-fd3bbb70d4df"),
                 true);
@@ -147,7 +147,9 @@ public sealed class RequestClientMetadataTests
                 harness.Bus.CreateRequestClient<MetadataRequest>(harness.InputQueueAddress, RequestTimeout.After(m: 5));
 
             RequestFaultException exception = await Assert.ThrowsAsync<RequestFaultException>(() =>
-                client.GetResponse<MetadataResponse, AlternateResponse>(requestMessage, cancellationToken));
+                client.Advanced().GetResponseAsync<MetadataResponse, AlternateResponse>(
+                    requestMessage,
+                    cancellationToken: cancellationToken));
             ConsumeContext<MetadataRequest> request = await requestSeen.Task.WaitAsync(timeout, cancellationToken);
             ConsumeContext<Fault<MetadataRequest>> publishedFault =
                 await faultSeen.WaitAsync(timeout, cancellationToken);
@@ -165,7 +167,7 @@ public sealed class RequestClientMetadataTests
         }
         finally
         {
-            await harness.Stop().WaitAsync(timeout, CancellationToken.None);
+            await harness.StopAsync(TestContext.Current.CancellationToken).WaitAsync(timeout, CancellationToken.None);
         }
     }
 

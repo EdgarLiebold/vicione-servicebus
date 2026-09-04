@@ -14,14 +14,14 @@ public sealed class HostConfigurationRetryExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-HOST-RETRY", "configured-delay-is-the-only-delay")]
-    public async Task Retry_UsesOnlyTheConfiguredPolicyDelayAndTheExplicitTimeProvider()
+    public async Task Retry_UsesOnlyTheConfiguredPolicyDelayAndTheExplicitTimeProviderAsync()
     {
         TimeSpan retryDelay = TimeSpan.FromMinutes(7);
         var timeProvider = new ObservableTimeProvider(StartTime);
         var host = new TestHostConfiguration(Retry.Interval(1, retryDelay));
         var attempts = 0;
 
-        Task operation = host.Retry(() =>
+        Task operation = host.RetryAsync(() =>
         {
             if (Interlocked.Increment(ref attempts) == 1)
                 throw new ExpectedTransportException("transient");
@@ -29,7 +29,7 @@ public sealed class HostConfigurationRetryExtensionsTests
             return Task.CompletedTask;
         }, timeProvider, CancellationToken.None, CancellationToken.None);
 
-        await timeProvider.WaitForTimerCount(1).WaitAsync(TestContext.Current.CancellationToken);
+        await timeProvider.WaitForTimerCountAsync(1).WaitAsync(TestContext.Current.CancellationToken);
         Assert.Equal(1, attempts);
         Assert.False(operation.IsCompleted);
 
@@ -42,20 +42,20 @@ public sealed class HostConfigurationRetryExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-HOST-RETRY", "caller-cancellation-keeps-exact-token")]
-    public async Task Retry_CallerCancellationDuringBackoffKeepsTheExactCallerToken()
+    public async Task Retry_CallerCancellationDuringBackoffKeepsTheExactCallerTokenAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
         var host = new TestHostConfiguration(Retry.Interval(1, TimeSpan.FromHours(1)));
         using var caller = new CancellationTokenSource();
         var attempts = 0;
 
-        Task operation = host.Retry(() =>
+        Task operation = host.RetryAsync(() =>
         {
             Interlocked.Increment(ref attempts);
             throw new ExpectedTransportException("transient");
-        }, timeProvider, caller.Token, CancellationToken.None);
+        }, timeProvider, stoppingToken: CancellationToken.None, cancellationToken: caller.Token);
 
-        await timeProvider.WaitForTimerCount(1).WaitAsync(TestContext.Current.CancellationToken);
+        await timeProvider.WaitForTimerCountAsync(1).WaitAsync(TestContext.Current.CancellationToken);
         caller.Cancel();
 
         OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => operation);
@@ -65,7 +65,7 @@ public sealed class HostConfigurationRetryExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-HOST-RETRY", "stopping-cancellation-is-connection-failure")]
-    public async Task Retry_StoppingDuringBackoffProducesAConnectionFailureWithTheLastTransportFailure()
+    public async Task Retry_StoppingDuringBackoffProducesAConnectionFailureWithTheLastTransportFailureAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
         var host = new TestHostConfiguration(Retry.Interval(1, TimeSpan.FromHours(1)));
@@ -73,13 +73,13 @@ public sealed class HostConfigurationRetryExtensionsTests
         var expected = new ExpectedTransportException("transient");
         var attempts = 0;
 
-        Task operation = host.Retry(() =>
+        Task operation = host.RetryAsync(() =>
         {
             Interlocked.Increment(ref attempts);
             throw expected;
-        }, timeProvider, CancellationToken.None, stopping.Token);
+        }, timeProvider, stoppingToken: stopping.Token, cancellationToken: CancellationToken.None);
 
-        await timeProvider.WaitForTimerCount(1).WaitAsync(TestContext.Current.CancellationToken);
+        await timeProvider.WaitForTimerCountAsync(1).WaitAsync(TestContext.Current.CancellationToken);
         stopping.Cancel();
 
         ConnectionException exception = await Assert.ThrowsAsync<ConnectionException>(() => operation);
@@ -90,7 +90,7 @@ public sealed class HostConfigurationRetryExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-HOST-RETRY", "stopping-precedes-caller-cancellation")]
-    public async Task Retry_WhenBothSourcesAreCancelledReportsTheStoppingTransport()
+    public async Task Retry_WhenBothSourcesAreCancelledReportsTheStoppingTransportAsync()
     {
         var timeProvider = new ObservableTimeProvider(StartTime);
         var host = new TestHostConfiguration(Retry.Interval(1, TimeSpan.FromHours(1)));
@@ -99,13 +99,13 @@ public sealed class HostConfigurationRetryExtensionsTests
         var expected = new ExpectedTransportException("transient");
         var attempts = 0;
 
-        Task operation = host.Retry(() =>
+        Task operation = host.RetryAsync(() =>
         {
             Interlocked.Increment(ref attempts);
             throw expected;
-        }, timeProvider, caller.Token, stopping.Token);
+        }, timeProvider, stoppingToken: stopping.Token, cancellationToken: caller.Token);
 
-        await timeProvider.WaitForTimerCount(1).WaitAsync(TestContext.Current.CancellationToken);
+        await timeProvider.WaitForTimerCountAsync(1).WaitAsync(TestContext.Current.CancellationToken);
         caller.Cancel();
         stopping.Cancel();
 
@@ -117,7 +117,7 @@ public sealed class HostConfigurationRetryExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-HOST-RETRY", "terminal-failure-keeps-identity")]
-    public async Task Retry_ExhaustedPolicyRethrowsTheExactTerminalFailure()
+    public async Task Retry_ExhaustedPolicyRethrowsTheExactTerminalFailureAsync()
     {
         var host = new TestHostConfiguration(Retry.Immediate(1));
         var first = new ExpectedTransportException("first");
@@ -125,7 +125,7 @@ public sealed class HostConfigurationRetryExtensionsTests
         var attempts = 0;
 
         ExpectedTransportException actual = await Assert.ThrowsAsync<ExpectedTransportException>(() =>
-            host.Retry(() =>
+            host.RetryAsync(() =>
             {
                 int attempt = Interlocked.Increment(ref attempts);
                 throw attempt == 1 ? first : terminal;
@@ -137,20 +137,20 @@ public sealed class HostConfigurationRetryExtensionsTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-HOST-RETRY", "public-boundary-rejects-null-dependencies")]
-    public async Task Retry_RejectsNullConfigurationOperationTimeProviderAndPolicy()
+    public async Task Retry_RejectsNullConfigurationOperationTimeProviderAndPolicyAsync()
     {
         Func<Task> operation = () => Task.CompletedTask;
         var host = new TestHostConfiguration(Retry.None);
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
 
         ArgumentNullException missingHost = await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            HostConfigurationRetryExtensions.Retry(null!, operation, TimeProvider.System, cancellationToken, cancellationToken));
+            HostConfigurationRetryExtensions.RetryAsync(null!, operation, TimeProvider.System, cancellationToken, cancellationToken));
         ArgumentNullException missingOperation = await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            host.Retry(null!, TimeProvider.System, cancellationToken, cancellationToken));
+            host.RetryAsync(null!, TimeProvider.System, cancellationToken, cancellationToken));
         ArgumentNullException missingTimeProvider = await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            host.Retry(operation, null!, cancellationToken, cancellationToken));
+            host.RetryAsync(operation, null!, cancellationToken, cancellationToken));
         InvalidOperationException missingPolicy = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            new TestHostConfiguration(null!).Retry(operation, TimeProvider.System, cancellationToken, cancellationToken));
+            new TestHostConfiguration(null!).RetryAsync(operation, TimeProvider.System, cancellationToken, cancellationToken));
 
         Assert.Equal("hostConfiguration", missingHost.ParamName);
         Assert.Equal("factory", missingOperation.ParamName);

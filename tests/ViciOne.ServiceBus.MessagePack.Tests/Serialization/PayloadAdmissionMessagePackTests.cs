@@ -15,32 +15,32 @@ public sealed class PayloadAdmissionMessagePackTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-PAYLOAD-ADMISSION", "body-owned-capacity-boundaries-single-pass")]
-    public async Task BodyOwnedCapacityLimit_EnforcesExactBoundariesWithoutReserializing()
+    public async Task BodyOwnedCapacityLimit_EnforcesExactBoundariesWithoutReserializingAsync()
     {
         BoundaryPayload message = CreateMessage();
         int bodyLength = MeasureBodyLength(message);
-        int requiredCapacity = await MeasureRequiredBodyCapacity(bodyLength);
+        int requiredCapacity = await MeasureRequiredBodyCapacityAsync(bodyLength);
 
         Assert.True(requiredCapacity >= bodyLength);
-        await AssertBodyBoundary(requiredCapacity + 1, rejected: false);
-        await AssertBodyBoundary(requiredCapacity, rejected: false);
-        await AssertBodyBoundary(requiredCapacity - 1, rejected: true);
+        await AssertBodyBoundaryAsync(requiredCapacity + 1, rejected: false);
+        await AssertBodyBoundaryAsync(requiredCapacity, rejected: false);
+        await AssertBodyBoundaryAsync(requiredCapacity - 1, rejected: true);
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-MESSAGEPACK-PAYLOAD-ADMISSION", "envelope-owned-capacity-boundaries-single-pass")]
-    public async Task EnvelopeOwnedCapacityLimit_EnforcesExactBoundariesWithoutReserializing()
+    public async Task EnvelopeOwnedCapacityLimit_EnforcesExactBoundariesWithoutReserializingAsync()
     {
-        int envelopeLength = await MeasureEnvelopeLength();
-        int requiredCapacity = await MeasureRequiredEnvelopeCapacity(envelopeLength);
+        int envelopeLength = await MeasureEnvelopeLengthAsync();
+        int requiredCapacity = await MeasureRequiredEnvelopeCapacityAsync(envelopeLength);
 
         Assert.True(requiredCapacity >= envelopeLength);
-        await AssertEnvelopeBoundary(requiredCapacity + 1, rejected: false);
-        await AssertEnvelopeBoundary(requiredCapacity, rejected: false);
-        await AssertEnvelopeBoundary(requiredCapacity - 1, rejected: true);
+        await AssertEnvelopeBoundaryAsync(requiredCapacity + 1, rejected: false);
+        await AssertEnvelopeBoundaryAsync(requiredCapacity, rejected: false);
+        await AssertEnvelopeBoundaryAsync(requiredCapacity - 1, rejected: true);
     }
 
-    private static async Task AssertBodyBoundary(int maximumBodyBytes, bool rejected)
+    private static async Task AssertBodyBoundaryAsync(int maximumBodyBytes, bool rejected)
     {
         BoundaryPayload message = CreateMessage();
         BoundaryPayload.ResetSerializationReads();
@@ -59,7 +59,7 @@ public sealed class PayloadAdmissionMessagePackTests
         await bus.StartAsync(TestContext.Current.CancellationToken).WaitAsync(Timeout, TestContext.Current.CancellationToken);
         try
         {
-            Task send = Send(bus, message);
+            Task send = SendAsync(bus, message);
             if (rejected)
             {
                 PayloadAdmissionException exception = await Assert.ThrowsAsync<PayloadAdmissionException>(() => send);
@@ -84,7 +84,7 @@ public sealed class PayloadAdmissionMessagePackTests
         }
     }
 
-    private static async Task<int> MeasureEnvelopeLength()
+    private static async Task<int> MeasureEnvelopeLengthAsync()
     {
         BoundaryPayload.ResetSerializationReads();
         var observer = new BodyReadingObserver();
@@ -103,7 +103,7 @@ public sealed class PayloadAdmissionMessagePackTests
         try
         {
             BoundaryPayload message = CreateMessage();
-            await Send(bus, message);
+            await SendAsync(bus, message);
             Assert.Equal(message.GetDataLength(),
                 await received.Task.WaitAsync(Timeout, TestContext.Current.CancellationToken));
             Assert.Equal(1, observer.PreSendCalls);
@@ -117,7 +117,7 @@ public sealed class PayloadAdmissionMessagePackTests
         }
     }
 
-    private static async Task<int> MeasureRequiredBodyCapacity(int bodyLength)
+    private static async Task<int> MeasureRequiredBodyCapacityAsync(int bodyLength)
     {
         BoundaryPayload.ResetSerializationReads();
         var observer = new BodyReadingObserver();
@@ -135,7 +135,7 @@ public sealed class PayloadAdmissionMessagePackTests
         try
         {
             PayloadAdmissionException exception = await Assert.ThrowsAsync<PayloadAdmissionException>(
-                () => Send(bus, CreateMessage()));
+                () => SendAsync(bus, CreateMessage()));
             Assert.Equal(PayloadAdmissionStage.SerializedBody, exception.Stage);
             Assert.Equal(1, BoundaryPayload.SerializationReads);
             Assert.Equal(0, observer.PreSendCalls);
@@ -147,7 +147,7 @@ public sealed class PayloadAdmissionMessagePackTests
         }
     }
 
-    private static async Task<int> MeasureRequiredEnvelopeCapacity(int envelopeLength)
+    private static async Task<int> MeasureRequiredEnvelopeCapacityAsync(int envelopeLength)
     {
         BoundaryPayload.ResetSerializationReads();
         var observer = new BodyReadingObserver();
@@ -165,7 +165,7 @@ public sealed class PayloadAdmissionMessagePackTests
         try
         {
             PayloadAdmissionException exception = await Assert.ThrowsAsync<PayloadAdmissionException>(
-                () => Send(bus, CreateMessage()));
+                () => SendAsync(bus, CreateMessage()));
             Assert.Equal(PayloadAdmissionStage.TransportEnvelope, exception.Stage);
             Assert.Equal(1, BoundaryPayload.SerializationReads);
             Assert.Equal(0, observer.PreSendCalls);
@@ -177,7 +177,7 @@ public sealed class PayloadAdmissionMessagePackTests
         }
     }
 
-    private static async Task AssertEnvelopeBoundary(int maximumEnvelopeBytes, bool rejected)
+    private static async Task AssertEnvelopeBoundaryAsync(int maximumEnvelopeBytes, bool rejected)
     {
         BoundaryPayload.ResetSerializationReads();
         var observer = new BodyReadingObserver();
@@ -196,7 +196,7 @@ public sealed class PayloadAdmissionMessagePackTests
         try
         {
             BoundaryPayload message = CreateMessage();
-            Task send = Send(bus, message);
+            Task send = SendAsync(bus, message);
             if (rejected)
             {
                 PayloadAdmissionException exception = await Assert.ThrowsAsync<PayloadAdmissionException>(() => send);
@@ -247,11 +247,11 @@ public sealed class PayloadAdmissionMessagePackTests
             new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
     }
 
-    private static async Task Send(IBus bus, BoundaryPayload message)
+    private static async Task SendAsync(IBus bus, BoundaryPayload message)
     {
-        ISendEndpoint endpoint = await bus.GetSendEndpoint(
+        ISendEndpoint endpoint = await bus.GetSendEndpointAsync(
             new Uri("loopback://payload-messagepack/payload-messagepack-input"));
-        await endpoint.Send(message, TestContext.Current.CancellationToken);
+        await endpoint.SendAsync(message, TestContext.Current.CancellationToken);
     }
 
     private static BoundaryPayload CreateMessage() => new(new byte[12_000]);
@@ -273,7 +273,7 @@ public sealed class PayloadAdmissionMessagePackTests
 
         public int ApplicationSerializationReads { get; private set; }
 
-        public Task PreSend<T>(SendContext<T> context)
+        public Task PreSendAsync<T>(SendContext<T> context)
             where T : class
         {
             Interlocked.Increment(ref _preSendCalls);
@@ -284,11 +284,11 @@ public sealed class PayloadAdmissionMessagePackTests
             return Task.CompletedTask;
         }
 
-        public Task PostSend<T>(SendContext<T> context)
+        public Task PostSendAsync<T>(SendContext<T> context)
             where T : class
             => Task.CompletedTask;
 
-        public Task SendFault<T>(SendContext<T> context, Exception exception)
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
             where T : class
             => Task.CompletedTask;
     }

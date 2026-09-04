@@ -18,7 +18,8 @@ public interface ISagaTestHarness<TSaga>
     /// <param name="correlationId"></param>
     /// <param name="timeout"></param>
     /// <returns></returns>
-    Task<Guid?> Exists(Guid correlationId, TimeSpan? timeout = default);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<Guid?> ExistsAsync(Guid correlationId, TimeSpan? timeout = default, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Waits until at least one saga exists matching the specified filter
@@ -26,7 +27,8 @@ public interface ISagaTestHarness<TSaga>
     /// <param name="filter"></param>
     /// <param name="timeout"></param>
     /// <returns></returns>
-    Task<IList<Guid>> Match(Expression<Func<TSaga, bool>> filter, TimeSpan? timeout = default);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<IList<Guid>> MatchAsync(Expression<Func<TSaga, bool>> filter, TimeSpan? timeout = default, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Waits until the saga matching the specified correlationId does NOT exist
@@ -34,5 +36,6 @@ public interface ISagaTestHarness<TSaga>
     /// <param name="correlationId"></param>
     /// <param name="timeout"></param>
     /// <returns></returns>
-    Task<Guid?> NotExists(Guid correlationId, TimeSpan? timeout = default);
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    Task<Guid?> NotExistsAsync(Guid correlationId, TimeSpan? timeout = default, CancellationToken cancellationToken = default);
 }

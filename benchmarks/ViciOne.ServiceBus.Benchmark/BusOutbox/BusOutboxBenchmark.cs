@@ -37,7 +37,7 @@ public class BusOutboxBenchmark
         _payload = _options.PayloadSize > 0 ? new string('*', _options.PayloadSize) : null;
     }
 
-    public async Task Run()
+    public async Task RunAsync()
     {
         _capture = new MessageMetricCapture(_options.MessageCount);
 
@@ -78,13 +78,13 @@ public class BusOutboxBenchmark
             })
             .BuildServiceProvider(true);
 
-        await provider.StartHostedServices();
+        await provider.StartHostedServicesAsync();
 
         try
         {
             Console.WriteLine("Running Bus Outbox Benchmark");
 
-            await RunBenchmark(provider);
+            await RunBenchmarkAsync(provider);
 
             Console.WriteLine("Message Count: {0}", _options.MessageCount);
             Console.WriteLine("Clients: {0}", _options.Clients);
@@ -112,16 +112,16 @@ public class BusOutboxBenchmark
         }
         finally
         {
-            await provider.StopHostedServices();
+            await provider.StopHostedServicesAsync();
         }
     }
 
-    async Task RunBenchmark(IServiceProvider provider)
+    async Task RunBenchmarkAsync(IServiceProvider provider)
     {
         var stripes = new Task[_options.Clients];
 
         for (var i = 0; i < _options.Clients; i++)
-            stripes[i] = Task.Run(() => RunStripe(provider, _options.MessageCount / _options.Clients));
+            stripes[i] = Task.Run(() => RunStripeAsync(provider, _options.MessageCount / _options.Clients));
 
         await Task.WhenAll(stripes).ConfigureAwait(false);
 
@@ -130,7 +130,7 @@ public class BusOutboxBenchmark
         _consumeDuration = await _capture.ConsumeCompleted.ConfigureAwait(false);
     }
 
-    async Task RunStripe(IServiceProvider provider, long messageCount)
+    async Task RunStripeAsync(IServiceProvider provider, long messageCount)
     {
         var endpointNameFormatter = provider.GetService<IEndpointNameFormatter>() ?? DefaultEndpointNameFormatter.Instance;
 
@@ -143,9 +143,9 @@ public class BusOutboxBenchmark
             await using var dbContext = scope.ServiceProvider.GetService<BusOutboxDbContext>();
 
             var messageId = NewId.NextGuid();
-            var sendEndpoint = await scope.ServiceProvider.GetService<ISendEndpointProvider>().GetSendEndpoint(address);
-            await _capture.Sent(messageId,
-                () => sendEndpoint.Send(new BusOutboxMessage(messageId, _payload), x => x.MessageId = messageId), true)
+            var sendEndpoint = await scope.ServiceProvider.GetService<ISendEndpointProvider>().GetSendEndpointAsync(address);
+            await _capture.SentAsync(messageId,
+                () => sendEndpoint.SendAsync(new BusOutboxMessage(messageId, _payload), x => x.MessageId = messageId), true)
                 .ConfigureAwait(false);
 
             await dbContext.SaveChangesAsync();
@@ -163,19 +163,19 @@ public class BusOutboxBenchmark
             _metric = metric;
         }
 
-        public Task PreSend<T>(SendContext<T> context)
+        public Task PreSendAsync<T>(SendContext<T> context)
             where T : class
         {
             return Task.CompletedTask;
         }
 
-        public Task PostSend<T>(SendContext<T> context)
+        public Task PostSendAsync<T>(SendContext<T> context)
             where T : class
         {
-            return SendMetricReporter.Report(_metric, context.MessageId);
+            return SendMetricReporter.ReportAsync(_metric, context.MessageId);
         }
 
-        public Task SendFault<T>(SendContext<T> context, Exception exception)
+        public Task SendFaultAsync<T>(SendContext<T> context, Exception exception)
             where T : class
         {
             return Task.CompletedTask;

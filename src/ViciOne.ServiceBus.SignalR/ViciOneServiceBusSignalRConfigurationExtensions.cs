@@ -12,7 +12,7 @@ namespace ViciOne.ServiceBus.SignalR;
 public static class ViciOneServiceBusSignalRConfigurationExtensions
 {
     public static void AddSignalRHub<THub>(this IBusRegistrationConfigurator busConfigurator,
-        Action<IHubLifetimeManagerOptions<THub>> configureHubLifetimeOptions = null)
+        Action<IHubLifetimeManagerOptions<THub>>? configureHubLifetimeOptions = null)
         where THub : Hub
     {
         var options = new HubLifetimeManagerOptions<THub>();

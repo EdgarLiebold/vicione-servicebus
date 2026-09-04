@@ -22,7 +22,7 @@ public interface JobAttemptStarted
     /// <summary>
     /// The time the job was started
     /// </summary>
-    DateTime Timestamp { get; }
+    DateTimeOffset Timestamp { get; }
 
     /// <summary>
     /// The address of the instance on which this job was started

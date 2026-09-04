@@ -61,19 +61,19 @@ internal static class Program
 
             object result = args[0] switch
             {
-                "bus-lifecycle" => await BusLifecycleScenario.Run(cycles, sampleEvery, cancellation.Token),
-                "publish-load" => await PublishLoadScenario.Run(
+                "bus-lifecycle" => await BusLifecycleScenario.RunAsync(cycles, sampleEvery, cancellation.Token),
+                "publish-load" => await PublishLoadScenario.RunAsync(
                     Number(options, "messages", 100_000), Number(options, "concurrency", 32),
                     Number(options, "prefetch", 10_000),
                     TimeSpan.FromSeconds(Number(options, "completion-limit-seconds", 180)), cancellation.Token),
                 _ => throw new ArgumentException($"unknown scenario '{args[0]}'")
             };
 
-            return await Deliver(result, sink, cancellation.Token);
+            return await DeliverAsync(result, sink, cancellation.Token);
         }
         catch (OperationCanceledException)
         {
-            await Report(new { scenario = args[0], status = "cancelled", reason = "cancelled before the scenario could finish, so nothing was measured" },
+            await ReportAsync(new { scenario = args[0], status = "cancelled", reason = "cancelled before the scenario could finish, so nothing was measured" },
                 sink, CancellationToken.None);
 
             return 1;
@@ -83,7 +83,7 @@ internal static class Program
             // Structured on failure too, and into the same sink: a caller that reads the output of a
             // success has to be able to read the output of a failure without switching to parsing
             // prose, and without looking somewhere else for it.
-            await Report(new { scenario = args[0], status = "failed", error = exception.Message },
+            await ReportAsync(new { scenario = args[0], status = "failed", error = exception.Message },
                 sink, CancellationToken.None);
 
             return 1;
@@ -148,10 +148,15 @@ internal static class Program
     /// handled explicitly instead of being hidden in an unreachable no-broker success branch.
     /// </para>
     /// </summary>
-    internal static async Task<int> Deliver(object result, string? sink, CancellationToken cancellationToken,
+    /// <param name="result">The result used by the operation.</param>
+    /// <param name="sink">The sink used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="output">The output used by the operation.</param>
+    /// <param name="error">The error used by the operation.</param>
+    internal static async Task<int> DeliverAsync(object result, string? sink, CancellationToken cancellationToken,
         TextWriter? output = null, TextWriter? error = null)
     {
-        return await Report(result, sink, cancellationToken, output, error) ? 0 : 1;
+        return await ReportAsync(result, sink, cancellationToken, output, error) ? 0 : 1;
     }
 
     /// <summary>
@@ -170,7 +175,12 @@ internal static class Program
     /// </para>
     /// </summary>
     /// <returns>True when the result reached the place the caller named.</returns>
-    internal static async Task<bool> Report(object result, string? sink, CancellationToken cancellationToken,
+    /// <param name="result">The result used by the operation.</param>
+    /// <param name="sink">The sink used by the operation.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <param name="output">The output used by the operation.</param>
+    /// <param name="error">The error used by the operation.</param>
+    internal static async Task<bool> ReportAsync(object result, string? sink, CancellationToken cancellationToken,
         TextWriter? output = null, TextWriter? error = null)
     {
         TextWriter destination = output ?? Console.Out;

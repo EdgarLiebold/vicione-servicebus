@@ -38,22 +38,22 @@ public sealed class SqlServerConfigurationAndRetryTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0105", "sqlserver-native-owner")]
-    public async Task ProviderPollingDelayIgnoresQueueIdAndCompletesAtTheConfiguredBoundaryOrCancellation()
+    public async Task ProviderPollingDelayIgnoresQueueIdAndCompletesAtTheConfiguredBoundaryOrCancellationAsync()
     {
         var timeProvider = new FakeTimeProvider(StartTime);
         TimeSpan pollingInterval = TimeSpan.FromMinutes(2);
-        Task firstQueue = SqlServerDbConnectionContext.DelayUntilMessageReady(
+        Task firstQueue = SqlServerDbConnectionContext.DelayUntilMessageReadyAsync(
             17,
             pollingInterval,
             timeProvider,
             CancellationToken.None);
-        Task secondQueue = SqlServerDbConnectionContext.DelayUntilMessageReady(
+        Task secondQueue = SqlServerDbConnectionContext.DelayUntilMessageReadyAsync(
             9_999,
             pollingInterval,
             timeProvider,
             CancellationToken.None);
         using var cancellation = new CancellationTokenSource();
-        Task canceled = SqlServerDbConnectionContext.DelayUntilMessageReady(
+        Task canceled = SqlServerDbConnectionContext.DelayUntilMessageReadyAsync(
             17,
             pollingInterval,
             timeProvider,
@@ -76,7 +76,7 @@ public sealed class SqlServerConfigurationAndRetryTests
 
     [Fact]
     [RequirementCoverage("OBL-R0-SQL-0113", "sqlserver-native-owner")]
-    public async Task SubSecondLockDurationIsRejectedBeforeTheEndpointCanStart()
+    public async Task SubSecondLockDurationIsRejectedBeforeTheEndpointCanStartAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using SqlServerTestDatabase fixture = await SqlServerTestDatabase.CreateAsync(

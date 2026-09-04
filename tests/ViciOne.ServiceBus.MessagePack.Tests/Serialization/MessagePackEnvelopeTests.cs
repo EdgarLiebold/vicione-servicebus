@@ -134,9 +134,9 @@ public sealed class MessagePackEnvelopeTests
 
         public object Message { get; } = message;
 
-        public DateTime? ExpirationTime => null;
+        public DateTimeOffset? ExpirationTime => null;
 
-        public DateTime? SentTime { get; } = DateTime.UtcNow;
+        public DateTimeOffset? SentTime { get; } = TimeProvider.System.GetUtcNow();
 
         public Dictionary<string, object?> Headers { get; } = [];
 

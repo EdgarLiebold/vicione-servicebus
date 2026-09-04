@@ -21,11 +21,11 @@ public class DelaySendPipe<T> :
         _pipe?.Probe(context);
     }
 
-    public Task Send(SendContext<T> context)
+    public Task SendAsync(SendContext<T> context)
     {
         if (_delay > TimeSpan.Zero)
             context.Delay = _delay;
 
-        return _pipe.IsNotEmpty() ? _pipe.Send(context) : Task.CompletedTask;
+        return _pipe.IsNotEmpty() ? _pipe.SendAsync(context) : Task.CompletedTask;
     }
 }

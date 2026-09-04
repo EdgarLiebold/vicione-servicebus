@@ -14,11 +14,12 @@ public static class RabbitMqDeferMessageExtensions
     /// <param name="delay"></param>
     /// <param name="callback"></param>
     /// <returns></returns>
-    public static Task Defer<T>(this ConsumeContext<T> context, TimeSpan delay, Action<ConsumeContext, SendContext> callback = null)
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    public static Task DeferAsync<T>(this ConsumeContext<T> context, TimeSpan delay, Action<ConsumeContext, SendContext>? callback = null, CancellationToken cancellationToken = default)
         where T : class
     {
         MessageRedeliveryContext redeliveryContext = new DelayedMessageRedeliveryContext<T>(context, RedeliveryOptions.None);
 
-        return redeliveryContext.ScheduleRedelivery(delay, callback);
+        return redeliveryContext.ScheduleRedeliveryAsync(delay, callback, cancellationToken: cancellationToken);
     }
 }

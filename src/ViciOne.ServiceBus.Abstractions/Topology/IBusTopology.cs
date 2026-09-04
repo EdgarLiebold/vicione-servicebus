@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ViciOne.ServiceBus;
 
@@ -38,13 +39,13 @@ public interface IBusTopology
     /// <param name="messageType">The message type</param>
     /// <param name="publishAddress"></param>
     /// <returns></returns>
-    bool TryGetPublishAddress(Type messageType, out Uri publishAddress);
+    bool TryGetPublishAddress(Type messageType, [NotNullWhen(true)] out Uri? publishAddress);
 
     /// <summary>
     /// Returns the destination address for the specified message type, as a short address.
     /// </summary>
     /// <param name="publishAddress"></param>
     /// <returns></returns>
-    bool TryGetPublishAddress<T>(out Uri publishAddress)
+    bool TryGetPublishAddress<T>([NotNullWhen(true)] out Uri? publishAddress)
         where T : class;
 }
