@@ -1,8 +1,10 @@
 using System;
+using System.ComponentModel;
 
 namespace ViciOne.ServiceBus;
 
 /// <summary>Persisted durable-send record claimed for one delivery attempt.</summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
 public sealed record DurableSendDelivery
 {
     public required SerializedDurableSend Message { get; init; }

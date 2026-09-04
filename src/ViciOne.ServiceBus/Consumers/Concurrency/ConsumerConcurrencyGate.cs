@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -7,6 +8,7 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Bounded consumer-local gate for serial or fixed parallel execution.
 /// </summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
 public sealed class ConsumerConcurrencyGate<TMessage> : IConsumerConcurrencyGate<TMessage>, IDisposable
 {
     private readonly SemaphoreSlim _semaphore;

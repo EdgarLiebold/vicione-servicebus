@@ -1,10 +1,12 @@
 namespace ViciOne.ServiceBus.Serialization;
 
 using System;
+using System.ComponentModel;
 
 /// <summary>
 /// Bus-owned immutable policy for the application body and final transport envelope.
 /// </summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
 public sealed record PayloadAdmissionPolicy
 {
     /// <summary>Gets the observation-only body warning threshold.</summary>

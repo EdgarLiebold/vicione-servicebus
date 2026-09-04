@@ -1,6 +1,11 @@
+using System.ComponentModel;
 using System.Reflection;
+using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Architecture.Tests.Repository;
 using ViciOne.ServiceBus.DurableSend;
+using ViciOne.ServiceBus.Diagnostics;
+using ViciOne.ServiceBus.ProviderAbstractions;
+using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -9,34 +14,83 @@ namespace ViciOne.ServiceBus.Architecture.Tests.Product;
 public sealed class DurableSenderArchitectureTests
 {
     [Fact]
-    [RequirementCoverage("REQ-VSB-DURABLE-ARCHITECTURE", "public-spi-is-provider-neutral-abstraction")]
-    public void PublicStateAndPersistenceSpi_StayInAbstractionsWithoutClrTypePersistence()
+    [RequirementCoverage("REQ-VSB-DURABLE-ARCHITECTURE", "application-api-is-visible-and-provider-spi-is-hidden")]
+    public void ApplicationApi_IsVisibleWhileProviderSpiStaysHiddenAndProviderNeutral()
     {
-        Type[] contracts =
+        Type[] applicationApi =
         [
             typeof(DurableSendId),
-            typeof(SerializedDurableSend),
-            typeof(DurableSendDelivery),
-            typeof(DurableSendStoreSnapshot),
+            typeof(DurableSendAdmissionDisposition),
+            typeof(DurableSendOptions),
+            typeof(DurableSendReceipt),
+            typeof(DurableSendQuarantineQuery),
+            typeof(DurableSendQuarantinePage),
+            typeof(DurableSendQuarantineEntry),
+            typeof(DurableSendOperationOutcome),
+            typeof(DurableSendOperationResult),
             typeof(IDurableSender<>),
-            typeof(IDurableSendStore<>),
-            typeof(IDurableSendDispatcher<>),
-            typeof(IDurableSendConsumerCompletion),
             typeof(IDurableSenderOperations<>),
         ];
+        Assert.All(applicationApi, AssertVisibleApplicationType);
 
-        Assert.All(contracts, contract =>
+        Type[] providerSpi =
+        [
+            typeof(SerializedDurableSend),
+            typeof(DurableSendAdmissionResult),
+            typeof(DurableSendDelivery),
+            typeof(DurableSendDispatchContext),
+            typeof(DurableSendDispatchResult),
+            typeof(DurableSendCompletionMode),
+            typeof(DurableSendLease),
+            typeof(DurableSendStoreLimits),
+            typeof(DurableSendStoreSnapshot),
+            typeof(IDurableSendStore<>),
+            typeof(IDurableSendDispatcher<>),
+            typeof(IDurableSendAdmission<>),
+            typeof(IDurableSendConsumerCompletion),
+            typeof(IConsumerConcurrencyGate<>),
+            typeof(ConsumerConcurrencyGate<>),
+            typeof(PartitionedConsumerConcurrencyGate<,>),
+            typeof(IPayloadAdmissionEvaluator<>),
+            typeof(PayloadAdmissionEvaluator<>),
+            typeof(IPayloadSerializationBuffer),
+            typeof(PayloadAdmissionPolicy),
+            typeof(IMessageSensitivityInspector),
+            typeof(MessageSensitivityInspector),
+            typeof(IMessageDiagnosticRedactor),
+            typeof(MessageDiagnosticRedactor),
+            typeof(EndpointQosDeclaration),
+            typeof(EndpointQosTopologyValidator),
+            typeof(BusPersistenceIdentity<>),
+            typeof(IDurableSenderProviderConfigurator),
+        ];
+
+        Assert.All(providerSpi, contract =>
         {
             Assert.True(contract.IsPublic);
-            Assert.Same(ProductAssemblyFacts.Abstractions, contract.Assembly);
+            Assert.NotNull(contract.GetCustomAttribute<EditorBrowsableAttribute>());
+            Assert.Equal(
+                EditorBrowsableState.Never,
+                contract.GetCustomAttribute<EditorBrowsableAttribute>()!.State);
         });
+        Assert.Same(ProductAssemblyFacts.Abstractions, typeof(SerializedDurableSend).Assembly);
         Assert.Same(ProductAssemblyFacts.Core, typeof(DurableSenderOptions<>).Assembly);
         Assert.DoesNotContain(typeof(SerializedDurableSend).GetProperties(), property => property.PropertyType == typeof(Type));
         Assert.DoesNotContain("AssemblyQualifiedName", Source(
             "src/ViciOne.ServiceBus.Abstractions/DurableSend/SerializedDurableSend.cs"),
             StringComparison.Ordinal);
+        string[] forbiddenProviderReferences =
+        [
+            "Amazon",
+            "Apache.NMS",
+            "Azure.Messaging",
+            "EntityFramework",
+            "Npgsql",
+            "RabbitMQ",
+            "SqlClient",
+        ];
         Assert.DoesNotContain(ProductAssemblyFacts.ReferencedAssemblyNames(ProductAssemblyFacts.Abstractions),
-            name => name.Contains("EntityFramework", StringComparison.OrdinalIgnoreCase));
+            name => forbiddenProviderReferences.Any(fragment => name.Contains(fragment, StringComparison.OrdinalIgnoreCase)));
     }
 
     [Fact]
@@ -46,10 +100,13 @@ public sealed class DurableSenderArchitectureTests
         string[] implementationNames =
         [
             "ViciOne.ServiceBus.DurableSend.InMemoryDurableSendStore`1",
-            "ViciOne.ServiceBus.DurableSend.DurableSender`1",
+            "ViciOne.ServiceBus.DurableSend.DurableSendAdmission`1",
+            "ViciOne.ServiceBus.DurableSend.TypedDurableSender`1",
             "ViciOne.ServiceBus.DurableSend.DurableSenderDeliveryService`1",
             "ViciOne.ServiceBus.DurableSend.DurableSenderOperations`1",
             "ViciOne.ServiceBus.DurableSend.DurableSendConsumerCompletion`1",
+            "ViciOne.ServiceBus.DurableSend.DurableSenderConfigurator`1",
+            "ViciOne.ServiceBus.DurableSend.DurableSenderStartupValidator`1",
             "ViciOne.ServiceBus.InMemoryTransport.InMemoryDurableSendDispatcher`1",
             "ViciOne.ServiceBus.InMemoryTransport.InMemoryDurableSendCompletionFilter",
             "ViciOne.ServiceBus.InMemoryTransport.InMemoryDurableSendContext",
@@ -121,4 +178,12 @@ public sealed class DurableSenderArchitectureTests
 
     private static string Source(string relativePath) =>
         File.ReadAllText(Path.Combine(RepositoryLayout.Root, relativePath));
+
+    private static void AssertVisibleApplicationType(Type type)
+    {
+        Assert.True(type.IsPublic);
+        Assert.NotEqual(
+            EditorBrowsableState.Never,
+            type.GetCustomAttribute<EditorBrowsableAttribute>()?.State);
+    }
 }

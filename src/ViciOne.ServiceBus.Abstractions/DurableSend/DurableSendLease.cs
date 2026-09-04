@@ -1,10 +1,12 @@
 using System;
+using System.ComponentModel;
 
 namespace ViciOne.ServiceBus;
 
 /// <summary>
 /// Fenced ownership lease for one persisted durable-send delivery attempt.
 /// </summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
 public readonly record struct DurableSendLease
 {
     public DurableSendLease(Guid token, DateTimeOffset expiresAt)

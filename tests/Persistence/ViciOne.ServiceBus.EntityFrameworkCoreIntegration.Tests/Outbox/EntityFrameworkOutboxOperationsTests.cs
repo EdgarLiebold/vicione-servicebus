@@ -3,12 +3,15 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Outbox;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using ViciOne.ServiceBus.Middleware.Outbox;
+using ViciOne.ServiceBus.ProviderAbstractions;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
 public sealed class EntityFrameworkOutboxOperationsTests
 {
     private static readonly DateTime Created = new(2042, 3, 4, 5, 6, 7, DateTimeKind.Utc);
+    private const string FirstBusKey = "first-bus-v1";
+    private const string SecondBusKey = "second-bus-v1";
 
     [Fact]
     [RequirementCoverage("REQ-VSB-EF-OUTBOX-OPERATIONS", "quarantine-list-is-bounded-owned-and-deterministic")]
@@ -18,14 +21,14 @@ public sealed class EntityFrameworkOutboxOperationsTests
         Guid laterId = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
         Guid earlierId = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
         fixture.DbContext.AddRange(
-            CreateState(laterId, EntityFrameworkBusOutboxIdentity<IFirstBus>.BusKey, OutboxDeliveryStatus.Quarantined),
-            CreateState(earlierId, EntityFrameworkBusOutboxIdentity<IFirstBus>.BusKey, OutboxDeliveryStatus.Quarantined),
-            CreateState(Guid.NewGuid(), EntityFrameworkBusOutboxIdentity<IFirstBus>.BusKey, OutboxDeliveryStatus.Pending),
-            CreateState(Guid.Parse("00000000-0000-0000-0000-000000000001"), EntityFrameworkBusOutboxIdentity<ISecondBus>.BusKey,
+            CreateState(laterId, FirstBusKey, OutboxDeliveryStatus.Quarantined),
+            CreateState(earlierId, FirstBusKey, OutboxDeliveryStatus.Quarantined),
+            CreateState(Guid.NewGuid(), FirstBusKey, OutboxDeliveryStatus.Pending),
+            CreateState(Guid.Parse("00000000-0000-0000-0000-000000000001"), SecondBusKey,
                 OutboxDeliveryStatus.Quarantined));
         await fixture.DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
         var notification = new RecordingNotification();
-        var operations = new EntityFrameworkOutboxOperations<IFirstBus, OperationsDbContext>(fixture.DbContext, notification);
+        var operations = CreateOperations(fixture.DbContext, notification);
 
         IReadOnlyList<OutboxQuarantineEntry> entries = await operations.GetQuarantinedAsync(2, TestContext.Current.CancellationToken);
 
@@ -44,12 +47,12 @@ public sealed class EntityFrameworkOutboxOperationsTests
     public async Task Requeue_ResetsEveryFailureFieldAndSignalsOnlyAfterPersistence()
     {
         await using OperationsFixture fixture = await OperationsFixture.Create();
-        OutboxState state = CreateState(Guid.NewGuid(), EntityFrameworkBusOutboxIdentity<IFirstBus>.BusKey,
+        OutboxState state = CreateState(Guid.NewGuid(), FirstBusKey,
             OutboxDeliveryStatus.Quarantined);
         fixture.DbContext.Add(state);
         await fixture.DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
         var notification = new RecordingNotification();
-        var operations = new EntityFrameworkOutboxOperations<IFirstBus, OperationsDbContext>(fixture.DbContext, notification);
+        var operations = CreateOperations(fixture.DbContext, notification);
 
         await operations.RequeueAsync(state.OutboxId, TestContext.Current.CancellationToken);
         fixture.DbContext.ChangeTracker.Clear();
@@ -72,13 +75,13 @@ public sealed class EntityFrameworkOutboxOperationsTests
     public async Task Discard_RemovesTheOwnedQuarantineAndMessagesWithoutTouchingAnotherBus()
     {
         await using OperationsFixture fixture = await OperationsFixture.Create();
-        OutboxState owned = CreateState(Guid.NewGuid(), EntityFrameworkBusOutboxIdentity<IFirstBus>.BusKey,
+        OutboxState owned = CreateState(Guid.NewGuid(), FirstBusKey,
             OutboxDeliveryStatus.Quarantined);
-        OutboxState foreign = CreateState(Guid.NewGuid(), EntityFrameworkBusOutboxIdentity<ISecondBus>.BusKey,
+        OutboxState foreign = CreateState(Guid.NewGuid(), SecondBusKey,
             OutboxDeliveryStatus.Quarantined);
         fixture.DbContext.AddRange(owned, foreign, CreateMessage(1, owned.OutboxId), CreateMessage(2, foreign.OutboxId));
         await fixture.DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
-        var operations = new EntityFrameworkOutboxOperations<IFirstBus, OperationsDbContext>(fixture.DbContext, new RecordingNotification());
+        var operations = CreateOperations(fixture.DbContext, new RecordingNotification());
 
         await operations.DiscardAsync(owned.OutboxId, TestContext.Current.CancellationToken);
         fixture.DbContext.ChangeTracker.Clear();
@@ -94,13 +97,13 @@ public sealed class EntityFrameworkOutboxOperationsTests
     public async Task Mutations_RejectForeignAndNonQuarantinedStatesWithoutChangingEither()
     {
         await using OperationsFixture fixture = await OperationsFixture.Create();
-        OutboxState pending = CreateState(Guid.NewGuid(), EntityFrameworkBusOutboxIdentity<IFirstBus>.BusKey,
+        OutboxState pending = CreateState(Guid.NewGuid(), FirstBusKey,
             OutboxDeliveryStatus.Pending);
-        OutboxState foreign = CreateState(Guid.NewGuid(), EntityFrameworkBusOutboxIdentity<ISecondBus>.BusKey,
+        OutboxState foreign = CreateState(Guid.NewGuid(), SecondBusKey,
             OutboxDeliveryStatus.Quarantined);
         fixture.DbContext.AddRange(pending, foreign);
         await fixture.DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
-        var operations = new EntityFrameworkOutboxOperations<IFirstBus, OperationsDbContext>(fixture.DbContext, new RecordingNotification());
+        var operations = CreateOperations(fixture.DbContext, new RecordingNotification());
 
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
             operations.RequeueAsync(pending.OutboxId, TestContext.Current.CancellationToken));
@@ -130,6 +133,11 @@ public sealed class EntityFrameworkOutboxOperationsTests
         FailedMessageId = Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"),
         Delivered = Created
     };
+
+    private static EntityFrameworkOutboxOperations<IFirstBus, OperationsDbContext> CreateOperations(
+        OperationsDbContext dbContext,
+        RecordingNotification notification) =>
+        new(dbContext, notification, BusPersistenceIdentity<IFirstBus>.Create(FirstBusKey));
 
     private static OutboxMessage CreateMessage(long sequenceNumber, Guid outboxId) => new()
     {

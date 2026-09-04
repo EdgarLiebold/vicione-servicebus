@@ -1,8 +1,10 @@
 namespace ViciOne.ServiceBus.Diagnostics;
 
 using System;
+using System.ComponentModel;
 
 /// <summary>Inspects immutable ServiceBus diagnostic-sensitivity metadata.</summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
 public interface IMessageSensitivityInspector
 {
     /// <summary>Returns the descriptor for a runtime message type.</summary>

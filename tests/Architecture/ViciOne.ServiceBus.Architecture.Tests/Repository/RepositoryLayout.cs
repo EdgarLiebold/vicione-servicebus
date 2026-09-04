@@ -1,5 +1,7 @@
 namespace ViciOne.ServiceBus.Architecture.Tests.Repository;
 
+using ViciOne.ServiceBus.Architecture.Tests.Build;
+
 /// <summary>
 /// Locates the repository and the project files the evaluated-graph tests inspect.
 /// </summary>
@@ -62,6 +64,14 @@ internal static class RepositoryLayout
 
     /// <summary>Every compile-verified, non-deliverable sample project.</summary>
     internal static IReadOnlyList<string> SampleProjects => EnumerateProjects("samples");
+
+    /// <summary>Samples intentionally compiled only against freshly packed packages by their dedicated gate.</summary>
+    internal static IReadOnlyList<string> PackageConsumerProjects => SampleProjects
+        .Where(project => string.Equals(
+            MsBuildEvaluation.PropertyOf(project, "ViciOnePackageConsumer"),
+            "true",
+            StringComparison.OrdinalIgnoreCase))
+        .ToArray();
 
     /// <summary>Every currently materialized native test-profile solution.</summary>
     internal static IReadOnlyList<string> TestProfileSolutions =>

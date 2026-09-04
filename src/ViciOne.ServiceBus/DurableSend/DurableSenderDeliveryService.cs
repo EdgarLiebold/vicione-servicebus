@@ -27,16 +27,18 @@ internal sealed partial class DurableSenderDeliveryService<TBus> : BackgroundSer
     long _nextTelemetrySnapshotUtcTicks;
 
     public DurableSenderDeliveryService(
-        IDurableSendStore<TBus> store,
-        IDurableSendDispatcher<TBus> dispatcher,
+        IEnumerable<IDurableSendStore<TBus>> stores,
+        IEnumerable<IDurableSendDispatcher<TBus>> dispatchers,
         IEnumerable<ITransportSendFailureClassifier> failureClassifiers,
         DurableSenderPolicy<TBus> policy,
         TimeProvider timeProvider,
         ILogger<DurableSenderDeliveryService<TBus>> logger,
         V5ServiceBusInstrumentation<TBus> instrumentation)
     {
-        _store = store ?? throw new ArgumentNullException(nameof(store));
-        _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
+        _store = DurableSenderComposition.RequireExactlyOne<IDurableSendStore<TBus>, TBus>(stores, "persistence store");
+        _dispatcher = DurableSenderComposition.RequireExactlyOne<IDurableSendDispatcher<TBus>, TBus>(
+            dispatchers,
+            "transport dispatcher");
         ArgumentNullException.ThrowIfNull(failureClassifiers);
         _failureClassifiers = failureClassifiers.ToArray();
         _policy = policy ?? throw new ArgumentNullException(nameof(policy));

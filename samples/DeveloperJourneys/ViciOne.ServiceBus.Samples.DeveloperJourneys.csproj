@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <ViciOnePackageConsumer>true</ViciOnePackageConsumer>
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <!-- This project is deliberately a package consumer. ProjectReference is forbidden by the
+       architecture gate and the verification script restores it from freshly packed NuGets. -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.11" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.11" />
+    <PackageReference Include="ViciOne.ServiceBus" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.Azure.ServiceBus.Core" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.EntityFrameworkCore" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.MessagePack" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.Quartz" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.RabbitMQ" Version="1.0.0" />
+    <PackageReference Include="ViciOne.ServiceBus.Testing" Version="1.0.0" />
+  </ItemGroup>
+
+</Project>

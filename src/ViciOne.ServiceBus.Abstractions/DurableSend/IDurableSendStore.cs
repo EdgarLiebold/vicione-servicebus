@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,6 +18,7 @@ namespace ViciOne.ServiceBus;
 /// so a stale in-process capability can never retire a later re-admission that reuses the same durable-send id. A durable acceptance may be acknowledged to the caller
 /// only after <see cref="AdmitAsync"/> commits successfully.
 /// </remarks>
+[EditorBrowsable(EditorBrowsableState.Never)]
 public interface IDurableSendStore<TBus>
     where TBus : class, IBus
 {
@@ -76,11 +78,16 @@ public interface IDurableSendStore<TBus>
 
     Task<DurableSendStoreSnapshot> GetSnapshotAsync(CancellationToken cancellationToken = default);
 
-    Task<IReadOnlyList<DurableSendQuarantineEntry>> GetQuarantineAsync(
-        int maximumCount,
+    Task<DurableSendQuarantinePage> GetQuarantineAsync(
+        DurableSendQuarantineQuery query,
         CancellationToken cancellationToken = default);
 
-    Task<bool> RequeueAsync(DurableSendId id, DateTimeOffset dueAt, CancellationToken cancellationToken = default);
+    Task<DurableSendOperationResult> RequeueAsync(
+        DurableSendId id,
+        DateTimeOffset dueAt,
+        CancellationToken cancellationToken = default);
 
-    Task<bool> DiscardQuarantinedAsync(DurableSendId id, CancellationToken cancellationToken = default);
+    Task<DurableSendOperationResult> DiscardQuarantinedAsync(
+        DurableSendId id,
+        CancellationToken cancellationToken = default);
 }

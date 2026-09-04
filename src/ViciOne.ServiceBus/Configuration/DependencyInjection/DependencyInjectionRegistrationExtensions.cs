@@ -11,6 +11,7 @@ namespace ViciOne.ServiceBus
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Options;
     using Monitoring;
+    using ProviderAbstractions;
     using Transports;
 
 
@@ -35,6 +36,7 @@ namespace ViciOne.ServiceBus
 
             AddHostedService(collection);
             AddInstrumentation(collection);
+            collection.AddSingleton(BusPersistenceIdentity<IBus>.Default);
 
             var configurator = new ServiceCollectionBusConfigurator(collection);
 
@@ -102,6 +104,7 @@ namespace ViciOne.ServiceBus
 
             AddHostedService(collection);
             AddInstrumentation(collection);
+            collection.AddSingleton(BusPersistenceIdentity<TBus>.Unspecified);
 
             var configurator = new ServiceCollectionBusConfigurator<TBus, TBusInstance>(collection);
 
@@ -110,6 +113,26 @@ namespace ViciOne.ServiceBus
             configurator.Complete();
 
             return collection;
+        }
+
+        /// <summary>
+        /// Configures a typed bus with the one rename-stable identity shared by all of its persistent features.
+        /// </summary>
+        public static IServiceCollection AddViciOneServiceBus<TBus, TBusInstance>(
+            this IServiceCollection collection,
+            string persistenceIdentity,
+            Action<IBusRegistrationConfigurator<TBus>> configure)
+            where TBus : class, IBus
+            where TBusInstance : BusInstance<TBus>, TBus
+        {
+            ArgumentNullException.ThrowIfNull(configure);
+            BusPersistenceIdentity<TBus> identity = BusPersistenceIdentity<TBus>.Create(persistenceIdentity);
+            return collection.AddViciOneServiceBus<TBus, TBusInstance>(configurator =>
+            {
+                collection.RemoveAll<BusPersistenceIdentity<TBus>>();
+                collection.AddSingleton(identity);
+                configure(configurator);
+            });
         }
 
         /// <summary>
@@ -130,6 +153,25 @@ namespace ViciOne.ServiceBus
             BusInstanceBuilder.Instance.GetBusInstanceType(doIt);
 
             return collection;
+        }
+
+        /// <summary>
+        /// Configures a typed bus with the one rename-stable identity shared by all of its persistent features.
+        /// </summary>
+        public static IServiceCollection AddViciOneServiceBus<TBus>(
+            this IServiceCollection collection,
+            string persistenceIdentity,
+            Action<IBusRegistrationConfigurator<TBus>> configure)
+            where TBus : class, IBus
+        {
+            ArgumentNullException.ThrowIfNull(configure);
+            BusPersistenceIdentity<TBus> identity = BusPersistenceIdentity<TBus>.Create(persistenceIdentity);
+            return collection.AddViciOneServiceBus<TBus>(configurator =>
+            {
+                collection.RemoveAll<BusPersistenceIdentity<TBus>>();
+                collection.AddSingleton(identity);
+                configure(configurator);
+            });
         }
 
         /// <summary>

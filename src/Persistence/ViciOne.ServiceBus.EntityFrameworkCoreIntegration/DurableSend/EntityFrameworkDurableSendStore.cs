@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+using ViciOne.ServiceBus.ProviderAbstractions;
 
 /// <summary>
 /// EF Core persistent durable-send store with atomic retained-storage admission and fenced delivery ownership.
@@ -19,7 +19,7 @@ using Microsoft.Extensions.Options;
 /// removes the record in the same transaction that releases capacity. Claims use compare-and-set updates, so competing
 /// agents cannot own the same record even when the provider's normal read isolation is snapshot based.
 /// </remarks>
-public sealed class EntityFrameworkDurableSendStore<TBus, TDbContext> : IDurableSendStore<TBus>
+internal sealed class EntityFrameworkDurableSendStore<TBus, TDbContext> : IDurableSendStore<TBus>
     where TBus : class, IBus
     where TDbContext : DbContext
 {
@@ -31,14 +31,14 @@ public sealed class EntityFrameworkDurableSendStore<TBus, TDbContext> : IDurable
 
     public EntityFrameworkDurableSendStore(
         IDbContextFactory<TDbContext> dbContextFactory,
-        IOptions<EntityFrameworkDurableSendStoreOptions<TBus>> options,
+        BusPersistenceIdentity<TBus> persistenceIdentity,
         IEntityFrameworkDurableSendCommitDurabilityValidator<TBus> commitDurabilityValidator)
     {
         _dbContextFactory = dbContextFactory ?? throw new ArgumentNullException(nameof(dbContextFactory));
-        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(persistenceIdentity);
         _commitDurabilityValidator = commitDurabilityValidator
             ?? throw new ArgumentNullException(nameof(commitDurabilityValidator));
-        _storeKey = options.Value.ValidateStoreKey();
+        _storeKey = persistenceIdentity.Require("Entity Framework Durable Sender");
     }
 
     public async Task<DurableSendAdmissionResult> AdmitAsync(
@@ -357,26 +357,36 @@ public sealed class EntityFrameworkDurableSendStore<TBus, TDbContext> : IDurable
             aggregate?.OldestPending is { } oldest ? ToUtcOffset(oldest) : null);
     }
 
-    public async Task<IReadOnlyList<DurableSendQuarantineEntry>> GetQuarantineAsync(
-        int maximumCount,
+    public async Task<DurableSendQuarantinePage> GetQuarantineAsync(
+        DurableSendQuarantineQuery query,
         CancellationToken cancellationToken = default)
     {
-        DurableSendOperationLimits.ValidateQuarantinePageSize(maximumCount, nameof(maximumCount));
+        DurableSendQuarantineSeek seek = DurableSendQuarantinePagination.Validate(query);
 
         await EnsureInitializedAsync(cancellationToken).ConfigureAwait(false);
         await using var db = await _dbContextFactory.CreateDbContextAsync(cancellationToken).ConfigureAwait(false);
-        var rows = await db.Set<DurableSendRecord>().AsNoTracking()
-            .Where(x => x.StoreKey == _storeKey && x.Status == DurableSendStatus.Quarantined)
+        IQueryable<DurableSendRecord> rowsQuery = db.Set<DurableSendRecord>().AsNoTracking()
+            .Where(x => x.StoreKey == _storeKey && x.Status == DurableSendStatus.Quarantined);
+        if (seek.HasValue)
+        {
+            DateTime quarantinedAt = seek.QuarantinedAt.UtcDateTime;
+            Guid id = seek.Id.Value;
+            rowsQuery = rowsQuery.Where(x =>
+                x.QuarantinedAt < quarantinedAt
+                || x.QuarantinedAt == quarantinedAt && x.Id.CompareTo(id) > 0);
+        }
+
+        var rows = await rowsQuery
             .OrderByDescending(x => x.QuarantinedAt)
             .ThenBy(x => x.Id)
-            .Take(maximumCount)
+            .Take(checked(query.PageSize + 1))
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
 
-        return rows.Select(ToQuarantineEntry).ToArray();
+        return DurableSendQuarantinePagination.CreatePage(rows.Select(ToQuarantineEntry), query.PageSize);
     }
 
-    public async Task<bool> RequeueAsync(
+    public async Task<DurableSendOperationResult> RequeueAsync(
         DurableSendId id,
         DateTimeOffset dueAt,
         CancellationToken cancellationToken = default)
@@ -398,25 +408,45 @@ public sealed class EntityFrameworkDurableSendStore<TBus, TDbContext> : IDurable
             .ConfigureAwait(false);
 
         // Quarantine already consumed capacity, therefore no capacity mutation is necessary or allowed here.
-        return updated == 1;
+        if (updated == 1)
+            return new DurableSendOperationResult(id, DurableSendOperationOutcome.Requeued);
+
+        DurableSendStatus? status = await db.Set<DurableSendRecord>().AsNoTracking()
+            .Where(x => x.StoreKey == _storeKey && x.Id == id.Value)
+            .Select(x => (DurableSendStatus?)x.Status)
+            .SingleOrDefaultAsync(cancellationToken)
+            .ConfigureAwait(false);
+        return new DurableSendOperationResult(
+            id,
+            status.HasValue ? DurableSendOperationOutcome.NotQuarantined : DurableSendOperationOutcome.NotFound);
     }
 
-    public async Task<bool> DiscardQuarantinedAsync(DurableSendId id, CancellationToken cancellationToken = default)
+    public async Task<DurableSendOperationResult> DiscardQuarantinedAsync(
+        DurableSendId id,
+        CancellationToken cancellationToken = default)
     {
         await EnsureInitializedAsync(cancellationToken).ConfigureAwait(false);
         await using var db = await _dbContextFactory.CreateDbContextAsync(cancellationToken).ConfigureAwait(false);
         await using var transaction = await db.Database.BeginTransactionAsync(IsolationLevel.Serializable, cancellationToken).ConfigureAwait(false);
         var row = await db.Set<DurableSendRecord>().SingleOrDefaultAsync(
-            x => x.StoreKey == _storeKey && x.Id == id.Value && x.Status == DurableSendStatus.Quarantined,
+            x => x.StoreKey == _storeKey && x.Id == id.Value,
             cancellationToken).ConfigureAwait(false);
         if (row is null)
-            return false;
+        {
+            await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+            return new DurableSendOperationResult(id, DurableSendOperationOutcome.NotFound);
+        }
+        if (row.Status != DurableSendStatus.Quarantined)
+        {
+            await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+            return new DurableSendOperationResult(id, DurableSendOperationOutcome.NotQuarantined);
+        }
 
         await DecrementCapacityAsync(db, row.StorageSize, cancellationToken).ConfigureAwait(false);
         db.Set<DurableSendRecord>().Remove(row);
         await db.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
-        return true;
+        return new DurableSendOperationResult(id, DurableSendOperationOutcome.Discarded);
     }
 
     async Task<bool> MutateOwnedAsync(

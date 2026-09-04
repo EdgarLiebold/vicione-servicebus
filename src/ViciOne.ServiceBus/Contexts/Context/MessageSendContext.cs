@@ -68,6 +68,19 @@ namespace ViciOne.ServiceBus.Context
         public TimeSpan? TimeToLive { get; set; }
         public DateTime? SentTime { get; private set; }
 
+        internal void SetDurableAdmissionMetadata(Guid idempotencyKey, Guid? correlationId)
+        {
+            if (_body.IsValueCreated)
+                throw new InvalidOperationException("Durable admission metadata must be fixed before serialization.");
+
+            // A repeated typed admission must serialize to the same immutable intent. The durable key therefore owns
+            // the transport identities, while a null SentTime truthfully means that broker dispatch has not happened.
+            MessageId = idempotencyKey;
+            ConversationId = idempotencyKey;
+            CorrelationId = correlationId;
+            SentTime = null;
+        }
+
         public ContentType ContentType { get; set; }
 
         public IMessageSerializer Serializer

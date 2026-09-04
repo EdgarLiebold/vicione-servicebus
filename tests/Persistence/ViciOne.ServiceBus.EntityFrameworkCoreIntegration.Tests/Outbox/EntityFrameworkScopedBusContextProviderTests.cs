@@ -3,6 +3,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Outbox;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.DependencyInjection;
+using ViciOne.ServiceBus.ProviderAbstractions;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -74,17 +75,18 @@ public sealed class EntityFrameworkScopedBusContextProviderTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-EF-OUTBOX-IDENTITY", "bus-discriminator-is-stable-and-distinct")]
-    public void BusIdentity_IsStableBoundedAndDistinctPerBusType()
+    [RequirementCoverage("REQ-VSB-EF-OUTBOX-IDENTITY", "bus-discriminator-is-explicit-stable-bounded-and-distinct")]
+    public void BusIdentity_IsExplicitStableBoundedAndDistinctFromClrTypeNames()
     {
-        string first = EntityFrameworkBusOutboxIdentity<IFirstBus>.BusKey;
-        string second = EntityFrameworkBusOutboxIdentity<ISecondBus>.BusKey;
+        BusPersistenceIdentity<IFirstBus> first = BusPersistenceIdentity<IFirstBus>.Create("orders-v1");
+        BusPersistenceIdentity<ISecondBus> second = BusPersistenceIdentity<ISecondBus>.Create("billing-v1");
 
-        Assert.Equal("default", EntityFrameworkBusOutboxIdentity<IBus>.BusKey);
-        Assert.Equal(first, EntityFrameworkBusOutboxIdentity<IFirstBus>.BusKey);
-        Assert.NotEqual(first, second);
-        Assert.InRange(first.Length, 1, EntityFrameworkBusOutboxIdentity<IFirstBus>.MaximumBusKeyLength);
-        Assert.InRange(second.Length, 1, EntityFrameworkBusOutboxIdentity<ISecondBus>.MaximumBusKeyLength);
+        Assert.Equal("orders-v1", first.Require("test"));
+        Assert.Equal("orders-v1", BusPersistenceIdentity<IFirstBus>.Create("orders-v1").Require("test"));
+        Assert.Equal("billing-v1", second.Require("test"));
+        Assert.DoesNotContain(nameof(IFirstBus), first.Require("test"), StringComparison.Ordinal);
+        Assert.InRange(first.Require("test").Length, 1, BusPersistenceIdentity<IFirstBus>.MaximumLength);
+        Assert.InRange(second.Require("test").Length, 1, BusPersistenceIdentity<ISecondBus>.MaximumLength);
     }
 
     private interface IFirstBus : IBus;

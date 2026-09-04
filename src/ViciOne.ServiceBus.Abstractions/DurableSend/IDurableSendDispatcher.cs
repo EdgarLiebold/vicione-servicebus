@@ -1,9 +1,11 @@
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace ViciOne.ServiceBus;
 
 /// <summary>Transport adapter used by the generic durable sender to dispatch an already serialized retained message.</summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
 public interface IDurableSendDispatcher<TBus>
     where TBus : class, IBus
 {

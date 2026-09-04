@@ -1,8 +1,11 @@
 namespace ViciOne.ServiceBus;
 
+using System.ComponentModel;
+
 /// <summary>
 /// Defines the acceptance boundary after which a durable sender may retire its local persisted intent.
 /// </summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
 public enum DurableSendCompletionMode
 {
     /// <summary>

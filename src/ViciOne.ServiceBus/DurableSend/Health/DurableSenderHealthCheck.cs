@@ -18,11 +18,11 @@ internal sealed class DurableSenderHealthCheck<TBus> : IHealthCheck
     readonly TimeProvider _timeProvider;
 
     public DurableSenderHealthCheck(
-        IDurableSendStore<TBus> store,
+        IEnumerable<IDurableSendStore<TBus>> stores,
         DurableSenderPolicy<TBus> policy,
         TimeProvider timeProvider)
     {
-        _store = store ?? throw new ArgumentNullException(nameof(store));
+        _store = DurableSenderComposition.RequireExactlyOne<IDurableSendStore<TBus>, TBus>(stores, "persistence store");
         _policy = policy ?? throw new ArgumentNullException(nameof(policy));
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
     }

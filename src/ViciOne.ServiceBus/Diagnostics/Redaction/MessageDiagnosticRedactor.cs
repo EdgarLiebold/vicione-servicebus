@@ -3,12 +3,13 @@
 namespace ViciOne.ServiceBus.Diagnostics;
 
 using System;
-
+using System.ComponentModel;
 using System.Globalization;
 
 /// <summary>
 /// Conservative bounded rendering that never invokes arbitrary application <see cref="object.ToString"/> implementations.
 /// </summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
 public sealed class MessageDiagnosticRedactor : IMessageDiagnosticRedactor
 {
     /// <summary>The stable redacted marker.</summary>

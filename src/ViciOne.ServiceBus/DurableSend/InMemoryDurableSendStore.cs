@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.ProviderAbstractions;
 
 /// <summary>
 /// Deterministic in-memory implementation used by unit/in-memory integration tests. It obeys the exact durable-store
@@ -240,19 +241,29 @@ internal sealed class InMemoryDurableSendStore<TBus> : IDurableSendStore<TBus>
         }
     }
 
-    public Task<IReadOnlyList<DurableSendQuarantineEntry>> GetQuarantineAsync(
-        int maximumCount,
+    public Task<DurableSendQuarantinePage> GetQuarantineAsync(
+        DurableSendQuarantineQuery query,
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        DurableSendOperationLimits.ValidateQuarantinePageSize(maximumCount, nameof(maximumCount));
+        DurableSendQuarantineSeek seek = DurableSendQuarantinePagination.Validate(query);
 
         lock (_lock)
         {
-            return Task.FromResult<IReadOnlyList<DurableSendQuarantineEntry>>(_records.Values
-                .Where(record => record.Status == DurableSendStatus.Quarantined)
+            IEnumerable<Record> candidates = _records.Values
+                .Where(record => record.Status == DurableSendStatus.Quarantined);
+            if (seek.HasValue)
+            {
+                candidates = candidates.Where(record =>
+                    record.QuarantinedAt < seek.QuarantinedAt
+                    || record.QuarantinedAt == seek.QuarantinedAt
+                    && record.Message.Id.Value.CompareTo(seek.Id.Value) > 0);
+            }
+
+            DurableSendQuarantineEntry[] fetched = candidates
                 .OrderByDescending(record => record.QuarantinedAt)
-                .Take(maximumCount)
+                .ThenBy(record => record.Message.Id.Value)
+                .Take(checked(query.PageSize + 1))
                 .Select(record => new DurableSendQuarantineEntry
                 {
                     Id = record.Message.Id,
@@ -264,11 +275,12 @@ internal sealed class InMemoryDurableSendStore<TBus> : IDurableSendStore<TBus>
                     FailureKind = record.LastFailureKind,
                     FailureType = record.LastFailureType,
                 })
-                .ToArray());
+                .ToArray();
+            return Task.FromResult(DurableSendQuarantinePagination.CreatePage(fetched, query.PageSize));
         }
     }
 
-    public Task<bool> RequeueAsync(
+    public Task<DurableSendOperationResult> RequeueAsync(
         DurableSendId id,
         DateTimeOffset dueAt,
         CancellationToken cancellationToken = default)
@@ -276,8 +288,10 @@ internal sealed class InMemoryDurableSendStore<TBus> : IDurableSendStore<TBus>
         cancellationToken.ThrowIfCancellationRequested();
         lock (_lock)
         {
-            if (!_records.TryGetValue(id, out var record) || record.Status != DurableSendStatus.Quarantined)
-                return Task.FromResult(false);
+            if (!_records.TryGetValue(id, out var record))
+                return Task.FromResult(new DurableSendOperationResult(id, DurableSendOperationOutcome.NotFound));
+            if (record.Status != DurableSendStatus.Quarantined)
+                return Task.FromResult(new DurableSendOperationResult(id, DurableSendOperationOutcome.NotQuarantined));
 
             // Quarantine already consumes retained-storage capacity. Requeue is therefore a pure state transition and
             // can never bypass or overshoot the hard store bound.
@@ -289,19 +303,26 @@ internal sealed class InMemoryDurableSendStore<TBus> : IDurableSendStore<TBus>
             record.LastFailureType = null;
             record.LastFailureAt = null;
             record.Lease = null;
-            return Task.FromResult(true);
+            return Task.FromResult(new DurableSendOperationResult(id, DurableSendOperationOutcome.Requeued));
         }
     }
 
-    public Task<bool> DiscardQuarantinedAsync(DurableSendId id, CancellationToken cancellationToken = default)
+    public Task<DurableSendOperationResult> DiscardQuarantinedAsync(
+        DurableSendId id,
+        CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
         lock (_lock)
         {
-            if (!_records.TryGetValue(id, out var record) || record.Status != DurableSendStatus.Quarantined)
-                return Task.FromResult(false);
+            if (!_records.TryGetValue(id, out var record))
+                return Task.FromResult(new DurableSendOperationResult(id, DurableSendOperationOutcome.NotFound));
+            if (record.Status != DurableSendStatus.Quarantined)
+                return Task.FromResult(new DurableSendOperationResult(id, DurableSendOperationOutcome.NotQuarantined));
 
-            return Task.FromResult(_records.Remove(id));
+            if (!_records.Remove(id))
+                throw new InvalidOperationException($"Durable send '{id}' disappeared while its discard operation owned the store lock.");
+
+            return Task.FromResult(new DurableSendOperationResult(id, DurableSendOperationOutcome.Discarded));
         }
     }
 

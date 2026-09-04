@@ -3,6 +3,7 @@ namespace ViciOne.ServiceBus.Serialization;
 using System;
 using System.Collections.Generic;
 using Metadata;
+using ProviderAbstractions;
 
 
 /// <summary>
@@ -23,7 +24,7 @@ internal readonly struct EnvelopeMetadataProjection
         string? faultAddress,
         string[]? messageType,
         DateTime? expirationTime,
-        DateTime sentTime,
+        DateTime? sentTime,
         Dictionary<string, object?> headers,
         HostInfo host)
     {
@@ -54,7 +55,7 @@ internal readonly struct EnvelopeMetadataProjection
     public string? FaultAddress { get; }
     public string[]? MessageType { get; }
     public DateTime? ExpirationTime { get; }
-    public DateTime SentTime { get; }
+    public DateTime? SentTime { get; }
     public Dictionary<string, object?> Headers { get; }
     public HostInfo Host { get; }
 
@@ -62,7 +63,8 @@ internal readonly struct EnvelopeMetadataProjection
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        bool needsUtcNow = context.TimeToLive.HasValue || !context.SentTime.HasValue;
+        bool durableAdmission = context.TryGetPayload(out DurableSendEnvelopeMetadata? _);
+        bool needsUtcNow = context.TimeToLive.HasValue || !context.SentTime.HasValue && !durableAdmission;
         DateTime utcNow = needsUtcNow ? GetUtcNow(context) : default;
 
         return new EnvelopeMetadataProjection(
@@ -77,7 +79,7 @@ internal readonly struct EnvelopeMetadataProjection
             context.FaultAddress?.ToString(),
             context.SupportedMessageTypes,
             context.TimeToLive.HasValue ? utcNow + context.TimeToLive.Value : null,
-            context.SentTime ?? utcNow,
+            context.SentTime ?? (durableAdmission ? null : utcNow),
             CopyHeaders(context.Headers),
             HostMetadataCache.Host);
     }

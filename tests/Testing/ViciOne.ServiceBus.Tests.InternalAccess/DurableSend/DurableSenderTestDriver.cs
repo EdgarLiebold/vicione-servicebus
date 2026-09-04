@@ -45,8 +45,8 @@ public sealed class DurableSenderDeliveryTestDriver<TBus> : IDisposable
         DurableSenderPolicy<TBus> policy = options.ValidateAndFreeze();
         _instrumentation = new V5ServiceBusInstrumentation<TBus>(_meterFactory);
         _service = new DurableSenderDeliveryService<TBus>(
-            store,
-            dispatcher,
+            [store],
+            [dispatcher],
             classifiers ?? [],
             policy,
             timeProvider,

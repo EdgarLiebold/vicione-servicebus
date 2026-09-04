@@ -55,6 +55,7 @@ namespace ViciOne.ServiceBus
             Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator> configure = null)
         {
             configurator.SetBusFactory(new InMemoryRegistrationBusFactory(baseAddress, configure));
+            configurator.TryAddSingleton<IDurableSendDispatcher<IBus>, InMemoryDurableSendDispatcher<IBus>>();
 
             configurator.TryAddSingleton(provider =>
             {
@@ -62,6 +63,18 @@ namespace ViciOne.ServiceBus
 
                 return delayProvider ?? throw new ConfigurationException("The default bus instance is not an InMemory Bus Instance");
             });
+        }
+
+        /// <summary>
+        /// Configure ViciOne.ServiceBus to use the In-Memory transport for the multi-bus instance.
+        /// </summary>
+        /// <param name="configurator">The typed registration configurator.</param>
+        /// <param name="configure">The configuration callback for the bus factory.</param>
+        public static void UsingInMemory<TBus>(this IBusRegistrationConfigurator<TBus> configurator,
+            Action<IBusRegistrationContext, IInMemoryBusFactoryConfigurator> configure = null)
+            where TBus : class, IBus
+        {
+            UsingInMemory(configurator, null, configure);
         }
 
         /// <summary>
@@ -75,6 +88,7 @@ namespace ViciOne.ServiceBus
             where TBus : class, IBus
         {
             configurator.SetBusFactory(new InMemoryRegistrationBusFactory(baseAddress, configure));
+            configurator.TryAddSingleton<IDurableSendDispatcher<TBus>, InMemoryDurableSendDispatcher<TBus>>();
 
             AddDelayProvider<TBus>(configurator);
         }

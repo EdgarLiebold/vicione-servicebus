@@ -11,6 +11,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
     using Microsoft.EntityFrameworkCore.ChangeTracking;
     using Middleware;
     using Middleware.Outbox;
+    using ProviderAbstractions;
     using Serialization;
     using Transports;
 
@@ -27,6 +28,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
         readonly IClientFactory _clientFactory;
         readonly TDbContext _dbContext;
         readonly IBusOutboxNotification<EntityFrameworkBusOutboxScope<TBus, TDbContext>> _notification;
+        readonly string _persistenceIdentity;
         readonly IServiceProvider _provider;
         readonly TimeProvider _timeProvider;
         readonly EntityFrameworkOutboxWriteCoordinator _writeCoordinator = new();
@@ -41,7 +43,8 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
 
         public EntityFrameworkScopedBusContext(TBus bus, TDbContext dbContext,
             IBusOutboxNotification<EntityFrameworkBusOutboxScope<TBus, TDbContext>> notification,
-            IClientFactory clientFactory, IServiceProvider provider, TimeProvider timeProvider)
+            IClientFactory clientFactory, IServiceProvider provider, TimeProvider timeProvider,
+            BusPersistenceIdentity<TBus> persistenceIdentity)
         {
             _bus = bus ?? throw new ArgumentNullException(nameof(bus));
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
@@ -49,6 +52,8 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
             _clientFactory = clientFactory ?? throw new ArgumentNullException(nameof(clientFactory));
             _provider = provider ?? throw new ArgumentNullException(nameof(provider));
             _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
+            _persistenceIdentity = (persistenceIdentity ?? throw new ArgumentNullException(nameof(persistenceIdentity)))
+                .Require("Entity Framework transactional outbox");
         }
 
         public ISendEndpointProvider SendEndpointProvider => _sendEndpointProvider ??= new OutboxSendEndpointProvider(this, GetSendEndpointProvider());
@@ -165,7 +170,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
             _outboxState = _dbContext.Add(new OutboxState
             {
                 OutboxId = _outboxId,
-                BusKey = EntityFrameworkBusOutboxIdentity<TBus>.BusKey,
+                BusKey = _persistenceIdentity,
                 Created = _timeProvider.GetUtcNow().UtcDateTime,
                 Status = OutboxDeliveryStatus.Pending
             });

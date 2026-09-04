@@ -17,6 +17,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
     using Microsoft.Extensions.Options;
     using Middleware;
     using Middleware.Outbox;
+    using ProviderAbstractions;
     using RetryPolicies;
     using Serialization;
     using Transports;
@@ -49,7 +50,8 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
             IEnumerable<ITransportSendFailureClassifier> failureClassifiers,
             ILogger<BusOutboxDeliveryService<TBus, TDbContext>> logger,
             IServiceProvider provider,
-            TimeProvider timeProvider)
+            TimeProvider timeProvider,
+            BusPersistenceIdentity<TBus> persistenceIdentity)
         {
             ArgumentNullException.ThrowIfNull(options);
             ArgumentNullException.ThrowIfNull(outboxOptions);
@@ -61,7 +63,8 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
             _provider = provider;
             _bus = provider.GetRequiredService<TBus>();
             _busControl = ResolveBusControl(provider);
-            _busKey = EntityFrameworkBusOutboxIdentity<TBus>.BusKey;
+            _busKey = (persistenceIdentity ?? throw new ArgumentNullException(nameof(persistenceIdentity)))
+                .Require("Entity Framework bus outbox");
             _notification = notification;
             _logger = logger;
             _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));

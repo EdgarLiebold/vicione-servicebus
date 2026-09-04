@@ -1,11 +1,13 @@
 namespace ViciOne.ServiceBus.DurableSend;
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Diagnostics;
+using ViciOne.ServiceBus.ProviderAbstractions;
 
-internal sealed class DurableSender<TBus> : IDurableSender<TBus>
+internal sealed class DurableSendAdmission<TBus> : IDurableSendAdmission<TBus>
     where TBus : class, IBus
 {
     readonly IDurableSendStore<TBus> _store;
@@ -14,13 +16,15 @@ internal sealed class DurableSender<TBus> : IDurableSender<TBus>
     readonly TimeProvider _timeProvider;
     readonly V5ServiceBusInstrumentation<TBus> _instrumentation;
 
-    public DurableSender(IDurableSendStore<TBus> store, DurableSenderPolicy<TBus> policy,
-        IMessageContractCatalog contractCatalog, TimeProvider timeProvider,
+    public DurableSendAdmission(IEnumerable<IDurableSendStore<TBus>> stores, DurableSenderPolicy<TBus> policy,
+        IEnumerable<IMessageContractCatalog> contractCatalogs, TimeProvider timeProvider,
         V5ServiceBusInstrumentation<TBus> instrumentation)
     {
-        _store = store ?? throw new ArgumentNullException(nameof(store));
+        _store = DurableSenderComposition.RequireExactlyOne<IDurableSendStore<TBus>, TBus>(stores, "persistence store");
         _policy = policy ?? throw new ArgumentNullException(nameof(policy));
-        _contractCatalog = contractCatalog ?? throw new ArgumentNullException(nameof(contractCatalog));
+        _contractCatalog = DurableSenderComposition.RequireExactlyOne<IMessageContractCatalog, TBus>(
+            contractCatalogs,
+            "message-contract catalog");
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         _instrumentation = instrumentation ?? throw new ArgumentNullException(nameof(instrumentation));
     }

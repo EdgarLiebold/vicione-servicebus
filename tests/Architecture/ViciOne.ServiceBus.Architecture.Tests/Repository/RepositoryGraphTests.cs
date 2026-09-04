@@ -354,12 +354,17 @@ public sealed class RepositoryGraphTests
             .Select(Path.GetFullPath)
             .ToHashSet(RepositoryLayout.PathComparer);
 
-        var missing = RepositoryLayout.SampleProjects
+        var sourceBoundSamples = RepositoryLayout.SampleProjects
+            .Except(RepositoryLayout.PackageConsumerProjects, RepositoryLayout.PathComparer)
+            .ToArray();
+        var missing = sourceBoundSamples
             .Where(project => !members.Contains(Path.GetFullPath(project)))
             .Select(RepositoryLayout.RelativeToRoot)
             .ToArray();
 
         Assert.Empty(missing);
+        Assert.All(RepositoryLayout.PackageConsumerProjects, project =>
+            Assert.DoesNotContain(Path.GetFullPath(project), members));
     }
 
     [Fact]

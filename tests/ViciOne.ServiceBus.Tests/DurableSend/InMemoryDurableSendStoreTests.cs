@@ -231,11 +231,16 @@ public sealed class InMemoryDurableSendStoreTests
         Assert.Equal(DurableSendAdmissionDisposition.AlreadyQuarantined, duplicate.Disposition);
         await Assert.ThrowsAsync<DurableSendCapacityExceededException>(() =>
             store.AdmitAsync(Message(GuidFrom(2), body: []), limits, Epoch));
-        Assert.True(await store.RequeueAsync(message.Id, Epoch.AddMinutes(1)));
+        Assert.Equal(
+            DurableSendOperationOutcome.Requeued,
+            (await store.RequeueAsync(message.Id, Epoch.AddMinutes(1))).Outcome);
         DurableSendStoreSnapshot requeued = await store.GetSnapshotAsync();
         Assert.Equal(1, requeued.StoredCount);
         Assert.Equal(8, requeued.StoredBytes);
         Assert.Equal(0, requeued.QuarantinedCount);
+        Assert.Equal(
+            DurableSendOperationOutcome.NotQuarantined,
+            (await store.DiscardQuarantinedAsync(message.Id)).Outcome);
 
         DurableSendDelivery retry = Assert.Single(await store.ClaimDueAsync(
             Epoch.AddMinutes(1),
@@ -248,8 +253,12 @@ public sealed class InMemoryDurableSendStoreTests
             DurableSendFailureKind.NonRetryable,
             null,
             Epoch.AddMinutes(1)));
-        Assert.True(await store.DiscardQuarantinedAsync(message.Id));
-        Assert.False(await store.DiscardQuarantinedAsync(message.Id));
+        Assert.Equal(
+            DurableSendOperationOutcome.Discarded,
+            (await store.DiscardQuarantinedAsync(message.Id)).Outcome);
+        Assert.Equal(
+            DurableSendOperationOutcome.NotFound,
+            (await store.DiscardQuarantinedAsync(message.Id)).Outcome);
         Assert.Equal(0, (await store.GetSnapshotAsync()).StoredBytes);
     }
 
@@ -319,15 +328,121 @@ public sealed class InMemoryDurableSendStoreTests
         await store.QuarantineAsync(secondMessage.Id, second.Lease, 2, DurableSendFailureKind.NonRetryable,
             new string('x', 700), Epoch.AddMinutes(1));
 
-        DurableSendQuarantineEntry evidence = Assert.Single(await store.GetQuarantineAsync(1));
+        DurableSendQuarantineEntry evidence = Assert.Single(
+            (await store.GetQuarantineAsync(DurableSendQuarantineQuery.FirstPage(1))).Entries);
         Assert.Equal(secondMessage.Id, evidence.Id);
         Assert.Equal(2, evidence.DeliveryAttempts);
         Assert.Equal(DurableSendFailureKind.NonRetryable, evidence.FailureKind);
         Assert.Equal(512, evidence.FailureType!.Length);
         Assert.DoesNotContain("Body", evidence.GetType().GetProperties().Select(property => property.Name));
-        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => store.GetQuarantineAsync(0));
+        DurableSendQuarantinePage exactPage = await store.GetQuarantineAsync(DurableSendQuarantineQuery.FirstPage(2));
+        Assert.Equal(2, exactPage.Entries.Count);
+        Assert.False(exactPage.HasMore);
+        Assert.Null(exactPage.ContinuationToken);
+        Assert.Null(exactPage.NextQuery);
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            store.GetQuarantineAsync(DurableSendQuarantineQuery.FirstPage(0)));
         await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => store.GetQuarantineAsync(
-            DurableSendOperationLimits.AbsoluteMaximumQuarantinePageSize + 1));
+            DurableSendQuarantineQuery.FirstPage(
+                DurableSendOperationLimits.AbsoluteMaximumQuarantinePageSize + 1)));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-DURABLE-STORE-PAGINATION", "complete-seek-traversal-with-concurrent-changes")]
+    public async Task QuarantinePagination_TraversesMoreThanOneThousandEqualTimestampsWithoutDuplicatesOrGaps()
+    {
+        const int retainedCount = 1005;
+        StoreHarness store = Store();
+        var limits = new DurableSendStoreLimits(retainedCount + 1, retainedCount + 1);
+        var expected = new List<DurableSendId>(retainedCount);
+        for (var index = 1; index <= retainedCount; index++)
+        {
+            SerializedDurableSend message = Message(GuidFrom(index));
+            expected.Add(message.Id);
+            await store.AdmitAsync(message, limits, Epoch);
+        }
+
+        while ((await store.GetSnapshotAsync()).PendingCount > 0)
+        {
+            IReadOnlyList<DurableSendDelivery> deliveries = await store.ClaimDueAsync(
+                Epoch,
+                DurableSendOperationLimits.AbsoluteMaximumClaimCount,
+                TimeSpan.FromMinutes(1));
+            foreach (DurableSendDelivery delivery in deliveries)
+            {
+                Assert.True(await store.QuarantineAsync(
+                    delivery.Message.Id,
+                    delivery.Lease,
+                    1,
+                    DurableSendFailureKind.NonRetryable,
+                    "Tests.Page",
+                    Epoch));
+            }
+        }
+
+        var actual = new List<DurableSendId>(retainedCount);
+        DurableSendQuarantinePage page = await store.GetQuarantineAsync(DurableSendQuarantineQuery.FirstPage(137));
+        actual.AddRange(page.Entries.Select(entry => entry.Id));
+        Assert.True(page.HasMore);
+        string versionedToken = Assert.IsType<string>(page.ContinuationToken);
+        Assert.NotNull(page.NextQuery);
+        Assert.Equal(137, page.NextQuery!.PageSize);
+        Assert.Throws<NotSupportedException>(() =>
+            ((IList<DurableSendQuarantineEntry>)page.Entries).RemoveAt(0));
+
+        // Entries already returned remain a stable part of this traversal when operators mutate them concurrently.
+        Assert.Equal(DurableSendOperationOutcome.Requeued,
+            (await store.RequeueAsync(actual[0], Epoch.AddMinutes(1))).Outcome);
+        Assert.Equal(DurableSendOperationOutcome.Discarded,
+            (await store.DiscardQuarantinedAsync(actual[1])).Outcome);
+
+        // A newer concurrent insert belongs to a fresh traversal, not behind the existing seek cursor.
+        SerializedDurableSend inserted = Message(GuidFrom(retainedCount + 1));
+        await store.AdmitAsync(inserted, limits, Epoch);
+        DurableSendDelivery insertedDelivery = Assert.Single(await store.ClaimDueAsync(
+            Epoch,
+            1,
+            TimeSpan.FromMinutes(1)));
+        Assert.True(await store.QuarantineAsync(
+            inserted.Id,
+            insertedDelivery.Lease,
+            1,
+            DurableSendFailureKind.NonRetryable,
+            "Tests.Concurrent",
+            Epoch.AddMinutes(1)));
+
+        while (page.NextQuery is { } next)
+        {
+            page = await store.GetQuarantineAsync(next);
+            actual.AddRange(page.Entries.Select(entry => entry.Id));
+        }
+
+        Assert.Equal(expected, actual);
+        Assert.Equal(retainedCount, actual.Distinct().Count());
+        Assert.Equal(inserted.Id,
+            Assert.Single((await store.GetQuarantineAsync(DurableSendQuarantineQuery.FirstPage(1))).Entries).Id);
+        Assert.Equal(DurableSendOperationOutcome.NotQuarantined,
+            (await store.RequeueAsync(expected[0], Epoch)).Outcome);
+        Assert.Equal(DurableSendOperationOutcome.NotFound,
+            (await store.DiscardQuarantinedAsync(new DurableSendId(Guid.NewGuid()))).Outcome);
+        await Assert.ThrowsAsync<ArgumentException>(() => store.GetQuarantineAsync(new DurableSendQuarantineQuery
+        {
+            PageSize = 10,
+            ContinuationToken = "not-a-valid-token",
+        }));
+        string paddedToken = versionedToken.Replace('-', '+').Replace('_', '/');
+        paddedToken += new string('=', (4 - paddedToken.Length % 4) % 4);
+        byte[] unsupportedVersion = Convert.FromBase64String(paddedToken);
+        unsupportedVersion[0]++;
+        string unsupportedVersionToken = Convert.ToBase64String(unsupportedVersion)
+            .TrimEnd('=')
+            .Replace('+', '-')
+            .Replace('/', '_');
+        await Assert.ThrowsAsync<ArgumentException>(() => store.GetQuarantineAsync(new DurableSendQuarantineQuery
+        {
+            PageSize = 10,
+            ContinuationToken = unsupportedVersionToken,
+        }));
     }
 
     [Fact]
@@ -452,13 +567,13 @@ public sealed class InMemoryDurableSendStoreTests
         public Task<DurableSendStoreSnapshot> GetSnapshotAsync() =>
             store.GetSnapshotAsync(TestContext.Current.CancellationToken);
 
-        public Task<IReadOnlyList<DurableSendQuarantineEntry>> GetQuarantineAsync(int maximumCount) =>
-            store.GetQuarantineAsync(maximumCount, TestContext.Current.CancellationToken);
+        public Task<DurableSendQuarantinePage> GetQuarantineAsync(DurableSendQuarantineQuery query) =>
+            store.GetQuarantineAsync(query, TestContext.Current.CancellationToken);
 
-        public Task<bool> RequeueAsync(DurableSendId id, DateTimeOffset dueAt) =>
+        public Task<DurableSendOperationResult> RequeueAsync(DurableSendId id, DateTimeOffset dueAt) =>
             store.RequeueAsync(id, dueAt, TestContext.Current.CancellationToken);
 
-        public Task<bool> DiscardQuarantinedAsync(DurableSendId id) =>
+        public Task<DurableSendOperationResult> DiscardQuarantinedAsync(DurableSendId id) =>
             store.DiscardQuarantinedAsync(id, TestContext.Current.CancellationToken);
     }
 }

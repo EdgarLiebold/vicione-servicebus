@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.ProviderAbstractions;
 
 internal sealed class DurableSenderOperations<TBus> : IDurableSenderOperations<TBus>
     where TBus : class, IBus
@@ -11,26 +12,30 @@ internal sealed class DurableSenderOperations<TBus> : IDurableSenderOperations<T
     readonly IDurableSendStore<TBus> _store;
     readonly TimeProvider _timeProvider;
 
-    public DurableSenderOperations(IDurableSendStore<TBus> store, TimeProvider timeProvider)
+    public DurableSenderOperations(IEnumerable<IDurableSendStore<TBus>> stores, TimeProvider timeProvider)
     {
-        _store = store ?? throw new ArgumentNullException(nameof(store));
+        _store = DurableSenderComposition.RequireExactlyOne<IDurableSendStore<TBus>, TBus>(stores, "persistence store");
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
     }
 
     public Task<DurableSendStoreSnapshot> GetSnapshotAsync(CancellationToken cancellationToken = default)
         => _store.GetSnapshotAsync(cancellationToken);
 
-    public Task<IReadOnlyList<DurableSendQuarantineEntry>> GetQuarantineAsync(
-        int maximumCount,
+    public Task<DurableSendQuarantinePage> GetQuarantineAsync(
+        DurableSendQuarantineQuery query,
         CancellationToken cancellationToken = default)
     {
-        DurableSendOperationLimits.ValidateQuarantinePageSize(maximumCount, nameof(maximumCount));
-        return _store.GetQuarantineAsync(maximumCount, cancellationToken);
+        _ = DurableSendQuarantinePagination.Validate(query);
+        return _store.GetQuarantineAsync(query, cancellationToken);
     }
 
-    public Task<bool> RequeueAsync(DurableSendId id, CancellationToken cancellationToken = default)
+    public Task<DurableSendOperationResult> RequeueAsync(
+        DurableSendId id,
+        CancellationToken cancellationToken = default)
         => _store.RequeueAsync(id, _timeProvider.GetUtcNow(), cancellationToken);
 
-    public Task<bool> DiscardAsync(DurableSendId id, CancellationToken cancellationToken = default)
+    public Task<DurableSendOperationResult> DiscardAsync(
+        DurableSendId id,
+        CancellationToken cancellationToken = default)
         => _store.DiscardQuarantinedAsync(id, cancellationToken);
 }

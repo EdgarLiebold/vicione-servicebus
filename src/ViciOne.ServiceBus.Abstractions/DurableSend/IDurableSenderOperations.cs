@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,11 +12,15 @@ public interface IDurableSenderOperations<TBus>
 {
     Task<DurableSendStoreSnapshot> GetSnapshotAsync(CancellationToken cancellationToken = default);
 
-    Task<IReadOnlyList<DurableSendQuarantineEntry>> GetQuarantineAsync(
-        int maximumCount,
+    Task<DurableSendQuarantinePage> GetQuarantineAsync(
+        DurableSendQuarantineQuery query,
         CancellationToken cancellationToken = default);
 
-    Task<bool> RequeueAsync(DurableSendId id, CancellationToken cancellationToken = default);
+    Task<DurableSendOperationResult> RequeueAsync(
+        DurableSendId id,
+        CancellationToken cancellationToken = default);
 
-    Task<bool> DiscardAsync(DurableSendId id, CancellationToken cancellationToken = default);
+    Task<DurableSendOperationResult> DiscardAsync(
+        DurableSendId id,
+        CancellationToken cancellationToken = default);
 }

@@ -1,0 +1,115 @@
+#nullable enable
+
+namespace ViciOne.ServiceBus.DurableSend;
+
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.MessageData;
+using ViciOne.ServiceBus.ProviderAbstractions;
+using ViciOne.ServiceBus.Serialization;
+using ViciOne.ServiceBus.Transports;
+
+/// <summary>Owns the application-to-persisted-intent transition for one typed bus.</summary>
+internal sealed class TypedDurableSender<TBus> : IDurableSender<TBus>
+    where TBus : class, IBus
+{
+    private readonly IDurableSendAdmission<TBus> _admission;
+    private readonly TBus _bus;
+    private readonly IMessageContractCatalog _contractCatalog;
+    private readonly PayloadAdmissionRuntime<TBus>? _payloadAdmission;
+
+    public TypedDurableSender(
+        TBus bus,
+        IMessageContractCatalog contractCatalog,
+        IDurableSendAdmission<TBus> admission,
+        PayloadAdmissionRuntime<TBus>? payloadAdmission)
+    {
+        _bus = bus ?? throw new ArgumentNullException(nameof(bus));
+        _contractCatalog = contractCatalog ?? throw new ArgumentNullException(nameof(contractCatalog));
+        _admission = admission ?? throw new ArgumentNullException(nameof(admission));
+        _payloadAdmission = payloadAdmission;
+    }
+
+    public Task<DurableSendReceipt> SendAsync<TMessage>(
+        TMessage message,
+        DurableSendOptions options,
+        CancellationToken cancellationToken = default)
+        where TMessage : class
+        => SendAsync(EndpointConvention.GetDestinationAddress<TMessage>(_bus), message, options, cancellationToken);
+
+    public async Task<DurableSendReceipt> SendAsync<TMessage>(
+        Uri destinationAddress,
+        TMessage message,
+        DurableSendOptions options,
+        CancellationToken cancellationToken = default)
+        where TMessage : class
+    {
+        ArgumentNullException.ThrowIfNull(destinationAddress);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(options);
+        options.Validate();
+        if (!destinationAddress.IsAbsoluteUri)
+            throw new ArgumentException("A durable send destination must be an absolute URI.", nameof(destinationAddress));
+
+        cancellationToken.ThrowIfCancellationRequested();
+        MessageContractIdentity contractIdentity = _contractCatalog.GetIdentity(typeof(TMessage));
+        ISendEndpoint endpoint = await _bus.GetSendEndpoint(destinationAddress).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        if (endpoint is not ITransportSendEndpoint transportEndpoint)
+        {
+            throw new ConfigurationException(
+                $"The send endpoint for bus '{typeof(TBus)}' does not expose the canonical transport send-context required by Durable Sender.");
+        }
+
+        SendContext<TMessage> context = await transportEndpoint
+            .CreateSendContext(message, Pipe.Empty<SendContext<TMessage>>(), cancellationToken)
+            .ConfigureAwait(false);
+
+        if (context is not MessageSendContext<TMessage> messageContext)
+        {
+            throw new ConfigurationException(
+                $"The send context for bus '{typeof(TBus)}' cannot fix deterministic durable-admission metadata before serialization.");
+        }
+        messageContext.SetDurableAdmissionMetadata(options.IdempotencyKey.Value, options.CorrelationId);
+        context.GetOrAddPayload(() => DurableSendEnvelopeMetadata.Instance);
+
+        if (context is not TransportSendContext transportContext)
+        {
+            throw new ConfigurationException(
+                $"The send context for bus '{typeof(TBus)}' is not a transport context and cannot be admitted by Durable Sender.");
+        }
+
+        if (_payloadAdmission is not null)
+        {
+            bool messageDataOffloadObserved = context.TryGetPayload(out MessageDataAdmissionEvidence? evidence)
+                && evidence.HasStoredReference;
+            context.GetOrAddPayload(() => new PayloadAdmissionSerializationContext(
+                _payloadAdmission,
+                messageDataOffloadObserved));
+        }
+
+        byte[] body = transportContext.Body.GetBytes();
+        string contentType = context.ContentType?.ToString()
+            ?? throw new ConfigurationException(
+                $"The configured serializer for bus '{typeof(TBus)}' did not assign a content type.");
+        var serialized = new SerializedDurableSend
+        {
+            Id = options.IdempotencyKey,
+            ContractIdentity = contractIdentity,
+            DestinationAddress = destinationAddress,
+            ContentType = contentType,
+            Body = body,
+            Metadata = ReadOnlyMemory<byte>.Empty,
+            MessageId = context.MessageId,
+            CorrelationId = context.CorrelationId,
+        };
+
+        DurableSendAdmissionResult result = await _admission
+            .AdmitAsync(serialized, cancellationToken)
+            .ConfigureAwait(false);
+        return new DurableSendReceipt(result.Id, result.Disposition, result.StoredCount, result.StoredBytes);
+    }
+}

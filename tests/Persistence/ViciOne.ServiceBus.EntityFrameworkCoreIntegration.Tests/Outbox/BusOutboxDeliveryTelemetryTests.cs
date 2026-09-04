@@ -10,6 +10,7 @@ using ViciOne.ServiceBus.DependencyInjection.Testing;
 using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Middleware.Outbox;
 using ViciOne.ServiceBus.Monitoring;
+using ViciOne.ServiceBus.ProviderAbstractions;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.InternalAccess.Monitoring;
@@ -57,7 +58,8 @@ public sealed class BusOutboxDeliveryTelemetryTests
             [],
             NullLogger<BusOutboxDeliveryService<IBus, RecordingDbContext>>.Instance,
             provider,
-            TimeProvider.System);
+            TimeProvider.System,
+            BusPersistenceIdentity<IBus>.Create("default"));
 
         try
         {

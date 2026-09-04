@@ -3,8 +3,10 @@
 namespace ViciOne.ServiceBus.Serialization;
 
 using System;
+using System.ComponentModel;
 
 /// <summary>Evaluates only exact bytes already produced by the configured serializer.</summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
 public sealed class PayloadAdmissionEvaluator<TBus> : IPayloadAdmissionEvaluator<TBus>
     where TBus : class, IBus
 {

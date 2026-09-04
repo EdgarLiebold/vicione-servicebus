@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 #nullable enable
@@ -11,6 +12,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// Validates endpoint transport-QoS ownership after consumer topology discovery and before receive endpoints are
 /// materialized.
 /// </summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
 public sealed class EndpointQosTopologyValidator
 {
     public FrozenDictionary<string, EndpointTransportQos> Validate(IEnumerable<EndpointQosDeclaration> declarations)

@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.DurableSend;
 using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.InMemoryTransport;
@@ -14,12 +16,12 @@ internal sealed class InMemoryDurableSendDispatcher<TBus> : IDurableSendDispatch
     where TBus : class, IBus
 {
     readonly TBus _bus;
-    readonly IMessageContractCatalog _contractCatalog;
+    readonly IEnumerable<IMessageContractCatalog> _contractCatalogs;
 
-    public InMemoryDurableSendDispatcher(TBus bus, IMessageContractCatalog contractCatalog)
+    public InMemoryDurableSendDispatcher(TBus bus, IEnumerable<IMessageContractCatalog> contractCatalogs)
     {
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
-        _contractCatalog = contractCatalog ?? throw new ArgumentNullException(nameof(contractCatalog));
+        _contractCatalogs = contractCatalogs ?? throw new ArgumentNullException(nameof(contractCatalogs));
     }
 
     public async Task<DurableSendDispatchResult> DispatchAsync(
@@ -27,7 +29,11 @@ internal sealed class InMemoryDurableSendDispatcher<TBus> : IDurableSendDispatch
         CancellationToken cancellationToken = default)
     {
         SerializedDurableSend message = context.Message.Validate();
-        if (!_contractCatalog.TryGetMessageType(message.ContractIdentity, out Type messageType))
+        IMessageContractCatalog contractCatalog =
+            DurableSenderComposition.RequireExactlyOne<IMessageContractCatalog, TBus>(
+                _contractCatalogs,
+                "message-contract catalog");
+        if (!contractCatalog.TryGetMessageType(message.ContractIdentity, out Type messageType))
         {
             throw new MessageContractException(
                 $"Durable send contract identity '{message.ContractIdentity}' is not registered in the immutable message contract catalog.");

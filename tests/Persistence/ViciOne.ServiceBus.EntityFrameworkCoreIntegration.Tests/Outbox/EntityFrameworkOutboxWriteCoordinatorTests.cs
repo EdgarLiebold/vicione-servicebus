@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Middleware.Outbox;
+using ViciOne.ServiceBus.ProviderAbstractions;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -231,7 +232,8 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
             Notification,
             DispatchProxy.Create<IClientFactory, ThrowingClientFactoryProxy>(),
             _services,
-            new FakeTimeProvider(Now));
+            new FakeTimeProvider(Now),
+            BusPersistenceIdentity<IBus>.Create("default"));
 
         public async ValueTask DisposeAsync()
         {

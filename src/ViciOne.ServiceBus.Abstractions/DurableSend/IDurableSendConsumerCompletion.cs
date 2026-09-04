@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,6 +10,7 @@ namespace ViciOne.ServiceBus;
 /// Invoking it after the logical consumer pipeline has committed retires the persisted producer intent only when the
 /// capability still matches that intent's persisted generation. A stale capability cannot retire a later re-admission.
 /// </summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
 public interface IDurableSendConsumerCompletion
 {
     DurableSendId DurableSendId { get; }

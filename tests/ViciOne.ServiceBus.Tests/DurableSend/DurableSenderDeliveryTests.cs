@@ -338,8 +338,8 @@ public sealed class DurableSenderDeliveryTests
     private static Task<DurableSendStoreSnapshot> Snapshot(IDurableSendStore<ITestBus> store) =>
         store.GetSnapshotAsync(TestCancellationToken);
 
-    private static Task<IReadOnlyList<DurableSendQuarantineEntry>> Quarantine(IDurableSendStore<ITestBus> store) =>
-        store.GetQuarantineAsync(10, TestCancellationToken);
+    private static async Task<IReadOnlyList<DurableSendQuarantineEntry>> Quarantine(IDurableSendStore<ITestBus> store) =>
+        (await store.GetQuarantineAsync(DurableSendQuarantineQuery.FirstPage(10), TestCancellationToken)).Entries;
 
     private static SerializedDurableSend Message(int id) => new()
     {
@@ -543,18 +543,18 @@ public sealed class DurableSenderDeliveryTests
         public Task<DurableSendStoreSnapshot> GetSnapshotAsync(CancellationToken cancellationToken = default) =>
             inner.GetSnapshotAsync(cancellationToken);
 
-        public Task<IReadOnlyList<DurableSendQuarantineEntry>> GetQuarantineAsync(
-            int maximumCount,
+        public Task<DurableSendQuarantinePage> GetQuarantineAsync(
+            DurableSendQuarantineQuery query,
             CancellationToken cancellationToken = default) =>
-            inner.GetQuarantineAsync(maximumCount, cancellationToken);
+            inner.GetQuarantineAsync(query, cancellationToken);
 
-        public Task<bool> RequeueAsync(
+        public Task<DurableSendOperationResult> RequeueAsync(
             DurableSendId id,
             DateTimeOffset dueAt,
             CancellationToken cancellationToken = default) =>
             inner.RequeueAsync(id, dueAt, cancellationToken);
 
-        public Task<bool> DiscardQuarantinedAsync(
+        public Task<DurableSendOperationResult> DiscardQuarantinedAsync(
             DurableSendId id,
             CancellationToken cancellationToken = default) =>
             inner.DiscardQuarantinedAsync(id, cancellationToken);

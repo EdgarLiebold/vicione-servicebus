@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Linq;
 
 namespace ViciOne.ServiceBus;
@@ -10,6 +11,7 @@ namespace ViciOne.ServiceBus;
 /// <see cref="ContractIdentity"/> is the durable protocol identity. No assembly-qualified CLR type name is persisted.
 /// Metadata is ServiceBus-owned infrastructure metadata; payload body remains opaque to the durable store.
 /// </remarks>
+[EditorBrowsable(EditorBrowsableState.Never)]
 public sealed record SerializedDurableSend
 {
     public const int MaximumDestinationAddressCharacters = 2048;

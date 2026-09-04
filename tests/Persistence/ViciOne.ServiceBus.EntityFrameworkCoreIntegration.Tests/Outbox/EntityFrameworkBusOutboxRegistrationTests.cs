@@ -90,7 +90,7 @@ public sealed class EntityFrameworkBusOutboxRegistrationTests
             });
             configuration.UsingInMemory((_, _) => { });
         });
-        services.AddViciOneServiceBus<ISecondaryBus>(configuration =>
+        services.AddViciOneServiceBus<ISecondaryBus>("secondary-v1", configuration =>
         {
             configuration.AddEntityFrameworkOutbox<ISecondaryBus, SharedDbContext>(outbox =>
             {
@@ -132,9 +132,85 @@ public sealed class EntityFrameworkBusOutboxRegistrationTests
             .ToArrayAsync(TestContext.Current.CancellationToken);
         Assert.Equal(2, states.Length);
         Assert.Equal(2, states.Select(x => x.BusKey).Distinct(StringComparer.Ordinal).Count());
-        Assert.Contains(states, x => x.BusKey == EntityFrameworkBusOutboxIdentity<IBus>.BusKey);
-        Assert.Contains(states, x => x.BusKey == EntityFrameworkBusOutboxIdentity<ISecondaryBus>.BusKey);
+        Assert.Contains(states, x => x.BusKey == "default");
+        Assert.Contains(states, x => x.BusKey == "secondary-v1");
         Assert.Equal(states.Select(x => x.OutboxId).Order(), messages.Select(x => x.OutboxId!.Value).Order());
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-PERSISTENCE-IDENTITY", "typed-bus-outbox-and-durable-sender-persist-one-shared-identity")]
+    public async Task TypedBusOutboxAndDurableSender_PersistTheSameConfiguredBusIdentity()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        string path = Path.Combine(Path.GetTempPath(), $"vicione-persistence-identity-{Guid.NewGuid():N}.db");
+        string connectionString = $"Data Source={path};Pooling=False";
+        try
+        {
+            await using (var setup = new SqliteConnection(connectionString))
+            {
+                await setup.OpenAsync(cancellationToken);
+                await using SqliteCommand command = setup.CreateCommand();
+                command.CommandText = "PRAGMA journal_mode=WAL;";
+                Assert.Equal("wal", Convert.ToString(await command.ExecuteScalarAsync(cancellationToken))?.ToLowerInvariant());
+            }
+
+            var services = new ServiceCollection();
+            services.AddLogging();
+            services.AddPooledDbContextFactory<CombinedPersistenceDbContext>(options => options.UseSqlite(connectionString));
+            services.AddViciOneMessageContracts(catalog => catalog.Register<RegistrationProbe>("registration-probe"));
+            services.AddViciOneServiceBus<ISecondaryBus>("orders-v1", configuration =>
+            {
+                configuration.AddEntityFrameworkOutbox<ISecondaryBus, CombinedPersistenceDbContext>(outbox =>
+                {
+                    outbox.UseSqlite();
+                    outbox.DisableInboxCleanupService();
+                    outbox.UseBusOutbox(busOutbox => busOutbox.DisableDeliveryService());
+                });
+                configuration.UsingInMemory((_, bus) => bus.Host(new Uri("loopback://orders/")));
+                configuration.UseDurableSender(durable => durable.UseEntityFramework<CombinedPersistenceDbContext>());
+            });
+
+            await using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions
+            {
+                ValidateOnBuild = true,
+                ValidateScopes = true,
+            });
+            await using AsyncServiceScope scope = provider.CreateAsyncScope();
+            CombinedPersistenceDbContext dbContext = scope.ServiceProvider.GetRequiredService<CombinedPersistenceDbContext>();
+            await dbContext.Database.EnsureCreatedAsync(cancellationToken);
+
+            var outbox = (EntityFrameworkScopedBusContext<ISecondaryBus, CombinedPersistenceDbContext>)scope.ServiceProvider
+                .GetRequiredService<IEntityFrameworkTransactionalOutbox<ISecondaryBus, CombinedPersistenceDbContext>>();
+            await outbox.AddSend(CreateSendContext(Guid.NewGuid(), 7));
+            await outbox.CommitAsync(cancellationToken);
+
+            IDurableSender<ISecondaryBus> durableSender = scope.ServiceProvider.GetRequiredService<IDurableSender<ISecondaryBus>>();
+            DurableSendReceipt receipt = await durableSender.SendAsync(
+                new Uri("loopback://orders/registration-probe"),
+                new RegistrationProbe(8),
+                new DurableSendOptions { IdempotencyKey = new DurableSendId(Guid.NewGuid()) },
+                cancellationToken);
+            Assert.True(receipt.IsNew);
+
+            await using CombinedPersistenceDbContext verification = await provider
+                .GetRequiredService<IDbContextFactory<CombinedPersistenceDbContext>>()
+                .CreateDbContextAsync(cancellationToken);
+            Assert.Equal("orders-v1", Assert.Single(await verification.Set<OutboxState>()
+                .AsNoTracking()
+                .ToArrayAsync(cancellationToken)).BusKey);
+            Assert.Equal("orders-v1", Assert.Single(await verification.Set<DurableSendRecord>()
+                .AsNoTracking()
+                .ToArrayAsync(cancellationToken)).StoreKey);
+            Assert.Equal("orders-v1", Assert.Single(await verification.Set<DurableSendCapacityState>()
+                .AsNoTracking()
+                .ToArrayAsync(cancellationToken)).StoreKey);
+        }
+        finally
+        {
+            File.Delete(path);
+            File.Delete(path + "-wal");
+            File.Delete(path + "-shm");
+        }
     }
 
     [Fact]
@@ -229,5 +305,15 @@ public sealed class EntityFrameworkBusOutboxRegistrationTests
     private sealed class SharedDbContext(DbContextOptions<SharedDbContext> options) : DbContext(options)
     {
         protected override void OnModelCreating(ModelBuilder modelBuilder) => modelBuilder.AddTransactionalOutboxEntities();
+    }
+
+    private sealed class CombinedPersistenceDbContext(DbContextOptions<CombinedPersistenceDbContext> options)
+        : DbContext(options)
+    {
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.AddTransactionalOutboxEntities();
+            modelBuilder.AddViciOneDurableSender();
+        }
     }
 }

@@ -3,7 +3,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.DurableSend;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+using ViciOne.ServiceBus.ProviderAbstractions;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -26,7 +26,9 @@ public sealed class EntityFrameworkDurableSendStoreTests
         Assert.Equal("reliability", record.GetSchema());
         Assert.Equal([nameof(DurableSendRecord.StoreKey), nameof(DurableSendRecord.Id)],
             record.FindPrimaryKey()!.Properties.Select(property => property.Name));
-        Assert.Equal(128, record.FindProperty(nameof(DurableSendRecord.StoreKey))!.GetMaxLength());
+        Assert.Equal(BusPersistenceIdentity<ITestBus>.MaximumLength,
+            record.FindProperty(nameof(DurableSendRecord.StoreKey))!.GetMaxLength());
+        Assert.Equal(128, BusPersistenceIdentity<ITestBus>.MaximumLength);
         Assert.Equal(320, record.FindProperty(nameof(DurableSendRecord.ContractIdentity))!.GetMaxLength());
         Assert.Equal(SerializedDurableSend.MaximumDestinationAddressCharacters,
             record.FindProperty(nameof(DurableSendRecord.DestinationAddress))!.GetMaxLength());
@@ -135,13 +137,20 @@ public sealed class EntityFrameworkDurableSendStoreTests
             "Tests.Permanent",
             Epoch.AddMinutes(4),
             cancellationToken));
-        DurableSendQuarantineEntry evidence = Assert.Single(await store.GetQuarantineAsync(1, cancellationToken));
+        DurableSendQuarantinePage page = await store.GetQuarantineAsync(
+            DurableSendQuarantineQuery.FirstPage(1),
+            cancellationToken);
+        DurableSendQuarantineEntry evidence = Assert.Single(page.Entries);
         Assert.Equal(message.Id, evidence.Id);
         Assert.Equal(DurableSendFailureKind.NonRetryable, evidence.FailureKind);
         Assert.Equal(DurableSendAdmissionDisposition.AlreadyQuarantined,
             (await store.AdmitAsync(message, limits, Epoch, cancellationToken)).Disposition);
 
-        Assert.True(await store.RequeueAsync(message.Id, Epoch.AddMinutes(5), cancellationToken));
+        DurableSendOperationResult requeue = await store.RequeueAsync(
+            message.Id,
+            Epoch.AddMinutes(5),
+            cancellationToken);
+        Assert.Equal(DurableSendOperationOutcome.Requeued, requeue.Outcome);
         DurableSendDelivery requeued = Assert.Single(await store.ClaimDueAsync(
             Epoch.AddMinutes(5),
             1,
@@ -230,6 +239,63 @@ public sealed class EntityFrameworkDurableSendStoreTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-EF-DURABLE-PAGINATION", "restart-stable-complete-seek-traversal-with-concurrent-changes")]
+    public async Task QuarantinePagination_ResumesAfterRestartAndTraversesEveryEqualTimestampExactlyOnce()
+    {
+        const int retainedCount = 1005;
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        await using DurableDatabase database = await DurableDatabase.Create(cancellationToken);
+        DurableSendId[] expected = Enumerable.Range(1, retainedCount)
+            .Select(index => new DurableSendId(PageGuid(index)))
+            .ToArray();
+        await using (DurableDbContext seed = database.Factory.CreateDbContext())
+        {
+            seed.AddRange(expected.Select(id => QuarantinedRecord("paged", id, Epoch)));
+            seed.Add(QuarantinedRecord("another-bus", new DurableSendId(PageGuid(retainedCount + 10)), Epoch));
+            await seed.SaveChangesAsync(cancellationToken);
+        }
+
+        IDurableSendStore<ITestBus> firstProcess = database.CreateStore<ITestBus>("paged", new RecordingValidator());
+        DurableSendQuarantinePage page = await firstProcess.GetQuarantineAsync(
+            DurableSendQuarantineQuery.FirstPage(128),
+            cancellationToken);
+        var actual = page.Entries.Select(entry => entry.Id).ToList();
+        Assert.True(page.HasMore);
+
+        Assert.Equal(DurableSendOperationOutcome.Requeued,
+            (await firstProcess.RequeueAsync(actual[0], Epoch.AddMinutes(1), cancellationToken)).Outcome);
+        Assert.Equal(DurableSendOperationOutcome.Discarded,
+            (await firstProcess.DiscardQuarantinedAsync(actual[1], cancellationToken)).Outcome);
+        await using (DurableDbContext concurrent = database.Factory.CreateDbContext())
+        {
+            concurrent.Add(QuarantinedRecord(
+                "paged",
+                new DurableSendId(PageGuid(retainedCount + 1)),
+                Epoch.AddMinutes(1)));
+            await concurrent.SaveChangesAsync(cancellationToken);
+        }
+
+        // A new store instance models a process restart; the opaque token contains all cursor state.
+        IDurableSendStore<ITestBus> restarted = database.CreateStore<ITestBus>("paged", new RecordingValidator());
+        while (page.NextQuery is { } next)
+        {
+            page = await restarted.GetQuarantineAsync(next, cancellationToken);
+            actual.AddRange(page.Entries.Select(entry => entry.Id));
+        }
+
+        Assert.Equal(expected, actual);
+        Assert.Equal(retainedCount, actual.Distinct().Count());
+        Assert.Equal(new DurableSendId(PageGuid(retainedCount + 1)),
+            Assert.Single((await restarted.GetQuarantineAsync(
+                DurableSendQuarantineQuery.FirstPage(1),
+                cancellationToken)).Entries).Id);
+        Assert.Equal(DurableSendOperationOutcome.NotQuarantined,
+            (await restarted.RequeueAsync(expected[0], Epoch, cancellationToken)).Outcome);
+        Assert.Equal(DurableSendOperationOutcome.NotFound,
+            (await restarted.DiscardQuarantinedAsync(new DurableSendId(Guid.NewGuid()), cancellationToken)).Outcome);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-EF-DURABLE-PREFLIGHT", "custom-validator-runs-before-store-query")]
     public async Task Store_ExecutesTheProviderDurabilityPreflightBeforeInitializationQueries()
     {
@@ -241,7 +307,7 @@ public sealed class EntityFrameworkDurableSendStoreTests
             .Options);
         var store = new EntityFrameworkDurableSendStore<ITestBus, DurableDbContext>(
             factory,
-            Options.Create(new EntityFrameworkDurableSendStoreOptions<ITestBus> { StoreKey = "preflight" }),
+            BusPersistenceIdentity<ITestBus>.Create("preflight"),
             validator);
 
         ExpectedPreflightException actual = await Assert.ThrowsAsync<ExpectedPreflightException>(() =>
@@ -253,38 +319,33 @@ public sealed class EntityFrameworkDurableSendStoreTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-EF-DURABLE-COMPOSITION", "stable-store-key-custom-validator-and-single-owner")]
-    public void Registration_PreservesProviderValidatorAndRejectsAmbiguousStoreOwnership()
+    [RequirementCoverage("REQ-VSB-EF-DURABLE-COMPOSITION", "stable-persistence-identity-custom-validator-and-single-owner")]
+    public void Registration_PreservesProviderValidatorAndUsesOneValidatedPersistenceIdentity()
     {
         var validator = new RecordingValidator();
         var services = new ServiceCollection();
         services.AddSingleton<IEntityFrameworkDurableSendCommitDurabilityValidator<ITestBus>>(validator);
 
-        Assert.Same(services, services.AddEntityFrameworkDurableSendStore<ITestBus, DurableDbContext>(
-            options => options.StoreKey = "orders"));
+        Assert.Same(services, services.AddEntityFrameworkDurableSendStore<ITestBus, DurableDbContext>());
         Assert.Contains(services, descriptor =>
             descriptor.ServiceType == typeof(IEntityFrameworkDurableSendCommitDurabilityValidator<ITestBus>)
             && ReferenceEquals(descriptor.ImplementationInstance, validator));
         Assert.Single(services, descriptor => descriptor.ServiceType == typeof(IDurableSendStore<ITestBus>));
-        Assert.Throws<ConfigurationException>(() => services.AddEntityFrameworkDurableSendStore<ITestBus, DurableDbContext>(
-            options => options.StoreKey = "other"));
-
-        var missing = Options.Create(new EntityFrameworkDurableSendStoreOptions<ITestBus>());
-        var factory = new CountingFactory(new DbContextOptionsBuilder<DurableDbContext>().Options);
         Assert.Throws<ConfigurationException>(() =>
-            new EntityFrameworkDurableSendStore<ITestBus, DurableDbContext>(factory, missing, validator));
-        Assert.Throws<ConfigurationException>(() => new EntityFrameworkDurableSendStore<ITestBus, DurableDbContext>(
-            factory,
-            Options.Create(new EntityFrameworkDurableSendStoreOptions<ITestBus> { StoreKey = new string('x', 129) }),
-            validator));
-        Assert.Throws<ConfigurationException>(() => new EntityFrameworkDurableSendStore<ITestBus, DurableDbContext>(
-            factory,
-            Options.Create(new EntityFrameworkDurableSendStoreOptions<ITestBus> { StoreKey = "bad\nkey" }),
-            validator));
+            services.AddEntityFrameworkDurableSendStore<ITestBus, DurableDbContext>());
+
+        var factory = new CountingFactory(new DbContextOptionsBuilder<DurableDbContext>().Options);
+        Assert.Throws<ArgumentException>(() => BusPersistenceIdentity<ITestBus>.Create(" "));
+        string exactMaximumIdentity = new('x', BusPersistenceIdentity<ITestBus>.MaximumLength);
+        Assert.Equal(exactMaximumIdentity,
+            BusPersistenceIdentity<ITestBus>.Create(exactMaximumIdentity).Require("test"));
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            BusPersistenceIdentity<ITestBus>.Create(new string('x', BusPersistenceIdentity<ITestBus>.MaximumLength + 1)));
+        Assert.Throws<ArgumentException>(() => BusPersistenceIdentity<ITestBus>.Create("bad\nkey"));
 
         var defaultStore = new EntityFrameworkDurableSendStore<IBus, DurableDbContext>(
             factory,
-            Options.Create(new EntityFrameworkDurableSendStoreOptions<IBus>()),
+            BusPersistenceIdentity<IBus>.Create("default"),
             new RecordingValidator<IBus>());
         Assert.NotNull(defaultStore);
     }
@@ -313,7 +374,32 @@ public sealed class EntityFrameworkDurableSendStoreTests
         EnqueuedAt = Epoch.UtcDateTime,
     };
 
+    private static DurableSendRecord QuarantinedRecord(
+        string storeKey,
+        DurableSendId id,
+        DateTimeOffset quarantinedAt) => new()
+        {
+            StoreKey = storeKey,
+            Id = id.Value,
+            GenerationToken = Guid.NewGuid(),
+            ContractIdentity = new MessageContractIdentity("vicione.tests.ef-page", 1).ToString(),
+            DestinationAddress = "loopback://ef-page/",
+            ContentType = "application/octet-stream",
+            Body = [1],
+            StorageSize = 1,
+            Status = DurableSendStatus.Quarantined,
+            EnqueuedAt = Epoch.UtcDateTime,
+            DeliveryAttempts = 1,
+            LastFailureKind = DurableSendFailureKind.NonRetryable,
+            LastFailureType = "Tests.Page",
+            LastFailureAt = quarantinedAt.UtcDateTime,
+            QuarantinedAt = quarantinedAt.UtcDateTime,
+        };
+
     private static Guid GuidFrom(int value) => new(value, 0, 0, new byte[8]);
+
+    private static Guid PageGuid(int value) =>
+        Guid.Parse($"00000000-0000-0000-0000-{value:x12}");
 
     private interface ITestBus : IBus;
 
@@ -403,7 +489,7 @@ public sealed class EntityFrameworkDurableSendStoreTests
             where TBus : class, IBus =>
             new EntityFrameworkDurableSendStore<TBus, DurableDbContext>(
                 Factory,
-                Options.Create(new EntityFrameworkDurableSendStoreOptions<TBus> { StoreKey = storeKey }),
+                BusPersistenceIdentity<TBus>.Create(storeKey),
                 validator);
 
         public ValueTask DisposeAsync()

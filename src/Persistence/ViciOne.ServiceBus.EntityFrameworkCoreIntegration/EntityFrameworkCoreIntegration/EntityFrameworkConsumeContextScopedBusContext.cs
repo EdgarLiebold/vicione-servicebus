@@ -6,6 +6,7 @@ using Clients;
 using DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Middleware.Outbox;
+using ProviderAbstractions;
 
 
 internal class EntityFrameworkConsumeContextScopedBusContext<TBus, TDbContext> :
@@ -19,8 +20,9 @@ internal class EntityFrameworkConsumeContextScopedBusContext<TBus, TDbContext> :
     readonly IServiceProvider _provider;
 
     public EntityFrameworkConsumeContextScopedBusContext(TBus bus, TDbContext dbContext, IBusOutboxNotification<EntityFrameworkBusOutboxScope<TBus, TDbContext>> notification, IClientFactory clientFactory,
-        IServiceProvider provider, ConsumeContext consumeContext, TimeProvider timeProvider)
-        : base(bus, dbContext, notification, clientFactory, provider, timeProvider)
+        IServiceProvider provider, ConsumeContext consumeContext, TimeProvider timeProvider,
+        BusPersistenceIdentity<TBus> persistenceIdentity)
+        : base(bus, dbContext, notification, clientFactory, provider, timeProvider, persistenceIdentity)
     {
         _bus = bus;
         _clientFactory = clientFactory;

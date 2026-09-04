@@ -2,10 +2,12 @@ namespace ViciOne.ServiceBus.Serialization;
 
 using System.Buffers;
 using System;
+using System.ComponentModel;
 
 /// <summary>
 /// A serialization target whose owned-memory growth is bounded by a configured hard maximum.
 /// </summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
 public interface IPayloadSerializationBuffer : IBufferWriter<byte>
 {
     /// <summary>Gets the number of bytes committed by the serializer.</summary>

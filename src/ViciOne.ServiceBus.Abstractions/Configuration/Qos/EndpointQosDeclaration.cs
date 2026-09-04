@@ -1,10 +1,12 @@
 using System;
+using System.ComponentModel;
 
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
 /// A discovered endpoint QoS declaration used during topology validation.
 /// </summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
 public sealed record EndpointQosDeclaration(
     string EndpointName,
     Type ConsumerType,

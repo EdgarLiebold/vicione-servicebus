@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Middleware.Outbox;
+using ProviderAbstractions;
 
 
 internal sealed class EntityFrameworkOutboxOperations<TBus, TDbContext> : IEntityFrameworkOutboxOperations<TBus, TDbContext>
@@ -16,15 +17,18 @@ internal sealed class EntityFrameworkOutboxOperations<TBus, TDbContext> : IEntit
 {
     internal const int MaximumQuarantinePageSize = 1000;
 
-    readonly string _busKey = EntityFrameworkBusOutboxIdentity<TBus>.BusKey;
+    readonly string _busKey;
     readonly TDbContext _dbContext;
     readonly IBusOutboxNotification<EntityFrameworkBusOutboxScope<TBus, TDbContext>> _notification;
 
     public EntityFrameworkOutboxOperations(TDbContext dbContext,
-        IBusOutboxNotification<EntityFrameworkBusOutboxScope<TBus, TDbContext>> notification)
+        IBusOutboxNotification<EntityFrameworkBusOutboxScope<TBus, TDbContext>> notification,
+        BusPersistenceIdentity<TBus> persistenceIdentity)
     {
         _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         _notification = notification ?? throw new ArgumentNullException(nameof(notification));
+        _busKey = (persistenceIdentity ?? throw new ArgumentNullException(nameof(persistenceIdentity)))
+            .Require("Entity Framework outbox operations");
     }
 
     public async Task<IReadOnlyList<OutboxQuarantineEntry>> GetQuarantinedAsync(int limit = 100,

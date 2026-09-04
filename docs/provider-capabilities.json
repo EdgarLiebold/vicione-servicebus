@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "durableSenderContract": {
+    "applicationApi": "IDurableSender<TBus>.SendAsync",
+    "providerSpi": "IDurableSendDispatcher<TBus>",
+    "unsupportedBehavior": "startup-failure-before-background-delivery"
+  },
+  "transportProviders": [
+    {
+      "id": "in-memory",
+      "kind": "bus-transport",
+      "package": "ViciOne.ServiceBus",
+      "project": "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "registration": "UsingInMemory",
+      "send": "supported",
+      "publish": "supported",
+      "request": "supported",
+      "durableSendDispatch": "process-local-consumer-completion",
+      "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryDurableSendIntegrationTests.cs"
+    },
+    {
+      "id": "active-mq",
+      "kind": "bus-transport",
+      "package": "ViciOne.ServiceBus.ActiveMQ",
+      "project": "src/Transports/ViciOne.ServiceBus.ActiveMqTransport/ViciOne.ServiceBus.ActiveMqTransport.csproj",
+      "registration": "UsingActiveMq",
+      "send": "supported",
+      "publish": "supported",
+      "request": "supported",
+      "durableSendDispatch": "unsupported",
+      "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs"
+    },
+    {
+      "id": "amazon-sqs",
+      "kind": "bus-transport",
+      "package": "ViciOne.ServiceBus.AmazonSQS",
+      "project": "src/Transports/ViciOne.ServiceBus.AmazonSqsTransport/ViciOne.ServiceBus.AmazonSqsTransport.csproj",
+      "registration": "UsingAmazonSqs",
+      "send": "supported",
+      "publish": "supported",
+      "request": "supported",
+      "durableSendDispatch": "unsupported",
+      "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs"
+    },
+    {
+      "id": "azure-service-bus",
+      "kind": "bus-transport",
+      "package": "ViciOne.ServiceBus.Azure.ServiceBus.Core",
+      "project": "src/Transports/ViciOne.ServiceBus.Azure.ServiceBus.Core/ViciOne.ServiceBus.Azure.ServiceBus.Core.csproj",
+      "registration": "UsingAzureServiceBus",
+      "send": "supported",
+      "publish": "supported",
+      "request": "supported",
+      "durableSendDispatch": "unsupported",
+      "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs"
+    },
+    {
+      "id": "event-hub",
+      "kind": "rider",
+      "package": "ViciOne.ServiceBus.EventHub",
+      "project": "src/Transports/ViciOne.ServiceBus.EventHubIntegration/ViciOne.ServiceBus.EventHubIntegration.csproj",
+      "registration": "UsingEventHub",
+      "send": "rider-specific",
+      "publish": "not-applicable",
+      "request": "not-applicable",
+      "durableSendDispatch": "unsupported",
+      "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs"
+    },
+    {
+      "id": "rabbit-mq",
+      "kind": "bus-transport",
+      "package": "ViciOne.ServiceBus.RabbitMQ",
+      "project": "src/Transports/ViciOne.ServiceBus.RabbitMqTransport/ViciOne.ServiceBus.RabbitMqTransport.csproj",
+      "registration": "UsingRabbitMq",
+      "send": "supported",
+      "publish": "supported",
+      "request": "supported",
+      "durableSendDispatch": "unsupported",
+      "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs"
+    },
+    {
+      "id": "postgresql-sql-transport",
+      "kind": "bus-transport",
+      "package": "ViciOne.ServiceBus.SqlTransport.PostgreSQL",
+      "project": "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/ViciOne.ServiceBus.SqlTransport.PostgreSql.csproj",
+      "registration": "UsingPostgres",
+      "send": "supported",
+      "publish": "supported",
+      "request": "supported",
+      "durableSendDispatch": "unsupported",
+      "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs"
+    },
+    {
+      "id": "sql-server-sql-transport",
+      "kind": "bus-transport",
+      "package": "ViciOne.ServiceBus.SqlTransport.SqlServer",
+      "project": "src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/ViciOne.ServiceBus.SqlTransport.SqlServer.csproj",
+      "registration": "UsingSqlServer",
+      "send": "supported",
+      "publish": "supported",
+      "request": "supported",
+      "durableSendDispatch": "unsupported",
+      "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs"
+    },
+    {
+      "id": "signal-r",
+      "kind": "backplane-rider",
+      "package": "ViciOne.ServiceBus.SignalR",
+      "project": "src/ViciOne.ServiceBus.SignalR/ViciOne.ServiceBus.SignalR.csproj",
+      "registration": "AddSignalRHub",
+      "send": "rider-specific",
+      "publish": "not-applicable",
+      "request": "not-applicable",
+      "durableSendDispatch": "unsupported",
+      "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs"
+    }
+  ],
+  "persistenceProviders": [
+    {
+      "id": "amazon-s3",
+      "package": "ViciOne.ServiceBus.AmazonS3",
+      "project": "src/Persistence/ViciOne.ServiceBus.AmazonS3/ViciOne.ServiceBus.AmazonS3.csproj",
+      "durableSendStore": "unsupported"
+    },
+    {
+      "id": "azure-storage",
+      "package": "ViciOne.ServiceBus.Azure.Storage",
+      "project": "src/Persistence/ViciOne.ServiceBus.Azure.Storage/ViciOne.ServiceBus.Azure.Storage.csproj",
+      "durableSendStore": "unsupported"
+    },
+    {
+      "id": "azure-table",
+      "package": "ViciOne.ServiceBus.Azure.Table",
+      "project": "src/Persistence/ViciOne.ServiceBus.Azure.Table/ViciOne.ServiceBus.Azure.Table.csproj",
+      "durableSendStore": "unsupported"
+    },
+    {
+      "id": "dynamo-db",
+      "package": "ViciOne.ServiceBus.DynamoDb",
+      "project": "src/Persistence/ViciOne.ServiceBus.DynamoDbIntegration/ViciOne.ServiceBus.DynamoDbIntegration.csproj",
+      "durableSendStore": "unsupported"
+    },
+    {
+      "id": "entity-framework-core",
+      "package": "ViciOne.ServiceBus.EntityFrameworkCore",
+      "project": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.csproj",
+      "durableSendStore": "supported",
+      "durableSendEvidence": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests/DurableSend/EntityFrameworkDurableSendStoreTests.cs"
+    }
+  ]
+}

@@ -7,6 +7,7 @@ using DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Middleware.Outbox;
+using ProviderAbstractions;
 
 
 internal sealed class EntityFrameworkScopedBusContextFactory<TBus, TDbContext> :
@@ -46,13 +47,21 @@ internal sealed class EntityFrameworkScopedBusContextFactory<TBus, TDbContext> :
         var clientFactory = provider.GetRequiredService<Bind<TBus, IClientFactory>>().Value;
         var globalConsumeContextProvider = provider.GetRequiredService<IScopedConsumeContextProvider>();
         var timeProvider = provider.GetRequiredService<TimeProvider>();
+        var persistenceIdentity = provider.GetRequiredService<BusPersistenceIdentity<TBus>>();
 
         if (globalConsumeContextProvider.HasContext)
         {
             return new EntityFrameworkConsumeContextScopedBusContext<TBus, TDbContext>(bus, dbContext, notification, clientFactory, provider,
-                globalConsumeContextProvider.GetContext(), timeProvider);
+                globalConsumeContextProvider.GetContext(), timeProvider, persistenceIdentity);
         }
 
-        return new EntityFrameworkScopedBusContext<TBus, TDbContext>(bus, dbContext, notification, clientFactory, provider, timeProvider);
+        return new EntityFrameworkScopedBusContext<TBus, TDbContext>(
+            bus,
+            dbContext,
+            notification,
+            clientFactory,
+            provider,
+            timeProvider,
+            persistenceIdentity);
     }
 }

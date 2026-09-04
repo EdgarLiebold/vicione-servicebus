@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,6 +13,7 @@ namespace ViciOne.ServiceBus;
 /// global ordering guarantee. Hash collisions may serialize unrelated keys, which is a throughput cost but never a
 /// correctness violation.
 /// </summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
 public sealed class PartitionedConsumerConcurrencyGate<TMessage, TKey> : IConsumerConcurrencyGate<TMessage>, IDisposable
     where TKey : notnull
 {

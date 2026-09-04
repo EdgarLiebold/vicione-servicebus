@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 
 namespace ViciOne.ServiceBus;
 
@@ -8,6 +9,7 @@ namespace ViciOne.ServiceBus;
 /// serialized body + ServiceBus metadata bytes; it is not a claim about a provider's physical database allocation.
 /// Physical store quotas/row/index overhead remain provider/host capacity concerns.
 /// </summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
 public readonly record struct DurableSendStoreLimits
 {
     public DurableSendStoreLimits(int maximumStoredCount, long maximumStoredBytes)

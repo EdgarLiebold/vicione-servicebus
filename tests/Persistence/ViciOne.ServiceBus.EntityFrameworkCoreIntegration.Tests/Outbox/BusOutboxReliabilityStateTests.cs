@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Middleware.Outbox;
+using ViciOne.ServiceBus.ProviderAbstractions;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -218,7 +219,8 @@ public sealed class BusOutboxReliabilityStateTests
             classifiers ?? [],
             NullLogger<BusOutboxDeliveryService<IBus, DeliveryDbContext>>.Instance,
             provider,
-            new FakeTimeProvider(Now));
+            new FakeTimeProvider(Now),
+            BusPersistenceIdentity<IBus>.Create("default"));
     }
 
     private static ServiceProvider CreateProvider()

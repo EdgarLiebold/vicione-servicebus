@@ -5,6 +5,7 @@ namespace ViciOne.ServiceBus.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Collections.Frozen;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -12,6 +13,7 @@ using System.Runtime.CompilerServices;
 /// <summary>
 /// Caches immutable sensitivity metadata without pinning collectible message assemblies.
 /// </summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
 public sealed class MessageSensitivityInspector : IMessageSensitivityInspector
 {
     private readonly ConditionalWeakTable<Type, MessageSensitivityDescriptor> _cache = new();

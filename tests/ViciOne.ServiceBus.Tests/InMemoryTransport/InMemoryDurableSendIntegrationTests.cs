@@ -95,7 +95,9 @@ public sealed class InMemoryDurableSendIntegrationTests
             DurableSendStoreSnapshot waiting = await store.GetSnapshotAsync(cancellationToken);
             Assert.Equal(1, waiting.StoredCount);
             Assert.Equal(1, waiting.AwaitingConsumerCompletionCount);
-            Assert.Empty(await store.GetQuarantineAsync(10, cancellationToken));
+            Assert.Empty((await store.GetQuarantineAsync(
+                DurableSendQuarantineQuery.FirstPage(10),
+                cancellationToken)).Entries);
         }
         finally
         {
@@ -132,7 +134,6 @@ public sealed class InMemoryDurableSendIntegrationTests
                 return Task.CompletedTask;
             }));
         }));
-        services.AddViciOneInMemoryDurableSendDispatcher<IBus>();
         return services.BuildServiceProvider(new ServiceProviderOptions
         {
             ValidateOnBuild = true,

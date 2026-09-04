@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Time.Testing;
+using ViciOne.ServiceBus.Diagnostics;
 using ViciOne.ServiceBus.InMemoryTransport;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Testing;
@@ -22,6 +23,55 @@ public sealed class MessagePackTransportIntegrationTests
 
         Assert.Same(serializer, deserializer);
         Assert.Equal(MessagePackMessageSerializer.MessagePackContentType, factory.ContentType);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGEPACK-DURABLE-SEND", "typed-facade-canonical-envelope-and-idempotent-retry")]
+    public async Task TypedDurableSender_UsesTheConfiguredMessagePackEnvelopeWithoutReserialization()
+    {
+        var destination = new Uri("loopback://messagepack-durable/input");
+        var durableId = new DurableSendId(Guid.Parse("9358cc89-9ff0-4ef4-8202-835f98ef5e09"));
+        var services = new ServiceCollection();
+        services.AddViciOneServiceBusTextWriterLogger(TextWriter.Null);
+        services.AddViciOneServiceBus(configuration =>
+        {
+            configuration.UsingInMemory((_, transport) =>
+            {
+                transport.Host(new Uri("loopback://messagepack-durable/"));
+                transport.ClearSerialization();
+                transport.UseMessagePackSerializer();
+                transport.Route<DurableMessagePackMessage>(destination);
+            });
+            configuration.UseDurableSender(durable =>
+            {
+                durable.UseInMemoryStore();
+                durable.AddMessageContract<DurableMessagePackMessage>("vicione.tests.messagepack-durable");
+            });
+        });
+        await using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions
+        {
+            ValidateOnBuild = true,
+            ValidateScopes = true,
+        });
+        await using AsyncServiceScope scope = provider.CreateAsyncScope();
+        IDurableSender<IBus> sender = scope.ServiceProvider.GetRequiredService<IDurableSender<IBus>>();
+        var message = new DurableMessagePackMessage { Value = "native-messagepack" };
+        var options = new DurableSendOptions { IdempotencyKey = durableId };
+
+        DurableSendReceipt first = await sender.SendAsync(message, options, TestContext.Current.CancellationToken);
+        DurableSendReceipt duplicate = await sender.SendAsync(destination, message, options, TestContext.Current.CancellationToken);
+
+        Assert.True(first.IsNew);
+        Assert.Equal(DurableSendAdmissionDisposition.AlreadyAccepted, duplicate.Disposition);
+        IDurableSendStore<IBus> store = scope.ServiceProvider.GetRequiredService<IDurableSendStore<IBus>>();
+        DurableSendDelivery retained = Assert.Single(await store.ClaimDueAsync(
+            DateTimeOffset.UtcNow.AddDays(1),
+            1,
+            TimeSpan.FromMinutes(1),
+            TestContext.Current.CancellationToken));
+        Assert.Equal(MessagePackMessageSerializer.MessagePackContentType.ToString(), retained.Message.ContentType);
+        Assert.Equal(durableId.Value, retained.Message.MessageId);
+        Assert.False(retained.Message.Body.IsEmpty);
     }
 
     [Fact]
@@ -301,6 +351,11 @@ public sealed class MessagePackTransportIntegrationTests
 
     public sealed record MixedPing(Guid CorrelationId, string Value);
     public sealed record MixedPong(Guid CorrelationId, string Value);
+
+    public sealed class DurableMessagePackMessage
+    {
+        public string Value { get; init; } = string.Empty;
+    }
 
     private sealed class ForwardExpirationMessage
     {
